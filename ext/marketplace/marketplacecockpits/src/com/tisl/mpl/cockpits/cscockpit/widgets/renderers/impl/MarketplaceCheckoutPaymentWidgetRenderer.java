@@ -117,7 +117,7 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
-	@Autowired
+	@Resource
 	private AgentIdForStore agentIdForStore;
 	
 	private boolean buttonLabelChangeFlag = false;

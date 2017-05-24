@@ -145,7 +145,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	@Autowired
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
 	
-	@Autowired
+	@Resource
 	private AgentIdForStore agentIdForStore;
 
 	/**

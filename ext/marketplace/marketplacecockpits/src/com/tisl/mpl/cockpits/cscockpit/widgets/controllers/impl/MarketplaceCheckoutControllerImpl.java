@@ -169,7 +169,7 @@ public class MarketplaceCheckoutControllerImpl extends
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
-	@Autowired
+	@Resource
 	private AgentIdForStore agentIdForStore;
 	
 	/**

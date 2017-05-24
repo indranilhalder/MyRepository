@@ -111,6 +111,16 @@ public interface MplPaymentService
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
 			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
+	/**
+	 * juspay payment specific changes from cscockpit
+	 * 
+	 * @param custName
+	 * @param cartValue
+	 * @param totalCharge
+	 * @param entries
+	 * @param abstractOrderModel
+	 * @throws EtailNonBusinessExceptions
+	 */
 	void saveJusPayPaymentInfo(String custName, Double cartValue, Double totalCharge, List<AbstractOrderEntryModel> entries,
 			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
@@ -261,20 +271,20 @@ public interface MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	BankModel getBankDetailsForBank(final String bankName) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	List<BankforNetbankingModel> getNetBankingBanks() throws EtailNonBusinessExceptions;

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -110,7 +112,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	@Autowired
 	private MplFindDeliveryCostStrategy mplFindDeliveryCostStrategy;
 	
-	@Autowired
+	@Resource
 	private AgentIdForStore agentIdForStore;
 	
 	@Autowired
@@ -617,7 +619,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			//TISUAT-4526 no sship in cod
 			if((!mplFindDeliveryCostStrategy.isTShip(ussid)) 
 					&&
-					!(agentId != null && StringUtils.isNotEmpty(agentId))){
+					!(StringUtils.isNotEmpty(agentId))){
 				popupMessage(widget,"noSellerCOD");
 				return;
 			}

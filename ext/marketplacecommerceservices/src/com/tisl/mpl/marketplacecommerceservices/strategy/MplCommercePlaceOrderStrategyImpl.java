@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -83,7 +84,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
-	@Autowired
+	@Resource
 	private AgentIdForStore agentIdForStore;
 
 
@@ -211,7 +212,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					final String agentId = agentIdForStore
 							.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
-					if (agentId != null && StringUtils.isNotEmpty(agentId))
+					if (StringUtils.isNotEmpty(agentId))
 					{
 						orderModel.setAgentId(agentId);
 					}

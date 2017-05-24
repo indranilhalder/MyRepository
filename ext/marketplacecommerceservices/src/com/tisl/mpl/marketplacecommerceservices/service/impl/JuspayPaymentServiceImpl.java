@@ -34,10 +34,6 @@ import com.tisl.mpl.marketplacecommerceservices.daos.impl.MplPaymentDaoImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 
 
-/**
- * @author 1047493
- *
- */
 public class JuspayPaymentServiceImpl implements JuspayPaymentService
 {
 

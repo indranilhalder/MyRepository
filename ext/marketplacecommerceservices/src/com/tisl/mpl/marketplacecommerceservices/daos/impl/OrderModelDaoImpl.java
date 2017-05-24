@@ -373,8 +373,8 @@ public class OrderModelDaoImpl implements OrderModelDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.USER, customer);
 			query.addQueryParameter(MarketplacecommerceservicesConstants.AGENT_ID, agentId);
-			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(query).getResult();
-			return listOfData;
+
+			return flexibleSearchService.<OrderModel> search(query).getResult();
 		}
 		catch (final Exception e)
 		{
