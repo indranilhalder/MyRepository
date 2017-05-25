@@ -277,15 +277,16 @@ $(document).ready(function(){
 	cat = cat[cat.length-1];
 	//cat = cat.toLowerCase();
 	cat = cat.substr(2);
+	var catUpper = cat.toUpperCase();
 	//alert(cat);
 	
 	// TPR-1287 end
 	if(null!= cat ){
 		 window.setTimeout(function(){
 			//alert("Fire");
-			$("#"+cat).click();
+			$("#"+catUpper).click();
 			
-			$("a[data-id="+cat+"]").parent().addClass("active");
+			$("a[data-id="+catUpper+"]").parent().addClass("active");
 		},1000); 
 		
 	}
