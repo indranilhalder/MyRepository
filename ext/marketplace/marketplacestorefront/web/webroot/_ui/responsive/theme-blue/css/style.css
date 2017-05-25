@@ -68795,3 +68795,7 @@ header .content .right>ul>li>a.headeruserdetails.account-userTitle[href='']{
 header .content .right>ul .logged_in.dropdown{
 	cursor: initial;
 }
+
+header.marketplace-header .content .top .container>.right>ul.headerUl {
+    display: block;
+}		/*PRDI-261*/
