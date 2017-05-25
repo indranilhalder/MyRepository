@@ -10,12 +10,14 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -40,7 +42,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 
 	final List<AbstractOrderEntryModel> childEntries = new ArrayList<AbstractOrderEntryModel>();
-	private static final String ORDER_CODE = "orderCode";
+	private static final String ORDER_CODE = "orderReferenceNumber";
 	private static final String P_ORDER_CODE = "pOrderCode";
 	private static final String CHILDORDERS = "childOrders";
 	private static final String CHILDENTRIES = "childEntries";
@@ -62,6 +64,12 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
+	//TPR-5329
+	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	private static final String ORDERPLACEDATE = "orderPlaceDate";
+	private static final String SUBTOTAL = "subTotal";
+	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -71,6 +79,15 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderUpdateProcessModel, emailPageModel);
+		final double orderTotalPrice = orderUpdateProcessModel.getOrder().getTotalPrice() == null ? 0D : orderUpdateProcessModel
+				.getOrder().getTotalPrice().doubleValue();
+		final double convenienceCharges = orderUpdateProcessModel.getOrder().getConvenienceCharges() == null ? 0D
+				: orderUpdateProcessModel.getOrder().getConvenienceCharges().doubleValue();
+		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
+		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
+		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
+		final Double subTotal = Double.valueOf(orderTotalPrice);
+
 		final OrderModel order = orderUpdateProcessModel.getOrder();
 
 		final Set<ConsignmentModel> consignmentEntries = orderUpdateProcessModel.getOrder().getConsignments();
@@ -91,12 +108,12 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 				.getOrder().getParentReference().getCode()
 				: "";
 
-		final Double totalPrice = order.getTotalPrice();
+		//final Double totalPrice = order.getTotalPrice();
 		final Double shippingCharge = order.getDeliveryCost();
 		final String orderDate = (null != order.getCreationtime()) ? order.getCreationtime().toString() : "";
 
 		final AddressModel deliveryAddress = order.getDeliveryAddress();
-		final String orderCode = order.getCode();
+		final String orderReferenceNumber = order.getCode();
 
 		final List<AbstractOrderEntryModel> childOrders = order.getEntries();
 		final List<String> entryNumbers = orderUpdateProcessModel.getEntryNumber();
@@ -106,16 +123,28 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 			for (final AbstractOrderEntryModel childOrder : childOrders)
 			{
+
+
+
 				if (childOrder.getEntryNumber() == Integer.valueOf(entryNumber))
 				{
 					childEntries.add(childOrder);
+					final ProductModel productModel = childOrder.getProduct();
+					final String productImageUrl = productModel.getPicture().getURL();
+					put(PRODUCT_IMAGE_URL, productImageUrl);
+					final String orderPlaceDate;
 
+					SimpleDateFormat formatter;
+					formatter = new SimpleDateFormat("MMM d, yyyy");
+					orderPlaceDate = formatter.format(childOrder.getCreationtime());
+
+					put(ORDERPLACEDATE, orderPlaceDate);
 				}
 			}
 		}
 
 		put(P_ORDER_CODE, pOrderCode);
-		put(ORDER_CODE, orderCode);
+		put(ORDER_CODE, orderReferenceNumber);
 		put(CHILDORDERS, childOrders);
 		put(CHILDENTRIES, childEntries);
 		put(TOTALPRICE, totalPrice);
@@ -123,6 +152,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		put(COD_CHARGES, orderUpdateProcessModel.getOrder().getConvenienceCharges());
 		put(ORDERDATE, orderDate);
 		put(AWBNUMBER, orderUpdateProcessModel.getAwbNumber());
+		put(SUBTOTAL, subTotal);
+		put(CONVENIENCECHARGE, convenienceChargesVal);
 
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
 		final StringBuilder deliveryAddr = new StringBuilder(150);
