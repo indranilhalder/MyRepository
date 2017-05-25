@@ -45,8 +45,13 @@
 		.borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
 	}
 </style> 
-		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px;">
 			<tbody>
+				<tr>
+			  	 <td>
+			  	   ${ctx.cmsSlotContents.placeh}
+			  	 </td>
+		  	    </tr>
 			    <tr>
 			      <td>
 			        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -491,20 +496,17 @@
 		  	        		    <!-- stage mobile -->
 
  <!-- shipping mobile -->
-		  	        		    <tr style="display: none" class="dsBlock">
+		  	        		   <tr style="display: none" class="dsBlock">
 		  	        		    	<td style="background-color:#aa1d3d" align="center">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
                                           <tbody>
-                                               <tr>
-						  	        		      <td >
-						  	        		        ${ctx.cmsSlotContents.placeh}
-						  	        		      </td>
-						  	        		   </tr>
+                                               
 	                                          <tr>
 	                                             <td width="30">&nbsp;</td>
 	                                             <td>
 	                                             	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 	                                             	  <tbody>
+															
 	                                             	    <tr>
 	                                             	    	<td width="27">
 			                                          	     ${ctx.cmsSlotContents.tatatrust}
@@ -512,11 +514,7 @@
 			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">Tata Trust
 			                                          	   </td>
 	                                             	    </tr>
-	                                             	    <tr>
-								  	        		      <td >
-								  	        		        ${ctx.cmsSlotContents.placeh}
-								  	        		      </td>
-								  	        		    </tr>
+	                                             	   
 	                                             	    <tr>
 	                                             	    	<td width="27">
 				                                          	     ${ctx.cmsSlotContents.easyreturn}
@@ -525,11 +523,7 @@
 				                                          	      Easy Returns
 				                                          	</td>
 	                                             	    </tr>
-	                                             	    <tr>
-								  	        		      <td >
-								  	        		        ${ctx.cmsSlotContents.placeh}
-								  	        		      </td>
-								  	        		    </tr>
+	                                             	   
 	                                             	    <tr>
 	                                             	       <td width="27">
 			                                          	     ${ctx.cmsSlotContents.freeshipping}
@@ -553,11 +547,7 @@
 			                                          	      CLiQ and PIQ
 			                                          	   </td>
 			                                          	  </tr>
-			                                          	  <tr>
-								  	        		      <td >
-															${ctx.cmsSlotContents.placeh}
-								  	        		      </td>
-								  	        		    </tr>
+			                                          	 
 			                                          	  <tr>
 			                                          	  	<td width="27">
 			                                          	     ${ctx.cmsSlotContents.authenticbrands}
@@ -566,16 +556,13 @@
 			                                          	      Authentic Brands
 			                                          	   </td>
 			                                          	  </tr>
+														  
 			                                          	 </tbody>
 			                                         </table>
 	                                             </td>
 	                                              <td width="10">&nbsp;</td>
 	                                          </tr>
-	                                          <tr>
-						  	        		      <td >
-						  	        		        ${ctx.cmsSlotContents.placeh}
-						  	        		      </td>
-						  	        		   </tr>
+	                                          
                                           </tbody>
                                         </table>
 		  	        		    	</td>
@@ -600,11 +587,11 @@
 		  	        		    				<tr>
 		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
 		  	        		    					<td class="smFull">
-													#if($ctx.cmsSlotContents.appstore)<td style="text-align: right;">
-															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+														#if($ctx.cmsSlotContents.appstore)
+															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&mt=8&icid=em:general:registration:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
 														#end
-														#if($ctx.cmsSlotContents.googleplay)<td style="text-align: right;">
-															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+														#if($ctx.cmsSlotContents.googleplay)
+															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&icid=em:general:registration:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
 														#end
 													</td>
 		  	        		    					<td class="smFull dsnone">
@@ -612,13 +599,13 @@
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fb)<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a></td> #end
-						  	        		    		#if($ctx.cmsSlotContents.tweet)<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>#end
-						  	        		    		#if($ctx.cmsSlotContents.insta)<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>#end
+		  	        		    						#if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a> #end
+						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<td><a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a></td>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtube)<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>#end
+														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>
