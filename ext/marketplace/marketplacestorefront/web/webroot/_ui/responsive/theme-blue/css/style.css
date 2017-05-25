@@ -68789,3 +68789,9 @@ body.page-checkout-login header .content nav{
 	}
 	}
 /*PRDI-223 end*/
+header .content .right>ul>li>a.headeruserdetails.account-userTitle[href='']{
+	pointer-events: none;
+}
+header .content .right>ul .logged_in.dropdown{
+	cursor: initial;
+}
