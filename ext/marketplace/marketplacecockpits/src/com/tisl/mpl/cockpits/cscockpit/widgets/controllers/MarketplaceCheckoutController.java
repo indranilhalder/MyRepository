@@ -136,7 +136,6 @@ public interface MarketplaceCheckoutController extends
 
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
 
-	// Soumya, Avijit changes
 	
 	void processJuspayPayment(final CartModel cart, final CustomerModel customer);
 	

@@ -824,7 +824,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 								mode.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_PAYMENT))
 						{
 							((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
-							//((MarketplaceCheckoutController) widget.getWidgetController()).processJusPayPaymentOnSelect();
+							((MarketplaceCheckoutController) widget.getWidgetController()).processJusPayPaymentOnSelect();
 							((MarketplaceCheckoutController) widget.getWidgetController()).setJusPayPaymentModeOnSelect(cart);
 							try {
 								

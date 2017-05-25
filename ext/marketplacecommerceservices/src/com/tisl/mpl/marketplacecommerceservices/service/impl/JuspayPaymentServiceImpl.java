@@ -189,9 +189,9 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		jusPayPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(cart.getUser().getName()) ? cart.getUser().getName()
 				: ((CustomerModel) cart.getUser()).getOriginalUid());
 		cart.setPaymentInfo(jusPayPaymentInfoModel);
-		cart.setConvenienceCharges(Double
+		/*cart.setConvenienceCharges(Double
 				.valueOf(null != baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
-						.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
+						.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));*/
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
 		paymentInfo.put(MarketplaceJuspayServicesConstants.JUSPAY_KEY, cart.getConvenienceCharges());
