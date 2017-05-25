@@ -6,7 +6,7 @@
 
 
 
-<h3 class="section-title">${title}</h3>
+<h2 class="section-title text-center">${title}</h2>
 
 <c:forEach items="${ShowCase}" var="ShowCase" varStatus="status">			
 <section class="look-book look-book-wrapper"> 
