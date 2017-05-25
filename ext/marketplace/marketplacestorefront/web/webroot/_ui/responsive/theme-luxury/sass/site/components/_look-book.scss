@@ -11,12 +11,33 @@
 	}
 }
 .lux-main-banner-slider{
+	margin-bottom:20px;
+	position:relative;
 	.owl-stage-outer{
 		overflow:hidden;
 		.owl-item{
 			float:left;
 		}
 	}
+	.owl-dots {
+		bottom: 15px;
+		position: absolute;
+		text-align: center;
+		width: 100%;
+		z-index: 999;
+		.owl-dot {
+			background: gray;
+			display: inline-block;
+			height: 2px;
+			margin-left: 10px;
+			text-align: center;
+			width: 56px;
+		}
+		.owl-dot.active {
+			background: #fff;
+		}
+	}
+	
 
 }
 .look-book {
