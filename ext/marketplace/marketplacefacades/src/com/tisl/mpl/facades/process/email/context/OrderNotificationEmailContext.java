@@ -91,6 +91,9 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	{
 		super.init(orderProcessModel, emailPageModel);
 		//final OrderData orderData = getOrderConverter().convert(orderProcessModel.getOrder());
+		final double orderSubTotalPrice = orderProcessModel.getOrder().getSubtotal() == null ? 0D : orderProcessModel.getOrder()
+				.getSubtotal().doubleValue();
+
 		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D : orderProcessModel.getOrder()
 				.getTotalPrice().doubleValue();
 		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D : orderProcessModel
@@ -98,7 +101,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
-		final Double subTotal = Double.valueOf(orderTotalPrice);
+		final Double subTotal = Double.valueOf(orderSubTotalPrice);
 		final DecimalFormat myFormatter = new DecimalFormat("#,###");
 		final String subTotalNew = myFormatter.format(subTotal);
 		final String totalPriceNew = myFormatter.format(totalPrice);
@@ -143,9 +146,19 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
 
+			final String productImageUrl;
 
 			final ProductModel productModel = entryModel.getProduct();
-			final String productImageUrl = productModel.getPicture().getURL();
+			if (null != productModel.getPicture())
+			{
+				productImageUrl = productModel.getPicture().getURL();
+			}
+			else
+			{
+				productImageUrl = "";
+			}
+
+
 			put(PRODUCT_IMAGE_URL, productImageUrl);
 
 

@@ -116,13 +116,13 @@
 					  	        </tr>
 		  	        		    <tr>
 		  	        		    	<td align="center" class="topLinks">
-		  	        		    		<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
+		  	        		    		<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
 			  	        		      	
 		  	        		    	</td> 
 		  	        		    </tr>
@@ -166,10 +166,13 @@
 		  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
 		  	        		      	   	 	  	<strong>Your order will be send to:</strong>
 		  	        		      	   	 	  	<br>
+		  	        		      	   	 	  
+		  	        		      	   	 	  	#if($ctx.deliveryAddress)
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<strong>${ctx.deliveryAddress}</strong>
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
+		  	        		      	   	 	  	#end
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<strong>Order delivery date:</strong> 
@@ -243,7 +246,7 @@
 					  	        		 <tr>
 		  	        		      	   	 	<td width="12" class="dsnone">&nbsp;</td>
 		  	        		      	   	 	<td width="60">
-		  	        		      	   	 	  <img src="http:${ctx.productImageUrl}" width="51" height="75" style="border:1px solid #cbcbcb;">
+		  	        		      	   	 	  <img src="http:${entry.product.picture.url}" width="51" height="75" style="border:1px solid #cbcbcb;">
 		  	        		      	   	 	 </td>
 		  	        		      	   	 	 <td width="10">&nbsp;</td>
 		  	        		      	   	 	 <td style="vertical-align:top;">
@@ -253,14 +256,18 @@
 					  	        		      	   	 <td class="smFull">
 				  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;">
 				  	        		      	   	 	  $entry.quantity X  $entry.product.name
+				  	        		      	   	 	  #if($entry.product.size)
 				  	        		      	   	 	  <br>
 				  	        		      	   	 	  <span style="color:#333333">Size: $entry.product.size</span>
+				  	        		      	   	 	  #end
 				  	        		      	   	 	  <br>
 				  	        		      	   	 	  <span style="color:#333333">Sold by: $entry.SellerInfo </span>
 				  	        		      	   	 	  	
 				  	        		      	   	 	  </div>
 				  	        		      	   	 	 </td>
-				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">&#x20b9; $entry.netAmountAfterAllDisc</td>
+				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">
+				  	        		      	   	 	
+				  	        		      	   	 	&#x20b9; $entry.netAmountAfterAllDisc</td>
 				  	        		      	   	 	</tr>
 				  	        		      	   	 	</tbody>
 		  	        		      	   	 	</table>
@@ -301,7 +308,7 @@
 						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.shippingCharge == 0)
 Free
 #else
-${ctx.shippingCharge}
+&#x20b9; ${ctx.shippingCharge}
 #end</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
@@ -309,7 +316,7 @@ ${ctx.shippingCharge}
 						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
 Free
 #else
-${ctx.convenienceChargesVal}
+&#x20b9; ${ctx.convenienceChargesVal}
 #end</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
