@@ -20,12 +20,14 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,12 +57,15 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String ORDER_CODE = "orderReferenceNumber";
 	private static final String CHILDORDERS = "childOrders";
 	private static final String CHILDENTRIES = "childEntries";
+	private static final String SUBTOTAL = "subTotal";
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
+	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
 	private static final String DELIVERYADDRESS = "deliveryAddress";
 	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
+
 
 
 
@@ -72,9 +77,12 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
+	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
+
 
 
 	@Override
@@ -88,8 +96,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				.getOrder().getConvenienceCharges().doubleValue();
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
-
-
+		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
+		final Double subTotal = Double.valueOf(orderTotalPrice);
 
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
 				+ " convenienceCharges:" + convenienceCharges);
@@ -110,8 +118,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(TRACK_ORDER_URL, trackOrderUrl);
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
+		put(SUBTOTAL, subTotal);
 		put(TOTALPRICE, totalPrice);
 		put(SHIPPINGCHARGE, shippingCharge);
+		put(CONVENIENCECHARGE, convenienceChargesVal);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
 		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
@@ -125,6 +135,20 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			LOG.debug("total price" + entryModel.getTotalPrice());
 			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
+
+
+			final ProductModel productModel = entryModel.getProduct();
+			final String productImageUrl = productModel.getPicture().getURL();
+			put(PRODUCT_IMAGE_URL, productImageUrl);
+
+
+			final String orderPlaceDate;
+
+			SimpleDateFormat formatter;
+			formatter = new SimpleDateFormat("MMM d, yyyy");
+			orderPlaceDate = formatter.format(entryModel.getCreationtime());
+
+			put(ORDERPLACEDATE, orderPlaceDate);
 
 			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
@@ -169,25 +193,20 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			deliveryAddr.append(deliveryAddress.getStreetname());
 			if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 			{
-				//TISUATSE-81 starts
-				deliveryAddr.append(deliveryAddress.getStreetnumber());
+				deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
 			}
 			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 			{
-				deliveryAddr.append(deliveryAddress.getAddressLine3());
+				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
 			}
-			//TISUATSE-81 ends
 			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
 			{
 				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
 			}
-			//TISUATSE-70 starts
-			deliveryAddr.append("<br/>");
 
-			final String city = deliveryAddress.getTown();
-			deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
-					.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
-			//TISUATSE-70 ends
+			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
+					.append(COMMA).append(deliveryAddress.getPostalcode());
+
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 		String websiteUrl = null;
