@@ -135,52 +135,52 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 
 			for (final CustomPageData pageData : mainSiteMapUrlList)
 			{
-				//check for blank URL
-				if (StringUtils.isEmpty(pageData.getUrl()))
+				if (StringUtils.isNotEmpty(pageData.getUrl()))
+				{
+					//check if / is present
+					if (!pageData.getUrl().startsWith("/"))
+					{
+						removeUrlBlankList.add(pageData);
+						final CustomPageData cpd = new CustomPageData();
+						cpd.setUrl("/" + pageData.getUrl());
+						cpd.setChangeFrequency(pageData.getChangeFrequency());
+						cpd.setPriority(pageData.getPriority());
+
+						addfrontSlashList.add(cpd);
+					}
+					//check for excluded keywords that starts with
+					for (final String keyword : excludedKeywordsStartswith)
+					{
+
+						if (StringUtils.isNotEmpty(pageData.getUrl())
+								&& pageData.getUrl().toUpperCase().startsWith(keyword.toUpperCase()))
+						{
+							removeUrlBlankList.add(pageData);
+
+						}
+					}
+					//check for excluded equal keywords
+					for (final String keyword : excludedKeywordsEqual)
+					{
+
+						if (StringUtils.isNotEmpty(pageData.getUrl()) && pageData.getUrl().equalsIgnoreCase(keyword))
+						{
+							removeUrlBlankList.add(pageData);
+
+						}
+					}
+				}
+				//check for blank/null URL
+				else
 				{
 					removeUrlBlankList.add(pageData);
 				}
-				//check if / is present
-				else if (!pageData.getUrl().startsWith("/"))
-				{
-					removeUrlBlankList.add(pageData);
-					final CustomPageData cpd = new CustomPageData();
-					cpd.setUrl("/" + pageData.getUrl());
-					cpd.setChangeFrequency(pageData.getChangeFrequency());
-					cpd.setPriority(pageData.getPriority());
-
-					addfrontSlashList.add(cpd);
-				}
-				//check for excluded keywords that starts with
-				for (final String keyword : excludedKeywordsStartswith)
-				{
-
-					if (pageData.getUrl().toUpperCase().startsWith(keyword.toUpperCase()))
-					{
-						removeUrlBlankList.add(pageData);
-
-					}
-				}
-				//check for excluded equal keywords
-				for (final String keyword : excludedKeywordsEqual)
-				{
-
-					if (pageData.getUrl().equalsIgnoreCase(keyword))
-					{
-						removeUrlBlankList.add(pageData);
-
-					}
-				}
-
 			}
 		}
 		mainSiteMapUrlList.removeAll(removeUrlBlankList);
 		mainSiteMapUrlList.addAll(addfrontSlashList);
 		return mainSiteMapUrlList;
 	}
-
-
-
 
 	/**
 	 * This method returns the custom data for Homepage for TPR-1285 Dynamic sitemap
@@ -192,7 +192,15 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private List<CustomPageData> homePageSiteMap(final List<CustomPageData> mainSiteMapUrlList, final SiteMapPageModel siteMapPage)
 	{
 		final ContentPageModel homepage = getCmsPageService().getHomepage();
-		final String relUrl = StringEscapeUtils.escapeXml(getHomepageUrlResolver().resolve(homepage));
+		String relUrl = null;
+		if (homepage != null)
+		{
+			relUrl = StringEscapeUtils.escapeXml(getHomepageUrlResolver().resolve(homepage));
+		}
+		else
+		{
+			relUrl = "/";
+		}
 		final CustomPageData data = new CustomPageData();
 		data.setUrl(relUrl);
 		if (null != siteMapPage.getFrequency())

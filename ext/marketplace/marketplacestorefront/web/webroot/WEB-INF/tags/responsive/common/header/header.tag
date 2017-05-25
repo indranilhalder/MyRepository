@@ -149,7 +149,7 @@
 				<c:set var="userLoggedIn" value="${true}"  />
 				<div class="right">
 
-					<ul>
+					<ul class="headerUl">		<!-- PRDI-261 -->
 
 
 						<!--Using this tag for 'My Bag' Link in header navigation pane and it will navigate to cart Page  -->
