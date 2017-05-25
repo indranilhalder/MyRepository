@@ -7,7 +7,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
 <%-- <c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/> --%>
-<%-- <c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/>
+<c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/>
 <c:choose>
 	<c:when test="${not empty primaryImage && not empty primaryImage.url}">
 		<c:choose>
@@ -22,9 +22,9 @@
 	<c:otherwise>
 		<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 	</c:otherwise>
-</c:choose> --%>
+</c:choose>
 <%-- <theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/> --%>
-<img class="plp-default-img" alt="images" src="/_ui/responsive/theme-blue/images/thumb.PNG" />
+<!-- <img class="plp-default-img" alt="images" src="/_ui/responsive/theme-blue/images/thumb.PNG" />
 <img class="plp-hover-img" alt="images" src="/_ui/responsive/theme-blue/images/temp3.jpg"/>
-<img class="plp-model-img" alt="images" src="/_ui/responsive/theme-blue/images/model-img.PNG" />
+<img class="plp-model-img" alt="images" src="/_ui/responsive/theme-blue/images/model-img.PNG" /> -->
 

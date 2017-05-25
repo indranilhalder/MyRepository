@@ -12153,11 +12153,11 @@ TATA.CommonFunctions = {
         }, 3e3), !1);
     },
     leftBarAccordian: function() {
-        $(window).width() >= 768 ? $(".facetHead").on("click", function(e) {
+        $(window).width() >= 768 ? $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {
                 $(this).find(".allFacetValues").slideToggle();
             });
-        }) : ($(".facet:first").removeClass("open"), $(".facetHead").on("click", function(e) {
+        }) : ($(".facet:first").removeClass("open"), $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 
             $(this).closest(".facet").siblings().removeClass("open").find(".allFacetValues").hide();
         }));
@@ -12211,7 +12211,7 @@ TATA.CommonFunctions = {
                     success: function(x) {
                         var filtered = $.parseHTML(x);
                         $(filtered).has(".facetList") && ($(".facetList").html($(filtered).find(".facetList")), 
-                        refreshRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper"));
+                        TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper"));
                     }
                 });
             });

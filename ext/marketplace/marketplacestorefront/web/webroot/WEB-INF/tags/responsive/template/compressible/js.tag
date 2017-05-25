@@ -87,8 +87,9 @@ if(loginStatus){
 <%-- bootstrap --%>
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
+<%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 <script type="text/javascript" src="${themeResourcePath}/combined/luxury-main.js"></script>
-<script type="text/javascript" src="${themeResourcePath}/js/luxury.js"></script> 
+<%-- <script type="text/javascript" src="${themeResourcePath}/js/plpSearch.js"></script> --%>
 
 <!-- R2.3: START FL04 -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or

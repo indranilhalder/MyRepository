@@ -231,15 +231,15 @@ TATA.CommonFunctions = {
 	leftBarAccordian: function(){
 		if($(window).width() >=768){
 		/*$('.facet:first').find('.allFacetValues').show();*/
-		$('.facetHead').on('click', function(e){
+		$(document).on('click', '.facetHead', function(e){
 			e.stopPropagation();
 			$(this).closest('.facet').toggleClass('open', function(){
 				$(this).find('.allFacetValues').slideToggle();
 			});
 		});
 		}else{
-			$('.facet:first').removeClass('open');
-			$('.facetHead').on('click', function(e){
+			/*$('.facet:first').removeClass('open');*/
+			$(document).on('click', '.facetHead', function(e){
 				e.stopPropagation();
 				$(this).closest('.facet').addClass('open').find('.allFacetValues').show();
 				$(this).closest('.facet').siblings().removeClass('open').find('.allFacetValues').hide();
@@ -340,7 +340,7 @@ TATA.Pages = {
 			            
 			            if($(filtered).has('.facetList')){
 			            	$(".facetList").html($(filtered).find(".facetList"));
-			            	refreshRefinements();
+			            	TATA.Pages.PLP.showSelectedRefinements();
 			            }
 			            
 			            if($(filtered).has('.product-grid')){

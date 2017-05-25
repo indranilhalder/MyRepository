@@ -49,10 +49,10 @@
 							<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 						</c:when>
 						<c:otherwise>
-						<%-- Changes Performance Start --%>
+							<%-- Changes Performance Start --%>
  							<c:if test="${facet.genericFilter}">
-  							<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
- 						</c:if>
+  								<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+ 							</c:if>
 						</c:otherwise>
 					 </c:choose>
 			   		</c:otherwise>
