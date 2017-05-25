@@ -10,11 +10,9 @@
 		float:left;
 	}
 }
-.lux-main-banner-slider{
-	.content-block-slider{ 
-
 .lux-main-rotate-banner{
 	.owl-stage-outer{
+		overflow:hidden;
 		.owl-item{
 			float:left;
 		}
