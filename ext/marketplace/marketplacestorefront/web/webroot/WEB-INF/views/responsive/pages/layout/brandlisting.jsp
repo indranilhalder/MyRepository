@@ -277,7 +277,9 @@ $(document).ready(function(){
 	cat = cat[cat.length-1];
 	//cat = cat.toLowerCase();
 	cat = cat.substr(2);
-	//alert(cat);
+	if (cat.indexOf("mbh") == 0) {
+		cat = cat.toUpperCase();
+	}
 	
 	// TPR-1287 end
 	if(null!= cat ){

@@ -2234,8 +2234,8 @@ $(document).ready(function()
                }
                //Akamai caching
                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
-               $("a.headeruserdetails").attr('href','/my-account');
-               
+               /*$("a.headeruserdetails").attr('href','/my-account');*/
+               $("a.headeruserdetails").attr('href',''); /*client feedback to remove href*/
                $("a.tracklinkcls").attr('href','#');
                if(data.notificationCount != null){            	   
 	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');

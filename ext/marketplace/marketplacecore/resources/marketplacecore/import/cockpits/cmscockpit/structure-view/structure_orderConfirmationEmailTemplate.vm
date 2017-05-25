@@ -8,7 +8,7 @@
 			</tr>
 			<tr>
 				<td height="125px" width="25%" colspan="2" rowspan="2" class="structureViewSection">
-					<cockpit code="SiteLogo" />
+					<cockpit code="SiteLogoNew" />
 				</td>
 				<td height="125px" width="25%" colspan="2" rowspan="2" class="structureViewSection">
 					<cockpit code="placeh" />
@@ -108,11 +108,11 @@
 			</tr>
 			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="fb" />
-					<cockpit code="tweet" />
-					<cockpit code="insta" />
+					<cockpit code="fbNew" />
+					<cockpit code="tweetNew" />
+					<cockpit code="instaNew" />
 					<cockpit code="gplus" />
-					<cockpit code="youtube" />
+					<cockpit code="youtubeNew" />
 				</td>
 			</tr>
 		</tbody>

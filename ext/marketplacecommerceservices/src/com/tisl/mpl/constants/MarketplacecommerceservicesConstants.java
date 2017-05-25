@@ -558,7 +558,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PUSH_MESSAGE_ORDER_OFD_PREPAID = "Hi! Your order {0} of {1} item(s) will reach you today. To know more, check out the Order History section of the app.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_COD = "Hi! Your order {0} of {1} item(s) will reach you today. Please keep INR {2} cash handy. To know more, check out the Order History section of the app.";
 	/* 14. Anniversary Changes */
-	public static final String PUSH_MESSAGE_ORDER_CANCELLED = "Hi, a refund of INR {0} has been initiated on the cancellation of {2} product(s). Check your email for details.";
+	public static final String PUSH_MESSAGE_ORDER_CANCELLED = "Hi! We have initiated a refund of INR {0} to you for the {1} item(s) you cancelled.The reason for this cancellation is {2}. To know more, check out the Order History section of the app.";
 
 
 	public static final String SMS_SERVICE_CONTACTNO = "marketplace.sms.service.contactno";
