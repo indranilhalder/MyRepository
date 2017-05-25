@@ -11,6 +11,7 @@
 	<div>
 	
 	
+
 <section class="lux-main-banner-slider text-center text-uppercase">
 	<div class="banner-list">
 		<div class="banner-img">
