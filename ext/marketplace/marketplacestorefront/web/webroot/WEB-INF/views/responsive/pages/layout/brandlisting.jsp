@@ -277,16 +277,17 @@ $(document).ready(function(){
 	cat = cat[cat.length-1];
 	//cat = cat.toLowerCase();
 	cat = cat.substr(2);
-	var catUpper = cat.toUpperCase();
-	//alert(cat);
+	if (cat.indexOf("mbh") == 0) {
+		cat = cat.toUpperCase();
+	}
 	
 	// TPR-1287 end
 	if(null!= cat ){
 		 window.setTimeout(function(){
 			//alert("Fire");
-			$("#"+catUpper).click();
+			$("#"+cat).click();
 			
-			$("a[data-id="+catUpper+"]").parent().addClass("active");
+			$("a[data-id="+cat+"]").parent().addClass("active");
 		},1000); 
 		
 	}
