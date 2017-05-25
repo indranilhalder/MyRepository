@@ -11,7 +11,7 @@
 	<div>
 	
 	
-<section class="main-banner text-center text-uppercase">
+<section class="lux-main-banner-slider text-center text-uppercase">
 	<div class="banner-list">
 		<div class="banner-img">
 			<picture><cms:pageSlot

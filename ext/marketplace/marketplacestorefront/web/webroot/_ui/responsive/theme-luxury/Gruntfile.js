@@ -65,7 +65,8 @@ grunt.initConfig({
 				    'js/lib/jquery.validate.min.js',
 				    'js/main.js',
 				    'js/login.js',
-				    'js/tulvalidation.js'				
+				    'js/tulvalidation.js',
+					'js/plpSearch.js'					
 				
 				].map(absolutePath), 
 					dest: 'combined/luxury-main.js'
