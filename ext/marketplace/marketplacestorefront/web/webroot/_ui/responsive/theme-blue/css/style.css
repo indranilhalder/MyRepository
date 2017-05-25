@@ -68772,3 +68772,20 @@ body.page-checkout-login header .content nav{
 	width: 88%;
     white-space: normal;
 }
+/*PRDI-223 start*/
+@media(min-width: 791px){
+	header .content nav>ul>li>ul>li>ul>li.images>a .logo{
+	padding-bottom: 5px;
+	}
+	header .content nav>ul>li>ul>li>ul.images{
+	padding-top: 0px;
+	}
+	header .content nav>ul>li>ul>li>ul.images>li.images{
+	min-width: auto;
+    width: 100%;
+	}
+	header .content .bottom:not(.active) nav > ul > li > ul > li > ul{
+	height: 499px;
+	}
+	}
+/*PRDI-223 end*/
