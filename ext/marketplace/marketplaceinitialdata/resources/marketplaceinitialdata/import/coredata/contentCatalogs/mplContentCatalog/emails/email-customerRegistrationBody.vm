@@ -45,8 +45,13 @@
 		.borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
 	}
 </style> 
-		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px;">
 			<tbody>
+				<tr>
+			  	 <td>
+			  	   ${ctx.cmsSlotContents.placeh}
+			  	 </td>
+		  	    </tr>
 			    <tr>
 			      <td>
 			        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -83,21 +88,39 @@
 					  	 <!-- starts here-->
 					  	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 					  	     <tbody>
-					  	        
+					  	        <tr class="dsnone">
+					  	         <td>
+					  	       	   ${ctx.cmsSlotContents.placeh}
+					  	          </td>
+					  	        </tr>
 		  	        		    <tr>
 		  	        		    	<td align="center" class="topLinks">
-		  	        		    		<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
+		  	        		    		<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
 			  	        		      	
 		  	        		    	</td> 
 		  	        		    </tr>
-		  	        		     
-		  	        		    
+								
+								<tr>
+		  	        		      <td style="border-bottom:1px solid #aa1d3d;"></td>
+		  	        		    </tr>
+								
+		  	        		    <tr class="dsnone">
+		  	        		      <td>
+		  	        		        ${ctx.cmsSlotContents.placeh}
+		  	        		      </td>
+		  	        		    </tr> 
+								<tr class="dsnone">
+		  	        		      <td>
+		  	        		        ${ctx.cmsSlotContents.placeh}
+		  	        		      </td>
+		  	        		    </tr> 
+								 
 		  	        		    <tr>
 		  	        		    	<td class="inPad content">
 		  	        		    		<div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
@@ -119,7 +142,11 @@
 
 		  	        		    	</td>
 		  	        		    </tr>
-		  	        		    
+		  	        		    <tr>
+		  	        		      <td class="lesspad">
+		  	        		        ${ctx.cmsSlotContents.placeh}
+		  	        		      </td>
+		  	        		    </tr>
 
 		  	        		    <tr class="dsnone">
 		  	        		    	<td style="background-color:#aa1d3d" align="center">
@@ -171,26 +198,27 @@
 	                                             <td>
 	                                             	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 	                                             	  <tbody>
+															
 	                                             	    <tr>
 	                                             	    	<td width="27">
-			                                          	     <img src="images/t_trust.png" width="18" height="25" style="display:block;line-height:0;font-size:0;">
+			                                          	     ${ctx.cmsSlotContents.tatatrust}
 			                                          	   </td>
 			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">Tata Trust
 			                                          	   </td>
 	                                             	    </tr>
-	                                             	    
+	                                             	   
 	                                             	    <tr>
 	                                             	    	<td width="27">
-				                                          	     <img src="images/t_easy_returns.png" width="20" height="25" style="display:block;line-height:0;font-size:0;">
+				                                          	     ${ctx.cmsSlotContents.easyreturn}
 				                                          	 </td>
 				                                          	 <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
 				                                          	      Easy Returns
 				                                          	</td>
 	                                             	    </tr>
-	                                             	    
+	                                             	   
 	                                             	    <tr>
 	                                             	       <td width="27">
-			                                          	     <img src="images/t_free_shipping.png" width="25" height="25" style="display:block;line-height:0;font-size:0;">
+			                                          	     ${ctx.cmsSlotContents.freeshipping}
 			                                          	   </td>
 			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
 			                                          	     Free Shipping
@@ -205,21 +233,22 @@
 	                                             	  <tbody>
 	                                             	    <tr>
 			                                             	<td width="27">
-		                                          	        <img src="images/t_PIQ.png" width="21" height="25" style="display:block;line-height:0;font-size:0;">
+		                                          	        ${ctx.cmsSlotContents.cliqnpic}
 			                                          	   </td>
 			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
 			                                          	      CLiQ and PIQ
 			                                          	   </td>
 			                                          	  </tr>
-			                                          	  
+			                                          	 
 			                                          	  <tr>
 			                                          	  	<td width="27">
-			                                          	     <img src="images/t_authentic_brands.png" width="16" height="25" style="display:block;line-height:0;font-size:0;">
+			                                          	     ${ctx.cmsSlotContents.authenticbrands}
 			                                          	   </td>
 			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
 			                                          	      Authentic Brands
 			                                          	   </td>
 			                                          	  </tr>
+														  
 			                                          	 </tbody>
 			                                         </table>
 	                                             </td>
@@ -235,8 +264,11 @@
 		  	        		    
 
 
-
-		  	        		    
+								<tr>
+		  	        		      <td>
+		  	        		        ${ctx.cmsSlotContents.placeh}
+		  	        		      </td>
+		  	        		    </tr>
 		  	        		    <tr align="center">
 		  	        		    	<td>
 		  	        		    		
@@ -245,11 +277,11 @@
 		  	        		    				<tr>
 		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
 		  	        		    					<td class="smFull">
-														#if($ctx.cmsSlotContents.appstore)<td style="text-align: right;">
-															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+														#if($ctx.cmsSlotContents.appstore)
+															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&mt=8&icid=em:general:registration:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
 														#end
-														#if($ctx.cmsSlotContents.googleplay)<td style="text-align: right;">
-															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+														#if($ctx.cmsSlotContents.googleplay)
+															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&icid=em:general:registration:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
 														#end
 													</td>
 		  	        		    					<td class="smFull dsnone">
@@ -257,13 +289,13 @@
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fb)<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a></td> #end
-						  	        		    		#if($ctx.cmsSlotContents.tweet)<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>#end
-						  	        		    		#if($ctx.cmsSlotContents.insta)<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>#end
+		  	        		    						#if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a> #end
+						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<td><a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a></td>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtube)<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>#end
+														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>
@@ -271,17 +303,25 @@
 		  	        		    		
 		  	        		    	</td>
 		  	        		    </tr>
-		  	        		    
+		  	        		    <tr class="inPad bordertop">
+		  	        		      <td class="">
+		  	        		        ${ctx.cmsSlotContents.placeh}
+		  	        		      </td>
+		  	        		    </tr>
 		  	        		    <tr>
 		  	        		    	<td align="center" class="content foocontnt inPad">
 		  	        		    	  <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    	    This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care &lt;link to customer centre &gt;
+		  	        		    	    This email can't receive replies. Get in touch with us by contacting <a href ="https://www.tatacliq.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Care</a>
 		  	        		    	    <br>
-		  	        		    	    You can also write to us at <a href="mailto:someone@example.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:someone@example.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
+		  	        		    	    You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
 		  	        		    	  </div>
 		  	        		    	</td>
 		  	        		    </tr>
-		  	        		     
+		  	        		    <tr>
+		  	        		      <td>
+		  	        		        ${ctx.cmsSlotContents.placeh} 
+		  	        		      </td>
+		  	        		    </tr> 
 					  	     </tbody>
 					  	   </table>
 
