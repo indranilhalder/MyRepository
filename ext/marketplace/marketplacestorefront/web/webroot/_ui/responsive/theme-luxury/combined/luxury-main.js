@@ -12285,7 +12285,11 @@ TATA.CommonFunctions = {
         _self.PLP.init(), _self.PDP.init();
     }
 }, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt(), $(window).width() <= 767 && $(".sort-by-fature .selectboxit-text").html("SORT");
+    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt(), $(window).width() <= 767 && $(".sort-by-fature .selectboxit-text").html("SORT"), 
+    $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
+        dots: !0,
+        items: 1
+    });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
@@ -12367,38 +12371,7 @@ TATA.CommonFunctions = {
         });
     }
     loginRequest();
-
-});
-
-var rfv = {};
-
-(function($) {
-    "use strict";
-    tul.commonFunctions = {
-        newCustomer: function() {
-            $("#loginFormOverlay, #LoginForm").validate({
-                rules: {
-                    j_username: {
-                        required: !0,
-                        email: !0,
-                        emailvalidation: !0
-                    },
-                    j_password: {
-                        required: !0
-                    }
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
-        },
-        init: function() {
-            rfv.commonFunctions.newCustomer();
-        }
-    }, $(document).ready(function() {
-        tul.commonFunctions.init();
-    });
-}).call(rfv.commonFunctions, window.jQuery), $(document).ready(function() {
+}), $(document).ready(function() {
     function refreshRefinements() {
         $(".facetValues .facet-form input:checked").each(function() {
             $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open"), 

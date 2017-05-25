@@ -461,6 +461,11 @@ TATA.Pages = {
 	if($(window).width() <= 767){
 		$('.sort-by-fature .selectboxit-text').html('SORT');
 	}
+	$(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
+		//autoPlay: 3000,
+        dots: true,
+        items: 1,
+    });
 	
 });
 
