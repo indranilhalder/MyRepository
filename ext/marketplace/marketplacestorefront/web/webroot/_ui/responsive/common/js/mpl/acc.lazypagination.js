@@ -442,6 +442,7 @@ function ajaxPLPLoad(ajaxUrl){
 				populateFirstFiveProductsPlp();
 			}
             ACC.quickview.bindToUiCarouselLink();
+            $("img.lazy-pic").lazyload();
         }
     });
 }
