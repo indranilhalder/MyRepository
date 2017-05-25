@@ -1,5 +1,40 @@
 $(document).ready(function() {
 
+	refreshRefinements();
+	
+	function refreshRefinements(){
+		$(".facetValues .facet-form input:checked").each(function(){
+			$(this).parents(".allFacetValues").show();
+			$(this).parents(".facet").addClass("open");
+			console.log($(this).parents(".allFacetValues"));
+		});
+		$(".facetValues .facet-form input:checked").each(function(){
+			
+		});
+	}
+	
+	$(document).on('change','.facet-form input:checkbox', function(){
+		var requestUrl = $(this).closest('form').attr('action')+"?"+$(this).closest('form').serialize();
+		$.ajax({
+	        url: requestUrl,
+	        data: {
+	            lazyInterface:'Y'
+	        },
+	        success: function(x) {
+	            var filtered = $.parseHTML(x);
+	            
+	            if($(filtered).has('.facetList')){
+	            	$(".facetList").html($(filtered).find(".facetList"));
+	            	refreshRefinements();
+	            }
+	            
+	            if($(filtered).has('.product-grid')){
+	            	$('.product-grid-wrapper').html($(filtered).find(".product-grid-wrapper"));
+	            }
+	            
+	        }
+	    });
+	});
 
   $(document).on('click','.sort',function(){
         	sort($(this),false);
@@ -121,48 +156,36 @@ $(document).on("click",".add-to-wishlist",function(e){
 	} else {
 		 addToWishlistForPLP($(this).data("product"),this);
 	}
-	return false;
-})
+//	return false;
+});
 	
 
 		function removeToWishlistForPLP(productURL,el) {
-			//var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
-			var wishName = "";
-			var requiredUrl = ACC.config.encodedContextPath + "/search/"
-					+ "removeFromWishListInPLP";	
-		    var sizeSelected=true;
-		    
-		    if(!$('#variant li').hasClass('selected')) {
-		    	sizeSelected=false;
-		    }
-		    if( $("#variant,#sizevariant option:selected").val()=="#"){
-		    	sizeSelected=false;
-		    }
-		    var dataString = 'wish=' + wishName + '&product=' + productCode
-					+ '&sizeSelected=' + sizeSelected;
+			var requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";
 			
-		    //change for INC144314854 
-			//if(loggedIn == 'false') {
 		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
-				setTimeout(function(){
-					$(".wishAddLoginPlp").removeClass("active")
-				},3000)
+					setTimeout(function(){
+						$(".wishAddLoginPlp").removeClass("active")
+					},
+				3000);
 				return false;
 			}	
 			else {	
 				$.ajax({			
 					contentType : "application/json; charset=utf-8",
 					url : requiredUrl,
-					data : dataString,
+					data : {
+						product : productCode
+					},
 					dataType : "json",			
 					success : function(data){
 						if (data == true) {					
 							$(".wishRemoveSucessPlp").addClass("active");
 							setTimeout(function(){
 								$(".wishRemoveSucessPlp").removeClass("active")
-							},3000)
+							},3000);
 							$(el).removeClass("added");
 						}
 						else{
@@ -189,26 +212,9 @@ $(document).on("click",".add-to-wishlist",function(e){
 
 
 		function addToWishlistForPLP(productURL,el) {
-			//var loggedIn=$("#loggedIn").val();
 			var productCode=urlToProductCode(productURL);
-			var productarray=[];
-			productarray.push(productCode);
-			var wishName = "";
-			var requiredUrl = ACC.config.encodedContextPath + "/search/"
-					+ "addToWishListInPLP";	
-		    var sizeSelected=true;
+			var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
 		    
-		    if(!$('#variant li').hasClass('selected')) {
-		    	sizeSelected=false;
-		    }
-		    if( $("#variant,#sizevariant option:selected").val()=="#"){
-		    	sizeSelected=false;
-		    }
-		    var dataString = 'wish=' + wishName + '&product=' + productCode
-					+ '&sizeSelected=' + sizeSelected;
-			
-		    // Change for INC144314854 
-			//if(loggedIn == 'false') {
 		    if(!headerLoggedinStatus) {
 				$(".wishAddLoginPlp").addClass("active");
 				setTimeout(function(){
@@ -220,7 +226,9 @@ $(document).on("click",".add-to-wishlist",function(e){
 				$.ajax({			
 					contentType : "application/json; charset=utf-8",
 					url : requiredUrl,
-					data : dataString,
+					data : {
+						product : productCode
+					},
 					dataType : "json",			
 					success : function(data){
 						if (data == true) {					

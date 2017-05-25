@@ -107,14 +107,126 @@ TATA.CommonFunctions = {
         });
     },
 	
-	
-	
-	addTowishlist: function(){
-		$('.add-to-wishlist').on('click', function(){
-			$(this).toggleClass('added');
+    wishlist: function(){
+    	$(document).on("click",".add-to-wishlist",function(){
+			if ($(this).hasClass("added")){
+//				 removeFromWishlist($(this).data("product"),this);
+			} else {
+//				 addToWishlist($(this).data("product"),this);
+			}
 		});
+    },
+	
+    urlToProductCode : function(productURL) {
+		var n = productURL.lastIndexOf("-");
+		var productCode=productURL.substring(n+1, productURL.length);
+	    return productCode.toUpperCase();
+	},
+    
+	addTowishlist: function(productURL, element){
+		var productCode=urlToProductCode(productURL);
+		var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
+	    
+		
+	    if(!headerLoggedinStatus) {
+			$(".wishAddLoginPlp").addClass("active");
+				setTimeout(function(){
+					$(".wishAddLoginPlp").removeClass("active")
+				},3000);
+			return false;
+		} else {	
+			$.ajax({			
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : {
+					product : productCode
+				},
+				dataType : "json",			
+				success : function(data){
+					if (data == true) {					
+						$(".wishAddSucessPlp").addClass("active");
+						setTimeout(function(){
+							$(".wishAddSucessPlp").removeClass("active")
+						},3000)
+						$(element).addClass("added");
+					}
+					else{
+						$(".wishAlreadyAddedPlp").addClass("active");
+						setTimeout(function(){
+							$(".wishAlreadyAddedPlp").removeClass("active")
+						},3000)
+					}
+					$(this).addClass("added");
+				},
+				error : function(xhr, status, error){
+					alert(error);
+					if(typeof utag !="undefined"){
+						utag.link({error_type : 'wishlist_error'});
+						}
+				}
+			});
+			
+			setTimeout(function() {
+				$('a.wishlist#wishlist').popover('hide');
+				$('input.wishlist#add_to_wishlist').popover('hide');
+			}, 0);
+		}
 	},
 	
+	removeFromWishlist : function(productURL,el) {
+		var productCode=urlToProductCode(productURL);
+		var wishName = "";
+		var requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";	
+	    var sizeSelected=true;
+	    
+	    if(!$('#variant li').hasClass('selected') || $("#variant,#sizevariant option:selected").val()=="#") {
+	    	sizeSelected=false;
+	    }
+	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&sizeSelected=' + sizeSelected;
+		
+	    if(!headerLoggedinStatus) {
+			$(".wishAddLoginPlp").addClass("active");
+			setTimeout(function(){
+				$(".wishAddLoginPlp").removeClass("active")
+			},3000)
+			return false;
+		} else {	
+			$.ajax({			
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : {
+					product : productCode
+				},
+				dataType : "json",			
+				success : function(data){
+					if (data == true) {					
+						$(".wishRemoveSucessPlp").addClass("active");
+						setTimeout(function(){
+							$(".wishRemoveSucessPlp").removeClass("active")
+						},3000)
+						$(el).removeClass("added");
+					}
+					else{
+						$(".wishAlreadyAddedPlp").addClass("active");
+						setTimeout(function(){
+							$(".wishAlreadyAddedPlp").removeClass("active")
+						},3000)
+					}
+					$(this).removeClass("added");
+				},
+				error : function(xhr, status, error){
+					alert(error);
+				}
+			});
+			
+			setTimeout(function() {
+				$('a.wishlist#wishlist').popover('hide');
+				$('input.wishlist#add_to_wishlist').popover('hide');
+
+				}, 0);
+		}
+		return false;
+	},
 	
 	leftBarAccordian: function(){
 		if($(window).width() >=768){
@@ -195,7 +307,7 @@ TATA.CommonFunctions = {
 		_self.BrandSlider();
 		_self.Accordion();
 		_self.ShopByCatagorySlider();
-		_self.addTowishlist();
+		_self.wishlist();
 		_self.leftBarAccordian();
 	
     }
