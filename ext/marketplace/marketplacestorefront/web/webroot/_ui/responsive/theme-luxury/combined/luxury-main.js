@@ -12089,7 +12089,7 @@ TATA.CommonFunctions = {
     },
     wishlist: function() {
         $(document).on("click", ".add-to-wishlist", function() {
-            $(this).hasClass("added");
+            $(this).hasClass("added") ? removeFromWishlist($(this).data("product"), this) : addToWishlist($(this).data("product"), this);
         });
     },
     urlToProductCode: function(productURL) {
@@ -12153,11 +12153,11 @@ TATA.CommonFunctions = {
         }, 3e3), !1);
     },
     leftBarAccordian: function() {
-        $(window).width() >= 768 ? ($(".facet:first").find(".allFacetValues").show(), $(".facetHead").on("click", function(e) {
+        $(window).width() >= 768 ? $(".facetHead").on("click", function(e) {
             e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {
                 $(this).find(".allFacetValues").slideToggle();
             });
-        })) : ($(".facet:first").removeClass("open"), $(".facetHead").on("click", function(e) {
+        }) : ($(".facet:first").removeClass("open"), $(".facetHead").on("click", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 
             $(this).closest(".facet").siblings().removeClass("open").find(".allFacetValues").hide();
         }));
@@ -12195,6 +12195,27 @@ TATA.CommonFunctions = {
     }
 }, TATA.Pages = {
     PLP: {
+        showSelectedRefinements: function() {
+            $(".facetValues .facet-form input:checked").each(function() {
+                $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
+            });
+        },
+        filterByFacet: function() {
+            $(document).on("change", ".facet-form input:checkbox", function() {
+                var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
+                $.ajax({
+                    url: requestUrl,
+                    data: {
+                        lazyInterface: "Y"
+                    },
+                    success: function(x) {
+                        var filtered = $.parseHTML(x);
+                        $(filtered).has(".facetList") && ($(".facetList").html($(filtered).find(".facetList")), 
+                        refreshRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper"));
+                    }
+                });
+            });
+        },
         Filtershow: function() {
             $(".plp-mob-filter").on("click", function() {
                 $(".leftbar").addClass("active");
@@ -12241,7 +12262,8 @@ TATA.CommonFunctions = {
         init: function() {
             var _self = TATA.Pages.PLP;
             _self.Filtershow(), _self.showModelImg(), _self.addGiftWrap(), _self.TwoColumnseperator(), 
-            _self.ProductSort(), _self.productGrid(), _self.productHover();
+            _self.ProductSort(), _self.productGrid(), _self.productHover(), _self.filterByFacet(), 
+            _self.showSelectedRefinements();
         }
     },
     PDP: {
@@ -12371,166 +12393,4 @@ TATA.CommonFunctions = {
         });
     }
     loginRequest();
-}), $(document).ready(function() {
-    function refreshRefinements() {
-        $(".facetValues .facet-form input:checked").each(function() {
-            $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open"), 
-            console.log($(this).parents(".allFacetValues"));
-        }), $(".facetValues .facet-form input:checked").each(function() {});
-    }
-    function sort(this_data, drop_down) {
-        var item = $(this_data).attr("data-name");
-        $(".sort").removeAttr("style"), drop_down || $(this_data).css("color", "#a5173c");
-        var pathName = window.location.pathname, pageType = $("#pageType").val();
-        pathName = pathName.replace(/page-[0-9]+/, "page-1");
-        var url = "";
-        switch (item) {
-          case "relevance":
-            if ("productsearch" == pageType) {
-                var url = $("#searchPageDeptHierTreeForm").serialize();
-                url += "&sort=relevance";
-            } else {
-                var url = $("#categoryPageDeptHierTreeForm").serialize();
-                url += "&sort=relevance";
-            }
-            ajaxPLPLoad(pathName + "?" + url), sortReplaceState(pathName + "?" + url), initPageLoad = !0;
-            break;
-
-          case "new":
-            if ("productsearch" == pageType) {
-                var url = $("#searchPageDeptHierTreeForm").serialize();
-                url += "&sort=isProductNew";
-            } else {
-                var url = $("#categoryPageDeptHierTreeForm").serialize();
-                url += "&sort=isProductNew";
-            }
-            ajaxPLPLoad(pathName + "?" + url), sortReplaceState(pathName + "?" + url), initPageLoad = !0;
-            break;
-
-          case "discount":
-            if ("productsearch" == pageType) {
-                var url = $("#searchPageDeptHierTreeForm").serialize();
-                url += "&sort=isDiscountedPrice";
-            } else {
-                var url = $("#categoryPageDeptHierTreeForm").serialize();
-                url += "&sort=isDiscountedPrice";
-            }
-            ajaxPLPLoad(pathName + "?" + url), sortReplaceState(pathName + "?" + url), initPageLoad = !0;
-            break;
-
-          case "low":
-            if ("productsearch" == pageType) {
-                var url = $("#searchPageDeptHierTreeForm").serialize();
-                url += "&sort=price-asc";
-            } else {
-                var url = $("#categoryPageDeptHierTreeForm").serialize();
-                url += "&sort=price-asc";
-            }
-            ajaxPLPLoad(pathName + "?" + url), sortReplaceState(pathName + "?" + url), initPageLoad = !0;
-            break;
-
-          case "high":
-            if ("productsearch" == pageType) {
-                var url = $("#searchPageDeptHierTreeForm").serialize();
-                url += "&sort=price-desc";
-            } else {
-                var url = $("#categoryPageDeptHierTreeForm").serialize();
-                url += "&sort=price-desc";
-            }
-            ajaxPLPLoad(pathName + "?" + url), sortReplaceState(pathName + "?" + url), initPageLoad = !0;
-        }
-    }
-    function ajaxPLPLoad(ajaxUrl) {
-        $.ajax({
-            url: ajaxUrl,
-            data: {
-                pageSize: 24,
-                lazyInterface: "Y"
-            },
-            success: function(x) {
-                var filtered = $.parseHTML(x);
-                $(filtered).has(".product-grid") && ($(".product-grid-wrapper").html(""), $(filtered).find(".product-grid").each(function() {
-                    $(".product-grid-wrapper").append($(this));
-                }));
-            }
-        });
-    }
-    function removeToWishlistForPLP(productURL, el) {
-        var productCode = urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";
-        return headerLoggedinStatus ? ($.ajax({
-            contentType: "application/json; charset=utf-8",
-            url: requiredUrl,
-            data: {
-                product: productCode
-            },
-            dataType: "json",
-            success: function(data) {
-                1 == data ? ($(".wishRemoveSucessPlp").addClass("active"), setTimeout(function() {
-                    $(".wishRemoveSucessPlp").removeClass("active");
-                }, 3e3), $(el).removeClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
-                setTimeout(function() {
-                    $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(this).removeClass("added");
-            },
-            error: function(xhr, status, error) {
-                alert(error);
-            }
-        }), setTimeout(function() {
-            $("a.wishlist#wishlist").popover("hide"), $("input.wishlist#add_to_wishlist").popover("hide");
-        }, 0), !1) : ($(".wishAddLoginPlp").addClass("active"), setTimeout(function() {
-            $(".wishAddLoginPlp").removeClass("active");
-        }, 3e3), !1);
-    }
-    function addToWishlistForPLP(productURL, el) {
-        var productCode = urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
-        return headerLoggedinStatus ? ($.ajax({
-            contentType: "application/json; charset=utf-8",
-            url: requiredUrl,
-            data: {
-                product: productCode
-            },
-            dataType: "json",
-            success: function(data) {
-                1 == data ? ($(".wishAddSucessPlp").addClass("active"), setTimeout(function() {
-                    $(".wishAddSucessPlp").removeClass("active");
-                }, 3e3), $(el).addClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
-                setTimeout(function() {
-                    $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(this).addClass("added");
-            },
-            error: function(xhr, status, error) {
-                alert(error), "undefined" != typeof utag && utag.link({
-                    error_type: "wishlist_error"
-                });
-            }
-        }), setTimeout(function() {
-            $("a.wishlist#wishlist").popover("hide"), $("input.wishlist#add_to_wishlist").popover("hide");
-        }, 0), !1) : ($(".wishAddLoginPlp").addClass("active"), setTimeout(function() {
-            $(".wishAddLoginPlp").removeClass("active");
-        }, 3e3), !1);
-    }
-    function urlToProductCode(productURL) {
-        var n = productURL.lastIndexOf("-");
-        return productURL.substring(n + 1, productURL.length).toUpperCase();
-    }
-    refreshRefinements(), $(document).on("change", ".facet-form input:checkbox", function() {
-        var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-        $.ajax({
-            url: requestUrl,
-            data: {
-                lazyInterface: "Y"
-            },
-            success: function(x) {
-                var filtered = $.parseHTML(x);
-                $(filtered).has(".facetList") && ($(".facetList").html($(filtered).find(".facetList")), 
-                refreshRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper"));
-            }
-        });
-    }), $(document).on("click", ".sort", function() {
-        sort($(this), !1);
-    }), $(document).on("change", ".responsiveSort", function() {
-        sort($(this).find(":selected"), !0);
-    }), $(document).on("click", ".add-to-wishlist", function(e) {
-        $(this).hasClass("added") ? removeToWishlistForPLP($(this).data("product"), this) : addToWishlistForPLP($(this).data("product"), this);
-    });
 });
