@@ -110,9 +110,9 @@ TATA.CommonFunctions = {
     wishlist: function(){
     	$(document).on("click",".add-to-wishlist",function(){
 			if ($(this).hasClass("added")){
-//				 removeFromWishlist($(this).data("product"),this);
+				 removeFromWishlist($(this).data("product"),this);
 			} else {
-//				 addToWishlist($(this).data("product"),this);
+				 addToWishlist($(this).data("product"),this);
 			}
 		});
     },
@@ -230,7 +230,7 @@ TATA.CommonFunctions = {
 	
 	leftBarAccordian: function(){
 		if($(window).width() >=768){
-		$('.facet:first').find('.allFacetValues').show();
+		/*$('.facet:first').find('.allFacetValues').show();*/
 		$('.facetHead').on('click', function(e){
 			e.stopPropagation();
 			$(this).closest('.facet').toggleClass('open', function(){
@@ -320,6 +320,38 @@ TATA.Pages = {
 	PLP: {
 		
 		// PLP Page filter
+		showSelectedRefinements : function(){
+			$(".facetValues .facet-form input:checked").each(function(){
+				$(this).parents(".allFacetValues").show();
+				$(this).parents(".facet").addClass("open");
+			});
+		},
+		
+		filterByFacet : function(){
+			$(document).on('change','.facet-form input:checkbox', function(){
+				var requestUrl = $(this).closest('form').attr('action')+"?"+$(this).closest('form').serialize();
+				$.ajax({
+			        url: requestUrl,
+			        data: {
+			            lazyInterface:'Y'
+			        },
+			        success: function(x) {
+			            var filtered = $.parseHTML(x);
+			            
+			            if($(filtered).has('.facetList')){
+			            	$(".facetList").html($(filtered).find(".facetList"));
+			            	refreshRefinements();
+			            }
+			            
+			            if($(filtered).has('.product-grid')){
+			            	$('.product-grid-wrapper').html($(filtered).find(".product-grid-wrapper"));
+			            }
+			            
+			        }
+			    });
+			});
+		},
+		
 		Filtershow: function() {
 			$('.plp-mob-filter').on('click', function(){
 				$('.leftbar').addClass('active');
@@ -397,6 +429,9 @@ TATA.Pages = {
 			_self.ProductSort();
 			_self.productGrid();
 			_self.productHover();
+			_self.filterByFacet();
+			_self.showSelectedRefinements();
+			
 		}
 	},
 	
