@@ -297,10 +297,10 @@
 		  	        		    				<tr>
 		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
 		  	        		    					<td class="smFull">
-														#if($ctx.cmsSlotContents.appstore)<td style="text-align: right;">
+														#if($ctx.cmsSlotContents.appstore)
 															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&mt=8&icid=em:general:registration:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
 														#end
-														#if($ctx.cmsSlotContents.googleplay)<td style="text-align: right;">
+														#if($ctx.cmsSlotContents.googleplay)
 															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&icid=em:general:registration:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
 														#end
 													</td>
@@ -309,13 +309,13 @@
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fb)<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a></td> #end
-						  	        		    		#if($ctx.cmsSlotContents.tweet)<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>#end
-						  	        		    		#if($ctx.cmsSlotContents.insta)<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>#end
+		  	        		    						#if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a> #end
+						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<td><a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a></td>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtube)<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>#end
+														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>
@@ -331,7 +331,7 @@
 		  	        		    <tr>
 		  	        		    	<td align="center" class="content foocontnt inPad">
 		  	        		    	  <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    	    This email can't receive replies. Get in touch with us by contacting <a href ="https://www.tatacliq.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Care</a>;
+		  	        		    	    This email can't receive replies. Get in touch with us by contacting <a href ="https://www.tatacliq.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Care</a>
 		  	        		    	    <br>
 		  	        		    	    You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
 		  	        		    	  </div>
