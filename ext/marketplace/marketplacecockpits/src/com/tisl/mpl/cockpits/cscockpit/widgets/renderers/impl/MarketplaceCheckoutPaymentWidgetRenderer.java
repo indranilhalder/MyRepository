@@ -455,45 +455,56 @@ protected class JuspayPaymentEventListener implements EventListener
 				.getObject());
 		
 		final CustomerModel customer = (CustomerModel)cart.getUser();
-		if(cart != null && customer != null && cart.getPaymentTransactions().isEmpty())
+		if(cart != null && customer != null)
 		{
-			try 
+			if(cart.getPaymentTransactions().isEmpty())
 			{
-				((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
-				final JaloSession jSession = JaloSession.getCurrentSession();
-				if(jSession != null)
+				try 
 				{
-					jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
-				}
-				
-				if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+					((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
+					final JaloSession jSession = JaloSession.getCurrentSession();
+					if(jSession != null)
+					{
+						jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+					}
+					
+					if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+					{
+						LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
+						juspayOrderCreationFlag = true;
+						buttonLabelChangeFlag = true;
+						//createContentInternal(widget,rootContainer);
+						/*Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+						((CheckoutController) widget.getWidgetController()).getBasketController()
+						.dispatchEvent(null, widget.getWidgetController(), data);*/
+						
+						String absoluteJusPayPaymentURL = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.JUSPAYPAYMENTPAGEURL)
+								+ jsuPayCreatedOrderId;
+						LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
+						
+						//Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
+						Clients.evalJavaScript("window.location.href = '"+ absoluteJusPayPaymentURL +"'");
+					}
+				} 
+				catch (Exception e) 
 				{
-					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
-					juspayOrderCreationFlag = true;
-					buttonLabelChangeFlag = true;
-					//createContentInternal(widget,rootContainer);
-					/*Map data = Collections.singletonMap("refresh", Boolean.TRUE);
-					((CheckoutController) widget.getWidgetController()).getBasketController()
-					.dispatchEvent(null, widget.getWidgetController(), data);*/
-					
-					String absoluteJusPayPaymentURL = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.JUSPAYPAYMENTPAGEURL)
-							+ jsuPayCreatedOrderId;
-					LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
-					
-					//Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
-					Clients.evalJavaScript("window.location.href = '"+ absoluteJusPayPaymentURL +"'");
+					Messagebox.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+									new Object[0]), INFO, Messagebox.OK,
+									Messagebox.ERROR);
 				}
-			} 
-			catch (Exception e) 
-			{
-				Messagebox.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
-								new Object[0]), INFO, Messagebox.OK,
-								Messagebox.ERROR);
+			}
+			else{
+				Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_COMPLETED,INFO, Messagebox.OK,
+						Messagebox.ERROR);
+				createContentInternal(widget,rootContainer);
+				Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+				((CheckoutController) widget.getWidgetController()).getBasketController()
+				.dispatchEvent(null, widget.getWidgetController(), data);
 			}
 		}
 		else
 		{
-			Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_COMPLETED,INFO, Messagebox.OK,
+			Messagebox.show(MarketplaceCockpitsConstants.ERROR,INFO, Messagebox.OK,
 					Messagebox.ERROR);
 		}
 	}
@@ -790,7 +801,8 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 					}
 					String mode = (String) selectedItem.getValue();
 				
-					if ("COD".equalsIgnoreCase(mode)) {
+					if ("COD".equalsIgnoreCase(mode) && 
+							cart.getPaymentTransactions().isEmpty()) {
 						//
 						((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
 						((MarketplaceCheckoutController) widget.getWidgetController()).processCODPayment();
@@ -815,13 +827,10 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 							ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 						}
 						buttonLabelChangeFlag = false;
-						createContentInternal(widget,rootContainer);
-						Map data = Collections.singletonMap("refresh", Boolean.TRUE);
-						((CheckoutController) widget.getWidgetController()).getBasketController()
-								.dispatchEvent(null, widget.getWidgetController(), data);
 						} 
 						else if(StringUtils.isNotEmpty(mode) && 
-								mode.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_PAYMENT))
+								mode.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_PAYMENT) && 
+								cart.getPaymentTransactions().isEmpty())
 						{
 							((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
 							((MarketplaceCheckoutController) widget.getWidgetController()).processJusPayPaymentOnSelect();
@@ -845,16 +854,10 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 										+ cart + "]", e);
 								ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
 							}
-							buttonLabelChangeFlag = true;
-							createContentInternal(widget,rootContainer);
-							Map data = Collections.singletonMap("refresh", Boolean.TRUE);
-							((CheckoutController) widget.getWidgetController()).getBasketController()
-							.dispatchEvent(null, widget.getWidgetController(), data);
-							
+							buttonLabelChangeFlag = true;							
 						}
 						else{
-							if(!(cart.getPaymentInfo() != null && 
-									cart.getPaymentInfo() instanceof JusPayPaymentInfoModel))
+							if(cart.getPaymentTransactions().isEmpty())
 							{
 								((MarketplaceCheckoutController) widget.getWidgetController()).removeCODPayment();
 								try {
@@ -880,7 +883,10 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 							((CheckoutController) widget.getWidgetController()).getBasketController()
 									.dispatchEvent(null, widget.getWidgetController(), data);
 							}
-					   
+					createContentInternal(widget,rootContainer);
+					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+					((CheckoutController) widget.getWidgetController()).getBasketController()
+					.dispatchEvent(null, widget.getWidgetController(), data); 
 			    }
 			}
 			
