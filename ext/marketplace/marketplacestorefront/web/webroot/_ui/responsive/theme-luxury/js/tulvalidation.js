@@ -1,13 +1,12 @@
 /*Form validation*/
 
-var rfv = {};
+/*var rfv = {};
 
 
 
 (function ($) {
 
 	"use strict";
-//	additionalMethods: function() {
 	
 	tul.commonFunctions = {	
 		newCustomer : function () {			          	            
@@ -39,4 +38,4 @@ var rfv = {};
 		
 	});
 
-}).call(rfv.commonFunctions, window.jQuery);
+}).call(rfv.commonFunctions, window.jQuery);*/

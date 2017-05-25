@@ -65,6 +65,7 @@ $(document).ready(function() {
 	function pwsRequest(){
 		$('.js-password-forgotten').on('click',function(e){
 			e.preventDefault();
+			
 			const pwsRequest = $(this).attr('href');
 			$.ajax({
 				url: pwsRequest,

@@ -157,8 +157,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;CategoryHeroBanner;CategoryHeroBanner;;CategoryHeroBanner;true
 ;;Category-Page-Curosel;CategoryCurosel;;CategoryCurosel;true
 
-
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryCategoryPage'];contentSlot(uid,$contentCV)[unique=true];
 ;;CategoryPagebanner2;Categorybanner2;;Categorybanner2;true
 ;;CategoryPagebanner3;Categorybanner3;;Categorybanner3Slot
 ;;CategoryPagebanner4;Categorybanner4;;Categorybanner4Slot
+;;ProductCurosel;ProductCurosel;;ProductCurosel
