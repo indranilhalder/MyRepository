@@ -63210,11 +63210,17 @@ body.page-productGrid .list_title h1 {
 }
 /*TPR-250 defect fix No result*/
 body.page-productGrid .list_title h1.shiftDownZero{
-	top: 30px;
+	/* top: 30px; */
     width: 100%;
 }
-body.page-productGrid .list_title h1{
+/* body.page-productGrid .list_title h1{
 	display:none;
+} */ /*Customer feedback - PLP Title needs to be loaded 1st*/
+
+body.page-productGrid .totalResults h2{
+	margin-top: 70px;
+	width: 127.1%;
+    margin-left: -27.1%;
 }
 /*TPR-250 defect fix No result*/
 }
@@ -68780,6 +68786,7 @@ body.page-checkout-login header .content nav{
 @media(min-width: 791px){
 	header .content nav>ul>li>ul>li>ul>li.images>a .logo{
 	padding-bottom: 5px;
+	height: 28px;
 	}
 	header .content nav>ul>li>ul>li>ul.images{
 	padding-top: 0px;

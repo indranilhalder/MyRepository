@@ -41,15 +41,15 @@
 		</li>
 		</c:if>
 		
-		<!-- UF-249 -->
-	<%-- 	<c:if test="${ empty notificationCount and isSignedInUser eq 'no'}">
+		
+		<c:if test="${ empty notificationCount and isSignedInUser eq 'no'}">
 		
 		<li class="track trackOrder">
 	<a id="tracklink" href="/login" class="tracklinkcls"><span class="bell-icon"></span>&nbsp;Notifications</a>
 		 <span id="mobile-menu-toggle"></span>
 		<ul class="trackorder-dropdown"></ul> 
 		</li>
-		</c:if> --%>
+		</c:if>
 		
 
 		</c:otherwise>
