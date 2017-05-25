@@ -170,7 +170,7 @@
 
 	<alias name="defaultGuidCookieGenerator" alias="guidCookieGenerator"/>
 	<bean id="defaultGuidCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.EnhancedCookieGenerator" >
-		<property name="cookieSecure" value="true" />
+		<property name="cookieSecure" value="false" />
 		<property name="cookieName" value="acceleratorSecureGUID" />
 		<property name="httpOnly" value="true"/>
 	</bean>
@@ -318,7 +318,7 @@
 		<property name="cookieName" value="EX" />
 		<property name="alwaysRemember" value="true" />
 		<property name="userService" ref="extendedUserService"/>
-		<property name="useSecureCookie" value="true"/>
+		<property name="useSecureCookie" value="false"/>
 		<property name="customerFacade" ref="customerFacade"/>
 		<property name="checkoutCustomerStrategy" ref="checkoutCustomerStrategy"/>
 		<property name="urlEncoderService" ref="urlEncoderService"/>

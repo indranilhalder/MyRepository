@@ -175,16 +175,15 @@
 		  	        		      	   	 	  	#end
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
+		  	        		      	   	 	  	#if($entry.edScheduledDate)
 		  	        		      	   	 	  	<strong>Order delivery date:</strong> 
 												<font size="2" color="#000000" >
-												#if($entry.edScheduledDate)
 												$entry.edScheduledDate
 												$entry.timeSlotFrom  To  $entry.timeSlotTo
 												#elseif ($entry.sddDateBetween)
 												$entry.sddDateBetween
-												#else
-												NA
-												#end</font>
+												</font>
+												#end
 												
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
@@ -267,7 +266,7 @@
 				  	        		      	   	 	 </td>
 				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">
 				  	        		      	   	 	
-				  	        		      	   	 	&#x20b9; $entry.netAmountAfterAllDisc</td>
+				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
 				  	        		      	   	 	</tr>
 				  	        		      	   	 	</tbody>
 		  	        		      	   	 	</table>
@@ -301,14 +300,14 @@
 	  	        		    		 				 <tbody>
 	  	        		    		 				 	<tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; ${ctx.subTotal}</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
 						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.shippingCharge == 0)
 Free
 #else
-&#x20b9; ${ctx.shippingCharge}
+&#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
 #end</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
@@ -316,7 +315,7 @@ Free
 						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
 Free
 #else
-&#x20b9; ${ctx.convenienceChargesVal}
+&#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
 #end</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
@@ -328,7 +327,7 @@ Free
 								  	        		   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; ${ctx.totalPrice}</td>
+						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
 			 			  	        		    	   </tr>
 	  	        		    		 				 </tbody>
 	  	        		    		 				</table> 

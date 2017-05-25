@@ -27,7 +27,6 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,9 +101,9 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
 		final Double subTotal = Double.valueOf(orderSubTotalPrice);
-		final DecimalFormat myFormatter = new DecimalFormat("#,###");
-		final String subTotalNew = myFormatter.format(subTotal);
-		final String totalPriceNew = myFormatter.format(totalPrice);
+		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
+		//final String subTotalNew = myFormatter.format(subTotal);
+		//final String totalPriceNew = myFormatter.format(totalPrice);
 		//final String subTotalNew = NumberFormat.getIntegerInstance().format(subTotal);
 
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
@@ -126,10 +125,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(TRACK_ORDER_URL, trackOrderUrl);
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
-		//put(SUBTOTAL, subTotal);
-		put(SUBTOTAL, subTotalNew);
-		//put(TOTALPRICE, totalPrice);
-		put(TOTALPRICE, totalPriceNew);
+		put(SUBTOTAL, subTotal);
+		//put(SUBTOTAL, subTotalNew);
+		put(TOTALPRICE, totalPrice);
+		//put(TOTALPRICE, totalPriceNew);
 		put(SHIPPINGCHARGE, shippingCharge);
 		put(CONVENIENCECHARGE, convenienceChargesVal);
 		//Setting first name and last name to NAMEOFPERSON
