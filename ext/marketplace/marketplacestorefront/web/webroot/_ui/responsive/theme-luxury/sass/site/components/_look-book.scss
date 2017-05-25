@@ -1,3 +1,15 @@
+.look-book-wrapper{
+	.colmn.left{
+		float:left;
+	}
+	.colmn.right{
+		float:right;
+	}
+	li{
+		width:50%;
+		float:left;
+	}
+}
 .look-book {
 	max-width: 910px;
 	margin: 0 auto 30px;
@@ -148,4 +160,9 @@
 		margin: 0px 10px;
 	}
    
+}
+.shop-by-catagory{
+	.slick-track{
+		margin:0 auto;
+	}
 }

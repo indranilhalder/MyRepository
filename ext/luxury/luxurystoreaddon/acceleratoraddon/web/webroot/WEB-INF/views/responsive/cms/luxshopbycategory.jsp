@@ -6,16 +6,16 @@
 
 
 
-	<h3 class="section-title">${component.title}</h3>
-	
-		<a href="#">
+<section class="shop-by-catagory text-center">
+	<h3 class="section-title text-center">${component.title}</h3>
+	<ul class="list-unstyled shop-by-catagory-slider circle-pager">
 		<c:forEach items="${component.relatedImage}" var="Image" varStatus="status">
 		<li>
-			<ul class="list-unstyled  circle-pager">
+			<a href="javascript:;">
 				<img src="${Image.media.url}" alt="${Image.name}">
-					<h5>${Image.name}</h5>
-			</ul>
-			</li>
+				<h5>${Image.name}</h5>
+			</a>
+		</li>
 		</c:forEach>
-		
-				</a>
+	</ul>
+</section>
