@@ -27,6 +27,7 @@ import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -98,6 +99,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
 		final Double subTotal = Double.valueOf(orderTotalPrice);
+		final DecimalFormat myFormatter = new DecimalFormat("#,###");
+		final String subTotalNew = myFormatter.format(subTotal);
+		final String totalPriceNew = myFormatter.format(totalPrice);
+		//final String subTotalNew = NumberFormat.getIntegerInstance().format(subTotal);
 
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
 				+ " convenienceCharges:" + convenienceCharges);
@@ -118,8 +123,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(TRACK_ORDER_URL, trackOrderUrl);
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
-		put(SUBTOTAL, subTotal);
-		put(TOTALPRICE, totalPrice);
+		//put(SUBTOTAL, subTotal);
+		put(SUBTOTAL, subTotalNew);
+		//put(TOTALPRICE, totalPrice);
+		put(TOTALPRICE, totalPriceNew);
 		put(SHIPPINGCHARGE, shippingCharge);
 		put(CONVENIENCECHARGE, convenienceChargesVal);
 		//Setting first name and last name to NAMEOFPERSON
@@ -193,19 +200,19 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			deliveryAddr.append(deliveryAddress.getStreetname());
 			if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getStreetnumber());
 			}
 			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getAddressLine3());
 			}
 			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
 			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
+				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getLandmark());
 			}
 
-			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
-					.append(COMMA).append(deliveryAddress.getPostalcode());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getTown()).append(COMMA).append(SPACE)
+					.append(deliveryAddress.getDistrict()).append(COMMA).append(SPACE).append(deliveryAddress.getPostalcode());
 
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
