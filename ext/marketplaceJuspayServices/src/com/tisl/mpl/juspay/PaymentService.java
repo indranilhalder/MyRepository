@@ -255,7 +255,7 @@ public class PaymentService
 	}
 
 	/*
-	 * cscockpit specific order payment status look up
+	 * TPR-5712 cscockpit specific order payment status look up
 	 */
 	public String getCockpitOrderPaymentstatus(final String endPointURL, final String key)
 	{

@@ -653,6 +653,10 @@ public class MarketplaceCheckoutControllerImpl extends
 		return isCODLimitAvailable;
 	}
 	
+	/*
+	 * TPR-5712
+	 * Non COD restriction for SM
+	 */
 	protected boolean isNonCodProductExistForAgent(final CartModel cart, final String agentId)
 	{
 		boolean nonCodProduct = false;
@@ -715,6 +719,10 @@ public class MarketplaceCheckoutControllerImpl extends
 		return (true);
 	}
 
+	/*
+	 * TPR-5712 : juspay payment txn for OIS
+	 * @see com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController#jusPayprocessPaymentTxn(de.hybris.platform.core.model.order.CartModel)
+	 */
 	@Override
 	public boolean jusPayprocessPaymentTxn(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
@@ -897,6 +905,7 @@ public class MarketplaceCheckoutControllerImpl extends
 	}
 
 	/**
+	 * TPR-5712
 	 * juspay payment integration from cscockpit
 	 */
 	@Override
@@ -931,7 +940,12 @@ public class MarketplaceCheckoutControllerImpl extends
 				uid, "WEB");
 		LOG.info("order id ::: "+orderId);
 	}
-
+	
+	/*
+	 * TPR-5712
+	 * juspay payment validation for OIS
+	 * @see com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController#juspayPaymentValidation(java.lang.String)
+	 */
 	@Override
 	public String juspayPaymentValidation(final String commerEndOrderId)
 	{

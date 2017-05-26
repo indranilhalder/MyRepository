@@ -247,6 +247,12 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		return div;
 	}
 	
+	/**
+	 * TPR-5712 : juspay payment validation
+	 * @param widget
+	 * @param rootContainer
+	 * @throws InterruptedException
+	 */
 	private void validatePaymentAndCreatePaymentTxn(DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, 
 			HtmlBasedComponent rootContainer) throws InterruptedException
 	{
@@ -424,8 +430,8 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	}
 
 /**
- * 
- * juspay payment event listner
+ * TPR-5712
+ * juspay payment event listner for OIS
  *
  */
 protected class JuspayPaymentEventListener implements EventListener
