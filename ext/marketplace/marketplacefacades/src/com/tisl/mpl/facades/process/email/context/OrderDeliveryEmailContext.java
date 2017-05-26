@@ -57,6 +57,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String CUSTOMER = "Customer";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
+	private static final String SPACE = " "; //TISUATSE-80
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
@@ -131,16 +132,20 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		deliveryAddr.append(deliveryAddress.getStreetname());
 		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 		{
-			deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+			//TISUATSE-80 starts
+			deliveryAddr.append(deliveryAddress.getStreetnumber());
 		}
 		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 		{
-			deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+			deliveryAddr.append(deliveryAddress.getAddressLine3());
 		}
-
-		deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
-				.append(COMMA).append(deliveryAddress.getPostalcode());
-
+		//TISUATSE-80 ends
+		deliveryAddr.append('\n');//Sonar fix
+		//TISUATSE-70 starts
+		final String city = deliveryAddress.getTown();
+		deliveryAddr.append(COMMA).append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA)
+				.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
+		//TISUATSE-70 ends
 
 		put(DELIVERYADDRESS, deliveryAddr);
 

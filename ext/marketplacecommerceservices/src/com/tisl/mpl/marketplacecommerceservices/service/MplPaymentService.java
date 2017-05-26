@@ -21,6 +21,7 @@ import java.util.Map;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -302,6 +303,53 @@ public interface MplPaymentService
 	 * @return OrderModel
 	 */
 	OrderModel fetchOrderOnGUID(String guid);
+
+	/**
+	 * @return
+	 */
+	String createWalletPaymentId();
+
+	/**
+	 * @param request
+	 * @param channelWeb
+	 * @param walletOrderId
+	 * @param order
+	 */
+	//Commented for Mobile use
+
+	//	void entryInTPWaltAudit(HttpServletRequest request, String channelWeb, String guid, String walletOrderId);
+
+	void entryInTPWaltAudit(String status, String channelWeb, String guid, String walletOrderId);
+
+	/**
+	 * @param custName
+	 * @param entries
+	 * @param cart
+	 * @param request
+	 */
+
+	//Commented for Mobile use
+	//	void saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
+	//			HttpServletRequest request);
+	AbstractOrderModel saveTPWalletPaymentInfo(String custName, List<AbstractOrderEntryModel> entries, AbstractOrderModel cart,
+			String refernceCode);
+
+	/**
+	 * @param paymentMode
+	 * @param cart
+	 * @param transactionAmount
+	 * @param request
+	 */
+	//Commented for Mobile use
+	//	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, HttpServletRequest request);
+	void setTPWalletPaymentTransaction(Map<String, Double> paymentMode, AbstractOrderModel cart, final String refernceCode,
+			Double transactionAmount);
+
+	/**
+	 * @param refNo
+	 * @return
+	 */
+	MplPaymentAuditModel getWalletAuditEntries(String refNo);
 
 	/**
 	 * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel against

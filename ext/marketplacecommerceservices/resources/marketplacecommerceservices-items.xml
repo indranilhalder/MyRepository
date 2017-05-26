@@ -625,7 +625,7 @@
  				<modifiers read="true" write="true" optional="true" />
  					<persistence type="property">
  						<columntype database="oracle">
- 							<value>varchar2(4000)</value>
+ 							<value>varchar2(2500)</value>	<!-- Changed for PRDI-177 -->
  						</columntype>
  						<columntype database="mysql">
  							<value>text</value>
@@ -2992,6 +2992,50 @@
 						</columntype>
 					</persistence>
 				</attribute>
+				<!-- TPR-1325 : changes starts -->
+				<attribute qualifier="promourl" type="localized:java.lang.String">
+					<description>Configurable link on PDP to be displayed for Bundling promotion</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<attribute qualifier="bundlepromolinktext" type="localized:java.lang.String">
+					<description>Configurable link name on PDP to be displayed for Bundling promotion</description>
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property">
+						<columntype database="oracle">
+							<value>varchar2(4000)</value>
+						</columntype>
+						<columntype database="mysql">
+							<value>text</value>
+						</columntype>
+						<columntype database="sqlserver">
+							<value>nvarchar(max)</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+						<columntype>
+							<value>varchar</value>
+						</columntype>
+					</persistence>
+				</attribute>
+				<!-- TPR-1325 : changes ends -->
 			</attributes>
 		</itemtype>
 			<!-- TPR-1294 : Item Declaration ends -->
@@ -3040,6 +3084,64 @@
 		</typegroup>
 		
 		<!-- TPR-970 changes end -->
+		
+		<typegroup name="CachedPromotionAction">
+		<itemtype code="CachedCustomPromotionOrderEntryAdjustAction"
+                  extends="CustomPromotionOrderEntryAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderEntryAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        <itemtype code="CachedCustomBOGOPromoOrderEntryAdjustAction"
+                  extends="CustomBOGOPromoOrderEntryAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomBOGOPromoOrderEntryAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        <itemtype code="CachedCustomPromotionOrderAddFreeGiftAction"
+                  extends="CustomPromotionOrderAddFreeGiftAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderAddFreeGiftAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+            </attributes>
+        </itemtype>
+        
+        
+        <itemtype code="CachedCustomPromotionOrderAdjustTotalAction"
+                  extends="CustomPromotionOrderAdjustTotalAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomPromotionOrderAdjustTotalAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+           </attributes>
+        </itemtype>
+        
+        
+        <itemtype code="CachedCustomShippingChargesPromotionAdjustAction"
+                  extends="CustomShippingChargesPromotionAdjustAction"
+                  jaloclass="com.tisl.mpl.jalo.CachedCustomShippingChargesPromotionAdjustAction"
+                  jaloonly="true"
+                  autocreate="true"
+                  generate="true">
+            <attributes>
+           </attributes>
+        </itemtype>
+		
+		</typegroup>
+		
+		
+		
 	</itemtypes>
 	
 </items>

@@ -8,6 +8,7 @@ import de.hybris.platform.commercefacades.voucher.VoucherFacade;
 import de.hybris.platform.commercefacades.voucher.data.VoucherData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commercefacades.voucher.impl.DefaultVoucherFacade;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.converters.Converters;
@@ -57,6 +58,7 @@ import com.tisl.mpl.data.VoucherDisplayData;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+import com.tisl.mpl.model.ChannelRestrictionModel;
 import com.tisl.mpl.model.UnregisteredUserRestrictionModel;
 
 
@@ -380,6 +382,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDNEWCUST + voucherCode);
 						}
 						/* TPR-1075 Changes End */
+						//TPR-4460 Changes
+						else if (null != error
+								&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+									+ voucherCode);
+						}
+
 						else
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
@@ -449,10 +469,30 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINVALIDUSER + voucherCode);
 						}
+						//TPR-4460 Changes
+						else if (null != error
+								&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+									+ voucherCode);
+						}
+						else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+						{
+							throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+									+ voucherCode);
+						}
+
 						else
 						{
 							throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE + voucherCode);
 						}
+
+
 					}
 
 					else if (!checkVoucherIsReservable(voucher, voucherCode, orderModel)) //Checks whether voucher is reservable
@@ -653,6 +693,26 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 				break;
 			}
 			/* TPR-1075 Changes End */
+			/* TPR-4460 Changes Start */
+			else if (restriction instanceof ChannelRestrictionModel)
+			{
+
+
+				LOG.error(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION);
+				if (((ChannelRestrictionModel) restriction).getChannel().contains(SalesApplication.MOBILE))
+				{
+					error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE;
+				}
+				else if (((ChannelRestrictionModel) restriction).getChannel().contains(SalesApplication.WEB))
+				{
+					error = MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB;
+				}
+				else if (((ChannelRestrictionModel) restriction).getChannel().contains(SalesApplication.CALLCENTER))
+				{
+					error = MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER;
+				}
+			}
+			/* TPR-4460 Changes End */
 			else
 			{
 				continue;
@@ -660,7 +720,6 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 		}
 		return error;
 	}
-
 
 	/**
 	 * This method adds global discount

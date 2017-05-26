@@ -282,13 +282,15 @@ display: none;
           
           <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}" />
 		  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}" />
+		  <c:set var="landmark" value="${fn:trim(deliveryAddress.landmark)}" />
 		  
-		  <c:if test="${empty myline2  && empty myline3}">
+		  <c:if test="${empty myline2  && empty myline3 && empty landmark}">
 		  <span style="padding-bottom: 0px;">
-		  
+		
 		  ${fn:escapeXml(deliveryAddress.title)}</span>	
 		  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+<!-- TISUATSE-65 --><span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+
 		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -297,11 +299,30 @@ display: none;
 		 
 		  </c:if>
 		  
-		  <c:if test="${not empty myline2  && empty myline3}">
+		  <c:if test="${empty myline2  && empty myline3 && not empty landmark}">
+		  <span style="padding-bottom: 0px;">
+		
+		  ${fn:escapeXml(deliveryAddress.title)}</span>	
+		  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+<!-- TISUATSE-65 --><span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br></span>
+		 
+		  </c:if>
+		  
+		  
+		  
+		  
+		  <c:if test="${not empty myline2  && empty myline3 && empty landmark}">
 		   <span style="padding-bottom: 0px;">
 		   ${fn:escapeXml(deliveryAddress.title)}</span>
 		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span> <span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+<!-- TISUATSE-65 --><span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span> <span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+
 		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -309,11 +330,30 @@ display: none;
 		  <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
 		 
 		  </c:if>
-		  <c:if test="${ empty myline2  && not empty myline3}">
+		  
+		  <c:if test="${not empty myline2  && empty myline3 && not empty landmark}">
+		   <span style="padding-bottom: 0px;">
+		   ${fn:escapeXml(deliveryAddress.title)}</span>
+		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+<!-- TISUATSE-65 --><span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span> <span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+
+		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+		 
+		  </c:if>
+		  
+		  
+		  
+		  
+		  <c:if test="${ empty myline2  && not empty myline3 && empty landmark}">
 		  
 		  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
 		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+<!-- TISUATSE-65 --><span> ${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+
 		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -323,11 +363,30 @@ display: none;
 		  
 		  </c:if>
 		  
-		  <c:if test="${not empty myline2  && not empty myline3}">
+		  <c:if test="${ empty myline2  && not empty myline3 && not empty landmark}">
+		  
+		  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
+		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+<!-- TISUATSE-65 --><span> ${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+		
+		  
+		  </c:if>
+		  
+		  
+		  
+		  
+		  <c:if test="${not empty myline2  && not empty myline3 && empty landmark}">
 		  <span style="padding-bottom: 0px;">
 		  ${fn:escapeXml(deliveryAddress.title)}</span>
 																	<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+<!-- TISUATSE-65 --><span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;
+
 		${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -335,6 +394,23 @@ display: none;
 		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
 		  
 		  </c:if>
+		  
+		  
+		  <c:if test="${not empty myline2  && not empty myline3 && not empty landmark}">
+		  <span style="padding-bottom: 0px;">
+		  ${fn:escapeXml(deliveryAddress.title)}</span>
+																	<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+<!-- TISUATSE-65 --><span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+
+		${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+		  
+		  </c:if>
+		  
+		  
 		  
  	<c:choose>
  	<c:when test="${deliveryAddress.defaultAddress}">
@@ -544,8 +620,24 @@ display: none;
           
           <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}" />
 		  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}" />
+		  <!-- TISSTRT-1506 starts -->
+		  <c:set var="landmark" value="${fn:trim(deliveryAddress.landmark)}" />
 		  
-		  <c:if test="${empty myline2  && empty myline3}">
+		  <c:if test="${empty myline2  && empty myline3 && empty landmark}">
+		  <span style="padding-bottom: 0px;">
+		  
+		  ${fn:escapeXml(deliveryAddress.title)}</span>	
+		  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
+		  
+		  </c:if>
+		  
+		   <c:if test="${empty myline2  && empty myline3 && not empty landmark}">
 		  <span style="padding-bottom: 0px;">
 		  
 		  ${fn:escapeXml(deliveryAddress.title)}</span>	
@@ -559,11 +651,14 @@ display: none;
 		  
 		  </c:if>
 		  
-		  <c:if test="${not empty myline2  && empty myline3}">
+		  
+		  
+		  
+		  <c:if test="${not empty myline2  && empty myline3 && empty landmark}">
 		   <span style="padding-bottom: 0px;">
 		   ${fn:escapeXml(deliveryAddress.title)}</span>
 		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
+		   <span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
 		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -571,11 +666,28 @@ display: none;
 		   <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
 		  
 		  </c:if>
-		  <c:if test="${ empty myline2  && not empty myline3}">
+		  
+		  <c:if test="${not empty myline2  && empty myline3 && not empty landmark}">
+		   <span style="padding-bottom: 0px;">
+		   ${fn:escapeXml(deliveryAddress.title)}</span>
+		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		   <span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
+		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		   <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		  
+		  </c:if>
+		  
+		  
+		  
+		  
+		  <c:if test="${ empty myline2  && not empty myline3 && empty landmark}">
 		  
 		  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
 		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+		 <span> ${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp; 
 		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -584,11 +696,27 @@ display: none;
 		
 		  </c:if>
 		  
-		  <c:if test="${not empty myline2  && not empty myline3}">
+		  <c:if test="${ empty myline2  && not empty myline3 && not empty landmark}">
+		  
+		  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
+		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		 <span> ${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		
+		  </c:if>
+		  
+		  
+		  
+		  
+		  <c:if test="${not empty myline2  && not empty myline3 && empty landmark}">
 		  <span style="padding-bottom: 0px;">
 		  ${fn:escapeXml(deliveryAddress.title)}</span>
 																	<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+		  <span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;
 		${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
 		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
 																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
@@ -596,6 +724,21 @@ display: none;
 		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
 		  
 		  </c:if>
+		  
+		  <c:if test="${not empty myline2  && not empty myline3 && not empty landmark}">
+		  <span style="padding-bottom: 0px;">
+		  ${fn:escapeXml(deliveryAddress.title)}</span>
+																	<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		  <span>${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+		${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		  
+		  </c:if>
+		  <!-- TISSTRT-1506 ends -->
+		  
 		  
 		  <span class="default">
 		  <input type="radio" value="Make this my default address"

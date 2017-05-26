@@ -598,6 +598,7 @@ public final class ModelAttributetConstants
 	//FOR MSD
 	public static final String MSD_JS_URL = "msdjsURL";
 	public static final String IS_MSD_ENABLED = "isMSDEnabled";
+	public static final String IS_PRODUCTPAGE = "isProductPage";
 	public static final String MSD_REST_URL = "msdRESTURL";
 	// Friends Invite **************
 
@@ -761,6 +762,8 @@ public final class ModelAttributetConstants
 	public static final String BUILD_NUMBER = "buildNumber";
 	//TISPRM-33
 	public static final String SAVINGONPRODUCT = "savingsOnProduct";
+	//UF-287
+	public static final String NO_CACHE = "rand";
 
 	//TISPRM-56
 	public static final String PRODUCT_SIZE = "productSize";

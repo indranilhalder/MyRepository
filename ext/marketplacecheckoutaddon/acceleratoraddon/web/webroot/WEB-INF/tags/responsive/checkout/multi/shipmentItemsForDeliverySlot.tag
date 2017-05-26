@@ -269,10 +269,14 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 	<div class="checkout-shipping-items">
 	<div class="checkout-headers">
 		<h1 class="title-name">
+			
 			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
+			
+			 
 		</h1>
 		<p class="desk-view"><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode "></spring:theme><span>${defaultPinCode}</span></p>
 		<span style="display:none"></span>
+
 		</div>
 		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
 				<li class="header">

@@ -14,7 +14,6 @@
 package com.tisl.mpl.controllers.pages;
 
 
-
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -284,7 +283,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 				if (CollectionUtils.isEmpty(responseData))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData, serviceCart);
 				}
 				// TPR-429 START
 				final String cartLevelSellerID = populateCheckoutSellers(cartData);
@@ -533,7 +532,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 				if (CollectionUtils.isEmpty(responseData))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData, cartModel);
 				}
 				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 
@@ -1478,15 +1477,41 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					addressForm.setAddressId(addressData.getId());
 					addressForm.setFirstName(addressData.getFirstName());
 					addressForm.setLastName(addressData.getLastName());
-					addressForm.setLine1(addressData.getLine1());
-					addressForm.setLine2(addressData.getLine2());
+					//changes TPR-3402
+					//TISUATSE-73 starts
+					String addressLine1 = addressData.getLine1();
+					String addressLine2 = "";
+					String addressLine3 = "";
+
+					if (StringUtils.isNotEmpty(addressData.getLine2()))
+					{
+						addressLine2 = addressData.getLine2();
+						addressLine1 = addressLine1 + addressLine2;
+					}
+					if (StringUtils.isNotEmpty(addressData.getLine3()))
+					{
+						addressLine3 = addressData.getLine3();
+						addressLine1 = addressLine1 + addressLine3;
+					}
+					//TISUATSE-73 ends
+					//					if (addressLine2.length() > 0)
+					//					{
+					//						addressLine1 = addressLine1 + addressLine2;
+					//					}
+					//					if (addressLine3.length() > 0)
+					//					{
+					//						addressLine1 = addressLine1 + addressLine3;
+					//					}
+					addressForm.setLine1(addressLine1);
+					//addressForm.setLine1(addressData.getLine1());
+					//addressForm.setLine2(addressData.getLine2());
 					addressForm.setTownCity(addressData.getTown());
 					addressForm.setPostcode(addressData.getPostalCode());
 					addressForm.setCountryIso(addressData.getCountry().getIsocode());
 					addressForm.setAddressType(addressData.getAddressType());
 					addressForm.setMobileNo(addressData.getPhone());
 					addressForm.setState(addressData.getState());
-					addressForm.setLine3(addressData.getLine3());
+					//addressForm.setLine3(addressData.getLine3());
 					addressForm.setLocality(addressData.getLocality());
 					addressForm.setLandmark(addressData.getLandmark());
 
@@ -1537,6 +1562,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 			model.addAttribute(ModelAttributetConstants.STATE_DATA_LIST, stateDataList);
 			GlobalMessages.addErrorMessage(model, "address.error.formentry.invalid");
+			LOG.error("+++++++++++Error in edit address 1111+++++++++++", e);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			model.addAttribute(
@@ -2239,12 +2265,40 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
 				}
 
+				final String fullAddress = addressForm.getLine1();
+
+
 				final AddressData newAddress = new AddressData();
+
+				String addressLine1 = "";
+				String addressLine2 = "";
+				String addressLine3 = "";
+
+				if (fullAddress.length() <= 40)
+				{
+					addressLine1 = fullAddress.substring(0, fullAddress.length());
+				}
+				else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+				{
+					addressLine1 = fullAddress.substring(0, 40);
+					addressLine2 = fullAddress.substring(40, fullAddress.length());
+				}
+				else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+				{
+					addressLine1 = fullAddress.substring(0, 40);
+					addressLine2 = fullAddress.substring(40, 80);
+					addressLine3 = fullAddress.substring(80, fullAddress.length());
+				}
+
+				newAddress.setLine1(addressLine1);
+				newAddress.setLine2(addressLine2);
+				newAddress.setLine3(addressLine3);
 				newAddress.setTitleCode(addressForm.getTitleCode());
 				newAddress.setFirstName(addressForm.getFirstName());
 				newAddress.setLastName(addressForm.getLastName());
-				newAddress.setLine1(addressForm.getLine1());
-				newAddress.setLine2(addressForm.getLine2());
+				//				newAddress.setLine1(addressForm.getLine1());
+				//				newAddress.setLine2(addressForm.getLine2());
+				//				newAddress.setLine3(addressForm.getLine3());
 				newAddress.setTown(addressForm.getTownCity());
 				newAddress.setPostalCode(addressForm.getPostcode());
 				newAddress.setBillingAddress(false);
@@ -2252,7 +2306,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				newAddress.setAddressType(addressForm.getAddressType());
 				newAddress.setState(addressForm.getState());
 				newAddress.setPhone(addressForm.getMobileNo());
-				newAddress.setLine3(addressForm.getLine3());
 				newAddress.setLocality(addressForm.getLocality());
 				// R2.3 changes
 				if (StringUtils.isNotBlank(addressForm.getLandmark())
@@ -2433,19 +2486,49 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 
 			final AddressData newAddress = new AddressData();
+
+			final String fullAddress = addressForm.getLine1();
+
+			String addressLine1 = "";
+			String addressLine2 = "";
+			String addressLine3 = "";
+
+
+
+			if (fullAddress.length() <= 40)
+			{
+				addressLine1 = fullAddress.substring(0, fullAddress.length());
+			}
+			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, fullAddress.length());
+			}
+			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, 80);
+				addressLine3 = fullAddress.substring(80, fullAddress.length());
+			}
+			newAddress.setLine1(addressLine1);
+			newAddress.setLine2(addressLine2);
+			newAddress.setLine3(addressLine3);
 			newAddress.setId(addressForm.getAddressId());
 			newAddress.setTitleCode(addressForm.getTitleCode());
 			newAddress.setFirstName(addressForm.getFirstName());
 			newAddress.setLastName(addressForm.getLastName());
-			newAddress.setLine1(addressForm.getLine1());
-			newAddress.setLine2(addressForm.getLine2());
+			/*
+			 * newAddress.setLine1(addressForm.getLine1()); newAddress.setLine2(addressForm.getLine2());
+			 * newAddress.setLine3(addressForm.getLine3());
+			 */
+
 			newAddress.setTown(addressForm.getTownCity());
 			newAddress.setPostalCode(addressForm.getPostcode());
 			newAddress.setPhone(addressForm.getMobileNo());
 			newAddress.setBillingAddress(false);
 			newAddress.setShippingAddress(true);
 			newAddress.setAddressType(addressForm.getAddressType());
-			newAddress.setLine3(addressForm.getLine3());
+
 			newAddress.setLocality(addressForm.getLocality());
 			newAddress.setState(addressForm.getState());
 			if (StringUtils.isNotBlank(addressForm.getLandmark())

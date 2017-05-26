@@ -196,7 +196,7 @@ display: none;}
 		<%-- <label  class="asd" for="${type}"></label><form:radiobutton path="addressType" value="${type}" /> --%>
 		
 		
-		
+
 		<div class="row">
 		<div class="col-md-6 col-sm-6 col-xs-6 padd">
 		<input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/>
@@ -253,15 +253,12 @@ display: none;}
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line1" labelKey="Address Line 1*"
-			 path="line1"
+<!-- TPR-3402 --><formElement:formTextArea idKey="address.line1"   labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
 
-
-			mandatory="true" maxLength="40" />
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
 			</div>
-			<div class='full'>
+<!-- TPR-3402 --><div class='hide'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2" labelKey="Address Line 2"
 			 path="line2" 
@@ -270,7 +267,7 @@ display: none;}
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
 			</div>
-			<div class='full'>
+<!-- TPR-3402 --><div class='hide'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3" labelKey="Address Line 3"
 			 path="line3" 
@@ -352,7 +349,7 @@ display: none;}
 			</div> --%>
 			</div>
 			<!-- R2.3: END -->
-			
+
 		<!-- <div class="half country-select"> -->
 		<div class="full country-select">
 		<c:set var='count'  value='1' />

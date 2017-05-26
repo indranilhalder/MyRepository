@@ -1,0 +1,36 @@
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+#New Job To Process mRupee Order from Payment Successful to Order Refund
+;mplmRupeeCronJob;mplThirdPartyWalletCronJob;false;en
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+#% afterEach: impex.getLastImportedItem().setActivationTime(new Date());
+; mplmRupeeCronJob; 0 0/10 * 1/1 * ? *
+
+
+$lang='en'
+
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en   
+
+
+#Global code master entries
+INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];description[optional=true]
+;MRUPEE;TMR;
+
+INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
+;MRupee;false;mpl
+;TW;false;mpl
+
+
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+;mpl_Email_CustomerProfileUpdate_Subject;"Customer Profile Update Email Subject";$emailResource/email-customerProfileUpdateSubject.vm
+;mpl_Email_CustomerProfileUpdate_Body;"Customer Profile Update Email Body";$emailResource/email-customerProfileUpdateBody.vm
+
