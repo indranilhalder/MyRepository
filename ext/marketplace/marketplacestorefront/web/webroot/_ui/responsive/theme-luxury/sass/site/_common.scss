@@ -331,3 +331,22 @@ header{
 		}
 	}
 }
+
+footer{
+	.signup-email-wrapper{
+		.selectboxit-container{
+			width:100%;
+			height:49px;
+			.selectboxit{
+				width: 100% !important;
+				height: 100%;
+				border-radius: 0px;
+				background: #fff;
+				.selectboxit-text{
+					height:100%;
+					line-height:45px;
+				}
+			}
+		}
+	}
+}
