@@ -278,9 +278,19 @@ TATA.CommonFunctions = {
 				$(this).toggleClass('active').next('.sub-menu').toggleClass('active');
 			});
 		},
+		HeaderMinicart: function(){
+			$('header .mini-bag').hide();
+			$("header .bag").hover(function () {
+				$(this).find('.mini-bag').show();
+			},
+			function () {
+				$(this).find('.mini-bag').hide();
+			});
+		},
 		
 		init: function() {
 			this.MobileMenu();
+			this.HeaderMinicart();
 		}
 	},
 	
