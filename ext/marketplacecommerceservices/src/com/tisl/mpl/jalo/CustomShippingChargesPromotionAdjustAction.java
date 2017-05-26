@@ -193,6 +193,18 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.PREVDELIVERYCHARGE, Double.valueOf(0.00D));
 				orderEntry.setProperty(ctx, MarketplacecommerceservicesConstants.CURRENTDELIVERYCHARGE, Double.valueOf(0.00D));
 
+
+				calculate = true;
+
+				//				prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
+				//						.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
+				//				if (null != prodPrevCurrDelChargeMap && !prodPrevCurrDelChargeMap.isEmpty())
+				//				{
+				//					getDefaultPromotionsManager().undoDeliveryCharges(order, prodPrevCurrDelChargeMap, ctx);
+				//					calculate = true;
+				//				}
+
+
 				calculate = true;
 			}
 		}

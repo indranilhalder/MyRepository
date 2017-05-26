@@ -19,6 +19,8 @@ import de.hybris.platform.cockpit.widgets.InputWidget;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
@@ -63,7 +65,7 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		  
 		      {
 		        AbstractOrderModel abstractOrderModel = (AbstractOrderModel)order.getObject();
-		  
+
 		        final CurrencyModel cartCurrencyModel = abstractOrderModel.getCurrency();
 		        NumberFormat currencyInstance = (NumberFormat)getSessionService().executeInLocalView(new SessionExecutionBody() 
 		
@@ -87,27 +89,58 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		    	
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
-		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-		       /* 
-				Double deliveryCosts = 0D;
-				
-				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
-						.getEntries()) {
-					if (null != orderEntry.getMplDeliveryMode()) {
-						deliveryCosts = deliveryCosts
-								+ ( orderEntry.getCurrDelCharge());
+                Double scheduleDeliveryCosts = 0.0D;
+		        if(null==abstractOrderModel.getDeliveryAddress() || null!=((CartModel)abstractOrderModel).getCartReservationDate()) {
+		        	for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
+			    		if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge() !=0.0D)
+			    			scheduleDeliveryCosts+= (entry.getScheduledDeliveryCharge()) ;
 					}
-				}*/
+		        }
+
+
+		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
+				 if(scheduleDeliveryCosts>=0.0D) {
+		        	deliveryCosts+=scheduleDeliveryCosts;
+		        }
+				/* if(deliveryCosts<=0.0){
+				 for (AbstractOrderEntryModel orderEntry : abstractOrderModel
+							.getEntries()) {
+						if (null != orderEntry.getMplDeliveryMode()) {
+							deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue())*orderEntry.getQuantity();
+						}
+					}
+				 }*/
+				//if(deliveryCosts==0.0){
+
+
+
+
+
+
+				//for (AbstractOrderEntryModel orderEntry : abstractOrderModel
+				//		.getEntries()) {
+				//	if (null != orderEntry.getMplDeliveryMode()) {
+				//		deliveryCosts =  (orderEntry.getMplDeliveryMode().getValue()-orderEntry.getCurrDelCharge().doubleValue())*orderEntry.getQuantity();
+
+
+				//	}
+				//}
+				//}
+
 				
 		        renderRow(deliveryCosts, LabelUtils.getLabel(widget, "deliveryCosts", new Object[0]), currencyInstance, container);
+
+
+
 
 				Double totalDeliveryCostDisc = 0D;
 				
 				for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 						.getEntries()) {
-					if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
-						totalDeliveryCostDisc =+ Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
-					}
+					//if(! mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry.getSelectedUSSID())){
+						totalDeliveryCostDisc += Double.valueOf(orderEntry.getPrevDelCharge().doubleValue() - orderEntry.getCurrDelCharge().doubleValue());
+					//}
+
 				}
 				
 				renderRow(totalDeliveryCostDisc > 0 ? totalDeliveryCostDisc  : 0d , LabelUtils.getLabel(widget, "deliveryDiscount", new Object[0]), currencyInstance, container);
@@ -147,9 +180,21 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        
 		        Double convenienceCharges = abstractOrderModel.getConvenienceCharges();
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
-		  
-		      //  Double totalPrice = abstractOrderModel.getTotalPriceWithConv();
-		        renderRow(abstractOrderModel.getTotalPriceWithConv(), LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
+		        /********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
+    	        //Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-couponDiscount-totalDeliveryCostDisc-totalDeliveryCostDisc;
+    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-promotion-totalDeliveryCostDisc;
+    	        /********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/
+//		        if(deliveryCosts==0.0){
+//		        	totalPrice=totalPrice-prevDeliveryCost;
+//		        }
+
+
+
+                if(scheduleDeliveryCosts>0.0D) {
+		        	 totalPrice+=scheduleDeliveryCosts;
+		         }
+             
+		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  
 		      container.setParent(parent);

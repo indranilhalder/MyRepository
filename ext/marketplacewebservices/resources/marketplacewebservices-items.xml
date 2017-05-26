@@ -16,8 +16,8 @@
 		<collectiontype elementtype="BaseSite" code="BaseSiteCollection" autocreate="true"/>
 	</collectiontypes>
 	
-	<enumtypes>
-		<enumtype code="ComponentTypeEnum" autocreate="true" generate="true" dynamic="true">
+<enumtypes>
+		 <enumtype code="ComponentTypeEnum" autocreate="true" generate="true" dynamic="true">
 		<description>Component Type For Components</description>
 			<value code="BannerCarousel"/>
 			<value code="Banners3CarouselType"/>
@@ -29,11 +29,25 @@
 			<value code="SingleBanner"/>
 			<value code="Banners3TypeReverse"/>	
 			<value code="Banner3Type"/>
-			<!--  TPR-1316 -->
+			<!-- TPR-1316  --> 
 			<value code="ProductSliderType"/>
 			<value code="ProductListType"/>
-		</enumtype>
+		</enumtype> 
 	</enumtypes>
+	
+	<relations>
+	 	<!-- R2.3 FL04 Changes -->
+  		<relation code="State2PincodeRelation" localized="false"
+			autocreate="true">
+			<sourceElement type="State" cardinality="one"
+				qualifier="state"></sourceElement>
+			<targetElement type="Pincode" cardinality="many"
+				qualifier="city"></targetElement>
+		</relation>
+		<!-- R2.3 FL04 Close -->
+  	</relations>
+	
+	
 	
 	<itemtypes>
 		<itemtype code="ProductExpressUpdateCleanerCronJob" autocreate="true" generate="true" extends="CronJob"
@@ -144,11 +158,11 @@
 					</attribute>
 				</attributes>
 			</itemtype>
-<!-- Priority -->
-<itemtype code="restrictionsetup" autocreate="true"
+			<!-- Priority -->
+			<itemtype code="restrictionsetup" autocreate="true"		
 					 generate="true">
-	    <deployment table="MplRestnSetup" typecode="25082" /> 			 	
-		<attributes>
+	    		<deployment table="MplRestnSetup" typecode="25082" /> 			 	
+				<attributes>
 					<attribute autocreate="true" qualifier="pincode"
 						type="java.lang.String">
 						<persistence type="property">
@@ -211,15 +225,17 @@
 							optional="false" />
 					</attribute>
 			</attributes>
-			<indexes><index name="MPLRESTRCSTP_IDX">
-						<key attribute="pincode" />
-						<key attribute="sellerId" />
-						<key attribute="USSID" />
-						<key attribute="listingID" />
-						<key attribute="primaryCatID" />
-					</index>
+			<indexes>
+				<index name="MPL_mplrestnsetup_PINSELLER">
+					<key attribute="pincode" />
+					<key attribute="sellerId" />
+					<key attribute="USSID" />
+					<key attribute="listingID" />
+					<key attribute="primaryCatID" />
+					<key attribute="itemtype" />
+				</index>
 			</indexes>	
-		</itemtype>
+	</itemtype>
  
  	<itemtype code="SellerTypeGlobalCodes" autocreate="true"
 					 generate="true">
@@ -240,6 +256,29 @@
 			</attributes>
 	</itemtype>
 
+	<!-- <itemtype code="State" autocreate="true"
+					 generate="true">
+			<attributes>
+					<attribute autocreate="true" qualifier="countrykey"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="region"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="description"
+						type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+					</attribute>					
+			</attributes>
+	</itemtype> -->
 
 	<itemtype code="MerchantMasterTable" autocreate="true"
 						 generate="true">
@@ -333,16 +372,23 @@
 					</attribute>				
 			</attributes>
 	</itemtype>
-	
-	 <itemtype code="SimpleCMSComponent" generate="false" autocreate="false">
-			<attributes>
-				<!--..... other declarations...-->
-				<attribute qualifier="componentType" type="ComponentTypeEnum">
-					<persistence type="property" />
-					<modifiers read="true" write="true" optional="true" />
-				</attribute>
-			</attributes>
-	</itemtype>
-	
+	 <itemtype code="SimpleCMSComponent" generate="true" autocreate="false">
+  			<attributes>
+ 				<!--..... other declarations...-->
+  				<attribute qualifier="componentType" type="ComponentTypeEnum">
+  					<persistence type="property" />
+  					<modifiers read="true" write="true" optional="true" />
+  				</attribute>
+  			</attributes>
+ 	</itemtype>
+
+	<!-- CAR-274 -->
+ 	<itemtype code="OAuthAccessToken" autocreate="false" generate="false">
+ 			<indexes>
+ 				<index name="MPL_TOKEN_USERNAME">
+ 					<key attribute="userName" />
+ 				</index>
+ 			</indexes>
+ 	</itemtype>
 	</itemtypes>
 </items>

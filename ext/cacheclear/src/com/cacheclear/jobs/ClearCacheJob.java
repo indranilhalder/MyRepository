@@ -13,7 +13,6 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.text.SimpleDateFormat;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.cacheclear.event.CacheClearEvent;

@@ -4,11 +4,14 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.security.PrincipalModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.processengine.BusinessProcessService;
+import de.hybris.platform.processengine.constants.GeneratedProcessengineConstants.Enumerations.ProcessState;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
@@ -36,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.NpsEmailProcessModel;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
 import com.tisl.mpl.core.model.VoucherStatusNotificationModel;
 import com.tisl.mpl.data.NotificationData;
@@ -44,6 +48,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.NotificationDao;
 import com.tisl.mpl.marketplacecommerceservices.event.InventoryReservationFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.OrderPlacedEvent;
+import com.tisl.mpl.marketplacecommerceservices.event.PaymentFailedEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentPendingEvent;
 import com.tisl.mpl.marketplacecommerceservices.event.PaymentTimeoutEvent;
 import com.tisl.mpl.marketplacecommerceservices.service.CouponRestrictionService;
@@ -76,14 +81,33 @@ public class NotificationServiceImpl implements NotificationService
 	@Resource(name = "couponRestrictionService")
 	private CouponRestrictionService couponRestrictionService;
 
+	//SONAR FIX
+	/*
+	 * @Autowired private BaseSiteService baseSiteService;
+	 * 
+	 * 
+	 * @Autowired private BaseStoreService baseStoreService;
+	 * 
+	 * @Autowired private CommonI18NService commonI18NService;
+	 */
+
+	@Autowired
+	private BusinessProcessService businessProcessService;
+
+	public BusinessProcessService getBusinessProcessService()
+	{
+		return businessProcessService;
+	}
+
 	@Autowired
 	private ExtendedUserService extendedUserService;
+
 	private static final Logger LOG = Logger.getLogger(NotificationServiceImpl.class);
 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotification()
 	 */
 	@Override
@@ -95,7 +119,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * Getting notificationDetails of logged User (non-Javadoc) (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getNotificationDetails(com.tisl.mpl.data.
 	 * NotificationData)
@@ -126,7 +150,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#checkCustomerFacingEntry(com.tisl.mpl.core
 	 * .model.OrderStatusNotificationModel)
@@ -148,7 +172,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -204,12 +228,12 @@ public class NotificationServiceImpl implements NotificationService
 
 
 			//final List<VoucherStatusNotificationModel> voucherNotificationListModifiable = new ArrayList<VoucherStatusNotificationModel>();
-			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;			
+			//final VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
 			//VoucherStatusNotificationModel voucherNotificationTobeRemoved = null;
 
 			/*
 			 * for (final VoucherStatusNotificationModel vsn : voucherNotificationList) {
-			 * 
+			 *
 			 * if (vsn.getVoucherCode().equalsIgnoreCase(orderNo)) { //continue; //voucherNotificationTobeRemoved = vsn;
 			 * break; }
 			 */
@@ -217,20 +241,20 @@ public class NotificationServiceImpl implements NotificationService
 			 * else { //voucherNotificationListModifiable.add(vsn); }
 			 */
 
-//			for (final VoucherStatusNotificationModel vsn : voucherNotificationList)
-//			{
-//				if (vsn.getVoucherCode().equalsIgnoreCase(orderNo))
-//				{
-//					continue;
-//					//voucherNotificationTobeRemoved = vsn;
-//					//break;
-//				}
-//				else
-//				{
-//					voucherNotificationListModifiable.add(vsn);
-//				}
-//
-//			}
+			//			for (final VoucherStatusNotificationModel vsn : voucherNotificationList)
+			//			{
+			//				if (vsn.getVoucherCode().equalsIgnoreCase(orderNo))
+			//				{
+			//					continue;
+			//					//voucherNotificationTobeRemoved = vsn;
+			//					//break;
+			//				}
+			//				else
+			//				{
+			//					voucherNotificationListModifiable.add(vsn);
+			//				}
+			//
+			//			}
 			//Removing the voucher notification from customers voucher notification List
 			//			if (voucherNotificationTobeRemoved != null)
 			//			{
@@ -239,7 +263,7 @@ public class NotificationServiceImpl implements NotificationService
 			//set the updated voucherNotification Data against user
 			//user.setVoucher(voucherNotificationListModifiable);
 			//save the user
-//			modelService.save(user);
+			//			modelService.save(user);
 
 		}
 		catch (final ModelSavingException e)
@@ -251,7 +275,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -310,7 +334,7 @@ public class NotificationServiceImpl implements NotificationService
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(orderDetails);
 			orderProcessModel.setOrderTrackUrl(trackorderurl);
-			final PaymentTimeoutEvent paymentFailedEvent = new PaymentTimeoutEvent(orderProcessModel);
+			final PaymentFailedEvent paymentFailedEvent = new PaymentFailedEvent(orderProcessModel);
 			try
 			{
 				eventService.publishEvent(paymentFailedEvent);
@@ -344,7 +368,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnInventoryFail(de.hybris
 	 * .platform.core.model.order.OrderModel)
@@ -371,7 +395,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#triggerEmailAndSmsOnOrderConfirmation(de.
 	 * hybris.platform.core.model.order.OrderModel, java.lang.String)
@@ -429,7 +453,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#sendMobileNotifications(de.hybris.platform
 	 * .core.model.order.OrderModel)
@@ -518,7 +542,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getPromotion()
 	 */
 	@Override
@@ -538,7 +562,7 @@ public class NotificationServiceImpl implements NotificationService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NotificationService#getSortedNotificationData(java.util.List)
 	 */
@@ -770,10 +794,47 @@ public class NotificationServiceImpl implements NotificationService
 	 * @return List<VoucherStatusNotificationModel>
 	 * @throws EtailNonBusinessExceptions
 	 */
-	private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode)
-			throws EtailNonBusinessExceptions
+
+
+	//SONAR FIX
+	/*
+	 * private List<VoucherStatusNotificationModel> getModelForVoucherIdentifier(final String voucherCode) throws
+	 * EtailNonBusinessExceptions { return getNotificationDao().getModelForVoucherIdentifier(voucherCode); }
+	 */
+
+
+
+
+	@Override
+	public String triggerNpsEmail(final AbstractOrderEntryModel OrderEntry, final OrderModel orderModel)
 	{
-		return getNotificationDao().getModelForVoucherIdentifier(voucherCode);
+		LOG.info("Starting Nps Feedback Mail");
+
+		try
+		{
+			final NpsEmailProcessModel npsEmailProcessModel = (NpsEmailProcessModel) getBusinessProcessService().createProcess(
+					"npsEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(), "npsEmailProcess");
+
+			LOG.info("Starting Nps Feedback Mail in try block");
+			npsEmailProcessModel.setOrder(orderModel);
+			npsEmailProcessModel.setAbstractOrderEntry(OrderEntry);
+			modelService.save(npsEmailProcessModel);
+			businessProcessService.startProcess(npsEmailProcessModel);
+			LOG.info("Starting Nps Feedback Mail process have been started sucessfully");
+		}
+
+
+
+		catch (final Exception e)
+		{
+			LOG.error("Exception during Nps feedback mail >> " + e.getMessage());
+			return ProcessState.FAILED;
+		}
+
+		return ProcessState.SUCCEEDED;
+
+
+
 	}
 
 	/**
@@ -860,6 +921,8 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		this.modelService = modelService;
 	}
+
+
 
 
 }

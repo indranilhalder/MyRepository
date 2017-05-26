@@ -1,0 +1,90 @@
+<widget xmlns="http://www.zkoss.org/2005/zul"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:w="http://www.zkoss.org/2005/zk/client"
+	xmlns:zk="http://www.zkoss.org/2005/zk"
+	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.hybris.com/schema/cockpitng/zul/zul.xsd"
+	height="100%">
+	<style>
+		.z-listcell-content, .z-listgroup-content,
+		.z-listgroupfoot-content, .z-listfooter-content { font-family:
+		"Open Sans",Arial,Sans-serif; font-size: 12px; font-weight: 400;
+		font-style: normal; color: #555; padding: 3px 4px 4px;
+		line-height: -1px; overflow: none; cursor: pointer; }
+	</style>
+		<div style="overflow-x:auto">
+					<vlayout style="width:100%;height:100%">
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Order ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtOrderId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+							<vlayout width="20px">
+								<label value="" />
+							</vlayout>
+							<vlayout width="100px">
+								<label value="Transaction ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtOrderlineId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+						</hlayout>
+						<hlayout>
+							<vlayout width="100px">
+								<label value="Seller ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtsellerId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+							<vlayout width="20px">
+								<label value="" />
+							</vlayout>
+							<vlayout width="100px">
+								<label value="Slave ID" hflex="1" />
+							</vlayout>
+							<vlayout width="200px">
+								<textbox hflex="1" id="txtSlaveId"
+									style="width:200px;height:10px">
+								</textbox>
+							</vlayout>
+							<vlayout
+								style="width:100px;margin-left:10px">
+								<button style="float:left"
+									label="Search" id="sshipOrderSearch" />
+							</vlayout>
+						</hlayout>
+						<separator />
+						<listbox id="listBoxData" mold="paging"
+							pageSize="10" pagingPosition="top"
+							emptyMessage="No result found in the result">
+							<listhead sizable="true">
+								<listheader label="Order Id"></listheader>
+								<listheader label="Transaction Id">
+								</listheader>
+								<listheader label="Order status">
+								</listheader>
+								<listheader label="Seller Id"></listheader>
+								<listheader label="Slave Id"
+									width="200px">
+								</listheader>
+								<listheader
+									label="SSHIP SellerPromised Time" width="200px">
+								</listheader>
+							</listhead>
+						</listbox>
+						<separator />
+						<hbox pack="center" style="width:100%">
+							<button id="sshipOrderCancel"
+								style="float:right" label="Order Cancel" />
+						</hbox>
+					</vlayout>
+					</div>
+</widget>

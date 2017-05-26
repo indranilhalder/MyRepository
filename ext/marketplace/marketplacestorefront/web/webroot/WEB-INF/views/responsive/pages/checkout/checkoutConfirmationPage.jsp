@@ -38,6 +38,15 @@
 <input type="hidden" id="product_category" value='${productCategoryList}'/>
 <input type="hidden" id="page_subcategory_name" value='${pageSubCategories}'/>
 <input type="hidden" id="page_subcategory_name_l3" value='${page_subcategory_name_L3}'/>
+<!-- added for kidswear:L4 needs to be populated -->
+<input type="hidden" id="page_subcategory_name_l4" value='${page_subcategory_name_L4}'/>
+
+<!-- kidswear -->
+<input type="hidden" id="page_subcategory_L1" value='${productCategoryList}'/>
+<input type="hidden" id="page_subcategory_L2" value='${pageSubCategories}'/>
+<input type="hidden" id="page_subcategory_l3" value='${page_subcategory_name_L3}'/>
+<!-- added for kidswear:L4 needs to be populated -->
+<input type="hidden" id="page_subcategory_l4" value='${page_subcategory_name_L4}'/>
 	
 <input type="hidden" id="orderIDString" value="${orderData.code}">
 <input type="hidden" id="orderSubTotal" value="${orderData.subTotal.value}">
@@ -92,16 +101,18 @@
 							arguments="${orderData.code}" /></strong>
 				</p>
 				<p>
-					<strong>
+				      <!--R2.3 TISRLUAT-1062 Start 07-03-2017 -->
+					<%-- <strong>
 					<fmt:formatDate value="${orderData.created}" pattern="MMMM " var="month" />
 					<fmt:formatDate value="${orderData.created}" pattern=", yyyy " var="year" />
-					<%-- <spring:theme
-							code="text.account.order.orderPlaced" text="Order Placed: "/>&nbsp;${month} ${date} ${year} </strong> --%>
+					<spring:theme
+							code="text.account.order.orderPlaced" text="Order Placed: "/>&nbsp;${month} ${date} ${year} </strong>
 					<!--TISCR-413-->
 					<spring:theme
-							code="text.account.order.orderPlaced.message" text="Expect your shipment: "/>&nbsp;In ${deliveryStartTime} - ${deliveryEndTime}<spring:theme code="mpl.pdp.delivery.posttext" /></strong>
+							code="text.account.order.orderPlaced.message" text="Expect your shipment: "/>&nbsp;In ${deliveryStartTime} - ${deliveryEndTime}<spring:theme code="mpl.pdp.delivery.posttext" /></strong> --%>
 							
 					<!--TISCR-413 ends -->
+					 <!--R2.3 TISRLUAT-1062 END 07-03-2017 -->
 				</p>
 				
 

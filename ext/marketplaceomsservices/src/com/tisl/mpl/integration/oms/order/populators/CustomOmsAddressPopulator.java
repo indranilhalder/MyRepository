@@ -21,22 +21,28 @@ import com.tisl.mpl.model.StateModel;
 
 
 
+
 /**
  * @author TCS
  *
  */
 public class CustomOmsAddressPopulator implements Populator<AddressModel, Address>
 {
+	//SONAR FIX
+	//private static final Logger LOG = Logger.getLogger(CustomOmsAddressPopulator.class);
 	private CustomerNameStrategy customerNameStrategy;
 
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
 
+
 	public void populate(final AddressModel source, final Address target) throws ConversionException
 	{
 		Assert.notNull(source, "source Address can't be null");
 		Assert.notNull(target, "target Address can't be null");
+
+
 		if (StringUtils.isNotBlank(source.getFirstname()))
 		{
 			target.setFirstName(source.getFirstname());
@@ -53,7 +59,7 @@ public class CustomOmsAddressPopulator implements Populator<AddressModel, Addres
 		//target.setPostalZone(source.getPostalcode());
 		target.setCityName(source.getTown());
 		target.setPinCode(source.getPostalcode());
-      target.setLandmark(source.getLandmark());
+		target.setLandmark(source.getLandmark());
 
 		if (StringUtil.isNotEmpty(source.getDistrict()))
 		{

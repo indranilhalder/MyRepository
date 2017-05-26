@@ -165,8 +165,9 @@ public class CustomBOGOPromoOrderEntryAdjustAction extends GeneratedCustomBOGOPr
 			if (isEntryFreeNonFreeBoth)
 			{
 				amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
-				//				qCount = getOrderEntryQuantity(ctx).intValue() + nonFreeCount;
-				qCount = nonFreeCount;
+				//INC144316050
+				qCount = getOrderEntryQuantity(ctx).intValue() + nonFreeCount;
+				//qCount = nonFreeCount;
 
 				setPrices(orderEntry, amtTobeDeductedAtlineItemLevel, ctx);
 				setAssociatedItem(freeEntryUSSID, productAssociatedItemsMap, orderEntry, ctx);

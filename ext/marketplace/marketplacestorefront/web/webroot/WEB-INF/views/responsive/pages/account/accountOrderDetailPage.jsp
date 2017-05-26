@@ -15,6 +15,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+<%@ taglib prefix="return" tagdir="/WEB-INF/tags/responsive/returns"%> 
+<!-- R2.3: Added above one line. responsive/returns -->
+
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -28,6 +31,8 @@
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+<!-- LW-230 -->
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
@@ -121,8 +126,9 @@
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li><spring:theme code="text.account.order.delivery"
-											text="Delivery" /><span class="amt"> <format:price
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Schedule Delivery and Shipping Charges"/></span>
+									<%-- <spring:theme code="text.account.order.delivery"
+											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" />
 									</span></li>
@@ -247,6 +253,12 @@
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
 										<br>
+										<!-- R2.3: START -->
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br><%-- ${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
+										<!-- R2.3: END -->
 										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
 										<c:if test="${not empty creditCardBillingAddress.state}">
 														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
@@ -311,25 +323,43 @@
 								</c:if>
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
+								<div class="col-md-8 col-sm-6">
 								<address>
-									${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
-									${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
-									${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
+									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
+									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
+									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
 									<c:if test="${not empty subOrderLine2}">
-									${fn:escapeXml(subOrder.deliveryAddress.line2)},
+									<span data-tribhuvan="addressLine2">${fn:escapeXml(subOrder.deliveryAddress.line2)}</span>,
 									</c:if>
 									<c:if test="${not empty subOrderLine3}">
-												&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+												&nbsp;<span data-tribhuvan="addressLine3">${fn:escapeXml(subOrder.deliveryAddress.line3)}</span>,
 											</c:if>
-									<br> ${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
+									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
+									</c:if>
+									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
-												${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
 											</c:if>
-									${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}
+									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
 									<br>
-									91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
 								</address>
 							</div>
+							</div>
+							<!-- R2.3: START -->
+									<div class="col-md-4 col-sm-6">
+										<div class="editIconCSS">
+										<c:if test="${addressChangeEligible eq true}">
+									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
+									   </c:if>
+										</div>
+									</div>
+								
+							<p style="clear:both"></p>
+							<div class="itemBorder">&nbsp;</div> 
+							<!-- R2.3: END -->
 							</c:if>
 							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
 							
@@ -419,6 +449,21 @@
 										
 											
 											
+									<!--R2.3 TISRLEE-1615- Start   -->
+									     <c:choose>
+												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
+													   <p>
+										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
+										              </p>
+												  </c:when>
+													<c:otherwise>
+													<c:if test="${not empty entry.eddDateBetWeen}">
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                     </c:if>
+													</c:otherwise>
+										 </c:choose>
+									<!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
 														<div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
@@ -564,6 +609,7 @@
 
 										</div>
 										<div class="actions">
+										<div class="col-md-6"> <!-- R2.3: START >
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
 												<c:set var="bogoCheck"
@@ -577,15 +623,36 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
-											<c:if
-												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and returnFlag}">
-												<a
+											 <%-- R2.3: START:Commented: <c:if
+												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+
+											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
 													<spring:theme code="text.account.returnReplace"
 														text="Return Item" />
 												</a>
-											</c:if>
-
+											 </c:if>  --%> <!-- R2.3: START: -->
+											 <%-- <a
+																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																	<spring:theme code="text.account.returnReplace"
+																		text="Return Item" />
+																</a>  --%>
+											 	<c:choose>
+												 	 <c:when test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+															 <a
+																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
+																	<spring:theme code="text.account.returnReplace"
+																		text="Return Item" />
+																</a> 	 
+												  	</c:when>
+												  	<c:otherwise>
+												  			 <c:if test="${cancellationMsg eq 'true'}">
+																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+															</c:if> 
+												  	</c:otherwise>
+												</c:choose>
+												<!-- R2.3: END: -->
+												
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -593,12 +660,44 @@
 														code="text.account.RequestInvoice" text="Request Invoice" /></a>
 											</c:if>
 											<!-- TISCR-410 -->
-											<c:if test="${cancellationMsg eq 'true'}">
+											<!-- R2.3: START -->
+											<%--  <c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-											</c:if>
+											</c:if>  --%>
+											
+											<%--  <c:choose>
+														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+																	<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
+																						<spring:theme code="text.account.returnReplace"
+																							text="Return Item"/> 
+																	</a>		 
+														  	</c:when>
+														  	<c:otherwise>
+														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
+																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																</c:if>
+														  	</c:otherwise>
+														</c:choose> --%>
 											<!-- TISCR-410 ends -->
+											
+											</div>
+											<div class="col-md-5">
+												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${entry.isRefundable eq false }">
+												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
+													<div class="awsInnerClass">
+															Please provide AWB number, Logistics partner and upload POD <a class="awbNumberLink" id="awbNumberLink">here</a>
+													</div>
+													<!-- TISRLUAT-50 -->
+														<return:lpDetailsUploadPopup entry="${entry}" />
+												</c:if>
+												</c:if>	
+												</c:if>
+											</div>
+											
 										</div>
 
+										<!-- R2.3 : END -->
 										<div class="modal cancellation-request fade"
 											id="cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
 
@@ -715,7 +814,9 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
+															<!-- TISPRDT - 995 -->
+																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
+																<!-- TISPRDT - 995 -->
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -1542,9 +1643,27 @@
 										
 											
 											
+									<!--R2.3 TISRLEE-1615- Start   -->
+								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
+								             <c:choose>
+												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
+													   <p>
+										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
+										              </p>
+												  </c:when>
+													<c:otherwise>
+													<c:if test="${not empty entry.eddDateBetWeen}">
+                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                     </c:if>
+													</c:otherwise>
+											  </c:choose>
+								   </c:if>
+									 
+								 <!--R2.3 TISRLEE-1615- END   -->
 											<!--  Edit button and input box for  pickup Person details -->
 											
-														<div id="pickNo" style="font-size: 12px;padding-top: 5px;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
+														<div id="pickNo" style="font-size: 12px;padding-top: 5px; display:none;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
 														&nbsp; &nbsp;
 														<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 														<c:set var="editButton" value="enable" />  
@@ -1675,7 +1794,10 @@
 											</c:if>
 
 										</div>
+
+
 										<div class="actions">
+										<div class="col-md-6 col-sm-6">
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 												<c:set var="bogoCheck"
@@ -1708,6 +1830,22 @@
 											<c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
+											</div>
+											<div class="col-md-6 col-sm-6 pull-right">
+											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
+												<c:if test="${entry.isRefundable eq false }">
+												<c:if test="${entry.consignment.status.code eq 'RETURN_INITIATED'}">
+													<div class="awsInnerClass">
+															Please provide AWB number, 
+															<br/>Logistics partner and upload POD <a id="awbNumberLink" class="awbNumberLink">here</a>
+													</div>
+													<!-- TISRLUAT-50 -->
+														<return:lpDetailsUploadPopup entry="${entry}" />
+												</c:if>	
+												</c:if>
+												</c:if>
+												
+											</div>
 											<!-- TISCR-410 ends -->
 										</div>
 
@@ -1815,7 +1953,9 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
-															<a class="close" data-dismiss="modal">Close</a>
+															<!-- TISPRDT - 995 -->
+																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
+																<!-- TISPRDT - 995 -->
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -2443,6 +2583,7 @@
 
 
                                    </c:if>
+								 <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
 							
@@ -2462,6 +2603,17 @@
 		</div>
 		
 	</div>
+		<!-- R2.3: START -->
+			<div class="removeModalAfterLoad" id="changeAddressPopup">
+			  <order:changeDeliveryAddress orderDetails="${subOrder}" />
+            </div>
+            <div class="removeModalAfterLoad" id="otpPopup">
+            </div>
+             </div><!-- /.modal -->
+	    
+ 
+        <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
+	<!-- R2.3: END -->
 </template:page>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
@@ -2471,6 +2623,23 @@
 <script>
 
 /*--------- Start of track order UI -------*/
+<!-- R2.3: START --> 
+ <!--   AWB Jquery codes PopUp  -->
+	$(document).ready(function(){
+		$(".uploadFile").change(function(){
+			// TISRLUAT-50 changes 
+			var tribhuvanUploadFile = $(this);
+			var url = $(this).val();
+			var res = url.split('\\');
+			var filename = res[res.length - 1];
+			// TISRLUAT-50 changes 
+			//console.log("tribhuvanUploadFile "+tribhuvanUploadFile.parent().attr('style'));
+			tribhuvanUploadFile.parent().find('.uploadDiv .textFile').text(filename);
+		});
+		});
+	
+	<!--  End of AWB Jquery codes PopUp  -->
+<!-- R2.3: END -->	
 
 $(function(){
 	$('body .right-account .order-details .deliveryTrack ul.nav').each(function(){
@@ -2587,7 +2756,7 @@ $(function() {
 });
 
 	function showCancelDiv(orderLineId) {
-		alert('Suman');
+		
 		var divId='cancellation' + orderLineId;
 		showDiv(divId);
 
@@ -2768,6 +2937,43 @@ $(function() {
 	}	 
 	$(document).ready(function(){
 		console.log($('.item-fulfillment').length);
+<!-- R2.3: START -->
+		 $("#changeAddressLink").click(function(){
+			  $(".error_text").hide();
+			  $(".addressListPop input[type='radio']").prop('checked',false);
+			  $("#changeAddressPopup").show();
+			  $(".wrapBG").show();
+			  var height = $(window).height();
+			  $(".wrapBG").css("height",height);
+			  $("#changeAddressPopup").css("z-index","999999");
+			  $("#deliveryAddressForm #pincode").val($("address span[data-tribhuvan='pincode']").text());
+			  $("#deliveryAddressForm #new-address-option-1").val($("address span[data-tribhuvan='addressType']").text());
+			  loadPincodeData('edit').done(function() {
+					
+					
+				  
+			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
+			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
+			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
+			      
+			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
+			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
+			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
+			 	
+			      console.log("blur line 394");
+					 var value = $(".address_landmarkOtherDiv").attr("data-value");
+					 console.log("blur line 396 "+value);
+					 otherLandMarkTri(value,"defult");
+			      $("#deliveryAddressForm #city").val($("#deliveryAddressForm #city").attr("value")); 
+			      $("#deliveryAddressForm #state").val($("#deliveryAddressForm #state").attr("value")); 
+			      $("#deliveryAddressForm #mobileNo").val($("#deliveryAddressForm #mobileNo").attr("value")); 
+			     });
+			  	
+			  	//changeFuncLandMark("Other"); 
+			 
+		});
+		
+		
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -2785,7 +2991,331 @@ $(function() {
 			// $(".pickupeditbtn").css("display","block");
 			 
 		 });
+
+$("#saveBlockData").click(function(){
+				$("#changeAddressPopup").hide();
+				$("#showOrderDetails").show();
+				$("#showOrderDetails").css("z-index","999999");
+		});
+		
+ 	$(".submitSchedule").click(function(){
+			$("#changeAddressPopup, #showOrderDetails").hide();
+			$("#showOTP").show();
+			$("#showOTP").css("z-index","999999");
+		});
+		 
+		 $(".close").click(function(){
+			 $("#changeAddressPopup,#otpPopup").hide();
+			 $(".wrapBG, #showOrderDetails").hide();
+			 $("#showOTP").hide();
+		 });
 		 //$(".pickupeditbtn").hide(); 
-	 });	 
+		 
+		 
+		 <!--   AWB Jquery codes PopUp  -->
+		 $(".awbNumberLink").click(function(){
+				//   alert("awbNumberLink");
+				// TISRLUAT-50 changes 
+				var tribhuvanAwbLink = $(this);
+				
+				//alert(tribhuvanAwbLink.parent().next().attr('class'));
+				
+				
+				   $(".awsNumError").hide();
+				    $(".logisticPartnerError").hide();
+				    $(".uploadError").hide(); 
+				    $(".amountError").hide();
+				 // TISRLUAT-50 changes 
+				    tribhuvanAwbLink.parent().next().show();
+			     $(".wrapBG").show();
+			     var height = $(window).height();
+			     $(".wrapBG").css("height",height);
+			  // TISRLUAT-50 changes 
+			     tribhuvanAwbLink.parent().next().css("z-index","999999");
+			  });
+		 
+			  $(".submitButton").click(function(event){
+				// TISRLUAT-50 changes 
+				  var tribhuvaAwbSubmit = $(this);
+				  var tribhuvanLocalPopUp =  tribhuvaAwbSubmit.closest(".awsNumberModal");
+			   if(awbValidations(tribhuvaAwbSubmit)){
+			  $(".awsNumberModal").hide(); 
+			  $(".wrapBG").hide();
+			// TISRLUAT-50 changes 
+			  tribhuvanLocalPopUp.find("form").unbind('submit').submit();
+
+			   }else{
+			    //alert('elsepanchayati');
+			    event.preventDefault();
+			 // TISRLUAT-50 changes 
+			    tribhuvanLocalPopUp.show();
+			    $(".wrapBG").show();
+			   }
+			  });
+
+			  $(".closeAWSNum").click(function(){
+			   $(".awsNumberModal").hide();
+			   $(".wrapBG").hide();
+			  });
+			  
+			function awbValidations(arg1){
+			 var validate = true;
+			 $(".awsNumError").hide();
+			 $(".logisticPartnerError").hide();
+			 $(".uploadError").hide(); 
+			 $(".amountError").hide();
+			// TISRLUAT-50 changes 
+			 var tribhuvanLocalPopUp =  arg1.closest(".awsNumberModal");
+			 var awsNumber=tribhuvanLocalPopUp.find("#awsNum").val();
+			 var logPart=tribhuvanLocalPopUp.find("#logisticPartner").val();
+			 var fileName=tribhuvanLocalPopUp.find("#uploadFile").val();
+			 var amount = tribhuvanLocalPopUp.find('#amount').val();
+			 var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+			 
+			 if(awsNumber != null && awsNumber == '' && awsNumber < 2 && awsNumber.trim() == ''){
+			       $(".awsNumError").show();
+			     $(".awsNumError").text("AWB Number cannot be Blank");
+			     validate = false;
+			     }else if(/[^[a-zA-Z0-9]]*$/.test(awsNumber)){
+			      $(".awsNumError").show();
+			       $(".awsNumError").text("AWB Number cannot allow special characters");
+			      validate = false;
+			     }
+
+			     if(logPart != null && logPart == '' && logPart < 2 && logPart.trim() == ''){
+			        $(".logisticPartnerError").show();
+			      $(".logisticPartnerError").text("Logistic partner cannot be Blank");
+			      validate = false;
+			      }else if(/[^[a-zA-Z]]*$/.test(logPart)){
+			       $(".logisticPartnerError").show();
+			        $(".logisticPartnerError").text("Logistic partner cannot allow special characters and numbers");
+			       validate = false;
+			 }
+			 if(amount != null && amount == '' && amount < 2 && amount.trim() == ''){
+			    
+			        $(".amountError").show();
+			      $(".amountError").text("Amount cannot be Blank");
+			      validate = false;
+			      }else if(isNaN(amount)){
+			       
+			       $(".amountError").show();
+			        $(".amountError").text("Amount cannot allow special characters or letters");
+			       validate = false;
+			      }
+			     
+			   if(ext == " "){
+				   $(".uploadError").show();
+			       $(".uploadError").text("Proof of Delivery is mandatory");
+			   }
+			   else if(ext != "gif" && ext != "GIF" && ext != "JPEG" && ext != "jpeg" && ext != "jpg" && ext != "JPG" && ext != "pdf" && ext != "PDF" && ext != 'png' && ext != "PNG")
+			    {
+				 //  alert(ext);
+			     $(".uploadError").show();
+			       $(".uploadError").text("Upload images and pdf file only");
+			       validate = false;
+			    }
+			  
+			 return validate;
+			 
+			}
+		   
+		  <!-- End of  AWB Jquery codes PopUp  -->
+		  });  
+		</script>
+
+		<!--   AWB CSS for PopUp -->
+		<style>
+		@media (max-width: 1365px){
+		.changeAdddd {
+		    height: initial !important;
+		}
+		}
+
+@media (max-width: 1366px) {
+	.awsNumberModal .changeAWS {
+		height: 390px;
+		width: 700px;
+	}
+}
+
+.awsNumberModal .changeAWS {
+    height: 390px;
+    width: 700px;
+}
+
+@media (max-width: 720px) {
+body .account .right-account .order-history.order-details li.item .item-header{margin-bottom:0px }
+#changeAddressLink{line-height: 3;}
+	.awsNumberModal .changeAWS{
+		height: 400px;
+		overflow-y: scroll;
+		width: auto;
+	}
+	#awbNumberPopup{
+		left:0 !important;
+	}
 	
-</script>
+
+	.submitButton {
+		margin: 60px auto;
+	}
+	/*TISPRDT-1049 Start  */
+	.textFile {
+    display: inline-block;
+    padding: 0px 4px;
+    color: #8c8c8c;
+    height: 32px;
+    line-height: 32px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 57%;
+}
+.uploadButton {
+    background: #00cfe6;
+    color: #fff;
+    display: inline-block;
+    padding: 0px 8px !important;
+    font-size: 14px;
+    height: 33px;
+    line-height: 33px;
+    margin: 0px 2px;
+    vertical-align: top;
+    width: 40%;
+}
+/*TISPRDT-1049 End  */
+}
+#awbNumberPopup {
+	display: none;
+	position: fixed;
+	top: 50px;
+	left:25%;
+	
+}
+
+#awbNumberPopup .space{
+	margin: 20px 10px;
+	line-height: 20px;
+	color: #8c8c8c;
+}
+#awbNumberPopup label{
+	padding: 10px 0px;
+	color: #8c8c8c;
+	font-size: 14px;
+}
+#awbNumberPopup .control-label {
+    font-weight: inherit;
+}
+#awbNumberPopup .awsUpload, #awbNumberPopup .awsUpload:focus {
+	border: none;
+} 
+#awbNumberPopup .form-group {
+    margin-bottom: 0px;
+}
+.closeAWSNum{
+	border-radius: 50%;
+	border: 1px solid #ccc !important;
+	width: 40px;
+	height: 40px;
+    position: absolute;
+    right: 17px;
+    top: -6px;
+    font-size: 35px;
+    font-weight: 100;
+    color: #ccc;
+    padding: 9px 9px;
+}
+#awbNumberPopup h4{
+    font-size: 22px !important;
+    font-weight: 100 !important;
+    margin-bottom: 25px !important;
+}
+@media (max-width: 620px){
+#awbNumberPopup h4 {
+    width: 85%;
+}
+}
+#awbNumberPopup .awsTextinput{
+	width: 100%;
+}
+.submitButton{
+	background: #ff9900;
+	color: #fff;
+	width: 100px;
+	margin: 16px;
+	height: 46px;
+    font-size: 20px !important;
+}
+.submitButton:focus, .submitButton:hover{
+	border: none;
+	background: #ff9900;
+	color: #fff;
+	width: 100px;
+	margin: 16px;
+	height: 46px;
+    font-size: 20px;
+}
+#awbNumberLink{
+	color: #00cfe6;
+	display: inline-block;
+}
+
+.awsInnerClass {
+	display: inline-block;
+	position: relative;
+	background: #fafafa;
+	padding: 9px 12px 2px 12px;
+	border: 2px solid #edad24;
+	font-size: 13px;
+}
+.awsInnerClass:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	right: 100%;
+	top: 50%;
+	margin-top: -18px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-right: 12px solid #edad24;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid transparent;
+}
+.errorText{
+	color: red;
+}
+.awsNumError{
+	padding: 3px 0;
+}
+.textFile{
+	display: inline-block;
+ 	padding: 0px 10px;
+ 	color: #8c8c8c;
+ 	height: 32px;
+ 	line-height: 32px;
+ 	overflow: hidden;
+ 	text-overflow: ellipsis;
+    white-space: nowrap
+}
+.uploadButton{
+	background: #00cfe6;
+	color: #fff;
+	display: inline-block;
+    padding: 0px 11px;
+    font-size: 14px;
+    height: 34px;
+	line-height: 34px;
+}
+.uploadDiv{
+    border: 1px solid #dfd1d5;
+    width: 100%;
+    height:35px;
+}
+input[type="radio"]:checked {
+	background: #000;
+}
+
+</style>
+
+<!-- R2.3: END: End of  AWB CSS for PopUp -->

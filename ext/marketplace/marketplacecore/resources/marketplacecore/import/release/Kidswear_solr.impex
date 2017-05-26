@@ -1,0 +1,109 @@
+#
+# Import the Solr configuration for the store
+#
+$prefix=mpl
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en
+$indexCurrencies=INR
+$priceRangeINR=$prefixPriceRangeINR
+$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
+$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
+$lang=en
+
+
+####### For existing facets
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider			;facetDisplayNameProvider			;customFacetSortProvider;topValuesProvider		 ;rangeSets(name);$classificationAttributeAssignments;
+								  ;$solrIndexedType			    		  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;;;colorfamilyapparel:apparelCC,colorfamilyfootwear:footwearCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf,colorfamilyfashiona:10001,colorfamilyapparel:colorfamilyapparelCC
+									
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=false];facetType(code);facetSort(code);priority;visible		;fieldValueProvider  ;facetDisplayNameProvider  ;customFacetSortProvider;rangeSets(name);$classAttributeAssignment;$classificationAttributeAssignments;topValuesProvider;facetTopValue
+								 ;$solrIndexedType                        ;Occasion							;string		;					; 					;true						;true 					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyCodeValueProvider;mplOccasionDisplayNameProvider;;;occasion:apparelCC;occasionfashiona:10002,occasionwatches:20002,occasionkidswear:occasionkidswearCC;defaultTopValuesProvider;8
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;classificationProductType;topValuesProvider;facetTopValue
+								 ;$solrIndexedType                        ;sleeve-classification			;string		;					; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;	;		;womensleeve:womensleeveCC,mensleeve:mensleeveCC,sleevekidswear:sleevekidswearCC;;defaultTopValuesProvider;8
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
+								 ;$solrIndexedType                        ;gender							;string		;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;genderfashiona:10014,genderwatches:20002,genderkidswear:genderkidswearCC
+
+								 
+
+####### For normal facets
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true]				  ;type(code)	;sortableType(code)	;currency[default=false];localized[default=false];isNumeric[default=false]	;isRangeFaceted[default=false]	;isNumericRange[default=false];multiValue[default=true]	;facet[default=false]	;facetType(code);facetSort(code);priority  ;boostDouble	;visible 	;fieldValueProvider      				;customFacetSortProvider;rangeSets(name);$classAttributeAssignment  ;$classificationAttributeAssignments;classificationProductType;topValuesProvider;facetTopValue
+								 ;$solrIndexedType                        ;Garment-Length-kidswear      	  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;garmentlengthkidswear:garmentlengthkidswearCC;;defaultTopValuesProvider;8
+ 								 ;$solrIndexedType                        ;Fabric-family-kidswear       	  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;fabricfamilykidswear:fabricfamilykidswearCC;;defaultTopValuesProvider;8
+ 								 ;$solrIndexedType                        ;Character-kidswear				  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;characterkidswear:characterkidswearCC;;defaultTopValuesProvider;8
+								 ;$solrIndexedType                        ;Clothing-accessories-type-kidswear ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;   		;true		;mplClassificationPropertyValueProvider		;						;				;							;clothingaccessoriestypekidswear:clothingaccessoriestypekidswearCC;;defaultTopValuesProvider;8
+ 								 ;$solrIndexedType                        ;Clothing-sets-kidswear			  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;	    	;true		;mplClassificationPropertyValueProvider		;						;				;							;clothingsetskidswear:clothingsetskidswearCC;;defaultTopValuesProvider;8
+								 ;$solrIndexedType                        ;Innerwear-type-kidswear			  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;innerweartypekidswear:innerweartypekidswearCC;;defaultTopValuesProvider;8
+ 								 ;$solrIndexedType                        ;Rainwear-type-kidswear			  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;rainweartypekidswear:rainweartypekidswearCC;;defaultTopValuesProvider;8
+								 ;$solrIndexedType                        ;Swimming-accessories-typekidswear  ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;swimmingaccessoriestypekidswear:swimmingaccessoriestypekidswearCC;;defaultTopValuesProvider;8
+ 								 ;$solrIndexedType                        ;Category-type-kidswear             ;string		;					; 						;true					;							;								;							  ; 						;true				   	;MultiSelectOr 	;Alpha		  	;1000		;		    ;true		;mplClassificationPropertyValueProvider		;						;				;							;categorytypekidswear:categorytypekidswearCC;;defaultTopValuesProvider;8
+ 								 
+
+					 
+					 
+# Language
+# Solr Indexed Property
+UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true]	;displayName[lang=$lang]
+							;$solrIndexedType	;Garment-Length-kidswear	  			;"Garment Length"
+							;$solrIndexedType	;Fabric-family-kidswear		  			;"Fabric Family"
+						   ;$solrIndexedType	;Character-kidswear			  			;"Character"
+							;$solrIndexedType	;Clothing-accessories-type-kidswear	    ;"Clothing Accessories Type"
+							;$solrIndexedType	;Clothing-sets-kidswear				    ;"Clothing Sets"
+                            ;$solrIndexedType   ;Innerwear-type-kidswear				;"Innerwear Type"		
+						    ;$solrIndexedType   ;Rainwear-type-kidswear				    ;"Rainwear Type"	
+							;$solrIndexedType   ;Swimming-accessories-typekidswear	    ;"Swimming Accessories Type"	
+						    ;$solrIndexedType   ;Category-type-kidswear					;"Categories"	
+						
+						
+INSERT_UPDATE Sizesystem;name[unique=true];from;to;conversionUnit;propertyName;
+
+;0 Mto0-6 M;0 M;0-6 M;0.00;KidswearSize
+;0-3 Mto0-6 M;0-3 M;0-6 M;0.00;KidswearSize
+;0-6 Mto0-6 M;0-6 M;0-6 M;0.00;KidswearSize
+;3-6 Mto0-6 M;3-6 M;0-6 M;0.00;KidswearSize
+
+;6-12 Mto6-12 M;6-12 M;6-12 M;0.00;KidswearSize
+;6-9 Mto6-12 M;6-9 M;6-12 M;0.00;KidswearSize
+;9-12 Mto6-12 M;9-12 M;6-12 M;0.00;KidswearSize
+
+;1-2 Yto1-2 Y;1-2 Y;1-2 Y;0.00;KidswearSize
+;12-18 Mto1-2 Y;12-18 M;1-2 Y;0.00;KidswearSize
+;18-24 Mto1-2 Y;18-24 M;1-2 Y;0.00;KidswearSize
+
+;2-3 Yto2-4 Y;2-3 Y;2-4 Y;0.00;KidswearSize
+;3-4 Yto2-4 Y;3-4 Y;2-4 Y;0.00;KidswearSize
+;2-4 Yto2-4 Y;2-4 Y;2-4 Y;0.00;KidswearSize
+
+;4-5 Yto4-6 Y;4-5 Y;4-6 Y;0.00;KidswearSize
+;5-6 Yto4-6 Y;5-6 Y;4-6 Y;0.00;KidswearSize
+;4-6 Yto4-6 Y;4-6 Y;4-6 Y;0.00;KidswearSize
+
+;6-7 Yto6-8 Y;6-7 Y;6-8 Y;0.00;KidswearSize
+;7-8 Yto6-8 Y;7-8 Y;6-8 Y;0.00;KidswearSize
+;6-8 Yto6-8 Y;6-8 Y;6-8 Y;0.00;KidswearSize
+
+;8-9 Yto8-10 Y;8-9 Y;8-10 Y;0.00;KidswearSize
+;9-10 Yto8-10 Y;9-10 Y;8-10 Y;0.00;KidswearSize
+;8-10 Yto8-10 Y;8-10 Y;8-10 Y;0.00;KidswearSize
+
+;10-11 Yto10-12 Y;10-11 Y;10-12 Y;0.00;KidswearSize
+;11-12 Yto10-12 Y;11-12 Y;10-12 Y;0.00;KidswearSize
+;10-12 Yto10-12 Y;10-12 Y;10-12 Y;0.00;KidswearSize
+
+;12-13 Yto12-14 Y;12-13 Y;12-14 Y;0.00;KidswearSize
+;13-14 Yto12-14 Y;13-14 Y;12-14 Y;0.00;KidswearSize
+;12-14 Yto12-14 Y;12-14 Y;12-14 Y;0.00;KidswearSize
+
+;14-15 Yto14-16 Y;14-15 Y;14-16 Y;0.00;KidswearSize
+;15-16 Yto14-16 Y;15-16 Y;14-16 Y;0.00;KidswearSize
+;14-16 Yto14-16 Y;14-16 Y;14-16 Y;0.00;KidswearSize
+

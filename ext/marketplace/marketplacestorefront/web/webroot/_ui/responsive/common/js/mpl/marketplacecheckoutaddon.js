@@ -2106,6 +2106,7 @@ $("#otpMobileNUMField").focus(function(){
   
 
  $("#make_saved_cc_payment,#make_saved_cc_payment_up").click(function(){
+	 $("#cvvError").css("display", "none");
 	var password = $(".card_token").parent().parent().parent().find(".cvv").find(".cvvValdiation").val();
 	var ebsDownCheck=$("#ebsDownCheck").val();
 	var isDomestic=$(".card_token").parent().parent().parent().find('.card').find('.radio').find('.card_is_domestic').val();
@@ -5023,6 +5024,8 @@ $(".edit_address").click(function(){
  		success : function(response) {
  		//	$(this).parents().find(".edit").next(".editnewAddresPage#"+address_id).html(response);
  			$('.editnewAddresPage, .formaddress').slideUp();
+ 			// TISRLEE-1676
+ 			$('.editnewAddresPage, .formaddress').empty();
  			$(".add-address").slideDown();
  			$("#"+address_id_new[1]).html(response);
  		//	$(this).parents().find(".edit").next(".editnewAddresPage").show();
@@ -5031,6 +5034,13 @@ $(".edit_address").click(function(){
  			
  			$("#"+address_id_new[1] + " .checkout-shipping.formaddress").prepend("<div class='heading-form'><h3>Edit This Address</h3><input type='button' value='cancel' class='cancelBtnEdit' id='cancel-"+address_id_new[1]+"'></div>");
  			$("#"+address_id_new[1]).slideDown();
+ 			//TISRLEE-2328 Author Tribhuvan
+ 			 loadPincodeData("edit").done(function() {
+     			console.log("addressform line 394");
+     		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+     		 console.log("addressform line 396 "+value);
+     		 otherLandMarkTri(value,"defult");
+     		});
  		},
  		error : function(resp) {
  		}
@@ -5311,7 +5321,7 @@ function checkServiceabilityRequired(buttonType,el){
 	if(buttonType == "typeCheckout" )
 	{
 		
-		if(typeof utag == "undefined"){
+		/*if(typeof utag == "undefined"){
 			console.log("Utag is undefined")
 		}
 		else{
@@ -5319,7 +5329,7 @@ function checkServiceabilityRequired(buttonType,el){
 			utag.link(
 			{"link_text": "cart_checkout_clicked" , "event_type" : "cart_checkout_clicked"}
 			);
-		}
+		}*/
 	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
@@ -5545,7 +5555,7 @@ function checkPincodeServiceability(buttonType,el)
  				{
 	 				//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
-		 				"link_obj": this,
+		 				//"link_obj": this,
 		 				"link_text": "cart_pincode_check_failure", 
 		 				"event_type" : "cart_pincode_check_failure",
 		 				"cart_pin_non_servicable" : selectedPincode
@@ -5565,15 +5575,16 @@ function checkPincodeServiceability(buttonType,el)
 					reloadpage(selectedPincode,buttonType);
  	 			$("#isPincodeServicableId").val('N');
  	 			// reloadpage(selectedPincode,buttonType);
- 				} 
+ 			} 
  			else
+
  				{
  				utagCheckPincodeStatus = "cart_pincode_check_success";
  				/*if(typeof utag !="undefined")
  				{
  					//TPR-4736 | DataLAyerSchema changes | cart
  					utag.link({
-		 				"link_obj": this,
+		 				//"link_obj": this,
 		 				"link_text": "cart_pincode_check_success", 
 		 				"event_type" : "cart_pincode_check_success",
 		 				"cart_pin_servicable" : selectedPincode
@@ -5589,7 +5600,7 @@ function checkPincodeServiceability(buttonType,el)
 	 			$("#AvailableMessageBtm").show();//UF-68
  					populatePincodeDeliveryMode(response,buttonType);
  					reloadpage(selectedPincode,buttonType);
- 				}
+ 			}
  			
  			// TISPRM-33
 	 			$("#defaultPinDiv").show();
@@ -5625,7 +5636,7 @@ function checkPincodeServiceability(buttonType,el)
  			/*if(typeof utag !="undefined"){
  				//TPR-4736 | DataLAyerSchema changes | cart
 	 			utag.link({
-	 				"link_obj": this,
+	 				//"link_obj": this,
 	 				"link_text": "cart_pincode_check_failure", 
 	 				"event_type" : "cart_pincode_check_failure",
 	 				"cart_pin_non_servicable" : selectedPincode
@@ -5649,6 +5660,7 @@ function checkPincodeServiceability(buttonType,el)
  	 		// },500);
  		},
  		complete : function(resp){
+
  					//TPR-4736 | DataLAyerSchema changes | cart
 	  					if(utagCheckPincodeStatus == "cart_pincode_check_failure"){
 	  						if(typeof utag !="undefined"){
@@ -5669,6 +5681,7 @@ function checkPincodeServiceability(buttonType,el)
 	 			  			}
 	  					}
  			   		}
+
  	});
 	
 
@@ -6153,6 +6166,7 @@ function checkIsServicable()
 	 			//Sprint merge issue
 	 			var responeStr=response['pincodeData'].split("|");
 	 			if(responeStr[0]=="N"){
+
 	 			$("#cartPinCodeAvailable").hide();
 	 			$("#AvailableMessage").hide();
 	 			$("#AvailableMessageBtm").hide();//UF-68
@@ -6172,11 +6186,11 @@ function checkIsServicable()
 	 			}
 	 			else{
 	 				$(".deliveryUlClass").remove();//TPR-1341
-	 				 $(".pincodeServiceError").hide();
+	 				$(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
 	 				$("#unserviceablepincodeBtm").show();//UF-68
 	 				$("#unserviceablepincode_tooltip").hide();
-	 				 $("#unserviceablepincode_tooltip_btm").hide();
+	 				$("#unserviceablepincode_tooltip_btm").hide();
 	 				$("#cartPinCodeAvailable").hide();
 	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 				$("#AvailableMessage").show();
@@ -6216,14 +6230,17 @@ function checkIsServicable()
  	 				});
  	 			}
 	 		},
-	 		complete : function(resp){
-	 		 	 			if(utagCheckPincodeStatus == true){
-	 		 	 				pincodeServicabilitySuccess(selectedPincode);
-	 		 	 			}
-	 		 	 			else{
-	 		 	 				pincodeServicabilityFailure(selectedPincode);
-	 		 	 			}
-	 		 	 		} 
+
+			complete : function(resp){
+				if(utagCheckPincodeStatus == true){
+					pincodeServicabilitySuccess(selectedPincode);
+				}
+				else{
+					pincodeServicabilityFailure(selectedPincode);
+				}
+			} 
+
+	 		
 
 	 	});
 	}

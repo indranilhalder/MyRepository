@@ -33,7 +33,7 @@
 			<%-- <c:forEach items="${suborder.entries}" var="eachSubOrderEntry"> --%>
 				<c:set var="eachSubOrderEntry" value="${subOrderEntry}"/>
 				<form:form class="return-form" action="../returnRequest"
-					method="post" commandName="returnRequestForm" onsubmit="return validateForm()">
+					method="post" commandName="returnRequestForm" onsubmit="return validateFormReturn()">
 					<div class="return-container" >
 						<h2 class="order-details"><spring:theme code="text.returRequest.orderDetails" text="Order Details" /></h2>
 						<ul class="products">
@@ -130,7 +130,7 @@
 	
 	
 <script>
-function validateForm() {
+function validateFormReturn() {
   
    if($("#reasonSelectBox").val()!=null)
 	  {

@@ -142,5 +142,12 @@
 		<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />		
 		<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl"/>
 		<bean id="mplGigyaReviewCommentDao" class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl"/>
+		
+		<bean id="googleShortUrlService"
+		class="com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl"/>
+		
+		<bean id="shortUrlReportDaoImpl"
+		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
+		
 </beans>
 

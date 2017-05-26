@@ -1,4 +1,4 @@
-	
+
 	ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
@@ -152,7 +152,7 @@
 		 
 			if(localStorage.getItem("removeFromCart_msgFromCart")=="Y")
 			{
-			$('#removeFromCart_Cart').show();
+			$('#removeFromCart_Cart').css("display","inline-block");
 			setTimeout(function() {
 				  $("#removeFromCart_Cart").fadeOut().empty();
 				}, 1500);
@@ -184,7 +184,10 @@
 		});
 		//End
 		//added for Size guide Variant select
-		$(document).on("click", '.variant-select li span',
+		//Sprint 7 Sanity Issue fixing starts here
+		//$(document).on("click", '.variant-select li span',
+		  $(document).on("click", '.variant-select li span, .color-swatch li span',
+		//Sprint 7 Sanity Issue fixing ends here
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
@@ -809,10 +812,11 @@ function setValidPrice(sellersArray, index) {
 			 $("#savingsOnProductId").hide();
 			 //$("#dListedErrorMsg").show(); //Need to Change	
 			// $("#freebieProductMsgId").show();
+			 var prodCode=$("#productCodePost").val();
 			 var ussId=  $("#ussid").val();
 			 
 			//update the message for Freebie product TPR-1754
-			 var freebieproductMsg =populateFreebieMsg(ussId);
+			 var freebieproductMsg =populateFreebieMsg(prodCode);
 			
 			 if($.isEmptyObject(freebieproductMsg)){
 				 
@@ -1425,12 +1429,19 @@ function isOOS(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $("#variant li.strike").length;
 	
-	if(availibility!=undefined && availibility.length > 0){
+	//if(availibility!=undefined && availibility.length > 0){
+	// availibility.length  was coming undefined even if availability was NOT Undefined
+	if(availibility!=undefined && typeof availibility === 'object')/* Change for TISSQAUAT-687 :: IE throws error*/ 
+		/*Object.keys(availibility).length > 0)*/
+	{
+		if(Object.keys(availibility).length > 0){
+
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
 			}
 		});
+		}
 	}
 	
 	if(totalOptions == disabledOption && totalOptions!=0){
@@ -1462,6 +1473,7 @@ $( document ).ready(function() {
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
 	var variantCodesJson = "";
+	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
@@ -1475,8 +1487,10 @@ $( document ).ready(function() {
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/buybox";
 	//var dataString = 'productCode=' + productCode;
+
 	/*var data =*/ getBuyBoxDataAjax(productCode,variantCodesJson);//Moving buybox call on load in a method so that it can be reused.UF-60
-	
+
+
 //}
 	$(".size-guide").click(function(){
 		if(null!= availibility){
@@ -1533,6 +1547,10 @@ function displayDeliveryDetails(sellerName) {
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
 				
+				 /*TISPRDT-878 start*/
+				var fulFillmentP1 = data['fulfillmentType1'];
+				/*TISPRDT-878 END*/
+
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1545,12 +1563,28 @@ function displayDeliveryDetails(sellerName) {
 				if (data['onlineExclusive']) {
 					$('.online-exclusive').show();
 				}
-				if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+				/*if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
 					$('#fulFilledByTship').show();
 				} else {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
-				}
+				}*/
+				/*TISPRDT-878 Start*/
+				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
+					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+					  }else {
+					   $('#fulFilledBySship').show();
+					   $('#fulFilledBySship').html(sellerName);
+					  }
+					    } else if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					   $('#fulFilledByTship').show();
+					 }else {
+					   $('#fulFilledBySship').show();
+					   $('#fulFilledBySship').html(sellerName);
+					  }
+				/*TISPRDT-878 END*/
+
 				//INC144314017 start
 				if(!$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
@@ -1827,12 +1861,14 @@ function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 				 $("#spPriceId").hide();//UF-60
 				 //$("#dListedErrorMsg").show();	//Need to Change
 				// $("#freebieProductMsgId").show();
-			var ussId=  $("#ussid").val();
+				 var prodCode=$("#productCodePost").val();
+			     var ussId=  $("#ussid").val();
 				
 			//	$("#ussid").val(data['sellerArticleSKU']);
 				 
 				//update the message for Freebie product TPR-1754
-				 var freebieproductMsg =populateFreebieMsg(ussId);			 
+				 var freebieproductMsg =populateFreebieMsg(prodCode);			 
+				// var freebieproductMsg =populateFreebieMsg(ussId);			 
 				 if($.isEmptyObject(freebieproductMsg)){	
 					 
 					 $("#freebieProductMsgId").show();			 
@@ -2398,7 +2434,9 @@ function isOOSSizeGuide(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
 	
-	if(availibility!=undefined && availibility.length > 0){
+	//if(availibility!=undefined && availibility.length > 0){
+	// availibility.length  was coming undefined even if availability was NOT Undefined
+	if(availibility!=undefined && Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
 			if(window.location.pathname.endsWith(k.toLowerCase()) && v == 0){
 				skuOOS = true;
@@ -3014,7 +3052,8 @@ function loadDefaultWishListName_SizeGuide() {
 	
 	/*Offer popup*/
 	function offerPopup(comp) {
-		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+/*		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;max-width: 650px;">'+comp+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
+*/		$("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">'+comp+'<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
 		/*if($("#OfferWrap .Inner .Left").children().length == 0) {
 			$("#OfferWrap .Inner .Left").remove();
 		}*/
@@ -3087,62 +3126,211 @@ function loadDefaultWishListName_SizeGuide() {
 		
 		
 	}
-	//TPR-978
+
+//TPR-978
 function getProductContents() {
 		
-		var requiredUrl = ACC.config.encodedContextPath + "/p"
-				+ "-fetchPageContents";
-		var dataString = 'productCode=' + productCode;
-		var renderHtml = "";
-		$.ajax({
-			url : requiredUrl,
-			data : dataString,
-			success : function(data) {
-				if(data){
-					$('#productContentDivId').html(data);
-					//TPR-4701 | utag event for A+ products
-					var productId=[];
-					productId.push($('#product_id').val());
-					utag.link({
-						"link_text": "a_plus_product",
-						"event_type": "a_plus_product",
-						"a_plus_product_id":productId
+	var requiredUrl = ACC.config.encodedContextPath + "/p"
+			+ "-fetchPageContents";
+	var dataString = 'productCode=' + productCode;
+	var renderHtml = "";
+	$.ajax({
+		url : requiredUrl,
+		data : dataString,
+		success : function(data) {
+			if(data){ 
+				$('#productContentDivId').html(data);
+				 if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
+					 $(".every-scene-carousel").owlCarousel({
+							items:3,
+							loop: true,
+							nav:true,
+							dots:false,
+							navText:[],
+							responsive : {
+								// breakpoint from 0 up
+								0 : {
+									items:1,
+								},	
+								// breakpoint from 767 up
+								768 : {
+									items:2,
+								},
+								// breakpoint from 1122 up
+								1123 : {
+									items:3,
+								}			
+							}	
+							/*navigation:true,
+							rewindNav: false,
+							navigationText :[],
+							pagination:false,
+							items:4,
+							itemsDesktop : false, 
+							itemsDesktopSmall : false, 
+							itemsTablet: false, 
+							itemsMobile : true
+						itemsDesktop : [5000,4], 
+						itemsDesktopSmall : [1400,4], 
+						itemsTablet: [650,2], 
+						itemsMobile : [480,2],*/
+
+
+
+
+
+
+
 					});
-				}
-			},
-			error : function(xhr, status, error) {
-				{
-					
-				}
+				 }
+				//TPR-4701 | utag event for A+ products
+				var productId=[];
+				productId.push($('#product_id').val());
+				utag.link({
+					"link_text": "a_plus_product",
+					"event_type": "a_plus_product",
+					"a_plus_product_id":productId
+				});
+
+
+
+
+
+
 			}
-		});
-	
+				 
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+}
+
+function lazyLoadProductContents(){
+	if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
+		if(!$('#productContentDivId').attr('loaded')) {
+		    //not in ajax.success due to multiple sroll events
+		    $('#productContentDivId').attr('loaded', true);
+
 		
+		    //ajax goes here
+		    //by theory, this code still may be called several times
+		    if ($('#productContentDivId').children().length == 0) {
+		    	getProductContents();
+		    }
+		}
 	}
+}
 
-	function lazyLoadProductContents(){
-		if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
-	        if(!$('#productContentDivId').attr('loaded')) {
-	            //not in ajax.success due to multiple sroll events
-	            $('#productContentDivId').attr('loaded', true);
-
-	            //ajax goes here
-	            //by theory, this code still may be called several times
-	            if ($('#productContentDivId').children().length == 0) {
-	            	getProductContents();
-	        }
-	        }
-	}
-	}
-	
-	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
-		$(window).on('scroll load',function() {
+if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
+	$(window).on('scroll load',function() {
 		lazyLoadProductContents();
-		});
-		
-	}
+	});
+}
 
-	
+
+//PDP Specifications arrow
+$(document).ready(function(){
+var width=0;
+var windowWidth = $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width();
+if (windowWidth > 60){
+$(".SpecWrap .Padd .tabs-block .nav > li").each(
+		function() {
+			width = width + $(this).width();
+		});
+}
+else{
+$(".SpecWrap .Padd .tabs-block .nav > li").each(
+		function() {
+			width = width + $(this).width() + 15;
+		});
+}
+//console.log(width);
+var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+//console.log(winWidth);
+if (width <= winWidth){
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","0px");
+}
+if (width > winWidth){
+	var l = 0;
+	var value = 200;
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","15px");
+	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
+		l = l + value;
+		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible() && l <= width ){
+            $('.SpecWrap .Padd .tabs-block .nav').animate({'left':-l});			
+		}else{
+			l = 0;
+			$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+		}
+        });	
+}
+
+
+
+
+
+
+});
+$(window).on("resize", function() {
+	var width=0;
+	var windowWidth = $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width();
+	if (windowWidth > 60){
+	$(".SpecWrap .Padd .tabs-block .nav > li").each(
+			function() {
+				width = width + $(this).width();
+			});
+
+
+
+
+
+
+	}
+	else{
+	$(".SpecWrap .Padd .tabs-block .nav > li").each(
+			function() {
+				width = width + $(this).width() + 15;
+			});
+	}
+	//console.log(width);
+	var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+	//console.log(winWidth);
+if (width <= winWidth){
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","none");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","0px");
+}
+if (width > winWidth){
+	var l = 0;
+	var value = 200;
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display","inline-block");
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top","15px");
+	$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+	$(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
+		l = l + value;
+		if(!$('.SpecWrap .Padd .tabs-block .nav li:last-child').visible() && l <= width ){
+            $('.SpecWrap .Padd .tabs-block .nav').animate({'left':-l});			
+		}else{
+			l = 0;
+			$('.SpecWrap .Padd .tabs-block .nav').animate({'left':0});
+		}
+        });	
+}
+});
+
+
+
+
+
+
+
+
+
+
+
 	//update the message for Freebie product TPR-1754
 	function  populateFreebieMsg(ussId){
 		var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId
@@ -3214,11 +3402,20 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 			//To get product code from URL
 			//productCode=getProductCodeFromPdpUrl(href);
 			//To get original URL
-			var a = $('<a>', { href:href } )[0];
-			var port= ":"+window.location.port;
+			//var a = $('<a>', { href:href } )[0];
+			if(window.location.port!="")
+			{
+				var port= ":"+window.location.port;
+			}
+			else
+			{
+				var port= "";
+			}
 			var hostName = window.location.hostname;
 			var baseUrl="//"+hostName+port;
-			var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
+			//var originalUrl=baseUrl+a.pathname+"?selectedSize=true";
+			//TISPRDT-781 issue fix
+			var originalUrl=baseUrl+href;
 			$("#addToCartFormTitle").hide(); //Hide 'please select size' on selecting size
 			
 			
@@ -3275,7 +3472,20 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						$("#dListedErrorMsg").hide();//TISSTRT-1469
 						$(".reviews").show();
 						$(".fullfilled-by").show();
+						//CKD:TPR-250 :Start
+						var msiteSeller = $("#msiteBuyBoxSellerId").val(); 
+						var msiteSellerQueryString = '';
+						if (!$.isEmptyObject(msiteSeller)){
+							msiteSellerQueryString='?sellerId='+msiteSeller;
+						}
 						
+						/*$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers");
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers");*/
+						
+						$("a#submit.otherSellersFont").attr("href","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						$("#sellerForm").attr("action","/p/"+responseProductCode+"/viewSellers"+msiteSellerQueryString);
+						
+						//CKD:TPR-250 :End
 						//Deselect the previously selected li and highlight the current li
 						$('ul#variant.variant-select li').each(function (index, value) { 
 							if($(this).hasClass("selected"))
@@ -3405,10 +3615,12 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 							xhrBuyBox.always(function(){
 								//showing/hiding buttons on page change
 								$('#pin').val("");
-								$("#addToCartButton").show();
+								//$("#addToCartButton").show(); // commented for TPR-250 :was overriding
+
 								$('#addToCartButton-wrong').hide();
 								$('#buyNowButton').attr("disabled",false);
-								$("#buyNowButton").show();
+								//$("#buyNowButton").show();  // commented for TPR-250 :was overriding
+
 								//Hiding fullfilled by as they will be populated during richAttribute population
 								$('#fulFilledByTship').hide();
 								$('#fulFilledBySship').hide();
@@ -3503,11 +3715,20 @@ function getClassificationAttributes(productCode)
 function getBuyBoxDataAjax(productCode,variantCodesJson)
 {
 	var isproductPage = $("#isproductPage").val();
+	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode+ "/buybox";
+	$("#allVariantOutOfStock").hide();
+	$("#outOfStockId").hide();
+	$("#addToCartButton").show();
+	$("#addToCartButton").show();
+	$('#buyNowButton').show();
 	return $.ajax({
 		contentType : "application/json; charset=utf-8",
 		url : requiredUrl,
-		data : {productCode:productCode,variantCode:variantCodesJson},
+		data : {productCode:productCode,variantCode:variantCodesJson
+			,sellerId:msiteBuyBoxSeller //CKD:TPR-250	
+		},
+
 		cache : false,//added to resolve browser specific the OOS issue
 		dataType : "json",
 		success : function(data) {
@@ -3521,6 +3742,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			}
 			//TISPRM-56
 			var stockInfo = data['availibility'];
+		
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
 
@@ -3596,12 +3818,23 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					// var codEnabled = data['isCod'];
 					var sellerName = data['sellerName'];
 					var sellerID = data['sellerId'];
+					var oosMicro=data['isOOsForMicro']; // TPR-250
 					
 					
 					$("#sellerNameId").html(sellerName);
 					$("#sellerSelId").val(sellerID);
 				//	alert(data['othersSellersCount']);
-					if (isOOS() && data['othersSellersCount']>0) {
+					if(data['othersSellersCount']>0 && oosMicro==true){ //TPR-250 change
+						$("#addToCartButton").hide();
+						$('#buyNowButton').hide();
+						$("#outOfStockId").show();
+						$("#allVariantOutOfStock").show();
+						$("#otherSellerInfoId").show();
+						$("#otherSellersId").html(data['othersSellersCount']);
+						$("#otherSellerLinkId").show();
+					}
+					
+					else if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();

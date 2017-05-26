@@ -5,6 +5,8 @@ import de.hybris.platform.basecommerce.enums.ReplacementReason;
 import de.hybris.platform.basecommerce.enums.ReturnAction;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.returns.impl.DefaultReturnService;
 import de.hybris.platform.returns.model.RefundEntryModel;
 import de.hybris.platform.returns.model.ReplacementEntryModel;
@@ -13,14 +15,34 @@ import de.hybris.platform.returns.model.ReplacementOrderModel;
 import de.hybris.platform.returns.model.ReturnRequestModel;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.MplCustomerBankAccountDetailsModel;
+import com.tisl.mpl.core.model.MplReturnPickUpAddressInfoModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
+import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.returns.dao.MplReturnsDao;
+import com.tisl.mpl.wsdto.ReturnRequestDTO;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import org.apache.log4j.Logger;
+import com.tisl.mpl.model.CRMTicketDetailModel;
+
 
 
 public class MPLDefaultReturnService extends DefaultReturnService implements MPLReturnService
 {
 
+	@Autowired
+	private MplReturnsDao mplReturnsDao;
+	
+	protected static final Logger LOG = Logger.getLogger(MPLDefaultReturnService.class);
+	
 	@Override
 	public ReplacementEntryModel createReplacement(final ReturnRequestModel request, final AbstractOrderEntryModel entry,
 			final String notes, final Long expectedQuantity, final ReturnAction action, final ReplacementReason reason)
@@ -106,13 +128,148 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 		getModelService().refresh(order);
 	}
 
-
-	//need to save to generate return id 
-	/*
-	 * @Override public ReturnRequestModel createReturnRequest(final OrderModel order) { final ReturnRequestModel request
-	 * = (ReturnRequestModel) getModelService().create(ReturnRequestModel.class); request.setOrder(order); return
-	 * request; }
+	/**
+	 * @author TECHOUTS 
+	 * 
+	 * @param  customerId
+	 * 
+	 * @return MplCustomerBankAccountDetailsModel
+	 * 
 	 */
+	@Override
+	public MplCustomerBankAccountDetailsModel getCustomerBakDetailsById(String customerId)
+	{
+		
+		return mplReturnsDao.getCustomerBankDetailsById(customerId);
+	}
+
+  @Override
+  public List<ReturnRequestModel> getListOfReturnRequest(String orlderId){
+	  return mplReturnsDao.getListOfReturnRequest(orlderId);
+  }
 
 
+	@Override
+	public OrderModel getOrder(final String orderId)
+	{
+		final List<OrderModel> orderModel = mplReturnsDao.getOrder(orderId);
+		if (CollectionUtils.isNotEmpty(orderModel))
+		{
+			return orderModel.get(0);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService#checkProductEligibilityForRTS(java.util.List)
+	 */
+	@Override
+	public boolean checkProductEligibilityForRTS(List<AbstractOrderEntryModel> entries)
+	{
+
+		boolean eligibleForRTS = false;
+		for (final AbstractOrderEntryModel entry : entries)
+		{
+			final ProductModel productModel = entry.getProduct();
+			List<RichAttributeModel> productRichAttributeModel = null;
+			if (null != productModel && productModel.getRichAttribute() != null)
+			{
+				productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+				if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+				{
+					String productRTSValue = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+					if(null != productRTSValue && productRTSValue.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
+						eligibleForRTS = true;
+					}else {
+						eligibleForRTS= false;
+					}
+				}else {
+					eligibleForRTS= false;
+				}
+			}
+			if(!eligibleForRTS) {
+				return eligibleForRTS;
+			}
+			final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+					.getSellerInformationRelator();
+			for (final SellerInformationModel sellerInformationModel : sellerInfo)
+			{
+				if (sellerInformationModel.getSellerArticleSKU().equals(entry.getSelectedUSSID()))
+				{
+					List<RichAttributeModel> sellerRichAttributeModel = null;
+					if (sellerInformationModel.getRichAttribute() != null)
+					{
+						sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
+						if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						{
+							String sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+							if(sellerRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
+								eligibleForRTS = true;
+							}else {
+								eligibleForRTS = false;
+							}
+						}else {
+							eligibleForRTS = false;
+						}
+					}
+					if(!eligibleForRTS) {
+						return false;
+					}
+				}
+
+			}
+
+		}
+		return eligibleForRTS;
+	}
+	
+	@Override
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(final Date fromDate, final Date toDate)
+	{
+		return mplReturnsDao.getPickUpReturnReportByDates(fromDate, toDate);
+
+	}
+
+	@Override
+	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(final String orderID, final String customerId,
+			final String pincode)
+	{
+		return mplReturnsDao.getPickUpReturnReportByParams(orderID, customerId, pincode);
+
+	}
+	
+	@Override
+	public CRMTicketDetailModel getCRMTicketDetail(String transactionId){
+		return mplReturnsDao.getCRMTicketDetail(transactionId);
+	}
+
+	
+	//Save CRM Retrun Rss Ticket information In DB
+	@Override
+	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO)
+	{
+		try
+		{
+			CRMTicketDetailModel crmTicketDetailModel = getModelService().create(CRMTicketDetailModel.class);
+			crmTicketDetailModel.setCustomerID(returnRequestDTO.getUserId());
+			crmTicketDetailModel.setEcomRequestId(returnRequestDTO.getEcomRequestId());
+			crmTicketDetailModel.setTicketId(returnRequestDTO.getTicketId());
+			crmTicketDetailModel.setOrderId(returnRequestDTO.getOrderCode());
+			crmTicketDetailModel.setTransactionId(returnRequestDTO.getTransactionId());
+			crmTicketDetailModel.setTicketType(returnRequestDTO.getTicketType());
+			crmTicketDetailModel.setTicketSubType(returnRequestDTO.getTicketSubType());
+			crmTicketDetailModel.setResturnReasonCode(returnRequestDTO.getReturnReasonCode());
+			crmTicketDetailModel.setRefundType(returnRequestDTO.getRefundType());
+						crmTicketDetailModel.setIsTicketCreatedInCRM(Boolean.TRUE);
+			getModelService().save(crmTicketDetailModel);
+		}
+		catch (ModelSavingException modelSavingException)
+		{
+			LOG.error("Exception while model object saving" + modelSavingException.getMessage());
+		}
+
+	}
 }

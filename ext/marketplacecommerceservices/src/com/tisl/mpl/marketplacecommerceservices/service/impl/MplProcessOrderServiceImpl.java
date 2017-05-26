@@ -5,17 +5,23 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
+import de.hybris.platform.servicelayer.exceptions.ModelRemovalException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.BaseStoreModel;
@@ -23,8 +29,10 @@ import de.hybris.platform.voucher.model.PromotionVoucherModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,12 +55,14 @@ import com.tisl.mpl.marketplacecommerceservices.daos.JuspayWebHookDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplProcessOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplVoucherDao;
+import com.tisl.mpl.marketplacecommerceservices.service.ExtStockLevelPromotionCheckService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCheckoutService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
+import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -94,7 +104,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 	private Converter<OrderModel, OrderData> orderConverter;
 	//For CAR:127
 	private static final String ERROR_NOTIF = "Error while sending notifications>>>>>>";
+
+	@Resource(name = "stockPromoCheckService")
+	private ExtStockLevelPromotionCheckService stockPromoCheckService;
+
 	final Double skipPendingOrdersTATStFinal = new Double(10);
+
 
 	/**
 	 * This method processes pending orders
@@ -256,8 +271,11 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 							getMplCommerceCartService().isInventoryReserved(orderData,
 									MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode,
-									orderModel);
+									orderModel, null, SalesApplication.WEB);
 							getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_TIMEOUT);
+
+							//TPR-965
+							removePromotionInvalidation(orderModel);
 
 							//Code to remove coupon for Payment_Timeout orders
 							if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
@@ -501,9 +519,13 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 					//OMS Deallocation call for failed order
 					getMplCommerceCartService().isInventoryReserved(orderData,
-							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel);
+							MarketplacecommerceservicesConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
+							null, SalesApplication.WEB);
 
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					//limited stock promotion issue starts here
+					removePromotionInvalidation(orderModel);
+					//limited stock promotion issue ends here
 
 
 					if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()))
@@ -551,9 +573,12 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 							break;
 						}
 					}
-					if (successFlag == false)
+					if (!successFlag)
 					{
 						getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+						//limited stock promotion issue starts here
+						removePromotionInvalidation(orderModel);
+						//limited stock promotion issue ends here
 					}
 
 					juspayWebhookModel.setIsExpired(Boolean.TRUE);
@@ -566,6 +591,9 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_FAILED);
+					//limited stock promotion issue starts here
+					removePromotionInvalidation(orderModel);
+					//limited stock promotion issue ends here
 				}
 
 			}
@@ -657,6 +685,84 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			}
 			getMplPaymentService().paymentModeApportion(orderModel);
 		}
+	}
+
+	//TPR-965
+	/**
+	 * removing the released stocks
+	 *
+	 * @param orderModel
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@Override
+	public void removePromotionInvalidation(final OrderModel orderModel) throws EtailNonBusinessExceptions
+	{
+		LOG.debug("Chcking to remove promotion invalidation entries..............");
+		try
+		{
+			//TISSQAUAT-468 and TISSQAUATS-752  code starts here for promotion offercount revert back logic
+			//marketplace.PaymentPending.skipTime
+			boolean isLimitedStockRestrictionAppliedflag = false;
+			final List<PromotionResultModel> promotionlist = new ArrayList<PromotionResultModel>(orderModel.getAllPromotionResults());
+			final Iterator<PromotionResultModel> iter2 = promotionlist.iterator();
+			while (iter2.hasNext())
+			{
+				//final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
+				final PromotionResultModel model2 = iter2.next();
+				if (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions())
+						&& checkForLimitedStockPromo(model2.getPromotion().getRestrictions()))//TISSQAUATS-941
+
+				{
+					isLimitedStockRestrictionAppliedflag = true;
+					LOG.debug("Promotion Type of Limited Offer");
+				}
+
+				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
+				//SONAR FIX
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
+				{
+					final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
+							stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));
+
+					final Iterator<LimitedStockPromoInvalidationModel> iter = invalidationList.iterator();
+
+					//Remove the existing discount
+					while (iter.hasNext())
+					{
+						final LimitedStockPromoInvalidationModel model = iter.next();
+						LOG.debug("Removing Invalidation Entries" + model.getPk());
+						getModelService().remove(model);
+					}
+				}
+
+			}
+		}
+		catch (final ModelRemovalException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0020);
+		}
+	}
+
+	/**
+	 * Validating for Limited Offer Promotion
+	 *
+	 *
+	 * @param restrictions
+	 * @return boolean
+	 */
+	private boolean checkForLimitedStockPromo(final Collection<AbstractPromotionRestrictionModel> restrictions)
+	{
+		if (CollectionUtils.isNotEmpty(restrictions))
+		{
+			for (final AbstractPromotionRestrictionModel restriction : restrictions)
+			{
+				if (restriction instanceof EtailLimitedStockRestrictionModel)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	//Not used

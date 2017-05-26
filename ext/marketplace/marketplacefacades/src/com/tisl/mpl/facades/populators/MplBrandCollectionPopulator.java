@@ -11,10 +11,6 @@ import de.hybris.platform.converters.Populator;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -34,7 +30,7 @@ public class MplBrandCollectionPopulator implements Populator<BrandComponentMode
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -42,30 +38,23 @@ public class MplBrandCollectionPopulator implements Populator<BrandComponentMode
 	{
 		Assert.notNull(source, MarketplacecommerceservicesConstants.SOURCENOTNULL);
 		Assert.notNull(target, MarketplacecommerceservicesConstants.TARGETNOTNULL);
-
 		target.setUid(source.getUid());
-		target.setLayout(source.getLayout().getCode());
+
+		if (null != source.getLayout())
+		{
+			target.setLayout(source.getLayout().getCode());
+		}
 		target.setMasterBrandName(source.getMasterBrandName());
 		target.setMasterBrandURL(source.getMasterBrandURL());
-		if (CollectionUtils.isNotEmpty(source.getSubBrandList()))
-		{
-			final List<CMSSubbrandData> subBrandDataList = new ArrayList<CMSSubbrandData>();
-			for (final CMSSubbrandModel subBrandModel : source.getSubBrandList())
-			{
-				final CMSSubbrandData cmsSubBrandData = cmsSubBrandConvertor.convert(subBrandModel);
-				subBrandDataList.add(cmsSubBrandData);
-			}
-			target.setSubBrandList(subBrandDataList);
-		}
-		if (CollectionUtils.isNotEmpty(source.getSubBrands()))
-		{
-			final List<CategoryData> categorydata = new ArrayList<CategoryData>();
-			for (final CategoryModel categoryModel : source.getSubBrands())
-			{
-				categorydata.add(categoryConverter.convert(categoryModel));
-			}
-			target.setSubBrands(categorydata);
-		}
+		/*
+		 * if (CollectionUtils.isNotEmpty(source.getSubBrandList())) { final List<CMSSubbrandData> subBrandDataList = new
+		 * ArrayList<CMSSubbrandData>(); for (final CMSSubbrandModel subBrandModel : source.getSubBrandList()) { final
+		 * CMSSubbrandData cmsSubBrandData = cmsSubBrandConvertor.convert(subBrandModel);
+		 * subBrandDataList.add(cmsSubBrandData); } target.setSubBrandList(subBrandDataList); } if
+		 * (CollectionUtils.isNotEmpty(source.getSubBrands())) { final List<CategoryData> categorydata = new
+		 * ArrayList<CategoryData>(); for (final CategoryModel categoryModel : source.getSubBrands()) {
+		 * categorydata.add(categoryConverter.convert(categoryModel)); } target.setSubBrands(categorydata); }
+		 */
 
 	}
 

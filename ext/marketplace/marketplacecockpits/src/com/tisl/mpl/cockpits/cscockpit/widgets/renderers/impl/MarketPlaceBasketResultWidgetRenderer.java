@@ -1,11 +1,9 @@
+
 package com.tisl.mpl.cockpits.cscockpit.widgets.renderers.impl;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,10 +29,8 @@ import com.tisl.mpl.cockpits.cscockpit.services.search.meta.processor.MplMetaPro
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceSearchCommandController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.models.impl.MarketplaceSearchResultWidgetModel;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplFindDeliveryCostStrategy;
 
@@ -47,8 +43,6 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
-import de.hybris.platform.core.model.security.PrincipalGroupModel;
-import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.model.data.DataObject;
 import de.hybris.platform.cscockpit.services.search.CsFacetSearchCommand;
 import de.hybris.platform.cscockpit.utils.CssUtils;
@@ -57,11 +51,11 @@ import de.hybris.platform.cscockpit.utils.SafeUnbox;
 import de.hybris.platform.cscockpit.widgets.controllers.search.SearchCommandController;
 import de.hybris.platform.cscockpit.widgets.models.impl.SearchResultWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.BasketResultWidgetRenderer;
-import de.hybris.platform.jalo.JaloSession;
+import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
-import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.PriceValue;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -112,11 +106,11 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	@Autowired
 	private MplFindDeliveryCostStrategy mplFindDeliveryCostStrategy;
 	
-	@Resource
-	private AgentIdForStore agentIdForStore;
 	
 	@Autowired
 	private PincodeService pincodeService;
+	
+
 	/**
 	 * Creates the content internal.
 	 *
@@ -592,8 +586,7 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		widget.getWidgetController().dispatchEvent(null, null, data);
 	}
 	}
-	
-	
+
 	/**
 	 * Process pin code serviceability.
 	 *
@@ -612,27 +605,24 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 		try {
 			((MarketplaceSearchCommandController) widget
 					.getWidgetController()).setCurrentSite();
-			
-			final String agentId = agentIdForStore.getAgentIdForStore(
-					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
-			
+			boolean isPinCodeServicable =false;
 			//TISUAT-4526 no sship in cod
-			if((!mplFindDeliveryCostStrategy.isTShip(ussid)) 
-					&&
-					!(StringUtils.isNotEmpty(agentId))){
-				popupMessage(widget,"noSellerCOD");
-				return;
-			}
+			// commenting below line ,since from R2.3 SSHIP COD IS eligible  if seller Allows
+//			if(!mplFindDeliveryCostStrategy.isTShip(ussid)){
+//				popupMessage(widget,"noSellerCOD");
+//				return;
+//			}
 				
 			List<PinCodeResponseData> pinCodeResponses = ((MarketplaceSearchCommandController) widget
 					.getWidgetController()).getResponseForPinCode(product,
 					String.valueOf(pincode), isDeliveryDateRequired, ussid);
-			boolean isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
+			
 			if(CollectionUtils.isNotEmpty(pinCodeResponses)) {
 				LOG.info("pinCodeResponse:" + pinCodeResponses.size());
 
 				boolean isAddtoCartRequired = checkServiceAbility(widget, item, quantityToAdd, pincode, product,
 						pinCodeResponses);
+				isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
 				if(isAddtoCartRequired){
 					((MarketplaceSearchCommandController) widget
 							.getWidgetController()).setCurrentSite();
@@ -685,9 +675,11 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 							+ product.getCode());
 					LOG.info("Quantity added:" + quantityToAdd);
 					isAddtoCartRequired=true;
+					sessionService.setAttribute("isPincodeServicable", true);
 				} else if (!StringUtils.equals(
 						pinCodeResponse.getIsServicable(), YES)) {
 					LOG.info("Not serviceable at " + pincode);
+					sessionService.setAttribute("isPincodeServicable", false);
 					popupMessage(widget, NOT_SERVICE_ABLE);
 				} else if (pinCodeResponse.getStockCount() > 0) {
 					LOG.info("There is no sufficient inventory available for this product. Total Inventory available:"
@@ -733,3 +725,4 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 	     return null;
 	   }
 }
+

@@ -85,6 +85,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
@@ -110,6 +111,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
+import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -206,6 +208,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
+
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
 
 	private final String checkoutPageName = "Payment Options";
 	private final String RECEIVED_INR = "Received INR ";
@@ -351,6 +356,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				// TPR-429 END
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
+
+
+				//TISSQAUAT-536 fixes
+
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
@@ -1461,6 +1470,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			setupMplCardForm(model, cartTotal);
 
 			//Adding all the details in model to be accessed from jsp
+
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 			//TODO: Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope
 			//model.addAttribute("voucherDataList",
@@ -1488,7 +1498,42 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			model.addAttribute(MarketplacecheckoutaddonConstants.ORDERDATA, orderData);
 			model.addAttribute("isCart", Boolean.FALSE);
 		}
+		//TISSTRT-1501 starts
+		if (null != cartData)
+		{
+			if (null != cartData.getEntries())
+			{
+				//TISSTRT-1501 ends
+				for (final OrderEntryData cartEntryData : cartData.getEntries())
+				{
+					final CartModel cartModel = getCartService().getSessionCart();
+					final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+					{
+						if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+						{
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+							{
+								cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+							}
+						}
+					}
 
+					if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+					{
+						if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+						{
+							// final CartModel cartModel = getCartService().getSessionCart();
+							final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+							cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
+									Double.valueOf(configModel.getSdCharge())));
+						}
+					}
+				}
+				//TISSTRT-1501 starts
+			}
+		}
+		//TISSTRT-1501 ends
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
 		model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
@@ -2281,7 +2326,12 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//adding cards to model
 				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedCreditCards);
 			}
-			else
+			//TISRLUAT-03 starts
+			else if (MapUtils.isNotEmpty(savedDebitCards))
+			{
+				model.addAttribute(MarketplacecheckoutaddonConstants.CREDITCARDS, savedDebitCards);
+			}
+			//TISRLUAT-03 end
 			{
 				LOG.info("No Saved credit cards found !!");
 			}
@@ -3964,11 +4014,28 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						if (richAttributeModel != null && richAttributeModel.get(0) != null
 								&& richAttributeModel.get(0).getDeliveryFulfillModes() != null)
 						{
-							final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+							/* Added in R2.3 for START */
+							if (DeliveryFulfillModesEnum.BOTH.toString().equalsIgnoreCase(fulfillmentType))
+							{
+								if (null != entry.getFulfillmentType())
+								{
+									fulfillmentType = entry.getFulfillmentType();
+								}
+								else if (null != entry.getFulfillmentTypeP1())
+								{
+									fulfillmentType = entry.getFulfillmentTypeP1();
+								}
+								else if (null != richAttributeModel.get(0).getDeliveryFulfillModeByP1()
+										&& null != richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode())
+								{
+									fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode();
+								}
+							}
+							/* Added in R2.3 END */
 							if (DeliveryFulfillModesEnum.TSHIP.toString().equalsIgnoreCase(fulfillmentType))
 							{
 								LOG.debug("Entry is TSHIP");
-								//TPR-627, TPR-622 Separate method the check COD Eligibility to avoid redundant code
 								final boolean returnFlag = paymentModecheckForCOD(richAttributeModel, abstractOrder, model);
 								if (!returnFlag)
 								{
@@ -4007,9 +4074,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 			}
 		}
+
 	}
-
-
 
 
 	//Getters and Setters
@@ -4269,7 +4335,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */

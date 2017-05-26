@@ -9,6 +9,49 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- R2.3 START: 2016-12-19: Code Merged -->
+<!-- Move it to style.css before committing -->
+<style>
+	.address_landmarks, .address_landmarkOther, .address_landmarkOtherDiv {
+		width: 100% !important;
+		display: inline-block;
+	}
+	
+	.address_landmarkOther, .address_landmarkOtherDiv label, .address_landmarkOtherDiv {
+		display: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		display: none;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: inherit;
+	}
+	
+	.address_landmarkOtherDiv {
+		margin: 0px !important;
+	}
+	.formaddress .checkout-indent #new-address-option-1+label,
+.formaddress .checkout-indent #new-address-option-2+label {
+    width:100%;
+    
+}
+/* R2.3 START */
+.dupDisplay{
+display: none;}
+/* R2.3 end */
+@media(min-width:791px) {
+   
+    #new-address-option-1+label,
+    #new-address-option-2+label {
+        width:100%
+    }
+    
+}
+	
+</style>
+<!-- R2.3 END: 2016-12-19: Code Merged -->
 <c:choose>
 	<c:when test="${country == 'US'}">
 		<formElement:formSelectBox idKey="address.title"
@@ -153,12 +196,19 @@
 		<%-- <label  class="asd" for="${type}"></label><form:radiobutton path="addressType" value="${type}" /> --%>
 		
 		
+		
+		<div class="row">
+		<div class="col-md-6 col-sm-6 col-xs-6 padd">
 		<input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/>
 		<label class="residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" /></label>
+		</div>
+		<div class="col-md-6 col-sm-6 col-xs-6 padd">
 		<input type="radio" id="new-address-option-2" value="Work" name="addressType" />
 		<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" /></label>
+        </div></div>
 		<fieldset> 
 		<div class='half'>
+
 
 		<formElement:formInputBox idKey="address.firstName" labelKey="First Name*"
 			 path="firstName" 
@@ -175,6 +225,7 @@
 			</div>
 			<!-- <div class='half'> -->
          <div class='half'>
+
           <%-- <label for="myselect"><spring:theme code="text.addressBook.PhoneNumber" text="Mobile Number" /></label>	 --%>	
       <div class="showPhone">
        <label class="control-label " for="address.mobile">Mobile Number*</label>
@@ -182,6 +233,7 @@
        <option value="myselectedvalue" selected="selected">+91</option>
      </select> -->
         <input type="hidden" name="myselect" value="myselectedvalue" /> 
+
 	 	<form:input type="text" idKey="address.mobile" id="mobileNonewForm" 
 			 path="MobileNo" inputCSS="form-control"
 			mandatory="true" maxLength="10"/> 
@@ -193,7 +245,7 @@
 		<div class='half'>
 		<formElement:formInputBox idKey="address.postcode" labelKey="Pincode*"
 			path="postcode"
-			mandatory="true" maxLength="6" />
+			mandatory="true" maxLength="6" inputCSS="address_postcode" />
 		<div class="help-block has-error" id="addressPincodeServicableDiv"
 			style="display: none;"></div>
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
@@ -203,6 +255,8 @@
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line1" labelKey="Address Line 1*"
 			 path="line1"
+
+
 			mandatory="true" maxLength="40" />
 			 <div class="help-block has-error" id="address1Error" style="display: none;">
 			</div>
@@ -211,6 +265,7 @@
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2" labelKey="Address Line 2"
 			 path="line2" 
+
 			mandatory="true" maxLength="40"/>
 			 <div class="help-block has-error" id="address2Error" style="display: none;">
 			</div>
@@ -219,35 +274,91 @@
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3" labelKey="Address Line 3"
 			 path="line3" 
+
 			mandatory="true" maxLength="40"/>
 			 <div class="help-block has-error" id="address3Error" style="display: none;">
 			</div>
 			</div>
+				<!-- R2.3: START -->
+			<div class='full'>
+			<div class='half'>
+				<div class="optionsLandmark">
+					<formElement:formSelectBox  idKey="address.landmarks" selectCSSClass="address_landmarks"
+						labelKey="Landmarks" path="landmark" mandatory="true"
+						skipBlank="false" 
+						items="${abc}"
+						itemValue="name" />
+				</div>
+			</div>
+			<div class='half'>
+			
+				<div class='half address_landmarkOtherDiv' data-value="${addressForm.landmark}" style="display: none;">
+						<formElement:formInputBox inputCSS="address_landmarkOther" idKey="otherLandmark"
+							labelKey="Nearest Landmark" path="otherLandmark"
+							maxLength="30" />
+							<div class="error_text otherLandMarkError"></div>
+				</div>
+			</div>
+			</div>
+			<!-- R2.3: END -->
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
 		<div class='full'>
 		<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.townCity" labelKey="City*"
 			 path="townCity" 
-			mandatory="true" maxLength="40"/>
+			mandatory="true" maxLength="40" inputCSS="address_townCity"/>
 			<div class="help-block has-error" id="cityError" style="display: none;">
 			</div>
 			</div>
 			<!-- <div class="half address-select"> -->
+
+			<!-- R2.3: START: Commeted --><!--
 			<div class="full address-select">
-		<formElement:formSelectBox idKey="address.states" labelKey="State*"
+		<formElement:formSelectBox idKey="address.states" 
 			 path="state" mandatory="true"
 			skipBlank="false" skipBlankMessageKey="address.state.pleaseSelectState"
 			items="${stateDataList}" selectedValue="${addressForm.state}"
 			itemValue="name"  />
 			<div class="help-block has-error" id="stateError" style="display: none;">		
-			</div>
-			</div>
+			</div> 
+			</div> --><!-- R2.3: END: Commented -->
+			<!-- R2.3: START -->
+			<div class="full address-select">
+				<div class="mainDrop">
+				<formElement:formSelectBox idKey="address.states" 
+					selectCSSClass="address_states addressRead" labelKey="address.states"
+					path="state" mandatory="true" skipBlank="false"
+					skipBlankMessageKey="${addressForm.state}"
+					items="${stateDataList}"
+					itemValue="name" />
+				<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+				</div>
+				
+					<div class="dupDisplay">
+					<label>State *</label>
+					<div class="stateInput"></div>
+						<div class="help-block has-error" id="stateError"
+					style="display: none;"></div>
+					</div>
 
+			<%-- <div class="dupDisplay">
+				
+					<form:input path="state" id="address.statesReadOnly"
+						class="address_states addressDup" maxlength="30" readonly="readonly"/>
+					<div class="errorMessage">
+							<div id="erraddressCity"></div>
+					</div>
+			</div> --%>
+			</div>
+			<!-- R2.3: END -->
+			
 		<!-- <div class="half country-select"> -->
 		<div class="full country-select">
 		<c:set var='count'  value='1' />
 		<div class="country">
 		<%-- <label><spring:theme code="address.selectCountry"/></label> --%>
+
 
 		    	<c:forEach items="${supportedCountries}" var="country">
 					<c:if test="${country.isocode eq 'IN' and count==1}">
@@ -261,6 +372,7 @@
 			</div>
 		</div>
 
+
 		<%-- <formElement:formInputBox idKey="address.states" labelKey="address.states" path="state" inputCSS="form-control" mandatory="true"/> --%>
 		<!-- <div class='half'> -->
 		<%-- <div class='full'>
@@ -272,6 +384,7 @@
 			<div class="help-block has-error" id="pincodeError" style="display: none;">
 			</div>
 			</div> --%>
+
 
          <%-- <!-- <div class='half'> -->
          <div class='full'>
@@ -305,6 +418,31 @@
 
 	</c:otherwise>
 </c:choose>
-
-
-
+<!-- R2.3: START -->
+<script>
+$(document).ready(function(){
+	var tmpValue= -1;
+	
+	
+	$(".address_postcode").blur(function() {
+		if($(".address_postcode").val().length == "6") {	
+		loadPincodeData("new").done(function() {
+			console.log("addressform blur line 394");
+		 var value = $(".address_landmarkOtherDiv").attr("data-value");
+		 console.log("addressform blur line 396 "+value);
+		 otherLandMarkTri(value,"blur");
+		});
+		}else{
+			$(".address_landmarks").empty();
+			changeFuncLandMark("");
+			$(".address_states,#statesReadOnly,.address_townCity").attr('readonly',false).prop("value","");
+			$(".mainDrop").show();
+			$(".mainDrop select").prop("disabled",false);
+			$(".stateInput input").prop("disabled","disabled");
+			$(".dupDisplay").hide();
+		}
+});
+	
+	});
+</script>
+<!-- R2.3: END -->

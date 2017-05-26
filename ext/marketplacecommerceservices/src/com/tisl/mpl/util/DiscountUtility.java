@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.util;
 
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
@@ -87,6 +84,9 @@ public class DiscountUtility
 		{
 			promoData = getBuyAAboveXData(productPromotion, abstractOrderModel);
 		}
+		//TPR-970 starts
+
+		//TPR-970 ends
 		final long endTime = System.currentTimeMillis();
 		LOG.debug("Exiting service populateData====== " + (endTime - startTime));
 		return promoData;

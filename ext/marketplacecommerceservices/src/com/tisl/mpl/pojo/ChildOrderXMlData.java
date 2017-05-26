@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder =
 { "transactionId", "paymentRefID", "orderTag", "fulfillmentType", "itemNumber", "USSID", "amount", "shipmentCharge",
 		"sellerCode", "expressdeliveryCharge", "primaryCategory", "secondaryCategory", "cancelDate", "returnDate",
-		"reversePaymentRefId", "deliveryMode" })
+		"reversePaymentRefId", "deliveryMode", "scheduleDelCharge" })
 public class ChildOrderXMlData
 {
 
@@ -36,6 +36,9 @@ public class ChildOrderXMlData
 	private String returnDate;
 	private String reversePaymentRefId;
 	private String deliveryMode;
+	private double scheduleDelCharge;
+
+
 
 	/**
 	 * @return the transactionId
@@ -327,6 +330,24 @@ public class ChildOrderXMlData
 	public void setDeliveryMode(final String deliveryMode)
 	{
 		this.deliveryMode = deliveryMode;
+	}
+
+	/**
+	 * @return the scheduleDelCharge
+	 */
+	@XmlElement(name = "ScheduleDelCharge")
+	public double getScheduleDelCharge()
+	{
+		return scheduleDelCharge;
+	}
+
+	/**
+	 * @param scheduleDelCharge
+	 *           the scheduleDelCharge to set
+	 */
+	public void setScheduleDelCharge(final double scheduleDelCharge)
+	{
+		this.scheduleDelCharge = scheduleDelCharge;
 	}
 
 }

@@ -101,6 +101,18 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxList;
 	}
 
+	//CKD:TPR-250: Start
+	@Override
+	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode, final String sellerId)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	{
+
+		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyboxPriceForMicrosite(productCode, sellerId);
+		return buyBoxList;
+	}
+
+	//CKD:TPR-250: End
+
 	/*
 	 * This service method will return buybox prices for product code
 	 *

@@ -23,11 +23,11 @@ INSERT_UPDATE Language;isocode[unique=true];fallbackLanguages(isocode);active[de
 
 # Currencies
 INSERT_UPDATE Currency;isocode[unique=true];conversion;digits;symbol
-;GBP;1;2;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£
-;EUR;1;2;ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬
+;GBP;1;2;Ãƒâ€šÃ‚Â£
+;EUR;1;2;ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 ;USD;1,4;2;$
-;JPY;120;0;ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥
-;INR;1;2;â‚¹
+;JPY;120;0;Ãƒâ€šÃ‚Â¥
+;INR;1;2;₹
 
 # SiteMap Language Currencies
 INSERT_UPDATE SiteMapLanguageCurrency;&siteMapLanguageCurrency;language(isoCode)[unique=true];currency(isocode)[unique=true];
@@ -644,4 +644,39 @@ INSERT_UPDATE luxIndicatorEnum;code[unique=true];name[lang=en]
 ;marketplace;Marketplace
 ;luxury;Luxury;
 
+####SiteMap CronJob
+$storePrefix=mpl
+$siteUid=$storePrefix
+$siteMapUrlLimitPerFile=1000
+ 
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;customSiteMapMediaJob;customSiteMapMediaJob;false;en
+
+INSERT_UPDATE SiteMapMediaCronJob;code[unique=true];job(code);sessionLanguage(isocode);updatetype(code);contentsite(uid);siteMapUrlLimitPerFile
+;customSiteMapMediaJob;customSiteMapMediaJob;en;ALL;$siteUid;$siteMapUrlLimitPerFile
+
+INSERT_UPDATE SiteMapPage;code(code)[unique=true];frequency(code);priority;active
+;Homepage;daily;1;true
+;Product;daily;0.7;true
+;Category;daily;0.8;true
+;CategoryLanding;daily;0.8;true
+;Store;weekly;0.5;true
+;Content;weekly;0.5;true
+;Custom;weekly;0.5;true
+
+INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
+;mpl-siteMapTemplate;"<?xml version=""1.0"" encoding=""UTF-8""?>
+<urlset xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"" xmlns:image=""http://www.google.com/schemas/sitemap-image/1.1"">
+	#foreach( $siteMapUrl in $ctx.siteMapData )
+		<url>
+			<loc>${ctx.baseUrl}${siteMapUrl.loc}</loc>
+			<lastmod>${siteMapUrl.lastMod} </lastmod>
+			<changefreq>${siteMapUrl.changeFrequency}</changefreq>
+			<priority>${siteMapUrl.priority}</priority>
+
+		</url>
+	#end
+</urlset>"
+
+####SiteMap CronJob Ends
 

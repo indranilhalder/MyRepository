@@ -539,5 +539,12 @@ public class MarketplacewebservicesConstants
 
 	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
 
+	public static final String TO = "TO";
+	public static final String RETURN_SELF_COURIER_FILE_DOWNLOAD_URL = "/my-account/returns/returnFileDownload?orderCode=";
+	public static final String TRANSACTION_ID ="transactionId";
+	public static final String AMPERSAND = "&";
+	public static final String EQUALS_TO = "=";
+	public static final String COLON = ":";
+	public static final String FORWARD_SLASHES = "//";
 
 }
