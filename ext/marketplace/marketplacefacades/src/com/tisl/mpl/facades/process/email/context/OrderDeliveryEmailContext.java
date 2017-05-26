@@ -27,7 +27,9 @@ import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 /**
@@ -60,6 +62,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
 	private static final String SPACE = " "; //TISUATSE-80
+	public static final String TRACK_ORDER_URL = "trackOrderUrl";
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
@@ -72,7 +75,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 	@Autowired
 	private ConfigurationService configurationService;
-
+	@Autowired
+	private ShortUrlService shortUrlService;
 
 
 	@Override
@@ -147,6 +151,20 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 				}
 			}
 		}
+
+		/*
+		 * final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderUpdateProcessModel.getOrder().getCode();
+		 * put(TRACK_ORDER_URL, trackOrderUrl);
+		 */
+
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+				+ orderReferenceNumber;
+		/* Added in R2.3 for shortUrl START */
+		final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
+		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
+
 
 		put(P_ORDER_CODE, pOrderCode);
 		put(ORDER_CODE, orderReferenceNumber);

@@ -44,6 +44,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 /**
@@ -82,7 +83,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
-
+	@Autowired
+	private ShortUrlService shortUrlService;
 
 
 	@Override
@@ -117,12 +119,21 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+				+ orderCode;
+		/* Added in R2.3 for shortUrl START */
+		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
+
+
 		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
 
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ orderProcessModel.getOrder().getCode();
-		put(TRACK_ORDER_URL, trackOrderUrl);
+		/*
+		 * final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderProcessModel.getOrder().getCode();
+		 * put(TRACK_ORDER_URL, trackOrderUrl);
+		 */
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
 		put(SUBTOTAL, subTotal);
