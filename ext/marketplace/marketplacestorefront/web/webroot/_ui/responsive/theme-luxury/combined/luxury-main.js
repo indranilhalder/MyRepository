@@ -12174,16 +12174,16 @@ TATA.CommonFunctions = {
         return productURL.substring(n + 1, productURL.length).toUpperCase();
     },
     addToWishlist: function(productURL, element) {
-        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
+        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP", sizeSelected = !0;
+        $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
+        var dataString = "wish=&product=" + productCode + "&sizeSelected=" + sizeSelected;
         if (!headerLoggedinStatus) return $(".wishAddLoginPlp").addClass("active"), setTimeout(function() {
             $(".wishAddLoginPlp").removeClass("active");
         }, 3e3), !1;
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url: requiredUrl,
-            data: {
-                product: productCode
-            },
+            data: dataString,
             dataType: "json",
             success: function(data) {
                 1 == data ? ($(".wishAddSucessPlp").addClass("active"), setTimeout(function() {
@@ -12191,7 +12191,7 @@ TATA.CommonFunctions = {
                 }, 3e3), $(element).addClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
                 setTimeout(function() {
                     $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(this).addClass("added");
+                }, 3e3)), $(element).addClass("added");
             },
             error: function(xhr, status, error) {
                 alert(error), "undefined" != typeof utag && utag.link({
@@ -12202,23 +12202,22 @@ TATA.CommonFunctions = {
             $("a.wishlist#wishlist").popover("hide"), $("input.wishlist#add_to_wishlist").popover("hide");
         }, 0);
     },
-    removeFromWishlist: function(productURL, el) {
-        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";
-        $("#variant li").hasClass("selected") && $("#variant,#sizevariant option:selected").val();
+    removeFromWishlist: function(productURL, element) {
+        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP", sizeSelected = !0;
+        $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
+        var dataString = "wish=&product=" + productCode + "&sizeSelected=" + sizeSelected;
         return headerLoggedinStatus ? ($.ajax({
             contentType: "application/json; charset=utf-8",
             url: requiredUrl,
-            data: {
-                product: productCode
-            },
+            data: dataString,
             dataType: "json",
             success: function(data) {
                 1 == data ? ($(".wishRemoveSucessPlp").addClass("active"), setTimeout(function() {
                     $(".wishRemoveSucessPlp").removeClass("active");
-                }, 3e3), $(el).removeClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
+                }, 3e3), $(element).removeClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
                 setTimeout(function() {
                     $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(this).removeClass("added");
+                }, 3e3)), $(element).removeClass("added");
             },
             error: function(xhr, status, error) {
                 alert(error);
