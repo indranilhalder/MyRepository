@@ -43,8 +43,7 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 
-<header class="marketplace-header">	
-	<!-- For Infinite Analytics Start -->
+<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" name="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" name="ia_site_page_id" value="${cmsPage.uid}"> 
 	<!-- changes for url structure change for pdp-->
@@ -67,6 +66,9 @@
 	<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
 	
 	<!-- End -->
+
+<header class="marketplace-header">	
+	
 	<%--<!-- geolocation start-->
 	
 	<input type="hidden" id="latlng" value="">
@@ -74,13 +76,6 @@
     
     <!-- geolocation End--> --%>
 
-	
-	
-	
-    
-   
-	
-	
 	
 	
 	<div class="row header-row"></div>
