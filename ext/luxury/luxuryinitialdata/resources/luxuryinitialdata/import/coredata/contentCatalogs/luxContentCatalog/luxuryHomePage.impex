@@ -32,7 +32,14 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 
 INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
 ;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
+
+INSERT_UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;;
+;;MiniCart;Mini Cart;MiniCart;SUBTOTAL;3;;
+
                            
+INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;shownProductCount;;
+;;MyWishList;My WishList;MyWishList;3;;
+
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
 ;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
@@ -209,8 +216,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;TopHeaderSlot;Top header slot;true;LuxuryFreeShippingLink       
 ;;FooterSlot;Footer;true;LuxuryFooterComponent        
 ;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
-
-
+;;WishListSlot;Wish List;true;MyWishList
+;;MiniCartSlot;Mini Cart;true;MiniCart
 ;;TabsSlot;Tabs;true;TabPanelContainer
 ;;BottomHeaderSlot;Bottom Header;true;breadcrumbComponent
 ;;VariantSelectorSlot;Variant Selector;true;VariantSelector
@@ -232,7 +239,7 @@ INSERT_UPDATE ContentSlotName;name[uniquRightContentSlote=true];template(uid,$co
 ;SiteLogo;;;logo               
 ;HeaderLinks;;;headerlinks        
 ;SearchBox;;;searchbox          
-;MiniCart;;;wide               
+;MiniCart;;;wide             
 ;NavigationBar;;;navigation         
 ;TopBannerMen;;;wide               
 ;TopBannerWomen;;;wide               
@@ -250,7 +257,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo               
 ;HeaderLinks;;;headerlinks        
 ;SearchBox;;;searchbox          
-;MiniCart;;;wide               
+;MiniCart;;;wide                
 ;NavigationBar;;;navigation 
 ;Section1;;;wide
 ;Section2;;;wide
@@ -279,7 +286,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SiteLogo;SiteLogo;;SiteLogoSlot;true          
 ;;HeaderLinks;HeaderLinks;;HeaderLinksSlot;true          
 ;;SearchBox;SearchBox;;SearchBoxSlot;true          
-;;MiniCart;MiniCart;;MiniCartSlot;true          
+;;MiniCart;MiniCart;;MiniCartSlot;true  
+;;WishList;WishList;;WishListSlot;true     
 ;;NavigationBar;NavigationBar;;NavigationBarSlot;true          
 ;;HomeTopBannerMen;TopBannerMen;;HomeTopHeroBannerLeft;true          
 ;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true                  
