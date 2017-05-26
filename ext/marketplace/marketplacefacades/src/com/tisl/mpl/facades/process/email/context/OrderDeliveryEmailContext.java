@@ -79,6 +79,11 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderUpdateProcessModel, emailPageModel);
+
+		final OrderModel order = orderUpdateProcessModel.getOrder();
+
+		final double orderSubTotalPrice = order.getSubtotal() == null ? 0D : order.getSubtotal().doubleValue();
+
 		final double orderTotalPrice = orderUpdateProcessModel.getOrder().getTotalPrice() == null ? 0D : orderUpdateProcessModel
 				.getOrder().getTotalPrice().doubleValue();
 		final double convenienceCharges = orderUpdateProcessModel.getOrder().getConvenienceCharges() == null ? 0D
@@ -86,9 +91,9 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
-		final Double subTotal = Double.valueOf(orderTotalPrice);
+		final Double subTotal = Double.valueOf(orderSubTotalPrice);
 
-		final OrderModel order = orderUpdateProcessModel.getOrder();
+
 
 		final Set<ConsignmentModel> consignmentEntries = orderUpdateProcessModel.getOrder().getConsignments();
 		for (final ConsignmentModel consignment : consignmentEntries)

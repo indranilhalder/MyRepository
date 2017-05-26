@@ -567,8 +567,7 @@ Free
 
 		  	        		    <tr>
 		  	        		      <td>
-
-		  	        		        <img src="images/placeh.gif" height="6" style="display:block;line-height:0;font-size:0;">
+		  	        		         ${ctx.cmsSlotContents.placeh}
 		  	        		      </td>
 		  	        		    </tr>
 		  	        		    <tr align="center">
