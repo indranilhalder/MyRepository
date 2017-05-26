@@ -21,7 +21,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.session.SessionService;
 
@@ -202,12 +201,10 @@ public class LoginPageController extends AbstractLoginPageController
 				if (loginError)
 				{
 					model.addAttribute(ModelAttributetConstants.MESSAGE, ModelAttributetConstants.EMAILORPASSINVALID);
-					System.out.println("returning LoginPanelFragment");
 					return ControllerConstants.Views.Fragments.LuxuryHome.LoginFragment;
 				}
 				else
 				{
-					System.out.println("returning RegisterFragment");
 					return ControllerConstants.Views.Fragments.LuxuryHome.RegisterFragment;
 				}
 			}
@@ -279,13 +276,15 @@ public class LoginPageController extends AbstractLoginPageController
 			@RequestParam(value = ModelAttributetConstants.AFFILIATEID, required = false) final String affiliateId,
 			@RequestParam(value = ModelAttributetConstants.IS_SIGN_IN_ACTIVE, required = false) final String isSignInActive,
 			final Model model, final HttpServletRequest request, final HttpServletResponse response, final HttpSession session)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		try
 		{
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
+
+
 			if (!StringUtils.isBlank(affiliateId))
 			{
 				final ExtRegisterForm form = new ExtRegisterForm();
@@ -389,8 +388,6 @@ public class LoginPageController extends AbstractLoginPageController
 			final String rePassword = java.net.URLDecoder.decode(request.getParameter("checkPwd"), "UTF-8");
 			form.setPwd(password);
 			form.setCheckPwd(rePassword);
-			LOG.info("inside doRegister");
-			System.out.println("inside doRegister");
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
@@ -446,7 +443,7 @@ public class LoginPageController extends AbstractLoginPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	private String processRegisterUserRequestNew(final ExtRegisterForm form, final BindingResult bindingResult, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response, final RedirectAttributes redirectModel)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		if (bindingResult.hasErrors())

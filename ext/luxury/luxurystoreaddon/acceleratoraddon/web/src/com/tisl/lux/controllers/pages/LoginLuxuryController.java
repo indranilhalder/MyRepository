@@ -51,7 +51,6 @@ public class LoginLuxuryController
 	public String getLoginFragment(final Model model, final LoginForm form)
 	{
 		LOG.info("inside getLoginFragment");
-		System.out.println("inside getLoginFragment");
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		model.addAttribute("userName", currentCustomer.getFirstName());
 

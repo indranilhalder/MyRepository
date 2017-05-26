@@ -6,6 +6,7 @@ package com.tisl.mpl.facades.account.register.impl;
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNullStandardMessage;
 
 import de.hybris.platform.acceleratorservices.model.email.EmailAttachmentModel;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.commercefacades.customer.impl.DefaultCustomerFacade;
@@ -47,6 +48,7 @@ import com.tisl.mpl.core.model.SendInvoiceProcessModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.account.register.RegisterCustomerFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtDefaultCustomerService;
@@ -300,8 +302,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				setUidForRegister(registerData, newCustomer);
 				newCustomer.setSessionLanguage(getCommonI18NService().getCurrentLanguage());
 				newCustomer.setSessionCurrency(getCommonI18NService().getCurrentCurrency());
-				final boolean flag = true;
-				if (flag)
+
+				final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+				final String site = currentBaseSite.getUid();
+
+				if (site != null && !"".equals(site) && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
 				{
 					newCustomer.setFirstName(registerData.getFirstName());
 					newCustomer.setLastName(registerData.getLastName());
@@ -318,6 +323,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 
 					newCustomer.setMobileNumber(registerData.getMobilenumber());
 				}
+
 				extDefaultCustomerService.registerUser(newCustomer, registerData.getPassword(), registerData.getAffiliateId());
 				/*
 				 * mplCustomerWebService.customerModeltoWsData(newCustomer,

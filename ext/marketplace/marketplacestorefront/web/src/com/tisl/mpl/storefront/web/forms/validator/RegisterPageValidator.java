@@ -10,6 +10,8 @@ package com.tisl.mpl.storefront.web.forms.validator;
 
 
 import de.hybris.platform.acceleratorstorefrontcommons.forms.RegisterForm;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,8 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.storefront.businessvalidator.CommonAsciiValidator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 
@@ -41,7 +43,7 @@ public class RegisterPageValidator implements Validator
 	private static final int MAX_MOBILE_FIELD_LENGTH_10 = 10;
 	//"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
 	@Autowired
-	private CommonUtils commonUtils;
+	private BaseSiteService baseSiteService;
 	private static final Logger LOG = Logger.getLogger(RegisterPageValidator.class);
 
 	@Override
@@ -62,20 +64,7 @@ public class RegisterPageValidator implements Validator
 		final String lastName = registerForm.getLastName();
 		final String mobileNumber = registerForm.getMobileNumber();
 		final String gender = registerForm.getGender();
-		LOG.info("inside validate");
-		System.out.println("firstName:::" + firstName);
-		System.out.println("lastName:::" + lastName);
-		System.out.println("mobileNumber:::" + mobileNumber);
-		System.out.println("gender:::" + gender);
 
-		System.out.println("email" + email);
-		System.out.println("checkPwd" + checkPwd);
-
-
-		LOG.info("firstName" + firstName);
-		LOG.info("lastName" + lastName);
-		LOG.info("mobileNumber" + mobileNumber);
-		LOG.info("gender" + gender);
 
 		if (StringUtils.isEmpty(email))
 		{
@@ -124,9 +113,12 @@ public class RegisterPageValidator implements Validator
 				errors.rejectValue("checkPwd", "register.checkPwd.invalid");
 			}
 		}
-		LOG.info("isLuxury:::" + commonUtils.isLuxurySite());
 
-		if (commonUtils.isLuxurySite())
+
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
+
+		if (site != null && !"".equals(site) && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
 		{
 			if (StringUtils.isEmpty(firstName))
 			{
@@ -166,6 +158,7 @@ public class RegisterPageValidator implements Validator
 			}
 		}
 	}
+
 
 	public boolean validateEmailAddress(final String email)
 	{
