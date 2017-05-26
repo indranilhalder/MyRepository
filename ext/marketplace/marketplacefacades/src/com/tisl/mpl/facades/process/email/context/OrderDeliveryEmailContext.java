@@ -169,18 +169,18 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 		{
 			//TISUATSE-80 starts
-			deliveryAddr.append(deliveryAddress.getStreetnumber());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getStreetnumber());
 		}
 		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 		{
-			deliveryAddr.append(deliveryAddress.getAddressLine3());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getAddressLine3());
 		}
 		//TISUATSE-80 ends
 		deliveryAddr.append('\n');//Sonar fix
 		//TISUATSE-70 starts
 		final String city = deliveryAddress.getTown();
-		deliveryAddr.append(COMMA).append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA)
-				.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
+		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
+				.append(deliveryAddress.getDistrict()).append(COMMA).append(SPACE).append(deliveryAddress.getPostalcode());
 		//TISUATSE-70 ends
 
 		put(DELIVERYADDRESS, deliveryAddr);
