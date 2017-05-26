@@ -27,8 +27,34 @@ body {
 	&, &:focus, &:focus, &:hover {
 		color: $white; 
 	}
+	position:relative;
 	background-color: #4460a0;
+	&:before{
+		content: '';
+		position:absolute;
+		top:0;
+		left:0;
+		background-image: url('../images/lux-sprite.png');
+		width:32px;
+		height:32px;		
+		background-position: -60px -138px;
+	}
 }
+
+.btn-gp {
+	position:relative;
+	&:before{
+		content: '';
+		position:absolute;
+		top:0;
+		left:0;
+		background-image: url('../images/lux-sprite.png');
+		width:32px;
+		height:32px;		
+		background-position: -29px -135px;
+	}
+}
+
 button, input, optgroup, select, textarea {
 	outline: 0;
 }
@@ -275,4 +301,33 @@ textarea {
 	border: 1px solid $mlight-gray;
 	padding: 10px;
 	border-radius: 10px;
+}
+
+.luxury-loader{
+	background: url(../images/spinner.gif) no-repeat;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 150px;
+    left: 200px;
+}
+
+header{
+	li.bag{
+		position:relative;
+		margin-left:-15px;
+		.mini-bag{
+			position: absolute;
+			width: 350px;
+			left: -250px;
+			padding: 20px 10px 10px;
+			margin-top: -1px;
+			.my-bag-ul{
+				padding:10px;
+				border: 1px solid #e3e3e3;
+				border-radius: $border-radius-small;
+				background: $white;
+			}
+		}
+	}
 }

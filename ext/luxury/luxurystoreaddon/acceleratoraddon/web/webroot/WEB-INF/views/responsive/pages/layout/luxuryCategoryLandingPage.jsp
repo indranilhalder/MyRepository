@@ -26,23 +26,24 @@
 
  <section class="shop-by-catagory text-center">
 
-					<cms:pageSlot position="CategoryCurosel" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
-						<cms:component component="${feature}" />
-					</cms:pageSlot>  
-					</section>
-					
-					  
-						
-						<cms:pageSlot
-							position="Categorybanner2" var="feature" element="div"
-							class="span-24 section5 cms_disp-img_slot">
-							<cms:component component="${feature}" />
-						</cms:pageSlot> 
-						
-						
-						 <cms:pageSlot position="ProductCurosel" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
-							<cms:component component="${feature}" />
-						</cms:pageSlot>
+	<cms:pageSlot position="CategoryCurosel" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${feature}" />
+	</cms:pageSlot>  
+</section>
+	
+	  
+		
+		<cms:pageSlot
+			position="Categorybanner2" var="feature" element="div"
+			class="span-24 section5 cms_disp-img_slot">
+			<cms:component component="${feature}" />
+		</cms:pageSlot> 
+		
+		<div class="container">
+			 <cms:pageSlot position="ProductCurosel" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
+				<cms:component component="${feature}" />
+			</cms:pageSlot>
+		</div>
 
 		<%-- <table
 			style="margin: 0; padding: 0; table-layout: fixed; "

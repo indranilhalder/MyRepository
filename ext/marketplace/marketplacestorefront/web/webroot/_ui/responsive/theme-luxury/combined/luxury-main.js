@@ -12178,8 +12178,15 @@ TATA.CommonFunctions = {
                 $(this).toggleClass("active").next(".sub-menu").toggleClass("active");
             });
         },
+        HeaderMinicart: function() {
+            $("header .mini-bag").hide(), $("header .bag").hover(function() {
+                $(this).find(".mini-bag").show();
+            }, function() {
+                $(this).find(".mini-bag").hide();
+            });
+        },
         init: function() {
-            this.MobileMenu();
+            this.MobileMenu(), this.HeaderMinicart();
         }
     },
     Footer: function() {
@@ -12340,10 +12347,14 @@ TATA.CommonFunctions = {
     }
     function loginRequest() {
         $(".luxury-login").on("click", function(e) {
-            e.preventDefault();
+            $("#header-account").addClass("active"), $("body").removeClass("menu-open"), e.preventDefault();
             const loginURL = $(this).attr("href");
+            $("#login-container .header-sign-in");
             $.ajax({
                 url: loginURL,
+                beforeSend: function() {
+                    $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+                },
                 success: function(data) {
                     $("#login-container .header-sign-in").html(data);
                 },
@@ -12359,6 +12370,9 @@ TATA.CommonFunctions = {
             const pwsRequest = $(this).attr("href");
             $.ajax({
                 url: pwsRequest,
+                beforeSend: function() {
+                    $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
+                },
                 success: function(data) {
                     $("#login-container .header-forget-pass").html(data);
                 },
@@ -12374,6 +12388,9 @@ TATA.CommonFunctions = {
             const luxRegister = $(this).attr("href");
             $.ajax({
                 url: luxRegister,
+                beforeSend: function() {
+                    $("#login-container .header-signup").html('<div class="luxury-loader"></div>');
+                },
                 success: function(data) {
                     $("#login-container .header-signup").html(data);
                 },

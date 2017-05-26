@@ -385,33 +385,62 @@
 		top: 88px;
 		box-shadow: 0px 2px 5px #ccc;
 		border-radius: 0 0 $border-radius-small $border-radius-small; 
+		@include media-breakpoint-down(sm) {
+			width: 100%;
+		    position: fixed;
+		    left: 0;
+		    top: 107px;
+		    overflow: auto;
+		    height: 100%;
+		}
 		&.active {
 			max-height: 590px;
+			@include media-breakpoint-down(sm) {
+				max-height: 100%;	
+			}
 		}
 		&-inner{
 			width: 1290px;
 			left: -430px;
 			position: relative;
 			@include transition(all 0.3s ease-in-out);
+			@include media-breakpoint-down(sm) {
+				left: -100%;
+    			width: 99999px;			
+			}
 		}
 		&-section {
 			float: left;
 			width: 430px;
 			padding: 20px 30px;
+			position:relative;
+			@include media-breakpoint-down(sm) {
+				width: 100vw;			
+			}
 			label{
 				display:none;
 			}
+			
 		}
 		&.active-forget-password {
 			height: 300px;
+			@include media-breakpoint-down(sm) {
+				height: 100%;	
+			}
 			.header-account-inner{
 				left: 0;
 			}
 		}
 		&.active-sign-up {
 			height: 580px;
+			@include media-breakpoint-down(sm) {
+				height: 100%;	
+			}
 			.header-account-inner{
 				left: -860px;
+				@include media-breakpoint-down(sm) {
+					left:-200%;
+				}
 			}
 		}
 		h2 {

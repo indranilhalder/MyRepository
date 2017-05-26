@@ -43,17 +43,23 @@ $(document).ready(function() {
 	
 	loginRequest();
 	
-	
 	function loginRequest(){
 		$('.luxury-login').on('click',function(e){
+			$('#header-account').addClass('active');
+			$('body').removeClass('menu-open');
 			e.preventDefault();
 			const loginURL = $(this).attr('href');
+			var loginContainer = $('#login-container .header-sign-in');
 			$.ajax({
 				url: loginURL,
+				beforeSend: function(){
+					$('#login-container .header-sign-in').html('<div class="luxury-loader"></div>');
+			    },
+
 				success:function(data){
 					$('#login-container .header-sign-in').html(data);
 				},
-				complete:function(){
+				complete:function(){					
 					pwsRequest();
 					registerRequest();
 					targetLink();
@@ -69,6 +75,9 @@ $(document).ready(function() {
 			const pwsRequest = $(this).attr('href');
 			$.ajax({
 				url: pwsRequest,
+				beforeSend: function(){
+					$('#login-container .header-forget-pass').html('<div class="luxury-loader"></div>');
+			    },
 				success:function(data){
 					$('#login-container .header-forget-pass').html(data);
 				},
@@ -88,6 +97,9 @@ $(document).ready(function() {
 			const luxRegister = $(this).attr('href');
 			$.ajax({
 				url: luxRegister,
+				beforeSend: function(){
+					$('#login-container .header-signup').html('<div class="luxury-loader"></div>');
+			    },
 				success:function(data){
 					$('#login-container .header-signup').html(data);						
 				},
