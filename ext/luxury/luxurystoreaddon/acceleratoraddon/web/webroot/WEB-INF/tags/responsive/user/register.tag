@@ -11,7 +11,7 @@
 <h2 class="mb-20"><spring:theme code="luxury.header.link.register" /> </h2>
 <div class="header-soc-login mb-20">
 	<a class="fb-login btn btn-fb" href="javascript:;">FACEBOOK</a>
-	<a class="g-login btn btn-default" href="javascript:;">GOOGLE</a>
+	<a class="g-login btn btn-default btn-gp" href="javascript:;">GOOGLE</a>
 </div>
 <p class="mb-20">OR</p>
 <form:form method="POST" commandName="extRegisterForm" action="${action}">

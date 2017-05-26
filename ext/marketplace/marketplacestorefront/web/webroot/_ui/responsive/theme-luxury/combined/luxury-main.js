@@ -11930,7 +11930,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12340,10 +12340,14 @@ TATA.CommonFunctions = {
     }
     function loginRequest() {
         $(".luxury-login").on("click", function(e) {
-            e.preventDefault();
+            $("#header-account").addClass("active"), $("body").removeClass("menu-open"), e.preventDefault();
             const loginURL = $(this).attr("href");
+            $("#login-container .header-sign-in");
             $.ajax({
                 url: loginURL,
+                beforeSend: function() {
+                    $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+                },
                 success: function(data) {
                     $("#login-container .header-sign-in").html(data);
                 },
@@ -12359,6 +12363,9 @@ TATA.CommonFunctions = {
             const pwsRequest = $(this).attr("href");
             $.ajax({
                 url: pwsRequest,
+                beforeSend: function() {
+                    $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
+                },
                 success: function(data) {
                     $("#login-container .header-forget-pass").html(data);
                 },
@@ -12374,6 +12381,9 @@ TATA.CommonFunctions = {
             const luxRegister = $(this).attr("href");
             $.ajax({
                 url: luxRegister,
+                beforeSend: function() {
+                    $("#login-container .header-signup").html('<div class="luxury-loader"></div>');
+                },
                 success: function(data) {
                     $("#login-container .header-signup").html(data);
                 },
