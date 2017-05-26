@@ -540,4 +540,21 @@ public interface MplCartFacade extends CartFacade
 			CartModel cart);
 
 
+	/**
+	 * For TPR-5666
+	 *
+	 * @param cartGuid
+	 * @return
+	 */
+	CartModel getCartByGuid(String cartGuid);
+
+	/**
+	 * For TPR-5666
+	 * 
+	 * @param cartModel
+	 * @param sourceCartModel
+	 * @return
+	 */
+	public void mergeCarts(CartModel sourceCartModel, CartModel targetCartModel);
+
 }
