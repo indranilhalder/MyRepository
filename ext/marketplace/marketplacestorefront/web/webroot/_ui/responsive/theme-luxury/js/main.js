@@ -236,8 +236,14 @@ TATA.CommonFunctions = {
     
 	addToWishlist: function(productURL, element){
 		var productCode = TATA.CommonFunctions.urlToProductCode(productURL);
+		var wishName = "";
 		var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
+		var sizeSelected=true;
 	    
+	    if(!$('#variant li').hasClass('selected') || $("#variant,#sizevariant option:selected").val()=="#") {
+	    	sizeSelected=false;
+	    }
+	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&sizeSelected=' + sizeSelected;
 		
 	    if(!headerLoggedinStatus) {
 			$(".wishAddLoginPlp").addClass("active");
@@ -249,9 +255,7 @@ TATA.CommonFunctions = {
 			$.ajax({			
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
-				data : {
-					product : productCode
-				},
+				data : dataString,
 				dataType : "json",			
 				success : function(data){
 					if (data == true) {					
@@ -267,7 +271,7 @@ TATA.CommonFunctions = {
 							$(".wishAlreadyAddedPlp").removeClass("active")
 						},3000)
 					}
-					$(this).addClass("added");
+					$(element).addClass("added");
 				},
 				error : function(xhr, status, error){
 					alert(error);
@@ -284,7 +288,7 @@ TATA.CommonFunctions = {
 		}
 	},
 	
-	removeFromWishlist : function(productURL,el) {
+	removeFromWishlist : function(productURL,element) {
 		var productCode = TATA.CommonFunctions.urlToProductCode(productURL);
 		var wishName = "";
 		var requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";	
@@ -305,9 +309,7 @@ TATA.CommonFunctions = {
 			$.ajax({			
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
-				data : {
-					product : productCode
-				},
+				data : dataString,
 				dataType : "json",			
 				success : function(data){
 					if (data == true) {					
@@ -315,7 +317,7 @@ TATA.CommonFunctions = {
 						setTimeout(function(){
 							$(".wishRemoveSucessPlp").removeClass("active")
 						},3000)
-						$(el).removeClass("added");
+						$(element).removeClass("added");
 					}
 					else{
 						$(".wishAlreadyAddedPlp").addClass("active");
@@ -323,7 +325,7 @@ TATA.CommonFunctions = {
 							$(".wishAlreadyAddedPlp").removeClass("active")
 						},3000)
 					}
-					$(this).removeClass("added");
+					$(element).removeClass("added");
 				},
 				error : function(xhr, status, error){
 					alert(error);
