@@ -325,6 +325,18 @@
 					text-indent: -99999px;
 				}
 			}
+			li.bag{
+				background: $Sprite 0px 0px no-repeat;
+				width:27px;
+				height:25px;
+				.mini-cart-link{
+					width:27px;
+					height:25px;
+				}
+			}
+			li.header-bag-link{
+				display:none;
+			}
 		}
 	}
 	.header-left {

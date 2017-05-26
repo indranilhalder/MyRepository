@@ -391,6 +391,7 @@ TATA.CommonFunctions = {
 		},
 		HeaderMinicart: function(){
 			$('header .mini-bag').hide();
+			$('header .mini-cart-link').html('');
 			$("header .bag").hover(function () {
 				$(this).find('.mini-bag').show();
 			},
