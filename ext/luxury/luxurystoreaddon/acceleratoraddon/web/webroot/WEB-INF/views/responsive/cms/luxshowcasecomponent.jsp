@@ -6,12 +6,12 @@
 
 
 
-<h2 class="section-title text-center">${title}</h2>
+<h2 class="section-title text-center mb-40">${title}</h2>
 
 <c:forEach items="${ShowCase}" var="ShowCase" varStatus="status">			
 <section class="look-book look-book-wrapper"> 
-	<h3 class="section-title">${ShowCase.title}</h3>
-	<p class="mb-40">${ShowCase.description}</p>
+	<h3 class="section-title mb-10">${ShowCase.title}</h3>
+	<p class="mb-30">${ShowCase.description}</p>
 	<div class="look-book-list clearfix">
 		<div class="colmn ${ShowCase.bannerImagePosition}">
 			<c:forEach items="${ShowCase.bannerImage}" var="Image" varStatus="status">
