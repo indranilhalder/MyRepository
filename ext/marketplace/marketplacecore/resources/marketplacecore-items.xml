@@ -7761,6 +7761,11 @@
 						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					<attribute qualifier="gender" type="java.lang.String"
+						autocreate="true" generate="true">
+						<modifiers read="true" write="true" search="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 		</typegroup>
