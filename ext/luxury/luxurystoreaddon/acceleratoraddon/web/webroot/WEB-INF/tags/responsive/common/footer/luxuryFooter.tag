@@ -20,13 +20,19 @@
 						<p class="email-tit">We send awesome emails.</p>
 						<p>Be first to know about new arrivals, curated collections, and exclusive sales.</p>
 					</div>
-					<div class="col-sm-6 signup-email">
-						<input type="email" name="email" id="emailId" class="col-sm-6 email" placeholder="Enter your email address">
-						<select id="gender" class="col-sm-4 gender">
-							<option value="Male">Male</option>
-							<option value="Female">Female</option>
-						</select>
-						<button class="btn col-sm-2 text-left" onclick="return newsletterSubscribe();">Sign Up</button>
+					<div class="col-sm-6 signup-email nopadding">
+						<div class="col-sm-6 nopadding">
+							<input type="email" name="email" id="emailId" class="email col-sm-12" placeholder="Enter your email address">
+						</div>
+						<div class="col-sm-4 nopadding">
+							<select id="gender" class="gender">
+								<option value="Male">Male</option>
+								<option value="Female">Female</option>
+							</select>
+						</div>
+						<div class="col-sm-2 nopadding">
+							<button class="btn text-left" onclick="return newsletterSubscribe();">Sign Up</button>
+						</div>
 						<div id="error_message" style="display:block;font-size:12px;"></div>
 					</div>
 				</div>
