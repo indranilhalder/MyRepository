@@ -92,16 +92,19 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderUpdateProcessModel, emailPageModel);
-		final double orderTotalPrice = orderUpdateProcessModel.getOrder().getTotalPrice() == null ? 0D : orderUpdateProcessModel
-				.getOrder().getTotalPrice().doubleValue();
-		final double convenienceCharges = orderUpdateProcessModel.getOrder().getConvenienceCharges() == null ? 0D
-				: orderUpdateProcessModel.getOrder().getConvenienceCharges().doubleValue();
+
+		final OrderModel order = orderUpdateProcessModel.getOrder();
+
+		final double orderSubTotalPrice = order.getSubtotal() == null ? 0D : order.getSubtotal().doubleValue();
+
+		final double orderTotalPrice = order.getTotalPrice() == null ? 0D : order.getTotalPrice().doubleValue();
+		final double convenienceCharges = order.getConvenienceCharges() == null ? 0D : order.getConvenienceCharges().doubleValue();
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
-		final Double subTotal = Double.valueOf(orderTotalPrice);
+		final Double subTotal = Double.valueOf(orderSubTotalPrice);
 
-		final OrderModel order = orderUpdateProcessModel.getOrder();
+
 
 		final Set<ConsignmentModel> consignmentEntries = orderUpdateProcessModel.getOrder().getConsignments();
 		for (final ConsignmentModel consignment : consignmentEntries)
@@ -176,11 +179,11 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 		{
 			//TISUATSE-80 starts
-			deliveryAddr.append(deliveryAddress.getStreetnumber());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getStreetnumber());
 		}
 		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 		{
-			deliveryAddr.append(deliveryAddress.getAddressLine3());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getAddressLine3());
 		}
 		//TISUATSE-80 starts
 
@@ -188,7 +191,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		//TISUATSE-81 starts
 		final String city = deliveryAddress.getTown();
 		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
-				.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
+				.append(deliveryAddress.getDistrict()).append(COMMA).append(SPACE).append(deliveryAddress.getPostalcode());
 
 		put(DELIVERYADDRESS, deliveryAddr);
 

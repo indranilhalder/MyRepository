@@ -82,7 +82,7 @@
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
 			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;">Your Orders</p>
-			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">&lt;Insert Order No&gt;</span></p>
+			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.pOrderCode}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
 			  	        		      	   </tbody>
@@ -170,21 +170,7 @@
 		  	        		      	   	 	  	<strong>${ctx.deliveryAddress}</strong>
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<strong>Order delivery date:</strong>
-												<p align="center"><font size="2" color="#000000" >
-												#if($entry.edScheduledDate)
-												$entry.edScheduledDate
-												$entry.timeSlotFrom  To  $entry.timeSlotTo
-												#elseif ($entry.sddDateBetween)
-												$entry.sddDateBetween
-												#else
-												NA
-												#end</font>
-												</p>
-		  	        		      	   	 	  	<br>
-		  	        		      	   	 	  	<br>
+		  	        		      	   	 	  	
 		  	        		      	   	 	  	<a href="${ctx.trackOrderUrl}" class="btn" style="background-color:#aa1d3d; color:#ffffff;font-size;12px;font-family:Arial, Helvetica, sans-serif;padding:4px 10px; text-decoration:none;display:inherit;width:120px;text-align:center;border-bottom:2px solid #8e0f2d;text-decoration:none;">View / Manage Order</a>
 		  	        		      	   	 	  </div>
 		  	        		      	   	 	  
@@ -213,7 +199,7 @@
 		  	        		     	  		<td class="smFull" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #333333;">
 		  	        		     	  		  Order Details	
 		  	        		     	  		</td>
-		  	        		     	  		<td class="smFull orderdetail" align="right" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">Order placed on ${ctx.orderPlaceDate} | Order <span style="color:#aa1d3d;">${ctx.orderReferenceNumber}</span></td>
+		  	        		     	  		<td class="smFull orderdetail" align="right" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">Order placed on ${ctx.orderPlaceDate} | Order <span style="color:#aa1d3d;">${ctx.pOrderCode}</span></td>
 		  	        		     	  	</tr>
 		  	        		     	  </tbody>
 		  	        		     	</table>
@@ -242,7 +228,7 @@
 		  	        		      	   	 <tr>
 		  	        		      	   	 	<td width="10" class="dsnone">&nbsp;</td>
 		  	        		      	   	 	<td width="60">
-		  	        		      	   	 	  <img src="http:${ctx.productImageUrl}" width="51" height="75" style="border:1px solid #cbcbcb;">
+		  	        		      	   	 	  <img src="http:${entry.product.picture.url}" width="51" height="75" style="border:1px solid #cbcbcb;">
 		  	        		      	   	 	 </td>
 		  	        		      	   	 	 <td width="10">&nbsp;</td>
 		  	        		      	   	 	 <td style="vertical-align:top;">
@@ -252,14 +238,16 @@
 					  	        		      	   	 <td class="smFull">
 				  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;">
 				  	        		      	   	 	  $entry.quantity X  $entry.product.name
+				  	        		      	   	 	  #if($entry.product.size)
 				  	        		      	   	 	  <br>
 				  	        		      	   	 	  <span style="color:#333333">Size: $entry.product.size</span>
+				  	        		      	   	 	  #end
 				  	        		      	   	 	  <br>
 				  	        		      	   	 	  <span style="color:#333333">Sold by: $entry.SellerInfo </span>
 													  
 													  </div>
 				  	        		      	   	 	 </td>
-				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">&#x20b9; $entry.netAmountAfterAllDisc</td>
+				  	        		      	   	 	<td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">&#x20b9; $ctx.numberTool.format("#0.00",$entry.netAmountAfterAllDisc)</td>
 				  	        		      	   	 	</tr>
 				  	        		      	   	 	</tbody>
 		  	        		      	   	 	</table>
@@ -290,15 +278,23 @@
 	  	        		    		 				 <tbody>
 	  	        		    		 				 	<tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">${ctx.subTotal}</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">${ctx.shippingCharge}</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.shippingCharge == 0)
+Free
+#else
+&#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
+#end</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">${ctx.convenienceChargesVal}</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
+Free
+#else
+&#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
+#end</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 								  	        		      <td>
@@ -309,7 +305,7 @@
 								  	        		   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; ${ctx.totalPrice}</td>
+						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
 			 			  	        		    	   </tr>
 	  	        		    		 				 </tbody>
 	  	        		    		 				</table> 
@@ -364,7 +360,7 @@
 															${ctx.cmsSlotContents.orderdelivered}
 															</td>
 					  	        		    	     	   <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#000000;text-align:center; line-height:13px;">Order <br>Delivered</td>
+					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center; line-height:13px;">Order <br>Delivered</td>
 					  	        		    	       </tr>
 					  	        		    	     </tbody>
 					  	        		    	   </table>
