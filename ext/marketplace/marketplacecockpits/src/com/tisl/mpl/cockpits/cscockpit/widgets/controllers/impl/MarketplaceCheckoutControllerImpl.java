@@ -1,18 +1,33 @@
 package com.tisl.mpl.cockpits.cscockpit.widgets.controllers.impl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Messagebox;
@@ -24,12 +39,22 @@ import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStra
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceBasketController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+
+import com.tisl.mpl.facades.payment.MplPaymentFacade;
+import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
+
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
+import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
@@ -39,7 +64,6 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
-
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -55,7 +79,9 @@ import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.delivery.DeliveryModeModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
@@ -64,9 +90,12 @@ import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
 import de.hybris.platform.cscockpit.widgets.controllers.impl.DefaultCheckoutController;
 import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutCartWidgetModel;
 import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutPaymentWidgetModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.order.exceptions.CalculationException;
+import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.WeakArrayList;
 
 public class MarketplaceCheckoutControllerImpl extends
@@ -74,6 +103,11 @@ public class MarketplaceCheckoutControllerImpl extends
 
 	/** The Constant OMS_MODES_NOT_CONFIGURED. */
 	private static final String OMS_MODES_NOT_CONFIGURED = "omsModesNotConfigured";
+
+	private int connectionTimeout = 5 * 10000;
+	private int readTimeout = 5 * 1000;
+	
+	private String paymentType = StringUtils.EMPTY;
 
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger
@@ -86,6 +120,20 @@ public class MarketplaceCheckoutControllerImpl extends
 	private static final int _15 = 15;
 
 	private static final String NO_DELIVERY_MODE_FOR_USSID = "noDeliveryForUssid";
+
+	
+	@Resource(name = "mplPaymentFacade")
+	private MplPaymentFacade mplPaymentFacade;
+
+	
+	public MplPaymentFacade getMplPaymentFacade() {
+		return mplPaymentFacade;
+	}
+
+	public void setMplPaymentFacade(MplPaymentFacade mplPaymentFacade) {
+		this.mplPaymentFacade = mplPaymentFacade;
+	}
+
 
 	/** The mpl pincode restriction service. */
 	@Resource(name = "mplPincodeRestrictionService")
@@ -112,6 +160,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	@Autowired
 	/** The c od payment service. */
 	private CODPaymentService cODPaymentService;
+	
+	@Autowired
+	private JuspayPaymentService jusPayPaymentService;
 
 	@Autowired
 	private MplDeliveryCostService deliveryCostService;
@@ -127,6 +178,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
+	
+	@Resource
+	private AgentIdForStore agentIdForStore;
 	
 	@Autowired
 	private MplCartFacade mplCartFacade;
@@ -612,11 +666,52 @@ public class MarketplaceCheckoutControllerImpl extends
 		}
 		return isCODLimitAvailable;
 	}
-
+	
+	/*
+	 * TPR-5712
+	 * Non COD restriction for SM
+	 */
+	protected boolean isNonCodProductExistForAgent(final CartModel cart, final String agentId)
+	{
+		boolean nonCodProduct = false;
+		
+		final List<AbstractOrderEntryModel> orderEntry = cart.getEntries();
+		for(final AbstractOrderEntryModel entry : orderEntry)
+		{
+			final Collection<SellerInformationModel> listOfSeller = entry.getProduct().getSellerInformationRelator();
+			
+			for(final SellerInformationModel seller : listOfSeller)
+			{
+				if(seller.getSellerID().equalsIgnoreCase(agentId))
+				{
+					final RichAttributeModel richAttribute = seller.getRichAttribute().iterator().next();
+					if (!((DeliveryFulfillModesEnum.TSHIP.getCode().
+							equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
+							|| (null != richAttribute.getIsSshipCodEligible()
+									&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))))
+					{
+						nonCodProduct = true;
+						return nonCodProduct;
+					}
+				}
+			}
+		}
+		return nonCodProduct;
+	}
+	
 	@Override
 	public boolean processPayment(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
-
+		
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isNotEmpty(agentId))
+		{
+			if(isNonCodProductExistForAgent(cart, agentId))
+			{
+				return false;
+			}
+		}
 		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
 
 		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
@@ -642,6 +737,66 @@ public class MarketplaceCheckoutControllerImpl extends
 		return (true);
 	}
 
+	/*
+	 * TPR-5712 : juspay payment txn for OIS
+	 * @see com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController#jusPayprocessPaymentTxn(de.hybris.platform.core.model.order.CartModel)
+	 */
+	@Override
+	public boolean jusPayprocessPaymentTxn(CartModel cart) throws PaymentException,
+			ValidationException ,Exception{
+
+		double unTotal = getCsCheckoutService().getUnauthorizedTotal(cart);
+
+		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
+				.getConvenienceCharges();
+
+		String cusName= null;
+		jusPayPaymentService.getTransactionModel(cart, unTotal);
+		if (StringUtils.isNotEmpty(cart.getUser().getName()) && !cart.getUser().getName().equalsIgnoreCase(" "))
+		{
+			cusName = cart.getUser().getName();
+
+		}
+		else
+		{
+			cusName = ((CustomerModel)cart.getUser()).getOriginalUid();
+		}
+		mplPaymentService.saveJusPayPaymentInfo(cusName, cart.getSubtotal(), cart.getConvenienceCharges(), cart.getEntries(),cart);
+		getModelService().refresh(cart);
+		return (true);
+	}
+
+	@Override
+	public boolean processJusPayPaymentOnSelect() throws PaymentException, ValidationException
+	{
+		jusPayPaymentService.createJusPayPaymentInfo(getCartModel());
+						 CommerceCartParameter cartParameter = new CommerceCartParameter();
+							cartParameter.setCart(getCartModel());			
+							ImpersonationContext context = createImpersonationContext(getCartModel());
+							getImpersonationService()
+									.executeInContext(
+											context,
+											new ImpersonationService.Executor<CartModel, ImpersonationService.Nothing>() {
+												@Override
+												public CartModel execute() {
+													try {
+														CommerceCartParameter cartParameter = new CommerceCartParameter();
+														cartParameter.setCart(getCartModel());
+														getCommerceCartService()
+																.recalculateCart(
+																		cartParameter);
+														
+													} catch (CalculationException e) {
+														LOG.error("Exception calculating cart ["
+																+ getCartModel() + "]", e);
+														throw new ClientEtailNonBusinessExceptions(e);
+													}
+													return null;
+												}
+											});
+				return (true);
+			}
+	
 	@Override
 	/*     */public boolean processCODPayment()
 	/*     */throws PaymentException, ValidationException
@@ -807,8 +962,76 @@ public class MarketplaceCheckoutControllerImpl extends
 		return null;
 	}
 	
-	
-	
-	
+	@Override
+	public void setJusPayPaymentModeOnSelect(final CartModel cartModel)
+	{
+		cartModel.setModeOfPayment("JusPay");
+		getModelService().save(cartModel);
+	}
 
+	/**
+	 * TPR-5712
+	 * juspay payment integration from cscockpit
+	 */
+	@Override
+	public void processJuspayPayment(final CartModel cart, final CustomerModel customer)
+	{
+		String orderId = null;
+		
+		final String firstName = customer.getFirstName();
+		final String lastName = customer.getLastName();
+		final String paymentAddressLine1 = cart.getPaymentAddress().getStreetnumber();
+		final String paymentAddressLine2 = cart.getPaymentAddress().getStreetname();
+		final String paymentAddressLine3 = cart.getPaymentAddress().getCity();
+		final String country = cart.getPaymentAddress().getCountry().getName();
+		final String state = cart.getPaymentAddress().getState();
+		final String city = cart.getPaymentAddress().getCity();
+		final String pincode = cart.getPaymentAddress().getPostalcode();
+		final boolean cardSaved = false;
+		final boolean sameAsShipping = false;
+		final String uid = customer.getUid();
+		final StringBuilder returnUrlBuilder = new StringBuilder();
+		
+		LOG.info("first name :: "+firstName+" "+"last name ::"+lastName
+				+" "+"pincode :: "+pincode);
+		
+		returnUrlBuilder
+		.append(configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.CSCOCKPITRETURN_URL));
+		LOG.info("created URL ::: "+returnUrlBuilder);
+		
+		orderId = getMplPaymentFacade().createJuspayOrder(cart, null, firstName, lastName, paymentAddressLine1,
+				paymentAddressLine2, paymentAddressLine3, country, state, city, pincode,
+				cardSaved + "|" + sameAsShipping, returnUrlBuilder.toString(),
+				uid, "WEB");
+		LOG.info("order id ::: "+orderId);
+	}
+	
+	/*
+	 * TPR-5712
+	 * juspay payment validation for OIS
+	 * @see com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController#juspayPaymentValidation(java.lang.String)
+	 */
+	@Override
+	public String juspayPaymentValidation(final String commerEndOrderId)
+	{
+		//final String url = ORDERPAYMENTSTATUSURL+commerEndOrderId+"?"+MERCHANTKEY+MERCHANTID;
+		final String url = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.ORDERPAYMENTSTATUSURL)
+				+commerEndOrderId;
+		final String paymentStatusresponse = getMplPaymentFacade().makeGetPaymentStatusCall(url);
+		
+		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
+		final String ordStatus = (String) jsonResponse.get("status");
+		final String paymentMethodType = (String)jsonResponse.get("payment_method_type");
+		if(paymentMethodType.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_METHOD_TYPE))
+		{
+			final JSONObject structure = (JSONObject) jsonResponse.get(MarketplaceCockpitsConstants.JUSPAY_RESPONSE_CARD_KEY);
+			paymentType = (String)structure.get(MarketplaceCockpitsConstants.JUSPAY_RESPONSE_CARTTYPE_KEY);
+		}
+		else
+		{
+			paymentType = MarketplaceCockpitsConstants.OIS_NETBANKING;
+		}
+		JaloSession.getCurrentSession().setAttribute("oisPaymentType", paymentType);
+		return ordStatus;
+	}
 }

@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -161,8 +162,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/*
 	 * (non-Javadoc)
 	 * 
+
 	 * 
 	 * 
+
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -269,15 +272,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
+				 *
 				 * 
 				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
 				orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
+						|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
 				{
-					LOG.debug("Payment Info COD");
+					LOG.debug("Payment Info for cod or juspay");
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 				else
@@ -588,8 +593,6 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * 
-	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -669,7 +672,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//OrderIssues:-  Code moved to upward
 			//		orderModel.setChildOrders(orderList);
 			//getModelService().save(orderModel);
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
+			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel || 
+					WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 			}

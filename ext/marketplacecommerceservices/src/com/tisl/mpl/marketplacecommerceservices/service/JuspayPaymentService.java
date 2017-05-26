@@ -8,14 +8,14 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 
 
 /**
- * @author TCS
+ * @author 1047493
  *
  */
-public interface CODPaymentService
+public interface JuspayPaymentService
 {
-	void getTransactionModel(CartModel cart);
+	//void getTransactionModel(CartModel cart);
 
-	void getPaymentTransactionEntryModel(PaymentTransactionModel paymentTransactionModel, CartModel cart);
+	//void getPaymentTransactionEntryModel(PaymentTransactionModel paymentTransactionModel, CartModel cart);
 
 	/**
 	 * @param cart
@@ -30,19 +30,5 @@ public interface CODPaymentService
 	 */
 	void getPaymentTransactionEntryModel(PaymentTransactionModel paymentTransactionModel, CartModel cart, Double amount);
 
-	/**
-	 * @param cart
-	 */
-	void createCODPaymentInfo(CartModel cart);
-
-	/**
-	 * @param cart
-	 */
-	void removeCODPaymentInfo(CartModel cart);
-
-	/**
-	 * @param cart
-	 * @param amount
-	 */
-	void getTransactionModelForCards(CartModel cart, Double amount);
+	public void createJusPayPaymentInfo(final CartModel cart);
 }
