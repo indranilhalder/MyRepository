@@ -2472,15 +2472,21 @@ $(document).ready(function()
 			                "/getCollectionShowcase",
 			            data: dataString,
 			            success: function(response) {
-						var showCaseMobile = '<h2>'+response.title+'</h2>';
-						showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
-							$.each(response.subComponents, function(k, v) {	
-								  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
-								 
-							});
-							showCaseMobile+= '</div>';
-							$('#showcaseMobile').html(showCaseMobile);
-							window.localStorage.setItem("showcaseContentMobile",encodeURI(showCaseMobile));
+			            	try{
+							var showCaseMobile = '<h2>'+response.title+'</h2>';
+							showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
+								$.each(response.subComponents, function(k, v) {	
+									  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
+									 
+								});
+								showCaseMobile+= '</div>';
+								$('#showcaseMobile').html(showCaseMobile);
+								window.localStorage.setItem("showcaseContentMobile",encodeURI(showCaseMobile));
+			            	}
+			            	catch(e)
+			            	{
+			            		console.log(e);
+			            	}
 			             },
 						complete:function(){
 						$(".showcase-carousel").owlCarousel({
