@@ -15,13 +15,13 @@
 	<div class="look-book-list clearfix">
 		<div class="colmn ${ShowCase.bannerImagePosition}">
 			<c:forEach items="${ShowCase.bannerImage}" var="Image" varStatus="status">
-			<img src="${Image.media.url}" alt="${Image.name}">
+			<a href="${Image.urlLink}"><img src="${Image.media.url}" alt="${Image.name}"></a>
 			</c:forEach>
 		</div>
 		<div class="colmn">
 			<ul class="list-unstyled clearfix">
 				<c:forEach items="${ShowCase.productImages}" var="Image" varStatus="status">
-				<li><img src="${Image.media.url}" alt=""></li>
+				<li><a href="${Image.urlLink}"><img src="${Image.media.url}" alt=""></a></li>
 				</c:forEach>
 			</ul>
 		</div>

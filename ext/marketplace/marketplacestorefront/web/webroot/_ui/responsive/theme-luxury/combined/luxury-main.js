@@ -12157,10 +12157,10 @@ TATA.CommonFunctions = {
             e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {
                 $(this).find(".allFacetValues").slideToggle();
             });
-        }) : ($(".facet:first").removeClass("open"), $(document).on("click", ".facetHead", function(e) {
+        }) : $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 
             $(this).closest(".facet").siblings().removeClass("open").find(".allFacetValues").hide();
-        }));
+        });
     },
     WindowScroll: function() {
         var winWidth = $(window).width();

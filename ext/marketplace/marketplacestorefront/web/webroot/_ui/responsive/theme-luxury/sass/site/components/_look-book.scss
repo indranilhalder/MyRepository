@@ -1,3 +1,17 @@
+.page-luxuryCategoryPage{
+	.mainContent-wrapper{
+		> .container{
+			width:100%;
+			padding:0px;
+		}
+		footer{
+			.container{
+				max-width:1200px;
+				margin:0 auto;
+			}
+		}
+	}
+}
 .look-book-wrapper{
 	.colmn.left{
 		float:left;
