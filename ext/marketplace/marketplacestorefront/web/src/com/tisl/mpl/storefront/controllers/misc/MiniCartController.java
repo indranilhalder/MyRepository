@@ -207,10 +207,24 @@ public class MiniCartController extends AbstractController
 				{
 					for (final ImageData image : images)
 					{
-						if (image.getMediaPriority() != null && image.getMediaPriority().intValue() == 1
-								&& image.getFormat().equalsIgnoreCase("cartPage"))
+						//if (image.getMediaPriority() != null && image.getMediaPriority().intValue() == 1
+						//		&& image.getFormat().equalsIgnoreCase("cartPage"))
+						if (image.getMediaPriority() != null && image.getMediaPriority().intValue() == 1)
 						{
-							imageUrl = image.getUrl();
+							if (productData.getRootCategory().equalsIgnoreCase("FineJewellery"))
+							{
+								if (image.getFormat().equalsIgnoreCase("fineJewelcartPage"))
+								{
+									imageUrl = image.getUrl();
+								}
+							}
+							else
+							{
+								if (image.getFormat().equalsIgnoreCase("cartPage"))
+								{
+									imageUrl = image.getUrl();
+								}
+							}
 						}
 					}
 				}

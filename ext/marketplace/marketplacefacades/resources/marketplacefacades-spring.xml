@@ -107,6 +107,14 @@
 				<value>luxurySearchPage</value>
 				<!-- TPR-1694 new resolution for Mobile App-->
 				<value>mobilePdpView</value>
+				<!-- added for fine jewellery -->
+				<value>fineJewelsuperZoom</value>
+				<value>fineJewelzoom</value>
+				<value>fineJewelproduct</value>
+				<value>fineJewelthumbnail</value>
+				<value>fineJewelcartIcon</value>
+				<value>fineJewelcartPage</value>
+				<value>fineJewelsearchPage</value>
 			</list>
 		</property>
 	</bean>
@@ -125,6 +133,14 @@
 				<value>luxuryThumbnail</value>
 				<!-- TPR-1694 new resolution for Mobile App-->
 				<value>mobilePdpView</value>
+				<!-- added for fine jewellery -->
+				<value>fineJewelsuperZoom</value>
+				<value>fineJewelzoom</value>
+				<value>fineJewelproduct</value>
+				<value>fineJewelthumbnail</value>
+				<value>fineJewelcartIcon</value>
+				<value>fineJewelcartPage</value>
+				<value>fineJewelsearchPage</value>
 			</list>
 		</property>
 	</bean>
@@ -156,6 +172,17 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 <entry key="luxuryStyleSwatch" value="97Wx108H" />
 <!-- TPR-1694 new resolution for Mobile App-->
 <entry key="mobilePdpView" value="450Wx545H" />
+<!-- added for fine jewellery -->
+<entry key="fineJewelsuperZoom" value="1348Wx1906H" />
+<entry key="fineJewelzoom" value="674Wx953H" />
+<entry key="fineJewelstore" value="674Wx953H" />
+<entry key="fineJewelproduct" value="674Wx953H" />
+<entry key="fineJewelsearchPage" value="252Wx374H" />
+<entry key="fineJewelthumbnail" value="145Wx206H" />
+<entry key="fineJewelcartPage" value="110Wx169H" />
+<entry key="fineJewelvideo" value="97Wx141H" />
+<entry key="fineJewelcartIcon" value="145Wx206H" />
+<entry key="fineJewelstyleSwatch" value="145Wx206H" />
 </map>
 </property>
 </bean>
@@ -379,6 +406,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxurySearchPage</value>
 				<!-- TPR-1694 new resolution for Mobile App-->
 				<value>mobilePdpView</value>
+				<!-- added for fine jewellery -->
+				<value>fineJewelsuperZoom</value>
+				<value>fineJewelzoom</value>
+				<value>fineJewelproduct</value>
+				<value>fineJewelthumbnail</value>
+				<value>fineJewelcartIcon</value>
+				<value>fineJewelcartPage</value>
+				<value>fineJewelsearchPage</value>
 				</list>
 		</property>
 	</bean>
@@ -398,6 +433,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxuryCartIcon</value>
 				<!-- TPR-1694 new resolution for Mobile App-->
 				<value>mobilePdpView</value>
+				<!-- added for fine jewellery -->
+				<value>fineJewelsuperZoom</value>
+				<value>fineJewelzoom</value>
+				<value>fineJewelproduct</value>
+				<value>fineJewelthumbnail</value>
+				<value>fineJewelcartIcon</value>
+				<value>fineJewelcartPage</value>
+				<value>fineJewelsearchPage</value>
 			</list>
 		</property>
 	</bean>
@@ -416,6 +459,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>luxuryThumbnail</value>
 				<!-- TPR-1694 new resolution for Mobile App-->
 				<value>mobilePdpView</value>
+				<!-- added for fine jewellery -->
+				<value>fineJewelsuperZoom</value>
+				<value>fineJewelzoom</value>
+				<value>fineJewelproduct</value>
+				<value>fineJewelthumbnail</value>
+				<value>fineJewelcartIcon</value>
+				<value>fineJewelcartPage</value>
+				<value>fineJewelsearchPage</value>
 			</list>
 		</property>
 	</bean>

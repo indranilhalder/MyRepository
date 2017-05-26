@@ -13,7 +13,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -26,19 +26,23 @@
 <spring:url value="/my-account/friendsInvite" var="friendsInviteUrl" />
 <spring:url value="/my-account/order/" var="orderDetailsUrl" />
 
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')" var="cancelFlag"/> 
-<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
+<spring:eval
+	expression="T(de.hybris.platform.util.Config).getParameter('order.cancel.enabled')"
+	var="cancelFlag" />
+<spring:eval
+	expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')"
+	var="returnFlag" />
 
 
 <!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+<input type="hidden" id="isLuxury" value="${isLuxury}" />
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<h1 class="account-header">
 			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
-				<user:accountMobileViewMenuDropdown pageNameDropdown="orderHistory"/>
-		
+			<user:accountMobileViewMenuDropdown pageNameDropdown="orderHistory" />
+
 			<%-- <select class="menu-select"
 				onchange="window.location=this.options[this.selectedIndex].value;">
 				<optgroup label="<spring:theme code="header.flyout.myaccount" />">
@@ -79,8 +83,8 @@
 
 
 			<!----- Left Navigation Starts --------->
-			
-			<user:accountLeftNav pageName="orderHistory"/>
+
+			<user:accountLeftNav pageName="orderHistory" />
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
@@ -90,7 +94,7 @@
 							<spring:theme text="Order History" />
 						</h2>
 						<c:if test="${not empty searchPageData.results}">
-						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
+							<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
 							<input type="hidden" id="pageIndex" value="${pageIndex}" />
 							<input type="hidden" id="pagableSize" value="${pageSize}" />
 							<input type="hidden" id="totalNumberOfResults"
@@ -100,7 +104,7 @@
 					</div>
 
 					<c:if test="${not empty searchPageData.results}">
-						
+
 						<input type="hidden" id="pageSize" value="${pageSizeInoh}" />
 						<input type="hidden" id="orderEntryCount"
 							value="${fn:length(orderDataList)}" />
@@ -110,9 +114,10 @@
 
 							</ul>
 						</c:if> --%>
-						
+
 						<!-- TISPRO-48 ---- call mpl-pagination.tag for pagination -->
-						<nav:mpl-pagination top="true" supportShowPaged="${isShowPageAllowed}"
+						<nav:mpl-pagination top="true"
+							supportShowPaged="${isShowPageAllowed}"
 							supportShowAll="${isShowAllAllowed}"
 							searchPageData="${searchPageData}"
 							searchUrl="/my-account/orders?sort=${searchPageData.pagination.sort}"
@@ -143,23 +148,19 @@
 													${orderDataMap[orderHistoryDetail.code]}
 												</c:if></li>
 												<li class="order-total"><span><spring:theme
-															code="text.orderHistory.total" /></span>  
-												<!-- TISSIT-1773 -->
-															<%-- <format:price priceData="${orderHistoryDetail.totalPrice}" /> --%>
-												<c:choose>
-													<c:when test="${orderHistoryDetail.net}">
-														<format:price priceData="${orderHistoryDetail.totalPriceWithTax}" />
-													</c:when>
-													<c:otherwise>
-														<format:price priceData="${orderHistoryDetail.totalPriceWithConvCharge}" />
-													</c:otherwise>
-												</c:choose>	
-															
-															
-															</li>
+															code="text.orderHistory.total" /></span> <!-- TISSIT-1773 --> <%-- <format:price priceData="${orderHistoryDetail.totalPrice}" /> --%>
+													<c:choose>
+														<c:when test="${orderHistoryDetail.net}">
+															<format:price
+																priceData="${orderHistoryDetail.totalPriceWithTax}" />
+														</c:when>
+														<c:otherwise>
+															<format:price
+																priceData="${orderHistoryDetail.totalPriceWithConvCharge}" />
+														</c:otherwise>
+													</c:choose></li>
 												<li class="recipient"><span><spring:theme
-															code="text.orderHistory.recipient" /></span> 
-															<c:choose>
+															code="text.orderHistory.recipient" /></span> <c:choose>
 														<c:when
 															test="${orderHistoryDetail.deliveryAddress != null}">
 																${orderHistoryDetail.deliveryAddress.firstName}&nbsp;${orderHistoryDetail.deliveryAddress.lastName}
@@ -167,8 +168,7 @@
 														<c:otherwise>
 																${orderHistoryDetail.mplPaymentInfo.cardAccountHolderName}
 																</c:otherwise>
-													</c:choose>
-													</li>
+													</c:choose></li>
 												<li class="order-number"><span><spring:theme
 															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 
@@ -198,20 +198,25 @@
 												</c:forEach>
 												<li class="item">
 													<div class="image">
-														<c:choose>
-															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="luxuryCartIcon" />
-																			</a>
-										
-															</c:when>
-															<c:otherwise>
-																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="thumbnail" />
-																			</a>
-																	
-															</c:otherwise>
-														</c:choose>
+														<c:if
+															test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<a href="${productUrl}"> <product:productPrimaryImage
+																	product="${entry.product}" format="luxuryCartIcon" />
+															</a>
+														</c:if>
+														<c:if
+															test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
+															<a href="${entryProductUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="fineJewelthumbnail" />
+															</a>
+														</c:if>
+														<c:if
+															test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory != 'FineJewellery'}">
+															<a href="${productUrl}"> <product:productPrimaryImage
+																	product="${entry.product}" format="thumbnail" />
+															</a>
+
+														</c:if>
 													</div>
 													<div class="details">
 														<h2 class="product-name">${entry.brandName}</h2>
@@ -250,27 +255,28 @@
 															<p>
 																<spring:theme text="Delivery Charges:" />
 																&nbsp;
-															<c:choose>
-																<c:when test="${entry.currDelCharge.value=='0.0'}">
-																	<%-- <spring:theme code="order.free"  /> --%>
-																	
-															      <c:choose>
-																	<c:when test="${not empty entry.scheduledDeliveryCharge}">
+																<c:choose>
+																	<c:when test="${entry.currDelCharge.value=='0.0'}">
+																		<%-- <spring:theme code="order.free"  /> --%>
+
+																		<c:choose>
+																			<c:when
+																				test="${not empty entry.scheduledDeliveryCharge}">
 																	    ${entry.scheduledDeliveryCharge}
 																	</c:when>
+																			<c:otherwise>
+																				<ycommerce:testId
+																					code="orderDetails_productTotalPrice_label">
+																					<format:price priceData="${entry.currDelCharge}"
+																						displayFreeForZero="true" />
+																				</ycommerce:testId>
+																			</c:otherwise>
+																		</c:choose>
+																	</c:when>
 																	<c:otherwise>
-																	<ycommerce:testId
-																		code="orderDetails_productTotalPrice_label">
-																		<format:price priceData="${entry.currDelCharge}"
-																			displayFreeForZero="true" />
-																	</ycommerce:testId>
-																    </c:otherwise>
+																		<format:price priceData="${entry.currDelCharge}" />
+																	</c:otherwise>
 																</c:choose>
-																</c:when>
-																<c:otherwise>
-																	<format:price priceData="${entry.currDelCharge}" />
-																</c:otherwise>
-															</c:choose>
 															</p>
 														</div>
 														<c:if
@@ -307,8 +313,8 @@
 
 														<p>
 															<spring:theme
-																code="text.orderHistory.seller.order.number" />&nbsp;
-															${subOrder.code}
+																code="text.orderHistory.seller.order.number" />
+															&nbsp; ${subOrder.code}
 														</p>
 														<p>
 															<c:forEach items="${entry.product.baseOptions}"
@@ -337,7 +343,8 @@
 																			<c:set var="displayed" value="false" />
 																			<c:forEach items="${promotion.consumedEntries}"
 																				var="consumedEntry">
-																				<c:if test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+																				<c:if
+																					test="${not displayed && not entry.isBOGOapplied && entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
 																					<c:set var="displayed" value="true" />
 																					<li><span>${promotion.description}</span></li>
 																				</c:if>
@@ -353,7 +360,8 @@
 
 														<c:set var="bogoCheck" value='false' />
 
-														<c:if test="${entry.itemCancellationStatus eq 'true' and cancelFlag}">
+														<c:if
+															test="${entry.itemCancellationStatus eq 'true' and cancelFlag}">
 															<c:if
 																test="${entry.giveAway eq 'false' and entry.isBOGOapplied eq 'false'}">
 																<c:forEach items="${entry.associatedItems}"
@@ -385,8 +393,8 @@
 														</c:if>
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
-														<!-- TISCR-410 -->  
-															<%-- R2.3: Commented <c:if test="${entry.isCancellationMissed eq 'true'}">
+														<!-- TISCR-410 -->
+														<%-- R2.3: Commented <c:if test="${entry.isCancellationMissed eq 'true'}">
 																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 															</c:if> --%>
 														<!-- TISCR-410 ends -->
@@ -399,17 +407,21 @@
 															</a>	
 														</c:if> --%>
 														<c:choose>
-														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
-																	<a href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}" onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
-																						<spring:theme code="text.account.returnReplace"
-																							text="Return Item"/> 
-																	</a>		 
-														  	</c:when>
-														  	<c:otherwise>
-														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
-																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+															<c:when
+																test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+																<a
+																	href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${subOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}"
+																	onClick="openReturnPage('${bogoCheck}',${entry.transactionId})">
+																	<spring:theme code="text.account.returnReplace"
+																		text="Return Item" />
+																</a>
+															</c:when>
+															<c:otherwise>
+																<c:if test="${entry.isCancellationMissed eq 'true'}">
+																	<spring:theme
+																		code="orderHistory.cancellationDeadlineMissed.msg" />
 																</c:if>
-														  	</c:otherwise>
+															</c:otherwise>
 														</c:choose>
 
 														<c:if test="${entry.showInvoiceStatus eq 'true'}">
@@ -431,7 +443,7 @@
 														<!-- <button type="button" class="close pull-right"
 															aria-hidden="true" data-dismiss="modal"></button> -->
 														<div class="cancellation-request-block">
-															<h2>Request Cancellation </h2>
+															<h2>Request Cancellation</h2>
 
 															<!-- ../my-account/returnSuccess -->
 															<form:form
@@ -439,82 +451,102 @@
 																class="return-form" action="../my-account/returnSuccess"
 																method="post" commandName="returnRequestForm">
 																<div class="return-container">
-																
+
 																	<ul class="products">
-																	<c:set var="orderCodeMap" value="${subOrder.code}${entry.orderLineId}"/>
-																
-																		<c:forEach items="${cancelProductMap[orderCodeMap]}" var="entryCancel" >	
-																			
-																		<li class="item look">
-																		<ul class="product-info">
-																			<li>
-																			<div class="product-img">
-																				<c:choose>
-																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
-																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
-																															</a>
-																
-																					</c:when>
-																					<c:otherwise>
-																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="thumbnail" />
-																															</a>
-																							
-																					</c:otherwise>
-																				</c:choose>
-																			</div>
-																			<div class="product">
-																				<!-- <p class="company">Nike</p> -->
-																				<h2 class="product-name">
-																					<a href="${productUrl}">${entryCancel.product.name}</a>
-																				</h2>
-																				
-																				<p class="item-info">
-																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
+																		<c:set var="orderCodeMap"
+																			value="${subOrder.code}${entry.orderLineId}" />
+
+																		<c:forEach items="${cancelProductMap[orderCodeMap]}"
+																			var="entryCancel">
+
+																			<li class="item look">
+																				<ul class="product-info">
+																					<li>
+																						<div class="product-img">
+																							<c:choose>
+																								<c:when
+																									test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																									<a href="${productUrl}"> <product:productPrimaryImage
+																											product="${entryCancel.product}"
+																											format="luxuryCartIcon" />
+																									</a>
+
+																								</c:when>
+																								<c:otherwise>
+																									<a href="${productUrl}"> <product:productPrimaryImage
+																											product="${entryCancel.product}"
+																											format="thumbnail" />
+																									</a>
+
+																								</c:otherwise>
+																							</c:choose>
+																						</div>
+																						<div class="product">
+																							<!-- <p class="company">Nike</p> -->
+																							<h2 class="product-name">
+																								<a href="${productUrl}">${entryCancel.product.name}</a>
+																							</h2>
+
+																							<p class="item-info">
+																								<span><b><c:if
+																											test="${entryCancel.quantity > 1}">
+																											<spring:theme
+																												code="text.orderHistory.quantity" />
 																					&nbsp;${entryCancel.quantity}
-																					</c:if></b> 
-																					</span>
-																					
-																					<c:if test="${not empty entryCancel.product.size}">
-													 									<span><b>Size:</b> ${entryCancel.product.size}</span>
-																					</c:if>
-																					<c:if test="${not empty entryCancel.product.colour}">
-																						<span><b>Color:</b> ${entryCancel.product.colour}</span>
-																					</c:if>
-																					 
-																					 <span
-																						class="price"><b>Price:</b> <ycommerce:testId
-																							code="orderDetails_productTotalPrice_label">
-																							<format:price priceData="${entryCancel.totalPrice}"
-																								displayFreeForZero="true" />
-																						</ycommerce:testId>
-																					</span>
-																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
-																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
-																					${subOrder.code}
-																					</span>
-																				</p>
-																				<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
-																			</div>
-																		</li>
-																	</ul>
-																</li>
-																</c:forEach>
+																					</c:if></b> </span>
+
+																								<c:if
+																									test="${not empty entryCancel.product.size}">
+																									<span><b>Size:</b>
+																										${entryCancel.product.size}</span>
+																								</c:if>
+																								<c:if
+																									test="${not empty entryCancel.product.colour}">
+																									<span><b>Color:</b>
+																										${entryCancel.product.colour}</span>
+																								</c:if>
+
+																								<span class="price"><b>Price:</b> <ycommerce:testId
+																										code="orderDetails_productTotalPrice_label">
+																										<format:price
+																											priceData="${entryCancel.totalPrice}"
+																											displayFreeForZero="true" />
+																									</ycommerce:testId> </span>
+																								<c:if
+																									test="${not empty entryCancel.imeiDetails}">
+																									<span><b>Serial Number:</b>
+																										${entryCancel.imeiDetails.serialNum}</span>
+																								</c:if>
+																								<span class="sellerOrderNo"><b> <spring:theme
+																											code="text.orderHistory.seller.order.number" /></b>
+																									${subOrder.code} </span>
+																							</p>
+																							<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
+																						</div>
+																					</li>
+																				</ul>
+																			</li>
+																		</c:forEach>
 																	</ul>
 																	<div class="questions">
 																		<label>But why?</label>
-																		 <form:select name="reasonList"
-																			id="cancellationreasonSelectBox_${entry.transactionId}" path="reasonCode" onchange="setDropDownValue(${entry.transactionId})">
-																			<option selected="selected" disabled="disabled" id="defaultReason"><spring:theme
+																		<form:select name="reasonList"
+																			id="cancellationreasonSelectBox_${entry.transactionId}"
+																			path="reasonCode"
+																			onchange="setDropDownValue(${entry.transactionId})">
+																			<option selected="selected" disabled="disabled"
+																				id="defaultReason"><spring:theme
 																					code="text.requestDropdown.selected" /></option>
 																			<c:forEach items="${cancellationReason}" var="reason">
 																				<option value="${reason.reasonCode}">${reason.reasonDescription}</option>
 																			</c:forEach>
 																		</form:select>
-																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
-																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div> 
+																		<div id="blankReasonError"
+																			style="display: none; color: red; padding-top: 10px;">
+																			<spring:theme
+																				code="text.cancel.requestDropdown.selected.error"
+																				text="Do let us know why you would like to cancel this item." />
+																		</div>
 																	</div>
 																	<form:hidden path="ticketTypeCode"
 																		class="ticketTypeCodeClass" value="C" />
@@ -529,11 +561,11 @@
 																		id="entryNumber" value="${entry.entryNumber}" />
 																</div>
 																<div class="buttons">
-																<!-- TISPRDT - 995 -->
+																	<!-- TISPRDT - 995 -->
 																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
-																<!-- TISPRDT - 995 -->
+																	<!-- TISPRDT - 995 -->
 																	<button type="button" class="light-red cancel-confirm"
-																		id="myaccount" data-dismiss="modal" >Confirm
+																		id="myaccount" data-dismiss="modal">Confirm
 																		Cancellation</button>
 																</div>
 
@@ -569,67 +601,80 @@
 															<form class="return-form">
 																<div class="return-container container">
 																	<ul class="products">
-																		<c:set var="orderCodeMap" value="${subOrder.code}-${entry.orderLineId}"/>
-																		
-																		<c:forEach items="${cancelProductMap[orderCodeMap]}" var="entryCancel" >	
-																			
-																		<li class="item look">
-																		<ul class="product-info">
-																			<li>
-																			<div class="product-img">
-																				<c:choose>
-																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
-																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
-																															</a>
-																
-																					</c:when>
-																					<c:otherwise>
-																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="thumbnail" />
-																															</a>
-																							
-																					</c:otherwise>
-																				</c:choose>
-																			</div>
-																			<div class="product">
-																				<!-- <p class="company">Nike</p> -->
-																				<h3 class="product-name">
-																					<a href="${productUrl}">${entryCancel.product.name}</a>
-																				</h3>
-																				
-																				<p class="item-info">
-																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>
+																		<c:set var="orderCodeMap"
+																			value="${subOrder.code}-${entry.orderLineId}" />
+
+																		<c:forEach items="${cancelProductMap[orderCodeMap]}"
+																			var="entryCancel">
+
+																			<li class="item look">
+																				<ul class="product-info">
+																					<li>
+																						<div class="product-img">
+																							<c:choose>
+																								<c:when
+																									test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
+																									<a href="${productUrl}"> <product:productPrimaryImage
+																											product="${entryCancel.product}"
+																											format="luxuryCartIcon" />
+																									</a>
+
+																								</c:when>
+																								<c:otherwise>
+																									<a href="${productUrl}"> <product:productPrimaryImage
+																											product="${entryCancel.product}"
+																											format="thumbnail" />
+																									</a>
+
+																								</c:otherwise>
+																							</c:choose>
+																						</div>
+																						<div class="product">
+																							<!-- <p class="company">Nike</p> -->
+																							<h3 class="product-name">
+																								<a href="${productUrl}">${entryCancel.product.name}</a>
+																							</h3>
+
+																							<p class="item-info">
+																								<span><b><c:if
+																											test="${entryCancel.quantity > 1}">
+																											<spring:theme
+																												code="text.orderHistory.quantity" />
 																					&nbsp;${entryCancel.quantity}
-																					</c:if></b> 
-																					</span>
-																					
-																					<c:if test="${not empty entryCancel.product.size}">
-													 									<span><b>Size:</b> ${entryCancel.product.size}</span>
-																					</c:if>
-																					<c:if test="${not empty entryCancel.product.colour}">
-																						<span><b>Color:</b> ${entryCancel.product.colour}</span>
-																					</c:if>
-																					 
-																					 <span
-																						class="price"><b>Price:</b> <ycommerce:testId
-																							code="orderDetails_productTotalPrice_label">
-																							<format:price priceData="${entryCancel.totalPrice}"
-																								displayFreeForZero="true" />
-																						</ycommerce:testId>
-																					</span>
-																					<c:if test="${not empty entryCancel.imeiDetails}"><span><b>Serial Number:</b> ${entryCancel.imeiDetails.serialNum}</span></c:if>
-																					<span class="sellerOrderNo"><b>
-																					<spring:theme code="text.orderHistory.seller.order.number" /></b> 
-																					${sellerOrder.code}
-																					</span>
-																				</p>
-																				<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
-																			</div>
-																		</li>
-																	</ul>
-																</li>
-																</c:forEach>
+																					</c:if></b> </span>
+
+																								<c:if
+																									test="${not empty entryCancel.product.size}">
+																									<span><b>Size:</b>
+																										${entryCancel.product.size}</span>
+																								</c:if>
+																								<c:if
+																									test="${not empty entryCancel.product.colour}">
+																									<span><b>Color:</b>
+																										${entryCancel.product.colour}</span>
+																								</c:if>
+
+																								<span class="price"><b>Price:</b> <ycommerce:testId
+																										code="orderDetails_productTotalPrice_label">
+																										<format:price
+																											priceData="${entryCancel.totalPrice}"
+																											displayFreeForZero="true" />
+																									</ycommerce:testId> </span>
+																								<c:if
+																									test="${not empty entryCancel.imeiDetails}">
+																									<span><b>Serial Number:</b>
+																										${entryCancel.imeiDetails.serialNum}</span>
+																								</c:if>
+																								<span class="sellerOrderNo"><b> <spring:theme
+																											code="text.orderHistory.seller.order.number" /></b>
+																									${sellerOrder.code} </span>
+																							</p>
+																							<%-- <form:hidden path="sellerId" value="${sellerId}" /> --%>
+																						</div>
+																					</li>
+																				</ul>
+																			</li>
+																		</c:forEach>
 																	</ul>
 																	<div class="reason questions">
 																		<label id="reasonTitle">Reason for
@@ -655,7 +700,7 @@
 							</ul>
 						</c:forEach>
 
-						<div class="navigation2" >
+						<div class="navigation2">
 							<span id="ofPagination"></span>
 							<%-- <div class="navigation2" >
 							<span id="ofPagination"></span>
@@ -674,7 +719,7 @@
 								searchUrl="/my-account/orders?sort=${searchPageData.pagination.sort}"
 								msgKey="text.account.orderHistory.page"
 								numberPagesShown="${numberPagesShown}" />
-						<!-- mycode -->
+							<!-- mycode -->
 						</div>
 						<!-- mycode -->
 					</c:if>

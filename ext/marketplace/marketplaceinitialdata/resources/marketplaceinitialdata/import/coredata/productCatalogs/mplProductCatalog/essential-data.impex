@@ -122,6 +122,15 @@ INSERT_UPDATE MediaFormat;qualifier[unique=true];name
 ;58Wx65H;58Wx65H
 ;658Wx734H;658Wx734H
 ;97Wx108H;97Wx108H
+#for fine jewellery
+;1348Wx1906H;1348Wx1906H
+;674Wx953H;674Wx953H
+;252Wx374H;252Wx374H
+;110Wx169H;110Wx169H
+;97Wx141H;97Wx141H
+;145Wx206H;145Wx206H
+;97Wx144H;97Wx144H
+
 
 INSERT_UPDATE ProductTaxGroup;code[unique=true]
 ;jp-vat-full
@@ -214,7 +223,7 @@ INSERT_UPDATE mediaStatusEnum;code[unique=true];name[lang=en]
 ;pcm_updatedpcm;Updated Pcm;
 ;pcm_mediaupdated;Media Updated;
 ;pcm_updatedservice;Updated Service;
-pcm_imageprocessingcompleted;Image Processing Completed;
+;pcm_imageprocessingcompleted;Image Processing Completed;
 
 INSERT_UPDATE productType;code[unique=true];name[lang=en]
 ;pcm_simple;Simple;

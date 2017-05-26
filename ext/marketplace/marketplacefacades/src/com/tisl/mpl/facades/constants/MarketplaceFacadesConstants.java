@@ -149,20 +149,24 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 
 	public static final String LUXURY_STYLE_SWATCH = "luxuryStyleSwatch";
 
+	//added for jewellery
+	public static final String JEWELLERY_STYLE_SWATCH = "fineJewelstyleSwatch";
+
 	public static final String CA = "CA";
 	public static final String CU = "CU";
-	public static final String CDP="CDP";
+	public static final String CDP = "CDP";
 	public static final String SUCCESS = "success";
 	public static final String SERVER_EXCEPTION = "Internal Server Error, Please try again later";
-	public static final String PINCODE_NOT_SERVICEABLE="Pincode not Serviceable";
-	public static final String TATA_CLIQ="TATA-CLIQ";
-	public static final String REFUND_MODE_C="C";
+	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
+	public static final String TATA_CLIQ = "TATA-CLIQ";
+	public static final String REFUND_MODE_C = "C";
 	public static final String RETURN_SELF_COURIER_FILE_DOWNLOAD_URL = "/my-account/returns/returnFileDownload?orderCode=";
-	public static final String TRANSACTION_ID ="transactionId";
+	public static final String TRANSACTION_ID = "transactionId";
 	public static final String AMPERSAND = "&";
 	public static final String EQUALS_TO = "=";
 	public static final String COLON = ":";
 	public static final String FORWARD_SLASHES = "//";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty
