@@ -55,6 +55,8 @@
 	<util:map id="luxAddonReplacePrefixMap">
 		<entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"/>
 		<entry key="pages/cart/cartPage" value="addon:/luxurystoreaddon/pages/cart/cartPage"/>
+		<entry key="pages/search/facetResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
+		<entry key="pages/search/searchGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
 	</util:map>
 	<!-- Logic for resolving view resolver for addon prefix -->
 </beans>
