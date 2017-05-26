@@ -2029,6 +2029,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
 
 	// Agent who placed order from cscockpit
-	public static final String AGENT_ID = "agentId";
-}
 
+}

@@ -26,10 +26,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
-import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
@@ -172,7 +172,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	//CKD:TPR-250:Start : Exactly same method as buyboxPrice only to have a different path till DAO
 	//which uses a query without having clause for availability
 	@Override
-	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode,String sellerId)
+	public List<BuyBoxModel> buyboxPriceForMicrosite(final String productCode, final String sellerId)
 	{
 		final StringBuilder productCodes = new StringBuilder(100);
 		final Map<String, String> queryParamMap = new HashMap<String, String>();
@@ -240,6 +240,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
 	//CKD:TPR-250:End
 
 	//	@Override
@@ -661,7 +662,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 						+ " where {cat.version}='Online' and {b.product} = ?productCode and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc";
 
 
-				log.debug(QUERY_CLASS + queryString);
+				LOG.debug(QUERY_CLASS + queryString);
 			}
 			else
 			{
