@@ -12,7 +12,7 @@
 						  <li> <p>TATA Promise</p> </li>
 						  <li class="omni"> <p>Omni Channel</p> </li>
 						  <li class="genuine"> <p>Genuine Brands</p> </li>
-						  <li class="returns"> <p>30 Day Returns</p> </li>
+						  <li class="returns"> <p>Easy Returns</p> </li>
 						</ul>
 					  </div>
 					</div>

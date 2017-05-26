@@ -311,16 +311,16 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						}
 					}
 				}
-				else
-				{
-					//certainty check
-					if (GenericUtilityMethods.checkRestrictionData(restrictionList))
-					{
-						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
-								promoContext.getOrder(), 1.00F);
-						results.add(result);
-					}
-				}
+				//				else
+				//				{
+				//					//certainty check
+				//					if (GenericUtilityMethods.checkRestrictionData(restrictionList))
+				//					{
+				//						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this,
+				//								promoContext.getOrder(), 1.00F);
+				//						results.add(result);
+				//					}
+				//				}
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -604,4 +604,3 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 		builder.append(modifyDate);
 	}
 }
-

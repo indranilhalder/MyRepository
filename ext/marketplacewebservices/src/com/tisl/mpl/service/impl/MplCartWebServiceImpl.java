@@ -2165,7 +2165,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
 				if (!StringUtil.isEmpty(pincode))
 				{
-					responseData = mplCartFacade.getOMSPincodeResponseData(pincode, cartData);
+					responseData = mplCartFacade.getOMSPincodeResponseData(pincode, cartData, cartModel);
 					// Changes for Duplicate Cart fix
 					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData, cartModel);
 				}

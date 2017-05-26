@@ -93,6 +93,7 @@ tr.d0 td {
 <input type="hidden" id="pdpSellerIDs" value='${pdpSellerIDs}'/>
 <input type="hidden" id="pdpBuyboxWinnerSellerID" value=''/>
 <input type="hidden" id="pdpOtherSellerIDs" value=''/>
+<input type="hidden" id="browser_type" value='${browser_type}'/>
 <!-- TPR-429 END-->
 <!-- For Data Layer Schema changes -->
 <input type="hidden" id="product_stock_count" value="${product_stock_count}" />
@@ -181,8 +182,6 @@ tr.d0 td {
 				<!-- CKD:TPR-250-Start-->
 				<c:set var="clickableBrandname" value="${msiteBrandName}"/>
 				<c:set var="clickableBrandCode" value="${msiteBrandCode}"/>
-				<!-- forcibly making brand non-clickable for time bieng -->
-				<c:set var="clickableBrandCode" value=""/>
 				<c:choose>
 					<c:when test="${not empty clickableBrandname && not empty clickableBrandCode}">
 				<h3 itemprop="brand" itemscope itemtype="http://schema.org/Organization" class="company"><span itemprop="name"><a href="/${clickableBrandname}/c-${clickableBrandCode}">${product.brand.brandname}</a></span></h3>
@@ -194,6 +193,7 @@ tr.d0 td {
 				<!-- CKD:TPR-250-End-->
 				<%-- <a itemprop="url" href="${mainurl}"> --%>		<!-- Commented as part of UF-181 -->
 				<!-- For TPR-4358 -->
+				<span id="url" itemprop="url" style="display: none">${mainurl}</span> <!-- TISSQAEE-301 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
 				<!-- </a> -->

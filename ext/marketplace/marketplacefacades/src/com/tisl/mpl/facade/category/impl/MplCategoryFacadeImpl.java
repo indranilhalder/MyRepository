@@ -10,7 +10,6 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
-import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.variants.model.VariantProductModel;
 
 import java.util.ArrayList;
@@ -19,12 +18,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.CollectionUtils;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCategoryService;
@@ -41,7 +40,7 @@ import com.tisl.mpl.wsdto.BreadcrumbResponseWsDTO;
  */
 public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCategoryFacade
 {
-	
+
 	private ConfigurationService configurationService;
 	@Autowired
 	private UrlResolver<ProductModel> productModelUrlResolver;
@@ -114,6 +113,7 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 		this.mplCategoryService = mplCategoryService;
 	}
 
+	protected static final Logger LOG = Logger.getLogger(MplCategoryFacadeImpl.class);
 
 	private MplCategoryService mplCategoryService;
 
@@ -189,8 +189,9 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 
 			if (topCategoryDetails == null)
 			{
-				throw new UnknownIdentifierException("Category with code '" + categoryCode
-						+ "' not found! (Active session catalogversions: " + cmsSiteService.getCurrentCatalogVersion() + ")");
+				/* throw new UnknownIdentifierException */
+				LOG.debug("Category with code '" + categoryCode + "' not found! (Active session catalogversions: "
+						+ cmsSiteService.getCurrentCatalogVersion() + ")");
 			}
 
 			for (final CategoryModel secondLevelCategoryModel : topCategoryDetails.getCategories())
@@ -230,8 +231,8 @@ public class MplCategoryFacadeImpl extends DefaultCatalogFacade implements MplCa
 			}
 			if (!isCategoryIDAvailable)
 			{
-				throw new EtailBusinessExceptions("Category with name '" + sellerId
-						+ "' not found! (Active session catalogversions: " + cmsSiteService.getCurrentCatalogVersion() + ")");
+				LOG.debug("Category with name '" + sellerId + "' not found! (Active session catalogversions: "
+						+ cmsSiteService.getCurrentCatalogVersion() + ")");
 			}
 			return secondLevelCategoryData;
 		}

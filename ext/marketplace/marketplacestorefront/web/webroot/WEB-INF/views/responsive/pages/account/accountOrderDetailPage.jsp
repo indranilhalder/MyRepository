@@ -126,7 +126,7 @@
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Schedule Delivery and Shipping Charges"/></span>
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Scheduled Delivery and Shipping Charges"/></span>
 									<%-- <spring:theme code="text.account.order.delivery"
 											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
@@ -187,8 +187,20 @@
 								<c:otherwise>
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
-								<h2>Payment Method:
+							<!-- Checked for mRupee order -->
+									 <c:choose>
+  										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
+  											<h2>Payment Method: <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
+									</h2>
+									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+									${subOrder.mplPaymentInfo.paymentOption}
+  										</c:when>
+								  		<c:otherwise>
+								  			<h2>Payment Method:
 									${subOrder.mplPaymentInfo.paymentOption}</h2>
+									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								  		</c:otherwise>
+								  	</c:choose>
 								<c:set var="cardNumberMasked"
 									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
 								<c:set var="cardNumberLength"
@@ -202,7 +214,7 @@
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
 								</c:if>
 								<!--  TISBOX-1182 -->
-								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%><!-- sanity issue -->
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
 									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
@@ -324,24 +336,32 @@
 								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
 								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
 								<div class="col-md-8 col-sm-6">
+								<!-- TISUATSE-69 starts -->
+
 								<address>
 									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
 									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
 									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
+									<c:if test="${empty subOrderLine2  && empty subOrderLine3}">
 									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
-									<c:if test="${not empty subOrderLine2}">
-									<span data-tribhuvan="addressLine2">${fn:escapeXml(subOrder.deliveryAddress.line2)}</span>,
 									</c:if>
-									<c:if test="${not empty subOrderLine3}">
-												&nbsp;<span data-tribhuvan="addressLine3">${fn:escapeXml(subOrder.deliveryAddress.line3)}</span>,
+									<c:if test="${not empty subOrderLine2  && empty subOrderLine3}">
+									<span data-tribhuvan="addressLine2">${fn:escapeXml(subOrder.deliveryAddress.line1)}${fn:escapeXml(subOrder.deliveryAddress.line2)}</span>,
+									</c:if>
+									<c:if test="${ empty subOrderLine2  && not empty subOrderLine3}">
+												<span data-tribhuvan="addressLine3">${fn:escapeXml(subOrder.deliveryAddress.line1)}${fn:escapeXml(subOrder.deliveryAddress.line3)}</span>,
 											</c:if>
-									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
+									<c:if test="${ not empty subOrderLine2  && not empty subOrderLine3}">
+												${fn:escapeXml(subOrder.deliveryAddress.line1)}${fn:escapeXml(subOrder.deliveryAddress.line2)}${fn:escapeXml(subOrder.deliveryAddress.line3)},
+		<!-- TISUATSE-69 ends -->	</c:if>	
+									<c:if test="${not empty subOrder.deliveryAddress.landmark}">
+
 									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
 									</c:if>
 									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
 												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
-											</c:if>
+									</c:if>
 									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
 									<br>
 									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
@@ -623,8 +643,11 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
+
 											 <%-- R2.3: START:Commented: <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+
+
 
 											 	<a
 													href="${request.contextPath}/my-account/order/returnPincodeCheck?orderCode=${sellerOrder.code}&ussid=${entry.mplDeliveryMode.sellerArticleSKU}&transactionId=${entry.transactionId}">
@@ -652,6 +675,8 @@
 												  	</c:otherwise>
 												</c:choose>
 												<!-- R2.3: END: -->
+
+
 												
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
@@ -664,6 +689,7 @@
 											<%--  <c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>  --%>
+
 											
 											<%--  <c:choose>
 														 	 <c:when test="${entry.itemReturnStatus eq 'true'  and entry.giveAway eq false and entry.isBOGOapplied eq false}">
@@ -694,6 +720,7 @@
 												</c:if>	
 												</c:if>
 											</div>
+
 											
 										</div>
 
@@ -2756,6 +2783,7 @@ $(function() {
 });
 
 	function showCancelDiv(orderLineId) {
+
 		
 		var divId='cancellation' + orderLineId;
 		showDiv(divId);
@@ -2955,10 +2983,22 @@ $(function() {
 			      console.log($("#deliveryAddressForm #firstName").attr("value")); 
 			      $("#deliveryAddressForm #firstName").val($("#deliveryAddressForm #firstName").attr("value"));
 			      $("#deliveryAddressForm #lastName").val($("#deliveryAddressForm #lastName").attr("value"));
-			      
-			      $("#deliveryAddressForm #addressLine1").val($("#deliveryAddressForm #addressLine1").attr("value"));
-			      $("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
-			      $("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
+			    //TISUATSE-128 start
+					var addressLine1 = ($("#deliveryAddressForm #addressLine1").attr("value"));
+					if(($("#deliveryAddressForm #addressLine2").attr("value")))
+					{
+					var addressLine2 = ($("#deliveryAddressForm #addressLine2").attr("value"));
+					addressLine1 = addressLine1 + addressLine2;
+					}
+					if(($("#deliveryAddressForm #addressLine3").attr("value")))
+					{
+					var addressLine3 = ($("#deliveryAddressForm #addressLine3").attr("value"));
+					addressLine1 = addressLine1 + addressLine3;
+					}
+			      $("#deliveryAddressForm #addressLine1").val(addressLine1);
+			    //TISUATSE-128 end
+			      //$("#deliveryAddressForm #addressLine2").val($("#deliveryAddressForm #addressLine2").attr("value")); 
+			      //$("#deliveryAddressForm #addressLine3").val($("#deliveryAddressForm #addressLine3").attr("value")); 
 			 	
 			      console.log("blur line 394");
 					 var value = $(".address_landmarkOtherDiv").attr("data-value");
@@ -2972,6 +3012,8 @@ $(function() {
 			  	//changeFuncLandMark("Other"); 
 			 
 		});
+
+
 		
 		
 		    var length = $(".returnStatus .dot").length;
@@ -3155,6 +3197,7 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 		left:0 !important;
 	}
 	
+
 
 	.submitButton {
 		margin: 60px auto;

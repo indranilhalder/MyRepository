@@ -47,7 +47,7 @@
 <input type="hidden" id="page_subcategory_l3" value='${page_subcategory_name_L3}'/>
 <!-- added for kidswear:L4 needs to be populated -->
 <input type="hidden" id="page_subcategory_l4" value='${page_subcategory_name_L4}'/>
-	
+
 <input type="hidden" id="orderIDString" value="${orderData.code}">
 <input type="hidden" id="orderSubTotal" value="${orderData.subTotal.value}">
 <%-- <input type="hidden" id="orderTotal" value="${order.subTotal}"> --%>

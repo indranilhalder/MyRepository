@@ -124,6 +124,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//	public static final String REFUNDTYPE = "S";
 	//	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
 
+
+
+
 	//Bulk Cancellation
 	public static final String initiate_cancel_job_cancellation_count = "initiate.cancel.job.cancellation.count";
 
@@ -538,14 +541,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_SENDER_ID = "marketplace.sms.sender.name".intern();
 	public static final String SMS_MESSAGE_FORGOT_PWD = "Dear Customer, One Time Password for your request is {0}. Please enter the same to submit the request. Regards, Team Tata Unistore.";
-	public static final String SMS_MESSAGE_ORDER_PLACED = "Hi {0}, thank you for placing the order with us .Your order ref no is ({1}). Excited? Click here to track your order {2} .";
+	/* 1.Anniversary Changes */
+	public static final String SMS_MESSAGE_ORDER_PLACED = "Hi {0}, your order no ({1}) is confirmed. While we will keep you posted, track your order at {2}. Hope you enjoyed shopping with us.";
+
 	public static final String SMS_MESSAGE_ORDER_SHIPPED = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
 	public static final String SMS_MESSAGE_ORDER_OUTFORDELIVERY_PREPAID = "Awesome news! {0} item(s) of your order  # {1} will reach you today. High five for shopping with us. Don't forget to download our app at {2} .";
-	public static final String SMS_MESSAGE_ORDER_OUTFORDELIVERY_COD = "Awesome news! {0} item(s) of your order # {1} will reach you today. Please keep INR {2} ready for COD. High five for shopping with us. Download our app at {3} .";
+	/* 3.Anniversary Changes */
+	public static final String SMS_MESSAGE_ORDER_OUTFORDELIVERY_COD = "Hi, {0} item(s) of your order # {1} will reach you today. Please keep INR {2} ready for COD. Next time, shop on the go, on our app! {3} .";
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "HmmmÂ… There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
@@ -553,7 +559,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PUSH_MESSAGE_ORDER_PLACED = "Awesome! We think your bag looks great. Track your order {0} in the Order History section of your account.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_PREPAID = "Hi! Your order {0} of {1} item(s) will reach you today. To know more, check out the Order History section of the app.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_COD = "Hi! Your order {0} of {1} item(s) will reach you today. Please keep INR {2} cash handy. To know more, check out the Order History section of the app.";
-	public static final String PUSH_MESSAGE_ORDER_CANCELLED = "Hi! We have initiated a refund of INR {0} to you for the {1} item(s) you cancelled.The reason for this cancellation is {2}. To know more, check out the Order History section of the app.";
+	/* 14. Anniversary Changes */
+	public static final String PUSH_MESSAGE_ORDER_CANCELLED = "Hi, a refund of INR {0} has been initiated on the cancellation of {2} product(s). Check your email for details.";
 
 
 	public static final String SMS_SERVICE_CONTACTNO = "marketplace.sms.service.contactno";
@@ -567,14 +574,20 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 	//public static final String SMS_MESSAGE_HOTC = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
-	public static final String SMS_MESSAGE_HOTC = "Hey! We have shipped {0} item(s) of your order  # {1} via {2}. Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
-	public static final String SMS_MESSAGE_ORDER_DELIVERY = "And it's done! You received {0} item(s) of your order # {1} today. We had tons of fun serving you. Thanks! To shop on the move, download our app at {2} .";
+	/* 2.Anniversary Changes */
+	public static final String SMS_MESSAGE_HOTC = "Hi! Your order # {1} with {0} item(s) has been shipped via {2}. You can track your order at {3}. Next time, shop on the go, on our app!";
+	/* 5.Anniversary Changes */
+	public static final String SMS_MESSAGE_ORDER_DELIVERY = "Hi, order no.{1} has been deliverd. We had tons of fun serving you. Check your email/account for details. Next time, shop on the go, on our app! {2}.";
 	public static final String SMS_MESSAGE_REFUND_INITIATED = "Hey! We have initiated a refund of INR {0} to you against return of {1} item(s) of your order ref # {2} with us. Please check your email for more details.";
-	public static final String SMS_MESSAGE_ORDER_UNDELIVERED = "Hey {0},we failed to deliver {1} item(s) of your order # {2} today. We will try delivering again. Feel free to call us at {3} in case of any queries.";
+	/* 4.Anniversary Changes */
+	public static final String SMS_MESSAGE_ORDER_UNDELIVERED = "Hi {0}! We tried delivering your order {1} with {2} item(s) but missed you. We will try again. Have a question? Call on {3}.";
+	/* 7.Anniversary Changes */
 
-	public static final String SMS_MESSAGE_ORDER_RISK = "Oh no! Your order ref # {0}) has been placed but it's been put on hold. Don't worry, your transaction with us was completely safe We will keep you posted. Questions? Call us at {1} .";
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "High five! Our Risk Management team came to the rescue. Your order ref # {0} is confirmed. Go ahead and track your order at {1} . Thanks!";
-	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Oh gosh! We were unable to accept your order ref # {0}. Should you wish to place another order, visit our website {1} or download our app at {2}. To know more about this order call {3}.";
+	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
+	/* 8. Anniversary Changes */
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	/* 9.Anniversary Changes */
+	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
 	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0}, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
 	public static final String SMS_MESSAGE_UNDELIVERED = "Your order of {0},  in order no. {1} is undelivered. We deeply regret the inconvenience. We will attempt to ship it to you within 48 hrs.";
@@ -583,6 +596,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_DELIVERED = "Good news, everyone!  Your {0} {1}, was successfully delivered. We had tons of fun serving you. Hope you're happy with your CAMEL as well";
 	public static final String SMS_MESSAGE_RTO_INITIATED = "We are  initiated RTO for your shipment. If you want delivery then let us know within 24 hr";
 	public static final String SMS_MESSAGE_MIS_ROUTE = "Hi! Your order of {0}  in order no. {1} has been delay due to mis route. We deeply regret the inconvenience. ";
+
+
 	public static final int MAX_PAGE_LIMIT = 100;
 
 	public static final String SNS_CATEGORY = "snsCategory";
@@ -910,6 +925,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Added for TPR-1290
 	public static final String B9332 = "B9332";
 	public static final String B9328 = "B9328";
+	public static final String B9700 = "B9700";
+
+	public static final String B9710 = "B9710";
 	// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
@@ -987,6 +1005,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9161 = "B9161";
 
 
+	//Added for TPR-4460
+	public static final String B9302 = "B9302";
+	public static final String B9303 = "B9303";
+	public static final String B9304 = "B9304";
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
@@ -1288,6 +1310,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//added for getcartdetails
 	public static final String INVALID_CART = "Invalid Cart";
+	//For TPR-5666
+	public static final String INVALID_CART_URL = "/cart/error-invalidCart";
 	public static final String COULD_NOT_COVERT_CART = "Could not covert cart";
 
 	public static final String PROMOTION_GROUP_DEFAULT = "default";
@@ -1399,13 +1423,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SDB_FLAG = "RRS";
 	public static final String EDTOHD_FLAG = "RRE";
 	/* Added in R2.3 END */
+
 	public static final String CASH_ON_DELIVERY = "COD";
 
 	// Added for delivery mode estimated description default time
 	public static final String DEFAULT_START_TIME = "1";
 	public static final String DEFAULT_END_TIME = "2";
 	public static final String DELIVERYMODE_DESC_PREFIX = "Delivered in ";
-	public static final String DELIVERYMODE_DESC_SUFFIX = " business days";
+	public static final String DELIVERYMODE_DESC_SUFFIX = " days";
 
 	public static final String ORDER_HISTORY_DURATION_DAYS = "order.history.duration.days";
 	public static final String ORDER_HISTORY_DEFAULT_DURATION_DAYS = "180";
@@ -1594,6 +1619,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String VOUCHERCODE = "voucherCode".intern();
 	public static final String SYSDATE = "sysdate".intern();
 	public static final String VOUCHERIDENTIFIER = "voucherIndentifier".intern();
+	//TPR-4460
+	public static final String CHANNELRESTVIOLATION_WEB = "Voucher Not applicable for Web Channel".intern();
+	public static final String CHANNELRESTVIOLATION_MOBILE = "Voucher Not applicable for Mobile Channel".intern();
+	public static final String CHANNELRESTVIOLATION_CALLCENTRE = "Voucher Not applicable for CallCentre Channel".intern();
+	public static final String CHANNEL_RESTRICTION_MOBILE = "ChannelMobile".intern();
+	public static final String CHANNEL_RESTRICTION_WEB = "ChannelWeb".intern();
+	public static final String CHANNEL_RESTRICTION = "Channel Restriction for coupons".intern();
 
 	public static final String FIND_USER_BY_UID = "SELECT {u.pk} FROM {User as u} WHERE ({u.UID} = ?uid )";
 	//Added for constants for clickandcollect and active.
@@ -1777,6 +1809,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
 			.intern();
 
+	//	public static final String PAYMENTPENDINGQUERY = "select {o.pk} from {Order as o},{OrderStatus as os},{WalletEnum as w} where  {o.creationtime} <= ?queryTAT and {o.status}={os.pk} and {os.code}=?status"
+	//			+"and {w.code}!='mRupee' ".intern(); //Query to include mRupee
+
+
 	public static final String PAYMENTPENDINGSTATUS = "status".intern();
 	//PaymentFix2017:- queryTAT added
 	public static final String PAYMENTPENDINGSKIPTIME = "queryTAT".intern();
@@ -1879,7 +1915,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 			.intern();
 	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
 	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
-
+	public static final String SITEMAP_CATEGORY_QUERY = "mpl.sitemap.categoryQuery".intern();
+	public static final String DEFAULT_SITEMAP_CATEGORY_QUERY = "SELECT {c.pk} FROM {Category AS c JOIN CatalogVersion AS cv ON {c.catalogVersion}={cv.pk} JOIN Catalog AS cat ON {cv.pk}={cat.activeCatalogVersion} JOIN CMSSite AS site ON {cat.pk}={site.defaultCatalog}}  WHERE {site.pk} = ?site AND ({c.code} like 'MSH%' or {c.code} like 'MBH%' ) AND NOT exists ({{select {cr.pk} from {CategoriesForRestriction as cr} where {cr.target} = {c.pk} }})"
+			.intern();
+	public static final String SITEMAP_PRODUCT_QUERY_DEFAULT = "select {p:pk} from {Product as p join CategoryProductRelation as prodrel on {p:pk}={prodrel:target} join BuyBox as bb on {bb.product}={p.code}} where {p.catalogversion}= ?catalogVersion and {bb.delisted}='0'and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate}) and {prodrel:source} in( {{select distinct{cat.pk} from {Category as cat} where {cat.pk} in ( {{select {rel:target} from {Category as c Join CategoryCategoryRelation as rel 	ON {c:PK} = {rel:source}} where {c.code}=?l2code and {c.catalogversion}= ?catalogVersion }}) }} ) "
+			.intern();
+	public static final String SITEMAP_PRODUCT_QUERY = "mpl.sitemap.productQuery".intern();
+	public static final String SITEMAP_CONTENT_QUERY = "mpl.sitemap.contentQuery".intern();
+	public static final String DEFAULT_SITEMAP_CONTENT_QUERY = "select {cp.pk} from {ContentPage as cp},{CmsApprovalStatus as cas},{catalogversion as cat} where {cp.approvalstatus}={cas.pk} and {cas.code}='approved' and {cp.catalogversion}={cat.pk} and {cat.version}='Online'"
+			.intern();
+	public static final String SITEMAP_HIERARCHY = "mpl.sitemap.hierarchy".intern();
+	public static final String SITEMAP_HIERARCHY_DEFAULT = "MSH1";
 	//update the message for Freebie product TPR-1754
 	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
 	//			.intern();
@@ -1943,6 +1989,29 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
 	public static final String PRODUCT_IMAGE = "product";
 
+	public static final String WALLETORDERID = "wallertOrderId";
+	public static final String CHECKSUMKEY = "checksumKey";
+	public static final String MRUPEE = "MRUPEE";
+	public static final String MRUPEE_CODE = "MRupee";
+	public static final String TPWALLETAUDITQUERY = "select {a:pk} from {MplPaymentAudit As a} where {a.auditId}=?auditId"
+			.intern();
+	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
+	public static final String THIRDPARTYWALLET_ENTRY_EXPIRED = "0".intern();
+
+	//mrupee
+	//mrupee
+	public static final String PAYMENTPENDING = "SELECT {o.pk}  FROM {order as o},{OrderStatus as os},{WalletEnum as w} WHERE SYSDATE - 10/1440 >  {creationtime} and {o.status}={os.pk} and  {o.iswallet}={w.pk} and ({os.code}=?status1 or {os.code}=?status2) and {w.code}='mRupee' "
+			.intern();
+	public static final String STATUS1 = "status1".intern();
+	public static final String STATUS2 = "status2".intern();
+
+	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
+	public final static String MRUPEERETURNURL = "payment.mRupee.returnUrl".intern();
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+	public static final String MRUPEE_OPTION = "mRupee";
+	public final static String MRUPEEHOSTNAME = "mRupee.hostname.disableSslVerification";
 	public static final String TICKETTYPECODE = "R";
 	public static final String REFUNDTYPE = "S";
 	public static final String REASONCODE = "03"; // Hard coded value -- I'm not happy with the product quality
@@ -1952,6 +2021,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//PaymentFix2017:-
 	public static final String PAYMENTPENDING_SKIPTIME = "marketplace.PaymentPending.skipTime".intern();
 	public static final String OTHER = "Other";
+
 	public static final String COUNTRYCODE = "91".intern();
 	//Promotion Related
 	//public static final String BUYAANDBGETPROMOTIONONSHIPPINGCHARGES = "BuyAandBGetPromotionOnShippingCharges".intern();
@@ -2018,20 +2088,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String USERPARAM = "user";
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	public static final String SECONDPRODUCT = "secondProduct";
 
 }

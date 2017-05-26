@@ -1777,6 +1777,37 @@ $("#otpMobileNUMField").focus(function(){
 }
  
 
+//TPR-3402
+ 
+ 
+ maxL=120;
+ var bName = navigator.appName;
+// function taLimit(taObj) {
+// 	if (taObj.value.length==maxL) return false;
+// 	return true;
+// }
+
+ function taCount(taObj,Cnt) { 
+	 						 
+ 	objCnt=createObject(Cnt);
+ 	objVal=taObj.value;
+ 	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
+ 	if (objCnt) {
+ 		if(bName == "Netscape"){	
+ 			objCnt.textContent=maxL-objVal.length;}
+ 		else{objCnt.innerText=maxL-objVal.length;}
+ 	}
+ 
+ 	return true;
+ }
+ function createObject(objId) {
+ 	if (document.getElementById) return document.getElementById(objId);
+ 	else if (document.layers) return eval("document." + objId);
+ 	else if (document.all) return eval("document.all." + objId);
+ 	else return eval("document." + objId);
+ }
+ /**************End of character count********/
+
  
 
  function populateBillingAddress(){ 
@@ -1806,7 +1837,8 @@ $("#otpMobileNUMField").focus(function(){
 	 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", false); 
 	 $("#country").attr("disabled", false); 
 	 $("#country").val("India"); 
-	 } 
+	 }
+	 $("#myCounter").html((120));
 	 }, 
 	 error : function(resp) { 
 
@@ -2426,8 +2458,8 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		  	 validate = false;
   	  }
     }
-	
-	   result=lastName.value;
+	 result=lastName.value;
+
 	if(result == undefined || result == "")
 	{	
 		$("#lastnameError").show();
@@ -4512,3 +4544,4 @@ function isSessionActive(){
 function redirectToCheckoutLogin(){
 	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
 }
+

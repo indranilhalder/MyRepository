@@ -169,20 +169,25 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			deliveryAddr.append(deliveryAddress.getStreetname());
 			if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getStreetnumber());
+				//TISUATSE-81 starts
+				deliveryAddr.append(deliveryAddress.getStreetnumber());
 			}
 			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getAddressLine3());
+				deliveryAddr.append(deliveryAddress.getAddressLine3());
 			}
+			//TISUATSE-81 ends
 			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
 			{
 				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
 			}
+			//TISUATSE-70 starts
+			deliveryAddr.append("<br/>");
 
-			deliveryAddr.append(COMMA).append(deliveryAddress.getTown()).append(COMMA).append(deliveryAddress.getDistrict())
-					.append(COMMA).append(deliveryAddress.getPostalcode());
-
+			final String city = deliveryAddress.getTown();
+			deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
+					.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
+			//TISUATSE-70 ends
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 		String websiteUrl = null;

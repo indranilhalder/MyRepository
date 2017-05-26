@@ -925,6 +925,8 @@
 		<property name="endDate" type="String" />
 		<property name="eligibleUSSIDList" type="java.util.List&lt;String>"></property>
 		<property name="giftProduct" type="com.tisl.mpl.wsdto.GiftProductMobileData" />
+		<property name="bundlepromolinkname" type="String" />
+		<property name="bundlepromolink" type="String" />
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.ClassificationMobileWsData">
@@ -2826,6 +2828,19 @@
 		type="java.util.List&lt;com.tisl.mpl.facades.data.RescheduleData>" />
 </bean>
 
+ <bean class="com.tisl.mpl.wsdto.ThirdPartyWalletWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+    	<property name="orderId" type="String"/>
+    	<property name="mCode" type="String"/>
+    	<property name="txnType" type="String"/>
+    	<property name="amount" type="String"/>
+    	<property name="narration" type="String"/>
+    	<property name="retUrl" type="String"/>
+    	<property name="checksum " type="String"/>
+    </bean>
+
+<bean class="com.tisl.mpl.wsdto.WalletPaymentWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
+    	<property name="orderId" type="String"/>
+    </bean>
 
 	<!-- TPR-1727 -->
 	<bean class="com.tisl.mpl.wsdto.ProductInfoWSDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">

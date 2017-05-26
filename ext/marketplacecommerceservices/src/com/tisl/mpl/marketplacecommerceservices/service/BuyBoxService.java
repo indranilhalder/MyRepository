@@ -63,6 +63,10 @@ public interface BuyBoxService
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
+	//TPR-3736
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+
+
 	/**
 	 * @param productCode
 	 * @param pdpproduct
