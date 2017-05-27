@@ -30,7 +30,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
 								<div class="image">
-									<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+									<img src="${banner.bannerImage.url}">
 								</div> 
 								<!-- TPR-628----for mobile and desktop banner view -->
 							<%--  <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
@@ -49,7 +49,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
 							<div class="hero icid fourPromoBanner">
 								<div class="image">
-									<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+									<img src="${banner.bannerImage.url}">
 								</div> 
 								<!-- TPR-628----for mobile and desktop banner view -->
 							 <%-- <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
@@ -79,7 +79,7 @@ var homePageBannerTimeout='${timeout}';
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
 								src="${banner.media.url}"
-								alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;"
+								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 								</a>
 							</c:when>
@@ -87,7 +87,7 @@ var homePageBannerTimeout='${timeout}';
 								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
-								src="${banner.media.url}" style="min-height: 200px;"
+								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 							</a>
@@ -116,7 +116,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
 							<div class="image">
-									<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+									<img src="${banner.bannerImage.url}">
 								</div>
 								<!-- TPR-628----for mobile and desktop banner view -->
 							<%--  <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
@@ -135,7 +135,7 @@ var homePageBannerTimeout='${timeout}';
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
 							<div class="hero icid fourPromoBanner">
 								<div class="image">
-									<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+									<img src="${banner.bannerImage.url}">
 								</div>
 								<!-- TPR-628----for mobile and desktop banner view -->
 							 <%-- <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
@@ -163,7 +163,7 @@ var homePageBannerTimeout='${timeout}';
 							<c:when test="${fn:contains(encodedUrl,'?')}">
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
-								src="${banner.media.url}" style="min-height: 200px;"
+								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 								</a>
@@ -171,7 +171,7 @@ var homePageBannerTimeout='${timeout}';
 							<c:otherwise>
 								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>><img
-								src="${banner.media.url}" style="min-height: 200px;"
+								src="${banner.media.url}"
 								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
 								<%-- title="${not empty banner.headline ? banner.headline : banner.media.altText}" --%> />
 							</a>
@@ -206,12 +206,12 @@ var homePageBannerTimeout='${timeout}';
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <div class="image">
-											<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+											<img src="${banner.bannerImage.url}">
 										</div>
 									</c:when>
 									<c:otherwise>
 										<div class="image">
-											<img data-src="${banner.bannerImage.url}" style="min-height: 200px;">
+											<img data-src="${banner.bannerImage.url}">
 										</div>
 									</c:otherwise>	
 								</c:choose>
@@ -239,12 +239,12 @@ var homePageBannerTimeout='${timeout}';
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <div class="image">
-											<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+											<img src="${banner.bannerImage.url}">
 										</div>
 									</c:when>
 									<c:otherwise>
 										<div class="image">
-											<img data-src="${banner.bannerImage.url}" style="min-height: 200px;">
+											<img data-src="${banner.bannerImage.url}">
 										</div>
 									</c:otherwise>	
 								</c:choose>
@@ -283,10 +283,10 @@ var homePageBannerTimeout='${timeout}';
 								<!-- UF-291 starts here -->
 								<c:choose>
 									<c:when test="${status.index eq 0}">
-										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:when>
 									<c:otherwise>
-										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:otherwise>	
 								</c:choose>
 								<!-- UF-291 ends here -->
@@ -307,10 +307,10 @@ var homePageBannerTimeout='${timeout}';
 								<!-- UF-291 starts here -->
 								<c:choose>
 									<c:when test="${status.index eq 0}">
-										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}"  style="min-height: 200px;" />
+										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:when>
 									<c:otherwise>
-										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:otherwise>	
 								</c:choose>
 								<!-- UF-291 ends here -->
@@ -343,12 +343,12 @@ var homePageBannerTimeout='${timeout}';
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <div class="image">
-										<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+										<img src="${banner.bannerImage.url}">
 									</div>
 								</c:when>
 								<c:otherwise>
 									<div class="image">
-										<img data-src="${banner.bannerImage.url}" style="min-height: 200px;">
+										<img data-src="${banner.bannerImage.url}">
 									</div>
 								</c:otherwise>	
 								</c:choose>
@@ -376,12 +376,12 @@ var homePageBannerTimeout='${timeout}';
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <div class="image">
-										<img src="${banner.bannerImage.url}" style="min-height: 200px;">
+										<img src="${banner.bannerImage.url}">
 									</div>
 								</c:when>
 								<c:otherwise>
 									<div class="image">
-										<img data-src="${banner.bannerImage.url}" style="min-height: 200px;">
+										<img data-src="${banner.bannerImage.url}">
 									</div>
 								</c:otherwise>	
 								</c:choose>
@@ -419,10 +419,10 @@ var homePageBannerTimeout='${timeout}';
 								<!-- UF-291 starts here -->
 								<c:choose>
 								<c:when test="${status.index eq 0}">
-									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:when>
 								<c:otherwise>
-									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:otherwise>	
 								</c:choose>
 								<!-- UF-291 ends here -->
@@ -438,10 +438,10 @@ var homePageBannerTimeout='${timeout}';
 								<!-- UF-291 starts here -->
 								<c:choose>
 								<c:when test="${status.index eq 0}">
-									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:when>
 								<c:otherwise>
-									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" style="min-height: 200px;" />
+									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:otherwise>	
 								</c:choose>
 								<!-- UF-291 ends here -->

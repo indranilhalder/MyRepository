@@ -91,26 +91,9 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 ;;/images/theme/Luxury_youtube.jpg;Luxury_youtube.jpg;$siteResource/images/theme/Luxury_youtube.jpg;;
 ;;/images/theme/Luxury_Insta.jpg;Luxury_Insta.jpg;$siteResource/images/theme/Luxury_Insta.jpg;;
 
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
-;;/images/theme/OrderConfirmationNewBanner1.png;OrderConfirmationNewBanner1.png;$siteResource/images/theme/OrderConfirmationNewBanner1.png;;
-;;/images/theme/placeh.gif;placeh.gif;$siteResource/images/theme/placeh.gif;;
-;;/images/theme/t_order_placed_active.png;t_order_placed_active.png;$siteResource/images/theme/t_order_placed_active.png;;
-;;/images/theme/Arrow.png;Arrow.png;$siteResource/images/theme/Arrow.png;;
-;;/images/theme/t_order_processed.png;t_order_processed.png;$siteResource/images/theme/t_order_processed.png;;
-;;/images/theme/t_order_delivered.png;t_order_delivered.png;$siteResource/images/theme/t_order_delivered.png;;
-;;/images/theme/t_trust.png;t_trust.png;$siteResource/images/theme/t_trust.png;;
-;;/images/theme/t_PIQ.png;t_PIQ.png;$siteResource/images/theme/t_PIQ.png;;
-;;/images/theme/t_easy_returns.png;t_easy_returns.png;$siteResource/images/theme/t_easy_returns.png;;
-;;/images/theme/t_authentic_brands.png;t_authentic_brands.png;$siteResource/images/theme/t_authentic_brands.png;;
-;;/images/theme/t_free_shipping.png;t_free_shipping.png;$siteResource/images/theme/t_free_shipping.png;;
-;;/images/theme/app_store.png;app_store.png;$siteResource/images/theme/app_store.png;;
-;;/images/theme/google_play.png;google_play.png;$siteResource/images/theme/google_play.png;;
-;;/images/theme/line-grey.png;line-grey.png;$siteResource/images/theme/line-grey.png;;
-;;/images/theme/facebookNew.png;facebookNew.png;$siteResource/images/theme/facebookNew.png;;
-;;/images/theme/twitterNew.png;twitterNew.png;$siteResource/images/theme/twitterNew.png;;
-;;/images/theme/instatramNew.png;instatramNew.png;$siteResource/images/theme/instatramNew.png;;
-;;/images/theme/google_plus.png;google_plus.png;$siteResource/images/theme/google_plus.png;;
-;;/images/theme/ytubeNewImage.png;ytubeNewImage.png;$siteResource/images/theme/ytubeNewImage.png;;
+
+
+
 
 # CMS Image Components
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
@@ -131,27 +114,6 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;Emailtwitter;/images/theme/Luxury_twiiter.jpg;
 ;;EmailInstagramImage;/images/theme/Luxury_Insta.jpg
 
-# CMS Image Components
-INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
-;;OrderConfirmationNewBanner1Image;/images/theme/OrderConfirmationNewBanner1.png;
-;;OrderPlacehImage;/images/theme/placeh.gif;
-;;EmailOrderPlacedImage;/images/theme/t_order_placed_active.png;
-;;EmailArrowImage;/images/theme/Arrow.png;
-;;EmailOrderProcessedImage;/images/theme/t_order_processed.png;
-;;EmailOrderDeliveredImage;/images/theme/t_order_delivered.png;
-;;EmailTataTrustImage;/images/theme/t_trust.png;
-;;EmailCliqNPicImage;/images/theme/t_PIQ.png;
-;;EmailEasyReturnImage;/images/theme/t_easy_returns.png;
-;;EmailAuthenticBrandsImage;/images/theme/t_authentic_brands.png;
-;;EmailFreeShippingImage;/images/theme/t_free_shipping.png;
-;;EmailAppStoreImage;/images/theme/app_store.png;
-;;EmailGooglePlayImage;/images/theme/google_play.png;
-;;EmailLineGreyImage;/images/theme/line-grey.png;
-;;EmailFacebookNewImage;/images/theme/facebookNew.png;
-;;EmailTwitterNewImage;/images/theme/twitterNew.png;
-;;EmailInstaNewImage;/images/theme/instatramNew.png;
-;;EmailGPlusImage;/images/theme/google_plus.png;
-;;EmailYouTubeNewImage;/images/theme/ytubeNewImage.png;
 
 ## reset password changes
 ;;EmailForgotPasswordHeaderImage;/images/theme/forgot_password_header.jpg;
@@ -178,28 +140,6 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailYouTubeSlot;Emailyoutube
 ;;EmailappConfSlot;EmailAppImage;
 ;;EmailInstaSlot;EmailInstagramImage
-
-# Content Slots
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
-;;EmailSiteLogoNewConfSlot;OrderConfirmationNewBanner1Image
-;;EmailPlacehSlot;OrderPlacehImage
-;;EmailOrderPlacedSlot;EmailOrderPlacedImage
-;;EmailArrowSlot;EmailArrowImage
-;;EmailOrderProcessedSlot;EmailOrderProcessedImage
-;;EmailOrderDeliveredSlot;EmailOrderDeliveredImage
-;;EmailTataTrustSlot;EmailTataTrustImage
-;;EmailCliqNPicSlot;EmailCliqNPicImage
-;;EmailEasyReturnSlot;EmailEasyReturnImage
-;;EmailAuthenticBrandsSlot;EmailAuthenticBrandsImage
-;;EmailFreeShippingSlot;EmailFreeShippingImage
-;;EmailAppStoreSlot;EmailAppStoreImage
-;;EmailGooglePlaySlot;EmailGooglePlayImage
-;;EmailLineGreySlot;EmailLineGreyImage
-;;EmailFacebookNewSlot;EmailFacebookNewImage
-;;EmailTwitterNewSlot;EmailTwitterNewImage
-;;EmailInstaNewSlot;EmailInstaNewImage
-;;EmailGPlusSlot;EmailGPlusImage
-;;EmailYouTubeNewSlot;EmailYouTubeNewImage
 
 
 # Order Collected By PickUp Person Email Template
@@ -702,4 +642,3 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailRankEightNpsSlot;EmailRankEightImage
 ;;EmailRankNineNpsSlot;EmailRankNineImage
 ;;EmailRankTenNpsSlot;EmailRankTenImage
-

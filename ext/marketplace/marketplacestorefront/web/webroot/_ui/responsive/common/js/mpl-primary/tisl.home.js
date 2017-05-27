@@ -2473,8 +2473,8 @@ $(document).ready(function()
 			            data: dataString,
 			            success: function(response) {
 			            	try{
-							var showCaseMobile = '<h2>'+response.title+'</h2>';
-							showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
+			            			var showCaseMobile = '<h2>'+response.title+'</h2>';
+			            			showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
 								$.each(response.subComponents, function(k, v) {	
 									  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
 									 
