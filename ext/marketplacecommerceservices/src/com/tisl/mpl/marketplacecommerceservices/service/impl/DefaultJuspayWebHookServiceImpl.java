@@ -37,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
-import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
@@ -143,13 +142,15 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 			{
 				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
 				{
-					final OrderModel ordrMdl = getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId());
-					if ((null != ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
-							|| ordrMdl.getIsWallet() == null)
-					{
-						//getting all the webhook data where isExpired is Y and adding into a list
-						uniqueList.add(oModel);
-					}
+					/*
+					 * final OrderModel ordrMdl =
+					 * getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if ((null !=
+					 * ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode())) ||
+					 * ordrMdl.getIsWallet() == null) {
+					 */
+					//getting all the webhook data where isExpired is Y and adding into a list
+					uniqueList.add(oModel);
+					//}
 				}
 			}
 
