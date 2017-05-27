@@ -188,77 +188,7 @@
 		  	        		    	</td>
 		  	        		    </tr>
 		  	        		   
-		  	        		    <tr style="display: none" class="dsBlock">
-		  	        		    	<td style="background-color:#aa1d3d" align="center">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                          <tbody>
-                                               
-	                                          <tr>
-	                                             <td width="30">&nbsp;</td>
-	                                             <td>
-	                                             	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-	                                             	  <tbody>
-															
-	                                             	    <tr>
-	                                             	    	<td width="27">
-			                                          	     ${ctx.cmsSlotContents.tatatrust}
-			                                          	   </td>
-			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">Tata Trust
-			                                          	   </td>
-	                                             	    </tr>
-	                                             	   
-	                                             	    <tr>
-	                                             	    	<td width="27">
-				                                          	     ${ctx.cmsSlotContents.easyreturn}
-				                                          	 </td>
-				                                          	 <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-				                                          	      Easy Returns
-				                                          	</td>
-	                                             	    </tr>
-	                                             	   
-	                                             	    <tr>
-	                                             	       <td width="27">
-			                                          	     ${ctx.cmsSlotContents.freeshipping}
-			                                          	   </td>
-			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-			                                          	     Free Shipping
-			                                          	   </td>
-	                                             	    </tr>
-	                                             	  </tbody>
-	                                             	</table>
-	                                             </td>
-	                                             <td width="10">&nbsp;</td>
-	                                             <td style="vertical-align:top;">
-	                                               <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-	                                             	  <tbody>
-	                                             	    <tr>
-			                                             	<td width="27">
-		                                          	        ${ctx.cmsSlotContents.cliqnpic}
-			                                          	   </td>
-			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-			                                          	      CLiQ and PIQ
-			                                          	   </td>
-			                                          	  </tr>
-			                                          	 
-			                                          	  <tr>
-			                                          	  	<td width="27">
-			                                          	     ${ctx.cmsSlotContents.authenticbrands}
-			                                          	   </td>
-			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-			                                          	      Authentic Brands
-			                                          	   </td>
-			                                          	  </tr>
-														  
-			                                          	 </tbody>
-			                                         </table>
-	                                             </td>
-	                                              <td width="10">&nbsp;</td>
-	                                          </tr>
-	                                          
-                                          </tbody>
-                                        </table>
-		  	        		    	</td>
-		  	        		    </tr>
+		  	        		    
 		  	        		    <!-- shipping mobile -->
 		  	        		    <!-- stage mobile -->
 		  	        		    
