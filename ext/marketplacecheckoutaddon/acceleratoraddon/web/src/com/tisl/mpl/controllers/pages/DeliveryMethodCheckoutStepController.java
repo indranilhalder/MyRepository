@@ -1165,7 +1165,6 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 										&& cartEntryModel.getGiveAway() != null && cartEntryModel.getGiveAway().booleanValue())
 								{
 
-
 									if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussid))
 									{
 										LOG.info("Freebie Parent Product USSID" + abstractCartEntry.getSelectedUSSID());

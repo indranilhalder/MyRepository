@@ -73,8 +73,7 @@ public class MplDefaultFacetSearchService extends DefaultFacetSearchService
 			final IndexedType indexedType)
 	{
 
-		final String configurationFA = configurationService.getConfiguration().getString("search.facet.name",
-				"allPromotions,allMobilePromotions");
+		final String configurationFA = configurationService.getConfiguration().getString("search.facet.name");
 		final Map facets = new TreeMap();
 		final List<FacetField> facetFields = queryResponse.getFacetFields();
 		IndexedProperty indexedProperty;/*     */
