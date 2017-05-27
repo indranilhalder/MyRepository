@@ -164,6 +164,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
 			EtailNonBusinessExceptions
 	{
+		/**
+		 * TPR-5712: OIS change to handle delisted products
+		 */
 		final String sellerId = agentIdForStore
 				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 
