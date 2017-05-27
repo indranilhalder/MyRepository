@@ -6,7 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +13,8 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -70,34 +67,6 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	{
 
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPrice(productCode);
-		//TPR-5712 , OIS specific change
-		final String sellerId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)));
-		if (StringUtils.isNotEmpty(sellerId))
-		{
-			final List<BuyBoxModel> buyBoxListForAgent = new ArrayList<BuyBoxModel>();
-			final List<BuyBoxModel> buyBoxListForNonAgent = new ArrayList<BuyBoxModel>();
-
-			for (final BuyBoxModel buyBoxModel : buyBoxList)
-			{
-				if (buyBoxModel.getSellerId().equalsIgnoreCase(sellerId))
-				{
-					buyBoxListForAgent.add(buyBoxModel);
-				}
-				else
-				{
-					buyBoxListForNonAgent.add(buyBoxModel);
-				}
-			}
-			if (buyBoxListForAgent.size() > 0 && buyBoxListForNonAgent.size() > 0)
-			{
-				for (final BuyBoxModel buyBoxModelForNonAgent : buyBoxListForNonAgent)
-				{
-					buyBoxListForAgent.add(buyBoxModelForNonAgent);
-				}
-				return buyBoxListForAgent;
-			}
-		}
 		return buyBoxList;
 	}
 
@@ -168,25 +137,6 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	public List<BuyBoxModel> buyBoxPriceNoStock(final String productCode) throws EtailNonBusinessExceptions
 	{
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceNoStock(productCode);
-
-		//TPR-5712 . OIS specific change
-		final String sellerId = agentIdForStore.getAgentIdForStore((configurationService.getConfiguration()
-				.getString(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)));
-		if (StringUtils.isNotEmpty(sellerId))
-		{
-			final List<BuyBoxModel> buyBoxListForAgent = new ArrayList<BuyBoxModel>();
-			for (final BuyBoxModel buyBoxModel : buyBoxList)
-			{
-				if (buyBoxModel.getSellerId().equalsIgnoreCase(sellerId))
-				{
-					buyBoxListForAgent.add(buyBoxModel);
-				}
-			}
-			if (buyBoxListForAgent.size() > 0)
-			{
-				return buyBoxListForAgent;
-			}
-		}
 		return buyBoxList;
 	}
 

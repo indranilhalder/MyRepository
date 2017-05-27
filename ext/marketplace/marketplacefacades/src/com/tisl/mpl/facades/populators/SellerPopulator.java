@@ -19,14 +19,17 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -60,6 +63,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 
 	@Resource(name = "productDetailsHelper")
 	private ProductDetailsHelper productDetailsHelper;
+
+	@Resource
+	private AgentIdForStore agentIdForStore;
 
 	/**
 	 * @return the mplPriceRowService
@@ -158,6 +164,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
 			EtailNonBusinessExceptions
 	{
+		final String sellerId = agentIdForStore
+				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+
 		if (null != productModel.getSellerInformationRelator())
 		{
 			final List<SellerInformationModel> sellerList = new ArrayList<SellerInformationModel>(
@@ -202,17 +211,17 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 						{
 							sellerData.setDeliveryFulfillModebyP1(rm.getDeliveryFulfillModeByP1().getCode());
 						}
-						
+
 						if (null != rm.getIsFragile())
 						{
 							sellerData.setIsFragile(rm.getIsFragile().getCode());
 						}
-						
+
 						if (null != rm.getIsPrecious())
 						{
 							sellerData.setIsPrecious(rm.getIsPrecious().getCode());
 						}
-						
+
 						sellerData.setSellername(sellerInformationModel.getSellerName());
 
 						if (null != rm.getShippingModes())
@@ -241,6 +250,83 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 					sellerData.setSellerID(sellerInformationModel.getSellerID());
 					sellerDataList.add(sellerData);
 				}
+
+				if ((sellerInformationModel.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.NO))
+						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
+								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate()))
+						&& StringUtils.isNotEmpty(sellerId))
+				{
+					final SellerInformationData sellerData = new SellerInformationData();
+					sellerData.setUssid(sellerInformationModel.getSellerArticleSKU());
+					sellerData.setSellerAssociationstatus(SellerAssociationStatusEnum.NO.toString());
+					for (final RichAttributeModel rm : sellerInformationModel.getRichAttribute())
+					{
+
+						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
+								sellerInformationModel.getSellerArticleSKU()));
+
+						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
+								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+						{
+							sellerData.setIsCod(MarketplaceFacadesConstants.Y);
+						}
+						else
+						{
+							sellerData.setIsCod(MarketplaceFacadesConstants.N);
+						}
+						/*
+						 * if (rm.getDeliveryFulfillModes().equals(DeliveryFulfillModesEnum.TSHIP)) {
+						 * sellerData.setFullfillment(configurationService.getConfiguration().getString("tship.sellerName"));
+						 * } else { sellerData.setFullfillment(sellerInformationModel.getSellerName()); }
+						 */
+						if (null != rm.getDeliveryFulfillModes())
+						{
+							sellerData.setFullfillment(rm.getDeliveryFulfillModes().getCode());
+						}
+						if (null != rm.getDeliveryFulfillModeByP1())
+						{
+							sellerData.setDeliveryFulfillModebyP1(rm.getDeliveryFulfillModeByP1().getCode());
+						}
+
+						if (null != rm.getIsFragile())
+						{
+							sellerData.setIsFragile(rm.getIsFragile().getCode());
+						}
+
+						if (null != rm.getIsPrecious())
+						{
+							sellerData.setIsPrecious(rm.getIsPrecious().getCode());
+						}
+
+						sellerData.setSellername(sellerInformationModel.getSellerName());
+
+						if (null != rm.getShippingModes())
+						{
+							sellerData.setShippingMode(rm.getShippingModes().getCode());
+						}
+
+						if (null != rm.getReturnWindow())
+						{
+							sellerData.setReturnPolicy(rm.getReturnWindow());
+						}
+						if (null != rm.getReplacementWindow())
+						{
+							sellerData.setReplacement(rm.getReplacementWindow());
+						}
+						if (null != rm.getCancellationWindow())
+						{
+							sellerData.setCancelPolicy(rm.getCancellationWindow());
+						}
+						if (null != rm.getExchangeAllowedWindow())
+						{
+							sellerData.setExchangePolicy(rm.getExchangeAllowedWindow());
+						}
+					}
+
+					sellerData.setSellerID(sellerInformationModel.getSellerID());
+					sellerDataList.add(sellerData);
+				}
+
 			}
 			productData.setSeller(sellerDataList);
 		}

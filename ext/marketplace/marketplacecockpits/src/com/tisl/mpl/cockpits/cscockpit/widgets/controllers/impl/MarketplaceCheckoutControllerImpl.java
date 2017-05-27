@@ -41,18 +41,16 @@ import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutCo
 import com.tisl.mpl.cockpits.cscockpit.widgets.helpers.MarketplaceServiceabilityCheckHelper;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
+import com.tisl.mpl.core.enums.PaymentModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.juspay.constants.MarketplaceJuspayServicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
-
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
-
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -64,6 +62,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
+
 import de.hybris.platform.catalog.impl.DefaultCatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -684,14 +683,15 @@ public class MarketplaceCheckoutControllerImpl extends
 			{
 				if(seller.getSellerID().equalsIgnoreCase(agentId))
 				{
-					final RichAttributeModel richAttribute = seller.getRichAttribute().iterator().next();
-					if (!((DeliveryFulfillModesEnum.TSHIP.getCode().
-							equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
-							|| (null != richAttribute.getIsSshipCodEligible()
-									&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))))
+					for(final RichAttributeModel richAttribute : seller.getRichAttribute()) 
 					{
-						nonCodProduct = true;
-						return nonCodProduct;
+						if (!(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.BOTH) 
+								|| 
+								(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.COD))))	
+						{
+							nonCodProduct = true;
+							return nonCodProduct;
+						}
 					}
 				}
 			}
