@@ -10,12 +10,14 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +27,9 @@ import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OrderUpdateProcessModel;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 /**
@@ -40,7 +44,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 
 	final List<AbstractOrderEntryModel> childEntries = new ArrayList<AbstractOrderEntryModel>();
-	private static final String ORDER_CODE = "orderCode";
+	private static final String ORDER_CODE = "orderReferenceNumber";
 	private static final String P_ORDER_CODE = "pOrderCode";
 	private static final String CHILDORDERS = "childOrders";
 	private static final String CHILDENTRIES = "childEntries";
@@ -58,20 +62,42 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
 	private static final String SPACE = " "; //TISUATSE-80
+	public static final String TRACK_ORDER_URL = "trackOrderUrl";
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
+	//TPR-5329
+	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	private static final String ORDERPLACEDATE = "orderPlaceDate";
+	private static final String SUBTOTAL = "subTotal";
+	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
+
 	@Autowired
 	private ConfigurationService configurationService;
-
+	@Autowired
+	private ShortUrlService shortUrlService;
 
 
 	@Override
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderUpdateProcessModel, emailPageModel);
+
 		final OrderModel order = orderUpdateProcessModel.getOrder();
+
+		final double orderSubTotalPrice = order.getSubtotal() == null ? 0D : order.getSubtotal().doubleValue();
+
+		final double orderTotalPrice = orderUpdateProcessModel.getOrder().getTotalPrice() == null ? 0D : orderUpdateProcessModel
+				.getOrder().getTotalPrice().doubleValue();
+		final double convenienceCharges = orderUpdateProcessModel.getOrder().getConvenienceCharges() == null ? 0D
+				: orderUpdateProcessModel.getOrder().getConvenienceCharges().doubleValue();
+		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
+		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
+		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
+		final Double subTotal = Double.valueOf(orderSubTotalPrice);
+
+
 
 		final Set<ConsignmentModel> consignmentEntries = orderUpdateProcessModel.getOrder().getConsignments();
 		for (final ConsignmentModel consignment : consignmentEntries)
@@ -91,12 +117,12 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 				.getOrder().getParentReference().getCode()
 				: "";
 
-		final Double totalPrice = order.getTotalPrice();
+		//final Double totalPrice = order.getTotalPrice();
 		final Double shippingCharge = order.getDeliveryCost();
 		final String orderDate = (null != order.getCreationtime()) ? order.getCreationtime().toString() : "";
 
 		final AddressModel deliveryAddress = order.getDeliveryAddress();
-		final String orderCode = order.getCode();
+		final String orderReferenceNumber = order.getCode();
 
 		final List<AbstractOrderEntryModel> childOrders = order.getEntries();
 		final List<String> entryNumbers = orderUpdateProcessModel.getEntryNumber();
@@ -106,16 +132,42 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 
 			for (final AbstractOrderEntryModel childOrder : childOrders)
 			{
+
+
+
 				if (childOrder.getEntryNumber() == Integer.valueOf(entryNumber))
 				{
 					childEntries.add(childOrder);
+					final ProductModel productModel = childOrder.getProduct();
+					final String productImageUrl = productModel.getPicture().getURL();
+					put(PRODUCT_IMAGE_URL, productImageUrl);
+					final String orderPlaceDate;
 
+					SimpleDateFormat formatter;
+					formatter = new SimpleDateFormat("MMM d, yyyy");
+					orderPlaceDate = formatter.format(childOrder.getCreationtime());
+
+					put(ORDERPLACEDATE, orderPlaceDate);
 				}
 			}
 		}
 
+		/*
+		 * final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderUpdateProcessModel.getOrder().getCode();
+		 * put(TRACK_ORDER_URL, trackOrderUrl);
+		 */
+
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+				+ orderReferenceNumber;
+		/* Added in R2.3 for shortUrl START */
+		final String shortUrl = shortUrlService.genearateShortURL(orderReferenceNumber);
+		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
+
+
 		put(P_ORDER_CODE, pOrderCode);
-		put(ORDER_CODE, orderCode);
+		put(ORDER_CODE, orderReferenceNumber);
 		put(CHILDORDERS, childOrders);
 		put(CHILDENTRIES, childEntries);
 		put(TOTALPRICE, totalPrice);
@@ -123,6 +175,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		put(COD_CHARGES, orderUpdateProcessModel.getOrder().getConvenienceCharges());
 		put(ORDERDATE, orderDate);
 		put(AWBNUMBER, orderUpdateProcessModel.getAwbNumber());
+		put(SUBTOTAL, subTotal);
+		put(CONVENIENCECHARGE, convenienceChargesVal);
 
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
 		final StringBuilder deliveryAddr = new StringBuilder(150);
@@ -133,18 +187,18 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 		{
 			//TISUATSE-80 starts
-			deliveryAddr.append(deliveryAddress.getStreetnumber());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getStreetnumber());
 		}
 		if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 		{
-			deliveryAddr.append(deliveryAddress.getAddressLine3());
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getAddressLine3());
 		}
 		//TISUATSE-80 ends
 		deliveryAddr.append('\n');//Sonar fix
 		//TISUATSE-70 starts
 		final String city = deliveryAddress.getTown();
-		deliveryAddr.append(COMMA).append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA)
-				.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
+		deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
+				.append(deliveryAddress.getDistrict()).append(COMMA).append(SPACE).append(deliveryAddress.getPostalcode());
 		//TISUATSE-70 ends
 
 		put(DELIVERYADDRESS, deliveryAddr);
