@@ -157,11 +157,19 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";appstore            
                                       
                                     
-                                    
+
+# CMS Paragraph Components
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;content[lang=$lang]
+;;luxuryFooterNotification;Luxury Footer Notification;luxuryFooterNotification;;;;"<ul>
+					<li><span>100% ORIGINAL </span>gaurantee for all products at luxury.com</li>
+					<li><span>Return within 30days </span>of placing your order</li>
+					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
+				</ul>"
+
                                                                      
  # CMS Footer Component               
-INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);
-;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;
+INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV); footerBarContent(uid,$contentCV);
+;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
                 
 # CMS tabs components  
 INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];name;visible;&componentRef;;;

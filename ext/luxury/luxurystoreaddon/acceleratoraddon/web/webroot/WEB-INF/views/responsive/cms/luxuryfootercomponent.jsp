@@ -43,11 +43,8 @@
 				</div>
 			</div>
 			<div class="col-sm-4 col-md-4 col-lg-4 about-product">
-				<ul>
-					<li><span>100% ORIGINAL </span>gaurantee for all products at luxury.com</li>
-					<li><span>Return within 30days </span>of placing your order</li>
-					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
-				</ul>
+				<cms:component component="${footerBarContent}"
+									evaluateRestriction="true" />
 			</div>
 			
 		</div>

@@ -2,7 +2,7 @@
 # English Localisation
 
 # Macros / Replacement Parameter definitions
-$storePrefix=mpl
+$storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
@@ -90,6 +90,11 @@ UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];footerText[lang=
 
 # CMS Paragraph Components
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;luxuryFooterNotification;"<ul>
+					<li><span>100% ORIGINAL </span>gaurantee for all products at luxury.com</li>
+					<li><span>Return within 30days </span>of placing your order</li>
+					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
+				</ul>"
 ;;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
 ;;TitleForSellWithUsComponent;"Sell With Us"
 ;;TitleForShippingPageComponent;"Shipping"
