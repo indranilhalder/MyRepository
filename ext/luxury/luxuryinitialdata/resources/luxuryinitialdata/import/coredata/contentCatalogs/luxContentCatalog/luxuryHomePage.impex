@@ -43,13 +43,13 @@ INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=tru
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
 ;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
-;;NewArrivalsCategoryLink;New Arrivals Category Link;/;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;               
-;;WomenCategoryLink;Women Category Link;/;WomenCategoryLink;WomenCategoryLink;;;;               
-;;MenCategoryLink;Men Category Link;/;MenCategoryLink;MenCategoryLink;;;;               
-;;LifestyleCategoryLink;Lifestyle Category Link;/;LifestyleCategoryLink;LifestyleCategoryLink;;;;               
-;;BeautyCategoryLink;Beauty Category Link;/;BeautyCategoryLink;BeautyCategoryLink;;;;               
-;;DesignersCategoryLink;Designers Category Link;/;DesignersCategoryLink;DesignersCategoryLink;;;;               
-;;OnSaleCategoryLink;OnSale Category Link;/;OnSaleCategoryLink;OnSaleCategoryLink;;;;               
+;;NewArrivalsCategoryLink;New Arrivals Category Link;/;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
+;;WomenCategoryLink;Women Category Link;/;WomenCategoryLink;WomenCategoryLink;;;;Women      
+;;MenCategoryLink;Men Category Link;/;MenCategoryLink;MenCategoryLink;;;;Men    
+;;LifestyleCategoryLink;Lifestyle Category Link;/;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
+;;BeautyCategoryLink;Beauty Category Link;/;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
+;;DesignersCategoryLink;Designers Category Link;/;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
+;;OnSaleCategoryLink;OnSale Category Link;/;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale              
 ;;KidsCategoryLink;Kids Category Link;/;KidsCategoryLink;KidsCategoryLink;;;;               
 ;;SaleCategoryLink;Sale Category Link;/;SaleCategoryLink;SaleCategoryLink;;;;               
 ;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Help"                       
