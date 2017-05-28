@@ -11,8 +11,10 @@
 					<h3 class="">${node.title}<span class="sprite sp-minus"></span></h3>
 					<ul class="accordion-content">
 						<c:forEach items="${node.links}" var="childlink">
-							<cms:component component="${childlink}"
-								evaluateRestriction="true" element="li" />
+							<li>
+								<cms:component component="${childlink}"
+									evaluateRestriction="true" />
+							</li>
 						</c:forEach>
 					</ul>
 				</div>
