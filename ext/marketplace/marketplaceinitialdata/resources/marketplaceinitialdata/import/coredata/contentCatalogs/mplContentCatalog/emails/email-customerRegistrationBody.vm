@@ -127,19 +127,16 @@
 		  	        		    		<strong>Hi,</strong>
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		We've created your Tata CLiQ account for you! With your Tata CLiQ account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier. 
+		  	        		    		Thanks for signing up! With your Tata CLiQ account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier.
+		  	        		    		<br>
+		  	        		    		At Tata CLiQ, find the best apparel, watches, bags, shoes, electronics and luxury brands, hand-picked for you, every season.
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		At Tata CLiQ, find the best apparel, watches, bags, shoes, electronics and luxury brands, hand-picked for you, every season. 
+		  	        		    		Ready to shop? Here are your account details: 
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		Ready to shop? Here are your account details:
-		  	        		    		<br>
-		  	        		    		<br>
-		  	        		    		Username: ${ctx.customerId}
-		  	        		    		
+		  	        		    		Username: ${ctx.customerId} 
 		  	        		    		</div>
-
 		  	        		    	</td>
 		  	        		    </tr>
 		  	        		    <tr>
