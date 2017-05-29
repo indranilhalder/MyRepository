@@ -377,8 +377,10 @@ public class MplDeliveryAddressFacadeImpl implements MplDeliveryAddressFacade
 									}
 								}
 							}
+							lineItemDataList.add(sendTicketLineItemData);
 						}
-						lineItemDataList.add(sendTicketLineItemData);
+						// Commented below Code , No Need to send line Items for clickAndCollect
+					//	lineItemDataList.add(sendTicketLineItemData);
 					}
 				}
 			}
