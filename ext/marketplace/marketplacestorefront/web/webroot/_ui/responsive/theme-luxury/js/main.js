@@ -415,7 +415,7 @@ TATA.Pages = {
 	    		break;
 	    	}
 	    	return url;
-	    }
+	    },
 	    
 	    performSort : function (this_data,drop_down){
 	    	var item = $(this_data).attr('data-name');
