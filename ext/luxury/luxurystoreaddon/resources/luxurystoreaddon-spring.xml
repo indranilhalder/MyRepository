@@ -58,6 +58,24 @@
 		<entry key="pages/search/facetResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
 		<entry key="pages/search/searchGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
 		<entry key="fragments/cart/cartPopup" value="addon:/luxurystoreaddon/fragments/cart/cartPopup"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/choosePickupLocationPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/choosePickupLocationPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addPaymentMethodPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addPaymentMethodPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/checkoutSummaryPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/checkoutSummaryPage"/>
+        <entry key="addon:addon:/marketplacecheckoutaddon/pages/checkout/multi/hostedOrderPageErrorPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/hostedOrderPageErrorPage"/>
+        <entry key="addon:addon:/marketplacecheckoutaddon/pages/checkout/multi/hostedOrderPostPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/hostedOrderPostPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/silentOrderPostPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/silentOrderPostPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/giftWrapPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/giftWrapPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/enterPaymentDetailsPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/enterPaymentDetailsPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addNewAddressPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addNewAddressPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/editAddressDetailsPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/editAddressDetailsPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliverySlotPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliverySlotPage"/>
+        <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/termsAndConditionsPopup" value="addon:/luxurycheckoutaddon/fragments/checkout/termsAndConditionsPopup"/>
+        <entry key="addon:addon:/marketplacecheckoutaddon/fragments/checkout/billingAddressForm" value="addon:/luxurycheckoutaddon/fragments/checkout/billingAddressForm"/>
+        <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/netbankingPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/netbankingPanel"/>
+        <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/codPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/codPanel"/>
 	</util:map>
 	<!-- Logic for resolving view resolver for addon prefix -->
 </beans>
