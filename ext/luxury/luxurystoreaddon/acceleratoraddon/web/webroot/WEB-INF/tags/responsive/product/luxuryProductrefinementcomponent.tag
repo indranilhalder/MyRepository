@@ -6,14 +6,8 @@
 
 	<input type="hidden" name="isConceirge" id="isConceirge" value="${isConceirge}" />
 	<input type="hidden" name="isCategoryPage" id="isCategoryPage" value="${isCategoryPage}" />
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('department.count.L1')" var="deptL1"/>
-    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('department.count.L2')" var="deptL2"/>
- 	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('department.count.L3')" var="deptL3"/>
-  	<input type="hidden" id="deptCountL1" value="${deptL1}"/>
-    <input type="hidden" id="deptCountL2" value="${deptL2}"/>
-    <input type="hidden" id="deptCountL3" value="${deptL3}"/>
 	
-	<c:if test="${not empty pageData.breadcrumbs}">
+	<c:if test="${not empty searchPageData.breadcrumbs}">
 		<nav:luxuryFacetNavAppliedFilters pageData="${searchPageData}"/>
 	</c:if>
 	

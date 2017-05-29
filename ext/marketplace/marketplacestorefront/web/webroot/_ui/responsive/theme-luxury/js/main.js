@@ -107,117 +107,6 @@ TATA.CommonFunctions = {
         });
     },
 
-    loadMoreInit: function(){
-    	$(document).on('click','.loadMorePageButton', function() {
-        	totalNoOfPages = $('input[name=noOfPages]').val();
-            totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
-            pageQuery=$("#pageQuery").val();
-            if(pageQuery==""){
-            	pageNoPaginationNew +=1;
-            }
-            TATA.CommonFunctions.loadProducts(pageQuery);
-        });
-    },
-
-    loadProducts : function(pageQuery) {
-        var pathName = window.location.pathname;
-        var query = window.location.search;
-        if (pageNoPaginationNew <= totalNoOfPages) {
-            if (/page-[0-9]+/.test(pageQuery)) {
-                var currentPageNo = pageQuery.match(/page-[0-9]+/);
-                currentPageNo = currentPageNo[0].split("-");
-                currentPageNo = parseInt(currentPageNo[1]);
-                currentPageNo++; 
-                pageNoPaginationNew++;
-                if (currentPageNo <= totalNoOfPages) {
-                	if(facetAjaxUrl){
-                		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-                		var sort = findGetParameter('sort');
-                		if(sort){
-                			ajaxUrl = ajaxUrl + '&sort='+ sort;
-                		}
-                	}else{
-                		ajaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-                		var nextPaginatedAjaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-                        if (query) {
-                            ajaxUrl = ajaxUrl + query;
-                            nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
-                        }
-                	}
-                	TATA.CommonFunctions.ajaxPLPLoad(ajaxUrl);
-                }
-            } else {
-            	
-                ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
-                if(pageType == 'productsearch'){//for serp initial page 
-                	ajaxUrl = ajaxUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
-            	}else if(query){
-            		ajaxUrl = ajaxUrl + query;
-            	}
-                var nextPaginatedAjaxUrl = ajaxUrl;
-                TATA.CommonFunctions.ajaxPLPLoad(ajaxUrl);
-            }
-        }
-    },
-    
-    sortInit : function(){
-    	$(document).on('change','.responsiveSort',function(){
-    		TATA.CommonFunctions.performSort($(this).find(':selected'),true);
-        });
-    },
-    
-    performSort : function (this_data,drop_down){
-    	var item = $(this_data).attr('data-name');
-    	var pathName = window.location.pathname;
-    	var pageType = $('#pageType').val();
-    	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
-    	
-    	var url = $('#categoryPageDeptHierTreeForm').serialize();
-    	if(pageType == 'productsearch'){
-			url = $('#searchPageDeptHierTreeForm').serialize();	
-		}
-    	switch (item) {
-    	case 'relevance':
-    		url = url+'&sort=relevance';
-    		break;
-    	case 'new':
-    		url = url+'&sort=isProductNew';
-    		break;
-    	case 'discount':
-    		url = url+'&sort=isDiscountedPrice';
-    		break;
-    	case 'low':
-    		url = url+'&sort=price-asc';
-    		break;
-    	case 'high':
-    		url = url+'&sort=price-desc';
-    		break;
-    	}
-    	TATA.CommonFunctions.ajaxPLPLoad(pathName +'?'+url);
-    },
-
-    ajaxPLPLoad : function(ajaxUrl){
-    	
-        $.ajax({
-            url: ajaxUrl,
-            data: {
-                pageSize: 24,
-                /* q: '', */
-                lazyInterface:'Y'
-            },
-            success: function(x) {
-                var filtered = $.parseHTML(x);
-                
-                if($(filtered).has('.product-grid')){
-                	$('.product-grid-wrapper').html("");
-                	$(filtered).find('.product-grid').each(function() {
-                    	$('.product-grid-wrapper').append($(this));
-                	});
-                }
-            }
-        });
-    },
-	
     wishlistInit: function(){
     	$(document).on("click",".add-to-wishlist",function(){
 			if ($(this).hasClass("added")){
@@ -420,8 +309,6 @@ TATA.CommonFunctions = {
 	init: function () {
         
         var _self = TATA.CommonFunctions;
-        var pageNoPaginationNew = 1;
-        var totalNoOfPages = 0;
 		
 		_self.Header.init();
 		_self.Footer();
@@ -435,8 +322,6 @@ TATA.CommonFunctions = {
 		_self.ShopByCatagorySlider();
 		_self.wishlistInit();
 		_self.leftBarAccordian();
-		_self.sortInit();
-		_self.loadMoreInit();
 	
     }
 
@@ -447,6 +332,116 @@ TATA.Pages = {
 	// PLP Page
 	PLP: {
 		
+		loadMoreInit: function(){
+	    	$(document).on('click','.loadMorePageButton', function() {
+	        	totalNoOfPages = $('input[name=noOfPages]').val();
+	            totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
+	            pageQuery=$("#pageQuery").val();
+	            if(pageQuery==""){
+	            	pageNoPaginationNew +=1;
+	            }
+	            TATA.Pages.PLP.loadProducts(pageQuery);
+	        });
+	    },
+
+	    loadProducts : function(pageQuery) {
+	        var pathName = window.location.pathname;
+	        var query = window.location.search;
+	        if (pageNoPaginationNew <= totalNoOfPages) {
+	            if (/page-[0-9]+/.test(pageQuery)) {
+	                var currentPageNo = pageQuery.match(/page-[0-9]+/);
+	                currentPageNo = currentPageNo[0].split("-");
+	                currentPageNo = parseInt(currentPageNo[1]);
+	                currentPageNo++; 
+	                pageNoPaginationNew++;
+	                if (currentPageNo <= totalNoOfPages) {
+	                	if(facetAjaxUrl){
+	                		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	                		var sort = findGetParameter('sort');
+	                		if(sort){
+	                			ajaxUrl = ajaxUrl + '&sort='+ sort;
+	                		}
+	                	}else{
+	                		ajaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	                		var nextPaginatedAjaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	                        if (query) {
+	                            ajaxUrl = ajaxUrl + query;
+	                            nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                        }
+	                	}
+	                	TATA.Pages.PLP.performLoadMore(ajaxUrl);
+	                }
+	            } else {
+	            	
+	                ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
+	                if(pageType == 'productsearch'){//for serp initial page 
+	                	ajaxUrl = ajaxUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
+	            	}else if(query){
+	            		ajaxUrl = ajaxUrl + query;
+	            	}
+	                var nextPaginatedAjaxUrl = ajaxUrl;
+	                TATA.Pages.PLP.performLoadMore(ajaxUrl);
+	            }
+	        }
+	    },
+	    
+	    sortInit : function(){
+	    	$(document).on('change','.responsiveSort',function(){
+	    		TATA.Pages.PLP.performSort($(this).find(':selected'),true);
+	        });
+	    },
+	    
+	    generateQueryUrl: function(){
+	    	var item = $(".responsiveSort").attr('data-name');
+	    	var url = $('#categoryPageDeptHierTreeForm').serialize();
+	    	if(pageType == 'productsearch'){
+				url = $('#searchPageDeptHierTreeForm').serialize();	
+			}
+	    	switch (item) {
+	    	case 'relevance':
+	    		url = url+'&sort=relevance';
+	    		break;
+	    	case 'new':
+	    		url = url+'&sort=isProductNew';
+	    		break;
+	    	case 'discount':
+	    		url = url+'&sort=isDiscountedPrice';
+	    		break;
+	    	case 'low':
+	    		url = url+'&sort=price-asc';
+	    		break;
+	    	case 'high':
+	    		url = url+'&sort=price-desc';
+	    		break;
+	    	}
+	    	return url;
+	    }
+	    
+	    performSort : function (this_data,drop_down){
+	    	var item = $(this_data).attr('data-name');
+	    	var pathName = window.location.pathname;
+	    	var pageType = $('#pageType').val();
+	    	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
+	    	var queryUrl = TATA.Pages.PLP.generateQueryUrl();
+	    	TATA.Pages.PLP.performAjax(pathName +'?'+queryUrl);
+	    },
+
+	    performLoadMore : function(ajaxUrl){
+	        $.ajax({
+	            url: ajaxUrl,
+	            data: {
+	                pageSize: 24,
+	                lazyInterface:'Y'
+	            },
+	            success: function(x) {
+	                var filtered = $.parseHTML(x);
+	                if($(filtered).has('.product-grid')){
+                    	$('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
+	                }
+	            }
+	        });
+	    },
+		
 		// PLP Page filter
 		showSelectedRefinements : function(){
 			$(".facetValues .facet-form input:checked").each(function(){
@@ -456,28 +451,40 @@ TATA.Pages = {
 		},
 		
 		filterByFacet : function(){
+			$(document).on('click', '.reset-filters', function(){
+				var resetUrl = $(this).data('resetqueryurl')+$(".responsiveSort").find(':selected');
+				TATA.Pages.PLP.performAjax(resetUrl);
+			});
+			$(document).on('click', '.remove-filter', function(){
+				var relevantCheckbox = $(this).attr("data-facetCode");
+				$("#"+relevantCheckbox).click();
+			});
 			$(document).on('change','.facet-form input:checkbox', function(){
 				var requestUrl = $(this).closest('form').attr('action')+"?"+$(this).closest('form').serialize();
-				$.ajax({
-			        url: requestUrl,
-			        data: {
-			            lazyInterface:'Y'
-			        },
-			        success: function(x) {
-			            var filtered = $.parseHTML(x);
-			            
-			            if($(filtered).has('.facetList')){
-			            	$(".facetList").html($(filtered).find(".facetList"));
-			            	TATA.Pages.PLP.showSelectedRefinements();
-			            }
-			            
-			            if($(filtered).has('.product-grid')){
-			            	$('.product-grid-wrapper').html($(filtered).find(".product-grid-wrapper"));
-			            }
-			            
-			        }
-			    });
+				TATA.Pages.PLP.performAjax(requestUrl);
 			});
+		},
+		
+		performAjax: function(requestUrl){
+			$.ajax({
+		        url: requestUrl,
+		        data: {
+		            lazyInterface:'Y'
+		        },
+		        success: function(x) {
+		            var filtered = $.parseHTML(x);
+		            
+		            if($(filtered).has('.filterblocks')){
+		            	$(".filterblocks").html($(filtered).find(".filterblocks"));
+		            	TATA.Pages.PLP.showSelectedRefinements();
+		            }
+		            
+		            if($(filtered).has('.product-grid')){
+		            	$('.product-grid-wrapper').html($(filtered).find(".product-grid-wrapper"));
+		            }
+		            
+		        }
+		    });
 		},
 		
 		Filtershow: function() {
@@ -550,6 +557,9 @@ TATA.Pages = {
 		// PLP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PLP;
+	        var pageNoPaginationNew = 1;
+	        var totalNoOfPages = 0;
+			
 			_self.Filtershow();
 			_self.showModelImg();
 			_self.addGiftWrap();
@@ -559,6 +569,8 @@ TATA.Pages = {
 			_self.productHover();
 			_self.filterByFacet();
 			_self.showSelectedRefinements();
+			_self.sortInit();
+			_self.loadMoreInit();
 			
 		}
 	},
