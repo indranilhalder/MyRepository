@@ -218,6 +218,7 @@
 	margin-right: auto;
 	background-color: #fbfbfb;
 	border-top: 2px solid #efefef;
+	clear: both;
 	.accordion-title {
 		border-bottom: 2px solid #efefef;
 		position: relative;
@@ -235,6 +236,7 @@
 	.accordion-content {
 		border-bottom: 2px solid #efefef;
 		padding: 20px 50px 20px 20px;
+	 	overflow: hidden;
 		
 		& ~ .accordion-content {
 			display: none;
@@ -356,3 +358,27 @@
 }
 
 /*PDP Section End*/
+
+#ReviewSecion, .wishAddSucess, .wishRemoveSucess, .wishAddLogin, .wishAlreadyAdded, #addToCartButton-wrong, .star-review {
+    display: none;
+}
+.tabs-block {
+    clear: both;
+}
+/*color-swatch*/
+ 
+.color-swatch {
+    padding: 0;
+    overflow: hidden; 
+        li {
+            display: inline-block;
+            margin: 0 2px;
+            float: left;
+                span {
+                    width: 23px !important;
+                    height: 23px !important;
+                    border-radius: 50%;
+                    display: block; 
+                }
+        }
+}
