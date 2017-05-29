@@ -102,7 +102,17 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
-		final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		double subTotal = 0.0d;
+		//Changes for discount
+		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		final List<AbstractOrderEntryModel> childOrders = orderProcessModel.getOrder().getEntries();
+
+		for (final AbstractOrderEntryModel childOrder : childOrders)
+		{
+			subTotal += childOrder.getNetAmountAfterAllDisc().doubleValue();
+
+		}
+
 		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
 		//final String subTotalNew = myFormatter.format(subTotal);
 		//final String totalPriceNew = myFormatter.format(totalPrice);
@@ -117,7 +127,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
-		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
@@ -136,7 +146,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		 */
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
-		put(SUBTOTAL, subTotal);
+		put(SUBTOTAL, Double.valueOf(subTotal));
 		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
 		//put(TOTALPRICE, totalPriceNew);
