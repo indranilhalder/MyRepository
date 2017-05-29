@@ -12,7 +12,8 @@
 						code="MiddleHeader" /></td>
 				<td style="width: 960px; height: 21px;"><cockpit
 						code="SiteLogo" /></td>
-				<td style="width: 960px; height: 21px;"><cockpit code="MiniCart" /><cockpit code="WishList"/></td>
+				<td style="width: 960px; height: 21px;"><cockpit code="MiniCart" /><cockpit code="WishList"/><cockpit
+						code="SearchBox" /></td>
 			</tr>
 			<tr>
 				<td style="width: 960px; height: 21px;" colspan="3"><cockpit
