@@ -247,7 +247,7 @@ INSERT_UPDATE ContentSlotName;name[uniquRightContentSlote=true];template(uid,$co
 ;SiteLogo;;;logo               
 ;HeaderLinks;;;headerlinks        
 ;SearchBox;;;searchbox          
-;MiniCart;;;wide             
+;MiniCart;;;minicart             
 ;NavigationBar;;;navigation         
 ;TopBannerMen;;;wide               
 ;TopBannerWomen;;;wide               
@@ -265,7 +265,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo               
 ;HeaderLinks;;;headerlinks        
 ;SearchBox;;;searchbox          
-;MiniCart;;;wide                
+;MiniCart;;;minicart                
 ;NavigationBar;;;navigation 
 ;Section1;;;wide
 ;Section2;;;wide
