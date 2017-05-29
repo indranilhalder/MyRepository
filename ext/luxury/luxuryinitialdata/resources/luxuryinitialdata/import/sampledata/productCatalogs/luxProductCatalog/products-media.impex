@@ -1,5 +1,4 @@
-# ImPex for Importing Product Media into Electronics Store
-
+#{defaultImpexProductHeader}
 # Macros / Replacement Parameter definitions
 $productCatalog=luxProductCatalog
 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
@@ -12,9 +11,43 @@ $others=others(code, $catalogVersion)
 $data_sheet=data_sheet(code, $catalogVersion)
 $medias=medias(code, $catalogVersion)
 $galleryImages=galleryImages(qualifier, $catalogVersion)
-$siteResource=jar:com.tisl.lux.constants.LuxuryinitialdataConstants&/luxuryinitialdata/import/sampledata/productCatalogs/$productCatalog
 $media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
 $URI=http:
-$mediaType=mediaType(code)[default='Image']
+$folder=folder(qualifier)[default='images']
+INSERT_UPDATE Media;Qualifier;MediaStatus(code);mediaFormat(qualifier);code[unique=true];internalURL;mediaType(code)[default='Image'];mime[default='image/jpeg'];mediaPriority;description;$folder;$catalogVersion
+;MP000000000390478_1;pcm_imageprocessingcompleted;1348Wx2000H;1348Wx2000H/MP000000000390478_1;https://img.tatacliq.com/images/1348Wx2000H/MP000000000389913_1348Wx2000H_20160730121800.jpeg;Image;image/jpeg;1;2000X1348.jpeg
 
+#mplmedia_container
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$thumbnail=thumbnail(code, $catalogVersion)
+$picture=picture(code, $catalogVersion)
+$thumbnails=thumbnails(code, $catalogVersion)
+$detail=detail(code, $catalogVersion)
+$normal=normal(code, $catalogVersion)
+$others=others(code, $catalogVersion)
+$data_sheet=data_sheet(code, $catalogVersion)
+$medias=medias(code, $catalogVersion)
+$galleryImages=galleryImages(qualifier, $catalogVersion)
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$URI=http:				
+INSERT_UPDATE MediaContainer;qualifier[unique=true];medias(code, $catalogVersion);$catalogVersion
 
+#mplmedia_product
+#{defaultImpexProductHeader}
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$thumbnail=thumbnail(code, $catalogVersion)
+$picture=picture(code, $catalogVersion)
+$thumbnails=thumbnails(code, $catalogVersion)
+$detail=detail(code, $catalogVersion)
+$normal=normal(code, $catalogVersion)
+$others=others(code, $catalogVersion)
+$data_sheet=data_sheet(code, $catalogVersion)
+$medias=medias(code, $catalogVersion)
+$galleryImages=galleryImages(qualifier, $catalogVersion)
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$URI=http:
+UPDATE Product;code[unique=true];$picture;$thumbnail;$detail;$others;$normal;$thumbnails;$galleryImages;$catalogVersion

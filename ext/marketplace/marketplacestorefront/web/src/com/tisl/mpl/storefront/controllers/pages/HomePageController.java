@@ -953,7 +953,9 @@ public class HomePageController extends AbstractPageController
 	 */
 	@ResponseBody
 	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
-	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId)
+	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId,
+			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) String gender,
+			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) Boolean isLuxury)
 	{
 		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
 		emailId = emailId.toLowerCase();
@@ -971,7 +973,15 @@ public class HomePageController extends AbstractPageController
 			if (result)
 			{
 				newsLetter.setEmailId(emailId);
-				newsLetter.setIsMarketplace(Boolean.TRUE);
+				if (isLuxury)
+				{
+					newsLetter.setGender(gender);
+					newsLetter.setIsLuxury(Boolean.TRUE);
+				}
+				else
+				{
+					newsLetter.setIsMarketplace(Boolean.TRUE);
+				}
 				modelService.save(newsLetter);
 				return "success";
 			}
@@ -985,8 +995,8 @@ public class HomePageController extends AbstractPageController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsMarketplace() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsMarketplace().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsMarketplace() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsMarketplace(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);

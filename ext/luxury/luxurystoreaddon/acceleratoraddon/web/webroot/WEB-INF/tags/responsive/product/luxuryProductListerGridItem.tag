@@ -57,7 +57,7 @@
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="searchPage"/>
 				</div>
 			</a>
-			<a href="javascript:;" class="plp-wishlist add-to-wishlist" data-product="${product.url}"></a>
+			<a href="javascript:;" class="add-to-wishlist" data-product="${product.url}"></a>
 			<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			<div class="short-info">
 				<h5>${product.productCategoryType}</h5>

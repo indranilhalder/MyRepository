@@ -12087,26 +12087,103 @@ TATA.CommonFunctions = {
             } ]
         });
     },
-    wishlist: function() {
+    loadMoreInit: function() {
+        $(document).on("click", ".loadMorePageButton", function() {
+            totalNoOfPages = $("input[name=noOfPages]").val(), "" == totalNoOfPages || parseInt(totalNoOfPages), 
+            pageQuery = $("#pageQuery").val(), "" == pageQuery && (pageNoPaginationNew += 1), 
+            TATA.CommonFunctions.loadProducts(pageQuery);
+        });
+    },
+    loadProducts: function(pageQuery) {
+        var pathName = window.location.pathname, query = window.location.search;
+        if (pageNoPaginationNew <= totalNoOfPages) if (/page-[0-9]+/.test(pageQuery)) {
+            var currentPageNo = pageQuery.match(/page-[0-9]+/);
+            if (currentPageNo = currentPageNo[0].split("-"), currentPageNo = parseInt(currentPageNo[1]), 
+            currentPageNo++, pageNoPaginationNew++, currentPageNo <= totalNoOfPages) {
+                if (facetAjaxUrl) {
+                    ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, "page-" + currentPageNo);
+                    var sort = findGetParameter("sort");
+                    sort && (ajaxUrl = ajaxUrl + "&sort=" + sort);
+                } else {
+                    ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo);
+                    var nextPaginatedAjaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo);
+                    query && (ajaxUrl += query, nextPaginatedAjaxUrl += query);
+                }
+                TATA.CommonFunctions.ajaxPLPLoad(ajaxUrl);
+            }
+        } else {
+            ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + pageNoPagination, "productsearch" == pageType ? ajaxUrl = ajaxUrl + "?" + $("#searchPageDeptHierTreeForm").serialize() : query && (ajaxUrl += query);
+            var nextPaginatedAjaxUrl = ajaxUrl;
+            TATA.CommonFunctions.ajaxPLPLoad(ajaxUrl);
+        }
+    },
+    sortInit: function() {
+        $(document).on("change", ".responsiveSort", function() {
+            TATA.CommonFunctions.performSort($(this).find(":selected"), !0);
+        });
+    },
+    performSort: function(this_data, drop_down) {
+        var item = $(this_data).attr("data-name"), pathName = window.location.pathname, pageType = $("#pageType").val();
+        pathName = pathName.replace(/page-[0-9]+/, "page-1");
+        var url = $("#categoryPageDeptHierTreeForm").serialize();
+        switch ("productsearch" == pageType && (url = $("#searchPageDeptHierTreeForm").serialize()), 
+        item) {
+          case "relevance":
+            url += "&sort=relevance";
+            break;
+
+          case "new":
+            url += "&sort=isProductNew";
+            break;
+
+          case "discount":
+            url += "&sort=isDiscountedPrice";
+            break;
+
+          case "low":
+            url += "&sort=price-asc";
+            break;
+
+          case "high":
+            url += "&sort=price-desc";
+        }
+        TATA.CommonFunctions.ajaxPLPLoad(pathName + "?" + url);
+    },
+    ajaxPLPLoad: function(ajaxUrl) {
+        $.ajax({
+            url: ajaxUrl,
+            data: {
+                pageSize: 24,
+                lazyInterface: "Y"
+            },
+            success: function(x) {
+                var filtered = $.parseHTML(x);
+                $(filtered).has(".product-grid") && ($(".product-grid-wrapper").html(""), $(filtered).find(".product-grid").each(function() {
+                    $(".product-grid-wrapper").append($(this));
+                }));
+            }
+        });
+    },
+    wishlistInit: function() {
         $(document).on("click", ".add-to-wishlist", function() {
-            $(this).hasClass("added") ? removeFromWishlist($(this).data("product"), this) : addToWishlist($(this).data("product"), this);
+            $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
         });
     },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
         return productURL.substring(n + 1, productURL.length).toUpperCase();
     },
-    addTowishlist: function(productURL, element) {
-        var productCode = urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
+    addToWishlist: function(productURL, element) {
+        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP", sizeSelected = !0;
+        $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
+        var dataString = "wish=&product=" + productCode + "&sizeSelected=" + sizeSelected;
         if (!headerLoggedinStatus) return $(".wishAddLoginPlp").addClass("active"), setTimeout(function() {
             $(".wishAddLoginPlp").removeClass("active");
         }, 3e3), !1;
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url: requiredUrl,
-            data: {
-                product: productCode
-            },
+            data: dataString,
             dataType: "json",
             success: function(data) {
                 1 == data ? ($(".wishAddSucessPlp").addClass("active"), setTimeout(function() {
@@ -12114,7 +12191,7 @@ TATA.CommonFunctions = {
                 }, 3e3), $(element).addClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
                 setTimeout(function() {
                     $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(this).addClass("added");
+                }, 3e3)), $(element).addClass("added");
             },
             error: function(xhr, status, error) {
                 alert(error), "undefined" != typeof utag && utag.link({
@@ -12125,23 +12202,22 @@ TATA.CommonFunctions = {
             $("a.wishlist#wishlist").popover("hide"), $("input.wishlist#add_to_wishlist").popover("hide");
         }, 0);
     },
-    removeFromWishlist: function(productURL, el) {
-        var productCode = urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";
-        $("#variant li").hasClass("selected") && $("#variant,#sizevariant option:selected").val();
+    removeFromWishlist: function(productURL, element) {
+        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP", sizeSelected = !0;
+        $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
+        var dataString = "wish=&product=" + productCode + "&sizeSelected=" + sizeSelected;
         return headerLoggedinStatus ? ($.ajax({
             contentType: "application/json; charset=utf-8",
             url: requiredUrl,
-            data: {
-                product: productCode
-            },
+            data: dataString,
             dataType: "json",
             success: function(data) {
                 1 == data ? ($(".wishRemoveSucessPlp").addClass("active"), setTimeout(function() {
                     $(".wishRemoveSucessPlp").removeClass("active");
-                }, 3e3), $(el).removeClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
+                }, 3e3), $(element).removeClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
                 setTimeout(function() {
                     $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(this).removeClass("added");
+                }, 3e3)), $(element).removeClass("added");
             },
             error: function(xhr, status, error) {
                 alert(error);
@@ -12179,7 +12255,7 @@ TATA.CommonFunctions = {
             });
         },
         HeaderMinicart: function() {
-            $("header .mini-bag").hide(), $("header .bag").hover(function() {
+            $("header .mini-bag").hide(), $("header .mini-cart-link").html(""), $("header .bag").hover(function() {
                 $(this).find(".mini-bag").show();
             }, function() {
                 $(this).find(".mini-bag").hide();
@@ -12198,7 +12274,8 @@ TATA.CommonFunctions = {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
-        _self.ShopByCatagorySlider(), _self.wishlist(), _self.leftBarAccordian();
+        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.sortInit(), 
+        _self.loadMoreInit();
     }
 }, TATA.Pages = {
     PLP: {

@@ -106,13 +106,124 @@ TATA.CommonFunctions = {
             ]
         });
     },
+
+    loadMoreInit: function(){
+    	$(document).on('click','.loadMorePageButton', function() {
+        	totalNoOfPages = $('input[name=noOfPages]').val();
+            totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
+            pageQuery=$("#pageQuery").val();
+            if(pageQuery==""){
+            	pageNoPaginationNew +=1;
+            }
+            TATA.CommonFunctions.loadProducts(pageQuery);
+        });
+    },
+
+    loadProducts : function(pageQuery) {
+        var pathName = window.location.pathname;
+        var query = window.location.search;
+        if (pageNoPaginationNew <= totalNoOfPages) {
+            if (/page-[0-9]+/.test(pageQuery)) {
+                var currentPageNo = pageQuery.match(/page-[0-9]+/);
+                currentPageNo = currentPageNo[0].split("-");
+                currentPageNo = parseInt(currentPageNo[1]);
+                currentPageNo++; 
+                pageNoPaginationNew++;
+                if (currentPageNo <= totalNoOfPages) {
+                	if(facetAjaxUrl){
+                		ajaxUrl = facetAjaxUrl.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+                		var sort = findGetParameter('sort');
+                		if(sort){
+                			ajaxUrl = ajaxUrl + '&sort='+ sort;
+                		}
+                	}else{
+                		ajaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+                		var nextPaginatedAjaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+                        if (query) {
+                            ajaxUrl = ajaxUrl + query;
+                            nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+                        }
+                	}
+                	TATA.CommonFunctions.ajaxPLPLoad(ajaxUrl);
+                }
+            } else {
+            	
+                ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + pageNoPagination;
+                if(pageType == 'productsearch'){//for serp initial page 
+                	ajaxUrl = ajaxUrl + '?'+ $('#searchPageDeptHierTreeForm').serialize();
+            	}else if(query){
+            		ajaxUrl = ajaxUrl + query;
+            	}
+                var nextPaginatedAjaxUrl = ajaxUrl;
+                TATA.CommonFunctions.ajaxPLPLoad(ajaxUrl);
+            }
+        }
+    },
+    
+    sortInit : function(){
+    	$(document).on('change','.responsiveSort',function(){
+    		TATA.CommonFunctions.performSort($(this).find(':selected'),true);
+        });
+    },
+    
+    performSort : function (this_data,drop_down){
+    	var item = $(this_data).attr('data-name');
+    	var pathName = window.location.pathname;
+    	var pageType = $('#pageType').val();
+    	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
+    	
+    	var url = $('#categoryPageDeptHierTreeForm').serialize();
+    	if(pageType == 'productsearch'){
+			url = $('#searchPageDeptHierTreeForm').serialize();	
+		}
+    	switch (item) {
+    	case 'relevance':
+    		url = url+'&sort=relevance';
+    		break;
+    	case 'new':
+    		url = url+'&sort=isProductNew';
+    		break;
+    	case 'discount':
+    		url = url+'&sort=isDiscountedPrice';
+    		break;
+    	case 'low':
+    		url = url+'&sort=price-asc';
+    		break;
+    	case 'high':
+    		url = url+'&sort=price-desc';
+    		break;
+    	}
+    	TATA.CommonFunctions.ajaxPLPLoad(pathName +'?'+url);
+    },
+
+    ajaxPLPLoad : function(ajaxUrl){
+    	
+        $.ajax({
+            url: ajaxUrl,
+            data: {
+                pageSize: 24,
+                /* q: '', */
+                lazyInterface:'Y'
+            },
+            success: function(x) {
+                var filtered = $.parseHTML(x);
+                
+                if($(filtered).has('.product-grid')){
+                	$('.product-grid-wrapper').html("");
+                	$(filtered).find('.product-grid').each(function() {
+                    	$('.product-grid-wrapper').append($(this));
+                	});
+                }
+            }
+        });
+    },
 	
-    wishlist: function(){
+    wishlistInit: function(){
     	$(document).on("click",".add-to-wishlist",function(){
 			if ($(this).hasClass("added")){
-				 removeFromWishlist($(this).data("product"),this);
+				TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
 			} else {
-				 addToWishlist($(this).data("product"),this);
+				TATA.CommonFunctions.addToWishlist($(this).data("product"),this);
 			}
 		});
     },
@@ -123,10 +234,16 @@ TATA.CommonFunctions = {
 	    return productCode.toUpperCase();
 	},
     
-	addTowishlist: function(productURL, element){
-		var productCode=urlToProductCode(productURL);
+	addToWishlist: function(productURL, element){
+		var productCode = TATA.CommonFunctions.urlToProductCode(productURL);
+		var wishName = "";
 		var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
+		var sizeSelected=true;
 	    
+	    if(!$('#variant li').hasClass('selected') || $("#variant,#sizevariant option:selected").val()=="#") {
+	    	sizeSelected=false;
+	    }
+	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&sizeSelected=' + sizeSelected;
 		
 	    if(!headerLoggedinStatus) {
 			$(".wishAddLoginPlp").addClass("active");
@@ -138,9 +255,7 @@ TATA.CommonFunctions = {
 			$.ajax({			
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
-				data : {
-					product : productCode
-				},
+				data : dataString,
 				dataType : "json",			
 				success : function(data){
 					if (data == true) {					
@@ -156,7 +271,7 @@ TATA.CommonFunctions = {
 							$(".wishAlreadyAddedPlp").removeClass("active")
 						},3000)
 					}
-					$(this).addClass("added");
+					$(element).addClass("added");
 				},
 				error : function(xhr, status, error){
 					alert(error);
@@ -173,8 +288,8 @@ TATA.CommonFunctions = {
 		}
 	},
 	
-	removeFromWishlist : function(productURL,el) {
-		var productCode=urlToProductCode(productURL);
+	removeFromWishlist : function(productURL,element) {
+		var productCode = TATA.CommonFunctions.urlToProductCode(productURL);
 		var wishName = "";
 		var requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP";	
 	    var sizeSelected=true;
@@ -194,9 +309,7 @@ TATA.CommonFunctions = {
 			$.ajax({			
 				contentType : "application/json; charset=utf-8",
 				url : requiredUrl,
-				data : {
-					product : productCode
-				},
+				data : dataString,
 				dataType : "json",			
 				success : function(data){
 					if (data == true) {					
@@ -204,7 +317,7 @@ TATA.CommonFunctions = {
 						setTimeout(function(){
 							$(".wishRemoveSucessPlp").removeClass("active")
 						},3000)
-						$(el).removeClass("added");
+						$(element).removeClass("added");
 					}
 					else{
 						$(".wishAlreadyAddedPlp").addClass("active");
@@ -212,7 +325,7 @@ TATA.CommonFunctions = {
 							$(".wishAlreadyAddedPlp").removeClass("active")
 						},3000)
 					}
-					$(this).removeClass("added");
+					$(element).removeClass("added");
 				},
 				error : function(xhr, status, error){
 					alert(error);
@@ -280,6 +393,7 @@ TATA.CommonFunctions = {
 		},
 		HeaderMinicart: function(){
 			$('header .mini-bag').hide();
+			$('header .mini-cart-link').html('');
 			$("header .bag").hover(function () {
 				$(this).find('.mini-bag').show();
 			},
@@ -305,7 +419,9 @@ TATA.CommonFunctions = {
 	
 	init: function () {
         
-        var _self = TATA.CommonFunctions; 
+        var _self = TATA.CommonFunctions;
+        var pageNoPaginationNew = 1;
+        var totalNoOfPages = 0;
 		
 		_self.Header.init();
 		_self.Footer();
@@ -317,8 +433,10 @@ TATA.CommonFunctions = {
 		_self.BrandSlider();
 		_self.Accordion();
 		_self.ShopByCatagorySlider();
-		_self.wishlist();
+		_self.wishlistInit();
 		_self.leftBarAccordian();
+		_self.sortInit();
+		_self.loadMoreInit();
 	
     }
 

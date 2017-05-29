@@ -5,8 +5,8 @@
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=luxProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
-$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue                                                                                        
@@ -43,26 +43,26 @@ INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=tru
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
 ;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
-;;NewArrivalsCategoryLink;New Arrivals Category Link;/;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;               
-;;WomenCategoryLink;Women Category Link;/;WomenCategoryLink;WomenCategoryLink;;;;               
-;;MenCategoryLink;Men Category Link;/;MenCategoryLink;MenCategoryLink;;;;               
-;;LifestyleCategoryLink;Lifestyle Category Link;/;LifestyleCategoryLink;LifestyleCategoryLink;;;;               
-;;BeautyCategoryLink;Beauty Category Link;/;BeautyCategoryLink;BeautyCategoryLink;;;;               
-;;DesignersCategoryLink;Designers Category Link;/;DesignersCategoryLink;DesignersCategoryLink;;;;               
-;;OnSaleCategoryLink;OnSale Category Link;/;OnSaleCategoryLink;OnSaleCategoryLink;;;;               
-;;KidsCategoryLink;Kids Category Link;/;KidsCategoryLink;KidsCategoryLink;;;;               
-;;SaleCategoryLink;Sale Category Link;/;SaleCategoryLink;SaleCategoryLink;;;;               
+;;NewArrivalsCategoryLink;New Arrivals Category Link;/;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
+;;WomenCategoryLink;Women Category Link;/;WomenCategoryLink;WomenCategoryLink;;;;Women      
+;;MenCategoryLink;Men Category Link;/;MenCategoryLink;MenCategoryLink;;;;Men    
+;;LifestyleCategoryLink;Lifestyle Category Link;/;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
+;;BeautyCategoryLink;Beauty Category Link;/;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
+;;DesignersCategoryLink;Designers Category Link;/;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
+;;OnSaleCategoryLink;OnSale Category Link;/;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale              
+;;KidsCategoryLink;Kids Category Link;/;KidsCategoryLink;KidsCategoryLink;;;;Kids
+;;SaleCategoryLink;Sale Category Link;/;SaleCategoryLink;SaleCategoryLink;;;;Sale           
 ;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Help"                       
 ;;LuxuryFreeShippingLink;Luxury Free Shipping Link;/free-shipping;;;;;;"Free Shipping + free return"
-;;ContactUsLink;Contact Us Link;/contact;;;;;;               
-;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;               
-;;TermsAndConditions;Terms And Conditions;/terms-conditions;;;;;;               
-;;TermsOfUse;Terms Of Use;/terms-use;;;;;;               
-;;TrackOrdersLink;Track Orders Link;/trackorders;;;;;;               
-;;ShippingLink;Shipping Link;/shipping;;;;;;               
-;;CancellationLink;Cancellation Link;/cancellation;;;;;;               
-;;ReturnsLink;Returns Link;/returns;;;;;;               
-;;BlogLink;Blog Link;/returns;;;;;;
+;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us             
+;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;FAQ           
+;;TermsAndConditions;Terms And Conditions;/terms-conditions;;;;;;Terms and Conditions    
+;;TermsOfUse;Terms Of Use;/terms-use;;;;;;Terms Of Use
+;;TrackOrdersLink;Track Orders Link;/trackorders;;;;;;Track Orders               
+;;ShippingLink;Shipping Link;/shipping;;;;;;Shipping
+;;CancellationLink;Cancellation Link;/cancellation;;;;;;Cancellation               
+;;ReturnsLink;Returns Link;/returns;;;;;;Returns
+;;BlogLink;Blog Link;/blog;;;;;;Blog
                                        
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef;
 ;root;;root;;;;root;
@@ -157,11 +157,19 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";appstore            
                                       
                                     
-                                    
+
+# CMS Paragraph Components
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;content[lang=$lang]
+;;luxuryFooterNotification;Luxury Footer Notification;luxuryFooterNotification;;;;"<ul>
+					<li><span>100% ORIGINAL </span>gaurantee for all products at luxury.com</li>
+					<li><span>Return within 30days </span>of placing your order</li>
+					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
+				</ul>"
+
                                                                      
  # CMS Footer Component               
-INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV);
-;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;
+INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV); footerBarContent(uid,$contentCV);
+;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
                 
 # CMS tabs components  
 INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];name;visible;&componentRef;;;

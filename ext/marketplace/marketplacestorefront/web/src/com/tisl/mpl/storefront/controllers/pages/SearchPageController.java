@@ -394,14 +394,7 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				storeContinueUrl(request);
 				populateModel(model, searchPageData, ShowMode.Page);
-				if (commonUtils.isLuxurySite())
-				{
-					storeCmsPageInModel(model, getContentPageForLabelOrId(LUX_SEARCH_CMS_PAGE_ID));
-				}
-				else
-				{
-					storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-				}
+				storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
 				updatePageTitle("", model);
 				//TISPRD-8030
 			}
@@ -547,10 +540,6 @@ public class SearchPageController extends AbstractSearchPageController
 	{
 
 		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
-		if (commonUtils.isLuxurySite())
-		{
-			return ControllerConstants.Views.Pages.Search.LuxuryFacetResultPanel;
-		}
 		return ControllerConstants.Views.Pages.Search.FacetResultPanel;
 	}
 
@@ -685,14 +674,7 @@ public class SearchPageController extends AbstractSearchPageController
 		{
 			// Order of calling updatPageTitle changed for For INC_10385
 			storeContinueUrl(request);
-			if (commonUtils.isLuxurySite())
-			{
-				storeCmsPageInModel(model, getContentPageForLabelOrId(LUX_SEARCH_CMS_PAGE_ID));
-			}
-			else
-			{
-				storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-			}
+			storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
 			updatePageTitle(searchPageData.getFreeTextSearch(), model);
 		}
 		final List<Breadcrumb> breadcrumbs = searchBreadcrumbBuilder.getBreadcrumbs(null, searchPageData);
@@ -1221,14 +1203,7 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				storeContinueUrl(request);
 				populateModel(model, searchPageData, ShowMode.Page);
-				if (commonUtils.isLuxurySite())
-				{
-					storeCmsPageInModel(model, getContentPageForLabelOrId(LUX_SEARCH_CMS_PAGE_ID));
-				}
-				else
-				{
-					storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-				}
+				storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
 				if (CollectionUtils.isNotEmpty(searchPageData.getResults()))
 				{
 					model.addAttribute("departmentHierarchyData", searchPageData.getDepartmentHierarchyData());
@@ -1292,14 +1267,7 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				storeContinueUrl(request);
 				populateModel(model, searchPageData, ShowMode.Page);
-				if (commonUtils.isLuxurySite())
-				{
-					storeCmsPageInModel(model, getContentPageForLabelOrId(LUX_SEARCH_CMS_PAGE_ID));
-				}
-				else
-				{
-					storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
-				}
+				storeCmsPageInModel(model, getContentPageForLabelOrId(SEARCH_CMS_PAGE_ID));
 				updatePageTitle(searchPageData.getFreeTextSearch(), model);
 			}
 			model.addAttribute("pageType", PageType.PRODUCTSEARCH.name());
