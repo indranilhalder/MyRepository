@@ -20,7 +20,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -95,14 +94,14 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 
 		final OrderModel order = orderUpdateProcessModel.getOrder();
 
-		final double orderSubTotalPrice = order.getSubtotal() == null ? 0D : order.getSubtotal().doubleValue();
+		//final double orderSubTotalPrice = order.getSubtotal() == null ? 0D : order.getSubtotal().doubleValue();
 
-		final double orderTotalPrice = order.getTotalPrice() == null ? 0D : order.getTotalPrice().doubleValue();
-		final double convenienceCharges = order.getConvenienceCharges() == null ? 0D : order.getConvenienceCharges().doubleValue();
+		//final double orderTotalPrice = order.getTotalPrice() == null ? 0D : order.getTotalPrice().doubleValue();
+		//final double convenienceCharges = order.getConvenienceCharges() == null ? 0D : order.getConvenienceCharges().doubleValue();
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
-		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
-		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
-		final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		//final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
+		//final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
+		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
 
 
 
@@ -118,7 +117,7 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 				: "";
 
 		//final Double totalPrice = order.getTotalPrice();
-		final Double shippingCharge = order.getDeliveryCost();
+		//final Double shippingCharge = order.getDeliveryCost();
 		final String orderDate = (null != order.getCreationtime()) ? order.getCreationtime().toString() : "";
 
 		final AddressModel deliveryAddress = order.getDeliveryAddress();
@@ -127,6 +126,11 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		final List<AbstractOrderEntryModel> childOrders = order.getEntries();
 		final List<String> entryNumbers = orderUpdateProcessModel.getEntryNumber();
 
+		double convenienceChargesVal = 0;
+		double shippingCharge = 0;
+		double subTotal = 0;
+		double totalPrice = 0;
+
 		for (final String entryNumber : entryNumbers)
 		{
 			for (final AbstractOrderEntryModel childOrder : childOrders)
@@ -134,20 +138,27 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 				if (childOrder.getEntryNumber() == Integer.valueOf(entryNumber))
 				{
 					childEntries.add(childOrder);
-					final ProductModel productModel = childOrder.getProduct();
-					final String productImageUrl = productModel.getPicture().getURL();
-					put(PRODUCT_IMAGE_URL, productImageUrl);
-					final String orderPlaceDate;
-
+					convenienceChargesVal += childOrder.getConvenienceChargeApportion().doubleValue();
+					shippingCharge += childOrder.getCurrDelCharge().doubleValue();
+					subTotal += childOrder.getNetAmountAfterAllDisc().doubleValue();
+					//creation Time
 					SimpleDateFormat formatter;
 					formatter = new SimpleDateFormat("MMM d, yyyy");
-					orderPlaceDate = formatter.format(childOrder.getCreationtime());
-
+					final String orderPlaceDate = formatter.format(childOrder.getCreationtime());
 					put(ORDERPLACEDATE, orderPlaceDate);
+
+					//					final ProductModel productModel = childOrder.getProduct();
+					//					final String productImageUrl = productModel.getPicture().getURL();
+					//					put(PRODUCT_IMAGE_URL, productImageUrl);
 
 				}
 			}
 		}
+		totalPrice = subTotal + shippingCharge + convenienceChargesVal;
+
+
+
+
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
@@ -162,13 +173,13 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 		put(ORDER_CODE, orderReferenceNumber);
 		put(CHILDORDERS, childOrders);
 		put(CHILDENTRIES, childEntries);
-		put(TOTALPRICE, totalPrice);
-		put(SHIPPINGCHARGE, shippingCharge);
+		put(TOTALPRICE, Double.valueOf(totalPrice));
+		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(COD_CHARGES, orderUpdateProcessModel.getOrder().getConvenienceCharges());
 		put(ORDERDATE, orderDate);
 		put(AWBNUMBER, orderUpdateProcessModel.getAwbNumber());
-		put(SUBTOTAL, subTotal);
-		put(CONVENIENCECHARGE, convenienceChargesVal);
+		put(SUBTOTAL, Double.valueOf(subTotal));
+		put(CONVENIENCECHARGE, Double.valueOf(convenienceChargesVal));
 
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
 		final StringBuilder deliveryAddr = new StringBuilder(150);

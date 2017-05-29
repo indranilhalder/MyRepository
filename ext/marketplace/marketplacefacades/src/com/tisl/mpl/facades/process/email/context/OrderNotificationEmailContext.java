@@ -92,8 +92,8 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	{
 		super.init(orderProcessModel, emailPageModel);
 		//final OrderData orderData = getOrderConverter().convert(orderProcessModel.getOrder());
-		final double orderSubTotalPrice = orderProcessModel.getOrder().getSubtotal() == null ? 0D : orderProcessModel.getOrder()
-				.getSubtotal().doubleValue();
+		//		final double orderSubTotalPrice = orderProcessModel.getOrder().getSubtotal() == null ? 0D : orderProcessModel.getOrder()
+		//				.getSubtotal().doubleValue();
 
 		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D : orderProcessModel.getOrder()
 				.getTotalPrice().doubleValue();
@@ -102,7 +102,23 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
-		final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		double subTotal = 0.0d;
+		double shippingCharge = 0.0d;
+		//Changes for discount
+		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		for (final OrderModel childOrder : childOrders)
+		{
+			for (final AbstractOrderEntryModel childOrderEntries : childOrder.getEntries())
+			{
+				subTotal += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+				shippingCharge += childOrderEntries.getCurrDelCharge().doubleValue();
+			}
+
+		}
+
+
+
 		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
 		//final String subTotalNew = myFormatter.format(subTotal);
 		//final String totalPriceNew = myFormatter.format(totalPrice);
@@ -112,12 +128,12 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				+ " convenienceCharges:" + convenienceCharges);
 
 
-		final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
+		//	final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
 
 
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
-		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
 
 		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
@@ -136,11 +152,11 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		 */
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
-		put(SUBTOTAL, subTotal);
+		put(SUBTOTAL, Double.valueOf(subTotal));
 		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
 		//put(TOTALPRICE, totalPriceNew);
-		put(SHIPPINGCHARGE, shippingCharge);
+		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(CONVENIENCECHARGE, convenienceChargesVal);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
