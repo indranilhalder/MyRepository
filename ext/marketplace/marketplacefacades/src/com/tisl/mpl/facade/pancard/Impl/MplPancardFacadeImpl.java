@@ -39,22 +39,10 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 		this.mplPancardService = mplPancardService;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#setPancardFileAndOrderId(java.lang.String,
-	 * org.springframework.web.multipart.MultipartFile)
-	 */
-	/*
-	 * @Override public void setPancardFileAndOrderId(final String orderreferancenumber, final MultipartFile file) {
-	 * mplPancardService.setPancardFileAndOrderIdservice(orderreferancenumber, file);
-	 *
-	 * }
-	 */
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#getPanCardOredrId(java.lang.String)
 	 */
 	@Override
@@ -68,15 +56,16 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#refreshPancardDetailsFacade(de.hybris.platform.core.model.
 	 * PancardInformationModel, org.springframework.web.multipart.MultipartFile)
 	 */
 	@Override
-	public void refreshPancardDetailsFacade(final PancardInformationModel oModel, final MultipartFile file)
+	public void refreshPancardDetailsFacade(final PancardInformationModel oModel, final MultipartFile file,
+			final String pancardnumber)
 	{
 		// YTODO Auto-generated method stub
-		mplPancardService.refreshPancardDetailsService(oModel, file);
+		mplPancardService.refreshPancardDetailsService(oModel, file, pancardnumber);
 
 	}
 
@@ -87,11 +76,26 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 	 * java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
 	@Override
-	public void setPancardFileAndOrderId(final String orderreferancenumber, final String customername, final String pancardnumber,
-			final MultipartFile file)
+	public void setPancardFileAndOrderId(final String orderreferancenumber, final String transactionid, final String customername,
+			final String pancardnumber, final MultipartFile file)
 	{
 		// YTODO Auto-generated method stub
-		mplPancardService.setPancardFileAndOrderIdservice(orderreferancenumber, customername, pancardnumber, file);
+		mplPancardService.setPancardFileAndOrderIdservice(orderreferancenumber, transactionid, customername, pancardnumber, file);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.facade.pancard.MplPancardFacade#getCrmStatusForPancardDetailsFacade(de.hybris.platform.core.model
+	 * .PancardInformationModel)
+	 */
+	@Override
+	public String getCrmStatusForPancardDetailsFacade(final PancardInformationModel oModel)
+	{
+		// YTODO Auto-generated method stub
+		return mplPancardService.getCrmStatusForPancardDetailsService(oModel);
+
 	}
 
 

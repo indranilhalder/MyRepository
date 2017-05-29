@@ -57,27 +57,51 @@ public class PancardController
 	}
 
 	//For displaying pancard upload page
-	@RequestMapping(value = "/pancarddetailsupload/{orderreferancenumber}/{customername}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pancarddetailsupload/{orderreferancenumber}/{transactionid}/{customername}", method = RequestMethod.GET)
 	public String pancardDetailsUploadPage(@PathVariable final String orderreferancenumber,
-			@PathVariable final String customername, final Model model)
+			@PathVariable final String transactionid, @PathVariable final String customername, final Model model)
 	{
-
-		//System.out.println("***********************************pancard" + orderReferenceNumber);
+		String status = null;
+		String crmStatus = null;
+		model.addAttribute("orderreferancenumber", orderreferancenumber);
+		model.addAttribute("customername", customername);
+		model.addAttribute("transactionid", transactionid);
 
 		final PancardInformationModel oModel = mplPancardFacade.getPanCardOredrId(orderreferancenumber);
 
-		model.addAttribute("orderreferancenumber", orderreferancenumber);
-		model.addAttribute("customername", customername);
-
-		if (oModel != null && StringUtils.equalsIgnoreCase(oModel.getStatus(), "Approved"))
+		if (null != oModel && StringUtils.isNotEmpty(oModel.getStatus()))
 		{
+			status = oModel.getStatus();
+		}
+
+		if (null != oModel && StringUtils.isNotEmpty(status) && StringUtils.equalsIgnoreCase(status, "Approved"))
+		{
+			model.addAttribute("status", status);
 			return ControllerConstants.Views.Pages.Pancard.panCardApproved;//if the pancard is already approved by CRM
 		}
 
 		else
 		{
+			if (null != oModel)
+			{
+				//CRM call and status update in commerce
+				crmStatus = mplPancardFacade.getCrmStatusForPancardDetailsFacade(oModel);
+			}
 
-			return ControllerConstants.Views.Pages.Pancard.PanCardDetail;//Open the pancard upload page
+			if (null != oModel && StringUtils.isNotEmpty(status) && StringUtils.equalsIgnoreCase(status, "Approved"))
+			{
+				model.addAttribute("status", status);
+				return ControllerConstants.Views.Pages.Pancard.panCardApproved;//if the pancard is already approved by CRM
+			}
+			else if (null != oModel && StringUtils.isNotEmpty(crmStatus) && StringUtils.equalsIgnoreCase(crmStatus, "Locked"))
+			{
+				model.addAttribute("status", crmStatus);
+				return ControllerConstants.Views.Pages.Pancard.panCardApproved;//if the pancard varification is locked by CRM
+			}
+			else
+			{
+				return ControllerConstants.Views.Pages.Pancard.PanCardDetail;//pancard upload page In_progress,Rejected or FirstTime upload
+			}
 		}
 	}
 
@@ -86,32 +110,23 @@ public class PancardController
 	@RequestMapping(value = "/pancardupload", method = RequestMethod.POST)
 	public String pancardDetailsUpload(@RequestParam("orderreferancenumber") final String orderreferancenumber,
 			@RequestParam("Customer_name") final String customername, @RequestParam("Pancard_number") final String pancardnumber,
-			@RequestParam("file") final MultipartFile file, final Model model)
+			@RequestParam("transactionid") final String transactionid, @RequestParam("file") final MultipartFile file,
+			final Model model)
 	{
 		model.addAttribute("orderreferancenumber", orderreferancenumber);
 		model.addAttribute("filename", file.getOriginalFilename());
 
-		/*
-		 * if (file.isEmpty() && customername.isEmpty() && pancardnumber.isEmpty()) { //If any field is left empty //not
-		 * needed return ControllerConstants.Views.Pages.Pancard.panCardUploadDetailsError;//If any field is left empty }
-		 * else {
-		 */
-
-		//for fetching the model corresponding to the orderreferancenumber
-
-
 		final PancardInformationModel oModel = mplPancardFacade.getPanCardOredrId(orderreferancenumber);
 
 
-		//If the file correspond to the orderreferancenumber already exist and for pancard details updation and resnding ticket
-		if (null != oModel && null != oModel.getOrderId()
+		//If the file correspond to the orderreferancenumber already exist and for pancard details updation and resending ticket
+		//i.e. for rejected and in progress
+		if (null != oModel && StringUtils.isNotEmpty(pancardnumber) && (!file.isEmpty())
 				&& StringUtils.equalsIgnoreCase(orderreferancenumber, oModel.getOrderId()))
 		{
 
-			//for updating pancard number
-			oModel.setPancardNumber(pancardnumber);
+			mplPancardFacade.refreshPancardDetailsFacade(oModel, file, pancardnumber);
 
-			mplPancardFacade.refreshPancardDetailsFacade(oModel, file);
 			final String fileexist = "**** !!!!!  Pancard details updated ****";
 			model.addAttribute("fileexist", fileexist);
 			return ControllerConstants.Views.Pages.Pancard.panCardUploadUpdate;
@@ -120,11 +135,9 @@ public class PancardController
 		//for new pancard details entry and ticket create
 		else
 		{
-			mplPancardFacade.setPancardFileAndOrderId(orderreferancenumber, customername, pancardnumber, file);
+			mplPancardFacade.setPancardFileAndOrderId(orderreferancenumber, transactionid, customername, pancardnumber, file);
 			return ControllerConstants.Views.Pages.Pancard.panCardUploadSuccess;
 		}
-
-		//	}
 
 	}
 

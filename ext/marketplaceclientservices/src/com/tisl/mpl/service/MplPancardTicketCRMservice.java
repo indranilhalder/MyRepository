@@ -26,8 +26,19 @@ public interface MplPancardTicketCRMservice
 	 * @param pancardnumber
 	 * @return
 	 */
-	public CRMpancardResponse ticketPancardModeltoDTO(PancardInformationModel oModel) throws JAXBException;
+	public String ticketPancardModeltoDTO(PancardInformationModel oModel, String newpath, String pancardnumber)
+			throws JAXBException;
 
-	public void createticketPancardModeltoDTO(String orderreferancenumber, String newpath, String customername,
+	public String createticketPancardModeltoDTO(String orderreferancenumber, String transactionid, String newpath,
 			String pancardnumber) throws JAXBException;
+
+	public String createCrmTicket(String ticket);
+
+	/**
+	 * @param oModel
+	 * @return
+	 */
+	public CRMpancardResponse getCrmStatusForPancardDetails(PancardInformationModel oModel);
+
+
 }

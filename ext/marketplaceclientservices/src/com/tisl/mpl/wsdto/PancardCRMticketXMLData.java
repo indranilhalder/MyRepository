@@ -15,52 +15,13 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "pancardticket")
 @XmlType(propOrder =
-{ "orderId", "path", "name", "pancardNumber", "status", "ticketNo" })
+{ "orderId", "transactionId", "path", "pancardNumber" })
 public class PancardCRMticketXMLData
 {
 	private String orderId;
+	private String transactionId;
 	private String path;
-	private String name;
 	private String pancardNumber;
-	private String status;
-	private String ticketNo;
-
-
-	/**
-	 * @return the status
-	 */
-	@XmlElement(name = "status")
-	public String getStatus()
-	{
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *           the status to set
-	 */
-	public void setStatus(final String status)
-	{
-		this.status = status;
-	}
-
-	/**
-	 * @return the ticketNo
-	 */
-	@XmlElement(name = "ticketNo")
-	public String getTicketNo()
-	{
-		return ticketNo;
-	}
-
-	/**
-	 * @param ticketNo
-	 *           the ticketNo to set
-	 */
-	public void setTicketNo(final String ticketNo)
-	{
-		this.ticketNo = ticketNo;
-	}
 
 	/**
 	 * @return the orderId
@@ -80,6 +41,25 @@ public class PancardCRMticketXMLData
 		this.orderId = orderId;
 	}
 
+
+
+	/**
+	 * @return the transactionId
+	 */
+	public String getTransactionId()
+	{
+		return transactionId;
+	}
+
+	/**
+	 * @param transactionId
+	 *           the transactionId to set
+	 */
+	public void setTransactionId(final String transactionId)
+	{
+		this.transactionId = transactionId;
+	}
+
 	/**
 	 * @return the path
 	 */
@@ -96,24 +76,6 @@ public class PancardCRMticketXMLData
 	public void setPath(final String path)
 	{
 		this.path = path;
-	}
-
-	/**
-	 * @return the name
-	 */
-	@XmlElement(name = "name")
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @param name
-	 *           the name to set
-	 */
-	public void setName(final String name)
-	{
-		this.name = name;
 	}
 
 	/**

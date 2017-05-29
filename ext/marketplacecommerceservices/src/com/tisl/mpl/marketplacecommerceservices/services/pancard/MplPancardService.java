@@ -18,9 +18,15 @@ public interface MplPancardService
 
 	public PancardInformationModel getPanCardOrderId(String orderreferancenumber);
 
-	public void refreshPancardDetailsService(PancardInformationModel oModel, MultipartFile file);
+	public void refreshPancardDetailsService(PancardInformationModel oModel, MultipartFile file, String pancardnumber);
 
-	public void setPancardFileAndOrderIdservice(String orderreferancenumber, String customername, String pancardnumber,
-			MultipartFile file);
+	public void setPancardFileAndOrderIdservice(final String orderreferancenumber, String transactionid, String customername,
+			String pancardnumber, MultipartFile file);
+
+	/**
+	 * @param oModel
+	 * @return
+	 */
+	public String getCrmStatusForPancardDetailsService(PancardInformationModel oModel);
 
 }
