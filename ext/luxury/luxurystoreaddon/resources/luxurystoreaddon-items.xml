@@ -144,6 +144,15 @@
 				<attribute qualifier="footerSocialTitle" type="java.lang.String">
 					<persistence type="property" />
 				</attribute>
+				
+				<attribute type="CMSParagraphComponent" qualifier="footerBarContent"
+						autocreate="true" generate="true">
+						<description>Footer Bar Content</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type='property' />
+				</attribute>
+				
 			</attributes>
 		</itemtype>
 		

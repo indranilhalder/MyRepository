@@ -1,7 +1,7 @@
 ##******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
 
 $contentCatalog=luxContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 
 # Language
 $lang=en

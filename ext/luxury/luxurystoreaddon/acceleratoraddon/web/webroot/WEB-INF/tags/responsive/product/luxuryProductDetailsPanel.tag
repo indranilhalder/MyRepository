@@ -8,6 +8,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="luxuryProduct" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/product"%>
 <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -184,7 +185,7 @@ tr.d0 td {
                 
 			<ycommerce:testId
 				code="productDetails_productNamePrice_label_${product.code}">
-				<product:productPricePanel product="${product}" />
+				<luxuryProduct:luxuryProductPricePanel product="${product}" />
 			</ycommerce:testId>
 			
 			<input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
@@ -237,7 +238,7 @@ tr.d0 td {
 			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
 			</div>			
 			<!-- TPR-275 ends -->
-			<product:productMainVariant /> 
+			<luxuryProduct:luxuryProductMainVariant /> 
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
@@ -349,7 +350,7 @@ tr.d0 td {
 		</div> --%>
 		
 <div class="tabs-block">
-				<product:productPageTabs />
+				<luxuryProduct:luxuryProductPageTabs />
 			</div>
 	</div>
 	

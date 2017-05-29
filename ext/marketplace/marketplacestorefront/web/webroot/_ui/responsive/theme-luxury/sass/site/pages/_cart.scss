@@ -518,3 +518,16 @@
 	}
 }
 /*Order Summary Style End*/	
+
+/*empty cart*/
+
+.emptyCart{
+    text-align: center;
+    h2 { font-size: 35px; margin-bottom: 15px; }
+    p {  font-size: 20px; margin-bottom: 50px; }    
+    button {
+        margin-right: 65px; 
+        //&:first-child {    margin-right: 60px;  }
+        &:last-child {      margin-right: 0;   margin-left: 65px;  }
+     }
+}
