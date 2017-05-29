@@ -237,6 +237,25 @@
 				</attribute>
 		</attributes>
 	</itemtype>
+	
+	<itemtype code="LuxCMSMediaParagraphComponent" generate="true"
+				jaloclass="com.tisl.mpl.jalo.cms.components.LuxCMSMediaParagraphComponent"
+				extends="CMSParagraphComponent" autocreate="true">
+				<description>It represents paragraph component with an additional media attribute.</description>
+				<attributes>
+					<attribute qualifier="media" generate="true" autocreate="true"
+						type="localized:Media">
+						<persistence type="property" />
+						<description>Attribute that stores the localized media of the paragraph.</description>
+					</attribute>
+					<attribute qualifier="url" generate="true" autocreate="true"
+						type="java.Lang.String">
+						<persistence type="property" />
+						<description>Attribute that stores the url of the media of the paragraph.</description>
+					</attribute>
+				</attributes>
+	</itemtype>
+	
 	<itemtype code="LuxShopByCategory" autocreate="true"
 				generate="true" extends="SimpleCMSComponent"
 				jaloclass="com.tisl.lux.jalo.cms.components.ShopByCategory">

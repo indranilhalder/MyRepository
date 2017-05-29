@@ -270,6 +270,60 @@
 				}
 			}
 		}
+        
+        .wishlist, .notifi, .mob-login{
+           padding-left: 15px; 
+            
+            a{                
+                &:before{
+                    content: '';
+                    position:absolute;
+                    background-image: url('../images/sprite.png');                   
+                }
+                
+            }       
+        }
+        .wishlist{
+            
+            a{                
+                &:before{                  
+                    top:13px;
+                    left:0px;                    
+                    width:32px;
+                    height:32px;		
+                    background-position: -228px -101px;
+                }
+                
+            }            
+        }
+        .notifi{
+            padding-left: 15px;
+            
+            a{                
+                &:before{                   
+                    top:11px;
+                    left:0px;                   
+                    width:24px;
+                    height:24px;		
+                    background-position: -335px -98px;
+                }
+                
+            }            
+        }
+        .mob-login{
+            padding-left: 15px;
+            
+            a{                
+                &:before{                   
+                    top:15px;
+                    left:0px;                  
+                    width:32px;
+                    height:32px;		
+                    background-position:-365px -104px;
+                }
+                
+            }            
+        }
 	}
 	.header-right, .header-left {
 		position: absolute;
