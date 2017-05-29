@@ -12321,7 +12321,18 @@ TATA.CommonFunctions = {
                 success: function(x) {
                     var filtered = $.parseHTML(x);
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")), 
-                    TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper"));
+                    TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());		            
+		            if($(filtered).has('input[name=noOfPages]')){
+		            	totalPages = parseInt($(filtered).find('input[name=noOfPages]').val());
+		            	if(totalPages > 1){
+		            		$("#pageQuery").val("");
+		            		currentPageNo = 1;
+		            		totalNoOfPages = totalPages;
+		            		$(".loadMore").show();
+		            	}else{
+		            		$(".loadMore").hide();
+		            	}
+		            }
                 }
             });
         },

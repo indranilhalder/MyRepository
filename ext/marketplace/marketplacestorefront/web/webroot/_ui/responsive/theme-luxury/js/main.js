@@ -425,51 +425,47 @@ TATA.Pages = {
 	            }
 	        });
 	    },
-		
-		// PLP Page filter
-		showSelectedRefinements : function(){
-			$(".facetValues .facet-form input:checked").each(function(){
-				$(this).parents(".allFacetValues").show();
-				$(this).parents(".facet").addClass("open");
-			});
-		},
-		
-		filterByFacet : function(){
-			$(document).on('click', '.reset-filters', function(){
-				var resetUrl = $(this).data('resetqueryurl')+$(".responsiveSort").find(':selected');
-				TATA.Pages.PLP.performAjax(resetUrl);
-			});
-			$(document).on('click', '.remove-filter', function(){
-				var relevantCheckbox = $(this).attr("data-facetCode");
-				$("#"+relevantCheckbox).click();
-			});
-			$(document).on('change','.facet-form input:checkbox', function(){
-				var requestUrl = $(this).closest('form').attr('action')+"?"+$(this).closest('form').serialize();
-				TATA.Pages.PLP.performAjax(requestUrl);
-			});
-		},
-		
-		performAjax: function(requestUrl){
-			$.ajax({
-		        url: requestUrl,
-		        data: {
-		            lazyInterface:'Y'
-		        },
-		        success: function(x) {
-		            var filtered = $.parseHTML(x);
-		            
-		            if($(filtered).has('.filterblocks')){
-		            	$(".filterblocks").html($(filtered).find(".filterblocks"));
-		            	TATA.Pages.PLP.showSelectedRefinements();
+        showSelectedRefinements: function() {
+            $(".facetValues .facet-form input:checked").each(function() {
+                $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
+            });
+        },
+        filterByFacet: function() {
+            $(document).on("click", ".reset-filters", function() {
+                var resetUrl = $(this).data("resetqueryurl") + $(".responsiveSort").find(":selected");
+                TATA.Pages.PLP.performAjax(resetUrl);
+            }), $(document).on("click", ".remove-filter", function() {
+                var relevantCheckbox = $(this).attr("data-facetCode");
+                $("#" + relevantCheckbox).click();
+            }), $(document).on("change", ".facet-form input:checkbox", function() {
+                var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
+                TATA.Pages.PLP.performAjax(requestUrl);
+            });
+        },
+        performAjax: function(requestUrl) {
+            $.ajax({
+                url: requestUrl,
+                data: {
+                    lazyInterface: "Y"
+                },
+                success: function(x) {
+                    var filtered = $.parseHTML(x);
+                    $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")), 
+                    TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());		            
+		            if($(filtered).has('input[name=noOfPages]')){
+		            	totalPages = parseInt($(filtered).find('input[name=noOfPages]').val());
+		            	if(totalPages > 1){
+		            		$("#pageQuery").val("");
+		            		currentPageNo = 1;
+		            		totalNoOfPages = totalPages;
+		            		$(".loadMore").show();
+		            	}else{
+		            		$(".loadMore").hide();
+		            	}
 		            }
-		            
-		            if($(filtered).has('.product-grid')){
-		            	$('.product-grid-wrapper').html($(filtered).find(".product-grid-wrapper"));
-		            }
-		            
-		        }
-		    });
-		},
+                }
+            });
+        },
 		
 		Filtershow: function() {
 			$('.plp-mob-filter').on('click', function(){
