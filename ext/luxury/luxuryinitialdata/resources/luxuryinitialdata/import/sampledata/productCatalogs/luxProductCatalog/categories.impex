@@ -1632,7 +1632,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MBH12E00096;PSP;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00097;Xbox360;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00098;Skywater;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MBH12E00099;Luxa2;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+;MBH12E00099;luxa2;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00100;Electrolux;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00101;BESTBON;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00103;Vanguard;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -1732,7 +1732,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MBH12E00301;RHA;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00302;Jaybird;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00303;Audeze;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MBH12E00304;Comply;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+;MBH12E00304;Coluxy;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00305;FiiO;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00306;Sudio;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00307;Rock Jaw Audio;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -1931,7 +1931,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MBH12E00562;Bower Camera;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00563;Cowboy Studio;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00564;Sterlingtek;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MBH12E00565;Crumpler;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+;MBH12E00565;Cruluxer;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00566;Fujifilm;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00567;Opteka;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00568;Polaroid;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2034,7 +2034,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MBH12E00697;Gopromate;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00699;KONUS;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00700;Kootek;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MBH12E00702;Luxebell;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+;MBH12E00702;luxebell;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00704;Mefoto;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00705;meikestore;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00706;Newmowa;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2129,7 +2129,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MBH12E00819;Sharper Image;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00820;Sharper Image-CE;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00821;Shower-Mate;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MBH12E00822;Simple Living Technology;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+;MBH12E00822;Siluxe Living Technology;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00823;soundbot;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00824;Sunbeam;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MBH12E00825;TANNC;MBH12:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2376,7 +2376,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1210101102;Single Door;MPH1210101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1210101103;Triple Door;MPH1210101:luxProductCatalog:Staged,tripledooraf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1210101104;Wine Coolers;MPH1210101:luxProductCatalog:Staged,winecoolersaf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1210102;Washing and Drying;MPH1210:luxProductCatalog:Staged,washinganddryingaf:pcmClassification:1,washinganddryinggf:pcmClassification:1,maximumspinspeedcc:pcmClassification:1,washinganddryingtf:pcmClassification:1,optionalprogramscc:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1210102;Washing and Drying;MPH1210:luxProductCatalog:Staged,washinganddryingaf:pcmClassification:1,washinganddryinggf:pcmClassification:1,maximumspinspeedcc:pcmClassification:1,washinganddryingtf:pcmClassification:1,optionalprogramscc:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1210102100;Dryers;MPH1210102:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1210102101;Washer Dryer;MPH1210102:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1210102102;Washing machine;MPH1210102:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2419,12 +2419,12 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1212104103;Surveillance;MPH1212104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1213;Computers and laptops;MPH12:luxProductCatalog:Staged,computersandlaptopsgf:pcmClassification:1,electronicstf:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1213100;Desktops;MPH1213:luxProductCatalog:Staged,desktopsaf:pcmClassification:1,desktopsdf:pcmClassification:1,desktopsms:pcmClassification:1,desktopsgf:pcmClassification:1,desktopstf:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
-;MPH1213100100;AIO's;MPH1213100:luxProductCatalog:Staged,aio'saf:pcmClassification:1,aio'cdf:pcmClassification:1,aio'sdf:pcmClassification:1,buildmypcgf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1213100101;Build My PC;MPH1213100:luxProductCatalog:Staged,buildmypcgf:pcmClassification:1,aio'cdf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1213100102;GAMING;MPH1213100:luxProductCatalog:Staged,gamingpf:pcmClassification:1,aio'cdf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+#;MPH1213100100;AIO's;MPH1213100:luxProductCatalog:Staged,aio'saf:pcmClassification:1,aio'cdf:pcmClassification:1,aio'sdf:pcmClassification:1,buildmypcgf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+#;MPH1213100101;Build My PC;MPH1213100:luxProductCatalog:Staged,buildmypcgf:pcmClassification:1,aio'cdf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
+#;MPH1213100102;GAMING;MPH1213100:luxProductCatalog:Staged,gamingpf:pcmClassification:1,aio'cdf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1213100103;iMac;MPH1213100:luxProductCatalog:Staged,imacgf:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1213100104;Monitors;MPH1213100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1213101;Laptops;MPH1213:luxProductCatalog:Staged,computersandlaptopsdf:pcmClassification:1,laptopsaf:pcmClassification:1,laptopsgf:pcmClassification:1,laptopsdf:pcmClassification:1,laptopsm:pcmClassification:1,laptopstf:pcmClassification:1,aio'cdf:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1213101;Laptops;MPH1213:luxProductCatalog:Staged,computersandlaptopsdf:pcmClassification:1,laptopsaf:pcmClassification:1,laptopsgf:pcmClassification:1,laptopsdf:pcmClassification:1,laptopsm:pcmClassification:1,laptopstf:pcmClassification:1,aio'cdf:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1213101100;2-in-1's (hybrid);MPH1213101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1213101101;Laptops;MPH1213101:luxProductCatalog:Staged,laptopss:pcmClassification:1;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1213102;Networking;MPH1213:luxProductCatalog:Staged,networkinggf:pcmClassification:1,networkingtf:pcmClassification:1;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
@@ -2569,14 +2569,14 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1221102100;Watches;MPH1221102:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH13;Footwear;footwearCC:pcmClassification:1,MPH1:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310;Kids;tipshapeCC:pcmClassification:1,sizematerialCC:pcmClassification:1,agekidsCC:pcmClassification:1,MPH13:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
-;MPH1310100;Boys Party;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1310100;Boys Party;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310100100;Shoe Lace - up;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310100101;Shoe Velcro;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310100102;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1310100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310100103;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310100104;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310100105;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1310101;Boys Casual;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1310101;Boys Casual;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310101100;Shoe Lace - up;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310101101;Shoe Velcro;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310101102;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1310101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2606,7 +2606,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1310104101;Clog;fasteningCC:pcmClassification:1,clogflipfloptypeCC:pcmClassification:1,MPH1310104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310104102;Flip Flop;clogflipfloptypeCC:pcmClassification:1,MPH1310104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310104103;Shoe;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1310105;Boys Ethnic;occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1310105;Boys Ethnic;occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310105100;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1310105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310105101;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310105102;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2614,14 +2614,14 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1310106100;Sandal;sandaltypeCC:pcmClassification:1,MPH1310106:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310106101;Shoe;shoeboottypeCC:pcmClassification:1,MPH1310106:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310106102;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,MPH1310106:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1310107;Girls Party;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1310107;Girls Party;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310107100;Shoe Lace - up;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310107:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310107101;Shoe Velcro;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310107:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310107102;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1310107:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310107103;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310107:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310107104;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310107:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310107105;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310107:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1310108;Girls Casual;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1310108;Girls Casual;characterCC:pcmClassification:1,occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310108100;Shoe Lace - up;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310108:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310108101;Shoe Velcro;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310108:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310108102;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1310108:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2655,18 +2655,18 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1310112100;Sandal;sandaltypeCC:pcmClassification:1,MPH1310112:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310112101;Shoe;shoeboottypeCC:pcmClassification:1,MPH1310112:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310112102;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,MPH1310112:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1310113;Girls Ethnic;occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1310113;Girls Ethnic;occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1310:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1310113100;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310113:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310113101;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1310113:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1310113102;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1310113:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311;Men;tipshapeCC:pcmClassification:1,recommendedforCC:pcmClassification:1,sizematerialCC:pcmClassification:1,MPH13:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
-;MPH1311100;Formal;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1311:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1311100;Formal;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1311:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1311100100;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311100101;Shoe Lace - up;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311100102;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1311100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311100103;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311100104;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1311101;Casual;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1311:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1311101;Casual;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1311:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1311101100;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311101101;Shoe Lace - up;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311101102;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1311101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2691,7 +2691,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1311103109;Outdoor;MPH1311103:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311103110;Hockey;MPH1311103:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311103111;Others;MPH1311103:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1311104;Ethnic;occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1311:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1311104;Ethnic;occasionfootwearCC:pcmClassification:1,seasonCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,MPH1311:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1311104100;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1311104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311104101;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311104102;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2704,11 +2704,11 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1311106101;Shoe Slip-on;MPH1311106:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1311106102;Boot;shoeheightCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1311106:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312;Women;tipshapeCC:pcmClassification:1,recommendedforCC:pcmClassification:1,sizematerialCC:pcmClassification:1,seasonCC:pcmClassification:1,MPH13:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
-;MPH1312100;Formal;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1312100;Formal;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1312100100;Sandal;sandaltypeCC:pcmClassification:1,MPH1312100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312100101;Shoe;shoeboottypeCC:pcmClassification:1,MPH1312100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312100102;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,MPH1312100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1312101;Casual;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1312101;Casual;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1312101100;Sandal;sandaltypeCC:pcmClassification:1,MPH1312101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312101101;Shoe;shoeboottypeCC:pcmClassification:1,MPH1312101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312101102;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,MPH1312101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2732,11 +2732,11 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1312103109;Outdoor;MPH1312103:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312103110;Hockey;MPH1312103:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312103111;Others;MPH1312103:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1312104;Comfort;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1312104;Comfort;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1312104100;Sandal;sandaltypeCC:pcmClassification:1,MPH1312104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312104101;Shoe;shoeboottypeCC:pcmClassification:1,MPH1312104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312104102;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,MPH1312104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1312105;Ethnic;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1312105;Ethnic;occasionfootwearCC:pcmClassification:1,technologyusedCC:pcmClassification:1,fasteningCC:pcmClassification:1,weightfootwearCC:pcmClassification:1,heelCC:pcmClassification:1,MPH1312:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1312105100;Sandal;sandaltypeCC:pcmClassification:1,MPH1312105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312105101;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1312105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1312105102;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,MPH1312105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2752,7 +2752,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1313100103;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313100104;Boot;shoeheightCC:pcmClassification:1,shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313100105;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313100:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1313101;Boys Ethnic;occasionfootwearCC:pcmClassification:1,MPH1313:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1313101;Boys Ethnic;occasionfootwearCC:pcmClassification:1,MPH1313:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1313101100;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1313101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313101101;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313101102;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313101:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
@@ -2773,7 +2773,7 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];supercategories( code, ca
 ;MPH1313104101;Clog;clogflipfloptypeCC:pcmClassification:1,MPH1313104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313104102;Flip Flop;clogflipfloptypeCC:pcmClassification:1,MPH1313104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313104103;Shoe;shoeboottypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313104:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
-;MPH1313105;Girls Ethnic;occasionfootwearCC:pcmClassification:1,MPH1313:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
+#;MPH1313105;Girls Ethnic;occasionfootwearCC:pcmClassification:1,MPH1313:luxProductCatalog:Staged;luxProductCatalog:Staged;ETAILREAD,admingroup,marketplaceGroup
 ;MPH1313105100;Shoe Slip-on;shoeboottypeCC:pcmClassification:1,MPH1313105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313105101;Sandal;sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
 ;MPH1313105102;Others;shoeboottypeCC:pcmClassification:1,sandaltypeCC:pcmClassification:1,fasteningCC:pcmClassification:1,MPH1313105:luxProductCatalog:Staged;luxProductCatalog:Staged;admingroup,marketplaceGroup,ETAILREAD
