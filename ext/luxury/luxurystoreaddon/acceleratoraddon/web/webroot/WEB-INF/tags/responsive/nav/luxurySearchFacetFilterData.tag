@@ -4,16 +4,17 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/product" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix="breadcrumb" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/nav/breadcrumb"%>
 <div class="container plp-wrapper">
 	<h4 class="categor-name text-center"></h4>
 	<div class="row">
 		 <div class="product-sort-wrapper mb-30 col-sm-12">
 				<div class="breadcrumb pull-left">
-					<!-- <ul>
-						<li><a href="javascript:;">Home</a></li>
-						<li><a href="javascript:;">Handbags</a></li>
-					</ul> -->
+					<c:if test="${fn:length(breadcrumbs) > 0}">
+						<ul class="breadcrumbs wrapper">
+							<breadcrumb:luxuryBreadcrumb breadcrumbs="${breadcrumbs}" />
+						</ul>
+					</c:if>
 				</div>	
 				<div class="sort-by-fature pull-right">
 					<select class="responsiveSort">
