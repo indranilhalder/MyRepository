@@ -200,7 +200,7 @@ INSERT_UPDATE ProductVariantSelectorComponent;$contentCV[unique=true];uid[unique
 
 # CMS AddToCart Action
 INSERT_UPDATE LuxuryAddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
-;;LuxuryAddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;LuxuryAddToCartAction
+;;LuxuryAddToCartAction;/cart/add;Product Add To Cart Action;;LuxuryAddToCartAction
 
 # CMS ProductAddToCart Components
 INSERT_UPDATE LuxuryProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef

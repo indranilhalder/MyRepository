@@ -77,7 +77,8 @@
 					</sec:authorize>
 					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>
-					</cms:pageSlot></a></li>
+					</cms:pageSlot></a><cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
+					<cms:component component="${SearchBox}" element="li"/></cms:pageSlot></li>
 				</ul>
 			</div>
 			<div class="header-search toggle-skip" id="header-search">
