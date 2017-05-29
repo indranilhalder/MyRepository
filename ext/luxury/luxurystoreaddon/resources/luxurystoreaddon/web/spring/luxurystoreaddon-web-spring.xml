@@ -96,6 +96,16 @@
        <property name="typeCode" value="LuxShopByCategory" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryProductAddToCartComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryAddToCartAction" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
    <bean parent="addonCmsComponentRendererMapping">
        <property name="typeCode" value="LuxCMSMediaParagraphComponent" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />

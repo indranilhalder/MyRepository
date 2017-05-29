@@ -199,12 +199,12 @@ INSERT_UPDATE ProductVariantSelectorComponent;$contentCV[unique=true];uid[unique
 ;;VariantSelector;Product Variant Selector;VariantSelector
 
 # CMS AddToCart Action
-INSERT_UPDATE AddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
-;;AddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;AddToCartAction
+INSERT_UPDATE LuxuryAddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+;;LuxuryAddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;LuxuryAddToCartAction
 
 # CMS ProductAddToCart Components
-INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
-;;AddToCart;Product Add To Cart;AddToCartAction;AddToCart     
+INSERT_UPDATE LuxuryProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
+;;LuxuryAddToCart;Product Add To Cart;LuxuryAddToCartAction;LuxuryAddToCart     
 
 # CMS ProductReferences Components
 INSERT_UPDATE ProductReferencesComponent;$contentCV[unique=true];uid[unique=true];name;productReferenceTypes(code);maximumNumberProducts;&componentRef;;
@@ -242,7 +242,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;TabsSlot;Tabs;true;TabPanelContainer
 ;;BottomHeaderSlot;Bottom Header;true;breadcrumbComponent
 ;;VariantSelectorSlot;Variant Selector;true;VariantSelector
-;;AddToCartSlot;Add To Cart;true;AddToCart
+;;AddToCartSlot;Add To Cart;true;LuxuryAddToCart
 ;;CrossSelling-ProductDetailsPage;CrossSelling Slot for  ProductDetails Page;true;CrossSelling;;;
 ;;UpSelling-ProductDetailsPage;UpSelling Slot for ProductDetails Page;true;UpSelling;;;
 #pdp changes for configuring number of images to be shown in pdp
@@ -285,7 +285,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Section3;;;wide
 ;Section4;;;wide
 ;VariantSelector;;ProductVariantSelectorComponent;narrow
-;AddToCart;;ProductAddToCartComponent;narrow
+;AddToCart;;LuxuryProductAddToCartComponent;narrow
 ;CrossSelling;;ProductReferencesComponent;narrow
 ;UpSelling;;ProductReferencesComponent;narrow
 ;Footer;;;footer
@@ -332,7 +332,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;Tabs-LuxuryProductDetails;Tabs;;TabsSlot;true
 ;;Footer-LuxuryProductDetails;Footer;;FooterSlot;true
 ;;VariantSelector-LuxuryProductDetails;VariantSelector;;VariantSelectorSlot;true
-;;AddToCart-LuxuryProductDetails;AddToCart;;AddToCartSlot;true
+;;LuxuryAddToCart-LuxuryProductDetails;LuxuryAddToCart;;AddToCartSlot;true
 ;;UpSelling-LuxuryProductDetails;UpSelling;;UpSellingSlot;true
 ;;CrossSelling-LuxuryProductDetails;CrossSelling;;CrossSellingSlot;true
 ;;BottomHeaderSlot-LuxuryProductDetails;BottomHeaderSlot;;BottomHeaderSlot;true
