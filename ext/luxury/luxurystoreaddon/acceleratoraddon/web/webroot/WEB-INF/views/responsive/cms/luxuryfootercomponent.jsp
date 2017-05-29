@@ -49,3 +49,9 @@
 			
 		</div>
 	</div>
+	
+	<div class="container footer-popular-search">
+	    <div class="footer-bottom-links">
+		   <h5><span>POPULAR SEARCHES</span></h5>
+	   </div>
+	</div>

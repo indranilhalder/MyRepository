@@ -17,11 +17,11 @@
 				</div>	
 				<div class="sort-by-fature pull-right">
 					<select class="responsiveSort">
-						<option  data-name="relevance">Relevance</option>
-						<option  data-name="new">New</option>
-						<option  data-name="discount">Discount</option>
-						<option  data-name="low">Low to High</option>
-						<option  data-name="high">High to Low</option>						
+						<option  value="relevance">Relevance</option>
+						<option  value="new">New</option>
+						<option  value="discount">Discount</option>
+						<option  value="low">Low to High</option>
+						<option  value="high">High to Low</option>						
 					</select>
 				</div>
 				<div class="sort-wrapper pull-right">
@@ -56,9 +56,7 @@
 		<div class="col-sm-9 col-xs-12 rightbar right-side-content text-right pull-right nopadding">
 			<div class="product-list-wrapper col-sm-12 nopadding">
 				<div class="product-list-wrapper-inner">
-					<div class="product-grid-wrapper">
-						<product:luxurySearchresultsgridcomponent/>
-					</div>
+					<product:luxurySearchresultsgridcomponent/>
 				</div>
 			</div>
 		</div>
