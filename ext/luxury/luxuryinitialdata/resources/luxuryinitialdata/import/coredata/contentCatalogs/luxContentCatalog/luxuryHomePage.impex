@@ -41,17 +41,22 @@ INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=tru
 ;;MyWishList;My WishList;MyWishList;3;;
 
 
+
+
+
+
+
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
 ;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
-;;NewArrivalsCategoryLink;New Arrivals Category Link;/;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
-;;WomenCategoryLink;Women Category Link;/;WomenCategoryLink;WomenCategoryLink;;;;Women      
-;;MenCategoryLink;Men Category Link;/;MenCategoryLink;MenCategoryLink;;;;Men    
-;;LifestyleCategoryLink;Lifestyle Category Link;/;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
-;;BeautyCategoryLink;Beauty Category Link;/;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
-;;DesignersCategoryLink;Designers Category Link;/;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
-;;OnSaleCategoryLink;OnSale Category Link;/;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale              
-;;KidsCategoryLink;Kids Category Link;/;KidsCategoryLink;KidsCategoryLink;;;;Kids
-;;SaleCategoryLink;Sale Category Link;/;SaleCategoryLink;SaleCategoryLink;;;;Sale           
+;;NewArrivalsCategoryLink;New Arrivals Category Link;/new-arrivals;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
+;;WomenCategoryLink;Women Category Link;/womenlandingpage;WomenCategoryLink;WomenCategoryLink;;;;Women      
+;;MenCategoryLink;Men Category Link;/menlandingpage;MenCategoryLink;MenCategoryLink;;;;Men    
+;;LifestyleCategoryLink;Lifestyle Category Link;/lifestyle;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
+;;BeautyCategoryLink;Beauty Category Link;/beauty;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
+;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
+;;OnSaleCategoryLink;OnSale Category Link;/onsale;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale              
+;;KidsCategoryLink;Kids Category Link;/kids;KidsCategoryLink;KidsCategoryLink;;;;Kids
+;;SaleCategoryLink;Sale Category Link;/sale;SaleCategoryLink;SaleCategoryLink;;;;Sale           
 ;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Help"                       
 ;;LuxuryFreeShippingLink;Luxury Free Shipping Link;/free-shipping;;;;;;"Free Shipping + free return"
 ;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us             
@@ -95,8 +100,8 @@ INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=tr
 INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
 ;;NavBarComponent;Luxury Navigation Bar Collection Component;NewArrivalsBarComponent,WomenBarComponent,MenBarComponent,LifestyleBarComponent,BeautyBarComponent,DesignersBarComponent,OnSaleBarComponent;
 
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];             
-;;shopMen;text/png;ShopMen.png;$jarResourceCms/preview-images/ShopMen.png;;             
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];internalURL;             
+;;shopMen;text/png;ShopMen.png;$jarResourceCms/preview-images/ShopMen.png;;/men-landing             
 ;;shopWomen;text/png;womenshop.png;$jarResourceCms/preview-images/womenshop.png;;             
 ;;LeftContent;text/png;getapp.png;$jarResourceCms/preview-images/getapp.png;;             
 ;;RightContent;text/png;EGV.png;$jarResourceCms/preview-images/EGV.png                                                      
@@ -119,6 +124,14 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 
 
 
+INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url
+;;Home-ShopMen;Shop Men;shopMen;"<div class='banner-content'><h2>shop men</h2></div>";"/menlanding";
+;;Home-ShopWomen;Shop Men;shopWomen;"<div class='banner-content'><h2>shop women</h2></div>";"/womenlanding"
+;;Home-LeftContent; Home Left Content;LeftContent;"<div class='seastion-content'><h2>Get<br> the app</h2><p>Put 1.500+ brands in your pocket. Shop anywhere, Anytime</p><a href=''#''>iOS</a></div>";"/shoes";
+;;Home-RightContent; Home Right Content;RightContent;"<div class='seastion-content text-left'><h2>Give 20,000<br>Give 20,000</h2><p>Refer your friends to Luxury and We'll reward everyone involved.</p><a href='#'>iOS</a></div>";"/women"
+
+
+
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;shopMenContent;shopMen             
 ;;shopWomenContent;shopWomen           
@@ -127,10 +140,10 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 
 #WeeklySpecialBanner           
 
-INSERT_UPDATE WeeklySpecialBanner;$contentCV[unique=true];uid[unique=true];svglogo(code,$contentCV);image(code,$contentCV)          
-;;weeklySpecial1;WeeklySpecialSvg-1;WeeklySpecialBanner-1
-;;weeklySpecial2;WeeklySpecialSvg-2;WeeklySpecialBanner-2
-;;weeklySpecial3;WeeklySpecialSvg-3;WeeklySpecialBanner-3
+INSERT_UPDATE WeeklySpecialBanner;$contentCV[unique=true];uid[unique=true];svglogo(code,$contentCV);image(code,$contentCV);url          
+;;weeklySpecial1;WeeklySpecialSvg-1;WeeklySpecialBanner-1;"/armani"
+;;weeklySpecial2;WeeklySpecialSvg-2;WeeklySpecialBanner-2;"/michale-kros"
+;;weeklySpecial3;WeeklySpecialSvg-3;WeeklySpecialBanner-3;"/armani"
                                   
                                   
 INSERT_UPDATE WeeklySpecial;$contentCV[unique=true];uid[unique=true];title;weeklySpecialBanners(uid,$contentCV)        
@@ -215,10 +228,10 @@ INSERT_UPDATE PincodeServiceComponent;$contentCV[unique=true];uid[unique=true];n
 # Create Content Slots              
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
 ;;MiddleHeader;helpLink;true;LuxuryHelpLink               
-;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true;shopMenContent               
-;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true;shopWomenContent             
-;;LeftContentSlot;Middle Left Banner;true;HomeLeftContentSlot          
-;;RightContentSlot;Middle Right Banner;true;HomeRightContentSlot         
+;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true;Home-ShopMen               
+;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true;Home-ShopWomen             
+;;LeftContentSlot;Middle Left Banner;true;Home-LeftContent          
+;;RightContentSlot;Middle Right Banner;true;Home-RightContent         
 ;;HomePageCurosel;Home Page Curosel;true;HomePageWeaklySpecialBanner  
 ;;WhyShopOnLuxury;Why Shop On Luxury;true;ShopOnLuxury                 
 ;;TopHeaderSlot;Top header slot;true;LuxuryFreeShippingLink       

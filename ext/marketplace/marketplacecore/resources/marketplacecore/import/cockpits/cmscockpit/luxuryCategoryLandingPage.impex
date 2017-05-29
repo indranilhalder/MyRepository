@@ -83,7 +83,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Categorybanner4Slot;Category Banner 4;true
 
 
-INSERT_UPDATE ContentSlotName;name[uniquRightContentSlote=true];template(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;CategoryCurosel;;LuxuryCategoryCollectionComponent;wide
 ;CategoryHeroBanner;;;wide
 ;ProductCurosel;;;wide
