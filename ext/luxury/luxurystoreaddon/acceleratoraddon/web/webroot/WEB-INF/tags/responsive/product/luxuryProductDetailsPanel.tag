@@ -104,8 +104,8 @@ tr.d0 td {
 
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
-	<div class="product-info wrapper">
-		<div class="product-image-container">
+	<div class="product-info wrapper pdp-view clearfix">
+		<div class="product-image-container pdp-left colmn">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
@@ -159,7 +159,7 @@ tr.d0 td {
 			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 		</div>
 		
-		<div class="product-detail">
+		<div class="product-detail pdp-right">
 			
 			<c:set var="req" value="${pageContext.request}" />
   			<c:set var="baseURL" value="${fn:replace(req.requestURL, req.requestURI, '')}" />

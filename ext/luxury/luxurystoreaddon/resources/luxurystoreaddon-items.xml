@@ -257,5 +257,15 @@
 				</attribute>
 		</attributes>
 	</itemtype>	
+	
+	<itemtype code="LuxuryProductAddToCartComponent" autocreate="true"
+				generate="true" extends="SimpleCMSComponent"
+				jaloclass="com.tisl.lux.jalo.cms.components.LuxuryProductAddToCartComponent">
+	</itemtype>
+	
+	<itemtype code="LuxuryAddToCartAction" autocreate="true"
+				generate="true" extends="SimpleCMSAction"
+				jaloclass="com.tisl.lux.jalo.cms.components.LuxuryAddToCartAction">
+	</itemtype>
 	</itemtypes>
 </items>
