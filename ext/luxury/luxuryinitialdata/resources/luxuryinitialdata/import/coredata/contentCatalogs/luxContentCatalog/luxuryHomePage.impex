@@ -131,8 +131,8 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url
 ;;Home-ShopMen;Shop Men;shopMen;"<div class='banner-content'><h2>shop men</h2></div>";"/menlanding";
 ;;Home-ShopWomen;Shop Men;shopWomen;"<div class='banner-content'><h2>shop women</h2></div>";"/womenlanding"
-;;Home-LeftContent; Home Left Content;LeftContent;"<div class='seastion-content'><h2>Get<br> the app</h2><p>Put 1.500+ brands in your pocket. Shop anywhere, Anytime</p><a href=''#''>iOS</a></div>";"/shoes";
-;;Home-RightContent; Home Right Content;RightContent;"<div class='seastion-content text-left'><h2>Give 20,000<br>Give 20,000</h2><p>Refer your friends to Luxury and We'll reward everyone involved.</p><a href='#'>iOS</a></div>";"/women"
+;;Home-LeftContent; Home Left Content;LeftContent;"<div class='seastion-content'><h2>Get<br> the app</h2><p>Put 1.500+ brands in your pocket. Shop anywhere, Anytime</p><a href='/shoes' class='link'>iOS</a></div>";"/shoes";
+;;Home-RightContent; Home Right Content;RightContent;"<div class='seastion-content text-left'><h2>Give 20,000<br>Give 20,000</h2><p>Refer your friends to Luxury and We'll reward everyone involved.</p><a href='/womens' class='link'>iOS</a></div>";"/women"
 
 
 
