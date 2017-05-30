@@ -282,6 +282,11 @@
 				jaloclass="com.tisl.lux.jalo.cms.components.LuxuryProductAddToCartComponent">
 	</itemtype>
 	
+	<itemtype code="LuxEnhancedSearchBoxComponent" autocreate="true"
+				generate="true" extends="SearchBoxComponent"
+				jaloclass="com.tisl.mpl.core.jalo.LuxEnhancedSearchBoxComponent">				
+				</itemtype>
+	
 	<itemtype code="LuxuryAddToCartAction" autocreate="true"
 				generate="true" extends="SimpleCMSAction"
 				jaloclass="com.tisl.lux.jalo.cms.components.LuxuryAddToCartAction">

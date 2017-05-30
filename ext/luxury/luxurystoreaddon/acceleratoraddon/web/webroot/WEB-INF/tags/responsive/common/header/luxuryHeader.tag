@@ -77,13 +77,13 @@
 					</sec:authorize>
 					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>
-					</cms:pageSlot></a><cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
-					<cms:component component="${SearchBox}" element="li"/></cms:pageSlot></li>
+					</cms:pageSlot></a></li>
 				</ul>
 			</div>
 			<div class="header-search toggle-skip" id="header-search">
 				<div class="header-search-inner">
-					<input type='text' placeholder='"Type or Talk"' class="search-input">
+				<cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
+					<cms:component component="${SearchBox}" element="div"/></cms:pageSlot>
 				</div>
 			</div>
 			<%-- <div class="header-right">
