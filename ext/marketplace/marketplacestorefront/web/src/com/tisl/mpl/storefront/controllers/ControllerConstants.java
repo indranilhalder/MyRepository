@@ -240,6 +240,7 @@ public interface ControllerConstants
 			{
 				String MiscRobotsPage = "pages/misc/miscRobotsPage";
 				String MiscSiteMapPage = "pages/misc/miscSiteMapPage";
+				String MiscIndividualSiteMapPage = "pages/misc/miscIndividualSiteMapPage";
 			}
 
 			interface Guest
@@ -393,7 +394,21 @@ public interface ControllerConstants
 				public static final String COUPONVALUE = "couponValue";
 				public static final String CHECK_REVERSE_PINCODE = "-checkReversePincode";
 				//Addition for Exchange Ends
+
+
+
+				public static final String USSID_CODE_PATH_NEW_PATTERN = "/**/p-{ussId:.*}";
+				public static final String USSID = "ussId";
 			}
+
+			interface NPS_Emailer
+			{
+				String NPSFeedback = "fragments/NPS_Emailer/npsFeedbackPage";
+				String SubmitSuccess = "fragments/NPS_Emailer/submitSuccess";
+				String NpsFeedbackExists = "fragments/NPS_Emailer/npsFeedbackExists";
+
+			}
+			
 		}
 	}
 

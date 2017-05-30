@@ -52,6 +52,7 @@
 	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
 		<property name="formattedValueNoDecimal" type="String"/>
 	</bean>
+
 	<!-- <bean class="com.tisl.mpl.data.SellerInfoDetailsData">
 		<property name="priceData" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 		<property name="sellerDetail" type="de.hybris.platform.commerceservices.model.SellerModel"/>
@@ -264,7 +265,7 @@
 		<property name="fulfillmentType" type="String"/>
 		<property name="deliveryMode" type="String"/>
 		<property name="quantity" type="Integer"/>
-		
+
 		<property name="transportMode" type="String"/>
 		
 		<!-- Added new ServiceableSlavesData   -->
@@ -486,6 +487,7 @@
 		<property name="freeCount" type="Integer"/>
 		<property name="qualifyingCount" type="Integer"/>
 		<property name="isCancellationMissed" type="boolean"/>
+		
 		<property name="eddDateBetWeen" type="String"/>
 		<!-- TPR-1083 Exchange Start -->
 		<property name="exchangeApplied" type="String" />
@@ -749,9 +751,26 @@
 			
 	</bean>
 	
+			<!-- TPR-1285 Start -->
+ 	<bean class="com.tisl.mpl.data.CustomPageData">
+ 		<property name ="url" type="String"/>
+ 		<property name ="changeFrequency" type = "String" />
+ 		<property name ="priority" type = "String" />
+  	</bean>
+  	
+  
+ 	
+ 	<bean class="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData">
+ 		<property name="changeFrequency" type="String" />
+ 		<property name="priority" type="String" />
+ 		<property name="lastMod" type="String" />
+ 	</bean>
+	<!-- TPR-1285 ends-->
+	
 	<bean class="com.tisl.mpl.data.CODSelfShipResponseData">
 	<property name="success" type="String"/>
 	</bean>
+
 	
 	<bean class="com.tisl.mpl.data.CRMTicketUpdateData">
 	<property name="ecomRequestId" type="String"/>
@@ -814,3 +833,4 @@
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
 </beans>
+

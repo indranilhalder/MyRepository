@@ -41,6 +41,8 @@
 	src="${commonResourcePath}/js/plugins/smk-accordion.js"></script>
 <script type="text/javascript"
 	src="${commonResourcePath}/js/plugins/jquery.elevatezoom.js"></script>
+	<script type="text/javascript"
+	src="${commonResourcePath}/js/plugins/jquery.visible.js"></script>
 <%-- Custom ACC JS --%>
 
 <%-- <script type="text/javascript"

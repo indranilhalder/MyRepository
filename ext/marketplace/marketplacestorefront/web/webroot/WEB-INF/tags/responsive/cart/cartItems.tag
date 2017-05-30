@@ -42,7 +42,7 @@ tr.d0 td {
 
 
 <ul class="product-block">
-		<span id="removeFromCart_Cart" style="display:none;color:#60A119; "><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
+		<span id="removeFromCart_Cart" style="display:none;color:#60A119;margin: 5px;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
    <li class="header">
    <ul>
    
@@ -1330,7 +1330,8 @@ tr.d0 td {
             </ycommerce:testId></span></li>
           </ul>
       <!--    As part of improvement TPR-1468 -->
-         <div class="wishlist-banner" id="wishlistBanner" style="display:none">
+       <!-- commented as part of TISPRD-9245, TPR-3691 -->
+        <div class="wishlist-banner" id="wishlistBanner" style="display:none">
 		<h2>
 			<spring:theme code="Treat Yourself" />
 			<span><spring:theme code="mpl.gift.Yourself" /></span>
@@ -1339,7 +1340,8 @@ tr.d0 td {
 	<ul class="product-block wishlist" id="giftYourselfProducts">
 		
 	</ul>
-         
+          
+           <!-- commented as part of TISPRD-9245, TPR-3691 -->
          
 <storepickup:pickupStorePopup />
 

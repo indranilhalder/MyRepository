@@ -23,6 +23,9 @@ import de.hybris.platform.returns.model.ReturnOrderModel;
 
 import java.util.Date;
 
+import com.tisl.mpl.core.model.FreebieDetailModel;
+import com.tisl.mpl.core.model.ProductFreebieDetailModel;
+
 
 /**
  * Global class for all Marketplacecommerceservices constants. You can add global constants for your extension into this
@@ -107,7 +110,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PRODUCT_PRICE_COLUMN = "price".intern();
 	public static final String PRESENT_CATEGORY = "Present Category :".intern();
 
-	public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
+	public static final String PROMO_ERROR_MESSAGE = "Cannot exceed 25 characters.".intern();
+	//public static final String PROMO_ERROR_MESSAGE = "Title cannot exceed 25 characters.".intern();
+
+
+
 
 
 	//For Bulk Orders Return Initiation
@@ -977,8 +985,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9300 = "B9300";
 	public static final String B9301 = "B9301";
 
+	public static final String B9161 = "B9161";
+
+
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
+
 
 
 	//Search error codes ends
@@ -1500,6 +1512,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String HTTP = "http:".intern();
 	public static final String HTTPS = "https:".intern();
 	public static final String STAGED = "Staged".intern();
+	//TISSQAUAT-673 starts
+	public static final String ONLINE = "Online".intern();
+	//TISSQAUAT-673 ends
 
 
 
@@ -1856,6 +1871,26 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String LUXURY_CARTICON = "luxuryCartIcon";
 
+
+	//TPR-1285
+	//	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE NOT EXISTS ({{ SELECT * FROM {CategoryCategoryRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MPH%'"
+	//			.intern();
+
+	public static final String L4CATEGORYQUERY = "SELECT distinct {cat.pk} FROM {Category AS cat},{CatalogVersion AS cv} WHERE  EXISTS ({{ SELECT * FROM {CategoryProductRelation} WHERE {source}={cat:pk} }} ) and {cat.code} like 'MSH%'"
+			.intern();
+	public static final String SITEMAP_FILE_LOCATION_CUSTOM = "mpl.sitemap.customFileLocation".intern();
+	public static final String SITEMAP_FILE_LOCATION_PRODUCT = "mpl.sitemap.productFileLocation".intern();
+
+	//update the message for Freebie product TPR-1754
+	//	public static final String PRODUCTFREEBIEDETMSGQUERY = "SELECT {prodOffrDet.ussId},{offerDet.freebieMsg},{prodOffrDet.startDate},{prodOffrDet.endDate}  FROM {FreebieDetail as offerDet}, {ProductFreebieDetail as  prodOffrDet} WHERE {prodOffrDet.ussId}= ?ussId AND {prodOffrDet.offer} = {offerDet.pk} AND {prodOffrDet.startDate} <=sysdate AND {prodOffrDet.endDate} >=sysdate"
+	//			.intern();
+	public static final String PRODUCTFREEBEEDETMSGQUERY = "select {prodOffrDet.pk},{offerDet.pk} from {"
+			+ ProductFreebieDetailModel._TYPECODE + " as prodOffrDet JOIN " + FreebieDetailModel._TYPECODE
+			+ " as offerDet ON {prodOffrDet.offer} = {offerDet.pk} }"
+			+ " where {prodOffrDet.ussId}= ?ussId AND sysdate between {prodOffrDet.startDate} AND {prodOffrDet.endDate}".intern();
+	public static final String FREEBIEMSG = "freebieMsg".intern();
+	public static final String FREEBIEUSSID = "ussId".intern();
+
 	//Luxury Changes
 	public static final String MARKETPLACE = "marketplace";
 	public static final String LUXURY = "luxury";
@@ -1903,8 +1938,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
 
+
+
 	public final static String RETURN_ENABLE = "order.return.enabled".intern();
 	public final static String CANCEL_ENABLE = "order.cancel.enabled".intern();
+	public static final String PRODUCT_IMAGE = "product";
 
 	public static final String TICKETTYPECODE = "R";
 	public static final String REFUNDTYPE = "S";
@@ -1934,6 +1972,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//Query for fetching invalidation of a particular order-voucher-user
 	public static final String VOUCHERINVALIDATIONQUERY = "select {pk} from {voucherinvalidation} where {order}=?order and {user}=?user and {voucher}=?voucher ";
+
 	public static final String OFD = "OUT FOR DELIVERY";
 	public static final String ADDRESS_ISSUE = "Address Issue";
 	public static final String MIS_ROUTE = "Misrouted";
@@ -1951,6 +1990,31 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SHIPMENT_CHARGE_AMOUNT = "return.shipmentcharge";
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
-
 	public static final String ADDRESS_NOT_CHANGED = "ADDRESS_NOT_CHANGED";
+	public static final String PROMO = "promo";
+	public static final String QUERYSOURCE = "source";
+	public static final String QUERYTARGET = "target";
+	public static final String QUERYPRODUCT = "} in (?product) }} ";
+	public static final String QUERYUNION = " UNION ";
+	public static final String QUERYSELECT = "{{ SELECT {cat2prod:";
+	public static final String QUERYAS = " AS cat2prod} ";
+	public static final String QUERYWHERECAT = " WHERE {cat2prod:";
+	public static final String QUERYPK = "} as pk ";
+	public static final String PDISCOUNT = " *** percentage discount:";
+	public static final String SPECIALPRICEPROMOTION = "******** Special price check disabling promotion, productlist impacted:";
+	public static final String SPECIALPRICEPROMOTIONERROR = "******** Special price check disabling promotion, productlist error:";
+	public static final String PROMOTIONCODE = "PROMOTION CODE:";
+	public static final String COMPONENTMESSAGE = "Component visiblity set to false";
+	public static final String SELLERIDSEARCH = "sellerId:";
+	public static final String SELLERIDPARAM = "sellerId";
+	public static final String HOMEPAGELOGINFO = "Component visiblity set to false";
+	public static final String QUERYWHEREPROMO = " where {b.promoCode}=?promoCode ";
+	public static final String QUERYERROR = "error in search query";
+	public static final String QUANTITYCOUNTEXCEPTIONLOG = "exception getching the quantity count details aginst product/ussid";
+	public static final String EXCEPTIONCAUSELOG = " Exception cause :";
+	public static final String CARTNOTFOUNDEXCEPTION = "Cart not found.";
+	public static final String PROMOTIONDEBUGLOG = "Fetching Promotion Details";
+	public static final String QUERYJOIN = "JOIN ";
+	public static final String USERPARAM = "user";
+	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 }

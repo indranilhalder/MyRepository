@@ -28,6 +28,7 @@ import com.tisl.mpl.wsdto.ReturnPincodeDTO;
 import com.tisl.mpl.wsdto.ReturnRequestDTO;
 
 
+
 /**
  * @author TCS
  *
@@ -80,19 +81,21 @@ public interface CancelReturnFacade
 	 * @param ussid
 	 * @param customerData
 	 * @param subOrderModel
-
+	 * 
 	 * @param returnAddress
 	 * @param returnInfoData
 	 * @return CRMTicketStatus
 	 */
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress,ReturnInfoData returnInfoData);
+			final CustomerData customerData, final OrderModel subOrderModel, ReturnItemAddressData returnAddress,
+			ReturnInfoData returnInfoData);
 
 
 	/**
 	 * @param order
 	 * @param orderLineId
+	 * @return
 	 * @throws Exception
 	 */
 	public List<OrderEntryData> associatedEntriesData(OrderModel order, String orderLineId) throws Exception;
@@ -113,26 +116,26 @@ public interface CancelReturnFacade
 	 * @param salesApplication
 	 * @return Return Item Status
 	 */
-	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, ReturnInfoData returnData,CustomerData customerData,
-			SalesApplication salesApplication, ReturnItemAddressData returnAddress);
+	public boolean implementReturnItem(OrderData subOrderDetails, OrderEntryData subOrderEntry, ReturnInfoData returnData,
+			CustomerData customerData, SalesApplication salesApplication, ReturnItemAddressData returnAddress);
 
 
 	/**
-	 * 
+	 *
 	 * @param returnRequestData
 	 * @return RTSAndRSSReturnInfoRequestData
 	 */
 	public RTSAndRSSReturnInfoResponseData retrunInfoCallToOMS(final RTSAndRSSReturnInfoRequestData returnRequestData);
 
 	/**
-	 * 
+	 *
 	 * @param codSelfShipData
 	 * @return RTSAndRSSReturnInfoRequestData
 	 */
 	public CODSelfShipResponseData codPaymentInfoToFICO(final CODSelfShipData codSelfShipData);
 
 	/**
-	 * 
+	 *
 	 * @param updateTicketData
 	 * @return CRMTicketUpdateResponseData
 	 */
@@ -148,7 +151,7 @@ public interface CancelReturnFacade
 
 
 	/**
-	 * 
+	 *
 	 * @param ussid
 	 * @return List<String>
 	 */
@@ -171,6 +174,7 @@ public interface CancelReturnFacade
 
 
 	public List<ReturnRequestModel> getListOfReturnRequest(String orderId);
+
 
 	/**
 	 * @author Techouts
@@ -197,6 +201,7 @@ public interface CancelReturnFacade
 	 * @param transId
 	 * @return
 	 */
+
 	List<ReturnLogisticsResponseData> checkReturnLogistics(OrderData orderDetails, String pincode, String transId);
 
 
@@ -223,7 +228,7 @@ public interface CancelReturnFacade
 	public List<OrderLineData> returnInitiationForRTS(List<OrderLineData> orerLines);
 
 	public void saveRTSAndRSSFInfoflag(String transactionId);
-	
+
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByDates(Date fromDate, Date toDate);
 
 	public List<MplReturnPickUpAddressInfoModel> getPickUpReturnReportByParams(String orderID, String customerId, String pincode);
@@ -238,8 +243,9 @@ public interface CancelReturnFacade
 	boolean orderCancellationFromBackoffice(String orderCode, String transactionId) throws Exception;
 
 	public void returnRssCRMRequest(ReturnRequestDTO returnRequestDTO);
-	
+
 	public ReturnPincodeDTO checkReturnLogisticsForApp(final OrderData orderDetails, final String pincode,
 			final String returntransactionId);
- 
+
+
 }

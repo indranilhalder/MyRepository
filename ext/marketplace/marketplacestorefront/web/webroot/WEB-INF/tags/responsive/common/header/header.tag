@@ -10,6 +10,9 @@
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
 <!-- R2.3 for track order Start -->
 <%@ taglib prefix="trackOrder" tagdir="/WEB-INF/tags/responsive/common/header"%> 
 <!-- R2.3 for track order END -->
@@ -40,7 +43,8 @@
 	<!-- TPR-844 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
-<header>	
+
+<header class="marketplace-header">	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" name="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" name="ia_site_page_id" value="${cmsPage.uid}"> 
@@ -62,7 +66,24 @@
 	<input type="hidden" id="pageName" name="pageName" value="${cmsPage.name}">
 	<!-- Static resource host -->
 	<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
+	
 	<!-- End -->
+	<%--<!-- geolocation start-->
+	
+	<input type="hidden" id="latlng" value="">
+    <input type="hidden" id="location" value="">
+    
+    <!-- geolocation End--> --%>
+
+	
+	
+	
+    
+   
+	
+	
+	
+	
 	<div class="row header-row"></div>
 	<c:choose>
 		<c:when test="${empty showOnlySiteLogo }">
@@ -81,8 +102,6 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
-
-
 	<div class="content">
 	<!-- Luxury tab	 starts-->
 	<c:if test="${!hideSecureTransaction}">
@@ -194,6 +213,7 @@
 						<cms:pageSlot position="TopHeaderSlot" var="logo" limit="1">
 							<cms:component component="${logo}"/>
 						</cms:pageSlot>
+						<button class="searchButtonGlobal"></button>
 						<div class="mobile-bag bag">
 						<!-- TISPRD-32-fix -->
 							<!-- <a href="/store/mpl/en/cart">(<span class="responsive-bag-count"></span>)</a> -->
@@ -308,6 +328,7 @@
 	<a id="skiptonavigation"></a>
 	<nav:topNavigation />
 </header>
+
 
 <c:if test="${empty showOnlySiteLogo }">
 	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"

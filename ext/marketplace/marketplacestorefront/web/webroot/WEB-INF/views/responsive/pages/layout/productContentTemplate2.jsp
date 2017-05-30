@@ -13,7 +13,7 @@ $(document).ready(function(){
 </script>
 <div class="Manufacturer Temp03">
 	<div class="Padd">
-		<h2>From the Manufacturer</h2>
+		<h2>${cmsPage.title}</h2>
 		<ul>
 			<li>     
 		        <div class="media">

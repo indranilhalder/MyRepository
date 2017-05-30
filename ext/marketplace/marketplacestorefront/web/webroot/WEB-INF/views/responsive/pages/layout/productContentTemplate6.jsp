@@ -12,7 +12,7 @@ $(document).ready(function(){
 </script>
 <div class="Manufacturer temp-six">
   <div class="Padd">
-    <h2><span>From the Manufacturer</span></h2>
+    <h2><span>${cmsPage.title}</span></h2>
       <div class="first-content">
          <div class="media">
             <cms:pageSlot position="Section1B" var="feature">

@@ -130,6 +130,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private Map<KeywordRedirectMatchType, KeywordRedirectHandler> redirectHandlers;
 
+
+
+
 	private static final String Y = "Y";
 	private static final String N = "N";
 
@@ -143,6 +146,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+
+	//sonar fix
+	/*
+	 * @Resource(name = "mplProductWebService") private MplProductWebServiceImpl mplProductWebServiceImpl;
+	 */
 
 	/**
 	 * @throws CMSItemNotFoundException
@@ -352,7 +360,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						variantsString = productData.getCode() + "," + variantCodes;
 					}
-					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+
+					//CKD:TPR-250:Start
+					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
+					//CKD:TPR-250:End
 					if (MapUtils.isNotEmpty(buydata))
 					{
 						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
@@ -399,7 +411,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					LOG.debug("*************** Exception at PDP web service buybox fetching ******************* " + e);
 				}
 			}
-			if (null != buyBoxData && null != buyBoxData.getSellerAssociationstatus())
+			if (null != buyBoxData && null != buyBoxData.getSellerAssociationstatus()
+					&& buyBoxData.getSellerAssociationstatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
 			{
 				productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.Y);
 			}
@@ -709,6 +722,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
 			productDetailMobile.setSharedText(sharedText);
 			LOG.debug("******************** PDP mobile web service  fetching done *****************");
+
+			//TPR-978
+
 
 		}
 
@@ -2255,6 +2271,178 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
+
+	}
+
+
+	@Override
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl)
+	{
+		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
+		//final MplProductWebServiceImpl mplProductWebServiceImpl = new MplProductWebServiceImpl();
+		BuyBoxData buyBoxData = null;
+		ProductData productData = null;
+		ProductModel productModel = null;
+		final StringBuilder allVariants = new StringBuilder();
+		String variantCodes = null;
+		String variantsString = "";
+		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
+		try
+		{
+			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+			productModel = productService.getProductForCode(productCode);
+			if (null != productModel)
+			{
+				productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY));
+				//ProductOption.CATEGORIES,ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, 
+				//ProductOption.VARIANT_FULL, ProductOption.SELLER));
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
+			}
+			if (null != productData && StringUtils.isNotEmpty(productData.getCode()))
+			{
+				try
+				{
+					//get left over variants
+					if (productData.getAllVariantsId() != null && productData.getAllVariantsId().size() > 1)
+					{
+						productData.getAllVariantsId().remove(productData.getCode());
+						for (final String variants : productData.getAllVariantsId())
+						{
+							allVariants.append(variants).append(',');
+						}
+						final int length = allVariants.length();
+						variantCodes = allVariants.substring(0, length - 1);
+					}
+					if (StringUtils.isNotEmpty(variantCodes))
+					{
+						variantsString = productData.getCode() + "," + variantCodes;
+					}
+					//CKD:TPR-250:Start
+					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
+					Map<String, Object> buydata = null;
+					if (StringUtils.isNotEmpty(variantsString))
+					{
+						buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
+					}
+					else
+					{
+						buydata = buyBoxFacade.buyboxPricePDP(productData.getCode(), null);
+					}
+
+					//CKD:TPR-250:End
+					if (MapUtils.isNotEmpty(buydata))
+					{
+						final List<String> noStockPCodes = (List<String>) buydata.get("no_stock_p_codes");
+						for (final String pCode : noStockPCodes)
+						{
+							stockAvailibilty.put(pCode, Integer.valueOf(0));
+						}
+						buyBoxData = (BuyBoxData) buydata.get("pdp_buy_box");
+					}
+				}
+				catch (final Exception e)
+				{
+					LOG.error("*************** Exception at PDP web service buybox fetching ******************* " + e);
+				}
+			}
+
+			//TPR-1727 Removal of Out of stock
+			if (null != buyBoxData && null != buyBoxData.getAvailable() && buyBoxData.getAvailable().intValue() <= 0)
+			{
+				return null;
+			}
+			if (null != productData)
+			{
+				if (null != productData.getListingId())
+				{
+					productDetailMobile.setProductListingId(productData.getListingId());
+				}
+				if (null != productData.getProductTitle())
+				{
+					productDetailMobile.setProductName(productData.getProductTitle());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
+						&& null != buyBoxData.getSpecialPrice().getValue().toString()
+						&& null != buyBoxData.getSpecialPrice().getValue()
+						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				{
+					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue().toString()
+						&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				{
+					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getMrp() && null != buyBoxData.getMrp().getValue().toString())
+				{
+					productDetailMobile.setMrp(buyBoxData.getMrp().getFormattedValue());
+				}
+
+				if (null != buyBoxData && null != buyBoxData.getSellerArticleSKU())
+				{
+					productDetailMobile.setWinningUssID(buyBoxData.getSellerArticleSKU());
+					LOG.debug("*************** Mobile web service buyBox USSID ****************" + buyBoxData.getSellerArticleSKU());
+				}
+
+				if (null != productData.getUrl()
+						&& (!(productData.getUrl().toLowerCase().contains(HTTP) || productData.getUrl().toLowerCase().contains(HTTPS))))
+				{
+					sharedText += MarketplacecommerceservicesConstants.SPACE + baseUrl + productData.getUrl();
+				}
+				else if (null != productData.getUrl())
+				{
+					sharedText += productData.getUrl();
+				}
+			}
+			sharedText += MarketplacecommerceservicesConstants.SPACE
+					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);
+			productDetailMobile.setSharedText(sharedText);
+			LOG.debug("******************** PDP mobile web service  fetching done *****************");
+			//TPR-1727 PRODUCT IMAGES
+			if (CollectionUtils.isNotEmpty(productData.getImages()))
+			{
+				//Set product image(thumbnail) url
+				for (final ImageData img : productData.getImages())
+				{
+					if (null != img && null != img.getUrl() && StringUtils.isNotEmpty(img.getFormat())
+					//&& img.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL) Sonar fix
+							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
+					{
+						productDetailMobile.setImageUrl(img.getUrl());
+					}
+
+				}
+			}
+			else
+			{
+				LOG.debug("*************** productInfo images not found ********************");
+			}
+
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9037);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		return productDetailMobile;
 
 	}
 

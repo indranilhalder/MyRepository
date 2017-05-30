@@ -5,7 +5,6 @@ package com.tisl.mpl.interceptor;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
-import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.interceptor.InterceptorContext;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -78,7 +76,7 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 			//			}
 
 
-			if (validateForShippingPromo(abstractOrder.getAllPromotionResults()) && validateForParent(abstractOrder))
+			if (validateForShippingPromo(abstractOrder.getAllPromotionResults()))
 			{
 				double deliveryOffChrg = 0.0D;
 				double promoDiscount = 0.0D;
@@ -137,19 +135,19 @@ public class SaveDeliveryCostInterceptor implements ValidateInterceptor
 	 * @param abstractOrder
 	 * @return
 	 */
-	private boolean validateForParent(final AbstractOrderModel abstractOrder)
-	{
-		boolean flag = false;
-		if (abstractOrder instanceof OrderModel)
-		{
-			final OrderModel order = (OrderModel) abstractOrder;
-			if (StringUtils.isNotEmpty(order.getType()) && order.getType().equals("Parent"))
-			{
-				flag = true;
-			}
-		}
-		return flag;
-	}
+	//	private boolean validateForParent(final AbstractOrderModel abstractOrder)
+	//	{
+	//		boolean flag = false;
+	//		if (abstractOrder instanceof OrderModel)
+	//		{
+	//			final OrderModel order = (OrderModel) abstractOrder;
+	//			if (StringUtils.isNotEmpty(order.getType()) && order.getType().equals("Parent"))
+	//			{
+	//				flag = true;
+	//			}
+	//		}
+	//		return flag;
+	//	}
 
 
 

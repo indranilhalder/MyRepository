@@ -80,9 +80,15 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		//product super category like electronics,clothing are being populated by interceptor.
 		productData.setRootCategory(productModel.getProductCategoryType());
 
-		final Collection<CategoryModel> categories = getCommerceProductService()
-				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+		final List<CategoryModel> resultList = new ArrayList<>();
+		// For TISSQAUAT-665
+		for (final CategoryModel categoryModel : productModel.getSupercategories())
+		{
+			resultList.add(categoryModel);
+		}
+		//final Collection<CategoryModel> categories = getCommerceProductService()
+		//	.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+		productData.setCategories(Converters.convertAll(resultList, getCategoryConverter()));
 		//TPR-1083 Changes Exchange Start
 		//Check if Exchange is Allowed from properties file
 		final List<String> defaultlist = new ArrayList();
@@ -96,7 +102,7 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		if (exchangeAllowed.booleanValue() && exchangeAllowedRootCategory.contains(productData.getRootCategory()))
 		{
 			CategoryModel l4category = null;
-			for (final CategoryModel cat : categories)
+			for (final CategoryModel cat : productModel.getSupercategories())
 			{ //Fetch Hierarchy Based on Local Properties
 				if (cat.getCode().startsWith(configurationService.getConfiguration().getString("mpl.exchange.hierarchy", "MPH")))
 				{
@@ -109,6 +115,7 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		}
 
 		//TPR-1083 Changes Exchange End
+
 
 
 	}

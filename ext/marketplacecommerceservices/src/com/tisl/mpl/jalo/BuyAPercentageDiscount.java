@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -55,6 +56,7 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	//	private double totalPricevalue;
 	private int noOfProducts = 0;
 	private boolean flagForCouldFireMessage = true;
+	private int stockCount = 0;
 
 
 
@@ -234,11 +236,51 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
 		final Long eligibleQuantity = getQuantity();
 		int totalCount = 0;
+		boolean isExhausted = false;
+
 		try
 		{
+
+			for (final AbstractOrderEntry entry : validProductUssidMap.values())
+			{
+				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+				//eligibleProductList.add(entry.getProduct());
+			}
+
+			//Added for TPR-4354
+			if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && null != eligibleQuantity
+					&& eligibleQuantity.intValue() > 0)
+			{
+				final int offerQuantity = (totalCount / eligibleQuantity.intValue());
+				final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerRedeemCount(restrictionList, this.getCode(),
+						order, eligibleQuantity.intValue());
+
+				isExhausted = data.isExhausted();
+				final int customerOfferCount = data.getActualCustomerCount();
+				final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+						* eligibleQuantity.intValue();
+
+				if (customerOfferCount > 0)
+				{
+					setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+				}
+				else
+				{
+					setStockCount(eligibleStockCount);
+				}
+				if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+				{
+					totalCount = (eligibleQuantity.intValue() * customerOfferCount);
+				}
+				else if (totalCount >= eligibleStockCount)
+				{
+					totalCount = eligibleStockCount;
+				}
+			}
+
 			//noOfProducts = populateTotalProductCount(validProductUssidMap);
 			if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext,
-					paramPromotionEvaluationContext, this, restrictionList)) // If exceeds set Category Amount and Restriction set Brand Value
+					paramPromotionEvaluationContext, this, restrictionList) && !isExhausted) // If exceeds set Category Amount and Restriction set Brand Value
 			{
 				boolean flagForDeliveryModeRestrEval = false;
 				boolean flagForPaymentModeRestrEval = false;
@@ -251,11 +293,6 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 
 				//getting eligible Product List
 				//final List<Product> eligibleProductList = new ArrayList<Product>();
-				for (final AbstractOrderEntry entry : validProductUssidMap.values())
-				{
-					totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-					//eligibleProductList.add(entry.getProduct());
-				}
 				noOfProducts = totalCount;
 				List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
 				final Map<String, Integer> tcMapForValidEntries = new ConcurrentHashMap<String, Integer>();
@@ -285,7 +322,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					final int totalFactorCount = totalCount / eligibleQuantity.intValue();
 
 					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
+							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList,
+							getCode());
 
 					//validProductFinalList.putAll(validProductList);
 					//validProductUssidFinalMap.putAll(validProductUssidMap);
@@ -418,7 +456,8 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 							+ ">" + eligibleQuantity.intValue() + Localization.getLocalizedString("promotion.freeGiftAction"));
 				}
 
-				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L) // For Localization: To check for Excluded Products
+				if (noOfProducts > 0 && remainingItemsFromTail != null && remainingItemsFromTail.size() > 0L
+						&& !getMplPromotionHelper().validateForStockRestriction(restrictionList)) // For Localization: To check for Excluded Products
 				{
 					final float certainty = (float) remainingItemsFromTail.size() / eligibleQuantity.intValue();
 
@@ -431,14 +470,35 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 					}
 
 				}
+				else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+				{
+					if (noOfProducts >= getStockCount())
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 1.00F);
+						promotionResults.add(result);
+					}
+					else if (noOfProducts < getStockCount() && (noOfProducts % eligibleQuantity.intValue() == 0))
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 1.00F);
+						promotionResults.add(result);
+					}
+					else if (noOfProducts < getStockCount() && !(noOfProducts % eligibleQuantity.intValue() == 0))
+					{
+						final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+								paramPromotionEvaluationContext.getOrder(), 0.00F);
+						promotionResults.add(result);
+					}
+				}
 			}
-			else if (noOfProducts > 0)
-			{
-				//certainty check
-				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
-						paramPromotionEvaluationContext.getOrder(), 0.00F);
-				promotionResults.add(result);
-			}
+			//			else if (noOfProducts > 0)
+			//			{
+			//				//certainty check
+			//				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+			//						paramPromotionEvaluationContext.getOrder(), 0.00F);
+			//				promotionResults.add(result);
+			//			}
 
 		}
 		catch (final JaloInvalidParameterException exception)
@@ -459,19 +519,16 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 	 * @param validProductUssidMap
 	 * @return totalCount
 	 */
-	//	private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap)
-	//	{
-	//		int totalCount = 0;
-	//		if (MapUtils.isNotEmpty(validProductUssidMap))
-	//		{
-	//			for (final AbstractOrderEntry entry : validProductUssidMap.values())
-	//			{
-	//				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-	//			}
-	//		}
-	//
-	//		return totalCount;
-	//	}
+
+	/* SONAR FIX */
+	/*
+	 * private int populateTotalProductCount(final Map<String, AbstractOrderEntry> validProductUssidMap) { int totalCount
+	 * = 0; if (MapUtils.isNotEmpty(validProductUssidMap)) { for (final AbstractOrderEntry entry :
+	 * validProductUssidMap.values()) { totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid
+	 * Products } }
+	 *
+	 * return totalCount; }
+	 */
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
@@ -740,5 +797,23 @@ public class BuyAPercentageDiscount extends GeneratedBuyAPercentageDiscount
 		this.flagForCouldFireMessage = flagForCouldFireMessage;
 	}
 
+
+	/**
+	 * @return the stockCount
+	 */
+	public int getStockCount()
+	{
+		return stockCount;
+	}
+
+
+	/**
+	 * @param stockCount
+	 *           the stockCount to set
+	 */
+	public void setStockCount(final int stockCount)
+	{
+		this.stockCount = stockCount;
+	}
 
 }

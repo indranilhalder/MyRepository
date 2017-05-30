@@ -1878,8 +1878,10 @@
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
+
 	
 	<!-- TPR-1282 -->
+
 	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
 	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
 		parent="defaultCmsCacheService">
@@ -1904,6 +1906,7 @@
 		 
 	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
 		</bean>
+		
 	<!-- TPR-3487 -->	
 	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
 
@@ -1970,8 +1973,90 @@
         </property>
     </bean>
 	<!-- Old Cron Job Deletion Logic ends: -->
+
+	<!-- TPR-1285 Start -->
+	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
+	<bean id="mplProductPageSiteMapGenerator"
+	    class="com.tisl.mpl.sitemap.generator.impl.MplProductPageSiteMapGenerator"
+	    parent="defaultProductPageSiteMapGenerator">
+	</bean>
+	
+	<alias name="mplCustomPageSiteMapGenerator" alias="mplCustomPageSiteMapGenerator"/>
+	<bean id="mplCustomPageSiteMapGenerator"
+		class="com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator"
+	    parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
+		<property name="siteMapPageEnum" value="CUSTOM"/>
+	    <property name="cmsPageService" ref="cmsPageService"/>
+	</bean> 
+	
+	
+	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
+	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCustomPageToSiteMapUrlDataPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<alias name="mplCustomPageToSiteMapUrlDataPopulator" alias="mplCustomPageToSiteMapUrlDataPopulator"/>
+	<bean id="mplCustomPageToSiteMapUrlDataPopulator"
+	      class="com.tisl.mpl.converter.populator.MplCustomPageToSiteMapUrlDataPopulator">
+	</bean>	
+	
+	<alias name="mplProductModelToSiteMapUrlDataPopulator" alias="productModelToSiteMapUrlDataPopulator"/>
+ 	<bean id="mplProductModelToSiteMapUrlDataPopulator"
+ 	      class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
+ 	      parent="defaultProductModelToSiteMapUrlDataPopulator">
+ 	</bean>
+ 	<!-- TPR-965 STARTS-->
+	 <bean id="stockPromoCheckService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl">
+	</bean>
+	 <bean id="stockPromoCheckDao"
+		class="com.tisl.mpl.promotion.dao.impl.ExtStockLevelPromotionCheckDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<!-- TPR-965 ENDS-->
+<!-- TPR-1285 End -->
+
+<!-- TPR-978 -->
+<bean id="aPlusContentPrepareInterceptor" class="com.tisl.mpl.interceptor.APlusContentPrepareInterceptor" autowire="byName"></bean>
+<bean id="AplusContentPrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="aPlusContentPrepareInterceptor"></property>
+<property name="typeCode" value="APlusContent"></property>
+</bean>
+
+<bean id="aPlusContentValidateInterceptor" class="com.tisl.mpl.interceptor.APlusContentValidateInterceptor" autowire="byName"></bean>
+<bean id="AplusContentValidateInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
+<property name="typeCode" value="APlusContent"></property>
+</bean>
+<!-- TPR-1984 START -->
+<bean id="npsFeedbackQuestionService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
+ 	</bean>
+ 	
+ <bean id="npsFeedbackQuestionDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.NPSFeedbackQuestionDaoImpl" />
+<!-- Key generator for NPS -->
+	<bean id="npsIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="npsId" />
+		<property name="digits" value="6" />
+		<property name="start" value="#{configurationService.configuration.getProperty('npsmailer.npsId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+<!-- TPR-1984 END -->
+
+
+
    <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
 <bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+
     <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
@@ -1989,7 +2074,12 @@
 				</bean>
 			</list>
 		</property>
-	</bean -->
+
+	</bean> -->
+	<!-- Old Cron Job Deletion Logic ends: -->
+
+
+
 	<!-- Node Warmer Changes: -->
 	
 	
@@ -2047,4 +2137,5 @@
 	
 	<!-- Addition for Exchange End 	-->
 </beans>
+
 

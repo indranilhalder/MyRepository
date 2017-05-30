@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 
 
@@ -62,5 +63,14 @@ public interface BuyBoxService
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
+	/**
+	 * @param productCode
+	 * @param pdpproduct
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws EtailBusinessExceptions
+	 */
+	//CKD:TPR-250
+	List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String sellerID) throws EtailNonBusinessExceptions;
 
 }
