@@ -57,6 +57,40 @@ public class MplOccasionDisplayNameProvider extends AbstractFacetValueDisplayNam
 				return "Wedding Wear";
 			}
 
+			//added for kidswear
+			if (facetValue.equalsIgnoreCase("occasionkidswearcasual"))
+			{
+				return "Casual";
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidswearparty"))
+			{
+				return "Party";
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidswearethnic"))
+			{
+				return "Ethnic";
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidswearwestern"))
+			{
+				return "Western";
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidswearsleepwear"))
+			{
+				return "Sleepwear";
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidswearsports"))
+			{
+				return "Sports";
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidswearactive"))
+			{
+				return "Active";
+
+			}
+			else if (facetValue.equalsIgnoreCase("occasionkidsweareverydaywear"))
+			{
+				return "Everyday Wear";
+			}
 			return facetValue;
 		}
 
