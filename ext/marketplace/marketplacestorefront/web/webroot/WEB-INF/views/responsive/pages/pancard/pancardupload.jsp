@@ -156,6 +156,7 @@ $(document).ready(function() {
 					<form:form method="POST" action="/pancard/pancardupload" enctype="multipart/form-data" id="uploadPanDetails" >
 						<input type="hidden" name="orderreferancenumber" value="${orderreferancenumber}" />
         				<input type="hidden" name="Customer_name" value="${customername}">
+        				 <input type="hidden" name="transactionid" value="${transactionid}">
 						<div class="panfield-wrapper clearfix">
 							<div class="pan-label">Order ID</div>
 							<div class="pan-label-value disable-color">${orderreferancenumber}</div>

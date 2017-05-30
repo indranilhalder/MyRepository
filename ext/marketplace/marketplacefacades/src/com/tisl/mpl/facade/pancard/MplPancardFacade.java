@@ -18,7 +18,7 @@ public interface MplPancardFacade
 
 	public PancardInformationModel getPanCardOredrId(String orderreferancenumber);
 
-	public void refreshPancardDetailsFacade(PancardInformationModel oModel, MultipartFile file);
+	public void refreshPancardDetailsFacade(PancardInformationModel oModel, MultipartFile file, String pancardnumber);
 
 	/**
 	 * @param orderreferancenumber
@@ -26,5 +26,12 @@ public interface MplPancardFacade
 	 * @param pancardnumber
 	 * @param file
 	 */
-	public void setPancardFileAndOrderId(String orderreferancenumber, String customername, String pancardnumber, MultipartFile file);
+	public void setPancardFileAndOrderId(String orderreferancenumber, String transactionid, String customername,
+			String pancardnumber, MultipartFile file);
+
+	/**
+	 * @param oModel
+	 * @return
+	 */
+	public String getCrmStatusForPancardDetailsFacade(PancardInformationModel oModel);
 }

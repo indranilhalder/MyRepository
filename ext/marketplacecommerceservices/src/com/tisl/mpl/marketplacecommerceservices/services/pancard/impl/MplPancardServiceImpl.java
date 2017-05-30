@@ -9,10 +9,14 @@ import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tisl.mpl.marketplacecommerceservices.daos.pancard.MplPancardDao;
@@ -27,9 +31,10 @@ import com.tisl.mpl.xml.pojo.CRMpancardResponse;
  */
 public class MplPancardServiceImpl implements MplPancardService
 {
-	public static final String PANCARD_PATH = "user.pancard.folder.location";
+	private static final Logger LOG = Logger.getLogger(MplPancardServiceImpl.class);
 
-	public static final String PANCARD_IMAGE_EXTENSION = "user.pancard.folder.extension";
+	public static final String PANCARD_PATH = "user.pancard.folder.location";
+	//public static final String PANCARD_IMAGE_EXTENSION = "user.pancard.folder.extension";
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
@@ -82,26 +87,27 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	//for creating ticket and saving it in the db i.e. first time entry
 	@Override
-	public void setPancardFileAndOrderIdservice(final String orderreferancenumber, final String customername,
-			final String pancardnumber, final MultipartFile file)
+	public void setPancardFileAndOrderIdservice(final String orderreferancenumber, final String transactionid,
+			final String customername, final String pancardnumber, final MultipartFile file)
 	{
 		// YTODO Auto-generated method stub
 		try
 		{
 			final String fileUploadDirectory = configurationService.getConfiguration().getString(PANCARD_PATH);
-			final String fileExtension = configurationService.getConfiguration().getString(PANCARD_IMAGE_EXTENSION);
+			//commenting as we will save the extension as it is
+			//final String fileExtension = configurationService.getConfiguration().getString(PANCARD_IMAGE_EXTENSION);
 
 			final String storageDirectory = fileUploadDirectory;
 			final String newFilenameBase = orderreferancenumber;
-
-			/*
-			 * final String fileExtension =
-			 * file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-			 */
+			final String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 
 			final String newFilename = newFilenameBase + fileExtension;
 
-			final String newpath = storageDirectory + "/" + newFilename;
+			final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+			final LocalDate localDate = LocalDate.now();
+
+			final String datepath = dtf.format(localDate);
+			final String newpath = storageDirectory + "/" + datepath + "/" + newFilename;
 			final File newFile = new File(newpath);
 			if (!newFile.exists())
 			{
@@ -110,55 +116,44 @@ public class MplPancardServiceImpl implements MplPancardService
 
 			file.transferTo(newFile);
 
+			LOG.debug("****pancard image path**" + newpath);
+
 			//final String newpath = storageDirectory + "/" + newFilename;
 			//System.out.println("*******************Pancard details save loaction::::" + newpath);
 
-
-			//I have to create a data class here  and  I have to call the method of MplPancardTicketCRMserviceImpl by passing that data class
-
-			/*
-			 * first save the model then create the ticket
-			 *
-			 * final PancardInformationModel consumed = modelService.create(PancardInformationModel.class);
-			 * consumed.setOrderId(orderreferancenumber); consumed.setPath(newpath); consumed.setTransactionId("");
-			 * consumed.setTicket(""); consumed.setStatus(""); consumed.setName(customername);
-			 * consumed.setPancardNumber(pancardnumber); modelService.save(consumed);
-			 */
-
-			//sending orderid and path for ticket creation
-			/* final CRMpancardResponse crmpancardResponse = */
-
-
-
 			//here we have to get the response and set the status and pan card number
-			mplPancardTicketCRMservice.createticketPancardModeltoDTO(orderreferancenumber, newpath, customername, pancardnumber);
+			final String ticket = mplPancardTicketCRMservice.createticketPancardModeltoDTO(orderreferancenumber, transactionid,
+					newpath, pancardnumber);
+			String response = null;
 
-
-			//saving to database table PancardInformation
+			if (StringUtils.isNotEmpty(ticket))
+			{
+				response = mplPancardTicketCRMservice.createCrmTicket(ticket);//For the first time we have to set the order status as In progress
+			}
 
 			final PancardInformationModel consumed = modelService.create(PancardInformationModel.class);
 			consumed.setOrderId(orderreferancenumber);
 			consumed.setPath(newpath);
-			consumed.setTransactionId("");
-			consumed.setTicket("");
-			consumed.setStatus("");
+			consumed.setTransactionId(transactionid);
 			consumed.setName(customername);
 			consumed.setPancardNumber(pancardnumber);
+
+			if (StringUtils.isNotEmpty(response))//For success submission we need to set the response as In progress for the first time(Hard coded )
+			{
+				consumed.setStatus("In progress");
+			}
+
 			modelService.save(consumed);
-
-			/*
-			 * after getting the status and ticket number from CRM
-			 * 
-			 * 
-			 * consumed.setTicket(value); consumed.setStatus(value); modelService.save(consumed);
-			 */
-
 		}
 		catch (final JAXBException ex)
 		{
 			ex.printStackTrace();
 		}
 		catch (final IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -177,33 +172,49 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	//for updating the pancard details
 	@Override
-	public void refreshPancardDetailsService(final PancardInformationModel oModel, final MultipartFile file)
+	public void refreshPancardDetailsService(final PancardInformationModel oModel, final MultipartFile file,
+			final String pancardnumber)
 	{
 
 
 		try
 		{
 			// YTODO Auto-generated method stub
-
-			//for sending ticket while refreshing  orderid, newpath, customername, pancardnumber
-			//at the time of updating we have to check whether we have to send the ticket again or not ....we have to add a checking here
-			final CRMpancardResponse crmpancardResponse = mplPancardTicketCRMservice.ticketPancardModeltoDTO(oModel);
-
-			oModel.setStatus(crmpancardResponse.getStatus());
-			oModel.setTicket(crmpancardResponse.getTicketNo());
-
-			//for updating  the model
-			modelService.save(oModel);
-
-			//for updating the image in the specific path
-			final String newpath = oModel.getPath();
-			final File newFile = new File(newpath);
+			final String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+			String updatedPath = null;
+			String previousExtension = null;
+			if (null != oModel && StringUtils.isNotEmpty(oModel.getPath()))
+			{
+				previousExtension = oModel.getPath().substring(oModel.getPath().lastIndexOf("."));
+				updatedPath = oModel.getPath().replace(previousExtension, fileExtension);
+			}
+			final File newFile = new File(updatedPath);
 			if (!newFile.exists())
 			{
 				newFile.mkdirs();
 			}
 
 			file.transferTo(newFile);
+
+			LOG.debug("****pancard image path update**" + updatedPath);
+
+			final String ticket = mplPancardTicketCRMservice.ticketPancardModeltoDTO(oModel, updatedPath, pancardnumber);
+			//final String ticket = mplPancardTicketCRMservice.createticketPancardModeltoDTO(oModel.getOrderId(),
+			//	oModel.getTransactionId(), newpath, pancardnumber);
+
+			String response = null;
+			oModel.setPath(updatedPath);
+			oModel.setPancardNumber(pancardnumber);
+			if (StringUtils.isNotEmpty(ticket))
+			{
+				response = mplPancardTicketCRMservice.createCrmTicket(ticket);
+			}
+			if (StringUtils.isNotEmpty(response) && StringUtils.isNotEmpty(oModel.getStatus()))
+			{
+				oModel.setStatus(oModel.getStatus());
+			}
+			modelService.save(oModel);
+
 		}
 		catch (final JAXBException ex)
 		{
@@ -214,6 +225,33 @@ public class MplPancardServiceImpl implements MplPancardService
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getCrmStatusForPancardDetailsFacade
+	 * (de.hybris.platform.core.model.PancardInformationModel)
+	 */
+	@Override
+	public String getCrmStatusForPancardDetailsService(final PancardInformationModel oModel)
+	{
+		// YTODO Auto-generated method stub
+		String crmStatus = null;
+		final CRMpancardResponse crmpancardResponse = mplPancardTicketCRMservice.getCrmStatusForPancardDetails(oModel);
+		if (crmpancardResponse != null && StringUtils.isNotEmpty(crmpancardResponse.getStatus()))
+		{
+			crmStatus = crmpancardResponse.getStatus();
+		}
+		if (StringUtils.isNotEmpty(crmStatus))
+		{
+			oModel.setStatus(crmStatus);
+			modelService.save(oModel);
+		}
+		return crmStatus;
 	}
 
 
