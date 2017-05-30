@@ -94,7 +94,29 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;sitemapTemplate;$jarResourceCms/structure-view/structure_sitemapPage.vm
 ;;appLandingPageTemplate;$jarResourceCms/structure-view/structure_sitemapPage.vm
 
+##### Templates for Luxury #######################
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true    
+;;LuxuryProductDetailsPageTemplate;Luxury Product Details Page Template;$luxuryStoreAddonPrefix/pages/product/luxuryProductLayoutPage;ProductPage            
 
+                           
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryHomePage.vm
+;;LuxuryProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_LuxuryProductDetailsPageTemplate.vm                                           
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;luxuryCategoryLandingPageTemplate;Luxury Category Landing Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryCategoryLandingPage;ContentPage;true
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;luxuryCategoryLandingPageTemplate;$jarResourceCms/structure-view/structure_luxuryCategory.vm
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;active[default=true]
+;;LuxSearchResultsPageTemplate;Lux Search Results Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchResultsPage
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;LuxSearchResultsPageTemplate;$jarResourceCms/structure-view/structure_searchResultsGridPageLuxTemplate.vm                         
+
+##### End Templates for Luxury #######################
 
 # Coupons Detail Page Template
 # Template used for Order Detail page
@@ -127,12 +149,6 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 ;TopHeaderSlot;;;wide
 ;BottomHeaderSlot;;;wide
-
-
-
-
-
-
 
 # Profile Page Template
 # Template used for Profile page
@@ -712,7 +728,148 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SearchBox-AccountInviteFriendsPage;SearchBox;;SearchBoxSlot;true
 ;;TopHeaderSlot-AccountInviteFriendsPage;TopHeaderSlot;;TopHeaderSlot;true
 ;;BottomHeaderSlot-AccountInviteFriendsPage;BottomHeaderSlot;;BottomHeaderSlot;true
-####################  END ContentSlotsForTemplates	####################
+
+########## Luxury ContentSlotsForTemplates ##################
+                                             
+                          
+ #Slot for Offers Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;minicart             
+;NavigationBar;;;navigation         
+;TopBannerMen;;;wide               
+;TopBannerWomen;;;wide               
+;LeftContentSlot;;RotatingImagesComponent;     
+;RightContentSlot;;MplOfferImageCarouselComponent;     
+;HomePageCurosel;;;wide               
+;WhyShopOnLuxury;;;wide               
+;Footer;;;wide          
+
+########### Content Sloat Name for Luxury ##########################
+# Product Details Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;minicart                
+;NavigationBar;;;navigation 
+;Section1;;;wide
+;Section2;;;wide
+;Section3;;;wide
+;Section4;;;wide
+;VariantSelector;;ProductVariantSelectorComponent;narrow
+;AddToCart;;LuxuryProductAddToCartComponent;narrow
+;CrossSelling;;ProductReferencesComponent;narrow
+;UpSelling;;ProductReferencesComponent;narrow
+;Footer;;;footer
+;Tabs;;CMSTabParagraphContainer
+;BottomHeaderSlot;;BreadcrumbComponent
+;PlaceholderContentSlot;;;
+#pdp changes for configuring number of images to be shown in pdp
+;ConfigureImagesCountSlot;;ConfigureImagesCountComponent
+#pdp changes for configuring number of products to be shown in pdp
+;ConfigureProductsCountSlot;;ConfigureProductsCountComponent
+#pin code
+;PinCodeServiceSlot;;PincodeServiceComponent   
+                   
+                          
+                              
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox;SearchBox;;SearchBoxSlot;true          
+;;MiniCart;MiniCart;;MiniCartSlot;true  
+;;WishList;WishList;;WishListSlot;true     
+;;NavigationBar;NavigationBar;;NavigationBarSlot;true          
+;;HomeTopBannerMen;TopBannerMen;;HomeTopHeroBannerLeft;true          
+;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true                  
+;;LeftContentSlot;LeftContentSlot;;LeftContentSlot;true          
+;;RightContentSlot;RightContentSlot;;RightContentSlot;true          
+;;HomePageCurosel;HomePageCurosel;;HomePageCurosel;true          
+;;WhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true          
+;;Footer;Footer;;FooterSlot;true      
+
+############################### Luxury Content slot for page template
+
+# Bind Content Slots to Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-LuxuryProductDetails;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-LuxuryProductDetails;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo-LuxuryProductDetails;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-LuxuryProductDetails;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-LuxuryProductDetails;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true          
+;;NavigationBar-LuxuryProductDetails;NavigationBar;;NavigationBarSlot;true 
+;;Tabs-LuxuryProductDetails;Tabs;;TabsSlot;true
+;;Footer-LuxuryProductDetails;Footer;;FooterSlot;true
+;;VariantSelector-LuxuryProductDetails;VariantSelector;;VariantSelectorSlot;true
+;;LuxuryAddToCart-LuxuryProductDetails;LuxuryAddToCart;;AddToCartSlot;true
+;;UpSelling-LuxuryProductDetails;UpSelling;;UpSellingSlot;true
+;;CrossSelling-LuxuryProductDetails;CrossSelling;;CrossSellingSlot;true
+;;BottomHeaderSlot-LuxuryProductDetails;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-LuxuryProductDetails;PlaceholderContentSlot;;PlaceholderContentSlot;true
+#pdp changes for configuring number of images to be shown in pdp
+;;ConfigureImagesCount-LuxuryProductDetails;ConfigureImagesCount;;ConfigureImagesCountSlot;true
+#pdp changes for configuring number of products to be shown in pdp
+;;ConfigureProductsCount-LuxuryProductDetails;ConfigureProductsCount;;ConfigureProductsCountSlot;true
+#pincode
+;;PinCodeService-LuxuryProductDetails;PinCodeService;;PinCodeServiceSlot;true
+    
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;CategoryCurosel;;;wide
+;CategoryHeroBanner;;;wide
+;ProductCurosel;;;wide
+;Categorybanner1Slot;;;wide
+;Categorybanner2Slot;;;wide
+;Categorybanner3Slot;;;wide
+;Categorybanner4Slot;;;wide
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;CategoryPageTopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true
+;;MiddleCategoryPageHeaderHelpLink;MiddleHeader;;MiddleHeader;true
+;;CategoryPageSiteLogo;SiteLogo;;SiteLogoSlot;true
+;;CategoryPageHeaderLinks;HeaderLinks;;HeaderLinksSlot;true
+;;CategoryPageSearchBox;SearchBox;;SearchBoxSlot;true
+;;CategoryPageMiniCart;MiniCart;;MiniCartSlot;true
+;;CategoryPageNavigationBar;NavigationBar;;NavigationBarSlot;true
+;;CategoryPageWhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;CategoryPageFooter;Footer;;FooterSlot;true
+;;CategoryHeroBanner;CategoryHeroBanner;;CategoryHeroBanner;true
+;;Category-Page-Curosel;CategoryCurosel;;CategoryCurosel;true
+	
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryCategoryPage'];contentSlot(uid,$contentCV)[unique=true];
+;;CategoryCurosel;CategoryCurosel;;CategoryCurosel
+#;;Categorybanner2;Categorybanner2;;Categorybanner2Slot
+#;;Categorybanner3;Categorybanner3;;Categorybanner3Slot
+#;;Categorybanner4;Categorybanner4;;Categorybanner4Slot
+;;ProductCurosel;ProductCurosel;;ProductCurosel
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;LuxPLPBanner-SearchResultsGrid;LuxPLPBannerSlot;;LuxPLPBannerSlot;true          
+;;LuxProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true          
+;;LuxSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true          
+;;LuxTopHeaderSlot-SearchResultsGrid;TopHeaderSlot;;TopHeaderSlot;true          
+;;LuxMiddleHeaderHelpLink-SearchResultsGrid;MiddleHeader;;MiddleHeader;true          
+;;LuxSiteLogo-SearchResultsGrid;SiteLogo;;SiteLogoSlot;true          
+;;LuxHeaderLinks-SearchResultsGrid;HeaderLinks;;HeaderLinksSlot;true          
+;;LuxSearchBox-SearchResultsGrid;SearchBox;;SearchBoxSlot;true          
+;;LuxMiniCart-SearchResultsGrid;MiniCart;;MiniCartSlot;true          
+;;LuxNavigationBar-SearchResultsGrid;NavigationBar;;NavigationBarSlot;true          
+;;LuxWhyShopOnLuxury-SearchResultsGrid;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;LuxFooter-SearchResultsGrid;Footer;;FooterSlot;true          
+;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true          
+
+
+####################  END Luxury ContentSlotsForTemplates	####################
 ####################  END ContentSlotsForTemplates	####################
 
 ## Update static pages with new temporary templates
@@ -743,6 +900,23 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;inviteFriends;Return Invite Friends Page;AccountInviteFriendsPageTemplate;inviteFriends
 ;;coupons;Coupon Details Page;AccountCouponDetailsPageTemplate;coupons
 
+##### Luxury Content Pages #############
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;homepage;Homepage;luxuryHomePageTemplate;homepage
+
+INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;luxuryCategoryPage;Luxury Category Landing Page;luxuryCategoryLandingPageTemplate;luxuryCategoryLandingPage
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;luxurySearchResultsPage
+
+
+##### End Luxury Content Pages #############
+
 ################################################################################################################################################
 ########## END OF RESPONSIVE TEMPORARY STATIC TEMPLATE DEFINITIONS 															####################
 ################################################################################################################################################
+
