@@ -12,31 +12,27 @@
 
 <!-- <h3 class="company author"></h3> -->
 <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
-	<p class="old" id="mrpPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
-	</p>
-	<p class="sale" id="mopPriceId" style="display:none">
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
-	</p>
-	<p class="sale" id="spPriceId" style="display:none">
-		<!-- For TPR-4358 Start -->
-		<span itemprop="price">${product_list_price}</span>
-		<span itemprop="priceCurrency">${currentCurrency.isocode}</span>
-		<c:choose>
- 		<c:when test="${product_availability == 'Available online'}">
- 			<meta itemprop="availability" content="http://schema.org/InStock"/>${product_availability}</meta>
- 		</c:when>
- 		<c:otherwise>
- 			<meta itemprop="availability" content="http://schema.org/OutOfStock"/>${product_availability}</meta>
- 		</c:otherwise>
- 		</c:choose>
- 	<!-- For TPR-4358 End -->
-		<%-- <spring:theme code="product.currency"></spring:theme> --%>
-	</p>
-	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
-		  <span></span>
-	</p>	
-	<br>
+	<p class="price-feature">
+	   <span class="strike-price" id="mrpPriceId" style="display:none"></span>
+	   <span class="our-price"  id="mopPriceId" style="display:none"></span>
+	   <span class="saving-price text-danger" sale" id="spPriceId" style="display:none"><span itemprop="price">${product_list_price}</span>
+	  <span itemprop="priceCurrency">${currentCurrency.isocode}</span>
+	  <c:choose>
+	   <c:when test="${product_availability == 'Available online'}">
+	    <meta itemprop="availability" content="http://schema.org/InStock"/>${product_availability}</meta>
+	   </c:when>
+	   <c:otherwise>
+	    <meta itemprop="availability" content="http://schema.org/OutOfStock"/>${product_availability}</meta>
+	   </c:otherwise>
+	   </c:choose></span>
+	  
+	 
+	 <span class="savings pdp-savings saving-price text-danger" id="savingsOnProductId" style="display:none">               
+	    <span></span>
+	 </span>
+	 </p> 
+	  
+	 <br>
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		
 	<input type="hidden" id="currency-for-mad" value="${product.productMRP.currencyIso}"/>

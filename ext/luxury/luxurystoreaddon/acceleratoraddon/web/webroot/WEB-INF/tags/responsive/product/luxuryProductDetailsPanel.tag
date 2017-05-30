@@ -108,25 +108,19 @@ tr.d0 td {
 		<div class="product-image-container pdp-left colmn">
 		<div class="clearfix">
 			<div class="pdp-img-nav">
-				<div><img src="../images/temp-pdp-02.jpg"></div>
-				<div><img src="../images/temp-pdp-03.jpg"></div>
-				<div><img src="../images/temp-pdp-02.jpg"></div>
-				<div><img src="../images/temp-pdp-03.jpg"></div>
-				<div><img src="../images/temp-pdp-02.jpg"></div>
-				<div><img src="../images/temp-pdp-03.jpg"></div>
-				<div><img src="../images/temp-pdp-02.jpg"></div>
-				<div><img src="../images/temp-pdp-03.jpg"></div>
+				<c:forEach items="${galleryImages}" var="container">
+					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+						<div><img src="//localhost:9001${container.thumbnail.url}"></div>
+					</c:if>
+				</c:forEach>
 			</div>
 			<div class="pdp-img">
 				<div class="pdp-img-slider circle-pager">
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
-					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<c:forEach items="${galleryImages}" var="container">
+						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+							<div><img src="//localhost:9001${container.superZoom.url}"></div>
+						</c:if>
+					</c:forEach>
 				</div>
 				<div class="offer-icon"><span class="new"></span></div>
 			</div>
