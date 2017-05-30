@@ -20,12 +20,14 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -42,6 +44,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.StateData;
+import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 /**
@@ -55,12 +58,15 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String ORDER_CODE = "orderReferenceNumber";
 	private static final String CHILDORDERS = "childOrders";
 	private static final String CHILDENTRIES = "childEntries";
+	private static final String SUBTOTAL = "subTotal";
 	private static final String TOTALPRICE = "totalPrice";
 	private static final String SHIPPINGCHARGE = "shippingCharge";
+	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
 	private static final String DELIVERYADDRESS = "deliveryAddress";
 	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
+
 
 
 
@@ -72,9 +78,13 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
+	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
+	@Autowired
+	private ShortUrlService shortUrlService;
 
 
 	@Override
@@ -82,36 +92,72 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	{
 		super.init(orderProcessModel, emailPageModel);
 		//final OrderData orderData = getOrderConverter().convert(orderProcessModel.getOrder());
+		//		final double orderSubTotalPrice = orderProcessModel.getOrder().getSubtotal() == null ? 0D : orderProcessModel.getOrder()
+		//				.getSubtotal().doubleValue();
+
 		final double orderTotalPrice = orderProcessModel.getOrder().getTotalPrice() == null ? 0D : orderProcessModel.getOrder()
 				.getTotalPrice().doubleValue();
 		final double convenienceCharges = orderProcessModel.getOrder().getConvenienceCharges() == null ? 0D : orderProcessModel
 				.getOrder().getConvenienceCharges().doubleValue();
 		//final List<AbstractOrderEntryModel> childEntries = orderProcessModel.getOrder().getEntries();
 		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
+		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
+		double subTotal = 0.0d;
+		double shippingCharge = 0.0d;
+		//Changes for discount
+		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
+		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		for (final OrderModel childOrder : childOrders)
+		{
+			for (final AbstractOrderEntryModel childOrderEntries : childOrder.getEntries())
+			{
+				subTotal += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+				shippingCharge += childOrderEntries.getCurrDelCharge().doubleValue();
+			}
+
+		}
 
 
+
+		//final DecimalFormat myFormatter = new DecimalFormat("#,###");
+		//final String subTotalNew = myFormatter.format(subTotal);
+		//final String totalPriceNew = myFormatter.format(totalPrice);
+		//final String subTotalNew = NumberFormat.getIntegerInstance().format(subTotal);
 
 		LOG.info(" *********************- totalPrice:" + totalPrice + " orderTotalPrice:" + orderTotalPrice
 				+ " convenienceCharges:" + convenienceCharges);
 
 
-		final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
+		//	final Double shippingCharge = orderProcessModel.getOrder().getDeliveryCost();
 
 
 		final String orderCode = orderProcessModel.getOrder().getCode();
 
-		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		//final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
+				+ orderCode;
+		/* Added in R2.3 for shortUrl START */
+		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
+
 
 		//final paymentMode = transactionEntry.getEntries().get(0).getPaymentMode().getMode();
 
-		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
-				+ orderProcessModel.getOrder().getCode();
-		put(TRACK_ORDER_URL, trackOrderUrl);
+		/*
+		 * final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+		 * MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL) + orderProcessModel.getOrder().getCode();
+		 * put(TRACK_ORDER_URL, trackOrderUrl);
+		 */
 		put(ORDER_CODE, orderCode);
 		put(CHILDORDERS, childOrders);
+		put(SUBTOTAL, Double.valueOf(subTotal));
+		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
-		put(SHIPPINGCHARGE, shippingCharge);
+		//put(TOTALPRICE, totalPriceNew);
+		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
+		put(CONVENIENCECHARGE, convenienceChargesVal);
 		//Setting first name and last name to NAMEOFPERSON
 		final StringBuilder name = new StringBuilder(150);
 		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
@@ -125,6 +171,30 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			LOG.debug("total price" + entryModel.getTotalPrice());
 			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
+
+			final String productImageUrl;
+
+			final ProductModel productModel = entryModel.getProduct();
+			if (null != productModel.getPicture())
+			{
+				productImageUrl = productModel.getPicture().getURL();
+			}
+			else
+			{
+				productImageUrl = "";
+			}
+
+
+			put(PRODUCT_IMAGE_URL, productImageUrl);
+
+
+			final String orderPlaceDate;
+
+			SimpleDateFormat formatter;
+			formatter = new SimpleDateFormat("MMM d, yyyy");
+			orderPlaceDate = formatter.format(entryModel.getCreationtime());
+
+			put(ORDERPLACEDATE, orderPlaceDate);
 
 			if (entryModel.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
 			{
@@ -169,25 +239,20 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			deliveryAddr.append(deliveryAddress.getStreetname());
 			if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
 			{
-				//TISUATSE-81 starts
-				deliveryAddr.append(deliveryAddress.getStreetnumber());
+				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getStreetnumber());
 			}
 			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
 			{
-				deliveryAddr.append(deliveryAddress.getAddressLine3());
+				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getAddressLine3());
 			}
-			//TISUATSE-81 ends
 			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
 			{
-				deliveryAddr.append(COMMA).append(deliveryAddress.getLandmark());
+				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getLandmark());
 			}
-			//TISUATSE-70 starts
-			deliveryAddr.append("<br/>");
 
-			final String city = deliveryAddress.getTown();
-			deliveryAddr.append(city.substring(0, 1).toUpperCase() + city.substring(1)).append(COMMA).append(SPACE)
-					.append(deliveryAddress.getDistrict()).append(SPACE).append(deliveryAddress.getPostalcode());
-			//TISUATSE-70 ends
+			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getTown()).append(COMMA).append(SPACE)
+					.append(deliveryAddress.getDistrict()).append(COMMA).append(SPACE).append(deliveryAddress.getPostalcode());
+
 			put(DELIVERYADDRESS, deliveryAddr);
 		}
 		String websiteUrl = null;

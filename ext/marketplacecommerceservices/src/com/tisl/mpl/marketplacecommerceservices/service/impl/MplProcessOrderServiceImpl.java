@@ -8,7 +8,6 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -168,7 +167,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					}
 
 
-					LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
+					//LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
 
 
 					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
