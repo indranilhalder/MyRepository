@@ -60,7 +60,7 @@
 			<a href="javascript:;" class="add-to-wishlist" data-product="${product.url}"></a>
 			<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			<div class="short-info">
-				<h5>${product.productCategoryType}</h5>
+				<h5>${product.brand}</h5>
 				<p class="pName"><a href="${product.url}" title="${product.name}">${product.name}</a></p>
 				<p class="price-sec">
 				
