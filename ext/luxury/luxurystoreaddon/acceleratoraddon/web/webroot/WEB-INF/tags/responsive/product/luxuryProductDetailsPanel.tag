@@ -115,10 +115,20 @@ tr.d0 td {
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
 				<product:emiDetail product="${product}" /> --%>
-			<span id="productPromotionSection"><!-- UF-60 wrapping product:productPromotionSection in a span -->
+			<!-- <span id="productPromotionSection"> --><!-- UF-60 wrapping product:productPromotionSection in a span -->
 			<!-- promotion  section -->
-			<product:productPromotionSection product="${product}" />
-			</span>
+			<%-- <product:productPromotionSection product="${product}" />
+			</span> --%>
+			
+			<div class="pdp-social-links text-center">
+				<ul>
+					<li><a href="#" class="play">Play</a></li>
+					<li><a onclick="addToWishlist()" class="save">Save</a></li>
+					<li><a href="#" class="share">Share</a></li>
+				</ul>	
+				<luxuryProduct:socialSharing product="${product}" />
+			</div>
+			
 		</div>
 		<!-- Added for carousel in mobile view -->
 		<div class="product-image-container device">
@@ -180,6 +190,17 @@ tr.d0 td {
 				<!-- For TPR-4358 -->
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}"/>
+				
+				<div class="SoldWrap">
+				<ycommerce:testId
+					code="productDetails_productNamePrice_label_${product.code}">
+					<div class="seller">Sold by <span id="sellerNameId"></span></div>
+				</ycommerce:testId>
+				<%-- <div class="fullfilled-by">
+				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+				<span id="fulFilledBySship"  style="display:none;"></span>
+				</div> --%>
+			</div>
 				<!-- </a> -->
 			</ycommerce:testId>
                 
@@ -192,6 +213,16 @@ tr.d0 td {
 				<!-- EMI section -->
 			
 			<product:emiDetail product="${product}" />
+			
+			
+			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
+	        <input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
+	
+			<div id="freebieProductMsgId" style="display:none">
+			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
+			</div>			
+			<!-- TPR-275 ends -->
+			<luxuryProduct:luxuryProductMainVariant /> 
 			
 			<!-- TISPRM-97 starts -->
 				<!-- TPR-772 starts -->
@@ -225,33 +256,16 @@ tr.d0 td {
 			
 			<!--  Added for displaying offer messages other than promotion, TPR-589 -->
 			<!--INC144313502-->
-				 <div>
+				 <!-- <div>
 					<a class="pdp-promo-title-link" style="display:none">View more</a>
-				</div>	
+				</div> -->	
 				
 			<!-- TISPRM-97 ends -->
 			<!-- TPR-275 starts  -->
-			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>
-	        <input type="hidden" id="freebiePriceThreshId" value="${freebiePriceThreshVal}">
-	
-			<div id="freebieProductMsgId" style="display:none">
-			 <spring:theme code="freebie.product.message" text="Freebie: This product is not on sale" ></spring:theme>				
-			</div>			
-			<!-- TPR-275 ends -->
-			<luxuryProduct:luxuryProductMainVariant /> 
+			
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
-			<div class="SoldWrap">
-				<ycommerce:testId
-					code="productDetails_productNamePrice_label_${product.code}">
-					<div class="seller">Sold by <span id="sellerNameId"></span></div>
-				</ycommerce:testId>
-				<div class="fullfilled-by">
-				<spring:theme code="mpl.pdp.fulfillment"></spring:theme>&nbsp;<span id="fulFilledByTship" style="display:none;"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-				<span id="fulFilledBySship"  style="display:none;"></span>
-				</div>
-			</div>
 			
 			<c:if test="${isGigyaEnabled=='Y'}">
 				<ul class="star-review" id="pdp_rating">

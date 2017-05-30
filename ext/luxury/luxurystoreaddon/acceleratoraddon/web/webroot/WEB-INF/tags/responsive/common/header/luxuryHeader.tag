@@ -35,9 +35,9 @@
 						
 					</ul>
 					<ul class="hidden-sm hidden-md hidden-lg">
-						<li><a href="#">Wishlist</a></li>
-						<li><a href="#">Notifications</a></li>
-						<li><a href="luxurylogin/signin" class="toggle-link luxury-login">Sign-in Or Sign-up</a></li>
+						<li class="wishlist"><a href="#">Wishlist</a></li>
+						<li class="notifi"><a href="#">Notifications</a></li>
+						<li class="mob-login"><a href="luxurylogin/signin" class="toggle-link luxury-login">Sign-in Or Sign-up</a></li>
 					</ul>
 					<div class="main-nav-close" id="main-nav-close"></div>
 				</nav>

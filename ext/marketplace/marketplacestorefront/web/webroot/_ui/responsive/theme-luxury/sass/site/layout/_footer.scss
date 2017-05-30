@@ -62,7 +62,7 @@ footer{
 		}
 		.signup-email-wrapper{
 			.send-awesome-email{
-				color:$btn-primary-color;
+				color:$btn-primary-color;                
 				.email-tit{
 					font-size:$font-size-h3;
 					margin-bottom:5px;
@@ -87,10 +87,14 @@ footer{
 					border-bottom-left-radius: 0px;
 					border-top-right-radius: $border-radius-large;
 					border-bottom-right-radius: $border-radius-large;
-					background-color:$btn-default-bg;
+                    background-color: $gold-dark;
+					color:$btn-default-bg;
 					padding:14px;
 				}
 			}
+            .selectboxit-options.selectboxit-list{
+                        min-width: 100%!important;
+            }
 		}
 	}
 	
@@ -146,23 +150,23 @@ footer{
 					
 				}
 				.fb-link, .twtr-link, .utube-link, .instgrm-link{
-					background:$Sprite no-repeat;
-					width:22px;
+					background:$Sprite_icon no-repeat;
+					width: 40px;
 					margin-right:10px;
 				}
 				.fb-link{
-					background-position: -379px -11px;
+					background-position: -2390px 0;
 				}
 				.twtr-link{
-					background-position: -472px -11px;
+					background-position: -2490px 0;
 					width:24px;
 				}
 				.utube-link{
-					background-position: -436px -11px;
+					background-position: -2440px 0;
 					width:30px;
 				}
 				.instgrm-link{
-					background-position:-406px -11px;
+					background-position:-2340px 0;
 				}
 			}
 		}
@@ -181,10 +185,10 @@ footer{
 					&:before{
 						
 						content: '';
-						background:$Sprite no-repeat;
+						background:$Sprite_icon no-repeat;
 						vertical-align: middle;						
-						width: 45px;
-						height: 45px;
+                        width: 55px;
+                        height: 45px;
 						display: inline-block;
 						text-indent: -999px;
 						overflow: hidden;
@@ -196,17 +200,20 @@ footer{
 					
 					&:first-child{
 						&:before{
-							background-position: -218px -4px;
+							background-position: -1952px -55px;                            
+                            height: 45px;
 						}						
 					}
 					&:nth-child(2){
 						&:before{
-							background-position: -267px -7px;
+							background-position: -1880px 0;
 						}
 					}
 					&:last-child{
 						&:before{
-							background-position: -320px -7px;
+							background-position: -1800px 0;
+                            width: 64px;
+                            height: 45px;
 						}
 					}
 			    }

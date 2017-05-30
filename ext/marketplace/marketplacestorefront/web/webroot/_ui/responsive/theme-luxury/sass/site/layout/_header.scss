@@ -87,7 +87,7 @@
 			position: fixed;
 			top: 0;
 			left: -100%;
-			background: rgba(0, 0, 0, 0.87);
+			background: rgba(65, 65, 65, 0.9);
 			color: $white;
 			z-index: 9999;
 			margin-top: 0;
@@ -272,13 +272,13 @@
 		}
         
         .wishlist, .notifi, .mob-login{
-           padding-left: 15px; 
+           padding-left: 20px; 
             
             a{                
                 &:before{
                     content: '';
                     position:absolute;
-                    background-image: url('../images/sprite.png');                   
+                    background-image: $Sprite_icon;             
                 }
                 
             }       
@@ -289,9 +289,9 @@
                 &:before{                  
                     top:13px;
                     left:0px;                    
-                    width:32px;
-                    height:32px;		
-                    background-position: -228px -101px;
+                    width: 22px;
+                    height: 20px;		
+                    background-position: -1021px -56px;
                 }
                 
             }            
@@ -303,9 +303,9 @@
                 &:before{                   
                     top:11px;
                     left:0px;                   
-                    width:24px;
-                    height:24px;		
-                    background-position: -335px -98px;
+                    width: 22px;
+                    height: 24px;		
+                    background-position: -1128px -53px;
                 }
                 
             }            
@@ -317,9 +317,9 @@
                 &:before{                   
                     top:15px;
                     left:0px;                  
-                    width:32px;
-                    height:32px;		
-                    background-position:-365px -104px;
+                    width: 20px;
+                    height: 14px;	
+                    background-position:-1158px -59px;
                 }
                 
             }            
@@ -364,7 +364,7 @@
 							top: 0px;
 							left: 0;
 							content: "";
-							background: $Sprite -79px -2px no-repeat;
+							background: $Sprite_icon -1730px 0 no-repeat;
 						}
 					}
 				}
@@ -375,17 +375,17 @@
 					}
 				}
 				&.header-bag-link a {
-					background: $Sprite 0px 0px no-repeat;
+					background: $Sprite_icon -1140px 0 no-repeat;
 					text-indent: -99999px;
 				}
 			}
 			li.bag{
-				background: $Sprite 0px 0px no-repeat;
-				width:27px;
-				height:25px;
+				background: $Sprite_icon -1140px 0 no-repeat;
+                width: 16px;
+                height: 20px;
 				.mini-cart-link{
-					width:27px;
-					height:25px;
+                    width: 16px;
+                    height: 20px;
 				}
 			}
 			li.header-bag-link{
