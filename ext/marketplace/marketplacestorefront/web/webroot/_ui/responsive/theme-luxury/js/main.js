@@ -303,7 +303,7 @@ TATA.CommonFunctions = {
 		}
 		$('#main-nav > ul').addClass('footer-cloned-ul').clone().appendTo('.footer-popular-search');
 		$('.footer-popular-search .footer-cloned-ul > li').append('<br/>');
-		$('.footer-cloned-ul > li').each(function(){
+		$('.footer-popular-search .footer-cloned-ul > li').each(function(){
 			if($(this).find('.sub-menu').length){
 				$(this).show();
 			}
