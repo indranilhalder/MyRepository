@@ -178,6 +178,7 @@ import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
+import com.tisl.mpl.wsdto.ResponseMaster;
 import com.tisl.mpl.wsdto.RestrictionPins;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
@@ -185,7 +186,6 @@ import com.tisl.mpl.wsdto.SellerSlaveDTO;
 import com.tisl.mpl.wsdto.SlaveInfoDTO;
 import com.tisl.mpl.wsdto.StateListWsDto;
 import com.tisl.mpl.wsdto.StateWsDto;
-import com.tisl.mpl.wsdto.TicketMaster;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.VersionListResponseData;
 import com.tisl.mpl.wsdto.VersionListResponseWsDTO;
@@ -1816,7 +1816,7 @@ public class MiscsController extends BaseController
 		//instances & variables
 		OneTouchCancelReturnDTO output = null;
 		final Set<OneTouchCancelReturnDTO> outputList = new HashSet<OneTouchCancelReturnDTO>();
-		final TicketMaster oneTouchReturnDTOList = new TicketMaster();
+		final ResponseMaster oneTouchReturnDTOList = new ResponseMaster();
 		boolean serviceabilty = true;
 		boolean resultFlag = false;
 		final String ussid = null;

@@ -15,12 +15,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author TCS
  *
  */
-@XmlRootElement(name = "ticketMaster")
+@XmlRootElement(name = "RequestMaster")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OneTouchCancelReturnCrmRequestList
 {
 	//@XmlElementWrapper(name = "complexType")
-	@XmlElement(name = "ticket")
+	@XmlElement(name = "RequestTickets")
 	private List<OneTouchCancelReturnCrmRequestDTO> oneTouchCancelReturnRequestDTOlist;
 
 	/**
