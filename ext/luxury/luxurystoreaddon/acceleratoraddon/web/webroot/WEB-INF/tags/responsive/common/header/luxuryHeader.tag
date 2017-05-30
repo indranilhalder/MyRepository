@@ -35,9 +35,9 @@
 						
 					</ul>
 					<ul class="hidden-sm hidden-md hidden-lg">
-						<li><a href="#">Wishlist</a></li>
-						<li><a href="#">Notifications</a></li>
-						<li><a href="luxurylogin/signin" class="toggle-link luxury-login">Sign-in Or Sign-up</a></li>
+						<li class="wishlist"><a href="#">Wishlist</a></li>
+						<li class="notifi"><a href="#">Notifications</a></li>
+						<li class="mob-login"><a href="luxurylogin/signin" class="toggle-link luxury-login">Sign-in Or Sign-up</a></li>
 					</ul>
 					<div class="main-nav-close" id="main-nav-close"></div>
 				</nav>
@@ -77,13 +77,13 @@
 					</sec:authorize>
 					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>
-					</cms:pageSlot></a><cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
-					<cms:component component="${SearchBox}" element="li"/></cms:pageSlot></li>
+					</cms:pageSlot></a></li>
 				</ul>
 			</div>
 			<div class="header-search toggle-skip" id="header-search">
 				<div class="header-search-inner">
-					<input type='text' placeholder='"Type or Talk"' class="search-input">
+				<cms:pageSlot position="SearchBox" var="SearchBox" limit="1">
+					<cms:component component="${SearchBox}" element="div"/></cms:pageSlot>
 				</div>
 			</div>
 			<%-- <div class="header-right">

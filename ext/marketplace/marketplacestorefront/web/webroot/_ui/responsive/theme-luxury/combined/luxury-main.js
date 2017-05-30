@@ -12201,100 +12201,67 @@ TATA.CommonFunctions = {
     }
 }, TATA.Pages = {
     PLP: {
-    	loadMoreInit: function(){
-			var pathName = window.location.pathname;
-	        var query = window.location.search;
-	        var pageType = $('#pageType').val();
-			totalNoOfPages = parseInt($('input[name=noOfPages]').val());
-			totalNoOfPages == '' ? 1 : totalNoOfPages;
-			currentPageNo = 1;
-	    	$(document).on('click','.loadMore', function() {
-	            pageQuery=$("#pageQuery").val();
-	            
-	            if(pageQuery == ""){
-		            if(pageType == 'productsearch'){
-						url = $('#searchPageDeptHierTreeForm').serialize();	
-					}else{
-						url = $('#categoryPageDeptHierTreeForm').serialize();				
-					}
-		            pageQuery = url+TATA.Pages.PLP.addSortParameter();
-	            }
-	            
-	            if (pageQuery != "" && /page-[0-9]+/.test(pageQuery)) {
-	                pageQueryString = pageQuery.match(/page-[0-9]+/);
-	                prevPageNoString = pageQueryString[0].split("-");
-	                prevPageNo = parseInt(prevPageNoString[1]);
-	                currentPageNo = prevPageNo+1;
-	                ajaxUrl = pageQuery.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	            } else {
-	            	currentPageNo++
-	            	ajaxUrl = pathName.replace(/[/]$/,"") + '/page-' + currentPageNo + "?" + pageQuery;
-	            }
-	            if (currentPageNo <= totalNoOfPages) {
-	            	TATA.Pages.PLP.performLoadMore(ajaxUrl);
-	            	if (currentPageNo == totalNoOfPages){
-	            		$(this).hide();
-	            	}
-	            }
-	        });
-	    },
-        sortInit : function(){
-	    	$(document).on('change','.responsiveSort',function(){
-	    		TATA.Pages.PLP.performSort();
-	        });
-	    },
-	    
-	    addSortParameter: function(){
-	    	var item = $(".responsiveSort").val();
-	    	var url = "";
-	    	switch (item) {
-	    	case 'relevance':
-	    		url = url+'&sort=relevance';
-	    		break;
-	    	case 'new':
-	    		url = url+'&sort=isProductNew';
-	    		break;
-	    	case 'discount':
-	    		url = url+'&sort=isDiscountedPrice';
-	    		break;
-	    	case 'low':
-	    		url = url+'&sort=price-asc';
-	    		break;
-	    	case 'high':
-	    		url = url+'&sort=price-desc';
-	    		break;
-	    	}
-	    	return url;
-	    },
-	    
-	    performSort : function (){
-	    	var pathName = window.location.pathname;
-	    	var pageType = $('#pageType').val();
-	    	pathName = pathName.replace(/page-[0-9]+/, 'page-1');
-	    	if(pageType == 'productsearch'){
-				url = $('#searchPageDeptHierTreeForm').serialize();	
-			}else{
-				url = $('#categoryPageDeptHierTreeForm').serialize();				
-			}
-	    	var queryUrl = url+TATA.Pages.PLP.addSortParameter();
-	    	TATA.Pages.PLP.performAjax(pathName +'?'+queryUrl);
-	    },
-	    performLoadMore : function(ajaxUrl){
-	        $.ajax({
-	            url: ajaxUrl,
-	            data: {
-	                pageSize: 24,
-	                lazyInterface:'Y'
-	            },
-	            success: function(x) {
-	                var filtered = $.parseHTML(x);
-	                if($(filtered).has('.product-grid')){
-                    	$('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
-	                }
-	                $("#pageQuery").val(ajaxUrl);
-	            }
-	        });
-	    },
+        loadMoreInit: function() {
+            var pathName = window.location.pathname, pageType = (window.location.search, $("#pageType").val());
+            totalNoOfPages = parseInt($("input[name=noOfPages]").val()), "" == totalNoOfPages || totalNoOfPages, 
+            currentPageNo = 1, $(document).on("click", ".loadMore", function() {
+                pageQuery = $("#pageQuery").val(), "" == pageQuery && (url = "productsearch" == pageType ? $("#searchPageDeptHierTreeForm").serialize() : $("#categoryPageDeptHierTreeForm").serialize(), 
+                pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
+                prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
+                currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
+                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
+            });
+        },
+        sortInit: function() {
+            $(document).on("change", ".responsiveSort", function() {
+                TATA.Pages.PLP.performSort();
+            });
+        },
+        addSortParameter: function() {
+            var item = $(".responsiveSort").val(), url = "";
+            switch (item) {
+              case "relevance":
+                url += "&sort=relevance";
+                break;
+
+              case "new":
+                url += "&sort=isProductNew";
+                break;
+
+              case "discount":
+                url += "&sort=isDiscountedPrice";
+                break;
+
+              case "low":
+                url += "&sort=price-asc";
+                break;
+
+              case "high":
+                url += "&sort=price-desc";
+            }
+            return url;
+        },
+        performSort: function() {
+            var pathName = window.location.pathname, pageType = $("#pageType").val();
+            pathName = pathName.replace(/page-[0-9]+/, "page-1"), url = "productsearch" == pageType ? $("#searchPageDeptHierTreeForm").serialize() : $("#categoryPageDeptHierTreeForm").serialize();
+            var queryUrl = url + TATA.Pages.PLP.addSortParameter();
+            TATA.Pages.PLP.performAjax(pathName + "?" + queryUrl);
+        },
+        performLoadMore: function(ajaxUrl) {
+            $.ajax({
+                url: ajaxUrl,
+                data: {
+                    pageSize: 24,
+                    lazyInterface: "Y"
+                },
+                success: function(x) {
+                    var filtered = $.parseHTML(x);
+                    $(filtered).has(".product-grid") && $(".product-grid-wrapper").append($(filtered).find(".product-grid-wrapper")), 
+                    $("#pageQuery").val(ajaxUrl);
+                }
+            });
+        },
         showSelectedRefinements: function() {
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
@@ -12321,18 +12288,10 @@ TATA.CommonFunctions = {
                 success: function(x) {
                     var filtered = $.parseHTML(x);
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")), 
-                    TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());		            
-		            if($(filtered).has('input[name=noOfPages]')){
-		            	totalPages = parseInt($(filtered).find('input[name=noOfPages]').val());
-		            	if(totalPages > 1){
-		            		$("#pageQuery").val("");
-		            		currentPageNo = 1;
-		            		totalNoOfPages = totalPages;
-		            		$(".loadMore").show();
-		            	}else{
-		            		$(".loadMore").hide();
-		            	}
-		            }
+                    TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html()), 
+                    $(filtered).has("input[name=noOfPages]") && (totalPages = parseInt($(filtered).find("input[name=noOfPages]").val()), 
+                    totalPages > 1 ? ($("#pageQuery").val(""), currentPageNo = 1, totalNoOfPages = totalPages, 
+                    $(".loadMore").show()) : $(".loadMore").hide());
                 }
             });
         },
