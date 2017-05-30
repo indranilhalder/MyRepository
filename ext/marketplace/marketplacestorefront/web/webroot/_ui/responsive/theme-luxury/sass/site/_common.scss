@@ -318,8 +318,8 @@ header{
 		margin-left:-15px;
 		.mini-bag{
 			position: absolute;
-			width: 350px;
-			left: -300px;
+			width: 500px;
+			left: -450px;
 			padding: 20px 10px 10px;
 			margin-top: -1px;
 			.my-bag-ul{
@@ -327,6 +327,85 @@ header{
 				border: 1px solid #e3e3e3;
 				border-radius: $border-radius-small;
 				background: $white;
+				.item{
+					padding: 0px 100px 44.5px 106px;
+				    position: relative;
+				    height: 175px;
+				    border-bottom: solid 1px #eee;
+				    
+				    ul{
+				    	list-style-type:none;
+				    	padding:0px;
+				    	.product-img {
+						    position: absolute;
+						    left: 0;
+						    width: 88px;
+						    img {
+							    width: 100%;
+							    height: auto;
+							}
+							.luxury_ribbon {
+							    max-height: 36px;
+							}
+						}
+						.product {
+						    line-height: normal;
+						}
+						.item-edit-details {
+						    position: absolute;
+						    bottom: 15px;
+						    left: 106px;
+						    line-height: 1.5;
+						    letter-spacing: .6px;
+						    li {
+							    display: block;
+							    margin-right: 40px;
+							}
+							.removeFromCart{
+								color: #92002e;
+							}
+						}
+				    }
+				    h3{
+				    	font-size:14px;
+				    	margin:0px;
+				    }
+				}
+				li:last-child{
+					text-align:center;
+				}
+				.price {
+				    position: absolute;
+				    right: 0;
+				    top: 24px;
+				    width: 100px;
+				    text-align: right;
+				    font-size: 14px;
+				    line-height: normal;
+				}
+				span.priceFormat {
+				    background: none !important;
+				}
+				.totalPayable {
+				    font-size: 12px;
+				    text-align: center;
+				    text-transform: capitalize;
+				    letter-spacing: .6px;
+				    line-height: 18px;
+				    margin-top: 16.5px;
+				    margin-bottom: 10px;
+				}
+				a.go-to-bag {
+				    background-color: #a5173c;
+				    color: #fff;
+				    width: 202px;
+				    float: none;
+				    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.35), 0 1px 2px 0 rgba(0,0,0,0.25);
+				    width: 200px;
+				    display: inline-block;
+				    height: 42px;
+				    line-height: 42px;
+				}
 			}
 		}
 	}
