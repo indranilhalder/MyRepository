@@ -137,8 +137,7 @@
 					text-decoration: none;
 					display: block;
 					&:before {
-						content: '';
-						background: $Sprite no-repeat;
+						content: '';						
 						width: 27px;
 						height: 25px;
 						display: block;
@@ -146,13 +145,16 @@
 					}
 				}
 				.play:before {
+                    background: $Sprite no-repeat;
 					background-position: -311px -60px;	
 					width: 17px;
 				}
 				.save:before {
+                    background: $Sprite no-repeat;
 					background-position: -460px -59px;		
 				}
 				.share:before {
+                    background: $Sprite no-repeat;
 					background-position: -379px -59px;	
 				}
 			}
@@ -213,6 +215,7 @@
 	}
 }
 .pdp-accordion {
+    margin-top: 30px;
 	max-width: 945px;
 	margin-left: auto;
 	margin-right: auto;

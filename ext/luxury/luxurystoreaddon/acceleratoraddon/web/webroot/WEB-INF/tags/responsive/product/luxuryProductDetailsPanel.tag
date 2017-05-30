@@ -106,11 +106,37 @@ tr.d0 td {
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper pdp-view clearfix">
 		<div class="product-image-container pdp-left colmn">
-			<cms:pageSlot position="ConfigureImagesCount" var="component">
+		<div class="clearfix">
+			<div class="pdp-img-nav">
+				<div><img src="../images/temp-pdp-02.jpg"></div>
+				<div><img src="../images/temp-pdp-03.jpg"></div>
+				<div><img src="../images/temp-pdp-02.jpg"></div>
+				<div><img src="../images/temp-pdp-03.jpg"></div>
+				<div><img src="../images/temp-pdp-02.jpg"></div>
+				<div><img src="../images/temp-pdp-03.jpg"></div>
+				<div><img src="../images/temp-pdp-02.jpg"></div>
+				<div><img src="../images/temp-pdp-03.jpg"></div>
+			</div>
+			<div class="pdp-img">
+				<div class="pdp-img-slider circle-pager">
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+					<div><img src="../images/temp-pdp-01.jpg"></div>
+				</div>
+				<div class="offer-icon"><span class="new"></span></div>
+			</div>
+						
+		</div>		
+			<%-- <cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
 			<product:productImagePanel galleryImages="${galleryImages}"
-				product="${product}" />
+				product="${product}" /> --%>
 
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
@@ -120,55 +146,68 @@ tr.d0 td {
 			<%-- <product:productPromotionSection product="${product}" />
 			</span> --%>
 			
-			<div class="pdp-social-links text-center">
-				<ul>
-					<li><a href="#" class="play">Play</a></li>
-					<li><a onclick="addToWishlist()" class="save">Save</a></li>
-					<li><a href="#" class="share">Share</a></li>
-				</ul>	
-				<luxuryProduct:socialSharing product="${product}" />
+				<div class="pdp-social-links text-center">
+					<ul>
+						<li><a href="#" class="play">Play</a></li>
+						<li><a onclick="addToWishlist()" class="save">Save</a></li>
+						<li><a data-toggle="modal" data-target="#share-modal" href="#" class="share">Share</a></li>
+					</ul>
+					<div id="share-modal" class="modal fade" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">×</button>
+									<h4 class="modal-title">Share</h4>
+								</div>
+								<div class="modal-body nopadding mt-10 clearfix">
+								    <luxuryProduct:socialSharing product="${product}" /> 																
+								</div>
+							</div>
+						</div>					
+					</div>	
+				</div>
+			
+		
+		<!-- Added for carousel in mobile view -->
+		
+			<%-- <div class="product-image-container device">
+			<a class="wishlist-icon" onclick="addToWishlist()"></a>
+			<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
+				<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
+					<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
+		
+		
+						<div id="addiImageTab${varStatus.index}">
+							<span>
+							<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+								<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+							</c:if>
+							<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+							<iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe>
+							</c:if>
+		
+							</span>
+						</div>
+					</c:forEach>
+				</div>
+			</div> --%>
+			
+			<div class="wishAddSucess">
+				<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
 			</div>
 			
-		</div>
-		<!-- Added for carousel in mobile view -->
-		<div class="product-image-container device">
-		<a class="wishlist-icon" onclick="addToWishlist()"></a>
-		<c:set var="thumbNailImageLengthDevice" value="${fn:length(galleryImages)}" />
-			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel"> 
-				<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">	
-	
-	
-					<div id="addiImageTab${varStatus.index}">
-						<span>
-						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
-						</c:if>
-						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-						</c:if>
-	
-						</span>
-					</div>
-				</c:forEach>
+			<div class="wishRemoveSucess">
+				<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+			</div>
+			
+			<div class="wishAddLogin">
+				<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+			</div>
+			<div class="wishAlreadyAdded">
+				<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 			</div>
 		</div>
-		
-		<div class="wishAddSucess">
-			<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
-		</div>
-		
-		<div class="wishRemoveSucess">
-			<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
-		</div>
-		
-		<div class="wishAddLogin">
-			<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
-		</div>
-		<div class="wishAlreadyAdded">
-			<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
-		</div>
-		
 		<div class="product-detail pdp-right">
 			
 			<c:set var="req" value="${pageContext.request}" />

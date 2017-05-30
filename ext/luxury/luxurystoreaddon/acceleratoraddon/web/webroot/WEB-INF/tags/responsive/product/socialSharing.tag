@@ -42,11 +42,11 @@
 		utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click',product_id : productIdArray });
 			})
 </script> -->
+	
 
 
-<div class="share">
-<span><spring:theme code="text.share.friends"/></span>
-	<ul>
+
+	<ul  class="soc-links">
 
 		<li>
 			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(),'share_twitter')"></a>
@@ -72,10 +72,10 @@
 			<a class="mail mailproduct" role="button" data-toggle="popover" data-placement="bottom"></a>
 		</li>
 	</ul>
-</div>
 
-<div id="emailLoggedInId" style="display: none"><spring:theme code="product.emailNonLoggedIn"/></div>
-<div id="emailSend" class="emailSend">
+
+<%-- <div id="emailLoggedInId" style="display: none"><spring:theme code="product.emailNonLoggedIn"/></div> --%>
+<%-- <div id="emailSend" class="emailSend">
 	
 				<div class="click2chat-container send-email-container" id="myModalLabel">
 					<h2><spring:theme code="email.mail"/></h2>
@@ -103,7 +103,7 @@
 				</div>
 				</form>
 				</div>
-</div>
+</div> --%>
 <!-- start change of INC144313760 -->
 <!-- <script type="text/javascript">
 $(document).ready(function(){
