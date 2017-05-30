@@ -107,3 +107,5 @@ INSERT_UPDATE Sizesystem;name[unique=true];from;to;conversionUnit;propertyName;
 ;15-16 Yto14-16 Y;15-16 Y;14-16 Y;0.00;KidswearSize
 ;14-16 Yto14-16 Y;14-16 Y;14-16 Y;0.00;KidswearSize
 
+INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=append];locname[lang=en]
+;storemanageragentgroup;csagentgroup;"storemanageragentgroup"

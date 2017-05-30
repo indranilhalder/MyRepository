@@ -4,11 +4,14 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Required;
 
@@ -17,6 +20,7 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
 
@@ -24,8 +28,31 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 public class BuyBoxServiceImpl implements BuyBoxService
 {
 
-
 	private BuyBoxDao buyBoxDao;
+
+
+	private ConfigurationService configurationService;
+
+	@Resource
+	private AgentIdForStore agentIdForStore;
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 	/*
 	 * This service method will return buybox prices for product code
@@ -40,9 +67,6 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	{
 
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPrice(productCode);
-
-
-
 		return buyBoxList;
 	}
 

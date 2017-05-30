@@ -113,6 +113,10 @@ public final class MarketplaceCockpitsConstants extends
 	public static final String CSCOCKPIT_USER_GROUP_SYNCCSAGENTGROUP = "cscockpit.user.group.synccsagentgroup";
 
 	
+	/** The Constant CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP for OIS. */
+	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+
+	
 	/** The Constant NO_SELLER_COD. */
 	public static final String NO_SELLER_COD = "noSellerCOD";
 
@@ -216,4 +220,31 @@ public final class MarketplaceCockpitsConstants extends
 	public final static String RETURN_REFUND_MODE_N = "N";
 
 	
+	public static final String CSCOCKPITRETURN_URL = "juspay.cscockpit.returnUrl".intern();
+	
+	public static final String JUSPAYPAYMENTPAGEURL = "juspay.paymentpage.url".intern();
+	
+	public static final String ORDERPAYMENTSTATUSURL = "juspay.paymentstatus.url".intern();
+	
+	public static final String PAYMENT_METHOD_TYPE= "CARD";
+	
+	public static final String OIS_NETBANKING = "Netbanking";
+	
+	public static final String JUSPAY_RESPONSE_CARD_KEY = "card";
+	
+	public static final String JUSPAY_RESPONSE_CARTTYPE_KEY = "card_type";
+	
+	public static final String JUSPAY_ORDER_STATUS = "CHARGED";
+	
+	public static final String PAYMENT_SUCCESSFUL = "Payment Successsful";
+	
+	public static final String PAYMENT_UNSUCCESSFUL = "Please try again";
+	
+	public static final String PAYMENT_COMPLETED = "Either You have already paid or System issue, Please Check again OR Contact with Site Administrator";
+	
+	public static final String NONCOD_PRODUCT_EXIST = "Non COD Product Exist, Please Check again OR Contact with Site Administrator";
+	
+	public static final String JUSPAY_PAYMENT = "paynow";
+	
+	public static final String JUSPAY_PAYMENT_VALUE = "Pay Now";
 }

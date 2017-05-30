@@ -8192,9 +8192,12 @@ div.wishlist-content .pagination {
   line-height: 1;
   bottom: 20px;
   right: 0; }
-  @media (max-width: 650px) {
+  div.wishlist-content .pagination li {
+  font-size: 12px; /*added as part of PRDI-255 fix*/
+  }
+  /* @media (max-width: 650px) {
     div.wishlist-content .pagination {
-      bottom: 30px; } }
+      bottom: 30px; } } */ /*commented as part of PRDI-255 fix*/
   div.wishlist-content .pagination a.active {
     text-decoration: underline;
     color: #A9143C; }
@@ -63207,11 +63210,17 @@ body.page-productGrid .list_title h1 {
 }
 /*TPR-250 defect fix No result*/
 body.page-productGrid .list_title h1.shiftDownZero{
-	top: 30px;
+	/* top: 30px; */
     width: 100%;
 }
-body.page-productGrid .list_title h1{
+/* body.page-productGrid .list_title h1{
 	display:none;
+} */ /*Customer feedback - PLP Title needs to be loaded 1st*/
+
+body.page-productGrid .totalResults h2{
+	margin-top: 70px;
+	width: 127.1%;
+    margin-left: -27.1%;
 }
 /*TPR-250 defect fix No result*/
 }
@@ -67375,6 +67384,7 @@ footer .footer-text{
     height: 37px;
     max-width: 37px !important;
     background-color: rgba(0,0,0,0.2);
+    z-index: 1;
 }
 .homepage-banner .owl-theme .owl-controls  .owl-nav div:hover{
 	background-color: rgba(0,0,0,0.2);
@@ -67396,7 +67406,7 @@ footer .footer-text{
     margin: auto;
     position: absolute;
     width: 100%;
-    z-index: 1;
+    /* z-index: 1; */
     display: table;
     padding: 0 30px;
     
@@ -68772,3 +68782,93 @@ body.page-checkout-login header .content nav{
 	width: 88%;
     white-space: normal;
 }
+/*PRDI-223 start*/
+@media(min-width: 791px){
+	header .content nav>ul>li>ul>li>ul>li.images>a .logo{
+	padding-bottom: 5px;
+	height: 28px;
+	}
+	header .content nav>ul>li>ul>li>ul.images{
+	padding-top: 0px;
+	}
+	header .content nav>ul>li>ul>li>ul.images>li.images{
+	min-width: auto;
+    width: 100%;
+	}
+	header .content .bottom:not(.active) nav > ul > li > ul > li > ul{
+	height: 499px;
+	}
+	}
+/*PRDI-223 end*/
+header .content .right>ul>li>a.headeruserdetails.account-userTitle[href='']{
+	pointer-events: none;
+}
+header .content .right>ul .logged_in.dropdown{
+	cursor: initial;
+}
+
+header.marketplace-header .content .top .container>.right>ul.headerUl {
+    display: block;
+}		/*PRDI-261*/
+
+#newAndExclusive .New_Exclusive_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+    padding-bottom: 0px !important;
+}
+
+/*PRDI-227 start*/
+body.page-viewAllTrending #ia_products_hot .listing-leftmenu .checkbox-menu li label:before, 
+body.page-viewAllTrending #ia_products_search .listing-leftmenu .checkbox-menu li label:before {
+    width: 12px;
+    height: 12px;
+    margin-top: 1px;
+    border: none;
+    box-shadow: 0 0 0 1px #b9b9b9;
+}
+body.page-viewAllTrending #ia_products_hot input[type="checkbox"]:checked+label:before, 
+body.page-viewAllTrending #ia_products_search input[type="checkbox"]:checked+label:before {
+    border: 2px solid #fff;
+}
+body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block h4 {
+    font-size: 14px !important;
+    text-transform: uppercase;
+}
+body.page-viewAllTrending #ia_products_hot .listing-leftmenu .checkbox-menu{
+	padding: 0;
+}
+@media(min-width: 791px){
+	body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block {
+    	width: 19.83% !important;
+    	margin-top: 31px !important
+	}
+	body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block.fix {
+    top: auto;
+    bottom: auto;
+	}
+	body.page-viewAllTrending #ia_products_hot  .listing.wrapper .selected.hotSelected{
+	line-height: 50px;
+	}
+	}
+	@media (max-width: 790px){
+	body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block {
+    margin-top: 0px !important;
+    padding: 0;
+    position: static !important;
+    width: 100% !important;
+	}
+	body.page-viewAllTrending #ia_products_hot .listing.wrapper {
+    padding: 0 10px;
+	}
+	body.page-viewAllTrending #ia_products_hot .listing.wrapper .right-block .product-list > li {
+    padding: 0 7px;
+}
+}
+@media (max-width: 650px){
+body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing-leftmenu {
+    width: 100%;
+    margin-top: 20px;
+}
+}
+/*PRDI-227 end*/

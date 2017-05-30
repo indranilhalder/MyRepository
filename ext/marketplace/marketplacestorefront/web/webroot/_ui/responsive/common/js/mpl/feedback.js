@@ -330,6 +330,9 @@ $(document).ready(function(){
 					}
 					});
 				}
+				
+				$(".store-locator-header,.download-app").parent("ul").css("display","block");		/*PRDI-261*/
+				
 				});
 			
 			var sessionFacetName;

@@ -470,6 +470,13 @@
 		<property name="modelService" ref="modelService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+	
+	<alias alias="jusPayPaymentService" name="jusPayPaymentServiceImpl" />
+	<bean id="jusPayPaymentServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.JuspayPaymentServiceImpl">
+		<property name="modelService" ref="modelService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
 
 	<alias name="defaultCommerceSolrSearchResponseConverter" alias="commerceSolrSearchResponseConverter" />
 	<bean id="defaultCommerceSolrSearchResponseConverter" parent="abstractPopulatingConverter">
@@ -542,6 +549,12 @@
 		<property name="baseSiteService" ref="baseSiteService" />
 		<property name="cartService" ref="cartService" />
 		<property name="commerceUpdateCartEntryStrategy" ref="commerceUpdateCartEntryStrategy" />
+	</bean>
+	
+	<!-- agent id for store service -->
+	<alias name="defaultAgentIdForStoreService" alias="agentIdForStore" />
+	<bean id="defaultAgentIdForStoreService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.AgentIdForStoreImpl">
 	</bean>
 
 	<!-- MplCommerceCartDao start -->
@@ -655,6 +668,7 @@
 	<bean id="buyBoxService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.BuyBoxServiceImpl">
 		<property name="buyBoxDao" ref="buyBoxDao" />
+		<property name="configurationService" ref="configurationService" />
 	</bean>
 
 	<bean id="buyBoxDao"

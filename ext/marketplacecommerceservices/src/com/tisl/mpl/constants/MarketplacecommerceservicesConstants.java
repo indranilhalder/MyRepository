@@ -2090,4 +2090,16 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SECONDPRODUCT = "secondProduct";
 
+	public static final String AGENT_ID = "agentId";
+
+	public static final String JUSPAY = "JUSPAY".intern();
+
+	// OIS store manager agent group
+	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+
+	// Agent specific order search query
+	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
+
+	// Agent who placed order from cscockpit
+
 }

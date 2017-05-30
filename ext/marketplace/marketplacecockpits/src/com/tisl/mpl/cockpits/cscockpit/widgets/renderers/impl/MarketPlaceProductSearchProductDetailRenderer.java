@@ -817,9 +817,13 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 						+ ";Article SKU:" + buyBox.getSellerArticleSKU()
 						+ "Seller Name:" + buyBox.getSellerName() + ";Price:"
 						+ buyBox.getPrice() + ";Special Price:"
-						+ buyBox.getSpecialPrice() + ";MRP:" + buyBox.getMrp());
-				populateSellerDetails(widget, container, item, listbox, buyBox,
-						popupWindow);
+						+ buyBox.getSpecialPrice() + ";MRP:" + buyBox.getMrp()
+						+ ";Availability:"+buyBox.getAvailable().toString());
+				// Display only the sellers with stock availibility
+				if(buyBox.getAvailable().intValue() > 0){
+					populateSellerDetails(widget, container, item, listbox, buyBox,
+							popupWindow);
+				}
 			}
 		}
 	}
