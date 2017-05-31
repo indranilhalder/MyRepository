@@ -12501,7 +12501,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12783,7 +12783,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -12979,29 +12979,6 @@ TATA.CommonFunctions = {
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
-    function validateForgetEmail() {
-        $("#luxuryForgotPasswordByEmailAjax").on("click", function(e) {
-            forgotPassword = $(this).parents().find("#forgotPassword_email").val();
-            var dataString = "forgotPassword_email=" + forgotPassword;
-            $(".PasswordForgotReset").css("display", "block"), $.ajax({
-                url: "/login/pw/request/confirmEmail",
-                type: "GET",
-                returnType: "text/html",
-                data: dataString,
-                success: function(data) {
-                    if (alert(data), "empty_or_null" == data) $(e.target).parent().parent().find("span#errorHolder").text("Please enter an email id"); else if ("invalid_email_format" == data) $(e.target).parent().parent().find("span#errorHolder").text("Please enter a valid email id"); else if ("invalid_email" == data) $(e.target).parent().parent().find("span#errorHolder").text("Oops! This email ID isn't registered with us."); else if ("success" == data) {
-                        var url = $(".js-password-forgotten").attr("href");
-                        $.get(url, function(data) {
-                            $(".forgotten-password").modal("hide"), $(data).filter("#forgotPasswordSuccessPopup").modal();
-                        });
-                    }
-                },
-                fail: function() {
-                    alert(data);
-                }
-            });
-        });
-    }
     function loginRequest() {
         $(".luxury-login").on("click", function(e) {
             $("#header-account").addClass("active"), $("body").removeClass("menu-open"), e.preventDefault();
@@ -13016,7 +12993,7 @@ TATA.CommonFunctions = {
                     $("#login-container .header-sign-in").html(data);
                 },
                 complete: function() {
-                    pwsRequest(), registerRequest(), targetLink();
+                    pwsRequest(), registerRequest(), targetLink(), LuxLoginValidate();
                 }
             });
         });
@@ -13034,7 +13011,7 @@ TATA.CommonFunctions = {
                     $("#login-container .header-forget-pass").html(data);
                 },
                 complete: function() {
-                    registerRequest(), targetLink(), registerRequest(), validateForgetEmail();
+                    registerRequest(), targetLink(), registerRequest(), LuxLoginValidate();
                 }
             });
         });
@@ -13052,7 +13029,7 @@ TATA.CommonFunctions = {
                     $("#login-container .header-signup").html(data);
                 },
                 complete: function() {
-                    loginRequest(), pwsRequest(), targetLink();
+                    loginRequest(), pwsRequest(), targetLink(), LuxLoginValidate();
                 }
             });
         });
@@ -13066,5 +13043,109 @@ TATA.CommonFunctions = {
             $("#gender").val(genderValue);
         });
     }
+    function LuxLoginValidate() {
+        tul.commonFunctions.init();
+    }
     loginRequest();
 });
+
+var tul = {};
+
+(function($) {
+    "use strict";
+    tul.commonFunctions = {
+        login: function() {
+            $("#loginForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#loginForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    j_username: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    },
+                    j_password: {
+                        required: !0,
+                        maxlength: 30
+                    }
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            }), $("#triggerLoginAjax").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#loginForm").submit();
+            });
+        },
+        signup: function() {
+            $("#extRegisterForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#extRegisterForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    firstName: {
+                        required: !0,
+                        maxlength: 100
+                    },
+                    lastName: {
+                        required: !0,
+                        maxlength: 30
+                    },
+                    mobileNumber: {
+                        required: !0,
+                        maxlength: 30
+                    },
+                    email: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    },
+                    pwd: {
+                        required: !0,
+                        maxlength: 30
+                    },
+                    checkPwd: {
+                        required: !0,
+                        maxlength: 30,
+                        equalTo: '[name="pwd"]'
+                    }
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            }), $("#luxury_register").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#extRegisterForm").submit();
+            });
+        },
+        forgetpassword: function() {
+            $("#forgottenPwdForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    email: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    }
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            }), $("#luxuryForgotPasswordByEmailAjax").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#forgottenPwdForm").submit();
+            });
+        },
+        init: function() {
+            tul.commonFunctions.login(), tul.commonFunctions.signup(), tul.commonFunctions.forgetpassword();
+        }
+    }, $(document).ready(function() {
+        tul.commonFunctions.init();
+    });
+}).call(tul.commonFunctions, window.jQuery);

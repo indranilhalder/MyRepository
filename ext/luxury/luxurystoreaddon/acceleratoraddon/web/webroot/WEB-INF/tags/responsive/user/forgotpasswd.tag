@@ -14,7 +14,6 @@
 					path="email" id="forgotPassword_email" maxlength="140" placeholder="Enter Your Email Address"/>
 		<input type="hidden" name="sms" id="sms" value="" />
 		<span id="errorHolder" style="color: red;"></span>
-		<br />
 	</div>		
 	<p class="mb-20">
 		<ycommerce:testId code="forgot_password_email">				
