@@ -36136,6 +36136,8 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     vertical-align: middle;
     display: table-cell;
     padding-right:5px;
+    padding-top:10px;		/* TISKIDK-701 */
+    padding-bottom:10px;	/* TISKIDK-701 */
 }
 .facet_mobile .facet-name.js-facet-name {
     display: table;
