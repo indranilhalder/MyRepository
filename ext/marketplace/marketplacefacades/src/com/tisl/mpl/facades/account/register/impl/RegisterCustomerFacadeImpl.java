@@ -399,6 +399,28 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				newCustomer.setName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setFirstName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
 				newCustomer.setLastName(MarketplacecommerceservicesConstants.SINGLE_SPACE);
+
+				//Logic for Luxury adding firstname, lastname and Gender starts
+				final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+				final String site = currentBaseSite.getUid();
+
+				if (site != null && !"".equals(site) && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+				{
+					newCustomer.setFirstName(registerData.getFirstName());
+					newCustomer.setLastName(registerData.getLastName());
+					if (registerData.getGender() != null && !"".equals(registerData.getGender())
+							&& MplConstants.MALE.equals(registerData.getGender()))
+					{
+						newCustomer.setGender(Gender.MALE);
+					}
+					if (registerData.getGender() != null && !"".equals(registerData.getGender())
+							&& MplConstants.FEMALE.equals(registerData.getGender()))
+					{
+						newCustomer.setGender(Gender.FEMALE);
+					}
+				}
+				//Logic for Luxury adding firstname, lastname and Gender ends
+
 				if (StringUtils.isNotEmpty(registerData.getSocialMediaType()))
 				{
 					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
@@ -489,6 +511,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				LOG.debug("Method  registerSocial return user ,SITE UID " + customerModel.getUid());
 				LOG.debug("Method  registerSocial else FIRST_NAME " + registerData.getFirstName());
 				LOG.debug("Method  registerSocial else LAST_NAME " + registerData.getLastName());
+				LOG.debug("Method  registerSocial else GENDER " + registerData.getGender());
 				LOG.debug("customer model email is   " + customerModel.getOriginalUid());
 
 				if (registerData.getFirstName() != null)
