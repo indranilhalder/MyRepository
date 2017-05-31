@@ -10,6 +10,8 @@
 	</c:forEach>
 </div>
 <c:if test="${searchPageData.pagination.numberOfPages > 1}">
-	<input type="hidden" id="pageQuery" value=""/>
-	<input type="button" value="Load More" class="loadMore"/>
+	<div class="text-center">
+		<input type="hidden" id="pageQuery" value=""/>
+		<input type="button" value="Load More" class="btn btn-primary loadMore"/>
+	</div>
 </c:if>
