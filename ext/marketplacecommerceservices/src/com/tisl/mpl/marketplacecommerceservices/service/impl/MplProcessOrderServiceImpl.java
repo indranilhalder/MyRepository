@@ -8,7 +8,6 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParameter;
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -46,7 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
@@ -168,7 +166,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					}
 
 
-					LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
+					//LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
 
 
 					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
