@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.core.enums.PaymentModesEnum;
@@ -158,16 +159,27 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
 			EtailNonBusinessExceptions
 	{
-		if (null != productModel.getSellerInformationRelator())
+		final List<SellerInformationModel> sellerList = new ArrayList<SellerInformationModel>(
+				productModel.getSellerInformationRelator());
+
+		//if (null != productModel.getSellerInformationRelator()) //CAR-283
+		if (CollectionUtils.isNotEmpty(sellerList))
 		{
-			final List<SellerInformationModel> sellerList = new ArrayList<SellerInformationModel>(
-					productModel.getSellerInformationRelator());
+			//			final List<SellerInformationModel> sellerList = new ArrayList<SellerInformationModel>(
+			//					productModel.getSellerInformationRelator()); //CAR-283
 
 			final List<SellerInformationData> sellerDataList = new ArrayList<SellerInformationData>();
 			for (final SellerInformationModel sellerInformationModel : sellerList)
 			{
-				if ((sellerInformationModel.getSellerAssociationStatus() == null || sellerInformationModel
-						.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+				final SellerAssociationStatusEnum enumData = sellerInformationModel.getSellerAssociationStatus(); //CAR-283
+
+				//				if ((sellerInformationModel.getSellerAssociationStatus() == null || sellerInformationModel
+				//						.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+				//						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
+				//								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate())))
+
+				// If condition modified for CAR-283
+				if ((null == enumData || enumData.equals(SellerAssociationStatusEnum.YES))
 						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
 								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate())))
 				{
@@ -180,8 +192,13 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
 								sellerInformationModel.getSellerArticleSKU()));
 
-						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
-								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+						final PaymentModesEnum paymentEnum = rm.getPaymentModes();
+
+						//						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
+						//								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+
+						if ((null != paymentEnum && paymentEnum.equals(PaymentModesEnum.BOTH) || (null != paymentEnum && paymentEnum
+								.equals(PaymentModesEnum.COD))))
 						{
 							sellerData.setIsCod(MarketplaceFacadesConstants.Y);
 						}
@@ -202,17 +219,17 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 						{
 							sellerData.setDeliveryFulfillModebyP1(rm.getDeliveryFulfillModeByP1().getCode());
 						}
-						
+
 						if (null != rm.getIsFragile())
 						{
 							sellerData.setIsFragile(rm.getIsFragile().getCode());
 						}
-						
+
 						if (null != rm.getIsPrecious())
 						{
 							sellerData.setIsPrecious(rm.getIsPrecious().getCode());
 						}
-						
+
 						sellerData.setSellername(sellerInformationModel.getSellerName());
 
 						if (null != rm.getShippingModes())
