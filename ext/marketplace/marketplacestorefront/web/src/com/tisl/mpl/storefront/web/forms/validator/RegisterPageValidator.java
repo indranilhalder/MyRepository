@@ -139,11 +139,8 @@ public class RegisterPageValidator implements Validator
 			{
 				errors.rejectValue("lastName", "profile.lastName.invalidlength");
 			}
-			if (StringUtils.isEmpty(mobileNumber))
-			{
-				errors.rejectValue("mobileNumber", "profile.mobileNumber.invalid.empty");
-			}
-			else if (!StringUtils.isEmpty(mobileNumber) && StringUtils.length(mobileNumber) > MAX_MOBILE_FIELD_LENGTH_10)
+
+			if (!StringUtils.isEmpty(mobileNumber) && StringUtils.length(mobileNumber) > MAX_MOBILE_FIELD_LENGTH_10)
 			{
 				errors.rejectValue("mobileNumber", "profile.mobileNumber.invalidlength");
 			}
