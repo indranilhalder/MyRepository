@@ -202,8 +202,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -251,81 +251,83 @@ public class ProductDetailsHelper
 	public List<MarketplaceDeliveryModeData> getDeliveryModeLlist(final RichAttributeModel rich, final String skuid)
 	{
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
+		final StringBuilder deliveryMode = new StringBuilder();
+
 		if (null != rich.getHomeDelivery() && rich.getHomeDelivery().equals(HomeDeliveryEnum.YES))
 		{
-			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.HD, MarketplaceFacadesConstants.INR, skuid);
-			//Populating Delivery Modes for each USSID
-			if (mplZoneDeliveryModeValueModel != null)
+			deliveryMode.append(MarketplaceFacadesConstants.HD);
+			deliveryMode.append(",");
+		}
+
+		if (null != rich.getClickAndCollect() && rich.getClickAndCollect().equals(ClickAndCollectEnum.YES))
+		{
+			deliveryMode.append(MarketplaceFacadesConstants.C_C);
+			deliveryMode.append(",");
+		}
+
+		if (null != rich.getExpressDelivery() && rich.getExpressDelivery().equals(ExpressDeliveryEnum.YES))
+		{
+			deliveryMode.append(MarketplaceFacadesConstants.EXPRESS);
+		}
+
+
+		if (deliveryMode.length() > 0)
+		{
+			final List<MplZoneDeliveryModeValueModel> mplZoneDeliveryModeValueModelList = getMplDeliveryCostService()
+					.getDeliveryCost(deliveryMode, MarketplaceFacadesConstants.INR, skuid);
+
+			if (CollectionUtils.isNotEmpty(mplZoneDeliveryModeValueModelList))
 			{
-				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
-				deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-				deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-				deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-				deliveryModeData.setSellerArticleSKU(skuid);
-				if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
+				final List<MarketplaceDeliveryModeData> dataList = getDeliveryData(mplZoneDeliveryModeValueModelList, rich);
+				if (CollectionUtils.isNotEmpty(dataList))
 				{
-					final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
-					deliveryModeData.setDeliveryCost(priceForTshipItem);
+					deliveryModeDataList.addAll(dataList);
 				}
-				else
-				{
-					deliveryModeData.setDeliveryCost(priceData);
-				}
-				deliveryModeDataList.add(deliveryModeData);
 			}
 
 		}
-		if (null != rich.getClickAndCollect() && rich.getClickAndCollect().equals(ClickAndCollectEnum.YES))
-		{
-			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.C_C, MarketplaceFacadesConstants.INR, skuid);
-			if (mplZoneDeliveryModeValueModel != null)
-			{
-				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
-				deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-				deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-				deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-				deliveryModeData.setSellerArticleSKU(mplZoneDeliveryModeValueModel.getSellerArticleSKU());
-				if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
-				{
-					final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
-					deliveryModeData.setDeliveryCost(priceForTshipItem);
-				}
-				else
-				{
-					deliveryModeData.setDeliveryCost(priceData);
-				}
-				deliveryModeDataList.add(deliveryModeData);
-			}
-		}
-		if (null != rich.getExpressDelivery() && rich.getExpressDelivery().equals(ExpressDeliveryEnum.YES))
-		{
-			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.EXPRESS, MarketplaceFacadesConstants.INR, skuid);
-			if (mplZoneDeliveryModeValueModel != null)
-			{
-				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
-				deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-				deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-				deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-				deliveryModeData.setSellerArticleSKU(skuid);
-				if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
-				{
-					final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
-					deliveryModeData.setDeliveryCost(priceForTshipItem);
-				}
-				else
-				{
-					deliveryModeData.setDeliveryCost(priceData);
-				}
-				deliveryModeDataList.add(deliveryModeData);
-			}
-		}
+
 		return deliveryModeDataList;
+	}
+
+	/**
+	 * Populate Data Class for Delivery Information
+	 *
+	 * CAR-266
+	 *
+	 * @param mplZoneDeliveryModeValueModelList
+	 * @param rich
+	 * @return dataList
+	 */
+	private List<MarketplaceDeliveryModeData> getDeliveryData(
+			final List<MplZoneDeliveryModeValueModel> mplZoneDeliveryModeValueModelList, final RichAttributeModel rich)
+	{
+		final List<MarketplaceDeliveryModeData> dataList = new ArrayList<MarketplaceDeliveryModeData>();
+
+		for (final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel : mplZoneDeliveryModeValueModelList)
+		{
+			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
+			final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
+
+			deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
+			deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
+			deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
+			deliveryModeData.setSellerArticleSKU(mplZoneDeliveryModeValueModel.getSellerArticleSKU());
+
+			if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
+			{
+				final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
+				deliveryModeData.setDeliveryCost(priceForTshipItem);
+			}
+			else
+			{
+				deliveryModeData.setDeliveryCost(priceData);
+			}
+
+			dataList.add(deliveryModeData);
+		}
+
+		return dataList;
 	}
 
 	public void groupGlassificationData(final ProductData productData)
@@ -956,15 +958,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1199,10 +1201,10 @@ public class ProductDetailsHelper
 		Wishlist2Model lastCreatedWishlist = null;
 		final UserModel user = userService.getCurrentUser();
 		//String ussid = null;
-//		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
-//		{
-//			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
-//		}
+		//		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+		//		{
+		//			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+		//		}
 		try
 		{
 			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);

@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -66,6 +67,34 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 		ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 		ServicesUtil.validateParameterNotNull(sellerArticleSku, "sellerArticleSku cannot be null");
 		return getMplDeliveryCostDao().getDeliveryModesAndCost(currencyIsoCode, sellerArticleSku);
+	}
+
+	/**
+	 *
+	 * Added for CAR-266
+	 * 
+	 * @param deliveryMode
+	 * @param currencyIsoCode
+	 * @param skuid
+	 */
+	@Override
+	public List<MplZoneDeliveryModeValueModel> getDeliveryCost(final StringBuilder deliveryMode, final String currencyIsoCode,
+			final String skuid)
+	{
+		final List<MplZoneDeliveryModeValueModel> dataList = getMplDeliveryCostDao()
+				.getDeliveryModesAndCost(currencyIsoCode, skuid);
+		final List<MplZoneDeliveryModeValueModel> finalList = new ArrayList<MplZoneDeliveryModeValueModel>();
+
+		for (final MplZoneDeliveryModeValueModel oModel : dataList)
+		{
+			if (deliveryMode.toString().contains(oModel.getDeliveryMode().getCode()))
+			{
+				finalList.add(oModel);
+			}
+		}
+
+		return finalList;
+
 	}
 
 }
