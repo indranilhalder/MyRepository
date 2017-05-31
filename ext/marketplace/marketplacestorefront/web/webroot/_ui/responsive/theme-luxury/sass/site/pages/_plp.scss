@@ -235,13 +235,13 @@
 					span.original-price{
 						text-decoration: line-through;
 						margin-right:10px;
+                        color: $mlight-gray;
 					}
 					span.savings{
 						color:#da3549;
 					}
                     span.sale-price{
-						float: right;
-                        text-align: right;
+                        padding-left: 20px;
 					}
 				}
 			}
