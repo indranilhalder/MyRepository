@@ -2084,4 +2084,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
 	public static final String SECONDPRODUCT = "secondProduct";
+
+	// PRDI - 151
+	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
 }
