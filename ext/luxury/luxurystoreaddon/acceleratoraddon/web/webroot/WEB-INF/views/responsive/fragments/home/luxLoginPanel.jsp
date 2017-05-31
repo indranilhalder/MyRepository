@@ -8,12 +8,57 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement" %>
-								
+			<script type="text/javascript">
+						var gigyasocialloginurl='https://cdns.gigya.com/JS/socialize.js';
+						var gigyaApiKey='3_9qHVRWtkcWmW3_VBpZ5tRjWHCiuFSKNQDe1AUNf7ItifpjxiFc_r0H-7ZPe0AAAk';
+						var commonResource='//localhost:9001/_ui/responsive/common';
+						var buildNumber='100073'; 
+						$.ajax({
+					        type: "GET",
+					        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
+					        success: function() {
+					        	 $.ajax({
+					 		        type: "GET",
+					 		        url: commonResource+'/js/minified/acc.gigya.min.js?v='+buildNumber,
+					 		        success: function() {
+					 		        	 $(document).ready(function () {
+					 		        		loadGigya();
+					 		        	});
+					 		        },
+					 		        dataType: "script",
+					 		        cache: true
+					 		    });
+					        },
+					        dataType: "script",
+					        cache: true
+					    });	
+			</script>						
 <h2 class="mb-20"><spring:theme code="luxury.header.link.signin" /></h2>
-<div class="header-soc-login mb-20 ">
-	<a class="fb-login btn btn-fb" href="javascript:;">FACEBOOK</a>
-	<a class="g-login btn btn-default btn-gp" href="javascript:;">GOOGLE</a>
-</div>
+
+	<!-- For  Gigya and API Social Login -->
+<c:choose> 
+  <c:when test="${isGigyaEnabled=='Y'}">
+   <ul class="social-connect" id="gSignInWrapper">
+<li>
+   <!--  <br /> -->
+   <!--  <h4>Please sign in using one of the following providers:</h4><br /><br /> -->
+    <div id="loginDiv"></div>
+    
+    </li>
+</ul>
+  </c:when>
+  <c:otherwise>
+   <ul class="social-connect" id="gSignInWrapper">
+   	<div class="header-soc-login mb-20 ">
+		<a class="fb-login btn btn-fb" href="${urlVisitForFacebook}">FACEBOOK</a>
+		<a class="g-login btn btn-default btn-gp" href="${urlVisit}">GOOGLE</a>
+	</div>
+	</ul>
+  </c:otherwise>
+</c:choose>
+
+<!-- End  Gigya and API Social Login -->
+
 <p class="mb-20">OR</p>
 <form:form action="/j_spring_security_check" method="post" commandName="loginForm">
 	<c:if test="${loginError}">
@@ -47,50 +92,3 @@
 		</ycommerce:testId>
 	</p>
 </form:form>
-
-
-				<%-- <li><spring:theme code="luxury.header.link.signin" /></li>
-								
-				<form:form action="/j_spring_security_check" method="post" commandName="loginForm">
-								
-					<c:if test="${loginError}">
-						<div class="form_field_error">
-					</c:if>		
-					<div class="form_field-elements">
-				   	 <formElement:formInputBox idKey="j_username" labelKey="login.email" path="j_username" inputCSS="text" mandatory="true" placeholder="EMAIL"/>
-				   	 <formElement:formPasswordBox idKey="j_password" labelKey="login.password" path="j_password" inputCSS="text password" mandatory="true"/>
-					<c:if test="${not empty message}">
-						<span class="errors">
-							<spring:theme code="${message}"/>
-						</span>
-					</c:if>
-					</div>
-					<c:if test="${loginError}">
-						</div>
-					</c:if>
-					<div class="form-actions clearfix">
-						<div class="form-actions clearfix">
-						<ycommerce:testId code="login_Login_button">
-							<button id="triggerLoginAjax" type="submit" class="btn header-signInButton">
-							   <spring:theme code="login.login" />
-							</button>
-						</ycommerce:testId>
-					</div>				
-					<div class="forgot-password">		
-						<a href="<c:url value='/login/pw/request'/>" class="js-password-forgotten header-login-target-link" data-target-id="forget-password" data-cbox-title="<spring:theme code="forgottenPwd.title"/>">
-						<spring:theme code="login.link.forgottenPwd" />
-						</a>
-					</div> 
-					</div>
-					<div class='or'><spring:theme code="text.or" /></div>
-			</form:form>								
- 								
-			<li><div class="foot">
-				<spring:theme code="luxury.header.flyout.signup.member"/>
-				<ycommerce:testId code="luxury_header_Register_link">
-				<a class="header-login-target-link register_link" data-target-id="sign-up" href="<c:url value="/login?isSignInActive=N"/>"> 
-				<spring:theme code="luxury.header.link.register" />
-				</a>
-				</ycommerce:testId>
-				</div>
-			</li> --%>
