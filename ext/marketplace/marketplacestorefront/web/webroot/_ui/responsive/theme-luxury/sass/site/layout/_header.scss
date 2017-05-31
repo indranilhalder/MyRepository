@@ -391,6 +391,15 @@
 			li.header-bag-link{
 				display:none;
 			}
+			li.wishlist{
+				background: $Sprite -36px -2px no-repeat;
+				width: 30px;
+                height: 20px;
+                a{
+	                width: 30px;
+	                height: 20px;
+                }
+			}
 		}
 	}
 	.header-left {

@@ -282,7 +282,7 @@ TATA.CommonFunctions = {
 		},
 		HeaderMinicart: function(){
 			$('header .mini-bag').hide();
-			$('header .mini-cart-link').html('');
+			$('header .mini-cart-link,header #myWishlistHeader').html('');
 			$("header .bag").hover(function () {
 				$(this).find('.mini-bag').show();
 			},

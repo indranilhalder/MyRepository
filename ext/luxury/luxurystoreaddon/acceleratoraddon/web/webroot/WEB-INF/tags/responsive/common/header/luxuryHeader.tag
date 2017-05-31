@@ -11,8 +11,10 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 
-<header class="header"> 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 
+<header class="header"> 
+<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
 <div class="header-promo text-center">
 	<cms:pageSlot position="TopCategoryPageHeaderSlot" var="component">
 		<cms:component component="${component}"/>
@@ -73,7 +75,10 @@
 					</sec:authorize>				
 					<li class="header-search-link"><a href="#" id="header-search-menu" class="toggle-link search" data-target-id="#header-search">Search</a></li>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-					<li class="header-wishlist-link hidden-xs"><a href="#" class="wishlist">Wishlist</a></li>
+					<li class="header-wishlist-link hidden-xs hidden-sm hidden-lg hidden-md"><a href="#" class="wishlist"><cms:pageSlot position="WishList" var="WishList" limit="1">
+						<cms:component component="${WishList}" element="li"/>
+					</cms:pageSlot></a>
+					</li>
 					</sec:authorize>
 					<li class="header-bag-link"><a href="#" class="bag"><cms:pageSlot position="MiniCart" var="cart" limit="1">
 					<cms:component component="${cart}" element="li"/>

@@ -9,6 +9,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="luxuryProduct" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/product"%>
+
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -110,7 +112,7 @@ tr.d0 td {
 			<div class="pdp-img-nav">
 				<c:forEach items="${galleryImages}" var="container">
 					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-						<div><img src="//localhost:9001${container.thumbnail.url}"></div>
+						<div><img src="//${staticHost}${container.thumbnail.url}"></div>
 					</c:if>
 				</c:forEach>
 			</div>
@@ -118,7 +120,7 @@ tr.d0 td {
 				<div class="pdp-img-slider circle-pager">
 					<c:forEach items="${galleryImages}" var="container">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<div><img src="//localhost:9001${container.superZoom.url}"></div>
+							<div><img src="//${staticHost}${container.superZoom.url}"></div>
 						</c:if>
 					</c:forEach>
 				</div>
