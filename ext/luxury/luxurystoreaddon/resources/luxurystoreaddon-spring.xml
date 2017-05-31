@@ -76,6 +76,8 @@
         <entry key="addon:addon:/marketplacecheckoutaddon/fragments/checkout/billingAddressForm" value="addon:/luxurycheckoutaddon/fragments/checkout/billingAddressForm"/>
         <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/netbankingPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/netbankingPanel"/>
         <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/codPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/codPanel"/>
+	    <entry key="fragments/password/passwordResetRequestPopup" value="addon:/luxurystoreaddon/fragments/home/forgottenPwd"/>
+	
 	</util:map>
 	<!-- Logic for resolving view resolver for addon prefix -->
 </beans>

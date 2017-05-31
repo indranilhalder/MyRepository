@@ -56,7 +56,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -130,10 +129,6 @@ public class PasswordResetPageController extends AbstractPageController
 	@Autowired
 	HttpServletRequest httpServletRequest;
 
-
-	@Autowired
-	private CommonUtils commonUtils;
-
 	/**
 	 * @description method is called to get PasswordRequest
 	 * @param model
@@ -169,16 +164,7 @@ public class PasswordResetPageController extends AbstractPageController
 				model.addAttribute(new ForgottenPwdForm());
 			}
 
-
-			if (commonUtils.isLuxurySite())
-			{
-				return ControllerConstants.Views.Fragments.LuxuryHome.ForgotPasswordPanel;
-			}
-			else
-			{
-				return ControllerConstants.Views.Fragments.Password.PasswordResetRequestPopup;
-			}
-
+			return ControllerConstants.Views.Fragments.Password.PasswordResetRequestPopup;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
