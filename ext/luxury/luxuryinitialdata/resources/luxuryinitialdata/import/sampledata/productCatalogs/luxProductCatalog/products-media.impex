@@ -51,3 +51,39 @@ $galleryImages=galleryImages(qualifier, $catalogVersion)
 $media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
 $URI=http:
 UPDATE Product;code[unique=true];$picture;$thumbnail;$detail;$others;$normal;$thumbnails;$galleryImages;$catalogVersion
+
+
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$galleryImages=galleryImages(qualifier, $catalogVersion)
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$siteResource=jar:com.tisl.lux.constants.LuxuryinitialdataConstants&/luxuryinitialdata/import/sampledata/productCatalogs/$productCatalog
+$medias=medias(code, $catalogVersion)
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);;code[unique=true];$media;mime[default='image/jpeg'];$catalogVersion;folder(qualifier);mediaType(code)[default='Image']
+;97Wx144H;97Wx144H/MP000000000390478_1;/97Wx144H/MP000000000390478_1.jpg;$siteResource/images/97Wx144H/MP000000000390478_1.jpg;;;images
+;97Wx144H;97Wx144H/MP000000000390478_2;/97Wx144H/MP000000000390478_2.jpg;$siteResource/images/97Wx144H/MP000000000390478_2.jpg;;;images
+;97Wx144H;97Wx144H/MP000000000390478_3;/97Wx144H/MP000000000390478_3.jpg;$siteResource/images/97Wx144H/MP000000000390478_3.jpg;;;images
+;97Wx144H;97Wx144H/MP000000000390478_4;/97Wx144H/MP000000000390478_4.jpg;$siteResource/images/97Wx144H/MP000000000390478_4.jpg;;;images
+
+;1348Wx2000H;1348Wx2000H/MP000000000390478_1;/1348Wx2000H/MP000000000390478_1.jpg;$siteResource/images/1348Wx2000H/MP000000000390478_1.jpg;;;images
+;1348Wx2000H;1348Wx2000H/MP000000000390478_2;/1348Wx2000H/MP000000000390478_2.jpg;$siteResource/images/1348Wx2000H/MP000000000390478_2.jpg;;;images
+;1348Wx2000H;1348Wx2000H/MP000000000390478_3;/1348Wx2000H/MP000000000390478_3.jpg;$siteResource/images/1348Wx2000H/MP000000000390478_3.jpg;;;images
+;1348Wx2000H;1348Wx2000H/MP000000000390478_4;/1348Wx2000H/MP000000000390478_4.jpg;$siteResource/images/1348Wx2000H/MP000000000390478_4.jpg;;;images
+
+;97Wx144H;97Wx144H/MP000000000390478_5;/97Wx144H/MP000000000390478_5.mp4;$siteResource/images/97Wx144H/MP000000000390478_5.mp4;video/mp4;;images;Video
+
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$catalogVersion
+;MP000000000390478_1;/97Wx144H/MP000000000390478_1.jpg,/1348Wx2000H/MP000000000390478_1.jpg
+;MP000000000390478_2;/97Wx144H/MP000000000390478_2.jpg,/1348Wx2000H/MP000000000390478_2.jpg
+;MP000000000390478_3;/97Wx144H/MP000000000390478_3.jpg,/1348Wx2000H/MP000000000390478_3.jpg
+;MP000000000390478_4;/97Wx144H/MP000000000390478_4.jpg,/1348Wx2000H/MP000000000390478_4.jpg
+;MP000000000390478_5;/97Wx144H/MP000000000390478_5.mp4
+
+
+
+UPDATE Product;code[unique=true];$catalogVersion;$galleryImages
+;MP000000000390478;;MP000000000390478_1,MP000000000390478_2,MP000000000390478_3,MP000000000390478_4,MP000000000390478_5
+;MP000000000390479;;MP000000000390478_1,MP000000000390478_2,MP000000000390478_3,MP000000000390478_4,MP000000000390478_5
