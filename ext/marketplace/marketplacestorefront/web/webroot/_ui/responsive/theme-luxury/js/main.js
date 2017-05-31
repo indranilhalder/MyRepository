@@ -426,6 +426,9 @@ TATA.Pages = {
 	    	TATA.Pages.PLP.performAjax(pathName +'?'+queryUrl);
 	    },
 	    performLoadMore : function(ajaxUrl){
+            
+            $('body').addClass('loader');
+            
 	        $.ajax({
 	            url: ajaxUrl,
 	            data: {
@@ -438,7 +441,10 @@ TATA.Pages = {
                     	$('.product-grid-wrapper').append($(filtered).find(".product-grid-wrapper"));
 	                }
 	                $("#pageQuery").val(ajaxUrl);
-	            }
+	            },
+                complete: function(){
+                    $('body').removeClass('loader');
+                }
 	        });
 	    },
         showSelectedRefinements: function() {
@@ -459,6 +465,9 @@ TATA.Pages = {
             });
         },
         performAjax: function(requestUrl) {
+            
+            $('body').addClass('loader');
+            
             $.ajax({
                 url: requestUrl,
                 data: {
@@ -479,6 +488,9 @@ TATA.Pages = {
 		            		$(".loadMore").hide();
 		            	}
 		            }
+                },
+                complete: function(){
+                    $('body').removeClass('loader');
                 }
             });
         },

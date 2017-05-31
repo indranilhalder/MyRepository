@@ -405,11 +405,11 @@ tr.d0 td {
 				</li>
 			</ul>
 		</div> --%>
-		
+</div>		
 <div class="tabs-block">
 				<luxuryProduct:luxuryProductPageTabs />
 			</div>
-	</div>
+	
 	
 	<c:set var="electronics"><spring:theme code='product.electronics'/></c:set>
 	<c:set var="clothing"><spring:theme code='product.clothing'/></c:set>
