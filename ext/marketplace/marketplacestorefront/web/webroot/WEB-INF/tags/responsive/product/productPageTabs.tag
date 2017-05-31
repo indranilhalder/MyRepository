@@ -95,7 +95,6 @@ var buyboxskuId='';
 </div>
 <ul class="tabs pdp productTabs">
 	<!-- INC144313814 fix start -->
-<<<<<<< HEAD
 	<!-- commented as part of PRDI-96 start -->
 	<%-- <c:if test="${fn:contains(validTabs, 'details')}">
 		<li class="active">
@@ -104,18 +103,11 @@ var buyboxskuId='';
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
 	<!-- INC144313814 fix end -->
-=======
->>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
-<<<<<<< HEAD
 		<li  class="active">				<!-- added class 'active' PRDI-96 -->
-=======
-		<li class="active">
->>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 			<product:productStyleNotesTab product="${product}" />
 		</li>
 	</c:if>
-<<<<<<< HEAD
 	<!-- moved as part of PRDI-96 start -->
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<li>
@@ -123,14 +115,7 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 	<!-- moved as part of PRDI-96 end -->
-=======
 	<!-- INC144313814 fix end -->
-	<c:if test="${fn:contains(validTabs, 'details')}">
-		<li>
-			<product:productDetailsTab product="${product}" />
-		</li>
-	</c:if>
->>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 	<c:if test="${fn:contains(validTabs, 'description')}">
 		<li class="active">
 			<product:productDescriptionTab product="${product}" />
