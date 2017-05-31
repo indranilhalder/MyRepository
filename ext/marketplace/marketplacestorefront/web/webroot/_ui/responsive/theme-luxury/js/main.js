@@ -299,7 +299,7 @@ TATA.CommonFunctions = {
 	
 	Footer: function() {
 		if($(window).width() >= 768){
-			$('footer').find('.accordion-title').removeClass('accordion-title');
+			$('footer').find('.accordion').removeClass('accordion');
 		}
 		$('#main-nav > ul').addClass('footer-cloned-ul').clone().appendTo('.footer-popular-search');
 		$('.footer-popular-search .footer-cloned-ul > li').append('<br/>');
@@ -312,6 +312,14 @@ TATA.CommonFunctions = {
 			}
 		});
 		
+		$(document).on('click','.accordion h3', function(){
+		      //Expand or collapse this panel
+		      $(this).toggleClass('active').next().stop().slideToggle(500);
+		       Acc.not($(this)).removeClass('active');
+		      //Hide the other panels
+		      $(".accordion-content").not($(this).next()).stop().slideUp(500);
+		      return false;
+		    });
 	},
 	
 	init: function () {

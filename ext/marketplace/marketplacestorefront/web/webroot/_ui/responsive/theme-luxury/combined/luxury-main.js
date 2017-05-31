@@ -12761,10 +12761,13 @@ TATA.CommonFunctions = {
         }
     },
     Footer: function() {
-        $(window).width() >= 768 && $("footer").find(".accordion-title").removeClass("accordion-title"), 
+        $(window).width() >= 768 && $("footer").find(".accordion").removeClass("accordion"), 
         $("#main-nav > ul").addClass("footer-cloned-ul").clone().appendTo(".footer-popular-search"), 
         $(".footer-popular-search .footer-cloned-ul > li").append("<br/>"), $(".footer-popular-search .footer-cloned-ul > li").each(function() {
             $(this).find(".sub-menu").length ? $(this).show() : $(this).hide();
+        }), $(document).on("click", ".accordion h3", function() {
+            return $(this).toggleClass("active").next().stop().slideToggle(500), Acc.not($(this)).removeClass("active"), 
+            $(".accordion-content").not($(this).next()).stop().slideUp(500), !1;
         });
     },
     init: function() {
