@@ -11,7 +11,16 @@
     li{
         list-style: none;
         display: inline-block;
+        width: 40px;
+        margin: 0px 5px;
     }
+    .g-interactivepost{
+        background: transparent;
+        border: 0px;
+        width: 40px;        
+        padding: 0px;
+    }
+    
     .fb, .tw, .yt, .ins, .gp, .pin{
         background:$Sprite_icon no-repeat;
         width: 40px;

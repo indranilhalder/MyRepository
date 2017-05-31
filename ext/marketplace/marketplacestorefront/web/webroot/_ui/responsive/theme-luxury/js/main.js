@@ -602,11 +602,26 @@ TATA.Pages = {
 				]
 			});
 		},
-		
+        
+        Zoomer: function() {
+            $('.zoomer').elevateZoom({  
+
+              zoomWindowWidth:300,
+            zoomWindowHeight:300
+            });
+        },
+        
+		openPopup: function (url) {
+            newwindow=window.open(url,'name','height=400,width=400');
+            if (window.focus) {newwindow.focus()}
+            return false;
+        }, 
+        
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
 			_self.Slider();
+            _self.Zoomer();
 		}
 	},
 	

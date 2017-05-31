@@ -61,6 +61,7 @@ grunt.initConfig({
 					'js/lib/jquery-ui-1.11.2.min.js',
 					'js/lib/jquery.selectBoxIt.min.js',
 					'js/lib/slick.min.js',
+                    'js/lib/jquery.elevatezoom.js',
 					'js/lib/bootstrap.min.js',
 				    'js/lib/jquery.validate.min.js',
 				    'js/main.js',
