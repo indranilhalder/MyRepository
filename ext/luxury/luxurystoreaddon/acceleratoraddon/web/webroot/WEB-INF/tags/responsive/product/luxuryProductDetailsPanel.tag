@@ -114,13 +114,17 @@ tr.d0 td {
 					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 						<div><img src="//${staticHost}${container.thumbnail.url}"></div>
 					</c:if>
+					<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+						<c:set var="videoAvailable" value="true"/>
+						<c:set var="videoUrl" value="//${staticHost}${container.thumbnail.url}"/>
+					</c:if>
 				</c:forEach>
 			</div>
 			<div class="pdp-img">
 				<div class="pdp-img-slider circle-pager">
 					<c:forEach items="${galleryImages}" var="container">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<div><img src="//${staticHost}${container.superZoom.url}"></div>
+							<div><img src="//${staticHost}${container.superZoom.url}" data-zoom-image="//localhost:9001${container.superZoom.url}" class="zoomer"></div>
 						</c:if>
 					</c:forEach>
 				</div>
@@ -144,8 +148,12 @@ tr.d0 td {
 			
 				<div class="pdp-social-links text-center">
 					<ul>
-						<li><a href="#" class="play">Play</a></li>
-						<li><a onclick="addToWishlist()" class="save">Save</a></li>
+						<c:if test="${videoAvailable}">
+							<li><a href="#" data-video-url="${videoUrl}" class="play">Play</a></li>
+						</c:if>
+						<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+							<li><a onclick="addToWishlist()" class="save">Save</a></li>
+						</sec:authorize>
 						<li><a data-toggle="modal" data-target="#share-modal" href="#" class="share">Share</a></li>
 					</ul>
 					<div id="share-modal" class="modal fade" role="dialog">
