@@ -959,7 +959,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 							}
 
 							//TISBOX-1746  commenting see TISBOX-1746
-							if (delData.getIsCODLimitFailed()) {
+							if (delData.getIsCODLimitFailed() && !(StringUtils.isNotEmpty(agentId))) {
 								errorMessages.add(new ResourceMessage(
 										"placeOrder.validation.codlimitFailed",
 										Arrays.asList(pinData.getUssid())));
