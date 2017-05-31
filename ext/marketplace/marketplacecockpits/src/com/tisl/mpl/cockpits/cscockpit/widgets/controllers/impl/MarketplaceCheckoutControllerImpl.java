@@ -412,6 +412,13 @@ public class MarketplaceCheckoutControllerImpl extends
 	public Boolean isCartCODEligible() throws ValidationException {
 
 		Boolean isEntryCODEligible = true;
+		
+		/**
+		 * TPR-5712 : if store manager logged in
+		 */
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		
 		if (configurationService
 				.getConfiguration()
 				.getBoolean(
@@ -450,7 +457,7 @@ public class MarketplaceCheckoutControllerImpl extends
 								+ response.getCod());
 	
 						if (StringUtils.equalsIgnoreCase(response.getCod(),
-								MarketplaceCockpitsConstants.NO)) {
+								MarketplaceCockpitsConstants.NO) && !(StringUtils.isNotEmpty(agentId))) {
 							isEntryCODEligible = false;
 							errorMessages.add(new ResourceMessage(
 									"placeOrder.validation.nocod", Arrays
