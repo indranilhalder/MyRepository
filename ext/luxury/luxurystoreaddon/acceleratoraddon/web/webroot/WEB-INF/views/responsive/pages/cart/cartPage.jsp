@@ -62,6 +62,12 @@
 			<cms:pageSlot position="EmptyCartMiddleContent" var="feature" element="div"  >
 				<cms:component component="${feature}"/>
 			</cms:pageSlot>
+			<div class="emptyCart">		
+					<h2>Your Shopping cart is empty</h2>
+					<p>Add products to it.</p>
+					<button class="btn btn-primary btn-lg">Shop Men</button>
+					<button class="btn btn-primary btn-lg">Shop Women</button>
+				</div>
 				<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
 			</div>
 		</c:if>
