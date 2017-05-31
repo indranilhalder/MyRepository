@@ -9,6 +9,7 @@
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/nav" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/product" %>
+<%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
 <c:set value="${(searchPageData.pagination.currentPage * searchPageData.pagination.pageSize) + 1}" var="currentPageStart"/>
 <c:set value="${(searchPageData.pagination.currentPage + 1) * searchPageData.pagination.pageSize}" var="currentPageEnd"/>
@@ -35,12 +36,15 @@
 		<section>
 			<div class="container-fluid plp-banner">
 				<div class="plp-banner-wrapper">
-					<!-- <img alt="images" src="../images/banner-plp.png" alt=""/> -->
+					<cms:pageSlot position="LuxPLPBannerPosition" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
+						<cms:component component="${feature}" />
+					</cms:pageSlot>
 				</div>
 			</div>
-			<c:if test="${fn:contains(page_name, 'Search Results')}">
-				<nav:luxurySearchFacetFilterData/>
-			</c:if>
+			<cms:pageSlot position="LuxPLPVisualFilterPosition" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">
+				<cms:component component="${feature}" />
+			</cms:pageSlot>
+			<nav:luxurySearchFacetFilterData/>
 		</section>
 	</template:page>
 </c:otherwise>

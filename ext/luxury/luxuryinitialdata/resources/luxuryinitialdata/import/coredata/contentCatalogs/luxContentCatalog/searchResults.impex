@@ -19,8 +19,13 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;LuxSearchResultsPageTemplate;$jarResourceCms/structure-view/structure_searchResultsGridPageLuxTemplate.vm                         
 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
+;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;LuxPLPBanner-SearchResultsGrid;LuxPLPBannerSlot;;LuxPLPBannerSlot;true          
+;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
+;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true          
 ;;LuxProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true          
 ;;LuxSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true          
 ;;LuxTopHeaderSlot-SearchResultsGrid;TopHeaderSlot;;TopHeaderSlot;true          
@@ -35,8 +40,17 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true          
 
                                      
-INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;luxurySearchResultsPage
+;;LuxProductsListingPageMSH12;Luxury Products Listing Page For MSH12;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1236106
+;;LuxProductsListingPageMSH13;Luxury Products Listing Page For MSH13;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1236105
                  
 
-                           
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='LuxProductsListingPageMSH12'];contentSlot(uid,$contentCV)[unique=true];
+;;LuxPLPBannerSlotForMSH12;LuxPLPBannerPosition;LuxProductsListingPageMSH12;LuxPLPBannerSlot;
+;;LuxPLPVisualFilterSlotForMSH12;LuxPLPVisualFilterPosition;LuxProductsListingPageMSH12;LuxPLPVisualFilterSlot;
+#;;LuxPLPBannerSlotForMSH13;LuxPLPBannerPosition;LuxProductsListingPageMSH13;LuxPLPBannerSlot;
+#;;LuxPLPVisualFilterSlotForMSH13;LuxPLPVisualFilterPosition;LuxProductsListingPageMSH13;LuxPLPVisualFilterSlot;    
+
+INSERT_UPDATE NeedHelpComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;ContactNumber;;
+;;NeedHelp;Need Help;NeedHelp;1-800-123-4567;;

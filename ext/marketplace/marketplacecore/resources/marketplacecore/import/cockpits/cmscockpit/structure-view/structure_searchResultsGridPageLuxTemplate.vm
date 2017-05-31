@@ -24,7 +24,12 @@
 			</tr>
 			<tr>
 				<td colspan="7" class="structureViewSection">
-					<cockpit code="LuxPLPBannerSlot"/>
+					<cockpit code="LuxPLPBannerPosition"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="7" class="structureViewSection">
+					<cockpit code="LuxPLPVisualFilterPosition"/>
 				</td>
 			</tr>
 			<tr>

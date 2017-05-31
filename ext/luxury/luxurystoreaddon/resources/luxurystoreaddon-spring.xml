@@ -57,6 +57,7 @@
 		<entry key="pages/cart/cartPage" value="addon:/luxurystoreaddon/pages/cart/cartPage"/>
 		<entry key="pages/search/facetResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
 		<entry key="pages/search/searchGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
+		<entry key="pages/search/searchEmptyPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchEmptyPage"/>
 		<entry key="fragments/cart/cartPopup" value="addon:/luxurystoreaddon/fragments/cart/cartPopup"/>
         <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/addEditDeliveryAddressPage"/>
         <entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/chooseDeliveryMethodPage"/>

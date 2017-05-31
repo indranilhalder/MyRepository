@@ -84,6 +84,9 @@
 										</c:otherwise>
 									</c:choose>
 								</span>
+								<c:if test="${product.savingsOnProduct.value > 0}">
+									<span class="savings">  ( -${product.savingsOnProduct.value}% ) </span>
+								</c:if>
 								<span class="sale-price">
 									<%-- <format:price priceData="${product.price}" /> --%>
 									<c:choose>
@@ -101,13 +104,6 @@
 										</c:otherwise>
 									</c:choose>
 								</span>
-								<!-- TISCR-405: set the savings for the current currency -->
-								<%-- <c:if test="${product.savingsOnProduct.value > 0}">																		
-									<p class="savings">																				
-									<span id="savings_${product.code}">  You save ${product.savingsOnProduct.formattedValue} </span>
-									 <span id="savings_${product.code}">  ( -${product.savingsOnProduct.value}% ) </span>
-									</p>
-								</c:if> --%>
 						</c:if>
 						<c:if test="${product.price.value <= 0 || (product.productMRP.value == product.price.value)}">
 							<span class="price">
