@@ -209,7 +209,7 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 				query2.append(" AND {o:creationtime} >=?thresholdDays");
 			}
 			//Condition based on agent ID
-			if (agentId != null) {
+			if (StringUtils.isNotEmpty(agentId)) {
 				query.append(" AND {o:agentId} =?agentId");
 				query2.append(" AND {o:agentId} =?agentId");
 			}
@@ -285,7 +285,7 @@ public class MarketplaceDefaultOrderSearchQueryBuilder extends
 						currentDate.getTime());
 			}
 			//Condition based on agent ID
-			if (agentId != null) {
+			if (StringUtils.isNotEmpty(agentId)) {
 				searchQuery.addQueryParameter("agentId", agentId.trim().toLowerCase());
 			}
 			LOG.debug("Query for Order Search " + searchQuery.getQuery());

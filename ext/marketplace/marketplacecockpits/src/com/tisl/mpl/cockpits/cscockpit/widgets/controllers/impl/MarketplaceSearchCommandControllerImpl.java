@@ -205,7 +205,7 @@ public class MarketplaceSearchCommandControllerImpl extends
 	 */
 	@Override
 	public List<BuyBoxModel> getsellerSpecificBuyBoxPrices(final ProductModel product) {
-		return buyBoxService.buyboxPrice(product.getCode());
+		return buyBoxService.buyboxPriceForAllSeller(product.getCode());
 	}
 
 	
