@@ -11,8 +11,10 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 
-<header class="header"> 
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 
+<header class="header"> 
+<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
 <div class="header-promo text-center">
 	<cms:pageSlot position="TopCategoryPageHeaderSlot" var="component">
 		<cms:component component="${component}"/>
