@@ -59,10 +59,11 @@ $(document).ready(function() {
 				success:function(data){
 					$('#login-container .header-sign-in').html(data);
 				},
-				complete:function(){					
+				complete:function(){	
 					pwsRequest();
 					registerRequest();
 					targetLink();
+					LuxLoginValidate();
 				}
 			})
 		});
@@ -85,7 +86,9 @@ $(document).ready(function() {
 					registerRequest();
 					targetLink();
 					registerRequest();
-					validateForgetEmail();
+					LuxLoginValidate();
+					
+					
 				}
 			});
 		});
@@ -106,7 +109,8 @@ $(document).ready(function() {
 				complete:function(){
 					loginRequest();
 					pwsRequest();
-					targetLink();						
+					targetLink();
+					LuxLoginValidate();
 				}
 			});
 		});
@@ -122,4 +126,11 @@ $(document).ready(function() {
 			$('#gender').val(genderValue);
 		});
 	}
+	
+	function LuxLoginValidate(){
+		tul.commonFunctions.init();	
+	}
+	
+	
+	
 });
