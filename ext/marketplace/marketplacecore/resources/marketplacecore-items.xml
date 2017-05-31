@@ -3375,6 +3375,15 @@
 						<persistence type="property" />
 					</attribute>
 
+					<attribute qualifier="isLuxuryCustomer" autocreate="true"
+						type="java.lang.Boolean" generate="true">
+						<description>To check if customer is luxury </description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>false</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+
 					<!-- Added for TISCR-278 enabling a check box for Tata my rewards in 
 						login page -->
 					<!-- Push notification save device key web service ends -->

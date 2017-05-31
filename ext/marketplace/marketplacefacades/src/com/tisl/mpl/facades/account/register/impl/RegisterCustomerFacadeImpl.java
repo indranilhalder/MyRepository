@@ -320,7 +320,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 					{
 						newCustomer.setGender(Gender.FEMALE);
 					}
-
+					newCustomer.setIsLuxuryCustomer(Boolean.valueOf(registerData.isIsLuxCustomer()));
 					newCustomer.setMobileNumber(registerData.getMobilenumber());
 				}
 

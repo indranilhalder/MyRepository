@@ -192,6 +192,7 @@ public class LoginPageController extends AbstractLoginPageController
 				model.addAttribute(ModelAttributetConstants.LOGIN_ERROR, Boolean.valueOf(loginError));
 				model.addAttribute(ModelAttributetConstants.RESULT, ModelAttributetConstants.FAILURE);
 				model.addAttribute(ModelAttributetConstants.COUNT, sessionService.getAttribute(ModelAttributetConstants.COUNT));
+
 			}
 			storeContentPageTitleInModel(model, MessageConstants.LOGIN_PAGE_TITLE);
 
@@ -207,6 +208,7 @@ public class LoginPageController extends AbstractLoginPageController
 				{
 					return ControllerConstants.Views.Fragments.LuxuryHome.RegisterFragment;
 				}
+
 			}
 			else
 			{
@@ -377,7 +379,8 @@ public class LoginPageController extends AbstractLoginPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_REGISTER, method = RequestMethod.POST)
 	public String doRegister(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+			final HttpServletResponse response, final RedirectAttributes redirectModel,
+			@RequestParam(value = "isLuxCustomer", required = false) final String isLuxCustomer) throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		try
@@ -388,21 +391,12 @@ public class LoginPageController extends AbstractLoginPageController
 			final String rePassword = java.net.URLDecoder.decode(request.getParameter("checkPwd"), "UTF-8");
 			form.setPwd(password);
 			form.setCheckPwd(rePassword);
+			form.setLuxCustomer(Boolean.parseBoolean(isLuxCustomer));
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
-
-			if (commonUtils.isLuxurySite())
-			{
-
-				if (bindingResult.hasErrors())
-				{
-					final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
-					model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
-					returnPage = ControllerConstants.Views.Fragments.LuxuryHome.RegisterFragment;
-				}
-
-			}
+			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
+			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 
 		}
 		catch (final EtailBusinessExceptions e)
@@ -466,6 +460,7 @@ public class LoginPageController extends AbstractLoginPageController
 			data.setFirstName(form.getFirstName());
 			data.setLastName(form.getLastName());
 			data.setMobilenumber(form.getMobileNumber());
+			data.setIsLuxCustomer(form.isLuxCustomer());
 			//implementation for TISCR-278 :start
 
 			if (null != request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS)
