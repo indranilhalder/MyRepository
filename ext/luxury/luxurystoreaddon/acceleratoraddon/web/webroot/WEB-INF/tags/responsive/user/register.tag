@@ -7,7 +7,7 @@
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
-<script type="text/javascript" src="/_ui/responsive/common/js/minified/acc.gigya.min.js"></script>
+<script type="text/javascript" src="/_ui/responsive/theme-luxury/js/gigya/acc.gigya.js"></script>
 
 
 <h2 class="mb-20"><spring:theme code="luxury.header.link.register" /> </h2>

@@ -5,7 +5,7 @@
 <%@ attribute name="pageCss" required="false" fragment="true" %>
 <%@ attribute name="pageScripts" required="false" fragment="true" %>
 
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="analytics" tagdir="/WEB-INF/tags/shared/analytics" %>
 <%@ taglib prefix="generatedVariables" tagdir="/WEB-INF/tags/shared/variables" %>
 <%@ taglib prefix="debug" tagdir="/WEB-INF/tags/shared/debug" %>
@@ -280,7 +280,7 @@
 
 
 <!-- For Gigya Social Login --><!-- TISPT-261 -->
-	<c:if test="${isGigyaEnabled=='Y'}">
+	<c:if test="${isLuxuryGigyaEnabled=='Y'}">
 		<c:choose>
 			<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/') or 
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
@@ -288,31 +288,41 @@
 		<c:choose>
  		<c:when test="${isMinificationEnabled}">
  		<script type="text/javascript">
- 		var gigyasocialloginurl='${gigyasocialloginurl}';
- 		var gigyaApiKey='${gigyaAPIKey}';
- 		var commonResource='${commonResourcePath}';
+ 		var luxuryGigyasocialloginurl='${luxuryGigyasocialloginurl}';
+ 		var luxuryGigyaApiKey='${luxuryGigyaAPIKey}';
+ 		var themeResourcePath='${themeResourcePath}';
  		var buildNumber='${buildNumber}'; 
  		/* done for TISPT-203 */
  		$(window).on('load',function(){
- 			/* $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 			alert('hi');
+ 			/*  $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
  				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
  					loadGigya();
  				});
- 			}); */
- 			callGigya();
+ 			});  */
+ 			callLuxuryGigya();
  		});
  		</script>
  	</c:when>
  		<c:otherwise>
  		<script type="text/javascript">
+ 		var luxuryGigyasocialloginurl='${luxuryGigyasocialloginurl}';
+ 		var luxuryGigyaApiKey='${luxuryGigyaAPIKey}';
+ 		var themeResourcePath='${themeResourcePath}';
+ 		var buildNumber='${buildNumber}'; 
  		/* done for TISPT-203 */
  		$(window).on('load',function(){
- 		/* 	$.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 			
+ 		 	/* $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
  				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
  					loadGigya();
  				});
- 			}); */
- 			callGigyaWhenNotMinified();
+ 			});  */
+ 			
+ 			$.getScript('${themeResourcePath}/js/feedback.js').done(function(){
+ 				callLuxuryGigyaWhenNotMinified();
+ 			});
+ 			
  		});
  		</script>
  		</c:otherwise>

@@ -8,7 +8,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement" %>
-<script type="text/javascript" src="/_ui/responsive/common/js/minified/acc.gigya.min.js"></script>
+<script type="text/javascript" src="/_ui/responsive/theme-luxury/js/gigya/acc.gigya.js"></script>
 
 						
 <h2 class="mb-20"><spring:theme code="luxury.header.link.signin" /></h2>

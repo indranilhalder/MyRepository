@@ -156,6 +156,8 @@ public final class MessageConstants
 
 	//Rating Review
 	public static final String USE_GIGYA = "gigya.use".intern();
+	public static final String USE_LUXURY_GIGYA = "luxury.gigya.use".intern();
+
 	public static final String NO = "N";
 	public static final String GIGYA_ERROR = "Gigya Service Switch is Set OFF or not SET";
 	public static final String COOKIE_ERROR = "Error in Setting Cookie-:Cookie Data NULL";
@@ -203,10 +205,15 @@ public final class MessageConstants
 	public static final String USER_LOGIN_TYPE = "userLoginType";
 	public static final String SUCCESS = "success";
 	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
-	public static final String   UPDATED="Updated";
-	public static final String VALIDATE_ERROR="Validation Error";
-	
+	public static final String UPDATED = "Updated";
+	public static final String VALIDATE_ERROR = "Validation Error";
+
 	//track order
 	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
+
+	//Luxury Gigya
+	public static final String LUXURY_GIGYA_APIKEY = "luxury.gigya.apikey";
+	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
+
 }
 

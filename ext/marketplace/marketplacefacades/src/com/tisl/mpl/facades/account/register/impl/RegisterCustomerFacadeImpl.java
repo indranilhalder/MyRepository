@@ -5,6 +5,7 @@ package com.tisl.mpl.facades.account.register.impl;
 
 import static de.hybris.platform.servicelayer.util.ServicesUtil.validateParameterNotNullStandardMessage;
 
+import de.hybris.platform.acceleratorservices.email.EmailService;
 import de.hybris.platform.acceleratorservices.model.email.EmailAttachmentModel;
 import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.catalog.CatalogVersionService;
@@ -26,6 +27,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -96,9 +98,10 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	ConfigurationService configurationService;
 
 
-	/*
-	 * @Resource(name = "defaultEmailService") private EmailService emailService;
-	 */
+
+	@Resource(name = "defaultEmailService")
+	private EmailService emailService;
+
 
 	/**
 	 * @return the userUniqueIdGenerator
@@ -408,19 +411,34 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				{
 					newCustomer.setFirstName(registerData.getFirstName());
 					newCustomer.setLastName(registerData.getLastName());
+					newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
 					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
 					{
 						if (registerData.getGender() != null && !"".equals(registerData.getGender())
-								&& MplConstants.FBMALE.equals(registerData.getGender()))
+								&& MplConstants.FBMALE.equalsIgnoreCase(registerData.getGender()))
 						{
 							newCustomer.setGender(Gender.MALE);
 						}
 						if (registerData.getGender() != null && !"".equals(registerData.getGender())
-								&& MplConstants.FBFEMALE.equals(registerData.getGender()))
+								&& MplConstants.FBFEMALE.equalsIgnoreCase(registerData.getGender()))
 						{
 							newCustomer.setGender(Gender.FEMALE);
 						}
-						newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
+					}
+
+					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.GOOGLE))
+					{
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBMALE.equalsIgnoreCase(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.MALE);
+						}
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBFEMALE.equalsIgnoreCase(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.FEMALE);
+						}
+
 					}
 
 				}
@@ -706,7 +724,7 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 	{
 		final File invoiceFile = new File(invoiceUrl);
 		FileInputStream input = null;
-		final EmailAttachmentModel emailAttachment = null;
+		EmailAttachmentModel emailAttachment = null;
 		if (invoiceFile.exists())
 		{
 			String invoiceFileName = null;
@@ -723,8 +741,8 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			try
 			{
 				input = new FileInputStream(invoiceFile);
-				//emailAttachment = emailService.createEmailAttachment(new DataInputStream(input), invoiceFileName,
-				//	"application/octet-stream");
+				emailAttachment = emailService.createEmailAttachment(new DataInputStream(input), invoiceFileName,
+						"application/octet-stream");
 
 				LOG.info("******Invoice Email Attachment Created Successfully!!!******" + emailAttachment.getCode());
 

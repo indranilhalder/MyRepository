@@ -365,6 +365,7 @@ public final class ModelAttributetConstants
 	public static final int SHOP_BY_LOOK_PAGE_SIZE = 1;
 	//comments and review changes
 	public static final String GIGYA_API_KEY = "gigyaAPIKey";
+	public static final String LUXURY_GIGYA_API_KEY = "luxuryGigyaAPIKey";
 	public static final String EMI_CUTTOFFAMOUNT = "emiCuttOffAmount";
 	public static final String SHOP_THE_LOOK_PAGE_EXPIRED = "pageExpired";
 	public static final String SHOP_THE_LOOK_TOTAL_PAGES = "totalPages";
@@ -675,6 +676,7 @@ public final class ModelAttributetConstants
 	public static final String ADDON = "addon:";
 	//for Gigya
 	public static final String IS_GIGYA_ENABLED = "isGigyaEnabled";
+	public static final String IS_LUXURY_GIGYA_ENABLED = "isLuxuryGigyaEnabled";
 
 	//AccountPageController
 	public static final String UTF8 = "UTF-8";
@@ -689,6 +691,7 @@ public final class ModelAttributetConstants
 	public static final String SOCIAL_LOGIN_PROVIDER = "SocialLoginProvider";
 	public static final String RATING_REVIEW_URL = "ratingReviewUrl";
 	public static final String GIGYA_SOCIAL_LOGIN_URL = "gigyasocialloginurl";
+	public static final String LUXURY_GIGYA_SOCIAL_LOGIN_URL = "luxuryGigyasocialloginurl";
 
 	//Numeric
 	public static final String NUM_1 = "1";

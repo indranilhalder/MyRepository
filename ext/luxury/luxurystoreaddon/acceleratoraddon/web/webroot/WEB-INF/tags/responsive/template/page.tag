@@ -4,7 +4,7 @@
 <%@ attribute name="pageScripts" required="false" fragment="true"%>
 <%@ attribute name="hideHeaderLinks" required="false"%>
 <%@ attribute name="showOnlySiteLogo" required="false"%>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="header"
