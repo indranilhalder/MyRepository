@@ -55,6 +55,17 @@
 			<a href="${product.url}" title="${product.name}">
 				<div class="product-image">
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="searchPage"/>
+					<div class="offer-icon">
+						<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
+							<span class="new"></span>
+						</c:if>
+						<c:if test="${!product.isOfferExisting && !product.isProductNew && product.isOnlineExclusive }">
+							<span class="exclusive"></span>
+						</c:if>
+						<c:if test="${product.isOfferExisting }">
+							<span class="offered"></span>
+						</c:if>
+					</div>
 				</div>
 			</a>
 			<a href="javascript:;" class="add-to-wishlist" data-product="${product.url}"></a>

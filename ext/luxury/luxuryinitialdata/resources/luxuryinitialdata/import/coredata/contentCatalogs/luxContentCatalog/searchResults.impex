@@ -3,7 +3,7 @@
 #
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
-$productCatalog=mplProductCatalog
+$productCatalog=$storePrefixProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
 $lang=en
