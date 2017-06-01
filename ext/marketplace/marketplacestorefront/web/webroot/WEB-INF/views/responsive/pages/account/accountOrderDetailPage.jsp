@@ -191,7 +191,7 @@
 								<c:otherwise>
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
-!-- Checked for mRupee order -->
+<!-- Checked for mRupee order -->
 									 <c:choose>
   										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
   											<h2>Payment Method: <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
@@ -755,7 +755,7 @@
 																</c:if>
 														  	</c:otherwise>
 														</c:choose> --%>
-<-- TISCR-410 ends -->
+<!-- TISCR-410 ends -->
 
 											</div>
 											<div class="col-md-5">
@@ -3471,4 +3471,4 @@ input[type="radio"]:checked {
 
 <!-- R2.3: END: End of  AWB CSS for PopUp -->
 	
-</script>
+
