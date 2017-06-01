@@ -151,7 +151,7 @@
 				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
 		</cms:pageSlot>
 	</div>
->>>>>>> refs/remotes/origin/Sprint_6_7_8_9
+
 	
 	<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
 			<!-- <div class="left-block"> -->

@@ -31,7 +31,7 @@ var buyboxskuId='';
 <div class="nav-wrapper">
 <ul class="nav pdp productNav">
 <!-- INC144315154 start -->
-	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+<%-- 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">
 			 <spring:theme code="product.product.styleNotes" />
 		</li>
