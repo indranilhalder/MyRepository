@@ -21,6 +21,9 @@
 		<property qualifier="CMSLinkComponent.category"/>
 		<property qualifier="CMSLinkComponent.url"/>
 		<property qualifier="CMSLinkComponent.target"/>
+		<property qualifier="CMSLinkComponent.deeplinkType" />
+        <property qualifier="CMSLinkComponent.deeplinkTypeId" />
+        <property qualifier="CMSLinkComponent.deeplinkTypeVal" />
 	</group>
 
 	<group qualifier="visibility" visible="true" initially-opened="false">

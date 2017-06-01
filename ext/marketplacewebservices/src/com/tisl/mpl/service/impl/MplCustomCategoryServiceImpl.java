@@ -340,6 +340,21 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 					deptData.setSuper_category_name(superNode.getLinkName());
 				}
 
+				//TISQAUAT-613--Start
+				if (StringUtils.isNotEmpty(superNode.getDeeplinkType()))
+				{
+					deptData.setDeepLinkType(superNode.getDeeplinkType());
+				}
+				if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeId()))
+				{
+					deptData.setDeepLinkId(superNode.getDeeplinkTypeId());
+				}
+				if (StringUtils.isNotEmpty(superNode.getDeeplinkTypeVal()))
+				{
+					deptData.setDeepLinkVal(superNode.getDeeplinkTypeVal());
+				}
+				//TISQAUAT-613--End
+
 				//Sub category
 				if (CollectionUtils.isNotEmpty(linkNode.getChildren()))
 				{
@@ -366,6 +381,20 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 							{
 								subDeptData.setSub_category_name(sublink.getTitle());
 							}
+							//TISQAUAT-613--Start
+							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkType()))
+							{
+								subDeptData.setDeepLinkType(sublinknode.getDeeplinkType());
+							}
+							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeId()))
+							{
+								subDeptData.setDeepLinkId(sublinknode.getDeeplinkTypeId());
+							}
+							if (StringUtils.isNotEmpty(sublinknode.getDeeplinkTypeVal()))
+							{
+								subDeptData.setDeepLinkVal(sublinknode.getDeeplinkTypeVal());
+							}
+							//TISQAUAT-613--End
 							int count = 0;
 							//Super sub category
 							for (final CMSLinkComponentModel thirdLevelsublink : sublink.getLinks())
@@ -390,6 +419,20 @@ public class MplCustomCategoryServiceImpl implements MplCustomCategoryService
 									{
 										thirdLevelCat.setSuper_sub_category_name(thirdLevelsublink.getLinkName());
 									}
+									//TISQAUAT-613--Start
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkType()))
+									{
+										thirdLevelCat.setDeepLinkType(thirdLevelsublink.getDeeplinkType());
+									}
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeId()))
+									{
+										thirdLevelCat.setDeepLinkId(thirdLevelsublink.getDeeplinkTypeId());
+									}
+									if (StringUtils.isNotEmpty(thirdLevelsublink.getDeeplinkTypeVal()))
+									{
+										thirdLevelCat.setDeepLinkVal(thirdLevelsublink.getDeeplinkTypeVal());
+									}
+									//TISQAUAT-613--End
 
 									superSubDeptDataList.add(thirdLevelCat);
 								}
