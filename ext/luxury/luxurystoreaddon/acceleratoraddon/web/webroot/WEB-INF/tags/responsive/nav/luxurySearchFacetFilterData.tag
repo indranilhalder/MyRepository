@@ -52,7 +52,7 @@
 				<div class="row facet-desktop">
 					<div class="col-xs-12">
 						<div class="filterblocks le-checkbox plp-checkbox">
-							<div class="plp-leftbar-close">
+							<div class="plp-leftbar-close visible-xs">
 								Filter <a class="" href="javascript:;"></a>
 							</div>
 							<product:luxuryProductrefinementcomponent/>

@@ -12,9 +12,13 @@
 <c:if test="${not empty lazyInterface}">
 	<c:set var="url" value="${url}/getFacetData"/>
 </c:if>
+<c:set var="facetClass" value="facet"/>
+<c:if test="${facetData.name eq 'colour'}">
+	<c:set var="facetClass" value="facet half-width"/>
+</c:if>
 <ycommerce:testId code="facetNav_title_${facetData.code}">
 	<c:if test="${facetData.values.size()>0}">
-		<div class="facet">
+		<div class="${facetClass}">
 			<div class="facetHead">
 				<h4>
 					<a class="" href="javascript:;">${facetData.name}</a>
@@ -35,7 +39,9 @@
 										<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 										<input type="hidden" name="isFacet" value="true"/>
 										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''} data-colour="${facetValue.code}" value="${facetValue.code}" name="" id="${facetValue.code}"><label for="${facetValue.code}">${facetValue.name}</label>
-										<span class="avail-count">${facetValue.count}</span>
+										<c:if test="${facetData.name ne 'colour'}">
+											<span class="avail-count">${facetValue.count}</span>
+										</c:if>
 									</form>
 								</div>
 							</li>
