@@ -2416,7 +2416,7 @@ function callLuxuryGigya(){
 
 function callLuxuryGigyaWhenNotMinified(){
 	//Start
-	alert('hiee');
+
 	$.ajax({
 	        type: "GET",
 	        url:luxuryGigyasocialloginurl+'?apikey='+luxuryGigyaApiKey,
