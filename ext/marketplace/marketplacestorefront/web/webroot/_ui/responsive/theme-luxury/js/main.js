@@ -455,7 +455,7 @@ TATA.Pages = {
             	var colorString = $(this).attr("data-colour");
             	var colorArray = colorString.split("_");
             	var colorCode = "#"+colorArray[1];
-            	$(this).closest("label").css("background",colorCode);
+            	$(this).closest("label::before").css("background",colorCode);
             });
         },
         filterByFacet: function() {
