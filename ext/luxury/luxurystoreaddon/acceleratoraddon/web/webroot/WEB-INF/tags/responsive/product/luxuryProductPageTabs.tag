@@ -35,12 +35,13 @@ var buyboxskuId='';
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<div class="accordion-title active">
 			<h4>
-				<spring:theme code="product.product.details" />
+				<spring:theme code="product.product.features" />
 			</h4><i class="accordion-icon"></i>
 			</div>
 		</c:if>
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<div class="accordion-content">
+			${product.articleDescription}
 			<product:productDetailsTab product="${product}" />
 		</div>
 	</c:if>
@@ -58,18 +59,6 @@ var buyboxskuId='';
 			</div>
 		</c:if>
 	
-		<c:if test="${fn:contains(validTabs, 'description')}">
-			<div class="accordion-title abc">
-				<h4>
-					<spring:theme code="product.product.description" />
-				</h4>	<i class="accordion-icon"></i>
-			</div>
-		</c:if>
-		<c:if test="${fn:contains(validTabs, 'description')}">
-			<div class="accordion-content">
-				<product:productDescriptionTab product="${product}" />
-			</div>
-		</c:if>
 	
 		<c:if test="${fn:contains(validTabs, 'warranty')}">
 			<div class="accordion-title">	
@@ -89,7 +78,7 @@ var buyboxskuId='';
 		<c:if test="${fn:contains(validTabs, 'knowmore')}">
 			<div class="accordion-title">	
 			<h4>
-				<spring:theme code="product.product.knowmore" />
+				<spring:theme code="product.product.returns" />
 			</h4><i class="accordion-icon"></i>
 				</div>
 		</c:if>
