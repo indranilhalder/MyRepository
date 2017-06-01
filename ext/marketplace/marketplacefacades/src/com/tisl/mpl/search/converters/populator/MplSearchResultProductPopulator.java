@@ -215,9 +215,16 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
-					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
+					getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
+		}
+		final Double mobilePriceValue = this.<Double> getValue(source, "mobileprice");
+		if (mobilePriceValue != null)
+		{
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(mobilePriceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
+			target.setMobileprice(priceData);
 		}
 
 		// Pull the special price value for the current currency

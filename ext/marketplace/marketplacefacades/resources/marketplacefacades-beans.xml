@@ -82,6 +82,9 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="price"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- Promotional channel added for TISPRD-8944 -->	
+		<property name="specialPriceMobile"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />	
 		<property name="sellerName" type="String" />
 		<property name="sellerArticleSKU" type="String" />
 		<property name="sellerId" type="String" />
@@ -162,6 +165,9 @@
 			<property name="otherSellers" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.SellerInformationData>"></property> -->
 		<property name="productMRP"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- Promotional channel added for TISPRD-8944 -->	
+		<property name="mobileprice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />	
 		<property name="productMOP"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="swatchColor" type="java.util.List&lt;java.lang.String>"></property>
@@ -252,6 +258,9 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="spPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- Promotional channel added for TISPRD-8944 -->	
+		<property name="spPriceMobile"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />	
 		<property name="mrpPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="sellerID" type="String"></property>

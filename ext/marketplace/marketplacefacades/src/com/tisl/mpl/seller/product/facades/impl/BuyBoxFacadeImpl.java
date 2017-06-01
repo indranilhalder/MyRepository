@@ -130,6 +130,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 
+
+
+
+
 	//TISPRM-56
 
 	/**
@@ -144,7 +148,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	@Override
 	public Map<String, Object> buyboxPricePDP(final String productCode, final String bBoxSellerId //CKD:TPR-250
-	) throws EtailNonBusinessExceptions
+	,String Channel) throws EtailNonBusinessExceptions
 	{
 		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
@@ -185,12 +189,32 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//TISPRM -56
 			List<BuyBoxModel> buyboxModelListAll = null;
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
-			buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			
+			//TISPRM -56
+			if (Channel.equalsIgnoreCase("Mobile"))
+			{
+
+				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceMobile(productCode));
+			}
+
+			else
+			{
+				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			}
+			
 			if (StringUtils.isNotBlank(bBoxSellerId))
+
+
 			{
 				isSellerPresent = rearrangeBuyBoxListElements(bBoxSellerId, buyboxModelListAll, isSellerPresent, pdpProduct);
+
 			}
 			//CKD:TPR-250 End
+
+
+
+
+
 			for (final BuyBoxModel buyBoxModel : buyboxModelListAll)
 			{
 				if (null != pdpProduct && pdpProduct.equalsIgnoreCase(buyBoxModel.getProduct()))
@@ -239,6 +263,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					}
 					else
 					{
+
 
 						buyBoxMod = buyboxModelList.get(0);
 					}
@@ -352,6 +377,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				for (final BuyBoxModel buyBoxModel : buyboxModelList)
 				{
+
 
 					//buyBoxDataList.add(populateBuyBoxData(buyBoxModel, onlyBuyBoxHasStock, buyboxModelList, buyboxData.getAllOOStock()));
 
@@ -528,6 +554,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 				//				{
 
+
 				//					buyboxData.setNumberofsellers(Integer.valueOf(-1));
 				//					//buyboxData.setNumberofsellers(Integer.valueOf(-1));
 
@@ -538,10 +565,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 
+
+
+
 				buyboxData.setNumberofsellers(noofsellers);
 
 				//}
 				//TPR-250:End
+
 				//Minimum price for other sellers
 				double minPrice = 0.0d;
 				if (sellerSize > 0)
@@ -717,6 +748,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				else
 				{
 					sellerData.setSpPrice(productDetailsHelper.formPriceData(new Double(0.0D)));
+				}
+				if (null != buyBox.getSpecialPriceMobile())
+				{
+					sellerData.setSpPriceMobile(productDetailsHelper.formPriceData(buyBox.getSpecialPriceMobile()));
+				}
+				else
+				{
+					sellerData.setSpPriceMobile(productDetailsHelper.formPriceData(new Double(0.0D)));
 				}
 				if (null != buyBox.getPrice())
 				{
@@ -994,6 +1033,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * This method is used to get the price of a product by giving the ussid
 	 * 
 
+
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1021,6 +1061,12 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			final double spPrice = buyBoxMod.getSpecialPrice().doubleValue();
 			//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
 			buyboxData.setSpecialPrice(productDetailsHelper.formPriceData(new Double(spPrice)));
+		}
+		if (null != buyBoxMod.getSpecialPriceMobile() && buyBoxMod.getSpecialPriceMobile().doubleValue() > 0)
+		{
+			final double spPriceMobile = buyBoxMod.getSpecialPriceMobile().doubleValue();
+			//final double roundedSpPrice = Math.round(spPrice * 100) / 100;
+			buyboxData.setSpecialPriceMobile(productDetailsHelper.formPriceData(new Double(spPriceMobile)));
 		}
 		final double price = buyBoxMod.getPrice().doubleValue();
 		buyboxData.setPrice(productDetailsHelper.formPriceData(new Double(price)));
@@ -1091,6 +1137,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		if (sellerSize < 0)
 		{
 			buyboxData.setNumberofsellers(Integer.valueOf(0));
+
 		}
 		else
 		{
