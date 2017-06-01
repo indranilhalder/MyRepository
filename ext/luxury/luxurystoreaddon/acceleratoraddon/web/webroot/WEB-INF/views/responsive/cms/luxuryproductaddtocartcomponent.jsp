@@ -48,6 +48,8 @@
 	<div class="buy-btn-holder clearfix">
 	<div id="buyNow" class="col-md-6">
 		<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />
+		
+		test
 	        <button  id="" type="button" class="btn-block js-add-to-cart btn btn-primary btn-lg btn-block">
 				<spring:theme code="buyNow.button.pdp" />
 			</button>
@@ -94,5 +96,14 @@
 			<action:actions element="div"  parentComponent="${component}"/>
 		</div>
 		</div>
+		
+		<div id="addtocart-popup">
+			<ul>
+				<li><a href="/cart">CART</a></li>
+				<li><a href="/cart">KEEP SHOPPING</a></li>
+				<li><a href="/cart">BUY NOW</a></li>
+			</ul>
+		</div>
+		
 	</div>
 </div>   

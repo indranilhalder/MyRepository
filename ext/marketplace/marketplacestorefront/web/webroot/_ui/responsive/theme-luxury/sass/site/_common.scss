@@ -476,3 +476,46 @@ footer{
 }
 
 /*Loader CSS start */
+
+/*Rating and review start*/
+.rating {  
+    font-size: 18px;
+    
+    span.empty{
+        font-family: FontAwesome;
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        &:before{
+            content: "\f006";
+            padding-right: 5px;
+            color: #fbb928;
+        }
+    }
+    span.full{
+       font-family: FontAwesome;
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        &:before{
+             content: "\f005";
+            padding-right: 5px;
+             color: #fbb928;
+        } 
+    }
+    span.half{
+       font-family: FontAwesome;
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        &:before{
+             content: "\f123";
+            padding-right: 5px;
+            color: #fbb928;
+        } 
+    }
+    
+    
+}
+/*Rating and review End
+   */

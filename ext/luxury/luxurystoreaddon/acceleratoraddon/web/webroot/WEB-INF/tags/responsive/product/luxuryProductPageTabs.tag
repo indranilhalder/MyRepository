@@ -46,6 +46,70 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	
+	<div class="accordion-title">	
+			<h4>Rating & Reviews</h4><i class="accordion-icon"></i>
+	</div>					
+	<div class="accordion-content full-box">	
+		<div class="colum4 left">
+			<table class="table design1">
+			  <tr>
+				   <td width="60%">	
+				     <span class="rating-count">5</span>			   
+					 <span class="rating">					   
+					   <span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span>
+					 </span>
+					</td>
+				   <td width="40%"></td>
+			  </tr>
+			  <tr>
+				   <td>	
+				     <span class="rating-count">4</span>			   
+					 <span class="rating">					   
+					   <span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span><span class="half"></span>
+					 </span>
+					</td>
+				   <td></td>
+			  </tr>
+			  <tr>
+				   <td>	
+				     <span class="rating-count">3</span>			   
+					 <span class="rating">					   
+					   <span class="full"></span><span class="full"></span><span class="full"></span><span class="empty"></span><span class="empty"></span>
+					 </span>
+					</td>
+				   <td></td>
+			  </tr>
+			  <tr>
+				   <td>	
+				     <span class="rating-count">2</span>			   
+					<span class="rating">					   
+					   <span class="full"></span><span class="full"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
+					 </span>
+					</td>
+				   <td></td>
+			  </tr>
+			  <tr>
+				   <td>	
+				     <span class="rating-count">1</span>			   
+					 <span class="rating">					   
+					   <span class="full"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
+					 </span>
+					</td>
+				   <td></td>
+			  </tr>
+			</table>
+		</div>
+		<div class="table colum3 right box-size">
+		    <h4>3.5 <span class="rating">					   
+					   <span class="full"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
+					 </span>
+			</h4>
+			<p>Great product. Qulity and switching was good and fit as expected,. This full sleeve
+tees become one of my favourite too. Thank you CLIQ and style shell for this amazing Tees.</p>
+            <span>by Bradley Oliver 22 May 2016</span>
+		</div>
+	</div>
+	
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<div class="accordion-title">
 			<h4>
@@ -89,6 +153,17 @@ var buyboxskuId='';
 			<product:productTataPromiseTab product="${product}" />
 			</div>
 		</c:if>
+		
+		<div class="accordion-title emi-header">	
+			 <h4>EMI Options</h4><i class="accordion-icon"></i>
+			</div>					
+			<div class="accordion-content full-box">
+				
+                <div class="table">
+                   <div class="emibox-left" id="bankNameForEMI"></div>
+                   <div class="emibox-right" id="emiTableTbody"></div>
+                </div>
+			</div>
 	
 	
 <!-- </ul> -->

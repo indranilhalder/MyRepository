@@ -670,12 +670,115 @@ TATA.Pages = {
             
             
         },
+        BankEMI: function(){
+            $('.emi-header').on('click', function(){  
+
+                var productVal = $("#prodPrice").val();
+                var optionData = "<ul>";
+                $("#EMITermTable").hide();
+                $("#emiTableTHead").hide();
+                $("#emiTableTbody").hide();
+                var requiredUrl = ACC.config.encodedContextPath + "/p" + "-enlistEMIBanks";
+                var dataString = 'productVal=' + productVal;
+                $.ajax({
+                contentType : "application/json; charset=utf-8",
+                url : requiredUrl,
+                data : dataString,
+                dataType : "json",
+                success : function(data) {
+                for (var i = 0; i < data.length; i++) {
+                optionData += "<li value='" + data[i] + "'>" + data[i]
+                        + "</li>";
+                }
+                optionData  += "</ul>";
+                $("#bankNameForEMI").html(optionData);
+                /*TPR-641*/
+                utag.link({
+                link_obj: this,
+                link_text: 'emi_more_information' ,
+                event_type : 'emi_more_information',
+                product_id : productIdArray
+                });
+
+                },
+                error : function(xhr, status, error) {
+
+                }
+                });
+         }); 
+            
+         $('#bankNameForEMI li').on('click', function(){ 
+                var productVal = $("#prodPrice").val();
+                var selectedBank = $('#bankNameForEMI :selected').text();
+                var contentData = '';
+                var productId=[];
+                productId.push($('#product_id').val());
+                if (selectedBank != "select") {
+                var dataString = 'selectedEMIBank=' + selectedBank + '&productVal=' + productVal;
+                $.ajax({
+                url : ACC.config.encodedContextPath + "/p-getTerms",
+                data : dataString,
+                /*data : {
+                    'selectedEMIBank' : selectedBank,
+                    'productVal' : productVal
+                },*/
+                type : "GET",
+                cache : false,
+                success : function(data) {
+                    if (data != null) {
+                        $("#emiTableTHead").show();
+                        $("#emiTableTbody").show();
+                        for (var index = 0; index < data.length; index++) {
+                            contentData += '<tr>';
+                            contentData += "<td>" + data[index].term + "</td>";
+                            contentData += "<td>" + data[index].interestRate
+                                    + "</td>";
+                            contentData += "<td>" + data[index].monthlyInstallment
+                                    + "</td>";
+                            contentData += "<td>" + data[index].interestPayable
+                                    + "</td>";
+                            contentData += '</tr>';
+                        }
+
+                        $("#emiTableTbody").html(contentData);
+                        $("#EMITermTable").show();
+                    } else {
+                        $('#emiNoData').show();
+                    }
+
+                    /*TPR-641 starts  */
+                    emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, '').toLowerCase();
+                    /* TPR-4725  quick view emi*/
+                    emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/[',."]/g,"");
+
+                    if(typeof utag !="undefined"){
+                    utag.link({
+                        link_text: emiBankSelectedTealium , 
+                        event_type : 'emi_option_selected',
+                        emi_selected_bank : emiBankSelected,
+                        product_id :productId
+                    });
+                    }
+                    /*TPR-641 ends*/
+                },
+                error : function(resp) {
+                    $('#emiSelectBank').show();
+                }
+                });
+                } else {
+
+                }
+         });
+            
+            
+        }, 
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
 			_self.Slider();
             _self.Zoomer();
             _self.videoPlay();
+            _self.BankEMI();
 		}
 	},
 	

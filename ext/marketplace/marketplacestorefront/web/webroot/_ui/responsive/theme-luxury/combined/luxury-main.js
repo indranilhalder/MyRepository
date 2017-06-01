@@ -12501,7 +12501,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12786,7 +12786,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -12986,9 +12986,63 @@ TATA.CommonFunctions = {
                 });
             });
         },
+        BankEMI: function() {
+            $(".emi-header").on("click", function() {
+                var productVal = $("#prodPrice").val(), optionData = "<ul>";
+                $("#EMITermTable").hide(), $("#emiTableTHead").hide(), $("#emiTableTbody").hide();
+                var requiredUrl = ACC.config.encodedContextPath + "/p-enlistEMIBanks", dataString = "productVal=" + productVal;
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    url: requiredUrl,
+                    data: dataString,
+                    dataType: "json",
+                    success: function(data) {
+                        for (var i = 0; i < data.length; i++) optionData += "<li value='" + data[i] + "'>" + data[i] + "</li>";
+                        optionData += "</ul>", $("#bankNameForEMI").html(optionData), utag.link({
+                            link_obj: this,
+                            link_text: "emi_more_information",
+                            event_type: "emi_more_information",
+                            product_id: productIdArray
+                        });
+                    },
+                    error: function(xhr, status, error) {}
+                });
+            }), $("#bankNameForEMI li").on("click", function() {
+                var productVal = $("#prodPrice").val(), selectedBank = $("#bankNameForEMI :selected").text(), contentData = "", productId = [];
+                if (productId.push($("#product_id").val()), "select" != selectedBank) {
+                    var dataString = "selectedEMIBank=" + selectedBank + "&productVal=" + productVal;
+                    $.ajax({
+                        url: ACC.config.encodedContextPath + "/p-getTerms",
+                        data: dataString,
+                        type: "GET",
+                        cache: !1,
+                        success: function(data) {
+                            if (null != data) {
+                                $("#emiTableTHead").show(), $("#emiTableTbody").show();
+                                for (var index = 0; index < data.length; index++) contentData += "<tr>", contentData += "<td>" + data[index].term + "</td>", 
+                                contentData += "<td>" + data[index].interestRate + "</td>", contentData += "<td>" + data[index].monthlyInstallment + "</td>", 
+                                contentData += "<td>" + data[index].interestPayable + "</td>", contentData += "</tr>";
+                                $("#emiTableTbody").html(contentData), $("#EMITermTable").show();
+                            } else $("#emiNoData").show();
+                            emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, "").toLowerCase(), 
+                            emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, " ").replace(/ /g, "_").replace(/[',."]/g, ""), 
+                            "undefined" != typeof utag && utag.link({
+                                link_text: emiBankSelectedTealium,
+                                event_type: "emi_option_selected",
+                                emi_selected_bank: emiBankSelected,
+                                product_id: productId
+                            });
+                        },
+                        error: function(resp) {
+                            $("#emiSelectBank").show();
+                        }
+                    });
+                }
+            });
+        },
         init: function() {
             var _self = TATA.Pages.PDP;
-            _self.Slider(), _self.Zoomer(), _self.videoPlay();
+            _self.Slider(), _self.Zoomer(), _self.videoPlay(), _self.BankEMI();
         }
     },
     init: function() {

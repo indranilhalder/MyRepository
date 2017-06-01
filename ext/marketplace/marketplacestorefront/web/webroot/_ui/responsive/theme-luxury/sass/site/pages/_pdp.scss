@@ -228,6 +228,7 @@
 	.accordion-title {
 		border-bottom: 2px solid #efefef;
 		position: relative;
+        background: $white;
 		h4 {
 			padding: 20px;
 			margin: 0;
@@ -239,14 +240,67 @@
 			transform: rotate(0deg);
 		}
 	}
+    
+    .accordion-content.full-box{
+       padding: 20px 25px 12px; 
+    }
 	.accordion-content {
 		border-bottom: 2px solid #efefef;
-		padding: 20px 50px 20px 20px;
+		padding: 20px 50px 50px 50px;
 	 	overflow: hidden;
 		
 		& ~ .accordion-content {
 			display: none;
 		}
+        
+        .tab-details{
+            margin-top: 15px;
+        }
+        
+        .table{
+            background: #fff;            
+            border: 2px solid #dde2eb;
+            border-radius: 5px;
+            padding: 10px;
+            
+            .rating-count{
+                font-size: 16px;
+                padding-right: 10px;
+                color: #9b9b9b;
+            }
+            .design1{
+                td{
+                    padding: 10px;
+                    border-right: 1px solid #ddd;
+                }
+            }
+        }
+        .box-size{
+            min-height: 220px
+        }
+        .colum4{
+            width: 30%;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .colum3{
+            width: 65%;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .left{
+            float: left;
+        }
+        .right{
+            float: right;
+        }
+        .emibox-left{
+            display: inline-block;
+            width: 30%;
+        }
+        .emibox-right{
+             display: inline-block;
+        }
 	}
 	.accordion-icon {
 		position: absolute;
