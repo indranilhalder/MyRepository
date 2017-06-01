@@ -384,36 +384,58 @@
 }
 .offer-icon{	
 	.exclusive{		
-		background: $Sprite -12px -178px no-repeat;		
+		background: $Sprite_icon no-repeat -650px 0;		
 		position: absolute;
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
 		left: -5px;
+        top:35px;
+	}	
+	.newseason{		
+		background: $Sprite_icon no-repeat -650px -30px;		
+		position: absolute;
+		width: 96px;
+		height: 27px;
+		bottom: 20px;
+		left: -5px;
+        top:35px;
 	}
-	.exclusive{		
-		background: $Sprite -12px -178px no-repeat;		
+	.trending{		
+		background: $Sprite_icon no-repeat -650px -60px;		
 		position: absolute;
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
 		left: -5px;
+        top:35px;
 	}
-	.new{		
-		background: $Sprite -13px -218px no-repeat;		
+    .editors{		
+		background: $Sprite_icon no-repeat -650px -90px;		
 		position: absolute;
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
 		left: -5px;
+        top:35px;
 	}
-	.onsale{		
-		background: $Sprite -12px -256px no-repeat;		
+    .newarrival{		
+		background: $Sprite_icon no-repeat -650px -120px;		
 		position: absolute;
 		width: 96px;
 		height: 27px;
 		bottom: 20px;
 		left: -5px;
+        top:35px;
+	}
+    .onsale{		
+		background: $Sprite_icon no-repeat -650px -150px;		
+		position: absolute;
+		width: 96px;
+		height: 27px;
+		bottom: 20px;
+		left: -5px;
+        top:35px;
 	}
 }
 
