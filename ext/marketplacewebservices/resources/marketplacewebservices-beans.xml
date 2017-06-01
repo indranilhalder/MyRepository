@@ -245,17 +245,33 @@
 		<property name="super_category_name" type="String" />
 		<property name="subCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSubHierarchyData>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 --> 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSubHierarchyData">
 		<property name="sub_category_name" type="String" />
 		<property name="sub_category_id" type="String" />
 		<property name="supersubCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData">
 
 		<property name="super_sub_category_id" type="String" />
 		<property name="super_sub_category_name" type="String" />
+		<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 --> 
+		
 
 	</bean>
 
@@ -271,17 +287,32 @@
 		<property name="super_category_name" type="String" />
 		<property name="subCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSubHierarchyWsDTO>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSubHierarchyWsDTO">
 		<property name="sub_category_name" type="String" />
 		<property name="sub_category_id" type="String" />
 		<property name="supersubCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyWsDTO>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyWsDTO">
 
 		<property name="super_sub_category_id" type="String" />
 		<property name="super_sub_category_name" type="String" />
+		<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 
 	</bean>
 	<!-- Shop by dept Mobile -->
