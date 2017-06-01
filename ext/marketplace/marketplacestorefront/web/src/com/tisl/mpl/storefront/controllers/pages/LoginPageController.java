@@ -380,7 +380,8 @@ public class LoginPageController extends AbstractLoginPageController
 	public String doRegister(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel,
-			@RequestParam(value = "isLuxCustomer", required = false) final String isLuxCustomer) throws CMSItemNotFoundException
+			@RequestParam(value = ModelAttributetConstants.IS_LUXURY_CUSTOMER, required = false) final String isLuxCustomer)
+			throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		try
@@ -397,7 +398,6 @@ public class LoginPageController extends AbstractLoginPageController
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
-
 		}
 		catch (final EtailBusinessExceptions e)
 		{
