@@ -451,7 +451,7 @@ TATA.Pages = {
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             });
-            $(".facet-colour .facet-form input[type=checkbox]").each(function(){
+            $(".facet-colour input[type=checkbox]").each(function(){
             	var colorString = $(this).attr("data-colour");
             	var colorArray = colorString.split("_");
             	var colorCode = "#"+colorArray[1];

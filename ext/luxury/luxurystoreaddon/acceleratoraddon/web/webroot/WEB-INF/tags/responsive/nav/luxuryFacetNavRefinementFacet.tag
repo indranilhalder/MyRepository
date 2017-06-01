@@ -27,14 +27,14 @@
 						<c:forEach items="${facetData.values}" var="facetValue">
 							<li>
 								<div class="le-checkbox">	
-									<form action="${url}" method="get" class="facet-form" id="facet-${facetData.name}"> 
+									<form action="${url}" method="get" class="facet-form facet-${facetData.name}"> 
 										<input type="hidden" name="offer" value="${offer}"/>
 										<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 										<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
 										<input type="hidden" name="text" value="${searchPageData.freeTextSearch}"/>
 										<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 										<input type="hidden" name="isFacet" value="true"/>
-										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''} value="${facetValue.code}" name="" id="${facetValue.code}"><label for="${facetValue.code}">${facetValue.name}</label>
+										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''} data-colour="${facetValue.code}" value="${facetValue.code}" name="" id="${facetValue.code}"><label for="${facetValue.code}">${facetValue.name}</label>
 										<span class="avail-count">${facetValue.count}</span>
 									</form>
 								</div>
