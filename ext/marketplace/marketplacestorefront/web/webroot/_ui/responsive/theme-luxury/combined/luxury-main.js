@@ -12501,7 +12501,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12786,7 +12786,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -12845,6 +12845,9 @@ TATA.CommonFunctions = {
         showSelectedRefinements: function() {
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
+            }), $(".facet-form input[type=checkbox]").each(function() {
+                var colorString = $(this).attr("data-colour"), colorArray = colorString.split("_"), colorCode = "#" + colorArray[1];
+                $(this).next("label").append("<span class='plp-filter-color'></span>"), $(this).next("label").find(".plp-filter-color").css("background-color", colorCode);
             });
         },
         filterByFacet: function() {
@@ -12874,7 +12877,9 @@ TATA.CommonFunctions = {
                     $(".loadMore").show()) : $(".loadMore").hide());
                 },
                 complete: function() {
-                    $("body").removeClass("loader");
+                    $("body").removeClass("loader"), $(".plp-leftbar-close a").on("click", function() {
+                        $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
+                    });
                 }
             });
         },
@@ -12970,9 +12975,20 @@ TATA.CommonFunctions = {
             return newwindow = window.open(url, "name", "height=400,width=400"), window.focus && newwindow.focus(), 
             !1;
         },
+        videoPlay: function() {
+            $(".pdp-social-links .play").on("click", function() {
+                $("body").addClass("pdp-video-active"), $("video").each(function() {
+                    this.play();
+                });
+            }), $(".pdp-img-nav .slick-slide").on("click", function() {
+                $("body").removeClass("pdp-video-active"), $("video").each(function() {
+                    this.load();
+                });
+            });
+        },
         init: function() {
             var _self = TATA.Pages.PDP;
-            _self.Slider(), _self.Zoomer();
+            _self.Slider(), _self.Zoomer(), _self.videoPlay();
         }
     },
     init: function() {

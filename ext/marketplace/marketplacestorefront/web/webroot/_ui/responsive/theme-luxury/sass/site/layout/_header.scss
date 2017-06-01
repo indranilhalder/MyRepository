@@ -464,7 +464,7 @@
 			width: 100%;
 		    position: fixed;
 		    left: 0;
-		    top: 107px;
+		    top: 68px;
 		    overflow: auto;
 		    height: 100%;
 		}
@@ -668,6 +668,12 @@
 		.main-nav {
 			left: 0;
 		}
+	}
+	.header-promo{
+		display:none;
+	}
+	.sticky-nav .header,header {
+	    height: 68px !important;
 	}
 }
 

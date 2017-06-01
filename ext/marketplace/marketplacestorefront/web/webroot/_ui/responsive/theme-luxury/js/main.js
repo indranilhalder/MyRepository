@@ -451,12 +451,15 @@ TATA.Pages = {
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             });
-            $(".facet-colour input[type=checkbox]").each(function(){
+            $('.facet-form input[type=checkbox]').each(function () {
             	var colorString = $(this).attr("data-colour");
             	var colorArray = colorString.split("_");
             	var colorCode = "#"+colorArray[1];
-            	$(this).closest("label::before").css("background",colorCode);
+            	$(this).next('label').append("<span class='plp-filter-color'></span>"); 
+            	$(this).next('label').find('.plp-filter-color').css('background-color',colorCode);
+            	
             });
+            
         },
         filterByFacet: function() {
             $(document).on("click", ".reset-filters", function() {
@@ -497,6 +500,10 @@ TATA.Pages = {
                 },
                 complete: function(){
                     $('body').removeClass('loader');
+                    $('.plp-leftbar-close a').on('click', function(){
+        				$('.leftbar').removeClass('active');
+        				$('.facet').removeClass('open')
+        			});
                 }
             });
         },

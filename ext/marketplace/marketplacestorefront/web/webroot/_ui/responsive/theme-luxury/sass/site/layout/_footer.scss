@@ -146,6 +146,14 @@ footer{
             .selectboxit-options.selectboxit-list{
                         min-width: 100%!important;
             }
+            .selectboxit-default-arrow {
+			    width: 0;
+			    height: 0;
+			    border-top: 10px solid #000;
+			    border-right: 7px solid transparent;
+			    border-left: 7px solid transparent;
+			    top:61%;
+			}
 		}
 	}
 	

@@ -336,6 +336,14 @@
 										 position: relative;
 										 cursor:pointer;
 									}
+									.plp-filter-color{
+										position: absolute;
+									    left: 0;
+									    width: 20px;
+									    height: 20px;
+									    top: 0;
+									    border-radius: $border-radius-small;
+									}
 									.ivory::before{background:#f5eccb !important;}
 									.deepgray::before{background:#9b9b9b !important;}
 									.coffee::before{background:#9d704f !important;}
@@ -422,6 +430,7 @@
 		position: fixed;
 		width:100%;
 		bottom: 0;
+		left:0px;
 		margin:0px;
 		z-index: 999;
 		background: #fff;
@@ -540,6 +549,7 @@
 			left:100%;
 			transition:all 500ms ease;
 			-webkit-transition:all 500ms ease;
+			padding:0px;
 			.filter-box{
 				display:none;
 			}
@@ -604,6 +614,7 @@
 							 } 
 						}
 						.facet{
+							padding:0 20px;
 							.facetHead{
 								h4{
 									padding:20px 0;
@@ -623,7 +634,7 @@
 								z-index: 991;
 								transition:all 500ms ease;
 								-webkit-transition:all 500ms ease;
-								background:#fff url('../images/filter-mobile-bg.PNG') repeat-y;
+								background:#fff url('../images/filter-mobile-bg.png') repeat-y;
 								.allFacetValues{
 									display:block;
 								}
@@ -651,4 +662,15 @@
 			}
 		}
 	}
+	body.page-search{
+		padding-top:68px;
+		.mainContent-wrapper{
+			>.container{
+				padding:0px;
+			}
+		}
+	}
+	
 }
+
+

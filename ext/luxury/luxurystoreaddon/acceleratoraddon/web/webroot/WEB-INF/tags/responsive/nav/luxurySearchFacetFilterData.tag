@@ -9,6 +9,7 @@
 	<h4 class="categor-name text-center"></h4>
 	<div class="row">
 		 <div class="product-sort-wrapper mb-30 col-sm-12">
+		 	<div class="plp-sort-inner">
 				<div class="breadcrumb pull-left">
 					<c:if test="${fn:length(breadcrumbs) > 0}">
 						<ul class="breadcrumbs wrapper">
@@ -44,7 +45,8 @@
 				</div>
 				<p class="plp-mob-filter visible-xs"><a class="nopadding btn" href="javascript:;">Refine</a></p>
 				<p class="plp-single-view visible-xs"><a class="nopadding btn" href="javascript:;">View</a></p>
-			</div><!-- product-sort-wrapper -->
+			</div>
+		</div><!-- product-sort-wrapper -->
 		<div class="col-sm-3 leftbar col-xs-12">
 			<div class="facetItem">
 				<div class="row facet-desktop">
