@@ -295,7 +295,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			@RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
 			@RequestParam(ModelAttributetConstants.SIGNATURE) final String signature,
 			@RequestParam(ModelAttributetConstants.PROVIDER) final String provider,
-			@RequestParam(ModelAttributetConstants.GENDER) final String gender, final ExtRegisterForm form,
+			@RequestParam(value = ModelAttributetConstants.GENDER, required = false) final String gender, final ExtRegisterForm form,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException, IOException
 

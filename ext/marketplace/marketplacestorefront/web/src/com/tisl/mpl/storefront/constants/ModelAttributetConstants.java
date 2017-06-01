@@ -439,6 +439,7 @@ public final class ModelAttributetConstants
 	public static final String FORGOTPASSWORD_EMAIL = "forgotPassword_email";
 	public static final String PRODUCTCODE_WL = "productCodeWl";
 	public static final String USSID_WL = "ussidWl";
+	public static final String IS_LUXURY_CUSTOMER = "isLuxCustomer";
 
 	public static final String CANCEL_ORDER_TICKET_TYPE_CODE = "C";
 	public static final String ORDER_RETURN_CATEGORY = "RSP";

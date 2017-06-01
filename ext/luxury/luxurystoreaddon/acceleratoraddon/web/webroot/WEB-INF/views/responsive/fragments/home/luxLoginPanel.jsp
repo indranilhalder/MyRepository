@@ -8,31 +8,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/responsive/formElement" %>
-			<script type="text/javascript">
-						var gigyasocialloginurl='https://cdns.gigya.com/JS/socialize.js';
-						var gigyaApiKey='3_9qHVRWtkcWmW3_VBpZ5tRjWHCiuFSKNQDe1AUNf7ItifpjxiFc_r0H-7ZPe0AAAk';
-						var commonResource='//localhost:9001/_ui/responsive/common';
-						var buildNumber='100073'; 
-						$.ajax({
-					        type: "GET",
-					        url:gigyasocialloginurl+'?apikey='+gigyaApiKey,
-					        success: function() {
-					        	 $.ajax({
-					 		        type: "GET",
-					 		        url: commonResource+'/js/minified/acc.gigya.min.js?v='+buildNumber,
-					 		        success: function() {
-					 		        	 $(document).ready(function () {
-					 		        		loadGigya();
-					 		        	});
-					 		        },
-					 		        dataType: "script",
-					 		        cache: true
-					 		    });
-					        },
-					        dataType: "script",
-					        cache: true
-					    });	
-			</script>						
+<script type="text/javascript" src="/_ui/responsive/common/js/minified/acc.gigya.min.js"></script>
+
+						
 <h2 class="mb-20"><spring:theme code="luxury.header.link.signin" /></h2>
 
 	<!-- For  Gigya and API Social Login -->
