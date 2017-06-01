@@ -43580,7 +43580,7 @@ Samsung Galaxy S5 -----------
 		/* margin-top: 5px !important; */
 		margin-top: 2px !important;
 	    /* margin-left: 0px !important; */
-	    margin-left: -2px !important;
+	    margin-left: 2px !important;	/* change for TISSQAEE-1114 */
 	    /* end change of INC144316787 */
 	    font-size: 10px !important;
 	    text-align: center;
@@ -43595,6 +43595,19 @@ Samsung Galaxy S5 -----------
 	}
 }
 /* end change of INC144316787 */
+
+/* start change for TISSQAEE-1114 */
+@media (max-width: 1024px) and (min-width: 768px){
+	.text_in{
+		margin-left: 5px !important;
+	}
+}
+@media (max-width: 767px) and (min-width: 651px){
+	.text_in{
+		margin-left: -2px !important;
+	}
+}
+/* end change for TISSQAEE-1114 */
 @media (min-width: 1024px) {
 	.text_in {
 		font-size: 10px !important;
