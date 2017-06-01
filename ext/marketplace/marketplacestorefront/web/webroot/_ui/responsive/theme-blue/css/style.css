@@ -68939,3 +68939,11 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 }
 }
 /*PRDI-227 end*/
+
+/* start change of TISSQAEE-1105, INC144316370 & INC144316762  */
+@media (max-width: 414px){
+	#ReviewSecion.reviews .half .rate-details.three-block span{
+		float:left;
+	}
+}
+/* end change of TISSQAEE-1105, INC144316370 & INC144316762  */
