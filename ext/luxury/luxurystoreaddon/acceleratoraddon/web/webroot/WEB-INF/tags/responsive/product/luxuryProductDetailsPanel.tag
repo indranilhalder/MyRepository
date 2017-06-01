@@ -128,8 +128,14 @@ tr.d0 td {
 						</c:if>
 					</c:forEach>
 				</div>
+				<div class="pdp-video">
+					<video width="100%" height="100%" controls>
+					  <source src="${videoUrl}" type="video/mp4">  
+					</video>
+				</div>
 				<div class="offer-icon"><span class="new"></span></div>
 			</div>
+			
 						
 		</div>		
 			<%-- <cms:pageSlot position="ConfigureImagesCount" var="component">

@@ -408,16 +408,21 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 				{
 					newCustomer.setFirstName(registerData.getFirstName());
 					newCustomer.setLastName(registerData.getLastName());
-					if (registerData.getGender() != null && !"".equals(registerData.getGender())
-							&& MplConstants.MALE.equals(registerData.getGender()))
+					if (registerData.getSocialMediaType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FACEBOOK))
 					{
-						newCustomer.setGender(Gender.MALE);
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBMALE.equals(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.MALE);
+						}
+						if (registerData.getGender() != null && !"".equals(registerData.getGender())
+								&& MplConstants.FBFEMALE.equals(registerData.getGender()))
+						{
+							newCustomer.setGender(Gender.FEMALE);
+						}
+						newCustomer.setIsLuxuryCustomer(Boolean.TRUE);
 					}
-					if (registerData.getGender() != null && !"".equals(registerData.getGender())
-							&& MplConstants.FEMALE.equals(registerData.getGender()))
-					{
-						newCustomer.setGender(Gender.FEMALE);
-					}
+
 				}
 				//Logic for Luxury adding firstname, lastname and Gender ends
 

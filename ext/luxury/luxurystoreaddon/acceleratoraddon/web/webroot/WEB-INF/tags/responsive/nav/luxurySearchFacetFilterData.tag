@@ -42,12 +42,17 @@
 						<span></span>
 					</div>
 				</div>
+				<p class="plp-mob-filter visible-xs"><a class="nopadding btn" href="javascript:;">Refine</a></p>
+				<p class="plp-single-view visible-xs"><a class="nopadding btn" href="javascript:;">View</a></p>
 			</div><!-- product-sort-wrapper -->
 		<div class="col-sm-3 leftbar col-xs-12">
 			<div class="facetItem">
 				<div class="row facet-desktop">
 					<div class="col-xs-12">
 						<div class="filterblocks le-checkbox plp-checkbox">
+							<div class="plp-leftbar-close">
+								Filter <a class="" href="javascript:;"></a>
+							</div>
 							<product:luxuryProductrefinementcomponent/>
 						</div>
 					</div>

@@ -451,6 +451,12 @@ TATA.Pages = {
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             });
+            $(".facet-colour .facet-form input[type=checkbox]").each(function(){
+            	var colorString = $(this).attr("data-colour");
+            	var colorArray = colorString.split("_");
+            	var colorCode = "#"+colorArray[1];
+            	$(this).closest("label::before").css("background",colorCode);
+            });
         },
         filterByFacet: function() {
             $(document).on("click", ".reset-filters", function() {
@@ -637,11 +643,32 @@ TATA.Pages = {
             return false;
         }, 
         
+        videoPlay: function(){
+            $('.pdp-social-links .play').on('click', function(){ 
+                $('body').addClass('pdp-video-active');
+                $('video').each(function () 
+                    {
+                        this.play();
+                    });
+            });
+            
+            $('.pdp-img-nav .slick-slide').on('click', function(){  
+                $('body').removeClass('pdp-video-active'); 
+                
+                $('video').each(function () 
+                    {
+                        this.load();
+                    });
+            });
+            
+            
+        },
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
 			_self.Slider();
             _self.Zoomer();
+            _self.videoPlay();
 		}
 	},
 	
