@@ -97,10 +97,14 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		final CartModel cartModel;
 		cartModel = cart;
 		String jusPayCreatedOrderId = StringUtils.EMPTY;
+		Long paymentGatewayId = new Long(0);
+		String bankErrorCode = StringUtils.EMPTY;
 		final JaloSession jSession = JaloSession.getCurrentSession();
 		if (jSession != null)
 		{
 			jusPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+			paymentGatewayId = (Long) jSession.getAttribute("paymentGatewayId");
+			bankErrorCode = (String) jSession.getAttribute("bankErrorCode");
 		}
 
 		if (StringUtils.isNotEmpty(jusPayCreatedOrderId))
@@ -125,9 +129,9 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 			paymentTransactionModel.setCurrency(cart.getCurrency());
 			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
-			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString(
-					MarketplaceJuspayServicesConstants.JUSPAY_PAYMENTPROVIDER));
+			paymentTransactionModel.setPaymentProvider(paymentGatewayId.toString());
 			paymentTransactionModel.setRequestId(juspayPrefix_reqId[1]);
+			paymentTransactionModel.setRequestToken(bankErrorCode);
 			paymentTransactionModelList.add(paymentTransactionModel);
 			cartModel.setPaymentTransactions(paymentTransactionModelList);
 			getModelService().save(paymentTransactionModel);
@@ -155,12 +159,14 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		paymentTransactionEntryModel.setTime(new Date());
 		paymentTransactionEntryModel.setType(PaymentTransactionType.AUTHORIZATION);
 		String paymentMode = StringUtils.EMPTY;
+		String txnId = StringUtils.EMPTY;
 		final JaloSession jSession = JaloSession.getCurrentSession();
 		if (jSession != null)
 		{
 			paymentMode = (String) jSession.getAttribute("oisPaymentType");
+			txnId = (String) jSession.getAttribute("txnId");
 		}
-
+		paymentTransactionEntryModel.setRequestToken(txnId);
 		if (paymentMode.equalsIgnoreCase("credit"))
 		{
 			final String actualOISPaymentMode = OISPaymentTypeEnum.CREDIT.toString() + " "
@@ -189,9 +195,11 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		jusPayPaymentInfoModel.setCashOwner(StringUtils.isNotEmpty(cart.getUser().getName()) ? cart.getUser().getName()
 				: ((CustomerModel) cart.getUser()).getOriginalUid());
 		cart.setPaymentInfo(jusPayPaymentInfoModel);
-		/*cart.setConvenienceCharges(Double
-				.valueOf(null != baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
-						.getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));*/
+		/*
+		 * cart.setConvenienceCharges(Double .valueOf(null !=
+		 * baseStoreService.getCurrentBaseStore().getConvenienceChargeForCOD() ? baseStoreService
+		 * .getCurrentBaseStore().getConvenienceChargeForCOD().longValue() : 0.0));
+		 */
 		//setting the payment modes and the amount against it in session to be used later
 		final Map<String, Double> paymentInfo = new HashMap<String, Double>();
 		paymentInfo.put(MarketplaceJuspayServicesConstants.JUSPAY_KEY, cart.getConvenienceCharges());

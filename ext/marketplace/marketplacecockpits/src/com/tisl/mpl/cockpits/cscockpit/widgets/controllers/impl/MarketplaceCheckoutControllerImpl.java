@@ -1029,6 +1029,9 @@ public class MarketplaceCheckoutControllerImpl extends
 		final JSONObject jsonResponse = (JSONObject) JSONValue.parse(paymentStatusresponse);
 		final String ordStatus = (String) jsonResponse.get("status");
 		final String paymentMethodType = (String)jsonResponse.get("payment_method_type");
+		final Long paymentGatewayId = (Long)jsonResponse.get("gateway_id");
+		final String bankErrorCode = (String)jsonResponse.get("bank_error_code");
+		final String txnId = (String)jsonResponse.get("txn_id");
 		if(paymentMethodType.equalsIgnoreCase(MarketplaceCockpitsConstants.PAYMENT_METHOD_TYPE))
 		{
 			final JSONObject structure = (JSONObject) jsonResponse.get(MarketplaceCockpitsConstants.JUSPAY_RESPONSE_CARD_KEY);
@@ -1039,6 +1042,9 @@ public class MarketplaceCheckoutControllerImpl extends
 			paymentType = MarketplaceCockpitsConstants.OIS_NETBANKING;
 		}
 		JaloSession.getCurrentSession().setAttribute("oisPaymentType", paymentType);
+		JaloSession.getCurrentSession().setAttribute("paymentGatewayId", paymentGatewayId);
+		JaloSession.getCurrentSession().setAttribute("bankErrorCode", bankErrorCode);
+		JaloSession.getCurrentSession().setAttribute("txnId", txnId);
 		return ordStatus;
 	}
 }
