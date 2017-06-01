@@ -549,6 +549,6 @@ public class MarketplacewebservicesConstants
 	public static final String EQUALS_TO = "=";
 	public static final String COLON = ":";
 	public static final String FORWARD_SLASHES = "//";
-
+	public static final String FINEJEWELLERY = "finejewellery";
 
 }
