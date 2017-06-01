@@ -1,5 +1,4 @@
 /*PDP Section start*/
-
 .pdp-view {
 	max-width: 1150px;
 	margin: 20px auto 0;
@@ -41,7 +40,11 @@
 		position: relative;
 		img {
 			border: 1px solid $border;
-		}
+		} 
+        
+        .pdp-video{
+            display: none;
+        }
 	}
 	h1, h5 {
 		text-transform: uppercase;
@@ -385,3 +388,22 @@
                 }
         }
 }
+
+/*video section in pdp page start*/
+
+.pdp-video-active{
+    .zoomContainer{
+        display: none;
+    }
+    .pdp-img{
+        .pdp-img-slider{
+            display: none;
+        }
+    }
+    .pdp-view .pdp-img .pdp-video{
+        display: block;
+    }
+}
+
+
+/*video section in pdp page End*/
