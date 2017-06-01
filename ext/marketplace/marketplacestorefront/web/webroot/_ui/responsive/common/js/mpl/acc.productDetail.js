@@ -1,4 +1,3 @@
-
 	ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],

@@ -933,15 +933,20 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					else if (!updateSpecialPrice && isEligibletoDisable)
 					{
 						LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
-						price.setPromotionStartDate(null);
-						price.setPromotionEndDate(null);
-						price.setIsPercentage(null);
-						price.setPromotionValue(null);
-						price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
-						price.setMaxDiscount(null);
+						//INC144316315 (Special price is getting disappeared when multiple promotions with single listing id)
+						if (StringUtils.isNotEmpty(price.getPromotionIdentifier())
+								&& (price.getPromotionIdentifier()).equals(promoCode)) //checking for Promo Identifier same or not
+						{
+							price.setPromotionStartDate(null);
+							price.setPromotionEndDate(null);
+							price.setIsPercentage(null);
+							price.setPromotionValue(null);
+							price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+							price.setMaxDiscount(null);
 
-						LOG.debug("Saving Price Row ");
-						priceList.add(price);
+							LOG.debug("Saving Price Row ");
+							priceList.add(price);
+						}
 					}
 
 				}

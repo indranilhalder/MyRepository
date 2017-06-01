@@ -226,7 +226,8 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<PinCodeResponseData> getOMSPincodeResponseData(String pincode, CartData cartData) throws EtailNonBusinessExceptions;
+	List<PinCodeResponseData> getOMSPincodeResponseData(String pincode, CartData cartData, CartModel cartModel)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -362,14 +363,6 @@ public interface MplCartFacade extends CartFacade
 	 */
 	ArrayList<Integer> getQuantityConfiguratioList() throws EtailNonBusinessExceptions;
 
-	/**
-	 * @param cartData
-	 * @param omsDeliveryResponse
-	 * @return Map<String, List<MarketplaceDeliveryModeData>>
-	 * @throws CMSItemNotFoundException
-	 */
-	List<PinCodeResponseData> getOMSPincodeResponseData(final String pincode, final CartData cartData,
-			final OrderEntryData entryData) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param cartData

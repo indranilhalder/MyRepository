@@ -961,6 +961,11 @@
 
 	<bean id="mplJusPayRefundService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplJusPayRefundService" />
+		
+		<!-- Mrupee implementation -->	
+	
+		<bean id="mplMWalletRefundService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService" />
 
 	<!-- For Bulk Upload of Promotions -->
 	<bean id="promotionCreationJob"
@@ -1217,6 +1222,8 @@
 		<property name="cartFactory" ref="cartFactory" />
 		<property name="commerceAddToCartStrategy" ref="commerceAddToCartStrategy" />
 		<property name="guidKeyGenerator" ref="guidKeyGenerator" />
+		<!-- Commented due to cart merge Issue,During Promotion Caching Implementation need to override rebuildsessioncart and rewriteentriesfromcarttocart -->
+<!-- 		<property name="cartValidityPeriod" value="0"/> -->
 	</bean>
 
 
@@ -1258,6 +1265,17 @@
 		<property name="numeric" value="true" />
 	</bean>
 	<!-- Key generator for COD Payment Transaction Ends -->
+	
+	<!-- Key generator for Third Party Wallet -->
+	<bean id="walletOrderIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="walletOrderId" />
+		<property name="digits" value="9" />
+		<property name="start" value="#{configurationService.configuration.getProperty('wallet.orderId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+	<!-- Key generator for Third Party Wallet Ends --> 
 
 
 	<!-- For Payment Web Hook Integration -->
@@ -1972,6 +1990,15 @@
             </bean>
         </property>
     </bean>
+   <!--  mrupee changes starts -->
+   <bean id="mRupeeWalletService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
+      <property name="configurationService" ref="configurationService" />
+      <property name="orderService" ref="orderService" />
+      <property name="orderConverter" ref="orderConverter"/>
+   </bean>
+   <bean id="mplThirdPartyWalletDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
+   </bean>
+  <!--  mrupee changes ends -->
 	<!-- Old Cron Job Deletion Logic ends: -->
 
 	<!-- TPR-1285 Start -->
@@ -2136,6 +2163,28 @@
 	</bean>
 	
 	<!-- Addition for Exchange End 	-->
+	 
+	 
+	 <!-- Changes for CAR-267 -->
+   
+    <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
+    	  <property name="cache" ref="promotionsCachingStrategy"/>
+	</bean>
+	
+	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper" >
+	<constructor-arg value = "${promotion.memcache.env.ip}"/>
+	 </bean>
+	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
+		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
+		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
+	</bean>-->
+	
+    <!-- Override the Cart so that calls to get promotion results can be intercepted -->
+   
+    <!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />
+	-->
+    <!-- CACHING FINISH -->
+    
 </beans>
 
 

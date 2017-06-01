@@ -192,12 +192,14 @@ public class CartPageController extends AbstractPageController
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
 		try
 		{
-			CartModel cartModel = getCartService().getSessionCart();
+
+			CartModel cartModel = null;
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
 			{
 
+				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 				//setExpressCheckout(serviceCart); //TISPT-104
@@ -1381,7 +1383,7 @@ public class CartPageController extends AbstractPageController
 						//{
 						if (!StringUtil.isEmpty(selectedPincode))
 						{
-							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData, null);
 							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
 
 						}
@@ -1725,7 +1727,7 @@ public class CartPageController extends AbstractPageController
 			{
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData, null);
 				}
 
 				for (PinCodeResponseData pinCodeResponseData : responseData)

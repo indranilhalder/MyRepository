@@ -255,6 +255,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	void beforeSubmitOrder(OrderModel orderModel) throws InvalidCartException, CalculationException;
 
+
 	/**
 	 * INC144314180 PRDI-25
 	 *

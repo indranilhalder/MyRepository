@@ -2001,4 +2001,3 @@ INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemp
 INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
 ;mpl_Email_Payment_Timeout_Body;$emailPackageName.OrderNotificationEmailContext
 ;mpl_Email_Payment_Timeout_Subject;$emailPackageName.OrderNotificationEmailContext
-

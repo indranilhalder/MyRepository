@@ -14,11 +14,15 @@ import de.hybris.platform.acceleratorservices.sitemap.generator.SiteMapGenerator
 import de.hybris.platform.acceleratorservices.sitemap.generator.impl.CustomPageSiteMapGenerator;
 import de.hybris.platform.acceleratorservices.sitemap.generator.impl.ProductPageSiteMapGenerator;
 import de.hybris.platform.catalog.model.CatalogUnawareMediaModel;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.core.model.media.MediaModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
 import de.hybris.platform.cronjob.enums.CronJobStatus;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.cronjob.PerformResult;
 
 import java.io.File;
@@ -29,15 +33,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
-import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.CustomMediaService;
 import com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator;
@@ -56,7 +62,10 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	private CustomMediaService mediaService;
 	private MplCategoryDao mplCategoryDao;
 	private MplCustomPageSiteMapGenerator mplCustomPageSiteMapGenerator;
-
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
+	@Autowired
+	private CategoryService categoryService;
 
 	/**
 	 * This method performs the sitemap job for TPR-1285 Dynamic sitemap
@@ -90,39 +99,94 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 				if (generator instanceof ProductPageSiteMapGenerator
 						&& (updateType.equals(SiteMapUpdateModeEnum.PRODUCT) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
 				{
-					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
-					for (final CategoryModel categoryModel : categoryList)
+					final CatalogVersionModel activeCatalog = contentSite.getDefaultCatalog().getActiveCatalogVersion();
+					final List<CategoryModel> L1Category = fetchL1fromL0(activeCatalog);
+
+					if (CollectionUtils.isNotEmpty(L1Category))
 					{
-						final int count = 4;
-						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
-						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
-						String categoryName = l2Cat.getName();
-						if (StringUtils.isNotEmpty(l1Cat.getName()))
+						for (final CategoryModel category : L1Category)
 						{
-							categoryName = l1Cat.getName() + " " + l2Cat.getName();
-						}
-						final List models = categoryModel.getProducts();
-						if (CollectionUtils.isNotEmpty(models))
-						{
-							//Logic for splitting files based on model size
-							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-							if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+							final List<CategoryModel> L2Category = fetchL2fromL1(category);
+							if (CollectionUtils.isNotEmpty(L2Category))
 							{
-								final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+								for (final CategoryModel categoryl2 : L2Category)
 								{
-									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
-											pageType, Integer.valueOf(modelIndex), categoryName);
+									final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
+
+									final List models = fetchProductforL2code(activeCatalog, categoryl2);
+									if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
+									{
+										//Logic for splitting files based on model size
+										final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+										if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+										{
+											final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+											for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+											{
+												generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig,
+														modelsList.get(modelIndex), pageType, Integer.valueOf(modelIndex), categoryName);
+											}
+										}
+										else
+										{
+											generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType,
+													null, categoryName);
+										}
+									}
+									else
+									{
+										LOG.debug("Product Model or Category Not available");
+									}
 								}
 							}
 							else
 							{
-								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
-										categoryName);
+								LOG.debug("L2 Category Not available");
 							}
 						}
 					}
+					else
+					{
+						LOG.debug("L1 Category Not available");
+					}
+
+
 				}
+
+				//					final List<CategoryModel> categoryList = getMplCategoryDao().getLowestPrimaryCategories();
+				//
+				//					for (final CategoryModel categoryModel : categoryList)
+				//					{
+				//						final int count = 4;
+				//						final CategoryModel l2Cat = findCategoryLevel(categoryModel, count);
+				//						final CategoryModel l1Cat = findL2CategoryLevel(categoryModel, count);
+				//						String categoryName = l2Cat.getName();
+				//						if (StringUtils.isNotEmpty(l1Cat.getName()))
+				//						{
+				//							categoryName = l1Cat.getName() + " " + l2Cat.getName();
+				//						}
+				//						final List models = categoryModel.getProducts();
+				//						if (CollectionUtils.isNotEmpty(models))
+				//						{
+				//							//Logic for splitting files based on model size
+				//							final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+				//							if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+				//							{
+				//								final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+				//								for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+				//								{
+				//									generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, modelsList.get(modelIndex),
+				//											pageType, Integer.valueOf(modelIndex), categoryName);
+				//								}
+				//							}
+				//							else
+				//							{
+				//								generateSiteMapFiles(siteMapFiles, contentSite, generator, siteMapConfig, models, pageType, null,
+				//										categoryName);
+				//							}
+				//						}
+				//					}
+				//				}
 				//Logic for MplCustomPageSiteMapGenerator
 				else if (generator instanceof CustomPageSiteMapGenerator
 						&& (updateType.equals(SiteMapUpdateModeEnum.CUSTOM) || updateType.equals(SiteMapUpdateModeEnum.ALL)))
@@ -176,83 +240,6 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
-	}
-
-	/**
-	 * finding a category level corresponding to a category id
-	 *
-	 * @param categoryId
-	 * @param count
-	 * @return count
-	 */
-	private CategoryModel findCategoryLevel(final CategoryModel categoryId, int count)
-	{
-
-		final int finalCount = 2;
-		CategoryModel cat = categoryId;
-		try
-		{
-			if (count == 1)
-			{
-				return cat;
-			}
-			else
-			{
-				for (final CategoryModel superCategory : categoryId.getSupercategories())
-				{
-					count--;
-					if (count == finalCount)
-					{
-						break;
-					}
-					else
-					{
-						cat = superCategory;
-						return findCategoryLevel(superCategory, count);
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return cat;
-	}
-
-	private CategoryModel findL2CategoryLevel(final CategoryModel categoryId, int count)
-	{
-
-		final int finalCount = 1;
-		CategoryModel cat = categoryId;
-		try
-		{
-			if (count == 1)
-			{
-				return cat;
-			}
-			else
-			{
-				for (final CategoryModel superCategory : categoryId.getSupercategories())
-				{
-					count--;
-					if (count == finalCount)
-					{
-						break;
-					}
-					else
-					{
-						cat = superCategory;
-						return findL2CategoryLevel(superCategory, count);
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
-		}
-		return cat;
 	}
 
 
@@ -386,7 +373,66 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 
 
+	protected String getHierarchy()
+	{
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SITEMAP_HIERARCHY,
+				MarketplacecommerceservicesConstants.SITEMAP_HIERARCHY_DEFAULT);
 
+		return query;
+	}
 
+	protected List<CategoryModel> fetchL1fromL0(final CatalogVersionModel catalog)
+	{
+		final CategoryModel L0Category = categoryService.getCategoryForCode(catalog, getHierarchy());
 
+		List<CategoryModel> L1Category = null;
+		if (L0Category != null && L0Category.getCategories() != null)
+		{
+			L1Category = L0Category.getCategories();
+
+		}
+
+		return L1Category;
+	}
+
+	protected List<CategoryModel> fetchL2fromL1(final CategoryModel l1Category)
+	{
+		List<CategoryModel> L2Category = null;
+		if (l1Category != null)
+		{
+			L2Category = l1Category.getCategories();
+		}
+
+		return L2Category;
+	}
+
+	protected List<ProductModel> fetchProductforL2code(final CatalogVersionModel catalog, final CategoryModel categoryl2)
+	{
+		List<ProductModel> productList = null;
+
+		if (catalog != null && categoryl2 != null && StringUtils.isNotEmpty(categoryl2.getCode()))
+		{
+			productList = getMplCategoryDao().getProductForL2code(catalog, categoryl2.getCode());
+		}
+		return productList;
+
+	}
+
+	protected String getSiteMapNamefromCategories(final CategoryModel level1Category, final CategoryModel level2Category)
+	{
+		String categoryName = "";
+		if (level1Category != null && level2Category != null)
+		{
+			if (StringUtils.isNotEmpty(level1Category.getName()) && StringUtils.isNotEmpty(level2Category.getName()))
+			{
+				categoryName = level1Category.getName() + " " + level2Category.getName();
+			}
+			else if (StringUtils.isNotEmpty(level1Category.getName()))
+			{
+				categoryName = level1Category.getName();
+			}
+		}
+		return categoryName;
+	}
 }

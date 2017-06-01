@@ -113,17 +113,22 @@
 			elementtype="SignColItemComponent" autocreate="true" generate="true"
 			type="list" />
 		<!-- Luxury SignatureCollection -->
-
-		<!-- Added in R2.3 START -->
-		<collectiontype elementtype="Address" code="addressList"
-			autocreate="true" generate="true" type="list" />
-		<!-- For Return QuickDrop Email Process -->
-		<collectiontype elementtype="java.lang.String" code="quickDropStores"
-			autocreate="true" generate="true" type="list" />
-
-		<collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
-			autocreate="true" generate="true" type="list" />
-		<!-- Added in R2.3 END -->
+		
+		<!-- Added for Third Party Wallet -->
+		<collectiontype code="ThrdPrtyAuditEntryCollection"
+			elementtype="ThirdPartyAuditEntry" autocreate="true" generate="true"
+			type="list" />
+		<!-- Added for Third Party Wallet -->
+		<!-- Added in R2.3 START  -->
+		 <collectiontype elementtype="Address" code="addressList"
+  			 autocreate="true" generate="true" type="list" />
+  		 <!-- For Return QuickDrop Email Process -->
+   		<collectiontype elementtype="java.lang.String" code="quickDropStores"
+  			 autocreate="true" generate="true" type="list" />
+   
+  		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
+   				autocreate="true" generate="true" type="list" />
+		<!-- Added in R2.3 END  -->
 
 	</collectiontypes>
 
@@ -806,57 +811,64 @@
 			<value code="marketplace" />
 			<value code="luxury" />
 		</enumtype>
-
-
-		<!-- us-10: added by i324321 start -->
-		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="tship" />
-			<value code="sship" />
+		
+		
+<!-- us-10: added by i324321 start -->
+ 		<enumtype code="deliveryFulfillModeByP1Enum" autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 			<value code="both" />
+ 		</enumtype>
+ 		<enumtype code="returnFulfillModeByP1Enum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="tship" />
+ 			<value code="sship" />
+ 		</enumtype>
+ 		<enumtype code="giftWrappableEnum"           autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="returnAtStoreEligibleEnum"   autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isFragileEnum"               autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="isPreciousEnum"              autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="mediationRequiredEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<enumtype code="scheduledDeliveryEnum"       autocreate="true" generate="true" 
+ 			dynamic="true">
+ 			<value code="yes" />
+ 			<value code="no" />
+ 		</enumtype>
+ 		<!-- added by i324321 end -->
+ 		
+ 		<!-- Added for third Party Wallet -->
+ 		<enumtype code="walletEnum" autocreate="true" generate="true"
+			dynamic="false">
+			<value code="nonWallet"></value>
+			<value code="mRupee"></value>
 		</enumtype>
-		<enumtype code="returnFulfillModeEnum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="tship" />
-			<value code="sship" />
-			<value code="both" />
-		</enumtype>
-		<enumtype code="returnFulfillModeByP1Enum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="tship" />
-			<value code="sship" />
-		</enumtype>
-		<enumtype code="giftWrappableEnum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="yes" />
-			<value code="no" />
-		</enumtype>
-		<enumtype code="returnAtStoreEligibleEnum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="yes" />
-			<value code="no" />
-		</enumtype>
-		<enumtype code="isFragileEnum" autocreate="true" generate="true"
-			dynamic="true">
-			<value code="yes" />
-			<value code="no" />
-		</enumtype>
-		<enumtype code="isPreciousEnum" autocreate="true" generate="true"
-			dynamic="true">
-			<value code="yes" />
-			<value code="no" />
-		</enumtype>
-		<enumtype code="mediationRequiredEnum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="yes" />
-			<value code="no" />
-		</enumtype>
-		<enumtype code="scheduledDeliveryEnum" autocreate="true"
-			generate="true" dynamic="true">
-			<value code="yes" />
-			<value code="no" />
-		</enumtype>
-		<!-- added by i324321 end -->
-
+		<!-- Added for third Party Wallet -->
 
 		<!-- TPR-1285 ENUM added -->
 		<enumtype code="siteMapUpdateModeEnum" autocreate="true"
@@ -2498,6 +2510,13 @@
 						<modifiers read="true" write="true" initial="true" />
 						<persistence type="property" />
 					</attribute>
+					<!-- mrupee changes -->
+					<attribute type="java.lang.Double" qualifier="mRupeeJobTAT">
+						<defaultvalue>Double.valueOf(30.0D)</defaultvalue>
+						<description>Turn Around Time for mRupee Job</description>
+						<modifiers read="true" write="true" initial="true" />
+						<persistence type="property" />
+					</attribute>
 				</attributes>
 			</itemtype>
 
@@ -3051,6 +3070,27 @@
 			</itemtype>
 
 			<!-- End of Item Types for Payment -->
+			
+			<!-- Added for third party wallet -->
+			
+			<itemtype code="ThirdPartyWalletInfo" extends="PaymentInfo"
+				autocreate="true" generate="false">
+				<attributes>
+					<attribute qualifier="providerName" autocreate="true"
+						type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="walletOwner" autocreate="true"
+						type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
 
 
 			<itemtype code="CustomerOldEmailDetails" autocreate="true"
@@ -5805,6 +5845,15 @@
 						<modifiers optional="true" read="true" write="true" />
 						<persistence type="property" />
 					</attribute>	<!-- TPR-629 -->
+					
+					<!--  Added for Third Party Wallet -->
+					<attribute qualifier="isWallet" type="walletEnum">
+						<modifiers optional="true" read="true" />
+						<persistence type="property" />
+						<defaultvalue>em().getEnumerationValue("walletEnum","nonWallet")</defaultvalue>
+					</attribute>
+					<!--  Added for Third Party Wallet -->
+					
 					<attribute qualifier="deliveryAddresses" type="addressList">
 						<modifiers optional="true" />
 						<persistence type="property" />
@@ -7984,6 +8033,127 @@
 				</indexes>
 			</itemtype>
 		</typegroup>
+		
+		<!-- Added for Third Party Wallet -->
+		<typegroup name="ThirdPartyPaymentAudit">
+			<itemtype code="ThirdPartyAuditEntry" autocreate="true"
+				generate="true" jaloclass="com.tisl.mpl.core.jalo.ThirdPartyAuditEntry">
+				<deployment table="ThrdPrtyAuditEntry" typecode="17074" />
+				<attributes>
+					<attribute qualifier="twAuditId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<description>It represents the Order ID</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="status"
+						type="MplPaymentAuditStatusEnum">
+						<description>ENUM for Payment Audit Status</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" initial="false"
+							optional="true" />
+					</attribute>
+					<attribute qualifier='responseDate' type="java.util.Date">
+						<description>Response Received Time Stamp</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier='refundReqId' type="java.lang.String">
+						<description>Unique request id in case of Refund</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='paymentTransaction' type="PaymentTransaction">
+						<description>Payment Transaction- to be utilized specially in case of refunds</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier='mWRefNo' type="java.lang.String">
+						<description>Reference number</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="reasonCode" type="java.lang.String">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="TWAUDITENTRYID_IDX">
+						<key attribute="twAuditId" />
+					</index>
+				</indexes>
+			</itemtype>
+
+			<itemtype code="ThirdPartyAudit" autocreate="true" generate="true"
+				jaloclass="com.tisl.mpl.core.jalo.ThirdPartyAudit">
+				<deployment table="ThrdPrtyAudit" typecode="17075" />
+				<attributes>
+					<attribute qualifier="twAuditId" type="java.lang.String"
+						autocreate="true" generate="true">
+						<description>It represents the Order ID</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="auditEntries" autocreate="true"
+						type="ThrdPrtyAuditEntryCollection">
+						<description>List of Payment Audit Entries</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="false"
+							optional="true" partof="true" />
+					</attribute>
+					<attribute qualifier='requestDate' type="java.util.Date">
+						<description>Request Sent Time Stamp</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier='modifiactionDate' type="java.util.Date">
+						<description>Modified Time Stamp</description>
+						<modifiers read="true" write="true" optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<attribute qualifier="cartGUID" type="java.lang.String"
+						autocreate="true" generate="true">
+						<description>The Cart GUID</description>
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="channel" autocreate="true" type="ChannelList">
+						<description>Channel Initiating Payment</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="false"
+							optional="false" initial="false" />
+					</attribute>
+					<attribute qualifier="isExpired" autocreate="true"
+						type="java.lang.Boolean">
+						<description>To determine the validity period of the record</description>
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="false" />
+					</attribute>
+					
+					<attribute qualifier="paymentAmount" type="java.lang.Double"
+						autocreate="true" generate="true">
+						<description>It represents the Payment Amount</description>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+				<indexes>
+					<index name="TWAUDITID_IDX">
+						<key attribute="twAuditId" />
+					</index>
+				</indexes>
+			</itemtype>
+		</typegroup>
+		<!-- Added for Third Party Wallet -->
 
 		<!-- Webhook Table for Juspay starts -->
 		<typegroup name="JuspayWebhook">

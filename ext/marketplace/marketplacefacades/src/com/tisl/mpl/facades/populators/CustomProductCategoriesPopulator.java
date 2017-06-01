@@ -118,6 +118,14 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 
 
 
+
+		//commented as a fix for TISSQAUAT-665
+		/**final Collection<CategoryModel> categories = getCommerceProductService()
+				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));**/
+
+
+
 	}
 
 	/**

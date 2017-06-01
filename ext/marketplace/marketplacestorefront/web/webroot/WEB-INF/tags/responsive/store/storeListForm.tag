@@ -25,24 +25,34 @@
 
 
 .store-finder-legends{
-z-index: 1;
-/* padding-left:20px */
-position :absolute;
-float:right;
-right:10px;
-top:15%;
-padding-bottom:5px;
+	z-index: 1;
+	/* padding-left:20px */
+	position :absolute;
+	float:right;
+	right:10px;
+	top:10%;		/* TISSQAEE-335 */
+	padding-bottom:5px;
+	text-align: right;		/* TISSQAEE-335 */
+	width: 50%;		/* TISSQAEE-335 */
+	display:none;
 }
 .googleMapLegends{
   /* width:initial; */
  /*  margin:-10px; */
 }
 
+@media (max-width:330px){
+	.store-finder-legends{
+		left:-16px;		/* TISSQAEE-335 iOS*/	
+	}
+}
+
 @media (max-width: 768px) {
   .store-finder-legends{
-  position:relative;
-  width:100%;
-  text-align:right;
+  	position:relative;
+  	width:100%;
+  	text-align:right;
+  	top:10px;		/* TISSQAEE-335*/	
   }
 }
 }

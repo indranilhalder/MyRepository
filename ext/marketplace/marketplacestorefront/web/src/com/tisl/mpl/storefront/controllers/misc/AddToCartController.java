@@ -33,10 +33,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
-import com.tisl.mpl.helper.AddToCartHelper;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.web.forms.MplAddToCartForm;
-
+import com.tisl.mpl.helper.AddToCartHelper;
 
 /**
  * Controller for Add to Cart functionality which is not specific to a certain page.
@@ -137,6 +136,7 @@ public class AddToCartController extends AbstractController
 				 */
 				if (cartModification.getQuantityAdded() == 0L)
 				{
+					LOG.error("in cart modification");
 					return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE;
 					/*
 					 * model.addAttribute(MarketplacecommerceservicesConstants.ERROR_MSG_TYPE,

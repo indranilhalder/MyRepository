@@ -297,10 +297,11 @@
 			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ProductData>"></property>
 		<property name="channels" type="java.util.List&lt;java.lang.String>"></property>
 		<property name="allowedSellers" type="java.util.List&lt;java.lang.String>"></property>
-
+		<!-- TPR-1325 starts -->
+		<property name="promourl" type="java.lang.String"></property>
+		<property name="bundlepromolinktext" type="java.lang.String"></property>
+		<!-- TPR-1325 ends -->
 		<property name="termsAndConditions" type="String" />
-
-
 	</bean>
 
 	<!-- PDP changes for Promotion end -->

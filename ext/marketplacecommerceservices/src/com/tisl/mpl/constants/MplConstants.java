@@ -108,4 +108,5 @@ public final class MplConstants
 	public static final String MSITE_SLR_SLS_PTRN_PART1 = "/mpl/";
 	//CKD:TPR-250: Brand info character limit
 	public static final int BRANDINFO_CHAR_LIMIT = 250;
+	public static final String BRAND_HIERARCHY_ROOT_CATEGORY_CODE = "MBH";
 }

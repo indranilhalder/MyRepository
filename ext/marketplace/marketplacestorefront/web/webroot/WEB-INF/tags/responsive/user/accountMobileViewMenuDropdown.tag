@@ -14,14 +14,14 @@
 <select class="menu-select" id="menuPageSelect"
 	onchange="window.location=this.options[this.selectedIndex].value;">
 	<optgroup label='<spring:theme code="header.flyout.myaccount" />'>
-		<option value=/store/mpl/en/my-account?isLux=${isLuxVal}
+		<%-- <option value=/store/mpl/en/my-account?isLux=${isLuxVal}
 			 data-href="/store/mpl/en/my-account/"><spring:theme
 				code="header.flyout.overview" />
-		</option>
-		<option value=/store/mpl/en/my-account/marketplace-preference?isLux=${isLuxVal}
+		</option> --%>
+		<%-- <option value=/store/mpl/en/my-account/marketplace-preference?isLux=${isLuxVal}
 			data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme
 				code="header.flyout.marketplacepreferences" />
-		</option>
+		</option> --%>	<!-- UF-249 -->
 		<option value=/store/mpl/en/my-account/update-profile?isLux=${isLuxVal}
 			data-href="account-info.php"><spring:theme
 				code="header.flyout.Personal" />
@@ -42,10 +42,10 @@
 						data-href="account-addresses.php"><spring:theme
 							code="header.flyout.review" />
 		</option>
-		<option value=/store/mpl/en/my-account/myInterest?isLux=${isLuxVal}
+		<%-- <option value=/store/mpl/en/my-account/myInterest?isLux=${isLuxVal}
 			data-href="account-addresses.php"><spring:theme
 				code="header.flyout.recommendations" />
-		</option>
+		</option> --%>		<!--  UF-249 link hide -->
 	</optgroup>
 
 	<optgroup label="Credit">

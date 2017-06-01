@@ -2001,35 +2001,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 
 		final List<PinCodeResponseData> responseList = new ArrayList<PinCodeResponseData>();
-		List<AbstractOrderEntryModel> cartEntryList = null;
+		//final List<AbstractOrderEntryModel> cartEntryList = null;
 		try
 		{
 			//fetching response   from oms  against the pincode
 			PinCodeDeliveryModeListResponse response = null;
 
-			for (final PincodeServiceData dataObj : reqData)
-			{
-				final CartModel cartModel = getCartService().getSessionCart();
-				cartEntryList = cartModel.getEntries();
-				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
-				{
-					if (null != cartEntryModel)
-					{
-						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUssid()))
-						{
-							cartEntryModel.setIsPrecious(dataObj.getIsPrecious());
-							cartEntryModel.setIsFragile(dataObj.getIsFragile());
-						}
-					}
-				}
-			}
-			LOG.debug("::::::Try to save cart Entry to :::::::::");
-			if (null != cartEntryList && cartEntryList.size() > 0)
-			{
-				LOG.debug("::::::In side If Statement :::::::::");
-				getModelService().saveAll(cartEntryList);
-			}
-			LOG.debug("::::::SuccessFully Saved to All Cart Entries:::::::::");
+			//			for (final PincodeServiceData dataObj : reqData)
+			//			{
+			//				final CartModel cartModel = getCartService().getSessionCart();
+			//				cartEntryList = cartModel.getEntries();
+			//				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			//				{
+			//					if (null != cartEntryModel)
+			//					{
+			//						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(dataObj.getUssid()))
+			//						{
+			//							cartEntryModel.setIsPrecious(dataObj.getIsPrecious());
+			//							cartEntryModel.setIsFragile(dataObj.getIsFragile());
+			//						}
+			//					}
+			//				}
+			//			}
+			//			LOG.debug("::::::Try to save cart Entry to :::::::::");
+			//			if (null != cartEntryList && cartEntryList.size() > 0)
+			//			{
+			//				LOG.debug("::::::In side If Statement :::::::::");
+			//				getModelService().saveAll(cartEntryList);
+			//			}
+			//			LOG.debug("::::::SuccessFully Saved to All Cart Entries:::::::::");
 			try
 			{
 				response = getPinCodeDeliveryModeService().prepPinCodeDeliveryModetoOMS(pin, reqData);
@@ -2438,12 +2438,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return isValid;
 	}
 
-	/*
+	/**
 	 * @Desc fetching reservation details
-	 *
-	 * @param cartId
-	 *
-	 * @param cartData
 	 *
 	 * @param pincode
 	 *
@@ -2474,8 +2470,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			/* Added for TISRLUAT-1161 START */
 			try
 			{
-				if (null != abstractOrderModel && null != abstractOrderModel.getEntries()
-						&& !abstractOrderModel.getEntries().isEmpty() && null != inventoryRequest && null != inventoryRequest.getItem())
+				if (null != abstractOrderModel && CollectionUtils.isNotEmpty(abstractOrderModel.getEntries())
+						&& null != inventoryRequest && CollectionUtils.isNotEmpty(inventoryRequest.getItem()))
 				{
 					for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
 					{
@@ -2513,51 +2509,52 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						}
 					}
 				}
-				else
-				{
-					final CartModel cartModel = getCartService().getSessionCart();
-
-					if (null != cartModel && null != cartModel.getEntries() && !cartModel.getEntries().isEmpty()
-							&& null != inventoryRequest && null != inventoryRequest.getItem())
-					{
-						for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
-						{
-							for (final AbstractOrderEntryModel entry : cartModel.getEntries())
-							{
-								if (item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
-								{
-									entry.setFulfillmentMode(item.getFulfillmentType());
-									entry.setFulfillmentType(item.getFulfillmentType());
-									try
-									{
-										final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-												entry.getSelectedUSSID());
-										List<RichAttributeModel> richAttributeModel = null;
-										if (sellerInfoModel != null)
-										{
-											richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-										}
-										if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
-												&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-
-										{
-											final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode()
-													.toUpperCase();
-											entry.setFulfillmentTypeP1(fulfilmentType);
-										}
-									}
-									catch (final ClientEtailNonBusinessExceptions e)
-									{
-										LOG.error("Exception occurred while setting fullFillMent Type P1" + e.getErrorCode());
-									}
-									getModelService().save(entry);
-									getModelService().save(entry.getOrder());
-								}
-							}
-						}
-
-					}
-				}
+				//Duplicate cart Fix
+				//				else
+				//				{
+				//					final CartModel cartModel = getCartService().getSessionCart();
+				//
+				//					if (null != cartModel && null != cartModel.getEntries() && !cartModel.getEntries().isEmpty()
+				//							&& null != inventoryRequest && null != inventoryRequest.getItem())
+				//					{
+				//						for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
+				//						{
+				//							for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+				//							{
+				//								if (item.getUssId().equalsIgnoreCase(entry.getSelectedUSSID()))
+				//								{
+				//									entry.setFulfillmentMode(item.getFulfillmentType());
+				//									entry.setFulfillmentType(item.getFulfillmentType());
+				//									try
+				//									{
+				//										final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+				//												entry.getSelectedUSSID());
+				//										List<RichAttributeModel> richAttributeModel = null;
+				//										if (sellerInfoModel != null)
+				//										{
+				//											richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+				//										}
+				//										if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
+				//												&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
+				//
+				//										{
+				//											final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode()
+				//													.toUpperCase();
+				//											entry.setFulfillmentTypeP1(fulfilmentType);
+				//										}
+				//									}
+				//									catch (final ClientEtailNonBusinessExceptions e)
+				//									{
+				//										LOG.error("Exception occurred while setting fullFillMent Type P1" + e.getErrorCode());
+				//									}
+				//									getModelService().save(entry);
+				//									getModelService().save(entry.getOrder());
+				//								}
+				//							}
+				//						}
+				//
+				//					}
+				//				}
 			}
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
@@ -3728,8 +3725,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			for (final CartSoftReservationData dataObj : cartSoftReservationDatalist)
 			{
-				final CartModel cartModel = getCartService().getSessionCart();
-				cartEntryList = cartModel.getEntries();
+				//duplicate Cart Fix
+				//final CartModel cartModel = getCartService().getSessionCart();
+				cartEntryList = abstractOrderModel.getEntries();
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
 					if (null != cartEntryModel)

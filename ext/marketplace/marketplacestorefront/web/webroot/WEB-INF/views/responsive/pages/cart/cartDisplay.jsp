@@ -147,10 +147,10 @@
 	</div>
 	</div>
 	<script>
-   				window.onload =	function(){
+                               $(window).on('load',function(){ 
    						checkIsServicable();
    						
-   				}
+   				});
 	</script>
 <!-- TISCR-320 -->
 <%-- <span class="continue-shopping">

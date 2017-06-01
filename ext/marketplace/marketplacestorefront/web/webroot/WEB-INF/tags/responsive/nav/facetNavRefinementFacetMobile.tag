@@ -94,6 +94,7 @@ function navigateToPage(queryString,textString)
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
 								<form action="${url}" method="get" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217); height:26px; width: 26px; background-size:100%;"> 
+
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -101,7 +102,9 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="button" class="js-facet-colourbutton" value="" style="background-color: transparent; border:none; height:36px; padding: 13px 17px; width:36px;">
+								<%-- INC144314175  --%>
+								<input type="button" class="js-facet-colourbutton" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								<%-- <input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg');border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;"> --%>
 								<span><span>All Color</span></span>
 								</form>
 								<%-- <a   onclick="navigateToPage('${facetValue.query.query.value}','${searchPageData.freeTextSearch}')" >
@@ -113,6 +116,7 @@ function navigateToPage(queryString,textString)
 								<c:otherwise>
 								<c:set var="colorHexCode" value="#${colorAry[1]}" />
 								<form action="${url}" method="get"  style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 26px; width: 26px;" > 
+
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -197,6 +201,7 @@ function navigateToPage(queryString,textString)
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
 							<form action="${url}" method="get" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217); height:26px; width:26px; background-size:100%;"> 
+
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -204,7 +209,9 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="button" class="js-facet-colourbutton" value="" style="background-color: transparent; border:none; height:36px; padding: 13px 17px; width:36px;">
+								<%-- INC144314175  --%>
+								<input type="button" class="js-facet-colourbutton" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">
+								<%-- <input type="submit" value="" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217);height:36px;padding: 13px 17px; width:36px;background-size:100%;">--%>
 								<span><span>All Color</span></span>
 								</form>
 								<%-- <a href="#">
@@ -217,6 +224,7 @@ function navigateToPage(queryString,textString)
 								<c:set var="colorHexCode" value="#${colorAry[1]}" />
 								<!-- <a href="#" ></a> --> 
 							    <form action="${url}" method="get" style="background-color:${colorHexCode}; border:1px solid rgb(204, 211, 217); height: 26px; width: 26px;"> 
+
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
 								<input type="hidden" name="q" value="${facetValue.query.query.value}"/>
@@ -497,4 +505,3 @@ function navigateToPage(queryString,textString)
 </c:if>
 </c:if>
 </div>
-
