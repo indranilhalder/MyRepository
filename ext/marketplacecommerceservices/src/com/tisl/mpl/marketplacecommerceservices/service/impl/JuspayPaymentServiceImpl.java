@@ -99,12 +99,14 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		String jusPayCreatedOrderId = StringUtils.EMPTY;
 		Long paymentGatewayId = new Long(0);
 		String bankErrorCode = StringUtils.EMPTY;
+		String commerEndOrderId = StringUtils.EMPTY;
 		final JaloSession jSession = JaloSession.getCurrentSession();
 		if (jSession != null)
 		{
 			jusPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
 			paymentGatewayId = (Long) jSession.getAttribute("paymentGatewayId");
 			bankErrorCode = (String) jSession.getAttribute("bankErrorCode");
+			commerEndOrderId = (String) jSession.getAttribute("commerceEndOrderId");
 		}
 
 		if (StringUtils.isNotEmpty(jusPayCreatedOrderId))
@@ -122,9 +124,15 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 				paymentTransactionModelList = new ArrayList<PaymentTransactionModel>();
 			}
 
-			final String juspayCode = getCodCodeGenerator().generate().toString();
-			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.JUSPAY + juspayCode + "-"
-					+ System.currentTimeMillis());
+			//final String juspayCode = getCodCodeGenerator().generate().toString();
+			if (StringUtils.isNotEmpty(commerEndOrderId))
+			{
+				paymentTransactionModel.setCode(commerEndOrderId + "-" + System.currentTimeMillis());
+			}
+			else
+			{
+				paymentTransactionModel.setCode(cart.getCode() + "-" + System.currentTimeMillis());
+			}
 
 			paymentTransactionModel.setCurrency(cart.getCurrency());
 			paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
