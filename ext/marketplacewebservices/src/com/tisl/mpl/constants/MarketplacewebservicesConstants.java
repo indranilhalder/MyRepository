@@ -565,7 +565,7 @@ public class MarketplacewebservicesConstants
 	public static final String INVALID_TICKET_TYPE = "Invalid Ticket Type".intern();
 	public static final String ERROR_IN_OMS = "The order is not cancellable/returnable.".intern();
 	public static final String FORMAT_MISMATCH = "Format mismatch".intern();
-	public static final String MISSING_MANDATORY_FIELDS = "Some mandatory fields are empty. Cannot proceed further.".intern();
+	public static final String MISSING_MANDATORY_FIELDS = "Some mandatory fields are missing".intern();
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCEL";
 	public static final String RETURN_ORDER_STATUS = "valid.order.statuses.RETURN";
 	public static final String BLANK_TRANSACTION_ID = "TRANSACTION ID IS NULL AT COMMERCE END";
