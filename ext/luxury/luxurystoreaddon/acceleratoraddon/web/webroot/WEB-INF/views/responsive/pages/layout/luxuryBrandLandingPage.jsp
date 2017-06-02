@@ -42,11 +42,10 @@
 		
 		
 		
-			<%-- <cms:pageSlot position="Brand-ProductCurosel2" var="ProductCurosel2" element="div"
+			 <cms:pageSlot position="Brand-ProductCurosel2" var="ProductCurosel2" element="div"
 		class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${ProductCurosel2}" />
-		${ProductCurosel2}
-		</cms:pageSlot> --%>
+		</cms:pageSlot> 
 		
 
 		
