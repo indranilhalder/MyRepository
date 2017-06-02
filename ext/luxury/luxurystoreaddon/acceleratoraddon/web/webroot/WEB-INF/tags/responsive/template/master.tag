@@ -294,13 +294,16 @@
  		var buildNumber='${buildNumber}'; 
  		/* done for TISPT-203 */
  		$(window).on('load',function(){
- 			alert('hi');
+ 			
  			/*  $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
  				$.getScript('${commonResourcePath}/js/minified/acc.gigya.min.js?v=${buildNumber}').done(function(){
  					loadGigya();
  				});
  			});  */
- 			callLuxuryGigya();
+ 			$.getScript('${themeResourcePath}/js/feedback.js').done(function(){
+ 				callLuxuryGigya();
+ 			});
+ 			
  		});
  		</script>
  	</c:when>

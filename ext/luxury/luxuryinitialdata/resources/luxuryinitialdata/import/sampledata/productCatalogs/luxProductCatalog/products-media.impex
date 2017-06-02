@@ -60,6 +60,11 @@ $media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator
 $siteResource=jar:com.tisl.lux.constants.LuxuryinitialdataConstants&/luxuryinitialdata/import/sampledata/productCatalogs/$productCatalog
 $medias=medias(code, $catalogVersion)
 
+INSERT_UPDATE MediaFormat;qualifier[unique=true];name
+;luxuryModel;luxuryModel
+;luxurySecondary;luxurySecondary
+
+
 
 INSERT_UPDATE Media;mediaFormat(qualifier);;code[unique=true];$media;mime[default='image/jpeg'];$catalogVersion;folder(qualifier);mediaType(code)[default='Image']
 ;97Wx144H;97Wx144H/MP000000000390478_1;/97Wx144H/MP000000000390478_1.jpg;$siteResource/images/97Wx144H/MP000000000390478_1.jpg;;;images
@@ -87,3 +92,28 @@ INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$catalogVersion
 UPDATE Product;code[unique=true];$catalogVersion;$galleryImages
 ;MP000000000390478;;MP000000000390478_1,MP000000000390478_2,MP000000000390478_3,MP000000000390478_4,MP000000000390478_5
 ;MP000000000390479;;MP000000000390478_1,MP000000000390478_2,MP000000000390478_3,MP000000000390478_4,MP000000000390478_5
+
+INSERT_UPDATE Media;mediaFormat(qualifier);;code[unique=true];mediaPriority;$media;mime[default='image/jpeg'];$catalogVersion;folder(qualifier);mediaType(code)[default='Image']
+;252Wx374H;252Wx374H/LUX000000000384024_252Wx374H;/252Wx374H/LUX000000000384024_252Wx374H.jpeg;1;$siteResource/images/252Wx374H/LUX000000000384024_252Wx374H.jpeg;;;images
+;252Wx374H;252Wx374H/LUX000000000384094_252Wx374H;/252Wx374H/LUX000000000384094_252Wx374H.jpeg;1;$siteResource/images/252Wx374H/LUX000000000384094_252Wx374H.jpeg;;;images
+;252Wx374H;252Wx374H/LUX000000000384004_252Wx374H;/252Wx374H/LUX000000000384004_252Wx374H.jpeg;1;$siteResource/images/252Wx374H/LUX000000000384004_252Wx374H.jpeg;;;images
+
+;luxuryModel;luxuryModel/LUX000000000384024_model;/luxuryModel/LUX000000000384024_model.jpeg;1;$siteResource/images/luxuryModel/LUX000000000384024_model.jpeg;;;images
+;luxuryModel;luxuryModel/LUX000000000384094_model;/luxuryModel/LUX000000000384094_model.jpeg;1;$siteResource/images/luxuryModel/LUX000000000384094_model.jpeg;;;images
+;luxuryModel;luxuryModel/LUX000000000384004_model;/luxuryModel/LUX000000000384004_model.jpeg;1;$siteResource/images/luxuryModel/LUX000000000384004_model.jpeg;;;images
+
+;luxurySecondary;luxurySecondary/LUX000000000384024_secondary;/luxurySecondary/LUX000000000384024_secondary.jpeg;1;$siteResource/images/luxurySecondary/LUX000000000384024_secondary.jpeg;;;images
+;luxurySecondary;luxurySecondary/LUX000000000384094_secondary;/luxurySecondary/LUX000000000384094_secondary.jpeg;1;$siteResource/images/luxurySecondary/LUX000000000384094_secondary.jpeg;;;images
+;luxurySecondary;luxurySecondary/LUX000000000384004_secondary;/luxurySecondary/LUX000000000384004_secondary.jpeg;1;$siteResource/images/luxurySecondary/LUX000000000384004_secondary.jpeg;;;images
+
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$catalogVersion
+;LUX000000000384024_1;/252Wx374H/LUX000000000384024_252Wx374H.jpeg,/luxuryModel/LUX000000000384024_model.jpeg,/luxurySecondary/LUX000000000384024_secondary.jpeg;
+;LUX000000000384094_1;/252Wx374H/LUX000000000384094_252Wx374H.jpeg,/luxuryModel/LUX000000000384094_model.jpeg,/luxurySecondary/LUX000000000384094_secondary.jpeg;
+;LUX000000000384004_1;/252Wx374H/LUX000000000384004_252Wx374H.jpeg,/luxuryModel/LUX000000000384004_model.jpeg,/luxurySecondary/LUX000000000384004_secondary.jpeg;
+
+UPDATE Product;code[unique=true];$catalogVersion;$galleryImages
+;LUX000000000384024;;LUX000000000384024_1
+;LUX000000000384094;;LUX000000000384094_1
+;LUX000000000384004;;LUX000000000384004_1
+;LUX000000000384034;;LUX000000000384004_1

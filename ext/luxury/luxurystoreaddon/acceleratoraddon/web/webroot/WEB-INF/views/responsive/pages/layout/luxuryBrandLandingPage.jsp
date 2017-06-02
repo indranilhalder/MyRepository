@@ -26,17 +26,21 @@
 				class="span-24 section5 cms_disp-img_slot">
 				<cms:component component="${CategoryCurosel}" />
 			</cms:pageSlot>
+			
+				<cms:pageSlot position="Brand-ShowCase1" var="ShowCase1" element="div"
+				class="span-24 section5 cms_disp-img_slot">
+				<cms:component component="${ShowCase1}" />
+				</cms:pageSlot>
+		
+			<div class="lux-blp-carousel">
+				<cms:pageSlot position="Brand-ProductCurosel1" var="feature" element="div"
+				class="span-24 section5 cms_disp-img_slot">
+				<cms:component component="${feature}" />
+				</cms:pageSlot>
+			</div>
 		</section>
-	<cms:pageSlot position="Brand-ShowCase1" var="ShowCase1" element="div"
-		class="span-24 section5 cms_disp-img_slot">
-		<cms:component component="${ShowCase1}" />
-	</cms:pageSlot>
-	
-	
-		<cms:pageSlot position="Brand-ProductCurosel1" var="feature" element="div"
-		class="span-24 section5 cms_disp-img_slot">
-		<cms:component component="${feature}" />
-		</cms:pageSlot>
+		
+		
 		
 			<%-- <cms:pageSlot position="Brand-ProductCurosel2" var="ProductCurosel2" element="div"
 		class="span-24 section5 cms_disp-img_slot">
@@ -46,53 +50,54 @@
 		
 
 		
-		
-		<div class="look-book-img"> 
-		<div class="look-book-list clearfix">
-			<div class="colmn">
-				<ul class="list-unstyled clearfix">
-					<cms:pageSlot position="Brand-MoreStoriesbanner1Col1" var="MoreStoriesbanner1Col1" element="div"
-					class="span-24 section5 cms_disp-img_slot">
-					<li><cms:component component="${MoreStoriesbanner1Col1}" /></li>
-					</cms:pageSlot>					
-				</ul>
+		<div class="look-book">
+			<div class="look-book-img"> 
+				<div class="look-book-list clearfix">
+					<div class="colmn">
+						<ul class="list-unstyled clearfix">
+							<cms:pageSlot position="Brand-MoreStoriesbanner1Col1" var="MoreStoriesbanner1Col1" element="div"
+							class="span-24 section5 cms_disp-img_slot">
+							<li><cms:component component="${MoreStoriesbanner1Col1}" /></li>
+							</cms:pageSlot>					
+						</ul>
+					</div>
+					<div class="colmn">
+						<ul class="list-unstyled clearfix">
+							<cms:pageSlot position="Brand-MoreStoriesbanner1Col2" var="MoreStoriesbanner1Col2" element="div"
+							class="span-24 section5 cms_disp-img_slot">
+							<li><cms:component component="${MoreStoriesbanner1Col2}" /></li> 
+							</cms:pageSlot>					
+						</ul>
+					</div>
+				</div>
 			</div>
-			<div class="colmn">
-				<ul class="list-unstyled clearfix">
-					<cms:pageSlot position="Brand-MoreStoriesbanner1Col2" var="MoreStoriesbanner1Col2" element="div"
-					class="span-24 section5 cms_disp-img_slot">
-					<li><cms:component component="${MoreStoriesbanner1Col2}" /></li> 
-					</cms:pageSlot>					
-				</ul>
+			
+			<div class="look-book-img"> 
+				<div class="look-book-list clearfix">
+					<div class="colmn">
+						<ul class="list-unstyled clearfix">
+							<cms:pageSlot position="Brand-MoreStoriesbanner2Col1" var="MoreStoriesbanner2Col1" element="div"
+							class="span-24 section5 cms_disp-img_slot">
+							<li><cms:component component="${MoreStoriesbanner2Col1}" /></li>
+							</cms:pageSlot>					
+						</ul>
+					</div>
+					<div class="colmn">
+						<ul class="list-unstyled clearfix">
+						<li>
+							<cms:pageSlot position="Brand-MoreStoriesbanner2Col2" var="MoreStoriesbanner2Col2" element="div"
+							class="span-24 section5 cms_disp-img_slot">
+							<li><cms:component component="${MoreStoriesbanner2Col2}"/> </li>
+							</cms:pageSlot>					
+						</ul>
+					</div>
+				</div>
 			</div>
-		</div>
-		</div>
-		
-		<div class="look-book-img"> 
-		<div class="look-book-list clearfix">
-			<div class="colmn">
-				<ul class="list-unstyled clearfix">
-					<cms:pageSlot position="Brand-MoreStoriesbanner2Col1" var="MoreStoriesbanner2Col1" element="div"
-					class="span-24 section5 cms_disp-img_slot">
-					<li><cms:component component="${MoreStoriesbanner2Col1}" /></li>
-					</cms:pageSlot>					
-				</ul>
-			</div>
-			<div class="colmn">
-				<ul class="list-unstyled clearfix">
-				<li>
-					<cms:pageSlot position="Brand-MoreStoriesbanner2Col2" var="MoreStoriesbanner2Col2" element="div"
-					class="span-24 section5 cms_disp-img_slot">
-					<li><cms:component component="${MoreStoriesbanner2Col2}"/> </li>
-					</cms:pageSlot>					
-				</ul>
-			</div>
-		</div>
-		</div>
-		
-		<cms:pageSlot position="Brand-PopularCategory" var="feature" element="div"
+				<cms:pageSlot position="Brand-PopularCategory" var="feature" element="div"
 		class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${feature}" />
 		</cms:pageSlot>
+		</div>
+	
 		
 </template:page>

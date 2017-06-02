@@ -3,6 +3,13 @@
 		> .container{
 			width:100%;
 			padding:0px;
+			.owl-stage-outer{
+				.item{
+					img{
+						width:100%;
+					} 
+				}
+			}
 		}
 		footer{
 			.container{
@@ -208,4 +215,39 @@
 	.slick-track{
 		margin:0 auto;
 	}
+}
+
+.page-luxuryBrandLandingPage{
+	.mainContent-wrapper{
+		> .container{
+			width:100%;
+			padding:0px;
+			.owl-stage-outer{
+				.item{
+					img{
+						width:100%;
+					} 
+				}
+			}
+		}
+		footer{
+			.container{
+				max-width:1200px;
+				margin:0 auto;
+			}
+		}
+	}
+	.lux-blp-carousel{
+		display:inline-block;
+		width:100%;
+		.owl-stage-outer{
+			overflow:hidden;
+			.owl-item{
+				float:left;
+			}
+		}
+	}
+	.look-book-img{
+		margin-top:50px;
+	}	
 }

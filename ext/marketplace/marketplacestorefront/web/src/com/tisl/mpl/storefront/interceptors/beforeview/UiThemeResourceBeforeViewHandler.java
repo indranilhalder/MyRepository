@@ -21,12 +21,15 @@ import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
+import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commerceservices.enums.SiteTheme;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.commerceservices.i18n.CommerceCommonI18NService;
 import de.hybris.platform.core.model.c2l.LanguageModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.regioncache.region.CacheRegion;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +99,11 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 	@Resource(name = "offersCompCacheValueLoader")
 	private OffersComponentCacheValueLoader offersCompCacheValueLoader;
 
+	@Resource(name = "userFacade")
+	private UserFacade userFacade;
 
+	@Resource(name = "userService")
+	private UserService userService;
 
 	@Override
 	public void beforeView(final HttpServletRequest request, final HttpServletResponse response, final ModelAndView modelAndView)
@@ -204,7 +211,14 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		modelAndView.addObject(ModelAttributetConstants.IS_LUXURY_GIGYA_ENABLED, isLuxuryGigyaEnabled);
 
 		modelAndView.addObject(ModelAttributetConstants.FEED_BACK_SURVEY_URL, feedbackSurveyUrl);
+		//Logic added for Name in header
+		if (!userFacade.isAnonymousUser())
+		{
+			final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
+			final String firstName = currentCustomer.getFirstName();
+			modelAndView.addObject(ModelAttributetConstants.LUXURY_USER_FIRST_NAME, firstName);
 
+		}
 		if (StringUtils.isNotEmpty(currentSite.getBuildNumber()))
 		{
 			modelAndView.addObject(ModelAttributetConstants.BUILD_NUMBER, currentSite.getBuildNumber());

@@ -55,6 +55,8 @@
 			<a href="${product.url}" title="${product.name}">
 				<div class="product-image">
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="searchPage"/>
+					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxuryModel"/>
+					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxurySecondary"/>
 					<div class="offer-icon">
 						<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
 							<span class="new"></span>

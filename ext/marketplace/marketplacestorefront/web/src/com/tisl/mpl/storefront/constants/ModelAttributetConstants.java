@@ -841,4 +841,6 @@ public final class ModelAttributetConstants
 	public static final String MESSAGE = "message";
 
 	public static final String EMAILORPASSINVALID = "Email or Password invalid";
+	public static final String LUXURY_USER_FIRST_NAME = "fname";
+
 }
