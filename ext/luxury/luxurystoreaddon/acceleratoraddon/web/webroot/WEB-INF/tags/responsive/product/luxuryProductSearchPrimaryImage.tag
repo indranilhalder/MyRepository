@@ -3,7 +3,7 @@
 <%@ attribute name="format" required="true" type="java.lang.String" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/shared/theme" %>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
 <%-- <c:set value="${ycommerce:productImage(product, format)}" var="primaryImage"/> --%>
@@ -27,7 +27,7 @@
 		</c:choose>
 	</c:when>
 	<c:otherwise>
-		<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+		<theme:luxuryImage code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 	</c:otherwise>
 </c:choose>
 <%-- <theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/> --%>
