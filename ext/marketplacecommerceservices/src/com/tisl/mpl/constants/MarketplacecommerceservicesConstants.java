@@ -2103,5 +2103,24 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// Agent who placed order from cscockpit
 
+	//CAR-285
+	public static final String XML_SITEMAP_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"> \n";
+	public static final String SITEMAP_TAG_OPEN = "<sitemap>\n";
+	public static final String SITEMAP_TAG_CLOSE = "</sitemap>\n";
+	public static final String LOC_TAG_OPEN = "<loc>\n";
+	public static final String LOC_TAG_CLOSE = "</loc>\n";
+	public static final String XML_SITEMAP_END = "</sitemapindex>\n";
+	public static final String SITEMAP_NAME = "mpl.sitemap.xml.name";
+	public static final String SITEMAP_NAME_DEFAULT = "sitemap.xml";
+	public static final String SITEMAP_LOCATION = "mpl.sitemap.xml.location";
+	public static final String SITEMAP_LOCATION_DEFAULT = "/hybris/hybris/data/feed/report/sitemap/";
+	public static final String SITEMAP_ZIP_LOCATION = "mpl.sitemap.zipLocation";
+	public static final String SITEMAP_ZIP_LOCATION_DEFAULT = "/hybris/hybris/data/feed/report/sitemap/sitemaps";
+	public static final String SITEMAP_UID = "mpl.sitemap.uid";
+	public static final String SITEMAP_UID_DEFAULT = "mpl";
+	public static final String SITEMAP_URL = "mpl.sitemap.url";
+	public static final String SITEMAP_URL_DEFAULT = "https://www.tatacliq.com/";
+	public static final String SITEMAP_FOLDER = "mpl.sitemap.folder";
+	public static final String SITEMAP_FOLDER_DEFAULT = "sitemaps/";
+	public static final String ZIP_FORMAT = ".gz";
 }
-

@@ -2166,7 +2166,13 @@
     <!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />
 	-->
     <!-- CACHING FINISH -->
+     <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
+    <bean id="siteMapZipperJob" class="com.tisl.mpl.sitemap.generator.impl.SiteMapZipperJob"
+		parent="abstractJobPerformable">
+			<property name="modelService" ref="modelService" />
+			</bean>
     
+    <!-- CAR-285 End -->
 </beans>
 
 
