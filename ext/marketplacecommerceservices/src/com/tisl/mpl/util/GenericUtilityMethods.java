@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -747,11 +748,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1605,6 +1606,7 @@ public class GenericUtilityMethods
 		double cartTotalNetSelPrice = 0.0D;
 		double couponDiscount = 0.0D;
 		double cartEntryNetSellPrice = 0.0D;
+		final DecimalFormat df = new DecimalFormat("#.##");
 
 
 		if (cartModel.getEntries() != null && !cartModel.getEntries().isEmpty())
@@ -1618,11 +1620,12 @@ public class GenericUtilityMethods
 
 					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
 					{
-						cartEntryNetSellPrice = Math.round(entry.getNetAmountAfterAllDisc().doubleValue());
+						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
 					}
 					else
 					{
-						cartEntryNetSellPrice = Math.round((entry.getBasePrice().doubleValue()) * (entry.getQuantity().doubleValue()));
+						cartEntryNetSellPrice = Double.parseDouble(df.format((entry.getBasePrice().doubleValue())
+								* (entry.getQuantity().doubleValue())));
 					}
 					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
 
