@@ -110,9 +110,10 @@
 		src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
 	<script type="text/javascript">
-	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+//	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+//		$('#j_username').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved.
+//	</c:if>
 		$('#j_username').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved.
-	</c:if>
 		(function() {
 			var po = document.createElement('script');
 			po.type = 'text/javascript';

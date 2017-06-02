@@ -762,6 +762,8 @@ public final class ModelAttributetConstants
 	public static final String BUILD_NUMBER = "buildNumber";
 	//TISPRM-33
 	public static final String SAVINGONPRODUCT = "savingsOnProduct";
+	//UF-287
+	public static final String NO_CACHE = "rand";
 
 	//TISPRM-56
 	public static final String PRODUCT_SIZE = "productSize";

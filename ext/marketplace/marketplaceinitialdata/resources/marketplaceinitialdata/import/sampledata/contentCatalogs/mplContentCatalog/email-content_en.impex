@@ -642,4 +642,3 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailRankEightNpsSlot;EmailRankEightImage
 ;;EmailRankNineNpsSlot;EmailRankNineImage
 ;;EmailRankTenNpsSlot;EmailRankTenImage
-

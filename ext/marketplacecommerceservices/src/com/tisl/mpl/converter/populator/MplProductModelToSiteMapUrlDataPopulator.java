@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.Date;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -64,8 +63,6 @@ public class MplProductModelToSiteMapUrlDataPopulator extends ProductModelToSite
 		this.activateBaseSiteInSession = activateBaseSiteInSession;
 	}
 
-
-	private final static Logger LOG = Logger.getLogger(MplProductModelToSiteMapUrlDataPopulator.class.getName());
 	private CMSSiteService cmsSiteService;
 	private ActivateBaseSiteInSessionStrategy<CMSSiteModel> activateBaseSiteInSession;
 
@@ -73,25 +70,23 @@ public class MplProductModelToSiteMapUrlDataPopulator extends ProductModelToSite
 	@Override
 	public void populate(final ProductModel productModel, final SiteMapUrlData siteMapUrlData) throws ConversionException
 	{
-		LOG.info("Inside MplProductModelToSiteMapUrlDataPopulator");
-
-		// set the catalog version for the current session
-
-
-
-		final String relUrl = StringEscapeUtils.escapeXml(getUrlResolver().resolve(productModel));
-
-
-		siteMapUrlData.setLoc(relUrl);
-
-
-		if (productModel.getPicture() != null)
+		if (productModel != null && siteMapUrlData != null)
 		{
-			siteMapUrlData.setImages(Collections.singletonList(productModel.getPicture().getURL()));
+
+			final String relUrl = StringEscapeUtils.escapeXml(getUrlResolver().resolve(productModel));
+
+
+			siteMapUrlData.setLoc(relUrl);
+
+
+			if (productModel.getPicture() != null)
+			{
+				siteMapUrlData.setImages(Collections.singletonList(productModel.getPicture().getURL()));
+			}
+			final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			final Date date = new Date();
+			siteMapUrlData.setLastMod(dateFormat.format(date));
 		}
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-		final Date date = new Date();
-		siteMapUrlData.setLastMod(dateFormat.format(date));
 
 	}
 }

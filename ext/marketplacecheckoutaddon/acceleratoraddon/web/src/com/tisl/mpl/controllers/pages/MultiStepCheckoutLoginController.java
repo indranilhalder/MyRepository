@@ -61,6 +61,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FBConnection;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
+import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.storefront.web.forms.validator.RegisterPageValidator;
 import com.tisl.mpl.util.ExceptionUtil;
@@ -114,6 +115,29 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 	{
 		this.resourceBreadcrumbBuilder = resourceBreadcrumbBuilder;
 	}
+
+	//Added for UF-93
+	@Autowired
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
+
+	/**
+	 * @return the lastUserLoggedInCookieGenerator
+	 */
+	public LastUserLoggedInCookieGenerator getLastUserLoggedInCookieGenerator()
+	{
+		return lastUserLoggedInCookieGenerator;
+	}
+
+	/**
+	 * @param lastUserLoggedInCookieGenerator
+	 *           the lastUserLoggedInCookieGenerator to set
+	 */
+	public void setLastUserLoggedInCookieGenerator(final LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator)
+	{
+		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
+	}
+
+	//Added for UF-93
 
 	private static final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
 	private static final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
@@ -169,22 +193,34 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 			model.addAttribute("pageName", pageName);
 			/** Added for UF-93 to show the last logged in user in log in field **/
-			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled");
-			model.addAttribute("rememberMeEnabled", rememberMeEnabled);
-			if ("Y".equalsIgnoreCase(rememberMeEnabled))
+//			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled");
+//			model.addAttribute("rememberMeEnabled", rememberMeEnabled);
+//			if ("Y".equalsIgnoreCase(rememberMeEnabled))
+//			{
+//				final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+//				if (null != cookie && null != cookie.getValue())
+//				{
+//					final String encodedCookieValue = cookie.getValue();
+//
+//					final String decodedCookieValue = new String(Base64.decodeBase64(encodedCookieValue.getBytes())); // No need of encodedCookieValue null check as cookie.value is check earlier.
+//					model.addAttribute("lastLoggedInUser", decodedCookieValue);
+//
+//					LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
+//				}
+//			}
+			/** End UF-93 **/
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+			if (null != cookie && null != cookie.getValue())
 			{
-				final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
-				if (null != cookie && null != cookie.getValue())
-				{
-					final String encodedCookieValue = cookie.getValue();
+				final String encodedCookieValue = cookie.getValue();
 
-					final String decodedCookieValue = new String(Base64.decodeBase64(encodedCookieValue.getBytes())); // No need of encodedCookieValue null check as cookie.value is check earlier.
-					model.addAttribute("lastLoggedInUser", decodedCookieValue);
+				final String decodedCookieValue = new String(Base64.decodeBase64(encodedCookieValue.getBytes())); // No need of encodedCookieValue null check as cookie.value is check earlier.
+				model.addAttribute("lastLoggedInUser", decodedCookieValue);
 
-					LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
-				}
+				//LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
 			}
 			/** End UF-93 **/
+
 			return getDefaultLoginPage(loginError, session, model);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -228,6 +264,16 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			form.setCheckPwd(rePassword);
 
 			getRegisterPageValidator().validate(form, bindingResult);
+			/** Added for UF-93 **/
+			if (StringUtils.isNotEmpty(request.getParameter("email")))
+			{
+				lastUserLoggedInCookieGenerator.addCookie(response,
+						new String(Base64.encodeBase64String(request.getParameter("email").getBytes())));
+				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
+				//+ customer.getOriginalUid().getBytes());
+			}
+			/** Ends for UF-93 **/
+
 			return processRegisterUserRequestNew(null, form, bindingResult, model, request, response, redirectModel);
 		}
 		catch (final EtailBusinessExceptions e)

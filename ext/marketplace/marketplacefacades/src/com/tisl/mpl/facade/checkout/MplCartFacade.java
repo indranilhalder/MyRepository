@@ -226,7 +226,8 @@ public interface MplCartFacade extends CartFacade
 	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<PinCodeResponseData> getOMSPincodeResponseData(String pincode, CartData cartData) throws EtailNonBusinessExceptions;
+	List<PinCodeResponseData> getOMSPincodeResponseData(String pincode, CartData cartData, CartModel cartModel)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -323,7 +324,8 @@ public interface MplCartFacade extends CartFacade
 
 
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
-			final String defaultPinCodeId,final InventoryReservListRequestWsDTO item,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+			final String defaultPinCodeId, final InventoryReservListRequestWsDTO item, SalesApplication salesApplication)
+			throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -361,14 +363,6 @@ public interface MplCartFacade extends CartFacade
 	 */
 	ArrayList<Integer> getQuantityConfiguratioList() throws EtailNonBusinessExceptions;
 
-	/**
-	 * @param cartData
-	 * @param omsDeliveryResponse
-	 * @return Map<String, List<MarketplaceDeliveryModeData>>
-	 * @throws CMSItemNotFoundException
-	 */
-	List<PinCodeResponseData> getOMSPincodeResponseData(final String pincode, final CartData cartData,
-			final OrderEntryData entryData) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param cartData
@@ -514,22 +508,24 @@ public interface MplCartFacade extends CartFacade
 	 * @throws EtailNonBusinessExceptions
 	 */
 	PinCodeResponseData getVlaidDeliveryModesByInventory(PinCodeResponseData pinCodeResponseData, CartData cartData);
-	
+
 	public CartData getCartDataFromCartModel(final CartModel cartModel, final boolean recentlyAddedFirst)
 			throws EtailNonBusinessExceptions;
-    
-    /**
+
+	/**
 	 * get EDD INFormation for Ussid
+	 *
 	 * @param cartModel
 	 * @param invReserForDeliverySlotsItemEDDInfoData
 	 * @return MplEDDInfoWsDTO
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
-	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
+	public MplEDDInfoWsDTO getEDDInfo(CartModel cartModel,
+			List<InvReserForDeliverySlotsItemEDDInfoData> invReserForDeliverySlotsItemEDDInfoData) throws ParseException;
 
 
 	/**
-	 * 
+	 *
 	 * @param cartModel
 	 * @param mplSelectedEDDInfo
 	 * @return boolean
@@ -540,7 +536,8 @@ public interface MplCartFacade extends CartFacade
 	 * @param cartdata
 	 * @return
 	 */
-	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata,CartModel cart);
+	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata,
+			CartModel cart);
 
 
 	/**

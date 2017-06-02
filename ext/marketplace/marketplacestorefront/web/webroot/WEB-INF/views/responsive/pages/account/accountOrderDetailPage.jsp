@@ -1,4 +1,3 @@
-
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
@@ -18,6 +17,8 @@
 <%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
 <%@ taglib prefix="return" tagdir="/WEB-INF/tags/responsive/returns"%> 
 <!-- R2.3: Added above one line. responsive/returns -->
+
+
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
 <spring:url value="/my-account/update-password" var="updatePasswordUrl" />
@@ -32,6 +33,7 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('order.return.enabled')" var="returnFlag"/> 
 <!-- LW-230 -->
 <input type="hidden" id="isLuxury" value="${isLuxury}"/>
+
 <template:page pageTitle="${pageTitle}">
 	<div class="account" id="anchorHead">
 		<h1 class="account-header">
@@ -127,8 +129,9 @@
 												<format:price
 												priceData="${cartTotalMrp}" />
 									</li>
-									<li><spring:theme code="text.account.order.delivery"
-											text="Delivery" /><span class="amt"> <format:price
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Scheduled Delivery and Shipping Charges"/></span>
+									<%-- <spring:theme code="text.account.order.delivery"
+											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
 												displayFreeForZero="true" />
 									</span></li>
@@ -519,6 +522,8 @@
 										</p>
 										</c:if>
 										
+
+
 									<!--R2.3 TISRLEE-1615- Start   -->
 									     <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
@@ -680,6 +685,7 @@
 										</div>
 										<div class="actions">
 
+										<div class="col-md-6"> <!-- R2.3: START >
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
 												<c:set var="bogoCheck"
@@ -693,6 +699,7 @@
 												<spring:theme code="trackOrder.cancellableBefore.msg" />
 												
 											</c:if>
+
 											 <%-- R2.3: START:Commented: <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
 
@@ -757,6 +764,7 @@
 														</c:choose> --%>
 <!-- TISCR-410 ends -->
 
+
 											</div>
 											<div class="col-md-5">
 												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
@@ -777,6 +785,7 @@
 									
 
 
+										<!-- R2.3 : END -->
 										<div class="modal cancellation-request fade"
 											id="cancelOrder${sellerOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
 
@@ -1722,6 +1731,7 @@
 										</p>
 										
 											
+
 							<!--R2.3 TISRLEE-1615- Start   -->
 								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 								             <c:choose>
@@ -1928,7 +1938,7 @@
 											<c:if test="${cancellationMsg eq 'true'}">
 												<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 											</c:if>
-</div>
+											</div>
 											<div class="col-md-6 col-sm-6 pull-right">
 											<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
 												<c:if test="${entry.isRefundable eq false }">
@@ -1975,6 +1985,7 @@
 																							format="thumbnail" />
 																					</a>
 																				</div> -->
+
 <!-- INC144315335-->
 																				<div class="product-img">
 																					<c:choose>
@@ -1991,7 +2002,7 @@
 																								
 																						</c:otherwise>
 																					</c:choose>
-							</div>
+																					</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
 																					<h2 class="product-name">
@@ -2718,6 +2729,7 @@
 
                                    </c:if>
 
+								 <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
 							
@@ -2893,6 +2905,7 @@ $(function() {
 
 	function showCancelDiv(orderLineId) {
 		
+
 
 
 		var divId='cancellation' + orderLineId;
@@ -3123,6 +3136,9 @@ $(function() {
 			 
 		});
 
+
+
+
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -3140,6 +3156,7 @@ $(function() {
 			// $(".pickupeditbtn").css("display","block");
 			 
 		 });
+
 $("#saveBlockData").click(function(){
 				$("#changeAddressPopup").hide();
 				$("#showOrderDetails").show();
@@ -3183,6 +3200,7 @@ $("#saveBlockData").click(function(){
 	 });	 
 	 
 	 
+
 			  $(".submitButton").click(function(event){
 				// TISRLUAT-50 changes 
 				  var tribhuvaAwbSubmit = $(this);
@@ -3470,5 +3488,3 @@ input[type="radio"]:checked {
 </style>
 
 <!-- R2.3: END: End of  AWB CSS for PopUp -->
-	
-

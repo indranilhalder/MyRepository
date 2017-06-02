@@ -2170,14 +2170,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//						}
 					//					}
 
-					//adding blacklist status to model
-					/*
-					 * final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() >= codLowerLimit.longValue() &&
-					 * cart .getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
-					 */
 					//INC144316663
 
-					final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
+					//final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
+					final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (cart
+							.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
 					final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
 
 					if (isCodEligible)
@@ -2345,7 +2342,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					{
 						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
 					}
-
 				}
 				else
 				{

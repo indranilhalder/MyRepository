@@ -9,10 +9,10 @@
 <div class="callouts">
 					  <div class="Padd">
 						<ul>
-						  <li> <p>TATA Promise</p> </li>
-						  <li class="omni"> <p>Omni Channel</p> </li>
-						  <li class="genuine"> <p>Genuine Brands</p> </li>
-						  <li class="returns"> <p>30 Day Returns</p> </li>
+						  <li> <p>Tata Trust</p> </li>
+						  <li class="omni"> <p>CLiQ and PIQ</p> </li>
+						  <li class="genuine"> <p>Authentic Brands</p> </li>
+						  <li class="returns"> <p>Easy Returns</p> </li>
 						</ul>
 					  </div>
 					</div>

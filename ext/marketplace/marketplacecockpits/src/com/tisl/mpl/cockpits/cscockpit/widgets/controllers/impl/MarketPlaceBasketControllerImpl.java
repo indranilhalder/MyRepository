@@ -742,7 +742,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			{
 				cartDeliveryCost+=cartEntry.getPrevDelCharge();
 			}else{
+			       if(null != cartEntry.getMplDeliveryMode()){//Null check for TISSQAEE-441
 				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+			          }	
 			}
 			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
 				scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
@@ -770,7 +772,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	      if ((deliveryMode != null) && (deliveryMode.getObject() instanceof MplZoneDeliveryModeValueModel))
 	      {
 	        deliveryModeModel = (MplZoneDeliveryModeValueModel)deliveryMode.getObject();
-	      }
+	      
 	      try {
 	      ((CartModel)entry.getOrder()).setCartReservationDate(null);  
 	      ((MarketplaceCheckoutControllerImpl) getCheckoutController()).removeCODPayment();
@@ -802,8 +804,9 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			}
 			catch(final Exception e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+				 ExceptionUtil.getCustomizedExceptionTrace(e);
 			}
+	      }
 			
 	    }
 	    return changed;
@@ -869,6 +872,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 			 * { deliveryModeModel =
 			 * (DeliveryModeModel)deliveryMode.getObject(); }
 			 */
+			LOG.debug("PincodeResponse---cscockpit"+pinCodeResponses);
 
 			if (pinCodeResponses == null || pinCodeResponses.isEmpty()) {
 				errorMessages.add(new ResourceMessage(
@@ -895,7 +899,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					 * ResourceMessage("placeOrder.validation.codlimitFailed"
 					 * ,Arrays.asList(pinData.getUssid()))); }
 					 */
-
+					
 					if (pinData.getValidDeliveryModes() == null
 							|| pinData.getValidDeliveryModes().isEmpty()) {
 						errorMessages.add(new ResourceMessage(

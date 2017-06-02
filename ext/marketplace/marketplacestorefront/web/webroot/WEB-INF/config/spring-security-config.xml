@@ -145,10 +145,9 @@
 		<property name="keepAliveCookieGenerator" ref="keepAliveCookieGenerator" />
 		<property name="luxuryUserCookieGenerator" ref="luxuryUserCookieGenerator" />
 		<property name="luxuryEmailCookieGenerator" ref="luxuryEmailCookieGenerator" />
-		<property name="lastUserLoggedInCookieGenerator" ref="lastUserLoggedInCookieGenerator" />  <!-- Added for UF-93 -->		
+		<property name="lastUserLoggedInCookieGenerator" ref="lastUserLoggedInCookieGenerator" />  <!-- Added for UF-93 -->	
 		<property name="userService" ref="extendedUserService" />
 	</bean>
-
 	<!-- UF-93 -->
 	<bean id="lastUserLoggedInCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator" >
 		<property name="cookieName" value="LastUserLogedIn"/>
@@ -157,8 +156,8 @@
 		<property name="useDefaultPath" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 	</bean>
-	<!-- UF-93 Ends -->
-		
+	<!-- UF-93 Ends -->	
+	
 	<alias name="defaultGuestCheckoutCartCleanStrategy" alias="guestCheckoutCartCleanStrategy"/>
 	<bean id="defaultGuestCheckoutCartCleanStrategy" class="com.tisl.mpl.storefront.security.impl.DefaultGuestCheckoutCartCleanStrategy">
 		<property name="checkoutURLPattern" value="#{configurationService.configuration.getProperty('marketplacestorefront.checkout.url.pattern')}" />

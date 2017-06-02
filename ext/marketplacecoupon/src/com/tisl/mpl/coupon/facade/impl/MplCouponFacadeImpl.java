@@ -102,6 +102,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 	@Resource(name = "voucherConverter")
 	private Converter<VoucherModel, VoucherData> voucherConverter;
+	
+	private final static String COMMACONSTANT=",";
+	private final static String DOTCONSTANT=".";
+	
+	
 
 
 	/**
@@ -995,7 +1000,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			final DiscountModel discount = voucherList.get(0);
 
-			if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+			if (discount instanceof PromotionVoucherModel && discount != null)//null check added for discount as per IQA review //Sonar Fix
 			{
 				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 				appliedVoucher = promotionVoucherModel;
@@ -1016,10 +1021,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							sb.append(messagePaymentMode);
 							for (final PaymentTypeModel paymentType : paymentTypeList)
 							{
-								sb.append(paymentType.getMode()).append(",");
+								//sb.append(paymentType.getMode()).append(",");//SonarFix
+								sb.append(paymentType.getMode()).append(COMMACONSTANT);
 							}
 							sb.deleteCharAt(sb.lastIndexOf(","));
-							sb.append(".");
+							//sb.append(".");//SonarFix
+							sb.append(DOTCONSTANT);
 						}
 
 						if (CollectionUtils.isNotEmpty(bankLists))
@@ -1028,10 +1035,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							sb.append(messageVoucherBank);
 							for (final BankModel bank : bankLists)
 							{
-								sb.append(bank.getBankName()).append(",");
+								//sb.append(bank.getBankName()).append(",");//Sonarfix
+								sb.append(bank.getBankName()).append(COMMACONSTANT);
 							}
 							sb.deleteCharAt(sb.lastIndexOf(","));
-							sb.append(".");
+							//sb.append(".");//SonarFix
+							sb.append(DOTCONSTANT);
 						}
 
 						couponMessageInformation = sb.toString();

@@ -132,7 +132,6 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
-
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -234,8 +233,8 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 
 /**
  * Controller for home page
@@ -428,16 +427,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
-	
+
 	@Autowired
 	private PincodeServiceFacade pincodeServiceFacade;
-	
-	@Autowired
-        private MplConfigFacade mplConfigFacade;
 
-	//sonar issue fixed 
-	/*@Resource(name = "mplPaymentFacade")
-	private MplPaymentFacade mplPaymentFacade;*/
+	@Autowired
+	private MplConfigFacade mplConfigFacade;
+
+	//sonar issue fixed
+	/*
+	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade;
+	 */
 
 	/*
 	 * @Autowired private DiscountUtility discountUtility;
@@ -446,7 +446,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	private MyStyleProfileFacade myStyleProfileFacade;
-	
+
 	@Autowired
 	MplDeliveryAddressComparator mplDeliveryAddressComparator;
 
@@ -914,7 +914,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@SuppressWarnings(ModelAttributetConstants.BOXING)
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_ORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,@RequestParam(value="isServiceable", required = false,defaultValue="false") final boolean isServiceable,
+	public String order(@RequestParam(value = ModelAttributetConstants.ORDERCODE, required = false) final String orderCode,
+			@RequestParam(value = "isServiceable", required = false, defaultValue = "false") final boolean isServiceable,
 			final Model model) throws CMSItemNotFoundException
 	{
 		if (null == orderCode)
@@ -962,7 +963,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					for (final OrderEntryData orderEntry : orderList)
 					{
 						getEDDeliveryDate(orderEntry);
-						
+
 						//statusTrackMap = getOrderDetailsFacade.getOrderPaymentStatus(orderEntry, orderDetail, orderModel);
 						statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(orderEntry, orderDetail, orderModel);
 						if (null == orderEntry.getConsignment() && orderEntry.getQuantity() != 0)
@@ -1012,8 +1013,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 						for (final OrderEntryData orderEntry : subOrder.getEntries())
 						{
 							getEDDeliveryDate(orderEntry);
-						    //TISRLEE-1615- END 
-							
+							//TISRLEE-1615- END
+
 							//getting the product code
 							final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
 							if (CollectionUtils.isNotEmpty(productModel.getBrands()))
@@ -1160,20 +1161,26 @@ public class AccountPageController extends AbstractMplSearchPageController
 											}
 											else
 											{
-												try{
-													
-													if(null != consignmentModel && null != consignmentModel.getEstimatedDelivery()){
-      													formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());
-      													formattedDeliveryDates.put(orderEntry.getOrderLineId(), formattedProductDate);
-      													formattedActualProductDate = getFormattedDate(consignmentModel.getDeliveryDate());
-      													formattedActualDeliveryDates.put(orderEntry.getOrderLineId(), formattedActualProductDate);
+												try
+												{
+
+													if (null != consignmentModel && null != consignmentModel.getEstimatedDelivery())
+													{
+														formattedProductDate = getFormattedDate(consignmentModel.getEstimatedDelivery());
+														formattedDeliveryDates.put(orderEntry.getOrderLineId(), formattedProductDate);
+														formattedActualProductDate = getFormattedDate(consignmentModel.getDeliveryDate());
+														formattedActualDeliveryDates.put(orderEntry.getOrderLineId(),
+																formattedActualProductDate);
 													}
 													LOG.debug(" order : Consignment is null or empty :Setting Item Retrun status to false for  Order code :"
 															+ orderCode);
 													orderEntry.setItemReturnStatus(false);
-													}catch(Exception e){
-														LOG.error(" Consignment is null or empty :Setting Item Retrun status to false"+e.getMessage());
-													}
+												}
+												catch (final Exception e)
+												{
+													LOG.error(" Consignment is null or empty :Setting Item Retrun status to false"
+															+ e.getMessage());
+												}
 											}
 										}
 									}
@@ -1223,7 +1230,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									luxFlag = true; //Setting true if at least one luxury product found
 								}
 							}
-							
+
 							final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrder
 									.getCode());
 							if (null != returnRequestModelList && returnRequestModelList.size() > 0)
@@ -1234,20 +1241,21 @@ public class AccountPageController extends AbstractMplSearchPageController
 									{
 										if (orderEntry.getTransactionId().equalsIgnoreCase(mmmodel.getOrderEntry().getTransactionID()))
 										{
-											if(null!= mm.getTypeofreturn() && null!=mm.getTypeofreturn().getCode())
+											if (null != mm.getTypeofreturn() && null != mm.getTypeofreturn().getCode())
 											{
-												if (mm.getTypeofreturn().getCode().equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
-	      									{
-	      										orderEntry.setReturnMethodType("SELF_COURIER");
-	      									}
-	      									else
-	      									{
-	      										orderEntry.setReturnMethodType("REVERSE_PICKUP");
-	      									}
+												if (mm.getTypeofreturn().getCode()
+														.equalsIgnoreCase(MarketplacecommerceservicesConstants.SELF_COURIER))
+												{
+													orderEntry.setReturnMethodType("SELF_COURIER");
+												}
+												else
+												{
+													orderEntry.setReturnMethodType("REVERSE_PICKUP");
+												}
 											}
 										}
 									}
-									
+
 								}
 							}
 
@@ -1259,7 +1267,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxFlag);
 
 				addressChangeEligible = mplDeliveryAddressFacade.isDeliveryAddressChangable(orderDetail.getCode());
-				
+
 				if (addressChangeEligible)
 				{
 					getDefalutAddress(orderDetail);
@@ -1288,7 +1296,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.FILTER_DELIVERYMODE, getMplOrderFacade().filterDeliveryMode());
 				model.addAttribute(ModelAttributetConstants.ORDER_DATE_FORMATED, finalOrderDate);
 				model.addAttribute(ModelAttributetConstants.RETURN_REQUEST_FORM, returnRequestForm);
-				model.addAttribute(ModelAttributetConstants.MPL_RETURN_INFO_FORM,mplReturnInfoForm);
+				model.addAttribute(ModelAttributetConstants.MPL_RETURN_INFO_FORM, mplReturnInfoForm);
 				model.addAttribute(ModelAttributetConstants.CANCELLATION_REASON, cancellationReason);
 
 				model.addAttribute(ModelAttributetConstants.AWBNUM, trackStatusAWBMap);
@@ -1297,7 +1305,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.RETURN_LOGISCTIC, trackStatusReturnLogisticMap);
 				model.addAttribute(ModelAttributetConstants.TRACKINGURL, trackStatusTrackingURLMap);
 				model.addAttribute(ModelAttributetConstants.IS_ED_ORDER, mplDeliveryAddressFacade.isEDOrder(orderDetail));
-				
+
 				final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
 
 				model.addAttribute(ModelAttributetConstants.AWBNUM, trackStatusAWBMap);
@@ -1305,7 +1313,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				model.addAttribute(ModelAttributetConstants.RETURN_AWBNUM, trackStatusReturnAWBMap);
 				model.addAttribute(ModelAttributetConstants.RETURN_LOGISCTIC, trackStatusReturnLogisticMap);
 				model.addAttribute(ModelAttributetConstants.TRACKINGURL, trackStatusTrackingURLMap);
-				
+
 				breadcrumbs.add(new Breadcrumb(RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_ORDERS,
 						getMessageSource().getMessage(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY, null,
 								getI18nService().getCurrentLocale()), null));
@@ -1363,9 +1371,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 		storeCmsPageInModel(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(ORDER_DETAIL_CMS_PAGE));
-		if(isServiceable){
-			
-			GlobalMessages.addMessage(model,GlobalMessages.CONF_MESSAGES_HOLDER,"mpl.change.delivery.address.success.message",new Object[]{} );
+		if (isServiceable)
+		{
+
+			GlobalMessages.addMessage(model, GlobalMessages.CONF_MESSAGES_HOLDER, "mpl.change.delivery.address.success.message",
+					new Object[] {});
 		}
 		return getViewForPage(model);
 
@@ -1376,7 +1386,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 	 */
 	private void getEDDeliveryDate(final OrderEntryData orderEntry)
 	{
-		//TISRLEE-1615- Start 
+		//TISRLEE-1615- Start
 		if (StringUtils.isNotEmpty(orderEntry.getSelectedDeliverySlotDate()))
 		{
 			orderEntry.setSelectedDeliverySlotDate(getSelectedDate(orderEntry.getSelectedDeliverySlotDate()));
@@ -1684,8 +1694,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
-		
-		
+
+
 		try
 		{
 			//OrderEntryData subOrderEntry = new OrderEntryData();
@@ -1702,17 +1712,18 @@ public class AccountPageController extends AbstractMplSearchPageController
 					orderEntry = entry;
 					returnOrderEntry = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(orderCode), transactionId);
 					returnProductMap.put(orderEntry.getTransactionId(), returnOrderEntry);
-					
+
 					final ProductModel productModel = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
 					List<RichAttributeModel> productRichAttributeModel = null;
-					if ( null!= productModel && productModel.getRichAttribute() != null){
+					if (null != productModel && productModel.getRichAttribute() != null)
+					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
 						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 						}
 					}
-					
+
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 							.getSellerInformationRelator();
 
@@ -1721,9 +1732,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
-							if (sellerInformationModel.getRichAttribute() != null){
+							if (sellerInformationModel.getRichAttribute() != null)
+							{
 								sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
-								if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+								if (sellerRichAttributeModel != null
+										&& sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 								{
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
@@ -1732,7 +1745,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
-					
+
 					break;
 				}
 
@@ -1751,25 +1764,32 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			model.addAttribute(ModelAttributetConstants.ADDRESS_FORM, addressForm);
 			final OrderData orderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-			final MplReturnsForm returnForm=new MplReturnsForm();
+			final MplReturnsForm returnForm = new MplReturnsForm();
 			model.addAttribute(ModelAttributetConstants.RETURN_FORM, returnForm);
-		
-			 List<AddressData> addressDataList= new ArrayList<AddressData>();
-			
-         if(null != mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()) && mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()).size()>0){
-         	addressDataList=mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook());
-         }else{
-         	AddressData addressData=null;
-         	if(null !=orderDetails.getDeliveryAddress()){
-         		addressData=orderDetails.getDeliveryAddress();
-         		addressDataList.add(addressData);
-         	}else if (null != orderDetails.getPaymentInfo() && null !=orderDetails.getPaymentInfo().getBillingAddress()){
-         		addressData=orderDetails.getPaymentInfo().getBillingAddress();
-         		addressDataList.add(addressData);
-         	}
-         	
-         }
-         model.addAttribute(ModelAttributetConstants.ADDRESS_DATA,addressDataList);
+
+			List<AddressData> addressDataList = new ArrayList<AddressData>();
+
+			if (null != mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook())
+					&& mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook()).size() > 0)
+			{
+				addressDataList = mplCheckoutFacadeImpl.rePopulateDeliveryAddress(getAccountAddressFacade().getAddressBook());
+			}
+			else
+			{
+				AddressData addressData = null;
+				if (null != orderDetails.getDeliveryAddress())
+				{
+					addressData = orderDetails.getDeliveryAddress();
+					addressDataList.add(addressData);
+				}
+				else if (null != orderDetails.getPaymentInfo() && null != orderDetails.getPaymentInfo().getBillingAddress())
+				{
+					addressData = orderDetails.getPaymentInfo().getBillingAddress();
+					addressDataList.add(addressData);
+				}
+
+			}
+			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
 			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
@@ -1786,21 +1806,24 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final AddressData address = orderDetails.getDeliveryAddress();
 			storeCmsPageInModel(model, getContentPageForLabelOrId(RETURN_SUBMIT));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(RETURN_SUBMIT));
-			
+
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			try
 			{
-			CODSelfShipData codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerData.getUid());
-			model.addAttribute(ModelAttributetConstants.CUSTOMER_BANK_DETAILS, codSelfShipData);
+				final CODSelfShipData codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerData.getUid());
+				model.addAttribute(ModelAttributetConstants.CUSTOMER_BANK_DETAILS, codSelfShipData);
 			}
-			catch(EtailNonBusinessExceptions e)
+			catch (final EtailNonBusinessExceptions e)
 			{
-				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerData.getUid()+" Actual Stack trace "+e);
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerData.getUid()
+						+ " Actual Stack trace " + e);
 			}
-			catch (Exception e) {
-				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :"+customerData.getUid()+" Actual Stack trace "+e);
+			catch (final Exception e)
+			{
+				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerData.getUid()
+						+ " Actual Stack trace " + e);
 			}
-			
+
 			returnPincodeCheckForm.setTransactionId(transactionId);
 			returnPincodeCheckForm.setOrderCode(orderCode);
 			returnPincodeCheckForm.setUssid(ussid);
@@ -1839,7 +1862,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (orderEntry.getDeliveryPointOfService() != null)
 			{
 				returnableStores = pincodeServiceFacade.getAllReturnableStores(orderEntry.getDeliveryPointOfService().getAddress()
-						.getPostalCode(),StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6) );
+						.getPostalCode(), StringUtils.substring(orderEntry.getSelectedUssid(), 0, 6));
 				//orderEntry.getSelectedSellerInformation().getSellerID()
 			}
 			else
@@ -1853,33 +1876,39 @@ public class AccountPageController extends AbstractMplSearchPageController
 				boolean scheduleDatesEmpty = false;
 				boolean isFulFilmentType = false;
 				List<String> timeSlots = new ArrayList<String>();
-				List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
+				final List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
 				final OrderModel orderModel = orderModelService.getOrder(orderCode);
-            for(AbstractOrderEntryModel orderModelENtry:orderModel.getEntries()){
-            	if(orderModelENtry.getOrder().getCode().equalsIgnoreCase(orderCode)){
-            		if(orderModelENtry.getFulfillmentMode().equalsIgnoreCase(ModelAttributetConstants.TSHIP)){
-            			isFulFilmentType=true;
-            		}
-            	}
-            }
-				if(null !=returnableDates && returnableDates.size()>0){
+				for (final AbstractOrderEntryModel orderModelENtry : orderModel.getEntries())
+				{
+					if (orderModelENtry.getOrder().getCode().equalsIgnoreCase(orderCode))
+					{
+						if (orderModelENtry.getFulfillmentMode().equalsIgnoreCase(ModelAttributetConstants.TSHIP))
+						{
+							isFulFilmentType = true;
+						}
+					}
+				}
+				if (null != returnableDates && returnableDates.size() > 0)
+				{
 					timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
 				}
-				if(null !=returnableDates && returnableDates.size()>0){
-					  if(returnableDates.size()==1 && isFulFilmentType){
-						  scheduleDatesEmpty=true;
-					  }
+				if (null != returnableDates && returnableDates.size() > 0)
+				{
+					if (returnableDates.size() == 1 && isFulFilmentType)
+					{
+						scheduleDatesEmpty = true;
+					}
 				}
-				
+
 				model.addAttribute(ModelAttributetConstants.SCHEDULE_TIMESLOTS, timeSlots);
 				model.addAttribute(ModelAttributetConstants.RETURN_DATES, returnableDates);
 				model.addAttribute(ModelAttributetConstants.RETURN_SCHEDULE_INFO, scheduleDatesEmpty);
 			}
-			catch (EtailNonBusinessExceptions e)
+			catch (final EtailNonBusinessExceptions e)
 			{
 				LOG.error("Error during fetching Returnable Dates :" + e);
 			}
-			catch(Exception e)
+			catch (final Exception e)
 			{
 				LOG.error("Error during fetching Returnable Dates :" + e);
 			}
@@ -2299,12 +2328,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 				if (sellerInfo.getSellerArticleSKU().equalsIgnoreCase(ussid))
 				{
 					model.addAttribute(ModelAttributetConstants.SELLERID, sellerInfo.getSellerID());
-					
+
 				}
 			}
 
 			//Bellow code written in RetrunPage Controller No use in this location
-			
+
 			if (ticketTypeCode.equalsIgnoreCase("R"))
 			{
 				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
@@ -3870,11 +3899,12 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setCountry(getI18NFacade().getCountryForIsocode(ModelAttributetConstants.INDIA_ISO_CODE));
 			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			if(StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+			if (StringUtils.isNotBlank(addressForm.getLandmark())
+					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
-			else if(null != addressForm.getOtherLandmark())
+			else if (null != addressForm.getOtherLandmark())
 			{
 				newAddress.setLandmark(addressForm.getOtherLandmark());
 			}
@@ -4021,7 +4051,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			newAddress.setState(addressForm.getState());
 			//newAddress.setLine3(addressForm.getLine3());
 			newAddress.setLocality(addressForm.getLocality());
-			if (StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+			if (StringUtils.isNotBlank(addressForm.getLandmark())
+					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddress.setLandmark(addressForm.getLandmark());
 			}
@@ -4267,7 +4298,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 			selectedAddress.setVisibleInAddressBook(true);
 			selectedAddress.setLine3(addressForm.getLine3());
 			selectedAddress.setLocality(addressForm.getLocality());
-			if (StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+			if (StringUtils.isNotBlank(addressForm.getLandmark())
+					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				selectedAddress.setLandmark(addressForm.getLandmark());
 			}
@@ -7595,31 +7627,63 @@ public class AccountPageController extends AbstractMplSearchPageController
 	{
 		this.accountAddressFacade = accountAddressFacade;
 	}
-@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method =
+
+	@RequestMapping(value = RequestMappingUrlConstants.CHANGE_DELIVERY_ADDRES_URL, method =
 	{ RequestMethod.POST, RequestMethod.GET })
 	public String changeDeliveryAddress(@PathVariable final String orderCode,
-			@ModelAttribute("addressForm") final AccountAddressForm addressForm, Model model) throws CMSItemNotFoundException ,UnsupportedEncodingException
+			@ModelAttribute("addressForm") final AccountAddressForm addressForm, final Model model) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
-		String errorMsg = mplAddressValidator.validate(addressForm);
-		//Validate the address 
+		final String errorMsg = mplAddressValidator.validate(addressForm);
+		//Validate the address
 		if (errorMsg.equalsIgnoreCase(MessageConstants.SUCCESS))
 		{
-			AddressData newAddressData = new AddressData();
+			final AddressData newAddressData = new AddressData();
 			newAddressData.setAddressType(addressForm.getAddressType());
 			newAddressData.setId(addressForm.getAddressId());
 			newAddressData.setPhone(addressForm.getMobileNo());
 			newAddressData.setFirstName(addressForm.getFirstName());
 			newAddressData.setLastName(addressForm.getLastName());
-			newAddressData.setLine1(addressForm.getLine1());
-			newAddressData.setLine2(addressForm.getLine2());
-			newAddressData.setLine3(addressForm.getLine3());
+
+			//TISPRDT-1238 starts
+			final String fullAddress = addressForm.getLine1();
+
+			String addressLine1 = "";
+			String addressLine2 = "";
+			String addressLine3 = "";
+
+			if (fullAddress.length() <= 40)
+			{
+				addressLine1 = fullAddress.substring(0, fullAddress.length());
+			}
+			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, fullAddress.length());
+			}
+			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+			{
+				addressLine1 = fullAddress.substring(0, 40);
+				addressLine2 = fullAddress.substring(40, 80);
+				addressLine3 = fullAddress.substring(80, fullAddress.length());
+			}
+
+			//newAddressData.setLine1(addressForm.getLine1());
+			//newAddressData.setLine2(addressForm.getLine2());
+			//newAddressData.setLine3(addressForm.getLine3());
+			newAddressData.setLine1(addressLine1);
+			newAddressData.setLine2(addressLine2);
+			newAddressData.setLine3(addressLine3);
+			//TISPRDT-1238 ends
+
 			newAddressData.setTown(addressForm.getTownCity());
 			newAddressData.setCity(addressForm.getTownCity());
 			newAddressData.setPostalCode(addressForm.getPostcode());
 			newAddressData.setState(addressForm.getState());
 			newAddressData.setBillingAddress(false);
 			newAddressData.setShippingAddress(true);
-			if (StringUtils.isNotBlank(addressForm.getLandmark()) && !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+			if (StringUtils.isNotBlank(addressForm.getLandmark())
+					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
 			{
 				newAddressData.setLandmark(addressForm.getLandmark());
 			}
@@ -7629,7 +7693,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
 			{
-				CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
 				newAddressData.setCountry(countryData);
 			}
 			if (addressForm.getRegionIso() != null && !StringUtils.isEmpty(addressForm.getRegionIso()))
@@ -7638,28 +7702,29 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			LOG.info("Change Delievry Address Request For Order {}" + orderCode);
 			ServicesUtil.validateParameterNotNull(orderCode, "orderCode must not be null");
-			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-			boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(), newAddressData);
-			boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
+			final OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+			final boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(),
+					newAddressData);
+			final boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
 					newAddressData);
 
 			if (isAddressChanged || isContactDetails)
 			{
-				//pincode are changed or not checking 
+				//pincode are changed or not checking
 				if (!newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
 				{
-					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(
-							orderCode, newAddressData);
+					final ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(orderCode,
+							newAddressData);
 					if (scheduledDeliveryData != null)
 					{
-						
-						//pincode serviceable checking  
+
+						//pincode serviceable checking
 						if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
 						{
 							//Save Address Data In session
 							sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 							//preparing Data for ScheduledDeliveryDate jsp page
-							OrderData orderDetail = mplDeliveryAddressFacade.getReScheduledDeliveryPageData(orderData);
+							final OrderData orderDetail = mplDeliveryAddressFacade.getReScheduledDeliveryPageData(orderData);
 							model.addAttribute(ModelAttributetConstants.ORDERDETAIL, orderDetail);
 							model.addAttribute(ModelAttributetConstants.TXNSCHEDULEDATA, scheduledDeliveryData);
 							return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
@@ -7672,8 +7737,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 					else
 					{
-						//pincode serviceable checking  
-						boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
+						//pincode serviceable checking
+						final boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
 						if (isServiceable)
 						{
 							//Save Address Data In session
@@ -7697,7 +7762,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					//Save Address Data In session
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS, newAddressData);
 					//preparing  OTP jsp Page Data when only change Contact Details Updated
-					mplDeliveryAddressFacade.newOTPRequest(orderCode,false,null);
+					mplDeliveryAddressFacade.newOTPRequest(orderCode, false, null);
 					String phoneNumber = orderData.getDeliveryAddress().getPhone();
 					phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
 					model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
@@ -7711,32 +7776,35 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 			}
 		}
-		model.addAttribute(ModelAttributetConstants.STRINGMEAASGE,MessageConstants.VALIDATE_ERROR);
+		model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, MessageConstants.VALIDATE_ERROR);
 		return ControllerConstants.Views.Pages.Account.ScheduledDeliveryDate;
 	}
 
 
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method = {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value = RequestMappingUrlConstants.OTP_VALIDATION_URL, method =
+	{ RequestMethod.POST, RequestMethod.GET })
 	public String submitChangeDeliveryAddress(@RequestParam(value = "orderId") final String orderId,
-			@RequestParam(value = "otpNumber") final String enteredOTPNumber,Model model)
+			@RequestParam(value = "otpNumber") final String enteredOTPNumber, final Model model)
 	{
 		String validateOTPMesg = null;
 		final CustomerData customerData = customerFacade.getCurrentCustomer();
 		if (StringUtils.isNotEmpty(enteredOTPNumber) && StringUtils.isNotEmpty(orderId))
 		{
 			LOG.debug("Cheking OTP Validation Account Page Controller");
-			OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerData.getUid(), enteredOTPNumber);
+			final OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerData.getUid(), enteredOTPNumber);
 			if (otpResponse.getOTPValid().booleanValue())
 			{
 				//Bug Id 784
-				if(mplDeliveryAddressFacade.isDeliveryAddressChangable(orderId)){
-				//OTP is valid then call save in commerce DB and Call to OMS and CRM
-				AddressData newDeliveryAddressData = sessionService
-						.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
-				List<TransactionSDDto> transactionSDDtoList=null;
-				validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId, newDeliveryAddressData,false,transactionSDDtoList,null);
+				if (mplDeliveryAddressFacade.isDeliveryAddressChangable(orderId))
+				{
+					//OTP is valid then call save in commerce DB and Call to OMS and CRM
+					final AddressData newDeliveryAddressData = sessionService
+							.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
+					final List<TransactionSDDto> transactionSDDtoList = null;
+					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId,
+							newDeliveryAddressData, false, transactionSDDtoList, null);
 				}
 				else
 				{//Bug Id 784
@@ -7748,35 +7816,37 @@ public class AccountPageController extends AbstractMplSearchPageController
 				validateOTPMesg = otpResponse.getInvalidErrorMessage();
 			}
 		}
-	   model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, validateOTPMesg);
+		model.addAttribute(ModelAttributetConstants.STRINGMEAASGE, validateOTPMesg);
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
 
-	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method ={RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value = RequestMappingUrlConstants.NEW_OTP_GENERATE, method =
+	{ RequestMethod.POST, RequestMethod.GET })
 	@ResponseBody
 	public boolean newOTP(@RequestParam(value = "orderCode") final String orderCode)
 	{
 		boolean isNewOTPCreated;
 		LOG.debug("Generate new OTP For change Delivery Address ");
-		isNewOTPCreated = mplDeliveryAddressFacade.newOTPRequest(orderCode,false,null);
+		isNewOTPCreated = mplDeliveryAddressFacade.newOTPRequest(orderCode, false, null);
 		return isNewOTPCreated;
 	}
 
 
-	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method = {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value = RequestMappingUrlConstants.RESCHEDULEDDELIVERYDATE, method =
+	{ RequestMethod.POST, RequestMethod.GET })
 	public String scheduledDeliveryDate(@PathVariable final String orderCode,
-			@RequestParam(value = "entryData") final String entryData,Model model)
+			@RequestParam(value = "entryData") final String entryData, final Model model)
 	{
 		try
 		{
-			ServicesUtil.validateParameterNotNull(orderCode,"orderCode must not be null");
+			ServicesUtil.validateParameterNotNull(orderCode, "orderCode must not be null");
 			if (StringUtils.isNotEmpty(entryData))
 			{
-				RescheduleDataList rescheduleDataList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(RescheduleDataList.class,
-						entryData);
+				final RescheduleDataList rescheduleDataList = (RescheduleDataList) GenericUtilityMethods.jsonToObject(
+						RescheduleDataList.class, entryData);
 				if (rescheduleDataList != null)
-				{  
-					// if Exiting session in key related value is available we need to remove first  
+				{
+					// if Exiting session in key related value is available we need to remove first
 					sessionService.removeAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY);
 					sessionService.setAttribute(MarketplacecommerceservicesConstants.RESCHEDULE_DATA_SESSION_KEY, rescheduleDataList);
 				}
@@ -7784,71 +7854,72 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (StringUtils.isNotEmpty(orderCode))
 			{
 				LOG.info("AccountPageController:OTP Creating for ChangeDeliveryAddress");
-			 	mplDeliveryAddressFacade.newOTPRequest(orderCode,false,null);
-			 	//preparing  OTP jsp Page Data
+				mplDeliveryAddressFacade.newOTPRequest(orderCode, false, null);
+				//preparing  OTP jsp Page Data
 				final OrderData orderDetail = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
 				String phoneNumber = orderDetail.getDeliveryAddress().getPhone();
 				phoneNumber = mplDeliveryAddressFacade.getPartialEncryptValue("*", 6, phoneNumber);
 				model.addAttribute(ModelAttributetConstants.PHONE_NUMBER, phoneNumber);
 				model.addAttribute(ModelAttributetConstants.ORDERCODE, orderCode);
 			}
-	 
+
 		}
-		catch (Exception parseException)
+		catch (final Exception parseException)
 		{
 			LOG.error("parseException raising converrting time" + parseException.getMessage());
 		}
 		return ControllerConstants.Views.Pages.Account.OTPPopup;
 	}
-	
-	  //Date Converting  Method BUG ID TISRLEE-1615- Start 
-		private String getSelectedDate(String date)
-		{
-			String finalString=null;
-			try
-			{
-				DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-				Date convertDate = formatter.parse(date);
-				SimpleDateFormat newFormat = new SimpleDateFormat("dd-MMMM");
-				finalString = newFormat.format(convertDate);
-			}
-			catch (ParseException parseException)
-			{
-				LOG.error("AccountPageController:parseException raising converrting time"+parseException.getMessage());
-				return null;
-			}
-			return finalString;
-		
-	}
-		
-		  /**
-	     * @param deliveryAddressList Bug Id 3841 start
-	     */
-	 private void getDefalutAddress(OrderData orderData)
-	 {
-	  List<AddressData> deliveryAddressList = orderData.getDeliveryAddressList();
-	  try
-	  {
-	   for (AddressData addresData : deliveryAddressList)
-	   {
-	    if (addresData.isDefaultAddress())
-	    {
-	     int currentIndexPosition = deliveryAddressList.indexOf(addresData);
-	     if (currentIndexPosition != 0)
-	     {
-	      Collections.swap(deliveryAddressList, currentIndexPosition, 0);
-	      orderData.setDeliveryAddressList(deliveryAddressList);
-	      break;
-	     }
-	    }
-	   }
-	  }
-	  catch (Exception exception)
-	  {
-	   LOG.error("Excception ouucer while changing index postion");
-	  }
 
-	 }
-	
+	//Date Converting  Method BUG ID TISRLEE-1615- Start
+	private String getSelectedDate(final String date)
+	{
+		String finalString = null;
+		try
+		{
+			final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			final Date convertDate = formatter.parse(date);
+			final SimpleDateFormat newFormat = new SimpleDateFormat("dd-MMMM");
+			finalString = newFormat.format(convertDate);
+		}
+		catch (final ParseException parseException)
+		{
+			LOG.error("AccountPageController:parseException raising converrting time" + parseException.getMessage());
+			return null;
+		}
+		return finalString;
+
+	}
+
+	/**
+	 * @param deliveryAddressList
+	 *           Bug Id 3841 start
+	 */
+	private void getDefalutAddress(final OrderData orderData)
+	{
+		final List<AddressData> deliveryAddressList = orderData.getDeliveryAddressList();
+		try
+		{
+			for (final AddressData addresData : deliveryAddressList)
+			{
+				if (addresData.isDefaultAddress())
+				{
+					final int currentIndexPosition = deliveryAddressList.indexOf(addresData);
+					if (currentIndexPosition != 0)
+					{
+						Collections.swap(deliveryAddressList, currentIndexPosition, 0);
+						orderData.setDeliveryAddressList(deliveryAddressList);
+						break;
+					}
+				}
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Excception ouucer while changing index postion");
+		}
+
+	}
+
 
 }

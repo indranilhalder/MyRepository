@@ -111,6 +111,7 @@ INSERT_UPDATE NavigationBarComponent;$contentCV[unique=true];uid[unique=true];na
 
 # CMS Mini Cart Component  
 INSERT_UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;;
+# Modified for UF-249
 ;;MiniCart;Mini Cart;MiniCart;SUBTOTAL;2;;
 
 
@@ -292,6 +293,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 #;;SearchBoxSlot;SearchBox
 #;;HomepageNavLinkSlot;HomepageNavLink
 #;;MiniCartSlot;MiniCart,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder 
+#;;MiniCartSlot,helpservicesLink,MyWishList,SignInFlyOut,TrackOrder
+# Added for UF-249
 ;;MiniCartSlot;helpservicesLink,SignInFlyOut,MyWishList,TrackOrder 
 ;;SideContentSlot;MobileAppBanner
 ;;SiteLogoSlot;SiteLogoComponent

@@ -111,7 +111,7 @@
 		        				</c:when>
 		    					<c:otherwise>
 		        					<div class="totalPayable">
-										<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
+										<spring:theme code="cart.popup.totalPayable" />&nbsp;<span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
 									</div>
 		   						</c:otherwise>
 							</c:choose> 

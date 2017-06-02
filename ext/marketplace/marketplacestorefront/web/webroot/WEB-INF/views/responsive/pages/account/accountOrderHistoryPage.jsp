@@ -249,8 +249,10 @@
 																</ycommerce:testId>
 															</p>
 															<p>
-																<spring:theme text="Delivery Charges:" />
-																&nbsp;
+																<%-- <spring:theme text="Delivery Charges:" /> --%>
+
+																<span>	<spring:theme code="text.account.order.delivery2" text="Scheduled Delivery and Shipping Charges:"/>
+																&nbsp;</span>
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
 																	<%-- <spring:theme code="order.free"  /> --%>

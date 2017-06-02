@@ -13,9 +13,10 @@
 								<!-- TISSIT-1703 -->
 								<form:form action="/" method="post" name='flyOutloginForm'>
 									<script type="text/javascript">
-										<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
-											$('#j_username').val('${lastLoggedInUser}');
-										</c:if>
+//										<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+//											$('#j_username').val('${lastLoggedInUser}');
+//										</c:if>
+										$('#j_username').val('${lastLoggedInUser}');
 										(function() {
 											var po = document
 													.createElement('script');
@@ -107,10 +108,10 @@
 	<!-- End  Gigya and API Social Login -->
 								
 								<li><div class="foot">
-									<spring:theme code="header.flyout.member"/><ycommerce:testId
+								<ycommerce:testId
 													code="header_Register_link">
 													 <a class="register_link" href="<c:url value="/login?isSignInActive=N"/>"> 
-													<spring:theme
+									<spring:theme code="header.flyout.member"/>&nbsp;<spring:theme
 															code="header.link.register" />
 													</a>
 												</ycommerce:testId>
@@ -121,10 +122,11 @@
 
 											
 <script type="text/javascript">
-	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
-		$('#j_username').val('${lastLoggedInUser}');
-	</c:if>
+//	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+//		$('#j_username').val('${lastLoggedInUser}');
+//	</c:if>
 	
+	$('#j_username').val('${lastLoggedInUser}');
 	$.ajax({
 		url:ACC.config.encodedContextPath + "/login/sociallogin",
 		type:'GET',

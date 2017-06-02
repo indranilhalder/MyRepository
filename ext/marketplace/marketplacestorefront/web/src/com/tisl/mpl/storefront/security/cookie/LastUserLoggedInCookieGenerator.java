@@ -7,7 +7,7 @@ import javax.servlet.http.Cookie;
 
 
 /**
- * @author 168108
+ * @author TCS
  *
  */
 public class LastUserLoggedInCookieGenerator extends EnhancedCookieGenerator

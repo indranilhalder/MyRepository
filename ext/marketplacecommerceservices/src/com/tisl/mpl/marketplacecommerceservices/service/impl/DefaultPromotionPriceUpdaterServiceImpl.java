@@ -1073,6 +1073,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 	}
 
+
 	private List<String> getExcludedProductData(final List<ProductModel> exproductList)
 	{
 		final List<String> exProductList = new ArrayList<String>();

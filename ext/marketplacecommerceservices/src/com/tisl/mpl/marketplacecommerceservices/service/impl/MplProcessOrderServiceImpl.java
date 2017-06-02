@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.enums.WalletEnum;
+//import com.tisl.mpl.core.enums.WalletEnum;//Sonar Fix
 import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
@@ -167,7 +167,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 					}
 
 
-					LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
+					//LOG.debug("Wallet details of orderModel:- " + orderModel.getIsWallet().getCode());
 
 
 					if (null != auditModel && StringUtils.isNotEmpty(auditModel.getAuditId()))
@@ -735,9 +735,8 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 			{
 				//final EtailLimitedStockRestriction limitedStockRestriction = new EtailLimitedStockRestriction();
 				final PromotionResultModel model2 = iter2.next();
-				if ((model2.getCertainty().floatValue() == 1f)
-						&& (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions()) && checkForLimitedStockPromo(model2
-								.getPromotion().getRestrictions())))
+				if (CollectionUtils.isNotEmpty(model2.getPromotion().getRestrictions())
+						&& checkForLimitedStockPromo(model2.getPromotion().getRestrictions()))//TISSQAUATS-941
 
 				{
 					isLimitedStockRestrictionAppliedflag = true;
@@ -746,7 +745,7 @@ public class MplProcessOrderServiceImpl implements MplProcessOrderService
 
 				//TISSQAUAT-468 and TISSQAUATS-752 code ends here for promotion offercount revert back logic
 				//SONAR FIX
-				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || !isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
+				if (CollectionUtils.isNotEmpty(orderModel.getDiscounts()) || isLimitedStockRestrictionAppliedflag)//TISSQAUAT-468 and TISSQAUATS-752  flag condition added for limited stock promotion check(promotion offercount revert back logic)
 				{
 					final List<LimitedStockPromoInvalidationModel> invalidationList = new ArrayList<LimitedStockPromoInvalidationModel>(
 							stockPromoCheckService.getPromoInvalidationList(orderModel.getGuid()));

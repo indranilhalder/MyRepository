@@ -22,7 +22,9 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
+import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,6 +75,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.BrandComponentModel;
+import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
@@ -173,7 +178,6 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "mplCmsFacade")
 	private MplCmsFacade mplCmsFacade;
 
-
 	/**
 	 * @return the notificationFacade
 	 */
@@ -227,6 +231,7 @@ public class HomePageController extends AbstractPageController
 	 * @return getViewForPage
 	 * @throws CMSItemNotFoundException
 	 */
+	@SuppressWarnings("boxing")
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(
 			@RequestParam(value = ModelAttributetConstants.LOGOUT, defaultValue = ModelAttributetConstants.FALSE) final boolean logout,
@@ -389,7 +394,6 @@ public class HomePageController extends AbstractPageController
 			}
 
 		}
-
 		return new TreeMap<Character, List<CategoryModel>>(brandsByRange);
 	}
 
@@ -403,7 +407,122 @@ public class HomePageController extends AbstractPageController
 		storeContentPageTitleInModel(model, getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle()));
 	}
 
+	/**
+	 * @description This method gives us the images of desktop and mobile banners
+	 * @param version
+	 * @return JSONObject
+	 */
+	@SuppressWarnings("boxing")
+	@ResponseBody
+	@RequestMapping(value = "/getHomePageBanners", method = RequestMethod.GET)
+	public JSONObject getHomePageBanners(@RequestParam(VERSION) final String version,
+			@RequestParam(required = false, defaultValue = "", value = "init-load") final String initLoad)
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject homePageBannerJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homeSlotSection1 = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section1-TMPHomepage",
+					version);
+			if (CollectionUtils.isNotEmpty(homeSlotSection1.getCmsComponents()))
+			{
+				components = homeSlotSection1.getCmsComponents();
+			}
+			for (final AbstractCMSComponentModel component : components)
+			{
+				LOG.info("Found Component>>>>with id :::" + component.getUid());
 
+				if (component instanceof RotatingImagesComponentModel)
+				{
+
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
+					{
+						final RotatingImagesComponentModel homePageBanners = (RotatingImagesComponentModel) component;
+
+						final LinkedHashSet<String> desktopBanners = new LinkedHashSet<String>();
+						final LinkedHashSet<String> moblileBanners = new LinkedHashSet<String>();
+						for (final BannerComponentModel banner : homePageBanners.getBanners())
+						{
+
+							if (banner instanceof MplBigPromoBannerComponentModel)
+							{
+								final MplBigPromoBannerComponentModel bannerComponent = (MplBigPromoBannerComponentModel) banner;
+								if (bannerComponent.getVisible() && homepageComponentService.showOnTimeRestriction(bannerComponent))
+								{
+									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+									{
+										moblileBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+									else
+									{
+										desktopBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+								}
+
+							}
+							else if (banner instanceof MplBigFourPromoBannerComponentModel)
+							{
+								final MplBigFourPromoBannerComponentModel bannerComponent = (MplBigFourPromoBannerComponentModel) banner;
+								if (bannerComponent.getVisible() && homepageComponentService.showOnTimeRestriction(bannerComponent))
+								{
+									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+									{
+										moblileBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+									else
+									{
+										desktopBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+								}
+							}
+							else
+							{
+								if (banner.getVisible() && homepageComponentService.showOnTimeRestriction(banner))
+								{
+									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+									{
+										moblileBanners.add(banner.getMedia().getUrl());
+									}
+									else
+									{
+										desktopBanners.add(banner.getMedia().getUrl());
+									}
+								}
+							}
+							if (StringUtils.isNotEmpty(initLoad))
+							{
+								break;
+							}
+
+						}
+						homePageBannerJson.put("desktopBanners", desktopBanners);
+						homePageBannerJson.put("moblileBanners", moblileBanners);
+					}
+					else
+					{
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
+					}
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return homePageBannerJson;
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLove", method = RequestMethod.GET)

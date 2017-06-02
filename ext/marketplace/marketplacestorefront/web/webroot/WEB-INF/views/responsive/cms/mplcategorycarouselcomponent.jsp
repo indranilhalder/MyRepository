@@ -48,7 +48,7 @@
 								<c:if
 									test="${not empty mediaQualifier && mediaQualifier eq '324Wx324H'}">
 									<a href="${categoryUrl}"><img src="${media.url2}"
-										class="image" /></a>
+										class="image call-to-action-banner"  alt = "${media.altText}" /></a>
 									<c:set var="mediaFound" value="true" />
 								</c:if>
 
@@ -58,14 +58,14 @@
 							<c:if test="${mediaFound eq 'false'}">
 								<a href="${categoryUrl}"><img
 									src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
-									class="image" /></a>
+									class="image call-to-action-banner" alt = "${media.altText}" /></a>
 							</c:if>
 						</c:when>
 
 						<c:otherwise>
 							<a href="${categoryUrl}"><img
 								src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
-								class="image" /></a>
+								class="image call-to-action-banner" alt = "${media.altText}"  /></a>
 						</c:otherwise>
 					</c:choose><span>${category.name}</span> <a class="shop_link"
 					href="${categoryUrl}"><spring:theme
@@ -105,7 +105,7 @@
 								<c:if
 									test="${not empty mediaQualifier && mediaQualifier eq '324Wx324H'}">
 									<a href="${categoryUrl}"><img src="${media.url2}"
-										class="image" /></a>
+										class="image call-to-action-banner"  alt = "${media.altText}" /></a>
 									<c:set var="mediaFound" value="true" />
 								</c:if>
 
@@ -115,14 +115,14 @@
 							<c:if test="${mediaFound eq 'false'}">
 								<a href="${categoryUrl}"><img
 									src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
-									class="image" /></a>
+									class="image call-to-action-banner" alt = "${media.altText}" /></a>
 							</c:if>
 						</c:when>
 
 						<c:otherwise>
 							<a href="${categoryUrl}"><img
 								src="/_ui/desktop/theme-blue/images/missing-product-515x515.jpg"
-								class="image" /></a>
+								class="image call-to-action-banner" alt = "${media.altText}" /></a>
 						</c:otherwise>
 
 					</c:choose>

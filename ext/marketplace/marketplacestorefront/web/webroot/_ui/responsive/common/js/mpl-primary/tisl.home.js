@@ -412,7 +412,7 @@ function getBrandsYouLoveAjaxCall() {
 	            				stagePadding: 90,
 	            			},
 	            			// breakpoint from 768 up
-	            			1280 : {
+	            			1080 : {
 	            				items:7,
 	            			}			
 	            		}		
@@ -484,11 +484,13 @@ function getBrandsYouLoveContentAjaxCall(id) {
                 dataType: "json",
                 beforeSend: function() {
                 	var staticHost=$('#staticHost').val();
-                    $(".home-brands-you-love-carousel").css(
+                    /*$(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
                         "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
                     );
+                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                    );*/
                 },
                 url: ACC.config.encodedContextPath +
                     "/getBrandsYouLoveContent",
@@ -606,12 +608,13 @@ function getBrandsYouLoveContentAjaxCall(id) {
                         id, encodeURI(defaultHtml));
                 },
                 complete: function() {
-                   $('#brandsYouLove .loaderDiv').remove();
+                   /*$('#brandsYouLove .loaderDiv').remove();*/
                 },
                 error: function() {
-                    $('#brandsYouLove .loaderDiv').remove();
-                    $(".home-brands-you-love-carousel").css(
-                        "margin-bottom", "33px");  /* UF-249 */
+
+                    /*$('#brandsYouLove .loaderDiv').remove();*/
+                    /*$(".home-brands-you-love-carousel").css(
+                        "margin-bottom", "33px");*/  /* UF-249 */
                     console.log(
                         "Error while getting brands you love content"
                     );
@@ -966,7 +969,7 @@ function getBestPicksAjaxCall() {
 	            				items:3,
 	            			},
 	            			// breakpoint from 768 up
-	            			1280 : {
+	            			1080 : {
 	            				items:5,
 	            			}			
 	            		}		
@@ -1095,7 +1098,7 @@ function getProductsYouCareAjaxCall() {
 									items : 3,
 								},
 								// breakpoint from 768 up
-								1280 : {
+								1080 : {
 									items : 4,
 								}
 
@@ -1453,11 +1456,12 @@ function getShowcaseContentAjaxCall(id) {
                 dataType: "json",
                 beforeSend: function() {
                 	var staticHost=$('#staticHost').val();
-                    $(".showcase-switch").css("margin-bottom",
+                    /*$(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
                         "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
                     );
+
                 },
                 url: ACC.config.encodedContextPath +
                     "/getShowcaseContent",
@@ -1516,9 +1520,9 @@ function getShowcaseContentAjaxCall(id) {
                         defaultHtml += "</a></div>";
                     }
                     defaultHtml += "</div>";
-                    $('#showcase .loaderDiv').remove();
+                    /*$('#showcase .loaderDiv').remove();
                     $(".showcase-switch").css("margin-bottom",
-                        "0px");
+                        "0px");*/
                     $('#showcase').append(defaultHtml);
                     window.localStorage.setItem("showcaseContent-" +
                         id, encodeURI(defaultHtml));
@@ -1526,9 +1530,9 @@ function getShowcaseContentAjaxCall(id) {
                 error: function() {
                     console.log(
                         "Error while getting showcase content");
-                    $('#showcase .loaderDiv').remove();
+                    /*$('#showcase .loaderDiv').remove();
                     $(".showcase-switch").css("margin-bottom",
-                        "0px");
+                        "0px");*/
                 }
             });
         }
@@ -1672,6 +1676,7 @@ $(window).on('resize', function() {
 		   $(this).removeAttr("data-src");
 	   });
    }); 
+   showMobileShowCase();
 });
 
 
@@ -2215,7 +2220,7 @@ $(document).ready(function()
            
            if (!headerLoggedinStatus) {
 
-               $("a.headeruserdetails").html("Sign In / Sign Up"); /*UF-249 text change*/
+        	   $("a.headeruserdetails").html("Sign In / Sign Up"); /*UF-249 text change*/
              //Akamai caching
                $("a.headeruserdetails").attr('href','/login');
                $('#signIn').attr('class','sign-in-info signin-dropdown-body ajaxflyout');
@@ -2233,8 +2238,8 @@ $(document).ready(function()
                }
                //Akamai caching
                $('#signIn').attr('class','dropdown-menu dropdown-hi loggedIn-flyout ajaxflyout');
-               $("a.headeruserdetails").attr('href','/my-account');
-               
+               /*$("a.headeruserdetails").attr('href','/my-account');*/
+               $("a.headeruserdetails").attr('href',''); /*client feedback to remove href*/
                $("a.tracklinkcls").attr('href','#');
                if(data.notificationCount != null){            	   
 	               	 $("a.tracklinkcls").html('<span class="bell-icon"></span>&nbsp;Notifications&nbsp;(<span >'+data.notificationCount+'</span>)');
@@ -2480,3 +2485,91 @@ $(document).ready(function()
 		}
 		/*End TISSQAEE-325*/
 
+		
+		function showMobileShowCase(){
+			var env = $("#previewVersion").val();
+				if (env == "true") {
+					var dataString = 'version=Staged';
+				} else {
+					var dataString = 'version=Online';
+				}
+				if (window.localStorage && (html = window.localStorage.getItem("showcaseContentMobile")) && html != "") {
+					$('#showcaseMobile').html(decodeURI(html));
+				}else{
+				$.ajax({
+			            type: "GET",
+			            dataType: "json",
+			            url: ACC.config.encodedContextPath +
+			                "/getCollectionShowcase",
+			            data: dataString,
+			            success: function(response) {
+			            	try{
+			            			var showCaseMobile = '<h2>'+response.title+'</h2>';
+			            			showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
+								$.each(response.subComponents, function(k, v) {	
+									  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
+									 
+								});
+								showCaseMobile+= '</div>';
+								$('#showcaseMobile').html(showCaseMobile);
+								window.localStorage.setItem("showcaseContentMobile",encodeURI(showCaseMobile));
+			            	}
+			            	catch(e)
+			            	{
+			            		console.log(e);
+			            	}
+			             },
+						complete:function(){
+						$(".showcase-carousel").owlCarousel({
+						items:1,
+			    		loop: $(".showcase-carousel img").length == 1 ? false : true,
+			    		navText:[],
+			    		nav:true,
+			    		dots:false
+					});
+						},
+			            error: function() {
+			                console.log("Error while getting showcase");
+			            }
+			        });
+				}
+			}
+
+
+			function getShowcaseMobileContentAjaxCall(id){
+			var showCaseMobile = '';
+			            $.ajax({
+			                type: "GET",
+			                dataType: "json",
+							async:false,
+			                beforeSend: function() {
+			                	var staticHost=$('#staticHost').val();
+			                    /*$(".showcase-switch").css("margin-bottom",
+			                        "80px");
+			                    $("#showcase").append(
+			                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
+			                    );*/
+			                },
+			                url: ACC.config.encodedContextPath +
+			                    "/getShowcaseContent",
+			                data: {
+			                    "id": id
+			                },
+			                success: function(response) {
+			                 
+			                showCaseMobile+= '<div class="item showcase-section">';
+							showCaseMobile+= '<div class="desc-section">'+response.text;
+							showCaseMobile+= '<img class="lazy" src="'+response.bannerImageUrl+'">'
+							showCaseMobile+= '</div>'
+							showCaseMobile+= '</div>';               
+			                },
+			                error: function() {
+			                    console.log(
+			                        "Error while getting showcase content");
+			                    //$('#showcase .loaderDiv').remove();
+			                    //$(".showcase-switch").css("margin-bottom",
+			                       // "0px");
+			                }
+			            });
+			return showCaseMobile;
+			}

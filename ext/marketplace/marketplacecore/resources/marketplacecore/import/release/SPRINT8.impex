@@ -25,8 +25,8 @@ INSERT_UPDATE GLOBALCODEMASTER;enumCode[unique=true];globalCode[unique=true];des
 ;MRUPEE;TMR;
 
 INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
-;MRupee;true;mpl
-;TW;true;mpl
+;MRupee;false;mpl
+;TW;false;mpl
 
 
 UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]

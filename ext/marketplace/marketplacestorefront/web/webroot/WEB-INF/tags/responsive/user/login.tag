@@ -176,9 +176,10 @@
 
 <script type="text/javascript" >
 $(document).ready(function (){
-	<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
-		$('#j_username_login').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved...
-	</c:if>
+	//<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+		//$('#j_username_login').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved...
+	//</c:if>
+	$('#j_username_login').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved...
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptcha",
 		type: 'GET',

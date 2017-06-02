@@ -81,8 +81,6 @@ function deleteArraySet(productItemArray) {
         	  recordsLoadedCount = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
         }
     }
-
-    
 }
 
 function getProductSetData() {
@@ -97,7 +95,6 @@ function getProductSetData() {
         window.localStorage.setItem('lastUrlquery',encodeURI(query));
 
     }
-    
     if (pageNoPagination <= totalNoOfPages) {
 
         //url with page no occourance found.
@@ -210,7 +207,6 @@ $(document).ready(function() {
     var lastUrlquery    = window.localStorage.getItem('lastUrlquery');
     
 
-
     if( (lastUrlpathName != undefined  && encodeURI(pathName) != lastUrlpathName) || (lastUrlquery != undefined && encodeURI(query) != lastUrlquery)) {
     	searchResultStorageData = "false"; // not same with last search url
     } 
@@ -262,7 +258,6 @@ $(document).ready(function() {
                     wH = $(window).height(),
                     wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH)) {
-
 				  $('.product-item').removeClass('lazy-reached');
 					//$('li').removeClass('lazy-reached');
                     if (recordsLoadedCount!=0 && (recordsLoadedCount % loadMoreCount) == 0) {
@@ -316,7 +311,6 @@ $(document).ready(function() {
         $("body.page-productGrid .list_title h1").css("margin-left",$(".right-block").offset().left+parseInt($(".right-block").css("padding-left")));
         $("body.page-productGrid .list_title h1.shiftDownZero").css("margin-left","0");		/*TPR-250 defect fix No result*/	/*TISSTRT-1520*/	/*TISSQAEE-458*/
         }
-
         });
         
         $(document).on('click','.sort',function(){
@@ -330,8 +324,9 @@ $(document).ready(function() {
         	 	}
 
         });
-        
-        $('.responsiveSort').change(function(){
+      //Added for PRDI-109 
+        $(document).on('change','.responsiveSort',function(){ 
+      //  $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
         	// INC144315462 and INC144315104
         	if($('input[name=customSku]')){
@@ -339,7 +334,8 @@ $(document).ready(function() {
         		}else{
         		sort($(this).find(':selected'),true);
         			}
-        });
+        });        
+       
         
         $(document).on('click','.product-item',function(){
         	if(window.localStorage){
