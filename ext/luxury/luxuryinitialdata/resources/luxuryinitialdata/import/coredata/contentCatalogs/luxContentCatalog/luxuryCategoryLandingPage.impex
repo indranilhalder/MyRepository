@@ -1,9 +1,9 @@
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=luxProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $picture=media(code, $contentCV)
-$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
@@ -14,7 +14,7 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;luxuryCategoryLandingPageTemplate;Luxury Category Landing Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryCategoryLandingPage;ContentPage;true
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;luxuryCategoryPage;Luxury Category Landing Page;luxuryCategoryLandingPageTemplate;luxuryCategoryLandingPage
+;;luxuryCategoryPage;Luxury Category Landing Page;luxuryCategoryLandingPageTemplate;/luxuryCategoryLandingPage
 
 
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
@@ -83,7 +83,7 @@ INSERT_UPDATE LuxShowCaseCollectionComponent;$contentCV[unique=true];uid[unique=
 
 INSERT_UPDATE LuxShowCaseComponent;$contentCV[unique=true];uid[unique=true];title;ShowCase(uid,$contentCV)
 								  ; 					  ;Bag-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1,Flowerbags2,Flowerbags3
-								  						  ;Men-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1		  
+								  ;						  ;Men-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1		  
 								  							  
 #### Product carousel
 INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;scroll(code);popup;&componentRef
@@ -160,6 +160,4 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryCategoryPage'];contentSlot(uid,$contentCV)[unique=true];
 ;;CategoryCurosel;CategoryCurosel;;CategoryCurosel
 ;;Categorybanner2;Categorybanner2;;Categorybanner2Slot
-;;Categorybanner3;Categorybanner3;;Categorybanner3Slot
-;;Categorybanner4;Categorybanner4;;Categorybanner4Slot
 ;;ProductCurosel;ProductCurosel;;ProductCurosel
