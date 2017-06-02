@@ -253,11 +253,28 @@
 }
 
 @include media-breakpoint-down(sm) {
-	.look-book-wrapper{
-		.colmn{
-			li{
-				width:50%;
+	.page-luxuryBrandLandingPage{
+		.look-book-wrapper{
+			.colmn{
+				width:100%;
+				text-align:center;
+				li{
+					width:50%;
+				}
 			}
+		}
+		.look-book-img{
+			.colmn{
+				width:100%;
+				text-align:center;
+				li{
+					width:100%;
+				}
+			}
+		}
+		.look-book-link li{
+			width:100%;
+			text-align:center;
 		}
 	}
 }
