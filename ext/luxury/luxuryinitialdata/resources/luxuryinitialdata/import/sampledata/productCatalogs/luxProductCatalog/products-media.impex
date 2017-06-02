@@ -60,6 +60,11 @@ $media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator
 $siteResource=jar:com.tisl.lux.constants.LuxuryinitialdataConstants&/luxuryinitialdata/import/sampledata/productCatalogs/$productCatalog
 $medias=medias(code, $catalogVersion)
 
+INSERT_UPDATE MediaFormat;qualifier[unique=true];name
+;luxuryModel;luxuryModel
+;luxurySecondary;luxurySecondary
+
+
 
 INSERT_UPDATE Media;mediaFormat(qualifier);;code[unique=true];$media;mime[default='image/jpeg'];$catalogVersion;folder(qualifier);mediaType(code)[default='Image']
 ;97Wx144H;97Wx144H/MP000000000390478_1;/97Wx144H/MP000000000390478_1.jpg;$siteResource/images/97Wx144H/MP000000000390478_1.jpg;;;images
