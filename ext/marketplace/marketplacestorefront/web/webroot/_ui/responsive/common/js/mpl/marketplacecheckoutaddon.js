@@ -5512,6 +5512,8 @@ $(document).ready(function(){
 	    		$("#unserviceablepincodeBtm").hide();
 	    		$("#unserviceablepincode_tooltip").hide();
 	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		//TISSTRT-1550
+	    		$("#defaultPinCodeIdsBtm").val("");
 	    		
 	        }
 	    }
@@ -5536,6 +5538,8 @@ $(document).ready(function(){
 	    		$("#unserviceablepincodeBtm").hide();
 	    		$("#unserviceablepincode_tooltip").hide();
 	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		//TISSTRT-1550
+	    		$("#defaultPinCodeIds").val("");
 	        }
 	    }
 	    //Added for UF-252-II ends
@@ -5710,7 +5714,9 @@ function checkPincodeServiceability(buttonType,el)
 		
 
 	//else if($("#pinCodeButtonIds").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIds"){
-	else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
+	//TISSTRT-1550
+	//else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
+	else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds" && regPostcode.test(selectedPincode) != true)//UF-71
 	{		
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
@@ -5740,7 +5746,9 @@ function checkPincodeServiceability(buttonType,el)
 		return false; 
 		// TPR-1055 ends
 	}
-	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
+	//TISSTRT-1550
+	//else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
+	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm" && regPostcode.test(selectedPincode) != true)//UF-71
 	{	
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
@@ -6083,10 +6091,12 @@ function populateCartDetailsafterPincodeCheck(responseData){
 //TPR-1055
 $("#defaultPinCodeIds").click(function(){
 	//Commented for UF-252 Start
-	//$("#unserviceablepincode").hide();
-	//$("#unserviceablepincodeBtm").hide();//UF-68
-	//$("#unserviceablepincode_tooltip").hide();
-	// $("#unserviceablepincode_tooltip_btm").hide();
+	//TISSTRT-1550 starts
+	$("#unserviceablepincode").hide();
+	$("#unserviceablepincodeBtm").hide();//UF-68
+	$("#unserviceablepincode_tooltip").hide();
+	$("#unserviceablepincode_tooltip_btm").hide();
+	//TISSTRT-1550 ends
 	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
@@ -6117,10 +6127,12 @@ $("#defaultPinCodeIds").click(function(){
 //UF-69
 $("#defaultPinCodeIdsBtm").click(function(){
 	//Commented for UF-252 Start
-	//$("#unserviceablepincode").hide();
-	//("#unserviceablepincodeBtm").hide();//UF-68
-	//$("#unserviceablepincode_tooltip").hide();
-	// $("#unserviceablepincode_tooltip_btm").hide();
+	//TISSTRT-1550 starts
+	$("#unserviceablepincode").hide();
+	$("#unserviceablepincodeBtm").hide();//UF-68
+	$("#unserviceablepincode_tooltip").hide();
+	$("#unserviceablepincode_tooltip_btm").hide();
+	//TISSTRT-1550 ends
 	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
@@ -8174,10 +8186,13 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//TPR-1055
 	$("#defaultPinCodeIds").click(function(){
 		$(this).css("color","black"); //TPR-1470
-		//$("#unserviceablepincode").hide();
-	//	$("#unserviceablepincodeBtm").hide();
-		//$("#unserviceablepincode_tooltip").hide();
-		// $("#unserviceablepincode_tooltip_btm").hide();
+		//TISSTRT-1550 starts
+		$("#defaultPinCodeIdsBtm").css("color","black");
+		$("#unserviceablepincode").hide();
+		$("#unserviceablepincodeBtm").hide();
+		$("#unserviceablepincode_tooltip").hide();
+		$("#unserviceablepincode_tooltip_btm").hide();
+		//TISSTRT-1550 ends
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
@@ -8203,7 +8218,13 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//UF-69 STARTS
 	$("#defaultPinCodeIdsBtm").click(function(){
 		$(this).css("color","black"); //TPR-1470
-	//	$("#unserviceablepincodeBtm").hide();
+		//TISSTRT-1550 starts
+		$("#defaultPinCodeIds").css("color","black");
+		$("#unserviceablepincode").hide();
+		$("#unserviceablepincodeBtm").hide();
+		$("#unserviceablepincode_tooltip").hide();
+		$("#unserviceablepincode_tooltip_btm").hide();
+		//TISSTRT-1550 ends
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
