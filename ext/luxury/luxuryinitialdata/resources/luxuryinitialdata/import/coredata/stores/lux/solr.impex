@@ -152,7 +152,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 #TPR-796
 ;$solrIndexedType; img-437Wx649H          ;string ;            ;    ;    ;    ;    ;    ;mplProductSearchImageValueProvider;
 ;$solrIndexedType; img-320Wx357H          ;string ;            ;    ;    ;    ;    ;    ;mplLuxurySearchImageValueProvider;
-;$solrIndexedType; img-luxuryModel        ;string ;            ;    ;    ;    ;    ;    ;lucuryNewSearchImageHovervalueProvider;
+;$solrIndexedType; img-luxuryModel        ;string ;            ;    ;    ;    ;    ;    ;luxuryNewSearchImageHovervalueProvider;
 ;$solrIndexedType; img-luxurySecondary    ;string ;            ;    ;    ;    ;    ;    ;luxurySearchImageHovervalueProvider;
 #TPR-796
 ;$solrIndexedType; immediateCategory      ;string ;            ;    ;    ;    ;    ;    ;mplCompareProductValueProvider;

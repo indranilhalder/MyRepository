@@ -83,7 +83,7 @@ INSERT_UPDATE LuxShowCaseCollectionComponent;$contentCV[unique=true];uid[unique=
 
 INSERT_UPDATE LuxShowCaseComponent;$contentCV[unique=true];uid[unique=true];title;ShowCase(uid,$contentCV)
 								  ; 					  ;Bag-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1,Flowerbags2,Flowerbags3
-								  								  
+								  						  ;Men-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1		  
 								  							  
 #### Product carousel
 INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;scroll(code);popup;&componentRef

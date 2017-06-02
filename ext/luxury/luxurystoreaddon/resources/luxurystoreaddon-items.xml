@@ -282,6 +282,11 @@
 				jaloclass="com.tisl.lux.jalo.cms.components.LuxuryProductAddToCartComponent">
 	</itemtype>
 	
+	<itemtype code="LuxurySimpleBannerComponent" autocreate="true"
+				generate="true" extends="SimpleBannerComponent"
+				jaloclass="com.tisl.lux.jalo.cms.components.LuxurySimpleBannerComponent">
+	</itemtype>
+	
 	<itemtype code="LuxEnhancedSearchBoxComponent" autocreate="true"
 				generate="true" extends="SearchBoxComponent"
 				jaloclass="com.tisl.mpl.core.jalo.LuxEnhancedSearchBoxComponent">				

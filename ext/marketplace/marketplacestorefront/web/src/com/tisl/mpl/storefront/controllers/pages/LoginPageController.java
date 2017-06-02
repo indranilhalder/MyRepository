@@ -392,7 +392,14 @@ public class LoginPageController extends AbstractLoginPageController
 			final String rePassword = java.net.URLDecoder.decode(request.getParameter("checkPwd"), "UTF-8");
 			form.setPwd(password);
 			form.setCheckPwd(rePassword);
-			form.setLuxCustomer(Boolean.parseBoolean(isLuxCustomer));
+			if (null != isLuxCustomer && StringUtils.isNotEmpty(isLuxCustomer))
+			{
+				form.setLuxCustomer(Boolean.parseBoolean(isLuxCustomer));
+			}
+			else
+			{
+				form.setLuxCustomer(Boolean.parseBoolean("false"));
+			}
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
