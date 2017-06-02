@@ -194,11 +194,13 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
 	public static final String MPLSHOWMESSAGE = "/message";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
+	public static final String CHECKLOCATIONRESTRICTEDPINCODE = "/delModesOnAddrSelect/{pincode:.*}";
 	public static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 	public static final String CALCULATEDELIVERYCOST = "/calculateDeliveryCost/{deliveryCost:.*}";
 	public static final String DELIVERYCOST = "deliveryCost";
 	public static final String MPLSELECTSAVEDADDRESS = "/selectaddress";
 	public static final String CHECKPINCODESERVICEABILITY = "/checkPincodeServiceability/{pincode:.*}";
+	public static final String CHECKPINCODE = "/checkPincodeServiceability/{pincode:.*}";
 	public static final String PINCODE = "pincode";
 	public static final String CHECKEXPRESSCHECKOUTPINOCDESERVICEABILITY = "/checkExCheckoutPincodeServiceability/{selectedAddressId:.*}";
 	public static final String SELECTEDADDRESSID = "selectedAddressId";
@@ -332,8 +334,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
 	public static final String REFNUMBER = "refNumber".intern();
-    public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
-	
+	public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
+
 	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
 

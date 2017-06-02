@@ -59,6 +59,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
@@ -90,6 +91,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sourceforge.pmd.util.StringUtil;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -97,6 +100,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.BindingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -452,6 +456,227 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveryAddressCarousel;
 		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.SingleStepCheckout.SinglePageCheckoutPage;
+	}
+
+	/**
+	 * This is a GET method to check pincode serviceability used to check pincode on entering six digits without
+	 * recalculate cart will return a JSON response
+	 *
+	 * @return String
+	 * @throws EtailNonBusinessExceptions
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKPINCODE, method = RequestMethod.GET)
+	//@RequireHardLogIn
+	public @ResponseBody JSONObject checkPincode(
+			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode)
+	{
+		String returnStatement = null;
+		final JSONObject jsonObject = new JSONObject();
+		//TISSEC-11
+		final String regex = "\\d{6}";
+		try
+		{
+			String isServicable = MarketplacecommerceservicesConstants.Y;
+
+			if (selectedPincode.matches(regex))
+			{
+				LOG.debug("selectedPincode " + selectedPincode);
+				ServicesUtil.validateParameterNotNull(selectedPincode, "pincode cannot be null");
+
+				List<PinCodeResponseData> responseData = null;
+				String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+
+				if (StringUtil.isNotEmpty(selectedPincode))
+				{
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				}
+				try
+				{
+					final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+
+					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
+					{
+						if (!StringUtil.isEmpty(selectedPincode))
+						{
+							responseData = mplCartFacade.getOMSPincodeResponseData(selectedPincode, cartData, null);
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
+
+						}
+						if (responseData != null)
+						{
+							for (PinCodeResponseData pinCodeResponseData : responseData)
+							{
+
+								if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+								{
+									isServicable = MarketplacecommerceservicesConstants.N;
+									break;
+								}
+								else if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+								{
+									//  TISPRD-1951  START //
+
+									// Checking whether inventory is availbale or not
+									// if inventory is not available for particular delivery Mode
+									// then removing that deliveryMode in Choose DeliveryMode Page
+									try
+									{
+										pinCodeResponseData = mplCartFacade.getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
+									}
+									catch (final Exception e)
+									{
+										LOG.error("Exception occured while checking inventory " + e.getCause());
+									}
+									//  TISPRD-1951  END //
+								}
+							}
+						}
+						else
+						{
+							isServicable = MarketplacecommerceservicesConstants.N;
+						}
+						final ObjectMapper objectMapper = new ObjectMapper();
+						jsonResponse = objectMapper.writeValueAsString(responseData);
+					}
+
+					LOG.debug(">> isServicable :" + isServicable + " >> json " + jsonResponse);
+				}
+				catch (final EtailNonBusinessExceptions ex)
+				{
+					ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+					LOG.error("EtailNonBusinessExceptions while checking pincode serviceabilty ", ex);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("Exception while checking pincode serviceabilty ", ex);
+				}
+
+				returnStatement = isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
+						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + jsonResponse;
+			}
+			else
+			{
+				isServicable = MarketplacecommerceservicesConstants.N;
+				returnStatement = isServicable;
+			}
+			jsonObject.put("pincodeData", returnStatement);
+		}
+		catch (final EtailNonBusinessExceptions ex)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+			LOG.error("EtailNonBusinessExceptions while checkPincodeServiceability ", ex);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Exception in checkPincodeServiceability ", ex);
+		}
+		return jsonObject;
+	}
+
+	/*
+	 * This method will be used for responsive site for location restricted promotion. Used to fetch the eligible
+	 * delivery modes without page load.
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKLOCATIONRESTRICTEDPINCODE, method = RequestMethod.GET)
+	public String checkLocationRestrictedPincode(@RequestParam("selectedAddressCode") final String selectedAddressCode,
+			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
+			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode) throws CMSItemNotFoundException
+	{
+		try
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Method...");
+			}
+			if (getUserFacade().isAnonymousUser())
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+			//TISST-13012
+			final CartModel cart = getCartService().getSessionCart();
+			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
+			if (cartItemDelistedStatus)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				// ** to be uncommented		return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+			}
+
+			boolean exchangeAppliedCart = false;
+			if (StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
+			{
+				exchangeAppliedCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
+			}
+
+			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+
+			//TISSEC-11
+			final String regex = "\\d{6}";
+
+			if (selectedPincode.matches(regex))
+			{
+				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				if (StringUtils.isEmpty(sessionPincode))
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+							+ "&type=redirect", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+				final String redirectURL = mplCartFacade.singlePagecheckPincode(selectedPincode, sessionPincode);
+				if (redirectURL.trim().length() > 0)
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?msg="
+							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+
+				//	getMplCustomAddressFacade().setDeliveryAddress(finaladdressData);
+				mplCartFacade.populatePinCodeData(cart, selectedPincode);
+				// Recalculating Cart Model
+				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
+				getMplCheckoutFacade().reCalculateCart(cartData);
+			}
+			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
+					&& !cartItemDelistedStatus)
+			{
+				if (!exchangeGuideFacade.isBackwardServiceble(selectedPincode))
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=Exchange Not Servicable&type=confirm", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+			}
+			if (StringUtils.isNotEmpty(exchangeEnabled))
+			{
+				exchangeGuideFacade.removeExchangefromCart(cart);
+			}
+			else if (!selectedPincode.matches(regex))
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=Provide valid pincode&type=error", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while selecting  address:" + e);
+		}
+		return FORWARD_PREFIX + "/checkout/single/choose";
 	}
 
 	/**
@@ -3403,7 +3628,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3460,7 +3685,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
