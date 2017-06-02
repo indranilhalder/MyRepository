@@ -67,9 +67,9 @@
 					<li><a href="/logout">Sign Out</a></li>
 					</sec:authorize>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-					<li class="logged_in">${user.firstName}
+					<li class="logged_in">
 					<ycommerce:testId code="header_LoggedUser">
-					<spring:theme code="header.welcome" arguments="${user.firstName},${user.lastName}" htmlEscape="true" />
+					<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
 					</ycommerce:testId>
 					</li>
 					</sec:authorize>				
