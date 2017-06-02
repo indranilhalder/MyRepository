@@ -22,26 +22,17 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/responsive/address"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/responsive/cart"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
+<%-- <%@ attribute name="cartData" required="true"
+	type="java.util.List"%> --%>
 
-<div id="selecteDeliveryModeMessage" style=""></div>
-	<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/single/select"
+<div id="selecteDeliveryModeMessageMobile" style=""></div>
+	<form:form id="selectDeliveryMethodFormMobile" action="${request.contextPath}/checkout/single/select"
 		method="post" commandName="deliveryMethodForm">
 		<div class="checkout-shipping left-block">
-			<div class="checkout-indent">
-				<single-checkout:showShipmentItems cartData="${cartData}"
-					defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
 
+			<div class="checkout-indent">
+				<single-checkout:showShipmentItemsMobile cartData="${cartData}"
+					defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
 			</div>
 		</div>
-
 	</form:form>
-	
-<div class="right-block shipping">
-		<div class="checkout-order-summary">
-			<button class="button" type="button" id="del_continue_btn" onclick="ACC.singlePageCheckout.proceedOnDeliveryModeSelection(this)";>
-				<spring:theme code="checkout.single.deliveryMethod.continue"
-					text="Next" />
-			</button>
-	</div>
-	
-</div>

@@ -34,8 +34,6 @@
 	            <div style="display:none" id="selectedAddressDivId"><span id="selectedAddressHighlight"></span><span>CHANGE ADDRESS</span></div>
 	        </div>
 	        <div class="checkout-accordion-body">
-	         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-	            <p class="cancel-mobile">Cancel</p></div>
 	            <div id="chooseDeliveryAddress">
 	                <single-checkout:showDeliveryAddressDetails deliveryAddresses="${deliveryAddresses}"/>
 	            </div>
@@ -48,8 +46,6 @@
 	            <div style="display:none" id="selectedDeliveryOptionsDivId"><span id="selectedDeliveryOptionsHighlight"></span><span>CHANGE DELIVERY OPTION</span></div>
 	        </div>
 	        <div class="checkout-accordion-body">
-	        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-	            <p class="cancel-mobile">Cancel</p></div>
 	            <div id="choosedeliveryMode" class="cart wrapper">
 	                <p></p>
 	            </div>
@@ -62,8 +58,6 @@
 	            <div style="display:none" id="selectedReviewOrderDivId"><span id="selectedReviewOrderHighlight"></span><span>REVIEW ORDER</span></div>
 	        </div>
 	        <div class="checkout-accordion-body">
-	        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-	            <p class="cancel-mobile">Cancel</p></div>
 	            <div id="reviewOrder" class="cart wrapper">
 	                <p></p>
 	            </div>
@@ -76,8 +70,6 @@
 	            <div style="display:none"><span></span><span></span></div>
 	        </div>
 	        <div class="checkout-accordion-body">
-	         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-	            <p class="cancel-mobile">Cancel</p></div>
 	            <div id="makePayment">
 	                <c:if test="${fn:contains(prePopulateTab, 'payment')}" >
 	                	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 
@@ -89,13 +81,16 @@
 </div>
 <div id="singlePageMobile">
 	<div id="chooseDeliveryAddressMobile">
+		<div class="change-cancel-wrapper"><p class="change-mobile">Change</p></div>
 		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
 	</div>
 	<div id="selectedDeliveryOptionsDivIdMobile">
-		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showDeliveryModeDetailsMobile.jsp"%>
-	</div>
+		<div class="change-cancel-wrapper"><p class="change-mobile">Change</p></div>
+			<%@include
+				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetailsMobile.jsp"%>
+		</div>
 	<div id="makePaymentMobile">
-		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPageMobile.jsp"%>
+		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
 	</div>
 </div>
 <div class="modal fade" id="singlePageAddressPopup">

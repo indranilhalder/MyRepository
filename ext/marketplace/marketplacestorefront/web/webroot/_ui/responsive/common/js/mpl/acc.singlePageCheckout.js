@@ -1374,5 +1374,16 @@ ACC.singlePageCheckout = {
 			$(this).parents(".checkout-accordion").find(".change-mobile").show();
 			$(this).hide();
 		});
+	},
+	getIsResponsive:function(){
+		var winWidth=$(window).width();
+		return winWidth<750?true:false;
+	},
+	
+/****************MOBILE STARTS HERE************************/
+	mobileValidationSteps:{
+		isAddressSaved:false,
+		isAddressSet:false,
+		isDeliveryModeSte:false
 	}
 }

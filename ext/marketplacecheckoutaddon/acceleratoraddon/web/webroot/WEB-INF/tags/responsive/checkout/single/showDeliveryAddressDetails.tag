@@ -241,7 +241,10 @@
 	<c:if test="${empty deliveryAddresses}">
 		<script>
 		$(document).ready(function(){
-			ACC.singlePageCheckout.getAddAddress();
+			if(!ACC.singlePageCheckout.getIsResponsive)
+			{
+				ACC.singlePageCheckout.getAddAddress();
+			}
 		})
 		</script>
 		<div class="new-address" style="display: block;">

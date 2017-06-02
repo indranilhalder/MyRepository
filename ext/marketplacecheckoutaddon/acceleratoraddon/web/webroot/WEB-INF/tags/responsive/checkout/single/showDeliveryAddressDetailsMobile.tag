@@ -26,10 +26,9 @@
 		<form id="selectAddressFormMobile"
 			action="${request.contextPath}/checkout/single/select-address"
 			method="get">
-<input type="hidden" id="contExchnage" name="contExchnage" value="">
 			<!-- change here for modified checkout page starts -->
 						<!-- Div to display ajax failure messages -->
-						<div id="selectedAddressMessage" style=""></div>
+						<div id="selectedAddressMessageMobile" style=""></div>
 
 						
 
@@ -55,25 +54,19 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
-									<%-- <span class="edit"> <a
-										href="${request.contextPath}/checkout/single/edit-address/${deliveryAddress.id}"
-										class=""
-										onclick="ACC.singlePageCheckout.getEditAddress(this,event);"
-										id="link_${deliveryAddress.id}"></a>
-									</span> --%>
 									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.proceedOnAddressSelection(this,'${deliveryAddress.id}');">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
-												<input type="radio" class="radio1" name="selectedAddressCode"
+												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
 													value="${deliveryAddress.id}"
-													id="radio_${deliveryAddress.id}" checked="checked" />
-												<label for="radio_${deliveryAddress.id}"></label>
+													id="radio_mobile_${deliveryAddress.id}" checked="checked" />
+												<label for="radio_mobile_${deliveryAddress.id}"></label>
 											</c:when>
 											<c:otherwise>
-												<input type="radio" class="radio1" name="selectedAddressCode"
+												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
 													value="${deliveryAddress.id}"
-													id="radio_${deliveryAddress.id}" />
-												<label for="radio_${deliveryAddress.id}"></label>
+													id="radio_mobile_${deliveryAddress.id}" />
+												<label for="radio_mobile_${deliveryAddress.id}"></label>
 											</c:otherwise>
 										</c:choose>	
 										<p class="address">	
@@ -179,7 +172,10 @@
 	<c:if test="${empty deliveryAddresses}">
 		<script>
 		$(document).ready(function(){
-			ACC.singlePageCheckout.getAddAddress();
+			if(ACC.singlePageCheckout.getIsResponsive)
+			{
+				ACC.singlePageCheckout.getAddAddress();
+			}
 		})
 		</script>
 		<div class="new-address" style="display: block;">

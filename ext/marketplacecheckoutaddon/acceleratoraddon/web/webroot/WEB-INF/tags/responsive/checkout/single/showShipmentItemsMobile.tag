@@ -18,39 +18,15 @@
 <c:set var="defaultPinCode" value="${defaultPincode}"></c:set>
 
 <c:if test="${hasShippedItems}">
-<script>
-	/* $(document).ready(function(){
-		$(".click-and-collect").addClass("click-collect");
-	}); */
-</script>
 	<!-- UF-281 changes -->
 	<div class="checkout-shipping-items">
-		<%-- <div class="checkout-headers">
-		<h1 class="title-name">
-			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
-		</h1>
-		<p class="desk-view"><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode"></spring:theme><span>${defaultPinCode}</span></p>
-		</div> --%>
-		<%-- <span><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.forPincode" text="for PINCODE "></spring:theme>&nbsp;${defaultPinCode}</span> TISUAT-4587--%>
 		<span style="display:none"></span>
-		<%-- <div class="checkout-shipping-items-header">	
-			<h3> <a href="${request.contextPath}/cart"><spring:theme code="checkout.multi.deliveryMethod.backToBag" text="Back to My Bag"></spring:theme> </a> </h3>
-		</div> --%>
-		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
-				<%-- <li class="header">
-					<ul class="headline mybag-item-head">
-					
-						<li id="header2" class="Product"><spring:theme code="text.product.delivery.product"/></li>
-						<li id="header2" class="Price"><spring:theme code="text.product.delivery.price"/></li>
-						<li id="header2" class="qty"><spring:theme code="text.product.delivery.quantity"/></li>
-						<li class="delivery dev" id="header4"><spring:theme code="text.product.delivery.deliveryoption"/></li>
-					</ul>
-				</li> --%>
+		<ul id="deliveryradioulMobile" class="checkout-table product-block mybag-items checkout-items">
 						<c:set var="entryNumbersId" value=""/>
 						<c:forEach items="${cartData.entries}" var="entry">
 								<c:url value="${entry.product.url}" var="productUrl" />
 				
-								<li class="item delivery_options" id="delmode_item_li_${entry.entryNumber}">
+								<li class="item delivery_options" id="delmode_item_li_mobile_${entry.entryNumber}">
 								<ul>
 									<li>
 											<div class="thumb product-img">
@@ -67,10 +43,9 @@
 													   
 											<div class="delivery-details">		   
 											<div class="details product" >
-											<p class="delivery_title">Select your preferred delivery option</p>
-												<p class="product_name"><span class="desk_prod">for "</span><%-- <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3> --%>
+												<p class="delivery_title">Select your preferred delivery option</p>
+												<p class="product_name"><span class="desk_prod">for "</span>
 												<ycommerce:testId code="cart_product_name">
-													<%-- <a href="${productUrl}"><div class="name product-name">${entry.product.name}</div></a> --%>
 													<span class="name product-name">${entry.product.name}</span></ycommerce:testId>
 												<span class="desk_prod">"</span>
 												</p>
@@ -82,21 +57,6 @@
 														<%-- <div class="size"><spring:theme code="text.size"/>${entry.product.size}</div> --%>
 													</ycommerce:testId>
 													<!-- INC_11620/INC_11466 -->
-													 <!--<div class="item-price delivery-price delivery-price-mobile">
-														<ycommerce:testId code="cart_totalProductPrice_label">
-														<c:choose>
-														<c:when test="${not empty entry.totalSalePrice}">
-															<format:price priceData="${entry.totalSalePrice}"
-																displayFreeForZero="true" />
-																</c:when>
-																<c:otherwise>
-																<format:price priceData="${entry.totalPrice}"
-																displayFreeForZero="true" />
-																</c:otherwise>
-																</c:choose>
-														</ycommerce:testId>
-														
-													   </div>-->
 													<ycommerce:testId code="cart_product_colour">
 																<%-- <div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div> --%>
 													</ycommerce:testId>
@@ -125,9 +85,6 @@
 													</c:if>
 												</c:forEach>
 												
-												<%-- <ycommerce:testId code="cart_product_colour">
-												<div class="colour"><spring:theme code="text.qty"/>${entry.quantity}</div>
-												</ycommerce:testId> --%>
 															
 												<c:if
 													test="${ycommerce:doesPotentialPromotionExistForOrderEntry(cartData, entry.entryNumber)}">
@@ -140,13 +97,6 @@
 																test="${not displayed && consumedEntry.orderEntryNumber == entry.entryNumber && not empty promotion.description}">
 																<c:set var="displayed" value="true" />
 																
-																<!--  Commented to remove promotional description 24-aug-15
-																<div class="promo">
-																	<ycommerce:testId code="cart_potentialPromotion_label">
-				                                           				  ${promotion.description}
-				                                         			</ycommerce:testId>
-																</div>
-																 -->
 															</c:if>
 														</c:forEach>
 													</c:forEach>
@@ -161,13 +111,6 @@
 															<c:if
 																test="${not displayed && consumedEntry.orderEntryNumber == entry.entryNumber}">
 																<c:set var="displayed" value="true" />
-																<!--  Commented to remove promotional description 24-aug-15
-																<div class="promo">
-																	<ycommerce:testId code="cart_appliedPromotion_label">
-			                                          					  ${promotion.description}
-			                                        				</ycommerce:testId>
-																</div>
-																-->
 															</c:if>
 														</c:forEach>
 													</c:forEach>
@@ -230,7 +173,7 @@
 															
 															<c:if test="${count==1}">
 																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${delMode.sellerArticleSKU}" />
-																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.code}" />
+																<form:input id="radio_mobile_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.code}" />
 															</c:if>
 														   <c:set var='count'  value='${count+1}' />
 
@@ -238,7 +181,7 @@
 																	<c:when test="${delMode.code eq 'home-delivery'}">
 																			
 																			<li class="${delMode.code }">
-																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}'); "  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_mobile_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}'); "  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
@@ -246,7 +189,7 @@
 																	</c:when>
 																	<c:when test="${delMode.code eq 'click-and-collect'}">
 																			<li class="${delMode.code }">
-																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_mobile_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
@@ -260,7 +203,7 @@
 																	</c:when>
 																	<c:otherwise>
 																			<li class="${delMode.code }">
-																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_mobile_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
@@ -277,7 +220,7 @@
 										</div>
 									</li>
 									<li class="cnc_store_wrapper">
-										<div id="cncStoreContainer${entry.entryNumber}" style="display:none;"></div>
+										<div id="cncStoreContainerMobile${entry.entryNumber}" style="display:none;"></div>
 									</li>
 									</ul>
 								</li>
@@ -287,7 +230,7 @@
 			</ul>
 		
 	</div>
-	<input type="hidden" name="isCncPresentInSinglePageCart" id="isCncPresentInSinglePageCart" value="${isCncPresentInSinglePageCart}"/>
-	<input type="hidden" name="entryNumbersId" id="entryNumbersId" value="${entryNumbersId}" />
+	<input type="hidden" name="isCncPresentInSinglePageCart" id="isCncPresentInSinglePageCartMobile" value="${isCncPresentInSinglePageCart}"/>
+	<input type="hidden" name="entryNumbersIdMobile" id="entryNumbersIdMobile" value="${entryNumbersId}" />
 	</c:if>
 
