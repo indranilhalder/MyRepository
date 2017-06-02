@@ -1106,7 +1106,8 @@ $(function() {
 								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 								return false;
 							}
-							var dataString = "pin=" + pin + "&productCode="
+							var productCode = $('#product').val();
+							var dataString  = "pin=" + pin + "&productCode="
 									+ productCode;
 							jQuery
 									.ajax({
