@@ -16,4 +16,4 @@
 	</c:otherwise>
 </c:choose>
 
-<img class="picZoomer-pic" src="${imageUrl}" alt="${alt}" title="${title}" onError="this.onerror=null;this.src='/_ui/responsive/theme-luxury/images/plpPlaceholder.png';"/>
+<img class="picZoomer-pic" src="${imageUrl}" alt="${alt}" title="${title}" />
