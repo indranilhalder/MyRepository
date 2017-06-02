@@ -27,11 +27,7 @@
 		</c:choose>
 	</c:when>
 	<c:otherwise>
-		<theme:luxuryImage code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+		<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 	</c:otherwise>
 </c:choose>
-<%-- <theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/> --%>
-<!-- <img class="plp-default-img" alt="images" src="/_ui/responsive/theme-blue/images/thumb.PNG" />
-<img class="plp-hover-img" alt="images" src="/_ui/responsive/theme-blue/images/temp3.jpg"/>
-<img class="plp-model-img" alt="images" src="/_ui/responsive/theme-blue/images/model-img.PNG" /> -->
 

@@ -6,7 +6,20 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="breadcrumb" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/nav/breadcrumb"%>
 <div class="container plp-wrapper">
-	<h4 class="categor-name text-center"></h4>
+	<h4 class="categor-name text-center">
+		<c:choose>
+			<c:when test="${isCategoryPage && not empty searchPageData.results && searchPageData.pagination.totalNumberOfResults > 0}">
+				${dropDownText} (${searchPageData.pagination.totalNumberOfResults})
+			</c:when>
+			<c:when test="${not empty searchPageData.results && searchPageData.pagination.totalNumberOfResults > 0}">
+				<spring:theme code="search.page.searchText"/>
+				<span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
+				<spring:theme code="search.page.searchTextItem"/>
+				<span class="searchString">					
+				"<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
+			</c:when>
+		</c:choose>
+	</h4>
 	<div class="row">
 		 <div class="product-sort-wrapper mb-30 col-sm-12">
 		 	<div class="plp-sort-inner">
