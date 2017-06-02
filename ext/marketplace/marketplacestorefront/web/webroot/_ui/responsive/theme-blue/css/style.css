@@ -34460,7 +34460,7 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul {
     padding-left: 20px;
 }
 .MyBag-top-section {
-	overflow:hidden;
+	/* overflow:hidden; */
     margin: 0 25px 20px;
 }
 body.page-cartPage .MyBagHeadingDesktop {
@@ -61763,7 +61763,9 @@ footer .banner{
 .callouts .Padd ul li p {
     font-size: 14px;
 }
-
+#emptyId_tooltip span.pin-responsive{
+	display: none;
+}
 @media(min-width:768px){
 .MyBag-pincode #changePinDiv>p#cartPinCodeAvailable{
 	display: none !important;
@@ -61772,6 +61774,9 @@ footer .banner{
 @media (max-width: 1024px){
 .MyBag-top-section {
     margin: 0 0 20px 0;
+}
+body.page-cartPage .cart.wrapper .product-block{
+	margin-top: 20px;
 }
 body.page-cartPage .cart.wrapper .MyBag-buttons ul.checkout-types a.checkoutButton{
 	width:100%;
@@ -61851,7 +61856,7 @@ body.page-cartPage .cart.wrapper .checkout-types li#checkout-id.onlyCheckout {
      width: 100%;
  }
 body.page-cartPage .cart.wrapper .product-block{
-	margin: 0;
+	margin: 20px 0 0 0;
     width: 100%;
 }
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.delivery {
@@ -61864,6 +61869,21 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo {
     padding: 12px 0 12px 8px;
     min-height: auto;
+}
+body.page-cartPage .cart.wrapper .checkout-types li#checkout-id.onlyCheckout{
+position: relative;
+}
+p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
+	bottom: 45px !important;
+	left: 0;
+    right: 0 !important;
+    margin: auto;
+}
+#emptyId_tooltip span.pin-desktop{
+	display: none;
+}
+#emptyId_tooltip span.pin-responsive{
+	display: inline;
 }
 }
 /* UF-72, UF-73 */
@@ -62031,9 +62051,9 @@ body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery li.me
      width: 15px;
  	    
  }
-p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
+/* p#unserviceablepincode_tooltip,p#error-Id_tooltip,p#emptyId_tooltip{	
 	display:none !important;
-	}
+	} */
 	/* Start TISSQAUAT-466 */
 body.page-cartPage .cart.wrapper .product-block li.header ul li.productInfo, 
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productItemInfo{
@@ -62099,7 +62119,7 @@ p#unserviceablepincode_tooltip_btm:after,p#emptyId_tooltip_btm:after {
 p#error-Id_tooltip_btm:after,p#unserviceablepincode_tooltip_btm:after,p#emptyId_tooltip_btm:after{
 	top:-5px;
 }
-#emptyId_tooltip span, #unserviceablepincode_tooltip span, #error-Id_tooltip span,#error-Id_tooltip_btm span,#unserviceablepincode_tooltip_btm span,#emptyId_tooltip_btm span{
+#emptyId_tooltip span.red-text, #unserviceablepincode_tooltip span, #error-Id_tooltip span,#error-Id_tooltip_btm span,#unserviceablepincode_tooltip_btm span,#emptyId_tooltip_btm span{
 	color: #fb0007;
 }
 body.page-cartPage .cart.wrapper .product-block li.item > ul > li.delivery ul{
@@ -62112,6 +62132,14 @@ body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,
 }
 body.page-cartPage .MyBag-pincode #changePinDiv.blankPincode #defaultPinCodeIds,body.page-cartPage #changePinDiv.blankPincode #defaultPinCodeIdsBtm{
 	border-right:0;
+}
+@media (max-width: 450px){
+body.page-cartPage .outstanding-total{
+	background: transparent;
+}
+p#unserviceablepincode_tooltip, p#error-Id_tooltip, p#emptyId_tooltip{
+	width: 165px;
+}
 }
 /* UF-61 Cart Page end */
 
@@ -63151,7 +63179,8 @@ header .content #flip-tabs ~ .bottom .bottom-header-wrapper .search form#search_
          background: url(../images/sprite.svg) no-repeat scroll -255px -190px;
      }
      
-     /* UF-68 UF-69 */
+     }
+         /* UF-68 UF-69 */
  #checkout-id:hover p#unserviceablepincode_tooltip,#checkout-id:hover p#error-Id_tooltip,#checkout-id:hover p#emptyId_tooltip,#checkout-id-down a#checkout-down-enabled:hover ~ p#error-Id_tooltip_btm,
 #checkout-id-down a#checkout-down-enabled:hover ~ p#unserviceablepincode_tooltip_btm,#checkout-id-down a#checkout-down-enabled:hover ~ p#emptyId_tooltip_btm,
 p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_tooltip_btm:hover{
@@ -63159,8 +63188,6 @@ p#error-Id_tooltip_btm:hover,p#unserviceablepincode_tooltip_btm:hover,p#emptyId_
 	cursor: text !important;
 }
 /* UF-68 UF-69 */
-
-     }
   @media (max-width: 1024px){
   body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodHome.lowOpacity:before,
   body.page-cartPage .cart.wrapper .product-block li.item>ul>li.delivery li.methodExpress.lowOpacity:before, 
