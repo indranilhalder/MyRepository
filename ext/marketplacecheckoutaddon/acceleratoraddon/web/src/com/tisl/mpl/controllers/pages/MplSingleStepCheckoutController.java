@@ -38,6 +38,7 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
+import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
@@ -421,8 +422,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			//Code to import payment on checkout page load
 			model.addAttribute("openTab", "deliveryAddresses");
-			model.addAttribute("prePopulateTab", "payment");
+			model.addAttribute("prePopulateTab", "payment#deliveryMethod");
 			prepareModelForPayment(model, cartUssidData);
+			prepareModelForDeliveryMode(model, cartModel);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -445,8 +447,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		if (isAjax)
 		{
-			final String selectedAddress = getSessionService().getAttribute("selectedAddress");
-			model.addAttribute("selectedAddress", selectedAddress);
+			//final String selectedAddress = getSessionService().getAttribute("selectedAddress");
+			//model.addAttribute("selectedAddress", selectedAddress);
 			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveryAddressCarousel;
 		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.SingleStepCheckout.SinglePageCheckoutPage;
@@ -743,7 +745,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//getCheckoutFacade().setDeliveryAddress(newAddress);
 			getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 
-			getSessionService().setAttribute("selectedAddress", newAddress.getId());
+			//getSessionService().setAttribute("selectedAddress", newAddress.getId());
 			//Recalculating Cart Model
 			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 			getMplCheckoutFacade().reCalculateCart(cartData);
@@ -965,7 +967,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					break;
 				}
 			}
-
+			finaladdressData.setDefaultAddress(true);
 			final String selectedPincode = finaladdressData.getPostalCode();
 
 			//TISSEC-11
@@ -1136,10 +1138,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (addressForm.getSaveInAddressBook() != null)
 				{
 					newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
-					if (addressForm.getSaveInAddressBook().booleanValue() && getUserFacade().isAddressBookEmpty())
-					{
-						newAddress.setDefaultAddress(true);
-					}
 				}
 				else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
 				{
@@ -1151,7 +1149,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				{
 					accountAddressFacade.addaddress(newAddress, (CustomerModel) oModel.getUser());
 				}
-
+				newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
+						|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
 				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
@@ -1170,7 +1169,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 				//Setting selected address id in session
-				getSessionService().setAttribute("selectedAddress", newAddress.getId());
+				//getSessionService().setAttribute("selectedAddress", newAddress.getId());
 				//Recalculating Cart Model
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
 				getMplCheckoutFacade().reCalculateCart(cartData);
@@ -1193,6 +1192,95 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return REDIRECT_PREFIX + "/checkout/single/choose";
 	}
 
+	public String prepareModelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
+			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
+	{
+		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
+		List<PinCodeResponseData> responseData = null;
+		final CartModel serviceCart = cartModel;
+		mplCouponFacade.releaseVoucherInCheckout(serviceCart);
+		mplCartFacade.removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
+		final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+		final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+
+		if (StringUtils.isNotEmpty(defaultPinCodeId) && (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())))
+		{
+			//CAR-126/128/129
+			responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
+			if (CollectionUtils.isEmpty(responseData))
+			{
+				responseData = mplCartFacade.getOMSPincodeResponseData(defaultPinCodeId, cartData, serviceCart);
+			}
+			if (CollectionUtils.isNotEmpty(responseData))
+			{
+				// TPR-429 START
+				//final String cartLevelSellerID = populateCheckoutSellers(cartData);
+				//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
+				// TPR-429 END
+
+				//  TISPRD-1951  START //
+
+				// Checking whether inventory is availbale or not
+				// if inventory is not available for particular delivery Mode
+				// then removing that deliveryMode in Choose DeliveryMode Page
+				for (PinCodeResponseData pinCodeResponseData : responseData)
+				{
+					try
+					{
+						if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+								&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+						{
+							pinCodeResponseData = mplCartFacade.getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
+						}
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Exception occured while checking inventory " + e.getCause());
+					}
+				}
+				//  TISPRD-1951  END //
+				deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData, serviceCart);
+				fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
+
+				//TIS-397
+				deliveryModeDataMap = mplCheckoutFacade.repopulateTshipDeliveryCost(deliveryModeDataMap, cartData);
+
+				model.addAttribute("deliveryModeData", deliveryModeDataMap);
+				model.addAttribute("deliveryMethodForm", new DeliveryMethodForm());
+				model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+				model.addAttribute(MarketplacecheckoutaddonConstants.FULFILLMENTDATA, fullfillmentDataMap);
+				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.TRUE);
+				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
+				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
+				//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
+				model.addAttribute("defaultPincode", defaultPinCodeId);
+
+				//TISPRO-625
+
+				//final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null) ? Boolean.TRUE: Boolean.FALSE;
+				//model.addAttribute(MarketplacecheckoutaddonConstants.CART_EXPRESS_CHECKOUT_SELECTED, isExpressCheckoutSelected);
+
+				//	this.prepareDataForPage(model);
+				//model.addAttribute("metaRobots", "noindex,nofollow");
+				//model.addAttribute("checkoutPageName", checkoutPageName);
+				model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
+			}
+			else
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?msg="
+						+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+		}
+		else
+		{
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+		}
+		return null;
+	}
 
 	/**
 	 * DELIVERY METHOD SECTION:This will return a JSP page where in a user can select delivery mmodes
@@ -2063,14 +2151,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (CollectionUtils.isEmpty(responseData))
 				{
 					responseData = mplCartFacade.getOMSPincodeResponseData(defaultPinCodeId, cartUssidData, cartModel);
+					final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel,
+							cartUssidData);
+					LOG.info("isCOdEligible " + isCOdEligible);
 				}
 				deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartUssidData, responseData, cartModel);
 
 				mplCartFacade.setDeliveryDate(cartUssidData, responseData);
-				//TISUTO-72 TISST-6994,TISST-6990 set cart COD eligible
-				final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel,
-						cartUssidData);
-				LOG.info("isCOdEligible " + isCOdEligible);
+
 
 			}
 
@@ -3315,7 +3403,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3372,7 +3460,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

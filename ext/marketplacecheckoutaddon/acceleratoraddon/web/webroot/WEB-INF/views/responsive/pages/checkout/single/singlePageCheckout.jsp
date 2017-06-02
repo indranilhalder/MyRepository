@@ -24,66 +24,79 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
+<div id="singlePageDesktop">
 	<!-- Accordions -->
-<div id="singlePageAccordion" class="checkout-accordion-wrapper">
-    <div class="checkout-accordion <c:if test="${openTab eq 'deliveryAddresses'}">accordion-open</c:if>">
-        <div class="checkout-accordion-heading">
-        <div class="checkout-mobile-heading">Delivery Address</div>
-            <div><h4><span>1</span> Delivery Address</h4></div>
-            <div style="display:none" id="selectedAddressDivId"><span id="selectedAddressHighlight"></span><span>CHANGE ADDRESS</span></div>
-        </div>
-        <div class="checkout-accordion-body">
-         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p></div>
-            <div id="chooseDeliveryAddress">
-                <single-checkout:showDeliveryAddressDetails deliveryAddresses="${deliveryAddresses}"/>
-            </div>
-        </div>
-    </div>
-    <div class="checkout-accordion <c:if test="${openTab eq 'deliveryMethod'}">accordion-open</c:if>">
-        <div class="checkout-accordion-heading">
-        <div class="checkout-mobile-heading">Delivery Method</div>
-            <div><h4><span>2</span> Delivery Method</h4></div>
-            <div style="display:none" id="selectedDeliveryOptionsDivId"><span id="selectedDeliveryOptionsHighlight"></span><span>CHANGE DELIVERY OPTION</span></div>
-        </div>
-        <div class="checkout-accordion-body">
-        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p></div>
-            <div id="choosedeliveryMode" class="cart wrapper">
-                <p>Bootstrap is a powerful front-end framework for faster and easier web development. It is a collection of CSS and HTML conventions. <a href="http://www.tutorialrepublic.com/twitter-bootstrap-tutorial/" target="_blank">Learn more.</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="checkout-accordion <c:if test="${openTab eq 'reviewOrder'}">accordion-open</c:if>">
-        <div class="checkout-accordion-heading">
-        <div class="checkout-mobile-heading">Review Order</div>
-            <div><h4><span>3</span> Review Order</h4></div>
-            <div style="display:none" id="selectedReviewOrderDivId"><span id="selectedReviewOrderHighlight"></span><span>REVIEW ORDER</span></div>
-        </div>
-        <div class="checkout-accordion-body">
-        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p></div>
-            <div id="reviewOrder" class="cart wrapper">
-                <p>CSS stands for Cascading Style Sheet. CSS allows you to specify various style properties for a given HTML element such as colors, backgrounds, fonts etc. <a href="http://www.tutorialrepublic.com/css-tutorial/" target="_blank">Learn more.</a></p>
-            </div>
-        </div>
-    </div>
-    <div class="checkout-accordion <c:if test="${openTab eq 'payment'}">accordion-open</c:if>">
-        <div class="checkout-accordion-heading">
-          <div class="checkout-mobile-heading">Payment</div>
-            <div><h4><span>4</span> Payment</h4></div>
-            <div style="display:none"><span></span><span></span></div>
-        </div>
-        <div class="checkout-accordion-body">
-         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
-            <p class="cancel-mobile">Cancel</p></div>
-            <div id="makePayment">
-                <c:if test="${prePopulateTab eq 'payment'}" >
-                	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 
-                </c:if>
-            </div>
-        </div>
-    </div>
+	<div id="singlePageAccordion" class="checkout-accordion-wrapper">
+	    <div class="checkout-accordion accordion-open">
+	        <div class="checkout-accordion-heading">
+	        <div class="checkout-mobile-heading">Delivery Address</div>
+	            <div><h4><span>1</span> Delivery Address</h4></div>
+	            <div style="display:none" id="selectedAddressDivId"><span id="selectedAddressHighlight"></span><span>CHANGE ADDRESS</span></div>
+	        </div>
+	        <div class="checkout-accordion-body">
+	         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+	            <p class="cancel-mobile">Cancel</p></div>
+	            <div id="chooseDeliveryAddress">
+	                <single-checkout:showDeliveryAddressDetails deliveryAddresses="${deliveryAddresses}"/>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="checkout-accordion">
+	        <div class="checkout-accordion-heading">
+	        <div class="checkout-mobile-heading">Delivery Method</div>
+	            <div><h4><span>2</span> Delivery Method</h4></div>
+	            <div style="display:none" id="selectedDeliveryOptionsDivId"><span id="selectedDeliveryOptionsHighlight"></span><span>CHANGE DELIVERY OPTION</span></div>
+	        </div>
+	        <div class="checkout-accordion-body">
+	        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+	            <p class="cancel-mobile">Cancel</p></div>
+	            <div id="choosedeliveryMode" class="cart wrapper">
+	                <p></p>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="checkout-accordion">
+	        <div class="checkout-accordion-heading">
+	        <div class="checkout-mobile-heading">Review Order</div>
+	            <div><h4><span>3</span> Review Order</h4></div>
+	            <div style="display:none" id="selectedReviewOrderDivId"><span id="selectedReviewOrderHighlight"></span><span>REVIEW ORDER</span></div>
+	        </div>
+	        <div class="checkout-accordion-body">
+	        <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+	            <p class="cancel-mobile">Cancel</p></div>
+	            <div id="reviewOrder" class="cart wrapper">
+	                <p></p>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="checkout-accordion">
+	        <div class="checkout-accordion-heading">
+	          <div class="checkout-mobile-heading">Payment</div>
+	            <div><h4><span>4</span> Payment</h4></div>
+	            <div style="display:none"><span></span><span></span></div>
+	        </div>
+	        <div class="checkout-accordion-body">
+	         <div class="change-cancel-wrapper"><p class="change-mobile">Change</p>
+	            <p class="cancel-mobile">Cancel</p></div>
+	            <div id="makePayment">
+	                <c:if test="${fn:contains(prePopulateTab, 'payment')}" >
+	                	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 
+	                </c:if>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+<div id="singlePageMobile">
+	<div id="chooseDeliveryAddressMobile">
+		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
+	</div>
+	<div id="selectedDeliveryOptionsDivIdMobile">
+		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showDeliveryModeDetailsMobile.jsp"%>
+	</div>
+	<div id="makePaymentMobile">
+		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPageMobile.jsp"%>
+	</div>
 </div>
 <div class="modal fade" id="singlePageAddressPopup">
 	<div class="content" style="padding: 40px;max-width: 650px;">
@@ -109,6 +122,97 @@
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
+
+<style>
+#confirmOverlay{
+	width:100%;
+	height:100%;
+	position:fixed;
+	top:0;
+	left:0;
+	background:url('ie.png');
+	background: -moz-linear-gradient(rgba(11,11,11,0.1), rgba(11,11,11,0.6)) repeat-x rgba(11,11,11,0.2);
+	background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(11,11,11,0.1)), to(rgba(11,11,11,0.6))) repeat-x rgba(11,11,11,0.2);
+	z-index:100000;
+}
+
+#confirmBox{
+	background:url('body_bg.jpg') repeat-x left bottom #e5e5e5;
+	width:460px;
+	position:fixed;
+	left:50%;
+	top:50%;
+	margin:-130px 0 0 -230px;
+	border: 1px solid rgba(33, 33, 33, 0.6);
+
+	-moz-box-shadow: 0 0 2px rgba(255, 255, 255, 0.6) inset;
+	-webkit-box-shadow: 0 0 2px rgba(255, 255, 255, 0.6) inset;
+	box-shadow: 0 0 2px rgba(255, 255, 255, 0.6) inset;
+}
+
+#confirmBox h1,
+#confirmBox p{
+	font:26px/1 'Cuprum','Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+	background:url('header_bg.jpg') repeat-x left bottom #f5f5f5;
+	padding: 18px 25px;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6);
+	color:#666;
+}
+
+#confirmBox h1{
+	letter-spacing:0.3px;
+	color:#888;
+}
+
+#confirmBox p{
+	background:none;
+	font-size:16px;
+	line-height:1.4;
+	padding-top: 35px;
+}
+
+#confirmButtons{
+	padding:15px 0 25px;
+	text-align:center;
+}
+
+#confirmBox .button{
+	display:inline-block;
+	background:url('buttons.png') no-repeat;
+	color:white;
+	position:relative;
+	height: 33px;
+
+	font:17px/33px 'Cuprum','Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+
+	margin-right: 15px;
+	padding: 0 35px 0 40px;
+	text-decoration:none;
+	border:none;
+}
+
+#confirmBox .button:last-child{	margin-right:0;}
+
+#confirmBox .button span{
+	position:absolute;
+	top:0;
+	right:-5px;
+	background:url('buttons.png') no-repeat;
+	width:5px;
+	height:33px
+}
+
+#confirmBox .blue{				background-position:left top;text-shadow:1px 1px 0 #5889a2;}
+#confirmBox .blue span{			background-position:-195px 0;}
+#confirmBox .blue:hover{		background-position:left bottom;}
+#confirmBox .blue:hover span{	background-position:-195px bottom;}
+
+#confirmBox .gray{				background-position:-200px top;text-shadow:1px 1px 0 #707070;}
+#confirmBox .gray span{			background-position:-395px 0;}
+#confirmBox .gray:hover{		background-position:-200px bottom;}
+#confirmBox .gray:hover span{	background-position:-395px bottom;}
+
+</style>
 <script>
 $(".checkout-accordion-wrapper .checkout-accordion .checkout-accordion-heading").on("click", function(){
 	//$(this).parent().find(".checkout-accordion-body").slideToggle();
