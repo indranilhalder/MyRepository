@@ -747,11 +747,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1653,8 +1653,8 @@ public class GenericUtilityMethods
 			responseData.setTotalDiscntIncMrp(totalDiscountVal);
 		}
 	}
-	
 
+	/**
 	 * @Description: Verifies Seller Data corresponding to the cart added Product
 	 * @param restrictionList
 	 * @param productSellerData
@@ -1725,7 +1725,7 @@ public class GenericUtilityMethods
 		return checkFlag;
 	}
 
-	
+
 	/**
 	 * For UF-93
 	 *
@@ -1748,5 +1748,5 @@ public class GenericUtilityMethods
 		}
 		return null;
 	}
-	
+
 }
