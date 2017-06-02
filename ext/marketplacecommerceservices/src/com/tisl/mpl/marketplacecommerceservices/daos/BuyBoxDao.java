@@ -69,4 +69,7 @@ public interface BuyBoxDao
 
 	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
 
+	// TISPRD-8944
+	List<BuyBoxModel> buyBoxPriceMobile(String ProductCode) throws EtailNonBusinessExceptions;
+
 }
