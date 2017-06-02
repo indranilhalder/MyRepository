@@ -154,6 +154,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 <entry key="luxuryVideo" value="97Wx108H" />
 <entry key="luxuryCartIcon" value="97Wx108H" />
 <entry key="luxuryStyleSwatch" value="97Wx108H" />
+<entry key="luxuryModel" value="luxuryModel" />
+<entry key="luxurySecondary" value="luxurySecondary" />
 <!-- TPR-1694 new resolution for Mobile App-->
 <entry key="mobilePdpView" value="450Wx545H" />
 </map>
