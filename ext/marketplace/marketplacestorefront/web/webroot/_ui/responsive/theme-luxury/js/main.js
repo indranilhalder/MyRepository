@@ -448,6 +448,9 @@ TATA.Pages = {
 	        });
 	    },
         showSelectedRefinements: function() {
+        	if($(".facetValues .facet-form input:checked").length == 0){
+        		$(".plp-wrapper h4.categor-name").show();
+        	}
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             });
@@ -470,6 +473,7 @@ TATA.Pages = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
+                $(".plp-wrapper h4.categor-name").hide();
                 TATA.Pages.PLP.performAjax(requestUrl);
             });
         },

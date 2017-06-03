@@ -59,13 +59,13 @@
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxurySecondary"/>
 					<div class="offer-icon">
 						<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
-							<span class="new"></span>
+							<span class="newarrival"></span>
 						</c:if>
 						<c:if test="${!product.isOfferExisting && !product.isProductNew && product.isOnlineExclusive }">
 							<span class="exclusive"></span>
 						</c:if>
 						<c:if test="${product.isOfferExisting }">
-							<span class="offered"></span>
+							<span class="onsale"></span>
 						</c:if>
 					</div>
 				</div>

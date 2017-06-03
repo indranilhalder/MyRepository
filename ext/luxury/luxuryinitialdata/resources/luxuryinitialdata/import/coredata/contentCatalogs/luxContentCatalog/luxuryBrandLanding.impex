@@ -1,9 +1,9 @@
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 $productCatalog=luxProductCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $picture=media(code, $contentCV)
-$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
@@ -33,9 +33,12 @@ INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];
 INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];products(code,$productCV)
 ;;CoachBrand-ProductCarouselComponent;LUX000000000384001,LUX000000000384021,LUX000000000384031,LUX000000000384041,LUX000000000384021;
 
+INSERT_UPDATE VideoComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;videoUrl;videoTitle;videoDescription;
+;;Men-StyleEditVideoComponent;Style Edit Video Component;StyleEditVideoComponent;https://www.youtube.com/embed/7Djj21GYLDU;REVENGE DRESSING:Best outfits in history;;
 
 
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];;
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];mediaType(code)[default='Image']
 ;;MenHeroBanner;text/png;MenHeroBanner.png;$jarResourceCms/preview-images/MenHeroBanner.png;;;
 ;;CoachHeroBanner;text/png;HeroBanner1.png;$jarResourceCms/preview-images/HeroBanner1.png;;;
 ;;CoachHeroBanner1;text/png;HeroBanner1.png;$jarResourceCms/preview-images/HeroBanner1.png;;;
@@ -55,6 +58,7 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename
 ;;bag-look1col22;text/png;img-look4.png;$jarResourceCms/preview-images/img-look4.png;;;
 ;;bag-look2col1;text/png;look12.png;$jarResourceCms/preview-images/look12.png;;;
 ;;Men-MiniLookBook;text/png;MenPlaceholder.png;$jarResourceCms/preview-images/MenPlaceholder.png;;;
+;;Brand_landingVideo;video/mp4;;$jarResourceCms/preview-images/brooks-brothers_brand-video.mp4;;Video;
 
 
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];&componentRef
@@ -84,6 +88,8 @@ INSERT_UPDATE CMSParagraphComponent ;$contentCV[unique=true];uid[unique=true];na
 INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url
 ;;Men-lookBook;Men look;Men-MiniLookBook;"<div class='seastion-content'><h2>Travellers <br>Edition</h2></div>";"/menlanding";
 
+INSERT_UPDATE LuxurySimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang];
+;;Men-BannerVideo1;Men Video Banner;;/;Brand_landingVideo;
 
 INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;CoachType1Banner;Category Type Banner 1;CoachType1Banner;/;CoachHeroBanner
@@ -109,6 +115,7 @@ INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title
 
 
 
+
 INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef)                                              					;&componentRef
 ;;BrandBannerRotating;Brand Banner Rotating;CoachType2Banner,CoachType3Banner,CoachType4Banner;CategoryBannerRotating
 ;;MenBannerRotating;Men Brand Banner Rotating;MenHeroBanner,MenHeroBanner1,MenHeroBanner2,MenHeroBanner3;MensBannerRotating
@@ -128,7 +135,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Brand-HeaderLinkSlot;Brand HeaderLinkSlot;true;
 ;;Brand-siteLogoSlot;Brand siteLogo;true;
 ;;Brand-MiniCartSlot;Brand MiniCart;true;
-;;Brand-HeroBannerSlot;Brand HeroBanner;true;BrandBannerRotating
+;;Brand-HeroBannerSlot;Brand HeroBanner;true;Men-BannerVideo1
 ;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Brand-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Brand-ShowCase1Slot;Brand ShowCase1;true;Bag-ShowCase
@@ -144,13 +151,19 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Brand-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
 ;;Brand-WhyShopOnLuxurySlot;Brand WhyShopOnLuxury;true;
 ;;Brand-FooterSlot;Brand Footer;true
+;;Gender-TopHeaderSlot;Gender TopHeader;true;
+;;Gender-HeaderLinkSlot;Gender HeaderLinkSlot;true;
+;;Gender-siteLogoSlot;Gender siteLogo;true;
+;;Gender-MiniCartSlot;Gender MiniCart;true;
+;;Gender-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
+;;Gender-FooterSlot;Gender Footer;true;
 ;;Men-TopHeaderSlot;Gender TopHeader;true;
 ;;Men-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Men-siteLogoSlot;Gender siteLogo;true;
 ;;Men-MiniCartSlot;Gender MiniCart;true;
 ;;Men-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Men-FooterSlot;Gender Footer;true;
-;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
+;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
 ;;Men-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Men-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
