@@ -58,14 +58,14 @@
 		<cms:component component="${feature}" />
 		</cms:pageSlot>
 		
-		sdcscd
+		
 	 <cms:pageSlot position="Gender-ProductCurosel1" var="ProductCurosel1" element="div"
 		class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${ProductCurosel1}" />
 		</cms:pageSlot> 
 		
 
-		asdsad
+		
 		
 		<div class="look-book-img"> 
 		<div class="look-book-list clearfix">
