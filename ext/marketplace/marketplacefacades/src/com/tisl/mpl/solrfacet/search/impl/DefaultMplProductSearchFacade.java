@@ -745,10 +745,10 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
 
 		//INC144317341 starts
-		final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
-		final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
-		if (categoryCode != null)
+		if (categoryCode != null && !categoryCode.startsWith(MarketplacecommerceservicesConstants.LSH))
 		{
+			final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
+			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
 			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
 			{
 				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
