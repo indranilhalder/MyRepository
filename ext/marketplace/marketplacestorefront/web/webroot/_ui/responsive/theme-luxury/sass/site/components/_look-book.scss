@@ -123,7 +123,7 @@
 			width: 33%;
 			display: inline-block;
 			text-align: left;
-			margin: 20px 0px;
+			margin: 10px 0px;
 			vertical-align: top;
 				a{
 					font-size: 15px;
@@ -250,4 +250,31 @@
 	.look-book-img{
 		margin-top:50px;
 	}	
+}
+
+@include media-breakpoint-down(sm) {
+	.page-luxuryBrandLandingPage{
+		.look-book-wrapper{
+			.colmn{
+				width:100%;
+				text-align:center;
+				li{
+					width:50%;
+				}
+			}
+		}
+		.look-book-img{
+			.colmn{
+				width:100%;
+				text-align:center;
+				li{
+					width:100%;
+				}
+			}
+		}
+		.look-book-link li{
+			width:100%;
+			text-align:center;
+		}
+	}
 }

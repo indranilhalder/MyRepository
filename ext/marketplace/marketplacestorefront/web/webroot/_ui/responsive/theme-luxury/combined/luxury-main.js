@@ -12843,6 +12843,7 @@ TATA.CommonFunctions = {
             });
         },
         showSelectedRefinements: function() {
+            0 == $(".facetValues .facet-form input:checked").length && $(".plp-wrapper h4.categor-name").show(), 
             $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             }), $(".facet-form input[type=checkbox]").each(function() {
@@ -12859,7 +12860,7 @@ TATA.CommonFunctions = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-                TATA.Pages.PLP.performAjax(requestUrl);
+                $(".plp-wrapper h4.categor-name").hide(), TATA.Pages.PLP.performAjax(requestUrl);
             });
         },
         performAjax: function(requestUrl) {
