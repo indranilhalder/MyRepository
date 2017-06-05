@@ -320,7 +320,7 @@
 					</c:if>
 				</c:forEach>
 			</ul> --%>
-			<ul>
+			<ul class="saved_cards_mobile">
 				<!-- SAVED CREDIT CARD -->
 						<c:if test="${not empty creditCards}">
 							<p class="saved_card_tab active_tab credit_tab">Saved Cards</p>

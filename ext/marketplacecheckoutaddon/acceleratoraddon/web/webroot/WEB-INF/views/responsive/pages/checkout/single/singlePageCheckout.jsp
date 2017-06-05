@@ -29,7 +29,6 @@
 	<div id="singlePageAccordion" class="checkout-accordion-wrapper">
 	    <div class="checkout-accordion accordion-open">
 	        <div class="checkout-accordion-heading">
-	        <div class="checkout-mobile-heading">Delivery Address</div>
 	            <div><h4><span>1</span> Delivery Address</h4></div>
 	            <div style="display:none" id="selectedAddressDivId"><span id="selectedAddressHighlight"></span><span>CHANGE ADDRESS</span></div>
 	        </div>
@@ -41,7 +40,6 @@
 	    </div>
 	    <div class="checkout-accordion">
 	        <div class="checkout-accordion-heading">
-	        <div class="checkout-mobile-heading">Delivery Method</div>
 	            <div><h4><span>2</span> Delivery Method</h4></div>
 	            <div style="display:none" id="selectedDeliveryOptionsDivId"><span id="selectedDeliveryOptionsHighlight"></span><span>CHANGE DELIVERY OPTION</span></div>
 	        </div>
@@ -65,7 +63,6 @@
 	    </div>
 	    <div class="checkout-accordion">
 	        <div class="checkout-accordion-heading">
-	          <div class="checkout-mobile-heading">Payment</div>
 	            <div><h4><span>4</span> Payment</h4></div>
 	            <div style="display:none"><span></span><span></span></div>
 	        </div>
@@ -81,15 +78,18 @@
 </div>
 <div id="singlePageMobile">
 	<div id="chooseDeliveryAddressMobile">
+		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper"><p class="change-mobile">Change</p></div>
 		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
 	</div>
-	<div id="selectedDeliveryOptionsDivIdMobile">
+	<div id="selectedDeliveryOptionsDivIdMobile" class="cart wrapper">
+		<div class="checkout-mobile-heading">Delivery Method</div>
 		<div class="change-cancel-wrapper"><p class="change-mobile">Change</p></div>
 			<%@include
 				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetailsMobile.jsp"%>
 		</div>
 	<div id="makePaymentMobile">
+	<div class="checkout-mobile-heading">Payment</div>
 		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
 	</div>
 </div>
