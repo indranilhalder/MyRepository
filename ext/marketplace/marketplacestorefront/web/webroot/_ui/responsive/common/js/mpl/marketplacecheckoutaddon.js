@@ -6734,7 +6734,7 @@ function checkSignUpValidation(path){
 	
 	if(validationResult && password!=rePassword){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("The passwords don’t match. Try again?");
+		$("#signupPasswordDiv").html("The passwords don’t match. Try again, please.");
 		validationResult=false;
 	}  else if(validationResult){
 		$("#signupPasswordDiv").hide();
