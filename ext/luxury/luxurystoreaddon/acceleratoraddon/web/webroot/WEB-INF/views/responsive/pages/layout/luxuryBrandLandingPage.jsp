@@ -32,7 +32,7 @@
 				<cms:component component="${ShowCase1}" />
 				</cms:pageSlot>
 		
-			<div class="lux-blp-carousel">
+			<div class="lux-blp-carousel luxgender-carousel">
 				<cms:pageSlot position="Brand-ProductCurosel1" var="feature" element="div"
 				class="span-24 section5 cms_disp-img_slot">
 				<cms:component component="${feature}" />

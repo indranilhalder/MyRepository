@@ -13,12 +13,14 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
+import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
@@ -29,6 +31,7 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -111,6 +114,8 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
 
+	@Resource(name = "customerData")
+	private CustomerData customerData;
 
 	@Resource(name = "cartFacade")
 	private CartFacade cartFacade;
@@ -204,11 +209,42 @@ public class HomePageController extends AbstractPageController
 			return REDIRECT_PREFIX + ROOT;
 		}
 
+
 		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
 		updatePageTitle(model, getContentPageForLabelOrId(null));
 
 		return getViewForPage(model);
+	}
+
+
+
+
+
+	@Override
+	protected ContentPageModel getContentPageForLabelOrId(final String labelOrId) throws CMSItemNotFoundException
+	{
+		String siteId = getSiteConfigService().getProperty("luxury.site.id");
+		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId)){
+			String gender = getCustomerFacade().getCurrentCustomer().getGender();
+			if(gender != null && !(gender.isEmpty())) {
+				switch (gender) {
+					case MessageConstants.MALE: {
+						String key = getSiteConfigService().getProperty(MessageConstants.MENLANDING);
+						return super.getContentPageForLabelOrId(key);
+					}
+					case MessageConstants.FEMALE: {
+						String key = getSiteConfigService().getProperty(MessageConstants.WOMENLANDING);
+						return super.getContentPageForLabelOrId(key);
+					}
+					default: {
+						return super.getContentPageForLabelOrId(labelOrId);
+					}
+				}
+			}
+
+	}
+	return super.getContentPageForLabelOrId(labelOrId);
 	}
 
 	/**
