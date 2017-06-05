@@ -397,7 +397,7 @@ header{
 				    margin-bottom: 10px;
 				}
 				a.go-to-bag {
-				    background-color: #a5173c;
+				    background-color: #2d2d2d;
 				    color: #fff;
 				    width: 202px;
 				    float: none;
@@ -410,6 +410,36 @@ header{
 			}
 		}
 	}
+	li.wishlist{
+		position:relative;
+		.wishlist-info{
+			display:none;
+			position: absolute;
+		    width: 300px;
+		    left: -220px;
+		    padding: 0;
+		    margin-top: -1px;
+		    #DropDownMyWishList{
+		    	list-style-type:none;
+		    	padding:20px 20px 40px 20px;
+		    	border: solid 1px #eee;
+		    	background:#fff;
+		    	border-radius:$border-radius-small;
+		    	margin-top:20px;
+		    }
+		    .foot{
+		    	position:absolute;
+		    	bottom:10px;
+		    	left:21px;
+		    }
+		}
+	}
+	li.wishlist:hover{
+		.wishlist-info{
+			display:block;
+		}
+	}
+	
 }
 
 footer{
