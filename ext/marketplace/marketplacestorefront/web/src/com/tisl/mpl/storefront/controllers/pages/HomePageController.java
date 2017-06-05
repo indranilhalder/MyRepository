@@ -237,7 +237,6 @@ public class HomePageController extends AbstractPageController
 						String key = getSiteConfigService().getProperty(MessageConstants.WOMENLANDING);
 						return super.getContentPageForLabelOrId(key);
 					}
-
 					default: {
 						return super.getContentPageForLabelOrId(labelOrId);
 					}

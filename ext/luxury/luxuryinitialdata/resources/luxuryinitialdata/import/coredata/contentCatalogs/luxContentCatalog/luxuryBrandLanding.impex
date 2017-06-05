@@ -209,7 +209,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BrandpageHeaderLink;HeaderLink;;Brand-HeaderLinkSlot;true
 ;;BrandPageSearchBox;SearchBox;;SearchBoxSlot;true
 ;;BrandPageMiddleHeaderLink;MiddleHeader;;MiddleHeader;true
-;;BrandPageMiniCart;MiniCart;;Brand-MiniCartSlot;true
+;;BrandPageWishList;WishList;;WishListSlot;true
+;;BrandPageMiniCart;MiniCart;;MiniCartSlot;true
 ;;BrandPageNavigationBar;NavigationBar;;NavigationBarSlot;true
 ;;BrandPageWhyShopOnLuxury;WhyShopOnLuxury;;Brand-WhyShopOnLuxurySlot;true
 ;;BrandPageFooter;Footer;;Brand-FooterSlot;true
@@ -280,7 +281,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;GenderPageSiteLogo;SiteLogo;;SiteLogoSlot;true
 ;;GenderPageSearchBox;SearchBox;;SearchBoxSlot;true
 ;;GenderPageMiddleHeaderLink;MiddleHeader;;MiddleHeader;true
-;;GenderPageMiniCart;MiniCart;;Gender-MiniCartSlot;true
+;;GenderPageWishList;WishList;;WishListSlot;true
+;;GenderPageMiniCart;MiniCart;;MiniCartSlot;true
 ;;GenderPageNavigationBar;NavigationBar;;NavigationBarSlot;true
 ;;GenderPageWhyShopOnLuxury;WhyShopOnLuxury;;Gender-WhyShopOnLuxurySlot;true
 ;;GenderPageFooter;Footer;;Gender-FooterSlot;true
