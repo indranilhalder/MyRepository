@@ -67002,6 +67002,7 @@ body .account .right-account .order-history .product-block li.item .attributes p
  /*  start of PRDI-177 */
 #OfferWrap .Inner .show-termsConditions p {
 	text-align: justify !important;
+	text-align: center !important;	/* TISKIDK-1415 */
 	}
 	/* End of PRDI-177 */
 
