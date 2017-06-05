@@ -709,7 +709,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter an Email ID</font>";
+			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid email ID.</font>";
 			proceed = false;
 		}
 		
@@ -987,7 +987,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Oops! The passwords don't match.</font>";
+			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>The passwords don’t match. Try again, please.</font>";
 			flag = false;
 		}
 		else{
