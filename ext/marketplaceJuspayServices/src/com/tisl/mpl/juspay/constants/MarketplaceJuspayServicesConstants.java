@@ -48,5 +48,4 @@ public final class MarketplaceJuspayServicesConstants extends GeneratedMarketpla
 	public final static String SESSIONID = "metadata.session_id";
 	public static final String JUSPAY_PAYMENTMODE_CARD_STRING = "Card";
 	public static final String JUSPAY_KEY = "JusPay";
-	public static final String JUSPAY_PAYMENTPROVIDER = "payment.juspay";
 }

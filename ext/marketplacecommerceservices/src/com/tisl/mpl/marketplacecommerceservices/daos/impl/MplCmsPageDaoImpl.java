@@ -6,9 +6,11 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
 import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -149,7 +151,7 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao#getHomePageForMobile()
 	 */
 	@Override
@@ -344,21 +346,21 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 	/*
 	 * @Override public SearchPageData<ContentSlotForPageModel> getContentSlotsForAppById(final String pageUid, final
 	 * PageableData pageableData) {
-	 * 
+	 *
 	 * final CatalogVersionModel catalogmodel =
 	 * catalogversionservice.getCatalogVersion(configurationService.getConfiguration()
 	 * .getString("internal.campaign.catelog"),
 	 * configurationService.getConfiguration().getString("internal.campaign.catalogVersionName"));
-	 * 
+	 *
 	 * final Map params = new HashMap(); params.put("uid", pageUid); params.put("version", catalogmodel);
-	 * 
+	 *
 	 * final String query =
 	 * "Select {CSP.pk} From {ContentSlotForPage AS CSP JOIN ContentPage as CP ON {CSP.page}={CP.pk}} where {CP.uid} = ?uid and {CSP.catalogVersion}=?version"
 	 * ;
-	 * 
+	 *
 	 * return getPagedFlexibleSearchService().search(query, params, pageableData);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -432,5 +434,18 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 				.append(" as cm ON {cp.channel} = {cm.pk}} ");
 
 		return queryString;
+	}
+
+	/**
+	 * @param siteUid
+	 * @return CMSSite
+	 * @CAR-285
+	 */
+	@Override
+	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException
+	{
+		final CMSSiteModel cms = new CMSSiteModel();
+		cms.setUid(siteUid);
+		return flexibleSearchService.getModelByExample(cms);
 	}
 }

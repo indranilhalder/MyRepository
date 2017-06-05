@@ -34,7 +34,6 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
-
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -858,6 +857,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		//
 		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
 		AbstractOrderEntryModel entry = null;
+		
+		/**
+		 * TPR-5712 : if store manager logged in
+		 */
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		
 		if (configurationService
 				.getConfiguration()
 				.getBoolean(
@@ -945,7 +951,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 										Arrays.asList(pinData.getUssid())));
 								break;
 							}
-							if (!delData.getIsCOD()) {
+							if (!delData.getIsCOD() && !(StringUtils.isNotEmpty(agentId))) {
 								errorMessages.add(new ResourceMessage(
 										"placeOrder.validation.nocod", Arrays
 												.asList(pinData.getUssid())));
@@ -953,7 +959,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 							}
 
 							//TISBOX-1746  commenting see TISBOX-1746
-							if (delData.getIsCODLimitFailed()) {
+							if (delData.getIsCODLimitFailed() && !(StringUtils.isNotEmpty(agentId))) {
 								errorMessages.add(new ResourceMessage(
 										"placeOrder.validation.codlimitFailed",
 										Arrays.asList(pinData.getUssid())));

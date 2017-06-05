@@ -4,9 +4,11 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.daos.CMSPageDao;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -57,4 +59,12 @@ public interface MplCmsPageDao extends CMSPageDao
 
 	//Added for TPR-978
 	ContentPageModel getContentPageForProduct(ProductModel product);
+
+
+	/**
+	 * @param siteUid
+	 * @return CMSSite
+	 * @CAR-285
+	 */
+	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException;
 }
