@@ -217,7 +217,7 @@
 	}
 }
 
-.page-luxuryBrandLandingPage{
+.page-luxuryWomenlandingPage,.page-luxuryMenlandingPage,.page-luxuryBrandLandingPage{
 	.mainContent-wrapper{
 		> .container{
 			width:100%;
@@ -237,6 +237,9 @@
 			}
 		}
 	}
+	.luxgender-carousel.shop-by-catagory{
+		overflow:hidden;
+	}
 	.lux-blp-carousel{
 		display:inline-block;
 		width:100%;
@@ -249,11 +252,35 @@
 	}
 	.look-book-img{
 		margin-top:50px;
+	}
+	.luxgender-carousel{
+		.owl-stage-outer{
+			display:inline-block;
+			.owl-item{
+				float:left;
+			}
+		}
+		.owl-dot{
+			background-color: #fff;
+		    border-radius: 50%;
+		    border: 1px solid #2d2d2d;
+		    text-indent: -90000px;
+		    width: 10px;
+		    height: 10px;
+		    padding: 0;
+		    display:inline-block;
+		    margin-right:10px;
+		}
+		.owl-dot.active{
+			background-color: #2d2d2d;
+		}
 	}	
 }
 
+
+
 @include media-breakpoint-down(sm) {
-	.page-luxuryBrandLandingPage{
+	.page-luxuryWomenlandingPage,.page-luxuryMenlandingPage,.page-luxuryBrandLandingPage{
 		.look-book-wrapper{
 			.colmn{
 				width:100%;

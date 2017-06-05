@@ -12934,6 +12934,24 @@ TATA.CommonFunctions = {
             _self.showSelectedRefinements(), _self.sortInit(), _self.loadMoreInit();
         }
     },
+    LANDING: {
+        owlCarosel_customize: function() {
+            $(window).width() <= 767 ? ($(".sort-by-fature .selectboxit-text").html("SORT"), 
+            $(".luxgender-carousel .js-owl-carousel").owlCarousel({
+                dots: !0,
+                items: 1
+            })) : $(".luxgender-carousel .js-owl-carousel").owlCarousel({
+                dots: !0,
+                items: 4
+            }), $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
+                dots: !0,
+                items: 1
+            });
+        },
+        init: function() {
+            TATA.Pages.LANDING.owlCarosel_customize();
+        }
+    },
     PDP: {
         Slider: function() {
             $(".pdp-img-slider").slick({
@@ -13048,14 +13066,10 @@ TATA.CommonFunctions = {
     },
     init: function() {
         var _self = TATA.Pages;
-        _self.PLP.init(), _self.PDP.init();
+        _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
     }
 }, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt(), $(window).width() <= 767 && $(".sort-by-fature .selectboxit-text").html("SORT"), 
-    $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
-        dots: !0,
-        items: 1
-    });
+    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt();
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {

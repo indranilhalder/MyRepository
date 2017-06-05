@@ -600,6 +600,33 @@ TATA.Pages = {
 		}
 	},
 	
+	LANDING: {
+		owlCarosel_customize: function (){
+			if($(window).width() <= 767){
+				$('.sort-by-fature .selectboxit-text').html('SORT');
+				$(".luxgender-carousel .js-owl-carousel").owlCarousel({
+					dots: true,
+			        items: 1
+			    });
+			}
+			else{
+				$(".luxgender-carousel .js-owl-carousel").owlCarousel({
+					dots: true,
+			        items: 4
+			    });
+				
+			}
+			$(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
+				dots: true,
+		        items: 1,
+		    });
+		},
+		init: function () {
+			var _self = TATA.Pages.LANDING;
+			_self.owlCarosel_customize();
+		}
+	},
+	
 	PDP:  {
 		// PDP Page Slider
 		Slider: function() {
@@ -790,6 +817,7 @@ TATA.Pages = {
 		var _self = TATA.Pages;
 		_self.PLP.init();
 		_self.PDP.init();
+		_self.LANDING.init();
 	}
 };
 
@@ -797,15 +825,6 @@ TATA.Pages = {
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
 	$("select").selectBoxIt(); 
-	if($(window).width() <= 767){
-		$('.sort-by-fature .selectboxit-text').html('SORT');
-	}
-	$(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
-		//autoPlay: 3000,
-        dots: true,
-        items: 1,
-    });
-	
 });
 
 $(window).scroll(function () {
