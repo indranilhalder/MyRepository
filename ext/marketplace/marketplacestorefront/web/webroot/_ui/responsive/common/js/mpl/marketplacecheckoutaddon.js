@@ -1720,8 +1720,9 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
@@ -1848,8 +1849,9 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
@@ -1995,8 +1997,9 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_cc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
@@ -2159,8 +2162,9 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
 					$(".pay button, #make_emi_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
@@ -4998,8 +5002,9 @@ function submitNBForm(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, .make_payment_top_nb").prop("disabled",false);
 					$(".pay button, .make_payment_top_nb").css("opacity","1");	
 					$(".pay .spinner").remove();
@@ -8135,8 +8140,9 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					}
 					//TPR-4461 STARTS HERE
 					else if(response=='redirect_with_coupon'){
-						document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+						document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 						$("#juspayconnErrorDiv").css("display","block");
+						$("body,html").animate({ scrollTop: 0 });
 						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
 						$(".pay button, #make_mrupee_payment_up").css("opacity","1");
 						$(".pay .spinner").remove();
@@ -8320,8 +8326,9 @@ function submitCODForm(){
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
 					// $(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay .payment-button,.cod_payment_button_top").prop("disabled",false);
 					$(".pay .payment-button,.cod_payment_button_top").css("opacity","1");
 					//$(".pay button, #make_cc_payment_up").prop("disabled",false);
