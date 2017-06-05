@@ -518,5 +518,8 @@ footer{
     
     
 }
-/*Rating and review End
-   */
+/*Rating and review End   */
+
+video::-webkit-media-controls {
+  display:none !important;
+}
