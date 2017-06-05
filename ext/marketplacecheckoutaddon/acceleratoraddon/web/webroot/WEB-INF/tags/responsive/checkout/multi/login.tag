@@ -105,6 +105,7 @@
 		src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
 	<script type="text/javascript">
+		$('#j_username').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved.
 		(function() {
 			var po = document.createElement('script');
 			po.type = 'text/javascript';

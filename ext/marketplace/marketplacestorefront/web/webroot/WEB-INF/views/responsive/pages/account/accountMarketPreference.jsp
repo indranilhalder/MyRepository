@@ -78,7 +78,7 @@
 				<div>
 					<h2>
 						<spring:theme code="text.account.MarketplacePreferences"
-							text="Marketplace Preferences" />
+							text="My Preferences" />		<!--  UF-249 text change -->
 					</h2>
 					<p>
 						<spring:theme code="account.marketplacePreferences.text"

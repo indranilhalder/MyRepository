@@ -164,7 +164,16 @@ ACC.carousel = {
 		        autoHeight : true,
 		        autoplayTimeout: timeout
 		    });
-		   
+			//UF-291 starts here
+			if ($(window).width() >= 720) {	
+				$("#rotatingImageTimeout img").each(function() {
+				    if ($(this).attr("data-src")) {
+						$(this).attr("src",$(this).attr("data-src"));
+						$(this).removeAttr("data-src");
+					}	
+				});
+			}	
+			//UF-291 ends here
 		}
 			//Mobile View
 			if(typeof homePageBannerTimeout!== "undefined"){
@@ -181,7 +190,17 @@ ACC.carousel = {
 			        autoplay: true,
 			        autoHeight : true,
 			        autoplayTimeout: timeout
-			    }); 
+			    });
+				//UF-291 starts here
+				if ($(window).width() < 720) {	
+					$("#rotatingImageTimeoutMobile img").each(function() {
+					    if ($(this).attr("data-src")) {
+							$(this).attr("src",$(this).attr("data-src"));
+							$(this).removeAttr("data-src");
+						}	
+					});
+				}
+				//UF-291 ends here
 			/*TISSQAEE-403 End*/
 			/*TPR-268*/
 			/*$("#rotatingImageTimeoutMobile").owlCarousel({
@@ -247,6 +266,16 @@ ACC.carousel = {
 				nav:false,
 				dots:($(".style_edit .electronic-rotatingImage img").length == 1)?false:true,
 				loop: ($(".style_edit .electronic-rotatingImage img").length == 1)?false:true,
+				autoplay: true,
+				autoHeight : true,
+				autoplayTimeout: timeout
+			});
+		       // TISPRDT-1159
+		       $(".style_edit_blp .home-rotatingImage").owlCarousel({
+				items:1,
+				nav:false,
+				dots:($(".style_edit_blp .home-rotatingImage img").length == 1)?false:true,
+				loop: ($(".style_edit_blp .home-rotatingImage img").length == 1)?false:true,
 				autoplay: true,
 				autoHeight : true,
 				autoplayTimeout: timeout

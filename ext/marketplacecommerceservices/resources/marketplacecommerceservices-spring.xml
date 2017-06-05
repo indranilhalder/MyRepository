@@ -1222,7 +1222,8 @@
 		<property name="cartFactory" ref="cartFactory" />
 		<property name="commerceAddToCartStrategy" ref="commerceAddToCartStrategy" />
 		<property name="guidKeyGenerator" ref="guidKeyGenerator" />
-		<property name="cartValidityPeriod" value="0"/>
+		<!-- Commented due to cart merge Issue,During Promotion Caching Implementation need to override rebuildsessioncart and rewriteentriesfromcarttocart -->
+<!-- 		<property name="cartValidityPeriod" value="0"/> -->
 	</bean>
 
 
@@ -2145,11 +2146,12 @@
 		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
 		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
 	</bean> -->
+
 	
     <!-- Override the Cart so that calls to get promotion results can be intercepted -->
    
     <!-- <bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" /> -->
-	
+
     <!-- CACHING FINISH -->
     
 </beans>

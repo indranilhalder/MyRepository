@@ -36,8 +36,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -70,6 +72,8 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private ApplicationContext applicationContext;
 	@Autowired
 	private SiteBaseUrlResolutionService siteBaseUrlResolutionService;
+
+
 
 
 
@@ -120,12 +124,63 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 			//				}
 			//			}
 		}
+		final List<CustomPageData> removeUrlBlankList = new ArrayList<CustomPageData>();
+		final List<CustomPageData> addfrontSlashList = new ArrayList<CustomPageData>();
+		final String[] excludedKeywordsStartswith = configurationService.getConfiguration()
+				.getString("mpl.sitemap.excludeKeywords.startsWith").split(",");
+		final String[] excludedKeywordsEqual = configurationService.getConfiguration()
+				.getString("mpl.sitemap.excludeKeywords.equals").split(",");
+		if (CollectionUtils.isNotEmpty(mainSiteMapUrlList))
+		{
 
+			for (final CustomPageData pageData : mainSiteMapUrlList)
+			{
+				if (StringUtils.isNotEmpty(pageData.getUrl()))
+				{
+					//check if / is present
+					if (!pageData.getUrl().startsWith("/"))
+					{
+						removeUrlBlankList.add(pageData);
+						final CustomPageData cpd = new CustomPageData();
+						cpd.setUrl("/" + pageData.getUrl());
+						cpd.setChangeFrequency(pageData.getChangeFrequency());
+						cpd.setPriority(pageData.getPriority());
+
+						addfrontSlashList.add(cpd);
+					}
+					//check for excluded keywords that starts with
+					for (final String keyword : excludedKeywordsStartswith)
+					{
+
+						if (StringUtils.isNotEmpty(pageData.getUrl())
+								&& pageData.getUrl().toUpperCase().startsWith(keyword.toUpperCase()))
+						{
+							removeUrlBlankList.add(pageData);
+
+						}
+					}
+					//check for excluded equal keywords
+					for (final String keyword : excludedKeywordsEqual)
+					{
+
+						if (StringUtils.isNotEmpty(pageData.getUrl()) && pageData.getUrl().equalsIgnoreCase(keyword))
+						{
+							removeUrlBlankList.add(pageData);
+
+						}
+					}
+				}
+				//check for blank/null URL
+				else
+				{
+					removeUrlBlankList.add(pageData);
+				}
+			}
+		}
+		mainSiteMapUrlList.removeAll(removeUrlBlankList);
+		mainSiteMapUrlList.addAll(addfrontSlashList);
 		return mainSiteMapUrlList;
 	}
-
-
-
 
 	/**
 	 * This method returns the custom data for Homepage for TPR-1285 Dynamic sitemap
@@ -137,7 +192,15 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private List<CustomPageData> homePageSiteMap(final List<CustomPageData> mainSiteMapUrlList, final SiteMapPageModel siteMapPage)
 	{
 		final ContentPageModel homepage = getCmsPageService().getHomepage();
-		final String relUrl = StringEscapeUtils.escapeXml(getHomepageUrlResolver().resolve(homepage));
+		String relUrl = null;
+		if (homepage != null)
+		{
+			relUrl = StringEscapeUtils.escapeXml(getHomepageUrlResolver().resolve(homepage));
+		}
+		else
+		{
+			relUrl = "/";
+		}
 		final CustomPageData data = new CustomPageData();
 		data.setUrl(relUrl);
 		if (null != siteMapPage.getFrequency())
@@ -166,13 +229,7 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private List<CustomPageData> categoryPageSiteMap(final CMSSiteModel siteModel, final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage)
 	{
-		//sonar fix
-		final StringBuilder queryBuilder = new StringBuilder(350);
-		queryBuilder.append("SELECT {c.pk} FROM {Category AS c JOIN CatalogVersion AS cv ON {c.catalogVersion}={cv.pk} ")
-				.append(" JOIN Catalog AS cat ON {cv.pk}={cat.activeCatalogVersion} ")
-				.append(" JOIN CMSSite AS site ON {cat.pk}={site.defaultCatalog}}  WHERE {site.pk} = ?site ")
-				.append(" AND NOT exists ({{select {cr.pk} from {CategoriesForRestriction as cr} where {cr.target} = {c.pk} }})");
-		final String query = queryBuilder.toString();
+		final String query = getCategoryForSitemapQuery();
 
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("site", siteModel);
@@ -196,9 +253,6 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 		return mainSiteMapUrlList;
 	}
 
-
-
-
 	/**
 	 * This method returns the custom data for content pages for TPR-1285 Dynamic sitemap
 	 *
@@ -209,14 +263,7 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	private List<CustomPageData> contentPageSiteMap(final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage)
 	{
-		//sonar fix
-		final StringBuilder queryBuilder = new StringBuilder(250);
-
-		queryBuilder.append("select {cp.pk} from {ContentPage as cp},{CmsApprovalStatus as cas},{catalogversion as cat} ")
-				.append("where {cp.approvalstatus}={cas.pk} and {cas.code}='approved' ")
-				.append("and {cp.catalogversion}={cat.pk} and {cat.version}='Online'");
-
-		final List<ContentPageModel> contentPageList = doSearch(queryBuilder.toString(), null, ContentPageModel.class);
+		final List<ContentPageModel> contentPageList = doSearch(getContentForSitemapQuery(), null, ContentPageModel.class);
 		for (final ContentPageModel contentPageModel : contentPageList)
 		{
 			final CustomPageData data = new CustomPageData();
@@ -229,16 +276,18 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 			//Logic for templates with url picked up from label
 			if (templateTypeForLabel.indexOf(contentPageTemplateUid) != -1)
 			{
-				data.setUrl(contentPageModel.getLabel());
-				if (null != siteMapPage.getFrequency())
+				if (StringUtils.isNotEmpty(contentPageModel.getLabel()))
 				{
-					data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+					data.setUrl(contentPageModel.getLabel());
+					if (null != siteMapPage.getFrequency())
+					{
+						data.setChangeFrequency(siteMapPage.getFrequency().getCode());
+					}
+					if (null != siteMapPage.getPriority())
+					{
+						data.setPriority(siteMapPage.getPriority().toString());
+					}
 				}
-				if (null != siteMapPage.getPriority())
-				{
-					data.setPriority(siteMapPage.getPriority().toString());
-				}
-
 				mainSiteMapUrlList.add(data);
 			}
 			//Logic for category templates
@@ -460,6 +509,25 @@ public class MplCustomPageSiteMapGenerator extends AbstractSiteMapGenerator<Cust
 	public void setSiteBaseUrlResolutionService(final SiteBaseUrlResolutionService siteBaseUrlResolutionService)
 	{
 		this.siteBaseUrlResolutionService = siteBaseUrlResolutionService;
+	}
+
+
+	public String getCategoryForSitemapQuery()
+	{
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SITEMAP_CATEGORY_QUERY,
+				MarketplacecommerceservicesConstants.DEFAULT_SITEMAP_CATEGORY_QUERY);
+		LOG.debug("query" + query);
+		return query;
+	}
+
+	public String getContentForSitemapQuery()
+	{
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SITEMAP_CONTENT_QUERY,
+				MarketplacecommerceservicesConstants.DEFAULT_SITEMAP_CONTENT_QUERY);
+		LOG.debug("query" + query);
+		return query;
 	}
 
 }

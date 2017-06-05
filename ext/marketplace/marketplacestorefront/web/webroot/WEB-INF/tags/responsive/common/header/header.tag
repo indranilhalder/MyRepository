@@ -1,4 +1,3 @@
-<%@ tag body-content="empty" trimDirectiveWhitespaces="true"%>
 <%@ attribute name="hideHeaderLinks" required="false"%>
 <%@ attribute name="showOnlySiteLogo" required="false"%>
 
@@ -44,8 +43,8 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 
-<header class="marketplace-header">	
-	<!-- For Infinite Analytics Start -->
+
+<!-- For Infinite Analytics Start -->
 	<input type="hidden" id="ia_site_id" name="ia_site_id" value="${cmsSite.uid}"> 
 	<input type="hidden" id="ia_site_page_id" name="ia_site_page_id" value="${cmsPage.uid}"> 
 	<!-- changes for url structure change for pdp-->
@@ -68,6 +67,8 @@
 	<input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
 	
 	<!-- End -->
+
+<header class="marketplace-header">	
 	<%--<!-- geolocation start-->
 	
 	<input type="hidden" id="latlng" value="">
@@ -150,7 +151,7 @@
 				<c:set var="userLoggedIn" value="${true}"  />
 				<div class="right">
 
-					<ul>
+					<ul class="headerUl">		<!-- PRDI-261 -->
 
 
 						<!--Using this tag for 'My Bag' Link in header navigation pane and it will navigate to cart Page  -->
@@ -303,12 +304,15 @@
 						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a> --%>
+						<div class="transient-mini-bag"></div>
 					<a href="/cart" class="mini-cart-link myBag-sticky"
 						data-mini-cart-url="/cart/rollover/MiniCart"
 						data-mini-cart-refresh-url="/cart/miniCart/SUBTOTAL"
 						data-mini-cart-name="Cart" data-mini-cart-empty-name="Empty Cart"
 						style="position: static;"><spring:theme code="minicart.mybag" />&nbsp;(<span
 						class="js-mini-cart-count-hover"></span>) </a>
+						
+						<div class="mini-bag"></div> <!-- Added for UF-268 -->
 				</c:if>
 			</div>
 			</div>
@@ -415,3 +419,4 @@ if(pathname =='/checkout/multi/delivery-method/select'){
 <div class="wishAlreadyAddedQV">
 	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
 </div>
+

@@ -39,17 +39,16 @@
 	 });
 	 */
 </script>
-
+<c:choose>
+<c:when test="${product.rootCategory=='Watches'}">
 <c:if test="${not empty product.classifications}">
-	<!-- <div class="view-button">Check The Specs</div> -->
+	 <div class="view-button">Check The Specs</div>
 </c:if>
 <!-- <div class="hide-button" style="display:none;">Hide Specifications</div> -->
-<%-- <div class="product-classifications wrapper">
+ <div class="product-classifications wrapper">
 	<c:if test="${not empty product.classifications}">
 		<table class="stats-table">
 			<tbody>
-				<c:choose>
-					<c:when test="${product.rootCategory=='Watches'}">
 						<tr style="background-color: #f0f4f5;">
 						<td colspan='2' style="font-weight: 700;"><div
 								class="headline">Functions and Features</div></td>
@@ -59,7 +58,7 @@
 								items="${mapConfigurableAttributes}">
 								<tr style="border: 1px solid #f0f4f5;">
 									<td style="border-right: 1px solid #f0f4f5;" class="title">
-										${outer.index} - ${inner.index}
+										<%-- ${outer.index} - ${inner.index} --%>
 										${classification.key}
 									</td>
 
@@ -77,8 +76,8 @@
 								</tr>
 							</c:forEach>
 						</c:if>
-					</c:when>
-					<c:otherwise>
+					
+					<%-- <c:otherwise>
 						<c:forEach items="${product.classifications}" var="classification"
 							varStatus="outer">
 
@@ -110,8 +109,8 @@
 							</c:forEach>
 						</c:forEach>
 
-					</c:otherwise>
-				</c:choose>
+					</c:otherwise> --%>
+				
 
 
 			</tbody>
@@ -142,18 +141,19 @@
 					</c:forEach>
 				</c:forEach>
 			</tbody>
-		</table>
+		</table> 
 	</c:if>
-</div>  --%>
-
+</div>
+</c:when> 
+<%--  <c:when test="${product.rootCategory ne 'Watches'}"> --%>
+<c:otherwise>
 <!-- TPR-792 changes start -->
 <c:if test="${not empty product.classifications}">
 <div class="SpecWrap">
   <div class="Padd">
     <h2>Specifications</h2>
     <div class="tabs-block">
-    <c:choose>
-    <c:when test="${product.rootCategory=='Watches'}">
+    <%-- <c:when test="${product.rootCategory=='Watches'}">
       <div class="nav-wrapper">
 	  <span></span>
         <ul class="nav pdp specNav">
@@ -168,7 +168,7 @@
          <c:forEach var="classification"	items="${mapConfigurableAttributes}">
 					<li>
 					<span>
-						<%-- ${outer.index} - ${inner.index} --%>
+						${outer.index} - ${inner.index}
 						${classification.key}
 					</span>
 					<span>
@@ -190,8 +190,8 @@
 		</li>
          </c:if>
          </ul>
-    </c:when>
-    <c:otherwise>
+    </c:when> --%>
+   
       <div class="nav-wrapper">
 	  <span></span>
         <ul class="nav pdp specNav">
@@ -233,12 +233,11 @@
 				</c:forEach>
          
          </ul>
-    </c:otherwise>
-     </c:choose>
      
       </div>
   </div>
 </div>
  </c:if>
-
+</c:otherwise>
+</c:choose>
 <!-- TPR-792 changes end -->

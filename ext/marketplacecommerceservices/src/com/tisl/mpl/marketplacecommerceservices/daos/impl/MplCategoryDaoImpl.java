@@ -6,6 +6,8 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.daos.impl.DefaultCategoryDao;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -33,7 +35,7 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplCatalogDao#getCategoryModelForName(de.hybris.platform.catalog
 	 * .model.CatalogVersionModel, java.lang.String)
@@ -41,6 +43,9 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	@Override
 	public CategoryModel getCategoryModelForName(final CatalogVersionModel catalogVersion, final String catalogName)
@@ -101,7 +106,7 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao#getMplRootCategoriesForCatalogVersion(de.hybris.
 	 * platform .catalog.model.CatalogVersionModel)
 	 */
@@ -179,6 +184,54 @@ public class MplCategoryDaoImpl extends DefaultCategoryDao implements MplCategor
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao#getProductForL2code(de.hybris.platform.catalog.model
+	 * .CatalogVersionModel, java.lang.String)
+	 */
+	@Override
+	public List<ProductModel> getProductForL2code(final CatalogVersionModel catalogVersion, final String l2CategoryCode)
+	{
+		List<ProductModel> productList = null;
+		try
+		{
+			final String queryString = getProductQuery();
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			query.addQueryParameter("l2code", l2CategoryCode);
+			query.addQueryParameter("catalogVersion", catalogVersion);
+
+			productList = flexibleSearchService.<ProductModel> search(query).getResult();
+		}
+
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final NullPointerException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0008);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+		return productList;
+	}
+
+	public String getProductQuery()
+	{
+		final String query = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SITEMAP_PRODUCT_QUERY,
+				MarketplacecommerceservicesConstants.SITEMAP_PRODUCT_QUERY_DEFAULT);
+
+		return query;
+	}
 
 
 }

@@ -78,7 +78,7 @@
 		<c:if test="${entry.key eq 'click-and-collect'}">
 		
 		<li id="collectli" class="do selected"><p><spring:theme code="text.clickandcollect.shipping"/></p>
-		<span style="display: block;">Buy online, collect in-store</span>
+		<span style="display: block;">Buy before 3 PM, PIQ confirmed order same day</span>
 		 <c:forEach var="clickEntry" items="${entry.value}">
 	
 			 <c:if test="${clickEntry.key eq 'startForClick'}">

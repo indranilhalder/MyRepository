@@ -14,7 +14,6 @@
 package com.tisl.mpl.controllers.pages;
 
 
-
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -284,7 +283,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 				if (CollectionUtils.isEmpty(responseData))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartData, serviceCart);
 				}
 				// TPR-429 START
 				final String cartLevelSellerID = populateCheckoutSellers(cartData);
@@ -554,7 +553,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 				if (CollectionUtils.isEmpty(responseData))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(defaultPinCodeId, cartUssidData, cartModel);
 				}
 				deliveryModeDataMap = getMplCartFacade().getDeliveryMode(cartUssidData, responseData, cartModel);
 

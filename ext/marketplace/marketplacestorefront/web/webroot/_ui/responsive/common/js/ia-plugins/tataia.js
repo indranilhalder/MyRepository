@@ -1339,7 +1339,7 @@ function updatePage(response, widgetMode) {
 				/* IA Changes Start for store/mpl/en */
 				html += '</div></div><a href="http://'
 						+ window.location.host
-						+ '/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 40px;line-height: 40px;">Shop the Hot List</a>';
+						+ '/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 42px;line-height: 42px;">Shop the Hot List</a>'; /* UF-249*/
 			}
 			/* IA Changes End for store/mpl/en */
 			else {
