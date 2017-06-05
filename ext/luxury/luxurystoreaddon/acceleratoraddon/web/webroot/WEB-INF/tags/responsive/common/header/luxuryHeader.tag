@@ -39,6 +39,19 @@
 		<cms:component component="${component}"/>
 	</cms:pageSlot>
 </div>
+	<div class="wishAddLoginPlp">
+		<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+	</div>
+	<div class="wishAddSucessPlp">
+		<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+	</div>
+		<div class="wishAlreadyAddedPlp">
+	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		</div>
+	<!-- Changes for INC144313867 -->
+	<div class="wishRemoveSucessPlp">
+	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+	</div>
 	<div class="container-fluid">
 		<div class="inner">
 		    <div id="hamburger-menu" class="hamburger-menu visible-xs-block"><span></span></div> 

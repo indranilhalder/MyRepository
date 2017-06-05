@@ -14,7 +14,7 @@
 				<li class="contactUsOptions"><img src="${feature.media.URL}" />
 					<div>${feature.content}</div>
 					
-					</li>
+					</li> 
 				</cms:pageSlot>
 		</ul>
 	</div>

@@ -483,3 +483,16 @@
 
 
 /*video section in pdp page End*/
+
+.pdp{
+    .trending{
+        .owl-stage-outer{
+            display: inline-block;
+            overflow: hidden;
+            width: 100%;
+            .owl-item{
+                float:left;
+            }
+        }
+    }
+}
