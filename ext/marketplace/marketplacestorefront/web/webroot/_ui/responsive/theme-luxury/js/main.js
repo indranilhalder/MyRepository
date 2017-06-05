@@ -604,18 +604,21 @@ TATA.Pages = {
 		owlCarosel_customize: function (){
 			if($(window).width() <= 767){
 				$('.sort-by-fature .selectboxit-text').html('SORT');
-				$(".luxgender-carousel .js-owl-carousel").owlCarousel({
-					dots: true,
-			        items: 1
-			    });
 			}
-			else{
-				$(".luxgender-carousel .js-owl-carousel").owlCarousel({
-					dots: true,
-			        items: 4
-			    });
-				
-			}
+			$(".luxgender-carousel .js-owl-carousel").owlCarousel({
+				dots: true,
+		        loop:true,
+		        merge:true,
+		        responsive:{
+		            0:{
+		                items:1
+		            },
+		            768:{
+		                items:4,
+		            }
+		        },
+		        
+		    });
 			$(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
 				dots: true,
 		        items: 1,
