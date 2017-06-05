@@ -1365,13 +1365,13 @@ ACC.singlePageCheckout = {
 	},
 	mobileAccordion:function(){
 		$(".change-mobile").on("click", function(){
-			$(this).parents(".checkout-accordion").find(".mobileNotDefaultDelAddress").show();
-			$(this).parents(".checkout-accordion").find(".cancel-mobile").show();
+			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+			$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 			$(this).hide();
 		});
 		$(".cancel-mobile").on("click", function(){
-			$(this).parents(".checkout-accordion").find(".mobileNotDefaultDelAddress").hide();
-			$(this).parents(".checkout-accordion").find(".change-mobile").show();
+			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").hide();
+			$(this).parents(".checkout_mobile_section").find(".change-mobile").show();
 			$(this).hide();
 		});
 	},

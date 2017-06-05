@@ -66844,11 +66844,15 @@ background:#f8f8f8;
  display: block;
  padding: 75px 8px 0;
  }
+ #singlePageMobile>div{
+ padding-top: 20px;
+ }
  #singlePageMobile .checkout-shipping.checkTab,
  #singlePageMobile #selectDeliveryMethodFormMobile,
  #singlePageMobile .checkout-content.checkout-payment.cart.checkout.wrapper{
  border-radius: 4px;
  background: #fff;
+ margin-top: 0;
  }
  #selectedDeliveryOptionsDivIdMobile .delivery_title{
  	display: none;
@@ -66907,28 +66911,18 @@ background:#f8f8f8;
 	.checkout-accordion {
     margin-bottom: 20px;
 	}
-	.checkout-accordion-heading *,
-	.checkout-accordion.accordion-open .checkout-accordion-heading .change-mobile{
-		display: none;
-	}
-	.checkout-accordion-heading .change-mobile, .checkout-mobile-heading{
+	.change-mobile, .checkout-mobile-heading{
 	display: inline-block;
 	}
-	.checkout-accordion .change-cancel-wrapper{
+	.change-cancel-wrapper{
 		font-size: 12px;
   		line-height: 1.33;
   		letter-spacing: 0.6px;
   		color: #92002e;
-  		position: absolute;
-  		top: 8px;
-  		right: 0;
   		cursor: pointer;
-	}
-	.checkout-accordion .change-mobile{
-	display: inline-block;
-	}
-	.checkout-accordion:not(.accordion-open) .change-cancel-wrapper{
-		display: none !important;
+  		display: inline-block;
+  		float: right;
+    	padding-top: 8px;
 	}
 	.checkout-accordion .checkout-accordion-heading,
 	.checkout-accordion.accordion-open .checkout-accordion-heading,
@@ -66956,7 +66950,7 @@ background:#f8f8f8;
   	line-height: 1.33;
   	letter-spacing: 0.6px;
   	color: #343434;
-  	/* padding: 8px 0; */
+  	padding: 8px 0;
 	}
 	.checkout-accordion-body{
 	border-radius: 4px;
@@ -67047,12 +67041,41 @@ background:#f8f8f8;
 	display: block;
     width: 100%;
     overflow: hidden;
+    padding: 6px 16px;
 	}
 	.cart.wrapper.checkout-payment .card-sec .card-num .card_image img{
 	position: static;
 	}
 	.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label>span{
 	font-size: 14px;
+	padding-bottom: 0;
+    color: #000;
+    display: inline;
+	}
+	.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label{
+	letter-spacing: 0.6px;
+  	color: #666666;
+  	padding-bottom: 3px;
+	}
+	div#savedCreditCard .credit-card-group .right-align-form, div#savedDebitCard .debit-card-group .right-align-form, div#savedEMICard .credit-card-group .right-align-form {
+    width: 131px;
+    margin-left: 85px;
+	}
+	.cart.wrapper.checkout-payment .card-sec .card-num .card_image{
+	margin-left: 35px;
+	}
+	div#savedCreditCard .credit-card-group .right-align-form input.cvvValdiation, 
+	div#savedDebitCard .debit-card-group .right-align-form input.cvvValdiation, 
+	div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation{
+    width: 100%;
+    border-color: #000;
+    height: 40px;
+	}
+	.cart.wrapper .left-block li#savedCard div.card p{
+	font-size: 10px;
+  	letter-spacing: 0.5px;
+  	color: #666666;
+  	padding-bottom: 2px;
 	}
 	.add_address_button, .new-address > p{
 	display: none !important;
