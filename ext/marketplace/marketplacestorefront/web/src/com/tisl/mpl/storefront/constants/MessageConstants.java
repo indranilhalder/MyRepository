@@ -211,6 +211,13 @@ public final class MessageConstants
 	//track order
 	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
 
+
+	//Gender Based landing
+	public static final String MALE = "MALE";
+	public static final String FEMALE = "FEMALE";
+	public static final String MENLANDING = "lux.men.landing";
+	public static final String WOMENLANDING = "lux.women.landing";
+
 	//Luxury Gigya
 	public static final String LUXURY_GIGYA_APIKEY = "luxury.gigya.apikey";
 	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
