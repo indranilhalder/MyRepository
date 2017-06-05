@@ -46,6 +46,8 @@
 				<div class="logo text-center">
 					<a href="#"><cms:pageSlot position="SiteLogo" var="logo" limit="1">
 		<cms:component component="${logo}" class="siteLogo"  element="div"/></cms:pageSlot>
+		<cms:pageSlot position="Brand-siteLogo" var="logo" limit="1">
+		<cms:component component="${logo}" class="siteLogo"  element="div"/></cms:pageSlot>
 	              </a>
 				</div>
 				<nav class="main-nav" id="main-nav">
