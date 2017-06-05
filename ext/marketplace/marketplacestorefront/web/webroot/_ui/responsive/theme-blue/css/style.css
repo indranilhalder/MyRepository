@@ -68874,3 +68874,9 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 }
 }
 /*PRDI-227 end*/
+
+/* TISKIDK-1416 */
+.page-multiStepCheckoutSummaryPage li {
+    list-style-type: none;
+}
+/* TISKIDK-1416 */
