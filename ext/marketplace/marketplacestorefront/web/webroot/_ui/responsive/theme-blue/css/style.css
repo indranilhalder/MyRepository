@@ -68960,3 +68960,28 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 	}
 }
 /* end change of TISSQAEE-1105, INC144316370 & INC144316762  */
+/*TPR-4461 start*/
+#juspayconnErrorDiv{
+    z-index: 10 !important;
+    position: relative !important;
+    width: 100%;
+    margin: 0px auto;
+    padding: 15px;
+    font-size: 14px;
+    min-height: 45px;
+    height: auto !important;
+}
+span#juspayErrorMsg{
+	display: inline-block;
+}
+#juspayconnErrorDiv button.close{
+	position: absolute;
+    left: 10px;
+    top: 43% !important;
+}
+@media(max-width: 767px){
+	#juspayconnErrorDiv{
+    top: 70px !important;
+}
+}
+/*TPR-4461 end*/

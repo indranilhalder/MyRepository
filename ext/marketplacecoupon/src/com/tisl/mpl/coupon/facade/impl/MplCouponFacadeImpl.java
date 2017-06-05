@@ -102,11 +102,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 	@Resource(name = "voucherConverter")
 	private Converter<VoucherModel, VoucherData> voucherConverter;
-	
-	private final static String COMMACONSTANT=",";
-	private final static String DOTCONSTANT=".";
-	
-	
+
+	private final static String COMMACONSTANT = ",";
+	private final static String DOTCONSTANT = ".";
+
+
 
 
 	/**
@@ -1031,7 +1031,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 						if (CollectionUtils.isNotEmpty(bankLists))
 						{
-							final String messageVoucherBank = " The valid bank/s is/are ";
+							final String messageVoucherBank = " The valid bank(s) :- ";
 							sb.append(messageVoucherBank);
 							for (final BankModel bank : bankLists)
 							{
