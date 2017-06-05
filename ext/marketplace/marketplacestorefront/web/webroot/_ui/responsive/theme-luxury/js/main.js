@@ -668,17 +668,27 @@ TATA.Pages = {
 		},
         
         Zoomer: function() {
-            $('.zoomer').elevateZoom({  
-
-              zoomWindowWidth:300,
-            zoomWindowHeight:300
+            $('.pdp-img-nav .slick-slide').on('click', function(){
+                var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
+                $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
+                    //scrollZoom : true,      
+                    zoomWindowWidth:500,
+                    zoomWindowHeight:500
+                });
             });
-        },
+            
+		},
         
 		openPopup: function (url) {
-            newwindow=window.open(url,'name','height=400,width=400');
-            if (window.focus) {newwindow.focus()}
-            return false;
+           if($('body').hasClass('page-productDetails')){
+               
+                newwindow = window.open(url,'name','height=400,width=400');
+                if (window.focus) {newwindow.focus()}
+                return false; 
+              
+            }            
+          
+             
         }, 
         
         videoPlay: function(){
@@ -808,6 +818,7 @@ TATA.Pages = {
 			var _self = TATA.Pages.PDP;
 			_self.Slider();
             _self.Zoomer();
+            _self.openPopup();
             _self.videoPlay();
             _self.BankEMI();
 		}

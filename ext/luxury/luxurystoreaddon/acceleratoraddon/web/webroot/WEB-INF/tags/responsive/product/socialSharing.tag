@@ -49,14 +49,14 @@
 	<ul  class="soc-links">
 
 		<li>
-			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(),'share_twitter')"></a>
+			<a class="tw" onclick="return TATA.Pages.PDP.openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(),'share_twitter')"></a>
 		</li>
 		<li>
-			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/','share_facebook')"></a> 
+			<a class="fb" onclick="return TATA.Pages.PDP.openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/','share_facebook')"></a> 
 			<!-- <a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=145634995501895&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=https://developers.facebook.com/tools/explorer')"></a>  -->				
 		</li>
 		<li>
-			<button class="g-interactivepost"
+			<%-- <button class="g-interactivepost"
 	        data-contenturl=""
 	        data-clientid='${googleClientid}'
 	        data-cookiepolicy="single_host_origin"
@@ -64,8 +64,8 @@
 	        data-calltoactionlabel="OPEN"
 	        data-calltoactionurl="">
 	        <a class="gp"></a>
-	        </button>
-			<!-- <a class="gp" onclick="return openPopup('https://plusone.google.com/_/+1/confirm?url=https://www.dev.tataunistore.com&amp;clientid=888304528479-qdh1rp8r9o5fvh3dlabr7ebdbr02se6e.apps.googleusercontent.com&amp;prefilltext=helooo&amp;calltoactionurl=https://www.google.com')"></a>  -->
+	        </button> --%>
+			<a class="gp" onclick="return TATA.Pages.PDP.openPopup('https://plusone.google.com/_/+1/confirm?url=https://www.dev.tataunistore.com&amp;clientid=888304528479-qdh1rp8r9o5fvh3dlabr7ebdbr02se6e.apps.googleusercontent.com&amp;prefilltext=helooo&amp;calltoactionurl=https://www.google.com')"></a>
 			<!-- <a href="" class="gp" onclick="return openPopup('https://plusone.google.com/_/+1/confirm?url=' + window.location)"></a> -->
 		</li>	
 		<li><%-- <a class="mail" data-target="#popUpModal" data-url="${SHARED_PATH}"></a> --%>
