@@ -21,9 +21,9 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 ;;luxuryGenderLandingPageTemplate;$jarResourceCms/structure-view/structure_luxuryGender.vm
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/luxuryBrandLandingPage
-;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/luxuryMenLandingPage
-;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/luxuryWomenLandingPage
+;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/lifestyle
+;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
+;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/womenlanding
 
 
 #### Product carousel

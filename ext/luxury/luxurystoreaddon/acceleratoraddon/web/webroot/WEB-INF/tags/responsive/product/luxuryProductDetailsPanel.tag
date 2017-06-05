@@ -112,11 +112,11 @@ tr.d0 td {
 			<div class="pdp-img-nav">
 				<c:forEach items="${galleryImages}" var="container">
 					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-						<div><img src="//${staticHost}${container.thumbnail.url}"></div>
+						<div><img src="${container.thumbnail.url}" data-zoom-image="${container.superZoom.url}"></div>
 					</c:if>
 					<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
 						<c:set var="videoAvailable" value="true"/>
-						<c:set var="videoUrl" value="//${staticHost}${container.thumbnail.url}"/>
+						<c:set var="videoUrl" value="${container.thumbnail.url}"/>
 					</c:if>
 				</c:forEach>
 			</div>
@@ -124,15 +124,10 @@ tr.d0 td {
 				<div class="pdp-img-slider circle-pager">
 					<c:forEach items="${galleryImages}" var="container">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<div><img src="//${staticHost}${container.superZoom.url}" data-zoom-image="//localhost:9001${container.superZoom.url}" class="zoomer"></div>
+							<div><img src="${container.superZoom.url}" data-zoom-image="${container.superZoom.url}" class="zoomer"></div>
 						</c:if>
 					</c:forEach>
-				</div>
-				<div class="pdp-video">
-					<video width="100%" height="100%" controls>
-					  <source src="${videoUrl}" type="video/mp4">  
-					</video>
-				</div>
+				</div>				
 				<div class="offer-icon"><span class="new"></span></div>
 			</div>
 			

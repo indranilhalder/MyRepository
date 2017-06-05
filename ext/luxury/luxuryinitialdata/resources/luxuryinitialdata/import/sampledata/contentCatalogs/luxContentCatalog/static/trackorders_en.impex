@@ -1,0 +1,39 @@
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForTrackOrderPageComponent;"Track Order"
+
+
+
+;;TrackOrderPageComponent;" Excellent  TRACK ORDER service is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible.
+<h3>Frequently Asked TRACK ORDERS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+"
