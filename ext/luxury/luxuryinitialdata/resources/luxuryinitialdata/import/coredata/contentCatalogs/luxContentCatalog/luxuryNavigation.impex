@@ -58,3 +58,87 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 ;EditorsPicksNavNode;;EditorsPicks Category;MenNavNode;EditorsPicksCategoryLink;EditorsPicksNavNode
 ;PopularBrandsNavNode;;PopularBrands Category;MenNavNode;Abercrombie&FitchLink,ColeHaanLink,FrenchConnectionLink,LacosteLink,MichaelKorsLink,NewBalanceLink,ReasonClothingLink;PopularBrandsNavNode
 
+
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
+;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers 
+
+#-----------------------------------------Designers----------------------------------------------------------------------
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;
+;;MichaelKorsLink;MichaelKorsLink;#;MichaelKorsLink;MichaelKorsLink;;
+;;HugoBossLink;HugoBossLink;#;HugoBossLink;HugoBossLink;;
+;;CoachLink;CoachLink;#;CoachLink;CoachLink;;
+;;ArmaniJeansLink;ArmaniJeansLink;#;ArmaniJeansLink;ArmaniJeansLink;;
+;;FurlaLink;FurlaLink;#;FurlaLink;FurlaLink;;
+;;TumiLink;TumiLink;#;TumiLink;TumiLink;;
+;;EmporioArmaniLink;EmporioArmaniLink;#;EmporioArmaniLink;EmporioArmaniLink;;
+;;G-StarRawLink;G-StarRawLink;#;G-StarRawLink;G-StarRawLink;;
+;;ArmaniExchangeLink;ArmaniExchangeLink;#;ArmaniExchangeLink;ArmaniExchangeLink;;
+;;M MissoniLink;M MissoniLink;#;M MissoniLink;M MissoniLink;;
+;;TrueRelegionLink;TrueRelegionLink;#;TrueRelegionLink;TrueRelegionLink;;
+;;CoccinelleLink;CoccinelleLink;#;CoccinelleLink;CoccinelleLink;;
+;;BrooksBrothersLink;BrooksBrothersLink;#;BrooksBrothersLink;BrooksBrothersLink;;
+
+
+#------------------------------------------New Arrivals---------------------------------------------------------------------
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;
+;;HandBagsLinkNewArrivalsWomen;HandBags Link;#;HandBagsLinkNewArrivalsWomen;HandBagsLinkNewArrivalsWomen;;
+;;WalletsLinkNewArrivalsWomen;Wallets Link;#;WalletsLinkNewArrivalsWomen;WalletsLinkNewArrivalsWomen;;
+;;ClothingLinkNewArrivalsWomen;Clothing Link;#;ClothingLinkNewArrivalsWomen;ClothingLinkNewArrivalsWomen;;
+;;ShoesLinkNewArrivalsWomen;Shoes Link;#;ShoesLinkNewArrivalsWomen;ShoesLinkNewArrivalsWomen;;
+;;SpringSummer17LinkShoesLinkNewArrivalsWomen;SpringSummer17 Link;#;SpringSummer17LinkShoesLinkNewArrivalsWomen;SpringSummer17LinkShoesLinkNewArrivalsWomen;;
+
+;;ClothingLinkNewArrivalsMen;Clothing Link;#;ClothingLinkNewArrivalsMen;ClothingLinkNewArrivalsMen;;
+;;BagsLinkNewArrivalsMen;Bags Link;#;BagsLinkNewArrivalsMen;BagsLinkNewArrivalsMen;;
+;;WalletsLinkNewArrivalsMen;Wallets Link;#;WalletsLinkNewArrivalsMen;WalletsLinkNewArrivalsMen;;
+;;AccessoriesLinkNewArrivalsMen;Accessories Link;#;AccessoriesLinkNewArrivalsMen;AccessoriesLinkNewArrivalsMen;;
+;;ShoesLinkNewArrivalsMen;Shoes Link;#;ShoesLinkNewArrivalsMen;ShoesLinkNewArrivalsMen;;
+;;SpringSummer17LinkNewArrivalsMen;SpringSummer17 Link;#;SpringSummer17LinkNewArrivalsMen;SpringSummer17LinkNewArrivalsMen;;
+
+#-------------------------------------------------------Women-----------------------------------------------------------------
+                 
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;
+;;TopsLinkWomen;Tops Link;#;TopsLinkWomen;TopsLinkWomen;;
+;;Tops&T-shirtsLink;Tops&T-shirts Link;#;Tops&T-shirtsLink;Tops&T-shirtsLink;;
+;;JeansLink;Jeans Link;#;JeansLink;JeansLink;;
+;;DressesLink;Dresses Link;#;DressesLink;DressesLink;;
+
+
+;;SatchelsLink;Satchels Link;#;SatchelsLink;SatchelsLink;;
+;;ToteBagsLink;ToteBags Link;#;ToteBagsLink;ToteBagsLink;;
+;;Hobo&ShoulderBagsLink;Hobo&ShoulderBags Link;#;Hobo&ShoulderBagsLink;Hobo&ShoulderBagsLink;;
+;;CrossbodyBagsLink;CrossbodyBags Link;#;CrossbodyBagsLink;CrossbodyBagsLink;;
+;;WalletsLink;Wallets Link;#;WalletsLink;WalletsLink;;
+;;EveningBagsLink;EveningBags Link;#;EveningBagsLink;EveningBagsLink;;
+;;Cases&pouchesLink;Cases&pouches Link;#;Cases&pouchesLink;Cases&pouchesLink;;
+;;BackPacksLink;BackPacks Link;#;BackPacksLink;BackPacksLink;;
+;;VanityBagsLink;VanityBags Link;#;VanityBagsLink;VanityBagsLink;;
+
+;;FlatsLink;Flats Link;#;FlatsLink;FlatsLink;;
+;;Loafers&MoccasinsLink;Loafers&MoccasinsLink;#;Loafers&MoccasinsLink;Loafers&MoccasinsLink;;
+;;SneakersLink;Sneakers Link;#;SneakersLink;SneakersLink;;
+
+;;BeltsLink;Belts Link;#;BeltsLink;BeltsLink;;
+
+#---------------------------------------------------------------------------------------------------------------
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;DesignersNavNode;;Designers Category;LuxuryNavNode;DesignersCategoryLink,MichaelKorsLink,HugoBossLink,CoachLink,ArmaniJeansLink,FurlaLink,TumiLink,EmporioArmaniLink,G-StarRawLink,ArmaniExchangeLink,M MissoniLink,TrueRelegionLink,CoccinelleLink,BrooksBrothersLink;DesignersNavNode
+
+#---------------------------------------------------------------------------------------------------------------
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;WomenNavNodeNewArrivals;;Women Category;NewArrivalsNavNode;HandBagsLinkNewArrivalsWomen,WalletsLinkNewArrivalsWomen,ClothingLinkNewArrivalsWomen,ShoesLinkNewArrivalsWomen,SpringSummer17LinkShoesLinkNewArrivalsWomen;WomenNavNodeNewArrivals
+;MenNavNodeNewArrivals;;Men Category;NewArrivalsNavNode;ClothingLinkNewArrivalsMen,BagsLinkNewArrivalsMen,WalletsLinkNewArrivalsMen,AccessoriesLinkNewArrivalsMen,ShoesLinkNewArrivalsMen,SpringSummer17LinkNewArrivalsMen;MenNavNodeNewArrivals
+
+												   
+#---------------------------------------------------------------------------------------------------------------
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;ClothingNavNodeWomen;;Clothing Category;WomenNavNode;Tops&T-shirtsLink,JeansLink,DressesLink;ClothingNavNodeWomen
+;BagsNavNodeWomen;;Bags Category;WomenNavNode;SatchelsLink,ToteBagsLink,Hobo&ShoulderBagsLink,CrossbodyBagsLink;WalletsLink,EveningBagsLink,Cases&pouchesLink,BackPacksLink,VanityBagsLink;BagsNavNodeWomen
+;ShoesNavNodeWomen;;Shoes Category;WomenNavNode;FlatsLink,Loafers&MoccasinsLink,SneakersLink;ShoesNavNodeWomen
+;AccessoriesNavNodeWomen;;Accessories Category;WomenNavNode;BeltsLink;AccessoriesNavNodeWomen
+

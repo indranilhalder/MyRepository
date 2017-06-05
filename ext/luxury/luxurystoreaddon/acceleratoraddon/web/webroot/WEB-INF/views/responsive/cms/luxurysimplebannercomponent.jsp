@@ -10,7 +10,7 @@
 
 <c:choose>
 <c:when test="${media.mediaType eq 'VIDEO'}">
-<video controls autoplay>
+<video controls="false" autoplay="autoplay" style="width:100%" loop>
   <source src="${media.url}"  type="video/mp4">
 </video>
 </c:when>
