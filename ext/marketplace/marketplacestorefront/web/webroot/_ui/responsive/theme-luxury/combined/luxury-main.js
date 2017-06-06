@@ -13104,9 +13104,15 @@ TATA.CommonFunctions = {
                 }
             });
         },
+        luxury_overlay_close: function() {
+            $(".luxury-over-lay").on("click", function() {
+                $("#addtocart-popup,.luxury-over-lay").hide();
+            });
+        },
         init: function() {
             var _self = TATA.Pages.PDP;
-            _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI();
+            _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI(), 
+            _self.luxury_overlay_close();
         }
     },
     init: function() {

@@ -880,6 +880,12 @@ TATA.Pages = {
             
             
         }, 
+        luxury_overlay_close:function(){
+        	$('.luxury-over-lay').on('click', function(){
+        		$('#addtocart-popup,.luxury-over-lay').hide();
+        	})
+        	
+        },
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
@@ -888,6 +894,7 @@ TATA.Pages = {
             _self.openPopup();
             _self.videoPlay();
             _self.BankEMI();
+            _self.luxury_overlay_close();
 		}
 	},
 	

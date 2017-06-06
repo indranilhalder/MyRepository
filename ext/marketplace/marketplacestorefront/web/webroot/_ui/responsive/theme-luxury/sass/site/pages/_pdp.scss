@@ -495,4 +495,48 @@
             }
         }
     }
+    #addtocart-popup{
+    	width: 400px;
+	    height: 300px;
+	    top: 50%;
+	    margin-top: -150px;
+	    left: 50%;
+	    margin-left: -200px;
+	    color: #000;
+	    background:#fff;
+	    text-align: center;
+	    position:fixed;
+	    z-index:9999;
+	    padding:20px;
+	    border-radius:5px;
+	    ul{
+	    	list-style-type:none;
+	    	padding:0px;
+	    	max-width:300px;
+	    	margin:0 auto;
+	    	li a{
+	    		border-radius:3px;
+	    		padding:10px;
+	    	}
+	    	.lux-cart-btn{
+	    		background:#B99D6B;
+	    	}
+	    	.lux-keepshop-btn{
+	    		border:1px solid #ddd;
+	    	}
+	    	.lux-buynow-btn{
+	    		background:#d2d2d2;
+	    	}
+	    }
+    }
+}
+.luxury-over-lay{
+	position:fixed;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	background:#000;
+	opacity:0.4;
+	z-index:999;
 }
