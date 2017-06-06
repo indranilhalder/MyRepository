@@ -1460,7 +1460,7 @@ function getShowcaseContentAjaxCall(id) {
                         "80px");
                     $("#showcase").append(
                         "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
-                    );
+                    );*/
 
                 },
                 url: ACC.config.encodedContextPath +
