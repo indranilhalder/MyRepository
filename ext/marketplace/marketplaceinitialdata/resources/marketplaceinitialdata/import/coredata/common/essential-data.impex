@@ -537,8 +537,8 @@ INSERT_UPDATE PaymentType;mode[unique=true];isAvailable;baseStore(uid)
 ;EMI;true;mpl
 ;COD;true;mpl
 ;Cheque;false;mpl
-;MRupee;true;mpl
-;TW;true;mpl
+;MRupee;false;mpl
+;TW;false;mpl
 
 INSERT_UPDATE Bank;bankName;bankCode[unique=true];baseStore(uid)
 ;HDFC Bank;HDFB;mpl
@@ -686,4 +686,3 @@ INSERT_UPDATE RendererTemplate;code[unique=true];templatescript[lang=en];
 </urlset>"
 
 ####SiteMap CronJob Ends
-
