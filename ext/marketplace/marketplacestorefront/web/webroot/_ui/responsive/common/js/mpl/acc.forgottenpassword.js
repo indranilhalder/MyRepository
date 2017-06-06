@@ -43,10 +43,10 @@ ACC.forgottenpassword = {
 						 $(e.target).parent().parent().find("span#errorHolder").text("Please enter an email id");
 					 }
 					 else if(data == "invalid_email_format"){
-						 $(e.target).parent().parent().find("span#errorHolder").text("Please enter a valid email id");
+						 $(e.target).parent().parent().find("span#errorHolder").text("Please enter a valid email ID.");
 					 }
 					 else if(data == "invalid_email"){
-						 $(e.target).parent().parent().find("span#errorHolder").text("Oops! This email ID isn't registered with us.");
+						 $(e.target).parent().parent().find("span#errorHolder").text("This email ID isn't registered with us.");
 					 }
 					 else if(data == "success"){
 						 var url = $(".js-password-forgotten").attr('href');

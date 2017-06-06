@@ -920,6 +920,14 @@ function editAddress(addressId) {
 				return false;
 			}
 		}
+		else if((document.getElementById("profilenickName").value) == null||(document.getElementById("profilenickName").value) == ""){
+			$("#errfn").css({
+				"display" : "block",
+				"margin-top" : "10px"
+			});
+			document.getElementById("errnn").innerHTML = "<font color='#ff1c47' size='2'>Add a nickname please.</font>";
+			return false;
+		}
 	}
 
 	function kpressnn() {
