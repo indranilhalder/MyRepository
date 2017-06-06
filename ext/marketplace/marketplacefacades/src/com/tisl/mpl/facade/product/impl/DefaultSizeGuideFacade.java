@@ -14,6 +14,7 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -141,7 +142,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 	{
 		final SizeGuideWsDTO sizeDTO = new SizeGuideWsDTO();
 		List<SizeGuideWsData> sizeGuideDataList = null;
-		List<SizeGuideWsDataValue> sizeGuideDataValueList = null;
+		LinkedList<SizeGuideWsDataValue> sizeGuideDataValueList = null;
 		String ImageURL = "";
 		SizeGuideWsData sizeGuideData = null;
 		SizeGuideWsDataValue sizeGuideWsDataValue = null;
@@ -175,7 +176,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 				sizeGuideDataList = new ArrayList<SizeGuideWsData>();
 				for (final String dimension : sizeGuideDatas.keySet())
 				{
-					sizeGuideDataValueList = new ArrayList<SizeGuideWsDataValue>();
+					sizeGuideDataValueList = new LinkedList<SizeGuideWsDataValue>();
 					sizeGuideData = new SizeGuideWsData();
 					//// move declaration out of for loop
 					//line deleted
@@ -189,30 +190,30 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 						{
 							sizeGuideWsDataValue.setDimensionValue(sizeGuideValue.getDimensionValue());
 						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionUnit()))
+						if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))//order changed according to TPR-6040
 						{
-							sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
+							sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
 						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionSize()))
+						if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))//order changed according to TPR-6040
 						{
-							sizeGuideWsDataValue.setDimensionSize(sizeGuideValue.getDimensionSize());
+							sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionSize()))//order changed according to TPR-6040
+						{
+							sizeGuideWsDataValue.setINDSize(sizeGuideValue.getDimensionSize());//name changed from dimensionsize to indsize according to TPR-6040
 						}
 						if (StringUtils.isNotEmpty(sizeGuideValue.getAge()))
 						{
 							sizeGuideWsDataValue.setAge(sizeGuideValue.getAge());
 						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))
-						{
-							sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
-						}
-						if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))
-						{
-							sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
-						}
-						if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)
+						if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)//order changed according to TPR-6040
 								&& StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
 						{
 							sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
+						}
+						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionUnit()))//order changed according to TPR-6040
+						{
+							sizeGuideWsDataValue.setDimensionUnit(sizeGuideValue.getDimensionUnit());
 						}
 						/**
 						 * Add for Accessories Belt Product START By SAP START::::
@@ -347,7 +348,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 
