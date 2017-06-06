@@ -127,7 +127,11 @@ tr.d0 td {
 							<div><img src="${container.superZoom.url}" data-zoom-image="${container.superZoom.url}" class="zoomer"></div>
 						</c:if>
 					</c:forEach>
-				</div>				
+				</div>	
+				 <div class="pdp-video">
+                    <video width="100%" height="100%" controls>
+                      <source src="${videoUrl}" type="video/mp4">  
+                    </video>			
 				<div class="offer-icon"><span class="new"></span></div>
 			</div>
 			

@@ -656,8 +656,8 @@ TATA.Pages = {
 		                items:4,
 		            }
 		        },
-		        
 		    });
+           
 			$(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
 				dots: true,
 		        items: 1,
@@ -722,14 +722,12 @@ TATA.Pages = {
 		},
         
 		openPopup: function (url) {
-           if($('body').hasClass('page-productDetails')){
-               
+            
+             $('#share-modal').on('click', function(){                 
                 newwindow = window.open(url,'name','height=400,width=400');
                 if (window.focus) {newwindow.focus()}
                 return false; 
-              
-            }            
-          
+             });
              
         }, 
         
