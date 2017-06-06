@@ -162,7 +162,7 @@ public class UAgentInfo
 	 * @return isIphone
 	 */
 	//Sonar Issue Fix For Kidswear: getIsIphone()--> IsIphone()
-	public boolean IsIphone()
+	public boolean isIphone()
 	{
 		return iphone;
 	}
@@ -173,7 +173,7 @@ public class UAgentInfo
 	 * @return isTierTablet
 	 */
 	//Sonar Issue Fix For Kidswear: getIsTierTablet()--> IsTierTablet()
-	public boolean IsTierTablet()
+	public boolean isTierTablet()
 	{
 		return tierTablet;
 	}
@@ -184,7 +184,7 @@ public class UAgentInfo
 	 * @return isTierIphone
 	 */
 	//Sonar Issue Fix For Kidswear: getIsTierIphone()--> IsTierIphone()
-	public boolean IsTierIphone()
+	public boolean isTierIphone()
 	{
 		return tierIphone;
 	}
@@ -195,7 +195,7 @@ public class UAgentInfo
 	 * @return isTierRichCss
 	 */
 	//Sonar Issue Fix For Kidswear: getIsTierRichCss()--> IsTierRichCss()
-	public boolean IsTierRichCss()
+	public boolean isTierRichCss()
 	{
 		return tierRichCss;
 	}
@@ -206,7 +206,7 @@ public class UAgentInfo
 	 * @return isTierGenericMobile
 	 */
 	//Sonar Issue Fix For Kidswear: getIsTierGenericMobile()--> IsTierGenericMobile()
-	public boolean IsTierGenericMobile()
+	public boolean isTierGenericMobile()
 	{
 		return tierGenericMobile;
 	}
