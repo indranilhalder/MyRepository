@@ -147,7 +147,9 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 		{
 
 			LOG.info("*************Inside sendNotification *******************");
-			String orderNumber = orderModel.getCode();
+			// TISPRDT-1399 START  , Sending Mail Order Id in SMS 
+			String orderNumber = orderModel.getParentReference().getCode();
+		   // TISPRDT-1399 END
 			String mobileNumber = null;
 			if (orderModel.getDeliveryAddress() != null)
 			{
