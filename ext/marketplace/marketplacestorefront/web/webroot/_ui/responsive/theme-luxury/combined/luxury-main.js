@@ -13022,8 +13022,10 @@ TATA.CommonFunctions = {
             });
         },
         openPopup: function(url) {
-            if ($("body").hasClass("page-productDetails")) return newwindow = window.open(url, "name", "height=400,width=400"), 
-            window.focus && newwindow.focus(), !1;
+            $("#share-modal").on("click", function() {
+                return newwindow = window.open(url, "name", "height=400,width=400"), window.focus && newwindow.focus(), 
+                !1;
+            });
         },
         videoPlay: function() {
             $(".pdp-social-links .play").on("click", function() {
