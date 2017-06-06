@@ -67056,8 +67056,12 @@ background:#f8f8f8;
 	display: block;
     width: 100%;
     overflow: hidden;
-    padding: 6px 16px 16px;
+    /* padding: 6px 16px 16px; */
     border-bottom: solid 1px #e8e8e8;
+	}
+	.cart.wrapper.checkout-payment .left-block .saved_cards_mobile li#savedCard{
+    padding: 6px 16px 16px;
+    overflow: hidden;
 	}
 	/* .cart.wrapper.checkout-payment .card-sec .card-num .card_image img{
 	position: static;

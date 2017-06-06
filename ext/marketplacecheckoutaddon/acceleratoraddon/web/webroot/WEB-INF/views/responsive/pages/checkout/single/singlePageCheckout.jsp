@@ -81,7 +81,7 @@
 		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper">
 		<p class="change-mobile">Change</p>
-		<p class="cancel-mobile">Cancel</p>
+		<!-- <p class="cancel-mobile">Cancel</p> -->
 		</div>
 		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
 	</div>
@@ -89,7 +89,7 @@
 		<div class="checkout-mobile-heading">Delivery Method</div>
 		<div class="change-cancel-wrapper">
 		<p class="change-mobile">Change</p>
-		<p class="cancel-mobile">Cancel</p>
+		<!-- <p class="cancel-mobile">Cancel</p> -->
 		</div>
 			<%@include
 				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetailsMobile.jsp"%>
@@ -98,7 +98,7 @@
 	<div class="checkout-mobile-heading">Payment</div>
 	<div class="change-cancel-wrapper">
 		<p class="change-mobile">Change</p>
-		<p class="cancel-mobile">Cancel</p>
+		<!-- <p class="cancel-mobile">Cancel</p> -->
 		</div>
 		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
 	</div>

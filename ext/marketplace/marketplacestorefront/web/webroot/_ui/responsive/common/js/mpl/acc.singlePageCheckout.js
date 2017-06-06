@@ -1366,18 +1366,18 @@ ACC.singlePageCheckout = {
 	mobileAccordion:function(){
 		$(".change-mobile").on("click", function(){
 			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
-			$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 			$(this).hide();
 		});
-		$(".cancel-mobile").on("click", function(){
+		/*$(".cancel-mobile").on("click", function(){
 			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").hide();
 			$(this).parents(".checkout_mobile_section").find(".change-mobile").show();
 			$(this).hide();
-		});
+		});*/
 	},
 	getIsResponsive:function(){
 		var winWidth=$(window).width();
-		return winWidth<750?true:false;
+		return winWidth<768?true:false;
 	},
 	
 /****************MOBILE STARTS HERE************************/
