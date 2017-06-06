@@ -354,7 +354,7 @@ TATA.CommonFunctions = {
 		$(document).on('click','.accordion h3', function(){
 		      //Expand or collapse this panel
 		      $(this).toggleClass('active').next().stop().slideToggle(500);
-		       Acc.not($(this)).removeClass('active');
+		       //Acc.not($(this)).removeClass('active');
 		      //Hide the other panels
 		      $(".accordion-content").not($(this).next()).stop().slideUp(500);
 		      return false;

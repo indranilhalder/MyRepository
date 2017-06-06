@@ -12788,8 +12788,8 @@ TATA.CommonFunctions = {
         $(".footer-popular-search .footer-cloned-ul > li").append("<br/>"), $(".footer-popular-search .footer-cloned-ul > li").each(function() {
             $(this).find(".sub-menu").length ? $(this).show() : $(this).hide();
         }), $(document).on("click", ".accordion h3", function() {
-            return $(this).toggleClass("active").next().stop().slideToggle(500), Acc.not($(this)).removeClass("active"), 
-            $(".accordion-content").not($(this).next()).stop().slideUp(500), !1;
+            return $(this).toggleClass("active").next().stop().slideToggle(500), $(".accordion-content").not($(this).next()).stop().slideUp(500), 
+            !1;
         });
     },
     init: function() {
