@@ -3,20 +3,28 @@ package com.tisl.mpl.cockpits.services.search;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.services.StoreAgentUserRole;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.daos.impl.BuyBoxDaoImpl;
 
 import de.hybris.platform.cscockpit.services.search.generic.query.AbstractCsFlexibleSearchQueryBuilder;
 import de.hybris.platform.cscockpit.services.search.impl.DefaultCsTextFacetSearchCommand;
 import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
+import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 
 public class DefaultMplProductSearchQueryBuilder extends
 AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand> 
 {
+	private static final Logger LOG = Logger.getLogger(DefaultMplProductSearchQueryBuilder.class.getName());
+	
 	@Resource
 	private ConfigurationService configurationService;
 	
@@ -25,21 +33,33 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 	
 	private final String PERCENTAGE = "%"; 
 	
-	protected FlexibleSearchQuery buildFlexibleSearchQuery(
-		DefaultCsTextFacetSearchCommand command) {
-	String productText = command.getText();
-	String sellerID = StringUtils.EMPTY;
-	//getiing seller id from session in case csr agent for store order
-	if(JaloSession.getCurrentSession() != null && storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP) == true){
-		sellerID = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
-	}
-	
-	FlexibleSearchQuery searchQuery = populateProductSearchQuery(productText, sellerID);
-	
-	return searchQuery;
+	protected FlexibleSearchQuery buildFlexibleSearchQuery(DefaultCsTextFacetSearchCommand command) 
+	{
+		String productText = command.getText();
+		String sellerID = StringUtils.EMPTY;
+		FlexibleSearchQuery searchQuery = null;
+		//getting seller id from session in case csr agent for store order
+		if(JaloSession.getCurrentSession() != null && 
+				storeAgentUserRole.isUserInRole(MarketplaceCockpitsConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP)){
+			sellerID = (String) JaloSession.getCurrentSession().getAttribute("sellerId");
+		}
+		try
+		{
+			searchQuery = populateProductSearchQuery(productText, sellerID);
+			return searchQuery;
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
-	private FlexibleSearchQuery populateProductSearchQuery(String productText, String sellerID) {
+	private FlexibleSearchQuery populateProductSearchQuery(String productText, String sellerID) throws FlexibleSearchException
+	{
 		String ussid = StringUtils.EMPTY;
 		if(StringUtils.isNotEmpty(sellerID) && StringUtils.isNotEmpty(productText))
 		{
@@ -54,14 +74,15 @@ AbstractCsFlexibleSearchQueryBuilder<DefaultCsTextFacetSearchCommand>
 		
 		StringBuilder queryString = new StringBuilder();
 		// For empty search
-		if(StringUtils.isEmpty(productText)){
+		/*if(StringUtils.isEmpty(productText)){
 			queryString.append(firstOuterClause);
 			if(StringUtils.isNotEmpty(sellerID)){
 				queryString.append(sellerClause);
 			}
-		}
+		}*/
 		// Non Empty search
-		else{
+		if(StringUtils.isNotEmpty(productText))
+		{
 			queryString.append(firstOuterClause);
 			if(StringUtils.isNotEmpty(sellerID)){
 				queryString.append(sellerClause);
