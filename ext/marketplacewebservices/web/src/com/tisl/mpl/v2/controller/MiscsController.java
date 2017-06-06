@@ -1921,7 +1921,9 @@ public class MiscsController extends BaseController
 							LOG.debug("========Initiating cancellation of consignment=========");
 							//----------IF CONSIGNMENT IS ALREADY CANCELLED---------
 							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
-									MarketplacewebservicesConstants.CANCEL_ORDER_STATUS))
+									MarketplacewebservicesConstants.CANCEL_ORDER_STATUS)
+									&& getMplOrderFacade().checkCancelStatus(consignmentStatus,
+											MarketplacewebservicesConstants.CANCEL_ELIGIBLE_STATUS))
 							{
 								resultFlag = cancelReturnFacade.oneTouchCancel(subOrderModel, orderData, orderEntry,
 										oneTouchCrmObj.getCancelReasonCode(), ussid, oneTouchCrmObj.getTicketType(),
@@ -1967,7 +1969,9 @@ public class MiscsController extends BaseController
 						{
 							//-----------IF CONSIGNMENT IS ALREADY RETURNED--------
 							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
-									MarketplacewebservicesConstants.RETURN_ORDER_STATUS))
+									MarketplacewebservicesConstants.RETURN_ORDER_STATUS)
+									&& (consignmentStatus.equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERED_STATUS.toString()) || consignmentStatus
+											.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString())))
 							{
 								//Pincode serviceablity check for RSP tickets
 								if (oneTouchCrmObj.getTicketSubType().equalsIgnoreCase(MarketplacewebservicesConstants.TICKET_TYPE_RSP))
@@ -2024,7 +2028,7 @@ public class MiscsController extends BaseController
 								}
 							}
 							//---------IF CONSIGNMENT IS ALREADY RETURNED--------
-							else
+
 							{
 								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 								{

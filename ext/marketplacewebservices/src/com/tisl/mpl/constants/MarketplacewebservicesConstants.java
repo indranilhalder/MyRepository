@@ -563,15 +563,18 @@ public class MarketplacewebservicesConstants
 	public static final String VALID_FLAG_F = "F".intern();
 	public static final String PINCODE_NOT_SERVICEABLE = "Pincode is not serviceable".intern();
 	public static final String INVALID_TICKET_TYPE = "Invalid Ticket Type".intern();
-	public static final String ERROR_IN_OMS = "The order is not cancellable/returnable.".intern();
+	public static final String ERROR_IN_OMS = "The order is not cancellable or returnable.".intern();
 	public static final String FORMAT_MISMATCH = "Format mismatch".intern();
 	public static final String MISSING_MANDATORY_FIELDS = "Some mandatory fields are missing".intern();
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCEL";
 	public static final String RETURN_ORDER_STATUS = "valid.order.statuses.RETURN";
 	public static final String BLANK_TRANSACTION_ID = "TRANSACTION ID IS NULL AT COMMERCE END";
 	public static final String NO_CONSIGNMENT_FOUND = "NO CONSIGNMENT FOUND";
-	public static final String ORDER_ALREAY_CANCELLED = "ORDER IS ALREADY CANCELLED";
-	public static final String RETURN_ALREADY_INITIATED = "RETURN ALREADY INITIATED";
-	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF";
+	public static final String ORDER_ALREAY_CANCELLED = "ORDER IS NOT ELIGIBLE FOR CANCELLATION".intern();
+	public static final String RETURN_ALREADY_INITIATED = "ORDER IS NOT ELIGIBLE FOR RETURN".intern();
+	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF".intern();
+	public static final String CANCEL_ELIGIBLE_STATUS = "valid.order.statuses.CANCELLATION".intern();
+	public static final String DELIVERED_STATUS = "DELIVERED".intern();
+	public static final String ORDER_COLLECTED_STATUS = "ORDER_COLLECTED".intern();
 
 }
