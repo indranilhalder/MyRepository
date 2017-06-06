@@ -331,14 +331,12 @@ public class CartPageController extends AbstractPageController
 			}
 			//TPR-174
 
-
-			//UF-260
-			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
-
-
 			//TISSQAUATS-522
 			if (null != cartModel)
 			{
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
+
 				cartModel.setMerged(false);
 				modelService.save(cartModel);
 			}

@@ -329,7 +329,7 @@ $(document).ready(function() {
       //  $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
         	// INC144315462 and INC144315104
-        	if($('input[name=customSku]')){
+        	if($('input[name=customSku]').length){
         		sortCustomSku($(this).find(':selected'),true);
         		}else{
         		sort($(this).find(':selected'),true);

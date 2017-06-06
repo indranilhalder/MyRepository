@@ -29,13 +29,13 @@
 	
 	<c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
-		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.saving"/></span>
 		<span id="cartPromotion" style="float: right">  <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
     </c:if>
     <li id="promotionApplied" >
-		<span><spring:theme code="basket.page.totals.savings"/></span>
+		<span><spring:theme code="basket.page.totals.saving"/></span>
 		<span id="promotion" style="float: right"><format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
@@ -60,14 +60,14 @@
 	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
 	<%-- <c:if test="${cartData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
-		<spring:theme code="basket.page.totals.savings"/>
+		<spring:theme code="basket.page.totals.saving"/>
 		<span id="cartPromotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> 
     </c:if>  
 	<!-- Tag used for Payment Page promotion display-->
 	<li id="promotionApplied" >
-		<spring:theme code="basket.page.totals.savings"/>
+		<spring:theme code="basket.page.totals.saving"/>
 		<span id="promotion" style="float: right"> - <format:price priceData="${cartData.totalDiscounts}"/> 	</span>
 
 	</li> --%>
@@ -135,14 +135,14 @@
 	<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
 	<c:if test="${orderData.totalDiscounts.value > 0}">
 	<li id="cartPromotionApplied">
-		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
+		<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.saving"/></span>
 		<span id="cartPromotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
 
 	</li> 
     </c:if> 
 	<!-- Tag used for Payment Page promotion display-->
 	<li id="promotionApplied" >
-		<span><spring:theme code="basket.page.totals.savings"/></span>
+		<span><spring:theme code="basket.page.totals.saving"/></span>
 		<span id="promotion" style="float: right"> - <format:price priceData="${orderData.totalDiscounts}"/> 	</span>
 
 	</li> 
