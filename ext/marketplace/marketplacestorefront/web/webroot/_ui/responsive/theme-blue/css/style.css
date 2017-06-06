@@ -68866,7 +68866,12 @@ body.page-viewAllTrending #ia_products_hot .listing-leftmenu .checkbox-menu{
 	}
 	body.page-viewAllTrending #ia_products_hot .listing.wrapper .right-block .product-list > li {
     padding: 0 7px;
-}
+	}
+	/* TISKIDK-1988 */
+	.luxury-header ~ .mainContent-wrapper .container_store_finder{
+        margin-top:20px;
+    }
+    /* TISKIDK-1988 */
 }
 @media (max-width: 650px){
 body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing-leftmenu {
