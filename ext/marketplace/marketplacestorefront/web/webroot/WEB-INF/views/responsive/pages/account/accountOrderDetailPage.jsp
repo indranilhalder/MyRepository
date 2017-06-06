@@ -123,8 +123,8 @@
 								<h2>Total:</h2>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
-											/> <format:price
-												priceData="${subOrder.subTotal}" />
+											/> <%-- <format:price
+												priceData="${subOrder.subTotal}" /> --%>
 												<!-- UF-260 -->
 												<format:price
 												priceData="${cartTotalMrp}" />
@@ -136,14 +136,14 @@
 												displayFreeForZero="true" />
 									</span></li>
 									<!-- TISEE-2672 -->
-									<c:if test="${subOrder.totalDiscounts.value > 0}">
+									<c:if test="${totalDiscount.value > 0}">
 										<li><spring:theme code="text.account.order.savings"
-												text="Discount" /> <span class="amt"> -<format:price
-													priceData="${subOrder.totalDiscounts}" />
-										</span></li>
+												text="Discount" /> <span class="amt">-<%-- <format:price
+													priceData="${subOrder.totalDiscounts}" /> --%>
+										
 										<!-- UF-260 -->
 													<format:price
-												priceData="${totalDiscount}" /></li>
+												priceData="${totalDiscount}" /></span></li>
 
 									</c:if>
 									<!-- TISEE-2672 -->
