@@ -17,9 +17,9 @@ import org.apache.log4j.Logger;
  * @author 168108
  *
  */
-public class CustomAbstractPromotion extends AbstractPromotion
+public class CustomPromotion extends AbstractPromotion
 {
-	private static final Logger LOG = Logger.getLogger(CustomAbstractPromotion.class);
+	private static final Logger LOG = Logger.getLogger(CustomPromotion.class);
 
 	public void findOrCreateImmutableCloneNew(final SessionContext ctx, final AbstractPromotion promotion)
 	{
