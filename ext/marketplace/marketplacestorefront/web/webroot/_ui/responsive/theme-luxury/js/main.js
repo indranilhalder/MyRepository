@@ -540,6 +540,18 @@ TATA.Pages = {
 		            		$(".loadMore").hide();
 		            	}
 		            }
+		            $(".product-grid").hover(function () {
+						$(this).addClass("hover");
+						$(this).find('.plp-hover-img').show().siblings().hide();
+					},
+					function () {
+						$(this).removeClass("hover");
+						if($('.plp-modelimg-show.active').length){
+							$(this).find('.plp-model-img').show().siblings().hide();
+						}else{
+							$(this).find('.plp-default-img').show().siblings().hide();
+						}
+					});
                 },
                 complete: function(){
                     $('body').removeClass('loader');
