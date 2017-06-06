@@ -67,6 +67,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
@@ -256,7 +257,9 @@ public class HomePageController extends AbstractPageController
 			}
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof RotatingImagesComponentModel)
 				{
@@ -370,7 +373,9 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
@@ -713,7 +718,9 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
@@ -1014,7 +1021,9 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
