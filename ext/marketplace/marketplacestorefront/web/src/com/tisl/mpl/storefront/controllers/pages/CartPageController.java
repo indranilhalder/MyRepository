@@ -61,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -187,8 +188,8 @@ public class CartPageController extends AbstractPageController
 	public String showCart(final Model model, @RequestParam(value = "ussid", required = false) final String ussid,
 			@RequestParam(value = "pincode", required = false) final String pinCode,
 			@RequestParam(value = "isLux", required = false) final boolean isLux,
-			@RequestParam(value = "cartGuid", required = false) final String cartGuid) throws CMSItemNotFoundException,
-			CommerceCartModificationException, CalculationException
+			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request)
+			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
@@ -349,8 +350,25 @@ public class CartPageController extends AbstractPageController
 			}
 			else if (isLux)
 			{
-				final CartData luxCart = mplCartFacade.getLuxCart();
-				prepareDataForPage(model, luxCart);
+				boolean found = false;
+				CartData luxCart = null;
+				for (final Cookie cookie : request.getCookies())
+				{
+					if (cookie.getName().equals("mpl-cart") && StringUtils.isNotEmpty(cookie.getValue()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if (found)
+				{
+					luxCart = mplCartFacade.getLuxCart();
+					prepareDataForPage(model, luxCart);
+				}
+				else
+				{
+					prepareDataForPage(model, mplCartFacade.getSessionCartWithEntryOrdering(true));
+				}
 			}
 			else
 			{

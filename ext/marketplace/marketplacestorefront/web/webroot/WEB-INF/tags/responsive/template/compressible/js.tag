@@ -99,18 +99,18 @@ if(loginStatus){
 </c:if>
 <!-- R2.3: END FL04 -->
 <!-- LW-230 Start -->
+<!-- PRDI-330 -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
 <c:choose>
-<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
-<script type="text/javascript" src="${headerWidgetJsSource}"></script>
-</c:when>
-<c:otherwise>
-<c:if test="${not empty isLuxury and isLuxury == 'true'}">
-<script type="text/javascript" src="${headerWidgetJsSource}"></script>
-</c:if>
-</c:otherwise>
+	<c:when test="${ not empty param.isLux and param.isLux eq true }">
+		<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+	</c:when>
+	<c:when test="${not empty isLuxury and isLuxury == 'true'}">
+		<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+	</c:when>
 </c:choose> 
+<!-- End PRDI-330 --> 
  <%-- <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/> 
  <c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
