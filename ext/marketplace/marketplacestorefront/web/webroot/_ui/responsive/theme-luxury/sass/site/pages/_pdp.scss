@@ -528,6 +528,14 @@
 	    		background:#d2d2d2;
 	    	}
 	    }
+	    .fa-check-circle{
+	    	position: absolute;
+		    top: -23px;
+		    margin-left: -33px;
+	    }
+	    .fa-check-circle:before{
+	    	font-size:70px;
+	    }
     }
 }
 .luxury-over-lay{

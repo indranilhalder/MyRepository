@@ -96,8 +96,9 @@
 		</div>
 		</div>
 		
-		<div id="addtocart-popup" style="display:none">
-			<h3 class="mb-40">Added product to bag</h3>
+			<div id="addtocart-popup" style="display:none">
+			<i class="fa fa-check-circle fa-4" aria-hidden="true"></i>
+			<h3 class="mt-40 mb-40">Added product to bag</h3>
 			<ul>
 				<li><a href="/cart" class="mb-10 btn-block lux-cart-btn">CART <span></span></a></li>
 				<li><a href="javascript:;" class="mb-10 btn-block lux-keepshop-btn">KEEP SHOPPING</a></li>
