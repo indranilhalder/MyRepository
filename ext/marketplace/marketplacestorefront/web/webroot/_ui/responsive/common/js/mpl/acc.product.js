@@ -481,7 +481,7 @@ sendAddToBag : function(formId, isBuyNow) {
 									var url = $(".mini-cart-link").data("miniCartUrl") + "?stamp="
 									+ (new Date()).getTime();
 									$.get(url, function(html) {
-										var cartqtytext = $('.item-edit-details li').html();
+										var cartqtytext = $(html).find('.item-edit-details li:first-child').html();
 										var cartcount = cartqtytext.split(":")[1];
 										$('#addtocart-popup .lux-cart-btn span').html('('+cartcount+')');
 									}); 

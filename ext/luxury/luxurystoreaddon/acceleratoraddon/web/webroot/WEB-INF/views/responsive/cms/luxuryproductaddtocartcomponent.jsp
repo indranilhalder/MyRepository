@@ -100,7 +100,7 @@
 			<h3 class="mb-40">Added product to bag</h3>
 			<ul>
 				<li><a href="/cart" class="mb-10 btn-block lux-cart-btn">CART <span></span></a></li>
-				<li><a href="/cart" class="mb-10 btn-block lux-keepshop-btn">KEEP SHOPPING</a></li>
+				<li><a href="javascript:;" class="mb-10 btn-block lux-keepshop-btn">KEEP SHOPPING</a></li>
 				<li><a href="/cart" class="mb-10 btn-block lux-buynow-btn">BUY NOW</a></li>
 			</ul>
 		</div>

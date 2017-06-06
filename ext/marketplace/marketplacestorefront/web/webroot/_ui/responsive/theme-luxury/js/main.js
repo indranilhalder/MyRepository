@@ -881,7 +881,7 @@ TATA.Pages = {
             
         }, 
         luxury_overlay_close:function(){
-        	$('.luxury-over-lay').on('click', function(){
+        	$('.luxury-over-lay,.lux-keepshop-btn').on('click', function(){
         		$('#addtocart-popup,.luxury-over-lay').hide();
         	})
         	
