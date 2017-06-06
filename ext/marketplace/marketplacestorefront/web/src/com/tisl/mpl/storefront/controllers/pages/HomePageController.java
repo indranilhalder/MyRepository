@@ -408,7 +408,8 @@ public class HomePageController extends AbstractPageController
 			}
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof RotatingImagesComponentModel)
 				{
@@ -522,7 +523,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
@@ -865,7 +867,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
@@ -1166,7 +1169,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
@@ -1430,7 +1434,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 

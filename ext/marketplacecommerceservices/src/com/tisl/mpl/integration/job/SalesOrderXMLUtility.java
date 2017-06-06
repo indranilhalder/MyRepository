@@ -63,11 +63,12 @@ public class SalesOrderXMLUtility
 	private PaymentInfoRevWebServiceImpl paymentInfoRevWebService;
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
-	
-	private static String REFUNDED_DELIVERY_MESSAGE="setting refunded delivery charge...";
-	
-	private static String EXPRESS_DELIVERY_CHARGE_MESSAGE="set express del charge from curr del charge";
-	
+
+	private static String REFUNDED_DELIVERY_MESSAGE = "setting refunded delivery charge...";
+
+	//SONAR FIX
+	//private static String EXPRESS_DELIVERY_CHARGE_MESSAGE="set express del charge from curr del charge";
+
 
 	//@Autowired
 	//private MplSellerInformationService mplSellerInformationService;
@@ -471,32 +472,33 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug(REFUNDED_DELIVERY_MESSAGE+entry.getRefundedDeliveryChargeAmt());
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
 								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("EXPRESS_DELIVERY_CHARGE_MESSAGE" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
 
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
-								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
+								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
-							}							
+							}
 							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
 									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS
 							{
-								LOG.debug(REFUNDED_DELIVERY_MESSAGE+entry.getRefundedScheduleDeliveryChargeAmt());
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
-							else {
+							else
+							{
 								xmlData.setScheduleDelCharge(0.00);
 							}
-					   	   // INC144316465 end
+							// INC144316465 end
 						}
 						else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
 						{
-							
+
 							LOG.debug("inside home del");
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
@@ -505,26 +507,27 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug(REFUNDED_DELIVERY_MESSAGE+entry.getRefundedDeliveryChargeAmt());
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
-								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
+								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
 							}
 							// INC144316465 STARTS
 							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
 									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
 							{
-								LOG.debug(REFUNDED_DELIVERY_MESSAGE+entry.getRefundedScheduleDeliveryChargeAmt());
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
-							else {
+							else
+							{
 								xmlData.setScheduleDelCharge(0.00);
 							}
-						// INC144316465 end
+							// INC144316465 end
 							LOG.debug("set del charge");
 						}
 					}
