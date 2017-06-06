@@ -1,4 +1,660 @@
-#
+# ImpEx for Importing Category Attribute
+
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$unit=unit(code,$classSystemVersion)
+
+INSERT_UPDATE  classificationAttribute;code[unique=true];name[lang=en];systemVersion(catalog(id),version);;;;;
+;colorapparel;Color;pcmClassification:1;;;;;
+;packquantity;Pack Quantity;pcmClassification:1;;;;;
+;stylenote;Style Note;pcmClassification:1;;;;;
+;colorfamilyapparel;Color Family;pcmClassification:1;;;;;
+;packcolor;Pack Color;pcmClassification:1;;;;;
+;stylecode;Style Code;pcmClassification:1;;;;;
+;multipack;Multi Pack;pcmClassification:1;;;;;
+;garmenttreatmenttypekidswear;Garment Treatment Type;pcmClassification:1;;;;;
+;fabricfamilykidswear;Fabric Family;pcmClassification:1;;;;;
+;rainweartypekidswear;Rainwear Type;pcmClassification:1;;;;;
+;featurekidswear;Feature;pcmClassification:1;;;;;
+;occasionkidswear;Occasion;pcmClassification:1;;;;;
+;collectionkidswear;Collection;pcmClassification:1;;;;;
+;garmentlengthkidswear;Garment Length;pcmClassification:1;;;;;
+;fabriccompositionkidswear;Fabric Composition;pcmClassification:1;;;;;
+;noofcomponentkidswear;No. of Components;pcmClassification:1;;;;;
+;characterkidswear;Character;pcmClassification:1;;;;;
+;exclusivelinefortatacliqkidswear;Exclusive Line for TATA cliq;pcmClassification:1;;;;;
+;washcarekidswear;Wash Care;pcmClassification:1;;;;;
+;seasonkidswear;Season;pcmClassification:1;;;;;
+;genderkidswear;Gender;pcmClassification:1;;;;;
+;modelfitkidswear;Model fit;pcmClassification:1;;;;;
+;sizekidswear;Size;pcmClassification:1;;;;;
+;waistrisekidswear;Waist Rise;pcmClassification:1;;;;;
+;patternkidswear;Pattern;pcmClassification:1;;;;;
+;neckkidswear;Neck;pcmClassification:1;;;;;
+;fitkidswear;Fit;pcmClassification:1;;;;;
+;clothingsetskidswear;Clothing Sets;pcmClassification:1;;;;;
+;garmentweightkidswear;Garment Weight;pcmClassification:1;;;;;
+;sleevekidswear;Sleeve;pcmClassification:1;;;;;
+;garmenttypekidswear;Garment Type;pcmClassification:1;;;;;
+;clothingaccessoriestypekidswear;Clothing Accessories Type;pcmClassification:1;;;;;
+;innerweartypekidswear;Innerwear Type;pcmClassification:1;;;;;
+;sizeguidekidswear;Size Guide;pcmClassification:1;;;;;
+;closurekidswear;Closure;pcmClassification:1;;;;;
+;packagecontentkidswear;Package Content;pcmClassification:1;;;;;
+;swimmingaccessoriestypekidswear;Swimming Accessories Type;pcmClassification:1;;;;;
+;categorytypekidswear;Categories;pcmClassification:1;;;;;
+
+
+#Enum;values;creation;;;;;;;
+#---------------------;;;;;;;;;
+# ImpEx for Importing Category Classifications
+
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$unit=unit(code,$classSystemVersion)
+
+
+INSERT_UPDATE classificationAttributeValue;code[unique=true];name[lang=en];systemVersion(catalog(id),version)[default=pcmClassification:1];;;;;
+
+
+;occasionkidswearsleepwear;Sleepwear;;;;;;
+;garmenttreatmenttypekidswearsoftnerwash;Softner Wash;;;;;;
+;waistrisekidswearhigh;High;;;;;;
+;seasonkidswearss16;Ss16;;;;;;
+;closurekidswearbuttondown;Button Down;;;;;;
+;closurekidswearsidesnap;Side Snap;;;;;;
+;closurekidswearslides;Slides;;;;;;
+;garmentlengthkidswearcroppedlength;Cropped Length;;;;;;
+;fabricfamilykidsweargeorgette;Georgette;;;;;;
+;fabricfamilykidsweardenim;Denim;;;;;;
+;fabricfamilykidswearmodal;Modal;;;;;;
+;fabricfamilykidswearfauxsuede;Faux Suede;;;;;;
+;fabricfamilykidswearhemp;Hemp;;;;;;
+;fabricfamilykidswearchambray;Chambray;;;;;;
+;fabricfamilykidswearcanvas;Canvas;;;;;;
+;fabricfamilykidswearnylonpolyester;Nylon Polyester;;;;;;
+;fabricfamilykidswearstructured;Structured;;;;;;
+;fabricfamilykidswearorganiccotton;Organic Cotton;;;;;;
+;fabricfamilykidswearpoplinlycra;Poplin Lycra;;;;;;
+;fabricfamilykidswearcottonwoolblend;Cotton Wool Blend;;;;;;
+;fabricfamilykidswearrawdenim;Raw Denim;;;;;;
+;sizekidswear0to6m;0-6 M;;;;;;
+;sizekidswear18to24m;18-24 M;;;;;;
+;sizekidswear8to9y;8-9 Y;;;;;;
+;sizekidswear14to16y;14-16 Y;;;;;;
+;sizekidswearlslashxl;L/Xl;;;;;;
+;patternkidswearquilted;Quilted;;;;;;
+;patternkidswearembossed;Embossed;;;;;;
+;patternkidswearcharacterbased;Character Based;;;;;;
+;patternkidswearself;Self;;;;;;
+;patternkidswearpigmentdyed;Pigment Dyed;;;;;;
+;patternkidswearpatch;Patch;;;;;;
+;sleevekidswearcutsleeves;Cut Sleeves;;;;;;
+;neckkidswearhighneck;High Neck;;;;;;
+;occasionkidsweareverydaywear;Everyday Wear;;;;;;
+;garmenttreatmenttypekidswearrinse;Rinse;;;;;;
+;garmenttreatmenttypekidswearrawdenim;Raw Denim;;;;;;
+;waistrisekidswearmid;Mid;;;;;;
+;seasonkidswearss14;Ss 14;;;;;;
+;seasonkidswearaw17;Aw17;;;;;;
+;seasonkidswearaw20;Aw20;;;;;;
+;patternkidswearripped;Ripped;;;;;;
+;neckkidswearchineseneckwithcollar;Chinese Neck With Collar;;;;;;
+;neckkidswearrollcollar;Roll Collar;;;;;;
+;neckkidswearsweetheart;Sweetheart;;;;;;
+;noofcomponentkidswear3;3;;;;;;
+;noofcomponentkidswear12;12;;;;;;
+;noofcomponentkidswear20;20;;;;;;
+;characterkidswearbatman;Batman;;;;;;
+;characterkidsweardisneyprincess;Disney Princess;;;;;;
+;characterkidswearchhotabheem;Chhota Bheem;;;;;;
+;characterkidswearspongebob;Spongebob;;;;;;
+;characterkidswearhannahmontana;Hannah Montana;;;;;;
+;characterkidswearmickey;Mickey;;;;;;
+;fitkidswearslim;Slim;;;;;;
+;fitkidswearnarrow;Narrow;;;;;;
+;fitkidswearflared;Flared;;;;;;
+;garmenttypekidswearharem;Harem;;;;;;
+;garmenttypekidswearpants;Pants;;;;;;
+;clothingaccessoriestypekidswearhats;Hats;;;;;;
+;clothingsetskidswearfulllengthsets;Full Length Sets;;;;;;
+;innerweartypekidswearboxers;Boxers;;;;;;
+;exclusivelinefortatacliqkidswearno;No;;;;;;
+;occasionkidswearactive;Active;;;;;;
+;garmenttreatmenttypekidswearacidwash;Acid Wash;;;;;;
+;seasonkidswearbeforess14;<Ss 14;;;;;;
+;seasonkidswearss17;Ss17;;;;;;
+;seasonkidswearaw18;Aw18;;;;;;
+;closurekidswearclasps;Clasps;;;;;;
+;garmentlengthkidswear3slash4thlength;3/4Th Length;;;;;;
+;garmentlengthkidswearmini;Mini;;;;;;
+;fabricfamilykidswearlace;Lace;;;;;;
+;fabricfamilykidswearleather;Leather;;;;;;
+;fabricfamilykidsweardobby;Dobby;;;;;;
+;fabricfamilykidswearpolyamide;Polyamide;;;;;;
+;fabricfamilykidswearherringbone;Herringbone;;;;;;
+;fabricfamilykidswearburnout;Burnout;;;;;;
+;fabricfamilykidswearknit;Knit;;;;;;
+;fabricfamilykidsweargabardine;Gabardine;;;;;;
+;fabricfamilykidsweardrifit;Dri Fit;;;;;;
+;sizekidswear6to9m;6-9 M;;;;;;
+;sizekidswear8to10y;8-10 Y;;;;;;
+;sizekidswear14to15y;14-15 Y;;;;;;
+;sizekidswearsslashm;S/M;;;;;;
+;patternkidswearstriped;Striped;;;;;;
+;patternkidsweardigitalprint;Digital Print;;;;;;
+;patternkidsweargraphic;Graphic;;;;;;
+;patternkidswearoverdyed;Over Dyed;;;;;;
+;patternkidswearombre;Ombre;;;;;;
+;patternkidswearrippedandrepaired;Ripped And Repaired;;;;;;
+;sleevekidswearshortsleeves;Short Sleeves;;;;;;
+;neckkidswearasymmetric;Asymmetric;;;;;;
+;neckkidswearcrewneck;Crew Neck;;;;;;
+;neckkidswearcollar;Collar;;;;;;
+;neckkidswearroundneckwithcollar;Round Neck With Collar;;;;;;
+;noofcomponentkidswear8;8;;;;;;
+;noofcomponentkidswear19;19;;;;;;
+;characterkidswearmickeyandfriends;Mickey & Friends;;;;;;
+;characterkidswearcars;Cars;;;;;;
+;characterkidswearpowerrangers;Power Rangers;;;;;;
+;characterkidsweartigger;Tigger;;;;;;
+;characterkidswearwinniethepooh;Winnie The Pooh;;;;;;
+;characterkidswearmonsterhigh;Monster High;;;;;;
+;characterkidswearkidsville;Kidsville;;;;;;
+;fitkidswearcigarette;Cigarette;;;;;;
+;fitkidswearfitted;Fitted;;;;;;
+;fitkidswearclassic;Classic;;;;;;
+;fitkidswearloose;Loose;;;;;;
+;garmenttypekidswearbermudas;Bermudas;;;;;;
+;garmenttypekidswear3slash4th;3/4Th;;;;;;
+;clothingaccessoriestypekidsweargloves;Gloves;;;;;;
+;clothingsetskidswearskirtsets;Skirt Sets;;;;;;
+;innerweartypekidswearcamisolesslashspaghetti;Camisoles/Spaghetti;;;;;;
+;rainweartypekidswearrainsuits;Rain Suits;;;;;;
+;closurekidswearzip;Zip;;;;;;
+;closurekidswear3slash4thplacket;3/4Th Placket;;;;;;
+;closurekidswearbuckles;Buckles;;;;;;
+;garmentlengthkidswearwaistlength;Waist Length;;;;;;
+;fabricfamilykidswearcottonlycra;Cotton Lycra;;;;;;
+;fabricfamilykidswearviscoseblend;Viscose Blend;;;;;;
+;fabricfamilykidswearlinen;Linen;;;;;;
+;fabricfamilykidswearcottonsilk;Cotton Silk;;;;;;
+;fabricfamilykidswearbamboo;Bamboo;;;;;;
+;fabricfamilykidswearcorduroy;Corduroy;;;;;;
+;fabricfamilykidsweartwilllycra;Twill Lycra;;;;;;
+;fabricfamilykidswearperformancefabrics;Performance Fabrics;;;;;;
+;fabricfamilykidswearbroadcloth;Broadcloth;;;;;;
+;fabricfamilykidswearmodalblend;Modal Blend;;;;;;
+;fabricfamilykidswearbambooblend;Bamboo Blend;;;;;;
+;fabricfamilykidswearbrocade;Brocade;;;;;;
+;sizekidswear2to3y;2-3 Y;;;;;;
+;sizekidswear5to6y;5-6 Y;;;;;;
+;sizekidswear10to12y;10-12 Y;;;;;;
+;sizekidswearfreesize;Free Size;;;;;;
+;patternkidswearjacquard;Jacquard;;;;;;
+;patternkidswearembroidery;Embroidery;;;;;;
+;patternkidswearcoated;Coated;;;;;;
+;patternkidswearzari;Zari;;;;;;
+;sleevekidswearhalfsleeves;Half Sleeves;;;;;;
+;neckkidswearroundneck;Round Neck;;;;;;
+;neckkidswearturtleneck;Turtle Neck;;;;;;
+;neckkidswearspaghettineck;Spaghetti Neck;;;;;;
+;neckkidswearbuttondown;Buttondown;;;;;;
+;neckkidswearshawl;Shawl;;;;;;
+;neckkidswearasymmetrical;Asymmetrical;;;;;;
+;noofcomponentkidswear9;9;;;;;;
+;noofcomponentkidswear13;13;;;;;;
+;noofcomponentkidswear15;15;;;;;;
+;characterkidswearangrybirds;Angry Birds;;;;;;
+;characterkidswearavengers;Avengers;;;;;;
+;characterkidswearbarbie;Barbie;;;;;;
+;characterkidswearlionking;Lion King;;;;;;
+;characterkidswearpopeye;Popeye;;;;;;
+;characterkidsweartarzan;Tarzan;;;;;;
+;characterkidsweardisney;Disney;;;;;;
+;fitkidswearrelaxed;Relaxed;;;;;;
+;fitkidswearregular;Regular;;;;;;
+;garmenttypekidsweardhoti;Dhoti;;;;;;
+;garmenttypekidswearonehyphenpiece;One-Piece;;;;;;
+;garmenttypekidsweardungaree;Dungaree;;;;;;
+;clothingaccessoriestypekidswearcaps;Caps;;;;;;
+;clothingaccessoriestypekidswearscarves;Scarves;;;;;;
+;innerweartypekidswearbriefsandtrunks;Briefs & Trunks;;;;;;
+;occasionkidswearwestern;Western;;;;;;
+;garmenttreatmenttypekidswearpigmentdye;Pigment Dye;;;;;;
+;seasonkidswearaw15;Aw15;;;;;;
+;seasonkidswearss20;Ss20;;;;;;
+;closurekidswearvelcro;Velcro;;;;;;
+;closurekidswearlace;Lace;;;;;;
+;closurekidswearsnapbutton;Snap Button;;;;;;
+;garmentlengthkidswearmidi;Midi;;;;;;
+;garmentlengthkidswearcalflength;Calf Length;;;;;;
+;fabricfamilykidswearrayon;Rayon;;;;;;
+;fabricfamilykidswearviscose;Viscose;;;;;;
+;fabricfamilykidswearcashmere;Cashmere;;;;;;
+;fabricfamilykidswearacrylic;Acrylic;;;;;;
+;fabricfamilykidsweartwill;Twill;;;;;;
+;fabricfamilykidswearflannel;Flannel;;;;;;
+;fabricfamilykidswearnylonspandex;Nylon Spandex;;;;;;
+;fabricfamilykidswearsupimacotton;Supima Cotton;;;;;;
+;fabricfamilykidswearvoil;Voil;;;;;;
+;fabricfamilykidswearrayonblend;Rayon Blend;;;;;;
+;fabricfamilykidswearflatknit;Flat Knit;;;;;;
+;fabricfamilykidswearpashmina;Pashmina;;;;;;
+;sizekidswear6to12m;6-12 M;;;;;;
+;sizekidswear4to5y;4-5 Y;;;;;;
+;sizekidswear7to8y;7-8 Y;;;;;;
+;sizekidswear12to14y;12-14 Y;;;;;;
+;sizekidswearxl;Xl;;;;;;
+;patternkidswearembellished;Embellished;;;;;;
+;patternkidswearapplique;Applique;;;;;;
+;patternkidswearspecialweaves;Special Weaves;;;;;;
+;patternkidsweartattered;Tattered;;;;;;
+;sleevekidswear3slash4thsleeves;3/4Th Sleeves;;;;;;
+;neckkidswearhooded;Hooded;;;;;;
+;neckkidswearpeterpancollar;Peter Pan Collar;;;;;;
+;neckkidswearhenley;Henley;;;;;;
+;neckkidswearscoop;Scoop;;;;;;
+;neckkidswearcowl;Cowl;;;;;;
+;neckkidswearhood;Hood;;;;;;
+;noofcomponentkidswear6;6;;;;;;
+;noofcomponentkidswear16;16;;;;;;
+;characterkidswearsuperman;Superman;;;;;;
+;characterkidswearkrrish;Krrish;;;;;;
+;characterkidswearlooneytunes;Looney Tunes;;;;;;
+;characterkidsweararchies;Archies;;;;;;
+;characterkidswearmutantninjaturtles;Mutant Ninja Turtles;;;;;;
+;characterkidsweartoystory;Toy Story;;;;;;
+;characterkidswearmarvel;Marvel;;;;;;
+;characterkidswearhotwheels;Hotwheels;;;;;;
+;fitkidswearsuperskinny;Super Skinny;;;;;;
+;fitkidswearslimboot;Slim Boot;;;;;;
+;fitkidswearmodern;Modern;;;;;;
+;garmenttypekidswearsalwar;Salwar;;;;;;
+;garmenttypekidswearbikini;Bikini;;;;;;
+;clothingaccessoriestypekidswearmittens;Mittens;;;;;;
+;clothingaccessoriestypekidswearbandanas;Bandanas;;;;;;
+;clothingsetskidswear3slash4thsets;3/4Th Sets;;;;;;
+;innerweartypekidswearbloomersandshorts;Bloomers & Shorts;;;;;;
+;swimmingaccessoriestypekidswearswimminggoggles;Swimming Goggles;;;;;;
+;occasionkidswearparty;Party;;;;;;
+;garmenttreatmenttypekidswearlightwash;Light Wash;;;;;;
+;garmenttreatmenttypekidswearstonewash;Stone Wash;;;;;;
+;garmenttreatmenttypekidswearenzymewash;Enzyme Wash;;;;;;
+;seasonkidswearaw14;Aw 14;;;;;;
+;seasonkidswearss19;Ss19;;;;;;
+;closurekidswearcord;Cord;;;;;;
+;closurekidswearchains;Chains;;;;;;
+;closurekidswearhooks;Hooks;;;;;;
+;closurekidswearnoclosure;No Closure;;;;;;
+;garmentlengthkidswearshort;Short;;;;;;
+;garmentlengthkidswearthighlength;Thigh Length;;;;;;
+;fabricfamilykidswearcotton;Cotton;;;;;;
+;fabricfamilykidswearchiffon;Chiffon;;;;;;
+;fabricfamilykidswearfauxfur;Faux Fur;;;;;;
+;fabricfamilykidswearmesh;Mesh;;;;;;
+;fabricfamilykidsweartencel;Tencel;;;;;;
+;fabricfamilykidsweartafetta;Tafetta;;;;;;
+;fabricfamilykidswearterry;Terry;;;;;;
+;fabricfamilykidswearfashionknits;Fashion Knits;;;;;;
+;fabricfamilykidswearpolyesterspandex;Polyester Spandex;;;;;;
+;fabricfamilykidswearpoplin;Poplin;;;;;;
+;fabricfamilykidswearpolycot;Poly Cot;;;;;;
+;fabricfamilykidswearmicrofiber;Microfiber;;;;;;
+;fabricfamilykidswearslub;Slub;;;;;;
+;fabricfamilykidswearinterlock;Interlock;;;;;;
+;fabricfamilykidswearkhadiblend;Khadi Blend;;;;;;
+;sizekidswear3to6m;3-6 M;;;;;;
+;sizekidswear3to4y;3-4 Y;;;;;;
+;sizekidswear4to6y;4-6 Y;;;;;;
+;sizekidswear10to11y;10-11 Y;;;;;;
+;sizekidswear15to16y;15-16 Y;;;;;;
+;sizekidswears;S;;;;;;
+;sizekidswearmslashl;M/L;;;;;;
+;patternkidsweartextured;Textured;;;;;;
+;patternkidswearlazer;Lazer;;;;;;
+;patternkidswearhandloom;Handloom;;;;;;
+;sleevekidswearsleeveless;Sleeveless;;;;;;
+;sleevekidswearpuffsleeves;Puff Sleeves;;;;;;
+;neckkidswearsquareneck;Square Neck;;;;;;
+;neckkidswearmandarincollar;Mandarin Collar;;;;;;
+;neckkidswearnehrucollar;Nehru Collar;;;;;;
+;neckkidswearbandcollar;Band Collar;;;;;;
+;neckkidsweardropshoulder;Drop Shoulder;;;;;;
+;neckkidswearoneshoulder;One Shoulder;;;;;;
+;noofcomponentkidswear2;2;;;;;;
+;noofcomponentkidswear10;10;;;;;;
+;genderkidsweargirls;Girls;;;;;;
+;characterkidswearben10;Ben 10;;;;;;
+;characterkidswearplanes;Planes;;;;;;
+;characterkidswearspiderman;Spiderman;;;;;;
+;characterkidswearhellokitty;Hello Kitty;;;;;;
+;characterkidswearthejunglebook;The Jungle Book;;;;;;
+;characterkidsweardccomics;Dc Comics;;;;;;
+;fitkidswearskinny;Skinny;;;;;;
+;fitkidsweartapered;Tapered;;;;;;
+;fitkidswearlowcrotch;Low Crotch;;;;;;
+;garmenttypekidswearswimshorts;Swim Shorts;;;;;;
+;garmenttypekidswearjumpsuit;Jumpsuit;;;;;;
+;clothingaccessoriestypekidswearbooties;Booties;;;;;;
+;clothingaccessoriestypekidswearsets;Sets;;;;;;
+;clothingaccessoriestypekidswearumbrellas;Umbrellas;;;;;;
+;clothingsetskidsweargiftsets;Gift Sets;;;;;;
+;innerweartypekidswearpanties;Panties;;;;;;
+;rainweartypekidswearraincoats;Rain Coats;;;;;;
+;exclusivelinefortatacliqkidswearyes;Yes;;;;;;
+;occasionkidswearsports;Sports;;;;;;
+;waistrisekidswearultralow;Ultra Low;;;;;;
+;seasonkidswearaw16;Aw16;;;;;;
+;seasonkidswearaw19;Aw19;;;;;;
+;closurekidsweardrawstring;Drawstring;;;;;;
+;closurekidswearrouched;Rouched;;;;;;
+;garmentlengthkidswearfulllength;Full Length;;;;;;
+;garmentlengthkidswearregularlength;Regular Length;;;;;;
+;fabricfamilykidswearcottonblend;Cotton Blend;;;;;;
+;fabricfamilykidswearcrepe;Crepe;;;;;;
+;fabricfamilykidswearwool;Wool;;;;;;
+;fabricfamilykidswearpique;Pique;;;;;;
+;fabricfamilykidswearnylon;Nylon;;;;;;
+;fabricfamilykidswearseersucker;Seersucker;;;;;;
+;fabricfamilykidsweartweed;Tweed;;;;;;
+;fabricfamilykidswearkhadi;Khadi;;;;;;
+;fabricfamilykidswearsatin;Satin;;;;;;
+;fabricfamilykidswearpolyfill;Polyfill;;;;;;
+;fabricfamilykidswearhempblend;Hemp Blend;;;;;;
+;fabricfamilykidswearbhagalpur;Bhagalpur;;;;;;
+;sizekidswear0to3m;0-3 M;;;;;;
+;sizekidswear2to4y;2-4 Y;;;;;;
+;sizekidswear11to12y;11-12 Y;;;;;;
+;sizekidswearl;L;;;;;;
+;patternkidswearcamouflage;Camouflage;;;;;;
+;patternkidswearcutwork;Cut Work;;;;;;
+;patternkidswearbasic;Basic;;;;;;
+;patternkidswearwashed;Washed;;;;;;
+;sleevekidswearfullsleeves;Full Sleeves;;;;;;
+;sleevekidswearrollupsleeves;Roll Up Sleeves;;;;;;
+;neckkidswearlapelcollar;Lapel Collar;;;;;;
+;neckkidswearhalterneck;Halter Neck;;;;;;
+;neckkidswearmockcollar;Mock Collar;;;;;;
+;neckkidswearmockturtleneck;Mock Turtleneck;;;;;;
+;neckkidswearwide;Wide;;;;;;
+;noofcomponentkidswear1;1;;;;;;
+;noofcomponentkidswear4;4;;;;;;
+;noofcomponentkidswear7;7;;;;;;
+;noofcomponentkidswear14;14;;;;;;
+;characterkidsweartomandjerry;Tom And Jerry;;;;;;
+;characterkidswearmrpmenlittlemiss;Mr. Men Little Miss;;;;;;
+;characterkidswearphineasandferb;Phineas & Ferb;;;;;;
+;characterkidsweardoraemon;Doraemon;;;;;;
+;characterkidswearmrpbean;Mr. Bean;;;;;;
+;characterkidswearlittlekrishna;Little Krishna;;;;;;
+;characterkidswearpokemon;Pokemon;;;;;;
+;characterkidswearjusticeleague;Justice League;;;;;;
+;fitkidswearslimstraight;Slim Straight;;;;;;
+;fitkidswearcomfort;Comfort;;;;;;
+;fitkidswearhipster;Hipster;;;;;;
+;garmenttypekidswearpalazzo;Palazzo;;;;;;
+;garmenttypekidswearpatiala;Patiala;;;;;;
+;garmenttypekidswearshorts;Shorts;;;;;;
+;garmenttypekidswearskirt;Skirt;;;;;;
+;clothingaccessoriestypekidswearsocks;Socks;;;;;;
+;clothingaccessoriestypekidswearheadbands;Headbands;;;;;;
+;clothingaccessoriestypekidswearbib;Bib;;;;;;
+;clothingaccessoriestypekidswearstoles;Stoles;;;;;;
+;clothingaccessoriestypekidswearwristbands;Wrist Bands;;;;;;
+;clothingsetskidswearjumpsuitset;Jumpsuit Set;;;;;;
+;innerweartypekidsweartrainingbras;Training Bras;;;;;;
+;occasionkidswearcasual;Casual;;;;;;
+;garmenttreatmenttypekidswearmediumwash;Medium Wash;;;;;;
+;garmenttreatmenttypekidsweardipdye;Dip Dye;;;;;;
+;garmenttreatmenttypekidswearbleached;Bleached;;;;;;
+;seasonkidswearbeforeaw14;<Aw 14;;;;;;
+;closurekidswearplacket;Placket;;;;;;
+;closurekidswearconcealedplacket;Concealed Placket;;;;;;
+;closurekidswearloopsslashrings;Loops/Rings;;;;;;
+;garmentlengthkidswearkneelength;Knee Length;;;;;;
+;garmentlengthkidswearanklelength;Ankle Length;;;;;;
+;fabricfamilykidswearsilk;Silk;;;;;;
+;fabricfamilykidswearviscoselycra;Viscose Lycra;;;;;;
+;fabricfamilykidswearcrochet;Crochet;;;;;;
+;fabricfamilykidswearramie;Ramie;;;;;;
+;fabricfamilykidswearjaquard;Jaquard;;;;;;
+;fabricfamilykidswearchino;Chino;;;;;;
+;fabricfamilykidswearpolyamidespandex;Polyamide Spandex;;;;;;
+;fabricfamilykidswearbrushedcotton;Brushed Cotton;;;;;;
+;fabricfamilykidswearoxford;Oxford;;;;;;
+;fabricfamilykidswearjersey;Jersey;;;;;;
+;fabricfamilykidswearlooper;Looper;;;;;;
+;sizekidswear0m;0 M;;;;;;
+;sizekidswear9to12m;9-12 M;;;;;;
+;sizekidswear6to7y;6-7 Y;;;;;;
+;sizekidswear6to8y;6-8 Y;;;;;;
+;sizekidswear13to14y;13-14 Y;;;;;;
+;sizekidswearxxl;Xxl;;;;;;
+;patternkidswearepaulettes;Epaulettes;;;;;;
+;patternkidswearmessage;Message;;;;;;
+;sleevekidswearcapsleeves;Cap Sleeves;;;;;;
+;neckkidswearvneck;V Neck;;;;;;
+;neckkidswearboatneck;Boat Neck;;;;;;
+;neckkidswearkeyhole;Keyhole;;;;;;
+;neckkidswearnocollar;No Collar;;;;;;
+;noofcomponentkidswear11;11;;;;;;
+;noofcomponentkidswear17;17;;;;;;
+;genderkidswearunisex;Unisex;;;;;;
+;characterkidswearmadagascar;Madagascar;;;;;;
+;characterkidswearpowerpuffgirls;Power Puff Girls;;;;;;
+;characterkidsweardonaldduck;Donald Duck;;;;;;
+;characterkidswearmarvelavengers;Marvel Avengers;;;;;;
+;characterkidswearetodzz;Etodzz;;;;;;
+;characterkidswearmotupatlu;Motu Patlu;;;;;;
+;occasionkidswearethnic;Ethnic;;;;;;
+;garmenttreatmenttypekidsweardarkwash;Dark Wash;;;;;;
+;waistrisekidswearlow;Low;;;;;;
+;waistrisekidswearregular;Regular;;;;;;
+;seasonkidswearss15;Ss15;;;;;;
+;seasonkidswearss18;Ss18;;;;;;
+;closurekidswearhalfplacket;Half Placket;;;;;;
+;closurekidswearelasticated;Elasticated;;;;;;
+;closurekidsweardring;D Ring;;;;;;
+;closurekidswearbutton;Button;;;;;;
+;garmentlengthkidswearhiplength;Hip Length;;;;;;
+;fabricfamilykidswearpolyester;Polyester;;;;;;
+;fabricfamilykidswearfleece;Fleece;;;;;;
+;fabricfamilykidswearsilkblend;Silk Blend;;;;;;
+;fabricfamilykidswearlinenblend;Linen Blend;;;;;;
+;fabricfamilykidswearvelvet;Velvet;;;;;;
+;fabricfamilykidswearsuede;Suede;;;;;;
+;fabricfamilykidswearpiquelycra;Pique Lycra;;;;;;
+;fabricfamilykidswearpu;Pu;;;;;;
+;fabricfamilykidswearloopknit;Loop Knit;;;;;;
+;fabricfamilykidswearmercerised;Mercerised;;;;;;
+;fabricfamilykidsweartussar;Tussar;;;;;;
+;fabricfamilykidswearrib;Rib;;;;;;
+;fabricfamilykidswearspandexblends;Spandex Blends;;;;;;
+;fabricfamilykidswearartsilk;Art Silk;;;;;;
+;sizekidswear1to2y;1-2 Y;;;;;;
+;sizekidswear12to18m;12-18 M;;;;;;
+;sizekidswear9to10y;9-10 Y;;;;;;
+;sizekidswear12to13y;12-13 Y;;;;;;
+;sizekidswearm;M;;;;;;
+;patternkidswearsolid;Solid;;;;;;
+;patternkidswearprinted;Printed;;;;;;
+;patternkidswearplaid;Plaid;;;;;;
+;patternkidswearcutnsew;Cut N Sew;;;;;;
+;patternkidswearpinstripe;Pinstripe;;;;;;
+;patternkidsweardistressed;Distressed;;;;;;
+;sleevekidsweardropshoulder;Drop Shoulder;;;;;;
+;neckkidswearpoloneck;Polo Neck;;;;;;
+;noofcomponentkidswear5;5;;;;;;
+;noofcomponentkidswear18;18;;;;;;
+;genderkidswearboys;Boys;;;;;;
+;characterkidsweardora;Dora;;;;;;
+;characterkidsweartweety;Tweety;;;;;;
+;characterkidswearkungfupanda;Kung Fu Panda;;;;;;
+;characterkidsweargoofy;Goofy;;;;;;
+;characterkidswearmarvelcomics;Marvel Comics;;;;;;
+;fitkidswearbootcut;Bootcut;;;;;;
+;fitkidswearextraslim;Extra Slim;;;;;;
+;fitkidswearathletic;Athletic;;;;;;
+;garmenttypekidswearcapri;Capri;;;;;;
+;garmenttypekidswear2hyphenpiece;2-Piece;;;;;;
+;clothingaccessoriestypekidswearstockings;Stockings;;;;;;
+;clothingsetskidswearshortsets;Short Sets;;;;;;
+;clothingsetskidsweardungareeset;Dungaree Set;;;;;;
+;innerweartypekidswearvests;Vests;;;;;;
+;rainweartypekidswearrainjackets;Rain Jackets;;;;;;
+;characterkidsweareteenz;Eteenz;;;;;;
+;characterkidswearninjahattori;Ninja Hattori;;;;;;
+;fitkidswearstraight;Straight;;;;;;
+;fitkidswearwide;Wide;;;;;;
+;garmenttypekidswearchuridar;Churidar;;;;;;
+;garmenttypekidswearpajamas;Pajamas;;;;;;
+;garmenttypekidswearswimtops;Swim Tops;;;;;;
+;garmenttypekidswearhipster;Hipster;;;;;;
+;clothingaccessoriestypekidswearmufflers;Mufflers;;;;;;
+;clothingaccessoriestypekidswearbeanies;Beanies;;;;;;
+;clothingaccessoriestypekidswearbonnets;Bonnets;;;;;;
+;clothingaccessoriestypekidswearsuspenders;Suspenders;;;;;;
+;clothingaccessoriestypekidswearbelts;Belts;;;;;;
+;clothingsetskidsweartunicsets;Tunic Sets;;;;;;
+;clothingsetskidswearcaprisets;Capri Sets;;;;;;
+;innerweartypekidswearslips;Slips;;;;;;
+;swimmingaccessoriestypekidswearswimmingcaps;Swimming Caps;;;;;;
+
+
+
+# Classification Class
+# Macros / Replacement Parameter definitions
+$productCatalog=mplProductCatalog
+$productCatalogName=Marketplace Product Catalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$unit=unit(code,$classSystemVersion)
+
+
+INSERT_UPDATE classificationclass;code[unique=true];name[lang=en];catalogVersion(catalog(id),version);;;;;
+
+;modelfitkidswearCC;modelfitkidswearClassifyingCategory;pcmClassification:1;;;;;
+;characterkidswearCC;characterkidswearClassifyingCategory;pcmClassification:1;;;;;
+;packagecontentkidswearCC;packagecontentkidswearClassifyingCategory;pcmClassification:1;;;;;
+;occasionkidswearCC;occasionkidswearClassifyingCategory;pcmClassification:1;;;;;
+;sleevekidswearCC;sleevekidswearClassifyingCategory;pcmClassification:1;;;;;
+;garmentlengthkidswearCC;garmentlengthkidswearClassifyingCategory;pcmClassification:1;;;;;
+;colorfamilyapparelCC;colorfamilyapparelClassifyingCategory;pcmClassification:1;;;;;
+;categorytypekidswearCC;categorytypekidswearClassifyingCategory;pcmClassification:1;;;;;
+;packquantityCC;packquantityClassifyingCategory;pcmClassification:1;;;;;
+;exclusivelinefortatacliqkidswearCC;exclusivelinefortatacliqkidswearClassifyingCategory;pcmClassification:1;;;;;
+;stylenoteCC;stylenoteClassifyingCategory;pcmClassification:1;;;;;
+;sizeguidekidswearCC;sizeguidekidswearClassifyingCategory;pcmClassification:1;;;;;
+;fabricfamilykidswearCC;fabricfamilykidswearClassifyingCategory;pcmClassification:1;;;;;
+;garmentweightkidswearCC;garmentweightkidswearClassifyingCategory;pcmClassification:1;;;;;
+;innerweartypekidswearCC;innerweartypekidswearClassifyingCategory;pcmClassification:1;;;;;
+;fitkidswearCC;fitkidswearClassifyingCategory;pcmClassification:1;;;;;
+;multipackCC;multipackClassifyingCategory;pcmClassification:1;;;;;
+;genderkidswearCC;genderkidswearClassifyingCategory;pcmClassification:1;;;;;
+;noofcomponentkidswearCC;noofcomponentkidswearClassifyingCategory;pcmClassification:1;;;;;
+;featurekidswearCC;featurekidswearClassifyingCategory;pcmClassification:1;;;;;
+;sizekidswearCC;sizekidswearClassifyingCategory;pcmClassification:1;;;;;
+;closurekidswearCC;closurekidswearClassifyingCategory;pcmClassification:1;;;;;
+;seasonkidswearCC;seasonkidswearClassifyingCategory;pcmClassification:1;;;;;
+;washcarekidswearCC;washcarekidswearClassifyingCategory;pcmClassification:1;;;;;
+;packcolorCC;packcolorClassifyingCategory;pcmClassification:1;;;;;
+;clothingsetskidswearCC;clothingsetskidswearClassifyingCategory;pcmClassification:1;;;;;
+;waistrisekidswearCC;waistrisekidswearClassifyingCategory;pcmClassification:1;;;;;
+;garmenttypekidswearCC;garmenttypekidswearClassifyingCategory;pcmClassification:1;;;;;
+;neckkidswearCC;neckkidswearClassifyingCategory;pcmClassification:1;;;;;
+;patternkidswearCC;patternkidswearClassifyingCategory;pcmClassification:1;;;;;
+;collectionkidswearCC;collectionkidswearClassifyingCategory;pcmClassification:1;;;;;
+;rainweartypekidswearCC;rainweartypekidswearClassifyingCategory;pcmClassification:1;;;;;
+;clothingaccessoriestypekidswearCC;clothingaccessoriestypekidswearClassifyingCategory;pcmClassification:1;;;;;
+;garmenttreatmenttypekidswearCC;garmenttreatmenttypekidswearClassifyingCategory;pcmClassification:1;;;;;
+;colorapparelCC;colorapparelClassifyingCategory;pcmClassification:1;;;;;
+;stylecodeCC;stylecodeClassifyingCategory;pcmClassification:1;;;;;
+;fabriccompositionkidswearCC;fabriccompositionkidswearClassifyingCategory;pcmClassification:1;;;;;
+;swimmingaccessoriestypekidswearCC;swimmingaccessoriestypekidswearClassifyingCategory;pcmClassification:1;;;;;
+
+#Class Attribute Assignment 
+#{defaultImpexProductHeader}
+            	$productCatalog=mplProductCatalog
+					$productCatalogName=Marketplace Product Catalog
+					$classificationCatalog=pcmClassification
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+					$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true,default='$classificationCatalog:1']
+					$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1'])[unique=true]
+					$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+					$supercategories=source(code, $classCatalogVersion)[unique=true]
+					$categories=target(code, $catalogVersion)[unique=true]
+					$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+					$unit=unit(code,$classSystemVersion)
+				INSERT_UPDATE classAttributeAssignment;classificationAttribute(code)[unique=true];$unit;attributeType(code);classificationClass(code)[unique=true];attributeValues(code);mandatory(code);multiValued(code);
+				
+
+;colorfamilyapparel;;enum;colorfamilyapparelCC;"beige,black,blue,brown,gold,green,grey,khaki,maroon,multi,navy,orange,peach,pink,purple,red,silver,tan,turquoise,white,yellow,pewter,metallic,coral";true;false
+;stylecode;;string;stylecodeCC;;true;false
+;stylenote;;string;stylenoteCC;;true;false
+;colorapparel;;string;colorapparelCC;;true;false
+;multipack;;enum;multipackCC;"yes,no";true;false
+;packquantity;;string;packquantityCC;;false;false
+;packcolor;;enum;packcolorCC;"beige,black,blue,brown,gold,green,grey,khaki,maroon,multi,navy,orange,peach,pink,purple,red,silver,tan,turquoise,white,yellow,pewter,metallic,coral";false;true
+;featurekidswear;;string;featurekidswearCC;;false;false
+;waistrisekidswear;;enum;waistrisekidswearCC;"waistrisekidswearultralow,waistrisekidswearlow,waistrisekidswearregular,waistrisekidswearmid,waistrisekidswearhigh";true;false
+;washcarekidswear;;string;washcarekidswearCC;;true;false
+;garmentweightkidswear;;string;garmentweightkidswearCC;;true;false
+;collectionkidswear;;string;collectionkidswearCC;;false;false
+;fabriccompositionkidswear;;string;fabriccompositionkidswearCC;;true;false
+;seasonkidswear;;enum;seasonkidswearCC;"seasonkidswearbeforess14,seasonkidswearss15,seasonkidswearaw16,seasonkidswearaw17,seasonkidswearss17,seasonkidswearaw15,seasonkidswearss16,seasonkidswearaw14,seasonkidswearss20,seasonkidswearss19,seasonkidswearbeforeaw14,seasonkidswearaw20,seasonkidswearss18,seasonkidswearaw19,seasonkidswearaw18,seasonkidswearss14";true;false
+;innerweartypekidswear;;enum;innerweartypekidswearCC;"innerweartypekidswearbloomersandshorts,innerweartypekidswearpanties,innerweartypekidswearbriefsandtrunks,innerweartypekidsweartrainingbras,innerweartypekidswearboxers,innerweartypekidswearcamisolesslashspaghetti,innerweartypekidswearvests,innerweartypekidswearslips";true;false
+;rainweartypekidswear;;enum;rainweartypekidswearCC;"rainweartypekidswearrainsuits,rainweartypekidswearraincoats,rainweartypekidswearrainjackets";true;false
+;categorytypekidswear;;string;categorytypekidswearCC;;true;false
+;garmenttreatmenttypekidswear;;enum;garmenttreatmenttypekidswearCC;"garmenttreatmenttypekidswearsoftnerwash,garmenttreatmenttypekidsweardipdye,garmenttreatmenttypekidswearmediumwash,garmenttreatmenttypekidsweardarkwash,garmenttreatmenttypekidswearpigmentdye,garmenttreatmenttypekidswearenzymewash,garmenttreatmenttypekidswearbleached,garmenttreatmenttypekidswearacidwash,garmenttreatmenttypekidswearstonewash,garmenttreatmenttypekidswearrawdenim,garmenttreatmenttypekidswearlightwash,garmenttreatmenttypekidswearrinse";true;false
+;closurekidswear;;enum;closurekidswearCC;"closurekidswearbuttondown,closurekidswearzip,closurekidswearvelcro,closurekidsweardrawstring,closurekidswearhalfplacket,closurekidswearcord,closurekidswearplacket,closurekidswearconcealedplacket,closurekidswearelasticated,closurekidswearchains,closurekidswearloopsslashrings,closurekidsweardring,closurekidswearhooks,closurekidswearslides,closurekidswearsnapbutton,closurekidswear3slash4thplacket,closurekidswearrouched,closurekidswearlace,closurekidswearsidesnap,closurekidswearbuckles,closurekidswearbutton,closurekidswearnoclosure,closurekidswearclasps";true;true
+;sizekidswear;;enum;sizekidswearCC;"sizekidswear0m,sizekidswear0to3m,sizekidswear0to6m,sizekidswear6to9m,sizekidswear9to12m,sizekidswear18to24m,sizekidswear1to2y,sizekidswear3to4y,sizekidswear4to5y,sizekidswear4to6y,sizekidswear6to7y,sizekidswear7to8y,sizekidswear6to8y,sizekidswear12to18m,sizekidswear5to6y,sizekidswear6to12m,sizekidswear8to10y,sizekidswear11to12y,sizekidswear10to12y,sizekidswear12to13y,sizekidswear13to14y,sizekidswear12to14y,sizekidswear14to15y,sizekidswear15to16y,sizekidswear8to9y,sizekidswear10to11y,sizekidswears,sizekidswear2to3y,sizekidswearl,sizekidswearxl,sizekidswear14to16y,sizekidswearxxl,sizekidswear9to10y,sizekidswearmslashl,sizekidswearfreesize,sizekidswear2to4y,sizekidswearm,sizekidswearsslashm,sizekidswearlslashxl,sizekidswear3to6m";true;false
+;patternkidswear;;enum;patternkidswearCC;"patternkidswearsolid,patternkidswearprinted,patternkidswearplaid,patternkidswearcamouflage,patternkidswearembellished,patternkidswearembroidery,patternkidswearembossed,patternkidswearquilted,patternkidswearcutwork,patternkidswearcutnsew,patternkidswearapplique,patternkidsweardigitalprint,patternkidswearmessage,patternkidswearlazer,patternkidswearjacquard,patternkidswearepaulettes,patternkidswearself,patternkidswearstriped,patternkidswearzari,patternkidswearcoated,patternkidswearhandloom,patternkidswearbasic,patternkidswearpinstripe,patternkidsweargraphic,patternkidswearcharacterbased,patternkidsweardistressed,patternkidsweartextured,patternkidswearpigmentdyed,patternkidswearoverdyed,patternkidswearspecialweaves,patternkidswearrippedandrepaired,patternkidswearombre,patternkidswearripped,patternkidswearpatch,patternkidsweartattered,patternkidswearwashed";true;true
+;sleevekidswear;;enum;sleevekidswearCC;"sleevekidswearfullsleeves,sleevekidswearsleeveless,sleevekidswearcapsleeves,sleevekidswearhalfsleeves,sleevekidswearpuffsleeves,sleevekidswearrollupsleeves,sleevekidswearcutsleeves,sleevekidswearshortsleeves,sleevekidsweardropshoulder,sleevekidswear3slash4thsleeves";true;false
+;neckkidswear;;enum;neckkidswearCC;"neckkidswearhooded,neckkidswearsquareneck,neckkidswearroundneck,neckkidswearpeterpancollar,neckkidswearlapelcollar,neckkidswearcollar,neckkidswearspaghettineck,neckkidswearnehrucollar,neckkidswearhalterneck,neckkidswearvneck,neckkidswearchineseneckwithcollar,neckkidswearpoloneck,neckkidswearboatneck,neckkidswearasymmetric,neckkidswearroundneckwithcollar,neckkidswearbuttondown,neckkidswearmockcollar,neckkidswearbandcollar,neckkidswearrollcollar,neckkidsweardropshoulder,neckkidswearcowl,neckkidswearkeyhole,neckkidswearmockturtleneck,neckkidswearscoop,neckkidswearhighneck,neckkidswearsweetheart,neckkidswearcrewneck,neckkidswearoneshoulder,neckkidswearhenley,neckkidswearasymmetrical,neckkidswearnocollar,neckkidswearwide,neckkidswearshawl,neckkidswearmandarincollar,neckkidswearhood,neckkidswearturtleneck";true;false
+;characterkidswear;;enum;characterkidswearCC;"characterkidswearsuperman,characterkidswearangrybirds,characterkidsweartomandjerry,characterkidswearbatman,characterkidsweardisneyprincess,characterkidsweardora,characterkidswearmadagascar,characterkidswearmickeyandfriends,characterkidswearlooneytunes,characterkidswearben10,characterkidswearplanes,characterkidsweartweety,characterkidswearavengers,characterkidswearspiderman,characterkidswearmrpmenlittlemiss,characterkidswearchhotabheem,characterkidswearkrrish,characterkidsweararchies,characterkidswearspongebob,characterkidswearmrpbean,characterkidswearlionking,characterkidswearcars,characterkidswearmutantninjaturtles,characterkidswearkungfupanda,characterkidswearhannahmontana,characterkidswearpowerrangers,characterkidsweardoraemon,characterkidswearpowerpuffgirls,characterkidsweartoystory,characterkidsweargoofy,characterkidswearphineasandferb,characterkidswearthejunglebook,characterkidswearhellokitty,characterkidswearbarbie,characterkidswearwinniethepooh,characterkidsweartigger,characterkidswearmarvelcomics,characterkidswearpopeye,characterkidsweartarzan,characterkidswearpokemon,characterkidswearmarvel,characterkidswearlittlekrishna,characterkidswearkidsville,characterkidsweareteenz,characterkidsweardisney,characterkidswearetodzz,characterkidswearmickey,characterkidsweardccomics,characterkidswearninjahattori,characterkidswearmonsterhigh,characterkidswearjusticeleague,characterkidswearhotwheels,characterkidsweardonaldduck,characterkidswearmarvelavengers,characterkidswearmotupatlu";false;false
+;swimmingaccessoriestypekidswear;;enum;swimmingaccessoriestypekidswearCC;"swimmingaccessoriestypekidswearswimmingcaps,swimmingaccessoriestypekidswearswimminggoggles";true;false
+;sizeguidekidswear;;string;sizeguidekidswearCC;;true;false
+;occasionkidswear;;enum;occasionkidswearCC;"occasionkidswearcasual,occasionkidsweareverydaywear,occasionkidswearsports,occasionkidswearactive,occasionkidswearsleepwear,occasionkidswearethnic,occasionkidswearparty,occasionkidswearwestern";true;false
+;modelfitkidswear;;string;modelfitkidswearCC;;false;false
+;garmentlengthkidswear;;enum;garmentlengthkidswearCC;"garmentlengthkidswearfulllength,garmentlengthkidswearkneelength,garmentlengthkidswearshort,garmentlengthkidswearregularlength,garmentlengthkidswearwaistlength,garmentlengthkidswearhiplength,garmentlengthkidswearanklelength,garmentlengthkidswearmini,garmentlengthkidswearcalflength,garmentlengthkidswear3slash4thlength,garmentlengthkidswearthighlength,garmentlengthkidswearmidi,garmentlengthkidswearcroppedlength";true;false
+;fabricfamilykidswear;;enum;fabricfamilykidswearCC;"fabricfamilykidswearcotton,fabricfamilykidswearcottonblend,fabricfamilykidswearcottonlycra,fabricfamilykidswearpolyester,fabricfamilykidsweardenim,fabricfamilykidswearfleece,fabricfamilykidswearsilk,fabricfamilykidswearcrepe,fabricfamilykidswearfauxfur,fabricfamilykidswearviscose,fabricfamilykidswearviscoselycra,fabricfamilykidswearrayon,fabricfamilykidswearmodal,fabricfamilykidswearviscoseblend,fabricfamilykidswearlinenblend,fabricfamilykidswearvelvet,fabricfamilykidswearcrochet,fabricfamilykidswearcashmere,fabricfamilykidswearlinen,fabricfamilykidswearsilkblend,fabricfamilykidswearmesh,fabricfamilykidsweargeorgette,fabricfamilykidswearfauxsuede,fabricfamilykidswearpique,fabricfamilykidswearleather,fabricfamilykidsweartencel,fabricfamilykidswearacrylic,fabricfamilykidswearcottonsilk,fabricfamilykidswearhemp,fabricfamilykidswearbamboo,fabricfamilykidswearramie,fabricfamilykidswearjaquard,fabricfamilykidswearwool,fabricfamilykidswearchambray,fabricfamilykidswearnylon,fabricfamilykidswearcorduroy,fabricfamilykidswearseersucker,fabricfamilykidswearpiquelycra,fabricfamilykidswearpu,fabricfamilykidswearsuede,fabricfamilykidsweartafetta,fabricfamilykidswearcanvas,fabricfamilykidsweartwilllycra,fabricfamilykidswearchino,fabricfamilykidsweardobby,fabricfamilykidswearflannel,fabricfamilykidswearkhadi,fabricfamilykidswearloopknit,fabricfamilykidsweartwill,fabricfamilykidswearlace,fabricfamilykidswearperformancefabrics,fabricfamilykidsweartweed,fabricfamilykidswearfashionknits,fabricfamilykidswearpolyamidespandex,fabricfamilykidswearnylonpolyester,fabricfamilykidswearbrushedcotton,fabricfamilykidswearsupimacotton,fabricfamilykidswearstructured,fabricfamilykidswearpoplin,fabricfamilykidswearnylonspandex,fabricfamilykidswearmercerised,fabricfamilykidswearherringbone,fabricfamilykidswearpolyesterspandex,fabricfamilykidswearbroadcloth,fabricfamilykidswearpolyamide,fabricfamilykidswearsatin,fabricfamilykidswearpolycot,fabricfamilykidswearpolyfill,fabricfamilykidswearoxford,fabricfamilykidswearvoil,fabricfamilykidswearpoplinlycra,fabricfamilykidswearmodalblend,fabricfamilykidswearburnout,fabricfamilykidswearslub,fabricfamilykidswearinterlock,fabricfamilykidswearrib,fabricfamilykidswearrayonblend,fabricfamilykidswearbambooblend,fabricfamilykidswearhempblend,fabricfamilykidswearjersey,fabricfamilykidswearorganiccotton,fabricfamilykidswearlooper,fabricfamilykidsweartussar,fabricfamilykidswearmicrofiber,fabricfamilykidswearchiffon,fabricfamilykidswearbrocade,fabricfamilykidswearflatknit,fabricfamilykidswearknit,fabricfamilykidswearspandexblends,fabricfamilykidswearkhadiblend,fabricfamilykidswearcottonwoolblend,fabricfamilykidsweardrifit,fabricfamilykidswearartsilk,fabricfamilykidswearpashmina,fabricfamilykidswearbhagalpur,fabricfamilykidsweargabardine,fabricfamilykidswearterry,fabricfamilykidswearrawdenim";true;false
+;noofcomponentkidswear;;enum;noofcomponentkidswearCC;"noofcomponentkidswear1,noofcomponentkidswear2,noofcomponentkidswear3,noofcomponentkidswear4,noofcomponentkidswear6,noofcomponentkidswear5,noofcomponentkidswear11,noofcomponentkidswear13,noofcomponentkidswear15,noofcomponentkidswear12,noofcomponentkidswear10,noofcomponentkidswear18,noofcomponentkidswear14,noofcomponentkidswear20,noofcomponentkidswear19,noofcomponentkidswear17,noofcomponentkidswear7,noofcomponentkidswear9,noofcomponentkidswear8,noofcomponentkidswear16";true;false
+;packagecontentkidswear;;string;packagecontentkidswearCC;;true;false
+;genderkidswear;;enum;genderkidswearCC;"genderkidsweargirls,genderkidswearboys,genderkidswearunisex";true;false
+;fitkidswear;;enum;fitkidswearCC;"fitkidswearsuperskinny,fitkidswearskinny,fitkidswearslim,fitkidswearstraight,fitkidswearbootcut,fitkidsweartapered,fitkidswearregular,fitkidswearclassic,fitkidswearmodern,fitkidswearcomfort,fitkidswearextraslim,fitkidswearnarrow,fitkidswearhipster,fitkidswearslimboot,fitkidswearathletic,fitkidswearlowcrotch,fitkidswearfitted,fitkidswearwide,fitkidswearrelaxed,fitkidswearcigarette,fitkidswearloose,fitkidswearflared,fitkidswearslimstraight";false;false
+;garmenttypekidswear;;enum;garmenttypekidswearCC;"garmenttypekidswearchuridar,garmenttypekidswearsalwar,garmenttypekidswearpalazzo,garmenttypekidswearharem,garmenttypekidswearpants,garmenttypekidswearcapri,garmenttypekidswearbermudas,garmenttypekidswear2hyphenpiece,garmenttypekidswearshorts,garmenttypekidswearonehyphenpiece,garmenttypekidswearbikini,garmenttypekidswearhipster,garmenttypekidswearswimtops,garmenttypekidswearskirt,garmenttypekidswearswimshorts,garmenttypekidsweardhoti,garmenttypekidsweardungaree,garmenttypekidswearjumpsuit,garmenttypekidswearpatiala,garmenttypekidswearpajamas,garmenttypekidswear3slash4th";true;false
+;clothingaccessoriestypekidswear;;enum;clothingaccessoriestypekidswearCC;"clothingaccessoriestypekidswearcaps,clothingaccessoriestypekidswearmufflers,clothingaccessoriestypekidswearbeanies,clothingaccessoriestypekidswearmittens,clothingaccessoriestypekidswearstockings,clothingaccessoriestypekidsweargloves,clothingaccessoriestypekidswearbooties,clothingaccessoriestypekidswearsets,clothingaccessoriestypekidswearbonnets,clothingaccessoriestypekidswearstoles,clothingaccessoriestypekidswearsuspenders,clothingaccessoriestypekidswearscarves,clothingaccessoriestypekidswearbelts,clothingaccessoriestypekidswearsocks,clothingaccessoriestypekidswearbib,clothingaccessoriestypekidswearumbrellas,clothingaccessoriestypekidswearhats,clothingaccessoriestypekidswearbandanas,clothingaccessoriestypekidswearheadbands,clothingaccessoriestypekidswearwristbands";true;false
+;clothingsetskidswear;;enum;clothingsetskidswearCC;"clothingsetskidswearshortsets,clothingsetskidswear3slash4thsets,clothingsetskidsweartunicsets,clothingsetskidswearskirtsets,clothingsetskidsweardungareeset,clothingsetskidswearjumpsuitset,clothingsetskidswearfulllengthsets,clothingsetskidswearcaprisets,clothingsetskidsweargiftsets";true;false
+;exclusivelinefortatacliqkidswear;;enum;exclusivelinefortatacliqkidswearCC;"exclusivelinefortatacliqkidswearyes,exclusivelinefortatacliqkidswearno";false;false
+
+
+
+#Solr Impex
 # Import the Solr configuration for the store
 #
 $prefix=mpl
@@ -107,5 +763,11 @@ INSERT_UPDATE Sizesystem;name[unique=true];from;to;conversionUnit;propertyName;
 ;15-16 Yto14-16 Y;15-16 Y;14-16 Y;0.00;KidswearSize
 ;14-16 Yto14-16 Y;14-16 Y;14-16 Y;0.00;KidswearSize
 
+#CS Cockpit 
 INSERT_UPDATE UserGroup;UID[unique=true];groups(uid)[mode=append];locname[lang=en]
 ;storemanageragentgroup;csagentgroup;"storemanageragentgroup"
+
+#Sitemap Cronjob
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+;siteMapZipperJob;siteMapZipperJob;false;en
+
