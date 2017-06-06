@@ -53,8 +53,8 @@ INSERT_UPDATE LuxEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=t
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
 ;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
 ;;NewArrivalsCategoryLink;New Arrivals Category Link;/new-arrivals;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
-;;WomenCategoryLink;Women Category Link;/womenlandingpage;WomenCategoryLink;WomenCategoryLink;;;;Women      
-;;MenCategoryLink;Men Category Link;/menlandingpage;MenCategoryLink;MenCategoryLink;;;;Men    
+;;WomenCategoryLink;Women Category Link;/womenlanding;WomenCategoryLink;WomenCategoryLink;;;;Women      
+;;MenCategoryLink;Men Category Link;/menlanding;MenCategoryLink;MenCategoryLink;;;;Men    
 ;;LifestyleCategoryLink;Lifestyle Category Link;/lifestyle;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
 ;;BeautyCategoryLink;Beauty Category Link;/beauty;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
 ;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
