@@ -70699,3 +70699,8 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 	float: right;
 } 
 /*TISSTRT-1565 end*/
+/*TISSTRT-1581 start*/
+.checkout-content.checkout-payment.cart.checkout.wrapper .checkout-order-summary .shipping span.shippingSpan{
+	padding: 0;
+}
+/*TISSTRT-1581 end*/
