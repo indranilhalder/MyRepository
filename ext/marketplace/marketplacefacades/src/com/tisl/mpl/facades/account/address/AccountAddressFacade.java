@@ -537,6 +537,8 @@ public class AccountAddressFacade implements MplAccountAddressFacade
 					addressmodel.setAddressType(newAddress.getAddressType());
 					addressmodel.setLocality(newAddress.getLocality());
 					addressmodel.setAddressLine3(newAddress.getLine3());
+					//TISKIDK-1298
+					addressmodel.setLandmark(newAddress.getLandmark());
 				}
 
 				customerAccountService.saveAddressEntry(currentCustomer, addressmodel);
