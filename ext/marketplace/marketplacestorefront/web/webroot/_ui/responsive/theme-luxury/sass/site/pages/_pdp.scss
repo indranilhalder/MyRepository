@@ -90,22 +90,48 @@
 		
 		li {
 			display: inline-block;
-			width: 44px;
-			height: 44px;
-			border-radius: 50%;
-			text-align: center;
-			border: 1px solid #e2e6ee;
-			line-height: 44px;
-			text-transform: uppercase;
-			cursor: pointer;
+			
 			& + li {
 				margin-left: 10px;
 			}
-			&:hover, &.active {
-				background-color: $gray-darker;
-				border-color: $gray-darker;
-				color: $white;
-			}
+            
+            a{
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                text-align: center;
+                border: 1px solid #e2e6ee;
+                line-height: 44px;
+                text-transform: uppercase;
+                cursor: pointer;  
+                display: block;
+                
+                &:hover, &.active {
+                    background-color: $gray-darker;
+                    border-color: $gray-darker;
+                    color: $white;
+                    text-decoration: none;
+                }
+            }
+            
+            &.selected{
+                a{
+                    background-color: $gray-darker;
+                    border-color: $gray-darker;
+                    color: $white;
+                    text-decoration: none; 
+                }
+            }
+            
+            &.strike{
+                a{
+                    background-color: $light-gray;
+                    border-color: $slight-gray;
+                    color: $gray-darker;
+                    text-decoration:underline;
+                    cursor: default;
+                }
+            }
 		}
 		.size-guide{
 			font-size: 13px;
