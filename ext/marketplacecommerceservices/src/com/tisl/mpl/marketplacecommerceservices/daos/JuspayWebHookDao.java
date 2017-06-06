@@ -75,6 +75,10 @@ public interface JuspayWebHookDao
 	 * @return OrderModel
 	 */
 	OrderModel fetchOrderOnGUID(String guid);
+	
+	
+	
+	String fetchStatusOnGUID(String guid);
 
 	/**
 	 * To fetch parent order based on guid
