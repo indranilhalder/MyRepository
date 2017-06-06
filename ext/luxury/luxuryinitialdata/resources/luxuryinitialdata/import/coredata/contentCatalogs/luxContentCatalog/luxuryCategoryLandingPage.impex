@@ -66,19 +66,19 @@ INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&com
 ;;CategoryType2Banner;Category Type Banner 2;CategoryType2Banner;/;CLPHeroBanner1
 ;;CategoryType3Banner;Category Type Banner 3;CategoryType3Banner;/;CLPHeroBanner2
 ;;CategoryType4Banner;Category Type Banner 4;CategoryType4Banner;/;CLPHeroBanner3
-;;Showbanner;Show Banner;shop-banner;/;showbanner
-;;showCase1-productImage1;showCase productImage;showCase1-productImage1;/;showCase-productImage
-;;showCase2-productImage2;showCase productImage;showCase-productImage1;/;showCase-productImage1
-;;showCase3-productImage3;showCase productImage;showCase-productImage2;/;showCase-productImage2
-;;showCase4-productImage4;showCase productImage;showCase-productImage3;/;showCase-productImage3
+;;Showbanner;Show Banner;shop-banner;/luxuryCategoryLandingPage;showbanner
+;;showCase1-productImage1;showCase productImage;showCase1-productImage1;"/p-mp000000000390479";showCase-productImage
+;;showCase2-productImage2;showCase productImage;showCase-productImage1;"/p-mp000000000390479";showCase-productImage1
+;;showCase3-productImage3;showCase productImage;showCase-productImage2;"/p-mp000000000390479";showCase-productImage2
+;;showCase4-productImage4;showCase productImage;showCase-productImage3;"/p-mp000000000390479";showCase-productImage3
 
 
 
 
 INSERT_UPDATE LuxShowCaseCollectionComponent;$contentCV[unique=true];uid[unique=true];name;title			;description				  ;bannerImage(uid,$contentCV) ;BannerImagePosition(code)[default='left']; productImages(uid,$contentCV)																					;shopNowName				;shopNowLink
-										 ;						 ;Flowerbags	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
+										 ;						 ;Flowerbags	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;right				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
 										 ;						 ;Flowerbags1	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
-										 ;						 ;Flowerbags2	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
+										 ;						 ;Flowerbags2	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;right				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
 										 ;						 ;Flowerbags3	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
 
 INSERT_UPDATE LuxShowCaseComponent;$contentCV[unique=true];uid[unique=true];title;ShowCase(uid,$contentCV)
@@ -99,7 +99,7 @@ INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];
 
 
 INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
-;;shop-bag	;shop-bag;shop by category;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
+;;shop-bag	;shop-bag;Shop by Category;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang];name;url;category(code, $productCV);target(code)[default='sameWindow'];&componentRef;
 ;;LuxuryHelpLink;"Help";Luxury Help Link;/help;;;helpLink;;;
@@ -150,6 +150,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;CategoryPageSiteLogo;SiteLogo;;SiteLogoSlot;true
 ;;CategoryPageHeaderLinks;HeaderLinks;;HeaderLinksSlot;true
 ;;CategoryPageSearchBox;SearchBox;;SearchBoxSlot;true
+;;CategoryPageWishList;WishList;;WishListSlot;true;
 ;;CategoryPageMiniCart;MiniCart;;MiniCartSlot;true
 ;;CategoryPageNavigationBar;NavigationBar;;NavigationBarSlot;true
 ;;CategoryPageWhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true

@@ -34,11 +34,11 @@
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" name="pageName" value="${cmsPage.name}">
 <input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
-<div class="header-promo text-center">
-	<cms:pageSlot position="TopCategoryPageHeaderSlot" var="component">
+
+	<cms:pageSlot position="TopHeaderSlot" var="component">
 		<cms:component component="${component}"/>
 	</cms:pageSlot>
-</div>
+
 	<div class="wishAddLoginPlp">
 		<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
 	</div>
