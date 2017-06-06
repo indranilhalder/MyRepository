@@ -8,7 +8,8 @@ var bankNameSelected=null;
 //var bankAvailable=$("#bankAvailable").val();
 
 // Display forms based on mode button click
-$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function(){
+//$("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function (){
+function viewPaymentCredit(){
 	
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
@@ -44,9 +45,11 @@ $("#viewPaymentCredit, #viewPaymentCreditMobile ").click(function(){
 			
 	});
 	}
-});
+//});
+}
 
-$("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
+//$("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
+function viewPaymentDebit(){
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -77,9 +80,11 @@ $("#viewPaymentDebit, #viewPaymentDebitMobile").click(function(){
 	utag.link({
 		"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
 	});
-});
+//});
+}
 
-$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function(){
+//$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function(){
+function viewPaymentNetbanking(){
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -98,9 +103,11 @@ $("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").click(function(){
 	utag.link({
 		"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
 	});
-});
+//});
+}
 
-$("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
+//$("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
+function viewPaymentCOD(){
 	if (!$("#paymentButtonId_up").is(':visible')){
 		$(".totals.outstanding-totalss").css("bottom","0px");
 	}
@@ -125,9 +132,11 @@ $("#viewPaymentCOD, #viewPaymentCODMobile").click(function(){
 	utag.link({
 		"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
 	});
-});
+//});
+}
 
-$("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){
+//$("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){
+function viewPaymentEMI(){
 	/*TPR-3446 new starts*/
 	var staticHost = $('#staticHost').val();
 	//$("body").append("<div id='no-click' style='opacity:0.40; background:transparent; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
@@ -147,7 +156,8 @@ $("#viewPaymentEMI, #viewPaymentEMIMobile").click(function(){
 	utag.link({
 		"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
 	});
-}); 
+//});
+}
 // Mode button click function ends
 
 // Disabling Paste
