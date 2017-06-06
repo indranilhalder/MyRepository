@@ -676,7 +676,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>Please enter a valid first name</font>";
 				proceed = false;
 			}
 		}
@@ -688,7 +688,7 @@ function editAddress(addressId) {
 					"margin-top" : "10px"
 				});
 
-				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Please enter a valid last name</font>";
 				proceed = false;
 			}
 		}
@@ -699,7 +699,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid Email ID</font>";
+				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid email ID</font>";
 				proceed = false;
 			}
 		}
@@ -723,7 +723,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"padding-top" : "10px"
 				});
-				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid phone number</font>";
 				proceed = false;
 			}
 		}
