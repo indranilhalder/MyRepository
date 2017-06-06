@@ -572,107 +572,117 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		try
 		{
-			// TISPRD-361
-			Collection<PaymentTransactionModel> collection = abstractOrderModel.getPaymentTransactions();
-			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-			//if (null == collection || collection.isEmpty())
-			if (CollectionUtils.isEmpty(collection))
-
+			//Sonar Issue Fixed For Kidswear: null check added for abstractOrderModel
+			if (null != abstractOrderModel)
 			{
-				collection = new ArrayList<PaymentTransactionModel>();
-			}
+				// TISPRD-361
+				Collection<PaymentTransactionModel> collection = abstractOrderModel.getPaymentTransactions();
+				final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+				//if (null == collection || collection.isEmpty())
+				if (CollectionUtils.isEmpty(collection))
 
-			paymentTransactionList.addAll(collection);
+				{
+					collection = new ArrayList<PaymentTransactionModel>();
+				}
 
-			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+				paymentTransactionList.addAll(collection);
 
-			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-			final Date date = new Date();
-			final String codCode = getCodCodeGenerator().generate().toString();
+				final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
 
-			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
-					.create(PaymentTransactionEntryModel.class);
+				final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+				final Date date = new Date();
+				final String codCode = getCodCodeGenerator().generate().toString();
 
-			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-			//SONAR FIX updated
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
-			{
-				paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
-			}
+				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
+						PaymentTransactionEntryModel.class);
 
-			paymentTransactionEntry.setTime(date);
-			paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
-			paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
-			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+				paymentTransactionEntry
+						.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+				//SONAR FIX updated
+				if (null != abstractOrderModel.getTotalPriceWithConv()
+						&& abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+				{
+					paymentTransactionEntry.setAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
+				}
 
-			PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
-			paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
-			paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
-			paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
+				paymentTransactionEntry.setTime(date);
+				paymentTransactionEntry.setCurrency(abstractOrderModel.getCurrency());
+				paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
+				paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
 
-			if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
-			{
-				getModelService().save(paymentTransactionEntry);
-				paymentTransactionEntryList.add(paymentTransactionEntry);
-			}
-			else
-			{
-				LOG.error("PaymentInfo already available or order is Payment_Timeout.....not saving any more paymentTransactionEntry model");
-			}
+				PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
+				paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+				paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
+				paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
-			if (null != abstractOrderModel.getPaymentInfo())
-			{
-				paymentTransactionModel.setInfo(abstractOrderModel.getPaymentInfo());
-			}
+				if (null == abstractOrderModel.getPaymentInfo()
+						&& !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
+				{
+					getModelService().save(paymentTransactionEntry);
+					paymentTransactionEntryList.add(paymentTransactionEntry);
+				}
+				else
+				{
+					LOG.error("PaymentInfo already available or order is Payment_Timeout.....not saving any more paymentTransactionEntry model");
+				}
 
-			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+				if (null != abstractOrderModel.getPaymentInfo())
+				{
+					paymentTransactionModel.setInfo(abstractOrderModel.getPaymentInfo());
+				}
 
-			paymentTransactionModel.setCreationtime(date);
-			paymentTransactionModel.setCurrency(abstractOrderModel.getCurrency());
-			paymentTransactionModel.setEntries(paymentTransactionEntryList);
-			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
-			paymentTransactionModel.setOrder(abstractOrderModel);
-
-			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			//SONAR FIX updated
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
-			{
 				paymentTransactionModel
-						.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv().doubleValue()));
-				//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
-			}
-			//COD Payment transaction check
-			if (CollectionUtils.isNotEmpty(paymentTransactionEntryList)
-					&& StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
-					&& paymentTransactionEntryList.get(0).getTransactionStatus()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-			{
-				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			}
-			else
-			{
-				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-			}
+						.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+
+				paymentTransactionModel.setCreationtime(date);
+				paymentTransactionModel.setCurrency(abstractOrderModel.getCurrency());
+				paymentTransactionModel.setEntries(paymentTransactionEntryList);
+				paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
+				paymentTransactionModel.setOrder(abstractOrderModel);
+
+				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+				//SONAR FIX updated
+				if (null != abstractOrderModel.getTotalPriceWithConv()
+						&& abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+				{
+					paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(abstractOrderModel.getTotalPriceWithConv()
+							.doubleValue()));
+					//the flag is used to identify whether all the entries in the PaymentTransactionModel are successful or not. If all are successful then flag is set as true and status against paymentTransactionModel is set as success
+				}
+				//COD Payment transaction check
+				if (CollectionUtils.isNotEmpty(paymentTransactionEntryList)
+						&& StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
+						&& paymentTransactionEntryList.get(0).getTransactionStatus()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+				else
+				{
+					paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+				}
 
 
-			if (null == abstractOrderModel.getPaymentInfo() && !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
-			{
-				getModelService().save(paymentTransactionModel);
-				paymentTransactionList.add(paymentTransactionModel);
-				abstractOrderModel.setPaymentTransactions(paymentTransactionList);
-				getModelService().save(abstractOrderModel);
-			}
-			else if (null != abstractOrderModel.getPaymentInfo())
-			{
-				LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
-						+ abstractOrderModel.getPaymentInfo().getCode());
-			}
-			else
-			{
-				LOG.error(ERROR_PAYMENT + abstractOrderModel.getCode());
-			}
+				if (null == abstractOrderModel.getPaymentInfo()
+						&& !OrderStatus.PAYMENT_TIMEOUT.equals(abstractOrderModel.getStatus()))
+				{
+					getModelService().save(paymentTransactionModel);
+					paymentTransactionList.add(paymentTransactionModel);
+					abstractOrderModel.setPaymentTransactions(paymentTransactionList);
+					getModelService().save(abstractOrderModel);
+				}
+				else if (null != abstractOrderModel.getPaymentInfo())
+				{
+					LOG.error("PaymentInfo already available.....not saving any more paymentTransactionModel and not setting against the abstractOrderModel>>>"
+							+ abstractOrderModel.getPaymentInfo().getCode());
+				}
+				else
+				{
+					LOG.error(ERROR_PAYMENT + abstractOrderModel.getCode());
+				}
 
+			}
 		}
 		catch (final ModelSavingException e)
 		{
@@ -3848,74 +3858,79 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		try
 		{
-			final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
-
-			final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
-
-			final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
-			final Date date = new Date();
-			final String codCode = getCodCodeGenerator().generate().toString();
-
-			final PaymentTransactionEntryModel paymentTransactionEntry = getModelService()
-					.create(PaymentTransactionEntryModel.class);
-
-			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			paymentTransactionEntry.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-			//SONAR FIX updated
-			if (orderModel.getTotalPriceWithConv() != null || orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			if (null != orderModel)
 			{
-				paymentTransactionEntry.setAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				final List<PaymentTransactionModel> paymentTransactionList = new ArrayList<PaymentTransactionModel>();
+
+				final List<PaymentTransactionEntryModel> paymentTransactionEntryList = new ArrayList<PaymentTransactionEntryModel>();
+
+				final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+				final Date date = new Date();
+				final String codCode = getCodCodeGenerator().generate().toString();
+
+				final PaymentTransactionEntryModel paymentTransactionEntry = getModelService().create(
+						PaymentTransactionEntryModel.class);
+
+				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+				paymentTransactionEntry
+						.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+				//SONAR FIX updated
+				if (null != orderModel.getTotalPriceWithConv() && orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+				{
+					paymentTransactionEntry.setAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				}
+
+				paymentTransactionEntry.setTime(date);
+				paymentTransactionEntry.setCurrency(orderModel.getCurrency());
+				paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
+				paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
+
+				PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
+				paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+				paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
+				paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
+
+				getModelService().save(paymentTransactionEntry);
+				paymentTransactionEntryList.add(paymentTransactionEntry);
+
+				if (null != orderModel.getPaymentInfo())
+				{
+					paymentTransactionModel.setInfo(orderModel.getPaymentInfo());
+				}
+
+				paymentTransactionModel
+						.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+
+				paymentTransactionModel.setCreationtime(date);
+				paymentTransactionModel.setCurrency(orderModel.getCurrency());
+				paymentTransactionModel.setEntries(paymentTransactionEntryList);
+				paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
+				paymentTransactionModel.setOrder(orderModel);
+
+				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
+				//SONAR FIX updated
+				if (null != orderModel.getTotalPriceWithConv() && orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+				{
+					paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				}
+
+				if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
+						&& paymentTransactionEntryList.get(0).getTransactionStatus()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
+				{
+					paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+				}
+				else
+				{
+					paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
+				}
+
+
+				getModelService().save(paymentTransactionModel);
+				paymentTransactionList.add(paymentTransactionModel);
+				orderModel.setPaymentTransactions(paymentTransactionList);
+				getModelService().save(orderModel);
 			}
-
-			paymentTransactionEntry.setTime(date);
-			paymentTransactionEntry.setCurrency(orderModel.getCurrency());
-			paymentTransactionEntry.setType(PaymentTransactionType.COD_PAYMENT);
-			paymentTransactionEntry.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS);
-
-			PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
-			paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
-			paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
-			paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
-
-			getModelService().save(paymentTransactionEntry);
-			paymentTransactionEntryList.add(paymentTransactionEntry);
-
-			if (null != orderModel.getPaymentInfo())
-			{
-				paymentTransactionModel.setInfo(orderModel.getPaymentInfo());
-			}
-
-			paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
-
-			paymentTransactionModel.setCreationtime(date);
-			paymentTransactionModel.setCurrency(orderModel.getCurrency());
-			paymentTransactionModel.setEntries(paymentTransactionEntryList);
-			paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
-			paymentTransactionModel.setOrder(orderModel);
-
-			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			//SONAR FIX updated
-			if (orderModel.getTotalPriceWithConv() != null || orderModel.getTotalPriceWithConv().doubleValue() > 0.0)
-			{
-				paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
-			}
-
-			if (StringUtils.isNotEmpty(paymentTransactionEntryList.get(0).getTransactionStatus())
-					&& paymentTransactionEntryList.get(0).getTransactionStatus()
-							.equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
-			{
-				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			}
-			else
-			{
-				paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.FAILURE);
-			}
-
-
-			getModelService().save(paymentTransactionModel);
-			paymentTransactionList.add(paymentTransactionModel);
-			orderModel.setPaymentTransactions(paymentTransactionList);
-			getModelService().save(orderModel);
 		}
 		catch (final ModelSavingException e)
 		{
