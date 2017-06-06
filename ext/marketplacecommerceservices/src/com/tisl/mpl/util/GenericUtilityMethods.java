@@ -70,6 +70,7 @@ public class GenericUtilityMethods
 	private static final Logger LOG = Logger.getLogger(GenericUtilityMethods.class);
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	private static final String REGEX = "[^\\w\\s]";
 
 
 	/**
@@ -736,11 +737,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1158,44 +1159,41 @@ public class GenericUtilityMethods
 							if (categoryNames.length == 5)
 							{
 								//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-								category = categoryNames[3].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+								category = categoryNames[3].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								productCategoryList.add(category);
 
 								//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
 								//	.toLowerCase());
 
-								page_subCategory_name = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+								page_subCategory_name = categoryNames[2].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								pageSubCategories.add(page_subCategory_name);
 
 								//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
 								//	.toLowerCase());
 
-								page_subcategory_name_L3 = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-										.toLowerCase();
+								page_subcategory_name_L3 = categoryNames[1].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
 								//For kidswear L4 needs to be populated
-								page_subcategory_name_L4 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-										.toLowerCase();
+								page_subcategory_name_L4 = categoryNames[0].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
 							}
 							else
 							{
 								//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-								category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+								category = categoryNames[2].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								productCategoryList.add(category);
 
 								//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
 								//	.toLowerCase());
 
-								page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
+								page_subCategory_name = categoryNames[1].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								pageSubCategories.add(page_subCategory_name);
 
 								//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
 								//	.toLowerCase());
 
-								page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-										.toLowerCase();
+								page_subcategory_name_L3 = categoryNames[0].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
 								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
 								//For kidswear L4 needs to be populated
@@ -1615,7 +1613,7 @@ public class GenericUtilityMethods
 		}
 		return salesApplication;
 	}
-	
+
 	/**
 	 * For UF-93
 	 *
@@ -1638,5 +1636,5 @@ public class GenericUtilityMethods
 		}
 		return null;
 	}
-	
+
 }

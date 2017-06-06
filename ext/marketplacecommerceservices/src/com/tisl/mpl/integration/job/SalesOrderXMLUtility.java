@@ -466,7 +466,7 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
+								LOG.debug("Exp Del:No current delivery charge, setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
@@ -478,7 +478,7 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
+								LOG.debug("Exp Del:No scheduled delivery charge, setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 
@@ -496,7 +496,7 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
+								LOG.debug("Home Del:No current delivery charge,setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 
@@ -507,7 +507,7 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
+								LOG.debug("Home Del:No schedule delivery charge,setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							LOG.debug("set del charge");

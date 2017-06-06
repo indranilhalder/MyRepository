@@ -88,7 +88,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
 
 /**
@@ -1384,7 +1383,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			//SONAR FIX updated
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			if (null != abstractOrderModel.getTotalPriceWithConv() && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}

@@ -106,13 +106,20 @@ public class AddProductCategoryInterceptor implements PrepareInterceptor
 			for (final Map.Entry<String, String> entry : categoryMap.entrySet())
 			{
 				//change For TPR:4847: size facet clubbing for kidswear
-				if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() <= 5)
-				{
-					product.setProductCategoryType(entry.getValue());
-				}
-				else if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() > 5)
+
+				//IQA Fixed	For TPR:4847: size facet clubbing for kidswear
+				//if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() <= 5)
+				//{
+				//	product.setProductCategoryType(entry.getValue());
+				//}
+
+				if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() > 5)
 				{
 					product.setProductCategoryTypeL2(entry.getValue());
+				}
+				else
+				{
+					product.setProductCategoryType(entry.getValue());
 				}
 				//change For TPR:4847: size facet clubbing for kidswear end
 			}
