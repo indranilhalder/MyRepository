@@ -99,6 +99,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		final CartModel cartModel = parameter.getCart();
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
 		final CommerceOrderResult result = new CommerceOrderResult();
+
+		final String agentId = agentIdForStore
+				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+
 		try
 		{
 			final String modeOfPayment = cartModel.getModeOfPayment();
@@ -220,21 +224,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						orderModel.setIsWallet(WalletEnum.MRUPEE);
 					}
-
-
 					else
-
-
-
 					{
 						orderModel.setIsWallet(WalletEnum.NONWALLET);
 
 					}
 					//storing agent id in the order model in case of store manager login in cscockpit
-
-
-					final String agentId = agentIdForStore
-							.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 					if (StringUtils.isNotEmpty(agentId))
 					{
 
@@ -280,8 +275,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				//afterPlaceOrder(parameter, result);  // 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved before
 
-				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+				if ((StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()) && orderModel.getModeOfOrderPayment()
+						.equalsIgnoreCase("COD")) || StringUtils.isNotEmpty(agentId))
 				{
 					//Added to trigger notification for only COD orders TPR-629
 					final String trackOrderUrl = configurationService.getConfiguration().getString(
@@ -422,11 +417,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
-
+	 *
+	 *
 	 * @param cartModel
-	 * 
-
+	 *
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -484,17 +479,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
 	 *
-
+	 *
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
 	 *
-
+	 *
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
 	 *
-
+	 *
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
 
