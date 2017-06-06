@@ -601,6 +601,12 @@ TATA.Pages = {
 				$('.product-list-wrapper').removeClass('twocolumngrid');
 			});
 		},
+		PLPsingleColumseperator:function(){
+			$('.plp-single-view').on('click', function(){
+				$('.product-list-wrapper').toggleClass('plpsinglecolumn');
+			});
+			
+		},
 		
 		ProductSort: function(){
 			$('.sort-wrapper .btn').on('click', function(){
@@ -640,6 +646,7 @@ TATA.Pages = {
 			_self.showModelImg();
 			_self.addGiftWrap();
 			_self.TwoColumnseperator();
+			_self.PLPsingleColumseperator();
 			_self.ProductSort();
 			_self.productGrid();
 			_self.productHover();

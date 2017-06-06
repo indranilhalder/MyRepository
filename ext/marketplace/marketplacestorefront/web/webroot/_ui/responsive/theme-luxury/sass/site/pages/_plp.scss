@@ -545,6 +545,11 @@
 		.leftbar.active{
 			left:0px;
 		}
+		.plpsinglecolumn{
+			.product-grid{
+				width:100% !important;
+			}
+		}
 		.leftbar{
 			position: fixed;
 			top: 0px;

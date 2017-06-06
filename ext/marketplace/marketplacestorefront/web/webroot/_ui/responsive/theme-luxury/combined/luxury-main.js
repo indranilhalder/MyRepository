@@ -12936,6 +12936,11 @@ TATA.CommonFunctions = {
                 $(".product-list-wrapper").removeClass("twocolumngrid");
             });
         },
+        PLPsingleColumseperator: function() {
+            $(".plp-single-view").on("click", function() {
+                $(".product-list-wrapper").toggleClass("plpsinglecolumn");
+            });
+        },
         ProductSort: function() {
             $(".sort-wrapper .btn").on("click", function() {
                 $(this).addClass("active").siblings().removeClass("active");
@@ -12956,8 +12961,8 @@ TATA.CommonFunctions = {
         init: function() {
             var _self = TATA.Pages.PLP;
             _self.Filtershow(), _self.showModelImg(), _self.addGiftWrap(), _self.TwoColumnseperator(), 
-            _self.ProductSort(), _self.productGrid(), _self.productHover(), _self.filterByFacet(), 
-            _self.showSelectedRefinements(), _self.sortInit(), _self.loadMoreInit();
+            _self.PLPsingleColumseperator(), _self.ProductSort(), _self.productGrid(), _self.productHover(), 
+            _self.filterByFacet(), _self.showSelectedRefinements(), _self.sortInit(), _self.loadMoreInit();
         }
     },
     LANDING: {
