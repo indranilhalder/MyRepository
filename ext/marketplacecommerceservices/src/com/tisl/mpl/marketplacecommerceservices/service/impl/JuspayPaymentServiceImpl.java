@@ -14,7 +14,6 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
-import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -71,8 +70,8 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 	@Autowired
 	private SessionService sessionService;
 
-	@Autowired
-	private BaseStoreService baseStoreService;
+	//	@Autowired
+	//	private BaseStoreService baseStoreService;
 
 	@Autowired
 	private PersistentKeyGenerator codCodeGenerator;

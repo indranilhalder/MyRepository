@@ -20,13 +20,13 @@ public class UAgentInfo
 	private boolean initCompleted = false;
 	private boolean isWebkit = false; //Stores the result of DetectWebkit()
 	private boolean isMobilePhone = false; //Stores the result of DetectMobileQuick()
-	private boolean isIphone = false; //Stores the result of DetectIphone()
+	private boolean iphone = false; //Stores the result of DetectIphone()
 	private boolean isAndroid = false; //Stores the result of DetectAndroid()
 	private boolean isAndroidPhone = false; //Stores the result of DetectAndroidPhone()
-	private boolean isTierTablet = false; //Stores the result of DetectTierTablet()
-	private boolean isTierIphone = false; //Stores the result of DetectTierIphone()
-	private boolean isTierRichCss = false; //Stores the result of DetectTierRichCss()
-	private boolean isTierGenericMobile = false; //Stores the result of DetectTierOtherPhones()
+	private boolean tierTablet = false; //Stores the result of DetectTierTablet()
+	private boolean tierIphone = false; //Stores the result of DetectTierIphone()
+	private boolean tierRichCss = false; //Stores the result of DetectTierRichCss()
+	private boolean tierGenericMobile = false; //Stores the result of DetectTierOtherPhones()
 
 	// Initialize some initial smartphone string variables.
 	private static final String engineWebKit = "webkit";
@@ -164,7 +164,7 @@ public class UAgentInfo
 	//Sonar Issue Fix For Kidswear: getIsIphone()--> IsIphone()
 	public boolean IsIphone()
 	{
-		return isIphone;
+		return iphone;
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class UAgentInfo
 	//Sonar Issue Fix For Kidswear: getIsTierTablet()--> IsTierTablet()
 	public boolean IsTierTablet()
 	{
-		return isTierTablet;
+		return tierTablet;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class UAgentInfo
 	//Sonar Issue Fix For Kidswear: getIsTierIphone()--> IsTierIphone()
 	public boolean IsTierIphone()
 	{
-		return isTierIphone;
+		return tierIphone;
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class UAgentInfo
 	//Sonar Issue Fix For Kidswear: getIsTierRichCss()--> IsTierRichCss()
 	public boolean IsTierRichCss()
 	{
-		return isTierRichCss;
+		return tierRichCss;
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class UAgentInfo
 	//Sonar Issue Fix For Kidswear: getIsTierGenericMobile()--> IsTierGenericMobile()
 	public boolean IsTierGenericMobile()
 	{
-		return isTierGenericMobile;
+		return tierGenericMobile;
 	}
 
 	/**
@@ -218,18 +218,18 @@ public class UAgentInfo
 	{
 		//Save these properties to speed processing
 		this.isWebkit = detectWebkit();
-		this.isIphone = detectIphone();
+		this.iphone = detectIphone();
 		this.isAndroid = detectAndroid();
 		this.isAndroidPhone = detectAndroidPhone();
 
 		//Generally, these tiers are the most useful for web development
 		this.isMobilePhone = detectMobileQuick();
-		this.isTierTablet = detectTierTablet();
-		this.isTierIphone = detectTierIphone();
+		this.tierTablet = detectTierTablet();
+		this.tierIphone = detectTierIphone();
 
 		//Optional: Comment these out if you NEVER use them
-		this.isTierRichCss = detectTierRichCss();
-		this.isTierGenericMobile = detectTierOtherPhones();
+		this.tierRichCss = detectTierRichCss();
+		this.tierGenericMobile = detectTierOtherPhones();
 
 		this.initCompleted = true;
 	}
@@ -241,9 +241,9 @@ public class UAgentInfo
 	 */
 	public boolean detectIphone()
 	{
-		if ((this.initCompleted) || (this.isIphone))
+		if ((this.initCompleted) || (this.iphone))
 		{
-			return this.isIphone;
+			return this.iphone;
 		}
 
 		// The iPad and iPod touch say they're an iPhone! So let's disambiguate.
@@ -937,9 +937,9 @@ public class UAgentInfo
 	 */
 	public boolean detectTierTablet()
 	{
-		if ((this.initCompleted) || (this.isTierTablet))
+		if ((this.initCompleted) || (this.tierTablet))
 		{
-			return this.isTierTablet;
+			return this.tierTablet;
 		}
 
 		return detectIpad() || detectAndroidTablet() || detectBlackBerryTablet() || detectWebOSTablet();
@@ -953,9 +953,9 @@ public class UAgentInfo
 	 */
 	public boolean detectTierIphone()
 	{
-		if ((this.initCompleted) || (this.isTierIphone))
+		if ((this.initCompleted) || (this.tierIphone))
 		{
-			return this.isTierIphone;
+			return this.tierIphone;
 		}
 
 		return detectIphoneOrIpod() || detectAndroidPhone() || detectWindowsPhone() || detectBlackBerry10Phone()
@@ -972,9 +972,9 @@ public class UAgentInfo
 	 */
 	public boolean detectTierRichCss()
 	{
-		if ((this.initCompleted) || (this.isTierRichCss))
+		if ((this.initCompleted) || (this.tierRichCss))
 		{
-			return this.isTierRichCss;
+			return this.tierRichCss;
 		}
 
 		boolean result = false;
@@ -1009,9 +1009,9 @@ public class UAgentInfo
 	 */
 	public boolean detectTierOtherPhones()
 	{
-		if ((this.initCompleted) || (this.isTierGenericMobile))
+		if ((this.initCompleted) || (this.tierGenericMobile))
 		{
-			return this.isTierGenericMobile;
+			return this.tierGenericMobile;
 		}
 
 		//Exclude devices in the other 2 categories
