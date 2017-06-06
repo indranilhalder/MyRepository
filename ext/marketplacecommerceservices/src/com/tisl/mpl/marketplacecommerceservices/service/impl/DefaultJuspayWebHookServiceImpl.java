@@ -1743,8 +1743,6 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	}
 
 
-
-
 	//Getters and setters
 	/**
 	 * @return the juspayWebHookDao
