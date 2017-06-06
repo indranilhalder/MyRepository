@@ -31,7 +31,7 @@
 
 
 <!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+<%-- <input type="hidden" id="isLuxury" value="${isLuxury}"/> --%>
 
 <template:page pageTitle="${pageTitle}">
 	<div class="account">

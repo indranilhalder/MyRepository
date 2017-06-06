@@ -712,25 +712,38 @@ TATA.Pages = {
 		},
         
         Zoomer: function() {
-            $('.pdp-img-nav .slick-slide').on('click', function(){
-                var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
-                $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
-                    //scrollZoom : true,      
-                    zoomWindowWidth:500,
-                    zoomWindowHeight:500
+            
+            if ($(window).width() > 789) {
+                
+                $('.pdp-img-nav .slick-slide, .pdp-img .slick-arrow').on('click', function(){
+                    var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
+                    $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
+                        //scrollZoom : true,      
+                        zoomWindowWidth:400,
+                        zoomWindowHeight:400
+                    });
                 });
-            });
+                
+                $(document).ready(function(){
+                    var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
+                    $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
+                        //scrollZoom : true,      
+                        zoomWindowWidth:400,
+                        zoomWindowHeight:400
+                    });
+                });
+			}
+            
             
 		},
         
 		openPopup: function (url) {
             
-             $('#share-modal').on('click', function(){                 
+             $('#share-modal .soc-links').on('click', function(){                 
                 newwindow = window.open(url,'name','height=400,width=400');
                 if (window.focus) {newwindow.focus()}
                 return false; 
-             });
-             
+             });             
         }, 
         
         videoPlay: function(){
