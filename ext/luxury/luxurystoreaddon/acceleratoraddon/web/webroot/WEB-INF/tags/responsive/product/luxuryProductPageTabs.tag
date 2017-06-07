@@ -47,67 +47,107 @@ var buyboxskuId='';
 	</c:if>
 	
 	<div class="accordion-title">	
-			<h4>Rating & Reviews</h4><i class="accordion-icon"></i>
+			<h4>Rating & Reviews<span class="rating-count1">- 3.5</span>			   
+					<ul class="star-review">
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="half"></li>
+						<li class="empty"></li>
+						</ul>
+			</h4><i class="accordion-icon"></i>
 	</div>					
 	<div class="accordion-content full-box">	
 		<div class="colum4 left">
 			<table class="table design1">
 			  <tr>
-				   <td width="60%">	
+				   <td width="80%">	
 				     <span class="rating-count">5</span>			   
-					 <span class="rating">					   
-					   <span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span>
-					 </span>
+						 <ul class="star-review">
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>			
+						</ul>
 					</td>
-				   <td width="40%"></td>
+				   <td width="20%"></td>
 			  </tr>
 			  <tr>
 				   <td>	
 				     <span class="rating-count">4</span>			   
-					 <span class="rating">					   
-					   <span class="full"></span><span class="full"></span><span class="full"></span><span class="full"></span><span class="half"></span>
-					 </span>
+					  <ul class="star-review">
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="empty"></li>
+						</ul>					 
 					</td>
 				   <td></td>
 			  </tr>
 			  <tr>
 				   <td>	
 				     <span class="rating-count">3</span>			   
-					 <span class="rating">					   
-					   <span class="full"></span><span class="full"></span><span class="full"></span><span class="empty"></span><span class="empty"></span>
-					 </span>
+					 <ul class="star-review">
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="empty"></li>
+						<li class="empty"></li>
+						</ul>
 					</td>
 				   <td></td>
 			  </tr>
 			  <tr>
 				   <td>	
 				     <span class="rating-count">2</span>			   
-					<span class="rating">					   
-					   <span class="full"></span><span class="full"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
-					 </span>
+					<ul class="star-review">
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="empty"></li>
+						<li class="empty"></li>
+						<li class="empty"></li>
+						</ul>
 					</td>
 				   <td></td>
 			  </tr>
 			  <tr>
 				   <td>	
 				     <span class="rating-count">1</span>			   
-					 <span class="rating">					   
-					   <span class="full"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
-					 </span>
+					<ul class="star-review">
+						<li class="full"></li>
+						<li class="empty"></li>
+						<li class="empty"></li>
+						<li class="empty"></li>
+						<li class="empty"></li>
+						</ul>
 					</td>
 				   <td></td>
 			  </tr>
 			</table>
 		</div>
 		<div class="table colum3 right box-size">
-		    <h4>3.5 <span class="rating">					   
-					   <span class="full"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span><span class="empty"></span>
-					 </span>
+		    <h4><span class="rating-count1">3.5</span>			   
+					<ul class="star-review">
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="full"></li>
+						<li class="half"></li>
+						<li class="empty"></li>
+						</ul>
 			</h4>
 			<p>Great product. Qulity and switching was good and fit as expected,. This full sleeve
 tees become one of my favourite too. Thank you CLIQ and style shell for this amazing Tees.</p>
             <span>by Bradley Oliver 22 May 2016</span>
+		</div> 
+		<!-- <div id="ReviewSecion" class="reviews" style="display:block;">
+
+		<div class="commentcontent" style="overflow-y:scroll; width:100%;">
+		<input type="hidden" name="user_logged">
+			<ul id="commentsDiv" class="gig-comments-container gig-comments-reviews" gigid="showCommentsUI" data-version="2" style="width: 500px;"><div class="gig-comments-header"><div class="gig-comments-header-left"><div class="gig-comments-count">0 Reviews</div></div><ul class="gig-comments-header-right gig-comments-linksContainer"><li class="gig-comments-sort" style="display: none;">Sort</li><li class="gig-comments-subscribe" title="Subscribe" style="display: none;">Subscribe</li><li class="gig-comments-rss" style="display: none;"><a href="http://comments.us1.gigya.com/comments/rss/7154082/Clothing/MP000000000722509">RSS</a></li></ul></div><div class="gig-comments-updates"><div class="gig-comments-updates-text"></div><div class="gig-comments-updates-link"></div></div><div class="gig-comments-comments"></div><div class="gig-comments-more" style="display: none;"></div><div class="gig-comments-composebox gig-comment-replybox-open gig-composebox-open"><div class="gig-composebox-error"></div><div class="gig-composebox-header"><div class="gig-composebox-login" style="display: none;"><div class="gig-composebox-social-login gig-comments-button">Login<div class="gig-composebox-login-icon"></div><div class="gig-composebox-login-drop-icon"></div></div><div class="gig-composebox-site-login">Login</div><div class="gig-composebox-or" style="display: none;">Or</div><div class="gig-composebox-guest-login gig-comments-button" style="display: none;">Guest</div></div><div class="gig-composebox-header-right"><div class="gig-composebox-follow" style="display: none;"></div><div class="gig-composebox-close"></div></div><div class="gig-composebox-header-left"><div class="gig-composebox-title" style="display: none;"></div><div class="gig-composebox-logout" style="display: none;">(<span>Logout</span>)</div><div class="gig-composebox-ratings"><div class="gig-composebox-rating gig-composebox-rating-_overall"><div class="gig-composebox-rating-title">Overall Rating:</div><div class="gig-composebox-rating-value" data-dimension="_overall"><div data-value="1" class="gig-composebox-rating-star"></div><div data-value="2" class="gig-composebox-rating-star"></div><div data-value="3" class="gig-composebox-rating-star"></div><div data-value="4" class="gig-composebox-rating-star"></div><div data-value="5" class="gig-composebox-rating-star"></div></div></div><div class="gig-composebox-rating gig-composebox-rating-Quality"><div class="gig-composebox-rating-title">Quality:</div><div class="gig-composebox-rating-value" data-dimension="Quality"><div data-value="1" class="gig-composebox-rating-star"></div><div data-value="2" class="gig-composebox-rating-star"></div><div data-value="3" class="gig-composebox-rating-star"></div><div data-value="4" class="gig-composebox-rating-star"></div><div data-value="5" class="gig-composebox-rating-star"></div></div></div><div class="gig-composebox-rating gig-composebox-rating-Fit"><div class="gig-composebox-rating-title">Fit:</div><div class="gig-composebox-rating-value" data-dimension="Fit"><div data-value="1" class="gig-composebox-rating-star"></div><div data-value="2" class="gig-composebox-rating-star"></div><div data-value="3" class="gig-composebox-rating-star"></div><div data-value="4" class="gig-composebox-rating-star"></div><div data-value="5" class="gig-composebox-rating-star"></div></div></div><div class="gig-composebox-rating gig-composebox-rating-Value for Money"><div class="gig-composebox-rating-title">Value for Money:</div><div class="gig-composebox-rating-value" data-dimension="Value for Money"><div data-value="1" class="gig-composebox-rating-star"></div><div data-value="2" class="gig-composebox-rating-star"></div><div data-value="3" class="gig-composebox-rating-star"></div><div data-value="4" class="gig-composebox-rating-star"></div><div data-value="5" class="gig-composebox-rating-star"></div></div></div></div></div></div><div class="gig-composebox-photo"><img class="gig-comment-img" alt="" src="https://cdns.gigya.com/gs/i/comments2/Avatar_empty_x1.png" style="vertical-align: top; height: 37px;"></div><div class="gig-composebox-data"><div class="gig-composebox-summary"><input class="gig-composebox-summary-input gig-comments-placeholder" data-placeholder="Enter a title for your review"></div><div class="gig-composebox-editor gig-composebox-editor-with-sidebar"><ul class="gig-composebox-sidebar"><li class="gig-composebox-sidebar-button gig-composebox-sidebar-font" title="Rich-text formatting"></li></ul><div class="gig-composebox-textarea" contenteditable="true" data-placeholder="Write your review"></div><p></p></div><div class="gig-composebox-mediaItem"></div><div class="gig-composebox-footer"><div class="gig-composebox-footer-right"><div class="gig-composebox-cancel gig-comments-button" style="display: none;">Cancel</div><div class="gig-composebox-post gig-comments-button">Post</div></div><div class="gig-composebox-footer-left"><div class="gig-composebox-share"><div class="gig-composebox-share-text">Share:</div><div class="gig-composebox-share-providers"><div class="gig-comments-share-provider gig-comments-share-provider-shown" data-provider="facebook" style="background-image: url(&quot;https://cdns.gigya.com/gs/i/comments2/shareToProviders/facebook_grey_x1.png&quot;);"><div class="gig-comments-share-provider-checkbox gig-comments-checkbox" data-provider="facebook"></div></div><div class="gig-comments-share-provider gig-comments-share-provider-shown" data-provider="twitter" style="background-image: url(&quot;https://cdns.gigya.com/gs/i/comments2/shareToProviders/twitter_grey_x1.png&quot;);"><div class="gig-comments-share-provider-checkbox gig-comments-checkbox" data-provider="twitter"></div></div></div></div></div></div></div></div></ul>
 		</div>
+</div> -->
 	</div>
 	
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
