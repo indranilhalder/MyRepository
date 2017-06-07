@@ -92,7 +92,6 @@ import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
-
 /**
  * @author TCS
  *
@@ -1372,7 +1371,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
-		if (null != abstractOrderModel)
+		if (abstractOrderModel != null)
 		{
 			//getting the current user
 			//OrderIssues:- Customer data is getting from Order in place of session
@@ -1386,7 +1385,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			//SONAR FIX updated
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			if (abstractOrderModel.getTotalPriceWithConv() != null && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
@@ -1663,11 +1662,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1718,9 +1717,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
