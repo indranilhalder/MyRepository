@@ -580,7 +580,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * delivery modes without page load.
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKLOCATIONRESTRICTEDPINCODE, method = RequestMethod.GET)
-	public String checkLocationRestrictedPincode(@RequestParam("selectedAddressCode") final String selectedAddressCode,
+	public String checkLocationRestrictedPincode(
 			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
 			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode) throws CMSItemNotFoundException
 	{
@@ -3628,7 +3628,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3685,7 +3685,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

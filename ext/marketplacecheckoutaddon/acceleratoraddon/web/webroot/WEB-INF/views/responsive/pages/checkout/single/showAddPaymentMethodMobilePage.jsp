@@ -111,16 +111,14 @@
         						$(".checkout-paymentmethod").css("display","block");
         						//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
         					}	
-    					}
-						else if($("#TW").val()=="true")
-						{
-							if($(window).width()>=768){
-								displayThrdPrtyWlt();
-								$("#viewPaymentMRupee, #viewPaymentMRupeeMobile").parent("li").addClass("active");
-							}
-							$(".checkout-paymentmethod").css("display","block");
-							//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
-							}
+							else if($("#TW").val()=="true")
+							{
+								if($(window).width()>=768){
+									displayThrdPrtyWlt();
+									$("#viewPaymentMRupee, #viewPaymentMRupeeMobile").parent("li").addClass("active");
+								}
+								$(".checkout-paymentmethod").css("display","block");
+								//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
 							}
 						}
 					});
@@ -194,7 +192,7 @@
 	</c:if>
 
 	<!-- TISCR-305 starts -->
-	<button type="button"
+	<%-- <button type="button"
 		class="button btn-block payment-button make_payment_top_savedCard proceed-button"
 		id="make_saved_cc_payment_up">
 		<spring:theme
@@ -230,7 +228,7 @@
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton" />
 	</button>
-	<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
+	<button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button>
 	<button type="button"
 		class="button positive right cod_payment_button_top proceed-button"
 		onclick="submitForm()" id="paymentButtonId_up">
@@ -241,7 +239,7 @@
 		id="make_mrupee_payment_up">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton" />
-	</button>
+	</button> --%>
 	<%-- 	<h1 class="payment-options">
 		<spring:theme code="text.payment.options" />
 	</h1>

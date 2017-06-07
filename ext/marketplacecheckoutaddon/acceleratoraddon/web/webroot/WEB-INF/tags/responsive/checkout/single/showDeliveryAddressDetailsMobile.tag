@@ -54,13 +54,14 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
-									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.proceedOnAddressSelection(this,'${deliveryAddress.id}');">
+									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkIsServicableResponsive('${deliveryAddress.postalCode}');">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
 												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
 													value="${deliveryAddress.id}"
 													id="radio_mobile_${deliveryAddress.id}" checked="checked" />
 												<label for="radio_mobile_${deliveryAddress.id}"></label>
+												<span id="defaultAddressPincode" style="display:none;">${deliveryAddress.postalCode}</span>
 											</c:when>
 											<c:otherwise>
 												<input type="radio" class="radio1" name="selectedAddressCodeMobile"

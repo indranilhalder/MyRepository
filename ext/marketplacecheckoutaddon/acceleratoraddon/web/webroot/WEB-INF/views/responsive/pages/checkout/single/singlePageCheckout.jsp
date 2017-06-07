@@ -91,8 +91,10 @@
 		<p class="change-mobile">Change</p>
 		<!-- <p class="cancel-mobile">Cancel</p> -->
 		</div>
-			<%@include
-				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetailsMobile.jsp"%>
+			<div id="choosedeliveryModeMobile">
+				<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetails.jsp"%>
+
+	        </div>
 		</div>
 	<div  class="checkout_mobile_section" id="makePaymentMobile">
 	<div class="checkout-mobile-heading">Payment</div>

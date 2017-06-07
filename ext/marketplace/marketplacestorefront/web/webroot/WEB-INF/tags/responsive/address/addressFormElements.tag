@@ -254,13 +254,11 @@ display: none;}
 			</div>
 			<div class='full'>
 			<!-- TISUAT-4696  /TPR-215-->
-		<formElement:formInputBox idKey="address.line1"
-			 path="line1" labelKey="Address Line 1*"
-			mandatory="true" maxLength="40"  />
+<!-- TPR-3402 --><formElement:formTextArea idKey="address.line1"   labelKey="address.line1" path="line1" areaCSS="textarea" mandatory="true" />
 			 <div class="help-block has-error" id="addressline1Error" style="display: none;">
 			</div>
 			</div>
-			<div class='full'>
+<!-- TPR-3402 --><div class='hide'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line2"
 			 path="line2"  labelKey="Address Line 2"
@@ -268,7 +266,7 @@ display: none;}
 			 <div class="help-block has-error" id="addressline2Error" style="display: none;">
 			</div>
 			</div>
-			<div class='full'>
+<!-- TPR-3402 --><div class='hide'>
 			<!-- TISUAT-4696  /TPR-215-->
 		<formElement:formInputBox idKey="address.line3"
 			 path="line3"  labelKey="Address Line 3"

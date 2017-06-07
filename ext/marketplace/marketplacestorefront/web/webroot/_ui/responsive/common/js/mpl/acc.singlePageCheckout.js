@@ -964,7 +964,9 @@ ACC.singlePageCheckout = {
 	},
 	
 	modalPopup: function(elementId,data){
-		if($(".checkout-mobile-heading").css("display") == "none"){
+		
+
+		if($(".checkout-mobile-heading").css("display") == "none"){			
 		var selector="#"+elementId+" #modalBody"
 			$(selector).html(data);
 			//$("body").append('<div class="modal fade" id="singlePageAddressPopup"><div class="content" style="padding: 40px;max-width: 650px;">'+data+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
@@ -975,6 +977,8 @@ ACC.singlePageCheckout = {
 			$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").html(data);
 			$("#"+elementId+" #modalBody").html('');
+			alert("calling");
+			ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
 		}
 	},
 	
@@ -1385,5 +1389,59 @@ ACC.singlePageCheckout = {
 		isAddressSaved:false,
 		isAddressSet:false,
 		isDeliveryModeSte:false
+	},
+	
+	checkIsServicableResponsive:function(selectedPincode,addressId)
+	{	
+		if(addressId!="")
+		{
+			$("#radio_mobile_"+addressId).prop("checked", true);
+		}
+		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){	
+			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
+			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+					console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				});
+				xhrResponse.done(function(response, textStatus, jqXHR) {
+					$("#choosedeliveryModeMobile").html(response);
+					ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
+		 		});
+		}
+		
+	},
+	
+	attachOnPincodeKeyUpEvent:function()
+	{	
+		$('.address_postcode').on('keyup',function(){
+			var pincode=$('.address_postcode').val();
+			var regPostcode = /^([1-9])([0-9]){5}$/;
+			if(pincode.length>=6)
+			{
+				if(regPostcode.test(pincode) == false)
+				{
+					 $("#addresspostcodeError").show();
+				     $("#addresspostcodeError").html("<p>Please enter a valid pincode</p>");
+				}
+				else
+				{
+					$("#addresspostcodeError").hide();
+					ACC.singlePageCheckout.checkIsServicableResponsive(pincode,"");
+				}
+			}
+				
+		});
 	}
 }
+//Calls to be made on dom ready.
+$(document).ready(function(){
+	if(ACC.singlePageCheckout.getIsResponsive())
+	{
+		var pageType=$("#pageType").val();
+		var defaultAddressPincode=$("#defaultAddressPincode").html();
+		if(pageType=="multistepcheckoutsummary" && typeof(defaultAddressPincode)!='undefined')
+		{
+			ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),"");
+		}
+	}
+});
