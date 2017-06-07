@@ -2028,7 +2028,7 @@ public class MiscsController extends BaseController
 								}
 							}
 							//---------IF CONSIGNMENT IS ALREADY RETURNED--------
-
+							else
 							{
 								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 								{
