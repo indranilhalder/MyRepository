@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -215,42 +216,56 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	 * @Decsription : Fetch Order Details Based on GUID
 	 * @param: guid
 	 */
-//	@Override
-//	public OrderModel fetchOrderOnGUID(final String guid)
-//	{
+
 	@Override
-	public String fetchOrderOnGUID(final String guid)
-	{	
-		//OrderModel orderModel = null;
-		
-		String status =  null;
+	public OrderModel fetchOrderOnGUID(final String guid)
+	{
+		OrderModel orderModel = null;
 
 		final String queryString = //
-		/*"SELECT {om:" + OrderModel.PK
+		"SELECT {om:" + OrderModel.PK
 				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om } where" + "{om." + OrderModel.GUID
-				+ "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type";*/
-
-				"SELECT {ev:" + EnumerationValue.CODE
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om },{" + EnumerationValueModel._TYPECODE + " AS ev} where " + "{om." + OrderModel.GUID
-				+ "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type and {om." + OrderModel.STATUS +"=ev."+EnumerationValueModel.PK;
+				+ "} = ?code and " + "{om." + OrderModel.TYPE + "} = ?type";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
 		query.addQueryParameter("type", "Parent");
-//		final List<OrderModel> orderModelList = getFlexibleSearchService().<OrderModel> search(query).getResult();
-//		if (!CollectionUtils.isEmpty(orderModelList))
-//		{
-//			orderModel = orderModelList.get(0);
-//		}
-		
-		final List<String> statusList = getFlexibleSearchService().<OrderModel> search(query).getResult();
+		final List<OrderModel> orderModelList = getFlexibleSearchService().<OrderModel> search(query).getResult();
+		if (!CollectionUtils.isEmpty(orderModelList))
+		{
+			orderModel = orderModelList.get(0);
+		}
+		return orderModel;
+	}
+
+	/**
+	 * @Decsription : Fetch Order Status Details Based on GUID
+	 * @param: guid
+	 */
+	@Override
+	public String fetchStatusOnGUID(final String guid)
+	{
+		String status = null;
+
+		final String queryString = //
+		"SELECT {ev:"
+				+ EnumerationValueModel.CODE
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om },{"
+				+ EnumerationValueModel._TYPECODE + " AS ev} where " + "{om." + OrderModel.GUID + "} = ?code and " + "{om."
+				+ OrderModel.TYPE + "} = ?type and {om." + OrderModel.STATUS + "} = {ev." + EnumerationValueModel.PK + "}";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
+		query.addQueryParameter("type", "Parent");
+
+		final List<String> statusList = getFlexibleSearchService().<String> search(query).getResult();
 		if (!CollectionUtils.isEmpty(statusList))
 		{
-				status = statusList.get(0);
+			status = statusList.get(0);
 		}
-		
+		LOG.debug("Order Status for guid:" + guid + " is " + status);
 		return status;
 	}
 
