@@ -99,6 +99,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServiceImpl;
@@ -155,6 +156,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	@Resource
 	private MplProductWebServiceImpl mplProductWebService;
 
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
 	@Resource
 	private SiteConfigService siteConfigService;
 	@Resource
@@ -865,8 +868,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	@Override
 	public List<GetWishListProductWsDTO> productDetails(final AbstractOrderModel abstractOrderModel,
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
-			final boolean resetRequired, final List<PinCodeResponseData> pincodeList) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions
+			final boolean resetRequired, final List<PinCodeResponseData> pincodeList, final String pincode)
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions
 	{
 
 		String mediaFormat = null;
@@ -911,6 +914,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 */
 
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
+				//TPR-1083
+				if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
+				{
+					gwlp.setExchangeId(abstractOrderEntry.getExchangeId());
+				}
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
 				{
 					PointOfServiceData pointOfServiceData = null;
@@ -1587,6 +1595,15 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != obj)
 				{
 					gwlp.setPinCodeResponse(obj);
+					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
+					{
+						gwlp.setExchangeMessage("Exchange Applied");
+					}
+					else
+					{
+						gwlp.setExchangeMessage("Exchange Is Not Applicable For Pincode " + pincode);
+					}
+
 				}
 
 				/* Added in R2.3 TISRLUAT-812 start */
@@ -1907,12 +1924,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (StringUtils.isNotEmpty(pincode))
 			{
 				//CAR-57
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, true, pinCodeRes);
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, true, pinCodeRes, pincode);
 			}
 			else
 			{
 				//CAR-57
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, true, pinCodeRes);
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, true, pinCodeRes, pincode);
 			}
 
 			if (null != gwlpList && !gwlpList.isEmpty())
@@ -2044,12 +2061,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (StringUtils.isNotEmpty(pincode))
 				{
 					//CAR-57
-					gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
+					gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes, pincode);
 				}
 				else
 				{
 					//CAR-57
-					gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
+					gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes, pincode);
 				}
 
 
@@ -2311,12 +2328,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (StringUtils.isNotEmpty(pincode))
 			{
 				//CAR-57
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes, pincode);
 			}
 			else
 			{
 				//CAR-57
-				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
+				gwlpList = productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes, pincode);
 			}
 			cartDetailsData.setProducts(gwlpList);
 
@@ -2501,12 +2518,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			if (StringUtils.isNotEmpty(pincode))
 			{
 				//CAR-57--TO-DO: For time being, passing null
-				gwlpList = productDetails(orderModel, deliveryModeDataMap, true, false, null);
+				gwlpList = productDetails(orderModel, deliveryModeDataMap, true, false, null, pincode);
 			}
 			else
 			{
 				//CAR-57--TO-DO: For time being, passing null
-				gwlpList = productDetails(orderModel, deliveryModeDataMap, false, false, null);
+				gwlpList = productDetails(orderModel, deliveryModeDataMap, false, false, null, pincode);
 			}
 			cartDetailsData.setProducts(gwlpList);
 
@@ -2760,7 +2777,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */

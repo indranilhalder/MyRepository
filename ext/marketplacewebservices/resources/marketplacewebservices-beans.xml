@@ -679,6 +679,9 @@
 		<property name="returnAWB" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
+	<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
+	<property name="exchangeMessage" type="String"/>
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
