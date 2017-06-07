@@ -10,8 +10,13 @@
 
 <c:choose>
 <c:when test="${media.mediaType eq 'VIDEO'}">
-<video controls="false" autoplay="autoplay" style="width:100%" loop>
+<video controls="false" autoplay="autoplay" style="width:100%" loop poster="/_ui/responsive/theme-luxury/images/poster.jpg">
   <source src="${media.url}"  type="video/mp4">
+  <source src="${media.url}"  type="video/webm">
+  <source src="${media.url}"  type="video/ogg">
+  <!-- <source src="/_ui/responsive/theme-luxury/images/video/big_buck_bunny/big_buck_bunny.mp4"  type="video/mp4">
+  <source src="/_ui/responsive/theme-luxury/images/video/big_buck_bunny/big_buck_bunny.webm"  type="video/webm">
+  <source src="/_ui/responsive/theme-luxury/images/video/big_buck_bunny.ogv"  type="video/ogg"> -->
 </video>
 </c:when>
 <c:otherwise>
