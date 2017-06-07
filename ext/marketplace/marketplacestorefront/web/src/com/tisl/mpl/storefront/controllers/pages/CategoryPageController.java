@@ -427,20 +427,20 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				/*
 				 * if (CollectionUtils.isNotEmpty(seoContent)) {
-				 * 
+				 *
 				 * metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword(); metaDescription =
 				 * seoContent.get(seoContent.size() - 1).getSeoMetaDescription(); metaTitle =
 				 * seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
-				 * 
-				 * 
+				 *
+				 *
 				 * setUpMetaDataForSeo(model, metaKeywords,metaDescription, metaTitle); updatePageTitle(model, metaTitle); }
 				 * else {
-				 * 
+				 *
 				 * metaKeywords = MetaSanitizerUtil.sanitizeKeywords(brandModel.getKeywords()); metaDescription =
 				 * MetaSanitizerUtil.sanitizeDescription(brandModel.getDescription());
 				 * updatePageTitle(brandModel,searchPageData.getBreadcrumbs(), model); setUpMetaData(model, metaKeywords,
 				 * metaDescription);
-				 * 
+				 *
 				 * }
 				 */
 
@@ -836,11 +836,18 @@ public class CategoryPageController extends AbstractCategoryPageController
 				{
 					LOG.info("*****category code******" + categoryCode);
 					final List<PriorityBrandsModel> priorityBrands = brandService.priorityBrands(categoryCode);
-					for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
-					{
-						priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
-					}
 
+					if (CollectionUtils.isNotEmpty(priorityBrands))
+					{
+						if (LOG.isDebugEnabled())
+						{
+							LOG.debug("priority brands size" + priorityBrands.size());
+						}
+						for (final PriorityBrandsModel priorityBrandsModel : priorityBrands)
+						{
+							priorityBrandsJsonArray.add(priorityBrandsModel.getBrandId());
+						}
+					}
 					priorityBrand.put("priorityBrands", priorityBrandsJsonArray);
 
 					model.addAttribute("PriorityBrandArray", priorityBrand.toJSONString());
