@@ -191,6 +191,30 @@ public interface MplCartFacade extends CartFacade
 			throws InvalidCartException, CommerceCartModificationException;
 
 	/**
+	 * Method for adding item to cart for Mobile service
+	 *
+	 * @param cartId
+	 *
+	 * @param productCode
+	 *
+	 * @param quantity
+	 *
+	 * @param ussid
+	 *
+	 * @return boolean , for success return true else false
+	 *
+	 * @throws CommerceCartModificationException
+	 *            if cartid , product code , quantity id null or empty if cart id , product id is invalid if quantity is
+	 *            less than or equals to 0
+	 */
+
+
+	boolean addItemToCartwithExchange(String cartId, CartModel cartModel, ProductModel productModel, long quantity, String ussid,
+			String exchangeParam) throws InvalidCartException, CommerceCartModificationException;
+
+
+
+	/**
 	 * @param cartData
 	 * @param omsDeliveryResponse
 	 * @param cartModel
@@ -542,11 +566,11 @@ public interface MplCartFacade extends CartFacade
 	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData) throws CMSItemNotFoundException;
 
 	/* *
-	 * 
+	 *
 	 * @param cartModel
-	 * 
+	 *
 	 * @param mplSelectedEDDInfo
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);

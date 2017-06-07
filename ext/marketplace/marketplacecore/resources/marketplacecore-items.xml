@@ -11122,7 +11122,7 @@
 				</attribute>
 				<attribute type="java.lang.String" qualifier="entryNumber">
 				<description>Entry Number</description>
-					<modifiers read="true" write="true" optional="false" unique="true"/>
+					<modifiers read="true" write="true" optional="true" unique="true"/>
 					<persistence type='property'>
 					</persistence>
 				</attribute>

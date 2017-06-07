@@ -150,5 +150,20 @@ public interface MplCartWebService
 	public CartDataDetailsWsDTO displayOrderSummary(final String pincode, final OrderModel cartModel,
 			final CartDataDetailsWsDTO cartDetailsData);
 
+	/**
+	 * Service to add product to cart
+	 *
+	 * @param productCode
+	 * @param cartId
+	 * @param quantity
+	 * @param USSID
+	 * @param exchangeParam
+	 * @return WebSerResponseWsDTO
+	 * @throws CommerceCartModificationException
+	 * @throws InvalidCartException
+	 */
+	WebSerResponseWsDTO addProductToCartwithExchange(final String productCode, final String cartId, final String quantity,
+			String USSID, boolean addedToCartWl, String channel, String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException;
 
 }

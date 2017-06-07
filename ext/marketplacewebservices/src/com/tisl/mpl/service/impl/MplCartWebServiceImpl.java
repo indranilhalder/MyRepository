@@ -2757,4 +2757,168 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		this.addressReversePopulator = addressReversePopulator;
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public WebSerResponseWsDTO addProductToCartwithExchange(final String productCode, final String cartId, final String quantity,
+			final String USSID, final boolean addedToCartWl, final String channel, final String exchangeParam)
+			throws InvalidCartException, CommerceCartModificationException
+	{
+		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
+		final long quant = Long.parseLong(quantity);
+		boolean addedToCart = false;
+		int count = 0;
+		String delistMessage = MarketplacewebservicesConstants.EMPTY;
+		final List<Wishlist2EntryModel> entryModelList = new ArrayList<Wishlist2EntryModel>();
+		CartModel cartModel = null;
+		boolean delisted = false;
+		ProductModel productModel = null;
+		ProductModel selectedProductModel = null;
+		try
+		{
+
+			//changes for CarProject
+			//cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartId);
+			cartModel = cartService.getSessionCart();
+			//changes for CarProject ends
+			if (cartModel == null)
+			{
+				LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
+			}
+			else
+			{
+				for (final AbstractOrderEntryModel pr : cartModel.getEntries())
+				{
+					productModel = pr.getProduct();
+					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
+					{
+						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+						}
+						if (Long.parseLong(quantity) + pr.getQuantity().longValue() > maximum_configured_quantiy)
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9066);
+						}
+						selectedProductModel = productModel;
+						//break;
+					}
+					//counting no of items in cart not freebie
+					if (null != pr.getGiveAway() && !pr.getGiveAway().booleanValue())
+					{
+						count++;
+					}
+				}
+			}
+			result.setCount(String.valueOf(count));
+
+			if (selectedProductModel == null)
+			{
+				//changes for CarProject
+				//selectedProductModel = productService.getProductForCode(defaultPromotionManager.catalogData(), productCode);
+				selectedProductModel = productService.getProductForCode(productCode);
+				// changes for CarProject ends
+				if (selectedProductModel == null)
+				{
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_CODE + productCode);
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9037);
+				}
+			}
+			if (quant <= 0)
+			{
+				LOG.debug(MarketplacecommerceservicesConstants.INVALID_PRODUCT_QUANTITY + quantity);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9068);
+			}
+			for (final SellerInformationModel seller : selectedProductModel.getSellerInformationRelator())
+			{
+				if (seller.getSellerArticleSKU().equalsIgnoreCase(USSID)
+						&& (seller.getSellerAssociationStatus() != null && (seller.getSellerAssociationStatus().getCode()
+								.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (seller.getEndDate() != null && new Date()
+								.after(seller.getEndDate())))))
+				{
+					delisted = true;
+					break;
+				}
+			}
+			if (delisted)
+			{
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("*********** Items delisted *************" + delistMessage);
+				}
+				delistMessage = Localization.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_CART);
+				result.setDelistedMessage(delistMessage);
+			}
+			else
+			{
+				addedToCart = mplCartFacade.addItemToCartwithExchange(cartId, cartModel, selectedProductModel, quant, USSID,
+						exchangeParam);
+				if (LOG.isDebugEnabled())
+				{
+					LOG.debug("*********** Products added status in cart *************  ::::USSID::::" + USSID + ":::added???"
+							+ addedToCart);
+				}
+				final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
+				for (final Wishlist2EntryModel entryModel : allWishlistEntry)
+				{
+					entryModel.setAddToCartFromWl(Boolean.valueOf(addedToCartWl));
+					if (LOG.isDebugEnabled())
+					{
+						LOG.debug("*********** Add to cart from WL mobile web service *************" + addedToCart + "::USSID::"
+								+ USSID);
+					}
+					entryModelList.add(entryModel);
+				}
+				//For saving all the data at once rather in loop;
+				modelService.saveAll(entryModelList);
+				//TISLUX-1823 -For LuxuryWeb
+				if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
+				{
+					cartModel.setChannel(SalesApplication.WEB);
+					modelService.save(cartModel);
+				}
+			}
+
+			if (!addedToCart && !delisted)
+			{
+				LOG.debug(MarketplacecommerceservicesConstants.FAILURE_CARTADD);
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9069);
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("*********** Products added successfully  Mobile web service *************");
+			}
+			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+		}
+		catch (final InvalidCartException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9064);
+		}
+
+		catch (final CommerceCartModificationException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9070);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
+		}
+		return result;
+	}
+
 }

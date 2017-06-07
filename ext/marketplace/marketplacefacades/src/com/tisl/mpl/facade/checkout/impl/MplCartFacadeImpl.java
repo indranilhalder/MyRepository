@@ -118,6 +118,7 @@ import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
  * @author TCS
  *
  */
+
 public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacade
 {
 	private static final Logger LOG = Logger.getLogger(MplCartFacadeImpl.class);
@@ -148,6 +149,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
 	@Resource(name = "pincodeService")
 	private PincodeService pincodeService;
 
@@ -176,9 +181,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
-	//Exchange Changes
-	@Resource(name = "exchangeGuideFacade")
-	private ExchangeGuideFacade exchangeGuideFacade;
+
 
 	public MplCommerceCartCalculationStrategy getMplDefaultCommerceCartCalculationStrategy()
 	{
@@ -3711,5 +3714,21 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 		return exchangeApplied;
 
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#addItemToCartwithExchange(java.lang.String,
+	 * de.hybris.platform.core.model.order.CartModel, de.hybris.platform.core.model.product.ProductModel, long,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean addItemToCartwithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
+			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException
+	{
+		return mplCommerceCartService.addItemToCartWithExchange(cartId, cartModel, productModel, quantity, ussid, exchangeParam);
 	}
 }

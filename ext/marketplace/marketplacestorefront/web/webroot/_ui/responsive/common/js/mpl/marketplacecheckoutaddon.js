@@ -5656,6 +5656,8 @@ function checkPincodeServiceability(buttonType,el)
  				$("#unserviceablepincodeBtm").show();//UF-68
  				 $(".pincodeServiceError").show();
  				populatePincodeDeliveryMode(response,buttonType);
+ 				//TPR-1083
+					populateIsExchangeApplied(response,'checkPincodeServiceability 1');
 					reloadpage(selectedPincode,buttonType);
  	 			$("#isPincodeServicableId").val('N');
  	 			// reloadpage(selectedPincode,buttonType);
@@ -5683,6 +5685,8 @@ function checkPincodeServiceability(buttonType,el)
 	 			$("#AvailableMessage").show();
 	 			$("#AvailableMessageBtm").show();//UF-68
  					populatePincodeDeliveryMode(response,buttonType);
+ 					//TPR-1083
+ 					populateIsExchangeApplied(response,'checkPincodeServiceability 2');	
  					reloadpage(selectedPincode,buttonType);
  			}
  			
@@ -6286,6 +6290,8 @@ function checkIsServicable()
 	 			}
 	 			// TPR-1055 ends
 	 			populatePincodeDeliveryMode(response,'pageOnLoad');
+	 			//TPR-1083
+	 			populateIsExchangeApplied(response,'checkIsServicable');
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
 	 			$("#defaultPinDiv").show();
 	 			// $("#changePinDiv").hide();
@@ -8377,3 +8383,36 @@ $(document).ajaxComplete(function(){
 $(".card_exp_month, .card_exp_year").on("change",function(){
 	$(this).css("color","#000");
 });
+//TPR-1083
+
+function populateIsExchangeApplied(response,stringCaller)
+{
+		//alert(stringCaller);
+	var exchangeId ="";
+		exchangeId=$('#exc_cart').val();
+	
+	
+	var values=response['pincodeData'].split("|");
+	
+		var isServicable=values[0];
+		
+		var selectedPincode=values[1];
+		
+		var deliveryModeJsonMap=values[2];
+		var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap);
+		var ussId;
+		var isExchangeServicable;
+		var exchangePincode;
+		
+		for ( var key in deliveryModeJsonObj) 
+		{
+			ussId= deliveryModeJsonObj[key].ussid;
+			isExchangeServicable= deliveryModeJsonObj[key].isExchangeServiceable;
+			exchangePincode=deliveryModeJsonObj[key].exchangePincode;	
+		}
+		
+		if(isExchangeServicable && exchangePincode==selectedPincode && exchangeId)
+			{
+			$(".cart_exchange").css('display','block');
+			}
+}

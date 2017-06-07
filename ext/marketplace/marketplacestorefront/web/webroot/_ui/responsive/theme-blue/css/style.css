@@ -47799,6 +47799,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 .product-detail .Emi {
 	position: relative;
 	margin: -15px 0 0;
+	display: inline-block;
 }
 
 .product-detail .Emi p {

@@ -186,6 +186,29 @@ public interface MplCommerceCartService
 	boolean addItemToCart(final String cartId, final CartModel cartModel, final ProductModel productModel, final long quantity,
 			final String ussid) throws InvalidCartException, CommerceCartModificationException;
 
+	/**
+	 * Method for adding item to cart for Mobile service
+	 *
+	 * @param cartId
+	 *
+	 * @param productCode
+	 *
+	 * @param quantity
+	 *
+	 * @param ussid
+	 *
+	 * @return boolean , for success return true else false
+	 *
+	 * @throws CommerceCartModificationException
+	 *            if cartid , product code , quantity id null or empty if cart id , product id is invalid if quantity is
+	 *            less than or equals to 0
+	 */
+
+	boolean addItemToCartWithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
+			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException;
+
+
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -248,8 +271,8 @@ public interface MplCommerceCartService
 	 * ReservationListWsDTO getReservation(final AbstractOrderModel cartModel, final String pincode, final String type)
 	 * throws EtailNonBusinessExceptions;
 	 */
-//	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
-//			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
+	//	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
+	//			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
@@ -379,7 +402,8 @@ public interface MplCommerceCartService
 	 * throws EtailNonBusinessExceptions;
 	 */
 	boolean isInventoryReserved(AbstractOrderData abstractOrderData, String requestType, String defaultPinCodeId,
-			AbstractOrderModel abstractOrderModel,InventoryReservListRequestWsDTO inventoryRequest,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+			AbstractOrderModel abstractOrderModel, InventoryReservListRequestWsDTO inventoryRequest,
+			SalesApplication salesApplication) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @description: It is responsible to find possible delivery mode of a cart entry
@@ -506,6 +530,7 @@ public interface MplCommerceCartService
 	 */
 	public Map<String, List<MarketplaceDeliveryModeData>> getDeliveryMode(CartData cartData,
 			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+
 	/**
 	 * This method was developed for CAR-256
 	 *
@@ -527,8 +552,8 @@ public interface MplCommerceCartService
 	 * @throws EtailNonBusinessExceptions
 	 */
 	ReservationListWsDTO getReservation(final AbstractOrderData cartData, final String pincode, final String type,
-			AbstractOrderModel abstractOrderModel,
-			InventoryReservListRequestWsDTO inventoryRequest,SalesApplication salesApplication) throws EtailNonBusinessExceptions;
+			AbstractOrderModel abstractOrderModel, InventoryReservListRequestWsDTO inventoryRequest,
+			SalesApplication salesApplication) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param cartdata
