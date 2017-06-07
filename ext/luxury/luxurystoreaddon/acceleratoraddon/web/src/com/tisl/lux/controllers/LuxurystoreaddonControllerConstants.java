@@ -13,12 +13,16 @@
  */
 package com.tisl.lux.controllers;
 
+import com.tisl.mpl.core.model.LuxEnhancedSearchBoxComponentModel;
+
+
 /**
  */
 public interface LuxurystoreaddonControllerConstants
 {
 	String ADDON_PREFIX = "addon:/luxurystoreaddon";
-	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";
+	public static final String LAST_USERNAME_WITH_ERROR_ATTEMPT = "lastUnameErrorAttempt";;
+	public static final String LUXURYLOGINPAGE = "luxuryLoginPage";
 
 	// implement here controller constants used by this extension
 	interface Views
@@ -30,6 +34,26 @@ public interface LuxurystoreaddonControllerConstants
 				String LoginPanelFragment = ADDON_PREFIX + "/fragments/home/luxLoginPanel";
 				String ForgotPasswordPanel = ADDON_PREFIX + "/fragments/home/forgottenPwd";
 			}
+		}
+
+		interface Pages
+		{
+
+			interface Home
+			{
+				String LuxuryLoginPage = ADDON_PREFIX + "/pages/home/luxLoginPanel";
+			}
+		}
+	}
+
+	interface Actions
+	{
+		interface Cms
+		{
+			String _Prefix = "/view/";
+			String _Suffix = "Controller";
+			String LuxEnhancedSearchBoxComponent = _Prefix + LuxEnhancedSearchBoxComponentModel._TYPECODE + _Suffix;
+
 		}
 	}
 }

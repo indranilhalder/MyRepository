@@ -22,7 +22,7 @@ public class ExtRegisterForm extends RegisterForm
 	private String affiliateId;
 	private boolean checkMyRewards;
 	private String gender;
-	private boolean isLuxCustomer;
+
 
 	/**
 	 * @return the affiliateId
@@ -77,21 +77,7 @@ public class ExtRegisterForm extends RegisterForm
 		this.gender = gender;
 	}
 
-	/**
-	 * @return the isLuxCustomer
-	 */
-	public boolean isLuxCustomer()
-	{
-		return isLuxCustomer;
-	}
 
-	/**
-	 * @param isLuxCustomer the isLuxCustomer to set
-	 */
-	public void setLuxCustomer(boolean isLuxCustomer)
-	{
-		this.isLuxCustomer = isLuxCustomer;
-	}
 
 
 

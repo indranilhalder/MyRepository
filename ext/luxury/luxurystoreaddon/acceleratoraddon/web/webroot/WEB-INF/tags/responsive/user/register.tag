@@ -46,7 +46,6 @@
 		<formElement:formPasswordBox idKey="register.password" labelKey="" path="pwd" inputCSS="password-strength form-control" mandatory="true"/>	
 		<formElement:formConfirmPasswordBox idKey="register.checkpassword" labelKey="" path="checkPwd" inputCSS="form-control" mandatory="true"/>
 	</div>
-	 <input type="hidden" id="isLuxCustomer" name="isLuxCustomer" value="true" />
 	<div class="sign-up-action">
 		<div class="male-female-checkbox mb-20">
 			<input id="male-on" class="toggle toggle-left get-gender-value" name="toggle" value="MALE" type="radio" checked="">

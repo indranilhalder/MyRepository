@@ -379,9 +379,7 @@ public class LoginPageController extends AbstractLoginPageController
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_REGISTER, method = RequestMethod.POST)
 	public String doRegister(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel,
-			@RequestParam(value = ModelAttributetConstants.IS_LUXURY_CUSTOMER, required = false) final String isLuxCustomer)
-			throws CMSItemNotFoundException
+			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
 		String returnPage = null;
 		try
@@ -392,14 +390,7 @@ public class LoginPageController extends AbstractLoginPageController
 			final String rePassword = java.net.URLDecoder.decode(request.getParameter("checkPwd"), "UTF-8");
 			form.setPwd(password);
 			form.setCheckPwd(rePassword);
-			if (null != isLuxCustomer && StringUtils.isNotEmpty(isLuxCustomer))
-			{
-				form.setLuxCustomer(Boolean.parseBoolean(isLuxCustomer));
-			}
-			else
-			{
-				form.setLuxCustomer(Boolean.parseBoolean("false"));
-			}
+
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
@@ -467,7 +458,7 @@ public class LoginPageController extends AbstractLoginPageController
 			data.setFirstName(form.getFirstName());
 			data.setLastName(form.getLastName());
 			data.setMobilenumber(form.getMobileNumber());
-			data.setIsLuxCustomer(form.isLuxCustomer());
+
 			//implementation for TISCR-278 :start
 
 			if (null != request.getParameter(ModelAttributetConstants.CHECK_MY_REWARDS)
