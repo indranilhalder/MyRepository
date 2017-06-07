@@ -34,17 +34,32 @@
 	<!-- For Infinite Analytics End -->
 	<input type="hidden" id="pageName" name="pageName" value="${cmsPage.name}">
 <input type="hidden" id="staticHost" name="staticHost" value="//${staticHost}">
-<div class="header-promo text-center">
-	<cms:pageSlot position="TopCategoryPageHeaderSlot" var="component">
+
+	<cms:pageSlot position="TopHeaderSlot" var="component">
 		<cms:component component="${component}"/>
 	</cms:pageSlot>
-</div>
+
+	<div class="wishAddLoginPlp">
+		<span><spring:theme code="product.wishListNonLoggedIn"></spring:theme></span>
+	</div>
+	<div class="wishAddSucessPlp">
+		<span><spring:theme code="mpl.pdp.wishlistSuccess"></spring:theme></span>
+	</div>
+		<div class="wishAlreadyAddedPlp">
+	<span><spring:theme code="mpl.pdp.wishlistAlreadyAdded"></spring:theme></span>
+		</div>
+	<!-- Changes for INC144313867 -->
+	<div class="wishRemoveSucessPlp">
+	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
+	</div>
 	<div class="container-fluid">
 		<div class="inner">
 		    <div id="hamburger-menu" class="hamburger-menu visible-xs-block"><span></span></div> 
 			<div class="logo-main-nav-wrapper">
 				<div class="logo text-center">
 					<a href="#"><cms:pageSlot position="SiteLogo" var="logo" limit="1">
+		<cms:component component="${logo}" class="siteLogo"  element="div"/></cms:pageSlot>
+		<cms:pageSlot position="Brand-siteLogo" var="logo" limit="1">
 		<cms:component component="${logo}" class="siteLogo"  element="div"/></cms:pageSlot>
 	              </a>
 				</div>

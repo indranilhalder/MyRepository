@@ -11,9 +11,10 @@
 			<td style="width: 537px; height: 5px;"><cockpit
 					code="MiddleHeader" /></td>
 			<td style="width: 298px; height: 5px;"><cockpit code="Brand-siteLogo" /></td>
-			<td style="width: 956px; height: 5px;" colspan="2"><cockpit
-					code="HeaderLink" /> <cockpit code="MiniCart" /> <cockpit
-					code="SearchBox" /></td>
+			<td style="width: 956px; height: 5px;" colspan="2">
+            <td style="width: 960px; height: 21px;"><cockpit
+                code="HeaderLinks" /><cockpit code="MiniCart" /><cockpit code="WishList"/><cockpit
+                    code="SearchBox" /></td>
 		</tr>
 		<tr style="height: 13px;">
 			<td style="width: 1791px; height: 13px;" colspan="4"><cockpit

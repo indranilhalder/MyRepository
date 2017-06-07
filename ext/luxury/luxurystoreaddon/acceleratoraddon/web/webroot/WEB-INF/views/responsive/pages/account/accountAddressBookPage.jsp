@@ -1,6 +1,7 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/user"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
@@ -16,7 +17,7 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+
 
 
 <spring:url value="/my-account/profile" var="profileUrl" />
@@ -34,7 +35,7 @@
 <template:page pageTitle="${pageTitle}">
 <div class="account">
   <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
-  		 <user:accountMobileViewMenuDropdown pageNameDropdown="addressBook"/>
+  		 
   		<%-- <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>

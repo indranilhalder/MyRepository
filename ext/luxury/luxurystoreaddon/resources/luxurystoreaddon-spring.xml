@@ -90,7 +90,22 @@
         <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/codPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/codPanel"/>
 	    <entry key="fragments/password/passwordResetRequestPopup" value="addon:/luxurystoreaddon/fragments/home/forgottenPwd"/>
 		<entry key="pages/account/accountLoginPage" value="addon:/luxurystoreaddon/fragments/home/luxRegister"/>
-	
+	    
+	    <!-- My Account Pages-->
+	    <entry key="pages/account/accountProfileEditPage" value="addon:/luxurystoreaddon/pages/account/accountProfileEditPage"/>
+		<entry key="pages/account/accountProfilePage" value="addon:/luxurystoreaddon/pages/account/accountProfilePage"/>
+		<entry key="pages/account/accountProfileEmailEditPage" value="addon:/luxurystoreaddon/pages/account/accountProfileEmailEditPage"/>
+		<entry key="pages/account/accountChangePasswordPage" value="addon:/luxurystoreaddon/pages/account/accountChangePasswordPage"/>
+		<entry key="pages/account/accountAddressBookPage" value="addon:/luxurystoreaddon/pages/account/accountAddressBookPage"/>
+		<entry key="pages/account/accountEditAddressPage" value="addon:/luxurystoreaddon/pages/account/accountEditAddressPage"/>
+		<entry key="pages/account/accountOrderDetailPage" value="addon:/luxurystoreaddon/pages/account/accountOrderDetailPage"/>
+		<entry key="pages/account/accountOrderHistoryPage" value="addon:/luxurystoreaddon/pages/account/accountOrderHistoryPage"/>
+		<entry key="pages/account/accountLayoutPage" value="addon:/luxurystoreaddon/pages/account/accountLayoutPage"/>
+		<entry key="pages/account/accountMarketPreference" value="addon:/luxurystoreaddon/pages/account/accountMarketPreference"/>
+		<entry key="pages/account/accountPaymentInfoPage" value="addon:/luxurystoreaddon/pages/account/accountPaymentInfoPage"/>
+		<entry key="pages/account/myInterest" value="addon:/luxurystoreaddon/pages/account/myInterest"/>
+		<entry key="pages/account/reviewPage" value="addon:/luxurystoreaddon/pages/account/reviewPage"/>
+		
 	</util:map>
 	<!-- Logic for resolving view resolver for addon prefix -->
 </beans>

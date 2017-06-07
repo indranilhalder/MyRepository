@@ -354,7 +354,7 @@ TATA.CommonFunctions = {
 		$(document).on('click','.accordion h3', function(){
 		      //Expand or collapse this panel
 		      $(this).toggleClass('active').next().stop().slideToggle(500);
-		       Acc.not($(this)).removeClass('active');
+		       //Acc.not($(this)).removeClass('active');
 		      //Hide the other panels
 		      $(".accordion-content").not($(this).next()).stop().slideUp(500);
 		      return false;
@@ -540,6 +540,18 @@ TATA.Pages = {
 		            		$(".loadMore").hide();
 		            	}
 		            }
+		            $(".product-grid").hover(function () {
+						$(this).addClass("hover");
+						$(this).find('.plp-hover-img').show().siblings().hide();
+					},
+					function () {
+						$(this).removeClass("hover");
+						if($('.plp-modelimg-show.active').length){
+							$(this).find('.plp-model-img').show().siblings().hide();
+						}else{
+							$(this).find('.plp-default-img').show().siblings().hide();
+						}
+					});
                 },
                 complete: function(){
                     $('body').removeClass('loader');
@@ -589,6 +601,12 @@ TATA.Pages = {
 				$('.product-list-wrapper').removeClass('twocolumngrid');
 			});
 		},
+		PLPsingleColumseperator:function(){
+			$('.plp-single-view').on('click', function(){
+				$('.product-list-wrapper').toggleClass('plpsinglecolumn');
+			});
+			
+		},
 		
 		ProductSort: function(){
 			$('.sort-wrapper .btn').on('click', function(){
@@ -628,6 +646,7 @@ TATA.Pages = {
 			_self.showModelImg();
 			_self.addGiftWrap();
 			_self.TwoColumnseperator();
+			_self.PLPsingleColumseperator();
 			_self.ProductSort();
 			_self.productGrid();
 			_self.productHover();
@@ -656,11 +675,13 @@ TATA.Pages = {
 		                items:4,
 		            }
 		        },
-		        
 		    });
+           
 			$(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
 				dots: true,
 		        items: 1,
+		        autoplay: true,
+                autoplayTimeout: 5000,
 		    });
 		},
 		init: function () {
@@ -710,27 +731,38 @@ TATA.Pages = {
 		},
         
         Zoomer: function() {
-            $('.pdp-img-nav .slick-slide').on('click', function(){
-                var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
-                $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
-                    //scrollZoom : true,      
-                    zoomWindowWidth:500,
-                    zoomWindowHeight:500
+            
+            if ($(window).width() > 789) {
+                
+                $('.pdp-img-nav .slick-slide, .pdp-img .slick-arrow').on('click', function(){
+                    var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
+                    $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
+                        //scrollZoom : true,      
+                        zoomWindowWidth:400,
+                        zoomWindowHeight:400
+                    });
                 });
-            });
+                
+                $(document).ready(function(){
+                    var luxzoomImg = $('.pdp-img-nav .slick-current img').attr('data-zoom-image');                
+                    $('.zoomer').data('zoom-image', luxzoomImg ).elevateZoom({  
+                        //scrollZoom : true,      
+                        zoomWindowWidth:400,
+                        zoomWindowHeight:400
+                    });
+                });
+			}
+            
             
 		},
         
 		openPopup: function (url) {
-           if($('body').hasClass('page-productDetails')){
-               
+            
+             $('#share-modal .soc-links').on('click', function(){                 
                 newwindow = window.open(url,'name','height=400,width=400');
                 if (window.focus) {newwindow.focus()}
                 return false; 
-              
-            }            
-          
-             
+             });             
         }, 
         
         videoPlay: function(){
@@ -855,6 +887,12 @@ TATA.Pages = {
             
             
         }, 
+        luxury_overlay_close:function(){
+        	$('.luxury-over-lay,.lux-keepshop-btn').on('click', function(){
+        		$('#addtocart-popup,.luxury-over-lay').hide();
+        	})
+        	
+        },
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
@@ -863,6 +901,7 @@ TATA.Pages = {
             _self.openPopup();
             _self.videoPlay();
             _self.BankEMI();
+            _self.luxury_overlay_close();
 		}
 	},
 	
