@@ -3462,6 +3462,10 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					$('#sizeSelectAjaxData').remove();
 					if(typeof(jsonData['error'])=='undefined')
 					{
+						//UF-33 starts//   //TISSTRT-1587//
+						//Update Page Title
+						document.title = jsonData['mapConfigurableAttribute']['metaTitle'];
+						//UF-33 ends//
 						//If no server side error occured the below code executes
 						var responseProductCode=jsonData['code'];
 						var responseProductUrl=jsonData['url'];
