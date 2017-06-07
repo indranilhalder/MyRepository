@@ -6638,12 +6638,13 @@ function checkSignInValidation(path){
 	if(emailId == null || emailId == ""){
 		$("#signinEmailIdDiv").show();
 		$("#signinEmailIdDiv").html("Please fill in all mandatory fields.");	
-
+		//UF-277
 		validationResult=false;
 	}
 	else if(!emailPattern.test(emailId)){
 		$("#signinEmailIdDiv").show();
 		// TISPRO-479 Change the text message
+		//UF-277
 		$("#signinEmailIdDiv").html("Please enter a valid email ID");
 		validationResult=false;
 	}
@@ -6703,6 +6704,7 @@ function checkSignUpValidation(path){
 	}else if(!emailPattern.test(emailId)){
 		$("#signupEmailIdDiv").show();
 		$("#signupEmailIdDiv").html("Please enter a valid email ID");
+		//UF-277
 		validationResult=false;	
 	}else{
 		$("#signupEmailIdDiv").hide();
@@ -6734,6 +6736,7 @@ function checkSignUpValidation(path){
 	
 	if(validationResult && password!=rePassword){
 		$("#signupPasswordDiv").show();
+		// UF-277
 		$("#signupPasswordDiv").html("The passwords don’t match. Try again, please.");
 		validationResult=false;
 	}  else if(validationResult){

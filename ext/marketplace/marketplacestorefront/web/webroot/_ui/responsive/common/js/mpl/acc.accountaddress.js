@@ -676,6 +676,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
+				//UF-277
 				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>Please enter a valid first name</font>";
 				proceed = false;
 			}
@@ -687,7 +688,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-
+				//UF-277
 				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Please enter a valid last name</font>";
 				proceed = false;
 			}
@@ -699,6 +700,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
+				//UF-277
 				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid email ID</font>";
 				proceed = false;
 			}
@@ -709,6 +711,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
+			//changes for UF-277
 			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid email ID.</font>";
 			proceed = false;
 		}
@@ -723,6 +726,7 @@ function editAddress(addressId) {
 					"display" : "block",
 					"padding-top" : "10px"
 				});
+				//UF-277
 				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid phone number</font>";
 				proceed = false;
 			}
@@ -925,6 +929,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
+			//UF-277
 			document.getElementById("errnn").innerHTML = "<font color='#ff1c47' size='2'>Add a nickname please.</font>";
 			return false;
 		}
@@ -995,6 +1000,7 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
+			//UF-277
 			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>The passwords don’t match. Try again, please.</font>";
 			flag = false;
 		}

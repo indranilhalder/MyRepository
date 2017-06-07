@@ -639,9 +639,9 @@
 				</h2>
 				<div class="wishlist-deletion-confirmation-block">
 				<label class="wishlist-deletion-confirmation"><spring:theme
-							code="wishlist.deleteConfirmation.message" /><label class="particular-wishlist-name"></label><spring:theme
+							code="wishlist.deleteConfirmation.message" /></label><spring:theme
 							code="wishlist.delete.message" /></label>
-				</div>
+				</div><!-- UF-277 -->
 				<button class="deleteWlConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
 					<a class="close deleteWlConfirmationNo" href="" data-dismiss="modal"><spring:theme code="text.wishlist.no" /></a>
 				</div>
