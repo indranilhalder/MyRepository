@@ -130,6 +130,8 @@ INSERT_UPDATE MediaFormat;qualifier[unique=true];name
 ;97Wx141H;97Wx141H
 ;145Wx206H;145Wx206H
 ;97Wx144H;97Wx144H
+;362Wx512H;362Wx512H
+;69Wx97H;69Wx97H
 
 
 INSERT_UPDATE ProductTaxGroup;code[unique=true]

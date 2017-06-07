@@ -115,6 +115,8 @@
 				<value>fineJewelcartIcon</value>
 				<value>fineJewelcartPage</value>
 				<value>fineJewelsearchPage</value>
+				<value>fineJewelproductquickview</value>
+				<value>fineJewelthumbnailquickview</value>
 			</list>
 		</property>
 	</bean>
@@ -141,6 +143,8 @@
 				<value>fineJewelcartIcon</value>
 				<value>fineJewelcartPage</value>
 				<value>fineJewelsearchPage</value>
+				<value>fineJewelproductquickview</value>
+				<value>fineJewelthumbnailquickview</value>
 			</list>
 		</property>
 	</bean>
@@ -183,6 +187,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 <entry key="fineJewelvideo" value="97Wx141H" />
 <entry key="fineJewelcartIcon" value="145Wx206H" />
 <entry key="fineJewelstyleSwatch" value="145Wx206H" />
+<entry key="fineJewelproductquickview" value="362Wx512H" />
+<entry key="fineJewelthumbnailquickview" value="69Wx97H" />
 </map>
 </property>
 </bean>
@@ -414,6 +420,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>fineJewelcartIcon</value>
 				<value>fineJewelcartPage</value>
 				<value>fineJewelsearchPage</value>
+				<value>fineJewelproductquickview</value>
+				<value>fineJewelthumbnailquickview</value>
 				</list>
 		</property>
 	</bean>
@@ -441,6 +449,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>fineJewelcartIcon</value>
 				<value>fineJewelcartPage</value>
 				<value>fineJewelsearchPage</value>
+				<value>fineJewelproductquickview</value>
+				<value>fineJewelthumbnailquickview</value>
 			</list>
 		</property>
 	</bean>
@@ -467,6 +477,8 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 				<value>fineJewelcartIcon</value>
 				<value>fineJewelcartPage</value>
 				<value>fineJewelsearchPage</value>
+				<value>fineJewelproductquickview</value>
+				<value>fineJewelthumbnailquickview</value>
 			</list>
 		</property>
 	</bean>
