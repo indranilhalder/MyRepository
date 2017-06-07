@@ -97,12 +97,12 @@
 		</div>
 		
 			<div id="addtocart-popup" style="display:none">
-			<i class="fa fa-check-circle fa-4" aria-hidden="true"></i>
+			<span class="tick-icon"><i class="fa fa-check fa-4" aria-hidden="true"></i></span>
 			<h3 class="mt-40 mb-40">Added product to bag</h3>
 			<ul>
-				<li><a href="/cart" class="mb-10 btn-block lux-cart-btn">CART <span></span></a></li>
-				<li><a href="javascript:;" class="mb-10 btn-block lux-keepshop-btn">KEEP SHOPPING</a></li>
-				<li><a href="/cart" class="mb-10 btn-block lux-buynow-btn">BUY NOW</a></li>
+				<li><a href="/cart" class="mb-10 btn btn-gloden btn-lg btn-block lux-cart-btn">CART <span></span></a></li>
+				<li><a href="javascript:;" class="mb-20 btn btn-default btn-lg btn-block lux-keepshop-btn">KEEP SHOPPING</a></li>
+				<li><a href="/cart" class="mt-40 btn btn-primary btn-lg btn-block">BUY NOW</a></li>
 			</ul>
 		</div>
 		<div class="luxury-over-lay" style="display:none"></div>

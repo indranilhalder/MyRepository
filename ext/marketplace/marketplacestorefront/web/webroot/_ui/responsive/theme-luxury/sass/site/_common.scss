@@ -553,3 +553,10 @@ footer{
 video::-webkit-media-controls {
   display:none !important;
 }
+
+/*btn*/
+
+.btn-gloden {
+    background: $gold-dark;
+    color: $white;
+}

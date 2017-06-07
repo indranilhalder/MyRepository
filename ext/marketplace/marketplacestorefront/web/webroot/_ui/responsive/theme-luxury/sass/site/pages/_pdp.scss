@@ -523,7 +523,7 @@
     }
     #addtocart-popup{
     	width: 400px;
-	    height: 300px;
+	    height:auto;
 	    top: 50%;
 	    margin-top: -150px;
 	    left: 50%;
@@ -554,13 +554,19 @@
 	    		background:#d2d2d2;
 	    	}
 	    }
-	    .fa-check-circle{
-	    	position: absolute;
-		    top: -23px;
-		    margin-left: -33px;
+	    .tick-icon{
+            position: absolute;
+            top: -24px;
+            margin-left: -17px;
+            background:$gray-darker;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
 	    }
-	    .fa-check-circle:before{
-	    	font-size:70px;
+	    .fa-check{
+            font-size: 35px;
+            color: $white;
+            padding: 7px;
 	    }
     }
 }
