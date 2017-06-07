@@ -277,6 +277,7 @@
 	</div> -->
 
 
+<input type="hidden" id="isLuxury" value="true"/>
 
 
 <!-- For Gigya Social Login --><!-- TISPT-261 -->

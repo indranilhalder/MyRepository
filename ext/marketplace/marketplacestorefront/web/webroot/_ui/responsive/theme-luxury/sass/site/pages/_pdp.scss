@@ -90,22 +90,48 @@
 		
 		li {
 			display: inline-block;
-			width: 44px;
-			height: 44px;
-			border-radius: 50%;
-			text-align: center;
-			border: 1px solid #e2e6ee;
-			line-height: 44px;
-			text-transform: uppercase;
-			cursor: pointer;
+			
 			& + li {
 				margin-left: 10px;
 			}
-			&:hover, &.active {
-				background-color: $gray-darker;
-				border-color: $gray-darker;
-				color: $white;
-			}
+            
+            a{
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                text-align: center;
+                border: 1px solid #e2e6ee;
+                line-height: 44px;
+                text-transform: uppercase;
+                cursor: pointer;  
+                display: block;
+                
+                &:hover, &.active {
+                    background-color: $gray-darker;
+                    border-color: $gray-darker;
+                    color: $white;
+                    text-decoration: none;
+                }
+            }
+            
+            &.selected{
+                a{
+                    background-color: $gray-darker;
+                    border-color: $gray-darker;
+                    color: $white;
+                    text-decoration: none; 
+                }
+            }
+            
+            &.strike{
+                a{
+                    background-color: $light-gray;
+                    border-color: $slight-gray;
+                    color: $gray-darker;
+                    text-decoration:underline;
+                    cursor: default;
+                }
+            }
 		}
 		.size-guide{
 			font-size: 13px;
@@ -267,6 +293,10 @@
                 font-size: 16px;
                 padding-right: 10px;
                 color: #9b9b9b;
+                float: left;
+            }
+            .rating-count1{
+                float: left;
             }
             .design1{
                 td{
@@ -441,7 +471,7 @@
 
 /*PDP Section End*/
 
-#ReviewSecion, .wishAddSucess, .wishRemoveSucess, .wishAddLogin, .wishAlreadyAdded, #addToCartButton-wrong, .star-review {
+#ReviewSecion, .wishAddSucess, .wishRemoveSucess, .wishAddLogin, .wishAlreadyAdded, #addToCartButton-wrong{
     display: none;
 }
 .tabs-block {
@@ -494,5 +524,144 @@
                 float:left;
             }
         }
+    }
+    #addtocart-popup{
+    	width: 400px;
+	    height:auto;
+	    top: 50%;
+	    margin-top: -150px;
+	    left: 50%;
+	    margin-left: -200px;
+	    color: #000;
+	    background:#fff;
+	    text-align: center;
+	    position:fixed;
+	    z-index:9999;
+	    padding:20px;
+	    border-radius:5px;
+	    ul{
+	    	list-style-type:none;
+	    	padding:0px;
+	    	max-width:300px;
+	    	margin:0 auto;
+	    	li a{
+	    		border-radius:3px;
+	    		padding:10px;
+	    	}
+	    	.lux-cart-btn{
+	    		background:#B99D6B;
+	    	}
+	    	.lux-keepshop-btn{
+	    		border:1px solid #ddd;
+	    	}
+	    	.lux-buynow-btn{
+	    		background:#d2d2d2;
+	    	}
+	    }
+	    .tick-icon{
+            position: absolute;
+            top: -24px;
+            margin-left: -17px;
+            background:$gray-darker;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+	    }
+	    .fa-check{
+            font-size: 35px;
+            color: $white;
+            padding: 7px;
+	    }
+    }
+}
+.luxury-over-lay{
+	position:fixed;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	background:#000;
+	opacity:0.4;
+	z-index:999;
+}
+/*Review section*/
+
+.reviews{
+    .header{
+        height: auto;
+        border-bottom: 1px solid #e3e3e3;
+        background-color: transparent;
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        width: 100%;
+        z-index: 999;
+    }
+    .wrapper {
+        margin: 0 auto;
+        position: relative;
+        padding: 0 10px;
+        width: 100%;
+    }
+    .overview div.half {
+        width: 50%;
+        padding: 40px;
+        display: inline-block;
+    }
+    .overview div.half:first-child .rating-list li.header {
+        margin-bottom: 40px;
+        padding-left: 50px;
+        margin-left: 0;
+    }
+    .rate-details .before {
+        text-align: right;
+        font-weight: bold;
+        text-transform: uppercase;
+        display: inline-block;
+        float: left;
+        width: 20%;
+        padding-right: 10px;
+        vertical-align: top;
+        line-height: 1;
+    }
+    *.gig-composebox-photo {
+        float: left;
+        width: 37px;
+        height: 37px;
+    }
+    .gig-composebox-data{
+        padding-left: 47px;
+    }
+    .gig-comments-container *, *.gig-comments-container {
+        word-wrap: break-word;
+        padding: 0px;
+        margin: 0px;
+        color: inherit;
+        text-decoration: none;
+        width: auto;
+        float: none;
+        font-family: arial;
+        color: #333333;
+        position: static;
+        text-align: left;
+        vertical-align: baseline;
+        -moz-box-sizing: content-box;
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+}
+.star-review{
+    margin: 0px;
+}
+.accordion-title{
+    .star-review{
+        display: inline-block;
+        text-align: left;
+        padding: 0px;
+    }
+    .rating-count1{
+        font-size: 18px!important;
+        margin-left: 10px;
     }
 }

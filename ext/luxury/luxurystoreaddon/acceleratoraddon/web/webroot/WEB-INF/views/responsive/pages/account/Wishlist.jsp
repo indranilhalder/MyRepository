@@ -25,8 +25,8 @@
 
 <template:page pageTitle="${pageTitle}">
 	<!-- LW-230 -->
-	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
-	
+<%-- 	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+ --%>	
 	<body class="wishlist" onload="readyFunction();">
 
 		<!-- START OF WRAPPER DIV SECTION -->

@@ -509,10 +509,10 @@ footer{
 /*Loader CSS start */
 
 /*Rating and review start*/
-.rating {  
+.star-review{  
     font-size: 18px;
     
-    span.empty{
+    li.empty{
         font-family: FontAwesome;
         font-weight: normal;
         font-style: normal;
@@ -523,7 +523,7 @@ footer{
             color: #fbb928;
         }
     }
-    span.full{
+    li.full{
        font-family: FontAwesome;
         font-weight: normal;
         font-style: normal;
@@ -534,7 +534,7 @@ footer{
              color: #fbb928;
         } 
     }
-    span.half{
+    li.half{
        font-family: FontAwesome;
         font-weight: normal;
         font-style: normal;
@@ -552,4 +552,11 @@ footer{
 
 video::-webkit-media-controls {
   display:none !important;
+}
+
+/*btn*/
+
+.btn-gloden {
+    background: $gold-dark;
+    color: $white;
 }

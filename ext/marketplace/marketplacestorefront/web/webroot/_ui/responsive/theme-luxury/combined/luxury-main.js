@@ -12788,8 +12788,8 @@ TATA.CommonFunctions = {
         $(".footer-popular-search .footer-cloned-ul > li").append("<br/>"), $(".footer-popular-search .footer-cloned-ul > li").each(function() {
             $(this).find(".sub-menu").length ? $(this).show() : $(this).hide();
         }), $(document).on("click", ".accordion h3", function() {
-            return $(this).toggleClass("active").next().stop().slideToggle(500), Acc.not($(this)).removeClass("active"), 
-            $(".accordion-content").not($(this).next()).stop().slideUp(500), !1;
+            return $(this).toggleClass("active").next().stop().slideToggle(500), $(".accordion-content").not($(this).next()).stop().slideUp(500), 
+            !1;
         });
     },
     init: function() {
@@ -12897,7 +12897,11 @@ TATA.CommonFunctions = {
                     TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html()), 
                     $(filtered).has("input[name=noOfPages]") && (totalPages = parseInt($(filtered).find("input[name=noOfPages]").val()), 
                     totalPages > 1 ? ($("#pageQuery").val(""), currentPageNo = 1, totalNoOfPages = totalPages, 
-                    $(".loadMore").show()) : $(".loadMore").hide());
+                    $(".loadMore").show()) : $(".loadMore").hide()), $(".product-grid").hover(function() {
+                        $(this).addClass("hover"), $(this).find(".plp-hover-img").show().siblings().hide();
+                    }, function() {
+                        $(this).removeClass("hover"), $(".plp-modelimg-show.active").length ? $(this).find(".plp-model-img").show().siblings().hide() : $(this).find(".plp-default-img").show().siblings().hide();
+                    });
                 },
                 complete: function() {
                     $("body").removeClass("loader"), $(".plp-leftbar-close a").on("click", function() {
@@ -12932,6 +12936,11 @@ TATA.CommonFunctions = {
                 $(".product-list-wrapper").removeClass("twocolumngrid");
             });
         },
+        PLPsingleColumseperator: function() {
+            $(".plp-single-view").on("click", function() {
+                $(".product-list-wrapper").toggleClass("plpsinglecolumn");
+            });
+        },
         ProductSort: function() {
             $(".sort-wrapper .btn").on("click", function() {
                 $(this).addClass("active").siblings().removeClass("active");
@@ -12952,8 +12961,8 @@ TATA.CommonFunctions = {
         init: function() {
             var _self = TATA.Pages.PLP;
             _self.Filtershow(), _self.showModelImg(), _self.addGiftWrap(), _self.TwoColumnseperator(), 
-            _self.ProductSort(), _self.productGrid(), _self.productHover(), _self.filterByFacet(), 
-            _self.showSelectedRefinements(), _self.sortInit(), _self.loadMoreInit();
+            _self.PLPsingleColumseperator(), _self.ProductSort(), _self.productGrid(), _self.productHover(), 
+            _self.filterByFacet(), _self.showSelectedRefinements(), _self.sortInit(), _self.loadMoreInit();
         }
     },
     LANDING: {
@@ -13015,16 +13024,22 @@ TATA.CommonFunctions = {
             });
         },
         Zoomer: function() {
-            $(".pdp-img-nav .slick-slide").on("click", function() {
+            $(window).width() > 789 && ($(".pdp-img-nav .slick-slide, .pdp-img .slick-arrow").on("click", function() {
                 var luxzoomImg = $(".pdp-img-nav .slick-current img").attr("data-zoom-image");
                 $(".zoomer").data("zoom-image", luxzoomImg).elevateZoom({
-                    zoomWindowWidth: 500,
-                    zoomWindowHeight: 500
+                    zoomWindowWidth: 400,
+                    zoomWindowHeight: 400
                 });
-            });
+            }), $(document).ready(function() {
+                var luxzoomImg = $(".pdp-img-nav .slick-current img").attr("data-zoom-image");
+                $(".zoomer").data("zoom-image", luxzoomImg).elevateZoom({
+                    zoomWindowWidth: 400,
+                    zoomWindowHeight: 400
+                });
+            }));
         },
         openPopup: function(url) {
-            $("#share-modal").on("click", function() {
+            $("#share-modal .soc-links").on("click", function() {
                 return newwindow = window.open(url, "name", "height=400,width=400"), window.focus && newwindow.focus(), 
                 !1;
             });
@@ -13094,9 +13109,15 @@ TATA.CommonFunctions = {
                 }
             });
         },
+        luxury_overlay_close: function() {
+            $(".luxury-over-lay,.lux-keepshop-btn").on("click", function() {
+                $("#addtocart-popup,.luxury-over-lay").hide();
+            });
+        },
         init: function() {
             var _self = TATA.Pages.PDP;
-            _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI();
+            _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI(), 
+            _self.luxury_overlay_close();
         }
     },
     init: function() {

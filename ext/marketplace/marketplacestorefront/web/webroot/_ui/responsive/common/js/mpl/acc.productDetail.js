@@ -420,7 +420,7 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    cursor: "crosshair",
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750
-				       });
+				});
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");

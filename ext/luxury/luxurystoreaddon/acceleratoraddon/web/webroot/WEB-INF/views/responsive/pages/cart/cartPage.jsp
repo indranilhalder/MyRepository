@@ -6,7 +6,7 @@
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/cart" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common" %>
 <!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+<%-- <input type="hidden" id="isLuxury" value="${isLuxury}"/> --%>
 
 <template:page pageTitle="${pageTitle}">
 

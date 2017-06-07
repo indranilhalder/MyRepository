@@ -45,13 +45,13 @@
 			</ycommerce:testId>
 		</span>
 		<!-- search category List -->
-		 <div class="select-view">
+		<%--  <div class="select-view">
 			<select id="enhancedSearchCategory" name="searchCategory" class="hide">
 				<optgroup label="All">
 					<option selected="selected" value="all"><spring:theme code="text.all" /></option>
 				</optgroup>
 					
-				<%-- 	<!-- Commented for cache implementation -->
+					<!-- Commented for cache implementation -->
 				<c:if test="${categorySize >0}">
 				
 				<optgroup label="Departments">
@@ -76,8 +76,8 @@
 							<option value="${seller.id}" ${searchCode == seller.id ? 'selected' : '' }>${seller.legalName}</option>
 					</c:forEach>
 				</optgroup>
-				</c:if> --%>
-			</select> 
+				</c:if>
+			</select>  --%>
 
 		<%-- 	<div class="select-list enhanced-search">
 				<input type="hidden" id="searchCodeForDropdown" value="${searchCode}" />
@@ -104,14 +104,27 @@
 			</div>
 		</div>
  --%>
-	<%-- 	<spring:theme code="search.placeholder" var="searchPlaceholder" />
- --%>		<%-- <spring:theme code="search.placeholder.marketplace" var="searchPlaceholder" /> --%>
+ 
+ <div class="select-list enhanced-search">
+ <ul class="dropdown" label="All">
+	<li id="all" class="selected" hidden="true"></li>
+</ul>
+ </div>
+		<spring:theme code="search.placeholder" var="searchPlaceholder" />
+		<%-- <spring:theme code="search.placeholder.marketplace" var="searchPlaceholder" /> --%>
 
 	
-			<input type="text" id="js-site-search-input" tabindex="1"
+			<%-- <input type="text" id="js-site-search-input" tabindex="1"
 				class="form-control js-site-search-input search-input" name="text" value=""
 				maxlength="250" placeholder='"Type or Talk"'
 				data-options='{"autocompleteUrl" : "${autocompleteUrl}","minCharactersBeforeRequest" : "${component.minCharactersBeforeRequest}","waitTimeBeforeRequest" : "${component.waitTimeBeforeRequest}","displayProductImages" : ${component.displayProductImages}}'>
+		  --%>
+		
+		 <input type="text" id="js-site-search-input" tabindex="1"
+				class="form-control js-site-search-input search-input" name="text" value=""
+				maxlength="250" placeholder='"Type or Talk"'
+				data-options='{"autocompleteUrl" : "/search/autocomplete/luxury-SearchBox","minCharactersBeforeRequest" : "3","waitTimeBeforeRequest" : "500","displayProductImages" : true}'>
+		 
 		 <input type="hidden" id="spellingSearchterm" value="${spellingSearchterm}" />	
 	</form>
 </div>

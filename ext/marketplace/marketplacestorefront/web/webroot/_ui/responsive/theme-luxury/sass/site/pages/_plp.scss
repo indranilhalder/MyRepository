@@ -302,6 +302,8 @@
 				
 				.facetList{
 					.facet{
+                        clear: both;
+                        
 						border-bottom:1px solid #f5f5f5;
 						.facetHead{
 							cursor:pointer;
@@ -542,6 +544,11 @@
 	.plp-wrapper{
 		.leftbar.active{
 			left:0px;
+		}
+		.plpsinglecolumn{
+			.product-grid{
+				width:100% !important;
+			}
 		}
 		.leftbar{
 			position: fixed;

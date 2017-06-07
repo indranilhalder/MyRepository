@@ -59,6 +59,7 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename
 ;;bag-look2col1;text/png;look12.png;$jarResourceCms/preview-images/look12.png;;;
 ;;Men-MiniLookBook;text/png;MenPlaceholder.png;$jarResourceCms/preview-images/MenPlaceholder.png;;;
 ;;Brand_landingVideo;video/mp4;;$jarResourceCms/preview-images/brooks-brothers_brand-video.mp4;;Video;
+;;Brand-team;text/png;niketeam.png;$jarResourceCms/preview-images/niketeam.png;;;
 
 
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];&componentRef
@@ -81,6 +82,7 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;bagShow-look2col1;bag-look2col1;
 ;;MenBanner;MenHeroBanner;
 ;;Men-MiniLookBook;Men-MiniLookBook;
+;;Brand-team;Brand-team;
 
 INSERT_UPDATE CMSParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;content;
 ;;Brand-shopByFav;Brand-shopByFav;"<section class='look-book clearfix'><h3 class='section-title'>Shop by Category</h3><p class='mb-40 section-content'>Shop your favourites</p><div class='look-book-link'><ul class='list-unstyled clearfix'><li><a href='#'>Polos &amp; T-shirts</a></li><li><a href='#'>Casual Shirts</a></li><li><a href='#'>Jeans</a></li><li><a href='#'>Casual Trousers</a></li><li><a href='#'>Formal Shirts</a></li><li><a href='#'>Formal Trousers</a></li><li><a href='#'>Sweatshirts &amp; Sweaters</a></li><li><a href='#'>Casual Jackets &amp; Blazers Underwear</a></li><li><a href='#'>Underwear</a></li></ul></div></section>";
@@ -111,7 +113,7 @@ INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&com
 ;;look2bookCol2;look2 book2;look2bookCol2;/;look2Col2
 
 INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
-;;Brand-shopbycategory	;Brand-shopbycategory;shop by category;BagsImageCoursel1,PantsImageCoursel1,ClothingImageCoursel1,FootwearImageCoursel1,GroomingImageCoursel1
+;;Brand-shopbycategory	;Brand-shopbycategory;Shop by Category;BagsImageCoursel1,PantsImageCoursel1,ClothingImageCoursel1,FootwearImageCoursel1,GroomingImageCoursel1
 
 
 
@@ -131,9 +133,9 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Brand-FooterSlot;;;wide
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Brand-TopHeaderSlot;Brand TopHeader;true;
+;;Brand-TopHeaderSlot;Brand TopHeader;true;Home-TopBannerContent
 ;;Brand-HeaderLinkSlot;Brand HeaderLinkSlot;true;
-;;Brand-siteLogoSlot;Brand siteLogo;true;
+;;Brand-siteLogoSlot;Brand siteLogo;true;Brand-team;
 ;;Brand-MiniCartSlot;Brand MiniCart;true;
 ;;Brand-HeroBannerSlot;Brand HeroBanner;true;Men-BannerVideo1
 ;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;
@@ -150,13 +152,13 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Brand-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
 ;;Brand-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
 ;;Brand-WhyShopOnLuxurySlot;Brand WhyShopOnLuxury;true;
-;;Brand-FooterSlot;Brand Footer;true
-;;Gender-TopHeaderSlot;Gender TopHeader;true;
+;;Brand-FooterSlot;Brand Footer;true;LuxuryFooterComponent
+;;Gender-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
 ;;Gender-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Gender-siteLogoSlot;Gender siteLogo;true;
 ;;Gender-MiniCartSlot;Gender MiniCart;true;
 ;;Gender-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
-;;Gender-FooterSlot;Gender Footer;true;
+;;Gender-FooterSlot;Gender Footer;true;LuxuryFooterComponent
 ;;Men-TopHeaderSlot;Gender TopHeader;true;
 ;;Men-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Men-siteLogoSlot;Gender siteLogo;true;
@@ -180,7 +182,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-ShortlookBookSlot;Gender ShortlookBook;true;Men-MiniLookBook
 ;;Men-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
 ;;Men-WeeklyBanner1Slot;Gender WeeklyBanner1;true;HomePageWeaklySpecialBanner
-;;Women-TopHeaderSlot;Gender TopHeader;true;
+;;Women-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
 ;;Women-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Women-siteLogoSlot;Gender siteLogo;true;
 ;;Women-MiniCartSlot;Gender MiniCart;true;
@@ -209,11 +211,11 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BrandpageHeaderLink;HeaderLink;;Brand-HeaderLinkSlot;true
 ;;BrandPageSearchBox;SearchBox;;SearchBoxSlot;true
 ;;BrandPageMiddleHeaderLink;MiddleHeader;;MiddleHeader;true
-;;BrandPageWishList;WishList;;WishListSlot;true
+;;BrandPageWishList;WishList;;WishListSlot;true;MyWishList
 ;;BrandPageMiniCart;MiniCart;;MiniCartSlot;true
 ;;BrandPageNavigationBar;NavigationBar;;NavigationBarSlot;true
 ;;BrandPageWhyShopOnLuxury;WhyShopOnLuxury;;Brand-WhyShopOnLuxurySlot;true
-;;BrandPageFooter;Footer;;Brand-FooterSlot;true
+;;BrandPageFooter;Footer;;FooterSlot;true
 
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryBrandLandingPage'];contentSlot(uid,$contentCV)[unique=true];
@@ -281,8 +283,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;GenderPageSiteLogo;SiteLogo;;SiteLogoSlot;true
 ;;GenderPageSearchBox;SearchBox;;SearchBoxSlot;true
 ;;GenderPageMiddleHeaderLink;MiddleHeader;;MiddleHeader;true
-;;GenderPageWishList;WishList;;WishListSlot;true
+;;GenderPageWishList;WishList;;WishListSlot;true;MyWishList
 ;;GenderPageMiniCart;MiniCart;;MiniCartSlot;true
 ;;GenderPageNavigationBar;NavigationBar;;NavigationBarSlot;true
 ;;GenderPageWhyShopOnLuxury;WhyShopOnLuxury;;Gender-WhyShopOnLuxurySlot;true
-;;GenderPageFooter;Footer;;Gender-FooterSlot;true
+;;GenderPageFooter;Footer;;FooterSlot;true

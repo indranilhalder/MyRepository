@@ -53,8 +53,8 @@ INSERT_UPDATE LuxEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=t
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
 ;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
 ;;NewArrivalsCategoryLink;New Arrivals Category Link;/new-arrivals;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
-;;WomenCategoryLink;Women Category Link;/womenlandingpage;WomenCategoryLink;WomenCategoryLink;;;;Women      
-;;MenCategoryLink;Men Category Link;/menlandingpage;MenCategoryLink;MenCategoryLink;;;;Men    
+;;WomenCategoryLink;Women Category Link;/womenlanding;WomenCategoryLink;WomenCategoryLink;;;;Women      
+;;MenCategoryLink;Men Category Link;/menlanding;MenCategoryLink;MenCategoryLink;;;;Men    
 ;;LifestyleCategoryLink;Lifestyle Category Link;/lifestyle;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
 ;;BeautyCategoryLink;Beauty Category Link;/beauty;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
 ;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
@@ -135,7 +135,6 @@ INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=
 ;;Home-RightContent; Home Right Content;RightContent;"<div class='seastion-content text-left'><h2>Give 20,000<br>Give 20,000</h2><p>Refer your friends to Luxury and We'll reward everyone involved.</p><a href='/womens' class='link'>iOS</a></div>";"/women"
 
 
-
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;shopMenContent;shopMen             
 ;;shopWomenContent;shopWomen           
@@ -166,6 +165,7 @@ INSERT_UPDATE ShopOnLuxury;$contentCV[unique=true];uid[unique=true];shopOnLuxury
 
                                     
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+;;SiteLogoComponent;Site logo ;SiteLogoComponent;"/";tulSiteLogo
 ;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook            
 ;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter             
 ;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube             
@@ -182,6 +182,7 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 					<li><span>Return within 30days </span>of placing your order</li>
 					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
 				</ul>"
+;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='#'>Know More</a></p></div>"
 
                                                                      
  # CMS Footer Component               
@@ -231,7 +232,8 @@ INSERT_UPDATE PincodeServiceComponent;$contentCV[unique=true];uid[unique=true];n
                                     
 # Create Content Slots              
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;MiddleHeader;helpLink;true;LuxuryHelpLink        
+;;MiddleHeader;helpLink;true;LuxuryHelpLink  
+;;SiteLogoSlot;site logo;true;SiteLogoComponent      
 ;;SearchBoxSlot;Search Box;true;luxury-SearchBox       
 ;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true;Home-ShopMen               
 ;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true;Home-ShopWomen             
@@ -239,7 +241,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;RightContentSlot;Middle Right Banner;true;Home-RightContent         
 ;;HomePageCurosel;Home Page Curosel;true;HomePageWeaklySpecialBanner  
 ;;WhyShopOnLuxury;Why Shop On Luxury;true;ShopOnLuxury                 
-;;TopHeaderSlot;Top header slot;true;LuxuryFreeShippingLink       
+;;TopHeaderSlot;Top header slot;true;Home-TopBannerContent
 ;;FooterSlot;Footer;true;LuxuryFooterComponent        
 ;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
 ;;WishListSlot;Wish List;true;MyWishList
