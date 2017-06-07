@@ -639,7 +639,7 @@
 				</h2>
 				<div class="wishlist-deletion-confirmation-block">
 				<label class="wishlist-deletion-confirmation"><spring:theme
-							code="wishlist.deleteConfirmation.message" /></label><spring:theme
+							code="wishlist.deleteConfirmation.message" /><spring:theme
 							code="wishlist.delete.message" /></label>
 				</div><!-- UF-277 -->
 				<button class="deleteWlConfirmation" type="submit"><spring:theme code="text.wishlist.yes" /></button>
