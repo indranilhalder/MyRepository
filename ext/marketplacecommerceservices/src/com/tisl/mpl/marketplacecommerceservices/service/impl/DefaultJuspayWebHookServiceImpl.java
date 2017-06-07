@@ -1099,7 +1099,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						//						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus())
 						//								|| OrderStatus.PAYMENT_FAILED.equals(orderModel.getStatus()))
 						//						{
-						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderStatus) || OrderStatus.PAYMENT_FAILED.equals(orderStatus))
+						else if (OrderStatus.PAYMENT_TIMEOUT.toString().equals(orderStatus) || OrderStatus.PAYMENT_FAILED.toString().equals(orderStatus))
 						{
 							final PaymentService juspayService = new PaymentService();
 
