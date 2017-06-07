@@ -54,6 +54,7 @@ public class OrderStatusSpecifier
 				flag = addOrderHistory(quantity, order, orderStatus, subOrderEntryList, subOrder, flag);
 
 			}
+			LOG.debug("Sub ORder status changed " + flag);
 		}
 		//TPR-1081
 		else if (CollectionUtils.isEmpty(subOrderList)
