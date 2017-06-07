@@ -95,6 +95,7 @@ import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.WeakArrayList;
 
 public class MarketplaceCheckoutControllerImpl extends
@@ -185,6 +186,11 @@ public class MarketplaceCheckoutControllerImpl extends
 	private MplCartFacade mplCartFacade;
 	@Autowired
 	private MplSellerInformationFacade  mplSellerInformationFacade;
+	
+	@Resource(name = "baseStoreService")
+	private BaseStoreService baseStoreService;
+	
+	
 	/**
 	 * Gets the product value.
 	 *
@@ -681,6 +687,9 @@ public class MarketplaceCheckoutControllerImpl extends
 	{
 		boolean nonCodProduct = false;
 		
+		final Long codUpperLimit = baseStoreService.getCurrentBaseStore().getCodUpperLimit();
+		final Long codLowerLimit = baseStoreService.getCurrentBaseStore().getCodLowerLimit();
+		
 		final List<AbstractOrderEntryModel> orderEntry = cart.getEntries();
 		for(final AbstractOrderEntryModel entry : orderEntry)
 		{
@@ -692,14 +701,45 @@ public class MarketplaceCheckoutControllerImpl extends
 				{
 					for(final RichAttributeModel richAttribute : seller.getRichAttribute()) 
 					{
-						if (!(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.BOTH) 
-								|| 
-								(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.COD))))	
+						boolean tShip = false;
+						if (DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
+						{
+							tShip = true;
+						}
+						else if (null != richAttribute.getIsSshipCodEligible()
+								&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))
+						{
+								tShip = true;
+						}
+						else
 						{
 							nonCodProduct = true;
 							return nonCodProduct;
 						}
+						if(tShip)
+						{
+							if (!(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.BOTH) 
+									|| 
+									(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.COD))))	
+							{
+								nonCodProduct = true;
+								return nonCodProduct;
+							}
+						}
 					}
+				}
+			}
+		}
+		if(!nonCodProduct)
+		{
+			if(codUpperLimit != null && codLowerLimit != null)
+			{
+				final boolean isCodLimitFailed = ((cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) && (cart
+						.getTotalPrice().longValue() >= codLowerLimit.longValue())) ? false : true;
+				final boolean isCodEligible = (isCodLimitFailed || !cart.getIsCODEligible().booleanValue()) ? false : true;
+				if(!isCodEligible)
+				{
+					nonCodProduct = true;
 				}
 			}
 		}

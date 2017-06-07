@@ -434,7 +434,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 															if(LOG.isDebugEnabled()) {
 																LOG.debug("COD Eligibility for product "+cartEntry.getSelectedUSSID()+" "+codEligible);
 															}
-															if(!codEligible) {
+															if(!codEligible && 
+																	!(StringUtils.isNotEmpty(agentId))) {
 																errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(cartEntry.getInfo())));
 																break;
 															}
