@@ -2,6 +2,7 @@ package com.tisl.mpl.integration.oms.order.populators;
 
 import de.hybris.platform.commerceservices.customer.CustomerEmailResolutionService;
 import de.hybris.platform.commerceservices.enums.CustomerType;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.commerceservices.model.PickUpDeliveryModeModel;
 import de.hybris.platform.commerceservices.strategies.CustomerNameStrategy;
@@ -18,6 +19,7 @@ import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.order.payment.ThirdPartyWalletInfoModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.model.OmsZoneDeliveryModeValueModel;
 import de.hybris.platform.omsorders.services.delivery.OmsZoneDeliveryModeValueStrategy;
@@ -64,23 +66,28 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 	public void populate(final OrderModel source, final Order target) throws ConversionException
 	{
 
+		final UserModel user = source.getUser();
 		final List<OrderLine> ondemandOrderEntrys = new ArrayList<OrderLine>();
-		target.setEmailid(((CustomerModel) source.getUser()).getOriginalUid());
+		target.setEmailid(((CustomerModel) user).getOriginalUid());
 		setFirstAndLastName(source, target);
-		target.setMiddleName(((CustomerModel) source.getUser()).getMiddleName());
+		target.setMiddleName(((CustomerModel) user).getMiddleName());
 		target.setCartID(source.getGuid());
-		if (source.getDeliveryAddress() != null)
+
+		final AddressModel delAddress = source.getDeliveryAddress();
+
+		if (delAddress != null)
 		{
-			target.setPhoneNumber(source.getDeliveryAddress().getPhone1() != null ? source.getDeliveryAddress().getPhone1() : source
-					.getDeliveryAddress().getPhone2());
+			target.setPhoneNumber(delAddress.getPhone1() != null ? delAddress.getPhone1() : delAddress.getPhone2());
 		}
 		else
 		{
 			LOG.info("CustomOmsOrderPopulator Delivery address is null ");
 		}
-		target.setCustomerID(((CustomerModel) source.getUser()).getUid());
+		target.setCustomerID(((CustomerModel) user).getUid());
 
-		if (source.getSalesApplication() != null && source.getSalesApplication().getCode() != null)
+		final SalesApplication salesEnum = source.getSalesApplication();
+
+		if (salesEnum != null && salesEnum.getCode() != null)
 		{
 			/*
 			 * target.setChannel(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(source.getSalesApplication().getCode().
@@ -88,7 +95,7 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			 * .get(source.getSalesApplication().getCode().toUpperCase()) : MplGlobalCodeConstants.GLOBALCONSTANTSMAP
 			 * .get(MarketplaceomsservicesConstants.DEFAULT_CHANNEL_CONSTANTS));
 			 */
-			target.setChannel(MplCodeMasterUtility.getglobalCode(source.getSalesApplication().getCode().toUpperCase()));
+			target.setChannel(MplCodeMasterUtility.getglobalCode(salesEnum.getCode().toUpperCase()));
 		}
 		else
 		{
@@ -117,11 +124,11 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		}
 		target.setOrderLines(ondemandOrderEntrys);
 
-		final AddressModel address = source.getDeliveryAddress();
+		//final AddressModel address = source.getDeliveryAddress();
 
-		if (address != null)
+		if (delAddress != null)
 		{
-			target.setShippingAddress(getAddressConverter().convert(address));
+			target.setShippingAddress(getAddressConverter().convert(delAddress));
 		}
 		else
 		{
@@ -183,9 +190,9 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 						}
 						else
 						{
-							if (address != null)
+							if (delAddress != null)
 							{
-								billingAddress = getAddressConverter().convert(address);
+								billingAddress = getAddressConverter().convert(delAddress);
 							}
 						}
 						if (billingAddress != null)
@@ -200,9 +207,9 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 				}
 				else
 				{
-					if (address != null)
+					if (delAddress != null)
 					{
-						billingAddress = getAddressConverter().convert(address);
+						billingAddress = getAddressConverter().convert(delAddress);
 					}
 					if (billingAddress != null)
 					{
@@ -223,7 +230,7 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 			}
 		}
 
-		if (source.getUser() instanceof CustomerModel)
+		if (user instanceof CustomerModel)
 		{
 			target.setUsername(((CustomerModel) source.getUser()).getCustomerID());
 		}
@@ -250,6 +257,7 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		String lastName = null;
 		String shippingFirstName = null;
 		String shippingLastName = null;
+		final UserModel user = source.getUser();
 
 		if (isGuestCustomerOrder(source))
 		{
@@ -261,14 +269,14 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		}
 		else
 		{
-			if (source.getUser() != null && StringUtils.isNotBlank(((CustomerModel) source.getUser()).getFirstName()))
+			if (user != null && StringUtils.isNotBlank(((CustomerModel) user).getFirstName()))
 			{
-				firstName = ((CustomerModel) source.getUser()).getFirstName();
-				lastName = ((CustomerModel) source.getUser()).getLastName();
+				firstName = ((CustomerModel) user).getFirstName();
+				lastName = ((CustomerModel) user).getLastName();
 			}
 			else
 			{
-				final String[] names = getCustomerNameStrategy().splitName(source.getUser().getName());
+				final String[] names = getCustomerNameStrategy().splitName(user.getName());
 				if (names != null)
 				{
 					firstName = names[0];
@@ -308,8 +316,8 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 
 	protected boolean isGuestCustomerOrder(final OrderModel order)
 	{
-		return ((order.getUser() instanceof CustomerModel) && (CustomerType.GUEST.equals(((CustomerModel) order.getUser())
-				.getType())));
+		final UserModel user = order.getUser();
+		return ((user instanceof CustomerModel) && (CustomerType.GUEST.equals(((CustomerModel) user).getType())));
 	}
 
 	public String getShippingMethod(final OrderModel source)
