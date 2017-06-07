@@ -1,11 +1,12 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/user"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/desktop/formElement" %>
-<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user" %>
+
 
 <spring:url value="/my-account/profile" var="profileUrl"/>
 <spring:url value="/my-account/update-profile" var="updateProfileUrl"/>
@@ -21,7 +22,7 @@
 
 		<div class="account">
 		<h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
-		 <user:accountMobileViewMenuDropdown pageNameDropdown="changePwd"/>
+
 			
 			<%-- <select class="menu-select"
 				onchange="window.location=this.options[this.selectedIndex].value;">
