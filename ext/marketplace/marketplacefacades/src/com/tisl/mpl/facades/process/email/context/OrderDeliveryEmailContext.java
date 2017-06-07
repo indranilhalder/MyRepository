@@ -67,7 +67,8 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
 	//TPR-5329
-	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	//SONAR FIX
+	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String SUBTOTAL = "subTotal";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
