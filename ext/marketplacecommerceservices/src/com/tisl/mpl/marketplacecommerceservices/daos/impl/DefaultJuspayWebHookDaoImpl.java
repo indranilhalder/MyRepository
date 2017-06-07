@@ -246,27 +246,30 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public String fetchStatusOnGUID(final String guid)
 	{
-		String status = null;
+
+		EnumerationValueModel status = null;
 
 		final String queryString = //
 		"SELECT {ev:"
-				+ EnumerationValueModel.CODE
+				+ EnumerationValueModel.PK
 				+ "} "//
 				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om },{"
 				+ EnumerationValueModel._TYPECODE + " AS ev} where " + "{om." + OrderModel.GUID + "} = ?code and " + "{om."
 				+ OrderModel.TYPE + "} = ?type and {om." + OrderModel.STATUS + "} = {ev." + EnumerationValueModel.PK + "}";
+				
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
 		query.addQueryParameter("type", "Parent");
 
-		final List<String> statusList = getFlexibleSearchService().<String> search(query).getResult();
+		final List<EnumerationValueModel> statusList = getFlexibleSearchService().<EnumerationValueModel> search(query).getResult();
 		if (!CollectionUtils.isEmpty(statusList))
 		{
 			status = statusList.get(0);
 		}
-		LOG.debug("Order Status for guid:" + guid + " is " + status);
-		return status;
+		LOG.debug("Order Status for guid:" + guid + " is " + status.getCode());
+
+		return status.getCode();
 	}
 
 	/**
