@@ -16,19 +16,9 @@ $luxuryStoreAddonPrefix=addon:/luxurystoreaddon
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;faq;Frequently Asked Questions FAQ Page;LuxuryContentPageTemplate;/faq
 
-
-
-
-
-
-
 # CMS Navigation Nodes  
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef;
 ;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink;NPPageCustomerServiceNavNode;
-
-
-
-
 
 # Navigation Bar Component
 INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
