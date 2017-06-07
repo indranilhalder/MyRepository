@@ -73,7 +73,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+//SONAR FIX
+//import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
@@ -150,8 +151,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
 
-//	@Resource(name = "mplVoucherService")
-//	private MplVoucherService mplVoucherService;//Sonar Fix
+	//	@Resource(name = "mplVoucherService")
+	//	private MplVoucherService mplVoucherService;//Sonar Fix
 	@Resource(name = "discountUtility")
 	private DiscountUtility discountUtility;
 
