@@ -1715,9 +1715,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()  && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}else{
+							productRichAttrOfQuickDrop=ModelAttributetConstants.NO;
 						}
 					}
 
