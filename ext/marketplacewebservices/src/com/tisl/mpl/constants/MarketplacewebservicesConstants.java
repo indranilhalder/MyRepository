@@ -568,10 +568,10 @@ public class MarketplacewebservicesConstants
 	public static final String MISSING_MANDATORY_FIELDS = "Some mandatory fields are missing".intern();
 	public static final String CANCEL_ORDER_STATUS = "valid.order.statuses.CANCEL";
 	public static final String RETURN_ORDER_STATUS = "valid.order.statuses.RETURN";
-	public static final String BLANK_TRANSACTION_ID = "TRANSACTION ID IS NULL AT COMMERCE END";
-	public static final String NO_CONSIGNMENT_FOUND = "NO CONSIGNMENT FOUND";
-	public static final String ORDER_ALREAY_CANCELLED = "ORDER IS NOT ELIGIBLE FOR CANCELLATION".intern();
-	public static final String RETURN_ALREADY_INITIATED = "ORDER IS NOT ELIGIBLE FOR RETURN".intern();
+	public static final String BLANK_TRANSACTION_ID = "Transaction id is not found in commerce system";
+	public static final String NO_CONSIGNMENT_FOUND = "No consignment found";
+	public static final String ORDER_ALREAY_CANCELLED = "Order is not eligible for cancellation".intern();
+	public static final String RETURN_ALREADY_INITIATED = "Order is not eligible for return".intern();
 	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF".intern();
 	public static final String CANCEL_ELIGIBLE_STATUS = "valid.order.statuses.CANCELLATION".intern();
 	public static final String DELIVERED_STATUS = "DELIVERED".intern();
