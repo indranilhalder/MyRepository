@@ -1720,7 +1720,7 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
@@ -1849,7 +1849,7 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
@@ -1997,7 +1997,7 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
@@ -2162,7 +2162,7 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
@@ -5002,7 +5002,7 @@ function submitNBForm(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, .make_payment_top_nb").prop("disabled",false);
@@ -8140,7 +8140,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					}
 					//TPR-4461 STARTS HERE
 					else if(response=='redirect_with_coupon'){
-						document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+						document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 						$("#juspayconnErrorDiv").css("display","block");
 						$("body,html").animate({ scrollTop: 0 });
 						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
@@ -8326,7 +8326,7 @@ function submitCODForm(){
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
 					// $(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon is not applicable for the payment mode/bank selected. Please select the applicable payment mode/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>release the coupon</u></b></a> and click on the Place Order button to proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
 					$("body,html").animate({ scrollTop: 0 });
 					$(".pay .payment-button,.cod_payment_button_top").prop("disabled",false);
