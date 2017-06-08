@@ -105,7 +105,8 @@ function focusOnElement() {
 	{
 		var promorestrictedSellers=$("#promotedSellerId").val();
 		var isproductPage = $("#isproductPage").val();
-		var pretext=$("#deliveryPretext").text();
+		//TISSTRT-1580
+		var pretext=$.trim($("#deliveryPretext").text()) + "&nbsp;";
 		var posttext=$("#deliveryPosttext").text();
 		var tbodycontent = "";
 	  	var stock = 0;	
@@ -240,16 +241,15 @@ function focusOnElement() {
 		  			 var start=parseInt($("#homeStartId").val())+leadTime;
 		  			 var end=parseInt($("#homeEndId").val())+leadTime;
 		  			 var deliveryValue=pretext+start+"-"+end+posttext;
-		     var      atpMap=availableDeliveryATPForHD.concat("-").concat(deliveryValue);         
-		  			 deliveryModeMap+=atpMap+"<br/>";
+		  			 var atpMap=availableDeliveryATPForHD.concat("-").concat(deliveryValue);         
+		  			 deliveryModeMap+= "<li>" + atpMap + "</li>";
 		  		}
 		  		if(isExpressDelivery){
-		  			
-		  			deliveryModeMap+=availableDeliveryATPForED+"<br/>";
+		  			deliveryModeMap+= "<li>" + availableDeliveryATPForED + "</li>";
 		  		}
 		  		if(isClickDelivery){
 		  			
-		  			deliveryModeMap+=availableDeliveryATPForCNC+"<br/>";
+		  			deliveryModeMap+= "<li>" + availableDeliveryATPForCNC + "</li>";
 		  		}
 		  	}else{
 		  		if(ussidIdsForED.indexOf(ussid)!=-1){
@@ -257,7 +257,7 @@ function focusOnElement() {
 		  			 var end=parseInt($("#expressEndId").val())+leadTime;
 		  			 var deliveryValue=pretext+start+"-"+end+posttext;
 		  			 availableDeliveryATPForED=availableDeliveryATPForED;
-		  			 deliveryModeMap+=availableDeliveryATPForED+"<br/>";
+		  			 deliveryModeMap+= "<li>" + availableDeliveryATPForED + "</li>";
 		  		}
 		  		if(ussidIdsForHD.indexOf(ussid)!=-1){
 		  			 var start=parseInt($("#homeStartId").val())+leadTime;
@@ -266,7 +266,7 @@ function focusOnElement() {
 		  			 if(atpMap!=""){
 		  			 var atpMap=availableDeliveryATPForHD.concat("-").concat(deliveryValue);
 		  			 }
-		  			 deliveryModeMap+=atpMap+"<br/>";
+		  			 deliveryModeMap+= "<li>" + atpMap + "</li>";
 			  		}
 		  		if(ussidIdsForCNC.indexOf(ussid)!=-1){
 		  			
@@ -276,16 +276,16 @@ function focusOnElement() {
 		  			 if(atpMap!=""){
 		  			 var atpMap=availableDeliveryATPForCNC.concat("-").concat(deliveryValue);
 		  			 }
-		  			 deliveryModeMap+=atpMap+"<br/>";
+		  			 deliveryModeMap+= "<li>" + atpMap + "</li>";
 			  	}
 		  	}
 			
 	  	tbodycontent+='<div data="Delivery Information" class="Delivery"><ul>';
 	  		  
-	    tbodycontent+="<li>";
+	    //tbodycontent+="<li>";
 	    tbodycontent+=deliveryModeMap;
 	    //console.log(JSON.stringfy(deliveryModeMap));
-	    tbodycontent+="</li>";
+	    //tbodycontent+="</li>";
 	   // if(ussidIdsForCOD==""||ussidIdsForCOD==[]){
 	    if($("#isPinCodeChecked").val()=="true"){
 	    	if(ussidIdsForCOD.indexOf(ussid)!=-1){

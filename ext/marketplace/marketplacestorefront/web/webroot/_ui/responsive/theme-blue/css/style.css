@@ -33819,8 +33819,9 @@ body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item
     font-size: 13px;
     margin-right: 20px;
     letter-spacing: 1px;
-        padding-left: 20px;
-        position:relative;
+    padding-left: 20px;
+    position:relative;
+    z-index:1; /*TISSTRT-1586 fix*/
 }
 body.page-cartPage .cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist:after{
     content: "";

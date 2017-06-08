@@ -1368,7 +1368,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							wishlist2EntryModel.getUssid());
 
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+					if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 					{
 						richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 						fullfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes() != null ? richAttributeModel.get(0)
@@ -1382,21 +1382,23 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 					final List<MplZoneDeliveryModeValueModel> deliveryModes = getMplDeliveryCostService().getDeliveryModesAndCost(
 							MarketplacecommerceservicesConstants.INR, wishlist2EntryModel.getUssid());
-					if (null != deliveryModes && !deliveryModes.isEmpty())
+					if (CollectionUtils.isNotEmpty(deliveryModes))
 					{
 						for (final MplZoneDeliveryModeValueModel deliveryEntry : deliveryModes)
 						{
 
-							if ((null != richAttributeModel.get(0).getHomeDelivery()
+							if ((CollectionUtils.isNotEmpty(richAttributeModel) && null != richAttributeModel.get(0).getHomeDelivery()
 									&& richAttributeModel.get(0).getHomeDelivery().equals(HomeDeliveryEnum.YES) && StringUtils
 										.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 												MarketplacecommerceservicesConstants.HOME_DELIVERY))
-									|| (null != richAttributeModel.get(0).getExpressDelivery()
+									|| (CollectionUtils.isNotEmpty(richAttributeModel)
+											&& null != richAttributeModel.get(0).getExpressDelivery()
 											&& richAttributeModel.get(0).getExpressDelivery().equals(ExpressDeliveryEnum.YES) && StringUtils
 												.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 														MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 
-									|| (null != richAttributeModel.get(0).getClickAndCollect()
+									|| (CollectionUtils.isNotEmpty(richAttributeModel)
+											&& null != richAttributeModel.get(0).getClickAndCollect()
 											&& richAttributeModel.get(0).getClickAndCollect().equals(ClickAndCollectEnum.YES) && StringUtils
 												.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 														MarketplacecommerceservicesConstants.CLICK_COLLECT)))
