@@ -32,7 +32,37 @@ var tul = {};
 					}
 				},
 				submitHandler: function(form) {
-					form.submit();						
+			    	 $.ajax({
+	               		  url:"/j_spring_security_check",
+	           				 type:"POST",
+	           				 returnType:"text/html",
+	           				 data: $(form).serialize(),
+	                         beforeSend: function() {
+	                             //$("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+	                         },
+	                         success: function(data) {
+	                       	  
+	                       	  if(data==307){
+	                       		  console.log("login success");
+	                       		  location.reload();  
+	                       	  }
+	                       	  else if(data==0){
+	                       		  console.log("login failed");
+	                       		  console.log("show error message");
+	                       		  $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
+	                       		  $("#j_password").val("");
+	                       	  }else{
+	                       		  console.log("login Failed");
+	                       		  console.log("show error message");
+	                       		  $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
+	                       		  $("#j_password").val("");
+	                       	  }
+	                         },
+	                         complete: function() {
+	                          //   pwsRequest(), registerRequest(), targetLink(), LuxLoginValidate();
+	                       	   
+	                         }
+	                     });					
 				}
 			});	
 			
