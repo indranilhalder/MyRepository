@@ -1392,11 +1392,15 @@ ACC.singlePageCheckout = {
 		isDeliveryModeSte:false
 	},
 	
-	checkIsServicableResponsive:function(selectedPincode,addressId)
+	checkIsServicableResponsive:function(selectedPincode,addressId,isNew)
 	{	
 		if(addressId!="")
 		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
+		}
+		else
+		{
+			//$("input[name=selectedAddressCodeMobile]").prop("checked", false);
 		}
 		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){	
 			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
@@ -1405,11 +1409,34 @@ ACC.singlePageCheckout = {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
 				});
 				xhrResponse.done(function(response, textStatus, jqXHR) {
-					$("#choosedeliveryModeMobile").html(response);
-					ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
+					if (jqXHR.responseJSON) {
+		                if(response.type!="response" && response.type!="confirm")
+		                {
+		                	if(isNew)
+		                	{
+		                		ACC.singlePageCheckout.processError("#newAddressMobileErrorMessage",response);
+		                		ACC.singlePageCheckout.scrollToDiv("newAddressMobileErrorMessage",100);
+		                	}
+		                	else
+	                		{
+		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
+		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+	                		}
+		                }
+		            } else {
+		            	$("#choosedeliveryModeMobile").html(response);
+		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
+		            }
 		 		});
 		}
 		
+	},
+	
+	scrollToDiv:function(id,offset){
+	      // Scroll
+	    $('html,body').animate({
+	        scrollTop: $("#"+id).offset().top-offset},
+	        'slow');
 	},
 	
 	attachOnPincodeKeyUpEvent:function()
@@ -1427,7 +1454,7 @@ ACC.singlePageCheckout = {
 				else
 				{
 					$("#addresspostcodeError").hide();
-					ACC.singlePageCheckout.checkIsServicableResponsive(pincode,"");
+					ACC.singlePageCheckout.checkIsServicableResponsive(pincode,"",true);
 				}
 			}
 				
@@ -1442,7 +1469,7 @@ $(document).ready(function(){
 		var defaultAddressPincode=$("#defaultAddressPincode").html();
 		if(pageType=="multistepcheckoutsummary" && typeof(defaultAddressPincode)!='undefined')
 		{
-			ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),"");
+			ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),"",false);
 		}
 	}
 });
