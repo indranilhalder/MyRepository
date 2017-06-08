@@ -54,7 +54,7 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
-									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkIsServicableResponsive('${deliveryAddress.postalCode}');">
+									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkIsServicableResponsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
 												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
@@ -154,10 +154,11 @@
 
 
 						<div class="addNew_wrapper">
-							<div class="mobile_add_address mobileNotDefaultDelAddress" onclick="ACC.singlePageCheckout.getAddAddress();">
+							<div class="mobile_add_address mobileNotDefaultDelAddress" onclick="$('input[name=selectedAddressCodeMobile]'').prop('checked', false);ACC.singlePageCheckout.getAddAddress();">
 							<span class="mobile_add_address_radio"></span>
 							<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
 							</div>
+							<span id="newAddressMobileErrorMessage"></span>
 							<div class="new-address-form-mobile"></div>
 						</div>
 
@@ -180,18 +181,19 @@
 		})
 		</script>
 		<div class="new-address" style="display: block;">
-			<p id="" onclick="ACC.singlePageCheckout.getAddAddress();">
+			<%-- <p id="" onclick="ACC.singlePageCheckout.getAddAddress();">
 				<span class="addsign pincode-button"> </span> 
 				<a
 					class="pincode-button"> <spring:theme
 						code="checkout.multi.deliveryAddress.useNewAddress"
 						text="Use New Address"></spring:theme>
 				</a>
-			</p>
+			</p> --%>
 			<div class="mobile_add_address" onclick="ACC.singlePageCheckout.getAddAddress();">
 			<span class="mobile_add_address_radio"></span>
 			<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
 			</div>
+			<span id="newAddressMobileErrorMessage"></span>
 			<div class="new-address-form-mobile"></div>
 		</div>
 	</c:if>
