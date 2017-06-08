@@ -53,8 +53,13 @@ import de.hybris.platform.variants.model.VariantProductModel;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1906,6 +1911,7 @@ public class OrdersController extends BaseCommerceController
 		      LOG.debug("***************:"+multipartFile.getOriginalFilename()); 
 		      String fileUploadLocation=null;
 		      String shipmentCharge=null;
+		      String finalUrlForDispatchProof=null;
 		      //TISRLUAT-50
 				Double configShippingCharge = 0.0d;
 		      if(null!=configurationService){
@@ -1918,16 +1924,19 @@ public class OrdersController extends BaseCommerceController
 		      	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
 		      		 try{  
 		      	        byte barr[]=multipartFile.getBytes();  
+		      	        finalUrlForDispatchProof = getPoDUploadPath(fileUploadLocation, transactionId, multipartFile.getOriginalFilename()); //PRDI-151
 		      	        BufferedOutputStream bout=new BufferedOutputStream(  
-		      	                 new FileOutputStream(fileUploadLocation+File.separator+multipartFile.getOriginalFilename()));  
+		      	                 new FileOutputStream(finalUrlForDispatchProof));  
 		      	        bout.write(barr);  
 		      	        bout.flush();  
 		      	        bout.close();  
-		      	        LOG.debug("FileUploadLocation   :"+fileUploadLocation);   
-		      	        }catch(Exception e){
-		      	      	  LOG.error("Exception is:"+e);   
-		      	        }  
-		      	 }
+		      	        LOG.info("Txn ID: " + transactionId +  " >> Uploaded Proof of dispatch: " + finalUrlForDispatchProof);   
+					}catch(Exception e){
+					  LOG.error("Failed to upload PoD. Txnid: " + transactionId + " -- Path: " + finalUrlForDispatchProof + " -- Exception: " + e);   
+					}  
+		      	 }else {
+					LOG.error("Failed to upload Proof of dispatch. POD File Upload location is not configured: " + MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+				 }
 			   }
 		      
 			OrderModel orderModel = orderModelService.getParentOrder(orderId);
@@ -1953,7 +1962,7 @@ public class OrdersController extends BaseCommerceController
 					returnInfoRequestData.setShipmentCharge(String.valueOf(configShippingCharge));
 				}
 			}
-			returnInfoRequestData.setShipmentProofURL(fileUploadLocation);
+			returnInfoRequestData.setShipmentProofURL(finalUrlForDispatchProof); //PRDI-151
 			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
  
 			//TISPRDT-984. Adding Try catch to handle Exception. 
@@ -2110,6 +2119,43 @@ public class OrdersController extends BaseCommerceController
 		}
 
 		return webSerResponseWsDTO;
+	}
+	
+	/**
+	 * PRDI-151
+	 * Return the full absolute POD Upload path. 
+	 * @param fileUploadLocation 	/orderdocs/dispatchproof - cannot be null or blank. 
+	 * @param transactionId 		Txn id. Cannot be null.
+	 * @param fileName 				Orginal file name. Cannot be null.
+	 * @return - Returns the final absolute upload path of the PoD. Including file name. 
+	 */
+	private String getPoDUploadPath(final String fileUploadLocation, final String transactionId, final String fileName){
+		String date = null;
+		Path path = null;
+		StringBuffer buffer = new StringBuffer();
+		final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
+		String typeOfReturn = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TYPE_OF_RETURN_FOR_RSS);
+		try{
+			date = sdf.format(new Date());
+			path = Paths.get(fileUploadLocation + File.separator + date);
+			//if directory exists?
+			//"fileUploadLocation", transactionId and fileName cannot be null or blank. 
+			if (!Files.exists(path))
+			{
+				try
+				{
+					Files.createDirectories(path);
+				}
+				catch (final IOException e)
+				{
+					//fail to create directory
+					LOG.error("Exception, while creating the Directory: " + path + " -- " + e);
+				}
+			}
+		}catch(final Exception ex){
+			LOG.error("Exception, While calculating the upload path: " + ex);
+		}
+		return buffer.append(path).append(File.separator).append(typeOfReturn).append(transactionId).append(fileName).toString();
 	}
 	//R2.3 Changes Developed 27-02-2017 END
 }

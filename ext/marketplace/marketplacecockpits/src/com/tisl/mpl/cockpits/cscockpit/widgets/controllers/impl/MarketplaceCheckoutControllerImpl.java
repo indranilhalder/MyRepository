@@ -763,11 +763,13 @@ public class MarketplaceCheckoutControllerImpl extends
 
 		unTotal = cart.getConvenienceCharges() == null ? unTotal : unTotal+cart
 				.getConvenienceCharges();
-        for (AbstractOrderEntryModel cartEnty : cart.getEntries()) {
-        	if(cartEnty.getScheduledDeliveryCharge()>0.0D) {
-        		unTotal+=cartEnty.getScheduledDeliveryCharge();
-        	}
-        }
+		// INC-144316545- Delivery Charge Issue START
+//        for (AbstractOrderEntryModel cartEnty : cart.getEntries()) {
+//        	if(cartEnty.getScheduledDeliveryCharge()>0.0D) {
+//        		unTotal+=cartEnty.getScheduledDeliveryCharge();
+//        	}
+//        }
+		// INC-144316545- Delivery Charge Issue END
 		String cusName= null;
 		cODPaymentService.getTransactionModel(cart, unTotal);
 		if (StringUtils.isNotEmpty(cart.getUser().getName()) && !cart.getUser().getName().equalsIgnoreCase(" "))

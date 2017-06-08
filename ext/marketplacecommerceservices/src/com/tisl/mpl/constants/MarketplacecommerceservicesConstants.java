@@ -589,7 +589,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
-	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0}, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
+	//	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0}, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
+	public static final String SMS_MESSAGE_ADDRESS_ISSUE = "Your order of {0} item, in order no. {1} has been delayed due to issues involving your address. We deeply regret the inconvenience. We will call you within 48 hrs to confirm your address.";
+
 	public static final String SMS_MESSAGE_UNDELIVERED = "Your order of {0},  in order no. {1} is undelivered. We deeply regret the inconvenience. We will attempt to ship it to you within 48 hrs.";
 	public static final String SMS_MESSAGE_OUT_FOR_DELIVERY = "Your order of {0}, items in order no. {1} is out for delivery. Are you excited? We are for sure! :D";
 	public static final String SMS_MESSAGE_DISPATCH = "Your order of {0},  items in order no.{1} has been dispatched throught Blue Dart with AWB Number: {2} . We will try have it delivered to you within the next 2-4 days.";
@@ -2123,4 +2125,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SITEMAP_FOLDER = "mpl.sitemap.folder";
 	public static final String SITEMAP_FOLDER_DEFAULT = "sitemaps/";
 	public static final String ZIP_FORMAT = ".gz";
+
+	// PRDI - 151
+	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
 }
