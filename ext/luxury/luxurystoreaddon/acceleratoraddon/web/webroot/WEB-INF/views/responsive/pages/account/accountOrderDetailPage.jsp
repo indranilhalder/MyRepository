@@ -50,6 +50,22 @@
               </optgroup>
       </select> --%>
 		</h1>
+	<div class="luxury-mobile-myaccount visible-xs">
+		<select class="menu-select">
+          <optgroup label="<spring:theme code="header.flyout.myaccount" />">
+                  <option value="Overview" data-href="account-overview.php"><spring:theme code="header.flyout.overview" /></option>
+                  <%-- <option value="Marketplace Preferences" data-href="marketplace-preferences.php"><spring:theme code="header.flyout.marketplacepreferences" /></option> --%>
+                  <option value="Personal Information" data-href="account-info.php"><spring:theme code="header.flyout.Personal" /> </option>
+                  <option value="Order History" data-href="order-history.php"> <spring:theme code="header.flyout.orders" /></option>
+                  <option value="Saved Cards" data-href="account-cards.php"><spring:theme code="header.flyout.cards" /></option>
+                  <option value="Saved Addresses" data-href="account-addresses.php"><spring:theme code="header.flyout.address" /></option>
+              </optgroup>
+         
+         <%--  <optgroup label="Share">
+                  <option value="Invite Friends" data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
+              </optgroup> --%>
+      </select>
+    </div>
 		<div class="wrapper">
 
 

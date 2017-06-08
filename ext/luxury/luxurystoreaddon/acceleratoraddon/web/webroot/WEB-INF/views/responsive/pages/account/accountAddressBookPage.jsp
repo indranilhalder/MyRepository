@@ -51,7 +51,22 @@
               </optgroup>
       </select> --%>
 </h1>
-		
+	<div class="luxury-mobile-myaccount visible-xs">
+		<select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+          <optgroup label="<spring:theme code="header.flyout.myaccount" />">
+                  <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
+                 <%--  <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option> --%>
+                  <option value=/store/mpl/en/my-account/update-profile data-href="account-info.php"><spring:theme code="header.flyout.Personal" /> </option>
+                  <option value=/store/mpl/en/my-account/orders data-href="order-history.php"> <spring:theme code="header.flyout.orders" /></option>
+                  <option value=/store/mpl/en/my-account/payment-details data-href="account-cards.php"><spring:theme code="header.flyout.cards" /></option>
+                  <option value=/store/mpl/en/my-account/address-book data-href="account-addresses.php" selected><spring:theme code="header.flyout.address" /></option>
+              </optgroup>
+         
+          <%-- <optgroup label="Share">
+                  <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
+              </optgroup> --%>
+      </select>
+	</div>
 		<div class="wrapper">
 				<!----- Left Navigation Starts --------->
 			<user:accountLeftNav pageName="addressBook"/>
@@ -340,26 +355,35 @@
 				<!-- <div><a name="editaddress">&emsp;</a></div> -->
 				<div class="new-address" id="editaddress">
 					<h2 class="account-only" id="headerAdd"><spring:theme code="text.addressBook.newaddress" text="Add New Address" /></h2>
-					<h2 class="account-only" id="headerEdit"><spring:theme code="text.addressBook.editaddress" text="Edit Address" /></h2>
+					<%-- <h2 class="account-only" id="headerEdit"><spring:theme code="text.addressBook.editaddress" text="Edit Address" /></h2> --%>
 					<ul class="product-block addresses new-form">
 						<li class="item"><form:form action="addNewAddress"
 								method="post" commandName="addressForm" name="addressForm"
 								onsubmit="return validateAccountAddress();">
 								<!-- Static data for radio button -->
-									
-										<input type="radio" name="addressRadioType"
+									<%-- <div class="adresstype">
+										<input type="radio" class="toggle" name="addressRadioType"
 											id="new-address-option-1" value="Residential"
-											onChange="onSelectRadio()" />
-										<label class="residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" />
+											onChange="onSelectRadio()" checked/>
+										<label class="toggle-btn residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" />
 											</label>
-										<input type="radio" name="addressRadioType"
+										<input type="radio" class="toggle" name="addressRadioType"
 											id="new-address-option-2" value="Commercial"
 											onChange="onSelectRadio()" />
-										<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" />
+										<label class="toggle-btn commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" />
 											</label>
 										 <div class="errorMessage">
 											<div id="errtype"></div>
-										</div> 					
+										</div>
+									</div>	 --%>
+										
+									<!-- <div class="mb-20 adresstype">
+										<input id="homeaddress" class="toggle" name="toggle" value="MALE" type="radio" checked="">
+										<label for="homeaddress" class="toggle-btn">Home</label>
+										<input id="officeaddress" class="toggle" name="toggle" value="FEMALE" type="radio">
+										<label for="officeaddress" class="toggle-btn">Office</label>
+									</div> -->
+									 					
 
 								<fieldset>
 
@@ -368,7 +392,7 @@
 									
 
 									<!-- TISEE-4696 -->
-									<div class="half no-display">
+									<%-- <div class="half no-display">
 									<label><spring:theme code="text.addressBook.firstName" text="First name *" /></label>
 										<form:input path="firstName" id="firstName"
 											onkeyup="kpressaddressfn()" maxlength="40" />
@@ -383,14 +407,14 @@
 										<form:input path="lastName" id="lastName"
 											onkeyup="kpressaddressln()" maxlength="40" />
 										<div class="errorMessage"><div id="erraddressln"></div></div>
-									</div>
+									</div> --%>
 									
-									<div class="half" style="clear:both;">
+									<%-- <div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
 										<form:input path="postcode" id="postcode" class="address_postcode"
 											onkeyup="kpressaddresspost()" maxlength="6" />
 											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
-									</div>
+									</div> --%>
 
 									<!-- TISUAT-4696 /TPR-215-->
 									<div class="half" style="clear:both;">
@@ -411,14 +435,14 @@
 							
 
 									<!-- TISUAT-4696  /TPR-215-->
-									<div class="half">
+								<%-- 	<div class="half">
 									<label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
 											maxlength="40" />
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
-									</div>
+									</div> --%>
 								
-									<div class="half no-display">
+									<div class="half no-display fullwidth">
 										<div class="optionsLandmark">
 											<label>Landmark</label>
 												<form:select path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
@@ -426,17 +450,17 @@
 												<div class="errorMessage errland1">   </div>
 										</div>
 									</div>
-									<div class="half no-display">
+									<%-- <div class="half no-display fullwidth">
 										<div class ="address_landmarkOtherDiv" data-value="${addressForm.landmark}">
 										<label>Nearest Landmark</label>
 											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
 												<div class="errorMessage errland2"></div>
 										</div>
-									</div>
+									</div> --%>
 									
 									<!-- TISUAT-4696  /TPR-215-->
-									<div class="half" style="clear: both">
+									<div class="half halfwidth cityselect">
 									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
 										<form:input path="townCity" id="townCity" class="address_townCity"
 											onkeyup="kpressaddresscity()" maxlength="30" />
@@ -445,7 +469,7 @@
 									
 
 
-									<div class="half no-display">
+									<div class="half no-display halfwidth stateselect">
 										<div class="mainDrop">
 											<label><spring:theme code="text.addressBook.State"
 													text="State *" /></label>
@@ -470,9 +494,34 @@
 												</div>
 
 									</div>
+									
+									<div class="half halfwidth">
+									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
+										<form:input path="postcode" id="postcode" class="address_postcode"
+											onkeyup="kpressaddresspost()" maxlength="6" />
+											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
+									</div>
 									 
+									 <div class="half phone halfwidth mobileno">
+										<label><spring:theme code="text.addressBook.Phone"
+												text="Mobile Number*" /></label>
+										<%-- <form:input type="text" value="+91" id="myInput" inputCSS="form-text" path="MobileNo" disabled="true"/> --%>
+										<%-- <select name="countryList"
+											disabled="disabled">
+											<c:forEach items="${countryData}" var="country"
+												varStatus="countryStatus">
+													<option value="${country.name}">${country.name}</option>
+												<option value="IN">+91</option>
+											</c:forEach>
+										</select> --%>
+											<form:input type="text" id="mobileNo" inputCSS="form-text"
+												path="mobileNo" 
+												onkeyup="kpressaddressmob()" maxlength="10" />
+										
+										<div class="errorMessage"><div id="erraddressMob"></div></div>
+									</div>
 
-									<div class="half no-display country" id="countryListBox">
+									<div class="half no-display country clearfix" id="countryListBox">
 										<label><spring:theme code="text.addressBook.Country" text="Country *" /></label> 
 										<%-- <select name="countryList"
 											disabled="disabled">
@@ -487,41 +536,46 @@
 										
 									</div>
 									
-									<div class="half phone">
-										<label><spring:theme code="text.addressBook.Phone"
-												text="Mobile Number*" /></label>
-										<%-- <form:input type="text" value="+91" id="myInput" inputCSS="form-text" path="MobileNo" disabled="true"/> --%>
-										<select name="countryList"
-											disabled="disabled">
-											<c:forEach items="${countryData}" var="country"
-												varStatus="countryStatus">
-												<%-- 	<option value="${country.name}">${country.name}</option> --%>
-												<option value="IN">+91</option>
-											</c:forEach>
-										</select>
-											<form:input type="text" id="mobileNo" inputCSS="form-text"
-												path="mobileNo" 
-												onkeyup="kpressaddressmob()" maxlength="10" />
+									
+									<div class="adresstype mb-20 mt-20 text-center">
+										<input type="radio" class="toggle" name="addressRadioType"
+											id="new-address-option-1" value="Residential"
+											onChange="onSelectRadio()" checked/>
+										<label class="toggle-btn residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" />
+											</label>
+										<input type="radio" class="toggle" name="addressRadioType"
+											id="new-address-option-2" value="Commercial"
+											onChange="onSelectRadio()" />
+										<label class="toggle-btn commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" />
+											</label>
 										
-										<div class="errorMessage"><div id="erraddressMob"></div></div>
-									</div>
+										<input type="radio" class="toggle" name="addressRadioType"
+											id="new-address-option-3" value="others"
+											onChange="onSelectRadio()" />
+										<label class="toggle-btn commercial" for="new-address-option-3">Others</label>
+										 <div class="errorMessage">
+											<div id="errtype"></div>
+										</div>
+									</div>	
+		
 								</fieldset>
 								
 								<%-- <input type="checkbox" name="mark-address-default" id="mark-address-default" class="account-only">
 								<label for="mark-address-default" class="account-only"><spring:theme code="text.addressBook.makedefaultAddress" text="Mark as Default Address" /></label> --%>
-								 <div id="checkBox">
-										<%-- 
+								 <%-- <div id="checkBox">
+										
 											<form:checkbox id="checkBox1" path="defaultAddress"
-												name="checkBox" value="checkBox" /> --%>
+												name="checkBox" value="checkBox" />
 												<input type="checkbox" id="checkBox1" name="defaultAddressCheckbox" value="true"/>
 												<label for="checkBox1">Mark as default address</label>
-									</div> 
+									</div> --%> 
 								<div class="actions">
-								<button type="submit" class="blue" id="addNewAddress"><spring:theme code="text.account.addressBook.addAddress" text="ADD NEW ADDRESS" />
+								<%-- <button type="submit" class="blue" id="addNewAddress"><spring:theme code="text.account.addressBook.addAddress" text="ADD NEW ADDRESS" />
+									</button> --%>
+								<div class="text-center mt-20">
+									<button type="submit" class="blue account-addressEditButton" id="edit" ><spring:theme code="text.addressBook.editAddress" text="SAVE ADDRESS" />
 									</button>
-								
-								<button type="submit" class="blue account-addressEditButton" id="edit" ><spring:theme code="text.addressBook.editAddress" text="SAVE ADDRESS" />
-									</button>
+								</div>
 									</div>
 							</form:form></li>
 					</ul>

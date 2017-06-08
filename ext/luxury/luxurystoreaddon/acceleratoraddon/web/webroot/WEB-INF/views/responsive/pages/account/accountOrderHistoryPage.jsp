@@ -73,7 +73,32 @@
 
 
 		</h1>
+		<div class="luxury-mobile-myaccount visible-xs">
+			<select class="menu-select"
+				onchange="window.location=this.options[this.selectedIndex].value;">
+				<optgroup label="<spring:theme code="header.flyout.myaccount" />">
+					<option value=/store/mpl/en/my-account data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
+					<%-- <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option> --%>
+					<option value=/store/mpl/en/my-account/update-profile data-href="account-info.php"><spring:theme code="header.flyout.Personal" /></option>
+					<option value=/store/mpl/en/my-account/orders data-href="order-history.php" selected>
+						<spring:theme code="header.flyout.orders" /></option>
+					<option value=/store/mpl/en/my-account/payment-details
+						data-href="account-cards.php"><spring:theme
+							code="header.flyout.cards" /></option>
+					<option value=/store/mpl/en/my-account/address-book
+						data-href="account-addresses.php"><spring:theme
+							code="header.flyout.address" /></option>
+							<option value=/store/mpl/en/my-account/reviews
+						data-href="account-addresses.php"><spring:theme code="header.flyout.review" /></option>
+				</optgroup>
 
+				<%-- <optgroup label="Share">
+					<option value=/store/mpl/en/my-account/friendsInvite
+						data-href="account-invite.php"><spring:theme
+							code="header.flyout.invite" /></option>
+				</optgroup> --%>
+			</select>
+		</div>
 		<div class="wrapper">
 
 
@@ -83,11 +108,12 @@
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
+				<h2>
+					<spring:theme text="Order History" />
+				</h2>
 				<div class="order-history">
 					<div class="navigation" id=order_pagination>
-						<h2>
-							<spring:theme text="Order History" />
-						</h2>
+						
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
 							<input type="hidden" id="pageIndex" value="${pageIndex}" />
@@ -682,6 +708,11 @@
 						<div class="account-emptyOrderMessage">
 							<spring:theme code="text.account.orderHistory.noOrders"
 								text="You have no orders" />
+							
+							<div class="empty-order-btn">	
+								<p class="mb-40">Start your search here</p>
+								<p><a class="lux-shopmen" href="javascript:;">Shop Men</a><a class="lux-shopwomen" href="javascript:;">Shop Women</a></p>
+							</div>
 						</div>
 					</c:if>
 
