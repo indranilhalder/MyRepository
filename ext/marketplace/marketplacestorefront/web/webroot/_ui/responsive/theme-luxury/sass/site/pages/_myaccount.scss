@@ -1,0 +1,298 @@
+.account{
+	margin:0 auto;
+	max-width:900px;
+	.account-header,#accountHead{
+		display:none; 
+	}
+	.wrapper{
+		display:inline-block;
+		width:100%;
+		margin-top: 50px;
+		.left-nav{
+			width:35%;
+			float:left;
+			ul{
+			padding:0px;
+			list-style-type:none;
+				li{
+					border: 1px solid #e0dfed;
+	    			border-radius: $border-radius-small;
+	    			margin-bottom:20px;
+					a{
+						display: block;
+					    padding: 15px;
+					    font-size: 18px;
+					}
+				}
+			}
+		}
+		.right-account{
+			width:59%;
+			float:left;
+			margin:0 3%;
+			border: 1px solid #e0dfed;
+    		border-radius: $border-radius-small;
+    		>h2{
+				border-bottom: 1px solid #e0dfed;
+			    border-radius: 3px;
+			    font-size:22px;
+			    padding:15px;
+			    margin:0px;
+			}
+			h2{
+				font-size:22px; 
+				margin-top:0px;
+			}
+			.block-element{
+				display:inline-block;
+				width:100%;
+			}
+    		.info{
+    			padding:20px;
+    			border-bottom:1px solid #d2d2d2;
+	    	}
+			.halfwidth{
+				width:50%;
+				float:left;
+				min-height:85px;
+			}
+			.fullwidth{
+				width:100%;
+				display:inline-block;
+				min-height:85px;
+			}
+			button{
+				background: #2d2d2d;
+			    color: #fff;
+			    border: 0px;
+			    padding: 10px 20px;
+			    width: 200px;
+			    border-radius: 3px;
+			}
+			label{
+				width:100%;
+			}
+			input,select{
+				margin-bottom: 20px;
+			    padding: 8px;
+			    width: 90%;
+			    border: 1px solid #d2d2d2;
+			    border-radius: 3px;
+			}
+			.calender{
+				.half_span{
+					width:70px;
+					float:left;
+					margin-right:10px;
+					.selectboxit {
+						max-width:65px;
+						border: 1px solid #ddd;
+						border-radius: 3px;
+						.selectboxit-arrow-container{
+							width:15px;
+						}
+					}
+				}
+			}
+			.gender{
+				.selectboxit{
+					width:230px !important;
+					border-radius:$border-radius-small;
+					border: 1px solid #d2d2d2;
+				}
+			}
+		}
+		.password{
+			padding:15px;
+			border-bottom:1px solid #d2d2d2;
+		}
+		.nickname{
+			padding:15px;
+		}
+		.order-history{
+			.account-emptyOrderMessage{
+				padding:25px 15px;
+				text-align:center;
+				font-size:18px;
+				.lux-shopwomen,.lux-shopmen{
+					background: #2d2d2d;
+				    color: #fff;
+				    border: 0px;
+				    padding: 10px 20px;
+				    width: 200px;
+				    border-radius: 3px;
+				    display:inline-block;
+				    margin-right:10px;
+				    font-size:16px;
+				}
+				.empty-order-btn{
+					margin-top:70px;
+				}
+			}
+		}
+		.card-list{
+			.saved-cards{
+				list-style-type:none;
+				padding:0px;
+			}
+			.account-emptyOrderMessage{
+				text-align:center;
+			}
+		}
+		.new-address{
+			padding:15px;
+			background:#F9F9F9;
+			.halfwidth{
+				input{
+					width:95%;
+				}
+			}
+			ul{
+				list-style-type:none;
+				padding:0px;
+			}
+			input{
+				width:100%;
+			}
+			#new-address-option-1,#new-address-option-2,.residential,.commercial,#checkBox1,label[for="checkBox1"]{
+				display: inline;
+    			width: auto;
+			}
+			.residential{
+				margin-right:30px;
+			}
+			.optionsLandmark{
+				.selectboxit-container{
+					display: inline-block;
+				    width: 100%;
+				    border: 1px solid #d2d2d2;
+				    border-radius: $border-radius-small;
+				    background: #fff;
+				    .selectboxit{
+				    	width:100% !important;
+				    	height:37px;
+				    }
+				}
+			}
+			.mobileno{
+				input{
+					width:100%;
+				}
+			}
+			.stateselect{
+				.selectboxit-container{
+					display: inline-block;
+				    width: 100%;
+				    border: 1px solid #d2d2d2;
+				    float: left;
+				    background: #fff;
+				    border-radius: $border-radius-small;
+				    .selectboxit{
+				    	width:100% !Important;
+				    	height:37px;
+				    }
+				}
+			}
+			.adresstype{
+				input{
+					display:none !important;
+				}
+				label{
+					display:inline;
+					padding:10px 10px;
+					margin-right:10px;
+				}
+			}
+			.actions{
+				button{
+					margin-right:10px;
+				}
+			}
+			.toggle-btn {
+			    border: 1px solid #2d2d2d;
+			    display: inline-block;
+			    padding: 10px;
+			    position: relative;
+			    text-align: center;
+			    transition: background .6s ease,color .6s ease;
+			    width: 50%;
+			    border-radius: 3px;
+			    margin-bottom: 0;
+			    font-weight: 400;
+			    z-index:1; 
+			    
+			}
+			.toggle[type="radio"]:checked + label{
+			    background: #2d2d2d;
+			    color:#fff;
+			}
+			
+		}
+	}
+}
+
+
+@include media-breakpoint-down(sm) {
+	.account{
+		.wrapper{
+			margin-top:20px;
+		}
+		.luxury-mobile-myaccount{
+			.selectboxit-container{
+				display: inline-block;
+			    width: 100%;
+			    border: 1px solid #d2d2d2;
+			    float: left;
+			    background: #fff;
+			    border-radius: $border-radius-small;
+			    .selectboxit{
+			    	width:100% !Important;
+			    	height:37px;
+			    }
+			}
+		}
+		.wrapper{
+			.right-account{
+				width:100%;
+				margin:0;
+				.halfwidth{
+					width:100%;
+					input,select{
+						width:100%;
+					}
+					.selectboxit-container{
+						width:100%;
+						.selectboxit{
+							width:100% !important;
+						}
+					}
+				}
+				.calender{
+					.half_span{
+						width: 33.3%;
+						margin:0px;
+						.selectboxit{
+							max-width:96%;
+						}
+					}
+				}
+				.gender{
+					margin-top:0px;
+				} 
+			}
+		}
+		.lux-shopmen{
+			margin-bottom:10px;
+		}
+		.new-address{
+			.adresstype{
+				label{
+					display:inline-block !Important; 
+					width:100% !Important;
+					margin-bottom:10px !Important;
+				}
+			} 
+		}
+	}  
+	
+}

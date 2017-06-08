@@ -248,6 +248,13 @@
 						<persistence type="property" />
 						<description>Attribute that stores the localized media of the paragraph.</description>
 					</attribute>
+					<attribute type="LuxbannerImageCollection" qualifier="medias"
+							   autocreate="true" generate="true">
+						<description>Medias</description>
+						<modifiers read="true" write="true" search="true"
+								   optional="true" />
+						<persistence type='property' />
+					</attribute>
 					<attribute qualifier="url" generate="true" autocreate="true"
 						type="java.Lang.String">
 						<persistence type="property" />

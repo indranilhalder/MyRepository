@@ -60,6 +60,8 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename
 ;;Men-MiniLookBook;text/png;MenPlaceholder.png;$jarResourceCms/preview-images/MenPlaceholder.png;;;
 ;;Brand_landingVideo;video/mp4;;$jarResourceCms/preview-images/brooks-brothers_brand-video.mp4;;Video;
 ;;Brand-team;text/png;niketeam.png;$jarResourceCms/preview-images/niketeam.png;;;
+;;mobile-RedPoster;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;
+;;pickitup-poster;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;
 
 
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];&componentRef
@@ -83,12 +85,12 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;MenBanner;MenHeroBanner;
 ;;Men-MiniLookBook;Men-MiniLookBook;
 ;;Brand-team;Brand-team;
+;;pickitup-poster;pickitup-poster;
+;;mobile-RedPoster;mobile-RedPoster;
 
 INSERT_UPDATE CMSParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;content;
 ;;Brand-shopByFav;Brand-shopByFav;"<section class='look-book clearfix'><h3 class='section-title'>Shop by Category</h3><p class='mb-40 section-content'>Shop your favourites</p><div class='look-book-link'><ul class='list-unstyled clearfix'><li><a href='#'>Polos &amp; T-shirts</a></li><li><a href='#'>Casual Shirts</a></li><li><a href='#'>Jeans</a></li><li><a href='#'>Casual Trousers</a></li><li><a href='#'>Formal Shirts</a></li><li><a href='#'>Formal Trousers</a></li><li><a href='#'>Sweatshirts &amp; Sweaters</a></li><li><a href='#'>Casual Jackets &amp; Blazers Underwear</a></li><li><a href='#'>Underwear</a></li></ul></div></section>";
 
-INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url
-;;Men-lookBook;Men look;Men-MiniLookBook;"<div class='seastion-content'><h2>Travellers <br>Edition</h2></div>";"/menlanding";
 
 INSERT_UPDATE LuxurySimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang];
 ;;Men-BannerVideo1;Men Video Banner;;/;Brand_landingVideo;
@@ -111,6 +113,14 @@ INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&com
 ;;look1bookCol2;look1 book2;look1bookCol2;/;look1Col2
 ;;look2bookCol1;look2 book1;look2bookCol1;/;look2Col1
 ;;look2bookCol2;look2 book2;look2bookCol2;/;look2Col2
+;;mobile1-RedPoster;mobile RedPoster;mobile-RedPoster;/;mobile-RedPoster
+;;pickitup1-poster;pickitup-poster;pickitup-poster;/;pickitup-poster
+
+
+INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url;medias(uid,$contentCV);
+;;Men-lookBook;Men look;Men-MiniLookBook;"<div class='seastion-content'><h2>Travellers <br>Edition</h2></div>";"/menlanding";"";
+;;mobile-lookBook;Mobile  MiniLookBook;;;"/";mobile1-RedPoster,pickitup1-poster;
+
 
 INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
 ;;Brand-shopbycategory	;Brand-shopbycategory;Shop by Category;BagsImageCoursel1,PantsImageCoursel1,ClothingImageCoursel1,FootwearImageCoursel1,GroomingImageCoursel1
@@ -179,7 +189,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
 ;;Men-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
 ;;Men-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
-;;Men-ShortlookBookSlot;Gender ShortlookBook;true;Men-MiniLookBook
+;;Men-ShortlookBookSlot;Gender ShortlookBook;true;mobile-lookBook
 ;;Men-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
 ;;Men-WeeklyBanner1Slot;Gender WeeklyBanner1;true;HomePageWeaklySpecialBanner
 ;;Women-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
