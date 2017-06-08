@@ -38,8 +38,8 @@ import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.promotions.PromotionsService;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
-import de.hybris.platform.promotions.model.ProductPromotionModel;
 import de.hybris.platform.promotions.model.PromotionGroupModel;
+import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -62,7 +62,6 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -70,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -79,7 +79,6 @@ import net.sourceforge.pmd.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -3559,7 +3558,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		{
 			final BaseSiteModel baseSiteModel = getBaseSiteService().getCurrentBaseSite();
 			PromotionGroupModel defaultPromotionGroup = null;
-			final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
+			//final Date currentTimeRoundedToMinute = DateUtils.round(getTimeService().getCurrentTime(), Calendar.MINUTE);
 			if (baseSiteModel != null)
 			{
 				defaultPromotionGroup = baseSiteModel.getDefaultPromotionGroup();
@@ -3568,29 +3567,31 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			{
 				return false;
 			}
-			for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
+			//for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
 
 
 			{
-				final ProductModel productModel = cartEntry.getProduct();
-				final List<ProductPromotionModel> promotions = getPromotionsService().getProductPromotions(
-						Collections.singletonList(defaultPromotionGroup), productModel, true, currentTimeRoundedToMinute);
+				//final ProductModel productModel = cartEntry.getProduct();
+				//final List<ProductPromotionModel> promotions = getPromotionsService().getProductPromotions(
+				//		Collections.singletonList(defaultPromotionGroup), productModel, true, currentTimeRoundedToMinute);
 
-				if (null != promotions)
+				final Set<PromotionResultModel> promotions = cart.getAllPromotionResults();
 
-
+				if (CollectionUtils.isNotEmpty(promotions))
 				{
-					for (final ProductPromotionModel productPromotion : promotions)
+					for (final PromotionResultModel productPromotion : promotions)
 
 					{
-						if (null != productPromotion
-								&& productPromotion.getEnabled() == Boolean.TRUE
-								&& (productPromotion instanceof BuyXItemsofproductAgetproductBforfreeModel
-										|| (productPromotion instanceof BuyAandBgetCModel)
-										|| (productPromotion instanceof BuyABFreePrecentageDiscountModel) || (productPromotion instanceof CustomProductBOGOFPromotionModel)))//CustomOrderThresholdFreeGiftPromotionModel
+						if (productPromotion != null
+								&& null != productPromotion.getPromotion()
+								&& productPromotion.getPromotion().getEnabled() == Boolean.TRUE
+								&& (productPromotion.getPromotion() instanceof BuyXItemsofproductAgetproductBforfreeModel
+										|| (productPromotion.getPromotion() instanceof BuyAandBgetCModel)
+										|| (productPromotion.getPromotion() instanceof BuyABFreePrecentageDiscountModel) || (productPromotion
+											.getPromotion() instanceof CustomProductBOGOFPromotionModel)))//CustomOrderThresholdFreeGiftPromotionModel
 						{
 
-							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getRestrictions())
+							for (final AbstractPromotionRestrictionModel restriction : productPromotion.getPromotion().getRestrictions())
 							{
 
 

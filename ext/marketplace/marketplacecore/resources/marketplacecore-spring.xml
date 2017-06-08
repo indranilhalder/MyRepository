@@ -1895,5 +1895,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 <!-- End TISPRD-8944 -->
     
+    <!-- Change for CAR-271 -->
+    <bean id="customPromotionService" class="de.hybris.platform.promotions.jalo.CustomPromotion" >
+    
+	</bean>
+    
 			
 </beans>

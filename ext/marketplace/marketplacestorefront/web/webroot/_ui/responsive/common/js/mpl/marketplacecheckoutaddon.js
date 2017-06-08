@@ -5642,9 +5642,9 @@ function checkPincodeServiceability(buttonType,el)
 		 $("#cartPinCodeAvailable").hide();
 		 $("#cartPinCodeAvailableBtm").hide();// TPR-1055//UF-68
 		//$("#pinCodeButtonIds").text("Change Pincode");
-		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
+		 $("#pinCodeButtonIds").attr("class","ChangePincode"); //UF-71
 		 //$("#pinCodeButtonIds").text("Change Pincode");
-		 document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode"; //UF-71
+		 $("#pinCodeButtonIdsBtm").attr("class","ChangePincode"); //UF-71
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
 		 $("#unserviceablepincodeBtm").hide();// tpr-1341//UF-68
@@ -6473,8 +6473,8 @@ function checkIsServicable()
 	var utagCheckPincodeStatus="";
 	// $("#defaultPinCodeIds").prop('disabled', true);
 	//$("#pinCodeButtonIds").text("Check");// tpr-1334
-	document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
-	document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
+	$("#pinCodeButtonIds").attr('class','CheckAvailability'); 	//UF-71
+	$("#pinCodeButtonIdsBtm").attr('class','CheckAvailability');//UF-71
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincodeBtm").hide();
 	$("#unserviceablepincode_tooltip").hide();
@@ -6508,8 +6508,8 @@ function checkIsServicable()
  				 $("#unserviceablepincode_tooltip_btm").show();
  				 $(".pincodeServiceError").show();
  				//$("#pinCodeButtonIds").text("Change Pincode");
- 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
- 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+ 				$("#pinCodeButtonIds").attr("class","ChangePincode"); //UF-71
+ 				$("#pinCodeButtonIdsBtm").attr("class", "ChangePincode");//UF-71
  				//pincodeServicabilityFailure(selectedPincode);
  				utagCheckPincodeStatus = false;
 	 			}
@@ -6524,8 +6524,8 @@ function checkIsServicable()
 	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 				$("#AvailableMessage").show();
 	 				//$("#pinCodeButtonIds").text("Change Pincode");
-	 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
-	 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+	 				$("#pinCodeButtonIds").attr("class", "ChangePincode"); //UF-71
+	 				$("#pinCodeButtonIdsBtm").attr("class","ChangePincode");//UF-71
 	 				//pincodeServicabilitySuccess(selectedPincode);
 	 				utagCheckPincodeStatus = true;
 	 			}

@@ -242,6 +242,15 @@ public class BuyAandBgetC extends GeneratedBuyAandBgetC
 				//}
 			}
 		}
+		else
+		{//UF-70
+			if (GenericUtilityMethods.checkRestrictionData(restrictionList))
+			{
+				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(ctx, this, arg1.getOrder(),
+						0.00F);
+				promotionResults.add(result);
+			}
+		}
 		return promotionResults;
 	}
 
