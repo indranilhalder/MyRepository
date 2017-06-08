@@ -1,9 +1,12 @@
 /*PDP Section start*/
+
 .pdp-view {
 	max-width: 1150px;
 	margin: 20px auto 0;
 	padding-left: 15px;
 	padding-right: 15px;
+    
+    
 	.pdp-left {
 		margin-bottom: 20px;
 	}
@@ -186,6 +189,11 @@
                     background: $Sprite no-repeat;
 					background-position: -379px -59px;	
 				}
+                
+                .save.added:before {
+                    background-position: -35px 0px;
+                }
+                
 			}
 		}
 	}

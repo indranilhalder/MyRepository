@@ -720,7 +720,7 @@ TATA.Pages = {
 			var ussidValue=$("#ussid").val();
 			var dataString = 'wish=' + wishName + '&product=' + productCodePost + '&ussid=' + ussidValue;
 			return dataString;
-		}
+		},
 		
 		getLastModifiedWishlist: function(ussidValue) {
 			var isInWishlist = false;
