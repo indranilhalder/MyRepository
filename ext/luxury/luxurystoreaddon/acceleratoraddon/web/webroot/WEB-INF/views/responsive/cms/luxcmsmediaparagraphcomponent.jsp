@@ -21,12 +21,24 @@
    <div class="bestCollections">${content}</div>
 </div>
  --%>
- <c:if test="${not empty url}">
-	<a href="${url}"><img src="${media.url}"
-		alt="${media.altText}" /> ${content}</a>
-</c:if>
-<c:if test="${empty url}">
-	<img src="${media.url}" alt="${media.altText}" />
-  ${content}</a>
-</c:if> 
+<c:choose>
+	<c:when test="${medias eq null}">
+		<c:if test="${not empty url}">
+			<a href="${url}"><img src="${media.url}"
+								  alt="${media.altText}" /> ${content}</a>
+		</c:if>
+		<c:if test="${empty url}">
+			<img src="${media.url}" alt="${media.altText}" />
+			${content}</a>
+		</c:if>
+	</c:when>
+	<c:otherwise>
+		<section class="trav-edition double-banner mb-40 clearfix container">
+			<c:forEach var="media" items="${medias}" varStatus="status">
+				<div class="col"><a href="${url}"><img src="${media.media.url}"
+													   alt="${media.media.altText}" /> ${content}</a> </div>
+			</c:forEach>
+		</section>
+	</c:otherwise>
+</c:choose>
 
