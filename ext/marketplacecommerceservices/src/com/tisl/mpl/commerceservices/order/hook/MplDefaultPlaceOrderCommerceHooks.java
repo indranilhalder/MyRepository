@@ -168,9 +168,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -277,8 +277,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 * 
-				 * 
+				 *
+				 *
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -579,9 +579,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -595,9 +595,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -718,13 +718,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param subOrderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -825,13 +825,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param subOrderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -1416,13 +1416,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param orderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -2299,6 +2299,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//Transaction ID have to strict with 15 digits, using the middle 3 zeros
 				switch (orderLineIdSequence.length())
 				{
+
 					case 6:
 						orderEntryModel.setOrderLineId(sellerID.concat(threeZero).concat(orderLineIdSequence));
 						orderEntryModel.setTransactionID(sellerID.concat(threeZero).concat(orderLineIdSequence));
