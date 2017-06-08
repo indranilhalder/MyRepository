@@ -147,7 +147,9 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 		{
 
 			LOG.info("*************Inside sendNotification *******************");
-			String orderNumber = orderModel.getCode();
+			// TISPRDT-1399 START  , Sending Mail Order Id in SMS 
+			String orderNumber = orderModel.getParentReference().getCode();
+		   // TISPRDT-1399 END
 			String mobileNumber = null;
 			if (orderModel.getDeliveryAddress() != null)
 			{
@@ -259,7 +261,7 @@ public class SendNotificationSecondaryStatusListener extends AbstractSiteEventLi
 				orderUpdateSmsProcessModel.setOrder(orderModel);
 				orderUpdateSmsProcessModel.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
 				orderUpdateSmsProcessModel.setMessage(MarketplacecommerceservicesConstants.SMS_MESSAGE_ADDRESS_ISSUE
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(childOrders.size()))
+						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, String.valueOf(1))
 						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderNumber));
 				orderUpdateSmsProcessModel.setRecipientPhoneNumber(mobileNumber);
 				final List<String> entryNumber = new ArrayList<String>();
