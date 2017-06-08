@@ -70,11 +70,7 @@
 						</cms:pageSlot>
 						
 					</ul>
-					<ul class="hidden-sm hidden-md hidden-lg">
-						<li class="wishlist"><a href="#">Wishlist</a></li>
-						<li class="notifi"><a href="#">Notifications</a></li>
-						<li class="mob-login"><a href="luxurylogin/signin" class="toggle-link luxury-login">Sign-in Or Sign-up</a></li>
-					</ul>
+					
 					<div class="main-nav-close" id="main-nav-close"></div>
 				</nav>
 			</div>
@@ -87,7 +83,7 @@
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 					<li class="header-account-link">
-						<a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="luxurylogin/signin">Sign In</a>
+						<a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="/luxurylogin/signin">Sign In</a>
 						<div class="header-account toggle-skip text-center" id="header-account">
 							<div class="header-account-inner clearfix" id="login-container">
 								<div class="header-account-section header-forget-pass"></div>
