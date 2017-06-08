@@ -57,7 +57,7 @@
 	        data-contenturl=""
 	        data-clientid='${googleClientid}'
 	        data-cookiepolicy="single_host_origin"
-	        data-prefilltext="<spring:theme code="share.pretext"/><spring:theme code="share.posttext"/>"
+	        data-prefilltext="<spring:theme code="share.pretext" arguments="${siteurl}"/><spring:theme code="share.posttext"/>"
 	        data-calltoactionlabel="OPEN"
 	        data-calltoactionurl="">
 	        <a class="gp"></a>
