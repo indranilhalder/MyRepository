@@ -27,24 +27,40 @@
   			</div>
 		</c:if>
 <div class="account">
-  <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
-  
-  <%-- <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+  <%-- <h1 class="account-header"><spring:theme code="text.account.headerTitle" text="My Tata CLiQ" /> 
+ <div class="luxury-mobile-myaccount visible-xs">
+  <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
                   <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
-                  <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option>
+                  <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option> 
                   <option value=/store/mpl/en/my-account/update-profile data-href="account-info.php"  selected><spring:theme code="header.flyout.Personal" /> </option>
                   <option value=/store/mpl/en/my-account/orders data-href="order-history.php"> <spring:theme code="header.flyout.orders" /></option>
                   <option value=/store/mpl/en/my-account/payment-details data-href="account-cards.php"><spring:theme code="header.flyout.cards" /></option>
                   <option value=/store/mpl/en/my-account/address-book data-href="account-addresses.php"><spring:theme code="header.flyout.address" /></option>
               </optgroup>
          
-          <optgroup label="Share">
+        	 <optgroup label="Share">
                   <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
+              </optgroup> 
+      </select>
+     </div>
+</h1>--%>
+<div class="luxury-mobile-myaccount visible-xs">
+  <select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
+          <optgroup label="<spring:theme code="header.flyout.myaccount" />">
+                  <option value=/store/mpl/en/my-account/ data-href="/store/mpl/en/my-account/"><spring:theme code="header.flyout.overview" /></option>
+                  <%-- <option value=/store/mpl/en/my-account/marketplace-preference data-href="/store/mpl/en/my-account/marketplace-preference"><spring:theme code="header.flyout.marketplacepreferences" /></option> --%>
+                  <option value=/store/mpl/en/my-account/update-profile data-href="account-info.php"  selected><spring:theme code="header.flyout.Personal" /> </option>
+                  <option value=/store/mpl/en/my-account/orders data-href="order-history.php"> <spring:theme code="header.flyout.orders" /></option>
+                  <option value=/store/mpl/en/my-account/payment-details data-href="account-cards.php"><spring:theme code="header.flyout.cards" /></option>
+                  <option value=/store/mpl/en/my-account/address-book data-href="account-addresses.php"><spring:theme code="header.flyout.address" /></option>
               </optgroup>
-      </select> --%>
-</h1>
-
+         
+         <%--  <optgroup label="Share">
+                  <option value=/store/mpl/en/my-account/friendsInvite data-href="account-invite.php"><spring:theme code="header.flyout.invite" /></option>
+              </optgroup> --%>
+      </select>
+     </div>
 <div class="wrapper">		
 		
 	<!----- Left Navigation Starts --------->
@@ -53,14 +69,15 @@
 			<!----- Left Navigation ENDS --------->
 			
 			<div class="right-account">
+				<h2><spring:theme code="profile.heading.text" text="Personal Information"/></h2>
 				<div class="info">
-					<h2><spring:theme code="profile.heading.text" text="Personal Information"/></h2>
+					
 					<p><spring:theme code="profile.heading.deatils" text="Change your name, email, phone number here. "/></p>
 					<%-- <form> --%>
 					<fieldset>
-						<form:form action="update-parsonal-detail" method="post" commandName="mplCustomerProfileForm" name="mplCustomerProfileForm" onSubmit="return validateForm();">
+						<form:form action="update-parsonal-detail" method="post" commandName="mplCustomerProfileForm" name="mplCustomerProfileForm" onSubmit="return validateForm();" class="clarfix">
 							 <input type="hidden" name="isLux" value="${param.isLux}"/>
-							 <div class="half">
+							 <div class="half halfwidth">
 									<label><spring:theme code="text.mplCustomerProfileForm.firstName" text="First Name" /></label>
 										<form:input path="firstName" id="profilefirstName"
 										onkeyup="kpressfn()" maxlength="40" />
@@ -70,14 +87,14 @@
 				
 				
 			
-							<div class="half">
+							<div class="half halfwidth">
 									<label><spring:theme code="text.mplCustomerProfileForm.lastName" text="Last Name" /></label>
 										<form:input path="lastName" id="profilelastName"
 											onkeyup="kpressln()" maxlength="40" />
 										<div class="errorMessage"><div id="errln"></div></div>
 									</div>
 				
-							<div class="half account-profileEmail"><%-- <formElement:formInputBox idKey="profile.email" labelKey="profile.email" path="emailId" inputCSS="form-control" mandatory="false"/> --%>
+							<div class="half halfwidth account-profileEmail"><%-- <formElement:formInputBox idKey="profile.email" labelKey="profile.email" path="emailId" inputCSS="form-control" mandatory="false"/> --%>
 									<label><spring:theme code="text.mplCustomerProfileForm.emailId" text="E-mail Address*" /></label>
 										<form:input path="emailId" id="profileEmailID"
 											onkeyup="kpressemail()" maxlength="240" />
@@ -88,18 +105,18 @@
     							<label>Email Address *</label>
     							<input type="text">
     				        </div> -->
-    				        <div class="full phone">
+    				        <div class="full phone halfwidth">
 							<label><spring:theme code="text.mplCustomerProfileForm.phoneNumber" text="Mobile Number"/></label>	
-								<div class="mobile_greyed"  >
-									<%-- <form:input type="text" value="+91" id="myInput" inputCSS="form-text" path="mobileNumber" disabled="true"/> --%>
+								<%-- <div class="mobile_greyed"  >
+									<form:input type="text" value="+91" id="myInput" inputCSS="form-text" path="mobileNumber" disabled="true"/>
 									<select name="countryList"
 											disabled="disabled">
 										
-												<%-- 	<option value="${country.name}">${country.name}</option> --%>
+													<option value="${country.name}">${country.name}</option>
 												<option value="IN">+91</option>
 											
 										</select>
-								</div>
+								</div> --%>
 								
 								 <div class="mobile_main">
 									<%-- <form:input type="tel" id="mobileNo" inputCSS="form-text" path="mobileNumber" onblur="validateForm()"
@@ -111,14 +128,14 @@
 									
 							</div>
 							
-							<div class="select calender" >
-							     	
+							<div class="select calender halfwidth" >
+							     <label><spring:theme code="profile.dateOfBirth"
+											text="Date Of Birth" /></label>	
 								 <div class="half_span">
 								 <%--<formElement:formSelectBox idKey="profile.dateOfBirth" labelKey="profile.dateOfBirth" path="dateOfBirthDay" mandatory="false" skipBlank="false" 
 							       skipBlankMessageKey="profile.select.day" items="${dayList}" selectCSSClass="form-control"/></div> --%>
 							     
-							     <label><spring:theme code="profile.dateOfBirth"
-											text="Date Of Birth" /></label>
+							     
 											
 									<form:select name="dateList" id="dateOfBirth" path="dateOfBirthDay" onchange="selectBoxChange();">
 										<option value="selectDay">Date</option>
@@ -173,13 +190,14 @@
 									</div>
 							</div>
 							
-							<div class=" select calender"  >
+							<div class=" select calender halfwidth"  >
+								<label><spring:theme code="profile.dateOfAnniversary"
+											text="Anniversary Date" /></label>
 								<div class="half_span">
 								<%-- <formElement:formSelectBox idKey="profile.dateOfAnniversary" labelKey="profile.dateOfAnniversary" path="dateOfAnniversaryDay" mandatory="false" skipBlank="false" 
 							     skipBlankMessageKey="profile.select.day" items="${dayList}" selectCSSClass="form-control"/></div> --%>
 							      
-							       <label><spring:theme code="profile.dateOfAnniversary"
-											text="Anniversary Date" /></label>
+							       
 											
 									<form:select name="dateList" id="dateOfAnniversary" path="dateOfAnniversaryDay" onchange="selectBoxChange();">
 										<option value="selectDay">Date</option>
@@ -231,12 +249,12 @@
 										<div id="errdata"></div>
 									</div>
 							</div>
-							<div class="select gender">
+							<div class="mb-20 mt-20 select gender halfwidth">
 								<formElement:formSelectBox idKey="profile.gender" labelKey="profile.gender" path="gender" mandatory="false" skipBlank="false" 
 							 skipBlankMessageKey="profile.select.gender" items="${genderData}" selectCSSClass="form-control"/></div>
-							
-							<button type="submit" class="blue"><spring:theme code="cart.modal.save.changes" text="Save Changes" /></button>
-							
+							<div class="mt-10 half fullfwidth">
+								<button type="submit" class="blue"><spring:theme code="cart.modal.save.changes" text="Save Changes" /></button>
+							</div>
 						</form:form>
 						
 						</fieldset>
@@ -255,7 +273,7 @@
 						<form:form id="frmUpdatePassword" action="update-password" method="post" commandName="updatePasswordForm" autocomplete="off">
 						<fieldset>
 						
-						<div class="full span password-input">
+						<div class="full span password-input halfwidth">
 									<label><spring:theme code="text.mplCustomerProfileForm.CurrPwd" text="Current Password*" /></label>
 										<!-- <input type="password" path="currentPassword" id="currentPassword"
 										onkeypress="kpresscp()"	 maxlength="140" /> -->
@@ -266,7 +284,7 @@
 									</div> 
 						
 						
-						 <div class="half password-input">
+						 <div class="half password-input halfwidth">
 									<label><spring:theme code="text.mplCustomerProfileForm.NewPwd" text="New Password*" /></label>
 										<!-- <input type="password" path="newPassword" id="newPassword"
 										onkeypress="kpressnp()"	 maxlength="140" /> -->
@@ -274,7 +292,7 @@
 									<div class="errorMessage"><div id="errNewpwd"></div></div>
 									</div> 
 						
-			        	 <div class="half password-input">
+			        	 <div class="half password-input halfwidth">
 									<label><spring:theme code="text.mplCustomerProfileForm.CnfNewPwd" text="Confirm New Password*" /></label>
 										<!-- <input type="password"  path="checkNewPassword" id="checkNewPassword"
 										onkeypress="kpresscnp()" maxlength="140" /> -->
@@ -287,7 +305,9 @@
 								<formElement:formPasswordBox idKey="profile.checkNewPassword" labelKey="profile.checkNewPassword" path="checkNewPassword" inputCSS="form-control password" mandatory="true"/>
 							</div> --%>
 							</fieldset>
-							<button type=button class="blue" onClick="return validatePassword();"><spring:theme code="cart.modal.save.changes" text="Save Changes"/></button>
+							<div>
+								<button type=button class="blue" onClick="return validatePassword();"><spring:theme code="cart.modal.save.changes" text="Save Changes"/></button>
+							</div>
 						</form:form>
 
 					</div>
