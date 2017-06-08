@@ -163,6 +163,10 @@ TATA.CommonFunctions = {
 	},
     
 	addToWishlist: function(productURL, element){
+		if(!headerLoggedinStatus) {
+			$(".luxury-login").trigger("click");
+			return false;
+		}
 		var productCode = TATA.CommonFunctions.urlToProductCode(productURL);
 		var wishName = "";
 		var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
@@ -172,48 +176,40 @@ TATA.CommonFunctions = {
 	    	sizeSelected=false;
 	    }
 	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&sizeSelected=' + sizeSelected;
-		
-	    if(!headerLoggedinStatus) {
-			$(".wishAddLoginPlp").addClass("active");
-				setTimeout(function(){
-					$(".wishAddLoginPlp").removeClass("active")
-				},3000);
-			return false;
-		} else {	
-			$.ajax({			
-				contentType : "application/json; charset=utf-8",
-				url : requiredUrl,
-				data : dataString,
-				dataType : "json",			
-				success : function(data){
-					if (data == true) {					
-						$(".wishAddSucessPlp").addClass("active");
-						setTimeout(function(){
-							$(".wishAddSucessPlp").removeClass("active")
-						},3000)
-						$(element).addClass("added");
-					}
-					else{
-						$(".wishAlreadyAddedPlp").addClass("active");
-						setTimeout(function(){
-							$(".wishAlreadyAddedPlp").removeClass("active")
-						},3000)
-					}
-					$(element).addClass("added");
-				},
-				error : function(xhr, status, error){
-					alert(error);
-					if(typeof utag !="undefined"){
-						utag.link({error_type : 'wishlist_error'});
-						}
-				}
-			});
 			
-			setTimeout(function() {
-				$('a.wishlist#wishlist').popover('hide');
-				$('input.wishlist#add_to_wishlist').popover('hide');
-			}, 0);
-		}
+		$.ajax({			
+			contentType : "application/json; charset=utf-8",
+			url : requiredUrl,
+			data : dataString,
+			dataType : "json",			
+			success : function(data){
+				if (data == true) {					
+					$(".wishAddSucessPlp").addClass("active");
+					setTimeout(function(){
+						$(".wishAddSucessPlp").removeClass("active")
+					},3000)
+					$(element).addClass("added");
+				}
+				else{
+					$(".wishAlreadyAddedPlp").addClass("active");
+					setTimeout(function(){
+						$(".wishAlreadyAddedPlp").removeClass("active")
+					},3000)
+				}
+				$(element).addClass("added");
+			},
+			error : function(xhr, status, error){
+				alert(error);
+				if(typeof utag !="undefined"){
+					utag.link({error_type : 'wishlist_error'});
+					}
+			}
+		});
+		
+		setTimeout(function() {
+			$('a.wishlist#wishlist').popover('hide');
+			$('input.wishlist#add_to_wishlist').popover('hide');
+		}, 0);
 	},
 	
 	removeFromWishlist : function(productURL,element) {
@@ -691,6 +687,123 @@ TATA.Pages = {
 	},
 	
 	PDP:  {
+	
+		wishlistInit: function(){
+			$(document).on("click",".add-to-wishlist",function(){
+				var loggedIn=$("#loggedIn").val();
+				
+				if(!loggedIn) {
+					$(".luxury-login").trigger("click");
+					return false;
+				}
+				
+				var dataString = TATA.Pages.PDP.getDataString;
+				
+				if ($(this).hasClass("added")){
+					TATA.Pages.PDP.removeFromWishlist(dataString);
+				} else {
+					var sizeSelected=true;
+					if(!$('#variant li').hasClass('selected') || $("#variant,#sizevariant option:selected").val()=="#") {
+						sizeSelected=false;
+					}
+					dataString = dataString + '&sizeSelected=' + sizeSelected; 
+					TATA.Pages.PDP.addToWishlist(dataString);
+				}
+			});
+		},
+		
+		getDataString: function(){
+			var productCodePost = $("#productCodePost").val();
+			var productcodearray =[];
+			productcodearray.push(productCodePost);
+			var wishName = "";
+			var ussidValue=$("#ussid").val();
+			var dataString = 'wish=' + wishName + '&product=' + productCodePost + '&ussid=' + ussidValue;
+			return dataString;
+		}
+		
+		getLastModifiedWishlist: function(ussidValue) {
+			var isInWishlist = false;
+			var requiredUrl = ACC.config.encodedContextPath + "/p-getLastModifiedWishlistByUssid";
+			var dataString = 'ussid=' + ussidValue;
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				dataType : "json",
+				async: false,
+				success : function(data) {
+				if (data == true) {
+					isInWishlist = true;
+					$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').addClass("added");
+					$("#add_to_wishlist").attr("disabled",true);
+					$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
+				}
+				
+				},
+				error : function(xhr, status, error) {
+					$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
+				}
+			});
+			return isInWishlist;
+		},
+		
+		populateMyWishlistFlyOut: function(wishName) {
+			var requiredUrl = ACC.config.encodedContextPath + "/my-account/wishlistAndItsItems";
+			var dataString = 'wishlistName=' + wishName;
+			
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				dataType : "json",
+				success : function(response) {
+					$('#DropDownMyWishList').empty();		
+					for(var i in response) {
+					var name=response[i].wishlistName;
+					var size=response[i].wishlistSize;
+					var url=response[i].wishlistUrl;
+					 $('#DropDownMyWishList').append('<li><a href="'+url+'">'+name+'<br><span>'+size+'&nbsp;items</span></a></li>');
+					}
+				},
+			})
+		},
+		addToWishlist: function(dataString) {
+			var requiredUrl = ACC.config.encodedContextPath + "/p-addToWishListInPDP";
+			$.ajax({
+				contentType : "application/json; charset=utf-8",
+				url : requiredUrl,
+				data : dataString,
+				dataType : "json",
+				success : function(data) {
+					$(".add-to-wl-pdp").addClass("added");
+					$(".wishAddSucess").addClass("active");
+					setTimeout(function(){
+						$(".wishAddSucess").removeClass("active")
+					},3000);
+				}
+			});
+		},
+		
+		removeFromWishlist: function(dataString){	
+			var requiredUrl = ACC.config.encodedContextPath+"/p" + "-removeFromWl";
+			$.ajax({
+				url: requiredUrl,
+				type: "GET",
+				data: dataString,
+				dataType : "json",
+				cache: false,
+				contentType : "application/json; charset=utf-8",
+				success : function(data) {
+					$(".add-to-wl-pdp").removeClass("added");
+					$(".wishRemoveSucess").addClass("active");
+					setTimeout(function(){
+						$(".wishRemoveSucess").removeClass("active")
+					},3000);
+				}
+			});
+		},
+		
 		// PDP Page Slider
 		Slider: function() {
 			$('.pdp-img-slider').slick({
@@ -902,6 +1015,7 @@ TATA.Pages = {
             _self.videoPlay();
             _self.BankEMI();
             _self.luxury_overlay_close();
+            _self.wishlistInit();
 		}
 	},
 	

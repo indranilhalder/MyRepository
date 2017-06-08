@@ -157,9 +157,7 @@ tr.d0 td {
 						<c:if test="${videoAvailable}">
 							<li><a href="#" data-video-url="${videoUrl}" class="play">Play</a></li>
 						</c:if>
-						<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-							<li><a onclick="addToWishlist()" class="save">Save</a></li>
-						</sec:authorize>
+						<li><a class="save add-to-wl-pdp">Save</a></li>
 						<li><a data-toggle="modal" data-target="#share-modal" href="#" class="share">Share</a></li>
 					</ul>
 					<div id="share-modal" class="modal fade" role="dialog">
