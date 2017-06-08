@@ -175,7 +175,8 @@ TATA.CommonFunctions = {
 	    if(!$('#variant li').hasClass('selected') || $("#variant,#sizevariant option:selected").val()=="#") {
 	    	sizeSelected=false;
 	    }
-	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&sizeSelected=' + sizeSelected;
+	    var ussid = $(element).attr("data-ussid");
+	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid +'&sizeSelected=' + sizeSelected;
 			
 		$.ajax({			
 			contentType : "application/json; charset=utf-8",
@@ -221,7 +222,8 @@ TATA.CommonFunctions = {
 	    if(!$('#variant li').hasClass('selected') || $("#variant,#sizevariant option:selected").val()=="#") {
 	    	sizeSelected=false;
 	    }
-	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&sizeSelected=' + sizeSelected;
+	    var ussid = $(element).attr("data-ussid");
+	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid + '&sizeSelected=' + sizeSelected;
 		
 	    if(!headerLoggedinStatus) {
 			$(".wishAddLoginPlp").addClass("active");
@@ -689,15 +691,13 @@ TATA.Pages = {
 	PDP:  {
 	
 		wishlistInit: function(){
-			$(document).on("click",".add-to-wishlist",function(){
-				var loggedIn=$("#loggedIn").val();
-				
-				if(!loggedIn) {
+			$(document).on("click",".add-to-wl-pdp",function(){
+				if(!headerLoggedinStatus) {
 					$(".luxury-login").trigger("click");
 					return false;
 				}
 				
-				var dataString = TATA.Pages.PDP.getDataString;
+				var dataString = TATA.Pages.PDP.getDataString();
 				
 				if ($(this).hasClass("added")){
 					TATA.Pages.PDP.removeFromWishlist(dataString);
