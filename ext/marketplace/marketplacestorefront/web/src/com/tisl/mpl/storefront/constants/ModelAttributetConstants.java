@@ -848,4 +848,5 @@ public final class ModelAttributetConstants
 	public static final String FOOTERSLOT = "FooterSlot";
 	public static final String GOOGLEBOT = "googlebot";
 
+	public static final String NO ="no";
 }

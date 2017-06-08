@@ -1,6 +1,3 @@
-
-	
-
 	ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
@@ -4200,3 +4197,4 @@ function getProductCodeFromPdpUrl(url)
 }
 
 //End of UF-60 changes
+

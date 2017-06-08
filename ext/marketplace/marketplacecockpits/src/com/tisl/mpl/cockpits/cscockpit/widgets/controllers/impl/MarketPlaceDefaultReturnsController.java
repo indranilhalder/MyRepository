@@ -349,8 +349,6 @@ public class MarketPlaceDefaultReturnsController extends
 							entries.add(orderEntryModel);
 						}
 					}
-
-
 					// PRDI-133 START 
                      if(null != codSelfShipData && null!=entries && !entries.isEmpty()) {
                     	 getCodPaymentInfoToFICO(codSelfShipData,entries);
@@ -433,9 +431,6 @@ public class MarketPlaceDefaultReturnsController extends
 						entries.add(orderEntryModel);
 					}
 				}
-
-
-
 				// PRDI-133 START 
 				if(null != codSelfShipData && null!=entries && !entries.isEmpty()) {
 					getCodPaymentInfoToFICO(codSelfShipData,entries);

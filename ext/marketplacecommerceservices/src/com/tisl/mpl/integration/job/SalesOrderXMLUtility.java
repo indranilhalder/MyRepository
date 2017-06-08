@@ -465,18 +465,22 @@ public class SalesOrderXMLUtility
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
 						{
 							LOG.debug("inside express del");
+							// TISPRDT-1186 START
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting current delivery charge...");
-								xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+						   //	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
 							{
 								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
-								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
-							LOG.debug("EXPRESS_DELIVERY_CHARGE_MESSAGE" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
-
+							xmlData.setExpressdeliveryCharge(0.00);
+							 //	TISPRDT-1186 END 
+							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
+							
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
@@ -510,7 +514,9 @@ public class SalesOrderXMLUtility
 								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
-
+						// TISPRDT-1186 START 
+							xmlData.setExpressdeliveryCharge(0.00);
+						// TISPRDT-1186 END 
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
@@ -527,7 +533,9 @@ public class SalesOrderXMLUtility
 							{
 								xmlData.setScheduleDelCharge(0.00);
 							}
+
 							// INC144316465 end
+
 							LOG.debug("set del charge");
 						}
 					}
