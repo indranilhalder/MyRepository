@@ -65836,6 +65836,13 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     .new-address-form-mobile .product-block.addresses.new-form .full{
     padding-right: 12px;
     }
+    #singlePageAddressPopup .product-block.addresses.new-form .full textarea.form-control,
+    .new-address-form-mobile .product-block.addresses.new-form .full textarea.form-control{
+    width: 100%;
+    height: 66px;
+    margin-bottom: 5px;
+    border: solid 1px #dddddd;
+    }
     #singlePageAddressPopup .product-block.addresses.new-form .full.country-select label,
     .new-address-form-mobile .product-block.addresses.new-form .full.country-select label{
     margin-bottom: 5px;
@@ -65998,7 +66005,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     width:15px;
     height: 15px;
     box-shadow: 0 0 0 1px #979797;
-    border-width: 2px;
+    border-width: 3px;
     top: 0px;
 }
 .checkout-accordion-body .cart.wrapper {
@@ -67137,6 +67144,12 @@ background:#f8f8f8;
 	}
 	.mobile_add_address.form_open .mobile_add_address_radio:before {
 	background-color: #000;
+	}
+	.new-address-form-mobile{
+	display: none;
+	}
+	.new-address-form-mobile .account-section .account-section-content{
+	padding:0;
 	}
 	.new-address-form-mobile  .checkout-shipping.addNewAddress .formaddress h3{
 	display: none;

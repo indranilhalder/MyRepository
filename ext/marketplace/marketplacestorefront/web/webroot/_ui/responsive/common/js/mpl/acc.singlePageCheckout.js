@@ -974,8 +974,9 @@ ACC.singlePageCheckout = {
 			$(".new-address-form-mobile").html('');
 		}
 		else{
-			$(".mobile_add_address").addClass("form_open");
+			$(".mobile_add_address").toggleClass("form_open");
 			$(".new-address-form-mobile").html(data);
+			$(".new-address-form-mobile").slideToggle();
 			$("#"+elementId+" #modalBody").html('');
 			alert("calling");
 			ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
