@@ -12690,12 +12690,10 @@ TATA.CommonFunctions = {
         return productURL.substring(n + 1, productURL.length).toUpperCase();
     },
     addToWishlist: function(productURL, element) {
+        if (!headerLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
         var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP", sizeSelected = !0;
         $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
         var dataString = "wish=&product=" + productCode + "&sizeSelected=" + sizeSelected;
-        if (!headerLoggedinStatus) return $(".wishAddLoginPlp").addClass("active"), setTimeout(function() {
-            $(".wishAddLoginPlp").removeClass("active");
-        }, 3e3), !1;
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url: requiredUrl,
@@ -12992,6 +12990,86 @@ TATA.CommonFunctions = {
         }
     },
     PDP: {
+        wishlistInit: function() {
+            $(document).on("click", ".add-to-wishlist", function() {
+                if (!$("#loggedIn").val()) return $(".luxury-login").trigger("click"), !1;
+                var dataString = TATA.Pages.PDP.getDataString;
+                if ($(this).hasClass("added")) TATA.Pages.PDP.removeFromWishlist(dataString); else {
+                    var sizeSelected = !0;
+                    $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1), 
+                    dataString = dataString + "&sizeSelected=" + sizeSelected, TATA.Pages.PDP.addToWishlist(dataString);
+                }
+            });
+        },
+        getDataString: function() {
+            var productCodePost = $("#productCodePost").val();
+            [].push(productCodePost);
+            return "wish=&product=" + productCodePost + "&ussid=" + $("#ussid").val();
+        },
+        getLastModifiedWishlist: function(ussidValue) {
+            var isInWishlist = !1, requiredUrl = ACC.config.encodedContextPath + "/p-getLastModifiedWishlistByUssid", dataString = "ussid=" + ussidValue;
+            return $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: requiredUrl,
+                data: dataString,
+                dataType: "json",
+                async: !1,
+                success: function(data) {
+                    1 == data && (isInWishlist = !0, $(".product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon").addClass("added"), 
+                    $("#add_to_wishlist").attr("disabled", !0), $(".add_to_cart_form .out_of_stock #add_to_wishlist").addClass("wishDisabled"));
+                },
+                error: function(xhr, status, error) {
+                    $("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
+                }
+            }), isInWishlist;
+        },
+        populateMyWishlistFlyOut: function(wishName) {
+            var requiredUrl = ACC.config.encodedContextPath + "/my-account/wishlistAndItsItems", dataString = "wishlistName=" + wishName;
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: requiredUrl,
+                data: dataString,
+                dataType: "json",
+                success: function(response) {
+                    $("#DropDownMyWishList").empty();
+                    for (var i in response) {
+                        var name = response[i].wishlistName, size = response[i].wishlistSize, url = response[i].wishlistUrl;
+                        $("#DropDownMyWishList").append('<li><a href="' + url + '">' + name + "<br><span>" + size + "&nbsp;items</span></a></li>");
+                    }
+                }
+            });
+        },
+        addToWishlist: function(dataString) {
+            var requiredUrl = ACC.config.encodedContextPath + "/p-addToWishListInPDP";
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: requiredUrl,
+                data: dataString,
+                dataType: "json",
+                success: function(data) {
+                    $(".add-to-wl-pdp").addClass("added"), $(".wishAddSucess").addClass("active"), setTimeout(function() {
+                        $(".wishAddSucess").removeClass("active");
+                    }, 3e3);
+                }
+            });
+        },
+        removeFromWishlist: function(dataString) {
+            var requiredUrl = ACC.config.encodedContextPath + "/p-removeFromWl";
+            $.ajax({
+                url: requiredUrl,
+                type: "GET",
+                data: dataString,
+                dataType: "json",
+                cache: !1,
+                contentType: "application/json; charset=utf-8",
+                success: function(data) {
+                    $(".add-to-wl-pdp").removeClass("added"), $(".wishRemoveSucess").addClass("active"), 
+                    setTimeout(function() {
+                        $(".wishRemoveSucess").removeClass("active");
+                    }, 3e3);
+                }
+            });
+        },
         Slider: function() {
             $(".pdp-img-slider").slick({
                 slidesToShow: 1,
@@ -13117,7 +13195,7 @@ TATA.CommonFunctions = {
         init: function() {
             var _self = TATA.Pages.PDP;
             _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI(), 
-            _self.luxury_overlay_close();
+            _self.luxury_overlay_close(), _self.wishlistInit();
         }
     },
     init: function() {
