@@ -382,7 +382,8 @@ public class ProductPageController extends MidPageController
 		String returnStatement = null;
 
 		final String userAgent = request.getHeader("user-agent");
-
+		final String siteurl=request.getRequestURL().toString();	//UF-277
+		model.addAttribute("siteurl",siteurl);	//UF-277
 		//	final Boolean isProductPage = true;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);

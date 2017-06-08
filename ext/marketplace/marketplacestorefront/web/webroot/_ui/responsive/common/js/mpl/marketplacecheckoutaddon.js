@@ -6637,14 +6637,15 @@ function checkSignInValidation(path){
 	$("#signinEmailIdDiv").hide();
 	if(emailId == null || emailId == ""){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter all mandatory fields");	
-
+		$("#signinEmailIdDiv").html("Please fill in all mandatory fields.");	
+		//UF-277
 		validationResult=false;
 	}
 	else if(!emailPattern.test(emailId)){
 		$("#signinEmailIdDiv").show();
 		// TISPRO-479 Change the text message
-		$("#signinEmailIdDiv").html("Please enter a valid email id");
+		//UF-277
+		$("#signinEmailIdDiv").html("Please enter a valid email ID");
 		validationResult=false;
 	}
 	else if(password==null || password=="" || password.length==0){
@@ -6702,7 +6703,8 @@ function checkSignUpValidation(path){
 		validationResult=false;	
 	}else if(!emailPattern.test(emailId)){
 		$("#signupEmailIdDiv").show();
-		$("#signupEmailIdDiv").html("Please enter a valid email id");
+		$("#signupEmailIdDiv").html("Please enter a valid email ID");
+		//UF-277
 		validationResult=false;	
 	}else{
 		$("#signupEmailIdDiv").hide();
@@ -6734,7 +6736,8 @@ function checkSignUpValidation(path){
 	
 	if(validationResult && password!=rePassword){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("The passwords don’t match. Try again?");
+		// UF-277
+		$("#signupPasswordDiv").html("The passwords don’t match. Try again, please.");
 		validationResult=false;
 	}  else if(validationResult){
 		$("#signupPasswordDiv").hide();

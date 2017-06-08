@@ -518,7 +518,7 @@
 																			</c:forEach>
 																		</form:select>
 																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
-																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div> 
+																					code="text.cancel.requestDropdown.selected.error" text="Let us know why you would like to cancel this product."/></div> 
 																	</div>
 																	<form:hidden path="ticketTypeCode"
 																		class="ticketTypeCodeClass" value="C" />
