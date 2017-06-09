@@ -201,4 +201,29 @@ $mildGrayTxt:	#7f7f7f;
 	}
 	
 }
+
+
+
+
+.sign-in.tab-view {    
+    .tabs>li#sign_in_content{
+       width: 45.8%;
+        display: inline-block;
+    } 
+    
+    .tabs>li#sign_up_content{
+        padding-left: 113px;
+        width: 47.6%;
+         display: inline-block;
+    }
+    .tabs>li.or {
+        width: 1px;
+        min-height: 280px;
+        display: inline-block;
+        float: left;
+        margin-top: 36px;
+    }
+}
+
+
 /*EOF Checkout Login Page Styles*/

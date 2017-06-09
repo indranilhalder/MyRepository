@@ -12790,11 +12790,25 @@ TATA.CommonFunctions = {
             !1;
         });
     },
+    deliveryaddressform: function() {
+        $("#address-form").click(function() {
+            $.ajax({
+                url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+                type: "GET",
+                cache: !1,
+                dataType: "html",
+                success: function(response) {
+                    $(".addnewAddresPage").html(response);
+                },
+                error: function(resp) {}
+            });
+        });
+    },
     init: function() {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
-        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian();
+        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.deliveryaddressform();
     }
 }, TATA.Pages = {
     PLP: {
@@ -13207,74 +13221,71 @@ TATA.CommonFunctions = {
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
-    function loginRequest() {
-        $(".luxury-login").on("click", function(e) {
-            $("#header-account").addClass("active"), $("body").removeClass("menu-open"), e.preventDefault();
-            const loginURL = $(this).attr("href");
-            $("#login-container .header-sign-in");
-            $.ajax({
-                url: loginURL,
-                beforeSend: function() {
-                    $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
-                },
-                success: function(data) {
-                    $("#login-container .header-sign-in").html(data);
-                },
-                complete: function() {
-                    pwsRequest(), registerRequest(), targetLink(), LuxLoginValidate();
+    $("#luxuryForgotPasswordByEmailAjax").on("click", function(e) {
+        forgotPassword = $(this).parents().find("#forgotPassword_email").val();
+        var dataString = "forgotPassword_email=" + forgotPassword;
+        $(".PasswordForgotReset").css("display", "block"), $.ajax({
+            url: "/login/pw/request/confirmEmail",
+            type: "GET",
+            returnType: "text/html",
+            data: dataString,
+            success: function(data) {
+                if ("empty_or_null" == data) $(e.target).parent().parent().find("span#errorHolder").text("Please enter an email id"); else if ("invalid_email_format" == data) $(e.target).parent().parent().find("span#errorHolder").text("Please enter a valid email id"); else if ("invalid_email" == data) $(e.target).parent().parent().find("span#errorHolder").text("Oops! This email ID isn't registered with us."); else if ("success" == data) {
+                    var url = $(".js-password-forgotten").attr("href");
+                    $.get(url, function(data) {
+                        $(".forgotten-password").modal("hide"), $(data).filter("#forgotPasswordSuccessPopup").modal();
+                    });
                 }
-            });
+            },
+            fail: function() {
+                alert(data);
+            }
         });
-    }
-    function pwsRequest() {
-        $(".js-password-forgotten").on("click", function(e) {
-            e.preventDefault();
-            const pwsRequest = $(this).attr("href");
-            $.ajax({
-                url: pwsRequest,
-                beforeSend: function() {
-                    $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
-                },
-                success: function(data) {
-                    $("#login-container .header-forget-pass").html(data);
-                },
-                complete: function() {
-                    registerRequest(), targetLink(), registerRequest(), LuxLoginValidate();
-                }
-            });
+    }), $(".luxury-login").on("click", function(e) {
+        e.preventDefault();
+        const loginURL = $(this).attr("href");
+        $("#login-container .header-sign-in");
+        $.ajax({
+            url: loginURL,
+            beforeSend: function() {
+                $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-sign-in").html(data), $("#header-account").addClass("active"), 
+                $("body").removeClass("menu-open");
+            }
         });
-    }
-    function registerRequest() {
-        $(".register_link").on("click", function(e) {
-            e.preventDefault();
-            const luxRegister = $(this).attr("href");
-            $.ajax({
-                url: luxRegister,
-                beforeSend: function() {
-                    $("#login-container .header-signup").html('<div class="luxury-loader"></div>');
-                },
-                success: function(data) {
-                    $("#login-container .header-signup").html(data);
-                },
-                complete: function() {
-                    loginRequest(), pwsRequest(), targetLink(), LuxLoginValidate();
-                }
-            });
+    }), $(".js-password-forgotten").on("click", function(e) {
+        e.preventDefault();
+        const pwsRequest = $(this).attr("href");
+        $.ajax({
+            url: pwsRequest,
+            beforeSend: function() {
+                $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-forget-pass").html(data);
+            }
         });
-    }
-    function targetLink() {
-        $(".header-login-target-link").on("click", function() {
-            var targetID = $(this).data("target-id");
-            $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
-        }), $(".get-gender-value").on("click", function() {
-            var genderValue = $(this).val();
-            $("#gender").val(genderValue);
+    }), $(".register_link").on("click", function(e) {
+        e.preventDefault();
+        const luxRegister = $(this).attr("href");
+        $.ajax({
+            url: luxRegister,
+            beforeSend: function() {
+                $("#login-container .header-signup").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-signup").html(data);
+            }
         });
-    }
-    function LuxLoginValidate() {
-        tul.commonFunctions.init();
-    }
-    loginRequest();
+    }), $(".header-login-target-link").on("click", function() {
+        var targetID = $(this).data("target-id");
+        $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
+    }), $(".get-gender-value").on("click", function() {
+        var genderValue = $(this).val();
+        $("#gender").val(genderValue);
+    });
 });
 
 var tul = {};
