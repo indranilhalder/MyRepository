@@ -47,8 +47,9 @@ public class OrderSecondaryStatusEmailContext extends AbstractEmailContext<Order
 	public void init(final OrderUpdateProcessModel orderUpdateProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(orderUpdateProcessModel, emailPageModel);
-		final String orderCode = orderUpdateProcessModel.getOrder().getCode();
-
+		//  TISPRDT-1399 START 
+		final String orderCode = orderUpdateProcessModel.getOrder().getParentReference().getCode();
+	  //  TISPRDT-1399 END 
 		
      if(LOG.isDebugEnabled()){
    	  
