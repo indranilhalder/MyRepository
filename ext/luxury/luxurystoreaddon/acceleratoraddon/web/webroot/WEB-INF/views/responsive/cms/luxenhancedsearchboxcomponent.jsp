@@ -45,7 +45,7 @@
 			</ycommerce:testId>
 		</span>
 		<!-- search category List -->
-		<%--  <div class="select-view">
+		 <div class="select-view">
 			<select id="enhancedSearchCategory" name="searchCategory" class="hide">
 				<optgroup label="All">
 					<option selected="selected" value="all"><spring:theme code="text.all" /></option>
@@ -77,7 +77,7 @@
 					</c:forEach>
 				</optgroup>
 				</c:if>
-			</select>  --%>
+			</select> 
 
 		<%-- 	<div class="select-list enhanced-search">
 				<input type="hidden" id="searchCodeForDropdown" value="${searchCode}" />
