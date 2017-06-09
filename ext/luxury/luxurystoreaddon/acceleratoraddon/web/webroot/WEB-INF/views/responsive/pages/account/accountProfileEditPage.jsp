@@ -249,10 +249,10 @@
 										<div id="errdata"></div>
 									</div>
 							</div>
-							<div class="mb-20 mt-20 select gender halfwidth">
+							<div class="select gender halfwidth">
 								<formElement:formSelectBox idKey="profile.gender" labelKey="profile.gender" path="gender" mandatory="false" skipBlank="false" 
 							 skipBlankMessageKey="profile.select.gender" items="${genderData}" selectCSSClass="form-control"/></div>
-							<div class="mt-10 half fullfwidth">
+							<div class="block-element">
 								<button type="submit" class="blue"><spring:theme code="cart.modal.save.changes" text="Save Changes" /></button>
 							</div>
 						</form:form>

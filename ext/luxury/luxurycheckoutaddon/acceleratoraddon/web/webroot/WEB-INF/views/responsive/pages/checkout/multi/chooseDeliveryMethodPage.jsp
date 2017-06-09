@@ -32,19 +32,16 @@ display: none;
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
-	<%-- <div class="checkout-headline">
+	<!-- <div class="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
-	</div> --%>
+	</div> -->
 	
 	
 	<div class="checkout-content cart checkout delivery">
 	<!-- store url fix -->
 	<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
+	 <div class="main"><div class="col-md-8">
 		<c:if test="${showDeliveryMethod eq true}">
-
-			<%-- <multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
-				progressBarId="${progressBarId}"> 
-				<jsp:body> --%>
 				<script>
 					//window.onload =	function(){
 					//resetConvChargeElsewhere(); Commented for TIS 400
@@ -90,67 +87,68 @@ display: none;
 				</script>
 				   <c:set var="progressBarClass" value="${progressBarClass}" />
                <c:set var="paymentPage" value="${paymentPage}" />
-               <div class="main col-md-8">
-				<div class="delivery-address progress-barcheck  ${progressBarClass}  ${paymentPage}">
-				   <div class="step-1 active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="open-arrow"></i></a><span class="paymentStepDone">dddddddddd</span></div>
-				</div>
-			<div class="deliverymethod clearfix">
-				<ycommerce:testId code="checkoutStepTwo">
-				
-				<form:form id="selectDeliveryMethodForm"
-							action="${request.contextPath}/checkout/multi/delivery-method/check"
-							method="post" commandName="deliveryMethodForm">
-				<!-- TISCR-305 starts -->
-				<!-- TISPRO-625 starts -->
-				<input type="hidden" id="isExpressCheckoutSelected"
-								value="${isExpressCheckoutSelected}" />
-					
-				<!-- TISPRO-625 ends -->
-				<!-- TISCR-305 ends -->
-					<div class="checkout-shipping left-block">
-					
-						<div class="checkout-indent">
-							<%-- <form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm"> --%>
-									<multi-checkout:shipmentItems cartData="${cartData}"
-										defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
-					
-						</div>
+               
+					<div class="delivery-address progress-barcheck  ${progressBarClass}  ${paymentPage}">
+					   <div class="step-1 active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone">dddddddddd</span>
+					   </div>
+					</div>
+					<div class="deliverymethod clearfix">
+						<ycommerce:testId code="checkoutStepTwo">
 						
-						
-						
+						<form:form id="selectDeliveryMethodForm"
+									action="${request.contextPath}/checkout/multi/delivery-method/check"
+									method="post" commandName="deliveryMethodForm">
+								<!-- TISCR-305 starts -->
+								<!-- TISPRO-625 starts -->
+								<input type="hidden" id="isExpressCheckoutSelected"
+												value="${isExpressCheckoutSelected}" />
+									
+								<!-- TISPRO-625 ends -->
+								<!-- TISCR-305 ends -->
+									<div class="checkout-shipping left-block">
+									
+										<div class="checkout-indent">
+											<%-- <form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm"> --%>
+													<multi-checkout:shipmentItems cartData="${cartData}"
+														defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
+									
+										</div>
+										
+										
+										
+									</div>
+									
+									<c:choose>
+										<c:when test="${isExpressCheckoutSelected}"> test ${isExpressCheckoutSelected}
+												<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
+														class="checkout-next">
+														<spring:theme
+															code="checkout.multi.deliveryMethod.expresscheckout.continue"
+															text="Next" />
+													</button>
+										</c:when>
+										<c:otherwise>
+													<button class="button proceed-button" id="deliveryMethodSubmitUp"
+														type="submit" class="checkout-next">
+														<spring:theme code="checkout.multi.deliveryMethod.continue"
+															text="Next" />
+													</button>
+										</c:otherwise>
+									</c:choose>
+									
+							</form:form>
+							
+						</ycommerce:testId>
 					</div>
 					
-					<c:choose>
-						<c:when test="${isExpressCheckoutSelected}"> test ${isExpressCheckoutSelected}
-								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
-										class="checkout-next">
-										<spring:theme
-											code="checkout.multi.deliveryMethod.expresscheckout.continue"
-											text="Next" />
-									</button>
-						</c:when>
-						<c:otherwise>
-									<button class="button proceed-button" id="deliveryMethodSubmitUp"
-										type="submit" class="checkout-next">
-										<spring:theme code="checkout.multi.deliveryMethod.continue"
-											text="Next" />
-									</button>
-						</c:otherwise>
-					</c:choose>
-					
-					</form:form>
-					
-				</ycommerce:testId>
-			</div>
-<%-- </jsp:body>
-			</multi-checkout:checkoutSteps> --%>
 		</c:if>
+		
 
 <div class="deliver-method progress-barcheck ${progressBarClass}  ${paymentPage}">
- <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
-				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+ <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
 				</div>
-				<div class="deliveryaddress">
+				<div class="deliveryaddress ${progressBarClass}">
 
 		<c:if test="${showAddress eq true}">
 			<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
@@ -196,21 +194,20 @@ display: none;
 			</script>
 				<ycommerce:testId code="checkoutStepTwo"> 
 					<div class="checkout-shipping checkTab"> 
-					<c:if test="${not empty deliveryAddresses}"> 
-								
-
+								<c:if test="${not empty deliveryAddresses}"> 
+					
 										<form id="selectAddressForm"
-									action="${request.contextPath}/checkout/multi/delivery-method/select-address"
-									method="get">
+											action="${request.contextPath}/checkout/multi/delivery-method/select-address"
+												method="get">
 											<c:set var='countWork' value='1' />
 											<c:set var='countHome' value='1' />
 							
 						<!-- change here for modified checkout page starts -->
 									
 									<div class="address-accordion smk_accordion acc_with_icon">
- <div class="choose-address accordion_in acc_active">
+ 									<div class="choose-address accordion_in acc_active">
     
-      <div class="acc_head">
+      								<div class="acc_head">
 												<div class="acc_icon_expand"></div>
 												<h2>Choose Address</h2>
 												<p class="cart-items">
@@ -218,174 +215,175 @@ display: none;
 														arguments="${cartData.deliveryItemsQuantity}"
 														text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme>
 												</p>
-											</div>
+									</div>
       
-	  	<div class="acc_content" style="display:block">
+	  	
+	  								<div class="acc_content" style="display:block">
 		
-      <form>
-                <div class="addressList_wrapper">
-                <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
-														varStatus="status">
-														
-		<c:if test="${status.last}">
-				<c:set var="deliveryAddressCount" value="${status.index}"></c:set>
-		</c:if>	
-		
-				
-		<c:choose>
-			<c:when test="${status.index eq 0 ||  status.index eq 1 ||  status.index eq 2 ||  status.index eq 3}"> 
-					 <c:set var="showItem" value="showItem"></c:set>
-					</c:when>
-			<c:otherwise>
-													
-			 <c:set var="showItem" value="hideItem"></c:set>
-			</c:otherwise>
-		</c:choose>	
-																
-        <div class="address-list ${showItem}" id="${singleAddress}">
-        	<c:choose>
-			<c:when test="${deliveryAddress.defaultAddress}">
-          <input type="radio" class="radio1" name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" checked="checked" />
-          <label for="radio_${deliveryAddress.id}"></label>
-           </c:when>
-           <c:otherwise>
-           	<input type="radio" class="radio1"
-																		name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" />
-          	<label for="radio_${deliveryAddress.id}"></label>
-           </c:otherwise>
-           
-           </c:choose>
-           
-          
-          <p class="address"> 
-          <c:choose>
-          <c:when test="${deliveryAddress.addressType eq 'Work'}">
-          <span class="name commercial"
-																			for="radio_${deliveryAddress.id}">
-          <spring:theme
-																				code="checkout.multi.deliveryAddress.commercialAddress"
-																				text="Commercial Addresses" />
-          <c:if test="${deliveryAddress.defaultAddress}">
-          - <spring:theme
-																					code="checkout.multi.deliveryAddress.defaultAddress"
-																					text="Default Addresses" /> <br />
-          </c:if>
-          </span> 
-          
-          <c:set var='countWork' value='${countWork+1}' />
-          </c:when>
-          <c:otherwise>
-           <span class="name residential"
-																			for="radio_${deliveryAddress.id}" ${countHome}>
-           <spring:theme
-																				code="checkout.multi.deliveryAddress.residentialAddress"
-																				text="Residential Addresses" />
-           <c:out value="${countHome}"></c:out>
-           <c:if test="${deliveryAddress.defaultAddress}">
-           - <spring:theme
-																					code="checkout.multi.deliveryAddress.defaultAddress"
-																					text="Default Addresses" /> <br />
-           </c:if>
-           </span>
-           <c:set var='countHome'  value='${countHome+1}' />
-          </c:otherwise>
-          
-          </c:choose>
-          
-          <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}" />
-		  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}" />
-		  
-		  <c:if test="${empty myline2  && empty myline3}">
-		  <span style="padding-bottom: 0px;">
-		  
-		  ${fn:escapeXml(deliveryAddress.title)}</span>	
-		  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
-		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
-																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
-																	</c:if>
-		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br></span>
-		 
-		  </c:if>
-		  
-		  <c:if test="${not empty myline2  && empty myline3}">
-		   <span style="padding-bottom: 0px;">
-		   ${fn:escapeXml(deliveryAddress.title)}</span>
-		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span> <span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
-		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
-																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
-																	</c:if>
-		  <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
-		 
-		  </c:if>
-		  <c:if test="${ empty myline2  && not empty myline3}">
-		  
-		  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
-		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp; 
-		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
-																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
-																	</c:if>
-		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
-		
-		  
-		  </c:if>
-		  
-		  <c:if test="${not empty myline2  && not empty myline3}">
-		  <span style="padding-bottom: 0px;">
-		  ${fn:escapeXml(deliveryAddress.title)}</span>
-																	<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
-		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
-		${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
-		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
-																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
-																	</c:if>
-		 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
-		  
-		  </c:if>
-		  
- 	<c:choose>
- 	<c:when test="${deliveryAddress.defaultAddress}">
- 		<span class="default default-selected">
- 	  <input type="radio" value="Make this my default address"
- 																class="regular-radio" name="default"
- 																id="radio-default2_${deliveryAddress.id}"
- 																data-address-id="${deliveryAddress.id}">				      
- 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
- 	  </span>
- 	</c:when>
- 		</c:choose>
-
-
-		  <span class="default">
-		  <input type="radio" value="Make this my default address"
-																	class="regular-radio" name="default"
-																	id="radio-default2_${deliveryAddress.id}"
-																	data-address-id="${deliveryAddress.id}">				      
-		  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
-		  </span>
-		  </p>
-		  <span class="edit">
-		  <a
-																href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
-																class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
-		  </span>
-		  
-		    <c:set var="adressid" value="${deliveryAddress.id}" />
-		  
-		  <div class="editnewAddresPage" id="${adressid}"></div>
-           </div>
-           </c:forEach>
-		</div> 
-      </form>
+      					<form>
+								                <div class="addressList_wrapper">
+								                <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
+																						varStatus="status">
+																						
+										<c:if test="${status.last}">
+												<c:set var="deliveryAddressCount" value="${status.index}"></c:set>
+										</c:if>	
+										
+												
+										<c:choose>
+											<c:when test="${status.index eq 0 ||  status.index eq 1 ||  status.index eq 2 ||  status.index eq 3}"> 
+													 <c:set var="showItem" value="showItem"></c:set>
+													</c:when>
+											<c:otherwise>
+																					
+											 <c:set var="showItem" value="hideItem"></c:set>
+											</c:otherwise>
+										</c:choose>	
+																								
+								        <div class="address-list ${showItem}" id="${singleAddress}">
+								        	<c:choose>
+												<c:when test="${deliveryAddress.defaultAddress}">
+									          <input type="radio" class="radio1" name="selectedAddressCode"
+																											value="${deliveryAddress.id}"
+																											id="radio_${deliveryAddress.id}" checked="checked" />
+									          <label for="radio_${deliveryAddress.id}"></label>
+									           </c:when>
+									           <c:otherwise>
+									           	<input type="radio" class="radio1"
+																											name="selectedAddressCode"
+																											value="${deliveryAddress.id}"
+																											id="radio_${deliveryAddress.id}" />
+									          	<label for="radio_${deliveryAddress.id}"></label>
+									           </c:otherwise>
+								           
+								           </c:choose>
+								           
+								          
+								          <p class="address"> 
+								          <c:choose>
+								          <c:when test="${deliveryAddress.addressType eq 'Work'}">
+								          <span class="name commercial"
+																											for="radio_${deliveryAddress.id}">
+								          <spring:theme
+																												code="checkout.multi.deliveryAddress.commercialAddress"
+																												text="Commercial Addresses" />
+								          <c:if test="${deliveryAddress.defaultAddress}">
+								          - <spring:theme
+																													code="checkout.multi.deliveryAddress.defaultAddress"
+																													text="Default Addresses" /> <br />
+								          </c:if>
+								          </span> 
+								          
+								          <c:set var='countWork' value='${countWork+1}' />
+								          </c:when>
+								          <c:otherwise>
+								           <span class="name residential"
+																											for="radio_${deliveryAddress.id}" ${countHome}>
+								           <spring:theme
+																												code="checkout.multi.deliveryAddress.residentialAddress"
+																												text="Residential Addresses" />
+								           <c:out value="${countHome}"></c:out>
+								           <c:if test="${deliveryAddress.defaultAddress}">
+								           - <spring:theme
+																													code="checkout.multi.deliveryAddress.defaultAddress"
+																													text="Default Addresses" /> <br />
+								           </c:if>
+								           </span>
+								           <c:set var='countHome'  value='${countHome+1}' />
+								          </c:otherwise>
+								          
+								          </c:choose>
+								          
+								          <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}" />
+										  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}" />
+										  
+										  <c:if test="${empty myline2  && empty myline3}">
+										  <span style="padding-bottom: 0px;">
+										  
+										  ${fn:escapeXml(deliveryAddress.title)}</span>	
+										  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+										 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br></span>
+										 
+										  </c:if>
+										  
+										  <c:if test="${not empty myline2  && empty myline3}">
+										   <span style="padding-bottom: 0px;">
+										   ${fn:escapeXml(deliveryAddress.title)}</span>
+										  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span> <span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+										${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										  <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+										 
+										  </c:if>
+										  <c:if test="${ empty myline2  && not empty myline3}">
+										  
+										  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
+										 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+										 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+										
+										  
+										  </c:if>
+										  
+										  <c:if test="${not empty myline2  && not empty myline3}">
+										  <span style="padding-bottom: 0px;">
+										  ${fn:escapeXml(deliveryAddress.title)}</span>
+																									<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+										${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+										  
+										  </c:if>
+										  
+								 	<c:choose>
+								 	<c:when test="${deliveryAddress.defaultAddress}">
+								 		<span class="default default-selected">
+								 	  <input type="radio" value="Make this my default address"
+								 																class="regular-radio" name="default"
+								 																id="radio-default2_${deliveryAddress.id}"
+								 																data-address-id="${deliveryAddress.id}">				      
+								 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
+								 	  </span>
+								 	</c:when>
+								 		</c:choose>
+								
+								
+										  <span class="default">
+										  <input type="radio" value="Make this my default address"
+																									class="regular-radio" name="default"
+																									id="radio-default2_${deliveryAddress.id}"
+																									data-address-id="${deliveryAddress.id}">				      
+										  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
+										  </span>
+										  </p>
+										  <span class="edit">
+										  <a
+																								href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
+																								class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
+										  </span>
+										  
+										    <c:set var="adressid" value="${deliveryAddress.id}" />
+										  
+										  <div class="editnewAddresPage" id="${adressid}"></div>
+								           </div>
+								           </c:forEach>
+										</div> 
+								 
 	  <%-- <div class="formaddress" style="display: none;">
 		<div class="heading-form">
 														<h3>Add New Address</h3>
@@ -428,36 +426,37 @@ display: none;
 		</c:choose>
 		
 	  
-	 <div class="addNew_wrapper ${deliveryAddressClass}">	  
-	  
-	     <c:if test="${deliveryAddressCount gt 3}">
-	    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
-	    <div class="add-address_viewMore viewMoreContainer">
-        <p>
-														<span class="addsign viewMoreSign">
-        
-        </span>
-        <a class="viewMore"> 
-		View More Address</a>
-        </p>
-		
-      </div>
-	  </c:if>
-	  <div class="addnewAddresPage"></div>
-     <div class="add-address" style="display: block;">
-        <p id="address-form">
-														<span class="addsign pincode-button">
-        
-        </span>
-        <a class="pincode-button"> 
-		<spring:theme code="checkout.multi.deliveryAddress.useNewAddress"
-																text="Use New Address"></spring:theme>
-		</a>
-        </p>
-		
-      </div>
-      
-    </div>
+							 <div class="addNew_wrapper ${deliveryAddressClass}">	  
+							  
+							     <c:if test="${deliveryAddressCount gt 3}">
+							    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
+							    <div class="add-address_viewMore viewMoreContainer">
+						        <p>
+																				<span class="addsign viewMoreSign">
+						        
+						        </span>
+						        <a class="viewMore"> 
+								View More Address</a>
+						        </p>
+								
+						      </div>
+							  </c:if>
+							  <div class="addnewAddresPage"></div>
+						     <div class="add-address" style="display: block;">
+						        <p id="address-form">
+																				<span class="addsign pincode-button">
+						        
+						        </span>
+						        <a class="pincode-button"> 
+								<spring:theme code="checkout.multi.deliveryAddress.useNewAddress"
+																						text="Use New Address"></spring:theme>
+								</a>
+						        </p>
+								
+						      </div>
+						      
+						    </div>
+						    </form>
 	  
 	  </div> 
    
@@ -954,41 +953,24 @@ display: none;
 			</multi-checkout:checkoutSteps>			
 				
 		</c:if>
-		</div>
+		
 		<div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
-		 <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
-				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
-				  <div class="step-3 active in-active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+		 <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				  <div class="step-3"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
 				</div>
-		</div>
+	</div></div>
+		
 	<div class="right-block shipping col-md-4">
 			<div class="checkout-order-summary">
 			<div class="order-summary-header"><h2>Summary</h2></div>
 				<multi-checkout:orderTotals cartData="${cartData}"
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 				<c:if test="${showDeliveryMethod eq true}">
-		<c:choose>
-			<c:when test="${isExpressCheckoutSelected}">
-					<button class="button" id="deliveryMethodSubmit"
-					type="submit" class="checkout-next">
-					<spring:theme
-						code="checkout.multi.deliveryMethod.expresscheckout.continue"
-						text="Next" />
-				</button>
-			</c:when>
-			<c:otherwise>
-						<button class="button" id="deliveryMethodSubmit"
-					type="submit" class="checkout-next">
-					<spring:theme code="checkout.multi.deliveryMethod.continue"
-						text="Next" />
-				</button>
-			</c:otherwise>
-		</c:choose>
+		
 		</c:if>
 		</div>
-		<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ">Proceed to Payment</button>
 	</div>
 </div>
-
 </template:page>
 

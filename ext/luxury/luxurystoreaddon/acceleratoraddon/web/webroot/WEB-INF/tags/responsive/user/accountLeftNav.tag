@@ -8,46 +8,47 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="left-nav">
-<input type="hidden" id="pageName" value="${pageName}">
-<c:set var="isLuxVal" value="${not empty param.isLux?param.isLux:false}"/>
+	<input type="hidden" id="pageName" value="${pageName}">
+	<c:set var="isLuxVal" value="${not empty param.isLux?param.isLux:false}"/>
 	<ul id="leftNavUl">
 		<li id="accountHead">
 			<h2>
 				<spring:theme code="header.flyout.myaccount" />
 			</h2>
-				
+
 		</li>
-		<li id="lnOverView"><a href="<c:url value="/my-account/update-profile?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.overview" /></a></li>
-		<li id="lnOrder"><a href="<c:url value="/my-account/orders?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.orders" /></a></li>
-		<li id="lnSavedCards"><a href="<c:url value="/my-account/payment-details?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.cards" /></a></li>
-		<li id="lnAddress"><a href="<c:url value="/my-account/address-book?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.address" /></a></li>
-		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
-					code="header.flyout.coupons" /></a></li>
+		<li id="lnOverView"><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
+				code="header.flyout.overview" /></a></li>
+		<li id="lnOrder"><a href="<c:url value="/my-account/orders"/>"><spring:theme
+				code="header.flyout.orders" /></a></li>
+		<li id="lnSavedCards"><a href="<c:url value="/my-account/payment-details"/>"><spring:theme
+				code="header.flyout.cards" /></a></li>
+		<li id="lnAddress"><a href="<c:url value="/my-account/address-book"/>"><spring:theme
+				code="header.flyout.address" /></a></li>
+		
 		<li id=""><a href="javascript:;">Frequently asked question</a></li>
 		<li id=""><a href="javascript:;">T&C</a></li>
-		<li id=""><a href="javascript:;">Terms of use</a></li>
+		<li id=""><a href="javascript:;">Terms of use</a></li>	
+		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
+				code="header.flyout.coupons" /></a></li>
 	</ul>
-	 <%-- <ul>
-		<li class="header-coupon">
-			<h2>
-				<spring:theme code="header.flyout.credits" />
-			</h2>
-		</li>
-		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.coupons" /></a></li>
-	</ul> 
-	<ul>
-		<li id="shareHead">
-			<h2>
-				<spring:theme code="header.flyout.share" />
-			</h2>
-		</li>
-		<li id="lnInvite"><a href="<c:url value="/my-account/friendsInvite?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.invite" /></a></li>
+	<%-- <ul>
+       <li class="header-coupon">
+           <h2>
+               <spring:theme code="header.flyout.credits" />
+           </h2>
+       </li>
+       <li id="lnCoupons"><a href="<c:url value="/my-account/coupons?isLux=${isLuxVal}"/>"><spring:theme
+                   code="header.flyout.coupons" /></a></li>
+   </ul>
+   <ul>
+       <li id="shareHead">
+           <h2>
+               <spring:theme code="header.flyout.share" />
+           </h2>
+       </li>
+       <li id="lnInvite"><a href="<c:url value="/my-account/friendsInvite?isLux=${isLuxVal}"/>"><spring:theme
+                   code="header.flyout.invite" /></a></li>
 
-	</ul> --%>
+   </ul> --%>
 </div>

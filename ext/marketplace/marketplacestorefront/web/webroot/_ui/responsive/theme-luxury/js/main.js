@@ -361,7 +361,25 @@ TATA.CommonFunctions = {
 		      return false;
 		    });
 	},
-	
+	deliveryaddressform: function() {
+        
+        $("#address-form").click(function(){	        
+        $.ajax({
+        url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
+        type: "GET",
+        cache: false,
+        dataType: "html",
+        success : function(response) {
+            //alert('here');
+            $(".addnewAddresPage").html(response);
+        },
+        error : function(resp) {
+        }
+
+        });
+        });
+    },
+    
 	init: function () {
         
         var _self = TATA.CommonFunctions;
@@ -378,6 +396,7 @@ TATA.CommonFunctions = {
 		_self.ShopByCatagorySlider();
 		_self.wishlistInit();
 		_self.leftBarAccordian();
+        _self.deliveryaddressform();
 	
     }
 

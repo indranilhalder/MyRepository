@@ -73,20 +73,21 @@
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
-				<div id="address_item" class="info card-list">
-					<!-- Heading for saved Cards -->
-
-					<h2>
+				<h2>
 						<c:if test="${fn:length(addressData)>10}">
 						<ul class="pagination address_pagination">
 						 <li id="prev"></li></ul>
 						</c:if>
 						<spring:theme code="text.account.addressBook.savedAddress"
 							text="My Address" />
-							<span><spring:theme code="text.account.addressBook.savedAddress.details"
-							text="Where in the world are you located? Edit, delete or change your address here." /></span>
+							<%-- <span><spring:theme code="text.account.addressBook.savedAddress.details"
+							text="Where in the world are you located? Edit, delete or change your address here." /></span> --%>
 					</h2>
-					
+				
+				<div id="address_item" class="info card-list">
+					<!-- Heading for saved Cards -->
+
+										
 					
 					
 					
@@ -355,7 +356,7 @@
 				<!-- <div><a name="editaddress">&emsp;</a></div> -->
 				<div class="new-address" id="editaddress">
 					<h2 class="account-only" id="headerAdd"><spring:theme code="text.addressBook.newaddress" text="Add New Address" /></h2>
-					<%-- <h2 class="account-only" id="headerEdit"><spring:theme code="text.addressBook.editaddress" text="Edit Address" /></h2> --%>
+					<h2 class="account-only" id="headerEdit"><spring:theme code="text.addressBook.editaddress" text="Edit Address" /></h2>
 					<ul class="product-block addresses new-form">
 						<li class="item"><form:form action="addNewAddress"
 								method="post" commandName="addressForm" name="addressForm"
