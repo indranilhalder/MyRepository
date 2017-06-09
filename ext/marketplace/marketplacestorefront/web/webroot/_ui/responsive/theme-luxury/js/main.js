@@ -7,31 +7,31 @@ var TATA = window.TATA;
 
 TATA.CommonFunctions = {
 	Toggle: function() {
-		
+
 		$('.toggle-link').on('click', function(){
 			var Target = $(this).data("target-id");
 			$('.toggle-skip').not(Target).removeClass('active');
 			$(Target).toggleClass('active');
 			return false;
 		});
-		
+
 	},
 	DocumentClick: function() {
-		
+
 		var elem = $('.toggle-skip');
-		
+
 		$(document).on("click", function(event){
 			elem.removeClass('active');
 			setTimeout(function(){
 				$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password');
 			},500);
 		});
-		
+
 		elem.click(function(e){
-			e.stopPropagation(); 
+			e.stopPropagation();
 		});
 	},
-	
+
 	MainBanner: function() {
 
         $('.main-banner').slick({
@@ -46,10 +46,10 @@ TATA.CommonFunctions = {
         $('.look-book-carousel').slick();
 
 	},
-	
+
 	BrandSlider: function() {
-		
-		$('.brand-slider').slick({ 
+
+		$('.brand-slider').slick({
 			infinite: true,
 			slidesToShow: 3,
 			slidesToScroll: 3,
@@ -66,12 +66,12 @@ TATA.CommonFunctions = {
 				}
 			]
 		});
-		
+
 	},
 
 	Accordion: function() {
 		//var Acc = $('.accordion').find('.accordion-title');
-		
+
 		$(document).on('click','.accordion .accordion-title', function(){
 	      //Expand or collapse this panel
 	      $(this).toggleClass('active').next().stop().slideToggle(500);
@@ -82,7 +82,7 @@ TATA.CommonFunctions = {
 	    });
 	},
 
-	
+
     ShopByCatagorySlider: function() {
         $('.shop-by-catagory-slider').slick({
             slidesToScroll: 6,
@@ -100,12 +100,29 @@ TATA.CommonFunctions = {
                       slidesToShow: 1,
                       infinite: true,
                       swipe: true,
-                      variableWidth: true 
+                      variableWidth: true
                   }
                 }
             ]
         });
     },
+
+    fillHeartForItemsInWishlist: function(){
+        var wlCode = [];
+        $(".wlCode").each(function(){
+            wlCode.push($(this).text().trim());
+        });
+        $(".plpWlcode").each(function(){
+            var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+
+            for(var i = 0; i < wlCode.length; i++) {
+                if(productCode.toUpperCase() == wlCode[i]) {
+                    console.log("Controle Inside");
+                    $(this).siblings(".add-to-wishlist").addClass("added");
+                }
+            }
+        });
+	},
 
     wishlistInit: function(){
     	$(document).on("click",".add-to-wishlist",function(){
@@ -115,9 +132,9 @@ TATA.CommonFunctions = {
 				TATA.CommonFunctions.addToWishlist($(this).data("product"),this);
 			}
 		});
-        
+
         var wishlistHover;
-        
+
         $("a#myWishlistHeader").on("mouseover touchend", function(e) {
             e.stopPropagation();
             wishlistHover = setTimeout(function(){
@@ -129,33 +146,19 @@ TATA.CommonFunctions = {
                     success: function(html) {
                         $("div.wishlist-info").html(html);
                         /*TPR-844*/
-                        var wlCode = [];
-        				$(".wlCode").each(function(){
-        					wlCode.push($(this).text().trim());
-        				});
-        				$(".plpWlcode").each(function(){
-        					var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
-        					//wlPlpCode.push(productCode.toUpperCase());
-        					
-        					for(var i = 0; i < wlCode.length; i++) {
-        						if(productCode.toUpperCase() == wlCode[i]) {
-        							console.log("Controle Inside");
-        							$(this).siblings(".plp-wishlist").addClass("added");
-        						}
-        					}
-        				});
+                        TATA.CommonFunctions.fillHeartForItemsInWishlist();
         				/*TPR-844*/
                     }
                 });
             },300);
-            
+
         });
-        
+
         $("a#myWishlistHeader").on("mouseleave", function() {
         	clearTimeout(wishlistHover);
         });
     },
-	
+
     urlToProductCode : function(productURL) {
 		var n = productURL.lastIndexOf("-");
 		var productCode=productURL.substring(n+1, productURL.length);

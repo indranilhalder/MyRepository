@@ -19,13 +19,12 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;LuxSearchResultsPageTemplate;$jarResourceCms/structure-view/structure_searchResultsGridPageLuxTemplate.vm                         
 
-#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;WishListSlot;Wish List;true;MyWishList
 #;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
 #;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
-#;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true          
 ;;LuxProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true          
 ;;LuxSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true          
 ;;LuxTopHeaderSlot-SearchResultsGrid;TopHeaderSlot;;TopHeaderSlot;true          
@@ -37,11 +36,12 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;LuxNavigationBar-SearchResultsGrid;NavigationBar;;NavigationBarSlot;true          
 ;;LuxWhyShopOnLuxury-SearchResultsGrid;WhyShopOnLuxury;;WhyShopOnLuxury;true
 ;;LuxFooter-SearchResultsGrid;Footer;;FooterSlot;true          
-;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true          
+;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true
+;;WishList-SearchResultsGrid;WishList;;WishListSlot;true
 
-                                     
+
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
-;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;luxurySearchResultsPage
+;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
 #;;LuxProductsListingPageMSH12;Luxury Products Listing Page For MSH12;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1236106
 #;;LuxProductsListingPageMSH13;Luxury Products Listing Page For MSH13;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1236105
                  
