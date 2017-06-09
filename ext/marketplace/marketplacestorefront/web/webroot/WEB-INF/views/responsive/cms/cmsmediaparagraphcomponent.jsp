@@ -7,14 +7,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
-
-
-<!-- Optional theme -->
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css"> -->
-
-
 <%-- <div class="content bestCollections-content">
   <div class="bestCollectionsImage"><img src="${media.url}" alt="${media.altText}"/></div>
  <br><b>${content}</b>
