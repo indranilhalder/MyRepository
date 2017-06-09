@@ -31491,7 +31491,7 @@ header .content .search input {
 /* Click to call changes end */
 .checkout-success.confirmation > .wrapper{
     overflow: hidden;
-    background-image: url(../images/CamelSeal_WaterMark.png);
+    /* background-image: url(../images/CamelSeal_WaterMark.png); */
     background-repeat: no-repeat;
     background-position: center;
 }
