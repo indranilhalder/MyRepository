@@ -112,15 +112,17 @@ public class AddProductCategoryInterceptor implements PrepareInterceptor
 				//{
 				//	product.setProductCategoryType(entry.getValue());
 				//}
+				// IQA revert back due to TISKIDK-2266
 
-				if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() > 5)
-				{
-					product.setProductCategoryTypeL2(entry.getValue());
-				}
-				else
+				if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() <= 5)
 				{
 					product.setProductCategoryType(entry.getValue());
 				}
+				else if (category.getCode().startsWith(entry.getKey()) && entry.getKey().length() > 5)
+				{
+					product.setProductCategoryTypeL2(entry.getValue());
+				}
+
 				//change For TPR:4847: size facet clubbing for kidswear end
 			}
 		}
