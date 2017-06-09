@@ -37,7 +37,7 @@
 	</div>	
 
 		<form id="selectAddressForm"
-			action="${request.contextPath}/checkout/single/select-address"
+			action="/checkout/single/select-address"
 			method="get">
 			<c:set var='countWork' value='1' />
 			<c:set var='countHome' value='1' />
@@ -68,7 +68,7 @@
 
 								<div class="address-list ${showItem}">
 									<span class="edit"> <a
-										href="${request.contextPath}/checkout/single/edit-address/${deliveryAddress.id}"
+										href="/checkout/single/edit-address/${deliveryAddress.id}"
 										class=""
 										onclick="ACC.singlePageCheckout.getEditAddress(this,event);"
 										id="link_${deliveryAddress.id}"></a>

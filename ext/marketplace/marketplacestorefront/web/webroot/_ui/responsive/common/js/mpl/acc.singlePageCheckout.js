@@ -1507,13 +1507,86 @@ ACC.singlePageCheckout = {
 	
 	saveAndSetNewDeliveryAddress:function()
 	{
-		var form=$("#selectAddressFormMobile")
-		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
+		if(validationResult!=false)
+		{
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+			var data=$("form#selectAddressFormMobile").serialize().replace(/\+/g,'%20');
+			
+			ACC.singlePageCheckout.showAjaxLoader();
+			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+	        
+	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});
+	        
+	        xhrResponse.done(function(data, textStatus, jqXHR) {
+	        	if (jqXHR.responseJSON) {
+	                if(data.type!="response")
+	                {
+	                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+	                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+	                }
+	                if(data.type=="response")
+	                {
+	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+	                }
+	            }
+			});
+	        
+	        xhrResponse.always(function(){
+			});
+		}
+		return false;
+	},
+	
+	setDeliveryAddress:function()
+	{
+		var validationResult=ACC.singlePageCheckout.validateAddressForm();
+		if(validationResult!=false)
+		{
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+			var data=$("form#selectAddressFormMobile").serialize().replace(/\+/g,'%20');
+			
+			ACC.singlePageCheckout.showAjaxLoader();
+			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+	        
+	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});
+	        
+	        xhrResponse.done(function(data, textStatus, jqXHR) {
+	        	if (jqXHR.responseJSON) {
+	                if(data.type!="response")
+	                {
+	                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+	                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+	                }
+	                if(data.type=="response")
+	                {
+	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+	                }
+	            }
+			});
+	        
+	        xhrResponse.always(function(){
+			});
+		}
+		return false;
 	}
 }
 //Calls to be made on dom ready.
 $(document).ready(function(){
+	var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
+	$(window).on("resize",function(){
+		var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
+		if(onLoadIsResponsive!=onSizeChangeIsResponsive)
+		{
+			location.reload(true);
+		}
+	});
 	if(ACC.singlePageCheckout.getIsResponsive())
 	{
 		var pageType=$("#pageType").val();

@@ -24,7 +24,7 @@
 	<c:if test="${not empty deliveryAddresses}">	
 
 		<form id="selectAddressFormMobile"
-			action="${request.contextPath}/checkout/single/select-address"
+			action="/checkout/single/select-address"
 			method="get">
 			<!-- change here for modified checkout page starts -->
 						<!-- Div to display ajax failure messages -->
