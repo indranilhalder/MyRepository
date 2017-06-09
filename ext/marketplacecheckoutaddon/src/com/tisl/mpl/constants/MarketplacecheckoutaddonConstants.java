@@ -195,6 +195,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLRESPONSIVEDELIVERYNEWADDRESSURL = "/new-address-responsive";
 	public static final String MPLSHOWMESSAGE = "/message";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
+	public static final String MPLRESPONSIVESELECTADDRESSURL = "/select-address-responsive";
 	public static final String CHECKLOCATIONRESTRICTEDPINCODE = "/delModesOnAddrSelect/{pincode:.*}";
 	public static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 	public static final String CALCULATEDELIVERYCOST = "/calculateDeliveryCost/{deliveryCost:.*}";
