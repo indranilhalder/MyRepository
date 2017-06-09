@@ -1,0 +1,192 @@
+
+.checkout-content{
+    background: transparent;
+    margin-top: 20px;
+    
+    .progress-barcheck{
+        .step-1, .step-2, .step-3{
+            border: 1px solid #ccc;
+            padding:30px;
+            width: 100%;
+            display: block;
+            
+            a{
+                display: block;
+                width: 100%;
+                text-decoration: none;
+                font-weight: 400;
+                
+                i.open-arrow{
+                    background: $Sprite_icon no-repeat -2185px -11px;
+                    width: 29px;
+                    height: 15px;
+                    display: block;
+                    float: right;
+                }
+                i.close-arrow{
+                    background: $Sprite_icon no-repeat -2146px -12px;
+                    width: 29px;
+                    height: 15px;
+                    display: block;
+                    float: right;
+                }
+            }
+        }
+    } 
+    .deliver-method.choosePage .step-1, .payment.choosePage .step-1,  .payment.choosePage .step-2, .payment.selectPage .step-1, .payment.selectPage .step-2{
+        display:none;
+    }
+    
+    .delivery-address.choosePage .step-1{
+        border-radius: 5px 5px 0px 0px;
+    }
+    
+    
+    .deliver-method.choosePage .step-2, .deliver-method.choosePage .step-3{
+        border-radius: 5px 5px 5px 5px;
+    }
+    
+    .checkout-content{
+        border:0px;
+        box-shadow: none;
+    }
+    .checkout-items{
+        padding: 0px;
+        padding-top: 10px;
+        
+        li{
+                list-style: none;
+            } 
+        
+        .delivery_options{
+            margin-top: 20px;
+        }
+    }
+    .deliverymethod{
+       background: #f9f9f9;
+        border-left: 1px solid #ccc;
+        border-right:1px solid #ccc;
+        padding-bottom: 10px;
+        border-radius: 0px 0px 5px 5px;
+        
+        .details.product{
+            h3{
+                font-size: 16px;
+            }
+            
+        }
+        
+        .header, .checkout-headers{
+            display: none;
+        }
+        .item.delivery_options{
+            
+            ul{
+                padding: 0px;
+                
+                li>div{
+                    margin-left: 30px;
+                }
+            }
+            
+            .product-brand-name{
+                
+            }
+            
+            li{
+                list-style: none;
+            }
+            .thumb, .details{
+                display: inline-block;
+                vertical-align: top;
+                
+                .product-brand-name{
+                    margin: 0px;
+                }
+            }
+            .thumb{
+                margin-right: 10px;
+                margin-top: 10px;
+            }
+            .quantity{
+                margin-left: 170px;
+                margin-bottom: 15px;
+            }
+            .delivery{
+                border-top: 1px solid #ccc;
+                padding-top: 15px;                
+                padding-left: 30px;
+            }
+        }
+        .proceed-button{
+            float: right;  
+            margin-right: 10px;
+           
+        }
+        .button{
+            padding: 8px 10px;
+            font-size: 18px;
+            line-height: 1.33333;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            color: #fff;
+           border-color: transparent;
+        }
+    }
+ }
+.right-block .checkout-order-summary{
+    border: 1px solid #ccc;  
+    border-radius: 5px 5px 5px 5px;
+    
+    .order-summary-header{
+        border-bottom: 1px solid #ccc;
+        h2{
+            text-align: center;
+            margin: 15px;
+            font-size: 18px
+        }
+    }
+    
+    .subtotals{
+        margin: 15px;
+        
+        ul{
+            margin: 0px;
+            padding: 0px;
+        }
+        li{
+            list-style: none;
+        }
+        .subTotalSpan, .amt, #promotionApplied span, .shipping span , #convChargeFieldId span{
+            width: 49%;
+            display: inline-block;
+            
+        }
+        .amt, #promotion, #deliveryCostSpanId, #convChargeField{
+            text-align: right;
+            float: none!important;
+        }
+        #couponApplied{
+            display: none;
+        }        
+    }
+    .outstanding-totalss{
+        margin: 15px;
+        padding: 15px 0px 0px 0px;
+        border-top: 1px solid #ccc;
+        font-size: 20px;
+        
+        li{
+            list-style: none;
+        }
+        
+        .outstanding-amounts{
+            font-size: 14px;
+            font-weight: 600;
+            .amt{
+                float: right;
+            }
+            
+        }
+    }
+}

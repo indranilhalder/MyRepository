@@ -35,14 +35,16 @@ display: none;
 	<%-- <div class="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
 	</div> --%>
-	<div class="checkout-content cart checkout wrapper delivery">
+	
+	
+	<div class="checkout-content cart checkout delivery">
 	<!-- store url fix -->
 	<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
 		<c:if test="${showDeliveryMethod eq true}">
 
-			<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
-				progressBarId="${progressBarId}">
-				<jsp:body>
+			<%-- <multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
+				progressBarId="${progressBarId}"> 
+				<jsp:body> --%>
 				<script>
 					//window.onload =	function(){
 					//resetConvChargeElsewhere(); Commented for TIS 400
@@ -86,6 +88,13 @@ display: none;
 						startTimer();
 					}
 				</script>
+				   <c:set var="progressBarClass" value="${progressBarClass}" />
+               <c:set var="paymentPage" value="${paymentPage}" />
+               <div class="main col-md-8">
+				<div class="delivery-address progress-barcheck  ${progressBarClass}  ${paymentPage}">
+				   <div class="step-1 active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="open-arrow"></i></a><span class="paymentStepDone">dddddddddd</span></div>
+				</div>
+			<div class="deliverymethod clearfix">
 				<ycommerce:testId code="checkoutStepTwo">
 				
 				<form:form id="selectDeliveryMethodForm"
@@ -95,23 +104,7 @@ display: none;
 				<!-- TISPRO-625 starts -->
 				<input type="hidden" id="isExpressCheckoutSelected"
 								value="${isExpressCheckoutSelected}" />
-					<c:choose>
-						<c:when test="${isExpressCheckoutSelected}">
-								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
-										class="checkout-next">
-										<spring:theme
-											code="checkout.multi.deliveryMethod.expresscheckout.continue"
-											text="Next" />
-									</button>
-						</c:when>
-						<c:otherwise>
-									<button class="button proceed-button" id="deliveryMethodSubmitUp"
-										type="submit" class="checkout-next">
-										<spring:theme code="checkout.multi.deliveryMethod.continue"
-											text="Next" />
-									</button>
-						</c:otherwise>
-					</c:choose>
+					
 				<!-- TISPRO-625 ends -->
 				<!-- TISCR-305 ends -->
 					<div class="checkout-shipping left-block">
@@ -127,14 +120,37 @@ display: none;
 						
 					</div>
 					
+					<c:choose>
+						<c:when test="${isExpressCheckoutSelected}"> test ${isExpressCheckoutSelected}
+								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
+										class="checkout-next">
+										<spring:theme
+											code="checkout.multi.deliveryMethod.expresscheckout.continue"
+											text="Next" />
+									</button>
+						</c:when>
+						<c:otherwise>
+									<button class="button proceed-button" id="deliveryMethodSubmitUp"
+										type="submit" class="checkout-next">
+										<spring:theme code="checkout.multi.deliveryMethod.continue"
+											text="Next" />
+									</button>
+						</c:otherwise>
+					</c:choose>
+					
 					</form:form>
 					
 				</ycommerce:testId>
-			</jsp:body>
-			</multi-checkout:checkoutSteps>
+			</div>
+<%-- </jsp:body>
+			</multi-checkout:checkoutSteps> --%>
 		</c:if>
 
-
+<div class="deliver-method progress-barcheck ${progressBarClass}  ${paymentPage}">
+ <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+				</div>
+				<div class="deliveryaddress">
 
 		<c:if test="${showAddress eq true}">
 			<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
@@ -192,7 +208,7 @@ display: none;
 						<!-- change here for modified checkout page starts -->
 									
 									<div class="address-accordion smk_accordion acc_with_icon">
-  <div class="choose-address accordion_in acc_active">
+ <div class="choose-address accordion_in acc_active">
     
       <div class="acc_head">
 												<div class="acc_icon_expand"></div>
@@ -360,7 +376,7 @@ display: none;
 		  <span class="edit">
 		  <a
 																href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
-																class="edit_address" id="link_${deliveryAddress.id}"></a>
+																class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
 		  </span>
 		  
 		    <c:set var="adressid" value="${deliveryAddress.id}" />
@@ -685,9 +701,9 @@ display: none;
 
 
 	<c:if test="${showEditAddress eq true}">
-		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
+<%-- 		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
 			progressBarId="${progressBarId}">
-			<jsp:body>
+			<jsp:body> --%>
 					<script>
 						//TISST-13010
 						$(document).ready(function() {
@@ -805,8 +821,8 @@ display: none;
 							</div>
 						</div>
 					</ycommerce:testId>
-				</jsp:body>
-		</multi-checkout:checkoutSteps>
+			<%--	</jsp:body>
+		 </multi-checkout:checkoutSteps> --%>
 	</c:if>
 
 
@@ -938,8 +954,16 @@ display: none;
 			</multi-checkout:checkoutSteps>			
 				
 		</c:if>
-	<div class="right-block shipping">
+		</div>
+		<div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
+		 <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+				  <div class="step-3 active in-active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="close-arrow"></i></a><span class="paymentStepDone"></span></div>
+				</div>
+		</div>
+	<div class="right-block shipping col-md-4">
 			<div class="checkout-order-summary">
+			<div class="order-summary-header"><h2>Summary</h2></div>
 				<multi-checkout:orderTotals cartData="${cartData}"
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 				<c:if test="${showDeliveryMethod eq true}">
@@ -962,9 +986,9 @@ display: none;
 		</c:choose>
 		</c:if>
 		</div>
-		
+		<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" ">Proceed to Payment</button>
 	</div>
-	
-	</div>
+</div>
 
 </template:page>
+
