@@ -80,11 +80,17 @@ public interface ExchangeGuideService
 
 	public boolean changePincode(final String pincode, final String exchangeId);
 
-	public boolean removeFromTransactionTable(final String exchangeId);
 
 	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId);
 
 	public boolean addToExchangeTable(final ExchangeTransactionModel ex);
+
+
+	public String getExchangeRequestID(final List<ExchangeTransactionModel> exTraxList, final boolean isInternal,
+			final String reason);
+
+
+	public boolean removeFromTransactionTable(final String exchangeId, final String reason);
 
 	/**
 	 * @param childOrders

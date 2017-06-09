@@ -208,11 +208,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
 	@Override
-	public boolean removeFromTransactionTable(final String exchangeId)
+	public boolean removeFromTransactionTable(final String exchangeId, final String reason)
 	{
 		boolean isSaved = false;
 		final List<ExchangeTransactionModel> exList = getTeporaryExchangeModelforId(exchangeId);
-		final String id = getExchangeRequestID(exList, true);
+		final String id = getExchangeRequestID(exList, true, reason);
 		if (StringUtils.isNotBlank(id))
 		{
 			isSaved = true;
@@ -293,7 +293,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		return exReqId;
 	}
 
-	public String getExchangeRequestID(final List<ExchangeTransactionModel> exTraxList, final boolean isInternal)
+	@Override
+	public String getExchangeRequestID(final List<ExchangeTransactionModel> exTraxList, final boolean isInternal,
+			final String reason)
 	{
 		final List<ExchangeModel> exModList = new ArrayList<>();
 		final List<ExchangeTransactionModel> exTraxRemovList = new ArrayList();
@@ -311,7 +313,14 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			exMod.setSellerOrderID(exTrax.getCartguid());
 			exMod.setTransactiondId(exTrax.getCartguid());
 			exMod.setUssid(exTrax.getUssid());
-			exMod.setExchangeRemovalReason("Exchange Removed from Cart/Delivery Page due to Pincode Servicability");
+			if (StringUtils.isNotEmpty(reason))
+			{
+				exMod.setExchangeRemovalReason(reason);
+			}
+			else
+			{
+				exMod.setExchangeRemovalReason("Exchange Removed from Cart/Delivery Page due to Pincode Servicability");
+			}
 			exModList.add(exMod);
 			exTraxRemovList.add(exTrax);
 
@@ -346,7 +355,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		}
 		System.out.println(removeExchangeIdList);
 		modelService.saveAll(entryUpdate);
-		removeFromTransactionTable(removeExchangeIdList);
+		removeFromTransactionTable(removeExchangeIdList, null);
 
 	}
 

@@ -57,9 +57,10 @@ public class MplCartWebServiceImplTest
 		final boolean resetRequired = true;
 		final List<GetWishListProductWsDTO> listProducts = new ArrayList<GetWishListProductWsDTO>();
 		final List<PinCodeResponseData> pincodeList = new ArrayList<PinCodeResponseData>();
+		final String pincode = "";
 
 		Mockito.when(
 				mplCartWebService.productDetails(abstractOrderModel, deliveryModeDataMap, isPinCodeCheckRequired, resetRequired,
-						pincodeList)).thenReturn(listProducts);
+						pincodeList, pincode)).thenReturn(listProducts);
 	}
 }

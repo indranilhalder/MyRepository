@@ -21,9 +21,9 @@ public interface ExchangeGuideFacade
 {
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getDistinctL4()
 	 */
 	public boolean isExchangable(String categoryCode);
@@ -52,7 +52,7 @@ public interface ExchangeGuideFacade
 
 	public boolean changePincode(final String pincode, final String exchangeId);
 
-	public boolean removeFromTransactionTable(final String exchangeId);
+	public boolean removeFromTransactionTable(final String exchangeId, final String reason);
 
 	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId);
 

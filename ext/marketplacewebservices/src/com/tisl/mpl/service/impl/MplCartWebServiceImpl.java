@@ -2777,7 +2777,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
@@ -2816,6 +2816,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					if (productCode.equals(productModel.getCode()) && USSID.equals(pr.getSelectedUSSID()))
 					{
 						final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+						if (StringUtils.isNotEmpty(pr.getExchangeId()))
+						{
+							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9305);
+						}
 						if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
 						{
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);

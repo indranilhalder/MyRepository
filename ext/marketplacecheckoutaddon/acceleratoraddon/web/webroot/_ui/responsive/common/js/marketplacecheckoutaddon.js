@@ -3178,6 +3178,7 @@ function checkPincodeServiceability(buttonType)
  			else
  				{
  					populatePincodeDeliveryMode(response,buttonType);
+ 					populateIsExchangeApplied(response);
  					reloadpage(selectedPincode,buttonType);
  				}
  			
@@ -4544,3 +4545,15 @@ function redirectToCheckoutLogin(){
 	window.location=ACC.config.encodedContextPath + "/checkout/multi/checkoutlogin/login";
 }
 
+function populateIsExchangeApplied(response)
+{
+	var exchangeId = $('#exc_cart').val();
+	if(exchangeId !== null && exchangeId !== undefined && response)
+		{
+		var values=response.split("|");
+		var isServicable=values[0];
+		var selectedPincode=values[1];
+		var deliveryModeJsonMap=values[2];
+		alert(deliveryModeJsonMap);
+		}
+}
