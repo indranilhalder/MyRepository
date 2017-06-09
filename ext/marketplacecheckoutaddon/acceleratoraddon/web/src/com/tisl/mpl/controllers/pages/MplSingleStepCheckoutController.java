@@ -871,81 +871,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute(MarketplacecheckoutaddonConstants.NOADDRESS,
 					Boolean.valueOf(getCheckoutFlowFacade().hasNoDeliveryAddress()));
 
-			final AddressData newAddress = new AddressData();
-
-			final String fullAddress = addressForm.getLine1();
-
-			String addressLine1 = "";
-			String addressLine2 = "";
-			String addressLine3 = "";
-
-
-
-			if (fullAddress.length() <= 40)
-			{
-				addressLine1 = fullAddress.substring(0, fullAddress.length());
-			}
-			else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
-			{
-				addressLine1 = fullAddress.substring(0, 40);
-				addressLine2 = fullAddress.substring(40, fullAddress.length());
-			}
-			else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
-			{
-				addressLine1 = fullAddress.substring(0, 40);
-				addressLine2 = fullAddress.substring(40, 80);
-				addressLine3 = fullAddress.substring(80, fullAddress.length());
-			}
-			newAddress.setLine1(addressLine1);
-			newAddress.setLine2(addressLine2);
-			newAddress.setLine3(addressLine3);
-			newAddress.setId(addressForm.getAddressId());
-			newAddress.setTitleCode(addressForm.getTitleCode());
-			newAddress.setFirstName(addressForm.getFirstName());
-			newAddress.setLastName(addressForm.getLastName());
-			/*
-			 * newAddress.setLine1(addressForm.getLine1()); newAddress.setLine2(addressForm.getLine2());
-			 * newAddress.setLine3(addressForm.getLine3());
-			 */
-
-			newAddress.setTown(addressForm.getTownCity());
-			newAddress.setPostalCode(addressForm.getPostcode());
-			newAddress.setPhone(addressForm.getMobileNo());
-			newAddress.setBillingAddress(false);
-			newAddress.setShippingAddress(true);
-			newAddress.setAddressType(addressForm.getAddressType());
-
-			newAddress.setLocality(addressForm.getLocality());
-			newAddress.setState(addressForm.getState());
-			if (StringUtils.isNotBlank(addressForm.getLandmark())
-					&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
-			{
-				newAddress.setLandmark(addressForm.getLandmark());
-			}
-			else if (StringUtils.isNotBlank(addressForm.getOtherLandmark()))
-			{
-				newAddress.setLandmark(addressForm.getOtherLandmark());
-			}
-			if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
-			{
-				final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
-				newAddress.setCountry(countryData);
-			}
-			if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
-			{
-				final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
-				newAddress.setRegion(regionData);
-			}
-
-			if (addressForm.getSaveInAddressBook() == null)
-			{
-				newAddress.setVisibleInAddressBook(true);
-			}
-			else
-			{
-				newAddress.setVisibleInAddressBook(Boolean.TRUE.equals(addressForm.getSaveInAddressBook()));
-			}
-
 			final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			if (StringUtils.isEmpty(sessionPincode))
 			{
@@ -962,13 +887,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
-
-			newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
-					|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
-			accountAddressFacade.editAddress(newAddress);
-
-			//getCheckoutFacade().setDeliveryAddress(newAddress);
-			getMplCustomAddressFacade().setDeliveryAddress(newAddress);
+			saveAndSetDeliveryAddress(addressForm, true);
 
 			//getSessionService().setAttribute("selectedAddress", newAddress.getId());
 			//Recalculating Cart Model
@@ -1270,7 +1189,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
 			throws CMSItemNotFoundException
 	{
-		final CartModel oModel = getCartService().getSessionCart();
 		try
 		{
 			if (getUserFacade().isAnonymousUser())
@@ -1296,87 +1214,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
 					model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
 				}
-
-				final String fullAddress = addressForm.getLine1();
-
-
-				final AddressData newAddress = new AddressData();
-
-				String addressLine1 = "";
-				String addressLine2 = "";
-				String addressLine3 = "";
-
-				if (fullAddress.length() <= 40)
-				{
-					addressLine1 = fullAddress.substring(0, fullAddress.length());
-				}
-				else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
-				{
-					addressLine1 = fullAddress.substring(0, 40);
-					addressLine2 = fullAddress.substring(40, fullAddress.length());
-				}
-				else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
-				{
-					addressLine1 = fullAddress.substring(0, 40);
-					addressLine2 = fullAddress.substring(40, 80);
-					addressLine3 = fullAddress.substring(80, fullAddress.length());
-				}
-
-				newAddress.setLine1(addressLine1);
-				newAddress.setLine2(addressLine2);
-				newAddress.setLine3(addressLine3);
-				newAddress.setTitleCode(addressForm.getTitleCode());
-				newAddress.setFirstName(addressForm.getFirstName());
-				newAddress.setLastName(addressForm.getLastName());
-				//				newAddress.setLine1(addressForm.getLine1());
-				//				newAddress.setLine2(addressForm.getLine2());
-				//				newAddress.setLine3(addressForm.getLine3());
-				newAddress.setTown(addressForm.getTownCity());
-				newAddress.setPostalCode(addressForm.getPostcode());
-				newAddress.setBillingAddress(false);
-				newAddress.setShippingAddress(true);
-				newAddress.setAddressType(addressForm.getAddressType());
-				newAddress.setState(addressForm.getState());
-				newAddress.setPhone(addressForm.getMobileNo());
-				newAddress.setLocality(addressForm.getLocality());
-				// R2.3 changes
-				if (StringUtils.isNotBlank(addressForm.getLandmark())
-						&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
-				{
-					newAddress.setLandmark(addressForm.getLandmark());
-				}
-				else if (StringUtils.isNotBlank(addressForm.getOtherLandmark()))
-				{
-					newAddress.setLandmark(addressForm.getOtherLandmark());
-				}
-
-				if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
-				{
-					final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
-					newAddress.setCountry(countryData);
-				}
-				if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
-				{
-					final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
-					newAddress.setRegion(regionData);
-				}
-				if (addressForm.getSaveInAddressBook() != null)
-				{
-					newAddress.setVisibleInAddressBook(addressForm.getSaveInAddressBook().booleanValue());
-				}
-				else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
-				{
-					newAddress.setDefaultAddress(true);
-					newAddress.setVisibleInAddressBook(true);
-				}
-
-				if (null != oModel && null != oModel.getUser())
-				{
-					accountAddressFacade.addaddress(newAddress, (CustomerModel) oModel.getUser());
-				}
-				newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
-						|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
-				getMplCustomAddressFacade().setDeliveryAddress(newAddress);
+				saveAndSetDeliveryAddress(addressForm, false);
 
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 				if (StringUtils.isEmpty(sessionPincode))
@@ -1415,6 +1253,162 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error("Exception occured while saving new address :", e);
 		}
 		return REDIRECT_PREFIX + "/checkout/single/choose";
+	}
+
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVEDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
+	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm, final BindingResult bindingResult)
+	{
+		final JSONObject jsonObj = new JSONObject();
+		try
+		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+			final String errorMsg = mplAddressValidator.validate(addressForm);
+			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
+					|| bindingResult.hasErrors())
+			{
+				jsonObj.put("displaymessage", errorMsg);
+				jsonObj.put("type", "errorCode");
+				return jsonObj;
+			}
+			else
+			{
+				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				if (StringUtils.isEmpty(sessionPincode))
+				{
+					jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
+					jsonObj.put("type", "redirect");
+					return jsonObj;
+				}
+				if (!(addressForm.getPostcode().equals(sessionPincode)))
+				{
+					jsonObj.put("displaymessage", MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE);
+					jsonObj.put("type", "error");
+					return jsonObj;
+				}
+				saveAndSetDeliveryAddress(addressForm, false);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions  while  saving new address ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  while saving new address ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while saving new address :", e);
+		}
+		return jsonObj;
+	}
+
+	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress)
+	{
+		CartModel oModel = null;
+		if (!isEditAddress)//For add address
+		{
+			oModel = getCartService().getSessionCart();
+		}
+		final String fullAddress = addressForm.getLine1();
+		final AddressData newAddress = new AddressData();
+
+		String addressLine1 = "";
+		String addressLine2 = "";
+		String addressLine3 = "";
+
+		if (fullAddress.length() <= 40)
+		{
+			addressLine1 = fullAddress.substring(0, fullAddress.length());
+		}
+		else if (fullAddress.length() <= 80 && fullAddress.length() > 40)
+		{
+			addressLine1 = fullAddress.substring(0, 40);
+			addressLine2 = fullAddress.substring(40, fullAddress.length());
+		}
+		else if (fullAddress.length() > 80 && fullAddress.length() <= 120)
+		{
+			addressLine1 = fullAddress.substring(0, 40);
+			addressLine2 = fullAddress.substring(40, 80);
+			addressLine3 = fullAddress.substring(80, fullAddress.length());
+		}
+
+		newAddress.setLine1(addressLine1);
+		newAddress.setLine2(addressLine2);
+		newAddress.setLine3(addressLine3);
+		if (isEditAddress)//For edit address
+		{
+			newAddress.setId(addressForm.getAddressId());
+		}
+		newAddress.setTitleCode(addressForm.getTitleCode());
+		newAddress.setFirstName(addressForm.getFirstName());
+		newAddress.setLastName(addressForm.getLastName());
+		//				newAddress.setLine1(addressForm.getLine1());
+		//				newAddress.setLine2(addressForm.getLine2());
+		//				newAddress.setLine3(addressForm.getLine3());
+		newAddress.setTown(addressForm.getTownCity());
+		newAddress.setPostalCode(addressForm.getPostcode());
+		newAddress.setBillingAddress(false);
+		newAddress.setShippingAddress(true);
+		newAddress.setAddressType(addressForm.getAddressType());
+		newAddress.setState(addressForm.getState());
+		newAddress.setPhone(addressForm.getMobileNo());
+		newAddress.setLocality(addressForm.getLocality());
+		// R2.3 changes
+		if (StringUtils.isNotBlank(addressForm.getLandmark())
+				&& !addressForm.getLandmark().equalsIgnoreCase(MarketplacecommerceservicesConstants.OTHER))
+		{
+			newAddress.setLandmark(addressForm.getLandmark());
+		}
+		else if (StringUtils.isNotBlank(addressForm.getOtherLandmark()))
+		{
+			newAddress.setLandmark(addressForm.getOtherLandmark());
+		}
+
+		if (StringUtils.isNotEmpty(addressForm.getCountryIso()))
+		{
+			final CountryData countryData = getI18NFacade().getCountryForIsocode(addressForm.getCountryIso());
+			newAddress.setCountry(countryData);
+		}
+		if (StringUtils.isNotEmpty(addressForm.getRegionIso()))
+		{
+			final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
+			newAddress.setRegion(regionData);
+		}
+		if (addressForm.getSaveInAddressBook() != null)
+		{
+			newAddress.setVisibleInAddressBook(Boolean.TRUE.equals(addressForm.getSaveInAddressBook()));
+		}
+		else if (getCheckoutCustomerStrategy().isAnonymousCheckout())
+		{
+			newAddress.setDefaultAddress(true);
+			newAddress.setVisibleInAddressBook(true);
+		}
+		else
+		{
+			newAddress.setVisibleInAddressBook(true);
+		}
+		if (isEditAddress)//For edit address
+		{
+			accountAddressFacade.editAddress(newAddress);
+		}
+		else
+		{//For add address
+			if (null != oModel && null != oModel.getUser())
+			{
+				accountAddressFacade.addaddress(newAddress, (CustomerModel) oModel.getUser());
+			}
+		}
+		newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
+				|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
+		getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 	}
 
 	public String prepareModelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,

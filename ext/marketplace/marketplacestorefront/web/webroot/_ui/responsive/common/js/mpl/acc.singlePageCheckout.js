@@ -140,7 +140,7 @@ ACC.singlePageCheckout = {
 	
 	postEditAddress:function(element){
 		var form=$(element).closest("form");
-		var validationResult=ACC.singlePageCheckout.validateAddressForm(form);
+		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
 		{			
 			var addressId=$(form).find(" #addressId").val();
@@ -199,10 +199,47 @@ ACC.singlePageCheckout = {
         
 		return false;	
 	},
+	getMobileAddAddress:function(){
+		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
+		if(formAlreadyLoaded=="false")
+		{
+			ACC.singlePageCheckout.showAjaxLoader();
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
+			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+	        
+	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});
+	        
+	        xhrResponse.done(function(data) {
+	        	//Unchecking the radio button of saved addresses
+	        	$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+	        	$(".mobile_add_address").addClass("form_open");
+				$(".new-address-form-mobile").html(data);
+				$(".new-address-form-mobile").attr("data-loaded","true");
+				$(".new-address-form-mobile").slideDown();
+				$("#singlePageAddressPopup #modalBody").html('');
+				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
+			});
+	        
+	        xhrResponse.always(function(){
+	        	ACC.singlePageCheckout.hideAjaxLoader();
+			});
+		}
+		else
+		{
+			ACC.singlePageCheckout.showAjaxLoader();
+			$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+        	$(".mobile_add_address").addClass("form_open");
+			$(".new-address-form-mobile").slideDown();
+			ACC.singlePageCheckout.hideAjaxLoader();
+		}        
+		return false;	
+	},
 	
 	postAddAddress:function(element){
 		var form=$(element).closest("form");
-		var validationResult=ACC.singlePageCheckout.validateAddressForm(form);
+		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
 		{
 			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
@@ -353,7 +390,7 @@ ACC.singlePageCheckout = {
         });
 	},
 	
-	validateAddressForm:function(form){
+	validateAddressForm:function(){
 		$("form#addressForm :input[type=text]").each(function(){
    		 var input = $(this);    
    		 $(this).val($(this).val().trim());    		     		
@@ -964,23 +1001,11 @@ ACC.singlePageCheckout = {
 	},
 	
 	modalPopup: function(elementId,data){
-		
 
-		if($(".checkout-mobile-heading").css("display") == "none"){			
 		var selector="#"+elementId+" #modalBody"
-			$(selector).html(data);
-			//$("body").append('<div class="modal fade" id="singlePageAddressPopup"><div class="content" style="padding: 40px;max-width: 650px;">'+data+'<button class="close" data-dismiss="modal"></button></div><div class="overlay" data-dismiss="modal"></div></div>');
-			$("#"+elementId).modal('show');
-			$(".new-address-form-mobile").html('');
-		}
-		else{
-			$(".mobile_add_address").toggleClass("form_open");
-			$(".new-address-form-mobile").html(data);
-			$(".new-address-form-mobile").slideToggle();
-			$("#"+elementId+" #modalBody").html('');
-			alert("calling");
-			ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
-		}
+		$(selector).html(data);
+		$("#"+elementId).modal('show');
+		$(".new-address-form-mobile").html('');
 	},
 	
 	showAccordion: function(showElementId){
@@ -1389,11 +1414,12 @@ ACC.singlePageCheckout = {
 	mobileValidationSteps:{
 		isAddressSaved:false,
 		isAddressSet:false,
-		isDeliveryModeSte:false
+		isDeliveryModeSte:false,
+		saveNewAddress:false
 	},
 	
 	checkIsServicableResponsive:function(selectedPincode,addressId,isNew)
-	{	
+	{
 		if(addressId!="")
 		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
@@ -1409,6 +1435,22 @@ ACC.singlePageCheckout = {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
 				});
 				xhrResponse.done(function(response, textStatus, jqXHR) {
+					//Hiding address pincode serviceability failure error messages
+	            	$("#selectedAddressMessageMobile").hide();
+	            	$("#newAddressMobileErrorMessage").hide();
+	            	if(!isNew)
+                	{
+	            		//Remove new address radio nutton check
+	            		$("div.mobile_add_address.form_open").removeClass("form_open");
+	            		$(".new-address-form-mobile").slideUp();
+                	}
+	            	if(isNew)
+                	{
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+                	}
+	            	else{
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            	}
 					if (jqXHR.responseJSON) {
 		                if(response.type!="response" && response.type!="confirm")
 		                {
@@ -1419,6 +1461,8 @@ ACC.singlePageCheckout = {
 		                	}
 		                	else
 	                		{
+		                		//Remove new address radio nutton check
+		                		$("div.mobile_add_address.form_open").removeClass("form_open");
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
@@ -1459,6 +1503,13 @@ ACC.singlePageCheckout = {
 			}
 				
 		});
+	},
+	
+	saveAndSetNewDeliveryAddress:function()
+	{
+		var form=$("#selectAddressFormMobile")
+		var form=$(element).closest("form");
+		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 	}
 }
 //Calls to be made on dom ready.

@@ -154,12 +154,12 @@
 
 
 						<div class="addNew_wrapper">
-							<div class="mobile_add_address mobileNotDefaultDelAddress" onclick="$('input[name=selectedAddressCodeMobile]'').prop('checked', false);ACC.singlePageCheckout.getAddAddress();">
+							<div class="mobile_add_address mobileNotDefaultDelAddress" onclick="ACC.singlePageCheckout.getMobileAddAddress();">
 							<span class="mobile_add_address_radio"></span>
 							<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
 							</div>
 							<span id="newAddressMobileErrorMessage"></span>
-							<div class="new-address-form-mobile"></div>
+							<div class="new-address-form-mobile" data-loaded="false"></div>
 						</div>
 
 
@@ -176,12 +176,12 @@
 		$(document).ready(function(){
 			if(ACC.singlePageCheckout.getIsResponsive)
 			{
-				ACC.singlePageCheckout.getAddAddress();
+				ACC.singlePageCheckout.getMobileAddAddress();
 			}
 		})
 		</script>
 		<div class="new-address" style="display: block;">
-			<%-- <p id="" onclick="ACC.singlePageCheckout.getAddAddress();">
+			<%-- <p id="" onclick="ACC.singlePageCheckout.getMobileAddAddress();">
 				<span class="addsign pincode-button"> </span> 
 				<a
 					class="pincode-button"> <spring:theme
@@ -189,7 +189,7 @@
 						text="Use New Address"></spring:theme>
 				</a>
 			</p> --%>
-			<div class="mobile_add_address" onclick="ACC.singlePageCheckout.getAddAddress();">
+			<div class="mobile_add_address" onclick="ACC.singlePageCheckout.getMobileAddAddress();">
 			<span class="mobile_add_address_radio"></span>
 			<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
 			</div>
