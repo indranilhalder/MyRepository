@@ -12658,30 +12658,55 @@ TATA.CommonFunctions = {
             } ]
         });
     },
-    wishlistInit: function() {
-        $(document).on("click", ".add-to-wishlist", function() {
-            $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
+
+    fillHeartForItemsInWishlist: function(){
+        var wlCode = [];
+        $(".wlCode").each(function(){
+            wlCode.push($(this).text().trim());
         });
+        $(".plpWlcode").each(function(){
+            var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode=productURL.substring(n+1, productURL.length);
+
+            for(var i = 0; i < wlCode.length; i++) {
+                if(productCode.toUpperCase() == wlCode[i]) {
+                    console.log("Controle Inside");
+                    $(this).siblings(".add-to-wishlist").addClass("added");
+                }
+            }
+        });
+    },
+
+    wishlistInit: function(){
+        $(document).on("click",".add-to-wishlist",function(){
+            if ($(this).hasClass("added")){
+                TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
+            } else {
+                TATA.CommonFunctions.addToWishlist($(this).data("product"),this);
+            }
+        });
+
         var wishlistHover;
+
         $("a#myWishlistHeader").on("mouseover touchend", function(e) {
-            e.stopPropagation(), wishlistHover = setTimeout(function() {
+            e.stopPropagation();
+            wishlistHover = setTimeout(function(){
                 $.ajax({
                     url: ACC.config.encodedContextPath + "/headerWishlist",
-                    type: "GET",
-                    data: "&productCount=" + $("li.wishlist").find("a#myWishlistHeader").attr("data-count"),
+                    type: 'GET',
+                    //data: "&productCount=" + $(this).attr("data-count"),
+                    data: "&productCount=" + $('li.wishlist').find('a#myWishlistHeader').attr("data-count"),
                     success: function(html) {
                         $("div.wishlist-info").html(html);
-                        var wlCode = [];
-                        $(".wlCode").each(function() {
-                            wlCode.push($(this).text().trim());
-                        }), $(".plpWlcode").each(function() {
-                            for (var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode = productURL.substring(n + 1, productURL.length), i = 0; i < wlCode.length; i++) productCode.toUpperCase() == wlCode[i] && (console.log("Controle Inside"), 
-                            $(this).siblings(".plp-wishlist").addClass("added"));
-                        });
+                        /*TPR-844*/
+                        TATA.CommonFunctions.fillHeartForItemsInWishlist();
+                        /*TPR-844*/
                     }
                 });
-            }, 300);
-        }), $("a#myWishlistHeader").on("mouseleave", function() {
+            },300);
+
+        });
+
+        $("a#myWishlistHeader").on("mouseleave", function() {
             clearTimeout(wishlistHover);
         });
     },
