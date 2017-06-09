@@ -1194,7 +1194,7 @@
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.SizeGuideWsDataValue" type="bean">
-		<property name="INDSize" type="String" /> 	<!-- TPR-6040 attribute dimensionSize changed to INDSize -->
+		<property name="dimensionSize" type="String" />
 		<property name="dimensionValue" type="String" />
 		<property name="dimensionUnit" type="String" />
 		<property name="euroSize" type="String" />
