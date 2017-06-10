@@ -102,6 +102,8 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.BindingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mobile.device.Device;
+import org.springframework.mobile.device.DeviceUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -358,7 +360,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@RequestMapping(method = RequestMethod.GET)
 	@RequireHardLogIn
 	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.DELIVERY_METHOD)
-	public String checkoutPage(final Model model, final RedirectAttributes redirectAttributes,
+	public String checkoutPage(final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "false") final boolean isAjax)
 	{
 		try
@@ -371,6 +373,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
+			String deviceType = "unknown";
+			final Device device = DeviceUtils.getCurrentDevice(request);
+			if (null != device)
+			{
+				if (device.isNormal())
+				{
+					deviceType = "normal";
+					LOG.debug("type of device" + device.isNormal());
+				}
+				else if (device.isMobile())
+				{
+					deviceType = "mobile";
+					LOG.debug("type of device" + device.isMobile());
+				}
+				else if (device.isTablet())
+				{
+					deviceType = "tablet";
+					LOG.debug("type of device" + device.isTablet());
+				}
+			}
+			LOG.debug(deviceType);
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
 			if (isServicable.equalsIgnoreCase("N"))
 			{
@@ -3599,7 +3622,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3656,7 +3679,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
