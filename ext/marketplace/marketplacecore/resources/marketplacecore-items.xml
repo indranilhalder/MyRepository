@@ -5861,6 +5861,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Added in R2.3 for sending edToHd and SDB information to fico END -->
+					<!-- TPR-5346 -->
+					<attribute qualifier="maxCountReached" autocreate="true"
+						type="boolean">
+						<defaultvalue>false</defaultvalue>
+						<description>MaxCount for product</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->

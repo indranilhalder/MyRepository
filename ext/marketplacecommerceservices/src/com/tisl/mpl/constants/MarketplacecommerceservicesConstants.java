@@ -937,6 +937,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9700 = "B9700";
 
 	public static final String B9710 = "B9710";
+	public static final String B9110 = "B9110";
 	// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
@@ -2098,4 +2099,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 	public static final String SECONDPRODUCT = "secondProduct";
+
+	//TPR-5346
+
+	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "reachedMaxLimitforproduct";
+
+	public static final String PRECOUNTMSG = "Unfortunately, there is a restriction on the number of";
+	public static final String MIDCOUNTMSG = "you can order. Since you can purchase only ";
+	public static final String LASTCOUNTMSG = "we have modified your shopping bag to reflect this.";
 }
