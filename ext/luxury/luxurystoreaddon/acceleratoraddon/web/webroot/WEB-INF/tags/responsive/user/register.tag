@@ -34,6 +34,13 @@
 </c:choose>
 
 <!-- End  Gigya and API Social Login -->
+<c:set var="hasErrors" value="false"/>
+  <c:if test="${not empty formErrorReg}">
+	<c:forEach var="formError" items="${formErrorReg}">
+	  	<c:set var="hasErrors" value="${formError.field}"/>   
+	</c:forEach>
+  </c:if>
+ <input type="hidden" name="regerror" id="hasErrorsInReg" value="${hasErrors}"/>
 
 
 <p class="mb-20">OR</p>
@@ -43,6 +50,7 @@
 		<formElement:formInputBox idKey="register.profilelastName" labelKey="" path="lastName" mandatory="true" placeholder="Last Name"/>			
 		<formElement:formInputBox idKey="register.mobileNumber" labelKey="" path="mobileNumber" mandatory="true" placeholder="Mobile Number"/>	
 		<formElement:formInputBox idKey="register.email" labelKey="" path="email" mandatory="true" placeholder="Email Address"/>	
+		<div class="regEmailErr"></div>	
 		<formElement:formPasswordBox idKey="register.password" labelKey="" path="pwd" inputCSS="password-strength form-control" mandatory="true"/>	
 		<formElement:formConfirmPasswordBox idKey="register.checkpassword" labelKey="" path="checkPwd" inputCSS="form-control" mandatory="true"/>
 	</div>

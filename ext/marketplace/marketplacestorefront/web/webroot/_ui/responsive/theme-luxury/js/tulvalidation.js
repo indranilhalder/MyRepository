@@ -43,17 +43,12 @@ var tul = {};
 	                         success: function(data) {
 	                       	  
 	                       	  if(data==307){
-	                       		  console.log("login success");
 	                       		  location.reload();  
 	                       	  }
 	                       	  else if(data==0){
-	                       		  console.log("login failed");
-	                       		  console.log("show error message");
 	                       		  $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
 	                       		  $("#j_password").val("");
 	                       	  }else{
-	                       		  console.log("login Failed");
-	                       		  console.log("show error message");
 	                       		  $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
 	                       		  $("#j_password").val("");
 	                       	  }
@@ -93,8 +88,9 @@ var tul = {};
 						maxlength: 30
 					},
 					mobileNumber: {
-						required: true,
-						maxlength: 30
+						minlength: 10,
+						maxlength: 10,
+						number: true
 					},
 					email: {
 						required: true,
@@ -103,7 +99,8 @@ var tul = {};
 					},
 					pwd: {
 						required: true,
-						maxlength: 30
+						maxlength: 30,
+						minlength: 8
 					},
 					checkPwd: {
 						required: true,
@@ -112,7 +109,32 @@ var tul = {};
 					}
 				},
 				submitHandler: function(form) {
-					form.submit();						
+	            	 $.ajax({
+	               		  url:"/login/register",
+	           				 type:"POST",
+	           				 returnType:"text/html",
+	           				 dataType: "html",
+	           				 data: $(form).serialize(),
+	                         beforeSend: function() {
+	                             //$("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+	                         },
+	                         success: function(data) {
+	                        	 console.log(data);
+	                        	 var hasErrors=$(data).filter("input#hasErrorsInReg").val();
+	                        	 console.log(hasErrors);	                        	 
+	                        	 
+	                        	 if(hasErrors == "email"){
+	                        		 $(".regEmailErr").append("<div class='invalided-error'>You already have an account with this email ID. Please use it to sign in!</div>");
+	                        	 }else{
+	                        		 $(".regEmailErr").html("");
+	                        		 location.reload();
+	                        	 }
+	                         },
+	                         complete: function() {
+	                          //   pwsRequest(), registerRequest(), targetLink(), LuxLoginValidate();
+	                       	   
+	                         }
+	                     });						
 				}
 			});	
 			
