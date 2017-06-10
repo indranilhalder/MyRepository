@@ -197,6 +197,10 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 	@Override
 	public void createJusPayPaymentInfo(final CartModel cart)
 	{
+		if (cart.getPaymentInfo() != null)
+		{
+			removeExistingPaymentInfo(cart);
+		}
 		final JusPayPaymentInfoModel jusPayPaymentInfoModel = getModelService().create(JusPayPaymentInfoModel.class);
 		jusPayPaymentInfoModel.setCode(UUID.randomUUID().toString());
 		jusPayPaymentInfoModel.setUser(cart.getUser());
@@ -214,6 +218,19 @@ public class JuspayPaymentServiceImpl implements JuspayPaymentService
 		sessionService.setAttribute("paymentModes", paymentInfo);
 		sessionService.setAttribute("paymentModeForPromotion", MarketplaceJuspayServicesConstants.JUSPAY_KEY);
 		getModelService().save(jusPayPaymentInfoModel);
+		getModelService().save(cart);
+		getModelService().refresh(cart);
+
+	}
+
+	protected void removeExistingPaymentInfo(final CartModel cart)
+	{
+		getModelService().remove(cart.getPaymentInfo());
+
+		cart.setPaymentInfo(null);
+		cart.setConvenienceCharges(null);
+		sessionService.removeAttribute("paymentModes");
+		sessionService.removeAttribute("paymentModeForPromotion");
 		getModelService().save(cart);
 		getModelService().refresh(cart);
 
