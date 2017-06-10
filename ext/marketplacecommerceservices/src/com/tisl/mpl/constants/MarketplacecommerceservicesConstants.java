@@ -229,6 +229,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ON = "on".intern();
 	public static final String WAREHOUSE = "mpl_warehouse";
 
+	//Luxury Return URL
+	public static final String RETURNURLLUX = "payment.juspay.returnUrl.lux".intern();
 
 	//PAYMENT DAO
 	public static final String MPLPAYMENTDAO = "mplPaymentDao";

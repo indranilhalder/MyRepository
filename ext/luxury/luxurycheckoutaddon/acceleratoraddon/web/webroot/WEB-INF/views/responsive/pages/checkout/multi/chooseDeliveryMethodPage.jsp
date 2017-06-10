@@ -20,6 +20,7 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/address"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/cart"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+<%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
 
 <style>
 
@@ -124,14 +125,14 @@ display: none;
 														class="checkout-next">
 														<spring:theme
 															code="checkout.multi.deliveryMethod.expresscheckout.continue"
-															text="Next" />
+															text="Continue" />
 													</button>
 										</c:when>
 										<c:otherwise>
 													<button class="button proceed-button" id="deliveryMethodSubmitUp"
 														type="submit" class="checkout-next">
-														<spring:theme code="checkout.multi.deliveryMethod.continue"
-															text="Next" />
+														<spring:theme code="checkout.multi.deliveryMethod.continue.lux"
+															text="Continue" />
 													</button>
 										</c:otherwise>
 									</c:choose>
@@ -971,6 +972,7 @@ display: none;
 		</c:if>
 		</div>
 	</div>
+		<multi-checkout:coupons isCart="${isCart}"/>
 </div>
 </template:page>
 
