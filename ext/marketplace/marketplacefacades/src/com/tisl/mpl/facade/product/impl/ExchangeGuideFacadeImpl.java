@@ -111,9 +111,9 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getDistinctL4()
 	 */
 	@Override
@@ -125,7 +125,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getExchangeGuide(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -297,7 +297,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#changePincode(java.lang.String)
 	 */
 	@Override
@@ -308,18 +308,18 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#removeFromTransactionTable(java.lang.String)
 	 */
 	@Override
-	public boolean removeFromTransactionTable(final String exchangeId)
+	public boolean removeFromTransactionTable(final String exchangeId, final String reason)
 	{
-		return exchangeGuideService.removeFromTransactionTable(exchangeId);
+		return exchangeGuideService.removeFromTransactionTable(exchangeId, reason);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getTeporaryExchangeModelforId(com.tisl.mpl.core.model.
 	 * ExchangeTransactionModel)
 	 */
@@ -332,7 +332,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.product.ExchangeGuideFacade#addToExchangeTable(com.tisl.mpl.core.model.ExchangeTransactionModel
 	 * )
@@ -346,7 +346,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getExchangeRequestID(java.util.List)
 	 */
 	@Override

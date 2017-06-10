@@ -2165,6 +2165,7 @@ public class CartsController extends BaseCommerceController
 
 				cartData = mplExtendedCartConverter.convert(cartModel);
 				final OrderEntryData orderEntry = getCartEntryForNumber(cartData, entryNumber);
+
 				if (quantity == null && StringUtils.isEmpty(pickupStore))
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
@@ -2387,12 +2388,12 @@ public class CartsController extends BaseCommerceController
 				if (StringUtils.isNotEmpty(postalCode))
 				{
 					//CAR-57
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, true, false, pinCodeRes, postalCode);
 				}
 				else
 				{
 					//CAR-57
-					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes);
+					gwlpList = mplCartWebService.productDetails(cartModel, deliveryModeDataMap, false, false, pinCodeRes, postalCode);
 				}
 
 				cartDetailsData.setProducts(gwlpList);

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -220,13 +221,23 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	public List<ExchangeTransactionModel> getTeporaryExchangeModelforId(final String exId)
 	{
 		final StringBuilder queryString = new StringBuilder(500);
+		String exIdString = "";
+		if (exId.indexOf(',') > 0)
+		{
+			final String exidArray[] = exId.split(",");
 
+			exIdString = "'" + StringUtils.join(exidArray, "','") + "'";
+		}
+		else
+		{
+			exIdString = exId;
+		}
 		try
 		{
 
 			queryString.append("SELECT {exchange." + ExchangeTransactionModel.PK + "} " + "FROM {"
 					+ ExchangeTransactionModel._TYPECODE + " AS exchange }" + " where {exchange.exchangeid} in (");
-			queryString.append(exId);
+			queryString.append(exIdString);
 			queryString.append(")");
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 

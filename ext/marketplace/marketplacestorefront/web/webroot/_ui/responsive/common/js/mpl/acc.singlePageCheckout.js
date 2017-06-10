@@ -551,7 +551,6 @@ ACC.singlePageCheckout = {
 		$("#radio_"+addressId).prop("checked", true);
 		a = $("input[name=selectedAddressCode]:checked").val();
         if (null == a || "undefined" == a)
-        	//TODO :: Show message to user to select an address
             return $("#emptyAddress").show(),
             !1;
         ACC.singlePageCheckout.showAjaxLoader();
@@ -1415,7 +1414,8 @@ ACC.singlePageCheckout = {
 		isAddressSaved:false,
 		isAddressSet:false,
 		isDeliveryModeSte:false,
-		saveNewAddress:false
+		saveNewAddress:false,
+		selectedAddressId:""
 	},
 	
 	checkIsServicableResponsive:function(selectedPincode,addressId,isNew)
@@ -1444,13 +1444,6 @@ ACC.singlePageCheckout = {
 	            		$("div.mobile_add_address.form_open").removeClass("form_open");
 	            		$(".new-address-form-mobile").slideUp();
                 	}
-	            	if(isNew)
-                	{
-	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
-                	}
-	            	else{
-	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
-	            	}
 					if (jqXHR.responseJSON) {
 		                if(response.type!="response" && response.type!="confirm")
 		                {
@@ -1468,6 +1461,16 @@ ACC.singlePageCheckout = {
 	                		}
 		                }
 		            } else {
+		            	if(isNew)
+	                	{
+		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+	                	}
+		            	else
+		            	{
+		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
+		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
@@ -1507,13 +1510,85 @@ ACC.singlePageCheckout = {
 	
 	saveAndSetNewDeliveryAddress:function()
 	{
-		var form=$("#selectAddressFormMobile")
-		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
+		if(validationResult!=false)
+		{
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+			var data=$("form#selectAddressFormMobile").serialize().replace(/\+/g,'%20');
+			
+			ACC.singlePageCheckout.showAjaxLoader();
+			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+	        
+	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});
+	        
+	        xhrResponse.done(function(data, textStatus, jqXHR) {
+	        	if (jqXHR.responseJSON) {
+	                if(data.type!="response")
+	                {
+	                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+	                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+	                }
+	                if(data.type=="response")
+	                {
+	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+	                }
+	            }
+			});
+	        
+	        xhrResponse.always(function(){
+			});
+		}
+		return false;
+	},
+	
+	setDeliveryAddress:function()
+	{
+		$("#radio_mobile_"+addressId).prop("checked", true);
+		a = $("input[name=selectedAddressCodeMobile]:checked").val();
+	    if (null == a || "undefined" == a)
+	        return $("#emptyAddressMobile").show(),
+	        !1;
+	    var data=$("form#selectAddressFormMobile").serialize();
+	    var url=ACC.config.encodedContextPath + $("#selectAddressFormMobile").attr("action");
+	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+      
+	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});  
+           
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+                if(data.type!="response")
+                {
+                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+                }
+                if(data.type=="response")
+                {
+                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+                }
+            }
+		});
+        
+        xhrResponse.always(function(){
+		});
+		
+		return false;
 	}
 }
 //Calls to be made on dom ready.
 $(document).ready(function(){
+	var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
+	$(window).on("resize",function(){
+		var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
+		if(onLoadIsResponsive!=onSizeChangeIsResponsive)
+		{
+			location.reload(true);
+		}
+	});
 	if(ACC.singlePageCheckout.getIsResponsive())
 	{
 		var pageType=$("#pageType").val();

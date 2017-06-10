@@ -1007,6 +1007,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9302 = "B9302";
 	public static final String B9303 = "B9303";
 	public static final String B9304 = "B9304";
+
+	//Added for TPR-1083
+	public static final String B9305 = "B9305";
+	public static final String B9306 = "B9306";
+
+	public static final String REVERSE_PINCODE_NOT_SERVICABLE = "Exchange is Not Servicable";
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
