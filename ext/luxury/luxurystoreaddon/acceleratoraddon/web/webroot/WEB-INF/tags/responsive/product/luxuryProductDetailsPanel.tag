@@ -315,25 +315,7 @@ tr.d0 td {
 				</cms:pageSlot>
 			
 			<c:if test="${isGigyaEnabled=='Y'}">
-				<ul class="star-review" id="pdp_rating">
-					<li class="empty"></li>
-					<li class="empty"></li>
-					<li class="empty"></li>
-					<li class="empty"></li>
-					<li class="empty"></li>
-				<%-- 	<span class="gig-rating-readReviewsLink_pdp"> <spring:theme
-							code="rating.noreviews" /></span> --%>
-							<span class="gig-rating-readReviewsLink_pdp"></span>			<!-- UF-29 -->
-					<!-- OOTB Code Commented to facilitate Rest Call -->
-					<%-- <c:choose>
-				<c:when test="${not empty product.ratingCount}">
-					<a href="">${product.ratingCount} <spring:theme code="text.account.reviews"/></a> 
-				</c:when>
-				<c:otherwise>
-					<span><spring:theme code="text.no.reviews"/></span>
-					 
-				</c:otherwise>
-			</c:choose>  --%>
+				<div id='ratingDiv'></div>
 				</ul>
 			</c:if>
 			<%-- <cms:pageSlot position="AddToCart" var="component">
