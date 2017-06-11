@@ -30,7 +30,7 @@
 						<!-- Div to display ajax failure messages -->
 						<div id="selectedAddressMessageMobile" style=""></div>
 
-						<span id="emptyAddressMobile">Please select a delivery method to proceed.</span>
+						<span id="emptyAddressMobile" style="display:none">Please select a delivery method to proceed.</span>
 
 <div class="addressList_wrapper mobile_list">
 							<c:forEach items="${deliveryAddresses}" var="deliveryAddress"
