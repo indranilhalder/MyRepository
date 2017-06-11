@@ -20,6 +20,8 @@
 		var pinform=document.getElementById("pincodeExchangeParam");
 		$("#pinExc").keyup(function() {
 			document.getElementById("pdpPincodeCheck").className = "Check";
+			$("#exchangeDetails").hide();
+			$("#couponMsg").hide();
 			pdppin.value = this.value;	
 			pinform.value=this.value;
 			
@@ -218,6 +220,11 @@
 				document.getElementById('lactiveselect').style.color = "red";
 				isError=true;
 				}
+			if(!$('input#exchange_tc').is(':checked'))
+				{ $("#error_tc").text("Please Agree to the Terms & Condition");
+					document.getElementById('error_tc').style.color = "red";
+					isError=true;
+				}
 			if(!isError)
 				{
 		document.getElementById('couponValue').style.display = "block";
@@ -309,7 +316,8 @@
 </div>
 
 <div id="submit&Condition">
-<input type="checkbox" name="terms&condition" id="exchange_tc" value="Bike">
+<label id="error_tc" for="exchange_tc"></label>
+<input type="checkbox" name="terms&condition" id="exchange_tc" >
 <label for="exchange_tc"><span>I agree to the <span>terms and conditions</span></span></label>
 	<cms:pageSlot position="Section2" var="component">
 				<cms:component component="${component}" />
