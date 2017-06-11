@@ -1760,6 +1760,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 				<value>${footwear.header.EURO}</value>
 				<value>${footwear.header.footlength}</value>
 				<value>${footwear.header.Witdth}</value>
+				<value>0-6M</value>
+				<value>6-12M</value>
+				<value>1-2Y</value>
+				<value>2-4Y</value>
+				<value>4-6Y</value>
+				<value>6-8Y</value>
+				<value>8-10Y</value>
+				<value>10-12Y</value>
+				<value>12-14Y</value>
+				<value>14-16Y</value>
 			</list>
 			</property>
 	</bean>
