@@ -47,12 +47,11 @@ INSERT_UPDATE  classificationAttribute;code[unique=true];name[lang=en];systemVer
 ;garmenttypekidswear;Garment Type;pcmClassification:1;;;;;
 ;clothingaccessoriestypekidswear;Clothing Accessories Type;pcmClassification:1;;;;;
 ;innerweartypekidswear;Innerwear Type;pcmClassification:1;;;;;
-;sizeguidekidswear;Size Guide;pcmClassification:1;;;;;
+;sizeguidekidswear;Size Chart;pcmClassification:1;;;;;
 ;closurekidswear;Closure;pcmClassification:1;;;;;
 ;packagecontentkidswear;Package Content;pcmClassification:1;;;;;
 ;swimmingaccessoriestypekidswear;Swimming Accessories Type;pcmClassification:1;;;;;
 ;categorytypekidswear;Categories;pcmClassification:1;;;;;
-
 
 #Enum;values;creation;;;;;;;
 #---------------------;;;;;;;;;
