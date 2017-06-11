@@ -1231,7 +1231,7 @@ function tealiumCallOnPageLoad()
 				}
 				if($("#page_subcategory_name_l3").val() !=undefined || $("#page_subcategory_name_l3").val() !=null){ 
 					tealiumData += '"page_subcategory_name_L3":"'
-				+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '"}';
+				+ $("#page_subcategory_name_l3").val().replace(/_+/g, '_') + '",'; //TISPRDT-1462
 				}
 				//added for kidswear:L4 needs to be populated
 				if($("#page_subcategory_name_l4").val() !=undefined || $("#page_subcategory_name_l4").val() !=null){ 
@@ -1316,7 +1316,7 @@ function tealiumCallOnPageLoad()
 				//added for kidswear:L4 needs to be populated
 				if($("#page_subcategory_name_l4").val() !=undefined || $("#page_subcategory_name_l4").val() !=null){ 
 					tealiumData += '"page_subcategory_name_L4":"'
-				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '"}';
+				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '",'; //TISPRDT-1462
 				}
 			//TPR-430 End
 				tealiumData += '"checkout_seller_ids":"'		//for TPR-429
@@ -1422,7 +1422,7 @@ function tealiumCallOnPageLoad()
 				//added for kidswear:L4 needs to be populated
 				if($("#page_subcategory_name_l4").val() !=undefined || $("#page_subcategory_name_l4").val() !=null){ 
 					tealiumData += '"page_subcategory_name_L4":"'
-				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '"}';
+				+ $("#page_subcategory_name_l4").val().replace(/_+/g, '_') + '",'; //TISPRDT-1462
 				}
 			//TPR-430 End
 				tealiumData += '"checkout_seller_ids":"'		//for TPR-429
