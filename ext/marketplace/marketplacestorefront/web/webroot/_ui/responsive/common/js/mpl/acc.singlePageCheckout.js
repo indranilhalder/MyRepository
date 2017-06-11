@@ -199,43 +199,6 @@ ACC.singlePageCheckout = {
         
 		return false;	
 	},
-	getMobileAddAddress:function(){
-		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
-		if(formAlreadyLoaded=="false")
-		{
-			ACC.singlePageCheckout.showAjaxLoader();
-			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
-			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
-	        
-	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-			});
-	        
-	        xhrResponse.done(function(data) {
-	        	//Unchecking the radio button of saved addresses
-	        	$('input[name=selectedAddressCodeMobile]').prop('checked', false);
-	        	$(".mobile_add_address").addClass("form_open");
-				$(".new-address-form-mobile").html(data);
-				$(".new-address-form-mobile").attr("data-loaded","true");
-				$(".new-address-form-mobile").slideDown();
-				$("#singlePageAddressPopup #modalBody").html('');
-				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
-			});
-	        
-	        xhrResponse.always(function(){
-	        	ACC.singlePageCheckout.hideAjaxLoader();
-			});
-		}
-		else
-		{
-			ACC.singlePageCheckout.showAjaxLoader();
-			$('input[name=selectedAddressCodeMobile]').prop('checked', false);
-        	$(".mobile_add_address").addClass("form_open");
-			$(".new-address-form-mobile").slideDown();
-			ACC.singlePageCheckout.hideAjaxLoader();
-		}        
-		return false;	
-	},
 	
 	postAddAddress:function(element){
 		var form=$(element).closest("form");
@@ -1345,7 +1308,7 @@ ACC.singlePageCheckout = {
         			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);
     	        	
     				$("#selectedReviewOrderDivId").show();
-    	        	ACC.singlePageCheckout.showAccordion("#makePayment");
+    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
     	        	
     	        	//Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
     	        	populateAddress();
@@ -1416,6 +1379,44 @@ ACC.singlePageCheckout = {
 		isDeliveryModeSte:false,
 		saveNewAddress:false,
 		selectedAddressId:""
+	},
+	
+	getMobileAddAddress:function(){
+		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
+		if(formAlreadyLoaded=="false")
+		{
+			ACC.singlePageCheckout.showAjaxLoader();
+			var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
+			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+	        
+	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});
+	        
+	        xhrResponse.done(function(data) {
+	        	//Unchecking the radio button of saved addresses
+	        	$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+	        	$(".mobile_add_address").addClass("form_open");
+				$(".new-address-form-mobile").html(data);
+				$(".new-address-form-mobile").attr("data-loaded","true");
+				$(".new-address-form-mobile").slideDown();
+				$("#singlePageAddressPopup #modalBody").html('');
+				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
+			});
+	        
+	        xhrResponse.always(function(){
+	        	ACC.singlePageCheckout.hideAjaxLoader();
+			});
+		}
+		else
+		{
+			ACC.singlePageCheckout.showAjaxLoader();
+			$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+        	$(".mobile_add_address").addClass("form_open");
+			$(".new-address-form-mobile").slideDown();
+			ACC.singlePageCheckout.hideAjaxLoader();
+		}        
+		return false;	
 	},
 	
 	checkIsServicableResponsive:function(selectedPincode,addressId,isNew)
@@ -1577,6 +1578,18 @@ ACC.singlePageCheckout = {
 		});
 		
 		return false;
+	},
+	
+	onPaymentModeSelection:function()
+	{
+		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+		{
+			ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
+		}
+		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+		{
+			ACC.singlePageCheckout.setDeliveryAddress();
+		}
 	}
 }
 //Calls to be made on dom ready.
@@ -1597,5 +1610,10 @@ $(document).ready(function(){
 		{
 			ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),"",false);
 		}
+		$("makePaymentDiv").html("");
+	}
+	else
+	{
+		$("makePaymentDivMobile").html("");
 	}
 });

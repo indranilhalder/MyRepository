@@ -47,6 +47,8 @@
 			<!-- change here for modified checkout page starts -->
 						<!-- Div to display ajax failure messages -->
 						<div id="selectedAddressMessage" style=""></div>
+						
+						<span id="emptyAddress">Please select a delivery method to proceed.</span>
 
 						<div class="addressList_wrapper owl-carousel" id="address_carousel">
 							<c:forEach items="${deliveryAddresses}" var="deliveryAddress"
