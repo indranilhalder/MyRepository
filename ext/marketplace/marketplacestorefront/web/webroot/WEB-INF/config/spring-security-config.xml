@@ -118,7 +118,7 @@
 
 	<!-- POC -->
 	<bean id="keepAliveCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator" >
-		<property name="cookieName" value="TQkeepAlive"/>
+		<property name="cookieName" value="keepAlive"/>
 		<property name="cookieSecure" value="true"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('default.session.timeout')}"/>
 		<property name="useDefaultPath" value="false"/>
