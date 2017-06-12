@@ -14,6 +14,7 @@
 				</td>
 				<td style="width: 960px; height: 21px;">
 					<cockpit code="HeaderLinks" />
+					<cockpit code="WishList" />
 					<cockpit code="MiniCart" />
 					<cockpit code="SearchBox" />
 				</td>
