@@ -168,7 +168,7 @@
            border-color: transparent;
         }
     }  
-    .deliveryaddress{
+    .deliveryaddress{   
         background: #f9f9f9;
         border-left: 1px solid #ccc;
         border-right:1px solid #ccc;
@@ -211,6 +211,45 @@
         
         #addressform_button_panel{
             clear: both;
+        }
+        
+        .choose-address{
+            .newAddressCenter{
+                padding: 10px 25px;
+                background: #fff;
+            }
+            
+            .addressList_wrapper{
+                
+                 padding: 0px 25px;
+                
+                .address-list{
+                    width: 100%;
+                    border: 1px solid #ccc;
+                    padding: 20px;
+                    border: 1px solid;
+                    border-radius: 10px;
+                    margin-bottom: 20px;
+                    background: #f9f9f9;
+
+                    .acc_head{
+                        h2{
+                            font-size:18px;
+                        }
+                    }
+                }
+            }  
+        }
+        
+        .addNew_wrapper{
+            background: #f9f9f9;
+            padding: 15px 25px;
+            border-top: 1px solid #ccc;
+            padding-bottom: 0px;
+        }
+        
+        .step-body{
+            padding: 0px 0px;
         }
         
     }
@@ -287,6 +326,43 @@
     }
     
  }
+.right-block .coupon-code{
+    border: 1px solid #ccc;  
+    border-radius: 5px 5px 5px 5px;
+    padding: 15px;
+    
+    .coupon>div{
+        #couponFieldId{
+            width: 55%;
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 10px;    
+            border: 1px solid #d2d2d2;
+            border-radius: 3px;
+        }
+        #couponSubmitButton{
+            width: 43%;
+            display: inline-block;
+            padding: 10px 16px;
+            font-size: 14px;
+            line-height: 1.33333;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            color: #fff;
+            font-weight: 400;
+            text-align: center;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            user-select: none;
+            text-transform: uppercase;
+        }
+    }
+    
+    
+}
 .right-block .checkout-order-summary{
     border: 1px solid #ccc;  
     border-radius: 5px 5px 5px 5px;
