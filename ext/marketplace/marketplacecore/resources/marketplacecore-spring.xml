@@ -1439,14 +1439,25 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	</bean>
 	
 
+	<!-- CAR-299 starts-->
+	<alias name="defaultMplCategoryNameSource" alias="abstractMplCategoryNameSource" />
+	<bean id="defaultMplCategoryNameSource" abstract="true"
+		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.DefaultMplCategorySource">
+		<property name="modelService" ref="modelService" />
+		<property name="categoriesQualifier" value="supercategories" />
+		<property name="includeClassificationClasses" value="false" />
+		<property name="categoryService" ref="categoryService" />
+	</bean> 
+
+	<bean id="mplCategorySource" parent="abstractMplCategoryNameSource">
+		<property name="rootCategory" value="MSH1,LSH1,MBH1,MPH1,SSH1" />
+	</bean>
+	
 	<bean id="mplCategoryNameValueProvider" parent="abstractCategoryNameValueProvider">
 		<property name="categorySource" ref="mplCategorySource" />
 	</bean>
-	
 
-	<bean id="mplCategorySource" parent="abstractCategorySource">
-		<property name="rootCategory" value="MSH1,LSH1" />
-	</bean>
+	<!-- 	CAR-299 ends -->
 	
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
