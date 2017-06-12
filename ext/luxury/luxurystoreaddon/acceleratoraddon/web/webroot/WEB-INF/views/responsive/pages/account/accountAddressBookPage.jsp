@@ -393,7 +393,7 @@
 									
 
 									<!-- TISEE-4696 -->
-									<%-- <div class="half no-display">
+									<div class="half no-display">
 									<label><spring:theme code="text.addressBook.firstName" text="First name *" /></label>
 										<form:input path="firstName" id="firstName"
 											onkeyup="kpressaddressfn()" maxlength="40" />
@@ -408,7 +408,7 @@
 										<form:input path="lastName" id="lastName"
 											onkeyup="kpressaddressln()" maxlength="40" />
 										<div class="errorMessage"><div id="erraddressln"></div></div>
-									</div> --%>
+									</div>
 									
 									<%-- <div class="half" style="clear:both;">
 									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
@@ -436,12 +436,12 @@
 							
 
 									<!-- TISUAT-4696  /TPR-215-->
-								<%-- 	<div class="half">
+									<div class="half">
 									<label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
 											maxlength="40" />
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
-									</div> --%>
+									</div>
 								
 									<div class="half no-display fullwidth">
 										<div class="optionsLandmark">
@@ -451,14 +451,14 @@
 												<div class="errorMessage errland1">   </div>
 										</div>
 									</div>
-									<%-- <div class="half no-display fullwidth">
+									<div class="half no-display fullwidth">
 										<div class ="address_landmarkOtherDiv" data-value="${addressForm.landmark}">
 										<label>Nearest Landmark</label>
 											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
 												<div class="errorMessage errland2"></div>
 										</div>
-									</div> --%>
+									</div>
 									
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half halfwidth cityselect">

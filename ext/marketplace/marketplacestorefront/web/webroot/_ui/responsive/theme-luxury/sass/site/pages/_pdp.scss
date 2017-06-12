@@ -696,3 +696,84 @@
         margin-left: 10px;
     }
 }
+
+.pdp-view {
+	#addToCartButton-wrong{
+	    color: #2d2d2d;
+	    background-color: #e6e6e6;
+	    padding: 10px 16px;
+	    font-size: 18px;
+	    line-height: 1.33333;
+	    border-radius: 4px;
+	    border: 0px;
+	    text-transform: uppercase;
+	}
+	ul{
+		padding: 0px;
+		list-style-type: none;
+	}
+	.delivery-block {
+		width:48%;
+		margin-top:30px;
+		float:left;
+	    .inline-form{
+			position: relative;
+    		width: 95%;
+    		#pin{
+    			border: 1px solid #d2d2d2;
+			    height: 40px;
+			    line-height: 40px;
+			    padding: 10px 100px 10px 10px;
+			    width: 100%;
+			    border-radius: 3px;
+    		}
+    		button{
+    			border: 0px;
+			    background: #000;
+			    position: absolute;
+			    right: 0;
+			    width: 76px;
+			    top: 0;
+			    height: 86%;
+			    margin: 3px;
+    		}
+    	}
+    	.luxuy_changepincode{
+    		color: #b8996d;
+    	}
+    	
+		li{
+			h3{
+				font-size: 16px;
+				background:url(../images/icon-parcel.png) no-repeat;
+				background-size: 30px;
+    			padding: 10px 36px;
+    			margin-top:0px;
+			}
+		}
+		
+	}
+	.right-delivery-block {
+		width:48%;
+		float:right;
+		#collectli{
+    		p{
+    			font-size: 16px;
+				background:url(../images/icon-location.png) no-repeat; 
+				background-size: 30px;
+    			padding: 10px 36px;
+    		}
+    	}
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	.pdp-view {
+		.delivery-block {
+			width:100%;
+		}
+		.right-delivery-block {
+			width:100%;
+		}
+	}
+}
