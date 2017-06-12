@@ -2,1348 +2,986 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
-<%@ taglib prefix="multiCheckout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="formElement" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/formElement" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="address" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/address" %>
-<%@ taglib prefix="cart" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/cart" %>
-<%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="formElement"
+	tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/formElement"%>
+<%@ taglib prefix="multi-checkout"
+	tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi"%>
+<%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
-<c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
-<spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="common" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/common"%>
+
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
+<%@ taglib prefix="nav" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/nav"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="address" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/address"%>
+<%@ taglib prefix="cart" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/cart"%>
+<%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+<%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
+
+<style>
+
+.checkTab .address-list.hideItem {
+display: none;
+}
+
+</style>
+
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
-				<div class="alert alert-danger alert-dismissable" id="juspayconnErrorDiv">	<!-- TPR-629 changes for error -->
-					<button class="close juspayCloseButton" type="button">&times;</button>
-					<span id="juspayErrorMsg">Some issues are there with payment</span>
-				</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
+	<!-- <div class="checkout-headline">
+		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
+	</div> -->
 	
-	<!-- TISCR-421 Starts -->	
-	<script type="text/javascript" async="true" src="https://elistva.com/api/script.js?aid=${account_id}&sid=${session_id}">
-	</script>
-
-	<noscript>
-	        <p style="background:url(//elistva.com/api/assets/clear.png?aid=${account_id}&sid=${session_id}"></p>
-	</noscript>
 	
-	<object type="application/x-shockwave-flash" data="//elistva.com/api/udid.swf?aid=${account_id}&sid=${session_id}" width="1" height="1">
-	        <param name="movie" value="//elistva.com/api/udid.swf?aid=${account_id}&sid=${session_id}" />
-	</object>
-	<!-- TISCR-421 Ends -->
-
-	<div class="checkout-headline" id="checkout-headline">
-		<spring:theme code="checkout.multi.secure.checkout"/>
-	</div>
-	<div class="checkout-content checkout-payment cart checkout wrapper">
-		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
-			<jsp:body>
+	<div class="checkout-content cart checkout delivery">
+	<!-- store url fix -->
+	<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
+	 <div class="main"><div class="col-md-8">
+		<c:if test="${showDeliveryMethod eq true}">
 				<script>
-    				$(document).ready(function(){
-    					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
-    					var updateItHereLink=window.location.href;
-    	
-    					
-    					if(updateItHereLink.indexOf("updateItHereLink")>=0)
-    					{
-    						displayCODForm();
-    						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
-    						$(".checkout-paymentmethod").css("display","block");
-    						document.getElementById("otpMobileNUMField").focus();    						
-    					}
-    					else
-    					{
-    						if($("#CreditCard").val()=="true")
-        					{	
-    							if($(window).width()>=768){
-        						displayCreditCardForm();
-        						$("#viewPaymentCredit, #viewPaymentCreditMobile").parent("li").addClass("active");
-    							}
-        						$(".checkout-paymentmethod").css("display","block");
-        						//setTimeout(function(){$('#viewPaymentCredit').click();},1000);
-        					}
-        					else if($("#DebitCard").val()=="true")
-        					{
-        						if($(window).width()>=768){
-        						displayDebitCardForm();
-        						$("#viewPaymentDebit, #viewPaymentDebitMobile").parent("li").addClass("active");
-        						}
-        						$(".checkout-paymentmethod").css("display","block");
-        						//setTimeout(function(){$('#viewPaymentDebit').click();},1000);
-        					}
-        					else if($("#EMI").val()=="true")
-        					{
-        						if($(window).width()>=768){
-        						displayEMIForm();
-        						$("#viewPaymentEMI, #viewPaymentEMIMobile").parent("li").addClass("active");
-        						}
-        						$(".checkout-paymentmethod").css("display","block");
-        						//setTimeout(function(){$('#viewPaymentEMI').click();},1000);
-        					}
-        					else if($("#Netbanking").val()=="true")
-        					{
-        						if($(window).width()>=768){
-        						displayNetbankingForm();
-        						$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").parent("li").addClass("active");
-        						}
-        						$(".checkout-paymentmethod").css("display","block");
-        						//setTimeout(function(){$('#viewPaymentNetbanking').click();},1000);
-        					}
-        					else if($("#COD").val()=="true")
-        					{
-        						if($(window).width()>=768){
-        						displayCODForm();
-        						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
-        						}
-        						$(".checkout-paymentmethod").css("display","block");
-        						//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
-        					}	
-    					}
-    					});
-				</script>
-				
-				<!-- Script for JusPay -->
-				<!--Twitter Bootstrap resources-->
-		        <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet"> -->
-		        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-		       <!--  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" rel="stylesheet"> -->
-				
-				 <script type="text/javascript" 
-            		src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
-        		</script>
-				
-				<script type="text/javascript" src="${juspayJsName}" >
-				</script>
-				<!-- Script for JusPay ENDS-->
-				
-				<script>
-					$(document).ready(function(){
-						$("#selectMode button").on("click",function(){
-							$("#selectMode button").css({
-														"background":"rgb(237,243,244)",
-														"color":"#000",
-														})
-							$(this).css({
-										"background":"white",
-										"color":"rgb(4,201,246)",								
-										})
-						});
-					});
-					
-				</script>
-				<c:if test="${isCart eq true}">
-				<script>
-					
-					var timeoutID;
-    				function setup() {
-    				    this.addEventListener("mousemove", resetTimer, false);
-    				    this.addEventListener("mousedown", resetTimer, false);
-    				    this.addEventListener("keypress", resetTimer, false);
-    				    this.addEventListener("DOMMouseScroll", resetTimer, false);
-    				    this.addEventListener("mousewheel", resetTimer, false);
-    				    this.addEventListener("touchmove", resetTimer, false);
-    				    this.addEventListener("MSPointerMove", resetTimer, false);
-    				    startTimer();
-    				}
-    				setup();
-
-    				function startTimer() {
-    				    // wait 2 seconds before calling goInactive
-    				    timeoutID = window.setTimeout(goInactive, '${timeout}');
-    				}
-
-    				function resetTimer(e) {
-    				    window.clearTimeout(timeoutID);
-
-    				    goActive();
-    				}
-
-    				function goInactive() {
-    				   window.location = '${request.contextPath}/cart';
-    				}
-
-    				function goActive() {
-    				      startTimer();
-    				}
-				</script>
-				</c:if>
-				
-				<!-- TISCR-305 starts -->					
-					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_saved_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_dc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_saved_dc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<button type="button" class="button btn-block payment-button make_payment_top_nb proceed-button" id="make_nb_payment_up" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
-					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
-					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
-						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
-					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
-				<!-- Unwanted code commented -->
-               <%--  <c:choose>
-                    <c:when test="${showTax}">
-                        <format:price priceData="${cartData.totalPriceWithTax}"/>
-                    </c:when>
-                    <c:otherwise>
-                        <format:price priceData="${cartData.totalPrice}"/>
-                    </c:otherwise>
-                </c:choose> --%>
-            </ycommerce:testId>
-					</span></p>
-				<!-- TISCR-305 ends -->	
-				<div class="left-block choose-payment">
-
-				<div class="checkout-indent payments tab-view">
-					<ul class="checkout-paymentmethod nav">
-
-
-
-
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'Credit Card'}">
-												<input type="hidden" id="CreditCard" value="${map.value}" />
-	
-												<li class="active">
-
-
-													<span id="viewPaymentCredit" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
-													</span>
-												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-		    								<c:when test="${map.key eq 'Debit Card'}">
-		    									<input type="hidden" id="DebitCard" value="${map.value}" />
-		    								
-		    									<li>
-		    										<span id="viewPaymentDebit" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
-													</span>
-												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'Netbanking'}">
-			    								<input type="hidden" id="Netbanking" value="${map.value}" />
-			    							
-			    								<li>
-			      	 								<span id="viewPaymentNetbanking" >
-			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
-			      	 								</span>
-			      	 							</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'EMI'}">
-											<li>
-				       								<span id="viewPaymentEMI" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
-													</span>
-												</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'COD'}">
-			    								<input type="hidden" id="COD" value="${map.value}" />
-												<li>
-				       								<span id="viewPaymentCOD" >
-				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
-				       								</span>
-			       								</li>
-												
-													</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					</ul>
-					<input type="hidden" id="paymentMode" name="paymentMode"/>
-					<ul class="tabs">
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'Credit Card'}">
-												<input type="hidden" id="CreditCard" value="${map.value}" />
-	
-												<li class="paymentModeMobile">
-
-
-													<span id="viewPaymentCreditMobile" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
-													</span>
-												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					<!-- div for Cards -->
-							<li id="card">
-							<ul class="product-block blocks">
-							<h3>Enter your card details</h3>
-							<!-- SAVED CREDIT CARD -->
-								<c:if test="${not empty creditCards}">
-								<p class="saved_card_tab active_tab credit_tab">Saved Cards</p>
-								<p class="new_card_tab credit_tab">New Credit Card</p>
-									<li id="savedCard" class="item">
-									<!-- <span class="mycards">My cards</span> -->
-										<form class="form-inline" id="card_form" autocomplete="off" >
-											<%-- <h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterSavedCardDetails"/></h4> --%>
-											<%-- <multiCheckout:paymentError /> --%>
-											<div id="maestroMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.maestroMsg"/></div>
-											<input type="hidden" class="merchant_id" id="merchant_id" value="${merchantID}" />
-				                  			<input type="hidden" class="order_id" id="order_id_saved" />
-				          					<!-- <input type="hidden" class="is_emi" id="is_emi" />
-				                  			<input type="hidden" class="emi_tenure" id="emi_tenure" />
-				                  			<input type="hidden" class="emi_bank" id="emi_bank">	 -->
-				                  			<input type="hidden" class="redirect" value="${redirect}">	
-				                  			<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-			                  			
-			                  				<div id="savedCreditCard">
-												<c:forEach var="map" items="${creditCards}" varStatus="status">
-													<div class="credit-card-group card-sec">
-			            								<div class="card card-num">
-										        			<div class="radio">
-										        				 <c:choose>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
-														           </c:when> 
-														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
-														           </c:when>
-														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
-														           </c:when>
-														           <c:otherwise>
-																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
-																	</c:otherwise>   
-														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
-									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
-									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
-									                 	 			<!-- <span class="saved">Saved card</span> -->
-									                  				<p>${map.value.nameOnCard}</p>
-									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
-									                  			<input type="hidden" name="creditCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
-									                  			<input type="hidden" name="creditCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
-									                  			<input type="hidden" name="creditIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
-									                  			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
-																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
-																</div>
-										            		</div>
-										       			</div>
-										        		<div class="cvv right-align-form digits">
-										        			<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" />
-										        			<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
-																<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
-															</div>
-										        		</div>
-													</div>
-												</c:forEach>
-											</div> 
-										
-											<div id="savedEMICard">
-											</div>
-											
-											</form>
-											<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
-											</li>
-											<li>	
-		
-				<!-- Terms & Conditions Link -->
-					<div id="cvvErrorSavedCard2" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
-												Enter a valid <span>CVV</span> to continue
-											</div>
-											<div class="pay top-padding saved-card-button">
-												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-												
-
-												
-												<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p> --%>
-											</div>
-										
-									</li>
-									<div class="terms">
-									<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>
-								</c:if> 
-								<!-- END SAVED CREDIT CARD -->
-								<!--  CREDIT CARD SECTION  -->
-								<li id="newCardCC" class="item new-form active">
-									<form class="juspay_inline_form new-card" id="payment_form" autocomplete="off" >
-										<%-- Payment new UI<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2> --%>
-									<%-- 	<p><spring:theme code="text.we.accept"/></p>
-										<ul class="accepted-cards">
-											<li><span class="visa"><img src="${commonResourcePath}/images/Visa.png"></span></li>
-											<li><span class="master"><img src="${commonResourcePath}/images/Master_Card.png"></span></li>
-											<li><span class="maestro"><img src="${commonResourcePath}/images/Maestro.png"></span></li>
-											<li><span class="amex"><img src="${commonResourcePath}/images/American_Express.png"></span></li>
-											<li><span class="diners"><img src="${commonResourcePath}/images/dinner_club.png"></span></li>
-											<li><span class="discover"><img src="${commonResourcePath}/images/Discover.png"></span></li>
-											<li><span class="jcb"><img src="${commonResourcePath}/images/JCB.png"></span></li>
-										</ul> --%>
-										<div id="newMaestroMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.maestroMsg"/></div>
-										<input type="hidden" class="merchant_id" id="merchant_id" value="${merchantID}" />
-				                  		<input type="hidden" class="order_id" id="order_id_new" />
-				                  		<!-- <input type="hidden" class="is_emi" id="is_emi" />
-				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
-				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
-				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<div class="radio creditDebitLabelRadio">
-										 <input type="radio" data-id="newCCard" id="creditLabel"/>
-										 <label for="creditLabel" class="numbers creditLabel" data-id="newCCard"><span>New Card</span></label>
-								   		</div>
-										<div class="card-group">
-											<div class="form-group">
-						                    	<fieldset>
-						                        	<div class="full account-only">
-					 									<label><spring:theme code="text.cardtype"/> *</label>
-					 										<select>
-					  											<option><spring:theme code="text.select"/></option>
-					  										</select>
-													</div>
-						                            <div class="controls full">
-						                            <!-- Static section start -->
-						                            <!-- <div class="cardNumber">
-									<input class="firstfour" placeholder="1111" id="cardNo1">
-									<input placeholder="2222" id="cardNo2">
-									<input placeholder="3333" id="cardNo3">
-									<input class="last" placeholder="4444" id="cardNo4">
-								</div> -->
-								<!-- Static section end -->
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
-						                            	<input type="text" class="card_number" id="cardNo" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
-						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
-						                            	<input type="hidden" id="cardType" disabled="disabled"/>
-						                            	<span class="error-message" id="cardNoError"></span>
-													</div>
-						                            
-						                            <div class="controls full">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
-						                            	<span class="error-message" id="memberNameError"></span>
-						                            </div>
-						                           
-						                            <div class="controls full exp ">
-						                             	<label class="control-label expires">
-						                             		<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiryDate"/>
-						                             	</label>
-						                            	<select class="card_exp_month" name="expmm" > 	
-							                            	<option value="month"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mm"/></option>
-															<option value="01"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.01"/></option>
-															<option value="02"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.02"/></option>
-															<option value="03"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.03"/></option>
-															<option value="04"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.04"/></option>
-															<option value="05"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.05"/></option>
-															<option value="06"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.06"/></option>
-															<option value="07"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.07"/></option>
-															<option value="08"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.08"/></option>
-															<option value="09"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.09"/></option>
-															<option value="10"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.10"/></option>
-															<option value="11"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.11"/></option>
-															<option value="12"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.12"/></option>
-														</select>  
-														
-														<c:set var="currentyear" value="<%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)%>"></c:set>
-														<select class="card_exp_year" name="expyy" >
-							                            	<option value="year" selected><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.yyyy"/></option>
-							                            	<c:forEach var="i" begin="${currentyear}" end="${currentyear + noOfYearsFromCurrentYear}">
-															   <option value="${i}">${i}</option>
-															</c:forEach>
-							                           </select>
-														<span class="error-message" id="expYYError"></span>
-						                            </div>
-						                            
-													<div class="controls full cvv">
-														
-														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
-														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
-						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
-						                           		<span class="error-message" id="cvvError"></span> 
-						                            </div>
-												</fieldset>
-		            							<div class="controls remember" id="billingAddress">
-					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                             <c:choose>
-						                             <c:when test="${isCart eq true}">
-							                            <c:forEach var="cartItem" items="${cartData.entries}">
-							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-																 <c:set var="flag" value="true"/>
-															  </c:if>  
-												    	</c:forEach>
-												    </c:when>
-												    <c:otherwise>
-												    	<c:forEach var="orderItem" items="${orderData.entries}">
-							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
-															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-																 <c:set var="flag" value="true"/>
-															  </c:if>  
-												    	</c:forEach>
-												    </c:otherwise>
-											    </c:choose>
-										    	<c:if test="${flag eq true}">
-					                            	<input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
-					                           	</c:if>   	
-					                           		<fieldset>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.first.name"/></label>
-							                           		<input type="text" id="firstName" required="required" maxlength="40">
-							                           		<span class="error-message" id="firstNameError"></span>
-						                           		</div>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.last.name"/></label>
-							                           		<input type="text" id="lastName" required="required" maxlength="40">
-							                           		<span class="error-message" id="lastNameError"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.addressline1"/></label>
-							                           		<input type="text" id="address1" maxlength="40" required="required">
-							                           		<span class="error-message" id="address1Error"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.addressline2"/></label>
-							                           		<input type="text" id="address2" maxlength="40">
-							                           		<span class="error-message" id="address2Error"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.landmark"/> </label>
-							                           		<input type="text" id="address3" maxlength="40">
-							                           		<span class="error-message" id="address3Error"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.city"/></label>
-							                           		<input type="text" id="city" required="required" maxlength="40">
-							                           		<span class="error-message" id="cityError"></span>
-						                           		</div>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.state"/></label>
-							                           		<input type="text" id="state" required="required" maxlength="40">
-							                           		<span class="error-message" id="stateError"></span>
-						                           		</div>
-						                           		<div class="half">
-						                           			<label><spring:theme code="text.country"/></label>
-						                           			<select id="country" >
-						                           				<c:forEach var="countryName" items="${country}">
-																	<option value="${countryName}">${countryName}</option>
-																</c:forEach>
-															</select>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.pincode"/></label>
-							                           		<input type="text" id="pincode" maxlength="10" onchange="validatePin()" ><span class="error-message" id="pinError"></span>
-						                           		</div>
-					                           		</fieldset>
-					                            </div> 
-					                            <div class="controls remember">
-					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card" name="save-card" /><label for="save-card"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
-					                            </div>
-		            							<input type="hidden" class="redirect" value="${redirect}">	
-			            					</div>
-			            				</div>
-			            			</form>
-			            			<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
-		            			</li>
-		            		<li>
-				<!-- Terms & Conditions Link -->
-			            		<div class="pay newCardPaymentCC">
-									
-									<button type="submit" class="make_payment button btn-block payment-button" id="make_cc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
-									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
-								</div>
-							</li>
-						</ul>
-						<div class="terms">
-						<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>					
-					</li>				
-
-				<!-- Card ends -->
-<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-		    								<c:when test="${map.key eq 'Debit Card'}">
-		    									<input type="hidden" id="DebitCard" value="${map.value}" />
-		    								
-		    									<li class="paymentModeMobile">
-		    										<span id="viewPaymentDebitMobile" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
-													</span>
-												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-				<li id="cardDebit">
-							<ul class="product-block blocks">
-							<h3>Enter your card details</h3>
-								<c:if test="${not empty debitCards}">
-								<p class="saved_card_tab active_tab debit_tab">Saved Cards</p>
-								<p class="new_card_tab debit_tab">New Debit Card</p>
-									<li id="savedCardDebit" class="item">
-									<!-- <span class="mycards">My cards</span> -->
-										<form class="form-inline" id="card_form_saved_debit" autocomplete="off" >
-											<%-- <h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterSavedCardDetails"/></h4> --%>
-											<%-- <multiCheckout:paymentError /> --%>
-											<div id="maestroMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.maestroMsg"/></div>
-											<input type="hidden" class="merchant_id" id="merchant_id" value="${merchantID}" />
-				                  			<input type="hidden" class="order_id" id="order_id_saved_dc" />
-				          					<!-- <input type="hidden" class="is_emi" id="is_emi" />
-				                  			<input type="hidden" class="emi_tenure" id="emi_tenure" />
-				                  			<input type="hidden" class="emi_bank" id="emi_bank"> -->	
-				                  			<input type="hidden" class="redirect" value="${redirect}">	
-				                  			<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-											<!--  SAVED DEBIT CARD -->
-											<div id="savedDebitCard">
-												<c:forEach var="map" items="${debitCards}" varStatus="status">                  						 
-			                   						<div class="debit-card-group card-sec">
-			            								
-			            									<div class="card card-num">
-										        				<div class="radio">
-															     <c:choose>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
-														           </c:when> 
-														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'maestro')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Maestro.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'amex')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/American_Express.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'diners')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/dinner_club.png" alt=""></span>
-														           </c:when>
-														            <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Discover.png" alt=""></span>
-														           </c:when>
-														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'discover')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/JCB.png" alt=""></span>
-														           </c:when>
-														           <c:otherwise>
-																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
-																	</c:otherwise>   
-														        </c:choose>															 
-				        							
-										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
-										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
-										                  				<p>${map.value.nameOnCard}</p>
-										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
-										                   			<input type="hidden" name="debitCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
-										                   			<input type="hidden" name="debitCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
-										                   			<input type="hidden" name="debitIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
-										            			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
-																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
-																</div>
-										            			</div>
-										        			</div>
-										        			<div class="cvv right-align-form digits">
-										        				<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
-										            			<input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code_hide" id="cvv${status.index+1}" maxlength="4" onkeypress="return isNumber(event)" />		
-										        				<br>
-										        				<div id="cvvErrorSavedCard" class="card_cvvErrorSavedCard error-message">
-																	<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
-																</div>
-										        			</div>
-										   			</div>
-												</c:forEach>
-											</div>
-											
-											<div id="savedEMICard">
-											</div>
-											
-											</form>
-											<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
-											</li>
-											
-											<li>	
-		
-											<!-- Terms & Conditions Link -->
-											<!-- Adding here the cvv error message -->
-											<div id="cvvErrorSavedCard1" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
-												Enter a valid <span>CVV</span> to continue
-											</div>
-											<div class="pay top-padding saved-card-button">
-												<button type="submit" class="make_payment button btn-block payment-button" id="make_saved_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-												<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
-												<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p> --%>
-											</div>
-										
-									</li>
-									<div class="terms">
-									<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>
-								</c:if> 
-								<!-- DEBIT NEW CARD -->
-								<li id="debitCard" class="item new-form active">
-								
-									<form class="juspay_inline_form new-card" id="debit_payment_form" autocomplete="off" >
-										<%-- Payment new UI<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.enterCardDetails"/></h2> --%>
-									<%-- 	<p><spring:theme code="text.we.accept"/></p>
-										<ul class="accepted-cards">
-											<li><span class="visa"><img src="${commonResourcePath}/images/Visa.png"></span></li>
-											<li><span class="master"><img src="${commonResourcePath}/images/Master_Card.png"></span></li>
-											<li><span class="maestro"><img src="${commonResourcePath}/images/Maestro.png"></span></li>
-											<li><span class="amex"><img src="${commonResourcePath}/images/American_Express.png"></span></li>
-											<li><span class="diners"><img src="${commonResourcePath}/images/dinner_club.png"></span></li>
-											<li><span class="discover"><img src="${commonResourcePath}/images/Discover.png"></span></li>
-											<li><span class="jcb"><img src="${commonResourcePath}/images/JCB.png"></span></li>
-										</ul> --%>
-										<div id="newMaestroMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.maestroMsg"/></div>
-										<input type="hidden" class="merchant_id" id="merchant_id" value="${merchantID}" />
-				                  		<input type="hidden" class="order_id" id="order_id_new_dc" />
-				                  		<!-- <input type="hidden" class="is_emi" id="is_emi" />
-				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
-				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
-				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<div class="radio creditDebitLabelRadio">
-										 <input type="radio" data-id="newDCard" id="debitLabel"/>
-										 <label for="debitLabel" data-id="newDCard" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
-								   		</div>
-				                  		<!-- <p>NEW CARD</p> -->
-										<div class="card-group">
-											<div class="form-group">
-						                    	<fieldset>
-						                        	<div class="full account-only">
-					 									<label><spring:theme code="text.cardtype"/> *</label>
-					 										<select>
-					  											<option><spring:theme code="text.select"/></option>
-					  										</select>
-													</div>
-						                            <div class="controls full">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
-						                            	
-						                             <input type="text" class="card_number" id="cardNoDc" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
-						                            	<input type="hidden" id="cardTypeDc" disabled="disabled"/>
-						                            	<span class="error-message" id="cardNoErrorDc"></span>
-													</div>
-						                            
-						                            <div class="controls full">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
-						                            	<span class="error-message" id="memberNameErrorDc"></span>
-						                            </div>
-						                           
-						                            <div class="controls full exp">
-						                             	<label class="control-label expires">
-						                             		<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiryDate"/>
-						                             	</label>
-						                            	<select class="card_exp_month" name="expmm" > 	
-							                            	<option value="month"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mm"/></option>
-															<option value="01"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.01"/></option>
-															<option value="02"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.02"/></option>
-															<option value="03"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.03"/></option>
-															<option value="04"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.04"/></option>
-															<option value="05"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.05"/></option>
-															<option value="06"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.06"/></option>
-															<option value="07"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.07"/></option>
-															<option value="08"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.08"/></option>
-															<option value="09"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.09"/></option>
-															<option value="10"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.10"/></option>
-															<option value="11"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.11"/></option>
-															<option value="12"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.12"/></option>
-														</select>  
-														
-														<c:set var="currentyear" value="<%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)%>"></c:set>
-														<select class="card_exp_year" name="expyy" >
-							                            	<option value="year" selected><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.yyyy"/></option>
-							                            	<c:forEach var="i" begin="${currentyear}" end="${currentyear + noOfYearsFromCurrentYear}">
-															   <option value="${i}">${i}</option>
-															</c:forEach>
-							                           </select>
-														<span class="error-message" id="expYYErrorDc"></span>
-						                            </div>
-						                            
-													<div class="controls full cvv">
-														
-														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
-														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
-						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
-						                           		<span class="error-message" id="cvvErrorDc"></span> 
-						                            </div>
-												</fieldset>
-		            							<%-- <div class="controls remember" id="billingAddress">
-					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                            <c:forEach var="cartItem" items="${cartData.entries}">
-					                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-													 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-														 <c:set var="flag" value="true"/>
-													  </c:if>  
-										    	</c:forEach>
-					                            </div> --%> 
-					                            <div class="controls remember">
-					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-dc" name="save-card" /><label for="save-card-dc"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
-					                            </div>
-		            							<input type="hidden" class="redirect" value="${redirect}">	
-			            					</div>
-			            				</div>
-			            			</form>
-			            			<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
-		            			</li>
-		            		<li>
-									<!-- Terms & Conditions Link -->
-			            		<div class="pay newCardPayment">
-									
-									<button type="submit" class="make_payment button btn-block payment-button" id="make_dc_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
-									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
-								</div>
-							</li>
-						</ul>	
-						<div class="terms">
-						<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>				
-					</li>	
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'Netbanking'}">
-			    								<input type="hidden" id="Netbanking" value="${map.value}" />
-			    							
-			    								<li class="paymentModeMobile">
-			      	 								<span id="viewPaymentNetbankingMobile" >
-			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
-			      	 								</span>
-			      	 							</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					<li id="netbanking">
-								<ul class="product-block net-bank netbankingPanel blocks" ></ul>
-									<%-- <p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
-									<!-- TISPT-235 -->
-									<div class="nbAjaxError error-message">
-										<spring:theme code="checkout.multi.paymentMethod.netbanking.AjaxError"/>
-									</div>
-									<!-- Terms & Conditions Link -->
-									<div class="pay top-padding nbButton">
-										<button type="button" class="make_payment button btn-block payment-button" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-										<div class="terms">
-										<p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p>
-										<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
-										</div>
-										
-									</div> 
-								</li>
-								
-							<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'EMI'}">
-											<li class="paymentModeMobile">
-				       								<span id="viewPaymentEMIMobile" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
-													</span>
-												</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-
-						<li id="emi">
-										<input type="hidden" id="EMI" value="${map.value}" />	
-										<ul class="product-block emi blocks">
-										<li class="item">
-										<div class="bank-select">
-										<h3>Select your bank for EMI</h3>
-														<%-- <label id="listOfEMiBank"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.listOfEMIBanks"/></label> --%>
-														<%-- <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p> --%>
-														 <!-- <label class="control-label bank-label">
-						                             		SELECT YOUR BANK </label> -->
-														<select id="bankNameForEMI" onchange="getSelectedEMIBank()">
-														</select>
-														
-														
-														<span class="error-message" id="emiNoBankError">No Banks available.</span>
-														<span class="error-message" id="emiPromoError"></span>
-														<div id="radioForEMI" class="banks">
-														<p class="emi-plan">Select a plan</p>	
-										 					<table id="EMITermTable">
-													 			<%-- <th>&nbsp;</th>
-								        						<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.terms"/></th>
-								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestRate"/></th>
-								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment"/></th>
-								       							<th><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable"/></th> --%>
-															</table> 
-															<%-- <form:hidden path="selectedTerm" value="select"/> --%>
-															<input type="hidden" name="selectedTerm" id="selectedTerm" value="select"/>
-														</div>	
-														<p id="emiRangeError"><spring:theme code="checkout.multi.paymentMethod.emi.emiRangeError"/></p>
-										</div>
-										<div class="credit_for_emi"></div>
-										
-										<c:forEach var="map" items="${paymentModes}">
-											<c:if test="${map.value eq true}">
-											<c:choose>
-											<c:when test="${map.key eq 'Credit Card'}">
-										<input type="hidden" id="CreditCard" value="${map.value}" />
-											<!-- EMI CREDIT CARD -->
-													<div id="cardEmi" style="display: none;">
-														<!-- <ul class="product-block blocks"> -->
-														<h3 class="emi-card-title">Enter card details</h3>
-														<!--  CREDIT CARD SECTION  -->
-														<div id="newCardCCEmi" class="item new-form new-card active">
-										
-										<form class="juspay_inline_form new-card" id="emi_payment_form" autocomplete="off" >
-										<div id="newMaestroMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.maestroMsg"/></div>
-										<input type="hidden" class="merchant_id" id="merchant_id_emi" value="${merchantID}" />
-				                  		<input type="hidden" class="order_id" id="order_id_new_emi" />
-				                  		<input type="hidden" class="is_emi" id="is_emi" value="true"/>
-				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
-				                  		<input type="hidden" class="emi_bank" id="emi_bank">
-				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<!-- <p>NEW CARD</p> -->
-										<div class="card-group">
-											<div class="form-group">
-						                    	<fieldset>
-						                        	<div class="full account-only">
-					 									<label><spring:theme code="text.cardtype"/> *</label>
-					 										<select>
-					  											<option><spring:theme code="text.select"/></option>
-					  										</select>
-													</div>
-						                            <div class="controls full">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
-						                            	<input type="text" class="card_number" id="cardNoEmi" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
-						                            	 <!-- <input type="hidden" class="card_number" value="" /> -->  
-						                            	<input type="hidden" id="cardTypeEmi" disabled="disabled"/>
-						                            	<span class="error-message" id="cardNoErrorEmi"></span>
-													</div>
-						                            
-						                            <div class="controls full">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardName"/></label>
-						                            	<input type="text" name="memberName" class="name_on_card name-card" maxlength="79" autocomplete="off">
-						                            	<span class="error-message" id="memberNameErrorEmi"></span>
-						                            </div>
-						                           
-						                            <div class="controls full exp ">
-						                             	<label class="control-label expires">
-						                             		<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiryDate"/>
-						                             	</label>
-						                            	<select class="card_exp_month" name="expmm" > 	
-							                            	<option value="month"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mm"/></option>
-															<option value="01"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.01"/></option>
-															<option value="02"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.02"/></option>
-															<option value="03"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.03"/></option>
-															<option value="04"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.04"/></option>
-															<option value="05"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.05"/></option>
-															<option value="06"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.06"/></option>
-															<option value="07"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.07"/></option>
-															<option value="08"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.08"/></option>
-															<option value="09"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.09"/></option>
-															<option value="10"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.10"/></option>
-															<option value="11"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.11"/></option>
-															<option value="12"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.12"/></option>
-														</select>  
-														
-														<c:set var="currentyear" value="<%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)%>"></c:set>
-														<select class="card_exp_year" name="expyy" >
-							                            	<option value="year" selected><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.yyyy"/></option>
-							                            	<c:forEach var="i" begin="${currentyear}" end="${currentyear + noOfYearsFromCurrentYear}">
-															   <option value="${i}">${i}</option>
-															</c:forEach>
-							                           </select>
-														<span class="error-message" id="expYYErrorEmi"></span>
-						                            </div>
-						                            
-													<div class="controls full cvv">
-														
-														<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
-														<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-						                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
-						                           		<input type="password" autocomplete="new-password" class="security_code span1" name="cvv" maxlength="4" />
-						                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
-						                           		<span class="error-message" id="cvvErrorEmi"></span> 
-						                            </div>
-												</fieldset>
-		            							<div class="controls remember" id="billingAddressEmi">
-					                            	<h2><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.billingAddress"/></h2>
-					                             <c:choose>
-						                             <c:when test="${isCart eq true}">
-							                            <c:forEach var="cartItem" items="${cartData.entries}">
-							                            <c:set var="deliveryMode" value="${cartItem.mplDeliveryMode.code}"/>
-															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-																 <c:set var="flag" value="true"/>
-															  </c:if>  
-												    	</c:forEach>
-												    </c:when>
-												    <c:otherwise>
-												    	<c:forEach var="orderItem" items="${orderData.entries}">
-							                            <c:set var="deliveryMode" value="${orderItem.mplDeliveryMode.code}"/>
-															 <c:if test="${deliveryMode ne 'click-and-collect'}"> 
-																 <c:set var="flag" value="true"/>
-															  </c:if>  
-												    	</c:forEach>
-												    </c:otherwise>
-											    </c:choose>
-										    	<c:if test="${flag eq true}">
-					                            	<input type="checkbox" id="sameAsShippingEmi" name="billing-shipping" checked="checked" /><label for="sameAsShippingEmi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label>
-					                           	</c:if>   	
-					                           		<fieldset>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.first.name"/></label>
-							                           		<input type="text" id="firstNameEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="firstNameErrorEmi"></span>
-						                           		</div>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.last.name"/></label>
-							                           		<input type="text" id="lastNameEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="lastNameErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.addressline1"/></label>
-							                           		<input type="text" id="address1Emi" maxlength="40" required="required">
-							                           		<span class="error-message" id="address1ErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.addressline2"/></label>
-							                           		<input type="text" id="address2Emi" maxlength="40">
-							                           		<span class="error-message" id="address2ErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.landmark"/> </label>
-							                           		<input type="text" id="address3Emi" maxlength="40">
-							                           		<span class="error-message" id="address3ErrorEmi"></span>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.city"/></label>
-							                           		<input type="text" id="cityEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="cityErrorEmi"></span>
-						                           		</div>
-						                           		<div class="half">
-							                           		<label><spring:theme code="text.state"/></label>
-							                           		<input type="text" id="stateEmi" required="required" maxlength="40">
-							                           		<span class="error-message" id="stateErrorEmi"></span>
-						                           		</div>
-						                           		<div class="half">
-						                           			<label><spring:theme code="text.country"/></label>
-						                           			<select id="countryEmi" >
-						                           				<c:forEach var="countryName" items="${country}">
-																	<option value="${countryName}">${countryName}</option>
-																</c:forEach>
-															</select>
-						                           		</div>
-						                           		<div class="full">
-							                           		<label><spring:theme code="text.pincode"/></label>
-							                           		<input type="text" id="pincodeEmi" maxlength="10" onchange="validatePin()"><span class="error-message" id="pinErrorEmi"></span>
-						                           		</div>
-					                           		</fieldset>
-					                            </div> 
-					                            <div class="controls remember">
-					                            	<input type="checkbox" class="juspay_locker_save checkbox"  id="save-card-emi" name="save-card-emi" /><label for="save-card-emi"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.saveCard"/></label>		                        	
-					                            </div>
-		            							<input type="hidden" class="redirect" value="${redirect}">	
-			            					</div>
-			            				</div>
-			            				<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
-			            			</form>
-			            			<div class="pay newCardPaymentCCEmi">
-									
-									<button type="button" class="make_payment button btn-block payment-button" id="make_emi_payment"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-									<!-- <p class="payment-redirect">You will be re-directed to secure payment gateway</p> -->
-									<%-- <p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p> --%>
-								    </div>
-								    <p id="emi-notice"><spring:theme code="checkout.multi.paymentMethod.emi.notice"/></p>
-								    <div class="terms">
-								    <p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
-									</div>	
-			            			</div>
-			            			</div>
-			            			</c:when>
-			            			</c:choose>
-			            			</c:if>
-			            			</c:forEach>
-			            			</li>
-									</ul>
-								</li> <!-- End of div id EMI -->
-								
-						<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'COD'}">
-			    								<input type="hidden" id="COD" value="${map.value}" />
-												<li class="paymentModeMobile">
-				       								<span id="viewPaymentCODMobile" >
-				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
-				       								</span>
-			       								</li>
-												
-													</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-
-						<ycommerce:testId code="paymentDetailsForm">
-								
-							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
-								<form:hidden path="paymentModeValue"/>
-								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
-								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
-								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
-							 	 
-								<!--TISQAUAT-411 Fix Removed  guid -->
-								<form:hidden path="guid" id="guid" value="${guid}"/>
-								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
-								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
-								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
-									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
-								</c:forEach>
-								<c:forEach items="${sopPaymentDetailsForm.subscriptionSignatureParams}" var="entry" varStatus="status">
-									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
-								</c:forEach>
-								
-				<!-- div for COD -->
-								<li id="COD">
-
-								<ul class="product-block net-bank blocks">
-								<%-- <li class="header">
-								<ul>
-											<li class="paymentHeaderHeight"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.title"/></li>
-										</ul>
-								</li> --%>
-								<li class="cod-container cash">
-									<div id="otpNUM" >
-										<!-- TISPT-235 Code changed for COD using AJAX -->
-										<input type="hidden" id="cartValue" value="${cartValue}" />
-										<input type="hidden" id="httpRequest" value="${request}" />
-										<%-- <p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
-										<div class="amtPayable"><h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable"/>
-										&nbsp;<span id="codAmount"></span></h4>&nbsp;<span id="convChargeMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg"/></span>
-										</div><br> 
-										<div id="sendOTPNumber" >
-											<input type="hidden" id="codEligible" value="${codEligible}" />
-											<div class="description"><spring:theme code=""/></div>
-											<label name="Enter OTP" class="cod-mob-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNo"/></label>
-												<input type="text" id="mobilePrefix" name="mobilePrefix" value="+91" disabled="disabled" /><input type="text" id="otpMobileNUMField" name="otpNUM" value="${cellNo}" maxlength="10"/>
-												<div id="mobileNoError" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage"/></div>
-												<p style="color:#333;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage"/>
-												&nbsp;<a href="${request.contextPath}/checkout/multi/payment-method/add?Id=updateItHereLink" class="cod-link"><spring:theme code="checkout.multi.paymentMethod.cod.updateItHereLink"/></a></p>
-											
-											<div id="sendOTPButton">
-													
-												<button type="button" class="positive right cod-otp-button" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" />
-												</button>
-												<div id="resendOTPMessage" class="description"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codResendMessage"/></div>
-											</div>
-											<div id="OTPGenerationErrorMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
-											</div>
-										</div>
-		
-										<div id="enterOTP">
-											<label name="Enter OTP"><spring:theme code="checkout.multi.paymentMethod.CODPayment.enterOTP" text="Enter OTP:&nbsp;"/>
-												<input type="text" id="otpNUMField" name="otpNUM" onfocus="hideErrorMsg()" autocomplete="off"/>
-											</label>
-										</div> --%>
-									</div>
-									
-									
-									<!-- COD error messages -->
-									<div id="codErrorMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
-									</div>
-									
-									<div id="codMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
-									</div>
-									
-									
-								 	<div id="customerBlackListMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.customerBlackListMessage"/>
-									</div>
-									
-									
-									<div id="otpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpValidationSuccessfulMessage"/>
-									</div>
-									
-									
-									<div id="wrongOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
-									</div>
-									
-									<%-- <div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
-									</div> --%>
-									
-									<div id="expiredOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
-									</div>
-									
-									<div id="fulfillmentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
-									</div>
-									
-									<div id="codItemEligibilityMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
-									</div>
-									
-									<div id="emptyOTPMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>
-									</div>
-									
-									<!-- COD error messages ends -->
-										
-										<div id="paymentFormButton" class="pay cont-del">	
-						<!-- Terms & Conditions Link -->
-
-								<%-- <button type="button" class="make_payment button btn-block payment-button confirm" onclick="submitForm()" id="paymentButtonId">		
-									<div id="submitPaymentFormCODButton">	
-										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
-									</div>
-								</button> --%>
-							 	<button type="button" class="make_payment button btn-block payment-button confirm" id="paymentButtonId" style="display:block;">		
-									<div id="submitPaymentFormCODButton"  style="display:block;">	
-										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
-									</div>
-								</button> 
-								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
-									
-							</div>
-													
-									</li>
-									</ul>	
-									<div class="terms cod"><p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /> <a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p></div>	
-								</li>
-														
-
-
-				<!-- End of COD -->					
-										
-							
-							</form:form>
-						</ycommerce:testId>
+					//window.onload =	function(){
+					//resetConvChargeElsewhere(); Commented for TIS 400
+					//}
+					$(document).ready(function() {
+						selectDefaultDeliveryMethod();
 						
-			</ul>
+						
+					});
+					var timeoutID;
+					function setup() {
+						this.addEventListener("mousemove", resetTimer, false);
+						this.addEventListener("mousedown", resetTimer, false);
+						this.addEventListener("keypress", resetTimer, false);
+						this.addEventListener("DOMMouseScroll", resetTimer,
+								false);
+						this.addEventListener("mousewheel", resetTimer, false);
+						this.addEventListener("touchmove", resetTimer, false);
+						this.addEventListener("MSPointerMove", resetTimer,
+								false);
+						startTimer();
+					}
+					setup();
+
+					function startTimer() {
+						// wait 2 seconds before calling goInactive
+						timeoutID = window.setTimeout(goInactive, '${timeout}');
+					}
+
+					function resetTimer(e) {
+						window.clearTimeout(timeoutID);
+
+						goActive();
+					}
+
+					function goInactive() {
+						window.location = '${request.contextPath}/cart';
+					}
+
+					function goActive() {
+						startTimer();
+					}
+				</script>
+				   <c:set var="progressBarClass" value="${progressBarClass}" />
+               <c:set var="paymentPage" value="${paymentPage}" />
+               
+					<div class="delivery-address progress-barcheck  ${progressBarClass}  ${paymentPage}">
+					   <div class="step-1 active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone">dddddddddd</span>
+					   </div>
+					</div>
+					<div class="deliverymethod clearfix">
+						<ycommerce:testId code="checkoutStepTwo">
+						
+						<form:form id="selectDeliveryMethodForm"
+									action="${request.contextPath}/checkout/multi/delivery-method/check"
+									method="post" commandName="deliveryMethodForm">
+								<!-- TISCR-305 starts -->
+								<!-- TISPRO-625 starts -->
+								<input type="hidden" id="isExpressCheckoutSelected"
+												value="${isExpressCheckoutSelected}" />
+									
+								<!-- TISPRO-625 ends -->
+								<!-- TISCR-305 ends -->
+									<div class="checkout-shipping left-block">
+									
+										<div class="checkout-indent">
+											<%-- <form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm"> --%>
+													<multi-checkout:shipmentItems cartData="${cartData}"
+														defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
+									
+										</div>
+										
+										
+										
+									</div>
+									
+									<c:choose>
+										<c:when test="${isExpressCheckoutSelected}"> test ${isExpressCheckoutSelected}
+												<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
+														class="checkout-next">
+														<spring:theme
+															code="checkout.multi.deliveryMethod.expresscheckout.continue"
+															text="Continue" />
+													</button>
+										</c:when>
+										<c:otherwise>
+													<button class="button proceed-button" id="deliveryMethodSubmitUp"
+														type="submit" class="checkout-next">
+														<spring:theme code="checkout.multi.deliveryMethod.continue.lux"
+															text="Continue" />
+													</button>
+										</c:otherwise>
+									</c:choose>
+									
+							</form:form>
+							
+						</ycommerce:testId>
+					</div>
+					
+		</c:if>
+		
+
+<div class="deliver-method progress-barcheck ${progressBarClass}  ${paymentPage}">
+ <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
 				</div>
-				</div>				
+				<div class="deliveryaddress ${progressBarClass}">
+
+		<c:if test="${showAddress eq true}">
+			<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
+				progressBarId="${progressBarId}">
+				<jsp:body>
+			<script>
+				//TISST-13010
+				$(document).ready(function() {
+					showPromotionTag();
+				});
+
+				var timeoutID;
+				function setup() {
+					this.addEventListener("mousemove", resetTimer, false);
+					this.addEventListener("mousedown", resetTimer, false);
+					this.addEventListener("keypress", resetTimer, false);
+					this.addEventListener("DOMMouseScroll", resetTimer, false);
+					this.addEventListener("mousewheel", resetTimer, false);
+					this.addEventListener("touchmove", resetTimer, false);
+					this.addEventListener("MSPointerMove", resetTimer, false);
+					startTimer();
+				}
+				setup();
+
+				function startTimer() {
+					// wait 2 seconds before calling goInactive
+					timeoutID = window.setTimeout(goInactive, '${timeout}');
+				}
+
+				function resetTimer(e) {
+					window.clearTimeout(timeoutID);
+
+					goActive();
+				}
+
+				function goInactive() {
+					window.location = '${request.contextPath}/cart';
+				}
+
+				function goActive() {
+					startTimer();
+				}
+			</script>
+				<ycommerce:testId code="checkoutStepTwo"> 
+					<div class="checkout-shipping checkTab"> 
+								<c:if test="${not empty deliveryAddresses}"> 
+					
+										<form id="selectAddressForm"
+											action="${request.contextPath}/checkout/multi/delivery-method/select-address"
+												method="get">
+											<c:set var='countWork' value='1' />
+											<c:set var='countHome' value='1' />
+							
+						<!-- change here for modified checkout page starts -->
+									
+									<div class="address-accordion smk_accordion acc_with_icon">
+ 									<div class="choose-address accordion_in acc_active">
+    
+      								<div class="acc_head">
+												<div class="acc_icon_expand"></div>
+												<h2>Choose Address</h2>
+												<p class="cart-items">
+													<spring:theme code="checkout.multi.shipment.items"
+														arguments="${cartData.deliveryItemsQuantity}"
+														text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme>
+												</p>
+									</div>
+      
+	  	
+	  								<div class="acc_content" style="display:block">
+		
+      					<form>
+								                <div class="addressList_wrapper">
+								                <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
+																						varStatus="status">
+																						
+										<c:if test="${status.last}">
+												<c:set var="deliveryAddressCount" value="${status.index}"></c:set>
+										</c:if>	
+										
+												
+										<c:choose>
+											<c:when test="${status.index eq 0 ||  status.index eq 1 ||  status.index eq 2 ||  status.index eq 3}"> 
+													 <c:set var="showItem" value="showItem"></c:set>
+													</c:when>
+											<c:otherwise>
+																					
+											 <c:set var="showItem" value="hideItem"></c:set>
+											</c:otherwise>
+										</c:choose>	
+																								
+								        <div class="address-list ${showItem}" id="${singleAddress}">
+								        	<c:choose>
+												<c:when test="${deliveryAddress.defaultAddress}">
+									          <input type="radio" class="radio1" name="selectedAddressCode"
+																											value="${deliveryAddress.id}"
+																											id="radio_${deliveryAddress.id}" checked="checked" />
+									          <label for="radio_${deliveryAddress.id}"></label>
+									           </c:when>
+									           <c:otherwise>
+									           	<input type="radio" class="radio1"
+																											name="selectedAddressCode"
+																											value="${deliveryAddress.id}"
+																											id="radio_${deliveryAddress.id}" />
+									          	<label for="radio_${deliveryAddress.id}"></label>
+									           </c:otherwise>
+								           
+								           </c:choose>
+								           
+								          
+								          <p class="address"> 
+								          <c:choose>
+								          <c:when test="${deliveryAddress.addressType eq 'Work'}">
+								          <span class="name commercial"
+																											for="radio_${deliveryAddress.id}">
+								          <spring:theme
+																												code="checkout.multi.deliveryAddress.commercialAddress"
+																												text="Commercial Addresses" />
+								          <c:if test="${deliveryAddress.defaultAddress}">
+								          - <spring:theme
+																													code="checkout.multi.deliveryAddress.defaultAddress"
+																													text="Default Addresses" /> <br />
+								          </c:if>
+								          </span> 
+								          
+								          <c:set var='countWork' value='${countWork+1}' />
+								          </c:when>
+								          <c:otherwise>
+								           <span class="name residential"
+																											for="radio_${deliveryAddress.id}" ${countHome}>
+								           <spring:theme
+																												code="checkout.multi.deliveryAddress.residentialAddress"
+																												text="Residential Addresses" />
+								           <c:out value="${countHome}"></c:out>
+								           <c:if test="${deliveryAddress.defaultAddress}">
+								           - <spring:theme
+																													code="checkout.multi.deliveryAddress.defaultAddress"
+																													text="Default Addresses" /> <br />
+								           </c:if>
+								           </span>
+								           <c:set var='countHome'  value='${countHome+1}' />
+								          </c:otherwise>
+								          
+								          </c:choose>
+								          
+								          <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}" />
+										  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}" />
+										  
+										  <c:if test="${empty myline2  && empty myline3}">
+										  <span style="padding-bottom: 0px;">
+										  
+										  ${fn:escapeXml(deliveryAddress.title)}</span>	
+										  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+										 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br></span>
+										 
+										  </c:if>
+										  
+										  <c:if test="${not empty myline2  && empty myline3}">
+										   <span style="padding-bottom: 0px;">
+										   ${fn:escapeXml(deliveryAddress.title)}</span>
+										  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span> <span>${fn:escapeXml(deliveryAddress.state)},&nbsp;
+										${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										  <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+										 
+										  </c:if>
+										  <c:if test="${ empty myline2  && not empty myline3}">
+										  
+										  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
+										 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+										 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+										
+										  
+										  </c:if>
+										  
+										  <c:if test="${not empty myline2  && not empty myline3}">
+										  <span style="padding-bottom: 0px;">
+										  ${fn:escapeXml(deliveryAddress.title)}</span>
+																									<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+										  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+										${fn:escapeXml(deliveryAddress.town)},&nbsp;</span><span>${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+										 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																									<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																									</c:if>
+										 <span> <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br></span>
+										  
+										  </c:if>
+										  
+								 	<c:choose>
+								 	<c:when test="${deliveryAddress.defaultAddress}">
+								 		<span class="default default-selected">
+								 	  <input type="radio" value="Make this my default address"
+								 																class="regular-radio" name="default"
+								 																id="radio-default2_${deliveryAddress.id}"
+								 																data-address-id="${deliveryAddress.id}">				      
+								 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
+								 	  </span>
+								 	</c:when>
+								 		</c:choose>
+								
+								
+										  <span class="default">
+										  <input type="radio" value="Make this my default address"
+																									class="regular-radio" name="default"
+																									id="radio-default2_${deliveryAddress.id}"
+																									data-address-id="${deliveryAddress.id}">				      
+										  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
+										  </span>
+										  </p>
+										  <span class="edit">
+										  <a
+																								href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
+																								class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
+										  </span>
+										  
+										    <c:set var="adressid" value="${deliveryAddress.id}" />
+										  
+										  <div class="editnewAddresPage" id="${adressid}"></div>
+								           </div>
+								           </c:forEach>
+										</div> 
+								 
+	  <%-- <div class="formaddress" style="display: none;">
+		<div class="heading-form">
+														<h3>Add New Address</h3>
+														<input type="button" value="cancel" class="cancelBtn">
+													</div>
+	  
+	  
+	   <div class="checkout-indent left-block address-form">
+								
+									<ul class="product-block addresses new-form account-section">
+									  	
+									  	<li
+																class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector
+																	supportedCountries="${countries}" regions="${regions}"
+																	cancelUrl="${currentStepUrl}" />
+									  	</li>
+									  	</ul>
+									  	
+									</div>
+	  
+	  </div> --%>
+	  <c:choose>
+	  <c:when test="${deliveryAddressCount eq 0}">
+				<c:set var="deliveryAddressClass" value="single_address"></c:set>
+		</c:when>
+		<c:when test="${deliveryAddressCount eq 1}">
+				<c:set var="deliveryAddressClass" value="two_address"></c:set>
+		</c:when>
+		<c:when test="${deliveryAddressCount eq 2}">
+				<c:set var="deliveryAddressClass" value="three_address"></c:set>
+		</c:when>
+		<c:when test="${deliveryAddressCount eq 3}">
+				<c:set var="deliveryAddressClass" value="four_address"></c:set>
+		</c:when>
+		
+		<%-- <c:when test="${deliveryAddressCount gt 3 && deliveryAddressCount % 2 == 0}">
+				<c:set var="deliveryAddressClass" value="moreEvens_address"></c:set>
+		</c:when> --%>
+		</c:choose>
+		
+	  
+							 <div class="addNew_wrapper ${deliveryAddressClass}">	  
+							  
+							     <c:if test="${deliveryAddressCount gt 3}">
+							    <!--  <li style="float:left;width:500px;"><a href="#" class="viewMore">View More</a></li> -->	
+							    <div class="add-address_viewMore viewMoreContainer">
+						        <p>
+																				<span class="addsign viewMoreSign">
+						        
+						        </span>
+						        <a class="viewMore"> 
+								View More Address</a>
+						        </p>
+								
+						      </div>
+							  </c:if>
+							  <div class="addnewAddresPage"></div>
+						     <div class="add-address" style="display: block;">
+						        <p id="address-form">
+																				<span class="addsign pincode-button">
+						        
+						        </span>
+						        <a class="pincode-button"> 
+								<spring:theme code="checkout.multi.deliveryAddress.useNewAddress"
+																						text="Use New Address"></spring:theme>
+								</a>
+						        </p>
+								
+						      </div>
+						      
+						    </div>
+						    </form>
+	  
+	  </div> 
+   
+  </div>
+ 
+</div>
+				
+				
+									
+									<!-- change here for modified checkout page ends -->
+						
+						</form>
+						
+									</c:if>
+									
+						<!--  If no address is present -->
+						<c:if test="${empty deliveryAddresses}"> 
+						<div id="emptyAddress" style="color:red;display:none;">Please select a delivery address</div>		
+										<form id="selectAddressForm"
+									action="${request.contextPath}/checkout/multi/delivery-method/select-address"
+									method="get">
+											<c:set var='countWork' value='1' />
+											<c:set var='countHome' value='1' />
+							
+						<!-- change here for modified checkout page starts -->
+									
+									<div class="address-accordion smk_accordion acc_with_icon">
+  <div class="choose-address accordion_in acc_active">
+    
+      <div class="acc_head newAddressCenter">
+												<div class="acc_icon_expand"></div>
+												<h2>Add New Address</h2>
+												<p class="cart-items">
+													<spring:theme code="checkout.multi.shipment.items"
+														arguments="${cartData.deliveryItemsQuantity}"
+														text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme>
+												</p>
+											</div>
+      
+	  	<div class="acc_content" style="display: block;">
+		
+      <form>
+        
+          <div class="addressList_wrapper">
+          <c:forEach items="${deliveryAddresses}" var="deliveryAddress"
+														varStatus="status">
+        <div class="address-list ${singleAddress}">
+        	<c:choose>
+			<c:when test="${deliveryAddress.defaultAddress}">
+          <input type="radio" class="radio1" name="selectedAddressCode"
+																		value="${deliveryAddress.id}"
+																		id="radio_${deliveryAddress.id}" checked="checked" />
+          <label for="radio_${deliveryAddress.id}"></label>
+           </c:when>
+           <c:otherwise>
+           	<input type="radio" class="radio1"
+																		name="selectedAddressCode"
+																		value="${deliveryAddress.id}"
+																		id="radio_${deliveryAddress.id}" />
+          	<label for="radio_${deliveryAddress.id}"></label>
+           </c:otherwise>
+           
+           </c:choose>
+           
+          
+          <p class="address"> 
+          <c:choose>
+          <c:when test="${deliveryAddress.addressType eq 'Work'}">
+          <span class="name commercial"
+																			for="radio_${deliveryAddress.id}">
+          <spring:theme
+																				code="checkout.multi.deliveryAddress.commercialAddress"
+																				text="Commercial Addresses" />
+          <c:if test="${deliveryAddress.defaultAddress}">
+          - <spring:theme
+																					code="checkout.multi.deliveryAddress.defaultAddress"
+																					text="Default Addresses" /> <br />
+          </c:if>
+          </span> 
+          
+          <c:set var='countWork' value='${countWork+1}' />
+          </c:when>
+          <c:otherwise>
+           <span class="name residential"
+																			for="radio_${deliveryAddress.id}">
+           <spring:theme
+																				code="checkout.multi.deliveryAddress.residentialAddress"
+																				text="Residential Addresses" />
+           <c:out value="${countHome}"></c:out>
+           <c:if test="${deliveryAddress.defaultAddress}">
+           - <spring:theme
+																					code="checkout.multi.deliveryAddress.defaultAddress"
+																					text="Default Addresses" /> <br />
+           </c:if>
+           </span>
+           <c:set var='countHome'  value='${countHome+1}' />
+          </c:otherwise>
+          
+          </c:choose>
+          
+          <c:set var="myline2" value="${fn:trim(deliveryAddress.line2)}" />
+		  <c:set var="myline3" value="${fn:trim(deliveryAddress.line3)}" />
+		  
+		  <c:if test="${empty myline2  && empty myline3}">
+		  <span style="padding-bottom: 0px;">
+		  
+		  ${fn:escapeXml(deliveryAddress.title)}</span>	
+		  <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)} <br>
+		  
+		  </c:if>
+		  
+		  <c:if test="${not empty myline2  && empty myline3}">
+		   <span style="padding-bottom: 0px;">
+		   ${fn:escapeXml(deliveryAddress.title)}</span>
+		  <span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		   <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;
+		${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span>${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		   <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		  
+		  </c:if>
+		  <c:if test="${ empty myline2  && not empty myline3}">
+		  
+		  <span style="padding-bottom: 0px;">${fn:escapeXml(deliveryAddress.title)}</span>
+		 <span class="name">${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		 <span> ${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp; 
+		 ${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		
+		  </c:if>
+		  
+		  <c:if test="${not empty myline2  && not empty myline3}">
+		  <span style="padding-bottom: 0px;">
+		  ${fn:escapeXml(deliveryAddress.title)}</span>
+																	<span class="name"> ${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</span>
+		  <span>${fn:escapeXml(deliveryAddress.line1)},&nbsp;${fn:escapeXml(deliveryAddress.line2)},&nbsp;${fn:escapeXml(deliveryAddress.line3)},&nbsp;${fn:escapeXml(deliveryAddress.landmark)},&nbsp;
+		${fn:escapeXml(deliveryAddress.town)},&nbsp;${fn:escapeXml(deliveryAddress.state)},&nbsp;${fn:escapeXml(deliveryAddress.postalCode)}<!--DSC_006 : Fix for Checkout Address State display issue -->
+		 ${fn:escapeXml(deliveryAddress.country.isocode)}</span>
+																	<c:if test="${not empty deliveryAddress.region.name}">&nbsp;<span> ${fn:escapeXml(deliveryAddress.region.name)}</span>
+																	</c:if>
+		  <spring:theme code="checkout.phone.no" text="+91" />&nbsp;${fn:escapeXml(deliveryAddress.phone)}<br>
+		  
+		  </c:if>
+		  
+		  <span class="default">
+		  <input type="radio" value="Make this my default address"
+																	class="regular-radio" name="default"
+																	id="radio-default2_${deliveryAddress.id}"
+																	data-address-id="${deliveryAddress.id}">				      
+		  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
+		  </span>
+		  </p>
+		  <span class="edit">
+		  <a
+																href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
+																class="edit_address" id="link_${deliveryAddress.id}"></a>
+		  </span>
+		  
+		    <c:set var="adressid" value="${deliveryAddress.id}" />
+		  
+		  <div class="editnewAddresPage" id="${adressid}"></div>
+           </div>
+           </c:forEach>
+		</div> 
+      </form>
+	  <%-- <div class="formaddress" style="display: none;">
+		<div class="heading-form">
+														<h3>Add New Address</h3>
+														<input type="button" value="cancel" class="cancelBtn">
+													</div>
+	  
+	  
+	   <div class="checkout-indent left-block address-form">
+								
+									<ul class="product-block addresses new-form account-section">
+									  	
+									  	<li
+																class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector
+																	supportedCountries="${countries}" regions="${regions}"
+																	cancelUrl="${currentStepUrl}" />
+									  	</li>
+									  	</ul>
+									  	<!-- <input type="submit" value="save" class="saveBtn"> -->
+									</div>
+	  
+	  </div> --%>
+	  <div class="addNew_wrapper no_address">
+	   <div class="addnewAddresPage"></div>
+     <div class="add-address" style="display: block;">
+        <p id="address-form">
+														<span class="addsign pincode-button">
+        
+        </span>
+        <a class="pincode-button"> 
+		<spring:theme code="checkout.multi.deliveryAddress.useNewAddress"
+																text="Use New Address"></spring:theme>
+		</a>
+        </p>
+		
+      </div>
+      </div>
+	  
+	  </div> 
+   
+  </div>
+ 
+</div>
+				
+				
+									
+									<!-- change here for modified checkout page ends -->
+						
+						</form>
+						
+									</c:if>								
+									
+									
+									
+									
+									
+					</div>
+					
+	</div>
+	</ycommerce:testId>
+	</jsp:body>
+	</multi-checkout:checkoutSteps>
+	</c:if>
+
+
+
+	<c:if test="${showEditAddress eq true}">
+<%-- 		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
+			progressBarId="${progressBarId}">
+			<jsp:body> --%>
+					<script>
+						//TISST-13010
+						$(document).ready(function() {
+							showPromotionTag();
+						});
+						var timeoutID;
+						function setup() {
+							this.addEventListener("mousemove", resetTimer,
+									false);
+							this.addEventListener("mousedown", resetTimer,
+									false);
+							this
+									.addEventListener("keypress", resetTimer,
+											false);
+							this.addEventListener("DOMMouseScroll", resetTimer,
+									false);
+							this.addEventListener("mousewheel", resetTimer,
+									false);
+							this.addEventListener("touchmove", resetTimer,
+									false);
+							this.addEventListener("MSPointerMove", resetTimer,
+									false);
+							startTimer();
+						}
+						setup();
+
+						function startTimer() {
+							// wait 2 seconds before calling goInactive
+							timeoutID = window.setTimeout(goInactive,
+									'${timeout}');
+						}
+
+						function resetTimer(e) {
+							window.clearTimeout(timeoutID);
+
+							goActive();
+						}
+
+						function goInactive() {
+							window.location = '${request.contextPath}/cart';
+						}
+
+						function goActive() {
+							startTimer();
+						}
+					</script>
+					<ycommerce:testId code="checkoutStepTwo">
+						<div class="checkout-shipping">
+						<c:choose>
+					<c:when test="${edit eq true}">
+						<ycommerce:testId code="multicheckout_saveAddress_button">
+							<button id="editAddressButtonUp"
+										class="btn btn-primary btn-block" type="submit">
+								<spring:theme code="checkout.multi.saveAddress"
+											text="Save address" />
+							</button>
+						</ycommerce:testId>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${accountPageAddress eq true}">
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonAccountUp"
+												class=" btn btn-primary btn-block" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue"
+													text="Continue" />
+									</button>
+								</ycommerce:testId>
+							</c:when>
+							<c:otherwise>
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonUp" class="button" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue"
+													text="Continue" />
+									</button>
+								</ycommerce:testId>
+							</c:otherwise>
+						</c:choose>						
+					</c:otherwise>
+				</c:choose> 
+							<div class="checkout-indent left-block address-form">
+								<h1>
+									<spring:theme code="checkout.summary.shippingAddress"
+									text="Shipping Address"></spring:theme>
+								</h1>
+								<div class="checkout-shipping-items-header">
+								<spring:theme code="checkout.multi.shipment.items"
+									arguments="${cartData.deliveryItemsQuantity}"
+									text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme>
+							</div>
+								<ul class="product-block addresses new-form account-section">
+									  	<li class="header">
+									  		<ul class="account-section-header">
+									        <li><spring:theme
+												code="text.account.addressBook.addressDetails" /></li>
+									        <li class="pincode-button"><a
+											href="${request.contextPath}/checkout/multi/delivery-method/selectaddress">
+									       
+									       
+									        <c:if test="${addressFlag eq 'T'}"> 
+										<spring:theme
+														code="checkout.multi.deliveryAddress.useSavedAddress"
+														text="Use a Saved Address"></spring:theme>	
+										</c:if>																
+									</a></li>
+									      </ul>
+									  	</li>
+									  	<li
+									class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector
+										supportedCountries="${countries}" regions="${regions}"
+										cancelUrl="${currentStepUrl}" country="${country}" />
+									  	</li>
+									  	</ul>
+							</div>
+						</div>
+					</ycommerce:testId>
+			<%--	</jsp:body>
+		 </multi-checkout:checkoutSteps> --%>
+	</c:if>
+
+
+	<c:if test="${addAddress eq true}">
+
+		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}"
+			progressBarId="${progressBarId}">
+			<jsp:body>
+					<script>
+						//TISST-13010
+						$(document).ready(function() {
+							showPromotionTag();
+						});
+						var timeoutID;
+						function setup() {
+							this.addEventListener("mousemove", resetTimer,
+									false);
+							this.addEventListener("mousedown", resetTimer,
+									false);
+							this
+									.addEventListener("keypress", resetTimer,
+											false);
+							this.addEventListener("DOMMouseScroll", resetTimer,
+									false);
+							this.addEventListener("mousewheel", resetTimer,
+									false);
+							this.addEventListener("touchmove", resetTimer,
+									false);
+							this.addEventListener("MSPointerMove", resetTimer,
+									false);
+							startTimer();
+						}
+						setup();
+
+						function startTimer() {
+							// wait 2 seconds before calling goInactive
+							timeoutID = window.setTimeout(goInactive,
+									'${timeout}');
+						}
+
+						function resetTimer(e) {
+							window.clearTimeout(timeoutID);
+
+							goActive();
+						}
+
+						function goInactive() {
+							window.location = '${request.contextPath}/cart';
+						}
+
+						function goActive() {
+							startTimer();
+						}
+					</script>
+					<ycommerce:testId code="checkoutStepTwo">
+						<div class="checkout-shipping">
+					<c:choose>
+					<c:when test="${edit eq true}">
+						<ycommerce:testId code="multicheckout_saveAddress_button">
+							<button id="editAddressButtonUp"
+										class="btn btn-primary btn-block" type="submit">
+								<spring:theme code="checkout.multi.saveAddress"
+											text="Save address" />
+							</button>
+						</ycommerce:testId>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${accountPageAddress eq true}">
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonAccountUp"
+												class=" btn btn-primary btn-block" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue"
+													text="Continue" />
+									</button>
+								</ycommerce:testId>
+							</c:when>
+							<c:otherwise>
+								<ycommerce:testId code="multicheckout_saveAddress_button">
+									<button id="newAddressButtonUp" class="button" type="submit">
+										<spring:theme code="checkout.multi.deliveryAddress.continue"
+													text="Continue" />
+									</button>
+								</ycommerce:testId>
+							</c:otherwise>
+						</c:choose>						
+					</c:otherwise>
+				</c:choose> 
+							<div class="checkout-indent left-block address-form">
+								<h1>
+									<spring:theme code="checkout.summary.shippingAddress"
+									text="Shipping Address"></spring:theme>
+								</h1>
+								<div class="checkout-shipping-items-header">
+								<spring:theme code="checkout.multi.shipment.items"
+									arguments="${cartData.deliveryItemsQuantity}"
+									text="Shipment - ${cartData.deliveryItemsQuantity} Item(s)"></spring:theme>
+							</div>
+									<ul class="product-block addresses new-form account-section">
+									  	<li class="header">
+									  		<ul class="account-section-header">
+									        <li><spring:theme
+												code="checkout.multi.deliveryAddress.newAddress"
+												text="New Address"> </spring:theme> </li>																  			 			 							        
+									        <li class="pincode-button"><a
+											href="${request.contextPath}/checkout/multi/delivery-method/selectaddress">
+									        
+									         <c:if test="${addressFlag eq 'T'}"> 
+											<spring:theme
+														code="checkout.multi.deliveryAddress.useSavedAddress"
+														text="Use a Saved Address"></spring:theme>
+											 </c:if>
+										</a></li>
+										
+									      </ul>
+									  	</li>
+									  	<li
+									class="item account-section-content	 account-section-content-small ">
+									  	<address:addressFormSelector
+										supportedCountries="${countries}" regions="${regions}"
+										cancelUrl="${currentStepUrl}" />
+									  	</li>
+									  	</ul>
+									</div>
+							</div>
+						
+					</ycommerce:testId>
 				</jsp:body>
-		</multiCheckout:checkoutSteps>	
-		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
-	</div>		
+			</multi-checkout:checkoutSteps>			
+				
+		</c:if>
+		
+		<div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
+		 <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				  <div class="step-3"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				</div>
+	</div></div>
+		
+	<div class="right-block shipping col-md-4">
+			<div class="checkout-order-summary">
+			<div class="order-summary-header"><h2>Summary</h2></div>
+				<multi-checkout:orderTotals cartData="${cartData}"
+					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
+				<c:if test="${showDeliveryMethod eq true}">
+		
+		</c:if>
+		</div>
+	</div>
+	<div class="coupon-code  mt-20"><multi-checkout:coupons isCart="${isCart}"/></div>
+	
+	<div class="helpLine mt-20 mb-20">
+		<p class="text-center grayTxt normalSizeRegularTxt">
+			Need Help With Placing Your Order?
+			<strong class="mediumSizeTxt mt-10 mb-10">Call us at 91-901 924 5000</strong>
+			<small class="smallSizeRegularTxt">Lines open from 8:00 AM to 11:00 PM</small>
+		</p>
+	</div>
+						
+</div>
 </template:page>
 
-<style>
- .checkout-paymentmethod {
-	display: none;
-}
-</style>
-
-<script>
-	//Refresh the page if compare page is already visted
-	if (sessionStorage.getItem("confirmationPageVisited") != null) {
-		sessionStorage.removeItem("confirmationPageVisited");
-		window.location.reload(true); // force refresh page1
-	}
-</script>
-<!-- 	  <script type="text/javascript">
-		jQuery(document).ready(function($){
-
-
-			$(".payments.tab-view").smk_Accordion({
-				closeAble: true, //boolean
-				showIcon: true
-			});
-
-		});
-	</script> -->
-
-	<script>
-	
-	/* As part of UF-210 */
-	
-	if($("#savedDebitCard").length > 0)
-	{
-		$("#cardDebit").find(".terms").last().hide();
-	}
-	if($("#savedCard").length > 0)
-	{
-		$("#card").find(".terms").last().hide();
-	}
-	
-	$(".saved_card_tab.credit_tab").click(function(){
-		$(this).addClass("active_tab");
-		$(".new_card_tab.credit_tab").removeClass("active_tab");
-		$(this).parents("#card").find("#savedCard").show();
-		$(this).parents("#card").find("#savedCard").next("li").show();
-		$(this).parents("#card").find(".terms").first().show();
-		$(this).parents("#card").find("#newCardCC").hide();
-		$(this).parents("#card").find("#newCardCC").next("li").hide();
-		$(this).parents("#card").find(".terms").last().hide();
-	});
-	$(".new_card_tab.credit_tab").click(function(){
-		$(this).addClass("active_tab");
-		$(".saved_card_tab.credit_tab").removeClass("active_tab");
-		$(this).parents("#card").find("#savedCard").hide();
-		$(this).parents("#card").find("#savedCard").next("li").hide();
-		$(this).parents("#card").find(".terms").first().hide();
-		$(this).parents("#card").find("#newCardCC").show();
-		$(this).parents("#card").find("#newCardCC").next("li").show();
-		$(this).parents("#card").find(".terms").last().show();
-		$(".card_cvvErrorSavedCard_popup").css("display","none");
-		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
-	});
-	$(".saved_card_tab.debit_tab").click(function(){
-		$(this).addClass("active_tab");
-		$(".new_card_tab.debit_tab").removeClass("active_tab");
-		$(this).parents("#cardDebit").find("#savedCardDebit").show();
-		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").show();
-		$(this).parents("#cardDebit").find(".terms").first().show();
-		$(this).parents("#cardDebit").find("#debitCard").hide();
-		$(this).parents("#cardDebit").find("#debitCard").next("li").hide();
-		$(this).parents("#cardDebit").find(".terms").last().hide();
-	});
-	$(".new_card_tab.debit_tab").click(function(){
-		$(this).addClass("active_tab");
-		$(".saved_card_tab.debit_tab").removeClass("active_tab");
-		$(this).parents("#cardDebit").find("#savedCardDebit").hide();
-		$(this).parents("#cardDebit").find("#savedCardDebit").next("li").hide();
-		$(this).parents("#cardDebit").find(".terms").first().hide();
-		$(this).parents("#cardDebit").find("#debitCard").show();
-		$(this).parents("#cardDebit").find("#debitCard").next("li").show();
-		$(this).parents("#cardDebit").find(".terms").last().show();
-		$(".card_cvvErrorSavedCard_popup").css("display","none");
-		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
-	});
-	</script>			
-				
