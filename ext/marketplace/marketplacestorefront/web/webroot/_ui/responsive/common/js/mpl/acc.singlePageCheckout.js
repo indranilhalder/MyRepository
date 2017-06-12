@@ -271,7 +271,6 @@ ACC.singlePageCheckout = {
 						if($("input[name='address"+entryNumbers[i]+"']:checked").length<=0)
 						{
 							$("."+entryNumbers[i]+"_select_store").show();
-							alert("in here");
 							return false;
 						}
     				}
@@ -1592,30 +1591,97 @@ ACC.singlePageCheckout = {
 		{
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
+		
+		var data="";
+	    var url=ACC.config.encodedContextPath + "";
+	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+      
+	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});  
+           
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+                if(data.type!="response")
+                {
+                	//TODO handle error here 
+                }
+                if(data.type=="response")
+                {
+                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved;
+                	ACC.singlePageCheckout.mobileValidationSteps.isSlotDeliveryPresent=data.isSlotDeliveryPresent;
+                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+                	{
+                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+                	}
+                	if(ACC.singlePageCheckout.mobileValidationSteps.isSlotDeliveryPresent)
+                	{
+                		//TODO Toast for slot delivery should be created here
+                	}
+                }
+                
+            }
+		});
+        
+        xhrResponse.always(function(){
+		});
+	},
+	
+	viewPaymentModeFormOnSelection:function(paymentMode)
+	{
+		if(paymentMode=="Credit Card")
+		{
+			viewPaymentCredit();
+		}
+		if(paymentMode=="Debit Card")
+		{
+			viewPaymentDebit();
+		}
+		if(paymentMode=="Netbanking")
+		{
+			viewPaymentNetbanking();
+		}
+		if(paymentMode=="EMI")
+		{
+			viewPaymentEMI();
+		}
+		if(paymentMode=="COD")
+		{
+			viewPaymentCOD();
+		}
+		if(paymentMode=="MRUPEE")
+		{
+			viewPaymentMRupee()
+		}
 	}
 }
 //Calls to be made on dom ready.
 $(document).ready(function(){
-	var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
-	$(window).on("resize",function(){
-		var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
-		if(onLoadIsResponsive!=onSizeChangeIsResponsive)
-		{
-			location.reload(true);
-		}
-	});
-	if(ACC.singlePageCheckout.getIsResponsive())
+	var pageType=$("#pageType").val();
+	if(pageType=="multistepcheckoutsummary")
 	{
-		var pageType=$("#pageType").val();
-		var defaultAddressPincode=$("#defaultAddressPincode").html();
-		if(pageType=="multistepcheckoutsummary" && typeof(defaultAddressPincode)!='undefined')
+		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
+		$(window).on("resize",function(){
+			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
+			if(onLoadIsResponsive!=onSizeChangeIsResponsive)
+			{
+				location.reload(true);
+			}
+		});
+		if(ACC.singlePageCheckout.getIsResponsive())
 		{
-			ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),"",false);
+			
+			var defaultAddressPincode=$("#defaultAddressPincode").html();
+			var defaultAddressId=$("#defaultAddressId").html();
+			if(typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
+			{
+				ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+			}
+			$("#makePaymentDiv").html("");
 		}
-		$("#makePaymentDiv").html("");
-	}
-	else
-	{
-		$("#makePaymentDivMobile").html("");
+		else
+		{
+			$("#makePaymentDivMobile").html("");
+		}
 	}
 });

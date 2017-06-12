@@ -216,7 +216,7 @@
 						<c:choose>
 							<c:when test="${map.key eq 'TW'}">
 								<input type="hidden" id="TW" value="${map.value}" />
-								<li><span id="viewPaymentMRupee"> <spring:theme
+								<li><span id="viewPaymentMRupee" onclick="viewPaymentMRupee();"> <spring:theme
 											code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 								</span></li>
 
