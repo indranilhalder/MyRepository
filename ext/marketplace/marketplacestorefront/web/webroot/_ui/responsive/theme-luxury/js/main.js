@@ -1063,7 +1063,7 @@ TATA.signInPopup = {
 		},
 		signIn : {
 			init: function(){
-				$(document).on("click", ".luxury-login", function(e){
+				$(".luxury-login").on("click", function(e){
 					e.preventDefault();
 					const loginURL = $(this).attr('href');
 					var loginContainer = $('#login-container .header-sign-in');
