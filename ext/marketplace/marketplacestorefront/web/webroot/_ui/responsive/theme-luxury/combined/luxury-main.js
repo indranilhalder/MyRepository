@@ -12832,7 +12832,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -13153,7 +13153,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -13549,8 +13549,103 @@ TATA.CommonFunctions = {
         var _self = TATA.Pages;
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
     }
+}, TATA.signInPopup = {
+    init: function() {
+        var _self = TATA.signInPopup;
+        _self.signIn.init(), _self.signUp.init(), _self.forgotPassword.init();
+    },
+    commonFunctions: {
+        beforeAjax: function() {
+            $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+        }
+    },
+    signIn: {
+        init: function() {
+            $(document).on("click", ".luxury-login", function(e) {
+                e.preventDefault();
+                const loginURL = $(this).attr("href");
+                $("#login-container .header-sign-in");
+                $.ajax({
+                    url: loginURL,
+                    beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
+                    success: function(data) {
+                        $("#login-container .header-sign-in").html(data), $("#header-account").addClass("active"), 
+                        $("body").removeClass("menu-open");
+                    }
+                });
+            }), $(document).on("click", "#triggerLoginAjax", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), TATA.signInPopup.signIn.validate();
+            });
+        },
+        validate: function() {
+            $("#loginForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#loginForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    j_username: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    },
+                    j_password: {
+                        required: !0,
+                        maxlength: 30
+                    }
+                },
+                submitHandler: TATA.signInPopup.signIn.submitHandler(this)
+            });
+        },
+        submitHandler: function(form) {
+            $.ajax({
+                url: "/j_spring_security_check",
+                type: "POST",
+                returnType: "text/html",
+                data: $(form).serialize(),
+                beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
+                success: function(data) {
+                    307 == data ? location.reload() : ($("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
+                    $("#j_password").val(""));
+                }
+            });
+        }
+    },
+    signUp: {
+        init: function() {
+            $(document).on("click", ".register_link", function(e) {
+                e.preventDefault();
+                const luxRegister = $(this).attr("href");
+                $.ajax({
+                    url: luxRegister,
+                    beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
+                    success: function(data) {
+                        $("#login-container .header-signup").html(data);
+                    }
+                });
+            });
+        },
+        validate: function() {}
+    },
+    forgotPassword: {
+        init: function() {
+            $(document).on("click", ".js-password-forgotten", function(e) {
+                e.preventDefault();
+                const pwsRequest = $(this).attr("href");
+                $.ajax({
+                    url: pwsRequest,
+                    beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
+                    success: function(data) {
+                        $("#login-container .header-forget-pass").html(data);
+                    }
+                });
+            });
+        },
+        validate: function() {}
+    }
 }, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt();
+    TATA.CommonFunctions.init(), TATA.Pages.init(), TATA.signInPopup.init(), $("select").selectBoxIt();
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {

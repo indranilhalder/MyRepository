@@ -981,6 +981,13 @@ display: none;
 			<small class="smallSizeRegularTxt">Lines open from 8:00 AM to 11:00 PM</small>
 		</p>
 	</div>
+	
+	<div class="card-details mt-20 mb-20">
+		<ul>
+		 <li class="ssl"></li>
+		 <li class="use-card"></li>
+		</ul>
+	</div>
 						
 </div>
 </template:page>

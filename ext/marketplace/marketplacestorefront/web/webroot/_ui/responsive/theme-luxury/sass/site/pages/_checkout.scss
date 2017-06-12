@@ -363,6 +363,35 @@
     
     
 }
+.right-block .card-details{
+    
+    ul{
+        padding: 0px;
+        
+        li{
+            
+            display: inline-block;
+            float: left;
+            
+            &.ssl{
+                background: $Sprite_icon no-repeat -850px -45px;
+                width: 81px;
+                height: 34px;               
+                float: left;
+                margin-right: 5px;
+            }
+            
+            &.use-card{
+                background: $Sprite_icon no-repeat -760px 0;
+                width: 248px;
+                height: 34px;               
+                float: left;
+            }
+        }
+        
+        
+    }
+}
 .right-block .checkout-order-summary{
     border: 1px solid #ccc;  
     border-radius: 5px 5px 5px 5px;
