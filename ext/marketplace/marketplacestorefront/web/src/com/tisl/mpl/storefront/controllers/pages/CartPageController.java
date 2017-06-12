@@ -217,25 +217,29 @@ public class CartPageController extends AbstractPageController
 					//ReachedMaxLimitforproduct = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
 					//					model.addAttribute(MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT, ReachedMaxLimitforproduct);
 					//GlobalMessages.addErrorMessage(model, ReachedMaxLimitforproduct);
-
+					String errorMsg = null;
 					cartModel = getCartService().getSessionCart();
+					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 					for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
 					{
 
 						if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
 								&& null != orderEntry.getProduct().getMaxOrderQuantity())
 						{
-							final String errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
+							errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
 									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
 									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.MIDCOUNTMSG
 									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
 									+ orderEntry.getProduct().getMaxOrderQuantity().toString()
 									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
 									+ MarketplacecommerceservicesConstants.LASTCOUNTMSG;
-
-							GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
 						}
 					}
+					GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
+
+					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+					prepareDataForPage(model, cartData);
+					return returnPage;
 				}
 				//TPR-5346 ENDS
 
