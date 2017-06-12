@@ -205,7 +205,25 @@
 			}
 			.actions{
 				button{
-					margin-right:10px;
+					margin:0 auto;
+					
+				}
+			}
+			.address_landmarkOtherDiv{
+				margin-left:0px !important;
+			}
+			.selectboxit-container{
+				ul.selectboxit-options{
+					width:100%;
+					li{
+						a{
+							height:35px;
+							line-height:35px;
+						}
+					}
+				}
+				.otherOption{
+					line-height:35px;
 				}
 			}
 			.toggle-btn {
@@ -268,6 +286,23 @@
 				}
 			}
 		}
+	}
+	ul.menu{
+		list-style-type: none;
+    	padding: 0;
+    	li{
+    		width:50%;
+    		float:left;
+    		padding:15px;
+    		height:250px;
+    		text-align:center;
+    		img{
+    			max-width:100px;
+    		}
+    		h3{
+    			font-size:18px;
+    		}
+    	}
 	}
 }
 
@@ -336,6 +371,12 @@
 				}
 			} 
 		}
-	}  
+		ul.menu{
+			li{
+				width:100%;
+			}
+		} 
+	} 
+	
 	
 }
