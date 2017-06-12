@@ -21,13 +21,18 @@
 		$("#pinExc").keyup(function() {
 			document.getElementById("pdpPincodeCheck").className = "Check";
 			$("#exchangeDetails").hide();
-			$("#couponMsg").hide();
+			$("#couponValue").hide();
+						
 			pdppin.value = this.value;	
 			pinform.value=this.value;
 			
 		});
 		
-	 
+		$('#exchange_tc').change(function(){
+			
+			$("#error_tc").hide();
+			
+		});
 
 	$("#pdpPincodeCheckExchnage").on("click",function(){
 		
@@ -137,6 +142,8 @@
 				        
 				      
 					$("#exchangeDetails").show();
+					document.getElementById('submit&Condition').style.display = "block";
+					
 					//alert("successs");
 					//var pinExc = $('#pinExc').val();
 					//alert("exchnge pin boss "+pinExc);
