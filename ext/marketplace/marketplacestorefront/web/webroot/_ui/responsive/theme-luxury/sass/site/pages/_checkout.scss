@@ -243,7 +243,49 @@
             }
         }
         
+        
+        .adresstype{
+            margin: 10px;
+            
+            input {
+                display: none!important;
+            }
+            
+            label{
+                display: inline-block;               
+                margin: 10px;
+            }
+            
+             .toggle-btn {
+			    border: 1px solid #2d2d2d;
+			    display: inline-block;
+			    padding: 10px;
+			    position: relative;
+			    text-align: center;
+			    transition: background .6s ease,color .6s ease;			   
+			    border-radius: 3px;
+                width: 30%;			   
+			    font-weight: 400;
+			    z-index:1; 
+			    
+			}
+			.toggle[type="radio"]:checked + label{
+			    background: #2d2d2d;
+			    color:#fff;
+			}
+            
+            
+            
+        }       
+        #addressform_button_panel{
+            height: 30px;
+            #newAddressButton{
+                float: right;
+            }
+        }
+        
     }
+    
  }
 .right-block .checkout-order-summary{
     border: 1px solid #ccc;  

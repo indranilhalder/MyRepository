@@ -71,7 +71,7 @@
 					</div>
 
 
-					<div class="form-additionals">
+					<div class="form-additionals  le-checkbox">
 						<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 							<formElement:formCheckbox idKey="savePaymentInfo1" labelKey="checkout.multi.sop.savePaymentInfo" path="savePaymentInfo"
 							                          inputCSS="" labelCSS="" mandatory="false"/>
