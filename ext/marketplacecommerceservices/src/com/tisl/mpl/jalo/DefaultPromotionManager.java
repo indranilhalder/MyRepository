@@ -5453,7 +5453,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		final StringBuilder promQuery = new StringBuilder(200);
 		promQuery.append("SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
 		promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(promotionType).append(" AS promo} ");
-		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
+		promQuery.append(" WHERE {promo:pk} = ?promo ");
+		//promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
 
 		final List<List<String>> resultStr = getSession().getFlexibleSearch()
 				.search(ctx, promQuery.toString(), params, Arrays.asList(String.class, String.class), true, true, 0, -1).getResult();
