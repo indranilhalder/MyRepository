@@ -3,6 +3,9 @@
  */
 package com.tisl.mpl.storefront.security.cookie;
 
+import de.hybris.platform.servicelayer.config.ConfigurationService;
+
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 
 import org.apache.log4j.Logger;
@@ -15,6 +18,9 @@ import org.apache.log4j.Logger;
 public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 {
 	private static final Logger LOG = Logger.getLogger(KeepAliveCookieGenerator.class);
+
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 	@Override
 	protected Cookie createCookie(final String cookieValue)
@@ -36,8 +42,8 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 		//		final int str = Integer.parseInt(configurationService.getConfiguration()
 		//				.getString(MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
 		//		final int expiryTime = 60 * 60 * 24 * str; // 24h in seconds
-		cookie.setMaxAge(900);
-		LOG.error("here Setting cookie age::: 900");
+		cookie.setMaxAge(Integer.parseInt(configurationService.getConfiguration().getString("shared.cookies.domain")));
+		LOG.error("here Setting cookie age::: shared.cookies.domain");
 	}
 
 	@Override
@@ -46,8 +52,8 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 		// If cookie doesnot use the default domain
 		//		if (!isUseDefaultDomain() && StringUtils.isNotEmpty(getCustomDomain()))
 		//		{
-		cookie.setDomain(".tataunistore.com");
-		LOG.error("here Setting cookie domain::: .tataunistore.com");
+		cookie.setDomain(configurationService.getConfiguration().getString(DOMAIN));
+		LOG.error("here Setting cookie domain::: shared.cookies.domain");
 		//		}
 
 	}
