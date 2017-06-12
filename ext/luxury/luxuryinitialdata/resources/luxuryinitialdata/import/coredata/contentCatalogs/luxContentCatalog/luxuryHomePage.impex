@@ -227,7 +227,7 @@ INSERT_UPDATE ConfigureProductsCountComponent;$contentCV[unique=true];uid[unique
 ;;ConfigureProductsCount;Configure product count;ConfigureProductsCount;;;
 
 INSERT_UPDATE PincodeServiceComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
-;;PinCodeService;Pincode Service Avilability;PinCodeService;;;                        
+;;LuxuryPinCodeService;Pincode Service Avilability;LuxuryPinCodeService;;;                        
                                     
                                     
 # Create Content Slots              
@@ -256,7 +256,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;ConfigureImagesCountSlot;ConfigureImagesCountComponent;true;ConfigureImagesCount
 #pdp changes for configuring number of products to be shown in pdp
 ;;ConfigureProductsCountSlot;ConfigureProductsCountComponent;true;ConfigureProductsCount
-;;PinCodeServiceSlot;Pin Code Service;true;PinCodeService                                                  
+;;PinCodeServiceSlot;Pin Code Service;true;LuxuryPinCodeService                                                  
                            
                                                 
                           

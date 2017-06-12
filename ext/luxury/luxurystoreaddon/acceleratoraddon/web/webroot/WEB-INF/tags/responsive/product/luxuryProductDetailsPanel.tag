@@ -313,6 +313,10 @@ tr.d0 td {
 			<cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot>
+				
+			<cms:pageSlot position="PinCodeService" var="component">
+				<cms:component component="${component}" />
+			</cms:pageSlot>
 			
 			<c:if test="${isGigyaEnabled=='Y'}">
 				<div id='ratingDiv'></div>

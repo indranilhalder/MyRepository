@@ -1108,6 +1108,8 @@ $(function() {
 										url : requiredUrl,
 										data : dataString,
 										success : function(data) {
+											
+											var isLuxury = $("#isLuxury").val();
 
 											if (data == "" || data == []
 													|| data == null) {
@@ -1152,6 +1154,12 @@ $(function() {
 											}
 											// check if oms service is down
 											else if (data[0]['isServicable'] == 'NA') {
+												
+												if(isLuxury) {
+													$(this).hide();
+													$('.luxuyChangepincode').show();
+												}
+												
 												$("#home").show();
 												$("#homeli").show();
 												$("#homeli").addClass("selected");
@@ -1181,6 +1189,11 @@ $(function() {
 											/*TPR-642 & 640 ends*/
 												return false;
 											} else {
+												
+												if(isLuxury) {
+													$(this).hide();
+													$('.luxuyChangepincode').show();
+												}
 												// TPR-1375
 												//populating  buybox details agian after checking pincode response
 												repopulateBuyBoxDetails(data,buyBoxList);
@@ -1528,6 +1541,8 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
+				var isLuxury = $("#isLuxury").val();
+				var pinCodeAvailable = $("#pinCodeAvailable").val();
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -1568,18 +1583,33 @@ function displayDeliveryDetails(sellerName) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-					//$("#home").hide();
-					//$("#homeli").hide();
+					if(isLuxury) {
+						$("#home").hide();
+						$("#homeli").hide();
+					} else {
+						$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
+						$("#homeli").css("opacity","0.5");
+						$("#homeli").removeClass("selected");
+					}
 				
-					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
-					$("#homeli").css("opacity","0.5");
-					$("#homeli").removeClass("selected");
 				} else {
 					//var start=parseInt($("#homeStartId").val())+leadTime;
 					//var end=parseInt($("#homeEndId").val())+leadTime;
 					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
-					$("#home").show();
-					$("#homeli").show();
+					if(isLuxury) {
+						if(pinCodeAvailable == 'true') {
+							$("#home").show();
+							$("#homeli").show();
+						} else {
+							$("#home").hide();
+							$("#homeli").hide();
+						}
+						
+					} else {
+						$("#home").show();
+						$("#homeli").show();
+					}
+					
 					$("#homeli").addClass("selected");
 				    $("#homeli").css("opacity","1");
 					
@@ -1587,33 +1617,70 @@ function displayDeliveryDetails(sellerName) {
 				var start_ed=$("#expressStartId").val();
 				var end_ed=$("#expressEndId").val();
 				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
-					//$("#express").hide();
-					//$("#expressli").hide();
+					
 					//var start=$("#expressStartId").val();
 					//var end=$("#expressEndId").val();
-					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
-					$("#expressli").css("opacity","0.5");
-					$("#expressli").removeClass("selected");
+					if(isLuxury) {
+						$("#express").hide();
+						$("#expressli").hide();
+					} else {
+						$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
+						$("#expressli").css("opacity","0.5");
+						$("#expressli").removeClass("selected");
+					}
+					
 				} else {		
 					
 			    
 					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
-					$("#express").show();
-					$("#expressli").show();
+					
+					if(isLuxury) {
+						if(pinCodeAvailable == 'true') {
+							$("#express").show();
+							$("#expressli").show();
+						} else {
+							$("#express").hide();
+							$("#expressli").hide();
+						}
+						
+					} else {
+						$("#express").show();
+						$("#expressli").show();
+					}
+					
+					
+					
 					$("#expressli").addClass("selected");
 				    $("#expressli").css("opacity","1");
 
 					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-						//$("#home").hide();
-						//$("#homeli").hide();
-						$("#homeli").css("opacity","0.5");
-						$("#homeli").removeClass("selected");
+						if(isLuxury) {
+							$("#home").hide();
+							$("#homeli").hide();
+						} else {
+							$("#homeli").css("opacity","0.5");
+							$("#homeli").removeClass("selected");
+						}
+						
 					} else {
 						var start=parseInt($("#homeStartId").val())+leadTime;
 						var end=parseInt($("#homeEndId").val())+leadTime;
 						$("#homeDate").html(pretext+start+"-"+end+posttext);
-						$("#home").show();
-						$("#homeli").show();
+						
+						if(isLuxury) {
+							if(pinCodeAvailable == 'true') {
+								$("#home").show();
+								$("#homeli").show();
+							} else {
+								$("#home").hide();
+								$("#homeli").hide();
+							}
+							
+						} else {
+							$("#home").show();
+							$("#homeli").show();
+						}
+						
 						$("#homeli").addClass("selected");
 						$("#homeli").css("opacity","1");
 					}
@@ -1627,24 +1694,55 @@ function displayDeliveryDetails(sellerName) {
 						var start=$("#expressStartId").val();
 						var end=$("#expressEndId").val();
 						$("#expressDate").html(pretext+start+"-"+end+posttext);
-						$("#express").show();
-						$("#expressli").show();
+						
+						if(isLuxury) {
+							if(pinCodeAvailable == 'true') {
+								$("#express").show();
+								$("#expressli").show();
+							} else {
+								$("#express").hide();
+								$("#expressli").show();
+							}
+							
+						} else {
+							$("#express").show();
+							$("#expressli").show();
+						}
+						
+						
 						$("#expressli").addClass("selected");
 						$("#expressli").css("opacity","1");
 					}
 					
 					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
+						if(isLuxury) {
+							$("#collect").hide();
+							$("#collectli").hide();
+						} else {
+							$("#collectli").css("opacity","0.5");
+							$("#collectli").removeClass("selected");
+						}
 						
-						//$("#collect").hide();
-						//$("#collectli").hide();
-						$("#collectli").css("opacity","0.5");
-						$("#collectli").removeClass("selected");
 					} else {
 						var start=$("#clickStartId").val();
 						var end=$("#clickEndId").val();
 						$("#clickDate").html(pretext+start+"-"+end+posttext);
-						$("#collect").show();
-						$("#collectli").show();
+						
+						if(isLuxury) {
+							if(pinCodeAvailable == 'true') {
+								$("#collect").show();
+								$("#collectli").show();
+							} else {
+								$("#collect").hide();
+								$("#collectli").hide();
+							}
+							
+						} else {
+							$("#collect").show();
+							$("#collectli").show();
+						}
+						
+						
 						$("#collectli").css("opacity","1");
 						$("#collectli").addClass("selected");
 					}
@@ -1658,19 +1756,35 @@ function displayDeliveryDetails(sellerName) {
 				var start_cnc=$("#clickStartId").val();
 				var end_cnc=$("#clickEndId").val();
 				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
+					if(isLuxury) {
+						$("#collect").hide();
+						$("#collectli").hide();
+					} else {
+						$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
+						$("#collectli").css("opacity","0.5");
+						$("#collectli").removeClass("selected");
+					}
 					
-					//$("#collect").hide();
-					//$("#collectli").hide();
-					
-					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
-					$("#collectli").css("opacity","0.5");
-					$("#collectli").removeClass("selected");
 				} else {
 				    //var start=$("#clickStartId").val();
 		        	//var end=$("#clickEndId").val();
 					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
-					$("#collect").show();
-					$("#collectli").show();
+					
+					if(isLuxury) {
+						if(pinCodeAvailable == 'true') {
+							$("#collect").show();
+							$("#collectli").show();
+						} else {
+							$("#collect").hide();
+							$("#collectli").hide();
+						}
+						
+					} else {
+						$("#collect").show();
+						$("#collectli").show();
+					}
+					
+					
 					$("#collectli").addClass("selected");
 				    $("#collectli").css("opacity","1");
 				  }

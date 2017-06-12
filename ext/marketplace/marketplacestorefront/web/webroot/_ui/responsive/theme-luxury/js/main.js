@@ -1028,6 +1028,13 @@ TATA.Pages = {
         	})
         	
         },
+        luxuryDeliveryOptions:function() {
+        	$('.luxuyChangepincode').on("click", function() {
+        		$(this).hide();
+        		$('#pin').show();
+        		$('#pdpPincodeCheck').show();
+        	});
+        },
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
@@ -1038,6 +1045,7 @@ TATA.Pages = {
             _self.BankEMI();
             _self.luxury_overlay_close();
             _self.wishlistInit();
+            _self.luxuryDeliveryOptions();
 		}
 	},
 	

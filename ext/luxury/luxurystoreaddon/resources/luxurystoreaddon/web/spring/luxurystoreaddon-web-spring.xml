@@ -118,5 +118,10 @@
        <property name="typeCode" value="LuxEnhancedSearchBoxComponent" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryPincodeServiceComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
  
 </beans>
