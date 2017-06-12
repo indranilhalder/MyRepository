@@ -751,6 +751,9 @@
     			margin-top:0px;
 			}
 		}
+		.pincodeEmpty{
+			display:none;
+		}
 	}
 	.right-delivery-block {
 		width:48%;
@@ -763,5 +766,16 @@
     			padding: 10px 36px;
     		}
     	}
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	.pdp-view {
+		.delivery-block {
+			width:100%;
+		}
+		.right-delivery-block {
+			width:100%;
+		}
 	}
 }
