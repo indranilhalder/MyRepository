@@ -168,8 +168,7 @@
            border-color: transparent;
         }
     }  
-    .deliveryaddress{
-        background: #f9f9f9;
+    .deliveryaddress{        
         border-left: 1px solid #ccc;
         border-right:1px solid #ccc;
         padding-bottom: 10px;
@@ -211,6 +210,34 @@
         
         #addressform_button_panel{
             clear: both;
+        }
+        
+        .choose-address{
+            .addressList_wrapper{
+                
+                 padding: 0px 25px;
+                
+                .address-list{
+                    width: 100%;
+                    border: 1px solid #ccc;
+                    padding: 20px;
+                    border: 1px solid;
+                    border-radius: 10px;
+                    margin-bottom: 20px;
+                    background: #f9f9f9;
+
+                    .acc_head{
+                        h2{
+                            font-size:18px;
+                        }
+                    }
+                }
+            }  
+        }
+        
+        .addNew_wrapper{
+            background: #f9f9f9;
+            padding: 0px 25px;
         }
         
     }
