@@ -272,7 +272,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			if (!updateCartOnMaxLimExceeds)
 			{
 				//	redirectAttributes.addFlashAttribute("updateCartOnMaxLimExceeds", Boolean.valueOf(updateCartOnMaxLimExceeds));
-
+				String errorMsg = null;
 				serviceCart = getCartService().getSessionCart();
 				for (final AbstractOrderEntryModel orderEntry : serviceCart.getEntries())
 				{
@@ -280,17 +280,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
 							&& null != orderEntry.getProduct().getMaxOrderQuantity())
 					{
-						final String errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
-								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
-								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.MIDCOUNTMSG
-								+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+						errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG + MarketplacecommerceservicesConstants.SINGLE_SPACE
+								+ orderEntry.getProduct().getName().toString() + MarketplacecommerceservicesConstants.SINGLE_SPACE
+								+ MarketplacecommerceservicesConstants.MIDCOUNTMSG + MarketplacecommerceservicesConstants.SINGLE_SPACE
 								+ orderEntry.getProduct().getMaxOrderQuantity().toString()
 								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.LASTCOUNTMSG;
-
-						GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
 					}
 				}
-
+				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 			//TPR-5346 ENDS
