@@ -24,13 +24,13 @@
 	<c:if test="${not empty deliveryAddresses}">	
 
 		<form id="selectAddressFormMobile"
-			action="/checkout/single/select-address"
+			action="/checkout/single/select-address-responsive"
 			method="get">
 			<!-- change here for modified checkout page starts -->
 						<!-- Div to display ajax failure messages -->
 						<div id="selectedAddressMessageMobile" style=""></div>
 
-						
+						<span id="emptyAddressMobile" style="display:none">Please select a delivery method to proceed.</span>
 
 <div class="addressList_wrapper mobile_list">
 							<c:forEach items="${deliveryAddresses}" var="deliveryAddress"

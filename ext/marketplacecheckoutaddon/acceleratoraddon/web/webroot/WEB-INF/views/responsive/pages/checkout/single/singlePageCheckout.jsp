@@ -24,6 +24,7 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
+<c:if test="${deviceType ne 'mobile'}">
 <div id="singlePageDesktop">
 	<!-- Accordions -->
 	<div id="singlePageAccordion" class="checkout-accordion-wrapper">
@@ -67,7 +68,7 @@
 	            <div style="display:none"><span></span><span></span></div>
 	        </div>
 	        <div class="checkout-accordion-body">
-	            <div id="makePayment">
+	            <div id="makePaymentDiv">
 	                <c:if test="${fn:contains(prePopulateTab, 'payment')}" >
 	                	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 
 	                </c:if>
@@ -76,12 +77,14 @@
 	    </div>
 	</div>
 </div>
+</c:if>
+<c:if test="${deviceType ne 'normal'}">
 <div id="singlePageMobile">
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
 		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper">
 		<p class="change-mobile">Change</p>
-		<!-- <p class="cancel-mobile">Cancel</p> -->
+		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
 	</div>
@@ -89,22 +92,25 @@
 		<div class="checkout-mobile-heading">Delivery Method</div>
 		<div class="change-cancel-wrapper">
 		<p class="change-mobile">Change</p>
-		<!-- <p class="cancel-mobile">Cancel</p> -->
+		<p class="cancel-mobile">Cancel</p>
 		</div>
-			<div id="choosedeliveryModeMobile">
-				<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetails.jsp"%>
-
-	        </div>
+		<div id="choosedeliveryModeMobile">
+			<%@include
+				file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/fragments/checkout/single/showDeliveryModesDetailsMobile.jsp"%>
 		</div>
+	</div>
 	<div  class="checkout_mobile_section" id="makePaymentMobile">
 	<div class="checkout-mobile-heading">Payment</div>
 	<div class="change-cancel-wrapper">
 		<p class="change-mobile">Change</p>
-		<!-- <p class="cancel-mobile">Cancel</p> -->
+		<p class="cancel-mobile">Cancel</p>
 		</div>
-		<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
+		<div id="makePaymentDivMobile">
+			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
+		</div>
 	</div>
 </div>
+</c:if>
 <div class="modal fade" id="singlePageAddressPopup">
 	<div class="content" style="padding: 40px;max-width: 650px;">
 		<span id="modalBody"></span>

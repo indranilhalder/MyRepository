@@ -380,20 +380,20 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (device.isNormal())
 				{
 					deviceType = "normal";
-					LOG.debug("type of device" + device.isNormal());
+					LOG.debug("type of device=" + device.isNormal());
 				}
 				else if (device.isMobile())
 				{
 					deviceType = "mobile";
-					LOG.debug("type of device" + device.isMobile());
+					LOG.debug("type of device=" + device.isMobile());
 				}
 				else if (device.isTablet())
 				{
 					deviceType = "tablet";
-					LOG.debug("type of device" + device.isTablet());
+					LOG.debug("type of device=" + device.isTablet());
 				}
 			}
-			LOG.debug(deviceType);
+			LOG.debug("Device Type=" + deviceType);
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
 			if (isServicable.equalsIgnoreCase("N"))
 			{
@@ -447,11 +447,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
 			model.addAttribute("checkoutPageName", selectAddress);
 
+			model.addAttribute("deviceType", deviceType);
 			//Code to import payment on checkout page load
 			model.addAttribute("openTab", "deliveryAddresses");
 			model.addAttribute("prePopulateTab", "payment#deliveryMethod");
 			prepareModelForPayment(model, cartUssidData);
-			prepareModelForDeliveryMode(model, cartModel);
+			if (!deviceType.equals("normal"))
+			{
+				prepareModelForDeliveryMode(model, cartModel);
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -3622,7 +3626,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3679,7 +3683,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
