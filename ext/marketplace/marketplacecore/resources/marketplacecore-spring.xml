@@ -1747,7 +1747,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 				<value>10-12Y</value>
 				<value>12-14Y</value>
 				<value>14-16Y</value>
-				<value>FreeSize</value> 
+				<value>FREESIZE</value>
 			<!-- TISPRDT-1447: kidswear size facet are not coming in order -->
 				<value>XXS</value>
 				<value>XS</value>
