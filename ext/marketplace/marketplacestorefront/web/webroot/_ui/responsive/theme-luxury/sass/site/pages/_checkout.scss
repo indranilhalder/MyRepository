@@ -214,7 +214,7 @@
         }
         
         .choose-address{
-            .newAddressCenter{
+            .acc_head{
                 padding: 10px 25px;
                 background: #fff;
             }
@@ -251,7 +251,10 @@
         .step-body{
             padding: 0px 0px;
         }
-        
+        .checkout-shipping{
+            background: #fff;
+            padding-top: 10px;
+        } 
     }
     .deliveryaddress.choosePage{
         background: transparent;
@@ -357,7 +360,7 @@
             border: 1px solid transparent;
             white-space: nowrap;
             user-select: none;
-            text-transform: uppercase;
+            text-transform:uppercase;
         }
     }
     
