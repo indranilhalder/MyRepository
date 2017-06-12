@@ -972,7 +972,16 @@ display: none;
 		</c:if>
 		</div>
 	</div>
-		<multi-checkout:coupons isCart="${isCart}"/>
+	<div class="coupon-code  mt-20"><multi-checkout:coupons isCart="${isCart}"/></div>
+	
+	<div class="helpLine mt-20 mb-20">
+		<p class="text-center grayTxt normalSizeRegularTxt">
+			Need Help With Placing Your Order?
+			<strong class="mediumSizeTxt mt-10 mb-10">Call us at 91-901 924 5000</strong>
+			<small class="smallSizeRegularTxt">Lines open from 8:00 AM to 11:00 PM</small>
+		</p>
+	</div>
+						
 </div>
 </template:page>
 
