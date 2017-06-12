@@ -31,9 +31,7 @@ public interface CheckoutStepController
 	 * @throws CMSItemNotFoundException
 	 * @throws CommerceCartModificationException
 	 */
-	//	String enterStep(final Model model, final RedirectAttributes redirectAttributes)
-	//			throws CMSItemNotFoundException, CommerceCartModificationException;
-	String enterStep(final Model model, final RedirectAttributes redirectAttributes, final RedirectAttributes redirectModel)
+	String enterStep(final Model model, final RedirectAttributes redirectAttributes)
 			throws CMSItemNotFoundException, CommerceCartModificationException;
 
 	/**
