@@ -737,11 +737,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1197,7 +1197,8 @@ public class GenericUtilityMethods
 								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
 								//For kidswear L4 needs to be populated
-								page_subcategory_name_L4 = "\" \"";
+								//Commented as per TISPRDT-1462
+								//page_subcategory_name_L4 = "\" \"";
 								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
 							}
 						}
