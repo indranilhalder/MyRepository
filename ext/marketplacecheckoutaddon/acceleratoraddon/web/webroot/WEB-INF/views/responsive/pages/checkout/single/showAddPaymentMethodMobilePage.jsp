@@ -1482,7 +1482,7 @@
 								<input type="hidden" id="TW" value="${map.value}" />
 
 								<li class="paymentModeMobile"><span
-									id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection(ACC.singlePageCheckout.onPaymentModeSelectionheme
+									id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('MRUPEE');"> <spring:theme
 											code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 								</span></li>
 							</c:when>
