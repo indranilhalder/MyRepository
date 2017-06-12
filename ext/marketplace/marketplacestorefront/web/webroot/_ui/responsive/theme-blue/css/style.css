@@ -69034,3 +69034,13 @@ transition: background 0s 0.3s;
 }
 } 
 /*UF-373 end*/
+/*UF-317 start*/
+@media (min-width: 791px){
+	footer>div>ul>li:first-child h3{
+	  padding-left: 30px;
+	  }
+	footer>div>ul>li:not(:first-child) h3.toggle{
+	padding: 25px 0 15px 30px; 
+	  }
+}
+/*UF-317 end*/
