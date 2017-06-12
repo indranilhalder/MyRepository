@@ -128,6 +128,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -2809,8 +2810,32 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			ValidationResults validationResult = null;
-			if (StringUtils.isEmpty(guid))
+
+			final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
+			LOG.debug("refNumber number is ...................." + refNumber);
+
+			//Implementing mRupee Logic with cartGuid TISSQAEE-229
+			OrderModel mRupeeorderModel = null;
+			String cartGuid = null;
+			/* Getting guid from audit table based on the reference no. received from mRupee */
+			if (StringUtils.isNotEmpty(refNumber))
 			{
+				cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
+			}
+			LOG.debug("cartGuid number is ...................." + cartGuid);
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			}
+
+			LOG.debug("mRupeeorderModel is ++++++++" + mRupeeorderModel);
+
+			//Implementing mRupee Logic with cartGuid TISSQAEE-229
+			if (StringUtils.isEmpty(guid) && null != mRupeeorderModel && null != mRupeeorderModel.getIsWallet()
+					&& !WalletEnum.MRUPEE.equals(mRupeeorderModel.getIsWallet()))
+			{
+				LOG.debug("mRupeeorderModel.getIsWallet() is ++++++++" + mRupeeorderModel.getIsWallet());
 				validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
 			}
 			if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
@@ -2823,9 +2848,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			boolean selectPickupDetails = false;
 			//Payment page will be shown based on cart or order(after first failure payment) TPR-629
 			OrderModel orderModel = null;
+			//Implementing mRupee Logic with cartGuid TISSQAEE-229
 			if (StringUtils.isNotEmpty(guid))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+			}
+			else if (StringUtils.isNotEmpty(cartGuid))
+			{
+				orderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
 			}
 			//code to restrict user to continue the checkout if he has not selected pickup person name and mobile number.
 			//this is only when cart entry contains cnc delivery mode.
@@ -2899,6 +2929,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 				//Cart guid added to propagate to further methods via jsp
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
+				model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.FALSE); //INC144315475
 
 				//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
@@ -2913,7 +2944,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				// TPR-429 END
 				//Getting Payment modes
 				paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, orderData);
+
+
+				//TISSQAUAT-536 fixes
+
 				model.addAttribute(MarketplacecheckoutaddonConstants.GUID, orderModel.getGuid());
+				model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.TRUE); //INC144315475
 
 				//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			}

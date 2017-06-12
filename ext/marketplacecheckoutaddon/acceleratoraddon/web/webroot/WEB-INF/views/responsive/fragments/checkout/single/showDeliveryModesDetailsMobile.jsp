@@ -31,7 +31,7 @@
 		<div class="checkout-shipping left-block">
 
 			<div class="checkout-indent">
-				<single-checkout:showShipmentItemsMobile cartData="${cartData}"
+				<single-checkout:showShipmentItems cartData="${cartData}"
 					defaultPincode="${defaultPincode}" showDeliveryAddress="true" />
 			</div>
 		</div>

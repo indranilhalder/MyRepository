@@ -1378,7 +1378,9 @@ ACC.singlePageCheckout = {
 		isAddressSet:false,
 		isDeliveryModeSte:false,
 		saveNewAddress:false,
-		selectedAddressId:""
+		selectedAddressId:"",
+		isInventoryReserved:false,
+		isSlotDeliveryPresent:false
 	},
 	
 	getMobileAddAddress:function(){
@@ -1580,7 +1582,7 @@ ACC.singlePageCheckout = {
 		return false;
 	},
 	
-	onPaymentModeSelection:function()
+	onPaymentModeSelection:function(paymentMode)
 	{
 		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
 		{
@@ -1610,10 +1612,10 @@ $(document).ready(function(){
 		{
 			ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),"",false);
 		}
-		$("makePaymentDiv").html("");
+		$("#makePaymentDiv").html("");
 	}
 	else
 	{
-		$("makePaymentDivMobile").html("");
+		$("#makePaymentDivMobile").html("");
 	}
 });
