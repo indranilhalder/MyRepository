@@ -1,7 +1,7 @@
 .soc-links{
     text-align: center;
     margin: 30px 0px;
-    
+
     a{
         display:inline-block;
         width: 40px;
@@ -17,10 +17,10 @@
     .g-interactivepost{
         background: transparent;
         border: 0px;
-        width: 40px;        
+        width: 40px;
         padding: 0px;
     }
-    
+
     .fb, .tw, .yt, .ins, .gp, .pin{
         background:$Sprite_icon no-repeat;
         width: 40px;
@@ -33,10 +33,10 @@
         background-position: -2390px 0;
     }
     .tw{
-        background-position: -2490px 0;        
+        background-position: -2490px 0;
     }
     .yt{
-        background-position: -2440px 0;    
+        background-position: -2440px 0;
     }
     .ins{
         background-position:-2340px 0;
@@ -45,7 +45,7 @@
         background-position:-2290px 0;
     }
     .pin{
-       background-position:-2540px 0; 
+       background-position:-2540px 0;
     }
 }
 
@@ -56,7 +56,7 @@
 			margin:35px 0;
 			font-family: $font-roboto;
 			font-size: 38px;
-			font-weight: 700;			
+			font-weight: 700;
 		}
 		.shop-on-luxuy{
 			h2{
@@ -65,35 +65,35 @@
 			}
 			/*.shop-box{
 				padding-top:70px;
-				
+
 				&:before{
 					content: '';
 					background:$Sprite no-repeat;
-					vertical-align: middle;					
+					vertical-align: middle;
 					width: 60px;
 					height: 60px;
 					display: inline-block;
 					text-indent: -999px;
 					overflow: hidden;
-					border: 0px;    
+					border: 0px;
 					margin-left: -25px;
 					margin-top: -37px;
 					outline: none;
 				}
 			}
-			.shop-box:first-child{				
+			.shop-box:first-child{
 				&:before{
-					background-position:-9px -60px; 
+					background-position:-9px -60px;
 				}
 			}
 			.shop-box:nth-child(2){
 				&:before{
-					background-position:-78px -60px; 
+					background-position:-78px -60px;
 				}
 			}
 			.shop-box:last-child{
 				&:before{
-					background-position:-146px -61px; 
+					background-position:-146px -61px;
 				}
 			}*/
 		}
@@ -101,11 +101,11 @@
 
 /* Footer part Start */
 footer{
-	
+
 	.footer-middle{
 		background-color:$gray-base;
 		padding:25px 0px;
-		margin-top: 10px; 
+		margin-top: 10px;
 		.inner {
 		    max-width: 1288px;
 			margin-left: auto;
@@ -113,7 +113,7 @@ footer{
 		}
 		.signup-email-wrapper{
 			.send-awesome-email{
-				color:$btn-primary-color;                
+				color:$btn-primary-color;
 				.email-tit{
 					font-size:$font-size-h3;
 					margin-bottom:5px;
@@ -156,7 +156,7 @@ footer{
 			}
 		}
 	}
-	
+
 	.footer-inner-wrapper{
 		padding:45px 0;
 		h3{
@@ -200,11 +200,11 @@ footer{
 				&:hover{
 					text-decoration:none;
 				}
-			}	
-            
+			}
+
              .soc-links{
                 text-align:left;
-                margin: 0px;   
+                margin: 0px;
             }
 		}
 		.about-product{
@@ -220,26 +220,26 @@ footer{
 				}
 				li{
 					&:before{
-						
+
 						content: '';
 						background:$Sprite_icon no-repeat;
-						vertical-align: middle;						
+						vertical-align: middle;
                         width: 55px;
                         height: 45px;
 						display: inline-block;
 						text-indent: -999px;
 						overflow: hidden;
-						border: 0px; 
+						border: 0px;
 						outline: none;
 						float: left;
 						margin-right: 10px;
 					}
-					
+
 					&:first-child{
 						&:before{
-							background-position: -1952px -55px;                            
+							background-position: -1952px -55px;
                             height: 45px;
-						}						
+						}
 					}
 					&:nth-child(2){
 						&:before{
@@ -254,37 +254,37 @@ footer{
 						}
 					}
 			    }
-				
+
 			}
 		}
 	}
-	
-	
+
+
 	.footer-bottom-links {
 		float: left;
 		width: 100%;
 		padding: 0;
-		margin-bottom: 0; 
-		
+		margin-bottom: 0;
+
 		h5{
 			font-weight: 700;
 			position: relative;
 			margin-bottom:30px;
 				span{
-					background-color: $white;	
+					background-color: $white;
 					margin-right: 10px;
 				}
-			
+
 			&:after{
 				content: '';
 				background-color: $light-gray;
 				width: 100%;
-				position: absolute;				
+				position: absolute;
 				height: 1px;
 				top:7px;
 			}
 		}
-		
+
 		ul {
 			font-weight: 300;
 			padding: 0;
@@ -293,14 +293,14 @@ footer{
 			margin: 20px 0px;
 			font-family: $font-roboto;
 			font-size: 12px;
-			
-			li {				
+
+			li {
 				line-height: normal;
 				display: inline-block;
-				
+
 				&:first-child {
 					font-weight: 500;
-					
+
 					&:after{
 						content: ':';
 					}
@@ -324,7 +324,7 @@ footer{
 		font-family: Roboto;
 		font-size:12px;
 	}
-	
+
 	.footer-cloned-ul{
 		padding-left:0px;
 		>li{
@@ -380,7 +380,7 @@ footer{
 				margin: 40px 0 0px;
 				font-size: 26px;
 			}
-		} 
+		}
 		.footer-inner-wrapper {
 			padding-bottom:0px;
 			.accordion{
@@ -393,7 +393,8 @@ footer{
 			}
 			.accordion-title,h3{
 				position:relative;
-				margin-bottom:20px;
+				margin-bottom:0;
+        padding-bottom:20px;
 				.sp-minus::after{
 					content: "+";
 					height: 10px;
@@ -455,7 +456,7 @@ footer{
 					}
 				}
 			}
-			
+
 		}
 		.footer-middle{
 			display:none;
@@ -464,16 +465,16 @@ footer{
 					.email,.gender,.btn{
 						border-radius: $border-radius-large;
 					}
-				} 
-			} 
+				}
+			}
 		}
 		.footer-bottom-links{
 			h5:after{
 				display:none;
 			}
-		} 
-		
-		
+		}
+
+
 	}
 }
 /* Footer part End */

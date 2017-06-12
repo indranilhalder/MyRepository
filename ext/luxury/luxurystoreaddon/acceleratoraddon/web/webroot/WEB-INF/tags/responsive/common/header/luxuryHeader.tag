@@ -94,7 +94,7 @@
 					</li>
 					</sec:authorize>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-					<li><a href="/logout">Sign Out</a></li>
+					<li class="sign-out"><a href="/logout">Sign Out</a></li>
 					</sec:authorize>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 					<li class="logged_in">
