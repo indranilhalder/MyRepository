@@ -561,7 +561,7 @@ public class CartPageController extends AbstractPageController
 									- Double.parseDouble(entryLatest.getTotalPrice().getValue().toString());
 							if (oldPromoValue != latestPromoValue)
 							{
-								promoModified.put(entryLatest.getEntryNumber().toString(), "Promotion has been modified");
+								promoModified.put(entryLatest.getEntryNumber().toString(), "Sorry! The price of this item has changed");
 							}
 
 							//TISEE-535
