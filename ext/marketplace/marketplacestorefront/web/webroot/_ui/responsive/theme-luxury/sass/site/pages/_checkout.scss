@@ -459,4 +459,57 @@
     }
 }
 
+.payment-section{
+        background: #f9f9f9;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding-bottom: 10px;
+    border-radius: 0 0 5px 5px;
+}
+.checkout-paymentmethod{
+    li{
+     padding-left: 30px;   
+        position: relative;
+        border-top: 1px solid #ccc;
+            padding-top: 50px;
+        margin: 10px 0px;
+        list-style: none;
+        
+        span{
+            padding-top: 16px;
+                top: 0px;
+                position: absolute;
+        }
+    }
+    
+    li:first-child{
+         border-top:0px;
+    }
+    
+    li:before{
+        
+     content: "";
+	width: 20px;
+	height: 20px;
+	border-radius: $border-radius-small;
+	background: #fff;
+	border: 1px solid #c8c7cc;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+    }
+    
+    li.active:before{
+        
+       color: #fff;
+        background: #b99d6b url('../images/tick.png') no-repeat;
+        background-position: 3px 1px;
+        border-color:#b99d6b;
+        text-align: center;
+        line-height: 16px;
+    }
+}
+
 

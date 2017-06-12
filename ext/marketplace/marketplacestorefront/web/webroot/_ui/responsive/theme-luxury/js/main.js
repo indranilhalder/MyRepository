@@ -81,6 +81,8 @@ TATA.CommonFunctions = {
 	      return false;
 	    });
 	},
+    
+    
 
 
     ShopByCatagorySlider: function() {
