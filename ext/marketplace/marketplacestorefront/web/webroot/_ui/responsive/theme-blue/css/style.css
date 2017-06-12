@@ -65842,6 +65842,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     height: 66px;
     margin-bottom: 5px;
     border: solid 1px #dddddd;
+    resize: vertical;
     }
     #singlePageAddressPopup .product-block.addresses.new-form .full.country-select label,
     .new-address-form-mobile .product-block.addresses.new-form .full.country-select label{
@@ -66870,7 +66871,7 @@ background:#f8f8f8;
  padding-top: 20px;
  }
  #singlePageMobile .checkout-shipping.checkTab,
- #singlePageMobile #selectDeliveryMethodFormMobile,
+ #singlePageMobile #choosedeliveryModeMobile,
  #singlePageMobile .checkout-content.checkout-payment.cart.checkout.wrapper .left-block.choose-payment{
  border-radius: 4px;
  background: #fff;
