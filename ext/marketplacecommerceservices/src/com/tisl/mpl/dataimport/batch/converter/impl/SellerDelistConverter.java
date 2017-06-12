@@ -78,36 +78,14 @@ public class SellerDelistConverter extends DefaultImpexConverter
 	public String convert(final Map<Integer, String> row, final Long sequenceId)
 	{
 
-		/*
-		 * //Calling Delisting Processor to delist the Seller final boolean processed =
-		 * mplDelistingProcessor.processDatatoModelSeller(row);
-		 *
-		 * //Inserting boolean Value using hot Folder if (processed) { //true->1 row.put(ISPROCESSEDCOLOUMN, "1"); } else
-		 * { //false->0 row.put(ISPROCESSEDCOLOUMN, "0"); }
-		 */
-		/*
-		 * final StringBuilder builder = new StringBuilder(); int copyIdx = 0; int idx = impexRow.indexOf(BRACKET_START);
-		 * while (idx > -1) { final int endIdx = impexRow.indexOf(BRACKET_END, idx); if (endIdx < 0) { throw new
-		 * SystemException("Invalid row syntax [brackets not closed]: " + impexRow); }
-		 * builder.append(impexRow.substring(copyIdx, idx)); if (impexRow.charAt(idx + 1) == SEQUENCE_CHAR) {
-		 * builder.append(sequenceId); } else { final boolean mandatory = impexRow.charAt(idx + 1) == PLUS_CHAR; Integer
-		 * mapIdx = null; try { mapIdx = Integer.valueOf(impexRow.substring(mandatory ? idx + 2 : idx + 1, endIdx)); }
-		 * catch (final NumberFormatException e) { throw new
-		 * SystemException("Invalid row syntax [invalid column number]: " + impexRow, e); } final String colValue =
-		 * row.get(mapIdx); if (mandatory && StringUtils.isBlank(colValue)) { throw new
-		 * IllegalArgumentException("Missing value for " + mapIdx); } if (colValue != null) { builder.append(colValue); }
-		 * } copyIdx = endIdx + 1; idx = impexRow.indexOf(BRACKET_START, endIdx); } if (copyIdx < impexRow.length()) {
-		 * builder.append(impexRow.substring(copyIdx)); } result = builder.toString(); } return escapeQuotes(result); }
-		 */
-
-
 		//CAR-292
 		//INSERT_UPDATE MarketplaceDelist;sellerID[unique=true];DelistingStatus;isBlockOMS;isProcessed
-
-
 		String result = EMPTY_STRING;
-		String sellerAssociationStatus = SellerAssociationStatusEnum.YES.getCode();
 		final StringBuffer sBuffer = new StringBuffer();
+
+
+		String sellerAssociationStatus = SellerAssociationStatusEnum.YES.getCode();
+
 		if (!MapUtils.isEmpty(row) && row.get(Integer.valueOf(0)) != null)
 		{
 			final List<SellerInformationModel> ussidList = getMplDelistingService()
@@ -129,6 +107,11 @@ public class SellerDelistConverter extends DefaultImpexConverter
 			}
 
 		}
+		else
+		{
+			throw new IllegalArgumentException("Missing value for  SellerID");
+		}
+
 
 		result = sBuffer.toString();
 		return result;
