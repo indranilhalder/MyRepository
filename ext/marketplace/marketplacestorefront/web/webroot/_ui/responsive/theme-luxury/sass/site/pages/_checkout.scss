@@ -186,7 +186,7 @@
             
         }
         
-        .button{
+        .button, .cancelBtn{
             padding: 8px 10px;
             font-size: 18px;
             line-height: 1.33333;
@@ -194,6 +194,9 @@
             background-color: #2d2d2d;
             color: #fff;
             border: 0px;
+        }
+        .cancelBtn{
+            float: right;
         }
         .padd, .form-additionals{
             input{
@@ -225,7 +228,7 @@
                 
                 .address-list{
                     width: 100%;
-                    border: 1px solid #ccc;
+                    border: 1px solid #cccccc;
                     padding: 20px;
                     border: 1px solid;
                     border-radius: 10px;
@@ -253,8 +256,11 @@
         }
         .checkout-shipping{
             background: #fff;
-            padding-top: 10px;
+            /*padding-top: 10px;*/
         } 
+        .checkout-shipping.addNewAddress{
+            background: #f9f9f9;
+        }
     }
     .deliveryaddress.choosePage{
         background: transparent;
@@ -452,3 +458,5 @@
         }
     }
 }
+
+

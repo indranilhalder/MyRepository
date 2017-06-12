@@ -8,12 +8,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>	<!-- TPR-629 -->
 	
-<h2 class="coupon">Apply Coupon Code</h2>	
+<!-- <h2 class="coupon">Apply Coupon Code</h2>	 -->
 <div class="coupon block">
-		<label for="couponFieldId">Coupon Code</label>
-		<div><input type="text" id="couponFieldId" />
+		<label for="couponFieldId">Coupon</label>
+		<div><input type="text" id="couponFieldId"  placeholder="Enter coupon code here"/>
 		<button type="submit" id="couponSubmitButton" class="button btn-block">Apply</button></div>
-		<span class="error-message" id="invalidCouponError"><spring:theme code="checkout.multi.coupons.invalid"/></span>
+		<div style="display: none;"><span class="error-message" id="invalidCouponError"><spring:theme code="checkout.multi.coupons.invalid"/></span>
 		<span class="error-message" id="expiredCouponError"><spring:theme code="checkout.multi.coupons.expired"/></span>
 		<span class="error-message" id="issueCouponError"><spring:theme code="checkout.multi.coupons.issue"/></span>
 		<span class="error-message" id="priceCouponError"><spring:theme code="checkout.multi.coupons.priceExceeded"/></span>
@@ -24,7 +24,7 @@
 		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
 		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
 <!-- changes for  [ TPR-1075]-->
-	   <span class="error-message" id="firstPurchaseOfferError"><spring:theme code="checkout.multi.coupons.firstPurchaseInvalid"/></span>
+	   <span class="error-message" id="firstPurchaseOfferError"><spring:theme code="checkout.multi.coupons.firstPurchaseInvalid"/></span></div>
 	<!-- Top 5 coupons-----Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 	<%-- <div id="voucherDisplay">
 		<c:if test="${not empty voucherDataList}">
