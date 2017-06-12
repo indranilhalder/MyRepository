@@ -25,7 +25,7 @@
 	<%-- <label class="email_Label"><spring:theme
 				code="text.account.email" text="Email Address" /></label> --%>
 	
-	<form:input id="register.email" class="inputText"
+	<form:input id="register.email" class="form-control inputText"
 		idKey="register.email" labelKey="" placeholder="EMAIL ADDRESS" path="email" maxlength="240" />
 	<div class="help-block has-error" id="signupEmailIdDiv" style="display: none;"></div>
 	
@@ -44,7 +44,7 @@
 	
 		<c:url value="/mytatarewards" var="mytatarewards" />
 		<c:url value="/tncmytatarewards" var="tncmytatarewards" />
-		 <div id="checkBox">
+		 <div id="checkBox" class="le-checkbox">
 					<%-- <div class="reward-popover">
 					<p class="reward-popover-container">
 					<span class="reward-popover-left">'Tata Treats' an exclusive program to celebrate your patronage with the Tata Group.
