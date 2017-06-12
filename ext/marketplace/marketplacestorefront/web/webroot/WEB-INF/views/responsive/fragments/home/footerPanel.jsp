@@ -129,7 +129,7 @@
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Yay! We can't wait to be pen-pals with you.</font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Thanks for signing up. We'll keep you updated with our newsletters.</font>";//TISSTRT-1599 message changed
 			          //TPR-667 START
 			            /* utag.link({
 							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
