@@ -69006,3 +69006,31 @@ span#juspayErrorMsg{
     margin-bottom: 5px;
 }
 /* TISKIDK-1416 */
+/*UF-373 start*/
+@media (max-width: 790px){
+header > .content .top.active > .toggle > span:first-child{
+    transition-property: top, transform;
+    transform: rotate(45deg);
+    margin-top: 7px;
+    transition: background 0s 0.3s;
+    transition-duration: 0.3s, 0.3s;
+  transition-delay: 0.3s, 0s;
+}
+header > .content .top.active > .toggle > span:last-child{
+    transition-property: bottom, transform;
+    transform: rotate(-45deg);
+    margin-top: -7px;
+    transition: background 0s 0.3s;
+    transition-duration: 0.3s, 0.3s;
+  transition-delay: 0.3s, 0s;
+}
+header > .content .top.active > .toggle > span:nth-child(2){
+    display: none;
+}
+header > .content .top .toggle span:first-child,
+header > .content .top .toggle span,
+header > .content .top .toggle span:last-child{
+transition: background 0s 0.3s;
+}
+} 
+/*UF-373 end*/
