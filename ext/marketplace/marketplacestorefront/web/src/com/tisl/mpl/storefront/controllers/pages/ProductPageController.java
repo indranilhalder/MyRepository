@@ -2054,8 +2054,9 @@ public class ProductPageController extends MidPageController
 					{
 						final Map<String, String> productFeatureMap = new HashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
-								productData, featureData.getCode());
+						//CKD:CAR-289
+						/*final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+								productData, featureData.getCode());*/
 						if (null != productData.getRootCategory())
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
@@ -2079,6 +2080,9 @@ public class ProductPageController extends MidPageController
 								if (null != properitsValue && featureValueData.getValue() != null
 										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
 								{
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+											productData, featureData.getCode());
 									productFeatureMap.put(featureValueData.getValue(),
 											productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
@@ -2094,6 +2098,9 @@ public class ProductPageController extends MidPageController
 								final String[] propertiesValues = properitsValue.split(",");
 								if (propertiesValues != null && propertiesValues.length > 0)
 								{
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+											productData, featureData.getCode());
 									for (final String value : propertiesValues)
 									{
 										if (value.equalsIgnoreCase(featureData.getName()))

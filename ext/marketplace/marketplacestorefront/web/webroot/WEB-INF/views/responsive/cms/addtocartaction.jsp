@@ -98,6 +98,11 @@ $(document).ready(function(){
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
+
+<%--TPR-5346 --%>
+ <span id="bagfullproduct" style="display:none"><spring:theme code="product.bag.maxlimit"/></span>
+ <%--TPR-5346 --%>
+
 <form:form method="post" name="addToCartFormId" id="addToCartForm" class="add_to_cart_form"
 	action="#">
 	<%-- <c:if test="${product.purchasable}"> --%>

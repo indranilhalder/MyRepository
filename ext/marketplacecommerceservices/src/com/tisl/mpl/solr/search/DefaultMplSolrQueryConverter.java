@@ -129,7 +129,8 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 			solrQuery.addField("url_en_string");
 			solrQuery.addField("img-252Wx374H_string");
 			solrQuery.addField("priceValue_inr_double");
-			solrQuery.addField("code_string");
+			//solrQuery.addField("code_string");
+			//solrQuery.addField("code_string");
 			solrQuery.addField("isLuxuryProduct_boolean");
 			solrQuery.addField("newTitle_string_mv");
 			//added for luxury Image

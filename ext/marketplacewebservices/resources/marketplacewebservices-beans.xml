@@ -710,6 +710,9 @@
 		<property name="returnAWB" type="String" />
 		<property name="storeDetails"
 			type="de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO" />
+			
+			<!-- TPR-6117 -->
+			<property name="maxQuantityAllowed" type="String" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -838,6 +841,8 @@
 		<property name="pickupPersonMobile" type="String" />
 
 		<property name="cartGuid" type="String"></property>
+		<!-- TPR-6117 -->
+		<property name="reachedMaxLimitforproduct" type="String"></property>
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
@@ -1194,7 +1199,7 @@
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.SizeGuideWsDataValue" type="bean">
-		<property name="INDSize" type="String" /> 	<!-- TPR-6040 attribute dimensionSize changed to INDSize -->
+		<property name="dimensionSize" type="String" />
 		<property name="dimensionValue" type="String" />
 		<property name="dimensionUnit" type="String" />
 		<property name="euroSize" type="String" />
