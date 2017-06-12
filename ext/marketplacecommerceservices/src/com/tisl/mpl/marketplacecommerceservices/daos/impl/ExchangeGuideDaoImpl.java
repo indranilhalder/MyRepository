@@ -38,9 +38,9 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#getDistinctL4()
 	 */
 
@@ -213,7 +213,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#changePincode(java.lang.String)
 	 */
 
@@ -230,7 +230,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 		}
 		else
 		{
-			exIdString = exId;
+			exIdString = "'" + exId + "'";
 		}
 		try
 		{
@@ -262,7 +262,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#addToExchangeTable(com.tisl.mpl.core.model.
 	 * ExchangeTransactionModel)
 	 */

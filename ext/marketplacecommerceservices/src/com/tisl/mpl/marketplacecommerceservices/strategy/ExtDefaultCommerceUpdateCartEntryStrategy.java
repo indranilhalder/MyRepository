@@ -103,7 +103,7 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 		if (isExchangeEntry)
 		{
-			if (newQuantity + entryToUpdate.getQuantity().longValue() > exchangeQuantityRestriction)
+			if (newQuantity + entryToUpdate.getQuantity().longValue() > exchangeQuantityRestriction && quantityToAdd > 0)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9305);
 			}
@@ -130,7 +130,7 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 			if (modification.getQuantity() == 0 && isExchangeEntry)
 			{
-				exchangeService.removeFromTransactionTable(exchangeId, "User Removed Product Mobile");
+				exchangeService.removeFromTransactionTable(exchangeId, "User Removed Product");
 			}
 		}
 		else

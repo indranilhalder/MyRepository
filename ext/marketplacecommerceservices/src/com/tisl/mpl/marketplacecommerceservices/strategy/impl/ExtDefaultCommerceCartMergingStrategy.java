@@ -16,10 +16,12 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -33,8 +35,8 @@ import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStr
  * @author TCS
  *
  */
-public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMergingStrategy
-		implements ExtCommerceCartMergingStrategy
+public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMergingStrategy implements
+		ExtCommerceCartMergingStrategy
 {
 	@Resource
 	private UserService userService;
@@ -128,7 +130,46 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 			toCart.setMerged(Boolean.TRUE);
 		}
 		getModelService().save(toCart);
+		if (cartMerged)
+		{
+			final List<Integer> entryNumberList = new ArrayList<>();
+			for (final AbstractOrderEntryModel entry : toCart.getEntries())
+			{
+				if (StringUtils.isNotEmpty(entry.getExchangeId()))
+				{
+					entryNumberList.add(entry.getEntryNumber());
+				}
+
+			}
+			if (CollectionUtils.isNotEmpty(entryNumberList))
+			{
+				changeQuantitieswithExchangeOffer(toCart, entryNumberList);
+			}
+		}
+
 		getModelService().remove(fromCart);
+	}
+
+	private void changeQuantitieswithExchangeOffer(final CartModel cartModel, final List<Integer> entryNumberList)
+	{
+		for (final Integer entryNumber : entryNumberList)
+		{
+			final CommerceCartParameter parameter = new CommerceCartParameter();
+			parameter.setEnableHooks(true);
+			parameter.setCart(cartModel);
+			parameter.setEntryNumber(entryNumber.longValue());
+			parameter.setQuantity(1);
+
+			try
+			{
+				getCommerceCartService().updateQuantityForCartEntry(parameter);
+			}
+			catch (final CommerceCartModificationException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private void mergeModificationToList(final CommerceCartModification modificationToAdd,
