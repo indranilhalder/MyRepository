@@ -16,6 +16,7 @@
 				</td>
 				<td width="20%" rowspan="1" class="structureViewSection">
 					<cockpit code="MiniCart" />
+					<cockpit code="WishList" />
 				</td>
 			</tr>
 			<tr>

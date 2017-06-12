@@ -334,7 +334,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SiteLogo-LuxuryProductDetails;SiteLogo;;SiteLogoSlot;true          
 ;;HeaderLinks-LuxuryProductDetails;HeaderLinks;;HeaderLinksSlot;true          
 ;;SearchBox-LuxuryProductDetails;SearchBox;;SearchBoxSlot;true          
-;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true          
+;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true     
+;;WishList-LuxuryProductDetails;WishList;;WishListSlot;true          
 ;;NavigationBar-LuxuryProductDetails;NavigationBar;;NavigationBarSlot;true 
 ;;Tabs-LuxuryProductDetails;Tabs;;TabsSlot;true
 ;;Footer-LuxuryProductDetails;Footer;;FooterSlot;true
