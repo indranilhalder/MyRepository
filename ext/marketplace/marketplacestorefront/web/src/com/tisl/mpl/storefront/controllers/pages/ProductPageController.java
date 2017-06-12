@@ -1700,8 +1700,17 @@ public class ProductPageController extends MidPageController
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
-			final String gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
-			final String gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			String siteId = getSiteConfigService().getProperty("luxury.site.id");
+			final String gigyaAPIKey;
+			final String gigyaRatingURL;
+			if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId)){
+
+				 gigyaAPIKey = configurationService.getConfiguration().getString("luxury.gigya.apikey");
+				 gigyaRatingURL = configurationService.getConfiguration().getString("luxury.gigya.rating.url");
+			}else{
+				gigyaAPIKey = configurationService.getConfiguration().getString("gigya.apikey");
+				gigyaRatingURL = configurationService.getConfiguration().getString("gigya.rating.url");
+			}
 			//end gigya
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final String cliqCareNumber = configurationService.getConfiguration().getString("cliq.care.number");
