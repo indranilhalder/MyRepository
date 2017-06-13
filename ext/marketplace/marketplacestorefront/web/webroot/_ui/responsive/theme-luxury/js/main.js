@@ -965,7 +965,7 @@ TATA.Pages = {
             
             $(document).on("click",'#bankNameForEMI li', function() {
                 var productVal = $("#prodPrice").val();
-                var selectedBank = $('#bankNameForEMI :selected').text();
+                var selectedBank = $(this).text();
                 var contentData = '';
                 var productId=[];
                 productId.push($('#product_id').val());
