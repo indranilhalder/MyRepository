@@ -58,7 +58,7 @@
 	
 	
 	<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-	<div class="form-additionals">
+	<div class="form-additionals le-checkbox">
 		<c:choose>
 			<c:when test="${showSaveToAddressBook}">
 				<%-- <formElement:formCheckbox idKey="saveAddressInMyAddressBook" 
