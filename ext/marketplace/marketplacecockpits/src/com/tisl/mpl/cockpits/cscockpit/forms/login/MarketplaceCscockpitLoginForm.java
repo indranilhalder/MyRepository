@@ -19,6 +19,7 @@ import org.zkoss.zul.Window;
 import de.hybris.platform.cockpit.forms.login.LoginForm;
 import de.hybris.platform.core.model.user.EmployeeModel;
 import de.hybris.platform.cscockpit.utils.LabelUtils;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
@@ -81,14 +82,13 @@ public class MarketplaceCscockpitLoginForm extends LoginForm
 	@Override
 	public boolean doOK() {
 		boolean success = false;
-		
+		String userName = null;
 		//Added
 		final Window loginDialog = getLoginDialogWindow();
 
 		if (loginDialog != null)
 		{
-			final String userName = ((Textbox) (loginDialog.getFellow("login"))).getValue();
-			
+			userName = ((Textbox) (loginDialog.getFellow("login"))).getValue();
 			final Textbox pwd = (Textbox) loginDialog.getFellow("pw");
 			final String previousPassword = pwd.getValue();
 			 String message = null;
@@ -176,6 +176,11 @@ public class MarketplaceCscockpitLoginForm extends LoginForm
 				}
 			}
 		
+		}
+		if(success)
+		{
+			//setting userid/ seller id in case of csr agent for store oder
+			JaloSession.getCurrentSession().setAttribute("sellerId", userName);
 		}
 		return success;
 		

@@ -1385,7 +1385,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			//SONAR FIX updated
-			if (abstractOrderModel.getTotalPriceWithConv() != null && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			if (null != abstractOrderModel.getTotalPriceWithConv() && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
@@ -2512,7 +2512,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 
 				LOG.error("Juspay Request Structure " + request);
-
 				//creating InitOrderResponse
 				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
 				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
@@ -2558,7 +2557,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		//		}
 	}
 
-
+	@Override
+	public String makeGetPaymentStatusCall(final String url)
+	{
+		final String key = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY);
+		return new PaymentService().getCockpitOrderPaymentstatus(url, key);
+	}
 
 
 	/**

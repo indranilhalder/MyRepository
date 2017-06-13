@@ -7,6 +7,7 @@ public class InitOrderResponse
 	private long statusId;
 	private String orderId;
 	private String merchantId;
+	private String juspayOrderID;
 
 
 
@@ -61,6 +62,16 @@ public class InitOrderResponse
 	public void setMerchantId(final String merchantId)
 	{
 		this.merchantId = merchantId;
+	}
+
+	public void setJuspayOrderID(final String juspayOrderID)
+	{
+		this.juspayOrderID = juspayOrderID;
+	}
+
+	public String getJuspayOrderID()
+	{
+		return juspayOrderID;
 	}
 
 

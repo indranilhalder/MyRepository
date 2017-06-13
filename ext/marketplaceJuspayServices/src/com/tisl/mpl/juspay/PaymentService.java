@@ -1,6 +1,7 @@
 package com.tisl.mpl.juspay;
 
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.payment.AdapterException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -193,6 +194,7 @@ public class PaymentService
 
 		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
 				MarketplaceJuspayServicesConstants.PROXYENABLED);
+
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
@@ -214,7 +216,6 @@ public class PaymentService
 				final URL url = new URL(endPoint);
 				connection = (HttpsURLConnection) url.openConnection();
 			}
-
 			String encodedKey = new String(Base64.encodeBase64(this.key.getBytes()));
 			encodedKey = encodedKey.replaceAll("\n", "");
 			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
@@ -236,6 +237,7 @@ public class PaymentService
 			wr.flush();
 			wr.close();
 
+
 			// Read the response
 			final InputStream inputStream = connection.getInputStream();
 			final BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
@@ -251,6 +253,78 @@ public class PaymentService
 			throw new AdapterException("Error with connection", e);
 		}
 	}
+
+	/*
+	 * TPR-5712 cscockpit specific order payment status look up
+	 */
+	public String getCockpitOrderPaymentstatus(final String endPointURL, final String key)
+	{
+		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
+				MarketplaceJuspayServicesConstants.PROXYENABLED);
+
+		HttpsURLConnection connection = null;
+		final StringBuilder response = new StringBuilder();
+		String responseFromJuspay = null;
+
+		try
+		{
+			if (proxyEnableStatus.equalsIgnoreCase("true"))
+			{
+				final String proxyName = getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXY);
+				final int proxyPort = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+						MarketplaceJuspayServicesConstants.GENPROXYPORT));
+				final SocketAddress addr = new InetSocketAddress(proxyName, proxyPort);
+				final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+				final URL url = new URL(endPointURL);
+				connection = (HttpsURLConnection) url.openConnection(proxy);
+			}
+			else
+			{
+				final URL url = new URL(endPointURL);
+				connection = (HttpsURLConnection) url.openConnection();
+			}
+			String encodedKey = new String(Base64.encodeBase64(key.getBytes()));
+			encodedKey = encodedKey.replaceAll("\n", "");
+			connection.setRequestProperty("Authorization", "Basic " + encodedKey);
+
+			connection.setConnectTimeout(connectionTimeout);
+			connection.setReadTimeout(readTimeout);
+			connection.setRequestMethod("GET");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			connection.setRequestProperty("Content-Language", "en-US");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("version",
+					getConfigurationService().getConfiguration().getString(MarketplaceJuspayServicesConstants.VERSION));
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+
+			final int responseCode = connection.getResponseCode();
+			LOG.info(" get request :: " + endPointURL);
+			LOG.info("response code ::: " + responseCode);
+
+			final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+
+			while ((inputLine = in.readLine()) != null)
+			{
+				response.append(inputLine);
+			}
+			in.close();
+
+			responseFromJuspay = response.toString();
+			LOG.info("response  :: " + responseFromJuspay);
+
+		}
+		catch (final Exception e)
+		{
+			throw new AdapterException("Error with connection", e);
+		}
+
+		return responseFromJuspay;
+	}
+
 
 	/**
 	 * Creates a new order and returns the InitOrderResponse associated with that.
@@ -285,8 +359,11 @@ public class PaymentService
 		params.put("udf9", initOrderRequest.getUdf9() == null ? "" : initOrderRequest.getUdf9());
 		params.put("udf10", initOrderRequest.getUdf10() == null ? "" : initOrderRequest.getUdf10());
 		params.put("return_url", initOrderRequest.getReturnUrl() == null ? "" : initOrderRequest.getReturnUrl());
+
+
 		final String serializedParams = serializeParams(params);
-		final String url = baseUrl + "/init_order";
+		final String url = baseUrl + "/orders";
+		//final String url = baseUrl + "/init_order";
 
 		//log.info("Sending init_order to " + url);
 		//log.debug("Payload (init_order): " + serializedParams);
@@ -303,6 +380,10 @@ public class PaymentService
 		final Long statusId = (Long) jsonResponse.get("status_id");
 		final String status = (String) jsonResponse.get(MarketplaceJuspayServicesConstants.STATUS);
 		final String orderId = (String) jsonResponse.get(MarketplaceJuspayServicesConstants.ORDERID);
+		final String orderCreatedJaspayEnd = (String) jsonResponse.get("id");
+		LOG.info("jaspay order id created  ::: " + orderCreatedJaspayEnd);
+		JaloSession.getCurrentSession().setAttribute("jusPayEndOrderId", orderCreatedJaspayEnd);
+		JaloSession.getCurrentSession().setAttribute("commerceEndOrderId", orderId);
 		LOG.info(jsonResponse + "  Response");
 
 		final InitOrderResponse initOrderResponse = new InitOrderResponse();
@@ -310,11 +391,11 @@ public class PaymentService
 		initOrderResponse.setOrderId(orderId);
 		initOrderResponse.setStatusId(statusId.longValue());
 		initOrderResponse.setMerchantId(merchantId);
-
-
+		initOrderResponse.setJuspayOrderID(orderCreatedJaspayEnd);
 
 		return initOrderResponse;
 	}
+
 
 	/**
 	 * Returns the card details associated with a token. The token information is encapsulated in the GetCardRequest

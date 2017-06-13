@@ -42,7 +42,8 @@ import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
-//SONAR FIX
+
+//Sonar Issue Fixed For Kidswear
 //import com.tisl.mpl.util.GenericUtilityMethods;
 
 

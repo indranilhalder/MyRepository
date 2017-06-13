@@ -112,6 +112,18 @@ public interface MplPaymentService
 	void saveCODPaymentInfo(String custName, Double cartValue, Double totalCODCharge, List<AbstractOrderEntryModel> entries,
 			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
+	/**
+	 * juspay payment specific changes from cscockpit
+	 * 
+	 * @param custName
+	 * @param cartValue
+	 * @param totalCharge
+	 * @param entries
+	 * @param abstractOrderModel
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void saveJusPayPaymentInfo(String custName, Double cartValue, Double totalCharge, List<AbstractOrderEntryModel> entries,
+			AbstractOrderModel abstractOrderModel) throws EtailNonBusinessExceptions;
 
 	/**
 	 * This method is setting paymentTransactionModel and the paymentTransactionEntryModel against the cart for non-COD
@@ -395,5 +407,6 @@ public interface MplPaymentService
 	 */
 	void setPaymentTransactionForCODFromSubmitProcess(Map<String, Double> paymentMode, OrderModel orderModel)
 			throws EtailNonBusinessExceptions;
+
 
 }

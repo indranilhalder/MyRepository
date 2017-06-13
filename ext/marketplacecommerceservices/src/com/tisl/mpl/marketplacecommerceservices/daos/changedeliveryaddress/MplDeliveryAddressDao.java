@@ -19,7 +19,6 @@ import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 
 public interface MplDeliveryAddressDao
 {
-
 	/**
 	 * Change deliveryAddressReport
 	 *
@@ -32,3 +31,4 @@ public interface MplDeliveryAddressDao
 	public MplDeliveryAddressInfoModel getMplDeliveryAddressReportModelByOrderId(final String orderCode);
 
 }
+

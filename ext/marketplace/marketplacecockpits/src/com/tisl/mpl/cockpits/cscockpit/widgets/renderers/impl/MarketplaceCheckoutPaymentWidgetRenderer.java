@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
@@ -15,6 +16,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.SelectEvent;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Hbox;
@@ -32,6 +34,7 @@ import com.tisl.mpl.data.OTPResponseData;
 import com.tisl.mpl.enums.OTPTypeEnum;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -43,6 +46,7 @@ import de.hybris.platform.cockpit.widgets.impl.DefaultListboxWidget;
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
@@ -50,6 +54,7 @@ import de.hybris.platform.cscockpit.utils.LabelUtils;
 import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
 import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutPaymentWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.CheckoutPaymentWidgetRenderer;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 
@@ -112,6 +117,15 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 	@Resource(name = "mplVoucherService")
 	private MplVoucherService mplVoucherService;	
 	
+	@Resource
+	private AgentIdForStore agentIdForStore;
+	
+	private boolean buttonLabelChangeFlag = false;
+	
+	private String jsuPayCreatedOrderId = StringUtils.EMPTY;
+	
+	private boolean juspayOrderCreationFlag = false;
+	
 	/**
 	 * Creates the content internal.
 	 *
@@ -123,15 +137,18 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 			final DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,
 			HtmlBasedComponent rootContainer) {
 		
+		Div parentDiv = (Div) super.createContentInternal(widget, rootContainer);
+		Button authorizeButton = null;
 		 CartModel  cart = (CartModel)widget.getWidgetController().getBasketController().getCart().getObject();
 		 OTPModel opt = getoTPGenericService().getLatestOTPModel(((CustomerModel)cart.getUser()).getOriginalUid(), OTPTypeEnum.COD);
 		//boolean isCODEligible = ((MarketplaceCheckoutController)widget.getWidgetController()).checkDeliveryModeCODLimit(cart,widget);
 		Div div = new 	Div();
+		parentDiv.appendChild(div);
 		Hbox hbox = new Hbox();
 		try {
 				Div paymentModeDropdownContent = new Div();
 				
-				createPaymentModeField(widget,paymentModeDropdownContent);
+				createPaymentModeField(widget,paymentModeDropdownContent,rootContainer);
 				
 //				Button generateOTP = new Button(LabelUtils.getLabel(
 //						widget, "generateButton"));
@@ -174,19 +191,42 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 				
 				boolean authorize=true;
 				Div otparea = new Div();
-				otparea.setVisible(authorize);				
+				otparea.setVisible(authorize);	
+				final String agentId = agentIdForStore.getAgentIdForStore(
+						MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 				
-				Button authorizeButton = new Button(LabelUtils.getLabel(
-						widget, "authorizeButton"));
+				if(!buttonLabelChangeFlag && !juspayOrderCreationFlag)
+				{
+					authorizeButton = new Button(LabelUtils.getLabel(
+							widget, "authorizeButton"));
+					authorizeButton.addEventListener(
+							Events.ON_CLICK,
+							createAuthorizeEventListener(widget));
+				}
+				else if(buttonLabelChangeFlag && !juspayOrderCreationFlag &&
+						(agentId != null && StringUtils.isNotEmpty(agentId)))
+				{
+					authorizeButton = new Button(LabelUtils.getLabel(
+							widget, "payNow"));
+					authorizeButton.addEventListener(
+							Events.ON_CLICK,
+							createJusPayPaymentEventListener(widget,rootContainer));
+				}
+				else
+				{
+					authorizeButton = new Button(LabelUtils.getLabel(
+							widget, "validatePayment"));
+					authorizeButton.addEventListener(
+							Events.ON_CLICK,
+							createJusPayPaymentValidationEventListener(widget,rootContainer));
+					validatePaymentAndCreatePaymentTxn(widget,rootContainer);
+				}
 				authorizeButton.setParent(otparea);
 				
 				hbox.appendChild(otparea);
 				
-				authorizeButton.addEventListener(
-						Events.ON_CLICK,
-						createAuthorizeEventListener(widget));
 				div.appendChild(hbox);
-				div.setParent(rootContainer);
+				div.setParent(parentDiv);
 			
 		}catch(ValidationException ex) {
 			try {
@@ -200,15 +240,281 @@ public class MarketplaceCheckoutPaymentWidgetRenderer extends
 		} catch(ClientEtailNonBusinessExceptions e) {
 			LOG.error("ClientEtailNonBusinessExceptions in createContentInternal:",e);
 			popupMessage(widget, MarketplaceCockpitsConstants.SERVER_ERROR+":"+e,Messagebox.ERROR);
+		} catch (InterruptedException ex) {
+			LOG.error("ClientEtailNonBusinessExceptions in createContentInternal:",ex);
+			popupMessage(widget, MarketplaceCockpitsConstants.SERVER_ERROR+":"+ex,Messagebox.ERROR);
 		} 
 		return div;
 	}
-
+	
+	/**
+	 * TPR-5712 : juspay payment validation
+	 * @param widget
+	 * @param rootContainer
+	 * @throws InterruptedException
+	 */
+	private void validatePaymentAndCreatePaymentTxn(DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, 
+			HtmlBasedComponent rootContainer) throws InterruptedException
+	{
+		final CartModel cart = ((CartModel) ((CheckoutController) widget
+				.getWidgetController()).getBasketController().getCart()
+				.getObject());
+		
+		final CustomerModel customer = (CustomerModel)cart.getUser();
+		if(cart != null && customer != null)
+		{
+			try 
+			{
+				String commerEndOrderId = StringUtils.EMPTY;
+				final JaloSession jSession = JaloSession.getCurrentSession();
+				if(jSession != null)
+				{
+					jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+					commerEndOrderId = (String) jSession.getAttribute("commerceEndOrderId");
+				}
+				
+				if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+				{
+					juspayOrderCreationFlag = true;
+				}
+				
+				LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
+				if(juspayOrderCreationFlag && StringUtils.isNotEmpty(commerEndOrderId))
+				{
+					final String orderPaymentStatus = ((MarketplaceCheckoutController)widget.getWidgetController()).
+							juspayPaymentValidation(commerEndOrderId);
+					
+					if(orderPaymentStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_ORDER_STATUS) &&
+							widget.getWidgetController().needPaymentOption())
+					{
+						Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_SUCCESSFUL,INFO, Messagebox.OK,
+								Messagebox.INFORMATION);
+						((MarketplaceCheckoutController)widget.getWidgetController()).jusPayprocessPaymentTxn(cart);
+						juspayOrderCreationFlag = false;
+						buttonLabelChangeFlag = false;
+					}
+					
+					else
+					{
+						Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_UNSUCCESSFUL,INFO, Messagebox.OK,
+								Messagebox.ERROR);
+						juspayOrderCreationFlag = false;
+						buttonLabelChangeFlag = true;
+					}
+					
+					createContentInternal(widget,rootContainer);
+					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+					((CheckoutController) widget.getWidgetController()).getBasketController()
+					.dispatchEvent(null, widget.getWidgetController(), data);
+				}
+			} 
+			
+			catch (Exception e) 
+			{
+				Messagebox.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+								new Object[0]), INFO, Messagebox.OK,
+								Messagebox.ERROR);
+				juspayOrderCreationFlag = false;
+				buttonLabelChangeFlag = true;
+				createContentInternal(widget,rootContainer);
+				Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+				((CheckoutController) widget.getWidgetController()).getBasketController()
+				.dispatchEvent(null, widget.getWidgetController(), data);
+			}
+		}
+	}
 
 	private EventListener createAuthorizeEventListener(
 			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget) {
 		 return new ValidateAuthorizeEventListener(widget);		
 	}
+	
+	private EventListener createJusPayPaymentEventListener(
+			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, HtmlBasedComponent rootContainer) {
+		 return new JuspayPaymentEventListener(widget, rootContainer);		
+	}
+	
+	private EventListener createJusPayPaymentValidationEventListener(
+			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, HtmlBasedComponent rootContainer) {
+		 return new JuspayPaymentValidationEventListener(widget, rootContainer);		
+	}
+	
+	protected class JuspayPaymentValidationEventListener implements EventListener
+	{
+
+		private DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget;
+		private HtmlBasedComponent rootContainer;
+		
+		public JuspayPaymentValidationEventListener(
+				DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, HtmlBasedComponent rootContainer) {
+			super();
+			this.widget = widget;
+			this.rootContainer = rootContainer;
+		}
+
+		@Override
+		public void onEvent(Event event) throws InterruptedException
+		{
+			doJusPayPaymentValidation(widget,  event);
+		}
+		
+		private void doJusPayPaymentValidation(
+				DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,Event event)throws InterruptedException 
+		{
+			final CartModel cart = ((CartModel) ((CheckoutController) widget
+					.getWidgetController()).getBasketController().getCart()
+					.getObject());
+			
+			final CustomerModel customer = (CustomerModel)cart.getUser();
+			if(cart != null && customer != null)
+			{
+				try 
+				{
+					String commerEndOrderId = StringUtils.EMPTY;
+					final JaloSession jSession = JaloSession.getCurrentSession();
+					if(jSession != null)
+					{
+						jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+						commerEndOrderId = (String) jSession.getAttribute("commerceEndOrderId");
+					}
+					
+					if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+					{
+						juspayOrderCreationFlag = true;
+					}
+					LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
+					if(juspayOrderCreationFlag && StringUtils.isNotEmpty(commerEndOrderId))
+					{
+						final String orderPaymentStatus = ((MarketplaceCheckoutController)widget.getWidgetController()).
+								juspayPaymentValidation(commerEndOrderId);
+						
+						if(orderPaymentStatus.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_ORDER_STATUS))
+								
+						{
+							Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_SUCCESSFUL,INFO, Messagebox.OK,
+									Messagebox.INFORMATION);
+							//((MarketplaceCheckoutController)widget.getWidgetController()).jusPayprocessPaymentTxn(cart);
+							juspayOrderCreationFlag = false;
+							buttonLabelChangeFlag = false;
+						}
+						
+						else
+						{
+							Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_UNSUCCESSFUL,INFO, Messagebox.OK,
+									Messagebox.ERROR);
+							juspayOrderCreationFlag = false;
+							buttonLabelChangeFlag = true;
+						}
+						
+						createContentInternal(widget,rootContainer);
+						Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+						((CheckoutController) widget.getWidgetController()).getBasketController()
+						.dispatchEvent(null, widget.getWidgetController(), data);
+					}
+				} 
+				
+				catch (Exception e) 
+				{
+					Messagebox.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+									new Object[0]), INFO, Messagebox.OK,
+									Messagebox.ERROR);
+					juspayOrderCreationFlag = false;
+					buttonLabelChangeFlag = true;
+					createContentInternal(widget,rootContainer);
+					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+					((CheckoutController) widget.getWidgetController()).getBasketController()
+					.dispatchEvent(null, widget.getWidgetController(), data);
+				}
+			}
+		}
+	}
+
+/**
+ * TPR-5712
+ * juspay payment event listner for OIS
+ *
+ */
+protected class JuspayPaymentEventListener implements EventListener
+{
+
+	private DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget;
+	private HtmlBasedComponent rootContainer;
+	
+	public JuspayPaymentEventListener(
+			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, HtmlBasedComponent rootContainer) {
+		super();
+		this.widget = widget;
+		this.rootContainer = rootContainer;
+	}
+
+	@Override
+	public void onEvent(Event event) throws InterruptedException
+	{
+		doJusPayPayment(widget,  event);
+	}
+	
+	private void doJusPayPayment(
+			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,Event event)throws InterruptedException 
+	{
+		final CartModel cart = ((CartModel) ((CheckoutController) widget
+				.getWidgetController()).getBasketController().getCart()
+				.getObject());
+		
+		final CustomerModel customer = (CustomerModel)cart.getUser();
+		if(cart != null && customer != null)
+		{
+			if(cart.getPaymentTransactions().isEmpty())
+			{
+				try 
+				{
+					((MarketplaceCheckoutController)widget.getWidgetController()).processJuspayPayment(cart, customer);
+					final JaloSession jSession = JaloSession.getCurrentSession();
+					if(jSession != null)
+					{
+						jsuPayCreatedOrderId = (String) jSession.getAttribute("jusPayEndOrderId");
+					}
+					
+					if(StringUtils.isNotEmpty(jsuPayCreatedOrderId))
+					{
+						LOG.info("juspay order id ::: "+jsuPayCreatedOrderId);
+						juspayOrderCreationFlag = true;
+						buttonLabelChangeFlag = true;
+						//createContentInternal(widget,rootContainer);
+						/*Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+						((CheckoutController) widget.getWidgetController()).getBasketController()
+						.dispatchEvent(null, widget.getWidgetController(), data);*/
+						
+						String absoluteJusPayPaymentURL = configurationService.getConfiguration().getString(MarketplaceCockpitsConstants.JUSPAYPAYMENTPAGEURL)
+								+ jsuPayCreatedOrderId;
+						LOG.info("juspaymnet page url  :: "+absoluteJusPayPaymentURL);
+						
+						//Clients.evalJavaScript("window.open('" + absoluteJusPayPaymentURL + "')");
+						Clients.evalJavaScript("window.location.href = '"+ absoluteJusPayPaymentURL +"'");
+					}
+				} 
+				catch (Exception e) 
+				{
+					Messagebox.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
+									new Object[0]), INFO, Messagebox.OK,
+									Messagebox.ERROR);
+				}
+			}
+			else{
+				Messagebox.show(MarketplaceCockpitsConstants.PAYMENT_COMPLETED,INFO, Messagebox.OK,
+						Messagebox.ERROR);
+				createContentInternal(widget,rootContainer);
+				Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+				((CheckoutController) widget.getWidgetController()).getBasketController()
+				.dispatchEvent(null, widget.getWidgetController(), data);
+			}
+		}
+		else
+		{
+			Messagebox.show(MarketplaceCockpitsConstants.ERROR,INFO, Messagebox.OK,
+					Messagebox.ERROR);
+		}
+	}
+}
 
 protected class ValidateAuthorizeEventListener implements EventListener {
 		
@@ -265,6 +571,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 					.getWidgetController()).getBasketController().getCart()
 					.getObject());
 			long time=0l;
+			boolean authPaaymentsttatus = false;
 			String userId = ((CustomerModel)cart.getUser()).getOriginalUid();
 			try{
 			time=Long.parseLong(configurationService.getConfiguration().getString("OTP_Valid_Time_milliSeconds"));
@@ -274,7 +581,14 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 			}	
 				if(widget.getWidgetController().needPaymentOption()){
 					try {
-						((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+						authPaaymentsttatus = ((MarketplaceCheckoutController)widget.getWidgetController()).processPayment(cart);
+						if(!authPaaymentsttatus)
+						{
+							Messagebox.show(
+									LabelUtils.getLabel("Error",MarketplaceCockpitsConstants.NONCOD_PRODUCT_EXIST, new Object[0]),
+									INFO, Messagebox.OK, Messagebox.ERROR);
+							return;
+						}
 					} catch (PaymentException e) {
 						Messagebox
 						.show(LabelUtils.getLabel(widget, e.getLocalizedMessage(),
@@ -301,6 +615,8 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 
 	}
 
+
+
 	/**
 	 * Creates the payment event listener.
 	 *
@@ -310,8 +626,8 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 	 * @return the event listener
 	 */
 	private EventListener createPaymentEventListener(
-			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget) {
-		return new PaymentEventListener(widget);
+			DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,HtmlBasedComponent rootContainer) {
+		return new PaymentEventListener(widget,rootContainer);
 	}
 
 	/**
@@ -323,8 +639,8 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 	 */
 	protected Listbox createPaymentModeField(
 			final DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,
-			final Div parent) throws ValidationException {
-		return createSearchDropdownField(widget, parent, "paymentModeText");
+			final Div parent, final HtmlBasedComponent rootContainer) throws ValidationException {
+		return createSearchDropdownField(widget, parent, "paymentModeText",rootContainer);
 
 	}
 
@@ -343,7 +659,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 	 */
 	protected <E extends Enum<E>> Listbox createSearchDropdownField(
 			final DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget,
-			final Div parent, final String labelKey) throws ValidationException {
+			final Div parent, final String labelKey,HtmlBasedComponent rootContainer) throws ValidationException {
 		final Span span = new Span();
 		//span.setSclass(cssClass);
 		final Label label = new Label(LabelUtils.getLabel(widget, labelKey));
@@ -355,7 +671,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 		listbox.setSclass("csDeliveryAddressList");
 		listbox.addEventListener(
 				Events.ON_SELECT,
-				createPaymentEventListener(widget));
+				createPaymentEventListener(widget,rootContainer));
 		return listbox;
 	}
 
@@ -413,12 +729,29 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 			Listitem listItem = listbox.appendItem(OTPTypeEnum.COD.getCode(),
 					OTPTypeEnum.COD.getCode());
 			listItem.setValue(OTPTypeEnum.COD.getCode());
-					if(cart.getPaymentInfo()!=null && cart.getPaymentInfo() instanceof CODPaymentInfoModel){
+			if(cart.getPaymentInfo()!=null && cart.getPaymentInfo() instanceof CODPaymentInfoModel){
 						listItem.setSelected(true);
 				}
-				
-
 		}
+		
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if(StringUtils.isNotEmpty(agentId))
+		{
+			Listitem listItemPayNow = listbox.appendItem(MarketplaceCockpitsConstants.JUSPAY_PAYMENT_VALUE,MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
+			listItemPayNow.setValue(MarketplaceCockpitsConstants.JUSPAY_PAYMENT);
+			if(buttonLabelChangeFlag && !juspayOrderCreationFlag)
+			{
+				listItemPayNow.setSelected(true);
+			}
+			
+			if(buttonLabelChangeFlag && juspayOrderCreationFlag)
+			{
+				listItemPayNow.setSelected(true);
+				listbox.setDisabled(false);
+			}
+		}
+		
 		return listbox;
 	}
 
@@ -437,7 +770,7 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 
 		/** The widget. */
 		private DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget;
-		
+		private HtmlBasedComponent rootContainer;
 		/**
 		 * Instantiates a new payment event listener.
 		 *
@@ -446,9 +779,10 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 		 * @param paymentModeDropdown the payment mode dropdown
 		 */
 		public PaymentEventListener(
-				DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget
+				DefaultListboxWidget<CheckoutPaymentWidgetModel, CheckoutController> widget, HtmlBasedComponent rootContainer
 				) {
 			this.widget = widget;
+			this.rootContainer = rootContainer;
 		}
 
 		/* (non-Javadoc)
@@ -463,71 +797,107 @@ protected class ValidateAuthorizeEventListener implements EventListener {
 				
 				Set selectedItems = ((SelectEvent)event).getSelectedItems();
 				Listitem selectedItem = null;
-				if ((selectedItems != null) && (!(selectedItems.isEmpty()))) {
+				if ((selectedItems != null) && (!(selectedItems.isEmpty()))) 
+				{
 					selectedItem = (Listitem) selectedItems.iterator().next();
-				}
-
-				if (selectedItem == null)
-					return;
-				String mode = (String) selectedItem.getValue();
 				
+					if (selectedItem == null)
+					{
+						return;
+					}
+					String mode = (String) selectedItem.getValue();
 				
-			if ("COD".equalsIgnoreCase(mode)) {
-				//
-				((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
-				((MarketplaceCheckoutController) widget.getWidgetController()).processCODPayment();
-				((MarketplaceCheckoutController) widget.getWidgetController()).setCODPaymentMode(cart);	//TPR-3471
-				try {
-					
-					getMplVoucherService().checkCartWithVoucher(cart);
-				} catch (EtailNonBusinessExceptions e) {
-					LOG.error("Exception calculating cart ["
-							+ cart + "]", e);
-					ExceptionUtil.etailNonBusinessExceptionHandler(e);
-				}
-				catch(VoucherOperationException e)
-				{
-					LOG.error("Exception calculating cart ["
-							+ cart + "]", e);
-				}
-				catch(Exception e)
-				{
-					LOG.error("Exception calculating cart ["
-							+ cart + "]", e);
-					ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
-				}
-				Map data = Collections.singletonMap("refresh", Boolean.TRUE);
-				((CheckoutController) widget.getWidgetController()).getBasketController()
-						.dispatchEvent(null, widget.getWidgetController(), data);
-				} else{
-					((MarketplaceCheckoutController) widget.getWidgetController()).removeCODPayment();
-					try {
-						getMplVoucherService().checkCartWithVoucher(cart);
-					} catch (EtailNonBusinessExceptions e) {
-						LOG.error("Exception calculating cart ["
-								+ cart + "]", e);
-						ExceptionUtil.etailNonBusinessExceptionHandler(e);
-					}
-					catch(VoucherOperationException e)
-					{
-						LOG.error("Exception calculating cart ["
-								+ cart + "]", e);
-					}
-					catch(Exception e)
-					{
-						LOG.error("Exception calculating cart ["
-								+ cart + "]", e);
-						ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
-					}
+					if ("COD".equalsIgnoreCase(mode) && 
+							cart.getPaymentTransactions().isEmpty()) {
+						//
+						((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
+						((MarketplaceCheckoutController) widget.getWidgetController()).processCODPayment();
+						((MarketplaceCheckoutController) widget.getWidgetController()).setCODPaymentMode(cart);	//TPR-3471
+						try {
+							
+							getMplVoucherService().checkCartWithVoucher(cart);
+						} catch (EtailNonBusinessExceptions e) {
+							LOG.error("Exception calculating cart ["
+									+ cart + "]", e);
+							ExceptionUtil.etailNonBusinessExceptionHandler(e);
+						}
+						catch(VoucherOperationException e)
+						{
+							LOG.error("Exception calculating cart ["
+									+ cart + "]", e);
+						}
+						catch(Exception e)
+						{
+							LOG.error("Exception calculating cart ["
+									+ cart + "]", e);
+							ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+						}
+						buttonLabelChangeFlag = false;
+						} 
+						else if(StringUtils.isNotEmpty(mode) && 
+								mode.equalsIgnoreCase(MarketplaceCockpitsConstants.JUSPAY_PAYMENT) && 
+								cart.getPaymentTransactions().isEmpty())
+						{
+							((MarketplaceCheckoutController) widget.getWidgetController()).canCreatePayments();
+							((MarketplaceCheckoutController) widget.getWidgetController()).processJusPayPaymentOnSelect();
+							((MarketplaceCheckoutController) widget.getWidgetController()).setJusPayPaymentModeOnSelect(cart);
+							try {
+								
+								getMplVoucherService().checkCartWithVoucher(cart);
+							} catch (EtailNonBusinessExceptions e) {
+								LOG.error("Exception calculating cart ["
+										+ cart + "]", e);
+								ExceptionUtil.etailNonBusinessExceptionHandler(e);
+							}
+							catch(VoucherOperationException e)
+							{
+								LOG.error("Exception calculating cart ["
+										+ cart + "]", e);
+							}
+							catch(Exception e)
+							{
+								LOG.error("Exception calculating cart ["
+										+ cart + "]", e);
+								ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+							}
+							buttonLabelChangeFlag = true;							
+						}
+						else{
+							if(cart.getPaymentTransactions().isEmpty())
+							{
+								((MarketplaceCheckoutController) widget.getWidgetController()).removeCODPayment();
+								try {
+									getMplVoucherService().checkCartWithVoucher(cart);
+								} catch (EtailNonBusinessExceptions e) {
+									LOG.error("Exception calculating cart ["
+											+ cart + "]", e);
+									ExceptionUtil.etailNonBusinessExceptionHandler(e);
+								}
+								catch(VoucherOperationException e)
+								{
+									LOG.error("Exception calculating cart ["
+											+ cart + "]", e);
+								}
+								catch(Exception e)
+								{
+									LOG.error("Exception calculating cart ["
+											+ cart + "]", e);
+									ExceptionUtil.etailNonBusinessExceptionHandler((EtailNonBusinessExceptions) e);
+								}
+							}
+							Map data = Collections.singletonMap("refresh", Boolean.TRUE);
+							((CheckoutController) widget.getWidgetController()).getBasketController()
+									.dispatchEvent(null, widget.getWidgetController(), data);
+							}
+					createContentInternal(widget,rootContainer);
 					Map data = Collections.singletonMap("refresh", Boolean.TRUE);
 					((CheckoutController) widget.getWidgetController()).getBasketController()
-							.dispatchEvent(null, widget.getWidgetController(), data);
-					}
-			   
+					.dispatchEvent(null, widget.getWidgetController(), data); 
 			    }
+			}
 			
 
-				}
+		}
 
 	}
 

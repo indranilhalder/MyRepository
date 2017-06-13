@@ -72,12 +72,11 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String COMMA = ",";
 	private static final String SPACE = " "; //TISUATSE-80
-
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
 
 	//TPR-5329
-	//SONAR FIX
+	//Sonar Issue Fixed For Kidswear
 	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String SUBTOTAL = "subTotal";

@@ -480,6 +480,13 @@ public interface MplPaymentFacade
 	 * @param refNo
 	 */
 	String getWalletAuditEntries(String refNo);
+	/***
+	 * cscockpit specific order payment status call
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public String makeGetPaymentStatusCall(final String url);
 
 
 

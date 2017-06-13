@@ -5720,7 +5720,14 @@ function checkPincodeServiceability(buttonType,el)
 		// TPR-1055 ends
 	} //CAR-246
 	else if(selectedPincode!==""){
-		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
+		// TPR-5666 | cartGuid Append in url during pincode servicability check
+		var cartGuidParamValue = getParameterByName("cartGuid");
+		if(typeof cartGuidParamValue != "undefined"){
+			$(location).attr('href',ACC.config.encodedContextPath + "/cart?cartGuid="+cartGuidParamValue+"&pincode="+selectedPincode);
+		}
+		else{
+			$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
+		}
 	}
 	else
     {
@@ -5894,6 +5901,14 @@ function checkPincodeServiceability(buttonType,el)
 	
 
    }
+}
+
+//get parameter from URL
+
+function getParameterByName(name){
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search)){
+		return decodeURIComponent(name[1]);
+   } 
 }
 
 //TPR-970 changes starts
