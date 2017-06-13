@@ -274,12 +274,15 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					LOG.info("Cookie domain :::" + cookie.getDomain());
 					cookie.setMaxAge(sessionTimeoutvalue);
 					cookie.setPath("/");
+					cookie.setSecure(true);
+					cookie.setDomain(getConfigurationService().getConfiguration().getString("shared.cookies.domain"));
 					response.addCookie(cookie);
 					request.getSession().setMaxInactiveInterval(sessionTimeoutvalue); // UF-93 Added to set the session to same interval as KeepAlive Cookie
 					LOG.error("UserDetailsRestorationFilterRemember.updateKeepAliveCookie() - RememberMe is : "
 							+ request.getSession().getAttribute("rememberMe") + " Keepalive : " + sessionTimeoutvalue / 60
-							+ "min cookie.getMaxAge(): " + cookie.getMaxAge() + " SessionId: " + request.getSession().getId()
-							+ " SessionTimeout : " + request.getSession().getMaxInactiveInterval() / 60 + "min");
+							+ "cookie.getName: " + cookie.getName() + "cookie.getMaxAge(): " + cookie.getMaxAge() + " cookie.getDomain"
+							+ cookie.getDomain() + "SessionId: " + request.getSession().getId() + " SessionTimeout : "
+							+ request.getSession().getMaxInactiveInterval() / 60 + "min");
 				}
 			}
 			//added for testing
