@@ -971,8 +971,7 @@ display: none;
 		
 		</c:if>
 		</div>
-	</div>
-	<div class="coupon-code  mt-20"><multi-checkout:coupons isCart="${isCart}"/></div>
+		<div class="coupon-code  mt-20"><multi-checkout:coupons isCart="${isCart}"/></div>
 	
 	<div class="helpLine mt-20 mb-20">
 		<p class="text-center grayTxt normalSizeRegularTxt">
@@ -988,6 +987,7 @@ display: none;
 		 <li class="use-card"></li>
 		</ul>
 	</div>
+	</div>	
 						
 </div>
 </template:page>

@@ -396,9 +396,7 @@ display: none;}
 				<input id="new-address-option-1" class="toggle" name="addressType" value="Home" type="radio" checked>
 				<label for="new-address-option-1" class="toggle-btn" class="residential">Home</label>
 				<input id="new-address-option-2" class="toggle" name="addressType" value="Work" type="radio">
-				<label for="new-address-option-2" class="toggle-btn" class="commercial" >Office</label>
-				<input id="new-address-option-3" class="toggle" name="addressType" value="other" type="radio">
-				<label for="new-address-option-3" class="toggle-btn" class="commercial" >Other</label>
+				<label for="new-address-option-2" class="toggle-btn" class="commercial" >Work</label>				
 			</div>		
 		</div>					
 			

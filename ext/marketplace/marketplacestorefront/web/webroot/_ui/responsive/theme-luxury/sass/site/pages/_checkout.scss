@@ -172,7 +172,7 @@
         background: #f9f9f9;
         border-left: 1px solid #ccc;
         border-right:1px solid #ccc;
-        padding-bottom: 10px;
+        padding: 10px 25px;
         border-radius: 0px 0px 5px 5px;
         
         .step-body{
@@ -204,6 +204,11 @@
                 float: left;
                 width: 10%;
             }
+            
+            &.le-checkbox input{
+                display: none;
+            }           
+            
             label{
                display: inline-block;
                 float: left;
@@ -217,23 +222,19 @@
         }
         
         .choose-address{
-            .acc_head{
-                padding: 10px 25px;
-                background: #fff;
-            }
+            
             
             .addressList_wrapper{
                 
-                 padding: 0px 25px;
+                 /*padding: 0px 25px;*/
                 
                 .address-list{
-                    width: 100%;
-                    border: 1px solid #cccccc;
-                    padding: 20px;
-                    border: 1px solid;
+                   /* width: 100%;
+                    border: 1px solid #ccc;
+                    padding: 20px;                   
                     border-radius: 10px;
                     margin-bottom: 20px;
-                    background: #f9f9f9;
+                    background: #f9f9f9;*/
 
                     .acc_head{
                         h2{
@@ -242,20 +243,13 @@
                     }
                 }
             }  
-        }
+        }        
         
-        .addNew_wrapper{
-            background: #f9f9f9;
-            padding: 15px 25px;
-            border-top: 1px solid #ccc;
-            padding-bottom: 0px;
-        }
         
         .step-body{
             padding: 0px 0px;
         }
-        .checkout-shipping{
-            background: #fff;
+        .checkout-shipping{            
             /*padding-top: 10px;*/
         } 
         .checkout-shipping.addNewAddress{
@@ -267,7 +261,7 @@
         border-left: 0px;
         border-right: 0px;
         padding-bottom: 0px;
-        border-radius: 0px;
+        border-radius: 0px;padding: 0px;
     }
     .checkout-shipping.addNewAddress{
         ul{
@@ -332,6 +326,30 @@
             }
         }
         
+    }
+    
+    .addNew_wrapper{
+        .add-address{
+            background: #fff;
+            border-radius: 10px;
+            text-align: center;
+            padding: 25px;
+            border: 1px solid #ccc;
+        .pincode-button{
+            cursor: pointer;
+
+            &:before{
+            content: "";
+            background: url('imgs/luxuary_sprite.png') no-repeat -1370px 0;
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            }
+        }
+        
+        }
+       
+      
     }
     
  }
@@ -511,5 +529,27 @@
         line-height: 16px;
     }
 }
+.checkout-shipping.addNewAddress .formaddress{
+ width:100%!important;
+ }
+ .i18nAddressForm.address-form .row{
+ background: transparent;
+    border: 0px;
+ }
+ .addressList_wrapper .address-list .addresslist-left{
+     width: 5%;
+    display: inline-block;
+    vertical-align: top;
+        margin-top: 14px;
+ }
+  .addressList_wrapper .address-list .addresslist-right{
+        width: 94%;
+    display: inline-block;
+ }
+ 
+.addressList_wrapper .address-list .addresslist-right .edit a{
+          text-align: right;
+    display: block;
+ } 
 
 

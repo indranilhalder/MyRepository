@@ -104,8 +104,27 @@ var buyboxskuId='';
 			<div class="accordion-content full-box">
 				
                 <div class="table">
+                	<input id="prodPrice" type="hidden" />
                    <div class="emibox-left" id="bankNameForEMI"></div>
-                   <div class="emibox-right" id="emiTableTbody"></div>
+                   <div class="emibox-right">
+                   	<table id="EMITermTable" class="other-sellers-table emi-table">
+				        <thead id="emiTableTHead" style="display:none">
+							<th width="5%"><spring:theme
+										code="checkout.multi.paymentMethod.addPaymentDetails.terms" /></th>
+							<th width="25%"><spring:theme
+										code="checkout.multi.paymentMethod.addPaymentDetails.interestRate" /></th>
+							<th width="35%"><spring:theme
+										code="checkout.multi.paymentMethod.addPaymentDetails.monthlyInstallment" /></th>
+							<th width="35%"><spring:theme
+										code="checkout.multi.paymentMethod.addPaymentDetails.interestPayable" /></th>
+						</thead>
+						
+						<tbody id="emiTableTbody">
+						<span id="emiSelectBank" style="display:none"><spring:theme code="emi.nobankselect"/></span>
+						<span id="emiNoData" style="display:none"><spring:theme code="emi.nodata"/></span>
+						</tbody>
+				      </table>
+                   </div>
                 </div>
 			</div>
 	

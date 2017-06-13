@@ -12963,6 +12963,7 @@ TATA.CommonFunctions = {
         });
     },
     Accordion: function() {
+        var Acc = $(".accordion").find(".accordion-title");
         $(document).on("click", ".accordion .accordion-title", function() {
             return $(this).toggleClass("active").next().stop().slideToggle(500), Acc.not($(this)).removeClass("active"), 
             $(".accordion-content").not($(this).next()).stop().slideUp(500), !1;
@@ -12996,7 +12997,7 @@ TATA.CommonFunctions = {
         }), $(".plpWlcode").each(function() {
             for (var productURL = $(this).text(), n = productURL.lastIndexOf("-"), productCode = productURL.substring(n + 1, productURL.length), i = 0; i < wlCode.length; i++) productCode.toUpperCase() == wlCode[i] && (console.log("Controle Inside"), 
             $(this).siblings(".add-to-wishlist").addClass("added"));
-        });
+        }), $("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1 && $(".add-to-wl-pdp").addClass("added");
     },
     wishlistInit: function() {
         $(document).on("click", ".add-to-wishlist", function() {
@@ -13501,8 +13502,8 @@ TATA.CommonFunctions = {
                     },
                     error: function(xhr, status, error) {}
                 });
-            }), $("#bankNameForEMI li").on("click", function() {
-                var productVal = $("#prodPrice").val(), selectedBank = $("#bankNameForEMI :selected").text(), contentData = "", productId = [];
+            }), $(document).on("click", "#bankNameForEMI li", function() {
+                var productVal = $("#prodPrice").val(), selectedBank = $(this).text(), contentData = "", productId = [];
                 if (productId.push($("#product_id").val()), "select" != selectedBank) {
                     var dataString = "selectedEMIBank=" + selectedBank + "&productVal=" + productVal;
                     $.ajax({

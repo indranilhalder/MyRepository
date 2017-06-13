@@ -259,7 +259,7 @@ tr.d0 td {
 			<input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
 			
-			<product:emiDetail product="${product}" />
+			<%-- <product:emiDetail product="${product}" /> --%>
 			
 			
 			<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('freebiePriceThreshold')" var="freebiePriceThreshVal"/>

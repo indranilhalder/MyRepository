@@ -97,10 +97,12 @@
 					<li class="sign-out"><a href="/logout">Sign Out</a></li>
 					</sec:authorize>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-					<li class="logged_in">
+					<li class="logged_in"><a href="<c:url value="/my-account"/>"
+										class="account-userTitle account-userTitle-custom">
 					<ycommerce:testId code="header_LoggedUser">
 					<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
 					</ycommerce:testId>
+					</a>
 					</li>
 					</sec:authorize>				
 					<li class="header-search-link"><a href="#" id="header-search-menu" class="toggle-link search" data-target-id="#header-search">Search</a></li>
@@ -157,3 +159,8 @@
 		</div>
 	</div>
 	</header>
+	
+	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"
+		class="container">
+		<cms:component component="${component}" />
+	</cms:pageSlot>

@@ -60,6 +60,7 @@ TATA.CommonFunctions = {
 		});
 
 	},
+    
 	DocumentClick: function() {
 
 		var elem = $('.toggle-skip');
@@ -121,7 +122,7 @@ TATA.CommonFunctions = {
 	},
 
 	Accordion: function() {
-		//var Acc = $('.accordion').find('.accordion-title');
+		var Acc = $('.accordion').find('.accordion-title');
 
 		$(document).on('click','.accordion .accordion-title', function(){
 	      //Expand or collapse this panel
@@ -175,6 +176,9 @@ TATA.CommonFunctions = {
                 }
             }
         });
+        if($("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1){
+        	$(".add-to-wl-pdp").addClass("added");
+        }
 	},
 
     wishlistInit: function(){
@@ -1010,9 +1014,9 @@ TATA.Pages = {
                 });
          }); 
             
-         $('#bankNameForEMI li').on('click', function(){ 
+            $(document).on("click",'#bankNameForEMI li', function() {
                 var productVal = $("#prodPrice").val();
-                var selectedBank = $('#bankNameForEMI :selected').text();
+                var selectedBank = $(this).text();
                 var contentData = '';
                 var productId=[];
                 productId.push($('#product_id').val());

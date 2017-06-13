@@ -10,12 +10,12 @@
 <%@ attribute name="isCart" required="false" type="java.lang.Boolean" %>	<!-- TPR-629 -->
 
 <ycommerce:testId code="checkoutSteps">
-<div class="col-md-8">
-<div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
+
+<%-- <div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
 		 <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
 				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
 				  <div class="step-3"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
-				</div>
+				</div> --%>
 				<div class="payment-section">
 	<div class="top checkout-top">
 		<div>
@@ -121,7 +121,6 @@
 			</c:when>
 		</c:choose>
 	</c:forEach>
-</div>
 </div>
 </ycommerce:testId>
 

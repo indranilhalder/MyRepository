@@ -315,10 +315,10 @@
         }
         
         .table{
-            background: #fff;            
+            background: #fff;
             border: 2px solid #dde2eb;
             border-radius: 5px;
-            padding: 10px;
+            padding: 0;
             
             .rating-count{
                 font-size: 16px;
@@ -357,10 +357,15 @@
         }
         .emibox-left{
             display: inline-block;
-            width: 30%;
+            width: 20%;
+            vertical-align: top;
         }
-        .emibox-right{
-             display: inline-block;
+        .emibox-right{  
+            display: inline-block;
+            width: 79%;
+            vertical-align: top;
+            padding: 10px;
+            border-left: 1px solid #ccc;
         }
 	}
 	.accordion-icon {
