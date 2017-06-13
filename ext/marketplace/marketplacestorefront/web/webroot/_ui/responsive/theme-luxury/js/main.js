@@ -81,6 +81,11 @@ TATA.CommonFunctions = {
             }else if(element.hasClass("js-password-forgotten")){
             	TATA.CommonFunctions.loadForgotPasswordForm(element);
             }
+            
+            if(element.hasClass("header-login-target-link")){
+        		var targetID = element.data('target-id');
+        		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
+            }
 		});
 	},
 
@@ -1118,6 +1123,10 @@ $(document).ready(function () {
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
 	$("select").selectBoxIt(); 
+	$('.header-login-target-link').on('click', function(){
+		var targetID = $(this).data('target-id');
+		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
+	});
 });
 
 $(window).scroll(function () {
