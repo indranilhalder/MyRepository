@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.mplconfig.service.MplConfigService;
@@ -52,6 +53,7 @@ import com.tisl.mpl.facades.data.StoreLocationRequestData;
 import com.tisl.mpl.facades.data.StoreLocationResponseData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.PincodeService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -86,10 +88,13 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
-	
+
 	@Resource(name = "mplPincodeConverter")
 	private Converter<PincodeModel, PincodeData> mplPincodeConverter;
 
+	//for Jewellery
+	@Resource
+	private BuyBoxService buyBoxService;
 
 	/**
 	 * This method is used to check pincode is serviceable are not
@@ -330,7 +335,22 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 				{
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
-						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						//changes for Jewellery pincode service in pdp
+						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+						{
+							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+									buyBoxService.buyboxPrice(productModel.getCode()));
+
+							final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), sellerArticleSKU);
+						}
+						//end
+
+						else
+						{
+							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						}
+						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}
 					data.setDeliveryModes(deliveryModeList);
@@ -340,25 +360,25 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 					data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase()));
 				}
 				LOG.debug("seller.getFullfillment() :" + seller.getFullfillment());
-				LOG.debug("seller.getDeliveryFulfillModebyP1():" +seller.getDeliveryFulfillModebyP1());
-				
+				LOG.debug("seller.getDeliveryFulfillModebyP1():" + seller.getDeliveryFulfillModebyP1());
+
 				if (null != seller.getDeliveryFulfillModebyP1() && StringUtils.isNotEmpty(seller.getDeliveryFulfillModebyP1()))
 				{
 					data.setDeliveryFulfillModeByP1(seller.getDeliveryFulfillModebyP1().toUpperCase());
 				}
-				LOG.debug("seller.getDeliveryFulfillModebyP1()******:" +seller.getDeliveryFulfillModebyP1());
-				LOG.debug("seller.getIsFragile()******:" +seller.getIsFragile());
+				LOG.debug("seller.getDeliveryFulfillModebyP1()******:" + seller.getDeliveryFulfillModebyP1());
+				LOG.debug("seller.getIsFragile()******:" + seller.getIsFragile());
 				if (null != seller.getIsFragile() && StringUtils.isNotEmpty(seller.getIsFragile()))
 				{
 					data.setIsFragile(seller.getIsFragile().toUpperCase());
 				}
-				LOG.debug("seller.getIsPrecious()******:" +seller.getIsPrecious());
+				LOG.debug("seller.getIsPrecious()******:" + seller.getIsPrecious());
 				if (null != seller.getIsPrecious() && StringUtils.isNotEmpty(seller.getIsPrecious()))
 				{
 					data.setIsPrecious(seller.getIsPrecious().toUpperCase());
 				}
-				
-				
+
+
 				if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode())))
 				{
 					data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase()));
@@ -399,27 +419,42 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 					LOG.debug("locationList:" + locationList.size());
 					data.setStore(locationList);
 				}
-				
-				SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(seller.getUssid());
+
+				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(seller.getUssid());
 				List<RichAttributeModel> sellerRichAttributeModel = null;
-		   	int sellerHandlingTime=0;
-		   	String sellerRichAttrForHandlingTime=null;
+				int sellerHandlingTime = 0;
+				String sellerRichAttrForHandlingTime = null;
 				if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 				{
 					sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 					if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getSellerHandlingTime() != null)
 					{
 						sellerRichAttrForHandlingTime = sellerRichAttributeModel.get(0).getSellerHandlingTime().toString();
-						if( StringUtils.isNotEmpty(sellerRichAttrForHandlingTime)){
-							sellerHandlingTime=Integer.parseInt(sellerRichAttrForHandlingTime);
+						if (StringUtils.isNotEmpty(sellerRichAttrForHandlingTime))
+						{
+							sellerHandlingTime = Integer.parseInt(sellerRichAttrForHandlingTime);
 						}
-						
+
 					}
-					data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));	
+					data.setSellerHandlingTime(Integer.valueOf(sellerHandlingTime));
 				}
-				
+
 				data.setSellerId(seller.getSellerID());
-				data.setUssid(seller.getUssid());
+
+				//added for jewellery
+				if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+				{
+					final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+							buyBoxService.buyboxPriceForJewellery(sellerInfoModel.getSellerArticleSKU()));
+					final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+					data.setUssid(sellerArticleSKU);
+				}
+				//end
+				else
+				{
+					data.setUssid(seller.getUssid());
+				}
+				//data.setUssid(seller.getUssid());
 				data.setIsDeliveryDateRequired("N");
 				requestData.add(data);
 			}
@@ -534,54 +569,60 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		}
 		return storeLocationRequestDataList;
 	}
+
 	/**
-	 * 
+	 *
 	 * @param pincode
 	 * @param sellerId
 	 * @return List<PointOfServiceData>
 	 */
 	@Override
-	public List<PointOfServiceData> getAllReturnableStores(String pincode,String sellerId)
+	public List<PointOfServiceData> getAllReturnableStores(final String pincode, final String sellerId)
 	{
-		PincodeModel pincodeModel=pincodeService.getLatAndLongForPincode(pincode);
-		List<PointOfServiceData> posData =null;
-			if(null!=pincodeModel){
-      			final LocationDTO dto = new LocationDTO();
-      			dto.setLongitude(pincodeModel.getLongitude().toString());
-      			dto.setLatitude(pincodeModel.getLatitude().toString());
-      			final Location myLocation = new LocationDtoWrapper(dto);
-      	
-      			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
-      			final double configurableRadius = Double.parseDouble(configRadius);
-      			LOG.debug("**********configrableRadius:" + configurableRadius);
-      			posData = new ArrayList<PointOfServiceData>();
-      			try
-      			{
-      			Collection<PointOfServiceModel> pointOfServiceModels=pincodeService.getAllReturnableStores(myLocation.getGPS(), configurableRadius, sellerId);
-      			
-      			if (CollectionUtils.isNotEmpty(pointOfServiceModels))
-      			{
-      				//convert model to data
-      				posData = converters.convertAll(pointOfServiceModels, pointOfServiceConverter);
-      				if (CollectionUtils.isNotEmpty(posData))
-      				{
-      					return posData;
-      				}
-      			}
-      			}
-      			catch(LocationServiceException e)
-      			{
-      				throw new EtailNonBusinessExceptions(e);
-      			}
-      			catch (Exception e) {
-      				throw new EtailNonBusinessExceptions(e);
-      			}
-      		
-      			return posData;
-			}else{
-				LOG.debug("Stores not Avalable...");
-				return	posData;
+		final PincodeModel pincodeModel = pincodeService.getLatAndLongForPincode(pincode);
+		List<PointOfServiceData> posData = null;
+		if (null != pincodeModel)
+		{
+			final LocationDTO dto = new LocationDTO();
+			dto.setLongitude(pincodeModel.getLongitude().toString());
+			dto.setLatitude(pincodeModel.getLatitude().toString());
+			final Location myLocation = new LocationDtoWrapper(dto);
+
+			final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
+			final double configurableRadius = Double.parseDouble(configRadius);
+			LOG.debug("**********configrableRadius:" + configurableRadius);
+			posData = new ArrayList<PointOfServiceData>();
+			try
+			{
+				final Collection<PointOfServiceModel> pointOfServiceModels = pincodeService.getAllReturnableStores(
+						myLocation.getGPS(), configurableRadius, sellerId);
+
+				if (CollectionUtils.isNotEmpty(pointOfServiceModels))
+				{
+					//convert model to data
+					posData = converters.convertAll(pointOfServiceModels, pointOfServiceConverter);
+					if (CollectionUtils.isNotEmpty(posData))
+					{
+						return posData;
+					}
+				}
 			}
+			catch (final LocationServiceException e)
+			{
+				throw new EtailNonBusinessExceptions(e);
+			}
+			catch (final Exception e)
+			{
+				throw new EtailNonBusinessExceptions(e);
+			}
+
+			return posData;
+		}
+		else
+		{
+			LOG.debug("Stores not Avalable...");
+			return posData;
+		}
 	}
 
 	/**
@@ -732,7 +773,7 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 	{
 		return pincodeService.getSortedLocationsNearby(gps, distance, sellerId);
 	}
-	
+
 	/**
 	 * Get the Pincode Details
 	 *
@@ -745,13 +786,13 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 		PincodeData pincodeData = null;
 		if (LOG.isDebugEnabled())
 		{
-			LOG.debug("Pincode Facade Class :"+pincode);
+			LOG.debug("Pincode Facade Class :" + pincode);
 		}
 		try
 		{
 			final PincodeModel pincodeModel = pincodeService.getDetailsOfPincode(pincode);
 			LOG.debug("Getting Pincode  Details of the Pincode and call to Converted");
-			if(null != pincodeModel)
+			if (null != pincodeModel)
 			{
 				pincodeData = getMplPincodeConverter().convert(pincodeModel);
 			}
@@ -777,9 +818,10 @@ public class PincodeServiceFacadeImpl implements PincodeServiceFacade
 
 
 	/**
-	 * @param mplPincodeConverter the mplPincodeConverter to set
+	 * @param mplPincodeConverter
+	 *           the mplPincodeConverter to set
 	 */
-	public void setMplPincodeConverter(Converter<PincodeModel, PincodeData> mplPincodeConverter)
+	public void setMplPincodeConverter(final Converter<PincodeModel, PincodeData> mplPincodeConverter)
 	{
 		this.mplPincodeConverter = mplPincodeConverter;
 	}
