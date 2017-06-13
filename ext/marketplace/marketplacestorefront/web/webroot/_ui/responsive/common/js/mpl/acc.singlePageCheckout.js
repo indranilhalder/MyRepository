@@ -1693,9 +1693,16 @@ $(document).ready(function(){
 			
 			var defaultAddressPincode=$("#defaultAddressPincode").html();
 			var defaultAddressId=$("#defaultAddressId").html();
-			if(typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
+			var defaultAddressPresent==$("#defaultAddressPresent").html();
+			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
 				ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+			}
+			if(defaultAddressPresent=="false")
+			{
+				$("#chooseDeliveryAddressMobile").find(".mobileNotDefaultDelAddress").show();
+				//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+				$("#chooseDeliveryAddressMobile .change-mobile").hide();
 			}
 			$("#makePaymentDiv").html("");
 		}

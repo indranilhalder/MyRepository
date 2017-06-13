@@ -33,6 +33,7 @@
 						<span id="emptyAddressMobile" style="display:none">Please select a delivery method to proceed.</span>
 
 <div class="addressList_wrapper mobile_list">
+						<c:set var="defaultAddressPresent" value="false"></c:set>
 							<c:forEach items="${deliveryAddresses}" var="deliveryAddress"
 								varStatus="status">
 
@@ -52,7 +53,6 @@
 									</c:otherwise>
 								</c:choose>
 
-
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
 									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkIsServicableResponsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
 										<c:choose>
@@ -63,6 +63,7 @@
 												<label for="radio_mobile_${deliveryAddress.id}"></label>
 												<span id="defaultAddressPincode" style="display:none;">${deliveryAddress.postalCode}</span>
 												<span id="defaultAddressId" style="display:none;">${deliveryAddress.id}</span>
+												<c:set var="defaultAddressPresent" value="true"></c:set>
 											</c:when>
 											<c:otherwise>
 												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
@@ -151,6 +152,7 @@
 								</div>
 								
 							</c:forEach>
+							<span id="defaultAddressPresent">${defaultAddressPresent}</span>
 						</div>
 
 
