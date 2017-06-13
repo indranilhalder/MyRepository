@@ -22,18 +22,18 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-	@Override
-	protected Cookie createCookie(final String cookieValue)
-	{
-		final Cookie cookie = new Cookie(getCookieName(), cookieValue);
-		if (getCookieDomain() != null)
-		{
-			LOG.error("here Setting cookie with name:::" + getCookieName() + "with domain :::" + getCookieDomain());
-			cookie.setDomain(getCookieDomain());
-		}
-		cookie.setPath(getCookiePath());
-		return cookie;
-	}
+//	@Override
+//	protected Cookie createCookie(final String cookieValue)
+//	{
+//		final Cookie cookie = new Cookie(getCookieName(), cookieValue);
+//		if (getCookieDomain() != null)
+//		{
+//			LOG.error("here Setting cookie with name:::" + getCookieName() + "with domain :::" + getCookieDomain());
+//			cookie.setDomain(getCookieDomain());
+//		}
+//		cookie.setPath(getCookiePath());
+//		return cookie;
+//	}
 
 	@Override
 	protected void setEnhancedCookie(final Cookie cookie)
