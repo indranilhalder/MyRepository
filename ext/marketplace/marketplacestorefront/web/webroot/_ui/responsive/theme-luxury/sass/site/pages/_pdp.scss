@@ -365,6 +365,7 @@
             	list-style-type:none;
             	li{
             		position:relative;
+            		cursor:pointer;
             	}
             	li.active::after{
             		content:'>';
@@ -769,8 +770,9 @@
 			    margin: 3px;
     		}
     	}
-    	.luxuy_changepincode{
+    	.luxuyChangepincode{
     		color: #b8996d;
+    		cursor:pointer;
     	}
     	
 		li{
