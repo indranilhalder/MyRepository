@@ -6,10 +6,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<!-- This is used for displaying text in footer -->
 <div class="footer-text">
 	<%-- ${footerText} --%>
-	<!-- For TPR-1282 -->
 	<c:choose>
 		<c:when test="${not empty categoryFooterTxt}">
 			${categoryFooterTxt}
@@ -21,7 +19,6 @@
 		</c:otherwise>
 	</c:choose>
 </div>
-<!-- This is used for displaying copyright in footer -->
 <div class="banner">
 	<span>${notice}</span>
 </div>
@@ -30,7 +27,4 @@
 		<div class="modal-content content" style="width:90%; max-width:90%;">
 			
 		</div>
-		<!-- /.modal-content -->
-	
-	<!-- /.modal-dialog -->
 </div>

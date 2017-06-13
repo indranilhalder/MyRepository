@@ -4,6 +4,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.core.model.user.CustomerModel;
+//import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 
 import javax.servlet.http.Cookie;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+//import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -35,11 +37,11 @@ public class LoginHiHeaderController
 	@Autowired
 	private UserService userService;
 
-	//SONAR FIX
+	//Sonar Issue Fixed For Kidswear: commented configurationService
 	//@Autowired
-	//private ConfigurationService configurationService; //Added for UF-93  
+	//private ConfigurationService configurationService; //Added for UF-93
 
-	//SONAR FIX
+	//Sonar Issue Fixed For Kidswear: commented LOG
 	//private static final Logger LOG = Logger.getLogger(LoginHiHeaderController.class);
 
 	@RequestMapping(method = RequestMethod.GET)

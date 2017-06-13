@@ -36141,6 +36141,8 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     vertical-align: middle;
     display: table-cell;
     padding-right:5px;
+    padding-top:10px;		/* TISKIDK-701 */
+    padding-bottom:10px;	/* TISKIDK-701 */
 }
 .facet_mobile .facet-name.js-facet-name {
     display: table;
@@ -67079,7 +67081,8 @@ body .account .right-account .order-history .product-block li.item .attributes p
   }		/*TISPRDT-1179*/
  /*  start of PRDI-177 */
 #OfferWrap .Inner .show-termsConditions p {
-	text-align: justify !important;
+	/* text-align: justify !important; */	/* Commented for TISKIDK-1415 */
+	text-align: center !important;	/* TISKIDK-1415 */
 	}
 	/* End of PRDI-177 */
 
@@ -68943,7 +68946,12 @@ body.page-viewAllTrending #ia_products_hot .listing-leftmenu .checkbox-menu{
 	}
 	body.page-viewAllTrending #ia_products_hot .listing.wrapper .right-block .product-list > li {
     padding: 0 7px;
-}
+	}
+	/* TISKIDK-1988 */
+	.luxury-header ~ .mainContent-wrapper .container_store_finder{
+        margin-top:20px;
+    }
+    /* TISKIDK-1988 */
 }
 @media (max-width: 650px){
 body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing-leftmenu {
@@ -68951,6 +68959,7 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
     margin-top: 20px;
 }
 }
+
 /*PRDI-227 end*/
 
 /* start change of TISSQAEE-1105, INC144316370 & INC144316762  */
@@ -68985,3 +68994,15 @@ span#juspayErrorMsg{
 }
 }
 /*TPR-4461 end*/
+
+/* TISKIDK-1416 */
+.page-multiStepCheckoutSummaryPage li {
+    list-style-type: none;
+}
+.allDetails .qty{
+	margin-bottom: 5px;
+}
+.cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .method h3 {
+    margin-bottom: 5px;
+}
+/* TISKIDK-1416 */

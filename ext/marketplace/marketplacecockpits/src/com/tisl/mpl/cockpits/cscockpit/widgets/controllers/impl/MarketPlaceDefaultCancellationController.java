@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.utilities.CodeMasterUtility;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketPlaceCancellationController;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.WalletEnum;
@@ -186,12 +187,14 @@ public class MarketPlaceDefaultCancellationController extends
 			if (orderCancelRecord.getRefundableAmount() != null
 					&& orderCancelRecord.getRefundableAmount() > NumberUtils.DOUBLE_ZERO) {
 
+
 //				Mrupee implementation 
 				final OrderModel order=orderCancelRecord.getOriginalVersion().getOrder();
 				
 				if((null !=order.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(order.getIsWallet().getCode()))||null ==order.getIsWallet()){
 				
 					final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
+
 				
 				try {
 					paymentTransactionModel = mplJusPayRefundService.doRefund(

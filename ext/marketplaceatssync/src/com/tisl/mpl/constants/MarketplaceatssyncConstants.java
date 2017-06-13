@@ -34,3 +34,4 @@ public final class MarketplaceatssyncConstants extends GeneratedMarketplaceatssy
 	public static final String ATS_KAFKA_POLLING_COUNT = "ats.polling.count";
 
 }
+

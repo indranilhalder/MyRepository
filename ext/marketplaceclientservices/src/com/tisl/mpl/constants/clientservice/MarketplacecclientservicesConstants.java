@@ -264,5 +264,4 @@ public class MarketplacecclientservicesConstants
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
-
 }

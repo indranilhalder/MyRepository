@@ -553,6 +553,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_FORGOT_PWD = "Dear Customer, One Time Password for your request is {0}. Please enter the same to submit the request. Regards, Team Tata Unistore.";
 	/* 1.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_PLACED = "Hi {0}, your order no ({1}) is confirmed. While we will keep you posted, track your order at {2}. Hope you enjoyed shopping with us.";
+
 	public static final String SMS_MESSAGE_ORDER_SHIPPED = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
 	public static final String SMS_MESSAGE_ORDER_OUTFORDELIVERY_PREPAID = "Awesome news! {0} item(s) of your order  # {1} will reach you today. High five for shopping with us. Don't forget to download our app at {2} .";
 	/* 3.Anniversary Changes */
@@ -564,6 +565,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
+
 	public static final String PUSH_MESSAGE_ORDER_PLACED = "Awesome! We think your bag looks great. Track your order {0} in the Order History section of your account.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_PREPAID = "Hi! Your order {0} of {1} item(s) will reach you today. To know more, check out the Order History section of the app.";
 	public static final String PUSH_MESSAGE_ORDER_OFD_COD = "Hi! Your order {0} of {1} item(s) will reach you today. Please keep INR {2} cash handy. To know more, check out the Order History section of the app.";
@@ -590,6 +592,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	/* 4.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_UNDELIVERED = "Hi {0}! We tried delivering your order {1} with {2} item(s) but missed you. We will try again. Have a question? Call on {3}.";
 	/* 7.Anniversary Changes */
+
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
@@ -1321,6 +1324,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//added for getcartdetails
 	public static final String INVALID_CART = "Invalid Cart";
+	//For TPR-5666
+	public static final String INVALID_CART_URL = "/cart/error-invalidCart";
 	public static final String COULD_NOT_COVERT_CART = "Could not covert cart";
 
 	public static final String PROMOTION_GROUP_DEFAULT = "default";
@@ -2101,6 +2106,40 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SECONDPRODUCT = "secondProduct";
 	public static final String FOUNDCOMPONENT = "Found Component>>>>with id :::";
+
+
+	public static final String AGENT_ID = "agentId";
+
+	public static final String JUSPAY = "JUSPAY".intern();
+
+	// OIS store manager agent group
+	public static final String CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP = "storemanageragentgroup";
+
+	// Agent specific order search query
+	public static final String ORDER_BY_AGENT = "select {pk} from {Order} where {user}=?user and {agentId}=?agentId ";
+
+	// Agent who placed order from cscockpit
+
+	//CAR-285
+	public static final String XML_SITEMAP_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"> \n";
+	public static final String SITEMAP_TAG_OPEN = "<sitemap>\n";
+	public static final String SITEMAP_TAG_CLOSE = "</sitemap>\n";
+	public static final String LOC_TAG_OPEN = "<loc>\n";
+	public static final String LOC_TAG_CLOSE = "</loc>\n";
+	public static final String XML_SITEMAP_END = "</sitemapindex>\n";
+	public static final String SITEMAP_NAME = "mpl.sitemap.xml.name";
+	public static final String SITEMAP_NAME_DEFAULT = "sitemap.xml";
+	public static final String SITEMAP_LOCATION = "mpl.sitemap.xml.location";
+	public static final String SITEMAP_LOCATION_DEFAULT = "/hybris/hybris/data/feed/report/sitemap/";
+	public static final String SITEMAP_ZIP_LOCATION = "mpl.sitemap.zipLocation";
+	public static final String SITEMAP_ZIP_LOCATION_DEFAULT = "/hybris/hybris/data/feed/report/sitemap/sitemaps";
+	public static final String SITEMAP_UID = "mpl.sitemap.uid";
+	public static final String SITEMAP_UID_DEFAULT = "mpl";
+	public static final String SITEMAP_URL = "mpl.sitemap.url";
+	public static final String SITEMAP_URL_DEFAULT = "https://www.tatacliq.com/";
+	public static final String SITEMAP_FOLDER = "mpl.sitemap.folder";
+	public static final String SITEMAP_FOLDER_DEFAULT = "sitemaps/";
+	public static final String ZIP_FORMAT = ".gz";
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";

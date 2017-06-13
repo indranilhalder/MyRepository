@@ -6,9 +6,11 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.model.CategoryModel;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.daos.impl.DefaultCMSPageDao;
 import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -452,5 +454,17 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		query.addQueryParameter("catVersion", catalogmodel);
 		//		query.addQueryParameter("catVersion", catalogVersion);
 		return flexibleSearchService.<BrandComponentModel> search(query).getResult();
+	}
+	/**
+	 * @param siteUid
+	 * @return CMSSite
+	 * @CAR-285
+	 */
+	@Override
+	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException
+	{
+		final CMSSiteModel cms = new CMSSiteModel();
+		cms.setUid(siteUid);
+		return flexibleSearchService.getModelByExample(cms);
 	}
 }

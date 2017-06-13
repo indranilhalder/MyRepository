@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.facade.checkout.impl;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
@@ -19,11 +16,15 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.commerceservices.order.CommerceCartRestoration;
+import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -3259,10 +3260,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * <<<<<<< HEAD =======
-	 * 
-	 * >>>>>>> refs/remotes/origin/SPRINT_8
-	 * 
 	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#getLuxCart()
 	 */
 	@Override
@@ -3520,5 +3517,59 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			return false;
 		}
 		return true;
+	}
+
+	//TPR-5666 samsung cart changes
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#getCartByGuid(java.lang.String)
+	 */
+	@Override
+	public CartModel getCartByGuid(final String cartGuid)
+	{
+		CartModel cart = null;
+		try
+		{
+			cart = mplCommerceCartService.fetchCartUsingGuid(cartGuid);
+		}
+		catch (final InvalidCartException invalidCartException)
+		{
+			LOG.error("Invalid Cart Exception ::::::::MplCartFacadeImpl::::" + invalidCartException.getMessage());
+		}
+		return cart;
+	}
+
+	//TPR-5666 samsung cart changes
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#mergeAnonymousCart(de.hybris.platform.core.model.order.CartModel,
+	 * de.hybris.platform.core.model.order.CartModel)
+	 */
+	@Override
+	public void mergeCarts(final CartModel sourceCartModel, final CartModel targetCartModel)
+	{
+		final CommerceCartParameter parameter = new CommerceCartParameter();
+		parameter.setEnableHooks(true);
+		parameter.setCart(targetCartModel);
+
+		CommerceCartRestoration restoration;
+		try
+		{
+			restoration = getCommerceCartService().restoreCart(parameter);
+			commerceCartService.mergeCarts(sourceCartModel, parameter.getCart(), restoration.getModifications());
+			parameter.setCart(getCartService().getSessionCart());
+		}
+		catch (final CommerceCartRestorationException ex)
+		{
+			LOG.error("Commerce Cart Restoration Exception ::::::::MplCartFacadeImpl::::" + ex.getMessage());
+		}
+
+		catch (final CommerceCartMergingException ex)
+		{
+			LOG.error("Commerce Cart Merging Exception ::::::::MplCartFacadeImpl::::" + ex.getMessage());
+		}
+		//return mplCommerceCartService.mergeCarts(sourceCartModel, targetCartModel);
 	}
 }
