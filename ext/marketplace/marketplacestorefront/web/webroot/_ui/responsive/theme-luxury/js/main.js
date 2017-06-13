@@ -6,10 +6,54 @@ var TATA = window.TATA;
 
 
 TATA.CommonFunctions = {
+	
+	loadSignInForm: function(element){
+		const loginURL = element.attr("href");
+    	$.ajax({
+            url: loginURL,
+            beforeSend: function(){
+                $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-sign-in").html(data), $("#header-account").addClass("active"), 
+                $("body").removeClass("menu-open");
+            }
+        });
+    },
+    loadRegisterForm: function(element){
+    	const luxRegister = element.attr("href");
+        $.ajax({
+            url: luxRegister,
+            beforeSend: function(){
+                $("#login-container .header-signup").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-signup").html(data);
+            }
+        });
+    },
+    loadForgotPasswordForm: function(element){
+    	const pwsRequest = element.attr("href");
+        $.ajax({
+            url: pwsRequest,
+            beforeSend: function(){
+                $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-forget-pass").html(data);
+            }
+        });
+    },
 	Toggle: function() {
 
-		$('.toggle-link').on('click', function(){
-			var Target = $(this).data("target-id");
+		$('.toggle-link').on('click', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var Target = $(this).data("target-id");
+            var elem = $(this);
+            if(elem.hasClass("luxury-login")){
+				TATA.CommonFunctions.loadSignInForm(elem);
+            }
 			$('.toggle-skip').not(Target).removeClass('active');
 			$(Target).toggleClass('active');
 			return false;
@@ -30,6 +74,13 @@ TATA.CommonFunctions = {
 
 		elem.click(function(e){
 			e.stopPropagation();
+			e.preventDefault();
+            var element = $(e.target);
+            if(element.hasClass("register_link")){
+            	TATA.CommonFunctions.loadRegisterForm(element);
+            }else if(element.hasClass("js-password-forgotten")){
+            	TATA.CommonFunctions.loadForgotPasswordForm(element);
+            }
 		});
 	},
 
@@ -1064,131 +1115,9 @@ TATA.Pages = {
 	}
 };
 
-TATA.signInPopup = {
-		init: function(){
-			var _self = TATA.signInPopup;
-			_self.signIn.init();
-			_self.signUp.init();
-			_self.forgotPassword.init();
-		},
-		commonFunctions : {
-			beforeAjax: function(){
-				$('#login-container .header-sign-in').html('<div class="luxury-loader"></div>');
-			},
-		},
-		signIn : {
-			init: function(){
-				$(".luxury-login").on("click", function(e){
-					e.preventDefault();
-					const loginURL = $(this).attr('href');
-					var loginContainer = $('#login-container .header-sign-in');
-					$.ajax({
-						url: loginURL,
-						beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-						success:function(data){
-							$('#login-container .header-sign-in').html(data);
-			                $('#header-account').addClass('active');
-			                $('body').removeClass('menu-open');
-						}
-					})
-				});
-				$(document).on("click", "#triggerLoginAjax", function(e){	
-					$(".invalided-error").remove();
-					e.preventDefault();				
-					TATA.signInPopup.signIn.validate();
-				});
-			},
-			validate: function(){
-				$('#loginForm').validate({
-					onfocusout: false,
-			        invalidHandler: function(form, validator) {
-			            var errors = validator.numberOfInvalids();
-			            if (errors) {
-			            	$("#loginForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
-			                validator.errorList[0].element.focus();
-			            }
-			        },
-					rules: {
-						j_username: {
-							required: true,
-							email: true ,
-							maxlength: 120
-						},
-						
-						j_password: {
-							required: true,
-							maxlength: 30
-						}
-					},
-					submitHandler: TATA.signInPopup.signIn.submitHandler(this),
-				});
-			},
-			submitHandler: function(form){
-				$.ajax({
-             		  url:"/j_spring_security_check",
-         				 type:"POST",
-         				 returnType:"text/html",
-         				 data: $(form).serialize(),
-                       beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-                       success: function(data) {
-                     	  if(data==307){
-                     		  location.reload();  
-                     	  }
-                     	  else if(data==0){
-                     		  $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
-                     		  $("#j_password").val("");
-                     	  }else{
-                     		  $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
-                     		  $("#j_password").val("");
-                     	  }
-                       },
-                   });
-			},
-		},
-		signUp : {				
-			init: function(){
-				$(document).on('click', '.register_link', function(e){
-					e.preventDefault();
-					const luxRegister = $(this).attr('href');
-					$.ajax({
-						url: luxRegister,
-						beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-						success:function(data){
-							$('#login-container .header-signup').html(data);
-//							TATA.signInPopup.signUp.validate();
-						}
-					});
-				});
-			},
-			validate: function(){
-				
-			},
-		},
-		forgotPassword : {				
-			init: function(){
-				$(document).on('click', '.js-password-forgotten', function(e){
-					e.preventDefault();
-					const pwsRequest = $(this).attr('href');
-					$.ajax({
-						url: pwsRequest,
-						beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-						success:function(data){
-							$('#login-container .header-forget-pass').html(data);
-//							TATA.signInPopup.forgotPassword.validate();
-						}
-					});
-				});
-			},
-			validate: function(){
-				
-			},
-		},
-};
-
- $(document).ready(function () {
+$(document).ready(function () {
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
-	TATA.signInPopup.init();
 	$("select").selectBoxIt(); 
 });
 

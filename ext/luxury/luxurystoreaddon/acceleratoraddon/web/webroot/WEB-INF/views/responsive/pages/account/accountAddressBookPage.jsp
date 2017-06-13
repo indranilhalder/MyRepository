@@ -80,11 +80,12 @@
 						</c:if>
 						<spring:theme code="text.account.addressBook.savedAddress"
 							text="My Address" />
-							<%-- <span><spring:theme code="text.account.addressBook.savedAddress.details"
-							text="Where in the world are you located? Edit, delete or change your address here." /></span> --%>
+							
 					</h2>
 				
 				<div id="address_item" class="info card-list">
+				<span><spring:theme code="text.account.addressBook.savedAddress.details"
+							text="Edit, delete or change your address here." /></span>
 					<!-- Heading for saved Cards -->
 
 										
@@ -103,7 +104,7 @@
 					</c:if> --%>
 
 					<ul
-						class="saved-cards" id="item_ul">
+						class="saved-cards mt-20" id="item_ul">
 						<c:choose>
 							<c:when test="${not empty addressData}">
 								<c:choose>
@@ -197,7 +198,7 @@
 																				data-mylist="<spring:theme code="text.help" />"
 																				data-dismiss="modal">
 																				<spring:theme
-																					code="text.remove" text="Delete Address" />
+																					code="text.remove" text="Delete" />
 																			</a>
 
 																		</ycommerce:testId>
@@ -206,7 +207,7 @@
 																			code="addressBook_editAddress_button">
 																			<a href="#editaddress" class="edit" 
 																				onclick="editAddress(${address.id})"> <spring:theme
-																					code="text.edit" text="Edit Address" />
+																					code="text.edit" text="Edit" />
 																			</a>
 																		</ycommerce:testId>
 																	</div>
@@ -394,9 +395,9 @@
 
 									<!-- TISEE-4696 -->
 									<div class="half no-display">
-									<label><spring:theme code="text.addressBook.firstName" text="First name *" /></label>
-										<form:input path="firstName" id="firstName"
-											onkeyup="kpressaddressfn()" maxlength="40" />
+									<%-- <label><spring:theme code="text.addressBook.firstName" text="First name *" /></label> --%>
+										<form:input path="firstName" id="firstName*"
+											onkeyup="kpressaddressfn()" maxlength="40" placeholder="First Name"/>
 									<div class="errorMessage"><div id="erraddressfn"></div></div>
 									</div>
 									
@@ -404,9 +405,9 @@
 
 									
 									<div class="half no-display last-name">
-									<label><spring:theme code="text.addressBook.lastName" text="Last name *" /></label>
-										<form:input path="lastName" id="lastName"
-											onkeyup="kpressaddressln()" maxlength="40" />
+									<%-- <label><spring:theme code="text.addressBook.lastName" text="Last name *" /></label> --%>
+										<form:input path="lastName" id="lastName*"
+											onkeyup="kpressaddressln()" maxlength="40" placeholder="last Name"/>
 										<div class="errorMessage"><div id="erraddressln"></div></div>
 									</div>
 									
@@ -419,52 +420,59 @@
 
 									<!-- TISUAT-4696 /TPR-215-->
 									<div class="half" style="clear:both;">
-									<label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label>
+									<%-- <label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label> --%>
 										<form:input path="line1" id="line1" onkeyup="kpressaddressln1()"
-											maxlength="40" />
+											maxlength="40" placeholder="Address Line1*"/>
 											<div class="errorMessage"><div id="erraddressline1"></div></div>
 									</div>
 									
 
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
-									<label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 " /></label>
+									<%-- <label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 " /></label> --%>
 										<form:input path="line2" id="line2" onkeyup="kpressaddressln2()"
-											maxlength="40" />
+											maxlength="40" placeholder="Address Line2"/>
 											<div class="errorMessage"><div id="erraddressline2">   </div></div>
 									</div>
 							
 
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half">
-									<label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label>
+									<%-- <label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label> --%>
 										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
-											maxlength="40" />
+											maxlength="40" placeholder="Address Line3"/>
 											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
 									</div>
+									
+									<div class="half halfwidth">
+									<%-- <label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label> --%>
+										<form:input path="postcode" id="postcode" class="address_postcode"
+											onkeyup="kpressaddresspost()" maxlength="6" placeholder="Pincode*"/>
+											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
+									</div>
 								
-									<div class="half no-display fullwidth">
+									<div class="half no-display halfwidth">
 										<div class="optionsLandmark">
-											<label>Landmark</label>
-												<form:select path="landmark" id="landmark" value="${addressForm.landmark}" class="address_landmarks"
+											<!-- <label>Landmark</label> -->
+												<form:select path="landmark" id="landmark" placeholder="Landmark" value="${addressForm.landmark}" class="address_landmarks"
 													maxlength="30"></form:select>
 												<div class="errorMessage errland1">   </div>
 										</div>
 									</div>
-									<div class="half no-display fullwidth">
-										<div class ="address_landmarkOtherDiv" data-value="${addressForm.landmark}">
-										<label>Nearest Landmark</label>
-											<form:input path="otherLandmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
+									<!-- <div class="half no-display fullwidth"> -->
+										<div class ="half no-display fullwidth address_landmarkOtherDiv" data-value="${addressForm.landmark}">
+										<!-- <label>Nearest Landmark</label> -->
+											<form:input path="otherLandmark" placeholder="Nearest Landmark" id="otherLandmark" onkeyup="optionsLandmark1()" class="address_landmarkOther"
 												maxlength="30" />
 												<div class="errorMessage errland2"></div>
 										</div>
-									</div>
+									<!-- </div> -->
 									
 									<!-- TISUAT-4696  /TPR-215-->
 									<div class="half halfwidth cityselect">
-									<label><spring:theme code="text.addressBook.City" text="City *" /></label>
+									<%-- <label><spring:theme code="text.addressBook.City" text="City *" /></label> --%>
 										<form:input path="townCity" id="townCity" class="address_townCity"
-											onkeyup="kpressaddresscity()" maxlength="30" />
+											onkeyup="kpressaddresscity()" maxlength="30" placeholder="City*"/>
 											<div class="errorMessage"><div id="erraddressCity">  </div></div>
 									</div>
 									
@@ -472,9 +480,9 @@
 
 									<div class="half no-display halfwidth stateselect">
 										<div class="mainDrop">
-											<label><spring:theme code="text.addressBook.State"
-													text="State *" /></label>
-											<form:select name="stateList" id="stateListBox" path="state"
+											<%-- <label><spring:theme code="text.addressBook.State"
+													text="State *" /></label> --%>
+											<form:select name="stateList" placeholder="State*" id="stateListBox" path="state"
 												class="address_states" onChange="onAddressSelectValidate()">
 												<c:forEach items="${stateDataList}" var="state"
 													varStatus="stateStatus">
@@ -496,16 +504,16 @@
 
 									</div>
 									
-									<div class="half halfwidth">
+									<%-- <div class="half halfwidth">
 									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
 										<form:input path="postcode" id="postcode" class="address_postcode"
 											onkeyup="kpressaddresspost()" maxlength="6" />
 											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
-									</div>
+									</div> --%>
 									 
-									 <div class="half phone halfwidth mobileno">
-										<label><spring:theme code="text.addressBook.Phone"
-												text="Mobile Number*" /></label>
+									 <div class="half phone fullwidth mobileno">
+										<%-- <label><spring:theme code="text.addressBook.Phone"
+												text="Mobile Number*" /></label> --%>
 										<%-- <form:input type="text" value="+91" id="myInput" inputCSS="form-text" path="MobileNo" disabled="true"/> --%>
 										<%-- <select name="countryList"
 											disabled="disabled">
@@ -517,13 +525,13 @@
 										</select> --%>
 											<form:input type="text" id="mobileNo" inputCSS="form-text"
 												path="mobileNo" 
-												onkeyup="kpressaddressmob()" maxlength="10" />
+												onkeyup="kpressaddressmob()" maxlength="10" placeholder="Mobile Number*"/>
 										
 										<div class="errorMessage"><div id="erraddressMob"></div></div>
 									</div>
 
-									<div class="half no-display country clearfix" id="countryListBox">
-										<label><spring:theme code="text.addressBook.Country" text="Country *" /></label> 
+									<div class="half fullwidth no-display country clearfix" id="countryListBox">
+										<%-- <label><spring:theme code="text.addressBook.Country" text="Country *" /></label>  --%>
 										<%-- <select name="countryList"
 											disabled="disabled">
 											<c:forEach items="${countryData}" var="country"
@@ -533,7 +541,7 @@
 											</c:forEach>
 										</select> --%>
 										
-										<input type="text" name="CountryList" value="India" disabled="">
+										<input type="text" name="CountryList" value="India" disabled="" placeholder="Country">
 										
 									</div>
 									
@@ -550,10 +558,10 @@
 										<label class="toggle-btn commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" />
 											</label>
 										
-										<input type="radio" class="toggle" name="addressRadioType"
+										<!-- <input type="radio" class="toggle" name="addressRadioType"
 											id="new-address-option-3" value="others"
 											onChange="onSelectRadio()" />
-										<label class="toggle-btn commercial" for="new-address-option-3">Others</label>
+										<label class="toggle-btn commercial" for="new-address-option-3">Others</label> -->
 										 <div class="errorMessage">
 											<div id="errtype"></div>
 										</div>
@@ -574,7 +582,7 @@
 								<%-- <button type="submit" class="blue" id="addNewAddress"><spring:theme code="text.account.addressBook.addAddress" text="ADD NEW ADDRESS" />
 									</button> --%>
 								<div class="text-center mt-20">
-									<button type="submit" class="blue account-addressEditButton" id="edit" ><spring:theme code="text.addressBook.editAddress" text="SAVE ADDRESS" />
+									<button type="submit" class="blue account-addressEditButton" id="edit" ><spring:theme code="text.addressBook.editAddress" text="Save Address" />
 									</button>
 								</div>
 									</div>

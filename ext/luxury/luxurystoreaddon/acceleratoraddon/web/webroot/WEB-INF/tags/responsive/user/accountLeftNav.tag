@@ -26,9 +26,12 @@
 		<li id="lnAddress"><a href="<c:url value="/my-account/address-book"/>"><spring:theme
 				code="header.flyout.address" /></a></li>
 		
-		<li id=""><a href="javascript:;">Frequently asked question</a></li>
-		<li id=""><a href="javascript:;">T&C</a></li>
-		<li id=""><a href="javascript:;">Terms of use</a></li>	
+		<li id="InFaq"><a href="<c:url value="/faq"/>">Frequently asked question</a></li>
+	<%--<li id=""><a href="javascript:;">Frequently asked question</a></li> --%>
+		<li id="InTernAndCondition"><a href="<c:url value="/termsAndConditions"/>">T&C</a></li>
+		<!-- <li id=""><a href="javascript:;">T&C</a></li> -->
+		<li id="InTermsOfUse"><a href="<c:url value="/termsOfUse"/>">Terms of use</a></li>
+		<!-- <li id=""><a href="javascript:;">Terms of use</a></li>	 -->
 		<li id="lnCoupons"><a href="<c:url value="/my-account/coupons"/>"><spring:theme
 				code="header.flyout.coupons" /></a></li>
 	</ul>

@@ -159,3 +159,8 @@
 		</div>
 	</div>
 	</header>
+	
+	<cms:pageSlot position="BottomHeaderSlot" var="component" element="div"
+		class="container">
+		<cms:component component="${component}" />
+	</cms:pageSlot>

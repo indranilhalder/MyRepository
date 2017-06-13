@@ -12832,7 +12832,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12920,10 +12920,49 @@ if (function(a, b) {
 var TATA = window.TATA;
 
 TATA.CommonFunctions = {
+    loadSignInForm: function(element) {
+        const loginURL = element.attr("href");
+        $.ajax({
+            url: loginURL,
+            beforeSend: function() {
+                $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-sign-in").html(data), $("#header-account").addClass("active"), 
+                $("body").removeClass("menu-open");
+            }
+        });
+    },
+    loadRegisterForm: function(element) {
+        const luxRegister = element.attr("href");
+        $.ajax({
+            url: luxRegister,
+            beforeSend: function() {
+                $("#login-container .header-signup").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-signup").html(data);
+            }
+        });
+    },
+    loadForgotPasswordForm: function(element) {
+        const pwsRequest = element.attr("href");
+        $.ajax({
+            url: pwsRequest,
+            beforeSend: function() {
+                $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
+            },
+            success: function(data) {
+                $("#login-container .header-forget-pass").html(data);
+            }
+        });
+    },
     Toggle: function() {
-        $(".toggle-link").on("click", function() {
-            var Target = $(this).data("target-id");
-            return $(".toggle-skip").not(Target).removeClass("active"), $(Target).toggleClass("active"), 
+        $(".toggle-link").on("click", function(e) {
+            e.preventDefault(), e.stopPropagation();
+            var Target = $(this).data("target-id"), elem = $(this);
+            return elem.hasClass("luxury-login") && TATA.CommonFunctions.loadSignInForm(elem), 
+            $(".toggle-skip").not(Target).removeClass("active"), $(Target).toggleClass("active"), 
             !1;
         });
     },
@@ -12934,7 +12973,9 @@ TATA.CommonFunctions = {
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password");
             }, 500);
         }), elem.click(function(e) {
-            e.stopPropagation();
+            e.stopPropagation(), e.preventDefault();
+            var element = $(e.target);
+            element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") && TATA.CommonFunctions.loadForgotPasswordForm(element);
         });
     },
     MainBanner: function() {
@@ -13154,7 +13195,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -13555,35 +13596,18 @@ TATA.CommonFunctions = {
         var _self = TATA.Pages;
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
     }
-}, TATA.signInPopup = {
-    init: function() {
-        var _self = TATA.signInPopup;
-        _self.signIn.init(), _self.signUp.init(), _self.forgotPassword.init();
-    },
-    commonFunctions: {
-        beforeAjax: function() {
-            $("#login-container .header-sign-in").html('<div class="luxury-loader"></div>');
-        }
-    },
-    signIn: {
-        init: function() {
-            $(".luxury-login").on("click", function(e) {
-                e.preventDefault();
-                const loginURL = $(this).attr("href");
-                $("#login-container .header-sign-in");
-                $.ajax({
-                    url: loginURL,
-                    beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-                    success: function(data) {
-                        $("#login-container .header-sign-in").html(data), $("#header-account").addClass("active"), 
-                        $("body").removeClass("menu-open");
-                    }
-                });
-            }), $(document).on("click", "#triggerLoginAjax", function(e) {
-                $(".invalided-error").remove(), e.preventDefault(), TATA.signInPopup.signIn.validate();
-            });
-        },
-        validate: function() {
+}, $(document).ready(function() {
+    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt();
+}), $(window).scroll(function() {
+    TATA.CommonFunctions.WindowScroll();
+});
+
+var tul = {};
+
+(function($) {
+    "use strict";
+    tul.commonFunctions = {
+        login: function() {
             $("#loginForm").validate({
                 onfocusout: !1,
                 invalidHandler: function(form, validator) {
@@ -13601,60 +13625,110 @@ TATA.CommonFunctions = {
                         maxlength: 30
                     }
                 },
-                submitHandler: TATA.signInPopup.signIn.submitHandler(this)
-            });
-        },
-        submitHandler: function(form) {
-            $.ajax({
-                url: "/j_spring_security_check",
-                type: "POST",
-                returnType: "text/html",
-                data: $(form).serialize(),
-                beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-                success: function(data) {
-                    307 == data ? location.reload() : ($("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
-                    $("#j_password").val(""));
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: "/j_spring_security_check",
+                        type: "POST",
+                        returnType: "text/html",
+                        data: $(form).serialize(),
+                        beforeSend: function() {},
+                        success: function(data) {
+                            307 == data ? location.reload() : ($("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
+                            $("#j_password").val(""));
+                        },
+                        complete: function() {}
+                    });
                 }
+            }), $("#triggerLoginAjax").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#loginForm").submit();
             });
+        },
+        signup: function() {
+            $("#extRegisterForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#extRegisterForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    firstName: {
+                        required: !0,
+                        maxlength: 100
+                    },
+                    lastName: {
+                        required: !0,
+                        maxlength: 30
+                    },
+                    mobileNumber: {
+                        minlength: 10,
+                        maxlength: 10,
+                        number: !0
+                    },
+                    email: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    },
+                    pwd: {
+                        required: !0,
+                        maxlength: 30,
+                        minlength: 8
+                    },
+                    checkPwd: {
+                        required: !0,
+                        maxlength: 30,
+                        equalTo: '[name="pwd"]'
+                    }
+                },
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: "/login/register",
+                        type: "POST",
+                        returnType: "text/html",
+                        dataType: "html",
+                        data: $(form).serialize(),
+                        beforeSend: function() {},
+                        success: function(data) {
+                            console.log(data);
+                            var hasErrors = $(data).filter("input#hasErrorsInReg").val();
+                            console.log(hasErrors), "email" == hasErrors ? $(".regEmailErr").append("<div class='invalided-error'>You already have an account with this email ID. Please use it to sign in!</div>") : ($(".regEmailErr").html(""), 
+                            location.reload());
+                        },
+                        complete: function() {}
+                    });
+                }
+            }), $("#luxury_register").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#extRegisterForm").submit();
+            });
+        },
+        forgetpassword: function() {
+            $("#forgottenPwdForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    email: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    }
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            }), $("#luxuryForgotPasswordByEmailAjax").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#forgottenPwdForm").submit();
+            });
+        },
+        init: function() {
+            tul.commonFunctions.login(), tul.commonFunctions.signup(), tul.commonFunctions.forgetpassword();
         }
-    },
-    signUp: {
-        init: function() {
-            $(document).on("click", ".register_link", function(e) {
-                e.preventDefault();
-                const luxRegister = $(this).attr("href");
-                $.ajax({
-                    url: luxRegister,
-                    beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-                    success: function(data) {
-                        $("#login-container .header-signup").html(data);
-                    }
-                });
-            });
-        },
-        validate: function() {}
-    },
-    forgotPassword: {
-        init: function() {
-            $(document).on("click", ".js-password-forgotten", function(e) {
-                e.preventDefault();
-                const pwsRequest = $(this).attr("href");
-                $.ajax({
-                    url: pwsRequest,
-                    beforeSend: TATA.signInPopup.commonFunctions.beforeAjax(),
-                    success: function(data) {
-                        $("#login-container .header-forget-pass").html(data);
-                    }
-                });
-            });
-        },
-        validate: function() {}
-    }
-}, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), TATA.signInPopup.init(), $("select").selectBoxIt();
-}), $(window).scroll(function() {
-    TATA.CommonFunctions.WindowScroll();
-}), $(document).ready(function() {
+    }, $(document).ready(function() {
+        tul.commonFunctions.init();
+    });
+}).call(tul.commonFunctions, window.jQuery), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
     $("select#menuPageSelect").val(""), $("#currentPassword").val("");

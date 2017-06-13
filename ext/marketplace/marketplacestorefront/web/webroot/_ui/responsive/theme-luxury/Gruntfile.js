@@ -65,8 +65,8 @@ grunt.initConfig({
 					'js/lib/bootstrap.min.js',
 				    'js/lib/jquery.validate.min.js',
 				    'js/main.js',
-				    /*'js/login.js',
-				    'js/tulvalidation.js',*/
+				    /*'js/login.js',*/
+				    'js/tulvalidation.js',
 				    'js/acc.accountaddress.js'
 				
 				].map(absolutePath), 
