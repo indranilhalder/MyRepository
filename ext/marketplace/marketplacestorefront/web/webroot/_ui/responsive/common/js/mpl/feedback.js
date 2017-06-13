@@ -3636,10 +3636,11 @@ $(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 $(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });
-
+/*added for UF-353*/
 $(document).ready(function(){
 	$("#footerByAjaxId ul li a[title='Store Locator']").parent().remove();
 });
+/*UF-353 end*/
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
 $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li",function(){
 	$(".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li").removeClass("active");
