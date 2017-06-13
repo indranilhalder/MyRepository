@@ -124,6 +124,9 @@ TATA.CommonFunctions = {
                 }
             }
         });
+        if($("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1){
+        	$(".add-to-wl-pdp").addClass("added");
+        }
 	},
 
     wishlistInit: function(){
