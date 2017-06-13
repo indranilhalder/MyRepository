@@ -163,7 +163,7 @@
 													<br>
 													<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
-																	text="Are you sure you would like to delete this card?" />
+																	text="You sure you want to delete this card?" />
 															</p>
 
 															<div class="buttons">
@@ -285,7 +285,7 @@
 													<br>
 													<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
-																	text="Are you sure you would like to delete this card?" />
+																	text="You sure you want to delete this card?" />
 															</p>
 
 															<div class="buttons">
