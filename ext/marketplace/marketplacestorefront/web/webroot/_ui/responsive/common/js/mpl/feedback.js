@@ -3636,6 +3636,10 @@ $(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 $(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });
+
+$(document).ready(function(){
+	$("#footerByAjaxId ul li a[title='Store Locator']").parent().remove();
+});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
 $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li",function(){
 	$(".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li").removeClass("active");
