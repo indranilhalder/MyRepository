@@ -1218,8 +1218,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @return Json Object
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVESELECTADDRESSURL, method = RequestMethod.GET)
-	public @ResponseBody JSONObject selectAddressSaveInResponsive(
-			@RequestParam("selectedAddressCode") final String selectedAddressCode)
+	public @ResponseBody JSONObject selectAddressResponsive(@RequestParam("selectedAddressCode") final String selectedAddressCode)
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -1254,8 +1253,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			finaladdressData.setDefaultAddress(true);
 			getMplCustomAddressFacade().setDeliveryAddress(finaladdressData);
-			jsonObj.put("isAddressSaved", "true");
 			jsonObj.put("isAddressSet", "true");
+			jsonObj.put("type", "response");
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1725,8 +1724,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-
-			returnPage = MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveyModesSelectionPanel;
+			final String is_responsive = getSessionService().getAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
+			if (is_responsive.equalsIgnoreCase("true"))
+			{
+				returnPage = "addon:/marketplacecheckoutaddon/fragments/checkout/single/showDeliveryModesDetailsMobile";
+			}
+			else
+			{
+				returnPage = MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveyModesSelectionPanel;
+			}
 		}
 
 		catch (final CMSItemNotFoundException e)
@@ -2611,6 +2617,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (inventoryReservationStatus)
 			{
 				jsonObj.put("isInventoryReserved", "true");
+				jsonObj.put("type", "response");
 			}
 			final List<CartSoftReservationData> cartSoftReservationDataList = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION);
@@ -2659,6 +2666,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (getSlotsAvailability(cartDataSupport))
 			{
 				jsonObj.put("isScheduleServiceble", "true");
+				jsonObj.put("type", "response");
 			}
 		}
 		catch (final CMSItemNotFoundException e)
@@ -4127,7 +4135,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4184,7 +4192,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

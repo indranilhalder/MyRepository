@@ -302,7 +302,6 @@ ACC.singlePageCheckout = {
                 	else
                 	{
                 		ACC.singlePageCheckout.getReviewOrder();
-                		
                 	}
             		ACC.singlePageCheckout.getSelectedDeliveryModes();
         		}
@@ -1172,6 +1171,7 @@ ACC.singlePageCheckout = {
 			var url=ACC.config.encodedContextPath + "/checkout/single/removereviewcart";
 			var data="entryNumber="+entryNumber;
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
 			});
@@ -1219,6 +1219,7 @@ ACC.singlePageCheckout = {
 	        		$("#entryNumbersId").val(entryNumbers.replace(removeEntryNo,""));
 	        		$("#delmode_item_li_"+entryNumber).remove();
 	        		ACC.singlePageCheckout.getSelectedDeliveryModes();
+	        		
 	            }
 			});
 	        
@@ -1568,11 +1569,13 @@ ACC.singlePageCheckout = {
 	
 	setDeliveryAddress:function()
 	{
-		$("#radio_mobile_"+addressId).prop("checked", true);
-		a = $("input[name=selectedAddressCodeMobile]:checked").val();
-	    if (null == a || "undefined" == a)
+		$("#radio_mobile_"+ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId).prop("checked", true);
+		a = $("form#selectAddressFormMobile input[name=selectedAddressCode]:checked").val();
+	    
+		if (null == a || "undefined" == a)
 	        return $("#emptyAddressMobile").show(),
 	        !1;
+	    
 	    var data=$("form#selectAddressFormMobile").serialize();
 	    var url=ACC.config.encodedContextPath + $("#selectAddressFormMobile").attr("action");
 	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
@@ -1590,7 +1593,7 @@ ACC.singlePageCheckout = {
                 }
                 if(data.type=="response")
                 {
-                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet=="true"?true:false;
                 }
             }
 		});
@@ -1612,9 +1615,9 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
 		
-		var data="";
-	    var url=ACC.config.encodedContextPath + "";
-	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+		var url=$("#selectDeliveryMethodFormMobile").attr("action");
+		var data=$("#selectDeliveryMethodFormMobile").serialize();
+	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
       
 	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
@@ -1625,11 +1628,12 @@ ACC.singlePageCheckout = {
                 if(data.type!="response")
                 {
                 	//TODO handle error here 
+                	ACC.singlePageCheckout.processError("",data);
                 }
                 if(data.type=="response")
                 {
-                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved;
-                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble;
+                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved=="true"?true:false;
+                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble=="true"?true:false;
                 	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
                 	{
                 		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
@@ -1693,7 +1697,7 @@ $(document).ready(function(){
 			
 			var defaultAddressPincode=$("#defaultAddressPincode").html();
 			var defaultAddressId=$("#defaultAddressId").html();
-			var defaultAddressPresent==$("#defaultAddressPresent").html();
+			var defaultAddressPresent=$("#defaultAddressPresent").html();
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
 				ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
@@ -1712,4 +1716,3 @@ $(document).ready(function(){
 		}
 	}
 });
-
