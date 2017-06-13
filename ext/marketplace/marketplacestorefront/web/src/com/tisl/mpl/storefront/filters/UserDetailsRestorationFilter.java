@@ -268,7 +268,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 		{
 			for (final Cookie cookie : cookies)
 			{
-				if (cookie.getName().equals("keepAlive"))
+				if (cookie.getName().equals("TULkeepAlive"))
 				{
 					LOG.info("Found the Keep Alive Cookie. Hence adding back to response with new expiry timeout");
 					LOG.info("Cookie domain :::" + cookie.getDomain());
