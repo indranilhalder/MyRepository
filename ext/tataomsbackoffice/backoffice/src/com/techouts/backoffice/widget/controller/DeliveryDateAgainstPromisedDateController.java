@@ -2,7 +2,7 @@
  *
  */
 package com.techouts.backoffice.widget.controller;
-
+import de.hybris.platform.util.Config;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,7 +71,13 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 	{
 		super.initialize(comp);
 		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, -6);
+		int defaultdays = 1;
+		final String defaultDaysConfigValue = Config.getParameter("backoffice.defaultconfig.reportdays").trim();
+		if (defaultDaysConfigValue != null)
+		{
+			defaultdays = Integer.parseInt(defaultDaysConfigValue);
+		}
+		cal.add(Calendar.DATE, -defaultdays);
 		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 		final SShipTxnInfo requestDto = new SShipTxnInfo();
 		requestDto.setFromDate(cal.getTime());
