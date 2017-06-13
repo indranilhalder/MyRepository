@@ -80,6 +80,8 @@ TATA.CommonFunctions = {
             	TATA.CommonFunctions.loadRegisterForm(element);
             }else if(element.hasClass("js-password-forgotten")){
             	TATA.CommonFunctions.loadForgotPasswordForm(element);
+            }else if(element.hasClass("header-signInButton")){
+            	$("#loginForm").submit();
             }
             
             if(element.hasClass("header-login-target-link")){
