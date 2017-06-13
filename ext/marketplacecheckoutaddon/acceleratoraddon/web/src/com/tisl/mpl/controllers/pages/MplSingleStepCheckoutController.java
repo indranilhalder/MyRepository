@@ -1725,9 +1725,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final String is_responsive = getSessionService().getAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
-			if (is_responsive.equalsIgnoreCase("true"))
+
+			if (StringUtils.isNotEmpty(is_responsive) && (is_responsive.equalsIgnoreCase("true")))
 			{
 				returnPage = "addon:/marketplacecheckoutaddon/fragments/checkout/single/showDeliveryModesDetailsMobile";
+				getSessionService().removeAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
 			}
 			else
 			{
@@ -4135,7 +4137,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4192,7 +4194,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
