@@ -483,6 +483,7 @@
     border-right: 1px solid #ccc;
     padding-bottom: 10px;
     border-radius: 0 0 5px 5px;
+    border-bottom:1px solid #ccc; 
 }
 .checkout-paymentmethod{
     li{
@@ -551,5 +552,90 @@
           text-align: right;
     display: block;
  } 
+ .address-list.showItem{
+     border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
 
+ }
+  .payment-section{
+  padding: 25px;
+  }
+ .payment-section .card-group fieldset{
+     background: #fff;
+    padding: 25px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+ }
+ .payment-section #netbanking{
+     display: block;
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+ }
+  .payment-section h1, .payment-section h3, .payment-section h2{
+      font-size: 18px;
+  }
+  .payment-section #countrySelectBoxIt{
+   background:#fff;
+  }
+ .payment-section .checkout-paymentmethod,  .payment-section .tabs, .payment-section .product-block{
+     padding: 0px;
+ }
+ .product-block li{
+ list-style: none;
+ }
+ .checkout-content.checkout-payment{
+ border:0px;
+ }
+ .row{
+     background: transparent;
+    border: 0px!important
+ }
+ 
+.creditDebitLabelRadio input{
+ 
+ display:none;
+}
+.creditDebitLabelRadio label{
+ width:150px;
+ text-align:center;
+ padding:10px;
+ border:#000;
+ border-radius:3px;
+ border:1px solid #000;
+ background:#fff;
+}
+.creditDebitLabelRadio input:checked + label{
+ background:#000;
+ color:#fff;
+ 
+}
+#netbanking .netbankingPanel ul{
+ padding:0px;
+}
+#netbanking .netbankingPanel ul li{
+     width: 30%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+        margin: 5px;
+}
+#netbanking .bank-select label{
+ width:100%;
+}
+#netbanking .bank-select #bankCodeSelection{
+ padding: 10px;
+}
+#COD{
+  background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+ 
+}
 
+.make_payment.button{
+ float:right; 
+}
