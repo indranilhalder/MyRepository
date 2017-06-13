@@ -1379,7 +1379,7 @@ ACC.singlePageCheckout = {
 		saveNewAddress:false,
 		selectedAddressId:"",
 		isInventoryReserved:false,
-		isSlotDeliveryPresent:false
+		isScheduleServiceble:false
 	},
 	
 	getMobileAddAddress:function(){
@@ -1609,12 +1609,12 @@ ACC.singlePageCheckout = {
                 if(data.type=="response")
                 {
                 	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved;
-                	ACC.singlePageCheckout.mobileValidationSteps.isSlotDeliveryPresent=data.isSlotDeliveryPresent;
+                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble;
                 	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
                 	{
                 		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
                 	}
-                	if(ACC.singlePageCheckout.mobileValidationSteps.isSlotDeliveryPresent)
+                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
                 	{
                 		//TODO Toast for slot delivery should be created here
                 	}

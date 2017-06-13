@@ -2687,6 +2687,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	private void prepareModelForPayment(final Model model, final CartData cartData) throws CMSItemNotFoundException
 	{
 		Map<String, Boolean> paymentModeMap = null;
+		model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.FALSE);
 		model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
 		//Getting Payment modes
 		paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
@@ -2715,7 +2716,32 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			ValidationResults validationResult = null;
-			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+
+
+			final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
+			LOG.debug("refNumber number is ...................." + refNumber);
+			//Implementing mRupee Logic with cartGuid TISSQAEE-229
+			OrderModel mRupeeorderModel = null;
+			String cartGuid = null;
+			/* Getting guid from audit table based on the reference no. received from mRupee */
+			if (StringUtils.isNotEmpty(refNumber))
+			{
+				cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
+			}
+			LOG.debug("cartGuid number is ...................." + cartGuid);
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			}
+			LOG.debug("mRupeeorderModel is ++++++++" + mRupeeorderModel);
+			if (null != mRupeeorderModel && null != mRupeeorderModel.getIsWallet()
+					&& !WalletEnum.MRUPEE.equals(mRupeeorderModel.getIsWallet()))
+			{
+				LOG.debug("mRupeeorderModel.getIsWallet() is ++++++++" + mRupeeorderModel.getIsWallet());
+				validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+			}
+
 			if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
@@ -3662,7 +3688,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3719,7 +3745,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
