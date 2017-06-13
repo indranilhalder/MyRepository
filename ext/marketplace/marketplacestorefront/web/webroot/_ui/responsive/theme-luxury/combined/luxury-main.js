@@ -12832,7 +12832,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12920,6 +12920,107 @@ if (function(a, b) {
 var TATA = window.TATA;
 
 TATA.CommonFunctions = {
+    signInValidate: function() {
+        $("#loginForm").validate({
+            onfocusout: !1,
+            invalidHandler: function(form, validator) {
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(validator.errorList[0].message) : $("#loginForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+            },
+            rules: {
+                j_username: {
+                    required: !0,
+                    email: !0,
+                    maxlength: 120
+                },
+                j_password: {
+                    required: !0,
+                    maxlength: 30
+                }
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: "/j_spring_security_check",
+                    type: "POST",
+                    returnType: "text/html",
+                    data: $(form).serialize(),
+                    success: function(data) {
+                        307 == data ? location.reload() : ($("#loginForm .invalided-error").html(""), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html("Oops! Your email ID and password don't match") : $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
+                        $("#j_password").val(""));
+                    }
+                });
+            }
+        });
+    },
+    signUpValidate: function() {
+        $("#extRegisterForm").validate({
+            onfocusout: !1,
+            invalidHandler: function(form, validator) {
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(validator.errorList[0].message) : $("#extRegisterForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+            },
+            rules: {
+                firstName: {
+                    required: !0,
+                    maxlength: 100
+                },
+                lastName: {
+                    required: !0,
+                    maxlength: 30
+                },
+                mobileNumber: {
+                    minlength: 10,
+                    maxlength: 10,
+                    number: !0
+                },
+                email: {
+                    required: !0,
+                    email: !0,
+                    maxlength: 120
+                },
+                pwd: {
+                    required: !0,
+                    maxlength: 30,
+                    minlength: 8
+                },
+                checkPwd: {
+                    required: !0,
+                    maxlength: 30,
+                    equalTo: '[name="pwd"]'
+                }
+            },
+            submitHandler: function(form) {
+                $.ajax({
+                    url: "/login/register",
+                    type: "POST",
+                    returnType: "text/html",
+                    dataType: "html",
+                    data: $(form).serialize(),
+                    success: function(data) {
+                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return $(".regEmailErr").html(""), 
+                        location.reload(), !1;
+                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!") : $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
+                    }
+                });
+            }
+        });
+    },
+    forgotPasswordValidate: function() {
+        $("#forgottenPwdForm").validate({
+            onfocusout: !1,
+            invalidHandler: function(form, validator) {
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+            },
+            rules: {
+                email: {
+                    required: !0,
+                    email: !0,
+                    maxlength: 120
+                }
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    },
     loadSignInForm: function(element) {
         const loginURL = element.attr("href");
         $.ajax({
@@ -12975,8 +13076,10 @@ TATA.CommonFunctions = {
         }), elem.click(function(e) {
             e.stopPropagation(), e.preventDefault();
             var element = $(e.target);
-            if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") ? $("#loginForm").submit() : "luxury_register" == e.target.id ? $("#extRegisterForm").submit() : "luxuryForgotPasswordByEmailAjax" == e.target.id && $("#forgottenPwdForm").submit(), 
-            element.hasClass("header-login-target-link")) {
+            if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") ? (TATA.CommonFunctions.signInValidate(), 
+            $("#loginForm").submit()) : "luxury_register" == e.target.id ? (TATA.CommonFunctions.signUpValidate(), 
+            $("#extRegisterForm").submit()) : "luxuryForgotPasswordByEmailAjax" == e.target.id && (TATA.CommonFunctions.forgotPasswordValidate(), 
+            $("#forgottenPwdForm").submit()), element.hasClass("header-login-target-link")) {
                 var targetID = element.data("target-id");
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
             }
@@ -13199,7 +13302,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -13609,135 +13712,7 @@ TATA.CommonFunctions = {
     });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
-});
-
-var tul = {};
-
-(function($) {
-    "use strict";
-    tul.commonFunctions = {
-        login: function() {
-            $("#loginForm").validate({
-                onfocusout: !1,
-                invalidHandler: function(form, validator) {
-                    validator.numberOfInvalids() && ($("#loginForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
-                    validator.errorList[0].element.focus());
-                },
-                rules: {
-                    j_username: {
-                        required: !0,
-                        email: !0,
-                        maxlength: 120
-                    },
-                    j_password: {
-                        required: !0,
-                        maxlength: 30
-                    }
-                },
-                submitHandler: function(form) {
-                    $.ajax({
-                        url: "/j_spring_security_check",
-                        type: "POST",
-                        returnType: "text/html",
-                        data: $(form).serialize(),
-                        beforeSend: function() {},
-                        success: function(data) {
-                            307 == data ? location.reload() : ($("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
-                            $("#j_password").val(""));
-                        },
-                        complete: function() {}
-                    });
-                }
-            }), $("#triggerLoginAjax").on("click", function(e) {
-                $(".invalided-error").remove(), e.preventDefault(), $("#loginForm").submit();
-            });
-        },
-        signup: function() {
-            $("#extRegisterForm").validate({
-                onfocusout: !1,
-                invalidHandler: function(form, validator) {
-                    validator.numberOfInvalids() && ($("#extRegisterForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
-                    validator.errorList[0].element.focus());
-                },
-                rules: {
-                    firstName: {
-                        required: !0,
-                        maxlength: 100
-                    },
-                    lastName: {
-                        required: !0,
-                        maxlength: 30
-                    },
-                    mobileNumber: {
-                        minlength: 10,
-                        maxlength: 10,
-                        number: !0
-                    },
-                    email: {
-                        required: !0,
-                        email: !0,
-                        maxlength: 120
-                    },
-                    pwd: {
-                        required: !0,
-                        maxlength: 30,
-                        minlength: 8
-                    },
-                    checkPwd: {
-                        required: !0,
-                        maxlength: 30,
-                        equalTo: '[name="pwd"]'
-                    }
-                },
-                submitHandler: function(form) {
-                    $.ajax({
-                        url: "/login/register",
-                        type: "POST",
-                        returnType: "text/html",
-                        dataType: "html",
-                        data: $(form).serialize(),
-                        beforeSend: function() {},
-                        success: function(data) {
-                            console.log(data);
-                            var hasErrors = $(data).filter("input#hasErrorsInReg").val();
-                            console.log(hasErrors), "email" == hasErrors ? $(".regEmailErr").append("<div class='invalided-error'>You already have an account with this email ID. Please use it to sign in!</div>") : ($(".regEmailErr").html(""), 
-                            location.reload());
-                        },
-                        complete: function() {}
-                    });
-                }
-            }), $("#luxury_register").on("click", function(e) {
-                $(".invalided-error").remove(), e.preventDefault(), $("#extRegisterForm").submit();
-            });
-        },
-        forgetpassword: function() {
-            $("#forgottenPwdForm").validate({
-                onfocusout: !1,
-                invalidHandler: function(form, validator) {
-                    validator.numberOfInvalids() && ($("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
-                    validator.errorList[0].element.focus());
-                },
-                rules: {
-                    email: {
-                        required: !0,
-                        email: !0,
-                        maxlength: 120
-                    }
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            }), $("#luxuryForgotPasswordByEmailAjax").on("click", function(e) {
-                $(".invalided-error").remove(), e.preventDefault(), $("#forgottenPwdForm").submit();
-            });
-        },
-        init: function() {
-            tul.commonFunctions.login(), tul.commonFunctions.signup(), tul.commonFunctions.forgetpassword();
-        }
-    }, $(document).ready(function() {
-        tul.commonFunctions.init();
-    });
-}).call(tul.commonFunctions, window.jQuery), $(document).ready(function() {
+}), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
     $("select#menuPageSelect").val(""), $("#currentPassword").val("");
