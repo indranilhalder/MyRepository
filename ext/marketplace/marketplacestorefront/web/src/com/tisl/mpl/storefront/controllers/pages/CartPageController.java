@@ -819,7 +819,7 @@ public class CartPageController extends AbstractPageController
 			if (isExchangeEntry)
 			{
 				// Success in update quantity
-				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,
+				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
 						"basket.page.message.exchange.error.productcount");
 				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
 			}

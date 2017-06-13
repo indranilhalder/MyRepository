@@ -136,6 +136,19 @@
 	</div>
 </div>
 
+<div id="confirmOverlay" style="display:none">
+    <div id="confirmBox" style="display:none">
+
+         <h1>OOPss Exchange Is not Serviceable</h1>
+        <p>Do you want to continue without Exchange?</p>
+
+        <div id="confirmButtons">
+            <a class="button blue" id="exConfirmYes" href="#">Yes<span></span></a>
+            <a class="button gray"  id="exConfirmNo" href="#">No<span></span></a>
+            </div>
+    </div>
+	</div>	
+
 <style>
 #confirmOverlay{
 	width:100%;

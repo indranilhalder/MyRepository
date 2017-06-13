@@ -97,9 +97,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -111,11 +111,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @param String categoryCode
-	 *
+	 * 
 	 * @param ExchangeCouponValueModel pricematrix
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -222,7 +222,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -341,19 +341,18 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		{
 			if (StringUtils.isEmpty(removeExchangeIdList) && StringUtils.isNotEmpty(entry.getExchangeId()))
 			{
-				removeExchangeIdList = "'" + entry.getExchangeId() + "'";
+				removeExchangeIdList = entry.getExchangeId();
 				entry.setExchangeId("");
 				entryUpdate.add(entry);
 			}
 			else if (StringUtils.isNotEmpty(removeExchangeIdList) && StringUtils.isNotEmpty(entry.getExchangeId()))
 			{
-				removeExchangeIdList += ",'" + entry.getExchangeId() + "'";
+				removeExchangeIdList += entry.getExchangeId();
 				entry.setExchangeId("");
 				entryUpdate.add(entry);
 			}
 
 		}
-		System.out.println(removeExchangeIdList);
 		modelService.saveAll(entryUpdate);
 		removeFromTransactionTable(removeExchangeIdList, null);
 
@@ -361,7 +360,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)

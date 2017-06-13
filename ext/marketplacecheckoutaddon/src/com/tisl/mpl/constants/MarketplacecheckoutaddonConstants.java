@@ -347,4 +347,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	//INC144315475
 	public static final String CARTTOORDERCONVERT = "cartToOrderConvert";
+
+	//TPR-1083
+	public static final String REMOVEEXCHANGEFROMCART = "/removeExchangeFromCart";
 }
