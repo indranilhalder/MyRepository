@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+		 pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
@@ -22,7 +22,7 @@
 </div>
  --%>
 <c:choose>
-	<c:when test="${medias eq null}">
+	<c:when test="${empty medias}">
 		<c:if test="${not empty url}">
 			<a href="${url}"><img src="${media.url}"
 								  alt="${media.altText}" /> ${content}</a>
@@ -33,6 +33,7 @@
 		</c:if>
 	</c:when>
 	<c:otherwise>
+
 		<section class="trav-edition double-banner mb-40 clearfix container">
 			<c:forEach var="media" items="${medias}" varStatus="status">
 				<div class="col"><a href="${url}"><img src="${media.media.url}"
