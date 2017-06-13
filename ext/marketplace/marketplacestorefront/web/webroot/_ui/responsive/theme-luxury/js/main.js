@@ -82,6 +82,10 @@ TATA.CommonFunctions = {
             	TATA.CommonFunctions.loadForgotPasswordForm(element);
             }else if(element.hasClass("header-signInButton")){
             	$("#loginForm").submit();
+            }else if(e.target.id == "luxury_register"){
+            	$("#extRegisterForm").submit();
+            }else if(e.target.id == "luxuryForgotPasswordByEmailAjax"){
+            	$("#forgottenPwdForm").submit();
             }
             
             if(element.hasClass("header-login-target-link")){
