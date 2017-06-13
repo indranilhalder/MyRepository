@@ -1443,6 +1443,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PENDING_VAL = "PENDING";
 
 	public static final String CART_DELISTED_SESSION_ID = "cartItemDelisted";
+	public static final String IS_RESPONSIVE = "isResponsive";
 	public static final String CART_DELISTED_SESSION_MESSAGE = "Sorry! Some of items in your cart is no longer available";
 	public static final String ORDERHISTORY_CREATE_ERROR = "Error while creating orderhistoryentry at ";
 	public static final String BY_DATE = "byDate";
