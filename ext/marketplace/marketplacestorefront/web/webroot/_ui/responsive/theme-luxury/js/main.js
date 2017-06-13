@@ -4,9 +4,156 @@ if ( ! window.TATA )
 }
 var TATA = window.TATA;
 
-
 TATA.CommonFunctions = {
 	
+	signInValidate: function(){
+		$('#loginForm').validate({
+			onfocusout: false,
+            invalidHandler: function(form, validator) {
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                	validator.errorList[0].element.focus();
+					if($("#loginForm .invalided-error").length > 0){
+						$("#loginForm .invalided-error").html(validator.errorList[0].message);
+					}else{
+						$("#loginForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
+					}
+                }
+            },
+			rules: {
+				j_username: {
+					required: true,
+					email: true ,
+					maxlength: 120
+				},
+				
+				j_password: {
+					required: true,
+					maxlength: 30
+				}
+			},
+			submitHandler: function(form) {
+		    	 $.ajax({
+               		  url:"/j_spring_security_check",
+           				 type:"POST",
+           				 returnType:"text/html",
+           				 data: $(form).serialize(),
+                         success: function(data) {
+							if(data==307){
+								location.reload();  
+							}else{
+								$("#loginForm .invalided-error").html("");
+								if($("#loginForm .invalided-error").length > 0){
+									$("#loginForm .invalided-error").html("Oops! Your email ID and password don't match");
+								}else{
+									$("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
+								}
+								$("#j_password").val("");
+							}
+                         },
+                     });					
+			}
+		});
+	},
+	
+	signUpValidate: function(){
+		$('#extRegisterForm').validate({
+			onfocusout: false,
+	        invalidHandler: function(form, validator) {
+	            var errors = validator.numberOfInvalids();
+	            if (errors) {
+	            	validator.errorList[0].element.focus();
+					if($("#extRegisterForm .invalided-error").length > 0){
+						$("#extRegisterForm .invalided-error").html(validator.errorList[0].message);
+					}else{
+						$("#extRegisterForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
+					}
+	            }
+	        },
+			rules: {
+				firstName: {
+					required: true,
+					maxlength: 100
+				},
+				
+				lastName: {
+					required: true,
+					maxlength: 30
+				},
+				mobileNumber: {
+					minlength: 10,
+					maxlength: 10,
+					number: true
+				},
+				email: {
+					required: true,
+					email: true,
+					maxlength: 120
+				},
+				pwd: {
+					required: true,
+					maxlength: 30,
+					minlength: 8
+				},
+				checkPwd: {
+					required: true,
+					maxlength: 30,
+					equalTo: '[name="pwd"]'
+				}
+			},
+			submitHandler: function(form) {
+	        	 $.ajax({
+           		  url:"/login/register",
+       				 type:"POST",
+       				 returnType:"text/html",
+       				 dataType: "html",
+       				 data: $(form).serialize(),
+                     success: function(data) {
+                    	 var hasErrors=$(data).filter("input#hasErrorsInReg").val();
+                    	 if(hasErrors != "email"){	                    		 
+                    		 $(".regEmailErr").html("");
+                    		 location.reload();
+                    		 return false;
+                    	 }
+                    	 
+                    	 if($("#extRegisterForm .invalided-error").length > 0){
+                    		 $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");
+                    	 }else{
+                    		 $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
+                    	 }
+                     }
+                 });						
+			}
+		});
+	},
+	
+	forgotPasswordValidate: function(){
+		$('#forgottenPwdForm').validate({
+			onfocusout: false,
+            invalidHandler: function(form, validator) {
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                	validator.errorList[0].element.focus();
+					if($("#forgottenPwdForm .invalided-error").length > 0){
+						$("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message);
+					}else{
+						$("#forgottenPwdForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
+					}
+                }
+            },
+			rules: {
+				email: {
+					required: true,
+					email: true,
+					maxlength: 120
+				}
+			},
+			submitHandler: function(form) {
+				form.submit();						
+			}
+		});
+	},
+		
 	loadSignInForm: function(element){
 		const loginURL = element.attr("href");
     	$.ajax({
@@ -81,10 +228,13 @@ TATA.CommonFunctions = {
             }else if(element.hasClass("js-password-forgotten")){
             	TATA.CommonFunctions.loadForgotPasswordForm(element);
             }else if(element.hasClass("header-signInButton")){
+            	TATA.CommonFunctions.signInValidate();
             	$("#loginForm").submit();
             }else if(e.target.id == "luxury_register"){
+            	TATA.CommonFunctions.signUpValidate();
             	$("#extRegisterForm").submit();
             }else if(e.target.id == "luxuryForgotPasswordByEmailAjax"){
+            	TATA.CommonFunctions.forgotPasswordValidate();
             	$("#forgottenPwdForm").submit();
             }
             
