@@ -610,7 +610,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKLOCATIONRESTRICTEDPINCODE, method = RequestMethod.GET)
 	public String checkLocationRestrictedPincode(
 			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
-			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode) throws CMSItemNotFoundException
+			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode,
+			@RequestParam(value = "locRestrictedPromoPresent", required = false, defaultValue = "false") final boolean locRestrictedPromoPresent)
+			throws CMSItemNotFoundException
 	{
 		try
 		{
@@ -669,7 +671,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				mplCartFacade.populatePinCodeData(cart, selectedPincode);
 				// Recalculating Cart Model
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
-				getMplCheckoutFacade().reCalculateCart(cartData);
+				if (locRestrictedPromoPresent)
+				{
+					getMplCheckoutFacade().reCalculateCart(cartData);
+				}
 			}
 			else if (!selectedPincode.matches(regex))
 			{
@@ -685,6 +690,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 			}
+			getSessionService().setAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE,
+					MarketplacecommerceservicesConstants.TRUE);
 			if (StringUtils.isNotEmpty(exchangeEnabled))
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
@@ -2531,6 +2538,438 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return returnPage;
 	}
 
+	/**
+	 * This method gets called when the "Payment Type radio" button is clicked. It sets the selected delivery mode on the
+	 * checkout facade and will perform inventory reservation and other calls.
+	 *
+	 * @param model
+	 *           - the id of the delivery mode
+	 * @param deliveryMethodForm
+	 * @param bindingResult
+	 * @return - a URL to the page to load.
+	 * @throws JSONException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURLRESPONSIVE, method = RequestMethod.POST)
+	public @ResponseBody JSONObject doSelectDeliveryModeResponsive(
+			@ModelAttribute("deliveryMethodForm") final DeliveryMethodForm deliveryMethodForm, final BindingResult bindingResult,
+			final Model model, final HttpSession session) throws CMSItemNotFoundException, JSONException
+	{
+		final JSONObject jsonObj = new JSONObject();
+		try
+		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+			final CartModel cartModel = getCartService().getSessionCart();
+
+			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cartModel);
+			//final boolean cartItemDelistedStatus = getMplCartFacade().isCartEntryDelisted(getCartService().getSessionCart());
+			if (cartItemDelistedStatus)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				jsonObj.put("url", "/cart");
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+			//TISPT-400 ends
+
+			Double finalDeliveryCost = Double.valueOf(0.0);
+
+			{
+				//create session object for deliveryMethodForm which will be used if cart contains both cnc and home delivery.
+				session.setAttribute("deliveryMethodForm", deliveryMethodForm);
+				//TISPT-400
+				finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
+				final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
+				getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
+
+			}
+
+			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+			final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
+
+			//	applyPromotions();
+
+			//populate freebie data
+			populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
+
+
+			LOG.debug(">>>>>>>>>>  Step 2  :Freebie data preparation ");
+
+
+			/*** Inventory Soft Reservation Start ***/
+
+			final CartData cartUssidData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+			//TISST-13012
+
+			final boolean inventoryReservationStatus = mplCartFacade.isInventoryReserved(
+					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartUssidData, cartModel);
+			if (inventoryReservationStatus)
+			{
+				jsonObj.put("isInventoryReserved", "true");
+			}
+			final List<CartSoftReservationData> cartSoftReservationDataList = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION);
+			LOG.debug("****************cartSoftReservationDataList :" + cartSoftReservationDataList.toString());
+
+
+			if (!inventoryReservationStatus)
+			{
+				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				jsonObj.put("url", "/cart");
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+			/*** Inventory Soft Reservation Start ***/
+
+			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
+			Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
+			List<PinCodeResponseData> responseData = null;
+
+			//commented for CAR:127
+			//final CartData cartUssidData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+
+			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+
+
+			if (StringUtils.isNotEmpty(defaultPinCodeId)
+					&& (cartUssidData != null && cartUssidData.getEntries() != null && !cartUssidData.getEntries().isEmpty()))
+			{
+				//CAR-126/128/129
+				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
+				if (CollectionUtils.isEmpty(responseData))
+				{
+					responseData = mplCartFacade.getOMSPincodeResponseData(defaultPinCodeId, cartUssidData, cartModel);
+					final boolean isCOdEligible = mplCartFacade.addCartCodEligible(deliveryModeDataMap, responseData, cartModel,
+							cartUssidData);
+					LOG.info("isCOdEligible " + isCOdEligible);
+				}
+				deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartUssidData, responseData, cartModel);
+
+				mplCartFacade.setDeliveryDate(cartUssidData, responseData);
+
+			}
+			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
+
+			if (getSlotsAvailability(cartDataSupport))
+			{
+				jsonObj.put("isScheduleServiceble", "true");
+			}
+		}
+		catch (final CMSItemNotFoundException e)
+		{
+			LOG.error("CMSItemNotFoundException  while  selecting delivery mode ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			jsonObj.put("url", "/cart");
+			jsonObj.put("type", "redirect");
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions  while  selecting delivery mode ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			jsonObj.put("url", "/cart");
+			jsonObj.put("type", "redirect");
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  while selecting delivery mode ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			jsonObj.put("url", "/cart");
+			jsonObj.put("type", "redirect");
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+			LOG.error("Exception  while selecting delivery mode ", e);
+			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			jsonObj.put("url", "/cart");
+			jsonObj.put("type", "redirect");
+		}
+		return jsonObj;
+	}
+
+	private boolean getSlotsAvailability(final CartData cartDataSupport)
+	{
+		final List<String> deliveryModelList = new ArrayList<String>();
+		final Map<String, String> selectedDateBetWeen = new LinkedHashMap<String, String>();
+		final List<CartSoftReservationData> cartSoftReservationDataList = getSessionService().getAttribute(
+				MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION);
+		boolean isScheduleServiceble = false;
+		LOG.debug("****************cartSoftReservationDataList :" + cartSoftReservationDataList.toString());
+		try
+		{
+			for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
+			{
+				if (null != cartEntryData && null != cartEntryData.getMplDeliveryMode())
+				{
+
+					final ProductModel productModel = productService.getProductForCode(cartEntryData.getProduct().getCode());
+
+					String productRichAttr = null;
+					String sellerRichAttr = null;
+					List<RichAttributeModel> productRichAttributeModel = null;
+					if (productModel != null && productModel.getRichAttribute() != null)
+					{
+						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
+						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getScheduledDelivery() != null)
+						{
+							productRichAttr = productRichAttributeModel.get(0).getScheduledDelivery().toString();
+						}
+					}
+
+					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(cartEntryData
+							.getSelectedUssid());
+					List<RichAttributeModel> sellerRichAttributeModel = null;
+					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+					{
+						sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
+						if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getScheduledDelivery() != null)
+						{
+							sellerRichAttr = sellerRichAttributeModel.get(0).getScheduledDelivery().toString();
+						}
+					}
+
+					if (cartEntryData.getMplDeliveryMode().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+					{
+
+						for (final CartSoftReservationData cartSoftReservationData : cartSoftReservationDataList)
+						{
+							if (cartSoftReservationData.getUSSID().equals(cartEntryData.getSelectedUssid()))
+							{
+
+								deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode()
+										+ MarketplacecommerceservicesConstants.COMMA + productRichAttr
+										+ MarketplacecommerceservicesConstants.COMMA + sellerRichAttr
+										+ MarketplacecommerceservicesConstants.COMMA + cartEntryData.getSelectedUssid()
+										+ MarketplacecommerceservicesConstants.COMMA + cartSoftReservationData.getFulfillmentType());
+							}
+						}
+					}
+					else if (cartEntryData.getMplDeliveryMode().getCode()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY))
+					{
+						for (final CartSoftReservationData cartSoftReservationData : cartSoftReservationDataList)
+						{
+							if (cartSoftReservationData.getUSSID().equals(cartEntryData.getSelectedUssid()))
+							{
+
+								deliveryModelList.add(cartEntryData.getMplDeliveryMode().getCode()
+										+ MarketplacecommerceservicesConstants.COMMA + productRichAttr
+										+ MarketplacecommerceservicesConstants.COMMA + sellerRichAttr
+										+ MarketplacecommerceservicesConstants.COMMA + cartEntryData.getSelectedUssid()
+										+ MarketplacecommerceservicesConstants.COMMA + cartSoftReservationData.getFulfillmentType());
+							}
+						}
+					}
+				}
+			}
+			if (deliveryModelList.size() > 0)
+			{
+				String selectedDeliveryMode = null;
+				String productScheduleDelivery = null;
+				String sellerScheduleDelivery = null;
+				String selectedUssId = null;
+				String fulfillmentType = null;
+				List<String> dateList;
+				final CartModel cartModel = getCartService().getSessionCart();
+				final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
+				deliverySlotsRequestData.setCartId(cartDataSupport.getGuid());
+				final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
+						deliverySlotsRequestData, cartModel);
+				//			final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+				final MplLPHolidaysModel mplLPHolidaysModel = mplConfigFacade
+						.getMplLPHolidays(MarketplacecommerceservicesConstants.CAMPAIGN_URL_ALL);
+				final Map<String, List<String>> dateTimeslotMapList = new HashMap<String, List<String>>();
+
+
+
+				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+						{
+							cartEntryModel.setEdScheduledDate("".trim());
+							cartEntryModel.setTimeSlotFrom("".trim());
+							cartEntryModel.setTimeSlotTo("".trim());
+
+						}
+					}
+				}
+				modelService.saveAll(cartEntryList);
+
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if (null != deliverySlotsResponseData)
+						{
+							for (final InvReserForDeliverySlotsItemEDDInfoData responseData : deliverySlotsResponseData
+									.getInvReserForDeliverySlotsItemEDDInfoData())
+							{
+								if (responseData.getUssId().equalsIgnoreCase(cartEntryModel.getSelectedUSSID()))
+								{
+									String estDeliveryDateAndTime = null;
+									if (responseData.getEDD() != null && StringUtils.isNotEmpty(responseData.getEDD()))
+									{
+										estDeliveryDateAndTime = responseData.getEDD();
+									}
+									else if (responseData.getNextEDD() != null && StringUtils.isNotEmpty(responseData.getNextEDD()))
+									{
+										estDeliveryDateAndTime = responseData.getNextEDD();
+									}
+									if (null != estDeliveryDateAndTime && StringUtils.isNotEmpty(estDeliveryDateAndTime))
+									{
+										final SimpleDateFormat parseFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+										final Date dateForEDD = parseFormat.parse(estDeliveryDateAndTime);
+										cartEntryModel.setExpectedDeliveryDate(dateForEDD);
+									}
+								}
+							}
+						}
+					}
+				}
+				modelService.saveAll(cartEntryList);
+
+				for (final String selectedDeliveryModes : deliveryModelList)
+				{
+					final String[] splitString = selectedDeliveryModes.split(MarketplacecommerceservicesConstants.COMMA);
+					if (null != splitString && !splitString.equals(""))
+					{
+						selectedDeliveryMode = splitString[0];
+						productScheduleDelivery = splitString[1];
+						sellerScheduleDelivery = splitString[2];
+						selectedUssId = splitString[3];
+						fulfillmentType = splitString[4];
+					}
+					LOG.debug("DeliveryMode :" + selectedDeliveryMode + "-- ProductScheduleDelivery" + productScheduleDelivery
+							+ "-- SellerScheduleDelivery" + sellerScheduleDelivery + "-- selectedUssId" + selectedUssId);
+					for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
+					{
+						if (!cartEntryData.isIsBOGOapplied() || !cartEntryData.isGiveAway())
+						{
+							if ((cartEntryData.getSelectedUssid().equalsIgnoreCase(selectedUssId)
+									&& selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY)
+									&& productScheduleDelivery.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerScheduleDelivery
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES))
+									|| (cartEntryData.getSelectedUssid().equalsIgnoreCase(selectedUssId)
+											&& selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY)
+											&& productScheduleDelivery.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES) && sellerScheduleDelivery
+												.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)))
+							{
+								for (final InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse : dateUtilHelper
+										.getUniqueEddDatesList(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
+								{
+									if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId()))
+									{
+										if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
+												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIP.toUpperCase()))
+										{
+
+											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
+													mplLPHolidaysModel);
+											dateList = new ArrayList<String>();
+											if (null != cartEntryData.getDeliverySlotsTime()
+													&& cartEntryData.getDeliverySlotsTime().size() > 0)
+											{
+
+												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime()
+														.entrySet())
+												{
+													dateList.add(entry.getKey());
+												}
+											}
+											String startAndEndDates = null;
+											if (dateList.size() > 0)
+											{
+												startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
+														+ dateList.get(dateList.size() - 1);
+
+												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
+											}
+											if (deliverySlotsResponse.getIsScheduled().equalsIgnoreCase(
+													MarketplacecommerceservicesConstants.Y))
+											{
+												isScheduleServiceble = true;
+
+											}
+											else
+											{
+												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+											}
+											//cartEntryData.isIsBOGOapplied() ||
+											if (cartEntryData.isGiveAway())
+											{
+												cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+											}
+
+										}
+										else if (cartEntryData.getSelectedUssid().equalsIgnoreCase(deliverySlotsResponse.getUssId())
+												&& fulfillmentType.equalsIgnoreCase(MarketplacecommerceservicesConstants.SSHIP.toUpperCase()))
+										{
+											//isScheduleServiceble=true;
+											mplCheckoutFacade.constructDeliverySlotsForEDAndHD(deliverySlotsResponse, cartEntryData,
+													mplLPHolidaysModel);
+
+											dateList = new ArrayList<String>();
+											if (null != cartEntryData.getDeliverySlotsTime()
+													&& cartEntryData.getDeliverySlotsTime().size() > 0)
+											{
+												for (final Entry<String, List<String>> entry : cartEntryData.getDeliverySlotsTime()
+														.entrySet())
+												{
+													dateList.add(entry.getKey());
+												}
+											}
+											String startAndEndDates = null;
+											if (dateList.size() > 0)
+											{
+												startAndEndDates = dateList.get(0) + MarketplacecommerceservicesConstants.AND
+														+ dateList.get(dateList.size() - 1);
+												selectedDateBetWeen.put(cartEntryData.getSelectedUssid(), startAndEndDates);
+											}
+											cartEntryData.setDeliverySlotsTime(dateTimeslotMapList);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION, selectedDateBetWeen);
+			}
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while selecting  address:" + e);
+		}
+		return isScheduleServiceble;
+	}
+
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETREVIEWORDER, method = RequestMethod.GET)
 	public String viewReviewOrder(final Model model)
 	{
@@ -2687,6 +3126,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	private void prepareModelForPayment(final Model model, final CartData cartData) throws CMSItemNotFoundException
 	{
 		Map<String, Boolean> paymentModeMap = null;
+		model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.FALSE);
 		model.addAttribute(MarketplacecheckoutaddonConstants.GUID, cartData.getGuid());
 		//Getting Payment modes
 		paymentModeMap = getMplPaymentFacade().getPaymentModes(MarketplacecheckoutaddonConstants.MPLSTORE, false, cartData);
@@ -2715,7 +3155,32 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			ValidationResults validationResult = null;
-			validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+
+
+			final String refNumber = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.REFNUMBER);
+
+			LOG.debug("refNumber number is ...................." + refNumber);
+			//Implementing mRupee Logic with cartGuid TISSQAEE-229
+			OrderModel mRupeeorderModel = null;
+			String cartGuid = null;
+			/* Getting guid from audit table based on the reference no. received from mRupee */
+			if (StringUtils.isNotEmpty(refNumber))
+			{
+				cartGuid = getMplPaymentFacade().getWalletAuditEntries(refNumber);
+			}
+			LOG.debug("cartGuid number is ...................." + cartGuid);
+			if (StringUtils.isNotEmpty(cartGuid))
+			{
+				mRupeeorderModel = getMplPaymentFacade().getOrderByGuid(cartGuid);
+			}
+			LOG.debug("mRupeeorderModel is ++++++++" + mRupeeorderModel);
+			if (null != mRupeeorderModel && null != mRupeeorderModel.getIsWallet()
+					&& !WalletEnum.MRUPEE.equals(mRupeeorderModel.getIsWallet()))
+			{
+				LOG.debug("mRupeeorderModel.getIsWallet() is ++++++++" + mRupeeorderModel.getIsWallet());
+				validationResult = paymentValidator.validateOnEnterOptimized(cartData, redirectAttributes);
+			}
+
 			if (null != validationResult && ValidationResults.REDIRECT_TO_CART.equals(validationResult))
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
@@ -3662,7 +4127,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -3719,7 +4184,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

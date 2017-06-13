@@ -6496,6 +6496,15 @@
 						<modifiers optional="false" />
 						<defaultvalue>Integer.valueOf(2)</defaultvalue>
 					</attribute>
+					<!-- UF-314 Start -->
+					<attribute qualifier="priority" type="java.lang.Integer"
+						generate="true" autocreate="true">
+						<description>Represents the priority Order to be Seen in Choose delivery Option Screen</description>
+						<persistence type="property" />
+						<modifiers optional="false" />
+						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+					</attribute>
+					<!-- UF-314 End -->
 				</attributes>
 			</itemtype>
 			<!-- deliverymode changes end -->

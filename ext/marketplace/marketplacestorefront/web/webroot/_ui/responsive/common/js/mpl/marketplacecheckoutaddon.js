@@ -8105,7 +8105,9 @@ function displayThrdPrtyWlt(){
 	$("li#MRUPEE").css("display","block");
 	applyPromotion(null,"none","none");
 }
-$("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
+//$("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
+function viewPaymentMRupee()
+{
 	refresh();
 	if($('#radioButton_MRupee').is(':checked')) 
 	{
@@ -8113,7 +8115,8 @@ $("#viewPaymentMRupee,#viewPaymentMRupeeMobile").click(function(){
 		$("#paymentModeValue").val("MRUPEE");
 		displayThrdPrtyWlt();
 	}
-})
+//})
+}
 
 /*$("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 	
