@@ -379,13 +379,14 @@
         }
         .emibox-right{
             display: inline-block;
-            width: 68%;
+            width: 78%;
             vertical-align: top;
             border-left: 1px solid #d2d2d2;
             table{
             	padding:10px;
             	td,th{
             		text-align:center;
+            		padding:4px 10px;
             	}
             }
             
