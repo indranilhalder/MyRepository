@@ -279,7 +279,8 @@ ACC.singlePageCheckout = {
 			}
 		}
 		ACC.singlePageCheckout.showAjaxLoader();
-		var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
+		//var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
+		var url=$("#selectDeliveryMethodForm").prop("action");
 		var data=$("#selectDeliveryMethodForm").serialize();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
         
@@ -302,6 +303,7 @@ ACC.singlePageCheckout = {
                 	else
                 	{
                 		ACC.singlePageCheckout.getReviewOrder();
+                		
                 	}
             		ACC.singlePageCheckout.getSelectedDeliveryModes();
         		}
@@ -527,7 +529,9 @@ ACC.singlePageCheckout = {
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
-        
+        //calling tealium
+        $("#checkoutPageName").val("Choose Your Delivery Options");
+        tealiumCallOnPageLoad();
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type=="confirm")
@@ -835,6 +839,14 @@ ACC.singlePageCheckout = {
 				$allListElements.closest("li").parent("div.owl-item").show();
 			}
 			
+			if( typeof utag !="undefined" && searchText!=""){
+				utag.link({
+					link_text: searchText+"entered",
+					event_type : searchText+"entered",
+					search_keyword : searchText
+				});
+			}
+			
 		
 	},
 	savePickupPersonDetails: function(element)
@@ -1066,6 +1078,9 @@ ACC.singlePageCheckout = {
                 }
          } else {
         	$("#reviewOrder").html(data);
+        	//added for tealium
+  		  $("#checkoutPageName").val("Review Order");
+  	       tealiumCallOnPageLoad();
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
@@ -1158,7 +1173,6 @@ ACC.singlePageCheckout = {
 			var url=ACC.config.encodedContextPath + "/checkout/single/removereviewcart";
 			var data="entryNumber="+entryNumber;
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
-	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
 			});
@@ -1175,6 +1189,15 @@ ACC.singlePageCheckout = {
 	        		{
 	        			ACC.product.addToBagFromWl(entryUssid,false);
 	        			$("#reviewOrder").html(data);
+	        			//tealium call for remove 
+		        		if(typeof(utag)!='undefined')
+						{
+							utag.link({
+								link_text  : 'remove_from_review_order' , 
+								event_type : 'remove_from_review_order',
+								product_id :  entryNumber
+							});
+						}
 	        		}
 	        		if(clickFrom=="addItemToWl")
 	        		{
@@ -1197,7 +1220,6 @@ ACC.singlePageCheckout = {
 	        		$("#entryNumbersId").val(entryNumbers.replace(removeEntryNo,""));
 	        		$("#delmode_item_li_"+entryNumber).remove();
 	        		ACC.singlePageCheckout.getSelectedDeliveryModes();
-	        		
 	            }
 			});
 	        
@@ -1272,11 +1294,9 @@ ACC.singlePageCheckout = {
 					
 					if(typeof(utag)!='undefined')
 					{
-					/*TPR-656*//*TPR-4738*/
 						utag.link({
-							link_obj: this, 
-							link_text: 'cart_add_to_wishlist' , 
-							event_type : 'cart_add_to_wishlist', 
+							link_text: 'review_order_add_to_wishlist' , 
+							event_type : 'review_order__to_wishlist', 
 							product_sku_wishlist : productcodearray
 						});
 					}
@@ -1619,3 +1639,4 @@ $(document).ready(function(){
 		$("#makePaymentDivMobile").html("");
 	}
 });
+

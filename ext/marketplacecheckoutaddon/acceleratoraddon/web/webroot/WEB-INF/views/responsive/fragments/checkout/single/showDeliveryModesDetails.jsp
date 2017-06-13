@@ -24,7 +24,7 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 
 <div id="selecteDeliveryModeMessage" style=""></div>
-	<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/single/select"
+	<form:form id="selectDeliveryMethodForm" action="/checkout/single/select"
 		method="post" commandName="deliveryMethodForm">
 		<div class="checkout-shipping left-block">
 			<div class="checkout-indent">
