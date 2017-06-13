@@ -1,4 +1,4 @@
-	ACC.productDetail = {
+ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
 
@@ -2284,43 +2284,89 @@ function CheckUserLogedIn() {
 //		});
 	
 }
-function nextImage()
+function nextImage(elem)
 {
-	var item_height = $(".product-info .imageListCarousel li").height();
-	var item_count = $(".product-info .imageListCarousel li").length/2;
-	var top = parseInt($(".product-info .imageListCarousel").css("top"));
-	if(!(top % item_height)){
-		if(parseInt($(".product-info .imageListCarousel").css("top")) > -item_height* (item_count-imagePageLimit)){
-		$(".product-info .imageListCarousel").animate({top: "-="+item_height+"px"},"250");
-		$("#previousImage,#zoomModal #previousImage").css("opacity","1");
+	var grandParentId = $(elem).parent().parent().attr('id');
+	if (grandParentId == 'pdp_gallery') {
+		$("#pdp_gallery .imageListCarousel li img").each(function(){
+			$(this).show();
+		});
+		var item_height = $("#pdp_gallery .imageListCarousel li").height();
+		var item_count = $("#pdp_gallery .imageListCarousel:first li").length;
+		var top = parseInt($("#pdp_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) > -item_height* (item_count-imagePageLimit)){
+			$("#pdp_gallery .imageListCarousel").animate({top: "-="+item_height+"px"},"250");
+			$("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity","1");
+			}
+			else{
+				$("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity","0.5");
+			}
 		}
-		else{
-			$("#nextImage,#zoomModal #nextImage").css("opacity","0.5");
+		if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) == (item_count-imagePageLimit-1)*(-item_height)){
+			$("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity","0.5");
 		}
 	}
-	if(parseInt($(".product-info .imageListCarousel").css("top")) == (item_count-imagePageLimit-1)*(-item_height)){
-		$("#nextImage,#zoomModal #nextImage").css("opacity","0.5");
+	else if (grandParentId == 'zoom_gallery') {
+		$("#zoom_gallery .imageListCarousel li img").each(function() {
+			if ($(this).attr('data-type') == "image") {
+				$(this).show();
+			}
+		});
+		var item_height = $("#zoom_gallery .imageListCarousel li").height();
+		var item_count = $("#zoom_gallery .imageListCarousel li").length;
+		var top = parseInt($("#zoom_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) > -item_height* (item_count-imagePageLimit)){
+			$("#zoom_gallery .imageListCarousel").animate({top: "-="+item_height+"px"},"250");
+			$("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity","1");
+			}
+			else{
+				$("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity","0.5");
+			}
+		}
+		if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) == (item_count-imagePageLimit-1)*(-item_height)){
+			$("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity","0.5");
+		}
 	}
-	
 }
+
 /*Display previous list of sellers after clicking previous link*/	
-function previousImage()
+function previousImage(elem)
 {
-	var item_height = $(".product-info .imageListCarousel li").height();
-	var top = parseInt($(".product-info .imageListCarousel").css("top"));
-	if(!(top % item_height)){
-		if(parseInt($(".product-info .imageListCarousel").css("top")) < 0 ){
-			$("#nextImage,#zoomModal #nextImage").css("opacity","1");
-			$(".product-info .imageListCarousel").animate({top: "+="+item_height+"px"},"250");
+	var grandParentId = $(elem).parent().parent().attr('id');
+	if (grandParentId == 'pdp_gallery') {
+		var item_height = $("#pdp_gallery .imageListCarousel li").height();
+		var top = parseInt($("#pdp_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) < 0 ){
+				$("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity","1");
+				$("#pdp_gallery .imageListCarousel").animate({top: "+="+item_height+"px"},"250");
+			}
+			else{
+				$("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity","0.5");
+			}
 		}
-		else{
-			$("#previousImage,#zoomModal #previousImage").css("opacity","0.5");
+		if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) == -item_height){
+			$("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity","0.5");
 		}
 	}
-	if(parseInt($(".product-info .imageListCarousel").css("top")) == -item_height){
-		$("#previousImage,#zoomModal #previousImage").css("opacity","0.5");
+	else if (grandParentId == 'zoom_gallery') {
+		var item_height = $("#zoom_gallery .imageListCarousel li").height();
+		var top = parseInt($("#zoom_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) < 0 ){
+				$("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity","1");
+				$("#zoom_gallery .imageListCarousel").animate({top: "+="+item_height+"px"},"250");
+			}
+			else{
+				$("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity","0.5");
+			}
+		}
+		if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) == -item_height){
+			$("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity","0.5");
+		}
 	}
-	
 }
 
 $(".showDate").click(function(){
@@ -4197,4 +4243,3 @@ function getProductCodeFromPdpUrl(url)
 }
 
 //End of UF-60 changes
-

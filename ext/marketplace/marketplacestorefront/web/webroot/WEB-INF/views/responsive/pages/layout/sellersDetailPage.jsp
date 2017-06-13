@@ -420,7 +420,7 @@ var allSellers='${allsellers}';
  --%>
 <div class="pdp other-sellers">
 <div class="product-info wrapper">
-<div class="product-image-container">
+<div class="product-image-container" id="pdp_gallery">
 
 <!-- Displaying thumbnail images -->
 	<cms:pageSlot position="ConfigureImagesCount" var="component">
