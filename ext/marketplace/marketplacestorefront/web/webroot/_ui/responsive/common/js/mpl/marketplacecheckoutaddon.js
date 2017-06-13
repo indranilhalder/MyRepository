@@ -7034,6 +7034,7 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
         return false;
@@ -7054,7 +7055,15 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	else if (!regexnew.test(name) && identifier=="firstName") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
 	else if (!regex.test(name) && identifier=="lastName") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	else if (!regexnew.test(name) && identifier=="lastName") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
@@ -7062,7 +7071,15 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
 	else if (!regex.test(name) && identifier=="lastNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
@@ -7107,8 +7124,13 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
+	var regex = new RegExp(/^[a-zA-Z0-9]+([\s]?[a-zA-Z0-9]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
+        return false;
+	}
+	else if(!regex.test(addressLine)){
+		errorHandle.innerHTML = "Please enter a valid Address";
         return false;
 	}
 	errorHandle.innerHTML = "";
@@ -7211,7 +7233,7 @@ function validateCityEmi() {
 function validateState() {
 	var name=$("#state").val();
 	var errorHandle=document.getElementById("stateError");
-	var regex = new RegExp(/^[a-zA-Z\. ]+$/);
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
@@ -7227,7 +7249,7 @@ function validateState() {
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
 	var errorHandle=document.getElementById("stateErrorEmi");
-	var regex = new RegExp(/^[a-zA-Z\. ]+$/);
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
