@@ -359,14 +359,24 @@
             display: inline-block;
             width: 20%;
             vertical-align: top;
+            padding:10px;
+            
         }
-        .emibox-right{  
+        .emibox-right{
             display: inline-block;
-            width: 79%;
+            width: 68%;
             vertical-align: top;
-            padding: 10px;
-            border-left: 1px solid #ccc;
+            border-left: 1px solid #d2d2d2;
+            padding:10px;
+            table{
+            	td,th{
+            		text-align:center;
+            	}
+            }
+            
+            
         }
+
 	}
 	.accordion-icon {
 		position: absolute;
