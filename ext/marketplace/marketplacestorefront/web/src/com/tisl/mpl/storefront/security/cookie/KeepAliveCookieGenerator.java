@@ -22,18 +22,18 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 
-//	@Override
-//	protected Cookie createCookie(final String cookieValue)
-//	{
-//		final Cookie cookie = new Cookie(getCookieName(), cookieValue);
-//		if (getCookieDomain() != null)
-//		{
-//			LOG.error("here Setting cookie with name:::" + getCookieName() + "with domain :::" + getCookieDomain());
-//			cookie.setDomain(getCookieDomain());
-//		}
-//		cookie.setPath(getCookiePath());
-//		return cookie;
-//	}
+	@Override
+	protected Cookie createCookie(final String cookieValue)
+	{
+		final Cookie cookie = new Cookie(getCookieName(), cookieValue);
+		//		if (getCookieDomain() != null)
+		//		{
+		//			LOG.error("here Setting cookie with name:::" + getCookieName() + "with domain :::" + getCookieDomain());
+		//			cookie.setDomain(getCookieDomain());
+		//		}
+		cookie.setPath(getCookiePath());
+		return cookie;
+	}
 
 	@Override
 	protected void setEnhancedCookie(final Cookie cookie)
@@ -43,7 +43,7 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 		//				.getString(MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
 		//		final int expiryTime = 60 * 60 * 24 * str; // 24h in seconds
 		cookie.setMaxAge(Integer.parseInt(configurationService.getConfiguration().getString("default.session.timeout")));
-		LOG.error("here Setting cookie age::: shared.cookies.domain");
+		LOG.error("here Setting cookie age::: default.session.timeout: " + cookie.getMaxAge());
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 		//		if (!isUseDefaultDomain() && StringUtils.isNotEmpty(getCustomDomain()))
 		//		{
 		cookie.setDomain(configurationService.getConfiguration().getString(DOMAIN));
-		LOG.error("here Setting cookie domain::: shared.cookies.domain");
+		LOG.error("here Setting cookie domain::: shared.cookies.domain:" + cookie.getDomain());
 		//		}
 
 	}
