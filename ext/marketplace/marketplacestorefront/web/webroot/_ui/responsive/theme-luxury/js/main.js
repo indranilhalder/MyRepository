@@ -127,32 +127,43 @@ TATA.CommonFunctions = {
 		});
 	},
 	
-	forgotPasswordValidate: function(){
-		$('#forgottenPwdForm').validate({
-			onfocusout: false,
+	forgotPasswordValidate: function() {
+        $("#forgottenPwdForm").validate({
+            onfocusout: !1,
             invalidHandler: function(form, validator) {
-                var errors = validator.numberOfInvalids();
-                if (errors) {
-                	validator.errorList[0].element.focus();
-					if($("#forgottenPwdForm .invalided-error").length > 0){
-						$("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message);
-					}else{
-						$("#forgottenPwdForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
-					}
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+            },
+            rules: {
+                email: {
+                    required: !0,
+                    email: !0,
+                    maxlength: 120
                 }
             },
-			rules: {
-				email: {
-					required: true,
-					email: true,
-					maxlength: 120
-				}
-			},
-			submitHandler: function(form) {
-				form.submit();						
-			}
-		});
-	},
+            submitHandler: function(form) {
+            	const url = "/login/pw/request/confirmEmail?forgotPassword_email="+$("#forgotPassword_email").val(); 
+            	$.ajax({
+           		  	url: url,
+       				type:"GET",
+       				returnType:"text/html",
+       				dataType: "html",
+       				success: function(data) {
+                    	 if(data === "invalid_email"){
+                    		$("#forgottenPwdForm .invalided-error").html("");
+                    		if($("#forgottenPwdForm .invalided-error").length > 0){
+                    			$("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.");
+							}else{
+								$("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>");
+							}
+                    	 }
+                    	 if(data === "success"){
+                    		 $("#forgottenPwdForm .invalided-error").html("You've got an email");
+                    	 }
+                     }
+				});
+            }
+        });
+    },
 		
 	loadSignInForm: function(element){
 		const loginURL = element.attr("href");
