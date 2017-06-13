@@ -42,7 +42,7 @@ public class KeepAliveCookieGenerator extends EnhancedCookieGenerator
 		//		final int str = Integer.parseInt(configurationService.getConfiguration()
 		//				.getString(MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
 		//		final int expiryTime = 60 * 60 * 24 * str; // 24h in seconds
-		cookie.setMaxAge(Integer.parseInt(configurationService.getConfiguration().getString("shared.cookies.domain")));
+		cookie.setMaxAge(Integer.parseInt(configurationService.getConfiguration().getString("default.session.timeout")));
 		LOG.error("here Setting cookie age::: shared.cookies.domain");
 	}
 
