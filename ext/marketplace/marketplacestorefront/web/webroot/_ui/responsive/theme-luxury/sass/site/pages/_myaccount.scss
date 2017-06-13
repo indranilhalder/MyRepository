@@ -329,6 +329,35 @@
     		}
     	}
 	}
+	.right-account{
+		.content:first-child{
+			border-bottom:1px solid #d2d2d2;
+			font-size:20px;
+		}
+		.content{
+			padding:15px;
+		}
+		.faq{
+			padding:0px;
+		}
+		table{
+			margin:10px 0;
+			th{
+				font-size:16px;
+			}
+			td{
+				padding:5px 20px 0 0;
+			}
+		}
+	}
+}
+.breadcrumbs.wrapper{
+    list-style-type: none;
+	margin-top: 12px;
+	li{
+		display: inline-block;
+    	margin-right: 10px;
+	}
 }
 
 

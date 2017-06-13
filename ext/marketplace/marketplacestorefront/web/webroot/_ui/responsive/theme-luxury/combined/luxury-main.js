@@ -12975,7 +12975,7 @@ TATA.CommonFunctions = {
         }), elem.click(function(e) {
             e.stopPropagation(), e.preventDefault();
             var element = $(e.target);
-            if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") && $("#loginForm").submit(), 
+            if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") ? $("#loginForm").submit() : "luxury_register" == e.target.id ? $("#extRegisterForm").submit() : "luxuryForgotPasswordByEmailAjax" == e.target.id && $("#forgottenPwdForm").submit(), 
             element.hasClass("header-login-target-link")) {
                 var targetID = element.data("target-id");
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);

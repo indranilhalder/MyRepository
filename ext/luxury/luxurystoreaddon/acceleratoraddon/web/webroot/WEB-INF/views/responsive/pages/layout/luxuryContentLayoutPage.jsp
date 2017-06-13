@@ -14,36 +14,34 @@
 
 
 
-	<div class="customer-service">
-
-<select class="left-nav-footer-mobile" onchange="window.location=this.options[this.selectedIndex].value;">
-
-</select>
-
-		<cms:pageSlot position="Section2A" var="feature" element="" class="">
-			<cms:component component="${feature}" element="" />
-		</cms:pageSlot>
-
-
-
-		<cms:pageSlot position="Section2B" var="feature">
-			<cms:component component="${feature}" />
-		</cms:pageSlot>
-
-	</div>
-
-
-	<div class="virtues">
-		<div class="wrapper">
-
-			<ul class="feature-virtues">
-				<cms:pageSlot position="Section3" var="feature">
-					<cms:component component="${feature}" element="li" />
-				</cms:pageSlot>
-			</ul>
-
+<div class="customer-service account">
+	<select class="left-nav-footer-mobile visible-xs" onchange="window.location=this.options[this.selectedIndex].value;"></select>
+	<div class="wrapper">
+		<div class="left-nav">
+			<cms:pageSlot position="Section2A" var="feature" element="" class="">
+				<cms:component component="${feature}" element="" />
+			</cms:pageSlot>
+		</div>
+		<div class="right-account">
+	
+			<cms:pageSlot position="Section2B" var="feature">
+				<cms:component component="${feature}" />
+			</cms:pageSlot>
 		</div>
 	</div>
+</div>
+
+<div class="virtues">
+	<div class="wrapper">
+
+		<ul class="feature-virtues">
+			<cms:pageSlot position="Section3" var="feature">
+				<cms:component component="${feature}" element="li" />
+			</cms:pageSlot>
+		</ul>
+
+	</div>
+</div>
 	<cms:pageSlot position="Section4" var="feature">
 		<cms:component component="${feature}" />
 	</cms:pageSlot>
