@@ -24,7 +24,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.security.cookie.UserCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.UserTypeCookieGenerator;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -204,9 +203,6 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 
 		filterChain.doFilter(request, response);
 		LOG.info("after filter chain  Method : value in userlogintype request is " + request.getAttribute(userLoginType));
-
-		//added for testing
-		GenericUtilityMethods.manageMultipleCookieBySameName(request, response, "keepAlive");
 	}
 
 	protected SessionService getSessionService()
@@ -268,7 +264,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 		{
 			for (final Cookie cookie : cookies)
 			{
-				if (cookie.getName().equals("TULkeepAlive"))
+				if (cookie.getName().equals("keepAlive"))
 				{
 					LOG.info("Found the Keep Alive Cookie. Hence adding back to response with new expiry timeout");
 					LOG.info("Cookie domain :::" + cookie.getDomain());
@@ -285,9 +281,6 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 							+ request.getSession().getMaxInactiveInterval() / 60 + "min");
 				}
 			}
-			//added for testing
-			GenericUtilityMethods.manageMultipleCookieBySameName(request, response, "keepAlive");
-
 		}
 
 	}
