@@ -141,7 +141,7 @@ $(document).ready(function(){
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
 	<span id="addToCartButtonId">
 		<span id="addToCartFormTitleSuccess"></span>
-		<button id=" " type="button" class="btn-block js-add-to-cart btn btn-default btn-lg btn-block">
+		<button id="addToCartButton" type="button" class="btn-block js-add-to-cart btn btn-default btn-lg btn-block">
 			<spring:theme code="basket.add.to.basket" />
 		</button>
 		<button
