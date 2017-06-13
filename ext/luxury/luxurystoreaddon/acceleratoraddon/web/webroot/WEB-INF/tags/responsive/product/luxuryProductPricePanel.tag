@@ -12,10 +12,11 @@
 
 <!-- <h3 class="company author"></h3> -->
 <div itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="price">
-	<p class="price-feature">
+	<div class="price-feature">
 	   <span class="strike-price" id="mrpPriceId" style="display:none"></span>
-	   <span class="our-price"  id="mopPriceId" style="display:none"></span>
+	   
 	   <span class="saving-price text-danger" sale" id="spPriceId" style="display:none"><span itemprop="price">${product_list_price}</span>
+	   
 	  <span itemprop="priceCurrency">${currentCurrency.isocode}</span>
 	  <c:choose>
 	   <c:when test="${product_availability == 'Available online'}">
@@ -30,8 +31,9 @@
 	 <span class="savings pdp-savings saving-price text-danger" id="savingsOnProductId" style="display:none">               
 	    <span></span>
 	 </span>
-	 </p> 
-	  
+	 
+	 </div> 
+	  <p><span class="our-price"  id="mopPriceId" style="display:none"></span></p>
 	 <br>
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		
