@@ -187,6 +187,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String MPLSINGLEPAGEURL = "/checkout/single";
 	public static final String MPLDELIVERYCHOOSEURL = "/choose";
 	public static final String MPLDELIVERYSELECTURL = "/select";
+	public static final String MPLDELIVERYSELECTURLRESPONSIVE = "/select-responsive";
 	public static final String MPLDELIVERYCHECKURL = "/check";
 	public static final String GETCNCSTRORES = "/cncStores";
 	public static final String GETREVIEWORDER = "/reviewOrder";
