@@ -13548,7 +13548,9 @@ TATA.CommonFunctions = {
                     error: function(xhr, status, error) {}
                 });
             }), $(document).on("click", "#bankNameForEMI li", function() {
-                var productVal = $("#prodPrice").val(), selectedBank = $(this).text(), contentData = "", productId = [];
+                var productVal = $("#prodPrice").val(), selectedBank = $(this).text();
+                $(this).addClass("active").siblings().removeClass("active");
+                var contentData = "", productId = [];
                 if (productId.push($("#product_id").val()), "select" != selectedBank) {
                     var dataString = "selectedEMIBank=" + selectedBank + "&productVal=" + productVal;
                     $.ajax({
