@@ -261,7 +261,7 @@
         border-left: 0px;
         border-right: 0px;
         padding-bottom: 0px;
-        border-radius: 0px;
+        border-radius: 0px;padding: 0px;
     }
     .checkout-shipping.addNewAddress{
         ul{
@@ -328,7 +328,7 @@
         
     }
     
-    .addNew_wrapper.no_address{
+    .addNew_wrapper{
         .add-address{
             background: #fff;
             border-radius: 10px;
@@ -529,5 +529,27 @@
         line-height: 16px;
     }
 }
+.checkout-shipping.addNewAddress .formaddress{
+ width:100%!important;
+ }
+ .i18nAddressForm.address-form .row{
+ background: transparent;
+    border: 0px;
+ }
+ .addressList_wrapper .address-list .addresslist-left{
+     width: 5%;
+    display: inline-block;
+    vertical-align: top;
+        margin-top: 14px;
+ }
+  .addressList_wrapper .address-list .addresslist-right{
+        width: 94%;
+    display: inline-block;
+ }
+ 
+.addressList_wrapper .address-list .addresslist-right .edit a{
+          text-align: right;
+    display: block;
+ } 
 
 
