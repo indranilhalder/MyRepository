@@ -46,7 +46,7 @@ TATA.CommonFunctions = {
     },
 	Toggle: function() {
 
-		$('.toggle-link').on('click', function(){
+		$('.toggle-link').on('click', function(e){
             e.preventDefault();
             e.stopPropagation();
             var Target = $(this).data("target-id");

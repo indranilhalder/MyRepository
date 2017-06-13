@@ -12958,7 +12958,7 @@ TATA.CommonFunctions = {
         });
     },
     Toggle: function() {
-        $(".toggle-link").on("click", function() {
+        $(".toggle-link").on("click", function(e) {
             e.preventDefault(), e.stopPropagation();
             var Target = $(this).data("target-id"), elem = $(this);
             return elem.hasClass("luxury-login") && TATA.CommonFunctions.loadSignInForm(elem), 
@@ -13600,7 +13600,135 @@ TATA.CommonFunctions = {
     TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt();
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
-}), $(document).ready(function() {
+});
+
+var tul = {};
+
+(function($) {
+    "use strict";
+    tul.commonFunctions = {
+        login: function() {
+            $("#loginForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#loginForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    j_username: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    },
+                    j_password: {
+                        required: !0,
+                        maxlength: 30
+                    }
+                },
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: "/j_spring_security_check",
+                        type: "POST",
+                        returnType: "text/html",
+                        data: $(form).serialize(),
+                        beforeSend: function() {},
+                        success: function(data) {
+                            307 == data ? location.reload() : ($("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
+                            $("#j_password").val(""));
+                        },
+                        complete: function() {}
+                    });
+                }
+            }), $("#triggerLoginAjax").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#loginForm").submit();
+            });
+        },
+        signup: function() {
+            $("#extRegisterForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#extRegisterForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    firstName: {
+                        required: !0,
+                        maxlength: 100
+                    },
+                    lastName: {
+                        required: !0,
+                        maxlength: 30
+                    },
+                    mobileNumber: {
+                        minlength: 10,
+                        maxlength: 10,
+                        number: !0
+                    },
+                    email: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    },
+                    pwd: {
+                        required: !0,
+                        maxlength: 30,
+                        minlength: 8
+                    },
+                    checkPwd: {
+                        required: !0,
+                        maxlength: 30,
+                        equalTo: '[name="pwd"]'
+                    }
+                },
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: "/login/register",
+                        type: "POST",
+                        returnType: "text/html",
+                        dataType: "html",
+                        data: $(form).serialize(),
+                        beforeSend: function() {},
+                        success: function(data) {
+                            console.log(data);
+                            var hasErrors = $(data).filter("input#hasErrorsInReg").val();
+                            console.log(hasErrors), "email" == hasErrors ? $(".regEmailErr").append("<div class='invalided-error'>You already have an account with this email ID. Please use it to sign in!</div>") : ($(".regEmailErr").html(""), 
+                            location.reload());
+                        },
+                        complete: function() {}
+                    });
+                }
+            }), $("#luxury_register").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#extRegisterForm").submit();
+            });
+        },
+        forgetpassword: function() {
+            $("#forgottenPwdForm").validate({
+                onfocusout: !1,
+                invalidHandler: function(form, validator) {
+                    validator.numberOfInvalids() && ($("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"), 
+                    validator.errorList[0].element.focus());
+                },
+                rules: {
+                    email: {
+                        required: !0,
+                        email: !0,
+                        maxlength: 120
+                    }
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            }), $("#luxuryForgotPasswordByEmailAjax").on("click", function(e) {
+                $(".invalided-error").remove(), e.preventDefault(), $("#forgottenPwdForm").submit();
+            });
+        },
+        init: function() {
+            tul.commonFunctions.login(), tul.commonFunctions.signup(), tul.commonFunctions.forgetpassword();
+        }
+    }, $(document).ready(function() {
+        tul.commonFunctions.init();
+    });
+}).call(tul.commonFunctions, window.jQuery), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
     $("select#menuPageSelect").val(""), $("#currentPassword").val("");
