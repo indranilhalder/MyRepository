@@ -97,9 +97,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -111,11 +111,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @param String categoryCode
-	 * 
+	 *
 	 * @param ExchangeCouponValueModel pricematrix
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -222,7 +222,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -258,7 +258,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			{
 				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
 				{
-					final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId("'" + entry.getExchangeId() + "'");
+					final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId(entry.getExchangeId());
 					for (final ExchangeTransactionModel exTrax : exTraxList)
 					{
 						final ExchangeModel exMod = new ExchangeModel();
@@ -361,7 +361,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)

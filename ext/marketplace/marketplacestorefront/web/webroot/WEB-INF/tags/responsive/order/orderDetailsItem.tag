@@ -103,7 +103,19 @@
 						</c:forEach>
 						</ul>
 					</c:if>
-
+					<ul>
+					<li class="cart_exchange" style="display:block">
+<%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   								<!-- //to do spring theme for exchange -->
+   								<%-- 
+   								<c:if test="${empty exchangeId}">
+									<c:set var="isExchangeavailable" value=" "/>
+								</c:if>--%>
+   									Exchange Id:${entry.exchangeApplied}
+			              		</li>
+</ul>
 					<p class="item-info">
 						<span> <spring:theme code="order.qty" /> <ycommerce:testId
 								code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>
