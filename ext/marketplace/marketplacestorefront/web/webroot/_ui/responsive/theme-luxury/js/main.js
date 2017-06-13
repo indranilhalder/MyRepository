@@ -16,6 +16,7 @@ TATA.CommonFunctions = {
 		});
 
 	},
+    
 	DocumentClick: function() {
 
 		var elem = $('.toggle-skip');

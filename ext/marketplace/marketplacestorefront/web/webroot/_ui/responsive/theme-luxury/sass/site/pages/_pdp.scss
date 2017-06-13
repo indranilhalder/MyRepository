@@ -358,9 +358,13 @@
         .emibox-left{
             display: inline-block;
             width: 30%;
+            vertical-align: top;
+            border-right: 1px solid #ddd;
         }
         .emibox-right{
              display: inline-block;
+            width: 68%;
+            vertical-align: top;
         }
 	}
 	.accordion-icon {
