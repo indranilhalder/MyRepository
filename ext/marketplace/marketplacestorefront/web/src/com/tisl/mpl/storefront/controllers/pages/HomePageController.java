@@ -524,14 +524,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-<<<<<<< HEAD
 				//SONAR FIX
 				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
-=======
-				//Sonar fix
-				//LOG.info("Found Component>>>>with id :::" + component.getUid());
-				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
->>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
@@ -874,14 +868,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-<<<<<<< HEAD
 				//SONAR FIX
 				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
-=======
-				//Sonar fix
-				//LOG.info("Found Component>>>>with id :::" + component.getUid());
-				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
->>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
@@ -1182,14 +1170,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-<<<<<<< HEAD
 				//SONAR FIX
 				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
-=======
-				//Sonar fix
-				//LOG.info("Found Component>>>>with id :::" + component.getUid());
-				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
->>>>>>> refs/remotes/origin/TCS_PROD_SUPPORT
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
