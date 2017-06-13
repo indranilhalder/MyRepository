@@ -2608,7 +2608,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			final boolean inventoryReservationStatus = mplCartFacade.isInventoryReserved(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartUssidData, cartModel);
-
+			if (inventoryReservationStatus)
+			{
+				jsonObj.put("isInventoryReserved", "true");
+			}
 			final List<CartSoftReservationData> cartSoftReservationDataList = getSessionService().getAttribute(
 					MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION);
 			LOG.debug("****************cartSoftReservationDataList :" + cartSoftReservationDataList.toString());
@@ -4124,7 +4127,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4181,7 +4184,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
