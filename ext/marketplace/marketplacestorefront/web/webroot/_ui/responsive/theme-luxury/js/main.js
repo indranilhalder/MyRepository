@@ -70,7 +70,7 @@ TATA.CommonFunctions = {
 	},
 
 	Accordion: function() {
-		//var Acc = $('.accordion').find('.accordion-title');
+		var Acc = $('.accordion').find('.accordion-title');
 
 		$(document).on('click','.accordion .accordion-title', function(){
 	      //Expand or collapse this panel
@@ -959,7 +959,7 @@ TATA.Pages = {
                 });
          }); 
             
-         $('#bankNameForEMI li').on('click', function(){ 
+            $(document).on("click",'#bankNameForEMI li', function() {
                 var productVal = $("#prodPrice").val();
                 var selectedBank = $('#bankNameForEMI :selected').text();
                 var contentData = '';
