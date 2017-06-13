@@ -291,7 +291,7 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 		{
 			for (final Cookie cookie : request.getCookies())
 			{
-				if (cookie.getName().equals("TULkeepAlive"))
+				if (cookie.getName().equals("keepAlive"))
 				{
 					keepLoginAlive = true;
 					LOG.info("Found KEEP ALIVE cookie......");
