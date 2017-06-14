@@ -44,6 +44,34 @@ public class LuxurySampleDataImportService extends SampleDataImportService
 				systemSetup.logInfo(context, String.format("Begin importing content catalog data for [%s]", new Object[]
 				{ contentCatalogName }));
 				importContentCatalog(context.getExtensionName(), contentCatalogName);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryHomePage.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryHomePage_en.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryNavigation.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryNavigation_en.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/searchResults.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(String
+						.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryCategoryLandingPage.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryBrandLanding.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryCartPage.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
+				getSetupImpexService().importImpexFile(
+						String.format("/%s/import/coredata/contentCatalogs/%sContentCatalog/luxuryErrorPage.impex", new Object[]
+				{ context.getExtensionName(), contentCatalogName }), false);
 			}
 		}
 		if (importProductCatalogData)
