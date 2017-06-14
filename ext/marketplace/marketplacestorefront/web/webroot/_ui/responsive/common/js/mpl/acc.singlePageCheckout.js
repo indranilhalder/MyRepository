@@ -1136,7 +1136,15 @@ ACC.singlePageCheckout = {
 			 document.getElementById('confirmBox').style.display = "block";
 			 $( "#exConfirmYes" ).click(function() {
 				 $("#contExchnage").val("disableExchange");
-				 ACC.singlePageCheckout.proceedOnAddressSelection(element,addressId);
+				 if(!ACC.singlePageCheckout.getIsResponsive())
+				 {
+			 ACC.singlePageCheckout.proceedOnAddressSelection(showElementId,addressId);
+				 }
+			 else
+				 {
+				 ACC.singlePageCheckout.removeExchangeFromCart();
+				 }
+				
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				});
@@ -1154,6 +1162,29 @@ ACC.singlePageCheckout = {
 			
 		}
 		
+	},
+removeExchangeFromCart : function (){
+		
+
+    	ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/removeExchangeFromCart";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+        		//do something
+            }});
+        
+        xhrResponse.always(function(){
+
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
 	},
 	
 	removeCartItem : function(element,clickFrom) {			

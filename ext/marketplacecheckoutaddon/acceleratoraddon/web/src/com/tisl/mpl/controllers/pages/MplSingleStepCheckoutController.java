@@ -4137,7 +4137,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4194,7 +4194,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -4704,5 +4704,62 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public void setMplPaymentFacade(final MplPaymentFacade mplPaymentFacade)
 	{
 		this.mplPaymentFacade = mplPaymentFacade;
+	}
+
+	/**
+	 * @description method is called to set address from list and save in cart in payment button radio click
+	 * @param selectedAddressCode
+	 * @return Json Object
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.REMOVEEXCHANGEFROMCART, method = RequestMethod.GET)
+	public @ResponseBody JSONObject removeAllExchangeFromCart()
+	{
+		final JSONObject jsonObj = new JSONObject();
+		try
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside selectAddress Responsive Method...");
+			}
+			if (getUserFacade().isAnonymousUser())
+			{
+				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
+				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+
+
+			//TISST-13012
+			final CartModel cart = getCartService().getSessionCart();
+			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
+			if (!cartItemDelistedStatus)
+			{
+				final boolean exchangeCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
+				if (exchangeCart)
+				{
+					exchangeGuideFacade.removeExchangefromCart(cart);
+					jsonObj.put("exchangeItemsRemoved", "true");
+
+				}
+
+			}
+
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions Removing Exchange from Cart ", e);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  Removing Exchange from Cart ", e);
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while Removing Exchange from Cart" + e);
+		}
+		return jsonObj;
 	}
 }
