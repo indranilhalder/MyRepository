@@ -5,8 +5,9 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/cart" %>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common" %>
+<%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
 <!-- LW-230 -->
-<%-- <input type="hidden" id="isLuxury" value="${isLuxury}"/> --%>
+<input type="hidden" id="isLuxury" value="${isLuxury}"/>
 
 <template:page pageTitle="${pageTitle}">
 
@@ -15,68 +16,99 @@
 	<cart:cartValidation/>
 	<cart:cartPickupValidation/> --%>
 
-		<%--<div class="cart-top-bar">
-		<div class="container">
-		 <div class="text-right">
-				<a href="" class="help js-cart-help" data-help="<spring:theme code="text.help" />"><spring:theme code="text.help" text="Help" />
-					<span class="glyphicon glyphicon-info-sign"></span>
-				</a>
-				<div class="help-popup-content-holder js-help-popup-content">
-					<div class="help-popup-content">
-						<strong>${cartData.code }</strong>
-						<spring:theme code="basket.page.cartHelpContent" text="Need Help? Contact us or call Customer Service at 1-###-###-####. If you are calling regarding your shopping cart, please reference the Shopping Cart ID above." />
+	<%--<div class="cart-top-bar">
+    <div class="container">
+     <div class="text-right">
+            <a href="" class="help js-cart-help" data-help="<spring:theme code="text.help" />"><spring:theme code="text.help" text="Help" />
+                <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+            <div class="help-popup-content-holder js-help-popup-content">
+                <div class="help-popup-content">
+                    <strong>${cartData.code }</strong>
+                    <spring:theme code="basket.page.cartHelpContent" text="Need Help? Contact us or call Customer Service at 1-###-###-####. If you are calling regarding your shopping cart, please reference the Shopping Cart ID above." />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>--%>
+
+	<section class="cartSection">
+		<section class="cartContent">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-xs-12 col-sm-7 col-md-7">
+
+						<div class="cartItems cart wrapper">
+							<h3 class="grayTxt"><spring:theme code="mpl.myBag" />(<label id="mybagcnt"></label> item) <span>Items in your cart are not reserved and can sell out.</span></h3>
+							<!-- UF-62 -->
+							<c:if test="${not empty cartData.entries}">
+								<cms:pageSlot position="CenterLeftContentSlot" var="feature" >
+									<cms:component component="${feature}"/>
+								</cms:pageSlot>
+							</c:if>
+								<%-- <cms:pageSlot position="CenterRightContentSlot" var="feature" element="div" class="right-block">
+                                        <cms:component component="${feature}"/>
+                                    </cms:pageSlot> --%>
+
+							<cms:pageSlot position="TopContent" var="feature" element="div" class="cart-top-block" >
+								<cms:component component="${feature}"/>
+							</cms:pageSlot>
+
+
+
+
+							<c:if test="${empty cartData.entries}">
+								<div class="emptyCart-mobile">
+									<cms:pageSlot position="EmptyCartMiddleContent" var="feature" element="div"  >
+										<cms:component component="${feature}"/>
+									</cms:pageSlot>
+									<div class="emptyCart">
+										<h2>Your Shopping cart is empty</h2>
+										<p>Add products to it.</p>
+										<button class="btn btn-primary btn-lg">Shop Men</button>
+										<button class="btn btn-primary btn-lg">Shop Women</button>
+									</div>
+									<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
+								</div>
+							</c:if>
+						</div>
+						<c:if test="${not empty cartData.entries}">
+							<!-- For Infinite Analytics Start -->
+							<div class="trending"  id="ia_products"></div>
+							<!-- For Infinite Analytics End -->
+						</c:if>
+
 					</div>
-				</div>
-			</div> 
-		</div>
+					<c:url value="/cart/checkout" var="checkoutUrl" scope="session"/>
 
-	</div>--%>
 
-	<div>
-	<div class="cart wrapper">
-	<h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1>			<!-- UF-62 -->
-	   <c:if test="${not empty cartData.entries}">
-			   <cms:pageSlot position="CenterLeftContentSlot" var="feature" >
-				   <cms:component component="${feature}"/>
-			   </cms:pageSlot>
-		</c:if>
-		<%-- <cms:pageSlot position="CenterRightContentSlot" var="feature" element="div" class="right-block">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot> --%>
-		<cms:pageSlot position="TopContent" var="feature" element="div" class="cart-top-block" >
-			<cms:component component="${feature}"/>
-		</cms:pageSlot> 
-		 
-		 <c:if test="${not empty cartData.entries}">
-			<cms:pageSlot position="CenterRightContentSlot" var="feature" element="div" class="right-block">
-				<cms:component component="${feature}"/>
-			</cms:pageSlot>
-			<%-- <cms:pageSlot position="BottomContentSlot" var="feature" element="div" class="col-xs-9" >
-				<cms:component component="${feature}"/>
-			</cms:pageSlot> --%>
-		</c:if>
-				
-				
-		 <c:if test="${empty cartData.entries}">
-		 <div class="emptyCart-mobile">
-			<cms:pageSlot position="EmptyCartMiddleContent" var="feature" element="div"  >
-				<cms:component component="${feature}"/>
-			</cms:pageSlot>
-			<div class="emptyCart">		
-					<h2>Your Shopping cart is empty</h2>
-					<p>Add products to it.</p>
-					<button class="btn btn-primary btn-lg">Shop Men</button>
-					<button class="btn btn-primary btn-lg">Shop Women</button>
+					<c:if test="${not empty cartData.entries}">
+						<div class="col-xs-12 col-sm-5 col-md-4 offset-md-1">
+							<div class="orderSummaryBlock mt-30">
+								<cms:pageSlot position="CenterRightContentSlot" var="feature"
+											  element="div" class="right-block orderSummary mb-20">
+									<cms:component component="${feature}" />
+								</cms:pageSlot>
+									<%-- <cms:pageSlot position="BottomContentSlot" var="feature" element="div" class="col-xs-9" >
+                                        <cms:component component="${feature}"/>
+                                    </cms:pageSlot> --%>
+								<h4 class="grayTxt text-center">Summary</h4>
+								<multi-checkout:orderTotals isCart="true" cartData="${cartData}"
+															showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
+							</div>
+							<div class="checkoutBtn text-center">
+								<a href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
+								<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
+							</div>
+						</div>
+					</c:if>
+
+
 				</div>
-				<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
 			</div>
-		</c:if>
-		</div>
-<c:if test="${not empty cartData.entries}">	
-		<!-- For Infinite Analytics Start -->
-	<div class="trending"  id="ia_products"></div>
-<!-- For Infinite Analytics End -->
-</c:if>
-	</div>
+		</section>
+	</section>
 
 </template:page>
