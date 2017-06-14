@@ -7124,7 +7124,7 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
-	var regex = new RegExp(/^[a-zA-Z0-9]+([\s]?[a-zA-Z0-9]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
         return false;
