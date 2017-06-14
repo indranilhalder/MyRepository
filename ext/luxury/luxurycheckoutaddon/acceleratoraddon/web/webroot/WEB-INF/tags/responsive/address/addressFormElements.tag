@@ -335,7 +335,7 @@ display: none;}
 			       
 			     <formElement:formInputBox idKey="address.mobile"
 			path="MobileNo"  placeholder="Contact Number"
-			mandatory="true" maxLength="6" inputCSS="form-control"/>
+			mandatory="true" maxLength="10" inputCSS="form-control"/>
 				
 			
 			</div>	
