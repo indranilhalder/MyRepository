@@ -25,7 +25,7 @@
 				<div class="">
 				<ul>
 					<c:forEach var="app" items="${footerAppImageList}" >
-						<li><a href="javascript:;"><img src="${app.media.url}" alt="${app.title}"></a></li>
+						<li><a href="${app.urlLink}"><img src="${app.media.url}" alt="${app.title}"></a></li>
 					</c:forEach>
 				</ul>
 				<div class="get-in-touch">

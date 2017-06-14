@@ -17,6 +17,7 @@ $product=product(code, $productCV)
 $picture=media(code, $contentCV)
 $luxuryStoreAddonPrefix=addon:/luxurystoreaddon
 
+
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
 ;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true    
 ;;LuxuryProductDetailsPageTemplate;Luxury Product Details Page Template;$luxuryStoreAddonPrefix/pages/product/luxuryProductLayoutPage;ProductPage            
@@ -170,8 +171,8 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter             
 ;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube             
 ;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://instagram.com";instagram           
-;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"https://www.play.google.com";googleplay          
-;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"http://www.apple.com";appstore            
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay          
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore            
                                       
                                     
 
