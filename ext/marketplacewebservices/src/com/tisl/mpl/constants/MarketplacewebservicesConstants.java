@@ -572,6 +572,7 @@ public class MarketplacewebservicesConstants
 	public static final String NO_CONSIGNMENT_FOUND = "No consignment found";
 	public static final String ORDER_ALREAY_CANCELLED = "Order is not eligible for cancellation in commerce system".intern();
 	public static final String RETURN_ALREADY_INITIATED = "Order is not eligible for return in commerce system".intern();
+	public static final String RETURN_ALREADY_INITIATED_CSCP = "Return already initiated in commerce system".intern();
 	public static final String ORDERTAG_TYPE_POSTPAID = "POSTPAIDRRF".intern();
 	public static final String CANCEL_ELIGIBLE_STATUS = "valid.order.statuses.CANCELLATION".intern();
 	public static final String DELIVERED_STATUS = "DELIVERED".intern();

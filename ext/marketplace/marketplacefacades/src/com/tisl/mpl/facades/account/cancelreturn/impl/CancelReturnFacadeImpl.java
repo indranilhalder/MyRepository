@@ -4952,7 +4952,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	public boolean oneTouchPincodeCheck(final OrderData subOrderDetails, final String returnPincode, final String txnId)
 			throws Exception
 	{
-		boolean pincodeCheck = false;
+		boolean pincodeCheck = true;
 		try
 		{
 			final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, returnPincode,
@@ -4962,9 +4962,10 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				for (final ReturnLogisticsResponseData response : returnLogisticsRespList)
 				{
 					if (StringUtils.isNotEmpty(response.getIsReturnLogisticsAvailable())
-							&& response.getIsReturnLogisticsAvailable().equalsIgnoreCase(MarketplacecommerceservicesConstants.NO))
+							&& response.getIsReturnLogisticsAvailable().equalsIgnoreCase("N"))
 					{
-						pincodeCheck = true;
+						pincodeCheck = false;
+						break;
 					}
 				}
 			}

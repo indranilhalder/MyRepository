@@ -1967,21 +1967,20 @@ public class MiscsController extends BaseController
 						//For Return
 						else if (oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
 						{
+							//Pincode serviceablity check for RSP tickets
+							if (oneTouchCrmObj.getTicketSubType().equalsIgnoreCase(MarketplacewebservicesConstants.TICKET_TYPE_RSP))
+							{
+								serviceabilty = cancelReturnFacade.oneTouchPincodeCheck(orderData, oneTouchCrmObj.getPincode(),
+										oneTouchCrmObj.getTransactionId());
+								LOG.debug("========Pincode serviceablity check result is=========" + serviceabilty);
+							}
 							//-----------IF CONSIGNMENT IS ALREADY RETURNED--------
 							if (!getMplOrderFacade().checkCancelStatus(consignmentStatus,
 									MarketplacewebservicesConstants.RETURN_ORDER_STATUS)
 									&& (consignmentStatus.equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERED_STATUS.toString()) || consignmentStatus
 											.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString())))
 							{
-								//Pincode serviceablity check for RSP tickets
-								if (oneTouchCrmObj.getTicketSubType().equalsIgnoreCase(MarketplacewebservicesConstants.TICKET_TYPE_RSP))
-								{
-									serviceabilty = cancelReturnFacade.oneTouchPincodeCheck(orderData, oneTouchCrmObj.getPincode(),
-											oneTouchCrmObj.getTransactionId());
-									LOG.debug("========Pincode serviceablity check result is=========" + serviceabilty);
-								}
 								//******INITITATING RETURN********
-
 								if (serviceabilty)
 								{
 									LOG.debug("========Initiating Return of consignment=========");
@@ -2030,14 +2029,28 @@ public class MiscsController extends BaseController
 							//---------IF CONSIGNMENT IS ALREADY RETURNED--------
 							else
 							{
+
 								for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 								{
 									output = new OneTouchCancelReturnDTO();
-									output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
-									output.setTransactionId(abstractOrderEntryModel.getTransactionID());
-									output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
-									output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED);
-									outputList.add(output);
+									///new addition to handle CS cockpit issues
+									if (consignmentStatus.equalsIgnoreCase("RETURN_INITIATED") && serviceabilty)
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+										output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP);
+										outputList.add(output);
+									}
+									else
+									{
+										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
+										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+										output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED);
+										outputList.add(output);
+									}
 
 								}
 							}
