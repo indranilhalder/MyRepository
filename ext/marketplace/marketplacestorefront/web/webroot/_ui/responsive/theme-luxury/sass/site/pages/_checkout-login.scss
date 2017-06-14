@@ -301,12 +301,19 @@ $mildGrayTxt:	#7f7f7f;
         color: #fff;
     }
     
-    .tabs>li#sign_in_content .social-connect {
-        position: absolute;
-        bottom: -130px;
-        left: -8%;
-        right: 0;
-    }
+    .tabs>li#sign_in_content, .tabs>li#sign_up_content{
+        .social-connect{            
+            
+            li{
+                list-style: none;
+            }
+        }
+        
+         .button_fwd_wrapper, .form-actions{
+            margin: 20px 0px;
+        }
+    }  
+    
     .tabs>li#sign_in_content .social-connect {
         padding-top: 28px;
     }
