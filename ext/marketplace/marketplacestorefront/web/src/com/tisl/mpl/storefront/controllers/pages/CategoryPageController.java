@@ -22,6 +22,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractCategoryPageController;
 import de.hybris.platform.acceleratorstorefrontcommons.util.MetaSanitizerUtil;
 import de.hybris.platform.acceleratorstorefrontcommons.util.XSSFilterUtil;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -41,6 +42,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.session.Session;
 import de.hybris.platform.servicelayer.session.SessionService;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -76,6 +78,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -118,6 +121,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//Added for TISLUX-91 s
 	@Autowired
 	private ConfigurationService configurationService;
+
+	@Resource(name = "baseSiteService")
+	private BaseSiteService baseSiteService;
+
 
 	//Below Lines Commented as Sonar Fix
 	//Start
@@ -287,7 +294,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				if (CollectionUtils.isNotEmpty(normalProductDatas))
 				{
-					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA, searchPageData.getDepartmentHierarchyData());
+					model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
+							searchPageData.getDepartmentHierarchyData());
 					model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
 					model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery().getValue());
 				}
@@ -312,8 +320,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//TISPRD-5986  MSH category 404 error handling
 		catch (final UnknownIdentifierException ex)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
-					MarketplacecommerceservicesConstants.E0023));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0023));
 			//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
 			try
 			{
@@ -328,8 +336,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 		catch (final Exception exception)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(
+					new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
 			try
 			{
 				return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -371,8 +379,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
 			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
-			CMSItemNotFoundException
+			final HttpServletRequest request, final HttpServletResponse response)
+					throws UnsupportedEncodingException, CMSItemNotFoundException
 	{
 		//UF-15
 		pageSize = PAGE_SIZE;
@@ -488,16 +496,16 @@ public class CategoryPageController extends AbstractCategoryPageController
 						model.addAttribute(ModelAttributetConstants.DEPARTMENT_HIERARCHY_DATA,
 								searchPageData.getDepartmentHierarchyData());
 						model.addAttribute(ModelAttributetConstants.DEPARTMENTS, searchPageData.getDepartments());
-						model.addAttribute(ModelAttributetConstants.CURRENT_QUERY, searchPageData.getCurrentQuery().getQuery()
-								.getValue());
+						model.addAttribute(ModelAttributetConstants.CURRENT_QUERY,
+								searchPageData.getCurrentQuery().getQuery().getValue());
 					}
 
 					final String categoryName = category.getName();
 					//TPR-243
 					//setUpMetaDataForContentPage(model, categoryLandingPage);
 
-					model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, categoryName.replaceAll(SPECIAL_CHARACTERS, "")
-							.replaceAll(" ", "_").toLowerCase());
+					model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+							categoryName.replaceAll(SPECIAL_CHARACTERS, "").replaceAll(" ", "_").toLowerCase());
 					model.addAttribute(WebConstants.BREADCRUMBS_KEY,
 							getSearchBreadcrumbBuilder().getBreadcrumbs(categoryCode, categoryName, false));
 					populateModel(model, searchPageData, ShowMode.Page);
@@ -511,8 +519,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 			{
 				LOG.error("************** category method exception " + exp);
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exp,
-						MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
 
 				try
 				{
@@ -539,8 +547,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 				}
 				catch (final Exception exception)
 				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
-							MarketplacecommerceservicesConstants.E0000));
+					ExceptionUtil.etailNonBusinessExceptionHandler(
+							new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
 					try
 					{
 						return frontEndErrorHelper.callNonBusinessError(model, exp.getMessage());
@@ -555,8 +563,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			//TISPRD-5986  MSH category 404 error handling
 			catch (final UnknownIdentifierException ex)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(ex,
-						MarketplacecommerceservicesConstants.E0023));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0023));
 				//LOG.error(EXCEPTION_OCCURED + ex + "  Category code: " + categoryCode + " not found!");
 				try
 				{
@@ -569,8 +577,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			catch (final Exception exception)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception,
-						MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(
+						new EtailNonBusinessExceptions(exception, MarketplacecommerceservicesConstants.E0000));
 				try
 				{
 					return frontEndErrorHelper.callNonBusinessError(model, exception.getMessage());
@@ -591,8 +599,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private boolean redirectIfLuxuryCategory(final String categoryCode, final HttpServletResponse response)
 	{
 		boolean redirect = false;
-		// YTODO Auto-generated method stub
-		if (categoryCode.startsWith(LSH))
+		if (categoryCode.startsWith(LSH) && !isLuxurySite())
 		{
 			redirect = true;
 			LOG.debug("**********The category is a luxury category.Hence redirecting to luxury website***********" + categoryCode);
@@ -603,6 +610,17 @@ public class CategoryPageController extends AbstractCategoryPageController
 			response.setHeader("Location", luxuryCategoryUrl);
 		}
 		return redirect;
+	}
+
+	private boolean isLuxurySite()
+	{
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
+				&& MarketplaceFacadesConstants.LuxuryPrefix.equals(currentBaseSite.getUid()))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -706,7 +724,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @throws UnsupportedEncodingException
 	 */
 	@ResponseBody
-	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN + "/results", method = RequestMethod.GET)
+	@RequestMapping(value = CATEGORY_URL_OLD_PATTERN + CATEGORY_CODE_PATH_VARIABLE_PATTERN
+			+ "/results", method = RequestMethod.GET)
 	public SearchResultsData<ProductData> getResults(@PathVariable(CATERGORYCODE) String categoryCode,
 			@RequestParam(value = "q", required = false) final String searchQuery,
 			@RequestParam(value = PAGE, defaultValue = "0") final int pgNum,
@@ -862,8 +881,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 
 	private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> updatePageData(
-			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData,
-			final String whichSearch, final String searchQuery)
+			final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData, final String whichSearch,
+			final String searchQuery)
 	{
 		// YTODO Auto-generated method stub
 		if (null != whichSearch)
@@ -919,7 +938,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 	protected String performSearchAndGetResultsPage(final String categoryCode, final String searchQuery, final int pgNumbers,
 			final ShowMode showMode, final String sortCode, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final String pageFacets, final CategoryModel category)
-			throws UnsupportedEncodingException
+					throws UnsupportedEncodingException
 	{
 		//final CategoryModel category = getCommerceCategoryService().getCategoryForCode(categoryCode); // commented as its sent as method parameter
 
@@ -1133,8 +1152,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 		private ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData;
 		private final String pageFacets;
 
-		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page,
-				final ShowMode showMode, final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
+		public CategorySearchEvaluator(final String categoryCode, final String searchQuery, final int page, final ShowMode showMode,
+				final String sortCode, final CategoryPageModel categoryPage, final String pageFacets)
 		{
 			this.categoryCode = categoryCode;
 			this.searchQueryData.setValue(searchQuery);

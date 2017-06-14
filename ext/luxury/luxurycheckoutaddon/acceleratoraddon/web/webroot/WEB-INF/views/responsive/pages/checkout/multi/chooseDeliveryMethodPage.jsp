@@ -90,7 +90,7 @@ display: none;
                <c:set var="paymentPage" value="${paymentPage}" />
                
 					<div class="delivery-address progress-barcheck  ${progressBarClass}  ${paymentPage}">
-					   <div class="step-1 active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone">dddddddddd</span>
+					   <div class="step-1 active"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone">Showing delivery options for ${defaultPincode}</span>
 					   </div>
 					</div>
 					<div class="deliverymethod clearfix">
@@ -147,7 +147,7 @@ display: none;
 
 <div class="deliver-method progress-barcheck ${progressBarClass}  ${paymentPage}">
  <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
-				   <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+				   <div class="step-2"><a href="/checkout/multi/delivery-method/select" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
 				</div>
 				<div class="deliveryaddress ${progressBarClass}">
 
@@ -242,9 +242,15 @@ display: none;
 										</c:choose>	
 																								
 								        <div class="address-list ${showItem}" id="${singleAddress}">
+								          <span class="edit">
+										  		<a	href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
+																								class="edit_address" id="link_${deliveryAddress.id}"><i class="fa fa-pencil"></i></a>
+										  </span>
+                                          <div class="address-details">
 								        	<div class="addresslist-left le-radio">
 								        	<c:choose>
 												<c:when test="${deliveryAddress.defaultAddress}">
+									       	
 									          <input type="radio" class="radio1" name="selectedAddressCode"
 																											value="${deliveryAddress.id}"
 																											id="radio_${deliveryAddress.id}" checked="checked" />
@@ -355,10 +361,10 @@ display: none;
 										  
 								 	<c:choose>
 								 	<c:when test="${deliveryAddress.defaultAddress}">
-								 		<span class="edit">
+<%-- 								 		<span class="edit">
 										  <a	href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
 																								class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
-										  </span>
+										  </span> --%>
 								 		<%-- <span class="default default-selected">
 								 	  <input type="radio" value="Make this my default address"
 								 																class="regular-radio" name="default"
@@ -383,11 +389,11 @@ display: none;
 										    <c:set var="adressid" value="${deliveryAddress.id}" />
 										  
 										  <div class="editnewAddresPage" id="${adressid}"></div>
-								           </div>
+								           </div></div>
 								           </div>
 								           </c:forEach>
 										</div> 
-								 
+								 <div class="btn-section"><button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" >Continue</button></div>
 	  <%-- <div class="formaddress" style="display: none;">
 		<div class="heading-form">
 														<h3>Add New Address</h3>
@@ -448,7 +454,7 @@ display: none;
 							  <div class="addnewAddresPage"></div>
 						     <div class="add-address" style="display: block;">
 						        <p id="address-form">
-																				<span class="addsign pincode-button">
+																				<span class="addsign pincode-button"> <i class="fa fa-plus" aria-hidden="true"></i>
 						        
 						        </span>
 						        <a class="pincode-button"> 
@@ -625,8 +631,7 @@ display: none;
 		  </span>
 		  </p>
 		  <span class="edit">
-		  <a
-																href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
+		  <a href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
 																class="edit_address" id="link_${deliveryAddress.id}"></a>
 		  </span>
 		  

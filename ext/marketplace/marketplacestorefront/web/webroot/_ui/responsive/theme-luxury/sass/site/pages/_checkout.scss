@@ -485,9 +485,11 @@
     border-radius: 0 0 5px 5px;
     border-bottom:1px solid #ccc; 
 }
+.checkout-paymentmethod.nav{
+    padding: 0px;
+}
 .checkout-paymentmethod{
-    li{
-     padding-left: 30px;   
+    li{     
         position: relative;
         border-top: 1px solid #ccc;
             padding-top: 50px;
@@ -495,9 +497,9 @@
         list-style: none;
         
         span{
-            padding-top: 16px;
-                top: 0px;
-                position: absolute;
+            top: 20px;
+            position: absolute;
+            padding-left: 30px;
         }
     }
     
@@ -505,7 +507,7 @@
          border-top:0px;
     }
     
-    li:before{
+    li span:before{
         
      content: "";
 	width: 20px;
@@ -520,7 +522,7 @@
 	margin: auto;
     }
     
-    li.active:before{
+    li.active span:before{
         
        color: #fff;
         background: #b99d6b url('../images/tick.png') no-repeat;

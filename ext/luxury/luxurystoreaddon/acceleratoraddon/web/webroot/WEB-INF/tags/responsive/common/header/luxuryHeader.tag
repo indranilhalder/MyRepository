@@ -83,7 +83,7 @@
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 					<li class="header-account-link">
-						<a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="/luxurylogin/signin">Sign In</a>
+						<a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="javascript:;" data-href="/luxurylogin/signin">Sign In</a>
 						<div class="header-account toggle-skip text-center" id="header-account">
 							<div class="header-account-inner clearfix" id="login-container">
 								<div class="header-account-section header-forget-pass"></div>

@@ -220,97 +220,16 @@
 												<input type="hidden" id="CreditCard" value="${map.value}" />
 	
 												<li class="active">
-
-
 													<span id="viewPaymentCredit" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-		    								<c:when test="${map.key eq 'Debit Card'}">
-		    									<input type="hidden" id="DebitCard" value="${map.value}" />
-		    								
-		    									<li>
-		    										<span id="viewPaymentDebit" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
-													</span>
-												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'Netbanking'}">
-			    								<input type="hidden" id="Netbanking" value="${map.value}" />
-			    							
-			    								<li>
-			      	 								<span id="viewPaymentNetbanking" >
-			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
-			      	 								</span>
-			      	 							</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'EMI'}">
-											<li>
-				       								<span id="viewPaymentEMI" >
-														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
-													</span>
-												</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-									
-									<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'COD'}">
-			    								<input type="hidden" id="COD" value="${map.value}" />
-												<li>
-				       								<span id="viewPaymentCOD" >
-				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
-				       								</span>
-			       								</li>
-												
-													</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					</ul>
-					<input type="hidden" id="paymentMode" name="paymentMode"/>
-					<ul class="tabs">
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-											<c:when test="${map.key eq 'Credit Card'}">
-												<input type="hidden" id="CreditCard" value="${map.value}" />
-	
-												<li class="paymentModeMobile">
-
-
+												<%-- <li class="paymentModeMobile">
 													<span id="viewPaymentCreditMobile" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
-												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					<!-- div for Cards -->
-							<li id="card">
+												</li> --%>
+													<li id="card">
 							<ul class="product-block blocks">
 							<h3>Enter your card details</h3>
 							<!-- SAVED CREDIT CARD -->
@@ -628,25 +547,17 @@
 						<p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>					
-					</li>				
-
-				<!-- Card ends -->
-<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-		    								<c:when test="${map.key eq 'Debit Card'}">
+												</li>				
+												</c:when>
+											<c:when test="${map.key eq 'Debit Card'}">
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
-		    									<li class="paymentModeMobile">
-		    										<span id="viewPaymentDebitMobile" >
+		    									<li>
+		    										<span id="viewPaymentDebit" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
-												</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-				<li id="cardDebit">
+												<li id="cardDebit">
 							<ul class="product-block blocks">
 							<h3>Enter your card details</h3>
 								<c:if test="${not empty debitCards}">
@@ -878,56 +789,43 @@
 						<p class="redirect">You will be redirected to secure payment gateway.</p>
 									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>				
-					</li>	
-					<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'Netbanking'}">
+										</li>	
+												</c:when>	
+												
+											<c:when test="${map.key eq 'Netbanking'}">
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
-			    								<li class="paymentModeMobile">
-			      	 								<span id="viewPaymentNetbankingMobile" >
+			    								<li>
+			      	 								<span id="viewPaymentNetbanking" >
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
+			      	 							<li id="netbanking">					
+												<ul class="product-block net-bank netbankingPanel blocks" ></ul>
+												
+													<%-- <p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
+													<!-- TISPT-235 -->
+													<div class="nbAjaxError error-message">
+														<spring:theme code="checkout.multi.paymentMethod.netbanking.AjaxError"/>
+													</div>
+													<!-- Terms & Conditions Link -->
+													<div class="pay top-padding nbButton mt-20 mb-20">
+														<button type="button" class="make_payment payment-button btn-lg btn-primary" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+														<div class="terms">
+														<p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p>
+														<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
+														</div>
+														
+													</div> 
+												</li>
 											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-					<li id="netbanking">					
-								<ul class="product-block net-bank netbankingPanel blocks" ></ul>
-								
-									<%-- <p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
-									<!-- TISPT-235 -->
-									<div class="nbAjaxError error-message">
-										<spring:theme code="checkout.multi.paymentMethod.netbanking.AjaxError"/>
-									</div>
-									<!-- Terms & Conditions Link -->
-									<div class="pay top-padding nbButton mt-20 mb-20">
-										<button type="button" class="make_payment payment-button btn-lg btn-primary" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-										<div class="terms">
-										<p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p>
-										<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
-										</div>
-										
-									</div> 
-								</li>
-								
-							<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'EMI'}">
-											<li class="paymentModeMobile">
-				       								<span id="viewPaymentEMIMobile" >
+											<c:when test="${map.key eq 'EMI'}">
+											<li>
+				       								<span id="viewPaymentEMI" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
-											</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-
-						<li id="emi">
+												<li id="emi">
 										<input type="hidden" id="EMI" value="${map.value}" />	
 										<ul class="product-block emi blocks">
 										<li class="item">
@@ -1146,43 +1044,15 @@
 			            			</li>
 									</ul>
 								</li> <!-- End of div id EMI -->
-								
-						<c:forEach var="map" items="${paymentModes}">
-									<c:if test="${map.value eq true}">
-										<c:choose>
-			    							<c:when test="${map.key eq 'COD'}">
+											</c:when>
+											<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
-												<li class="paymentModeMobile">
-				       								<span id="viewPaymentCODMobile" >
+												<li>
+				       								<span id="viewPaymentCOD" >
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
-												
-													</c:when>
-											</c:choose>
-										</c:if>
-									</c:forEach>
-
-						<ycommerce:testId code="paymentDetailsForm">
-								
-							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
-								<form:hidden path="paymentModeValue"/>
-								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
-								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
-								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
-							 	 
-								<!--TISQAUAT-411 Fix Removed  guid -->
-								<form:hidden path="guid" id="guid" value="${guid}"/>
-								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
-								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
-								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
-									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
-								</c:forEach>
-								<c:forEach items="${sopPaymentDetailsForm.subscriptionSignatureParams}" var="entry" varStatus="status">
-									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
-								</c:forEach>
-								
-				<!-- div for COD -->
+												<!-- div for COD -->
 								<li id="COD">
 
 								<ul class="product-block net-bank blocks">
@@ -1287,7 +1157,118 @@
 														
 
 
-				<!-- End of COD -->					
+				<!-- End of COD -->	
+											</c:when>
+											</c:choose>
+										</c:if>
+					</c:forEach>
+					
+					</ul>
+					<input type="hidden" id="paymentMode" name="paymentMode"/>
+					<ul class="tabs">
+					<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+											<c:when test="${map.key eq 'Credit Card'}">
+												<input type="hidden" id="CreditCard" value="${map.value}" />
+													<li class="paymentModeMobile">
+													<span id="viewPaymentCreditMobile" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+					<!-- div for Cards -->
+						
+
+				<!-- Card ends -->
+						<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+		    								<c:when test="${map.key eq 'Debit Card'}">
+		    									<input type="hidden" id="DebitCard" value="${map.value}" />
+		    								
+		    									<li class="paymentModeMobile">
+		    										<span id="viewPaymentDebitMobile" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
+													</span>
+												</li>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+				
+					<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'Netbanking'}">
+			    								<input type="hidden" id="Netbanking" value="${map.value}" />
+			    							
+			    								<li class="paymentModeMobile">
+			      	 								<span id="viewPaymentNetbankingMobile" >
+			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
+			      	 								</span>
+			      	 							</li>
+											</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+					
+								
+							<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'EMI'}">
+											<li class="paymentModeMobile">
+				       								<span id="viewPaymentEMIMobile" >
+														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
+													</span>
+												</li>
+											</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+
+						
+								
+						<c:forEach var="map" items="${paymentModes}">
+									<c:if test="${map.value eq true}">
+										<c:choose>
+			    							<c:when test="${map.key eq 'COD'}">
+			    								<input type="hidden" id="COD" value="${map.value}" />
+												<li class="paymentModeMobile">
+				       								<span id="viewPaymentCODMobile" >
+				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
+				       								</span>
+			       								</li>
+												
+													</c:when>
+											</c:choose>
+										</c:if>
+									</c:forEach>
+
+						<ycommerce:testId code="paymentDetailsForm">
+								
+							<form:form id="silentOrderPostForm" name="silentOrderPostForm" class="create_update_payment_form" commandName="paymentForm" action="${newPaymentFormMplUrl}" autocomplete="off" method="POST">
+								<form:hidden path="paymentModeValue"/>
+								<input type="hidden" name="orderPage_receiptResponseURL" value="${silentOrderPageData.parameters['orderPage_receiptResponseURL']}"/>
+								<input type="hidden" name="orderPage_declineResponseURL" value="${silentOrderPageData.parameters['orderPage_declineResponseURL']}"/>
+								<input type="hidden" name="orderPage_cancelResponseURL" value="${silentOrderPageData.parameters['orderPage_cancelResponseURL']}"/>
+							 	 
+								<!--TISQAUAT-411 Fix Removed  guid -->
+								<form:hidden path="guid" id="guid" value="${guid}"/>
+								<input type="hidden" id="promoAvailable" value="${promoAvailable}"/>
+								<input type="hidden" id="bankAvailable" value="${bankAvailable}"/>
+								<c:forEach items="${sopPaymentDetailsForm.signatureParams}" var="entry" varStatus="status">
+									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
+								</c:forEach>
+								<c:forEach items="${sopPaymentDetailsForm.subscriptionSignatureParams}" var="entry" varStatus="status">
+									<input type="hidden" id="${entry.key}" name="${entry.key}" value="${entry.value}"/>
+								</c:forEach>
+								
+								
 										
 							
 							</form:form>
@@ -1300,7 +1281,13 @@
 		</multiCheckout:checkoutSteps>	
 		</div></div>
 		<div class="col-md-4">	
-		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
+		 <%-- <multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/> --%>
+		
+		<div class="order-summary-header"><h2>Summary</h2></div>
+		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="true" showTax="true" isCart="true" orderData="${orderData}"/>
+		<multi-checkout:coupons isCart="true"/>
+
+	
 	</div>
 	</div>
 		
