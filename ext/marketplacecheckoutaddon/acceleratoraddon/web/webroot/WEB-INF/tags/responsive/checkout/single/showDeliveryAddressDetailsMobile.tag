@@ -60,7 +60,7 @@
 											<c:when test="${deliveryAddress.defaultAddress}">
 												<input type="radio" class="radio1" name="selectedAddressCode"
 													value="${deliveryAddress.id}"
-													id="radio_mobile_${deliveryAddress.id}" checked="checked" />
+													id="radio_mobile_${deliveryAddress.id}" checked="checked"  onclick="event.stopPropagation();"/>
 												<label for="radio_mobile_${deliveryAddress.id}"></label>
 												<span id="defaultAddressPincode" style="display:none;">${deliveryAddress.postalCode}</span>
 												<span id="defaultAddressId" style="display:none;">${deliveryAddress.id}</span>
@@ -69,7 +69,7 @@
 											<c:otherwise>
 												<input type="radio" class="radio1" name="selectedAddressCode"
 													value="${deliveryAddress.id}"
-													id="radio_mobile_${deliveryAddress.id}" />
+													id="radio_mobile_${deliveryAddress.id}"  onclick="event.stopPropagation();"/>
 												<label for="radio_mobile_${deliveryAddress.id}"></label>
 											</c:otherwise>
 										</c:choose>	

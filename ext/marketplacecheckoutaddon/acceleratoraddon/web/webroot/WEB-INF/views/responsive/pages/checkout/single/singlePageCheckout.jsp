@@ -70,6 +70,7 @@
 	        <div class="checkout-accordion-body">
 	            <div id="makePaymentDiv">
 	                <c:if test="${fn:contains(prePopulateTab, 'payment')}" >
+	                	<c:set var="is_responsive" value="false"></c:set>
 	                	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 
 	                </c:if>
 	            </div>
@@ -106,7 +107,8 @@
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="makePaymentDivMobile">
-			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
+			<c:set var="is_responsive" value="true"></c:set>
+			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%>
 		</div>
 	</div>
 </div>
