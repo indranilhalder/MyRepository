@@ -354,6 +354,47 @@
 			}
 		}
 	}
+	.right-account.rewards{
+		.coupon-listing{
+			h2{
+				padding: 15px;
+    			border-bottom: 1px solid #ddd;
+			}
+			>p{
+				padding: 15px;
+			}
+		}
+		.coupon-container{
+			padding: 0px;
+		}
+		.customer-service{
+			h2{
+				padding: 15px;
+    			border-bottom: 1px solid #ddd;
+			}
+			ul{
+				list-style-type:none;
+				padding:0px;
+				overflow:hidden;
+				width:100%;
+				margin:0px;
+				li.step{
+					width:25%;
+					padding:5px;
+					float:left;
+					text-align:center;
+					height:120px;
+					border-right:1px solid #ddd;
+					li:last-child{
+						border-right:0px solid #ddd;
+					}
+					span{
+						font-size:22px;
+					}
+				}
+			}
+		}
+	}
 }
 .breadcrumbs.wrapper{
     list-style-type: none;
