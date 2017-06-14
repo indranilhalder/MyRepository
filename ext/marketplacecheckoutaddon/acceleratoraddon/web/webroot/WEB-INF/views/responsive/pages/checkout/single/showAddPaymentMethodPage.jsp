@@ -617,7 +617,7 @@
 												<li class="paymentModeMobile">
 
 
-													<span id="viewPaymentCreditMobile" onclick="viewPaymentCredit();">
+													<span id="viewPaymentCreditMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Credit Card');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
@@ -944,7 +944,7 @@
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
 		    									<li class="paymentModeMobile">
-		    										<span id="viewPaymentDebitMobile" onclick="viewPaymentDebit();">
+		    										<span id="viewPaymentDebitMobile" onclick="ACC.singlePageCheckout.onPaymentModeSelection('Debit Card');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
@@ -1191,7 +1191,7 @@
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
 			    								<li class="paymentModeMobile">
-			      	 								<span id="viewPaymentNetbankingMobile" onclick="viewPaymentNetbanking();">
+			      	 								<span id="viewPaymentNetbankingMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Netbanking');">
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
@@ -1223,7 +1223,7 @@
 										<c:choose>
 			    							<c:when test="${map.key eq 'EMI'}">
 											<li class="paymentModeMobile">
-				       								<span id="viewPaymentEMIMobile"  onclick="viewPaymentEMI();">
+				       								<span id="viewPaymentEMIMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('EMI');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
@@ -1457,7 +1457,7 @@
 			    							<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
 												<li class="paymentModeMobile">
-				       								<span id="viewPaymentCODMobile"  onclick="viewPaymentCOD();">
+				       								<span id="viewPaymentCODMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('COD');">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
@@ -1606,7 +1606,7 @@
 												<input type="hidden" id="TW" value="${map.value}" />
 	
 												<li class="paymentModeMobile">
-													<span id="viewPaymentMRupeeMobile"  onclick="viewPaymentMRupee();">
+													<span id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('MRUPEE');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 													</span>
 												</li>

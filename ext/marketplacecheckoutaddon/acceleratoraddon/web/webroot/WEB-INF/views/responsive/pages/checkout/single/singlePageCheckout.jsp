@@ -79,6 +79,7 @@
 	</div>
 </div>
 </c:if>
+<span id="deviceType">${deviceType}</span>
 <c:if test="${deviceType ne 'normal'}">
 <div id="singlePageMobile">
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">

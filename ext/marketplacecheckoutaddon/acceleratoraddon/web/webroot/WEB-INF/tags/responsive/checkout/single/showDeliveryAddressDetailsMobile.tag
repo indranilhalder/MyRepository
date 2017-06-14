@@ -55,7 +55,7 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
-									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkIsServicableResponsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
+									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
 												<input type="radio" class="radio1" name="selectedAddressCode"

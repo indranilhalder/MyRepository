@@ -1426,14 +1426,34 @@ removeExchangeFromCart : function (){
 	},
 	
 /****************MOBILE STARTS HERE************************/
+//-----------------------------COMMENTS-----------------------------//
+//	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
+//	2.isAddressSet		:	Used to track if existing address has been set as delivery address in cartModel for responsive
+//	3.isDeliveryModeSet	:	Used to track if delivery mode has been set in cartModel for responsive
+//	4.saveNewAddress		:	Used to track if new address has to be saved in cartModel for responsive
+//	5.selectedAddressId	:	Used to track the selected address id for responsive
+//	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
+//	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
+//
+/////////////////////////////////////////////////////////////////////	
 	mobileValidationSteps:{
 		isAddressSaved:false,
 		isAddressSet:false,
-		isDeliveryModeSte:false,
+		isDeliveryModeSet:false,
 		saveNewAddress:false,
 		selectedAddressId:"",
 		isInventoryReserved:false,
 		isScheduleServiceble:false
+	},
+
+	resetValidationSteps:function(){
+		ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet=false;
+		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+		ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
 	},
 	
 	getMobileAddAddress:function(){
@@ -1474,8 +1494,12 @@ removeExchangeFromCart : function (){
 		return false;	
 	},
 	
-	checkIsServicableResponsive:function(selectedPincode,addressId,isNew)
+	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
 	{
+		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		{
+			ACC.singlePageCheckout.resetValidationSteps();
+		}
 		if(addressId!="")
 		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
@@ -1565,7 +1589,7 @@ removeExchangeFromCart : function (){
 				else
 				{
 					$("#addresspostcodeError").hide();
-					ACC.singlePageCheckout.checkIsServicableResponsive(pincode,"",true);
+					ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",true);
 				}
 			}
 				
@@ -1647,49 +1671,52 @@ removeExchangeFromCart : function (){
 	
 	onPaymentModeSelection:function(paymentMode)
 	{
-		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
 		}
-		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
-		
-		var url=$("#selectDeliveryMethodFormMobile").attr("action");
-		var data=$("#selectDeliveryMethodFormMobile").serialize();
-	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
-      
-	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-			console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		});  
-           
-        xhrResponse.done(function(data, textStatus, jqXHR) {
-        	if (jqXHR.responseJSON) {
-                if(data.type!="response")
-                {
-                	//TODO handle error here 
-                	ACC.singlePageCheckout.processError("",data);
-                }
-                if(data.type=="response")
-                {
-                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved=="true"?true:false;
-                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble=="true"?true:false;
-                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-                	{
-                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
-                	}
-                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
-                	{
-                		//TODO Toast for slot delivery should be created here
-                	}
-                }
-                
-            }
-		});
-        
-        xhrResponse.always(function(){
-		});
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet)
+		{
+			var url=$("#selectDeliveryMethodFormMobile").attr("action");
+			var data=$("#selectDeliveryMethodFormMobile").serialize();
+		    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+	      
+		    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});  
+	           
+	        xhrResponse.done(function(data, textStatus, jqXHR) {
+	        	if (jqXHR.responseJSON) {
+	                if(data.type!="response")
+	                {
+	                	//TODO handle error here 
+	                	ACC.singlePageCheckout.processError("",data);
+	                }
+	                if(data.type=="response")
+	                {
+	                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved=="true"?true:false;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble=="true"?true:false;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet=data.isDeliveryModeSet=="true"?true:false;
+	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+	                	{
+	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+	                	}
+	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
+	                	{
+	                		//TODO Toast for slot delivery should be created here
+	                	}
+	                }
+	                
+	            }
+			});
+	        
+	        xhrResponse.always(function(){
+			});
+		}
 	},
 	
 	viewPaymentModeFormOnSelection:function(paymentMode)
@@ -1730,18 +1757,22 @@ $(document).ready(function(){
 			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 			if(onLoadIsResponsive!=onSizeChangeIsResponsive)
 			{
-				location.reload(true);
+				window.location.href=window.location.href+"?isResponsive=true";
 			}
 		});
+		var deviceType=$("#deviceType").html();
+		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
+		{
+			window.location.href=window.location.href+"?isResponsive=true";
+		}
 		if(ACC.singlePageCheckout.getIsResponsive())
 		{
-			
 			var defaultAddressPincode=$("#defaultAddressPincode").html();
 			var defaultAddressId=$("#defaultAddressId").html();
 			var defaultAddressPresent=$("#defaultAddressPresent").html();
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
-				ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
 			}
 			if(defaultAddressPresent=="false")
 			{
