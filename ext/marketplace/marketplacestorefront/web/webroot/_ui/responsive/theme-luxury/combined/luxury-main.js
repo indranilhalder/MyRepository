@@ -13017,26 +13017,17 @@ TATA.CommonFunctions = {
                 }
             },
             submitHandler: function(form) {
-            	const url = "/login/pw/request/confirmEmail?forgotPassword_email="+$("#forgotPassword_email").val(); 
-            	$.ajax({
-           		  	url: url,
-       				type:"GET",
-       				returnType:"text/html",
-       				dataType: "html",
-       				success: function(data) {
-                    	 if(data === "invalid_email"){
-                    		$("#forgottenPwdForm .invalided-error").html("");
-                    		if($("#forgottenPwdForm .invalided-error").length > 0){
-                    			$("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.");
-							}else{
-								$("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>");
-							}
-                    	 }
-                    	 if(data === "success"){
-                    		 $("#forgottenPwdForm .invalided-error").html("You've got an email");
-                    	 }
-                     }
-				});
+                const url = "/login/pw/request/confirmEmail?forgotPassword_email=" + $("#forgotPassword_email").val();
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    returnType: "text/html",
+                    dataType: "html",
+                    success: function(data) {
+                        "invalid_email" === data && ($("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.") : $("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>")), 
+                        "success" === data && $("#forgottenPwdForm .invalided-error").html("You've got an email");
+                    }
+                });
             }
         });
     },
