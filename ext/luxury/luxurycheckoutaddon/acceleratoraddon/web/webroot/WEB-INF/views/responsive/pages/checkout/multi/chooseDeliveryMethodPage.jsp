@@ -242,6 +242,7 @@ display: none;
 										</c:choose>	
 																								
 								        <div class="address-list ${showItem}" id="${singleAddress}">
+								        	<div class="addresslist-left le-radio">
 								        	<c:choose>
 												<c:when test="${deliveryAddress.defaultAddress}">
 									          <input type="radio" class="radio1" name="selectedAddressCode"
@@ -258,7 +259,8 @@ display: none;
 									           </c:otherwise>
 								           
 								           </c:choose>
-								           
+								           </div>
+								           <div class="addresslist-right">
 								          
 								          <p class="address"> 
 								          <c:choose>
@@ -353,34 +355,35 @@ display: none;
 										  
 								 	<c:choose>
 								 	<c:when test="${deliveryAddress.defaultAddress}">
-								 		<span class="default default-selected">
+								 		<span class="edit">
+										  <a	href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
+																								class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
+										  </span>
+								 		<%-- <span class="default default-selected">
 								 	  <input type="radio" value="Make this my default address"
 								 																class="regular-radio" name="default"
 								 																id="radio-default2_${deliveryAddress.id}"
 								 																data-address-id="${deliveryAddress.id}">				      
 								 	  <label class="radio-checked" for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
-								 	  </span>
+								 	  </span> --%>
 								 	</c:when>
 								 		</c:choose>
 								
 								
-										  <span class="default">
+										<%--   <span class="default">
 										  <input type="radio" value="Make this my default address"
 																									class="regular-radio" name="default"
 																									id="radio-default2_${deliveryAddress.id}"
 																									data-address-id="${deliveryAddress.id}">				      
 										  <label for="radio-default2_${deliveryAddress.id}">Make this my default address</label>
-										  </span>
+										  </span> --%>
 										  </p>
-										  <span class="edit">
-										  <a
-																								href="${request.contextPath}/checkout/multi/delivery-method/edit-address/${deliveryAddress.id}"
-																								class="edit_address" id="link_${deliveryAddress.id}">Edit</a>
-										  </span>
+
 										  
 										    <c:set var="adressid" value="${deliveryAddress.id}" />
 										  
 										  <div class="editnewAddresPage" id="${adressid}"></div>
+								           </div>
 								           </div>
 								           </c:forEach>
 										</div> 

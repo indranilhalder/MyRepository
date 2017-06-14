@@ -26,7 +26,7 @@ from addon page
 	<div class="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout" text="Secure Checkout"></spring:theme>
 	</div>
-	<div class="row checkout-content">
+	<div class="row checkout-content checkoutLoginSection">
 		<multi-checkout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}">
 			<jsp:body>
 			<script>
@@ -55,13 +55,25 @@ from addon page
 								</ul>
 
 		
-								<ul class="tabs">
-									<li id="sign_in_content" class="active">
+								<ul class="tabs row">
+									<li id="sign_in_content" class="active col-xs-12 col-sm-5 ">
 										<c:url value="/checkout/j_spring_security_check" var="loginAndCheckoutActionUrl" />
 										<multi-checkout:login actionNameKey="checkout.login.loginAndCheckout" action="${loginAndCheckoutActionUrl}"/>
 									</li>
-									<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
-									<li id="sign_up_content">
+									<li class="or col-xs-12 col-sm-2 text-center">			
+					<div class="row">
+						<div class="hidden-sm-down col-sm-12">
+							<span class="vr-line">&nbsp;</span>
+						</div>
+						<div class="col-sm-12 orTxt">
+							<span class="or-rounded">or</span>
+						</div>
+						<div class="hidden-sm-down col-sm-12">
+							<span class="vr-line">&nbsp;</span>
+						</div>
+					</div>
+				</li>
+									<li id="sign_up_content" class="col-xs-12 col-sm-5">
 										<c:url value="/checkout/multi/checkoutlogin/checkoutRegister" var="registerAndCheckoutActionUrl" />
 										<multi-checkout:register actionNameKey="checkout.login.registerAndCheckout" action="${registerAndCheckoutActionUrl}" />
 									</li>

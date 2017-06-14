@@ -547,6 +547,12 @@
 									
 									
 									<div class="adresstype mb-20 mt-20 text-center">
+									
+									<input type="radio" class="toggle" name="editRadioType"
+									   id="edit" Value="Save" onChange="onSelectRadio()" />
+									  <label class="toggle-btn save" for="new-address-edit"> <spring:theme code="text.addressBook.Editaddress" text="Save"/> 
+											</label> 
+											
 										<input type="radio" class="toggle" name="addressRadioType"
 											id="new-address-option-1" value="Residential"
 											onChange="onSelectRadio()" checked/>

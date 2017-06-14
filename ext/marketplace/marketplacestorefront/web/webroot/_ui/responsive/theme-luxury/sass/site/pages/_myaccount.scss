@@ -336,6 +336,10 @@
 		}
 		.content{
 			padding:15px;
+			h3{
+				font-size:18px;
+				margin-bottom:15px;
+			}
 		}
 		.faq{
 			padding:0px;
@@ -350,18 +354,84 @@
 			}
 		}
 	}
+	.right-account.rewards{
+		border:0px;
+		.coupon-listing{
+			border:1px solid #ddd;
+			border-radius:3px;
+			h2{
+				padding: 15px;
+    			border-bottom: 1px solid #ddd;
+			}
+			>p{
+				padding: 0 15px;
+			}
+		}
+		.coupon-container{
+			padding: 0px;
+			h2{
+				border:0px;
+			}
+		}
+		.customer-service{
+			border: 1px solid #ddd;
+		    border-radius: 3px;
+		    margin-top: 20px;
+			h2{
+				padding: 15px;
+    			border-bottom: 1px solid #ddd;
+    			margin:0px;
+			}
+			ul{
+				list-style-type:none;
+				padding:0px;
+				overflow:hidden;
+				width:100%;
+				margin:0px;
+				li.step{
+					width:25%;
+					padding:10px 5px;
+					float:left;
+					text-align:center;
+					height:120px;
+					border-right:1px solid #ddd;
+					li:last-child{
+						border-right:0px solid #ddd;
+					}
+					span{
+						font-size:22px;
+					}
+				}
+			}
+		}
+	}
 }
 .breadcrumbs.wrapper{
     list-style-type: none;
 	margin-top: 12px;
 	li{
 		display: inline-block;
-    	margin-right: 10px;
+    	margin-right: 25px;
+    	position:relative;
+	}
+	li::after {
+	    width: 10px;
+	    height: 10px;
+	    position: absolute;
+	    content: url(../images/icon-breadcrumb.png);
+	    right: -20px;
+   		top: 3px;
+	}
+	li:last-child::after {
+	    content: '';
 	}
 }
 
 
 @include media-breakpoint-down(sm) {
+	.breadcrumbs.wrapper{
+		display:none;
+	}
 	.account{
 		.wrapper{
 			margin-top:20px;

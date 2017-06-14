@@ -531,3 +531,29 @@
         &:last-child {      margin-right: 0;   margin-left: 65px;  }
      }
 }
+.itemsQty {
+  margin-left: 10px;
+ form { display : inline }
+ }
+ .itemsTitle a {
+  color : #2d2d2d
+ }
+ .mybag-undo-form {display : inline-block}
+ .totalPrice{
+ text-decoration: none !important; 
+ span {
+  color: #DE2844 !important;
+  font-weight: 300;
+  text-decoration: none !important;
+  font-size: 100% !important;
+ }
+ span.priceFormat { 
+  color :#2d2d2d !important;
+ }
+}
+.checkoutBtn {
+ a.proceedCheckout {
+  width : 100%;
+  color : #fff;
+ }
+}

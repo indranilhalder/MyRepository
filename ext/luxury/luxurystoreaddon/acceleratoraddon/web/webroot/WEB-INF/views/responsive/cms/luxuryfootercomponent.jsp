@@ -25,7 +25,7 @@
 				<div class="">
 				<ul>
 					<c:forEach var="app" items="${footerAppImageList}" >
-						<li><a href="javascript:;"><img src="${app.media.url}" alt="${app.title}"></a></li>
+						<li><a href="${app.urlLink}"><img src="${app.media.url}" alt="${app.title}"></a></li>
 					</c:forEach>
 				</ul>
 				<div class="get-in-touch">
@@ -55,3 +55,15 @@
 		   <h5><span>POPULAR SEARCHES</span></h5>
 	   </div>
 	</div>
+	
+	<div class="modal fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
+	<div class="overlay" data-dismiss="modal"></div>
+		<div class="modal-dialog modal-lg">
+		<div class="modal-content content" style="width:90%; max-width:90%;">
+			
+		</div>
+		<!-- /.modal-content -->
+	
+	<!-- /.modal-dialog -->
+	</div>
+</div>

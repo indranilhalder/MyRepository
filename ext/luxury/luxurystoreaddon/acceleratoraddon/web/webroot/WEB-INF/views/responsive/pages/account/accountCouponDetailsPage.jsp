@@ -1,6 +1,6 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="nav" tagdir="/WEB-INF/tags/responsive/nav"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
@@ -16,7 +16,7 @@
 <%@ taglib prefix="formElement"
 	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="user" tagdir="/WEB-INF/tags/responsive/user"%>
+<%@ taglib prefix="user" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/user"%>
 
 <spring:url value="/my-account/profile" var="profileUrl" />
 <spring:url value="/my-account/update-profile" var="updateProfileUrl" />
@@ -124,7 +124,8 @@
 		</div>
 		<div class="wrapper">
 
-			<user:accountLeftNav pageName="coupons" />
+			
+			<user:accountLeftNav pageName="coupons"/>
 			<!----- Left Navigation ENDS --------->
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account rewards">

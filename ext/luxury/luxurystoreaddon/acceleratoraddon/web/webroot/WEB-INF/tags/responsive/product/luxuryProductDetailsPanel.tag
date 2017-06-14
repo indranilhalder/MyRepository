@@ -412,44 +412,6 @@ tr.d0 td {
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
 	<div id="productContentDivId"></div>
-<c:choose>
-		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
-			<div class="trending"  id="ia_products_complements"></div>
-			<div class="trending"  id="ia_products"></div>
-		</c:when>
-		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
-			<div class="trending"  id="ia_products_bought_together"></div>
-			<!-- Change for INC_10849 -->
-			<!-- <div class="trending"  id="ia_products_similar"></div> -->
-		</c:when>
-</c:choose>
-<!-- For Infinite Analytics End -->
-
-
-<!--- START: INSERTED for MSD --->
-<br/><br/>
-<c:choose>
-<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
-<div class="view-similar-items" id="view-similar-items"></div>
-</c:when>
-<c:otherwise>
-</c:otherwise> 
-</c:choose>	
-<!--- END:MSD ---> 
-	
-<c:choose>
-<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
-<product:productDetailsClassifications product="${product}"/>
-</c:when>
-<c:otherwise>
-</c:otherwise> 
-</c:choose>	
- <!-- Change for INC_10849 -->
-<c:choose>
-		<c:when test="${product.rootCategory==electronics  || product.rootCategory==watches}">
-			<div class="trending"  id="ia_products_similar"></div>
-		</c:when>
-</c:choose>
 	
 	
 	<!-- Made For Living Section Starts -->
