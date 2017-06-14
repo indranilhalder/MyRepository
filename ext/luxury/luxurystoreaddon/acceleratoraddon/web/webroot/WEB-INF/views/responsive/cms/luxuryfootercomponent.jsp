@@ -56,12 +56,14 @@
 	   </div>
 	</div>
 	
-	<div class="modal size-guide fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
+	<div class="modal fade" id="popUpModal" style="z-index:1000000000;" tabindex="-1" role="modal" aria-labelledby="popUpModalLabel" aria-hidden="true">
 	<div class="overlay" data-dismiss="modal"></div>
+		<div class="modal-dialog modal-lg">
 		<div class="modal-content content" style="width:90%; max-width:90%;">
 			
 		</div>
 		<!-- /.modal-content -->
 	
 	<!-- /.modal-dialog -->
+	</div>
 </div>

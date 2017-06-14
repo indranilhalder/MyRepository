@@ -90,6 +90,8 @@
         <entry key="addon:/marketplacecheckoutaddon/fragments/checkout/codPanel" value="addon:/luxurycheckoutaddon/fragments/checkout/codPanel"/>
 	    <entry key="fragments/password/passwordResetRequestPopup" value="addon:/luxurystoreaddon/fragments/home/forgottenPwd"/>
 		<entry key="pages/account/accountLoginPage" value="addon:/luxurystoreaddon/fragments/home/luxRegister"/>
+		
+		<entry key="fragments/product/sizeGuidePopup" value="addon:/luxurystoreaddon/fragments/product/sizeGuidePopup"/>
 	    
 	    <!-- My Account Pages-->
 	    <entry key="pages/account/accountProfileEditPage" value="addon:/luxurystoreaddon/pages/account/accountProfileEditPage"/>
