@@ -1560,6 +1560,9 @@ removeExchangeFromCart : function (){
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
+		            	$("#choosedeliveryModeMobile").on("change","input[type=radio]",function(){
+		            		ACC.singlePageCheckout.resetValidationSteps();
+		            	});
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
 		 		});
@@ -1743,7 +1746,7 @@ removeExchangeFromCart : function (){
 		}
 		if(paymentMode=="MRUPEE")
 		{
-			viewPaymentMRupee()
+			viewPaymentMRupee();
 		}
 	}
 }
@@ -1757,14 +1760,15 @@ $(document).ready(function(){
 			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 			if(onLoadIsResponsive!=onSizeChangeIsResponsive)
 			{
-				window.location.href=window.location.href+"?isResponsive=true";
+				window.location.href=ACC.config.encodedContextPath +"/checkout/single";
 			}
 		});
 		var deviceType=$("#deviceType").html();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
-			window.location.href=window.location.href+"?isResponsive=true";
+			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
 		}
+		
 		if(ACC.singlePageCheckout.getIsResponsive())
 		{
 			var defaultAddressPincode=$("#defaultAddressPincode").html();
