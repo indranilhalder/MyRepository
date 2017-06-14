@@ -39,70 +39,76 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(data) {
-        	$("#chooseDeliveryAddress").html(data);
-        	//Carousel reformation
-        	$("#address_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
-	                'initialize.owl.carousel initialize.owl.carousel ' +
-	                'to.owl.carousel changed.owl.carousel',
-	                function(event) {
-						var items     = event.item.count;     // Number of items
-						var item      = event.item.index;     // Position of the current item
-						
-						if($(window).width() > 1263){
-							var page_no = parseInt(items/3);
-							if(items%3 > 0){
-								page_no = parseInt(items/3) + 1;
-							}
-							var current_page = parseInt(item/3) + 1;
-							if(item%3 > 0){
-								current_page = parseInt(item/3) + 2;
-							}
-							}
-							else{
-								var page_no = parseInt(items/2);
-								if(items%2 > 0){
-									page_no = parseInt(items/2) + 1;
+        	if(!ACC.singlePageCheckout.getIsResponsive())
+        	{
+	        	$("#chooseDeliveryAddress").html(data);
+	        	//Carousel reformation
+	        	$("#address_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+		                'initialize.owl.carousel initialize.owl.carousel ' +
+		                'to.owl.carousel changed.owl.carousel',
+		                function(event) {
+							var items     = event.item.count;     // Number of items
+							var item      = event.item.index;     // Position of the current item
+							
+							if($(window).width() > 1263){
+								var page_no = parseInt(items/3);
+								if(items%3 > 0){
+									page_no = parseInt(items/3) + 1;
 								}
-								var current_page = parseInt(item/2) + 1;
-								if(item%2 > 0){
-									current_page = parseInt(item/2) + 2;
+								var current_page = parseInt(item/3) + 1;
+								if(item%3 > 0){
+									current_page = parseInt(item/3) + 2;
 								}
-							}
-						$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
-	                });
-	              $("#address_carousel").owlCarousel({
-	                items:3,
-					loop: false,
-					nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
-					dots:false,
-					navText:[],
-					slideBy: 3,
-					margin: 82,
-					responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 36,
-            				slideBy: 1,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:2,
-            				slideBy: 2,
-            			},
-            			// breakpoint from 1280 up
-            			1280 : {
-            				items:3,
-            			}			
-            		},
-            		onRefresh: function () {
-            			$("#address_carousel").find('div.owl-item').height('');
-                    },
-                    onRefreshed: function () {
-                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
-                    }
-	              });
-        	
+								}
+								else{
+									var page_no = parseInt(items/2);
+									if(items%2 > 0){
+										page_no = parseInt(items/2) + 1;
+									}
+									var current_page = parseInt(item/2) + 1;
+									if(item%2 > 0){
+										current_page = parseInt(item/2) + 2;
+									}
+								}
+							$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
+		                });
+		              $("#address_carousel").owlCarousel({
+		                items:3,
+						loop: false,
+						nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
+						dots:false,
+						navText:[],
+						slideBy: 3,
+						margin: 82,
+						responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 36,
+	            				slideBy: 1,
+	            			},
+	            			// breakpoint from 768 up
+	            			768 : {
+	            				items:2,
+	            				slideBy: 2,
+	            			},
+	            			// breakpoint from 1280 up
+	            			1280 : {
+	            				items:3,
+	            			}			
+	            		},
+	            		onRefresh: function () {
+	            			$("#address_carousel").find('div.owl-item').height('');
+	                    },
+	                    onRefreshed: function () {
+	                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
+	                    }
+		              });
+        	}
+        	else
+        	{
+        		$("#chooseDeliveryAddressMobile").html(data);
+        	}
 		});
         
         xhrResponse.always(function(){
@@ -1398,16 +1404,19 @@ removeExchangeFromCart : function (){
                 }
         		else if(data.type=="response" && data.validation=="success")
     			{
-        			//$("#orderDetailsSectionId").html(data);
-        			$("#totalWithConvField").html(data.totalPrice);
-        			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);
-    	        	
-    				$("#selectedReviewOrderDivId").show();
-    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
-    	        	
-    	        	//Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
-    	        	populateAddress();
-    	        	populateAddressEmi();
+        			if(!ACC.singlePageCheckout.getIsResponsive())
+        			{
+	        			//$("#orderDetailsSectionId").html(data);
+	        			$("#totalWithConvField").html(data.totalPrice);
+	        			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);
+	    	        	
+	    				$("#selectedReviewOrderDivId").show();
+	    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
+	    	        	
+	    	        	//Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
+	    	        	populateAddress();
+	    	        	populateAddressEmi();
+        			}
     			}
         		else
     			{
@@ -1667,6 +1676,7 @@ removeExchangeFromCart : function (){
 	                {
 	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
 	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+	                	ACC.singlePageCheckout.getDeliveryAddresses();
 	                }
 	            }
 			});
@@ -1748,6 +1758,9 @@ removeExchangeFromCart : function (){
 	                	ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet=data.isDeliveryModeSet=="true"?true:false;
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 	                	{
+	                		//Validate payment in responsive
+	                		ACC.singlePageCheckout.proceedToPayment();
+	                		//Open payment mode form
 	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
@@ -1804,9 +1817,13 @@ $(document).ready(function(){
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
 			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
-			if(onLoadIsResponsive!=onSizeChangeIsResponsive)
+			if(onLoadIsResponsive!=onSizeChangeIsResponsive && !ACC.singlePageCheckout.getIsResponsive())
 			{
 				window.location.href=ACC.config.encodedContextPath +"/checkout/single";
+			}
+			else if(onLoadIsResponsive!=onSizeChangeIsResponsive && ACC.singlePageCheckout.getIsResponsive())
+			{
+				window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
 			}
 		});
 		var deviceType=$("#deviceType").html();
