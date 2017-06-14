@@ -4473,6 +4473,70 @@
 			</editor>
 		</organizer>
 	</type>
+	<type name="Exchange"  mode="append">
+		<organizer>
+			<search mode="append">
+				<condition attribute="Pincode" />
+				<condition attribute="ExchangeValue" />
+				<condition attribute="brandName" />
+				<condition attribute="productId" />
+				<condition attribute="ussid" />
+				<condition attribute="ExchangeId" />
+				<condition attribute="cartguid" />
+				<condition attribute="ExchangeRequestId" />
+				<condition attribute="OrderID" />
+				<condition attribute="SellerOrderID" />
+				<condition attribute="TransactiondId" />
+			</search>
+			<result defaultview="list">
+				<listview>
+					<itemlayout mode="replace">
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</listview>
+				<editview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</editview>
+				<treeview mode="replace">
+					<itemlayout>
+						<attribute name="ExchangeRequestId" width="200"/>
+						<attribute name="OrderID" width="200"/>
+						<attribute name="SellerOrderID"  width="200"/>
+						 <attribute name="TransactiondId" width="200"/>
+					</itemlayout>
+				</treeview>
+			</result>
+			<editor>
+				
+				<tab name="mpl.exchange.priceMatrix.tab" position="0">
+				  <section name="mpl.exchange.priceMatrix.CategorySection">
+						<listlayout>
+							<attribute name="Pincode"/>
+							<attribute name="ExchangeValue"/>
+							<attribute name="brandName"/>
+						</listlayout>
+					</section>
+					<section name="mpl.exchange.priceMatrix.PricingSection">
+						<listlayout>
+						    <attribute name="productId" />
+							<attribute name="ussid" />
+							<attribute name="ExchangeId" />
+							<attribute name="cartguid" />
+						</listlayout>
+					</section>
+				</tab>
+				
+			</editor>
+		</organizer>
+	</type>
 <!-- TPR-1083 End -->
 </configuration>
 

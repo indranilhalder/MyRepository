@@ -221,6 +221,10 @@ ACC.singlePageCheckout = {
 	                {
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
+	                else if(data.type=="confirm")
+                	{
+                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","",element);
+                	}
 	            } else {
 					ACC.singlePageCheckout.getSelectedAddress();
 					$("#choosedeliveryMode").html(data);
@@ -1132,6 +1136,43 @@ ACC.singlePageCheckout = {
 	processConfirm: function(showElementId,jsonResponse,element,addressId){
 		if(jsonResponse.type=="confirm")
 		{
+			if(showElementId=="#addressMessage")
+				{
+				document.getElementById('singlePageAddressPopup').style.display = "none";
+				document.getElementById('confirmOverlay').style.display = "block";
+				 document.getElementById('confirmBox').style.display = "block";
+				 
+				 $( "#exConfirmYes" ).click(function() {
+					 $("#contExchnage").val("disableExchange");
+					 if(!ACC.singlePageCheckout.getIsResponsive())
+					 {
+				 ACC.singlePageCheckout.postAddAddress(element);
+					 }
+				 else
+					 {
+					 ACC.singlePageCheckout.removeExchangeFromCart();
+					 }
+					 //In case of Continue Without Exchange show next thing
+					 //document.getElementById('singlePageAddressPopup').style.display = "block";
+					 document.getElementById('confirmOverlay').style.display = "none";
+					 document.getElementById('confirmBox').style.display = "none";
+					});
+				 
+				 $( "#exConfirmNo" ).click(function() {
+					 $("#contExchnage").val("");
+					$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
+						$(showElementId).show();
+						ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+					 document.getElementById('confirmOverlay').style.display = "none";
+					 document.getElementById('confirmBox').style.display = "none";
+					 document.getElementById('singlePageAddressPopup').style.display = "block";
+					 
+					});
+				}
+			
+			else
+				{
 			document.getElementById('confirmOverlay').style.display = "block";
 			 document.getElementById('confirmBox').style.display = "block";
 			 $( "#exConfirmYes" ).click(function() {
@@ -1154,7 +1195,7 @@ ACC.singlePageCheckout = {
 				$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 					$(showElementId).show();
 					ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
-            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				 
@@ -1164,6 +1205,7 @@ ACC.singlePageCheckout = {
 			
 		}
 		
+	}
 	},
 removeExchangeFromCart : function (){
 		

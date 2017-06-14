@@ -96,7 +96,7 @@ public interface ExchangeGuideService
 	 * @param childOrders
 	 * @return
 	 */
-	String getExchangeRequestID(List<OrderModel> childOrders);
+	String getExchangeRequestID(OrderModel orders);
 
 	public void removeExchangefromCart(final CartModel cart);
 

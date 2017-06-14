@@ -1320,6 +1320,25 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				}
 				//	saveAndSetDeliveryAddress(addressForm, false);
 
+
+
+
+				boolean exchangeAppliedCart = false;
+				final CartModel cart = getCartService().getSessionCart();
+
+				exchangeAppliedCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
+
+
+
+				if (exchangeAppliedCart)
+				{
+					if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
+					{
+						final String requestQueryParam = UriUtils.encodeQuery("?msg=Exchange Not Servicable&type=confirm", UTF);
+						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					}
+				}
+
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 				if (StringUtils.isEmpty(sessionPincode))
 				{
@@ -4185,7 +4204,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4242,7 +4261,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

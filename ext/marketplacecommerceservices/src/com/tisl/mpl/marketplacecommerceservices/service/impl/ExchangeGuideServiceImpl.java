@@ -97,9 +97,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @returns All L4 for which Exchange is Applicable
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -111,11 +111,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 * 
+	 *
 	 * @param String categoryCode
-	 * 
+	 *
 	 * @param ExchangeCouponValueModel pricematrix
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -222,7 +222,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -244,13 +244,15 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	 */
 
 	@Override
-	public String getExchangeRequestID(final List<OrderModel> childOrders)
+	public String getExchangeRequestID(final OrderModel order)
 	{
 		final List<ExchangeModel> exModList = new ArrayList<>();
 		final List<OrderModel> childModfList = new ArrayList();
+		final List<AbstractOrderEntryModel> parentEntryList = new ArrayList<>();
+		final List<AbstractOrderEntryModel> childOrderEntryList = new ArrayList<>();
 		final List<ExchangeTransactionModel> exTraxRemovList = new ArrayList();
 		String exReqId = "";
-		for (final OrderModel child : childOrders)
+		for (final OrderModel child : order.getChildOrders())
 		{
 			boolean changeInChild = false;
 			final List<AbstractOrderEntryModel> entryDetails = child.getEntries();
@@ -261,7 +263,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 					final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId(entry.getExchangeId());
 					for (final ExchangeTransactionModel exTrax : exTraxList)
 					{
-						final ExchangeModel exMod = new ExchangeModel();
+						final ExchangeModel exMod = modelService.create(ExchangeModel.class);
 						exReqId = getEXCHANGEREQUESTID().generate().toString();
 						exMod.setBrandName(exTrax.getBrandName());
 						exMod.setExchangeRequestId(exReqId);
@@ -276,18 +278,27 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exTraxRemovList.add(exTrax);
 						entry.setExchangeId(exReqId);
 						changeInChild = true;
-
+						childOrderEntryList.add(entry);
 					}
 				}
 			}
-			if (changeInChild)
+
+			for (final AbstractOrderEntryModel entry : child.getParentReference().getEntries())
 			{
-				childModfList.add(child);
+				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+				{
+					entry.setExchangeId(exReqId);
+				}
+				parentEntryList.add(entry);
 			}
+			childModfList.add(child);
+
 		}
 
 		modelService.saveAll(exModList);
+		modelService.saveAll(childOrderEntryList);
 		modelService.saveAll(childModfList);
+		modelService.saveAll(parentEntryList);
 		modelService.removeAll(exTraxRemovList);
 
 		return exReqId;
@@ -360,7 +371,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)
