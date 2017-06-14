@@ -423,8 +423,11 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomType: "window",
 				    cursor: "crosshair",
 				    zoomWindowFadeIn: 500,
-				    zoomWindowFadeOut: 750
-				       });
+				    zoomWindowFadeOut: 750,
+				    onZoomedImageLoaded:function(z){
+				    	$(".zoomContainer .zoomLens").show();
+				    } 
+				 });
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
