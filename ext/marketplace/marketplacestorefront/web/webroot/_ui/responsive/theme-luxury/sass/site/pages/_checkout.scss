@@ -263,7 +263,7 @@
         padding-bottom: 0px;
         border-radius: 0px;padding: 0px;
     }
-    .checkout-shipping.addNewAddress{
+    .checkout-shipping.addNewAddress, .checkout-shipping .editnewAddresPage{
         ul{
             margin: 0px;
             padding: 0px;
@@ -538,10 +538,10 @@
     border: 0px;
  }
  .addressList_wrapper .address-list .addresslist-left{
-     width: 5%;
-    display: inline-block;
-    vertical-align: top;
-        margin-top: 14px;
+         width: 5%;
+        display: inline-block;
+        vertical-align: top;
+            margin-top: 14px;
  }
   .addressList_wrapper .address-list .addresslist-right{
         width: 94%;
@@ -638,4 +638,37 @@
 
 .make_payment.button{
  float:right; 
+}
+.address-list.showItem .edit{
+     float: right;
+ }
+  
+  .address-list.showItem .address-details{ 
+    clear: both;
+  }
+  .address-list.showItem{
+  
+    padding-bottom: 15px;
+  }
+  .choose-address .acc_head h2{font-size: 18px;}
+  .product-block.addresses.new-form.account-section{
+        padding: 0px;
+  }
+.checkout-content .checkout-shipping .cancelBtnEdit {
+    padding: 8px 10px;
+    font-size: 18px;
+    line-height: 1.33333;
+    border-radius: 4px;
+    background-color: #2d2d2d;
+    color: #fff;
+    border: 0;
+}
+.checkout-content .checkout-shipping .cancelBtnEdit {
+    float: right;
+}
+.checkout-content .checkout-shipping .address-form h1{
+ font-size: 18px;
+}
+.checkout-content .checkout-shipping .heading-form h3{
+ font-size: 14px;
 }
