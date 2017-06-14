@@ -534,7 +534,7 @@ ACC.singlePageCheckout = {
         	if (jqXHR.responseJSON) {
         		if(data.type=="confirm")
                 {
-        			ACC.singlePageCheckout.processConfirm("#selectedAddressMessage",data,element,addressId);
+        			ACC.singlePageCheckout.processConfirm("#selectedAddressMessage",data,addressId,"","",element);
                 }
         		if(data.type!="confirm")
                 {
@@ -1153,6 +1153,8 @@ ACC.singlePageCheckout = {
 				 $("#contExchnage").val("");
 				$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 					$(showElementId).show();
+					ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				 
@@ -1513,6 +1515,14 @@ removeExchangeFromCart : function (){
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
+		                	
+		                }
+		                //For Confirm Box TPR-1083
+		                else if(response.type=="confirm")
+		                {
+		                	
+		                		ACC.singlePageCheckout.processConfirm("#selectedAddressMessageMobile",response,addressId,selectedPincode,isNew,"");
+	           
 		                }
 		            } else {
 		            	if(isNew)

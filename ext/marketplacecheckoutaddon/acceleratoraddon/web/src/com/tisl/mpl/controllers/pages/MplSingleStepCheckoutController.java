@@ -887,6 +887,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final String errorMsg = mplAddressValidator.validate(addressForm);
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 
+
 			if ((!StringUtils.isEmpty(errorMsg) && !errorMsg.equalsIgnoreCase(ModelAttributetConstants.SUCCESS))
 					|| bindingResult.hasErrors())
 			{
@@ -1312,6 +1313,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					model.addAttribute(ModelAttributetConstants.COUNTRY, addressForm.getCountryIso());
 				}
 				saveAndSetDeliveryAddress(addressForm, false);
+
+
 
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 				if (StringUtils.isEmpty(sessionPincode))
@@ -4137,7 +4140,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4194,7 +4197,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

@@ -8426,4 +8426,5 @@ function populateIsExchangeApplied(response,stringCaller)
 			}
 		else{
 			$("#exCartAlert").css('display','block');
+		}
 }
