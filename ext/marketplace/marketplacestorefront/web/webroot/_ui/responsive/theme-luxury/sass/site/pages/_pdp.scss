@@ -802,6 +802,82 @@
 	}
 }
 
+#popUpModal{
+	.modal-content{
+		background:none;
+		.size{
+			max-width:500px;
+			margin:0 auto;
+			background:#fff;
+			border-radius:3px;
+			ul{
+				padding:15px;
+				text-align:center;
+				li{
+				    display: inline-block;
+				    width: 44px;
+				    height: 44px;
+				    border-radius: 50%;
+				    text-align: center;
+				    border: 1px solid #e2e6ee;
+				    line-height: 44px;
+				    text-transform: uppercase;
+				    cursor: pointer;
+				    margin-left: 10px;
+				}
+			}
+			label{
+				font-size: 18px;
+			    display: block;
+			    border-bottom: 1px solid #ddd;
+			    margin-bottom: 0px;
+			    padding: 10px 20px;
+			    font-weight:normal;
+			}
+		}
+		.sizes{
+			background:#fff;
+			border-radius:3px;
+			margin-top:15px;
+			display:inline-block;
+			width:100%;
+			h3{
+				border-bottom: 1px solid #ddd; 
+				padding: 15px 20px;
+				margin:0px;
+				font-size:18px;
+			}
+			.tables{
+				float:right;
+				width:60%;
+				table{
+					width:95%;
+					float:right;
+				}
+				ul{
+					list-style-type:none;
+					padding:0px;
+				}
+				td,th{
+					text-align:center;
+					ul{
+						li{
+							margin-bottom:5px;
+							padding:5px 10px;
+							border-bottom: 1px solid #ddd;
+						}
+					}
+				}
+			}
+			.img{
+				float:left;
+				width:40%;
+			}
+		}
+	}
+}
+	
+
 @include media-breakpoint-down(sm) {
 	.pdp-view {
 		.delivery-block {
