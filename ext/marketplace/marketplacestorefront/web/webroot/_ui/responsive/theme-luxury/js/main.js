@@ -166,7 +166,7 @@ TATA.CommonFunctions = {
     },
 		
 	loadSignInForm: function(element){
-		const loginURL = element.attr("href");
+		const loginURL = element.attr("data-href");
     	$.ajax({
             url: loginURL,
             beforeSend: function(){
