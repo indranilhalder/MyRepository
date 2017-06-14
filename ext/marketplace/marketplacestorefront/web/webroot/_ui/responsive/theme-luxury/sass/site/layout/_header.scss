@@ -744,3 +744,22 @@ header{
 		}
 	}
 }
+
+
+@media (min-width : 768px) and (max-width : 1024px)  { 
+	.sticky-nav{
+		header{
+			.logo-main-nav-wrapper{
+				.main-nav{
+					margin-top:0px;
+					>ul{
+						text-align:right;
+					}
+				}
+			}
+			.header-right{
+				top:36px;
+			}
+		}
+	}
+}
