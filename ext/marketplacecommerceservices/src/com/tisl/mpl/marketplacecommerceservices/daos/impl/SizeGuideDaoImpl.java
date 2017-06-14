@@ -4,14 +4,17 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -33,9 +36,12 @@ public class SizeGuideDaoImpl implements SizeGuideDao
 	@Autowired
 	private CatalogVersionService catalogVersionService;
 
+	@Autowired
+	BaseSiteService baseSiteService;
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao#getsizeGuideByCode(java.lang.String)
 	 */
 	@Override
@@ -44,7 +50,7 @@ public class SizeGuideDaoImpl implements SizeGuideDao
 
 		try
 		{
-			final CatalogVersionModel catalogVersion = getCatalogVersion();
+			final CatalogVersionModel catalogVersion = getCatalogVersionSession();
 			final String queryString = "SELECT {sg." + SizeGuideModel.PK + "} FROM {" + SizeGuideModel._TYPECODE + " AS sg}"
 
 			+ " WHERE {sg:" + SizeGuideModel.SIZEGUIDEID + "}=?sizeGuideCode  AND {sg:" + SizeGuideModel.CATALOGVERSION
@@ -75,6 +81,22 @@ public class SizeGuideDaoImpl implements SizeGuideDao
 		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
 				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		return catalogVersionModel;
+	}
+
+	private CatalogVersionModel getCatalogVersionSession()
+	{
+		CatalogVersionModel catalogVersionModel = null;
+		final List<CatalogModel> productCatalogs = baseSiteService.getProductCatalogs(baseSiteService.getCurrentBaseSite());
+		if (CollectionUtils.isNotEmpty(productCatalogs))
+		{
+			catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
+		}
+		else
+		{
+			catalogVersionModel = catalogVersionService
+					.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
+		}
 		return catalogVersionModel;
 	}
 }

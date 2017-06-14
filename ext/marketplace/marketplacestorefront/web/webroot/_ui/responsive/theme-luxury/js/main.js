@@ -388,11 +388,11 @@ TATA.CommonFunctions = {
         });
     },
 
-    urlToProductCode : function(productURL) {
+    urlToProductCode : function(productURL){
 		var n = productURL.lastIndexOf("-");
 		var productCode=productURL.substring(n+1, productURL.length);
 	    return productCode.toUpperCase();
-	},
+    },
     
 	addToWishlist: function(productURL, element){
 		if(!headerLoggedinStatus) {
