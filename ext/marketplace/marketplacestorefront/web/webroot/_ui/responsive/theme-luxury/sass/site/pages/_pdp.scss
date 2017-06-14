@@ -805,11 +805,14 @@
 #popUpModal{
 	.modal-content{
 		background:none;
+		box-shadow:none;
+		-webkit-box-shadow:none;
+		border:0px;
 		.size{
 			max-width:500px;
 			margin:0 auto;
 			background:#fff;
-			border-radius:3px;
+			border-radius:5px;
 			ul{
 				padding:15px;
 				text-align:center;
@@ -837,7 +840,7 @@
 		}
 		.sizes{
 			background:#fff;
-			border-radius:3px;
+			border-radius:5px;
 			margin-top:15px;
 			display:inline-block;
 			width:100%;
@@ -865,6 +868,9 @@
 							margin-bottom:5px;
 							padding:5px 10px;
 							border-bottom: 1px solid #ddd;
+						}
+						li:last-child{
+							border-bottom: 0px solid #ddd;
 						}
 					}
 				}
