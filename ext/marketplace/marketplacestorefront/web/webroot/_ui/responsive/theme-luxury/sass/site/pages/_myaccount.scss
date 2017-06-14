@@ -361,7 +361,7 @@
     			border-bottom: 1px solid #ddd;
 			}
 			>p{
-				padding: 15px;
+				padding: 0 15px;
 			}
 		}
 		.coupon-container{
@@ -371,6 +371,7 @@
 			h2{
 				padding: 15px;
     			border-bottom: 1px solid #ddd;
+    			margin:0px;
 			}
 			ul{
 				list-style-type:none;
