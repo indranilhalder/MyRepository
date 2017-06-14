@@ -3418,8 +3418,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 			var staticHost = $('#staticHost').val();
 			//Below 2 lines for adding spinner
 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			//$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'); //UF-263
+			//$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 			
 			if($('#promolist').val()!='')
 			{	//If promotion exist for the existing product
@@ -3662,8 +3662,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 								
 								
 								//Removing spinner as tealium/Classattributes/giggya call can continue in backend
-								$("#no-click,.spinner").remove();
-								
+								//$("#no-click,.spinner").remove();
+								$("#no-click,.loaderDiv").remove(); //UF-263
 								
 								//Start classification attributes
 								xhrClassAttrib=getClassificationAttributes(responseProductCode);
@@ -3714,7 +3714,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 					else
 					{	
 						//Removing spinner as tealium/Classattributes/giggya call can continue in backend
-						$("#no-click,.spinner").remove();
+						//$("#no-click,.spinner").remove();
+						$("#no-click,.loaderDiv").remove(); //UF-263
 						console.log("ERROR:Server side exception thrown while changing size using ajax:"+jsonData['error']);
 						console.log("ERROR:Resorting to page load as fall back");
 						window.location.href=originalUrl;
@@ -3731,7 +3732,8 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 		}
 	});
 	//Removing spinner incase it was not removed earlier due to some exception
-	$("#no-click,.spinner").remove();
+	//$("#no-click,.spinner").remove();
+	$("#no-click,.loaderDiv").remove(); //UF-263
 }//End onSizeSelect function
     
 //Ajax call to get classification attributes
