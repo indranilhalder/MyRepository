@@ -1015,73 +1015,73 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * @param contactNumber
 	 */
 
-	private void sendSMSUnDelivered(final List<AbstractOrderEntryModel> childOrders, final String orderNumber,
-			final String mobileNumber, final String contactNumber, final String firstName, final OrderModel orderModel,
-			final String awbNumber)
-	{
-		try
-		{
-			final SendSMSRequestData smsRequestDataOrderUndelivered = new SendSMSRequestData();
-			smsRequestDataOrderUndelivered.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-			smsRequestDataOrderUndelivered.setContent(MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_UNDELIVERED
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, orderNumber)
-					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, contactNumber));
-			smsRequestDataOrderUndelivered.setRecipientPhoneNumber(mobileNumber);
-			// Checking of SMS Notification previously sent or not
-			final List<OrderUpdateSmsProcessModel> orderUpdateSmsModelList = checkSmsSent(awbNumber, ConsignmentStatus.UNDELIVERED);
-			int numOfRows = 0;
-			//int totalEntries = 0;
-
-			if (null != orderUpdateSmsModelList && !orderUpdateSmsModelList.isEmpty())
-			{
-				numOfRows = orderUpdateSmsModelList.size();
-				//final List<String> entryList = orderUpdateSmsModelList.get(0).getEntryNumber();
-				//totalEntries = entryList.size();
-			}
-			LOG.info("*******Before checking isToSendNotification for UNDELIVERED SMS********");
-			final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
-			LOG.info("*******After checking isToSendNotification for UNDELIVERED SMS********");
-			LOG.info("No of Rows:::::sendSMSUnDelivered" + numOfRows);
-			if (numOfRows == 0 && flag)
-			{
-
-				final OrderUpdateSmsProcessModel orderUpdateSmsProcessModel = (OrderUpdateSmsProcessModel) getBusinessProcessService()
-						.createProcess("orderUndeliveredSmsProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
-								"orderUndeliveredSmsProcess");
-				orderUpdateSmsProcessModel.setOrder(orderModel);
-				orderUpdateSmsProcessModel.setAwbNumber(awbNumber);
-				orderUpdateSmsProcessModel.setShipmentStatus(ConsignmentStatus.UNDELIVERED);
-				orderUpdateSmsProcessModel.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
-				orderUpdateSmsProcessModel.setMessage(MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_UNDELIVERED
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, orderNumber)
-						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, contactNumber));
-				orderUpdateSmsProcessModel.setRecipientPhoneNumber(mobileNumber);
-				final List<String> entryNumber = new ArrayList<String>();
-				for (final AbstractOrderEntryModel child : childOrders)
-				{
-					entryNumber.add(child.getEntryNumber().toString());
-				}
-				orderUpdateSmsProcessModel.setEntryNumber(entryNumber);
-
-				modelService.save(orderUpdateSmsProcessModel);
-				businessProcessService.startProcess(orderUpdateSmsProcessModel);
-				//sendSMSService.sendSMS(smsRequestDataOrderDelivered);
-			}
-
-
-
-		}
-		catch (final Exception e)
-		{
-			LOG.error("Exception during sending SMS for UNDELIVERED >> " + e.getMessage());
-		}
-
-
-	}
+	//	private void sendSMSUnDelivered(final List<AbstractOrderEntryModel> childOrders, final String orderNumber,
+	//			final String mobileNumber, final String contactNumber, final String firstName, final OrderModel orderModel,
+	//			final String awbNumber)
+	//	{
+	//		try
+	//		{
+	//			final SendSMSRequestData smsRequestDataOrderUndelivered = new SendSMSRequestData();
+	//			smsRequestDataOrderUndelivered.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+	//			smsRequestDataOrderUndelivered.setContent(MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_UNDELIVERED
+	//					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
+	//					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))
+	//					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, orderNumber)
+	//					.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, contactNumber));
+	//			smsRequestDataOrderUndelivered.setRecipientPhoneNumber(mobileNumber);
+	//			// Checking of SMS Notification previously sent or not
+	//			final List<OrderUpdateSmsProcessModel> orderUpdateSmsModelList = checkSmsSent(awbNumber, ConsignmentStatus.UNDELIVERED);
+	//			int numOfRows = 0;
+	//			//int totalEntries = 0;
+	//
+	//			if (null != orderUpdateSmsModelList && !orderUpdateSmsModelList.isEmpty())
+	//			{
+	//				numOfRows = orderUpdateSmsModelList.size();
+	//				//final List<String> entryList = orderUpdateSmsModelList.get(0).getEntryNumber();
+	//				//totalEntries = entryList.size();
+	//			}
+	//			LOG.info("*******Before checking isToSendNotification for UNDELIVERED SMS********");
+	//			final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
+	//			LOG.info("*******After checking isToSendNotification for UNDELIVERED SMS********");
+	//			LOG.info("No of Rows:::::sendSMSUnDelivered" + numOfRows);
+	//			if (numOfRows == 0 && flag)
+	//			{
+	//
+	//				final OrderUpdateSmsProcessModel orderUpdateSmsProcessModel = (OrderUpdateSmsProcessModel) getBusinessProcessService()
+	//						.createProcess("orderUndeliveredSmsProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+	//								"orderUndeliveredSmsProcess");
+	//				orderUpdateSmsProcessModel.setOrder(orderModel);
+	//				orderUpdateSmsProcessModel.setAwbNumber(awbNumber);
+	//				orderUpdateSmsProcessModel.setShipmentStatus(ConsignmentStatus.UNDELIVERED);
+	//				orderUpdateSmsProcessModel.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
+	//				orderUpdateSmsProcessModel.setMessage(MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_UNDELIVERED
+	//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ZERO, firstName)
+	//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, String.valueOf(childOrders.size()))
+	//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, orderNumber)
+	//						.replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_THREE, contactNumber));
+	//				orderUpdateSmsProcessModel.setRecipientPhoneNumber(mobileNumber);
+	//				final List<String> entryNumber = new ArrayList<String>();
+	//				for (final AbstractOrderEntryModel child : childOrders)
+	//				{
+	//					entryNumber.add(child.getEntryNumber().toString());
+	//				}
+	//				orderUpdateSmsProcessModel.setEntryNumber(entryNumber);
+	//
+	//				modelService.save(orderUpdateSmsProcessModel);
+	//				businessProcessService.startProcess(orderUpdateSmsProcessModel);
+	//				//sendSMSService.sendSMS(smsRequestDataOrderDelivered);
+	//			}
+	//
+	//
+	//
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error("Exception during sending SMS for UNDELIVERED >> " + e.getMessage());
+	//		}
+	//
+	//
+	//	}
 
 
 	/**
@@ -1134,42 +1134,42 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * @param childOrders
 	 * @param awbNumber
 	 */
-	private void sendEmailUnDelivered(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders,
-			final String awbNumber)
-	{
-		// Checking of SMS Notification previously sent or not
-		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.UNDELIVERED);
-		int numOfRows = 0;
-		if (null != orderUpdateModelList && !orderUpdateModelList.isEmpty())
-		{
-			numOfRows = orderUpdateModelList.size();
-
-		}
-		LOG.info("*******Before checking isToSendNotification for UNDELIVERED EMAIL********");
-		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
-		LOG.info("*******After checking isToSendNotification for UNDELIVERED EMAIL********");
-		LOG.info("No of Rows:::::sendEmailUnDelivered" + numOfRows);
-		if (numOfRows == 0 && flag)
-		{
-			final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
-					.createProcess("orderUnDeliveredEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
-							"orderUnDeliveredEmailProcess");
-			orderUpdateProcessModel.setOrder(orderModel);
-			orderUpdateProcessModel.setAwbNumber(awbNumber);
-			orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.UNDELIVERED);
-
-			final List<String> entryNumber = new ArrayList<String>();
-			for (final AbstractOrderEntryModel child : childOrders)
-			{
-				entryNumber.add(child.getEntryNumber().toString());
-			}
-
-			orderUpdateProcessModel.setEntryNumber(entryNumber);
-			modelService.save(orderUpdateProcessModel);
-			businessProcessService.startProcess(orderUpdateProcessModel);
-		}
-
-	}
+	//	private void sendEmailUnDelivered(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders,
+	//			final String awbNumber)
+	//	{
+	//		// Checking of SMS Notification previously sent or not
+	//		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.UNDELIVERED);
+	//		int numOfRows = 0;
+	//		if (null != orderUpdateModelList && !orderUpdateModelList.isEmpty())
+	//		{
+	//			numOfRows = orderUpdateModelList.size();
+	//
+	//		}
+	//		LOG.info("*******Before checking isToSendNotification for UNDELIVERED EMAIL********");
+	//		final boolean flag = isToSendNotification(awbNumber, orderModel, ConsignmentStatus.UNDELIVERED);
+	//		LOG.info("*******After checking isToSendNotification for UNDELIVERED EMAIL********");
+	//		LOG.info("No of Rows:::::sendEmailUnDelivered" + numOfRows);
+	//		if (numOfRows == 0 && flag)
+	//		{
+	//			final OrderUpdateProcessModel orderUpdateProcessModel = (OrderUpdateProcessModel) getBusinessProcessService()
+	//					.createProcess("orderUnDeliveredEmailProcess-" + orderModel.getCode() + "-" + System.currentTimeMillis(),
+	//							"orderUnDeliveredEmailProcess");
+	//			orderUpdateProcessModel.setOrder(orderModel);
+	//			orderUpdateProcessModel.setAwbNumber(awbNumber);
+	//			orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.UNDELIVERED);
+	//
+	//			final List<String> entryNumber = new ArrayList<String>();
+	//			for (final AbstractOrderEntryModel child : childOrders)
+	//			{
+	//				entryNumber.add(child.getEntryNumber().toString());
+	//			}
+	//
+	//			orderUpdateProcessModel.setEntryNumber(entryNumber);
+	//			modelService.save(orderUpdateProcessModel);
+	//			businessProcessService.startProcess(orderUpdateProcessModel);
+	//		}
+	//
+	//	}
 
 
 	private Map<String, List<AbstractOrderEntryModel>> updateAWBNumber(final OrderModel orderModel,
