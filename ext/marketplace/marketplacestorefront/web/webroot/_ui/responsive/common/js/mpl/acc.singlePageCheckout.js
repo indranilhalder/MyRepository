@@ -1724,7 +1724,7 @@ removeExchangeFromCart : function (){
 		{
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
-		if(!ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet)
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{
 			var url=$("#selectDeliveryMethodFormMobile").attr("action");
 			var data=$("#selectDeliveryMethodFormMobile").serialize();
@@ -1762,6 +1762,10 @@ removeExchangeFromCart : function (){
 	        xhrResponse.always(function(){
 			});
 		}
+		else if(ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+    	{
+    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+    	}
 	},
 	
 	viewPaymentModeFormOnSelection:function(paymentMode)
