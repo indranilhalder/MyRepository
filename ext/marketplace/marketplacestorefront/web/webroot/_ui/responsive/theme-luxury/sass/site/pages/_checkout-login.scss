@@ -92,7 +92,58 @@ $mildGrayTxt:	#7f7f7f;
 		.button-set, .accept-cond {
 			text-align: center;
 		}
-	}	
+	}
+    
+    
+    .left form button{
+        margin-bottom: 0;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        user-select: none;
+        text-transform: uppercase;
+        padding: 10px 16px;
+        font-size: 18px;
+        line-height: 1.33333;
+        border-radius: 4px;
+        background-color: #2d2d2d;
+        color: #fff;
+    }
+
+
+
+.sign-in.tab-view.checkoutSignPage .nav{
+    display: none;
+    
+}
+.checkoutSignPage{
+    .tabs{
+        padding: 0px;
+        li{
+            list-style: none;
+        }
+        
+    }
+    
+    @include media-breakpoint-down(sm) {
+		padding: 0px 15px;
+	}
+    
+    
+}
+#sign_in_content, #sign_up_content{
+    .button_fwd_wrapper, .form-actions{
+            margin: 10px 0px;
+    }
+    .else-sec{
+        display: none;
+    }
+}
+    
 }
 .checkoutLoginHeader {
 	background-color: $light-gray;
@@ -203,135 +254,5 @@ $mildGrayTxt:	#7f7f7f;
 }
 
 
-
-
-.sign-in.tab-view {   
-    
-    
-    .tabs {       
-        margin-top: 0;
-        float: left;
-        width: 100%;
-        position: relative;
-    }
-    .tabs>li {
-        float: left;
-        padding: 0;
-        margin-top: 25px;
-    }
-    .tabs>li#sign_in_content{
-       width: 45.8%;
-        display: inline-block;
-         padding-right: 116px;
-    } 
-    
-    .tabs>li#sign_up_content{
-        padding-left: 113px;
-        width: 47.6%;
-         display: inline-block;
-    }    
-    
-    .tabs>li.or {
-        width: 1px;
-        min-height: 280px;
-        display: inline-block;
-        float: left;
-        margin-top: 36px;
-    }
-    .else-sec{
-        display: none;
-    }
-    .tabs>li {
-        float: left;
-        padding: 0;
-        margin-top: 25px;
-    }
-    .tabs>li.or {
-        width: 1px;
-        min-height: 280px;
-        display: inline-block;
-        float: left;
-        margin-top: 36px;
-    }
-    .vr-line {
-        background: #eaeaeb;
-        width: 1px;
-        height: 110px;
-        display: inline-block;
-    }
-    .or-rounded {
-        display: inline-block;
-        top: 158px;
-        float: left;
-        border: 1px solid #eaeaeb;
-        padding: 7px 9px 10px;
-        position: absolute;
-        left: 46%;
-        color: #7f7f7f;
-        font-size: 14px;
-        border-radius: 24px;
-        margin-left: 1px;
-        background: #fff;
-        letter-spacing: 1px;
-    }
-    
-    .vrt-line {
-        margin-top: 55px;
-        background: #eaeaeb;
-        width: 1px;
-        height: 110px;
-        display: inline-block;
-    }
-    .left form button{
-        margin-bottom: 0;
-        font-weight: 400;
-        text-align: center;
-        vertical-align: middle;
-        touch-action: manipulation;
-        cursor: pointer;
-        border: 1px solid transparent;
-        white-space: nowrap;
-        user-select: none;
-        text-transform: uppercase;
-        padding: 10px 16px;
-        font-size: 18px;
-        line-height: 1.33333;
-        border-radius: 4px;
-        background-color: #2d2d2d;
-        color: #fff;
-    }
-    
-    .tabs>li#sign_in_content, .tabs>li#sign_up_content{
-        .social-connect{            
-            
-            li{
-                list-style: none;
-            }
-        }
-        
-         .button_fwd_wrapper, .form-actions{
-            margin: 20px 0px;
-        }
-    }  
-    
-    .tabs>li#sign_in_content .social-connect {
-        padding-top: 28px;
-    }
-    .tabs>li#sign_in_content .social-connect {
-        padding-left: 0;
-        padding-right: 0;
-        padding-top: 65px;
-        background: transparent;
-    }
-    .tabs>li .login-section .social-connect, .checkout-shipping .social-connect {
-        width: 100%;
-        float: none;
-        margin: 0 auto;
-    }
-}
-.sign-in.tab-view.checkoutSignPage .nav{
-    display: none;
-    
-}
 
 /*EOF Checkout Login Page Styles*/
