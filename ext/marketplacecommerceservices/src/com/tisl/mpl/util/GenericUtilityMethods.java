@@ -749,11 +749,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 * 
+	 *
 	 * @param orderDetail
-	 * 
+	 *
 	 * @param type (1-Billing, 2-Shipping)
-	 * 
+	 *
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1644,7 +1644,7 @@ public class GenericUtilityMethods
 		double couponDiscount = 0.0D;
 		double cartEntryNetSellPrice = 0.0D;
 		final DecimalFormat df = new DecimalFormat("#.##");
-
+		double totalDeliveryCharge = 0;
 
 		if (cartModel.getEntries() != null && !cartModel.getEntries().isEmpty())
 		{
@@ -1667,6 +1667,8 @@ public class GenericUtilityMethods
 					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
 
 					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
+
+					totalDeliveryCharge += entry.getCurrDelCharge().doubleValue();
 				}
 			}
 		}
@@ -1691,6 +1693,13 @@ public class GenericUtilityMethods
 		if (null != responseData)
 		{
 			responseData.setTotalDiscntIncMrp(totalDiscountVal);
+			////TISSTRT-1605
+			if (totalDeliveryCharge > 0)
+			{
+				final PriceData totalDeliveryChargeVal = priceDataFactory.create(PriceDataType.BUY, new BigDecimal(
+						totalDeliveryCharge), MarketplacecommerceservicesConstants.INR);
+				responseData.setDeliveryCost(totalDeliveryChargeVal);
+			}
 		}
 	}
 

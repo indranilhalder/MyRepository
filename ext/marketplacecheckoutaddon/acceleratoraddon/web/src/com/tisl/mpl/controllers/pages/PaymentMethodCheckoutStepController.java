@@ -3029,6 +3029,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		OrderModel orderModel = null;
 		MplPromoPriceData responseData = new MplPromoPriceData();
 		String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+		CartData cartData = null;
+		OrderData orderData = null;
 		try
 		{
 			if (StringUtils.isNotEmpty(guid))
@@ -3088,7 +3090,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						}
 					}
 
-					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+					cartData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 					responseData = getMplPaymentFacade().applyPromotions(cartData, null, cart, null, responseData);
 					//					if (cart != null && cart.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
 					//					{
@@ -3204,11 +3206,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 
 					//TISST-7955
-					final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
 					final Map<String, String> ussidPricemap = new HashMap<String, String>();
-					if (promotedCartData != null)
+					if (cartData != null)
 					{
-						for (final OrderEntryData entryData : promotedCartData.getEntries())
+						for (final OrderEntryData entryData : cartData.getEntries())
 						{
 							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
 									.getFormattedValue());
@@ -3265,7 +3266,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 
-				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel, responseData);
 
 				getMplPaymentFacade().populateDelvPOSForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
@@ -3318,11 +3319,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 				//TISST-7955
-				final OrderData promotedOrderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				final Map<String, String> ussidPricemap = new HashMap<String, String>();
-				if (promotedOrderData != null)
+				if (orderData != null)
 				{
-					for (final OrderEntryData entryData : promotedOrderData.getEntries())
+					for (final OrderEntryData entryData : orderData.getEntries())
 					{
 						ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(), entryData.getTotalPrice()
 								.getFormattedValue());
@@ -4719,7 +4719,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -5604,7 +5604,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		this.voucherService = voucherService;
 	}
-
 	//TPR-4461 ends here
 
 
