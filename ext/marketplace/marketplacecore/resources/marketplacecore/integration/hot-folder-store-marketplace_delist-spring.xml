@@ -98,7 +98,7 @@
             </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{1};{2};1</value> //TISSTRT-1609-Fix
+            <value>;{+0};{1};{2};1</value> <!-- TISSTRT-1609-Fix -->
         </property>	
         </bean>
         
