@@ -157,9 +157,11 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		LOG.debug("Generationg Contents..");
 		LOG.debug("Error Checking Contents..");
 		int lineNo = 0;
+
 		//Sonar fix : limiting size of string builder
 		//sbError = new StringBuilder();
 		//	sbError = new StringBuilder(1000);
+
 		while (reader.readNextLine())
 		{
 			lineNo++;

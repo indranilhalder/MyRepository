@@ -816,4 +816,14 @@
 		<!--Bug Id TISRLUAT-818  -->
 		<property name="selfCourierDocumentLink" type="String"/>
 	</bean>
+	
+	<!-- TPR-1072 START -->
+	<bean class="com.tisl.mpl.data.ShopByBrandData">
+ 		<property name="masterBrandUrl" type="String" />
+ 		<property name="masterBrandName" type="String" />
+ 		<property name="subBrandList" type="java.util.List" />
+ 		<property name="subBrands" type="java.util.Collection" />
+ 		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
+ 	</bean>
+	<!-- TPR-1072 END -->
 </beans>

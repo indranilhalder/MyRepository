@@ -220,7 +220,11 @@ public class GenericUtilityMethods
 				dateBefore = date1;
 				dateAfter = date1;
 			}
-			noOfDays = (int) ((dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60 * 60 * 24));
+			// Change regarding INC144316821
+			double result;
+			result = ((dateAfter.getTime() - dateBefore.getTime()) / (1000.0 * 60.0 * 60.0 * 24.0));
+			noOfDays = (int) Math.ceil(result);
+			//	noOfDays = (int) ((dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60 * 60 * 24));
 		}
 		return noOfDays;
 	}
@@ -505,63 +509,63 @@ public class GenericUtilityMethods
 	 * @param productSellerData
 	 * @return flag
 	 */
-	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
-			final List<SellerInformationModel> productSellerData)
-	{
-		boolean flag = false;
-		boolean checkFlag = false;
-		List<SellerMaster> sellerData = null;
-		try
-		{
-			if (null == restrictionList || restrictionList.isEmpty())
-			{
-				flag = true;
-			}
-			else
-			{
-				if (null != productSellerData)
-				{
-					for (final AbstractPromotionRestriction restriction : restrictionList)
-					{
-						if (restriction instanceof EtailSellerSpecificRestriction)
-						{
-							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
-							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
-							for (final SellerMaster seller : sellerData)
-							{
-								for (final SellerInformationModel speficSeller : productSellerData)
-								{
-									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
-									{
-										checkFlag = true;
-									}
-								}
-							}
-							if (checkFlag)
-							{
-								flag = true;
-								break;
-							}
-							else
-							{
-								flag = false;
-								break;
-							}
-						}
-						else
-						{
-							flag = true;
-						}
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage());
-		}
-		return flag;
-	}
+	//	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean flag = false;
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				flag = true;
+	//			}
+	//			else
+	//			{
+	//				if (null != productSellerData)
+	//				{
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailSellerSpecificRestriction)
+	//						{
+	//							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+	//							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+	//							for (final SellerMaster seller : sellerData)
+	//							{
+	//								for (final SellerInformationModel speficSeller : productSellerData)
+	//								{
+	//									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
+	//									{
+	//										checkFlag = true;
+	//									}
+	//								}
+	//							}
+	//							if (checkFlag)
+	//							{
+	//								flag = true;
+	//								break;
+	//							}
+	//							else
+	//							{
+	//								flag = false;
+	//								break;
+	//							}
+	//						}
+	//						else
+	//						{
+	//							flag = true;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return flag;
+	//	}
 
 	/**
 	 * @Description: Freebie will not be applied if no Seller Restriction is added
@@ -591,67 +595,67 @@ public class GenericUtilityMethods
 	 * @param productSellerData
 	 * @return boolean
 	 */
-	public static boolean checkExcludeSellerData(final List<AbstractPromotionRestriction> restrictionList,
-			final List<SellerInformationModel> productSellerData)
-	{
-		boolean excludeSellerFlag = false;
-		boolean checkFlag = false;
-		List<SellerMaster> sellerData = null;
-		try
-		{
-			if (null == restrictionList || restrictionList.isEmpty())
-			{
-				excludeSellerFlag = false;
-			}
-			else
-			{
-				if (CollectionUtils.isNotEmpty(productSellerData))
-				{
-					for (final AbstractPromotionRestriction restriction : restrictionList)
-					{
-						if (restriction instanceof EtailExcludeSellerSpecificRestriction)
-						{
-							final EtailExcludeSellerSpecificRestriction excludeSellerRestrict = (EtailExcludeSellerSpecificRestriction) restriction;
-							sellerData = excludeSellerRestrict.getSellerMasterList();
-
-							for (final SellerMaster seller : sellerData)
-							{
-								for (final SellerInformationModel speficSeller : productSellerData)
-								{
-									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
-									{
-										checkFlag = true;
-									}
-								}
-							}
-
-							if (checkFlag)
-							{
-								excludeSellerFlag = true;
-								break;
-							}
-							else
-							{
-								excludeSellerFlag = false;
-								break;
-							}
-
-						}
-						else
-						{
-							excludeSellerFlag = false;
-						}
-					}
-				}
-
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage());
-		}
-		return excludeSellerFlag;
-	}
+	//	public static boolean checkExcludeSellerData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean excludeSellerFlag = false;
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				excludeSellerFlag = false;
+	//			}
+	//			else
+	//			{
+	//				if (CollectionUtils.isNotEmpty(productSellerData))
+	//				{
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+	//						{
+	//							final EtailExcludeSellerSpecificRestriction excludeSellerRestrict = (EtailExcludeSellerSpecificRestriction) restriction;
+	//							sellerData = excludeSellerRestrict.getSellerMasterList();
+	//
+	//							for (final SellerMaster seller : sellerData)
+	//							{
+	//								for (final SellerInformationModel speficSeller : productSellerData)
+	//								{
+	//									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
+	//									{
+	//										checkFlag = true;
+	//									}
+	//								}
+	//							}
+	//
+	//							if (checkFlag)
+	//							{
+	//								excludeSellerFlag = true;
+	//								break;
+	//							}
+	//							else
+	//							{
+	//								excludeSellerFlag = false;
+	//								break;
+	//							}
+	//
+	//						}
+	//						else
+	//						{
+	//							excludeSellerFlag = false;
+	//						}
+	//					}
+	//				}
+	//
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return excludeSellerFlag;
+	//	}
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
@@ -880,63 +884,63 @@ public class GenericUtilityMethods
 	 * @param productSellerData
 	 * @return flag
 	 */
-	public static boolean checkBOGOData(final List<AbstractPromotionRestriction> restrictionList,
-			final List<SellerInformationModel> productSellerData)
-	{
-		boolean flag = false;
-		boolean checkFlag = false;
-		List<SellerMaster> sellerData = null;
-		try
-		{
-			if (null == restrictionList || restrictionList.isEmpty())
-			{
-				flag = false;
-			}
-			else
-			{
-				if (null != productSellerData)
-				{
-					for (final AbstractPromotionRestriction restriction : restrictionList)
-					{
-						if (restriction instanceof EtailSellerSpecificRestriction)
-						{
-							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
-							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
-							for (final SellerMaster seller : sellerData)
-							{
-								for (final SellerInformationModel speficSeller : productSellerData)
-								{
-									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
-									{
-										checkFlag = true;
-									}
-								}
-							}
-							if (checkFlag)
-							{
-								flag = true;
-								break;
-							}
-							else
-							{
-								flag = false;
-								break;
-							}
-						}
-						else
-						{
-							flag = false;
-						}
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage());
-		}
-		return flag;
-	}
+	//	public static boolean checkBOGOData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean flag = false;
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				flag = false;
+	//			}
+	//			else
+	//			{
+	//				if (null != productSellerData)
+	//				{
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailSellerSpecificRestriction)
+	//						{
+	//							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+	//							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+	//							for (final SellerMaster seller : sellerData)
+	//							{
+	//								for (final SellerInformationModel speficSeller : productSellerData)
+	//								{
+	//									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
+	//									{
+	//										checkFlag = true;
+	//									}
+	//								}
+	//							}
+	//							if (checkFlag)
+	//							{
+	//								flag = true;
+	//								break;
+	//							}
+	//							else
+	//							{
+	//								flag = false;
+	//								break;
+	//							}
+	//						}
+	//						else
+	//						{
+	//							flag = false;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return flag;
+	//	}
 
 
 
@@ -1613,6 +1617,77 @@ public class GenericUtilityMethods
 			salesApplication.add(SalesApplication.CALLCENTER);
 		}
 		return salesApplication;
+	}
+
+	/**
+	 * @Description: Verifies Seller Data corresponding to the cart added Product
+	 * @param restrictionList
+	 * @param productSellerData
+	 * @return flag
+	 */
+	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
+			final List<SellerInformationModel> productSellerData)
+	{
+		boolean checkFlag = false;
+		List<SellerMaster> sellerData = null;
+		try
+		{
+			if (null == restrictionList || restrictionList.isEmpty())
+			{
+				checkFlag = true;
+			}
+			else
+			{
+				if (null != productSellerData)
+				{
+					boolean isSellerIncluded = false;
+
+					for (final AbstractPromotionRestriction restriction : restrictionList)
+					{
+						if (restriction instanceof EtailSellerSpecificRestriction)
+						{
+							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+							isSellerIncluded = true;
+							break;
+						}
+						else if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+						{
+							final EtailExcludeSellerSpecificRestriction excludeSellerRestriction = (EtailExcludeSellerSpecificRestriction) restriction;
+							sellerData = excludeSellerRestriction.getSellerMasterList();
+							break;
+						}
+					}
+
+					if (sellerData == null)
+					{
+						checkFlag = true;
+					}
+					else
+					{
+						final SellerInformationModel speficSeller = productSellerData.get(0);
+						final String sellerInformationId = speficSeller != null ? speficSeller.getSellerID() : "";
+
+						for (final SellerMaster seller : sellerData)
+						{
+							if ((seller.getId().equalsIgnoreCase(sellerInformationId) && isSellerIncluded)
+									|| (!seller.getId().equalsIgnoreCase(sellerInformationId) && !isSellerIncluded))
+							{
+								checkFlag = true;
+								break;
+							}
+						}
+
+					}
+
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+		}
+		return checkFlag;
 	}
 
 	/**

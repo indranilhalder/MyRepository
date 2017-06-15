@@ -5945,5 +5945,4 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		return mplCommerceCartDao.getCartByGuid(cartGuid);
 	}
-
 }

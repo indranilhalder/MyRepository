@@ -92,8 +92,8 @@
 </bean>
 
 	<!-- Order Create  -->
-	<!-- <bean id="OrderWebService"
-			class="com.tisl.mpl.service.OrderWebServiceImpl"/> -->
+	<alias name="orderWebService" alias="orderWebService"/>
+	<bean id="orderWebService" class="com.tisl.mpl.service.OrderWebServiceImpl"/>
 	<!-- Order Create  -->
 	<!-- Inventory Reservation reservation at Checkout -->
 	<bean id="inventoryReservationService"

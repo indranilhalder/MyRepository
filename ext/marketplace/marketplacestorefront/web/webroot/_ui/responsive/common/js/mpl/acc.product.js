@@ -169,6 +169,7 @@ ACC.product = {
 			 if ($('#variant.size-g li').hasClass('selected'))
 			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
+				$(".modal").modal('hide');	 //INC144315891
 			 
 			}else{
 					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
@@ -1338,10 +1339,11 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 	{
 		if($(window).width() > 773) {
 			$("#cboxClose").click();
+		} /*added as part of PRDI-90*/
 			$('body.modal-open').css('overflow-y','hidden');
 			$(".modal").modal('hide');
 			$('body').css('overflow-y','auto');
-		} 
+		//} /*commented as part of PRDI-90*/
 		
 	}
 };

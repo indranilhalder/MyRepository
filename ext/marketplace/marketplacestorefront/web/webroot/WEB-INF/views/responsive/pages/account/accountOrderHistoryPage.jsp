@@ -36,7 +36,7 @@
 <template:page pageTitle="${pageTitle}">
 	<div class="account">
 		<h1 class="account-header">
-			<spring:theme code="text.account.headerTitle" text="My Tata CLiQ" />
+			<%-- <spring:theme code="text.account.headerTitle" text="My Tata CLiQ" /> --%>
 				<user:accountMobileViewMenuDropdown pageNameDropdown="orderHistory"/>
 		
 			<%-- <select class="menu-select"
@@ -89,6 +89,7 @@
 						<h2>
 							<spring:theme text="My Orders" />		<!--  UF-249 text change -->
 						</h2>
+						<p class="commonAccountPara"><spring:theme text="Track your order status, cancel a product or request a return here." /></p>
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
 							<input type="hidden" id="pageIndex" value="${pageIndex}" />
@@ -133,19 +134,19 @@
 
 									<ul class="product-block">
 
-										<li class="header">
+										<%-- <li class="header">
 											<ul>
 												<li class="date"><span><spring:theme
-															code="text.orderHistory.order.placed" /></span> <%-- <fmt:formatDate
+															code="text.orderHistory.order.placed" /></span> <fmt:formatDate
 														value="${orderHistoryDetail.created}"
-														pattern="MMMMM dd, yyyy" /> ${formatedDate} --%> <c:if
+														pattern="MMMMM dd, yyyy" /> ${formatedDate} <c:if
 														test="${orderDataMap[orderHistoryDetail.code] ne null}">
 													${orderDataMap[orderHistoryDetail.code]}
 												</c:if></li>
 												<li class="order-total"><span><spring:theme
 															code="text.orderHistory.total" /></span>  
 												<!-- TISSIT-1773 -->
-															<%-- <format:price priceData="${orderHistoryDetail.totalPrice}" /> --%>
+															<format:price priceData="${orderHistoryDetail.totalPrice}" />
 												<c:choose>
 													<c:when test="${orderHistoryDetail.net}">
 														<format:price priceData="${orderHistoryDetail.totalPriceWithTax}" />
@@ -178,7 +179,28 @@
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
 															code="text.orderHistory.track.order" /></a></li>
 											</ul>
+										</li> --%>
+										
+										<li class="header">
+											<ul>
+												<li class="viewDetails">
+												<span class="orderNumber"><spring:theme code="text.orderHistory.order.place" text="Order"/>#${orderHistoryDetail.code}</span> 
+												<span class="orderDate"><spring:theme code="text.orderHistory.order.place" text="Placed on:"/>&nbsp;
+												<c:if test="${orderDataMap[orderHistoryDetail.code] ne null}">
+													${orderDataMap[orderHistoryDetail.code]}
+												</c:if></span>
+												</li>
+												
+
+												<li class="viewDetailsAnchor"><a
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
+															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
+															<!-- &pageAnchor=trackOrder -->
+												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
+															code="text.orderHistory.track.order" /></a></li>
+											</ul>
 										</li>
+										
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
 											var="subOrder" varStatus="status">
 											<input type="hidden" id="subOrderCode"
@@ -186,7 +208,6 @@
 
 											<c:forEach items="${subOrder.entries}" var="entry"
 												varStatus="entryStatus">
-
 												<c:url value="${entry.product.url}" var="productUrl" />
 												<c:set var="orderEntrySellerSKU"
 													value="${entry.mplDeliveryMode.sellerArticleSKU}" />
@@ -218,8 +239,7 @@
 														<h2 class="product-name">
 															<a href="${productUrl}">${entry.product.name}</a>
 														</h2>
-														<div class="attributes">
-
+														
 															<p>
 																<c:if test="${entry.quantity > 1}">
 																	<spring:theme code="text.orderHistory.quantity" />
@@ -238,6 +258,9 @@
 																	&nbsp;${entry.product.colour}
 																</c:if>
 															</p>
+														
+														<div class="attributes">
+
 															<p>
 																<spring:theme code="text.orderHistory.price" />
 																&nbsp;
@@ -349,6 +372,65 @@
 															</c:if>
 														</p>
 													</div>
+													<c:set value="${entry.orderLineId}" var="code"/>
+													<c:set value="${orderStatusMap[code]}" var="orderStatus"/>
+													
+													<c:set value="${orderStatus['APPROVED']}" var="approvedFlag"/>
+													<c:set value="${orderStatus['SHIPPING']}" var="shippingFlag"/>
+													<c:set value="${orderStatus['DELIVERY']}" var="deliveryFlag"/>
+													<c:choose>
+														<c:when test="${not empty deliveryFlag and deliveryFlag ne null}">
+														<div class="orderUpdatesBlock">
+														<div class="status">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered" /></span>
+														</div>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered:" /></span>&nbsp;
+															<c:forEach items="${deliveryFlag.statusRecords}" var="date">
+															<span>${date}</span>
+															</c:forEach>
+														</div>
+														</div>
+														</c:when>
+														<c:otherwise>
+														<c:choose>
+														<c:when test="${not empty shippingFlag and shippingFlag ne null}">
+														<div class="orderUpdatesBlock">
+														<div class="status">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped" /></span>
+														</div>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped:" /></span>&nbsp;
+															<c:forEach items="${shippingFlag.statusRecords}" var="date">
+															<span>${date}</span>
+															</c:forEach>
+														</div>
+														</div>
+														</c:when>
+														<c:otherwise>
+														<c:choose>
+															<c:when test="${not empty approvedFlag and approvedFlag ne null}">
+														<div class="orderUpdatesBlock">
+														<div class="status">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
+														</div>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed:" /></span>&nbsp;
+															<c:forEach items="${approvedFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
+															</c:forEach>
+														</div>
+														</div>
+														</c:when>
+														</c:choose>
+														</c:otherwise>
+														</c:choose>
+														</c:otherwise>
+														
+														
+														
+													</c:choose>
+													
 
 													<div class="actions">
 
@@ -409,21 +491,51 @@
 														  	<c:otherwise>
 														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
 																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																<span>${cancelPopover}</span>						
 																</c:if>
 														  	</c:otherwise>
 														</c:choose>
 
 														<c:if test="${entry.showInvoiceStatus eq 'true'}">
-															<a
+														<span  class="RequestInvoice"><a
 																href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${subOrder.code}&transactionId=${entry.transactionId}"
 																onclick="callSendInvoice();"><spring:theme
-																	code="text.account.RequestInvoice"
-																	text="Request Invoice" /></a>
-
+																code="text.account.RequestInvoice"
+																text="Request Invoice" /></a>
+													    </span>
 														</c:if>
+														
+														
+														<!-- TPR-6013 My Profile Orders starts-->
+														
+														<%-- <div class="NotBeCancelled">
+															<span><spring:theme code="orderHistory.cancellationDeadlineMissed.ms" text="This can not be cancelled. (Why?)" /></span>
+															<span class="RequestInvoice"><spring:theme code="orderHistory.cancellationDeadlineMissed.ms" text="Request Invoice" /></span>
+														</div> --%>
+														
+														<!-- TPR-6013 My Profile Orders ends-->
 
 													</div>
 												</li>
+												
+												<%-- <li class="header mobileHeader">
+												<ul>
+												<li class="viewDetails">
+												<span class="orderNumber"><spring:theme code="text.orderHistory.order.place" text="Order"/>#${orderHistoryDetail.code}</span> 
+												<span class="orderDate"><spring:theme code="text.orderHistory.order.place" text="Placed on:"/>&nbsp;
+												<c:if test="${orderDataMap[orderHistoryDetail.code] ne null}">
+													${orderDataMap[orderHistoryDetail.code]}
+												</c:if></span>
+												</li>
+												
+
+												<li class="viewDetailsAnchor"><a
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
+															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
+												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
+															code="text.orderHistory.track.order" /></a></li>
+												</ul>
+											</li> --%>
 
 												<div class="modal cancellation-request fade"
 													id="cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
@@ -692,5 +804,10 @@
 			</div>
 
 		</div>
+	</div>
+	<div class="modal fade track-order-modal" id="track-order-modal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="overlay" data-dismiss="modal"></div>
+		<div class="content"></div>
 	</div>
 </template:page>

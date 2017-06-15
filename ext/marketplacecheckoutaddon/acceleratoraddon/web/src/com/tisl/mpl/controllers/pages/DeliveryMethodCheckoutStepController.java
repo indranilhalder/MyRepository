@@ -327,6 +327,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
 				model.addAttribute("defaultPincode", defaultPinCodeId);
 
+				//INC144316212
+				final String isDeliveryOptionPage = "yes";
+				model.addAttribute(MarketplacecheckoutaddonConstants.IS_DELIVERY_OPTION_PAGE, isDeliveryOptionPage);
+
 				//TISPRO-625
 
 				final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null) ? Boolean.TRUE
@@ -429,6 +433,33 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//INC144313695
 			final HttpSession session = request.getSession();
 			deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
+
+			//prdi-36/INC144315559
+			String deliveryCode = null;
+			final int deliveryModeCount = deliveryMethodForm.getDeliveryMethodEntry().size();
+			int deliveryModeMatch = 0;
+			if (deliveryMethodForm.getDeliveryMethodEntry() != null && !deliveryMethodForm.getDeliveryMethodEntry().isEmpty())
+			{
+
+
+				for (final DeliveryMethodEntry deliveryEntry : deliveryMethodForm.getDeliveryMethodEntry())
+				{
+					deliveryCode = deliveryEntry.getDeliveryCode();
+
+					if (StringUtils.isNotEmpty(deliveryCode)
+							&& deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT)) // Code optimized as part of performance fix TISPT-104
+					{
+						deliveryModeMatch++;
+					}
+				}
+				//TISSQAEE-1121
+				if (deliveryModeMatch == deliveryModeCount)
+				{
+					return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method"
+							+ MarketplacecheckoutaddonConstants.MPLDELIVERYCHOOSEURL;
+				}
+			}
+			// end prdi-36/INC144315559
 
 			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
 			{
@@ -592,8 +623,15 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-						return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
-								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+						/*
+						 * return MarketplacecommerceservicesConstants.REDIRECT +
+						 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
+						 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+						 */
+						/**** PRDI-36/INC144315559 *******/
+						model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSID, cartUssidData.getDeliveryAddress()
+								.getId());
+
 					}
 					else
 					{
@@ -701,7 +739,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * @return string
 	 * @throws CMSItemNotFoundException
 	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL, method = RequestMethod.POST)
+	//@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL, method = RequestMethod.POST)
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL)
 	@RequireHardLogIn
 	public String doFindDelivaryMode(final DeliveryMethodForm deliveryMethodForm, final BindingResult bindingResult,
 			final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request,
@@ -711,6 +750,14 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		{
 			LOG.debug("from doFindDelivaryMode methodin Controller");
 		}
+
+		//INC144315801 starts
+		if (deliveryMethodForm.getDeliveryMethodEntry() == null)
+		{
+			return getCheckoutStep().previousStep();
+		}
+		//INC144315801 ends
+
 		//TISPT-400
 
 		if (getCartService().hasSessionCart())
@@ -775,14 +822,16 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				//for (final AbstractOrderEntryModel cartEntryModel : cartModel.getEntries())
 				for (final OrderEntryData cartD : cartData.getEntries())
 				{
-					if (null != cartD && !cartD.isGiveAway() && null != deliveryMethodForm //CAR-197
-							&& CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
+					//					if (null != cartD && !cartD.isGiveAway() && null != deliveryMethodForm //CAR-197
+					//							&& CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
 
 					/*
 					 * if (null != cartEntryModel && null != cartEntryModel.getGiveAway() &&
 					 * !cartEntryModel.getGiveAway().booleanValue() && null != deliveryMethodForm &&
 					 * CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))
 					 */
+					if (null != cartD && !cartD.isGiveAway()
+							&& CollectionUtils.isNotEmpty(deliveryMethodForm.getDeliveryMethodEntry()))//CAR-197
 					{
 						try
 						{
@@ -1803,7 +1852,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					if (productModel != null && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty() && productRichAttributeModel.get(0).getScheduledDelivery() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()
+								&& productRichAttributeModel.get(0).getScheduledDelivery() != null)
 						{
 							productRichAttr = productRichAttributeModel.get(0).getScheduledDelivery().toString();
 						}

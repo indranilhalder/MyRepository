@@ -19,11 +19,16 @@
 		<c:forEach var="megamap" items="${megaMap}">
 			<section>
 				<c:set var="catName" value="${fn:split(megamap.key.name, '||')}" />
-				<h4 class="r2-borderBottom">
-					<!-- br -->
-					
-					<a href="${catName[1]}/c-${fn:toLowerCase(megamap.key.code)}">${catName[0]}</a>
-				</h4>
+				<%-- <h4 class="r2-borderBottom">
+					<a href="/${catName[1]}/c-${fn:toLowerCase(megamap.key.code)}">${catName[0]}</a>
+				</h4> --%>
+				
+				<!-- code changes for INC-10885 -->
+ 				<h4 class="r2-borderBottom">
+ 				<c:url value="${catName[1]}" var="l1Url" />
+ 					<a href="${l1Url}">${catName[0]}</a>
+  				</h4>
+  				<!-- code changes for INC-10885 -->
 				<ul>
 				<c:forEach var="l2MegaMap" items="${megamap.value}">
 					<c:set var="catNameChildlevel2" value="${fn:split(l2MegaMap.key.name, '||')}" />

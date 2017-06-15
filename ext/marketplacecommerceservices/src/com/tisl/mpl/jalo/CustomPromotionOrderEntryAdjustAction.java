@@ -314,14 +314,9 @@ public class CustomPromotionOrderEntryAdjustAction extends GeneratedCustomPromot
 				associatedItemsList = productAssociatedItemsMap.get(validProductUSSID);
 			}
 
-			final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
-			//		double amtTobeDeductedAtlineItemLevel = 0;
-			//
-			//		if ((-1.0D * orderEntryAdjustment) > 0)
-			//		{
-			//			final double validQualifyingProdPrice = orderEntry.getBasePriceAsPrimitive() * qualifyingCount;
-			//			amtTobeDeductedAtlineItemLevel = (percentageDiscount * validQualifyingProdPrice) / 100;
-			//		}
+			//Modified for INC144315231
+			//final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();
+			final double lineItemLevelPrice = orderEntry.getBasePriceAsPrimitive() * orderEntry.getQuantityAsPrimitive();
 
 			final double amtTobeDeductedAtlineItemLevel = -1.0D * orderEntryAdjustment;
 

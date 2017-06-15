@@ -110,7 +110,7 @@ tr.d0 td {
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
-		<div class="product-image-container">
+		<div class="product-image-container" id="pdp_gallery">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
@@ -147,6 +147,28 @@ tr.d0 td {
 					</div>
 				</c:forEach>
 			</div>
+			<!-- start change for INC144314454 -->
+			<div class="modal fade" id="videoModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  				<div class="overlay" data-dismiss="modal" onclick="closing()"></div>
+      				<div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
+           			<button type="button" class="close pull-right" onclick="closingVideo()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">     TISPRO-508
+            		</button>
+					<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+      			</div>
+			</div>
+			<style>
+			#videoModal1 .content > .close:before {
+			    content: "\00d7";
+			    color: #fff;
+			    font-family: "Montserrat";
+			    font-size: 17px;
+			    font-weight: 600;
+			    -webkit-transition: font-weight 0.15s;
+			    -moz-transition: font-weight 0.15s;
+			    transition: font-weight 0.15s;
+			}
+			</style>
+			<!-- end change for INC144314454 -->
 		</div>
 		
 		<div class="wishAddSucess">

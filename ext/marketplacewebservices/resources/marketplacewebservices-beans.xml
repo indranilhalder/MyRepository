@@ -1019,6 +1019,7 @@
 		<property name="orderId" type="String"></property>
 		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
+		<property name="errorMessage" type="String"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.StateWsDto">
@@ -1094,6 +1095,7 @@
 		<property name="totalPrice" type="String" />
 		<property name="orderId" type="String" />
 		<property name="otpStatus" type="String" />
+		<property name="errorMessage" type="String" />
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
 		<property name="listofPotentialRestriction"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
@@ -2267,6 +2269,7 @@
 		<property name="couponDiscount" type="String" />
 		<property name="discount" type="String" />
 		<property name="total" type="String" />
+		<property name="couponMessage" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.GigyaWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="sessionToken" type="String" />
@@ -2836,6 +2839,7 @@
     	<property name="narration" type="String"/>
     	<property name="retUrl" type="String"/>
     	<property name="checksum " type="String"/>
+    	<property name="errorMessage " type="String"/>
     </bean>
 
 <bean class="com.tisl.mpl.wsdto.WalletPaymentWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">

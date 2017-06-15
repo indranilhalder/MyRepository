@@ -44,7 +44,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -111,7 +111,9 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 							.doubleValue();
 				}
 
-				final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();//TODO
+				//Modified for INC144315231
+				//final double lineItemLevelPrice = orderEntry.getTotalPriceAsPrimitive();//TODO
+				final double lineItemLevelPrice = orderEntry.getBasePriceAsPrimitive() * orderEntry.getQuantityAsPrimitive();
 				final double totalProdLevelDisc = 0.00D;
 				final double netSellingPrice = lineItemLevelPrice - totalProdLevelDisc;
 				final double totalCartLevelDisc = 0.00D;
