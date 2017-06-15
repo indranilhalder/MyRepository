@@ -558,3 +558,41 @@
 	
 	
 }
+
+/*content pages */
+.tab-wrapper, .customer-care-boxes, .breadcrumbs wrapper {
+	display : none;
+}
+
+.contact-us-header {
+	margin-bottom: 30px;
+    text-align: center;
+	> .content {
+		margin-bottom: 20px;
+    	line-height: 2em;
+	}
+	ul {
+		list-style-type: none;
+	}
+	p {
+		margin-bottom : 0;
+		text-align : left;
+	}
+	.copy {
+		margin: 0 auto 50px;
+	    width: 60%;
+	    display: block;
+    }
+}
+.contactUsOptions {
+	display: inline-block;
+    width: 33%;
+    
+    a{
+	    color: #B9966B;
+	    text-decoration: underline;
+	}
+	img, img+div{ 
+		display: inline-block;
+	}
+}

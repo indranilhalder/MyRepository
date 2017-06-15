@@ -12,7 +12,7 @@
 		<ul>
 			<cms:pageSlot position="Section2" var="feature">
 				<li class="contactUsOptions"><img src="${feature.media.URL}" />
-					<div>${feature.content}</div>
+					<div>${feature.content}</div> 
 					
 					</li> 
 				</cms:pageSlot>
@@ -20,7 +20,7 @@
 	</div>
 
 	<!-- Write to us Section-->
-		<cms:pageSlot position="Section3" var="feature">
+		<%-- <cms:pageSlot position="Section3" var="feature">
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
 	
@@ -32,7 +32,7 @@
 	</div>
 	</c:if> 
 	<!-- Customer Care Section-->
-	<%-- <c:if test="${empty hideContactHelpServiceModules }"> --%>
+	<c:if test="${empty hideContactHelpServiceModules }">
 	
 	<div class="customer-care-boxes">
 	<ul>
@@ -48,7 +48,7 @@
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
 		</ul>
-	</div>
+	</div> --%>
 
 </template:page>
 
