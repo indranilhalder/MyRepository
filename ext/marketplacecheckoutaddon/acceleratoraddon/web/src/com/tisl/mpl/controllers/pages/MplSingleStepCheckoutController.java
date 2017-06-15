@@ -3347,6 +3347,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return jsonObj;
 	}
 
+	@RequestMapping(value = "/payment/orderDetails", method = RequestMethod.GET)
+	public String getOrderDetailsTag(final Model model)
+	{
+		final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(false);
+		model.addAttribute("cartData", cartData);
+		model.addAttribute("isCart", Boolean.TRUE);
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.OrderTotals;
+	}
+
 	@RequestMapping(value = "/payment", method = RequestMethod.GET)
 	public String getPaymentPage(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid)
@@ -4272,7 +4281,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

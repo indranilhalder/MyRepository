@@ -1394,17 +1394,21 @@ removeExchangeFromCart : function (){
 			//$('a.wishlist#wishlist').popover('hide');
 	},
 	
-	proceedToPayment:function(element){
-		ACC.singlePageCheckout.showAjaxLoader();
+	validateCartForPayment:function()
+	{
 		var url = ACC.config.encodedContextPath + "/checkout/single/validatePayment";
 		var data = "";			
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
-        
-        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		return xhrResponse;
+	},
+	proceedWithPaymentForResponsive:function(){
+		ACC.singlePageCheckout.showAjaxLoader();
+		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
+		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         
-        xhrResponse.done(function(data, textStatus, jqXHR) {
+		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
                 {
@@ -1412,7 +1416,7 @@ removeExchangeFromCart : function (){
                 }
         		else if(data.type=="response" && data.validation=="success")
     			{
-        			if(!ACC.singlePageCheckout.getIsResponsive())
+        			/*if(!ACC.singlePageCheckout.getIsResponsive())
         			{
 	        			//$("#orderDetailsSectionId").html(data);
 	        			$("#totalWithConvField").html(data.totalPrice);
@@ -1420,7 +1424,66 @@ removeExchangeFromCart : function (){
 	    	        	
 	    				$("#selectedReviewOrderDivId").show();
 	    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
-	    	      	}
+	    	      	}*/
+	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
+	    	        populateAddress();
+	    	        populateAddressEmi();
+    			}
+        		else
+    			{
+        			console.log("ERROR:Cart validation failed, Redirectin to cart");
+        			window.location.href=ACC.config.encodedContextPath+"/cart";
+    			}
+            }
+        });
+        
+		xhrValidateResponse.always(function(){
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
+	},
+	
+	proceedToPayment:function(element){
+		ACC.singlePageCheckout.showAjaxLoader();
+		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
+		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+        		if(data.type!="response")
+                {
+        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+                }
+        		else if(data.type=="response" && data.validation=="success")
+    			{
+        			var url = ACC.config.encodedContextPath + "/checkout/single/payment/orderDetails";
+        			var data = "";			
+        			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        			});
+        	        
+        			xhrResponse.done(function(data, textStatus, jqXHR) {
+        	        	if (jqXHR.responseJSON) {
+        	        		if(data.type!="response")
+        	                {
+        	        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+        	                }
+        	            }
+        	        	else
+    	        		{	//Updating order total div
+        	        		$("#oredrTotalSpanId").html(data);
+    	        		}
+        	        });
+        			
+        			/*//$("#orderDetailsSectionId").html(data);
+        			$("#totalWithConvField").html(data.totalPrice);
+        			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);*/
+    	        	
+    				$("#selectedReviewOrderDivId").show();
+    				callOnReady();//This method is in showAddPaymentMethod.jsp
+    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 	    	        populateAddress();
 	    	        populateAddressEmi();
@@ -1650,7 +1713,7 @@ removeExchangeFromCart : function (){
 	                	}
 		            	else
 		            	{
-		            		ACC.singlePageCheckout.getPickUpPersonForm(pickupPersonName,pickupPersonMobileNo);
+		            		//ACC.singlePageCheckout.getPickUpPersonForm(pickupPersonName,pickupPersonMobileNo);
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
@@ -1809,9 +1872,10 @@ removeExchangeFromCart : function (){
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 	                	{
 	                		//Validate payment in responsive
-	                		ACC.singlePageCheckout.proceedToPayment();
-	                		//Open payment mode form
+	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive();
+	                		//Open payment mode form//apply promotion is called within
 	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+	                		//If delivery modes will be changed all the validation flags will be reset.
 	                		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)

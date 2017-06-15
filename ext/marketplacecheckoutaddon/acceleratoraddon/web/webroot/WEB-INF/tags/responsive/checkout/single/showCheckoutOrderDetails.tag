@@ -24,7 +24,8 @@
 	<div class="checkout-order-summary">
 	<h3>Final payable amount</h3>
 		<span id="oredrTotalSpanId">
-		<single-checkout:showOrderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
+		<%-- <single-checkout:showOrderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/> --%>
+			<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
 		</span>
 		<multi-checkout:coupons isCart="${isCart}"/>
 		

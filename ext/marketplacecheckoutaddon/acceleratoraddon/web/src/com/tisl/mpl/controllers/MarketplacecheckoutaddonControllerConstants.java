@@ -71,6 +71,7 @@ public interface MarketplacecheckoutaddonControllerConstants
 					String PickupLocationSelectionPanel = ADDON_PREFIX + "fragments/checkout/single/showPickupLocation";
 					String PickupPersonForm = ADDON_PREFIX + "fragments/checkout/single/showPickupPersonDetails";
 					String ReviewOrder = ADDON_PREFIX + "fragments/checkout/single/showReviewOrder"; //TISPT-235
+					String OrderTotals = ADDON_PREFIX + "fragments/checkout/single/showOrderTotalDetailsPage";
 				}
 			}
 

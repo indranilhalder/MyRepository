@@ -41,7 +41,9 @@
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
 				<script>
-    				$(document).ready(function(){
+				//Moving dom ready code to a function for one page checkout as payment page loads when single page loads hence this call should be made when the user selects payment accordion
+    				//$(document).ready(function(){
+    				function callOnReady(){
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
     					var updateItHereLink=window.location.href;
     	
@@ -111,7 +113,8 @@
         						//setTimeout(function(){$('#viewPaymentCOD').click();},1000);
         					}
     					}
-    					});
+    				}
+    					//});
 				</script>
 				
 				<!-- Script for JusPay -->
