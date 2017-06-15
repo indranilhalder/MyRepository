@@ -225,7 +225,7 @@
 												<li class="active">
 
 
-													<span id="viewPaymentCredit" >
+													<span id="viewPaymentCredit" onclick="viewPaymentCredit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
@@ -240,7 +240,7 @@
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
 		    									<li>
-		    										<span id="viewPaymentDebit" >
+		    										<span id="viewPaymentDebit"  onclick="viewPaymentDebit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
@@ -255,7 +255,7 @@
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
 			    								<li>
-			      	 								<span id="viewPaymentNetbanking" >
+			      	 								<span id="viewPaymentNetbanking"  onclick="viewPaymentNetbanking();">
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
@@ -268,7 +268,7 @@
 										<c:choose>
 			    							<c:when test="${map.key eq 'EMI'}">
 											<li>
-				       								<span id="viewPaymentEMI" >
+				       								<span id="viewPaymentEMI" onclick="viewPaymentEMI();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
@@ -283,7 +283,7 @@
 			    							<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
 												<li>
-				       								<span id="viewPaymentCOD" >
+				       								<span id="viewPaymentCOD" onclick="viewPaymentCOD();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
@@ -299,7 +299,7 @@
 			    							<c:when test="${map.key eq 'TW'}">
 			    								<input type="hidden" id="TW" value="${map.value}" />
 												<li>
-				       								<span id="viewPaymentMRupee" >
+				       								<span id="viewPaymentMRupee" onclick="viewPaymentMRupee();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 				       								</span>
 			       								</li>
@@ -320,7 +320,7 @@
 												<li class="paymentModeMobile">
 
 
-													<span id="viewPaymentCreditMobile" >
+													<span id="viewPaymentCreditMobile" onclick="viewPaymentCredit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
@@ -642,7 +642,7 @@
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
 		    									<li class="paymentModeMobile">
-		    										<span id="viewPaymentDebitMobile" >
+		    										<span id="viewPaymentDebitMobile" onclick="viewPaymentDebit();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
@@ -884,7 +884,7 @@
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
 			    								<li class="paymentModeMobile">
-			      	 								<span id="viewPaymentNetbankingMobile" >
+			      	 								<span id="viewPaymentNetbankingMobile" onclick="viewPaymentNetbanking();">
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
@@ -915,7 +915,7 @@
 										<c:choose>
 			    							<c:when test="${map.key eq 'EMI'}">
 											<li class="paymentModeMobile">
-				       								<span id="viewPaymentEMIMobile" >
+				       								<span id="viewPaymentEMIMobile"  onclick="viewPaymentEMI();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
@@ -1148,7 +1148,7 @@
 			    							<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
 												<li class="paymentModeMobile">
-				       								<span id="viewPaymentCODMobile" >
+				       								<span id="viewPaymentCODMobile"  onclick="viewPaymentCOD();">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
@@ -1296,7 +1296,7 @@
 												<input type="hidden" id="TW" value="${map.value}" />
 	
 												<li class="paymentModeMobile">
-													<span id="viewPaymentMRupeeMobile" >
+													<span id="viewPaymentMRupeeMobile"  onclick="viewPaymentMRupee();">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 													</span>
 												</li>

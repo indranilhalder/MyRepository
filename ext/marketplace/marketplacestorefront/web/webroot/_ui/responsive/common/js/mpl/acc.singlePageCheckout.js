@@ -221,6 +221,10 @@ ACC.singlePageCheckout = {
 	                {
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
+	                else if(data.type=="confirm")
+                	{
+                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","",element);
+                	}
 	            } else {
 					ACC.singlePageCheckout.getSelectedAddress();
 					$("#choosedeliveryMode").html(data);
@@ -278,7 +282,8 @@ ACC.singlePageCheckout = {
 			}
 		}
 		ACC.singlePageCheckout.showAjaxLoader();
-		var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
+		//var url=ACC.config.encodedContextPath + $("#selectDeliveryMethodForm").prop("action");
+		var url=$("#selectDeliveryMethodForm").prop("action");
 		var data=$("#selectDeliveryMethodForm").serialize();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
         
@@ -526,12 +531,14 @@ ACC.singlePageCheckout = {
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
-        
+        //calling tealium
+        $("#checkoutPageName").val("Choose Your Delivery Options");
+        tealiumCallOnPageLoad();
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type=="confirm")
                 {
-        			ACC.singlePageCheckout.processConfirm("#selectedAddressMessage",data,element,addressId);
+        			ACC.singlePageCheckout.processConfirm("#selectedAddressMessage",data,addressId,"","",element);
                 }
         		if(data.type!="confirm")
                 {
@@ -834,6 +841,14 @@ ACC.singlePageCheckout = {
 				$allListElements.closest("li").parent("div.owl-item").show();
 			}
 			
+			if( typeof utag !="undefined" && searchText!=""){
+				utag.link({
+					link_text: searchText+"entered",
+					event_type : searchText+"entered",
+					search_keyword : searchText
+				});
+			}
+			
 		
 	},
 	savePickupPersonDetails: function(element)
@@ -1065,6 +1080,9 @@ ACC.singlePageCheckout = {
                 }
          } else {
         	$("#reviewOrder").html(data);
+        	//added for tealium
+  		  $("#checkoutPageName").val("Review Order");
+  	       tealiumCallOnPageLoad();
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
@@ -1118,11 +1136,56 @@ ACC.singlePageCheckout = {
 	processConfirm: function(showElementId,jsonResponse,element,addressId){
 		if(jsonResponse.type=="confirm")
 		{
+			if(showElementId=="#addressMessage")
+				{
+				document.getElementById('singlePageAddressPopup').style.display = "none";
+				document.getElementById('confirmOverlay').style.display = "block";
+				 document.getElementById('confirmBox').style.display = "block";
+				 
+				 $( "#exConfirmYes" ).click(function() {
+					 $("#contExchnage").val("disableExchange");
+					 if(!ACC.singlePageCheckout.getIsResponsive())
+					 {
+				 ACC.singlePageCheckout.postAddAddress(element);
+					 }
+				 else
+					 {
+					 ACC.singlePageCheckout.removeExchangeFromCart();
+					 }
+					 //In case of Continue Without Exchange show next thing
+					 //document.getElementById('singlePageAddressPopup').style.display = "block";
+					 document.getElementById('confirmOverlay').style.display = "none";
+					 document.getElementById('confirmBox').style.display = "none";
+					});
+				 
+				 $( "#exConfirmNo" ).click(function() {
+					 $("#contExchnage").val("");
+					$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
+						$(showElementId).show();
+						ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+					 document.getElementById('confirmOverlay').style.display = "none";
+					 document.getElementById('confirmBox').style.display = "none";
+					 document.getElementById('singlePageAddressPopup').style.display = "block";
+					 
+					});
+				}
+			
+			else
+				{
 			document.getElementById('confirmOverlay').style.display = "block";
 			 document.getElementById('confirmBox').style.display = "block";
 			 $( "#exConfirmYes" ).click(function() {
 				 $("#contExchnage").val("disableExchange");
-				 ACC.singlePageCheckout.proceedOnAddressSelection(element,addressId);
+				 if(!ACC.singlePageCheckout.getIsResponsive())
+				 {
+			 ACC.singlePageCheckout.proceedOnAddressSelection(showElementId,addressId);
+				 }
+			 else
+				 {
+				 ACC.singlePageCheckout.removeExchangeFromCart();
+				 }
+				
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				});
@@ -1131,6 +1194,8 @@ ACC.singlePageCheckout = {
 				 $("#contExchnage").val("");
 				$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 					$(showElementId).show();
+					ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				 
@@ -1140,6 +1205,30 @@ ACC.singlePageCheckout = {
 			
 		}
 		
+	}
+	},
+removeExchangeFromCart : function (){
+		
+
+    	ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/removeExchangeFromCart";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+        		//do something
+            }});
+        
+        xhrResponse.always(function(){
+
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
 	},
 	
 	removeCartItem : function(element,clickFrom) {			
@@ -1174,6 +1263,15 @@ ACC.singlePageCheckout = {
 	        		{
 	        			ACC.product.addToBagFromWl(entryUssid,false);
 	        			$("#reviewOrder").html(data);
+	        			//tealium call for remove 
+		        		if(typeof(utag)!='undefined')
+						{
+							utag.link({
+								link_text  : 'remove_from_review_order' , 
+								event_type : 'remove_from_review_order',
+								product_id :  entryNumber
+							});
+						}
 	        		}
 	        		if(clickFrom=="addItemToWl")
 	        		{
@@ -1271,11 +1369,9 @@ ACC.singlePageCheckout = {
 					
 					if(typeof(utag)!='undefined')
 					{
-					/*TPR-656*//*TPR-4738*/
 						utag.link({
-							link_obj: this, 
-							link_text: 'cart_add_to_wishlist' , 
-							event_type : 'cart_add_to_wishlist', 
+							link_text: 'review_order_add_to_wishlist' , 
+							event_type : 'review_order__to_wishlist', 
 							product_sku_wishlist : productcodearray
 						});
 					}
@@ -1372,14 +1468,34 @@ ACC.singlePageCheckout = {
 	},
 	
 /****************MOBILE STARTS HERE************************/
+//-----------------------------COMMENTS-----------------------------//
+//	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
+//	2.isAddressSet		:	Used to track if existing address has been set as delivery address in cartModel for responsive
+//	3.isDeliveryModeSet	:	Used to track if delivery mode has been set in cartModel for responsive
+//	4.saveNewAddress		:	Used to track if new address has to be saved in cartModel for responsive
+//	5.selectedAddressId	:	Used to track the selected address id for responsive
+//	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
+//	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
+//
+/////////////////////////////////////////////////////////////////////	
 	mobileValidationSteps:{
 		isAddressSaved:false,
 		isAddressSet:false,
-		isDeliveryModeSte:false,
+		isDeliveryModeSet:false,
 		saveNewAddress:false,
 		selectedAddressId:"",
 		isInventoryReserved:false,
 		isScheduleServiceble:false
+	},
+
+	resetValidationSteps:function(){
+		ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet=false;
+		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+		ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
 	},
 	
 	getMobileAddAddress:function(){
@@ -1420,8 +1536,12 @@ ACC.singlePageCheckout = {
 		return false;	
 	},
 	
-	checkIsServicableResponsive:function(selectedPincode,addressId,isNew)
+	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
 	{
+		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		{
+			ACC.singlePageCheckout.resetValidationSteps();
+		}
 		if(addressId!="")
 		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
@@ -1461,6 +1581,14 @@ ACC.singlePageCheckout = {
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
+		                	
+		                }
+		                //For Confirm Box TPR-1083
+		                else if(response.type=="confirm")
+		                {
+		                	
+		                		ACC.singlePageCheckout.processConfirm("#selectedAddressMessageMobile",response,addressId,selectedPincode,isNew,"");
+	           
 		                }
 		            } else {
 		            	if(isNew)
@@ -1474,6 +1602,9 @@ ACC.singlePageCheckout = {
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
+		            	$("#choosedeliveryModeMobile").on("change","input[type=radio]",function(){
+		            		ACC.singlePageCheckout.resetValidationSteps();
+		            	});
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
 		 		});
@@ -1503,7 +1634,7 @@ ACC.singlePageCheckout = {
 				else
 				{
 					$("#addresspostcodeError").hide();
-					ACC.singlePageCheckout.checkIsServicableResponsive(pincode,"",true);
+					ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",true);
 				}
 			}
 				
@@ -1548,11 +1679,13 @@ ACC.singlePageCheckout = {
 	
 	setDeliveryAddress:function()
 	{
-		$("#radio_mobile_"+addressId).prop("checked", true);
-		a = $("input[name=selectedAddressCodeMobile]:checked").val();
-	    if (null == a || "undefined" == a)
+		$("#radio_mobile_"+ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId).prop("checked", true);
+		a = $("form#selectAddressFormMobile input[name=selectedAddressCode]:checked").val();
+	    
+		if (null == a || "undefined" == a)
 	        return $("#emptyAddressMobile").show(),
 	        !1;
+	    
 	    var data=$("form#selectAddressFormMobile").serialize();
 	    var url=ACC.config.encodedContextPath + $("#selectAddressFormMobile").attr("action");
 	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
@@ -1570,7 +1703,7 @@ ACC.singlePageCheckout = {
                 }
                 if(data.type=="response")
                 {
-                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet=="true"?true:false;
                 }
             }
 		});
@@ -1583,48 +1716,56 @@ ACC.singlePageCheckout = {
 	
 	onPaymentModeSelection:function(paymentMode)
 	{
-		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
 		}
-		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
-		
-		var data="";
-	    var url=ACC.config.encodedContextPath + "";
-	    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
-      
-	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-			console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		});  
-           
-        xhrResponse.done(function(data, textStatus, jqXHR) {
-        	if (jqXHR.responseJSON) {
-                if(data.type!="response")
-                {
-                	//TODO handle error here 
-                }
-                if(data.type=="response")
-                {
-                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved;
-                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble;
-                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-                	{
-                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
-                	}
-                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
-                	{
-                		//TODO Toast for slot delivery should be created here
-                	}
-                }
-                
-            }
-		});
-        
-        xhrResponse.always(function(){
-		});
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		{
+			var url=$("#selectDeliveryMethodFormMobile").attr("action");
+			var data=$("#selectDeliveryMethodFormMobile").serialize();
+		    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+	      
+		    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			});  
+	           
+	        xhrResponse.done(function(data, textStatus, jqXHR) {
+	        	if (jqXHR.responseJSON) {
+	                if(data.type!="response")
+	                {
+	                	//TODO handle error here 
+	                	ACC.singlePageCheckout.processError("",data);
+	                }
+	                if(data.type=="response")
+	                {
+	                	ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=data.isInventoryReserved=="true"?true:false;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=data.isScheduleServiceble=="true"?true:false;
+	                	ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet=data.isDeliveryModeSet=="true"?true:false;
+	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+	                	{
+	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+	                	}
+	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
+	                	{
+	                		//TODO Toast for slot delivery should be created here
+	                	}
+	                }
+	                
+	            }
+			});
+	        
+	        xhrResponse.always(function(){
+			});
+		}
+		else if(ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+    	{
+    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+    	}
 	},
 	
 	viewPaymentModeFormOnSelection:function(paymentMode)
@@ -1651,7 +1792,7 @@ ACC.singlePageCheckout = {
 		}
 		if(paymentMode=="MRUPEE")
 		{
-			viewPaymentMRupee()
+			viewPaymentMRupee();
 		}
 	}
 }
@@ -1665,17 +1806,29 @@ $(document).ready(function(){
 			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 			if(onLoadIsResponsive!=onSizeChangeIsResponsive)
 			{
-				location.reload(true);
+				window.location.href=ACC.config.encodedContextPath +"/checkout/single";
 			}
 		});
+		var deviceType=$("#deviceType").html();
+		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
+		{
+			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
+		}
+		
 		if(ACC.singlePageCheckout.getIsResponsive())
 		{
-			
 			var defaultAddressPincode=$("#defaultAddressPincode").html();
 			var defaultAddressId=$("#defaultAddressId").html();
-			if(typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
+			var defaultAddressPresent=$("#defaultAddressPresent").html();
+			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
-				ACC.singlePageCheckout.checkIsServicableResponsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+			}
+			if(defaultAddressPresent=="false")
+			{
+				$("#chooseDeliveryAddressMobile").find(".mobileNotDefaultDelAddress").show();
+				//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+				$("#chooseDeliveryAddressMobile .change-mobile").hide();
 			}
 			$("#makePaymentDiv").html("");
 		}

@@ -70,6 +70,7 @@
 	        <div class="checkout-accordion-body">
 	            <div id="makePaymentDiv">
 	                <c:if test="${fn:contains(prePopulateTab, 'payment')}" >
+	                	<c:set var="is_responsive" value="false"></c:set>
 	                	<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%> 
 	                </c:if>
 	            </div>
@@ -78,6 +79,7 @@
 	</div>
 </div>
 </c:if>
+<span id="deviceType">${deviceType}</span>
 <c:if test="${deviceType ne 'normal'}">
 <div id="singlePageMobile">
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
@@ -106,7 +108,8 @@
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="makePaymentDivMobile">
-			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodMobilePage.jsp"%>
+			<c:set var="is_responsive" value="true"></c:set>
+			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%>
 		</div>
 	</div>
 </div>
@@ -135,6 +138,19 @@
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
+
+<div id="confirmOverlay" style="display:none">
+    <div id="confirmBox" style="display:none">
+
+         <h1>OOPss Exchange Is not Serviceable</h1>
+        <p>Do you want to continue without Exchange?</p>
+
+        <div id="confirmButtons">
+            <a class="button blue" id="exConfirmYes" href="#">Yes<span></span></a>
+            <a class="button gray"  id="exConfirmNo" href="#">No<span></span></a>
+            </div>
+    </div>
+	</div>	
 
 <style>
 #confirmOverlay{

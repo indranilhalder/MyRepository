@@ -244,13 +244,15 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	 */
 
 	@Override
-	public String getExchangeRequestID(final List<OrderModel> childOrders)
+	public String getExchangeRequestID(final OrderModel order)
 	{
 		final List<ExchangeModel> exModList = new ArrayList<>();
 		final List<OrderModel> childModfList = new ArrayList();
+		final List<AbstractOrderEntryModel> parentEntryList = new ArrayList<>();
+		final List<AbstractOrderEntryModel> childOrderEntryList = new ArrayList<>();
 		final List<ExchangeTransactionModel> exTraxRemovList = new ArrayList();
 		String exReqId = "";
-		for (final OrderModel child : childOrders)
+		for (final OrderModel child : order.getChildOrders())
 		{
 			boolean changeInChild = false;
 			final List<AbstractOrderEntryModel> entryDetails = child.getEntries();
@@ -261,7 +263,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 					final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId(entry.getExchangeId());
 					for (final ExchangeTransactionModel exTrax : exTraxList)
 					{
-						final ExchangeModel exMod = new ExchangeModel();
+						final ExchangeModel exMod = modelService.create(ExchangeModel.class);
 						exReqId = getEXCHANGEREQUESTID().generate().toString();
 						exMod.setBrandName(exTrax.getBrandName());
 						exMod.setExchangeRequestId(exReqId);
@@ -276,18 +278,27 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exTraxRemovList.add(exTrax);
 						entry.setExchangeId(exReqId);
 						changeInChild = true;
-
+						childOrderEntryList.add(entry);
 					}
 				}
 			}
-			if (changeInChild)
+
+			for (final AbstractOrderEntryModel entry : child.getParentReference().getEntries())
 			{
-				childModfList.add(child);
+				if (entry != null && StringUtils.isNotEmpty(entry.getExchangeId()))
+				{
+					entry.setExchangeId(exReqId);
+				}
+				parentEntryList.add(entry);
 			}
+			childModfList.add(child);
+
 		}
 
 		modelService.saveAll(exModList);
+		modelService.saveAll(childOrderEntryList);
 		modelService.saveAll(childModfList);
+		modelService.saveAll(parentEntryList);
 		modelService.removeAll(exTraxRemovList);
 
 		return exReqId;
@@ -341,19 +352,18 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		{
 			if (StringUtils.isEmpty(removeExchangeIdList) && StringUtils.isNotEmpty(entry.getExchangeId()))
 			{
-				removeExchangeIdList = "'" + entry.getExchangeId() + "'";
+				removeExchangeIdList = entry.getExchangeId();
 				entry.setExchangeId("");
 				entryUpdate.add(entry);
 			}
 			else if (StringUtils.isNotEmpty(removeExchangeIdList) && StringUtils.isNotEmpty(entry.getExchangeId()))
 			{
-				removeExchangeIdList += ",'" + entry.getExchangeId() + "'";
+				removeExchangeIdList += entry.getExchangeId();
 				entry.setExchangeId("");
 				entryUpdate.add(entry);
 			}
 
 		}
-		System.out.println(removeExchangeIdList);
 		modelService.saveAll(entryUpdate);
 		removeFromTransactionTable(removeExchangeIdList, null);
 

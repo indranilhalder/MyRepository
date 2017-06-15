@@ -5053,8 +5053,14 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
 	 			//INC144316021
-	 			document.getElementById("outstanding-amount").innerHTML=currency+totalPrice;
-				document.getElementById("outstanding-amount-mobile").innerHTML=currency+totalPrice;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				document.getElementById("outstanding-amount").innerHTML=currency+totalPrice;
+	 			}
+	 			if(document.getElementById("outstanding-amount-mobile")!=null)
+	 			{
+	 				document.getElementById("outstanding-amount-mobile").innerHTML=currency+totalPrice;
+	 			}
 	 			isCodSet = false;
 	 		},
 	 		error : function(resp) {
@@ -8418,4 +8424,7 @@ function populateIsExchangeApplied(response,stringCaller)
 			{
 			$(".cart_exchange").css('display','block');
 			}
+		else{
+			$("#exCartAlert").css('display','block');
+		}
 }

@@ -26,7 +26,7 @@
 	type="java.util.List"%> --%>
 
 <div id="selecteDeliveryModeMessageMobile" style=""></div>
-	<form:form id="selectDeliveryMethodFormMobile" action="${request.contextPath}/checkout/single/select"
+	<form:form id="selectDeliveryMethodFormMobile" action="/checkout/single/select-responsive"
 		method="post" commandName="deliveryMethodForm">
 		<div class="checkout-shipping left-block">
 

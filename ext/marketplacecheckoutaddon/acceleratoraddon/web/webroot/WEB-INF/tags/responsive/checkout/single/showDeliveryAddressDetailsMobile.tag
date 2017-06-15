@@ -33,6 +33,7 @@
 						<span id="emptyAddressMobile" style="display:none">Please select a delivery method to proceed.</span>
 
 <div class="addressList_wrapper mobile_list">
+						<c:set var="defaultAddressPresent" value="false"></c:set>
 							<c:forEach items="${deliveryAddresses}" var="deliveryAddress"
 								varStatus="status">
 
@@ -54,20 +55,21 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
-									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkIsServicableResponsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
+									 <div style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
-												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
+												<input type="radio" class="radio1" name="selectedAddressCode"
 													value="${deliveryAddress.id}"
-													id="radio_mobile_${deliveryAddress.id}" checked="checked" />
+													id="radio_mobile_${deliveryAddress.id}" checked="checked"  onclick="event.stopPropagation();"/>
 												<label for="radio_mobile_${deliveryAddress.id}"></label>
 												<span id="defaultAddressPincode" style="display:none;">${deliveryAddress.postalCode}</span>
 												<span id="defaultAddressId" style="display:none;">${deliveryAddress.id}</span>
+												<c:set var="defaultAddressPresent" value="true"></c:set>
 											</c:when>
 											<c:otherwise>
-												<input type="radio" class="radio1" name="selectedAddressCodeMobile"
+												<input type="radio" class="radio1" name="selectedAddressCode"
 													value="${deliveryAddress.id}"
-													id="radio_mobile_${deliveryAddress.id}" />
+													id="radio_mobile_${deliveryAddress.id}"  onclick="event.stopPropagation();"/>
 												<label for="radio_mobile_${deliveryAddress.id}"></label>
 											</c:otherwise>
 										</c:choose>	
@@ -151,6 +153,7 @@
 								</div>
 								
 							</c:forEach>
+							<span id="defaultAddressPresent" style="display:none;">${defaultAddressPresent}</span>
 						</div>
 
 

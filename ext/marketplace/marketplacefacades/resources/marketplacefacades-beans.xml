@@ -551,6 +551,9 @@
 		<property name="deliveryCost"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="fulfillmentType" type="String" /> 
+		<!-- UF-314 Start -->
+		<property name="priority" type="Integer" />
+		<!-- UF-314 End -->
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
