@@ -549,7 +549,7 @@ display: none;
 									
 						<!--  If no address is present -->
 						<c:if test="${empty deliveryAddresses}"> 
-						<div id="emptyAddress" style="color:red;display:none;">Please select a delivery address</div>		
+						<div id="emptyAddress" style="color:red;display:none;">We don't have a saved address. Add a new address now.</div>		
 										<form id="selectAddressForm"
 									action="${request.contextPath}/checkout/multi/delivery-method/select-address"
 									method="get">

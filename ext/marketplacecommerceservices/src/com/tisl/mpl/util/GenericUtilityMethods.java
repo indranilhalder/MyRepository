@@ -45,7 +45,6 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1753,34 +1752,4 @@ public class GenericUtilityMethods
 		return null;
 	}
 
-	public static void manageMultipleCookieBySameName(final HttpServletRequest request, final HttpServletResponse response,
-			final String cookieName)
-	{
-		//final List<Cookie> cookieList = new ArrayList<Cookie>();
-		if (request != null && request.getCookies() != null && cookieName != null)
-		{
-			for (final Cookie cookie : request.getCookies())
-			{
-				int i = 1;
-				if (cookieName.equals(cookie.getName()))
-				{
-					//cookieList.add(cookie);
-					LOG.error("################# Found Cookie: " + cookie.getName() + i + "cookie domain : " + cookie.getDomain()
-							+ "cookie expiry : " + cookie.getMaxAge());
-					final int maxAge = cookie.getMaxAge();
-					if (maxAge > 86400)
-					{
-						cookie.setMaxAge(0);
-						response.addCookie(cookie);
-						LOG.error("################# REMOVED Cookie: " + cookie.getName() + i + "cookie domain : " + cookie.getDomain()
-								+ "cookie expiry : " + cookie.getMaxAge());
-					}
-					i++;
-
-				}
-			}
-			//return cookieList;
-		}
-		//return null;
-	}
 }

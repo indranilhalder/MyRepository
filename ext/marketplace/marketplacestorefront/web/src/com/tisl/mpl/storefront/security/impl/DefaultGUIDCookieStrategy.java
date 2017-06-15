@@ -42,7 +42,6 @@ import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -207,7 +206,6 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 						new String(Base64.encodeBase64String(customer.getOriginalUid().getBytes())));
 				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
 				//+ customer.getOriginalUid().getBytes());
-				GenericUtilityMethods.manageMultipleCookieBySameName(request, response, "keepAlive");
 				/** Ends for UF-93 **/
 			}
 		}
@@ -330,10 +328,6 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 		//Update the luxury cookies to anonymous
 		//updateLuxuryCookies(request, response, getLuxuryUserCookieGenerator().getCookieName());
 		updateLuxuryCookies(request, response, getLuxuryEmailCookieGenerator().getCookieName());
-
-		//added for testing
-		GenericUtilityMethods.manageMultipleCookieBySameName(request, response, "keepAlive");
-
 		//}
 	}
 

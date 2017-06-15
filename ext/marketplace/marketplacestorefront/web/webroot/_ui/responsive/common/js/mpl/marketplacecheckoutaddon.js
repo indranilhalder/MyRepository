@@ -3147,14 +3147,14 @@ function validateName() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -3182,14 +3182,14 @@ function validateNameDc() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -3217,14 +3217,14 @@ function validateNameEmi() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -3271,7 +3271,7 @@ function validateCVV() {
 	{
 		var number = handle[0].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -3285,7 +3285,7 @@ function validateCVV() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -3309,7 +3309,7 @@ function validateCVVDc() {
 	{
 		var number = handle[1].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -3323,7 +3323,7 @@ function validateCVVDc() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -3347,7 +3347,7 @@ function validateCVVEmi() {
 	{
 		var number = handle[2].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -3361,7 +3361,7 @@ function validateCVVEmi() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -4391,7 +4391,7 @@ function validatePin() {
 		return false;
 	}
 	else if(!regex.test(number)) {
-		errorHandle.innerHTML = "Please enter valid Pincode.";
+		errorHandle.innerHTML = "Please enter a valid Pincode.";
 		return false;
 	}
 	errorHandle.innerHTML = "";
@@ -4407,7 +4407,7 @@ function validatePinEmi() {
 		return false;
 	}
 	else if(!regex.test(number)) {
-		errorHandle.innerHTML = "Please enter valid Pincode.";
+		errorHandle.innerHTML = "Please enter a valid Pincode.";
 		return false;
 	}
 	errorHandle.innerHTML = "";
@@ -7034,6 +7034,7 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
         return false;
@@ -7050,8 +7051,36 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a Last name.";
         return false;
 	}
-	else if (!regex.test(name)) {
-		errorHandle.innerHTML = "Only alphabets and spaces allowed.";
+	else if (!regex.test(name) && identifier=="firstName") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	else if (!regexnew.test(name) && identifier=="firstName") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	else if (!regex.test(name) && identifier=="lastName") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	else if (!regexnew.test(name) && identifier=="lastName") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	else if (!regex.test(name) && identifier=="firstNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	else if (!regex.test(name) && identifier=="lastNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
 	else if (name.length < 1 && identifier=="firstName") {
@@ -7095,8 +7124,13 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
+	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
+        return false;
+	}
+	else if(!regex.test(addressLine)){
+		errorHandle.innerHTML = "Please enter a valid Address";
         return false;
 	}
 	errorHandle.innerHTML = "";
@@ -7199,7 +7233,7 @@ function validateCityEmi() {
 function validateState() {
 	var name=$("#state").val();
 	var errorHandle=document.getElementById("stateError");
-	var regex = new RegExp(/^[a-zA-Z\. ]+$/);
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
@@ -7215,7 +7249,7 @@ function validateState() {
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
 	var errorHandle=document.getElementById("stateErrorEmi");
-	var regex = new RegExp(/^[a-zA-Z\. ]+$/);
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;

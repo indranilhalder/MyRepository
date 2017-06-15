@@ -1125,7 +1125,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
 
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>Please enter a valid first name.</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -1136,7 +1136,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
 
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Please enter a valid last name.</font>";
             flagLn = false;
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {
@@ -1161,16 +1161,16 @@ function editAddress(addressId) {
         }
         else if (addressForm.postcode.value.length > 6 || addressForm.postcode.value.length < 6 || isNaN(addressForm.postcode.value) || regexSpace.test(addressForm.postcode.value)) {
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
         	flagPost = false;
         } else if(addressForm.postcode.value == "000000"){
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
         	flagPost = false;
         }
         else if(addressForm.postcode.value.startsWith("0")){
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
         	flagPost = false;
         }
         if (addressForm.townCity.value == null || addressForm.townCity.value == "") {
@@ -1181,13 +1181,13 @@ function editAddress(addressId) {
         /*added code, TISRLEE-1648*/
         else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
-        	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
+        	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid city.</font>";
         	flagCity = false;
         }
         /*added code, TISRLEE-1648*/
         if (selectedValueState == 0) {
         	$("#errddressState").css({"display":"block"});
-        	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>";
+        	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select a valid state.</font>";
         	flagState = false;
         }
         if (addressForm.mobileNo.value == null || addressForm.mobileNo.value == "") {

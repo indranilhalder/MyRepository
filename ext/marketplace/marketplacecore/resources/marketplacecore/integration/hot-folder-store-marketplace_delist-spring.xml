@@ -82,10 +82,15 @@
     p:mapping="delist-seller"
     p:converter-ref="batchMplDelistSellerConverter"/>  
     
+        <bean id="batchMplSellerInfoDelistSellerConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="delist-seller"
+    p:converter-ref="batchMplSellerInfoDelistSellerConverter"/>  
+    
  	 <!-- Converters -->
  	
  	<!-- Converter for Seller Delist Import --> 
-       <bean id="batchMplDelistSellerConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.SellerDelistConverter">
+       <bean id="batchMplDelistSellerConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}            	    
 				
@@ -95,7 +100,26 @@
         <property name="impexRow">
             <value>;{+0};{1};{2};{3}</value>
         </property>	
-        </bean>   
+        </bean>
+        
+       <!-- CAR-292 starts Converter for SellerInfoModel of Seller Delist Import -->  
+       <bean id="batchMplSellerInfoDelistSellerConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.SellerDelistConverter">
+       <property name="header">
+            <value> 
+            $productCatalog=mplProductCatalog
+			$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']         	    
+				
+            INSERT_UPDATE SellerInformation;sellerID[unique=true];USSID[unique=true][mode=append];sellerAssociationStatus(code);blockOMS;delistDate[dateformat=dd/MM/yyyy HH:mm:ss];$catalogVersion
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{2};{3};{4}</value>
+        </property>	
+        </bean>             
+        <!-- CAR-292 ends Converter for sellerinfomodel of Seller Delist Import -->   
+        
+        
+           
          <!-- Transformer for Seller Dlist Import -->
     <bean id="batchMplDelistUssidConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
