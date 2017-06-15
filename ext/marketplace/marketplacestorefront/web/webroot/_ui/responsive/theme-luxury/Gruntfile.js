@@ -24,7 +24,7 @@ grunt.initConfig({
 		},
 		compile: {
 			files: {
-				'css/styles.css': 'sass/main.scss'
+				'css/uistyles.css': 'sass/main.scss'
 			}
 		}, 
 		updateTrue: {
@@ -42,9 +42,9 @@ grunt.initConfig({
             files: [{
                 src: [
 					'css/jquery.selectBoxIt.css',
-					'css/styles.css',										
+					'css/uistyles.css',										
                 ].map(absolutePath),
-                dest: 'css/uistyles-min.css'
+                dest: 'css/style.css'
             }]
         },
     },
