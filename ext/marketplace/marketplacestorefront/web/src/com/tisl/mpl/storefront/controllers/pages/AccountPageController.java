@@ -1758,11 +1758,14 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()  && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()
+								&& productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
-						}else{
-							productRichAttrOfQuickDrop=ModelAttributetConstants.NO;
+						}
+						else
+						{
+							productRichAttrOfQuickDrop = ModelAttributetConstants.NO;
 						}
 					}
 
@@ -7862,9 +7865,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 					//OTP is valid then call save in commerce DB and Call to OMS and CRM
 					final AddressData newDeliveryAddressData = sessionService
 							.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
-					//final List<TransactionSDDto> transactionSDDtoList = null;
-					//validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId,
-					//	newDeliveryAddressData, false, transactionSDDtoList, null);
+					final List<TransactionSDDto> transactionSDDtoList = null;
+					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId,
+							newDeliveryAddressData, false, transactionSDDtoList, null);
 				}
 				else
 				{//Bug Id 784
