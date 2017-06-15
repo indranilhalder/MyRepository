@@ -1,3 +1,4 @@
+
 /**
  *
  */
@@ -225,8 +226,13 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setParentTransactionID(source.getParentTransactionID());
 
 			}
-
-
+			//TPR-1347---START
+			if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
+					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
+			{
+				target.setParentTransactionID(source.getParentTransactionID());
+			}
+			//TPR-1347---END
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -465,10 +471,18 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setIsaGift(MarketplaceomsservicesConstants.TRUE);
 			target.setIsAFreebie(MarketplaceomsservicesConstants.TRUE);
 		}
+		//TPR-1345--START
+		if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue())
+		{
+			target.setIsBOGO(MarketplaceomsservicesConstants.TRUE);
+		}
+		//TPR-1345--END
 		else
 		{
 			target.setIsaGift(MarketplaceomsservicesConstants.FALSE);
 			target.setIsAFreebie(MarketplaceomsservicesConstants.FALSE);
+			//TPR-1345
+			target.setIsBOGO(MarketplaceomsservicesConstants.FALSE);
 		}
 
 		target.setOrderLineId((source.getOrderLineId() != null) ? source.getOrderLineId() : source.getTransactionID());
@@ -583,3 +597,4 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	
 	
 }
+
