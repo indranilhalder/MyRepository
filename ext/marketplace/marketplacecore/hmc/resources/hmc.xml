@@ -4292,7 +4292,8 @@
 </type>
  <!-- TPR-1083 Start -->
 	<explorertree>
-		<group name="exchangegroup" description="group.MplExchangegroup.description">
+	
+		<group name="exchangeModule" description="group.exchangeModule.description">
 			<typeref type="ExchangeCouponValue" description="mpl.exchange.PriceMatrix" />
 			<typeref type="ExchangePincode" description="mpl.exchange.ExchangePincode" />
 			<typeref type="ExchangeTransaction" description="mpl.exchange.ExchangeTransaction" />
@@ -4412,7 +4413,6 @@
 			</editor>
 		</organizer>
 	</type>
-	
 	<type name="ExchangeTransaction"  mode="append">
 		<organizer>
 			<search mode="append">
@@ -4477,7 +4477,6 @@
 		<organizer>
 			<search mode="append">
 				<condition attribute="Pincode" />
-				<condition attribute="ExchangeValue" />
 				<condition attribute="brandName" />
 				<condition attribute="productId" />
 				<condition attribute="ussid" />
@@ -4520,7 +4519,6 @@
 				  <section name="mpl.exchange.priceMatrix.CategorySection">
 						<listlayout>
 							<attribute name="Pincode"/>
-							<attribute name="ExchangeValue"/>
 							<attribute name="brandName"/>
 						</listlayout>
 					</section>
@@ -4528,7 +4526,7 @@
 						<listlayout>
 						    <attribute name="productId" />
 							<attribute name="ussid" />
-							<attribute name="ExchangeId" />
+							<attribute name="ExchangeRequestId" />
 							<attribute name="cartguid" />
 						</listlayout>
 					</section>
@@ -4537,6 +4535,6 @@
 			</editor>
 		</organizer>
 	</type>
-<!-- TPR-1083 End -->
+	<!-- TPR-1083 End -->
 </configuration>
 

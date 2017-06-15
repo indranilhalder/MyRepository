@@ -90,7 +90,7 @@ public interface ExchangeGuideService
 			final String reason);
 
 
-	public boolean removeFromTransactionTable(final String exchangeId, final String reason);
+	public boolean removeFromTransactionTable(final String exchangeId, final String reason, final CartModel cart);
 
 	/**
 	 * @param childOrders

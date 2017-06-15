@@ -75,13 +75,14 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 			final CartModel cartModel = parameter.getCart();
 			final ProductModel productModel = parameter.getProduct();
+			Boolean exchangeApplied = Boolean.FALSE;
 			final long quantityToAdd = parameter.getQuantity();
 			//final UnitModel unit = parameter.getUnit();
 			final String ussid = parameter.getUssid();
 			cartModel.setCheckUssid(ussid);
 			final boolean forceNewEntry = parameter.isCreateNewEntry();
 			final PointOfServiceModel deliveryPointOfService = parameter.getPointOfService();
-			CommerceCartModification localCommerceCartModification1;
+			final CommerceCartModification localCommerceCartModification1;
 			UnitModel orderableUnit = parameter.getUnit();
 			if (orderableUnit == null)
 			{
@@ -144,10 +145,12 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 				setSellerInformationinCartEntry(cartEntryModel, productModel.getSellerInformationRelator());
 
 				//TPR-1083
-				//Set Temporary Exchange Id
+				//Set Temporary Exchange ID
+
 				if (StringUtils.isNotEmpty(parameter.getExchangeParam()))
 				{
 					cartEntryModel.setExchangeId(parameter.getExchangeParam());
+					exchangeApplied = Boolean.TRUE;
 				}
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
@@ -169,6 +172,12 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 				else if (actualAllowedQuantityChange == quantityToAdd)
 				{
 					modification.setStatusCode(MarketplacecommerceservicesConstants.SUCCESS);
+					if (exchangeApplied.booleanValue())
+					{
+						final CartModel updateCart = parameter.getCart();
+						updateCart.setExchangeAppliedCart(exchangeApplied);
+						getModelService().save(updateCart);
+					}
 				}
 				else
 				{

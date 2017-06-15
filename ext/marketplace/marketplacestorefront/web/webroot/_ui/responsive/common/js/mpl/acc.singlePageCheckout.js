@@ -31,7 +31,7 @@ ACC.singlePageCheckout = {
 	
 	getDeliveryAddresses:function(element){
 		
-		var url=ACC.config.encodedContextPath + "/checkout/single?isAjax=true";
+		var url=ACC.config.encodedContextPath + "/checkout/single?isAjax=true&isResponsive="+ACC.singlePageCheckout.getIsResponsive();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -39,70 +39,76 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.done(function(data) {
-        	$("#chooseDeliveryAddress").html(data);
-        	//Carousel reformation
-        	$("#address_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
-	                'initialize.owl.carousel initialize.owl.carousel ' +
-	                'to.owl.carousel changed.owl.carousel',
-	                function(event) {
-						var items     = event.item.count;     // Number of items
-						var item      = event.item.index;     // Position of the current item
-						
-						if($(window).width() > 1263){
-							var page_no = parseInt(items/3);
-							if(items%3 > 0){
-								page_no = parseInt(items/3) + 1;
-							}
-							var current_page = parseInt(item/3) + 1;
-							if(item%3 > 0){
-								current_page = parseInt(item/3) + 2;
-							}
-							}
-							else{
-								var page_no = parseInt(items/2);
-								if(items%2 > 0){
-									page_no = parseInt(items/2) + 1;
+        	if(!ACC.singlePageCheckout.getIsResponsive())
+        	{
+	        	$("#chooseDeliveryAddress").html(data);
+	        	//Carousel reformation
+	        	$("#address_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+		                'initialize.owl.carousel initialize.owl.carousel ' +
+		                'to.owl.carousel changed.owl.carousel',
+		                function(event) {
+							var items     = event.item.count;     // Number of items
+							var item      = event.item.index;     // Position of the current item
+							
+							if($(window).width() > 1263){
+								var page_no = parseInt(items/3);
+								if(items%3 > 0){
+									page_no = parseInt(items/3) + 1;
 								}
-								var current_page = parseInt(item/2) + 1;
-								if(item%2 > 0){
-									current_page = parseInt(item/2) + 2;
+								var current_page = parseInt(item/3) + 1;
+								if(item%3 > 0){
+									current_page = parseInt(item/3) + 2;
 								}
-							}
-						$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
-	                });
-	              $("#address_carousel").owlCarousel({
-	                items:3,
-					loop: false,
-					nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
-					dots:false,
-					navText:[],
-					slideBy: 3,
-					margin: 82,
-					responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 36,
-            				slideBy: 1,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:2,
-            				slideBy: 2,
-            			},
-            			// breakpoint from 1280 up
-            			1280 : {
-            				items:3,
-            			}			
-            		},
-            		onRefresh: function () {
-            			$("#address_carousel").find('div.owl-item').height('');
-                    },
-                    onRefreshed: function () {
-                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
-                    }
-	              });
-        	
+								}
+								else{
+									var page_no = parseInt(items/2);
+									if(items%2 > 0){
+										page_no = parseInt(items/2) + 1;
+									}
+									var current_page = parseInt(item/2) + 1;
+									if(item%2 > 0){
+										current_page = parseInt(item/2) + 2;
+									}
+								}
+							$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
+		                });
+		              $("#address_carousel").owlCarousel({
+		                items:3,
+						loop: false,
+						nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
+						dots:false,
+						navText:[],
+						slideBy: 3,
+						margin: 82,
+						responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 36,
+	            				slideBy: 1,
+	            			},
+	            			// breakpoint from 768 up
+	            			768 : {
+	            				items:2,
+	            				slideBy: 2,
+	            			},
+	            			// breakpoint from 1280 up
+	            			1280 : {
+	            				items:3,
+	            			}			
+	            		},
+	            		onRefresh: function () {
+	            			$("#address_carousel").find('div.owl-item').height('');
+	                    },
+	                    onRefreshed: function () {
+	                    	$("#address_carousel").find('div.owl-item').height($("#address_carousel").height());
+	                    }
+		              });
+        	}
+        	else
+        	{
+        		$("#chooseDeliveryAddressMobile").html(data);
+        	}
 		});
         
         xhrResponse.always(function(){
@@ -159,6 +165,10 @@ ACC.singlePageCheckout = {
 	                {
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
+	                else if(data.type=="confirm")
+                	{
+                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","",element);
+                	}
 	            } else {
 	            	ACC.singlePageCheckout.getSelectedAddress();
 	                $("#choosedeliveryMode").html(data);
@@ -1398,16 +1408,18 @@ removeExchangeFromCart : function (){
                 }
         		else if(data.type=="response" && data.validation=="success")
     			{
-        			//$("#orderDetailsSectionId").html(data);
-        			$("#totalWithConvField").html(data.totalPrice);
-        			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);
-    	        	
-    				$("#selectedReviewOrderDivId").show();
-    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
-    	        	
-    	        	//Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
-    	        	populateAddress();
-    	        	populateAddressEmi();
+        			if(!ACC.singlePageCheckout.getIsResponsive())
+        			{
+	        			//$("#orderDetailsSectionId").html(data);
+	        			$("#totalWithConvField").html(data.totalPrice);
+	        			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);
+	    	        	
+	    				$("#selectedReviewOrderDivId").show();
+	    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
+	    	      	}
+	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
+	    	        populateAddress();
+	    	        populateAddressEmi();
     			}
         		else
     			{
@@ -1498,6 +1510,19 @@ removeExchangeFromCart : function (){
 		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
 	},
 	
+	resetPaymentModes:function()
+	{
+		$("#makePaymentDivMobile").find("input[type=radio]").attr("checked","false");
+		$("#payment_form").slideUp();
+		$("#payment_form")[0].reset();
+		$("#debit_payment_form").slideUp();
+		$("#debit_payment_form")[0].reset();
+		$("#netbanking").slideUp();
+		$("#emi").slideUp();
+		$("#COD").slideUp();
+		$("#MRUPEE").slideUp();
+	},
+	
 	getMobileAddAddress:function(){
 		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
 		if(formAlreadyLoaded=="false")
@@ -1512,12 +1537,13 @@ removeExchangeFromCart : function (){
 	        
 	        xhrResponse.done(function(data) {
 	        	//Unchecking the radio button of saved addresses
-	        	$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+	        	$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
 	        	$(".mobile_add_address").addClass("form_open");
 				$(".new-address-form-mobile").html(data);
 				$(".new-address-form-mobile").attr("data-loaded","true");
 				$(".new-address-form-mobile").slideDown();
 				$("#singlePageAddressPopup #modalBody").html('');
+				$("#newAddressButton").hide();
 				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
 			});
 	        
@@ -1528,7 +1554,7 @@ removeExchangeFromCart : function (){
 		else
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
-			$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
         	$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
@@ -1541,6 +1567,7 @@ removeExchangeFromCart : function (){
 		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{
 			ACC.singlePageCheckout.resetValidationSteps();
+    		ACC.singlePageCheckout.resetPaymentModes();
 		}
 		if(addressId!="")
 		{
@@ -1602,14 +1629,20 @@ removeExchangeFromCart : function (){
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
-		            	$("#choosedeliveryModeMobile").on("change","input[type=radio]",function(){
-		            		ACC.singlePageCheckout.resetValidationSteps();
-		            	});
+		            	
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
 		 		});
 		}
 		
+	},
+	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
+	attachEventToResetFlagsOnDelModeChange:function()
+	{
+		$("#choosedeliveryModeMobile input[type=radio]").on("change",function(){
+    		ACC.singlePageCheckout.resetValidationSteps();
+    		ACC.singlePageCheckout.resetPaymentModes();
+    	});
 	},
 	
 	scrollToDiv:function(id,offset){
@@ -1667,6 +1700,7 @@ removeExchangeFromCart : function (){
 	                {
 	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
 	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+	                	ACC.singlePageCheckout.getDeliveryAddresses();
 	                }
 	            }
 			});
@@ -1748,7 +1782,11 @@ removeExchangeFromCart : function (){
 	                	ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet=data.isDeliveryModeSet=="true"?true:false;
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 	                	{
+	                		//Validate payment in responsive
+	                		ACC.singlePageCheckout.proceedToPayment();
+	                		//Open payment mode form
 	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+	                		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
@@ -1767,7 +1805,36 @@ removeExchangeFromCart : function (){
     		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
     	}
 	},
-	
+	//Method to get responsive slot delivery page
+	getResponsiveSlotSelectionPage:function(){
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/slotDelivery-responsive";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+            if (jqXHR.responseJSON) {
+            	if(data.type!="response")
+                {
+                	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
+                }
+            } else {
+            	
+            		var elementId="singlePageChooseSlotDeliveryPopup";
+            		ACC.singlePageCheckout.modalPopup(elementId,data);
+            }
+        });
+        
+        xhrResponse.always(function() {
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
+		
+	},
+	//Method to open payment form in responsive
 	viewPaymentModeFormOnSelection:function(paymentMode)
 	{
 		if(paymentMode=="Credit Card")
@@ -1795,6 +1862,7 @@ removeExchangeFromCart : function (){
 			viewPaymentMRupee();
 		}
 	}
+/****************MOBILE ENDS HERE************************/
 }
 //Calls to be made on dom ready.
 $(document).ready(function(){
@@ -1804,9 +1872,13 @@ $(document).ready(function(){
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
 			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
-			if(onLoadIsResponsive!=onSizeChangeIsResponsive)
+			if(onLoadIsResponsive!=onSizeChangeIsResponsive && !ACC.singlePageCheckout.getIsResponsive())
 			{
 				window.location.href=ACC.config.encodedContextPath +"/checkout/single";
+			}
+			else if(onLoadIsResponsive!=onSizeChangeIsResponsive && ACC.singlePageCheckout.getIsResponsive())
+			{
+				window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
 			}
 		});
 		var deviceType=$("#deviceType").html();

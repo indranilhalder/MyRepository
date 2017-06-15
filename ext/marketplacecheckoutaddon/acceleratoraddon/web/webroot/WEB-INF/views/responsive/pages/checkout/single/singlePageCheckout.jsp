@@ -88,7 +88,9 @@
 		<p class="change-mobile">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
-		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
+		<div id="chooseDeliveryAddressMobile">
+			<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
+		</div>
 	</div>
 	<div  class="checkout_mobile_section cart wrapper"  id="selectedDeliveryOptionsDivIdMobile">
 		<div class="checkout-mobile-heading">Delivery Method</div>

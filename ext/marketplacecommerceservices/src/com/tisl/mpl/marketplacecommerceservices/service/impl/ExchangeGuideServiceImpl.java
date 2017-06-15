@@ -208,7 +208,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
 	@Override
-	public boolean removeFromTransactionTable(final String exchangeId, final String reason)
+	public boolean removeFromTransactionTable(final String exchangeId, final String reason, final CartModel cart)
 	{
 		boolean isSaved = false;
 		final List<ExchangeTransactionModel> exList = getTeporaryExchangeModelforId(exchangeId);
@@ -216,7 +216,26 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		if (StringUtils.isNotBlank(id))
 		{
 			isSaved = true;
+			boolean hasExchangeinCart = false;
+			if (cart != null)
+			{
+				for (final AbstractOrderEntryModel entry : cart.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeId()))
+					{
+						hasExchangeinCart = true;
+						break;
+					}
+				}
+			}
+			if (!hasExchangeinCart)
+			{
+				cart.setExchangeAppliedCart(Boolean.FALSE);
+				modelService.save(cart);
+			}
 		}
+
+
 		return isSaved;
 	}
 
@@ -267,7 +286,13 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exReqId = getEXCHANGEREQUESTID().generate().toString();
 						exMod.setBrandName(exTrax.getBrandName());
 						exMod.setExchangeRequestId(exReqId);
-						exMod.setExchangeValue(exTrax.getExchangeValue());
+						exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+						exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
+						exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
+						exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
+						exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
+						exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+
 						exMod.setOrderID(child.getParentReference().getCode());
 						exMod.setPincode(exTrax.getPincode());
 						exMod.setProductId(exTrax.getProductId());
@@ -317,7 +342,12 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			exReqId = getEXCHANGEREQUESTID().generate().toString();
 			exMod.setBrandName(exTrax.getBrandName());
 			exMod.setExchangeRequestId(exReqId);
-			exMod.setExchangeValue(exTrax.getExchangeValue());
+			exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+			exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
+			exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
+			exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
+			exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
+			exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
 			exMod.setOrderID(exTrax.getCartguid());
 			exMod.setPincode(exTrax.getPincode());
 			exMod.setProductId(exTrax.getProductId());
@@ -365,7 +395,8 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 		}
 		modelService.saveAll(entryUpdate);
-		removeFromTransactionTable(removeExchangeIdList, null);
+
+		removeFromTransactionTable(removeExchangeIdList, null, cartModel);
 
 	}
 
