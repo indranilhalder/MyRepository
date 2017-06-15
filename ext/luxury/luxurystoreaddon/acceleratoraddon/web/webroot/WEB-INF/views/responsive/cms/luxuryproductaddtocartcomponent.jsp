@@ -49,7 +49,7 @@
 	<div id="buyNow" class="col-md-6">
 		<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />		
 		
-	        <button  id="" type="button" class="btn-block js-add-to-cart btn btn-primary btn-lg btn-block">
+	        <button  id="buyNow-js-add-to-cart" type="button" class="btn-block js-add-to-cart btn btn-primary btn-lg btn-block">
 				<spring:theme code="buyNow.button.pdp" />
 			</button>
 	        </div>

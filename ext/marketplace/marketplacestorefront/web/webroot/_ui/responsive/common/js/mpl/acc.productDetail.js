@@ -188,18 +188,30 @@
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
-				  var productcode= $(this).attr('data-productcode');
+				  var productcode= $(this).attr('data-productcode1');
 				//   console.log(productcode);
 				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 						  $(this).removeData('bs.modal');
 						});
-
-				   // load the url and show modal on success
-				   $("#popUpModal .modal-content").load(target, function() { 
-					   	   $("#popUpModal").modal("show");
-						  // buyboxDetailsForSizeGuide(productcode);
-				    });
-				  
+				   
+				   var isLuxury = $("#isLuxury").val();
+				   if(isLuxury) {
+					   var action = $("#sizeGuideAction").val();
+					   $("#popUpModal .modal-content").load(target,function() {
+						   $("#popUpModal").modal("hide");
+						   if(typeof action == 'undefined' || action === null || action === '') {
+							   $("#variant li a[data-productcode='" + productcode +"']").parent().addClass('selected');
+						   } else {
+							   $("#" + action).click();
+						   }
+					   });
+					  
+				   } else {
+					   $("#popUpModal .modal-content").load(target, function() {
+						   $("#popUpModal").modal("show");
+						   // buyboxDetailsForSizeGuide(productcode);
+					   });
+				   }
 			});
 		
 		
@@ -2874,11 +2886,21 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
-			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-			$("#addToCartFormTitle").show();
-			//For pdp analytics changes
-			utag.link({"error_type":"size_not_selected"});
-	 	    return false;
+			
+		   var isLuxury = $("#isLuxury").val();
+		   if(isLuxury) {
+			   var href = $('.size-guide').attr('href');
+		   		href += "&action=buyNow-js-add-to-cart";
+		   		$('.size-guide').attr('href', href).click();
+		   		utag.link({"error_type":"size_not_selected"});
+		 	    return false;
+		   } else {
+			   $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+				$("#addToCartFormTitle").show();
+				//For pdp analytics changes
+				utag.link({"error_type":"size_not_selected"});
+		 	    return false; 
+		   }
 	 }
 		ACC.product.sendAddToBag("addToCartForm",true);
 	});
