@@ -19,7 +19,7 @@
 		</ul>
 	</div>
 
-	<!-- Write to us Section-->
+	<!-- Write to us Section
 		<cms:pageSlot position="Section3" var="feature">
 			<cms:component component="${feature}" />
 		</cms:pageSlot>
@@ -32,7 +32,7 @@
 	</div>
 	</c:if> 
 	<!-- Customer Care Section-->
-	<%-- <c:if test="${empty hideContactHelpServiceModules }"> --%>
+	<%-- <c:if test="${empty hideContactHelpServiceModules }">
 	
 	<div class="customer-care-boxes">
 	<ul>
@@ -49,6 +49,7 @@
 		</cms:pageSlot>
 		</ul>
 	</div>
+	 --%>
 
 </template:page>
 
