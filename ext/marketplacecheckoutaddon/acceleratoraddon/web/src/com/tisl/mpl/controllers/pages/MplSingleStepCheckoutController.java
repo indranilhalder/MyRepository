@@ -650,10 +650,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				// ** to be uncommented		return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 
-			boolean exchangeAppliedCart = false;
+			Boolean exchangeAppliedCart = Boolean.FALSE;
 			if (StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
 			{
-				exchangeAppliedCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
+				exchangeAppliedCart = cart.getExchangeAppliedCart();
 			}
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -692,7 +692,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				final String requestQueryParam = UriUtils.encodeQuery("?msg=Provide valid pincode&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			if (exchangeAppliedCart && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
+			if (exchangeAppliedCart.booleanValue() && selectedPincode.matches(regex) && StringUtils.isEmpty(exchangeEnabled)
 					&& !cartItemDelistedStatus)
 			{
 				if (!exchangeGuideFacade.isBackwardServiceble(selectedPincode))
@@ -884,7 +884,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			//TISST-13012
-			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(getCartService().getSessionCart());
+			final CartModel cart = getCartService().getSessionCart();
+			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
 			if (cartItemDelistedStatus)
 			{
 				getSessionService().setAttribute(MarketplacecommerceservicesConstants.CART_DELISTED_SESSION_ID,
@@ -935,7 +936,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			saveAndSetDeliveryAddress(addressForm, true);
-
+			if (cart.getExchangeAppliedCart().booleanValue())
+			{
+				if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=Exchange Not Servicable&type=confirm", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+			}
 			//getSessionService().setAttribute("selectedAddress", newAddress.getId());
 			//Recalculating Cart Model
 			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
@@ -1145,7 +1153,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			boolean exchangeAppliedCart = false;
 			if (StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
 			{
-				exchangeAppliedCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
+				exchangeAppliedCart = cart.getExchangeAppliedCart().booleanValue();
 			}
 
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
@@ -1327,14 +1335,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 
-				boolean exchangeAppliedCart = false;
+				Boolean exchangeAppliedCart = Boolean.FALSE;
 				final CartModel cart = getCartService().getSessionCart();
 
-				exchangeAppliedCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
+				exchangeAppliedCart = cart.getExchangeAppliedCart();
 
-
-
-				if (exchangeAppliedCart)
+				if (exchangeAppliedCart.booleanValue())
 				{
 					if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
 					{
@@ -1342,6 +1348,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					}
 				}
+
 
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 				if (StringUtils.isEmpty(sessionPincode))
@@ -4265,7 +4272,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -4805,8 +4812,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
 			if (!cartItemDelistedStatus)
 			{
-				final boolean exchangeCart = mplCartFacade.isExchangeApplicableProductInCart(cart);
-				if (exchangeCart)
+				final Boolean exchangeCart = cart.getExchangeAppliedCart();
+				if (exchangeCart.booleanValue())
 				{
 					exchangeGuideFacade.removeExchangefromCart(cart);
 					jsonObj.put("exchangeItemsRemoved", "true");

@@ -165,6 +165,10 @@ ACC.singlePageCheckout = {
 	                {
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
+	                else if(data.type=="confirm")
+                	{
+                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","",element);
+                	}
 	            } else {
 	            	ACC.singlePageCheckout.getSelectedAddress();
 	                $("#choosedeliveryMode").html(data);

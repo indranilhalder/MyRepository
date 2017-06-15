@@ -130,7 +130,8 @@ public class ExtDefaultCommerceUpdateCartEntryStrategy extends DefaultCommerceUp
 
 			if (modification.getQuantity() == 0 && isExchangeEntry)
 			{
-				exchangeService.removeFromTransactionTable(exchangeId, "User Removed Product");
+				exchangeService.removeFromTransactionTable(exchangeId, "User Removed Product", cartModel);
+
 			}
 		}
 		else
