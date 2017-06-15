@@ -18,7 +18,7 @@
 	  $('#zommMgId').attr('src',superzoomurl);
    }  */     
   
-        $( document ).ready(function() {
+        /* $( document ).ready(function() {
     	   $("#zoom_gallery iframe").hide();
     	   
     	   var l = document.getElementById('zoom_gallery').getElementsByTagName('img');
@@ -29,7 +29,7 @@
     	   }
     	   
     	  
-    	 });
+    	 }); */
         
       
         
