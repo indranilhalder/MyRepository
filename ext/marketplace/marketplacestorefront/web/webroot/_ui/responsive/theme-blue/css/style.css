@@ -67371,7 +67371,7 @@ padding:0px;
  }
 /* UF-263 End */
 /*UF-93 start*/
-/*.dropdown.sign-in-dropdown.sign-in.ajaxloginhi label[for='j_RememberMe']{
+.dropdown.sign-in-dropdown.sign-in.ajaxloginhi label[for='j_RememberMe']{
 	padding-left: 0;
 }
 .dropdown.sign-in-dropdown.sign-in.ajaxloginhi input[type="checkbox"]+label[for='j_RememberMe']:before{
@@ -67385,7 +67385,7 @@ padding:0px;
 }
 .dropdown.sign-in-dropdown.sign-in.ajaxloginhi input[type="checkbox"]:checked+label[for='j_RememberMe']:before{
     background: rgba(0,0,0,0) url(../images/sprite.svg) no-repeat scroll -251px -1px;
-}*/
+}
 /*UF-93 end*/
 
 /* Fixes Unit Testing */
