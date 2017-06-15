@@ -24,6 +24,7 @@ ACC.singlePageCheckout = {
 			case "address.postcode.invalid" : message="Please enter post code"; break;
 			case "address.postcode.invalid.numeric.length" : message="Post code should be of 6 digit numeric only"; break;
 			case "address.addressType.select" : message="Please select an address Type"; break;
+			case "clientSideAddressFormValidationFailed" : message=ACC.singlePageCheckout.formValidationErrorCount+" errors occured. Please re-enter to continue"; break;
 			default:message="No message specified"; 
 		}
 		return message;
@@ -369,6 +370,8 @@ ACC.singlePageCheckout = {
 	},
 	
 	validateAddressForm:function(){
+		ACC.singlePageCheckout.formValidationErrorCount=0;
+		var errorCount=0;
 		$("form#addressForm :input[type=text]").each(function(){
    		 var input = $(this);    
    		 $(this).val($(this).val().trim());    		     		
@@ -396,6 +399,7 @@ ACC.singlePageCheckout = {
 			$("#addressfirstNameError").show();
 			$("#addressfirstNameError").html("<p>First Name cannot be Blank</p>");
 			validate= false;
+			errorCount++;
 		}
 		else if(letters.test(result) == false)  
 		{ 
@@ -403,6 +407,7 @@ ACC.singlePageCheckout = {
 			/*Error message changed TISPRD-427*/
 			$("#addressfirstNameError").html("<p>First name should not contain any special characters or space</p>");
 			validate= false;
+			errorCount++;
 		}  
 		else
 		{
@@ -415,6 +420,7 @@ ACC.singlePageCheckout = {
 			$("#addresssurnameError").show();
 			$("#addresssurnameError").html("<p>Last Name cannot be Blank</p>");
 			validate= false;
+			errorCount++;
 		}
 		else if(letters.test(result) == false)  
 		{ 
@@ -422,6 +428,7 @@ ACC.singlePageCheckout = {
 			/*Error message changed TISPRD-427*/
 			$("#addresssurnameError").html("<p>Last name should not contain any special characters or space</p>");
 			validate= false;
+			errorCount++;
 		} 
 		else
 		{
@@ -434,6 +441,7 @@ ACC.singlePageCheckout = {
 			$("#addressline1Error").show();
 			$("#addressline1Error").html("<p>Address Line 1 cannot be blank</p>");
 			validate= false;
+			errorCount++;
 		}
 		else
 		{
@@ -445,12 +453,14 @@ ACC.singlePageCheckout = {
 			$("#addresstownCityError").show();
 			$("#addresstownCityError").html("<p>City cannot be blank</p>");
 			 validate=false;
+			 errorCount++;
 		}
 		else if(cityPattern.test(result) == false)  
 		{ 
 			$("#addresstownCityError").show();
 			$("#addresstownCityError").html("<p>City must be alphabet only</p>");
 			validate= false;
+			errorCount++;
 		}
 		else
 		{
@@ -463,6 +473,7 @@ ACC.singlePageCheckout = {
 			$("#addressstatesError").show();
 			$("#addressstatesError").html("<p>Please choose a state</p>");
 			 validate = false;
+			 errorCount++;
 		}
 		else
 		{
@@ -474,11 +485,13 @@ ACC.singlePageCheckout = {
 			$("#addresspostcodeError").show();
 			$("#addresspostcodeError").html("<p>Please enter a pincode</p>");
 			validate = false;
+			errorCount++;
 		}
 	    else if(regPostcode.test(zipcode) == false){
 	        $("#addresspostcodeError").show();
 	        $("#addresspostcodeError").html("<p>Please enter a valid pincode</p>");
-			validate= false;  
+			validate= false;
+			errorCount++;
 		}
 	    else
 		{
@@ -490,11 +503,13 @@ ACC.singlePageCheckout = {
 			$("#addressmobileError").show();
 			$("#addressmobileError").html("<p>Please enter mobile no.</p>");
 	        validate = false;
+	        errorCount++;
 		}
 	    else if (mob.test(txtMobile) == false) {
 			$("#addressmobileError").show();
 			$("#addressmobileError").html("<p> Please enter correct mobile no.</p>");
-			 validate=false;   
+			 validate=false;
+			 errorCount++;
 	    }
 	       else
 		{
@@ -517,6 +532,7 @@ ACC.singlePageCheckout = {
 	   	}
 	   	if(validate==false)
 		{
+	   		ACC.singlePageCheckout.formValidationErrorCount=errorCount;
 			return false;
 		}
 		else{
@@ -1512,9 +1528,12 @@ removeExchangeFromCart : function (){
 	
 	showAjaxLoader:function(){
 		var staticHost = $('#staticHost').val();
-		//Below 2 lines for adding spinner
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		if($("#no-click,.spinner").length==0)
+		{
+			//Below 2 lines for adding spinner
+			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		}
 	},
 	
 	hideAjaxLoader:function(){
@@ -1554,7 +1573,7 @@ removeExchangeFromCart : function (){
 		var winWidth=$(window).width();
 		return winWidth<768?true:false;
 	},
-	
+	formValidationErrorCount:0,
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -1564,7 +1583,7 @@ removeExchangeFromCart : function (){
 //	5.selectedAddressId	:	Used to track the selected address id for responsive
 //	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
 //	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
-//
+//	8.paymentModeSelected:	Used to track the selected payment mode for responsive
 /////////////////////////////////////////////////////////////////////	
 	mobileValidationSteps:{
 		isAddressSaved:false,
@@ -1573,7 +1592,8 @@ removeExchangeFromCart : function (){
 		saveNewAddress:false,
 		selectedAddressId:"",
 		isInventoryReserved:false,
-		isScheduleServiceble:false
+		isScheduleServiceble:false,
+		paymentModeSelected:""
 	},
 
 	resetValidationSteps:function(){
@@ -1584,19 +1604,27 @@ removeExchangeFromCart : function (){
 		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
 		ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
+		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected="";
 	},
 	
 	resetPaymentModes:function()
 	{
-		$("#makePaymentDivMobile").find("input[type=radio]").attr("checked","false");
-		$("#payment_form").slideUp();
+		$("li.paymentModeMobile").removeClass("active");
 		$("#payment_form")[0].reset();
-		$("#debit_payment_form").slideUp();
 		$("#debit_payment_form")[0].reset();
-		$("#netbanking").slideUp();
-		$("#emi").slideUp();
-		$("#COD").slideUp();
-		$("#MRUPEE").slideUp();
+		$("#card").css("display","none");
+		$("#cardDebit").css("display","none");
+		$("#netbanking").css("display","none");
+		$("#emi").css("display","none");
+		$("#COD").css("display","none");
+		$("#MRUPEE").css("display","none");
+		$("#make_cc_payment_up").css("display","none");
+		$("#make_dc_payment_up").css("display","none");
+		$("#make_saved_dc_payment_up").css("display","none");
+		$("#make_nb_payment_up").css("display","none");
+		$("#make_emi_payment_up").css("display","none");
+		$("#paymentButtonId_up").css("display","none");
+		$("#make_mrupee_payment_up").css("display","none");
 	},
 	
 	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
@@ -1622,6 +1650,14 @@ removeExchangeFromCart : function (){
 	
 	getMobileAddAddress:function(){
 		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
+		
+		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
+		{//Will enter if an user selects new address after selecting a payment mode
+			ACC.singlePageCheckout.resetValidationSteps();
+			ACC.singlePageCheckout.resetPaymentModes();
+		}
+		//When ever a user selects a new address this flag should be set to true
+		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
 		if(formAlreadyLoaded=="false")
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
@@ -1722,7 +1758,6 @@ removeExchangeFromCart : function (){
 	                	}
 		            	else
 		            	{
-		            		//ACC.singlePageCheckout.getPickUpPersonForm(pickupPersonName,pickupPersonMobileNo);
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
@@ -1777,34 +1812,47 @@ removeExchangeFromCart : function (){
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
 		{
-			var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
-			var data=$("form#selectAddressFormMobile").serialize().replace(/\+/g,'%20');
-			
 			ACC.singlePageCheckout.showAjaxLoader();
-			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
-	        
-	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-			});
-	        
-	        xhrResponse.done(function(data, textStatus, jqXHR) {
-	        	if (jqXHR.responseJSON) {
-	                if(data.type!="response")
-	                {
-	                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
-	                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
-	                }
-	                if(data.type=="response")
-	                {
-	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
-	                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
-	                	ACC.singlePageCheckout.getDeliveryAddresses();
-	                }
-	            }
-			});
-	        
-	        xhrResponse.always(function(){
-			});
+			try{
+				var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+				var data=$("form#selectAddressFormMobile").serialize().replace(/\+/g,'%20');
+				
+				ACC.singlePageCheckout.showAjaxLoader();
+				var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+		        
+		        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+					console.log("ERROR:"+textStatus + ': ' + errorThrown);
+					data={displaymessage:"Network error occured",type:"error"}
+					ACC.singlePageCheckout.hideAjaxLoader();
+					ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+				});
+		        
+		        xhrResponse.done(function(data, textStatus, jqXHR) {
+		        	if (jqXHR.responseJSON) {
+		                if(data.type!="response")
+		                {
+		                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+		                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+		                }
+		                if(data.type=="response")
+		                {
+		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
+		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+		                	ACC.singlePageCheckout.getDeliveryAddresses();
+		                }
+		            }
+				});
+		        
+		        xhrResponse.always(function(){
+				});
+			}
+			catch(e)
+			{
+				console.log("ERROR:"+e);
+				ACC.singlePageCheckout.hideAjaxLoader();
+			}
+	        return true;
 		}
 		return false;
 	},
@@ -1824,6 +1872,10 @@ removeExchangeFromCart : function (){
       
 	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			data={displaymessage:"Network error occured",type:"error"}
+			ACC.singlePageCheckout.hideAjaxLoader();
+			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+        	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 		});  
            
         xhrResponse.done(function(data, textStatus, jqXHR) {
@@ -1848,22 +1900,39 @@ removeExchangeFromCart : function (){
 	
 	onPaymentModeSelection:function(paymentMode)
 	{
+		var formValidationSuccess=true;
+		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
 		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
-			ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
+			formValidationSuccess=ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
+			if(!formValidationSuccess)
+			{
+				ACC.singlePageCheckout.resetPaymentModes();
+	    		data={displaymessage:"clientSideAddressFormValidationFailed",type:"errorCode"}
+	    		ACC.singlePageCheckout.processError("#newAddressMobileErrorMessage",data);
+	        	ACC.singlePageCheckout.scrollToDiv("newAddressMobileErrorMessage",100);
+	        	return false;
+			}
 		}
 		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
+			ACC.singlePageCheckout.showAjaxLoader();
 			ACC.singlePageCheckout.setDeliveryAddress();
 		}
-		if(!ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-		{
+		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		{	
+			ACC.singlePageCheckout.showAjaxLoader();
 			var url=$("#selectDeliveryMethodFormMobile").attr("action");
 			var data=$("#selectDeliveryMethodFormMobile").serialize();
 		    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
 	      
 		    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+				data={displaymessage:"Network error occured",type:"error"}
+				ACC.singlePageCheckout.hideAjaxLoader();
+				ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+	        	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 			});  
 	           
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
@@ -1897,9 +1966,10 @@ removeExchangeFromCart : function (){
 			});
 	        
 	        xhrResponse.always(function(){
+	        	ACC.singlePageCheckout.hideAjaxLoader();
 			});
 		}
-		else if(ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		else if(formValidationSuccess && ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
     	{
     		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
     	}

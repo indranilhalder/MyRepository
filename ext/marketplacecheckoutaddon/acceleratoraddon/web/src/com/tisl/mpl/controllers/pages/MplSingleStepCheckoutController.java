@@ -730,7 +730,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
-		return FORWARD_PREFIX + "/checkout/single/choose";
+		return FORWARD_PREFIX + "/checkout/single/choose?" + MarketplacecommerceservicesConstants.IS_RESPONSIVE + "="
+				+ MarketplacecommerceservicesConstants.TRUE;
 	}
 
 	/**
@@ -1697,8 +1698,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
-	public String enterDeliveryModeStep(final Model model, final RedirectAttributes redirectAttributes)
-			throws UnsupportedEncodingException
+	public String enterDeliveryModeStep(final Model model, final RedirectAttributes redirectAttributes,
+			@RequestParam(required = false, defaultValue = "false") final boolean isResponsive) throws UnsupportedEncodingException
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -1717,7 +1718,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			final CartModel serviceCart = getCartService().getSessionCart();
-			setExpressCheckout(serviceCart);
+			//setExpressCheckout(serviceCart);
 
 			//TISST-13012
 			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(serviceCart); //TISPT-104
@@ -1813,12 +1814,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			final String is_responsive = getSessionService().getAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
+			//final String is_responsive = getSessionService().getAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
 
-			if (StringUtils.isNotEmpty(is_responsive) && (is_responsive.equalsIgnoreCase("true")))
+			if (isResponsive)
 			{
 				returnPage = "addon:/marketplacecheckoutaddon/fragments/checkout/single/showDeliveryModesDetailsMobile";
-				getSessionService().removeAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
+				//getSessionService().removeAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
 			}
 			else
 			{
@@ -4125,15 +4126,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return cartLevelSellerID;
 	}
 
-	private void setExpressCheckout(final CartModel serviceCart)
-	{
-		if (serviceCart.getDeliveryAddress() != null && serviceCart.getIsExpressCheckoutSelected().booleanValue())
-		{
-			serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(false));
-			serviceCart.setDeliveryAddress(null);
-			modelService.save(serviceCart);
-		}
-	}
+	//	private void setExpressCheckout(final CartModel serviceCart)
+	//	{
+	//		if (serviceCart.getDeliveryAddress() != null && serviceCart.getIsExpressCheckoutSelected().booleanValue())
+	//		{
+	//			serviceCart.setIsExpressCheckoutSelected(Boolean.valueOf(false));
+	//			serviceCart.setDeliveryAddress(null);
+	//			modelService.save(serviceCart);
+	//		}
+	//	}
 
 	/**
 	 * Populates mplZoneDeliveryMode.
