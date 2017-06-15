@@ -623,7 +623,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
 			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode,
 			@RequestParam(value = "locRestrictedPromoPresent", required = false, defaultValue = "false") final boolean locRestrictedPromoPresent)
-			throws CMSItemNotFoundException
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
 		{
@@ -713,15 +713,22 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		return FORWARD_PREFIX + "/checkout/single/choose";
 	}
@@ -841,17 +848,22 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while editing address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while editing address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
 			final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "address.error.formentry.invalid" + "&type=errorCode",
 					UTF);
 			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		model.addAttribute("checkoutPageName", checkoutPageName1);
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.EditAddressForm;
@@ -864,12 +876,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param model
 	 * @throws CMSItemNotFoundException
 	 * @return String
+	 * @throws UnsupportedEncodingException
 	 */
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS
 			+ MarketplacecheckoutaddonConstants.ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
 	public String edit(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
-			throws CMSItemNotFoundException
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
 		{
@@ -954,15 +967,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while editing address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while editing address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while editing address :", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		return REDIRECT_PREFIX + "/checkout/single/choose";
 
@@ -1120,13 +1139,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param selectedAddressCode
 	 * @throws CMSItemNotFoundException
 	 * @return String
+	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTADDRESSURL, method = RequestMethod.GET)
 	public String selectAddress(@RequestParam("selectedAddressCode") final String selectedAddressCode,
-			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled) throws CMSItemNotFoundException
+			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
 		try
 		{
+
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Inside selectAddress Method...");
@@ -1218,15 +1240,23 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		return FORWARD_PREFIX + "/checkout/single/choose";
 	}
@@ -1288,6 +1318,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+
 		}
 		return jsonObj;
 	}
@@ -1299,11 +1330,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param model
 	 * @throws CMSItemNotFoundException
 	 * @return String
+	 * @throws UnsupportedEncodingException
 	 */
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
-			throws CMSItemNotFoundException
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
 		{
@@ -1375,15 +1407,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  saving new address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while saving new address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while saving new address :", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		return REDIRECT_PREFIX + "/checkout/single/choose";
 	}
@@ -2126,11 +2164,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
@@ -2195,12 +2237,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			catch (final Exception e)
 			{
 				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
 						MarketplacecommerceservicesConstants.E0000));
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
 
@@ -3003,6 +3049,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3017,7 +3064,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.SLOTDELIVERYRESPONSIVE, method = RequestMethod.GET)
-	public String selectDeliverySlotResponsive(final Model model)
+	public String selectDeliverySlotResponsive(final Model model) throws UnsupportedEncodingException
 	{
 		try
 		{
@@ -3045,21 +3092,28 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  saving new address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while saving new address ", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while saving new address :", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		return "addon:/marketplacecheckoutaddon/pages/checkout/single/showChooseDeliverySlotPage";
 	}
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.GETREVIEWORDER, method = RequestMethod.GET)
-	public String viewReviewOrder(final Model model)
+	public String viewReviewOrder(final Model model) throws UnsupportedEncodingException
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		try
@@ -3098,7 +3152,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		catch (final Exception e)
 		{
-			e.printStackTrace();
+			LOG.error("Exception occured while saving new address :", e);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.ReviewOrder;
 	}
@@ -3909,6 +3966,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			storeLocationRequestData.setStoreId(null);
 			LOG.error("Exception while retrieving all the stores based on gps,sellerId and radius");
+
 		}
 		if (CollectionUtils.isNotEmpty(storeList))
 
@@ -4122,11 +4180,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/**
 	 * Cart Item Removal
+	 * 
+	 * @throws UnsupportedEncodingException
 	 *
 	 *
 	 */
 	@RequestMapping(value = "/removereviewcart", method = RequestMethod.GET)
-	public String removeFromMinicart(final Model model, final HttpServletRequest request) throws CommerceCartModificationException
+	public String removeFromMinicart(final Model model, final HttpServletRequest request)
+			throws CommerceCartModificationException, UnsupportedEncodingException
 	{
 		CartModel cartModel = null;
 		final String entryNumberString = request.getParameter("entryNumber");
@@ -4209,15 +4270,24 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final CommerceCartModificationException ex)
 		{
 			LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		catch (final EtailNonBusinessExceptions ex)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
 			LOG.error("EtailNonBusinessExceptions while remove item from minicart ", ex);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		catch (final Exception ex)
 		{
 			LOG.error("Exception while remove item from minicart ", ex);
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=Opps...Something went wrong&type=error", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+
 		}
 		return returnPage;
 	}
@@ -4265,6 +4335,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("Exception while adding to wishlist from cart ", e);
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -4347,6 +4418,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				ExceptionUtil.etailBusinessExceptionHandler(e, null);
 				LOG.error("Exception occured while showWishListsForCartPage ", e);
+
 			}
 			catch (final EtailNonBusinessExceptions e)
 			{
