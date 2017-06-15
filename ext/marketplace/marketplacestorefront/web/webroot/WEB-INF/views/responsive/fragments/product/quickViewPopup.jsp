@@ -276,7 +276,9 @@ tr.d0 td {
 		console.log("jsp mainImageHeight is " + mainImageHeight);
 		var thumbnailImageHeight = (mainImageHeight / 5);
 		console.log("jsp thumbnailImageHeight is " + thumbnailImageHeight);
-		$(".imageList ul li img").css("height", thumbnailImageHeight);
+	if (thumbnailImageHeight > 0) {	
+	 $(".imageList ul li img").css("height", thumbnailImageHeight);
+ } 
 		$("#previousImage").css("opacity","0.5");
 	 	$("#nextImage").css("opacity","1");
 	 	var listHeight = $(".imageList li").height();
