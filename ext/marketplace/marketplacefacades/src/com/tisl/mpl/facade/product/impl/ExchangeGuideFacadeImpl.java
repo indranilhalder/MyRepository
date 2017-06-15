@@ -350,7 +350,7 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 	 * @see com.tisl.mpl.facade.product.ExchangeGuideFacade#getExchangeRequestID(java.util.List)
 	 */
 	@Override
-	public String getExchangeRequestID(final List<OrderModel> childOrders)
+	public String getExchangeRequestID(final OrderModel childOrders)
 	{
 		return exchangeGuideService.getExchangeRequestID(childOrders);
 	}

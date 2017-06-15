@@ -7094,8 +7094,15 @@
 						<description>for Cockpit use only</description>
 						<persistence type="property" />
 					</attribute>
+				<!-- TPR-1083 Start -->
+				<attribute qualifier="exchangeAppliedCart" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<description>True if ant entry has exchange applied to It</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-1083 End -->
 				</attributes>
-
 				<!-- new indexes added for performace improvement -->
 				<indexes>
 					<index name="CARTS_IDX_MSS">
@@ -11129,12 +11136,6 @@
 					<persistence type='property'>
 					</persistence>
 				</attribute>
-				<attribute type="java.lang.String" qualifier="entryNumber">
-				<description>Entry Number</description>
-					<modifiers read="true" write="true" optional="true" unique="true"/>
-					<persistence type='property'>
-					</persistence>
-				</attribute>
 				</attributes>
 				</itemtype>
 				
@@ -11151,13 +11152,6 @@
 					<persistence type='property'>
 					</persistence>
 				</attribute>
-				<attribute type="ExchangeCouponValue" qualifier="ExchangeValue">
-				<description>Exchange Price Matrix</description>
-					<modifiers read="true" write="true" optional="false" />
-					<persistence type='property'>
-					</persistence>
-				</attribute>
-								
 				<attribute type="java.lang.String" qualifier="brandName">
 					<description>Brand Name</description>
 					<modifiers read="true" write="true" optional="true"/>
@@ -11207,6 +11201,36 @@
 					<modifiers read="true" write="true" optional="true" unique="false"/>
 					<persistence type='property'>
 					</persistence>
+				</attribute>
+				<attribute type="Category" qualifier="thirdLevelCategory">
+				<description>Third level Category</description>
+					<modifiers read="true" write="true" optional="false" />
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="l4categoryCode">
+					<description>Fourth Level Category</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="java.lang.String" qualifier="l4categoryName">
+					<description>Fourth Level Category Name</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+					</persistence>
+				</attribute>
+				<attribute type="boolean" qualifier="isWorking">
+				<description>Is the value Active</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+						</persistence>
+				</attribute>
+				<attribute type="java.lang.Double" qualifier="couponValue">
+				<description>Coupon Value for the L3 and L4</description>
+					<modifiers read="true" write="true" optional="false"/>
+					<persistence type='property'>
+						</persistence>
 				</attribute>
 			</attributes>
 			

@@ -97,9 +97,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -111,11 +111,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @param String categoryCode
-	 *
+	 * 
 	 * @param ExchangeCouponValueModel pricematrix
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -222,7 +222,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -267,7 +267,13 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exReqId = getEXCHANGEREQUESTID().generate().toString();
 						exMod.setBrandName(exTrax.getBrandName());
 						exMod.setExchangeRequestId(exReqId);
-						exMod.setExchangeValue(exTrax.getExchangeValue());
+						exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+						exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
+						exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
+						exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
+						exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
+						exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+
 						exMod.setOrderID(child.getParentReference().getCode());
 						exMod.setPincode(exTrax.getPincode());
 						exMod.setProductId(exTrax.getProductId());
@@ -317,7 +323,12 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			exReqId = getEXCHANGEREQUESTID().generate().toString();
 			exMod.setBrandName(exTrax.getBrandName());
 			exMod.setExchangeRequestId(exReqId);
-			exMod.setExchangeValue(exTrax.getExchangeValue());
+			exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
+			exMod.setL4categoryName(exTrax.getExchangeValue().getL4categoryName());
+			exMod.setThirdLevelCategory(exTrax.getExchangeValue().getThirdLevelCategory());
+			exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
+			exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
+			exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
 			exMod.setOrderID(exTrax.getCartguid());
 			exMod.setPincode(exTrax.getPincode());
 			exMod.setProductId(exTrax.getProductId());
@@ -365,13 +376,15 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 		}
 		modelService.saveAll(entryUpdate);
+		cartModel.setExchangeAppliedCart(Boolean.FALSE);
+		modelService.save(cartModel);
 		removeFromTransactionTable(removeExchangeIdList, null);
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)

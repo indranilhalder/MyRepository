@@ -60,7 +60,7 @@ public interface ExchangeGuideFacade
 	 * @param childOrders
 	 * @return
 	 */
-	String getExchangeRequestID(List<OrderModel> childOrders);
+	String getExchangeRequestID(OrderModel childOrders);
 
 	public boolean addToExchangeTable(final ExchangeTransactionModel ex);
 
