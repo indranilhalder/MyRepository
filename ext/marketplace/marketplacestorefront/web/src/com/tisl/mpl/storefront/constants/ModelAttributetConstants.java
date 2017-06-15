@@ -348,7 +348,9 @@ public final class ModelAttributetConstants
 	public static final String DEBIT_CARDS = "debitCards";
 	public static final String CARDS = "cards";
 	public static final String SLASH = "/";
+	public static final String DASH = "-";
 	public static final String SPLITTER_SLASH = "\\/";
+	public static final String SPILITTER_DASH = "-";
 
 	public static final String TEST_USSID_NO = "123456";
 	public static final String N_SMALL_VAL = "n";
@@ -396,6 +398,7 @@ public final class ModelAttributetConstants
 	public static final String ORDER_DATA_LIST = "orderDataList";
 	public static final String SUB_ORDER_LIST = "subOrderList";
 	public static final String ORDER_DATA_MAP = "orderDataMap";
+	public static final String ORDER_STATUS = "orderStatusMap";
 	public static final String RETURN_REQUEST_FORM = "returnRequestForm";
 	public static final String ORDERENTRY = "orderEntry";
 	public static final String CANCELLATION_REASON = "cancellationReason".intern();
@@ -405,6 +408,8 @@ public final class ModelAttributetConstants
 	public static final String ERRORMSG = "Your cancellation failed".intern();
 	public static final String RETURN_ERRORMSG = "Your return failed".intern();
 
+	public static final String RETURN_POPOVER = "returnPopover";
+	public static final String CANCEL_POPOVER = "cancelPopover";
 
 
 	public static final String SUB_CATEGORY_LIST = "subcategoryList";

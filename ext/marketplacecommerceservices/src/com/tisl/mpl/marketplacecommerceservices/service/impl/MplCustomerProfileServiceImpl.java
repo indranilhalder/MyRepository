@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.enums.Salutation;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.GenderData;
@@ -400,8 +401,9 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 	 * @description this method calls mplEnumerationHelper to fetch Gender enum values
 	 * @return List<GenderData>
 	 */
-	@Override
-	public List<GenderData> getGenders()
+	//@Override
+	@Deprecated
+	public List<GenderData> getGender()
 	{
 		try
 		{
@@ -430,6 +432,46 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 		}
 	}
 
+	//TPR-6013 changing gender to salutation
+	@Override
+	public List<GenderData> getGenders()
+	{
+		try
+		{
+			final List<GenderData> genderList = new ArrayList<GenderData>();
+
+			final List<EnumerationValueModel> enumList = mplEnumerationHelper.getEnumerationValuesForCode(Salutation._TYPECODE);
+			if (CollectionUtils.isNotEmpty(enumList))
+			{
+				for (int i = 0; i < enumList.size(); i++)
+				{
+					EnumerationValueModel oModelData = new EnumerationValueModel();
+					oModelData = enumList.get(i);
+
+					final GenderData oGenderData = new GenderData();
+
+					if (oModelData.getCode().equals(Salutation.MR.getCode()))
+					{
+						oGenderData.setName(oModelData.getCode());
+						oGenderData.setCode(Gender.MALE.getCode());
+					}
+					else if (oModelData.getCode().equals(Salutation.MRS.getCode())
+							|| oModelData.getCode().equals(Salutation.MISS.getCode()))
+					{
+						oGenderData.setName(oModelData.getCode());
+						oGenderData.setCode(Gender.FEMALE.getCode());
+					}
+
+					genderList.add(oGenderData);
+				}
+			}
+			return genderList;
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 	/**
 	 * @description this method is called to change uid of customer

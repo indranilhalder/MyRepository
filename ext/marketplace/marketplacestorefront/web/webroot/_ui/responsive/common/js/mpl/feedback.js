@@ -3598,6 +3598,14 @@ $("#sameAsShippingEmi").click(function(){
 /*TISSQAEE-335*/
 $(window).on("load resize",function(){
 	topLeftLocator();
+	
+	/* TPR-6013 responsive class addition starts*/
+	$("body .account .right-account .info,body .account .right-account .password,body .account .right-account .signOut,body .account .right-account .order-history").removeClass("responsiveProfile");
+	if($(window).width() <= 1007)
+		$("body .account .right-account .info,body .account .right-account .password").addClass("responsiveProfile");
+	if($(window).width() <= 773)
+		$("body .account .right-account .signOut,body .account .right-account .order-history").addClass("responsiveProfile");
+	/* TPR-6013 responsive class addition starts*/
 });
 $(document).ajaxComplete(function(){
 	topLeftLocator();
@@ -3647,3 +3655,26 @@ $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab
 	$(this).addClass("active");
 	});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
+
+/* TPR-6013 starts*/
+$(document).on("click","body .account .right-account .password .blue.changePass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	$("body .account .right-account .password .blue.changePass").css("display","block");
+});
+
+$(".deliveryTrack.status.suman").each(function(){
+	$(this).find(".progtrckr.tabs").find("li").each(function(){
+	if($(this).find(".commonBlock").length === 2){
+	var index = $(this).index();
+	$(this).parents(".progtrckr.tabs").siblings(".nav").find("li").eq(index).addClass("greenProgress");
+
+	}
+	});
+	});
+/* TPR-6013 ends*/

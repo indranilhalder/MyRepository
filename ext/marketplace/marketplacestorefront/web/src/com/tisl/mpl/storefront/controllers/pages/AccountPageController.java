@@ -188,15 +188,12 @@ import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
-import com.tisl.mpl.facades.product.data.DayData;
 import com.tisl.mpl.facades.product.data.GenderData;
-import com.tisl.mpl.facades.product.data.MonthData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.MyStyleProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.facades.product.data.StateData;
-import com.tisl.mpl.facades.product.data.YearData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
@@ -233,7 +230,6 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 
 /**
@@ -663,9 +659,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final Map<String, String> orderFormattedDateMap = new HashMap<String, String>();
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		List<OrderEntryData> cancelProduct = new ArrayList<OrderEntryData>();
+		final Map<String, Map<String, AWBResponseData>> orderWithStatus = new HashMap<String, Map<String, AWBResponseData>>();
+
+
 		LOG.debug("Step1-************************Order History");
 		try
 		{
+			//TPR-6013
+			final String cancelMessagePopOver = configurationService.getConfiguration()
+					.getString(MessageConstants.CANCEL_LOCAL_PROP).trim();
+			final String returnMessagePopOver = configurationService.getConfiguration()
+					.getString(MessageConstants.RETURN_LOCAL_PROP).trim();
 
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
@@ -758,6 +762,40 @@ public class AccountPageController extends AbstractMplSearchPageController
 						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 								orderEntryData.getOrderLineId());
 						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+
+						//TPR-6013
+						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
+						final Map<String, List<AWBResponseData>> statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(
+								orderEntryData, subOrder, subOrderModel);
+						List<AWBResponseData> response = null;
+						AWBResponseData approved = null, shipped = null, delivery = null;
+						final Map<String, AWBResponseData> orderStatus = new HashMap<String, AWBResponseData>();
+
+
+						response = statusTrackMap.get("APPROVED");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							approved = response.get(0);
+						}
+
+						response = statusTrackMap.get("SHIPPING");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							shipped = response.get(0);
+						}
+						response = statusTrackMap.get("DELIVERY");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							delivery = response.get(0);
+						}
+
+						orderStatus.put("APPROVED", approved);
+						orderStatus.put("SHIPPING", shipped);
+						orderStatus.put("DELIVERY", delivery);
+						orderWithStatus.put(orderEntryData.getOrderLineId(), orderStatus);
 					}
 					subOrderDetailsList.add(subOrder);
 				}
@@ -789,6 +827,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			// TISPRO-48 - added page index and page size attribute for pagination
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
+			model.addAttribute(ModelAttributetConstants.ORDER_STATUS, orderWithStatus);
+
+			//TPR-6013
+			model.addAttribute(ModelAttributetConstants.RETURN_POPOVER, returnMessagePopOver);
+			model.addAttribute(ModelAttributetConstants.CANCEL_POPOVER, cancelMessagePopOver);
 
 			// LW-225,230
 			if (CollectionUtils.isEmpty(orderHistoryList))
@@ -2945,20 +2988,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 
-			final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
-			final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
-			final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
-			final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
+			//final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
+			//final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
+			//final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
+			//final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
 
-			model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
-			model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
-			model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
-			model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
+			//model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
+			//model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
+			//model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
+			//model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
 
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData
-
-			.getDisplayUid());
+					.getDisplayUid());
 
 			final MplCustomerProfileForm mplCustomerProfileForm = new MplCustomerProfileForm();
 			if (null != customerProfileData && null != customerProfileData.getDateOfBirth()
@@ -3097,6 +3139,25 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
+			//TPR-6013
+			if (null != mplCustomerProfileForm && null != mplCustomerProfileForm.getDateOfBrithPicker()
+					&& mplCustomerProfileForm.getDateOfBrithPicker().contains(ModelAttributetConstants.DASH))
+			{
+				final String[] dob = mplCustomerProfileForm.getDateOfBrithPicker().split(ModelAttributetConstants.DASH);
+				mplCustomerProfileForm.setDateOfBirthYear(dob[0].trim());
+				mplCustomerProfileForm.setDateOfBirthMonth(dob[1].trim());
+				mplCustomerProfileForm.setDateOfBirthDay(dob[2].trim());
+			}
+			if (null != mplCustomerProfileForm && null != mplCustomerProfileForm.getAnniversaryDatePicker()
+					&& mplCustomerProfileForm.getAnniversaryDatePicker().contains(ModelAttributetConstants.DASH))
+			{
+				final String[] doa = mplCustomerProfileForm.getAnniversaryDatePicker().split(ModelAttributetConstants.DASH);
+				mplCustomerProfileForm.setDateOfAnniversaryYear(doa[0].trim());
+				mplCustomerProfileForm.setDateOfAnniversaryMonth(doa[1].trim());
+				mplCustomerProfileForm.setDateOfAnniversaryDay(doa[2].trim());
+
+
+			}
 
 			if (isDateValidatedDOB(mplCustomerProfileForm))
 			{
@@ -7801,9 +7862,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 					//OTP is valid then call save in commerce DB and Call to OMS and CRM
 					final AddressData newDeliveryAddressData = sessionService
 							.getAttribute(MarketplacecommerceservicesConstants.CHANGE_DELIVERY_ADDRESS);
-					final List<TransactionSDDto> transactionSDDtoList = null;
-					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId,
-							newDeliveryAddressData, false, transactionSDDtoList, null);
+					//final List<TransactionSDDto> transactionSDDtoList = null;
+					//validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerData.getUid(), orderId,
+					//	newDeliveryAddressData, false, transactionSDDtoList, null);
 				}
 				else
 				{//Bug Id 784
