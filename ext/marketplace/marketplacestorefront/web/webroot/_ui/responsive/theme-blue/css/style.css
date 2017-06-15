@@ -70721,3 +70721,26 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 	padding: 0;
 }
 /*TISSTRT-1581 end*/
+/*STW heading start*/
+.best_seller.stw-list .best_seller_section.hide_clplist{
+	height: auto;
+    opacity: 1;
+    z-index: 1;
+    font-size: 28px;
+    text-transform: capitalize;
+    letter-spacing: 0.6px;
+    padding-top: 64px;
+    padding-bottom: 24px;
+    text-align: center;
+}
+@media (max-width: 767px){
+.best_seller.stw-list .best_seller_section.hide_clplist{
+    padding: 34px 0 24px;
+    font-size: 24px;
+    line-height: 1.5;
+}
+.best_seller.stw-list .Menu ul {
+    width: calc(100% - 48px);
+}
+}
+/*STW heading end*/
