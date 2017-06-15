@@ -3647,3 +3647,25 @@ $(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 $(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });
+
+
+/* start change of PRDI-92 */
+$(document).ready(function() {
+    if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+        $(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+    }
+	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+	}
+});
+$(window).on("load resize click",function(){
+	setTimeout(function(){
+		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+			$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+		}
+		if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+			$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+		}
+	},500);
+});
+/* end change of PRDI-92 */
