@@ -79,6 +79,7 @@ function quickviewGallery() {
 	$(document).ready(function(){
 		//UF-24 thumbnail image load
 		$('.main-image a img.picZoomer-pic').on('load', function(){
+			console.log("js image is loaded");
 			var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 			console.log("js mainImageHeight is " + mainImageHeight);
 			var thumbnailImageHeight = (mainImageHeight / 5);
