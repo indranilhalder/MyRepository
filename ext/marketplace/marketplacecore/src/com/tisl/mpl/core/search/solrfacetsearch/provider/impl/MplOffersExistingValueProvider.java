@@ -81,7 +81,7 @@ public class MplOffersExistingValueProvider extends AbstractPropertyFieldValuePr
 		try
 		{
 			//INC144314274
-			if (model instanceof ProductModel)
+			if (model instanceof PcmProductVariantModel)
 			{
 				final PcmProductVariantModel product = (PcmProductVariantModel) model;
 
