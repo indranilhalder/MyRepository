@@ -4,6 +4,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 //import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -37,9 +38,8 @@ public class LoginHiHeaderController
 	@Autowired
 	private UserService userService;
 
-	//Sonar Issue Fixed For Kidswear: commented configurationService
-	//@Autowired
-	//private ConfigurationService configurationService; //Added for UF-93
+	@Autowired
+	private ConfigurationService configurationService; //Added for UF-93
 
 	//Sonar Issue Fixed For Kidswear: commented LOG
 	//private static final Logger LOG = Logger.getLogger(LoginHiHeaderController.class);
