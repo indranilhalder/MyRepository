@@ -68892,3 +68892,14 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
     margin-bottom: 5px;
 }
 /* TISKIDK-1416 */
+/* UF-361/TPR-6034 */
+.feedback-form-header {
+    background-color: #fff;
+}
+.feedback-form-header-image{
+	padding: 20px 10px 0 30px;
+}
+.feedback-form-question-options{
+	padding-left: 0px;
+}
+/* UF-361/TPR-6034 */
