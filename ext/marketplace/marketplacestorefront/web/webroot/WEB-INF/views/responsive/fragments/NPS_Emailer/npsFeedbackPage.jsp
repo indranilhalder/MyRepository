@@ -17,9 +17,9 @@
 	<div class="feedback-form-outer-wrapper">
 		<div class="feedback-form-wrapper">
 			<div class="feedback-form-header">
-				<img class="feedback-form-header-image"
-					src="${commonResourcePath}/images/camel.jpg"> <img
-					class="feedback-form-header-right"
+				<%-- <img class="feedback-form-header-image"
+					src="${commonResourcePath}/images/camel.jpg"> //commented for UF-361--%> 
+					<img class="feedback-form-header-right"
 					src="${commonResourcePath}/images/round-logo.png">
 			</div>
 			<div class="feedback-form-content">
