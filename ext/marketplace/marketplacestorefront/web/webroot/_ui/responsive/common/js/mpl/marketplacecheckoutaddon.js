@@ -5794,7 +5794,6 @@ function checkPincodeServiceability(buttonType,el)
 		else{
 			$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
 		}
->>>>>>> refs/remotes/origin/Sprint_6_7_8_9
 	}
 	else
     {
