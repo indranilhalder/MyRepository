@@ -53,7 +53,9 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 
 	@Autowired
 	private MplCmsPageService cmsPageService;
-	StringBuilder sbError = new StringBuilder();
+	//Sonar fix
+	//StringBuilder sbError = new StringBuilder();
+	StringBuilder sbError = new StringBuilder(1000);
 
 
 	/**
@@ -155,7 +157,11 @@ public class BusinessContentImportServiceImpl implements BusinessContentImportSe
 		LOG.debug("Generationg Contents..");
 		LOG.debug("Error Checking Contents..");
 		int lineNo = 0;
-		sbError = new StringBuilder();
+
+		//Sonar fix : limiting size of string builder
+		//sbError = new StringBuilder();
+		//	sbError = new StringBuilder(1000);
+
 		while (reader.readNextLine())
 		{
 			lineNo++;

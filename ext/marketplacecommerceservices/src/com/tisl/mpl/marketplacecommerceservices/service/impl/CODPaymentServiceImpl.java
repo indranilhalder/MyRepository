@@ -102,6 +102,45 @@ public class CODPaymentServiceImpl implements CODPaymentService
 	}
 
 	@Override
+	public void getTransactionModelForCards(final CartModel cart, final Double amount)
+	{
+		// YTODO Auto-generated method stub
+		List<PaymentTransactionModel> paymentTransactionModelList = null;
+		final CartModel cartModel;
+		cartModel = cart;
+		final PaymentTransactionModel paymentTransactionModel = getModelService().create(PaymentTransactionModel.class);
+		paymentTransactionModel.setOrder(cart);
+
+		if (!cartModel.getPaymentTransactions().isEmpty())
+		{
+			paymentTransactionModelList = new ArrayList<PaymentTransactionModel>(cartModel.getPaymentTransactions());
+		}
+		else
+		{
+			paymentTransactionModelList = new ArrayList<PaymentTransactionModel>();
+		}
+
+		//TISPRO-192
+		//		final String merchantTransactionCode = (new StringBuilder(String.valueOf(cart.getUser().getUid()))).append("-")
+		//				.append(UUID.randomUUID()).toString();
+		//		paymentTransactionModel.setCode(merchantTransactionCode);
+
+		final String codCode = getCodCodeGenerator().generate().toString();
+		paymentTransactionModel.setCode(MarketplacecommerceservicesConstants.COD + codCode + "-" + System.currentTimeMillis());
+
+		paymentTransactionModel.setCurrency(cart.getCurrency());
+		paymentTransactionModel.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
+		paymentTransactionModel.setPlannedAmount(BigDecimal.valueOf(cart.getTotalPriceWithConv().doubleValue()));
+		paymentTransactionModel.setPaymentProvider(getConfigurationService().getConfiguration().getString("payment.cod"));
+		paymentTransactionModelList.add(paymentTransactionModel);
+		cartModel.setPaymentTransactions(paymentTransactionModelList);
+		getModelService().save(paymentTransactionModel);
+		getPaymentTransactionEntryModel(paymentTransactionModel, cart, amount);
+		getModelService().save(cartModel);
+
+	}
+
+	@Override
 	public void getTransactionModel(final CartModel cart)
 	{
 		getTransactionModel(cart, cart.getTotalPrice());

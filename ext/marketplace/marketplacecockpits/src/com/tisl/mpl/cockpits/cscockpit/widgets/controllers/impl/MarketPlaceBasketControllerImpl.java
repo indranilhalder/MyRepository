@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.annotation.Resource;
@@ -33,6 +34,7 @@ import com.tisl.mpl.data.VoucherDiscountData;
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -64,7 +66,9 @@ import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParamete
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.security.PrincipalGroupModel;
 import de.hybris.platform.core.model.user.AddressModel;
+import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ResourceMessage;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
@@ -78,6 +82,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.util.WeakArrayList;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
@@ -145,6 +150,11 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 	@Autowired
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
+
+	
+	@Resource
+	private AgentIdForStore agentIdForStore;
+
     @Autowired
 	private MplCommerceCartCalculationStrategy calculationStrategy;
     
@@ -288,7 +298,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 
 		return responseData;
 	}
-
+	
 	/**
 	 * Reserve cart.
 	 *
@@ -319,6 +329,18 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	      {
 	        errorMessages.add(new ResourceMessage("placeOrder.validation.noPaymentAddress"));
 	      }
+	      
+	      // if store agent is logged in
+	      final String agentId = agentIdForStore.getAgentIdForStore(
+					MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+	      
+			for(AbstractOrderEntryModel entry : cart.getEntries()){
+				if((!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID()))
+						&& !(StringUtils.isNotEmpty(agentId))){						
+					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
+					break;
+				} 
+			}
 //			for(AbstractOrderEntryModel entry : cart.getEntries()){
 //				if(!mplFindDeliveryFulfillModeStrategy.isTShip(entry.getSelectedUSSID())){						
 //					errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(entry.getInfo())));
@@ -412,7 +434,8 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 															if(LOG.isDebugEnabled()) {
 																LOG.debug("COD Eligibility for product "+cartEntry.getSelectedUSSID()+" "+codEligible);
 															}
-															if(!codEligible) {
+															if(!codEligible && 
+																	!(StringUtils.isNotEmpty(agentId))) {
 																errorMessages.add(new ResourceMessage("placeOrder.validation.sship",Arrays.asList(cartEntry.getInfo())));
 																break;
 															}
@@ -732,6 +755,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		cartParameter.setIsDeliveryAddress(true);
 		getCommerceCheckoutService().setDeliveryAddress(cartParameter);
 		setDeliveryCost(cartModel);
+		// INC-144316545- Delivery Charge Issue START
+		try {
+			getCommerceCartService().recalculateCart(cartModel);
+		} catch (CalculationException e) {
+			LOG.error("Exception occurred while recalculating cart"+e.getMessage());
+		}
+		// INC-144316545- Delivery Charge Issue START
 	}
 
 	private void setDeliveryCost(CartModel cartModel) {
@@ -835,6 +865,13 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		//
 		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
 		AbstractOrderEntryModel entry = null;
+		
+		/**
+		 * TPR-5712 : if store manager logged in
+		 */
+		final String agentId = agentIdForStore.getAgentIdForStore(
+				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		
 		if (configurationService
 				.getConfiguration()
 				.getBoolean(
@@ -922,7 +959,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 										Arrays.asList(pinData.getUssid())));
 								break;
 							}
-							if (!delData.getIsCOD()) {
+							if (!delData.getIsCOD() && !(StringUtils.isNotEmpty(agentId))) {
 								errorMessages.add(new ResourceMessage(
 										"placeOrder.validation.nocod", Arrays
 												.asList(pinData.getUssid())));
@@ -930,7 +967,7 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 							}
 
 							//TISBOX-1746  commenting see TISBOX-1746
-							if (delData.getIsCODLimitFailed()) {
+							if (delData.getIsCODLimitFailed() && !(StringUtils.isNotEmpty(agentId))) {
 								errorMessages.add(new ResourceMessage(
 										"placeOrder.validation.codlimitFailed",
 										Arrays.asList(pinData.getUssid())));

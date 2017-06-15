@@ -11,7 +11,7 @@
 <c:url value="/searchCategory/" var="searchCategory" />
 <div class="ui-front active ">
 	
-	<!-- Commented for cache implementation -->
+	
 	<%-- <c:if test="${not empty categoryList}">
 
 		<c:set var="categoryList" value="${categoryList}" />
@@ -44,14 +44,14 @@
 				<button id='searchButton' tabindex="2"></button>
 			</ycommerce:testId>
 		</span>
-		<!-- search category List -->
+		
 		<div class="select-view">
 			<select id="enhancedSearchCategory" name="searchCategory">
 				<optgroup label="All">
 					<option selected="selected" value="all"><spring:theme code="text.all" /></option>
 				</optgroup>
 					
-					<!-- Commented for cache implementation -->
+					
 				<%-- <c:if test="${categorySize >0}">
 				
 				<optgroup label="Departments">
@@ -83,7 +83,7 @@
 				<input type="hidden" id="searchCodeForDropdown" value="${searchCode}" />
 				<span class="selected selected-dropdownText searchBox" id="searchBoxSpan"><spring:theme code="text.all"/></span>
 
-				<!-- Commented for cache implementation -->
+				
 				<ul class="dropdown" label="All">
 					<li id="all"><spring:theme code="text.all"/></li>
 				</ul> 

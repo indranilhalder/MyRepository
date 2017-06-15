@@ -90,18 +90,22 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        renderRow(promotion, LabelUtils.getLabel(widget, "promotion", new Object[0]), currencyInstance, container);
 		        
                 Double scheduleDeliveryCosts = 0.0D;
-		        if(null==abstractOrderModel.getDeliveryAddress() || null!=((CartModel)abstractOrderModel).getCartReservationDate()) {
-		        	for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
-			    		if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge() !=0.0D)
-			    			scheduleDeliveryCosts+= (entry.getScheduledDeliveryCharge()) ;
-					}
-		        }
+             // INC-144316545- Delivery Charge Issue START
+//		        if(null==abstractOrderModel.getDeliveryAddress() || null!=((CartModel)abstractOrderModel).getCartReservationDate()) {
+//		        	for(AbstractOrderEntryModel entry : abstractOrderModel.getEntries()){
+//			    		if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge() !=0.0D)
+//			    			scheduleDeliveryCosts+= (entry.getScheduledDeliveryCharge()) ;
+//					}
+//		        }
+             // INC-144316545- Delivery Charge Issue END
 
 
 		        Double deliveryCosts = abstractOrderModel.getDeliveryCost();
-				 if(scheduleDeliveryCosts>=0.0D) {
-		        	deliveryCosts+=scheduleDeliveryCosts;
-		        }
+		     // INC-144316545- Delivery Charge Issue START
+//				 if(scheduleDeliveryCosts>=0.0D) {
+//		        	deliveryCosts+=scheduleDeliveryCosts;
+//		        }
+		     // INC-144316545- Delivery Charge Issue END
 				/* if(deliveryCosts<=0.0){
 				 for (AbstractOrderEntryModel orderEntry : abstractOrderModel
 							.getEntries()) {
@@ -182,18 +186,18 @@ public class MarketPlaceBasketTotalsWidgetRenderer extends
 		        renderRow(convenienceCharges, LabelUtils.getLabel(widget, "convenienceCharges", new Object[0]), currencyInstance, container);
 		        /********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
     	        //Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-couponDiscount-totalDeliveryCostDisc-totalDeliveryCostDisc;
-    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-promotion-totalDeliveryCostDisc;
+    	        Double totalPrice = abstractOrderModel.getSubtotal()+convenienceCharges+deliveryCosts-couponDiscount-promotion-totalDeliveryCostDisc-orderDiscount;
     	        /********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/
 //		        if(deliveryCosts==0.0){
 //		        	totalPrice=totalPrice-prevDeliveryCost;
 //		        }
 
 
-
-                if(scheduleDeliveryCosts>0.0D) {
-		        	 totalPrice+=scheduleDeliveryCosts;
-		         }
-             
+    	     // INC-144316545- Delivery Charge Issue START
+//                if(scheduleDeliveryCosts>0.0D) {
+//		        	 totalPrice+=scheduleDeliveryCosts;
+//		         }
+    	     // INC-144316545- Delivery Charge Issue END
 		        renderRow(totalPrice, LabelUtils.getLabel(widget, "totalPrice", new Object[0]), currencyInstance, container);
 		      }
 		  

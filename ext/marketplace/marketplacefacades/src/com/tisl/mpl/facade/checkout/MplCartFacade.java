@@ -541,6 +541,23 @@ public interface MplCartFacade extends CartFacade
 
 
 	/**
+	 * For TPR-5666
+	 *
+	 * @param cartGuid
+	 * @return
+	 */
+	CartModel getCartByGuid(String cartGuid);
+
+	/**
+	 * For TPR-5666
+	 * 
+	 * @param cartModel
+	 * @param sourceCartModel
+	 * @return
+	 */
+	public void mergeCarts(CartModel sourceCartModel, CartModel targetCartModel);
+
+	/**
 	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
 	 *
 	 * @param cart

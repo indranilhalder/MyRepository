@@ -161,6 +161,7 @@
 		<property name="browseHistory" ref="browseHistory"/>
 		<property name="cookieGenerator" ref="sessionCookieGenerator"/>
 		<property name="cartRestoreCookieGenerator" ref="cartRestoreCookieGenerator"/>
+		<property name="cartService" ref="cartService"/>
 	</bean>
 	
 	<bean id="cartRestorationFilter" class="com.tisl.mpl.storefront.filters.CartRestorationFilter" >

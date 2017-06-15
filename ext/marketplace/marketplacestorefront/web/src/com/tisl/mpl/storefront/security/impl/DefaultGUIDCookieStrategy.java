@@ -43,6 +43,8 @@ import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
 
+//Sonar Issue Fixed For Kidswear
+//import com.tisl.mpl.util.GenericUtilityMethods;
 
 /**
  * Default implementation of {@link GUIDCookieStrategy}

@@ -73,6 +73,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+//Sonar fix
+//import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
@@ -430,7 +432,8 @@ public class HomePageController extends AbstractPageController
 			}
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof RotatingImagesComponentModel)
 				{
@@ -544,7 +547,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
@@ -887,7 +891,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
@@ -1188,7 +1193,8 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//SONAR FIX
+				LOG.info(MarketplacecommerceservicesConstants.FOUNDCOMPONENT + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{

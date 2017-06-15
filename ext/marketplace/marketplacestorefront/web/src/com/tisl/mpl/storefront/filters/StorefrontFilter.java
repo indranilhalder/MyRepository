@@ -17,6 +17,7 @@ import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistory;
 import de.hybris.platform.acceleratorstorefrontcommons.history.BrowseHistoryEntry;
 import de.hybris.platform.cms2.misc.CMSFilter;
 import de.hybris.platform.commercefacades.storesession.StoreSessionFacade;
+import de.hybris.platform.order.CartService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -52,6 +53,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 	private BrowseHistory browseHistory;
 	private CookieGenerator cookieGenerator;
 	private CartRestoreCookieGenerator cartRestoreCookieGenerator;
+	private CartService cartService;
 	/*
 	 * @Resource private ConfigurationService configurationService;
 	 */
@@ -111,6 +113,7 @@ public class StorefrontFilter extends OncePerRequestFilter
 	private void setLuxuryCookie(final HttpServletRequest request, final HttpServletResponse response)
 	{
 		Cookie isLuxCookie = null;
+		String cartGuid = null;
 		final Cookie[] cookies = request.getCookies();
 		if (cookies != null)
 		{
@@ -161,6 +164,14 @@ public class StorefrontFilter extends OncePerRequestFilter
 					break;
 				}
 			}
+		}
+
+		//PRDI-276
+		if (request.getRequestURI().contains("orderConfirmation") && request.getCookies() != null)
+		{
+			getCartRestoreCookieGenerator().removeCookie(response);
+			cartGuid = getCartService().getSessionCart().getGuid();
+			getCartRestoreCookieGenerator().addCookie(response, cartGuid);
 		}
 
 	}
@@ -310,5 +321,21 @@ public class StorefrontFilter extends OncePerRequestFilter
 	public void setCartRestoreCookieGenerator(final CartRestoreCookieGenerator cartRestoreCookieGenerator)
 	{
 		this.cartRestoreCookieGenerator = cartRestoreCookieGenerator;
+	}
+
+	/**
+	 * @return the cartService
+	 */
+	public CartService getCartService()
+	{
+		return cartService;
+	}
+
+	/**
+	 * @param cartService the cartService to set
+	 */
+	public void setCartService(CartService cartService)
+	{
+		this.cartService = cartService;
 	}
 }

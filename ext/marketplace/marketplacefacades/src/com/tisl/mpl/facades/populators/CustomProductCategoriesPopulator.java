@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -73,6 +74,13 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 		//product super category like electronics,clothing are being populated by interceptor.
 		productData.setRootCategory(productModel.getProductCategoryType());
 
+		//For TPR:4847: size facet clubbing for kidswear
+		if (StringUtils.isNotEmpty(productModel.getProductCategoryTypeL2()))
+		{
+			productData.setRootCategoryL2((productModel.getProductCategoryTypeL2()));
+		}
+		//For TPR:4847: size facet clubbing for kidswear end
+		
 		//		  final Collection<CategoryModel> categories = getCommerceProductService()
 		//		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
 		final List<CategoryModel> resultList = new ArrayList<>();

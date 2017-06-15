@@ -38,6 +38,7 @@ public class MarketplacecclientservicesConstants
 	public static final String SMS_SERVICE_USERNAME = "marketplace.sms.service.username";
 	public static final String SMS_SERVICE_PASSWORD = "marketplace.sms.service.password";
 	public static final String OMS_INVENTORY_RESERV_URL = "oms.inventoryreservation.url";
+	public static final String OMS_ORDER_CREATE_URL = "oms.order.createOrder.url";
 	public static final String M = "M";
 	public static final String F = "F";
 	public static final String U = "U";
@@ -267,5 +268,4 @@ public class MarketplacecclientservicesConstants
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
-
 }

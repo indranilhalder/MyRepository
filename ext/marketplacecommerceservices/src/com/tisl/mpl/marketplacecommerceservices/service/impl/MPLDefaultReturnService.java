@@ -178,7 +178,7 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 			if (null != productModel && productModel.getRichAttribute() != null)
 			{
 				productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-				if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+				if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty() && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 				{
 					String productRTSValue = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 					if(null != productRTSValue && productRTSValue.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {
@@ -203,7 +203,7 @@ public class MPLDefaultReturnService extends DefaultReturnService implements MPL
 					if (sellerInformationModel.getRichAttribute() != null)
 					{
 						sellerRichAttributeModel = (List<RichAttributeModel>) sellerInformationModel.getRichAttribute();
-						if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (sellerRichAttributeModel != null && !sellerRichAttributeModel.isEmpty() && sellerRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							String sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 							if(sellerRichAttrOfQuickDrop.equalsIgnoreCase(MarketplacecommerceservicesConstants.YES)) {

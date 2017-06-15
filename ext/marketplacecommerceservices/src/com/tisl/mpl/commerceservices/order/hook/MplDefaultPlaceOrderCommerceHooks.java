@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -33,6 +34,8 @@ import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
+//Sonar fix
+//import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -73,6 +76,8 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+//SONAR FIX
+//import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
@@ -146,6 +151,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//	private MplFraudModelService mplFraudModelService;
 
 	private static final String middleDigits = "000";
+
+	private static final String threeZero = "000";
+	private static final String twoZero = "00";
+	private static final String oneZero = "0";
+
+
+
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
 
@@ -156,9 +168,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -265,14 +278,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 *
-				 *
+				 * 
+				 * 
+				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
-				// Removed from Hooks added in PlaceOrderStrategy
-				//orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+
+				orderModel.setType("Parent");
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
+						|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
 				{
 					LOG.debug("Payment Info and Status saving COD");
 					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
@@ -535,9 +550,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -618,7 +634,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//OrderIssues:-  Code moved to upward
 			//		orderModel.setChildOrders(orderList);
 			//getModelService().save(orderModel);
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
+			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
+					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 			}
@@ -1357,9 +1375,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param orderList
 	 *
 	 *
@@ -2236,8 +2255,29 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
 			{
 				final String orderLineIdSequence = getMplCommerceCartService().generateOrderLineId();
-				orderEntryModel.setOrderLineId(sellerID.concat(middleDigits).concat(orderLineIdSequence));
-				orderEntryModel.setTransactionID(sellerID.concat(middleDigits).concat(orderLineIdSequence));
+
+				//Transaction ID have to strict with 15 digits, using the middle 3 zeros
+				switch (orderLineIdSequence.length())
+				{
+
+					case 6:
+						orderEntryModel.setOrderLineId(sellerID.concat(threeZero).concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(threeZero).concat(orderLineIdSequence));
+						break;
+					case 7:
+						orderEntryModel.setOrderLineId(sellerID.concat(twoZero).concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(twoZero).concat(orderLineIdSequence));
+						break;
+					case 8:
+						orderEntryModel.setOrderLineId(sellerID.concat(oneZero).concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(oneZero).concat(orderLineIdSequence));
+						break;
+					default:
+						orderEntryModel.setOrderLineId(sellerID.concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(orderLineIdSequence));
+
+				}
+
 			}
 			else
 			{

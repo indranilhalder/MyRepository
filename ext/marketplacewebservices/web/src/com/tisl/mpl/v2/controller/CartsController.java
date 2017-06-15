@@ -3336,7 +3336,8 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/applyCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value =
+	{ "/applyCoupons", "/{cartId}/applyCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ApplyCouponsDTO applyCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
@@ -3434,7 +3435,8 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/releaseCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value =
+	{ "/releaseCoupons", "/{cartId}/releaseCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public ReleaseCouponsDTO releaseCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)

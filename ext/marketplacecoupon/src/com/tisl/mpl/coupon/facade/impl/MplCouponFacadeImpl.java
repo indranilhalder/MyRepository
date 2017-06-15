@@ -102,11 +102,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 	@Resource(name = "voucherConverter")
 	private Converter<VoucherModel, VoucherData> voucherConverter;
-	
-	private final static String COMMACONSTANT=",";
-	private final static String DOTCONSTANT=".";
-	
-	
+
+	private final static String COMMACONSTANT = ",";
+	private final static String DOTCONSTANT = ".";
+
+
 
 
 	/**
@@ -1017,7 +1017,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 						if (CollectionUtils.isNotEmpty(paymentTypeList))
 						{
-							final String messagePaymentMode = "The coupon is valid for ";
+							final String messagePaymentMode = "This coupon code can be used on payments made by ";
 							sb.append(messagePaymentMode);
 							for (final PaymentTypeModel paymentType : paymentTypeList)
 							{
@@ -1026,12 +1026,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							}
 							sb.deleteCharAt(sb.lastIndexOf(","));
 							//sb.append(".");//SonarFix
-							sb.append(DOTCONSTANT);
+							//sb.append(DOTCONSTANT);
 						}
 
 						if (CollectionUtils.isNotEmpty(bankLists))
 						{
-							final String messageVoucherBank = " The valid bank/s is/are ";
+							final String messageVoucherBank = " via ";
 							sb.append(messageVoucherBank);
 							for (final BankModel bank : bankLists)
 							{

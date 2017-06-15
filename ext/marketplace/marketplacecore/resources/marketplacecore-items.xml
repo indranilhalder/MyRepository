@@ -1729,8 +1729,18 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
-
-
+					<!-- Added for KidsWear -->
+					<attribute qualifier="productCategoryTypeL2" type="java.lang.String">
+						<description>Represent the product's master Category</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(100)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- Added for KidsWear Ends-->
 				</attributes>
 			</itemtype>
 
@@ -3083,6 +3093,23 @@
 			</itemtype>
 
 			<itemtype code="CODPaymentInfo" extends="PaymentInfo"
+				autocreate="true" generate="false">
+				<attributes>
+					<attribute qualifier="cashOwner" autocreate="true"
+						type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+						<custom-properties>
+							<property name="hmcIndexField">
+								<value>"thefield"</value>
+							</property>
+						</custom-properties>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="JusPayPaymentInfo" extends="PaymentInfo"
 				autocreate="true" generate="false">
 				<attributes>
 					<attribute qualifier="cashOwner" autocreate="true"
@@ -5953,6 +5980,13 @@
 					</attribute>
 					<!--  Added for Third Party Wallet -->
 					
+
+					<!-- Adding attribute to identify Place order agents-->
+					<attribute qualifier="agentId" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					
 					<attribute qualifier="deliveryAddresses" type="addressList">
 						<modifiers optional="true" />
 						<persistence type="property" />
@@ -5972,6 +6006,7 @@
 					<attribute qualifier="changeDeliveryRejectsCount" type="java.lang.Integer">
 						<modifiers optional="true" />
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+
 						<persistence type="property" />
 					</attribute>
 				</attributes>

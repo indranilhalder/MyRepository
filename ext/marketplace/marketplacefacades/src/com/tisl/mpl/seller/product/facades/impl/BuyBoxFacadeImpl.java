@@ -1,3 +1,4 @@
+
 package com.tisl.mpl.seller.product.facades.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
@@ -8,7 +9,8 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
+//sonar fix
+//import java.util.Collections;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -81,6 +83,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private ProductDetailsHelper productDetailsHelper;
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+
 
 	private static final String BUYBOX_LIST = "buyboxList";
 
@@ -189,7 +192,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//TISPRM -56
 			List<BuyBoxModel> buyboxModelListAll = null;
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
-			
+
 			//TISPRM -56
 			if (Channel.equalsIgnoreCase("Mobile"))
 			{
@@ -201,7 +204,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			{
 				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
 			}
-			
+
 			if (StringUtils.isNotBlank(bBoxSellerId))
 
 
@@ -329,6 +332,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 					productsWithNoStock = arrayToProductList;
 				}
 			}
+
 			// CKD:TPR-250: Start
 			else if (!isSellerPresent && StringUtils.isNotBlank(bBoxSellerId))
 			{
@@ -1032,6 +1036,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	/*
 	 * This method is used to get the price of a product by giving the ussid
 	 * 
+	 * 
 
 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
@@ -1109,25 +1114,26 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
-		//final int oosSellersCount = getOosSellerCount(buyboxModelList);
-		//other sellers count
-		//int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
-		//final Integer noofsellers = Integer.valueOf(sellerSize);
-		//if (onlyBuyBoxHasStock && sellerSize > 0)
-		//{
-		//	buyboxData.setNumberofsellers(Integer.valueOf(-1));
-			//buyboxData.setNumberofsellers(Integer.valueOf(-1));
-
-	//	}
-		//else
-		//{
-			//buyboxData.setNumberofsellers(noofsellers);
-		//	buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
-		//}
-		//CKD:TPR-250:End
-		
-		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		//other sellers count
 		int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
 		if (isMicroSellerOOS)
@@ -1136,14 +1142,18 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		if (sellerSize < 0)
 		{
+
 			buyboxData.setNumberofsellers(Integer.valueOf(0));
 
 		}
 		else
 		{
+
+
 			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
 		}
 		//CKD:TPR-250:End
+
 		//Minimum price for other sellers
 		double minPrice = 0.0d;
 		if (sellerSize > 0)
@@ -1156,13 +1166,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			}
 			//int end = buyboxModelList.size()-1;
 
-			//for (int i = 1; i <= sellerSize; i++)
+			//for (int i = 1; i <= end; i++)
 			for (int i = start; i <= end; i++)
 			{
-				//if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
+							//if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
 	if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0
 						&& buyboxModelList.get(i).getAvailable().intValue() > 0 // CKD:TPR-250 not considering OOS elements for min price calculation
 				)
+
 				{
 
 					final double specialPrice = buyboxModelList.get(i).getSpecialPrice().doubleValue();
@@ -1282,3 +1293,4 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		return bBoxSellerIdFound;
 	}
 }
+
