@@ -262,6 +262,7 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 		final Cookie[] cookies = request.getCookies();
 		if (cookies != null)
 		{
+			String domain = "";
 			for (final Cookie cookie : cookies)
 			{
 				if (cookie.getName().equals("keepAlive"))
@@ -270,7 +271,11 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					LOG.info("Cookie domain :::" + cookie.getDomain());
 					cookie.setMaxAge(sessionTimeoutvalue);
 					cookie.setPath("/");
-					//cookie.setSecure(true);
+					domain = getConfigurationService().getConfiguration().getString("shared.cookies.domain");
+					if (null != domain && !domain.equalsIgnoreCase("localhost"))
+					{
+						cookie.setSecure(true);
+					}
 					cookie.setDomain(getConfigurationService().getConfiguration().getString("shared.cookies.domain"));
 					response.addCookie(cookie);
 					request.getSession().setMaxInactiveInterval(sessionTimeoutvalue); // UF-93 Added to set the session to same interval as KeepAlive Cookie
