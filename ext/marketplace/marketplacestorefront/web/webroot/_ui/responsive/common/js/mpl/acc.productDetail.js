@@ -424,9 +424,18 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    cursor: "crosshair",
 				    zoomWindowFadeIn: 500,
 				    zoomWindowFadeOut: 750,
-				    onZoomedImageLoaded:function(z){
+				   /* onZoomedImageLoaded:function(z){
+				    	var mouse_X = 0;
+						var mouse_Y = 0;
+						$('.picZoomer-pic-wp .picZoomer-pic').on('hover',function(e){ 
+					        //console.log("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
+					        mouse_X = e.pageX;
+					        mouse_Y = e.pageY;
+						});
+						$(".zoomContainer .zoomLens").top(mouse_X);
+						$(".zoomContainer .zoomLens").l(mouse_X);
 				    	$(".zoomContainer .zoomLens").show();
-				    } 
+				    } */
 				 });
 			}
 		    }else{
