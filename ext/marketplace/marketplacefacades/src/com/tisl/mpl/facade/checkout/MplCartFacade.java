@@ -573,7 +573,8 @@ public interface MplCartFacade extends CartFacade
 	 * @param cartModel
 	 * @return boolean
 	 */
-	boolean UpdateCartOnMaxLimExceeds(CartModel cartModel);
+	//boolean UpdateCartOnMaxLimExceeds(CartModel cartModel);
+	Map<String, String> updateCartOnMaxLimExceeds(CartModel cartModel);
 	//TPR-5346 ENDS
 
 }

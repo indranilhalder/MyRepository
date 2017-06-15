@@ -950,7 +950,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 * ProductOption.CATEGORIES ProductOption.PROMOTIONS, ProductOption.STOCK,
 				 * ProductOption.DELIVERY_MODE_AVAILABILITY ));
 				 */
-
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
 				{
@@ -978,13 +978,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				//TPR-6117 STARTS
 				if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
 						&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
-						&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < 5)
+						&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 				{
 					gwlp.setMaxQuantityAllowed(abstractOrderEntry.getProduct().getMaxOrderQuantity().toString());
 				}
 				else
 				{
-					final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 					gwlp.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
 				}
 
@@ -1967,13 +1966,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			//TPR-6117 STARTS
-			boolean updateCartOnMaxLimExceeds = true;
+			//boolean updateCartOnMaxLimExceeds = true;
 
-			updateCartOnMaxLimExceeds = mplCartFacade.UpdateCartOnMaxLimExceeds(cartModel);
-			if (!updateCartOnMaxLimExceeds)
+			final Map<String, String> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
+			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds))
 			{
-				//								final String countMsg=MarketplacewebservicesConstants.PRECOUNTMSG + cartModel.gete.getProduct().getName() + MarketplacewebservicesConstants.MIDCOUNTMSG +
-				//										abstractOrderEntry.getProduct().getMaxOrderQuantity().toString() + MarketplacewebservicesConstants.LASTCOUNTMSG ;
 				cartDataDetails.setReachedMaxLimitforproduct(MarketplacewebservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT);
 			}
 			//TPR-6117 ENDS
@@ -2116,13 +2113,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				}
 
 				//TPR-6117 STARTS
-				boolean updateCartOnMaxLimExceeds = true;
-
-				updateCartOnMaxLimExceeds = mplCartFacade.UpdateCartOnMaxLimExceeds(cartModel);
-				if (!updateCartOnMaxLimExceeds)
+				//	boolean updateCartOnMaxLimExceeds = true;
+				//This method will update the cart  with respect to the max quantity configured for the product
+				final Map<String, String> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
+				if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds))
 				{
-					//								final String countMsg=MarketplacewebservicesConstants.PRECOUNTMSG + cartModel.gete.getProduct().getName() + MarketplacewebservicesConstants.MIDCOUNTMSG +
-					//										abstractOrderEntry.getProduct().getMaxOrderQuantity().toString() + MarketplacewebservicesConstants.LASTCOUNTMSG ;
 					cartDataDetails.setReachedMaxLimitforproduct(MarketplacewebservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT);
 				}
 				//TPR-6117 ENDS

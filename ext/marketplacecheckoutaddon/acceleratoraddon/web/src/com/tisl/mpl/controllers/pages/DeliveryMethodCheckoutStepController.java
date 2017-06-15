@@ -256,7 +256,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			{
 				return getCheckoutStep().previousStep();
 			}
-			CartModel serviceCart = getCartService().getSessionCart();
+			final CartModel serviceCart = getCartService().getSessionCart();
 			setExpressCheckout(serviceCart);
 
 			//TISST-13012
@@ -267,27 +267,43 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 
 			//TPR-5346 STARTS
-			final boolean updateCartOnMaxLimExceeds = getMplCartFacade().UpdateCartOnMaxLimExceeds(serviceCart);
-
-			if (!updateCartOnMaxLimExceeds)
+			//This method will update the cart with respect to the max quantity configured for the product
+			//final boolean updateCartOnMaxLimExceeds = getMplCartFacade().UpdateCartOnMaxLimExceeds(serviceCart);
+			final Map<String, String> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(serviceCart);
+			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
 			{
 				//	redirectAttributes.addFlashAttribute("updateCartOnMaxLimExceeds", Boolean.valueOf(updateCartOnMaxLimExceeds));
 				String errorMsg = null;
-				serviceCart = getCartService().getSessionCart();
-				for (final AbstractOrderEntryModel orderEntry : serviceCart.getEntries())
+				final Map<String, String> msgMap = new HashMap<String, String>();
+				if (CollectionUtils.isNotEmpty(serviceCart.getEntries()))
 				{
-
-					if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
-							&& null != orderEntry.getProduct().getMaxOrderQuantity())
+					for (final AbstractOrderEntryModel orderEntry : serviceCart.getEntries())
 					{
-						errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG + MarketplacecommerceservicesConstants.SINGLE_SPACE
-								+ orderEntry.getProduct().getName().toString() + MarketplacecommerceservicesConstants.SINGLE_SPACE
-								+ MarketplacecommerceservicesConstants.MIDCOUNTMSG + MarketplacecommerceservicesConstants.SINGLE_SPACE
-								+ orderEntry.getProduct().getMaxOrderQuantity().toString()
-								+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.LASTCOUNTMSG;
+
+						if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
+								&& null != orderEntry.getProduct().getMaxOrderQuantity())
+						{
+							errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.MIDCOUNTMSG
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+									+ orderEntry.getProduct().getMaxOrderQuantity().toString()
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+									+ MarketplacecommerceservicesConstants.LASTCOUNTMSG;
+							msgMap.put(orderEntry.getProduct().getCode(), errorMsg);
+						}
 					}
 				}
-				GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
+				if (MapUtils.isNotEmpty(msgMap))
+				{
+					for (final Map.Entry<String, String> entry : msgMap.entrySet())
+					{
+						if (updateCartOnMaxLimExceeds.containsKey(entry.getKey()))
+						{
+							GlobalMessages.addFlashMessage(redirectAttributes, GlobalMessages.ERROR_MESSAGES_HOLDER, entry.getValue());
+						}
+					}
+				}
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 			//TPR-5346 ENDS

@@ -3792,11 +3792,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	//TPR-5346 STARTS
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#isMaxProductQuantityAlreadyAdded(java.lang.String, long, long,
-	 * java.lang.String)
+	/**
+	 * this method will check if the max quantity configured for the product is laready added in the cart or not
 	 */
 	@Override
 	public String isMaxProductQuantityAlreadyAdded(final Integer maxCount, final String code, final long qty, long stock,
@@ -3816,7 +3813,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		{
 			final CartData cartData = getSessionCartWithEntryOrdering(true);
 
-			if (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty())
+			if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()) && !cartData.getEntries().isEmpty())
 			{
 				for (final OrderEntryData entry : cartData.getEntries())
 				{
@@ -3890,10 +3887,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#checkMaxLimit(java.lang.String)
+	/**
+	 * This method will check the max quantity configured for the product at cart level
 	 */
 	@Override
 	public long checkMaxLimit(final String code, final CartModel cartModel)
@@ -3902,10 +3897,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.checkMaxLimit(code, cartModel);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#checkMaxLimitUpdate(long)
+	/**
+	 * This method will check the max quantity configured for the product and update the cart accordingly
 	 */
 	@Override
 	public boolean checkMaxLimitUpdate(final long entryNumber, final long quantityToBeUpdated)
@@ -3914,11 +3907,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.checkMaxLimitUpdate(entryNumber, quantityToBeUpdated);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.facade.checkout.MplCartFacade#checkMaxLimitCheckout(de.hybris.platform.core.model.order.CartModel)
+	/**
+	 * This method will check the max quantity configured for the product
 	 */
 	@Override
 	public boolean checkMaxLimitCheckout(final CartModel serviceCart)
@@ -3927,96 +3917,116 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.checkMaxLimitCheckout(serviceCart);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * This method will update the cart entry with respect to the max quantity configured for the product
 	 *
-	 * @see
-	 * com.tisl.mpl.facade.checkout.MplCartFacade#UpdateCartOnMaxLimExceeds(de.hybris.platform.core.model.order.CartModel
-	 * )
+	 * @param cartModel
+	 * @return
 	 */
 	@Override
-	public boolean UpdateCartOnMaxLimExceeds(CartModel cartModel)
+	//	public boolean UpdateCartOnMaxLimExceeds(CartModel cartModel)
+	public Map<String, String> updateCartOnMaxLimExceeds(final CartModel cartModel)
 	{
 		// YTODO Auto-generated method stub
 		final Map<String, Long> productMap = new HashMap();
 
-		boolean updateCartOnMaxLimExceeds = true;
+		//boolean updateCartOnMaxLimExceeds = true;
+		final Map<String, String> hMap = new HashMap<String, String>();
+		final int maximum_configured_quantiy = siteConfigService
+				.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+
 		int remainingcount;
 		int updateEntryCount;
 		int entryCount = 0;
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 		{
-			if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-					&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 			{
-				if (entry.getQuantity().longValue() > entry.getProduct().getMaxOrderQuantity().intValue())
+				//				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+				//						&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+						&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 				{
-					try
+					if (entry.getQuantity().longValue() > entry.getProduct().getMaxOrderQuantity().intValue())
 					{
-						final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
-								entry.getProduct().getMaxOrderQuantity().intValue());
-
-						if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
+						try
 						{
-							LOG.debug("updating from cart........");
-							//return false;
-							cartModel = getCartService().getSessionCart();
-							updateCartOnMaxLimExceeds = false;
+							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
+									entry.getProduct().getMaxOrderQuantity().intValue());
+
+							if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
+							{
+								LOG.debug("updating from cart........");
+								//return false;
+								//cartModel = getCartService().getSessionCart();
+								//updateCartOnMaxLimExceeds = false;
+								hMap.put(entry.getProduct().getCode(), "true");
+							}
 						}
-					}
-					catch (final CommerceCartModificationException ex)
-					{
-						LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+						catch (final CommerceCartModificationException ex)
+						{
+							LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+						}
 					}
 				}
 			}
 		}
 		//		for (final AbstractOrderEntryModel entry : cartModel.getEntries()) keeping the lastest entry in the cart
-		for (final AbstractOrderEntryModel entry : Lists.reverse(cartModel.getEntries()))
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 		{
-			entryCount = entryCount + entry.getQuantity().intValue();
-			if (!productMap.isEmpty())
+			for (final AbstractOrderEntryModel entry : Lists.reverse(cartModel.getEntries()))
 			{
-				if (productMap.get(entry.getProduct().getCode()) != null)
+				entryCount = entryCount + entry.getQuantity().intValue();
+				if (MapUtils.isNotEmpty(productMap))
 				{
-
-
-					if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-							&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+					if (productMap.get(entry.getProduct().getCode()) != null)
 					{
-						if (entry.getQuantity().longValue() + productMap.get(entry.getProduct().getCode()).longValue() > entry
-								.getProduct().getMaxOrderQuantity().intValue())
+
+
+						//					if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+						//							&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+						if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+								&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 						{
-							try
+							if (entry.getQuantity().longValue() + productMap.get(entry.getProduct().getCode()).longValue() > entry
+									.getProduct().getMaxOrderQuantity().intValue())
 							{
-								//remainingcount = entry.getQuantity().intValue() - entry.getProduct().getMaxOrderQuantity().intValue();
-								remainingcount = entryCount - entry.getProduct().getMaxOrderQuantity().intValue();
-								if (remainingcount >= 0)
+								try
 								{
-									updateEntryCount = entry.getQuantity().intValue() - remainingcount;
-									//									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), 0);
-
-									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
-											updateEntryCount);
-
-									if (cartModification.getQuantity() >= 0)
+									//remainingcount = entry.getQuantity().intValue() - entry.getProduct().getMaxOrderQuantity().intValue();
+									remainingcount = entryCount - entry.getProduct().getMaxOrderQuantity().intValue();
+									if (remainingcount >= 0)
 									{
-										LOG.debug("removing from cart........");
-										updateCartOnMaxLimExceeds = false;
-										//return false;
+										updateEntryCount = entry.getQuantity().intValue() - remainingcount;
+										//									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), 0);
+
+										final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
+												updateEntryCount);
+
+										if (cartModification.getQuantity() >= 0)
+										{
+											LOG.debug("removing from cart........");
+											//updateCartOnMaxLimExceeds = false;
+											//return false;
+											hMap.put(entry.getProduct().getCode(), "true");
+										}
 									}
 								}
+								catch (final CommerceCartModificationException ex)
+								{
+									LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+								}
 							}
-							catch (final CommerceCartModificationException ex)
+							else
 							{
-								LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+								productMap.put(entry.getProduct().getCode(), Long.valueOf(
+										productMap.get(entry.getProduct().getCode()).longValue() + entry.getQuantity().longValue()));
 							}
 						}
-						else
-						{
-							productMap.put(entry.getProduct().getCode(), Long
-									.valueOf(productMap.get(entry.getProduct().getCode()).longValue() + entry.getQuantity().longValue()));
-						}
+					}
+					else
+					{
+						productMap.put(entry.getProduct().getCode(), entry.getQuantity());
 					}
 				}
 				else
@@ -4024,13 +4034,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					productMap.put(entry.getProduct().getCode(), entry.getQuantity());
 				}
 			}
-			else
-			{
-				productMap.put(entry.getProduct().getCode(), entry.getQuantity());
-			}
 		}
 		//return true;
-		return updateCartOnMaxLimExceeds;
+		return hMap;
 	}
 	//TPR-5346 ENDS
 }
