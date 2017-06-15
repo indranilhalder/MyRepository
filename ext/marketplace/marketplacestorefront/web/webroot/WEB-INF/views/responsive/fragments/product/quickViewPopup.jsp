@@ -137,7 +137,7 @@ tr.d0 td {
 		
 	});
 	
-		$('.main-image a img.picZoomer-pic').on('load', function(){
+		/* $('.main-image a img.picZoomer-pic').on('load', function(){
 			$("#previousImage").css("opacity","0.5");
 		 	$("#nextImage").css("opacity","1");
 		 	var listHeight = $(".imageList li").height();
@@ -148,7 +148,7 @@ tr.d0 td {
 		 	$(".imageListCarousel").show();
 		}).each(function() {
 	  	  	if(this.complete) $(this).load();
-	  	});	
+	  	}); */	
 		
 			$(".black-arrow").change(function() {
 				 
@@ -269,7 +269,28 @@ tr.d0 td {
  		//alert(":-:"+avgrating);
  	 
  		
- }	  
+ }
+ $('.main-image a img.picZoomer-pic').on('load', function(){
+		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+		console.log("jsp mainImageHeight is " + mainImageHeight);
+		var thumbnailImageHeight = (mainImageHeight / 5);
+		console.log("jsp thumbnailImageHeight is " + thumbnailImageHeight);
+		$(".imageList ul li img").css("height", thumbnailImageHeight);
+		$("#previousImage").css("opacity","0.5");
+	 	$("#nextImage").css("opacity","1");
+	 	var listHeight = $(".imageList li").height();
+	 	console.log("jsp listHeight is " + listHeight);
+	 	console.log("jsp previousImage length is " + $("#previousImage").length);
+	 	if($("#previousImage").length){
+	 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+	 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+	 	}
+	 	$(".imageListCarousel").show();
+	}).each(function () {
+	    if (this.complete) {
+	        $(this).trigger("load");
+	    }
+	});
  </script>
  <style type="text/css">
 tr.d0 td {
