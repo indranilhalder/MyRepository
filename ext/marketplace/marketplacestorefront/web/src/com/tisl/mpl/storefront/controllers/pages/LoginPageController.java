@@ -420,19 +420,19 @@ public class LoginPageController extends AbstractLoginPageController
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
 			/** Added for UF-93 for Remember Me functionality **/
-			//			String rememberMe = "false";
-			//			if (null != request.getParameter("j_RememberMe"))
-			//			{
-			//				rememberMe = request.getParameter("j_RememberMe");
-			//				LOG.error("LoginPageController.doRegister() - Found 'j_RememberMe' in request:: " + rememberMe);
-			//			}
-			//			if (null != request.getSession())
-			//			{
-			//				request.getSession().setAttribute("rememberMe", rememberMe);
-			//				LOG.error("LoginPageController.doRegister() - After setting in Session 'j_RememberMe' ::"
-			//						+ request.getSession().getAttribute("rememberMe") + " SessionId: " + request.getSession().getId()
-			//						+ " SessionTimeout: " + request.getSession().getMaxInactiveInterval());
-			//			}
+			String rememberMe = "false";
+			if (null != request.getParameter("j_RememberMe"))
+			{
+				rememberMe = request.getParameter("j_RememberMe");
+				LOG.error("LoginPageController.doRegister() - Found 'j_RememberMe' in request:: " + rememberMe);
+			}
+			if (null != request.getSession())
+			{
+				request.getSession().setAttribute("rememberMe", rememberMe);
+				LOG.error("LoginPageController.doRegister() - After setting in Session 'j_RememberMe' ::"
+						+ request.getSession().getAttribute("rememberMe") + " SessionId: " + request.getSession().getId()
+						+ " SessionTimeout: " + request.getSession().getMaxInactiveInterval());
+			}
 			/** Added for UF-93 Ends **/
 			/** Added for UF-93 **/
 			if (StringUtils.isNotEmpty(request.getParameter("email")))

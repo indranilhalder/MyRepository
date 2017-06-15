@@ -101,7 +101,6 @@
             <value>;{+0};{1};{2};1</value> <!-- TISSTRT-1609-Fix-->
         </property>	
         </bean>
-        
        <!-- CAR-292 starts Converter for SellerInfoModel of Seller Delist Import -->  
        <bean id="batchMplSellerInfoDelistSellerConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.SellerDelistConverter">
        <property name="header">

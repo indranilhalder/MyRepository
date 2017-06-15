@@ -586,18 +586,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModel.getDeliveryMode() != null)
 								{
 									PriceData priceData = null;
-									if (entry.isIsBOGOapplied())
+									if (entry.isIsBOGOapplied() && isFulFillmentTypeMatch(deliveryData.getFulfilmentType(),
+											deliveryModel.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
 										priceData = formPriceData(
 												Double.valueOf(
 														deliveryModel.getValue().doubleValue() * entry.getQualifyingCount().intValue()),
 												cartData);
 									}
-									else
+									else if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(),
+											deliveryModel.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
 										priceData = formPriceData(
 												Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
 												cartData);
+									}
+									else
+									{
+
+										priceData = formPriceData(Double.valueOf(0.0), cartData);
 									}
 									deliveryModeData.setCode(checkDataValue(deliveryModel.getDeliveryMode().getCode()));
 									//deliveryModeData.setDescription(checkDataValue(deliveryModel.getDeliveryMode().getDescription()));
@@ -667,6 +674,47 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 
+
+	/**
+	 * Returns Fulfillment Details
+	 *
+	 *
+	 * @param fulfilmentType
+	 * @param zodeFulflmntcode
+	 * @param sellerInformationData
+	 * @return flag
+	 */
+	private boolean isFulFillmentTypeMatch(final String fulfilmentType, final String zodeFulflmntcode,
+			final SellerInformationData sellerInformationData)
+	{
+		boolean flag = false;
+
+		final String omsPincodeServiceability = getConfigurationService().getConfiguration()
+				.getString(MarketplacecclientservicesConstants.PIN_CODE_DELIVERY_MODE_OMS_MOCK).trim();
+
+		if (StringUtils.isNotEmpty(fulfilmentType) && StringUtils.isNotEmpty(zodeFulflmntcode))
+		{
+			if (StringUtils.equalsIgnoreCase(omsPincodeServiceability, "Y"))
+			{
+				flag = (StringUtils.equalsIgnoreCase(fulfilmentType, zodeFulflmntcode)) ? true : false;
+			}
+			else
+			{
+				flag = true;
+
+				LOG.debug("Executing code for real time set as False");
+
+				if (null != sellerInformationData && StringUtils.equalsIgnoreCase(sellerInformationData.getFullfillment(), "TSHIP")
+						&& !StringUtils.equalsIgnoreCase(fulfilmentType, zodeFulflmntcode))
+				{
+					LOG.debug("TSHIP but no TSHIP charges configured in Zone Delivery");
+					flag = false;
+				}
+			}
+		}
+
+		return flag;
+	}
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -1353,7 +1401,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
 			final Map<java.util.Date, Wishlist2EntryModel> sortedWishListMap, final CartData cartData)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 		final List<PincodeServiceData> pincodeRequestDataList = new ArrayList<PincodeServiceData>();
 		if (sortedWishListMap != null)
@@ -1415,10 +1463,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 											&& StringUtils.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 													MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 
-							|| (CollectionUtils.isNotEmpty(richAttributeModel) && null != richAttributeModel.get(0).getClickAndCollect()
-									&& richAttributeModel.get(0).getClickAndCollect().equals(ClickAndCollectEnum.YES)
-									&& StringUtils.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
-											MarketplacecommerceservicesConstants.CLICK_COLLECT)))
+									|| (CollectionUtils.isNotEmpty(richAttributeModel)
+											&& null != richAttributeModel.get(0).getClickAndCollect()
+											&& richAttributeModel.get(0).getClickAndCollect().equals(ClickAndCollectEnum.YES)
+											&& StringUtils.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
+													MarketplacecommerceservicesConstants.CLICK_COLLECT)))
 							{
 								final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
 								final PriceData priceData = formPriceData(deliveryEntry.getValue(), cartData);
@@ -2482,7 +2531,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public ReservationListWsDTO getReservation(final AbstractOrderData abstractOrderData, final String pincode,
 			final String requestType, final AbstractOrderModel abstractOrderModel,
 			final InventoryReservListRequestWsDTO inventoryRequest, final SalesApplication salesApplication)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 		final ReservationListWsDTO wsDto = new ReservationListWsDTO();
 		InventoryReservListResponse inventoryReservListResponse = null;
@@ -3245,7 +3294,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 */
 	private GetWishListProductWsDTO setWSWishlistEligibleDeliveryMode(final Wishlist2EntryModel wishlist2EntryModel,
 			final GetWishListProductWsDTO getWishListProductWsObj, final String pincode, final CartData cartData)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 		List<MplZoneDeliveryModeValueModel> deliveryModes = null;
 		if (wishlist2EntryModel.getUssid() != null)
@@ -3386,7 +3435,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Override
 	public boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
 			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, final CartData cartData)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 
 		boolean codEligible = true;
@@ -3803,7 +3852,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	public boolean isInventoryReserved(AbstractOrderData abstractOrderData, final String requestType,
 			final String defaultPinCodeId, final AbstractOrderModel abstractOrderModel,
 			final InventoryReservListRequestWsDTO inventoryRequest, final SalesApplication salesApplication)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 		//commented for CAR:127
 		//final List<CartSoftReservationData> cartSoftReservationDatalist = populateDataForSoftReservation(abstractOrderModel);
@@ -4158,8 +4207,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									{
 										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.HD;
 									}
-									else
-										if (deliveryModeForFreebie.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
+									else if (deliveryModeForFreebie
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 									{
 										deliveryModeGlobalCode = MarketplacecommerceservicesConstants.ED;
 									}
@@ -5451,7 +5500,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Override
 	public void saveDeliveryMethForFreebie(final AbstractOrderModel abstractOrderModel,
 			final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap, final Map<String, Long> freebieParentQtyMap)
-					throws EtailNonBusinessExceptions
+			throws EtailNonBusinessExceptions
 	{
 		//added for car-124 implementation
 		final List<AbstractOrderEntryModel> abstractOrderEntryModelList = new ArrayList<AbstractOrderEntryModel>();

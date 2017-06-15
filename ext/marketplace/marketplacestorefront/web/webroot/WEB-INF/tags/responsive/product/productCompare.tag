@@ -227,7 +227,7 @@
 		
 		var screenwidth=$(window).width();
 		 var items=4;
-		 /* if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == "0px"){ */
+		//Start INC144315014
 		   if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == undefined){
 			   if(screenwidth <= 790){
 					var items=2;
@@ -236,14 +236,14 @@
 		$('#number-items').html(items); 
 		$(window).resize(function(){
 			var items=4;
-			/* if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == "0px"){ */
+			
 			if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == undefined){ 
 				if(screenwidth <= 790){
 					var items=2;
 				}
 			}
 			$('#number-items').html(items);
-			
+		//End INC144315014
 		});
 	});
 </script>

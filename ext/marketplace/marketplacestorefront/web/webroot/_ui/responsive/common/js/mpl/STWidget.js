@@ -74,19 +74,19 @@ var stwService = {
 
 
 var stwRender = {
-    wigetLoaderOnIp: function(ip) {
-        var flag = true;
-        var lastIpPart = ip.split(".")[3];
-        if (typeof(lastIpPart) != 'undefined') {
-            if (lastIpPart % 2 == 0) {
-                delete productWidget[4]; // if even then load STW and delete HOT NOW
-                return flag;
-            } else {
-                return !flag;
+	    wigetLoaderOnIp: function(ip) {
+	        var flag = true;
+	        var lastIpPart = ip.split(".")[3];
+	        if (typeof(lastIpPart) != 'undefined') {
+	            if (lastIpPart % 2 == 0) {
+	                delete productWidget[4]; // if even then load STW and delete HOT NOW
+	                return flag;
+	            } else {
+	                return !flag;
 
-            }
-        }
-    },
+	            }
+	        }
+	    },
 
     visitingIpAddress: function(STWJOBJECT) {
         var visitingIp = STWJOBJECT.visiterIP;
@@ -193,7 +193,8 @@ $(document).ready(function() {
         $(".best_seller.stw-list .Menu .mobile.selectmenu").text(active_text);
         $('.best_seller.stw-list .Menu ul').slideUp();
     });
-    $(".best_seller .Menu .selectmenu").off("click").on("click", function() {
+   // $(".best_seller .Menu .selectmenu").off("click").on("click", function() {
+    	$(document).off("click", ".best_seller .Menu .selectmenu").on("click", ".best_seller .Menu .selectmenu", function(){
         $(this).next().slideToggle();
     });
 });

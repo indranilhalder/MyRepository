@@ -3618,7 +3618,7 @@ window.onload = function (){
 }
 
 function topLeftLocator(){
-var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 10;
+var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 20;	//TISSTRT-1611 fix
 $(".store-finder-legends").css("top",topLegend);
 var leftLegend = $(".store-finder-map.js-store-finder-map").outerWidth() + parseInt($(".store-finder-map.js-store-finder-map").parent(".js-store-finder").css("margin-left")) - $(".store-finder-legends").width() - parseInt($(".gmnoprint.gm-bundled-control").css("margin-right")) - 15;
 $(".store-finder-legends").css("left",leftLegend);
@@ -3653,3 +3653,26 @@ $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab
 	$(this).addClass("active");
 	});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
+});
+
+
+/* start change of PRDI-92 */
+$(document).ready(function() {
+    if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+        $(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+    }
+	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+	}
+});
+$(window).on("load resize click",function(){
+	setTimeout(function(){
+		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+			$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+		}
+		if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+			$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+		}
+	},500);
+});
+/* end change of PRDI-92 */

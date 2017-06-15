@@ -59,9 +59,9 @@
     					else
     					{
     						if($("#CreditCard").val()=="true")
-        					{	displayCreditCardForm();
+        					{	
+    							displayCreditCardForm();
     							if($(window).width()>=768){
-    							//displayCreditCardForm();
         						$("#viewPaymentCredit, #viewPaymentCreditMobile").parent("li").addClass("active");
     							}
         						$(".checkout-paymentmethod").css("display","block");
@@ -71,7 +71,6 @@
         					{
         						displayDebitCardForm();
         						if($(window).width()>=768){
-        						//displayDebitCardForm();
         						$("#viewPaymentDebit, #viewPaymentDebitMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -81,7 +80,6 @@
         					{
         						displayEMIForm();
         						if($(window).width()>=768){
-        						//displayEMIForm();
         						$("#viewPaymentEMI, #viewPaymentEMIMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -91,7 +89,6 @@
         					{
         						displayNetbankingForm();
         						if($(window).width()>=768){
-        						//displayNetbankingForm();
         						$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -101,7 +98,6 @@
         					{
         						displayCODForm();
         						if($(window).width()>=768){
-        						//displayCODForm();
         						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -112,7 +108,6 @@
         					{
         						displayThrdPrtyWlt();
         						if($(window).width()>=768){
-        						//displayThrdPrtyWlt();
         						$("#viewPaymentMRupee, #viewPaymentMRupeeMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
