@@ -949,7 +949,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			saveAndSetDeliveryAddress(addressForm, true);
-			if (cart.getExchangeAppliedCart().booleanValue())
+			if (null != cart.getExchangeAppliedCart() && cart.getExchangeAppliedCart().booleanValue())
 			{
 				if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
 				{
@@ -1173,7 +1173,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			boolean exchangeAppliedCart = false;
-			if (StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus)
+			if ((StringUtils.isEmpty(exchangeEnabled) && !cartItemDelistedStatus) && (null != (cart.getExchangeAppliedCart())))
 			{
 				exchangeAppliedCart = cart.getExchangeAppliedCart().booleanValue();
 			}
@@ -1369,8 +1369,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 				Boolean exchangeAppliedCart = Boolean.FALSE;
 				final CartModel cart = getCartService().getSessionCart();
-
-				exchangeAppliedCart = cart.getExchangeAppliedCart();
+				if (null != cart.getExchangeAppliedCart())
+				{
+					exchangeAppliedCart = cart.getExchangeAppliedCart();
+				}
 
 				if (exchangeAppliedCart.booleanValue())
 				{
@@ -4180,7 +4182,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/**
 	 * Cart Item Removal
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 *
 	 *
@@ -4294,7 +4296,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4352,7 +4354,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
