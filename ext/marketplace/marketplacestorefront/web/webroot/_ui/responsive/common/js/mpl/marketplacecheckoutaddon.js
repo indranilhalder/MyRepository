@@ -8424,7 +8424,8 @@ function populateIsExchangeApplied(response,stringCaller)
 			{
 			$(".cart_exchange").css('display','block');
 			}
-		else{
+		else if(exchangeId)
+			{
 			$("#exCartAlert").css('display','block');
 		}
 }

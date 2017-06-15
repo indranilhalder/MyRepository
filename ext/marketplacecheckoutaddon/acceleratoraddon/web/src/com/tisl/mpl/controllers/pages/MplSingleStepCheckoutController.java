@@ -881,7 +881,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@RequestMapping(value = RequestMappingUrlConstants.LINK_EDIT_ADDRESS
 			+ MarketplacecheckoutaddonConstants.ADDRESS_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.POST)
-	public String edit(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
+	public String edit(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
+			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
@@ -947,9 +948,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-
-			saveAndSetDeliveryAddress(addressForm, true);
-			if (null != cart.getExchangeAppliedCart() && cart.getExchangeAppliedCart().booleanValue())
+			if (null != cart.getExchangeAppliedCart() && cart.getExchangeAppliedCart().booleanValue()
+					&& StringUtils.isEmpty(exchangeEnabled))
 			{
 				if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
 				{
@@ -957,6 +957,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
 			}
+			if (StringUtils.isNotEmpty(exchangeEnabled))
+			{
+				exchangeGuideFacade.removeExchangefromCart(cart);
+			}
+			saveAndSetDeliveryAddress(addressForm, true);
+
 			//getSessionService().setAttribute("selectedAddress", newAddress.getId());
 			//Recalculating Cart Model
 			LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
@@ -1334,7 +1340,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
-	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model)
+	public String add(final AccountAddressForm addressForm, final BindingResult bindingResult, final Model model,
+			@RequestParam(value = "contExchnageAddEdit", required = false) final String exchangeEnabled)
 			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
@@ -1367,6 +1374,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 
+				//Check if Cart has exchange entry or not
 				Boolean exchangeAppliedCart = Boolean.FALSE;
 				final CartModel cart = getCartService().getSessionCart();
 				if (null != cart.getExchangeAppliedCart())
@@ -1374,7 +1382,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					exchangeAppliedCart = cart.getExchangeAppliedCart();
 				}
 
-				if (exchangeAppliedCart.booleanValue())
+				//Throw popup box for confirmation
+				if (exchangeAppliedCart.booleanValue() && StringUtils.isEmpty(exchangeEnabled))
 				{
 					if (!exchangeGuideFacade.isBackwardServiceble(addressForm.getPostcode()))
 					{
@@ -1382,7 +1391,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 					}
 				}
-
+				//Remove Exchange
+				if (StringUtils.isNotEmpty(exchangeEnabled))
+				{
+					exchangeGuideFacade.removeExchangefromCart(cart);
+				}
 
 				final String sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 				if (StringUtils.isEmpty(sessionPincode))

@@ -161,13 +161,13 @@ ACC.singlePageCheckout = {
 	        
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
 	            if (jqXHR.responseJSON) {
-	                if(data.type!="response")
+	                if(data.type!="response" && data.type!="confirm")
 	                {
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
 	                else if(data.type=="confirm")
                 	{
-                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","",element);
+                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","editAddress",element);
                 	}
 	            } else {
 	            	ACC.singlePageCheckout.getSelectedAddress();
@@ -227,15 +227,16 @@ ACC.singlePageCheckout = {
 	        
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
 	        	if (jqXHR.responseJSON) {
-	                if(data.type!="response")
+	        		if(data.type!="response" && data.type!="confirm")
 	                {
 	                	ACC.singlePageCheckout.processError("#addressMessage",data);
 	                }
 	                else if(data.type=="confirm")
                 	{
-                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","",element);
+	                	
+                	ACC.singlePageCheckout.processConfirm("#addressMessage",data,"","","addAddress",element);
                 	}
-	            } else {
+	            }  else {
 					ACC.singlePageCheckout.getSelectedAddress();
 					$("#choosedeliveryMode").html(data);
 		        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
@@ -1147,7 +1148,7 @@ ACC.singlePageCheckout = {
 			window.location.href=ACC.config.encodedContextPath+jsonResponse.url;
 		}
 	},
-	processConfirm: function(showElementId,jsonResponse,element,addressId){
+	processConfirm: function(showElementId,jsonResponse,addressId,selectedPincode,isNew,element){
 		if(jsonResponse.type=="confirm")
 		{
 			if(showElementId=="#addressMessage")
@@ -1158,10 +1159,15 @@ ACC.singlePageCheckout = {
 				 
 				 $( "#exConfirmYes" ).click(function() {
 					 $("#contExchnage").val("disableExchange");
-					 if(!ACC.singlePageCheckout.getIsResponsive())
+					 $("#contExchnageAddEdit").val("disableExchange");
+					 if(!ACC.singlePageCheckout.getIsResponsive() && isNew=="editAddress" )
 					 {
-				 ACC.singlePageCheckout.postAddAddress(element);
+						 ACC.singlePageCheckout.postEditAddress(element);
 					 }
+					 else if(!ACC.singlePageCheckout.getIsResponsive() && isNew=="addAddress" )
+						 {
+						 ACC.singlePageCheckout.postAddAddress(element);
+						 }
 				 else
 					 {
 					 ACC.singlePageCheckout.removeExchangeFromCart();
@@ -1174,6 +1180,7 @@ ACC.singlePageCheckout = {
 				 
 				 $( "#exConfirmNo" ).click(function() {
 					 $("#contExchnage").val("");
+					 $("#contExchnageAddEdit").val("");
 					$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 						$(showElementId).show();
 						ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
@@ -1191,6 +1198,7 @@ ACC.singlePageCheckout = {
 			 document.getElementById('confirmBox').style.display = "block";
 			 $( "#exConfirmYes" ).click(function() {
 				 $("#contExchnage").val("disableExchange");
+				 $("#contExchnageAddEdit").val("disableExchange");
 				 if(!ACC.singlePageCheckout.getIsResponsive())
 				 {
 			 ACC.singlePageCheckout.proceedOnAddressSelection(showElementId,addressId);
@@ -1206,6 +1214,7 @@ ACC.singlePageCheckout = {
 			 
 			 $( "#exConfirmNo" ).click(function() {
 				 $("#contExchnage").val("");
+				 $("#contExchnageAddEdit").val("");
 				$(showElementId).html("<span class='alert alert-danger alert-dismissable' style='padding:10px;'>"+jsonResponse.displaymessage+"</span>");
 					$(showElementId).show();
 					ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
