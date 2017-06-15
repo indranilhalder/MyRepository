@@ -22,4 +22,11 @@
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="single-checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/single"%>
 
-<single-checkout:showDeliveryAddressDetails deliveryAddresses="${deliveryAddresses}" selectedAddress="${selectedAddress}"/>
+<choose>
+	<when test="${isResponsive}">
+		<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}" selectedAddress="${selectedAddress}"/>
+	</when>
+	<otherwise>
+		<single-checkout:showDeliveryAddressDetails deliveryAddresses="${deliveryAddresses}" selectedAddress="${selectedAddress}"/>
+	</otherwise>
+</choose>

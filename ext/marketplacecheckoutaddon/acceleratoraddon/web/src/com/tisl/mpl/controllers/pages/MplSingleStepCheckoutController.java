@@ -443,26 +443,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute(MarketplacecheckoutaddonConstants.METAROBOTS, MarketplacecheckoutaddonConstants.NOINDEX_NOFOLLOW);
 			timeOutSet(model);
 
-			//Tealium related data population
-			final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
-			model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
-			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
-			model.addAttribute("checkoutPageName", selectAddress);
-			if (isResponsive)
+			if (!isAjax)
 			{
-				model.addAttribute("deviceType", "mobile");
-			}
-			else
-			{
-				model.addAttribute("deviceType", deviceType);
-			}
-			//Code to import payment on checkout page load
-			model.addAttribute("openTab", "deliveryAddresses");
-			model.addAttribute("prePopulateTab", "payment#deliveryMethod");
-			prepareModelForPayment(model, cartUssidData);
-			if (!deviceType.equals("normal"))
-			{
-				prepareModelForDeliveryMode(model, cartModel);
+				//Tealium related data population
+				final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
+				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
+				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
+				model.addAttribute("checkoutPageName", selectAddress);
+				if (isResponsive)
+				{
+					model.addAttribute("deviceType", "mobile");
+				}
+				else
+				{
+					model.addAttribute("deviceType", deviceType);
+				}
+				//Code to import payment on checkout page load
+				model.addAttribute("openTab", "deliveryAddresses");
+				model.addAttribute("prePopulateTab", "payment#deliveryMethod");
+				prepareModelForPayment(model, cartUssidData);
+				if (!deviceType.equals("normal"))
+				{
+					prepareModelForDeliveryMode(model, cartModel);
+				}
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -488,6 +491,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			//final String selectedAddress = getSessionService().getAttribute("selectedAddress");
 			//model.addAttribute("selectedAddress", selectedAddress);
+			model.addAttribute("isResponsive", Boolean.valueOf(isResponsive));
 			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveryAddressCarousel;
 		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.SingleStepCheckout.SinglePageCheckoutPage;

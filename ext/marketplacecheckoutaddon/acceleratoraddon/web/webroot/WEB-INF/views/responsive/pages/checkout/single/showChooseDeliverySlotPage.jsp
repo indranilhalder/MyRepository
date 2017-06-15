@@ -71,7 +71,7 @@
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm" action="${request.contextPath}/checkout/single/reviewOrder" method="get" >
+				<form:form id="selectDeliveryMethodForm" action="/checkout/single/reviewOrder" method="get" >
 				<!-- TISCR-305 starts -->
 				<button class="button" id="deliveryMethodSubmitUp" type="submit" class="checkout-next"><spring:theme code="checkout.pickup.continue.button" text="Next"/></button>
 				<!-- TISCR-305 ends -->
@@ -108,9 +108,9 @@
 			</div>
 			
 		<div>
-			<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal.('hide');ACC.singlePageCheckout.getReviewOrder();">Continue</button>
+			<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Continue</button>
 		</div>
 		<div>
-			<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal.('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</button>
+			<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</button>
 		</div>
 	</div>

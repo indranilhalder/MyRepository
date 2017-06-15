@@ -31,7 +31,7 @@ ACC.singlePageCheckout = {
 	
 	getDeliveryAddresses:function(element){
 		
-		var url=ACC.config.encodedContextPath + "/checkout/single?isAjax=true";
+		var url=ACC.config.encodedContextPath + "/checkout/single?isAjax=true&isResponsive="+ACC.singlePageCheckout.getIsResponsive();
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -1412,11 +1412,10 @@ removeExchangeFromCart : function (){
 	    	        	
 	    				$("#selectedReviewOrderDivId").show();
 	    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
-	    	        	
-	    	        	//Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
-	    	        	populateAddress();
-	    	        	populateAddressEmi();
-        			}
+	    	      	}
+	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
+	    	        populateAddress();
+	    	        populateAddressEmi();
     			}
         		else
     			{
@@ -1507,6 +1506,19 @@ removeExchangeFromCart : function (){
 		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
 	},
 	
+	resetPaymentModes:function()
+	{
+		$("#makePaymentDivMobile").find("input[type=radio]").attr("checked","false");
+		$("#payment_form").slideUp();
+		$("#payment_form")[0].reset();
+		$("#debit_payment_form").slideUp();
+		$("#debit_payment_form")[0].reset();
+		$("#netbanking").slideUp();
+		$("#emi").slideUp();
+		$("#COD").slideUp();
+		$("#MRUPEE").slideUp();
+	},
+	
 	getMobileAddAddress:function(){
 		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
 		if(formAlreadyLoaded=="false")
@@ -1521,12 +1533,13 @@ removeExchangeFromCart : function (){
 	        
 	        xhrResponse.done(function(data) {
 	        	//Unchecking the radio button of saved addresses
-	        	$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+	        	$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
 	        	$(".mobile_add_address").addClass("form_open");
 				$(".new-address-form-mobile").html(data);
 				$(".new-address-form-mobile").attr("data-loaded","true");
 				$(".new-address-form-mobile").slideDown();
 				$("#singlePageAddressPopup #modalBody").html('');
+				$("#newAddressButton").hide();
 				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
 			});
 	        
@@ -1537,7 +1550,7 @@ removeExchangeFromCart : function (){
 		else
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
-			$('input[name=selectedAddressCodeMobile]').prop('checked', false);
+			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
         	$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
@@ -1550,6 +1563,7 @@ removeExchangeFromCart : function (){
 		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{
 			ACC.singlePageCheckout.resetValidationSteps();
+    		ACC.singlePageCheckout.resetPaymentModes();
 		}
 		if(addressId!="")
 		{
@@ -1611,14 +1625,20 @@ removeExchangeFromCart : function (){
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
-		            	$("#choosedeliveryModeMobile").on("change","input[type=radio]",function(){
-		            		ACC.singlePageCheckout.resetValidationSteps();
-		            	});
+		            	
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
 		 		});
 		}
 		
+	},
+	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
+	attachEventToResetFlagsOnDelModeChange:function()
+	{
+		$("#choosedeliveryModeMobile input[type=radio]").on("change",function(){
+    		ACC.singlePageCheckout.resetValidationSteps();
+    		ACC.singlePageCheckout.resetPaymentModes();
+    	});
 	},
 	
 	scrollToDiv:function(id,offset){
@@ -1762,6 +1782,7 @@ removeExchangeFromCart : function (){
 	                		ACC.singlePageCheckout.proceedToPayment();
 	                		//Open payment mode form
 	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+	                		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
@@ -1780,7 +1801,36 @@ removeExchangeFromCart : function (){
     		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
     	}
 	},
-	
+	//Method to get responsive slot delivery page
+	getResponsiveSlotSelectionPage:function(){
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/slotDelivery-responsive";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+            if (jqXHR.responseJSON) {
+            	if(data.type!="response")
+                {
+                	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
+                }
+            } else {
+            	
+            		var elementId="singlePageChooseSlotDeliveryPopup";
+            		ACC.singlePageCheckout.modalPopup(elementId,data);
+            }
+        });
+        
+        xhrResponse.always(function() {
+        	ACC.singlePageCheckout.hideAjaxLoader();
+        });
+		
+	},
+	//Method to open payment form in responsive
 	viewPaymentModeFormOnSelection:function(paymentMode)
 	{
 		if(paymentMode=="Credit Card")
@@ -1808,6 +1858,7 @@ removeExchangeFromCart : function (){
 			viewPaymentMRupee();
 		}
 	}
+/****************MOBILE ENDS HERE************************/
 }
 //Calls to be made on dom ready.
 $(document).ready(function(){
