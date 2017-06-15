@@ -488,48 +488,54 @@
 .checkout-paymentmethod.nav{
     padding: 0px;
 }
-.checkout-paymentmethod{
-    li{     
+.checkout-paymentmethod{  
+    
+    li.payment-tab{
+        
         position: relative;
         border-top: 1px solid #ccc;
-            padding-top: 50px;
+        padding-top: 50px;
         margin: 10px 0px;
-        list-style: none;
+        list-style: none;   
         
-        span{
+        &:first-child{
+         border-top:0px;
+        }
+      
+        span{   
+            
             top: 20px;
             position: absolute;
             padding-left: 30px;
+            
+            &:before{
+                content: "";
+                width: 20px;
+                height: 20px;
+                border-radius: $border-radius-small;
+                background: #fff;
+                border: 1px solid #c8c7cc;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto; 
+                
+            }
+           
+        }          
+        &.active{
+            span{  
+                 &:before{
+                    color: #fff;
+                    background: #b99d6b url('../images/tick.png') no-repeat;
+                    background-position: 3px 1px;
+                    border-color:#b99d6b;
+                    text-align: center;
+                    line-height: 16px;
+                }
+            }
         }
-    }
-    
-    li:first-child{
-         border-top:0px;
-    }
-    
-    li span:before{
-        
-     content: "";
-	width: 20px;
-	height: 20px;
-	border-radius: $border-radius-small;
-	background: #fff;
-	border: 1px solid #c8c7cc;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	margin: auto;
-    }
-    
-    li.active span:before{
-        
-       color: #fff;
-        background: #b99d6b url('../images/tick.png') no-repeat;
-        background-position: 3px 1px;
-        border-color:#b99d6b;
-        text-align: center;
-        line-height: 16px;
     }
 }
 .checkout-shipping.addNewAddress .formaddress{
@@ -673,4 +679,29 @@
 }
 .checkout-content .checkout-shipping .heading-form h3{
  font-size: 14px;
+}
+#cardDebit{
+  display:none;
+ } 
+ .controls .card_exp_month, .controls .card_exp_year{
+ width: 49%;
+    display: inline-block;
+ }
+.creditDebitLabelRadio input{
+ 
+ display:none;
+}
+.creditDebitLabelRadio label{
+ width:150px;
+ text-align:center;
+ padding:10px;
+ border:#000;
+ border-radius:3px;
+ border:1px solid #000;
+ background:#fff;
+}
+.creditDebitLabelRadio input:checked + label{
+ background:#000;
+ color:#fff;
+ 
 }

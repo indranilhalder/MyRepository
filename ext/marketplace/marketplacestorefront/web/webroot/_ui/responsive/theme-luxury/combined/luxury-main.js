@@ -13715,12 +13715,7 @@ TATA.CommonFunctions = {
         var _self = TATA.Pages;
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
     }
-}, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt(), $(".header-login-target-link").on("click", function() {
-        var targetID = $(this).data("target-id");
-        $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
-    });
-}), $(window).scroll(function() {
+}, $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);

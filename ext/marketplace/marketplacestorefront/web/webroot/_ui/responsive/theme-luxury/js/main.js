@@ -1287,15 +1287,18 @@ TATA.Pages = {
 	}
 };
 
+/*
 $(document).ready(function () {
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
 	$("select").selectBoxIt(); 
+    $("select").not(".controls .card_exp_year, .controls .card_exp_month").selectBoxIt(); 
 	$('.header-login-target-link').on('click', function(){
 		var targetID = $(this).data('target-id');
 		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
 	});
 });
+*/
 
 $(window).scroll(function () {
 	TATA.CommonFunctions.WindowScroll();
