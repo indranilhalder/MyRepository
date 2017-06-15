@@ -617,6 +617,32 @@ ACC.singlePageCheckout = {
 		}
 	},
 	
+	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){		
+    	var isCncPresent=$("#isCncPresentInSinglePageCart").val();
+    	if(isCncPresent=="true")
+    	{
+    		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
+    		if(htmlPopulated=="NO")
+        	{
+    			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
+        		var data="";
+        		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
+        		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        		});
+        	        
+        		xhrPickupPersonResponse.done(function(data) { 
+        			//Populating popup
+        			$("#singlePagePickupPersonPopup .content").html(data);
+        			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
+        			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
+            		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
+    			});
+        	}
+    	}
+	},
+	
+	
 	getSelectedAddress:function(){
 		var url=ACC.config.encodedContextPath + "/checkout/single/deliveryAddress";
 		var data="";
@@ -631,32 +657,10 @@ ACC.singlePageCheckout = {
                 if(data.type=="response")
                 {              
                 	$("#selectedAddressDivId").show();
-
-            		var pickupPersonName=data.pickupPersonName;
-            		var pickupPersonMobileNo=data.pickupPersonMobileNo;
-                	$("#selectedAddressHighlight").html(data.fullAddress);
-                	var isCncPresent=$("#isCncPresentInSinglePageCart").val();
-                	if(isCncPresent=="true")
-                	{
-                		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
-                		if(htmlPopulated=="NO")
-	                	{
-                			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
-	                		var data="";
-	                		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
-	                		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
-	                				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-	                		});
-	                	        
-	                		xhrPickupPersonResponse.done(function(data) { 
-	                			//Populating popup
-	                			$("#singlePagePickupPersonPopup .content").html(data);
-	                			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
-	                			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
-	                    		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
-	            			});
-	                	}
-                	}
+                	
+                	
+                	ACC.singlePageCheckout.getPickUpPersonForm(data.pickupPersonName,data.pickupPersonMobileNo);
+            		
                 }
             }
 		});
@@ -1523,6 +1527,27 @@ removeExchangeFromCart : function (){
 		$("#MRUPEE").slideUp();
 	},
 	
+	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
+	getPickUpPersonPopUpMobile:function(){
+		var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
+		var data="";
+		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
+		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+	        
+		xhrPickupPersonResponse.done(function(data) { 
+			//Populating popup
+			$("#singlePagePickupPersonPopup .content").html(data);
+			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
+			
+		});
+		$("#singlePagePickupPersonPopup").modal('show');
+	
+	},
+	
+	
+	
 	getMobileAddAddress:function(){
 		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
 		if(formAlreadyLoaded=="false")
@@ -1625,6 +1650,7 @@ removeExchangeFromCart : function (){
 	                	}
 		            	else
 		            	{
+		            		ACC.singlePageCheckout.getPickUpPersonForm(pickupPersonName,pickupPersonMobileNo);
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}

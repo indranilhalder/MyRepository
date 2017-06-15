@@ -67,6 +67,11 @@
 			url : requiredUrl,
 			data : dataString,
 			success : function(data) {
+				if(ACC.singlePageCheckout.getIsResponsive())
+				{
+					ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
+					//$("#singlePagePickupPersonPopup").modal('show');
+				}
 				$(".continue_btn, .continue_btn_a").css("pointer-events", "all");
 				$(".continue_btn, .continue_btn_a").css("cursor", "pointer"); 
 				$(".continue_btn, .continue_btn_a").attr("href", $(".continue_btn, .continue_btn_a").attr("data-id"));
