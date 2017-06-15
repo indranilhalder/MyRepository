@@ -13716,7 +13716,7 @@ TATA.CommonFunctions = {
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
     }
 }, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("select").selectBoxIt(), $("select").not(".controls .card_exp_year, .controls .card_exp_month").selectBoxIt(), 
+    TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt(), 
     $(".header-login-target-link").on("click", function() {
         var targetID = $(this).data("target-id");
         $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
