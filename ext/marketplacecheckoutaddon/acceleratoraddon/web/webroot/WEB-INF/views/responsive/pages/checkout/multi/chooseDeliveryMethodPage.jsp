@@ -99,6 +99,19 @@ display: none;
 				<!-- TISPRO-625 starts -->
 				<input type="hidden" id="isExpressCheckoutSelected"
 								value="${isExpressCheckoutSelected}" />
+				<!-- Change for INC144316212 -->
+				<input type="hidden" id="isDeliveryOptionPage"
+								value="${isDeliveryOptionPage}" />
+					<c:choose>
+					<c:when test="${isDeliveryOptionPage eq 'yes'}">
+					<button class="button proceed-button" id="deliveryMethodSubmitUp"
+										type="submit" class="checkout-next">
+										<spring:theme code="checkout.multi.deliveryMethod.continue"
+											text="Next" />
+									</button>
+					</c:when>
+					
+					<c:otherwise>	
 					<c:choose>
 						<c:when test="${isExpressCheckoutSelected}">
 								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
@@ -115,6 +128,8 @@ display: none;
 											text="Next" />
 									</button>
 						</c:otherwise>
+					</c:choose>
+					</c:otherwise>
 					</c:choose>
 				<!-- TISPRO-625 ends -->
 				<!-- TISCR-305 ends -->
@@ -1100,23 +1115,35 @@ display: none;
 				<multi-checkout:orderTotals cartData="${cartData}"
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 				<c:if test="${showDeliveryMethod eq true}">
-		<c:choose>
-			<c:when test="${isExpressCheckoutSelected}">
+				<!-- chnages for INC144316212 -->
+				<c:choose>
+					<c:when test="${isDeliveryOptionPage eq 'yes'}">
 					<button class="button" id="deliveryMethodSubmit"
-					type="submit" class="checkout-next">
-					<spring:theme
-						code="checkout.multi.deliveryMethod.expresscheckout.continue"
-						text="Next" />
-				</button>
-			</c:when>
-			<c:otherwise>
-						<button class="button" id="deliveryMethodSubmit"
 					type="submit" class="checkout-next">
 					<spring:theme code="checkout.multi.deliveryMethod.continue"
 						text="Next" />
 				</button>
-			</c:otherwise>
-		</c:choose>
+					</c:when>
+					<c:otherwise>
+					<c:choose>
+					<c:when test="${isExpressCheckoutSelected}">
+							<button class="button" id="deliveryMethodSubmit"
+							type="submit" class="checkout-next">
+							<spring:theme
+								code="checkout.multi.deliveryMethod.expresscheckout.continue"
+								text="Next" />
+						</button>
+					</c:when>
+					<c:otherwise>
+								<button class="button" id="deliveryMethodSubmit"
+							type="submit" class="checkout-next">
+							<spring:theme code="checkout.multi.deliveryMethod.continue"
+								text="Next" />
+						</button>
+					</c:otherwise>
+				</c:choose>
+				</c:otherwise>
+				</c:choose>
 		</c:if>
 		</div>
 		

@@ -70,13 +70,15 @@
 							code="text.account.orderHistorylink" text="Back to Order History" />
 					</a>
 				</p>
+				<p class="track-order-header">Track Order</p>
 				<div class="order-history order-details">
 					<!-- Heading for saved Cards -->
 					<div class="navigation">
 						<h2>
 							<spring:theme text="Order Details" />
 						</h2>
-
+						
+						<p class="commonAccountPara">If you find any issue with the details, you can contact our customer care at 1800 208 8282.</p>
 
 					</div>
 
@@ -85,13 +87,17 @@
 						<li class="header">
 
 							<ul>
+							
+								<li><span>Order #</span>${subOrder.code}</li>
 								<li><span><spring:theme
-											code="text.orderHistory.order.placed" /></span> <c:if
+											code="text.orderHistory.order.place" text="Placed on:" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
-								<li><span>Total: </span> 
+										
+										<!-- Commented for TPR-6013 Order History -->
+								<%-- <li><span>Total: </span> 
 								<!-- TISSIT-1773 -->
-								<%-- <format:price	priceData="${subOrder.totalPrice}" /> --%>
+								<format:price	priceData="${subOrder.totalPrice}" />
 								
 								<c:choose>
 										<c:when test="${subOrder.net}">
@@ -114,8 +120,10 @@
 										<c:otherwise>
 												${subOrder.mplPaymentInfo.cardAccountHolderName}
 												</c:otherwise>
-									</c:choose></li>
-								<li><span>Order Reference Number: </span> ${subOrder.code}</li>
+									</c:choose></li> --%>
+								<%-- <li><span>Order Reference Number: </span> ${subOrder.code}</li> --%>	
+								<!-- Commented for TPR-6013 Order History -->
+								
 							</ul>
 
 
@@ -126,7 +134,7 @@
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Scheduled Delivery and Shipping Charges"/></span>
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1Charges" text="Scheduled Delivery & Shipping Charges"/></span>
 									<%-- <spring:theme code="text.account.order.delivery"
 											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
@@ -185,70 +193,10 @@
 									
 								</c:when>
 								<c:otherwise>
-								<c:set var="paymentError" value="false"/>
-									<div class="payment-method">
-							<!-- Checked for mRupee order -->
-									 <c:choose>
-  										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
-  											<h2>Payment Method: <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
-									</h2>
-									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
-									${subOrder.mplPaymentInfo.paymentOption}
-  										</c:when>
-								  		<c:otherwise>
-								  			<h2>Payment Method:
-									${subOrder.mplPaymentInfo.paymentOption}</h2>
-									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
-								  		</c:otherwise>
-								  	</c:choose>
-								<c:set var="cardNumberMasked"
-									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
-								<c:set var="cardNumberLength"
-									value="${fn:length(cardNumberMasked)}" />
-								<c:set var="cardNumEnd"
-									value="${fn:substring(cardNumberMasked, cardNumberLength-4, cardNumberLength)}" />
-
-								<c:if
-									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card'}">
-									<c:set var="creditCardBillingAddress"
-										value="${subOrder.mplPaymentInfo.billingAddress}" />
-								</c:if>
-								<!--  TISBOX-1182 -->
-								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%><!-- sanity issue -->
-								<c:if
-									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
-									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
-										${cardNumEnd}</p>
-									<p>Expires on:
-										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p>
-								</c:if>
-								<c:if
-									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}">
-									<p>${subOrder.mplPaymentInfo.bank}</p>
-								</c:if>
-
-
-								<!-- }
-								//TODO
-								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
-								{
-									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
-									orderWsDTO.setPaymentCardDigit(paymentInfo.getCardAccountHolderName());
-									if (paymentInfo.getEmiInfo() != null)
-									{
-										orderWsDTO.setPaymentCardExpire(paymentInfo.getEmiInfo().getTerm());
-									}
-					
-								}
-								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
-								{
-									//reportDTO.setRiskScore();
-									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
-									orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
-									orderWsDTO.setPaymentCardExpire("NA");
-								} -->
-							</div>
-							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+								
+								<!-- TPR-6013 Order History Ends -->
+								
+								<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
 							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
 							<div class="delivery-address">
 								<c:if test="${not empty creditCardBillingAddress.firstName}">
@@ -300,6 +248,130 @@
 										</address>
 									</c:if> --%>
 							</div>
+								
+								<!-- TPR-6013 Order History Ends -->
+								
+								<c:set var="paymentError" value="false"/>
+									<div class="payment-method">
+							<!-- Checked for mRupee order -->
+									 <c:choose>
+  										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
+  											<h2>Payment Method</h2>
+  											<span><spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /></span>
+									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+									${subOrder.mplPaymentInfo.paymentOption}
+  										</c:when>
+								  		<c:otherwise>
+								  			<h2>Payment Method</h2>
+								  			<span>${subOrder.mplPaymentInfo.paymentOption}</span>
+									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								  		</c:otherwise>
+								  	</c:choose>
+								<c:set var="cardNumberMasked"
+									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
+								<c:set var="cardNumberLength"
+									value="${fn:length(cardNumberMasked)}" />
+								<c:set var="cardNumEnd"
+									value="${fn:substring(cardNumberMasked, cardNumberLength-4, cardNumberLength)}" />
+
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card'}">
+									<c:set var="creditCardBillingAddress"
+										value="${subOrder.mplPaymentInfo.billingAddress}" />
+								</c:if>
+								<!--  TISBOX-1182 -->
+								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%><!-- sanity issue -->
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
+									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
+										${cardNumEnd}</p>
+									<p>Expires on:
+										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p>
+								</c:if>
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}">
+									<p>${subOrder.mplPaymentInfo.bank}</p>
+								</c:if>
+
+
+								<!-- }
+								//TODO
+								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+								{
+									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
+									orderWsDTO.setPaymentCardDigit(paymentInfo.getCardAccountHolderName());
+									if (paymentInfo.getEmiInfo() != null)
+									{
+										orderWsDTO.setPaymentCardExpire(paymentInfo.getEmiInfo().getTerm());
+									}
+					
+								}
+								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
+								{
+									//reportDTO.setRiskScore();
+									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
+									orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
+									orderWsDTO.setPaymentCardExpire("NA");
+								} -->
+							</div>
+							
+							<!-- Commented TPR-6013 Order History Starts -->
+							
+						<%-- 	<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
+							<div class="delivery-address">
+								<c:if test="${not empty creditCardBillingAddress.firstName}">
+									<h3>Billing Address:</h3>
+									
+									<address>
+										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
+										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
+										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
+										<c:if test="${not empty creditCardLine2}">
+										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
+										</c:if>
+										<c:if test="${not empty creditCardLine3}">
+														${fn:escapeXml(creditCardBillingAddress.line3)},
+													</c:if>
+										<br>
+										<!-- R2.3: START -->
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
+										<!-- R2.3: END -->
+										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
+										<c:if test="${not empty creditCardBillingAddress.state}">
+														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
+													</c:if>
+										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
+										<br>
+										91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br>
+									</address>
+								</c:if>
+								<c:if test="${empty creditCardBillingAddress.firstName}">
+										<address>
+											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
+											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.line2)},
+											<c:if test="${not empty subOrder.deliveryAddress.line3}">
+														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+													</c:if>
+											<br>
+											${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+											<c:if test="${not empty subOrder.deliveryAddress.state}">
+														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+													</c:if>
+											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;IN
+											<br>
+											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+										</address>
+									</c:if>
+							</div> --%>
+							
+							<!-- Commented TPR-6013 Order History Ends -->
+							
 								</c:otherwise>
 							</c:choose>
 							
@@ -1852,7 +1924,7 @@
 													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 														text="Cancel Order" /></a>
 												<!-- TISCR-410 -->
-												<spring:theme code="trackOrder.cancellableBefore.msg" />
+												<span><spring:theme code="trackOrder.cancellableBefore.msg" /></span>
 												
 											</c:if>
 											<c:if
@@ -2164,72 +2236,10 @@
 										  </c:forEach>
 										<div class="deliveryTrack status suman"
 											id="tracker_${entry.transactionId}">
-											<ul class="nav">
-
-												<li>Approval</li>
-
-												<c:choose>
-													<c:when
-														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
-														<li>Processing</li>
-													</c:when>
-
-												</c:choose>
-
-
-												<c:if test="${fn:length(cancelStatus) gt 0}">
-													<li>Cancel</li>
-												</c:if>
-
-													<c:choose>
-														<c:when
-															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
-															</c:if>
-														</c:when>
-														<c:otherwise>
-															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>Shipping</li>
-
-															</c:if>
-														</c:otherwise>
-													</c:choose>
-
-												<!-- For RTO handling productDelivered -->
-
-													<c:choose>
-														<c:when
-															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-															<c:if
-																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-																<li>PickedUp</li>
-															</c:if>
-														</c:when>
-														<c:otherwise>
-															<c:if
-																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-																<li>Delivery</li>
-															</c:if>
-														</c:otherwise>
-
-
-
-
-													</c:choose>
-
-													<c:if
-														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-														<li>Return</li>
-													</c:if>
-
-												<%-- <c:if
-													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
-													<li>Delivery</li>
-												</c:if>
-												--%>
-											</ul>
-											<ul class="progtrckr tabs">
+											
+											<!-- Commented for TPR-6013 Order Details Starts -->
+											
+										<%-- 	<ul class="progtrckr tabs">
 												
 												<!-------------------------------- Approval Block --------------------------------------->
 												<c:set var="displayMsgVar" value="" />
@@ -2351,8 +2361,8 @@
 												<!--End Processing Block -->
 
 
-												<%-- <c:choose>
-												<c:when test="${fn:length(cancelStatus) gt 0}"> --%>
+												<c:choose>
+												<c:when test="${fn:length(cancelStatus) gt 0}">
 
 												<c:if test="${fn:length(cancelStatus) gt 0}">
 													<!--------------------------------------- Cancel Block ------------------------------------------>
@@ -2409,11 +2419,11 @@
 														</c:forEach> <span class="end "></span></li>
 													<!--End Cancel Block -->
 												</c:if>
-												<%-- </c:when>
-												<c:otherwise> --%>
+												</c:when>
+												<c:otherwise>
 
-												<%-- </c:otherwise>
-												</c:choose> --%>
+												</c:otherwise>
+												</c:choose>
 
 
 
@@ -2544,7 +2554,7 @@
 												</c:if>
 												
 												<!------------------------------- Delivery Block ------------------------------------->
-												<%-- 
+												
 												 <c:if
 													test="${fn:length(cancelStatus) eq 0 }">
 													<li class="progress progtrckr-done delivery-status">
@@ -2557,7 +2567,7 @@
 														</p>
 													</li>
 												</c:if>
-												--%>
+												
 												<!-- End Delivery Block -->
 												
 												
@@ -2622,7 +2632,7 @@
 																 		</c:otherwise>
 																 		</c:choose>	
 																 	</c:if>
-																	<%-- 		
+																			
 																	<div id="track-more-info-return">
 																		<p class="active">
 																			<span class="view-more-consignment-return"
@@ -2639,7 +2649,7 @@
 																		id="returnRecord${entry.orderLineId}_${loop.index}">
 
 																	</div>
---%>
+
 																</div>
 															</c:if>
 
@@ -2654,6 +2664,193 @@
 												</c:if>
 												<!--End Return Block -->
 												
+											</ul> --%>
+											
+											<!--Commented for TPR-6013 Order Details Ends -->
+											
+											<ul class="progtrckr tabs">
+											<!-------------------------------- Approval Block --------------------------------------->
+												<c:set var="displayMsgVar" value="" />
+												<li class="progress progtrckr-done orderStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
+												
+													
+													
+													<c:forEach items="${approvedStatus}" var="productStatus" varStatus="loop">
+													
+													<c:choose>
+													
+													<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+														<div class="commonBlock greenBlock"> 
+															<div class="roundedDiv"></div>
+															<div class="rectangularDivQuarter"></div>
+														</div>
+													</c:when>
+													
+													
+													
+													</c:choose>
+													
+													</c:forEach>
+													
+													<div class="commonBlock grayBlock">
+														<div class="roundedDiv"></div>
+														<div class="rectangularDivQuarter"></div>
+													</div>
+													
+													
+												
+												</li>
+											<!--End Approval Block -->
+											
+											<!-------------------------------------------- Processing Block ---------------------------->
+											
+											<c:set var="displayMsgVar" value="" />
+											
+											<c:if test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+													
+												<li class="progress progtrckr-done processingStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
+														<c:set value="${0}" var="dotCount" /> 
+														<c:forEach items="${processingStatus}" var="productStatus" varStatus="loop">
+														<c:if test="${loop.last}">
+														<c:choose>
+														<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+														<div class="commonBlock greenBlock">
+															<div class="rectangularDiv"></div>
+															<div class="roundedDiv"></div>
+															<div class="rectangularDivQuarter"></div>
+														 </div>
+														</c:when>
+														
+														</c:choose>
+														
+														</c:if>
+														
+														</c:forEach>
+														
+														<div class="commonBlock grayBlock">
+															<div class="rectangularDiv"></div>
+															<div class="roundedDiv"></div>
+															<div class="rectangularDivQuarter"></div>
+														</div>
+														
+												</li>
+												
+											</c:if>
+											<!--End Processing Block -->
+											
+											<!------------------------------- Shipping Block --------------------------------->
+											
+											<c:if test="${fn:length(cancelStatus) eq 0}">
+											<c:set var="displayMsgVar" value="" />
+											<li class="progress progtrckr-done shippingStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
+											<c:set value="${0}" var="dotCount" />
+											<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
+											<c:choose>
+											<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+											<div class="commonBlock greenBlock">
+												<div class="rectangularDiv"></div>
+												<div class="roundedDiv"></div>
+												<div class="rectangularDivQuarter"></div>
+											</div>
+																	<c:set var="dotCount" value="${dotCount + 1}" />
+											</c:when>
+											</c:choose>
+											</c:forEach>
+											<div class="commonBlock grayBlock">
+												<div class="rectangularDiv"></div>
+												<div class="roundedDiv"></div>
+												<div class="rectangularDivQuarter"></div>
+											</div>
+											</li>
+											</c:if>
+											<!-- End Shipping Block -->
+											
+											<!--------------------------------- Return Block -------------------------------------->
+											
+											<li class="progress progtrckr-done returnStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
+											<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+											<c:set var="displayMsgVar" value="" />
+											
+											<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																	<div class="commonBlock greenBlock"> 
+																		<div class="rectangularDiv"></div>
+																		<div class="roundedDiv"></div>
+																	</div>
+																	<c:set var="dotCount" value="${dotCount + 1}" />
+																</c:when>
+											</c:if>
+											<div class="commonBlock grayBlock">
+												<div class="rectangularDiv"></div>
+												<div class="roundedDiv"></div>
+											</div>
+											</li>
+											
+											</ul>
+											
+											<ul class="nav">
+												
+												<li>Approved</li>
+
+												<c:choose>
+													<c:when
+														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+														<li>Processed</li>
+													</c:when>
+
+												</c:choose>
+
+
+												<c:if test="${fn:length(cancelStatus) gt 0}">
+													<li>Cancel</li>
+												</c:if>
+
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>READY for PickUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>Shipped</li>
+
+															</c:if>
+														</c:otherwise>
+													</c:choose>
+
+												<!-- For RTO handling productDelivered -->
+
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>PickedUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>Delivered</li>
+															</c:if>
+														</c:otherwise>
+
+
+
+
+													</c:choose>
+
+													<c:if
+														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+														<li>Return</li>
+													</c:if>
+
+												<%-- <c:if
+													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
+													<li>Delivery</li>
+												</c:if>
+												--%>
 											</ul>
 
 										</div>
@@ -3410,7 +3607,78 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 input[type="radio"]:checked {
 	background: #000;
 }
-
 </style>
+
+<!-- added for track order iframe styling-->
+<c:if test="${param.frame ne null}">
+<style>
+body .account p.track-order-header{
+	display: block;
+	font-size: 16px;
+  	font-weight: 500;
+  	letter-spacing: 0.6px;
+  	text-align: left;
+  	color: #000000;
+  	padding-left: 20px;
+}
+body .account .left-nav, body .account .right-account .order-history .navigation,
+body .account .right-account .order-history.order-details li.header .totals,
+body .account .right-account .order-history.order-details li.header .payment-method,
+body .account .right-account .order-history.order-details .product-block li.item .actions,
+body .account .nav-orderHistory, body .account .account-header{
+	display: none !important;
+}
+
+body .account .right-account .order-history.order-details li.item .item-fulfillment,
+body .account .right-account .order-history.order-details .product-block{
+	margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment{
+	padding-left: 20px !important;
+}
+body .account .right-account .order-history .product-block li.header>ul{
+	margin-left:0;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p{
+font-size: 11px;
+  font-style: italic;
+  line-height: 1.27;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: #bbbbbb;
+  font-weight: normal;
+}
+body .account .right-account .order-history.order-details li.header .delivery-address{
+	padding: 0;
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.8px;
+    text-align: left;
+    color: #666666;
+    font-weight: normal;
+}
+body .account .right-account{
+	width: 100% !important;
+    margin: 0 !important;
+}
+body .account .right-account .order-history.order-details li.header>ul>li:first-child{
+	font-size: 14px;
+}
+body .account .right-account .order-history.order-details .product-block{
+	border: 0 !important;
+    margin: 0;
+    margin-top: 30px;
+}
+body .account .right-account .order-history.order-details li.header>ul{
+	margin-bottom: 16px;
+}
+body.page-order .body-Content{
+	padding-bottom:0;
+}
+</style>
+</c:if>
 
 <!-- R2.3: END: End of  AWB CSS for PopUp -->

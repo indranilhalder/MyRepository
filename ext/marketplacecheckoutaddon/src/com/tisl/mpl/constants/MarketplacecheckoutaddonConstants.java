@@ -345,4 +345,6 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	//INC144315475
 	public static final String CARTTOORDERCONVERT = "cartToOrderConvert";
+	//INC144316212
+	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
 }

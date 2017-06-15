@@ -1000,7 +1000,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			final DiscountModel discount = voucherList.get(0);
 
-			if (discount instanceof PromotionVoucherModel && discount != null)//null check added for discount as per IQA review //Sonar Fix
+			if (discount instanceof PromotionVoucherModel)//Redundant null check removed for Sonar Fix
 			{
 				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 				appliedVoucher = promotionVoucherModel;
