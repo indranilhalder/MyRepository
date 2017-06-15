@@ -503,6 +503,15 @@
 				width:100%;
 			}
 		} 
+		.left-nav-footer-mobile{
+			width: 100%;
+		    padding: 10px;
+		    border: 1px solid #d2d2d2;
+		    border-radius: 3px;
+		}
+		.left-nav-footer-mobile + .selectboxit-container{
+			display:none;
+		}
 	} 
 	
 	
