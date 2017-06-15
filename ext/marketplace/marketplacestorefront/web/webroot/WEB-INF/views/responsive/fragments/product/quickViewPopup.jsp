@@ -381,7 +381,7 @@ display:none;
 		<img src="${commonResourcePath}/images/thin_top_arrow_333.png"/><%-- <spring:theme code="product.othersellers.previous" /> --%>
 	</button>
 </c:if>
-	<div class="imageList" style="overflow: hidden;">
+	<div class="imageList" style="overflow: hidden;${(thumbNailImageLength > imgCount)?"height:480px":""}">
 		<ul class="jcarousel-skin imageListCarousel" style="display:block; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
 				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
