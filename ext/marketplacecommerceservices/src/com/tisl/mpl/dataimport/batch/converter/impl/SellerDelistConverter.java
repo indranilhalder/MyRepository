@@ -18,11 +18,14 @@ import de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.De
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -114,7 +117,7 @@ public class SellerDelistConverter extends DefaultImpexConverter
 
 
 		result = sBuffer.toString();
-		return result;
+		return escapeQuotes(result);
 	}
 
 	private String defferedDate()
@@ -129,6 +132,26 @@ public class SellerDelistConverter extends DefaultImpexConverter
 
 		return strDate;
 
+	}
+
+
+	@Override
+	protected String escapeQuotes(final String input)
+	{
+		final String[] splitedInput = StringUtils.splitPreserveAllTokens(input, SEMICOLON_CHAR);
+		final List<String> tmp = new ArrayList<String>();
+		for (final String string : splitedInput)
+		{
+			if (doesNotContainNewLine(string))
+			{
+				tmp.add(StringEscapeUtils.escapeCsv(string));
+			}
+			else
+			{
+				tmp.add(string);
+			}
+		}
+		return StringUtils.join(tmp, SEMICOLON_CHAR);
 	}
 
 }
