@@ -17,7 +17,7 @@ function constructDepartmentHierarchy(inputArray) {
 					var categoryName = categoryDetails[1];
 					var facetCount = 0;
 					
-					if(categoryDetails[2] == "L3")
+					if(categoryDetails[2] == "L3" || categoryDetails[2] == "L4")
 					{
 						//categoryName += "  (" +categoryDetails[5] + ")";
 						facetCount = "  (" +categoryDetails[5] + ")";

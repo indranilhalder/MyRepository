@@ -485,7 +485,7 @@ public class SalesOrderXMLUtility
 							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
 									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
+								LOG.debug("Exp Del:No scheduled delivery charge, setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							else {
@@ -507,7 +507,7 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
+								LOG.debug("Home Del:No current delivery charge,setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 						// TISPRDT-1186 START 
@@ -522,7 +522,7 @@ public class SalesOrderXMLUtility
 							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
 									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
+								LOG.debug("Home Del:No schedule delivery charge,setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
 								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							else {

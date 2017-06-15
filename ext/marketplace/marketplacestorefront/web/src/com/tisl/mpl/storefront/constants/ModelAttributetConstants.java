@@ -806,6 +806,8 @@ public final class ModelAttributetConstants
 	public static final String PAGE_SUBCATEGORY_NAME = "page_subcategory_name";
 	public static final String PAGE_SUBCATEGORY_NAME_L3 = "page_subcategory_name_l3";
 	public static final String SHOP_BY_LOOK = "shopbylook".intern();
+	//For KIDSWEAR tealium data
+	public static final String PAGE_SUBCATEGORY_NAME_L4 = "page_subcategory_name_l4";
 	//LW-230
 	public static final String IS_LUXURY = "isLuxury";
 

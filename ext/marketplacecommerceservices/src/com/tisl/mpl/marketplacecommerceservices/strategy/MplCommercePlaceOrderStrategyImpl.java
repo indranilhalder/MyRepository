@@ -1,6 +1,7 @@
 /*** Eclipse Class Decompiler plugin, copyright (c) 2012 Chao Chen (cnfree2000@hotmail.com) ***/
 package com.tisl.mpl.marketplacecommerceservices.strategy;
 
+
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commerceservices.delivery.DeliveryService;
 import de.hybris.platform.commerceservices.externaltax.ExternalTaxesService;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -47,6 +49,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -84,6 +87,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
+	@Resource
+	private AgentIdForStore agentIdForStore;
+
+
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
 			EtailNonBusinessExceptions
@@ -92,6 +99,10 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		final CartModel cartModel = parameter.getCart();
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
 		final CommerceOrderResult result = new CommerceOrderResult();
+
+		final String agentId = agentIdForStore
+				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+
 		try
 		{
 			final String modeOfPayment = cartModel.getModeOfPayment();
@@ -213,12 +224,17 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 					{
 						orderModel.setIsWallet(WalletEnum.MRUPEE);
 					}
-
 					else
 					{
 						orderModel.setIsWallet(WalletEnum.NONWALLET);
-					}
 
+					}
+					//storing agent id in the order model in case of store manager login in cscockpit
+					if (StringUtils.isNotEmpty(agentId))
+					{
+
+						orderModel.setAgentId(agentId);
+					}
 					getModelService().save(orderModel);
 
 					/*
@@ -238,7 +254,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+						&& (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") || orderModel.getModeOfOrderPayment()
+								.equalsIgnoreCase("JusPay")))
+
 				{
 					//Order splitting and order fulfilment process will only be triggered for COD orders from here - TPR-629
 					try
@@ -257,8 +275,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				//afterPlaceOrder(parameter, result);  // 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved before
 
-				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+				if ((StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()) && orderModel.getModeOfOrderPayment()
+						.equalsIgnoreCase("COD")) || StringUtils.isNotEmpty(agentId))
 				{
 					//Added to trigger notification for only COD orders TPR-629
 					final String trackOrderUrl = configurationService.getConfiguration().getString(
@@ -399,9 +417,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
+	 *
 	 * @param cartModel
-	 * 
+	 *
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -445,6 +465,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
 		}
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
+
 		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge + deliveryCost.doubleValue()
 				- discount.doubleValue());
 		LOG.info("totalPrice for order entry in fetchTotalPrice is = " + totalPrice);
@@ -458,13 +479,16 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
 	 *
+	 *
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
+	 *
 	 *
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
+	 *
 	 *
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
@@ -499,6 +523,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			LOG.info("deliveryCost for order entry in getTotalDiscount is = " + deliveryCost);
 			LOG.info("promoDiscount for order entry in getTotalDiscount is = " + promoDiscount);
 			LOG.info("couponDiscount for order entry in getTotalDiscount is = " + couponDiscount);
+
 			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount);
 			LOG.info("discount for order entry in getTotalDiscount is = " + discount);
 		}
