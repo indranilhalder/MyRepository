@@ -103,8 +103,9 @@
 footer{
 
 	.footer-middle{
-		background-color:$gray-base;
-		padding:25px 0px;
+		background-color:$gray-base;		
+        padding-top: 25px;
+        padding-bottom: 25px;
 		margin-top: 10px;
 		.inner {
 		    max-width: 1288px;

@@ -13,7 +13,8 @@ body {
 
 .layout-fluid{
 	max-width: 1288px;
-	margin: 0 auto;
+	margin: 0 auto;    
+   
 }
 
 @include media-breakpoint-up(md) {
@@ -565,4 +566,7 @@ video::-webkit-media-controls {
 .btn-gloden {
     background: $gold-dark;
     color: $white;
+}
+.error-message{
+    color:$red;
 }
