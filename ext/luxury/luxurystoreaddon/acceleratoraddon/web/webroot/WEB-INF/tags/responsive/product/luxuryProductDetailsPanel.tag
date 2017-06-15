@@ -122,11 +122,21 @@ tr.d0 td {
 			</div>
 			<div class="pdp-img">
 				<div class="pdp-img-slider circle-pager">
-					<c:forEach items="${galleryImages}" var="container">
-						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<div><img src="${container.superZoom.url}" data-zoom-image="${container.superZoom.url}" class="zoomer"></div>
-						</c:if>
-					</c:forEach>
+						<c:choose>
+							<c:when test="${fn:length(galleryImages)>0}">
+								<c:forEach items="${galleryImages}" var="container">
+									<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+										<div><img src="${container.superZoom.url}" data-zoom-image="${container.superZoom.url}" class="zoomer"></div>
+									</c:if>
+									<c:if test="${empty container.superZoom}">
+										<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+									</c:if>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+							</c:otherwise>
+						</c:choose>
 				</div>	
 				 <div class="pdp-video">
                     <video width="100%" height="100%" controls>
