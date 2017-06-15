@@ -26,10 +26,8 @@
 					<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
 					<spring:theme code="needhelp.chatwithus" />
-					<!-- &nbsp;<span class="bubble">1</span> -->
 					</a>
 				</h3>
-					<!-- Commented as part of the chairman demo feedback -->
 			<%-- 	<a href="${request.contextPath}/clickto/chat" id="chatMe"
 					data-title="">
 					<spring:theme code="needhelp.availablenow" />
@@ -45,13 +43,11 @@
 					</a>
 				</h3>
 				
-				<!--  Post chairman demo Changes -->
 				<%-- <a href="${request.contextPath}/clickto/call" id="callMe">${contactNumber}</a> --%>
 			</div>
 		</div>
 	</div>
 	
-	<!-- TISPRD-2359 -->
 	<%-- <div class="feedback-links">
 		<a id="feedback" href="#nogo"><spring:theme code="text.feedback.survey"/></a>
 		<input type="hidden" id="feedbackUrlPath" value="${feebBackSurveyUrl}" />
@@ -62,10 +58,6 @@
 			$('.glyphicon-remove').click(function() {
 				helpMe();
 			});
-			/* $('#up').click(function() {
-					$(this).removeClass("minimize");
-					$("#h").toggle();
-			}); */
 			$(document).on("blur",".input-box input",function(){	
 				if( $(this).val() != ""){
 					$(this).addClass("used");

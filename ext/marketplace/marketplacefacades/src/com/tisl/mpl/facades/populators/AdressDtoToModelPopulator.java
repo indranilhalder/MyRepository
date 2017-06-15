@@ -51,8 +51,9 @@ public class AdressDtoToModelPopulator implements Populator<AddressData,AddressM
 		addressModel.setDistrict(addressData.getState());
 		addressModel.setCity(addressData.getCity());
 		//mobile changes  starts 
-		
-		addressModel.setCity(addressData.getTown());
+		// PRDI-135 START
+		addressModel.setTown(addressData.getCity());
+	   // PRDI-135 END
 		addressModel.setBillingAddress(Boolean.valueOf(addressData.isBillingAddress()));
 		addressModel.setShippingAddress(Boolean.valueOf(addressData.isShippingAddress()));
 		addressModel.setPublicKey(addressData.getId());

@@ -72,6 +72,12 @@
 			<value code="C2C" />
 			<value code="CDA" />
 		</enumtype>
+		<enumtype generate="true" code="oISPaymentTypeEnum" autocreate="true"
+			dynamic="true">
+			<value code="Credit" />
+			<value code="Debit" />
+			<value code="Netbanking" />
+		</enumtype>
 		<enumtype code="orderStatus" autocreate="false" generate="true"
 			dynamic="true">
 			<value code="PLACED" />

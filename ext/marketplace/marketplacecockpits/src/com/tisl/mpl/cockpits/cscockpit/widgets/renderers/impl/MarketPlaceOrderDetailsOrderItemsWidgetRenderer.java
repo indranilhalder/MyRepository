@@ -339,7 +339,15 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		Double deliveryCost = (null != entrymodel.getPrevDelCharge()) ? ((entrymodel
 				.getPrevDelCharge() > currDeliveryCost) ? entrymodel
 				.getPrevDelCharge() : currDeliveryCost) : 0d;
-		totalPriceValue = totalPriceValue + deliveryCost;
+				// Adding ScheduleDelivery Charges To the total Price
+				Double scheduleDeliveryCost = 0.0D;
+				if(null !=  entrymodel.getScheduledDeliveryCharge() && entrymodel.getScheduledDeliveryCharge() >0.0D) {
+					scheduleDeliveryCost = entrymodel.getScheduledDeliveryCharge();
+				}else if(null != entrymodel.getRefundedScheduleDeliveryChargeAmt() && entrymodel.getRefundedScheduleDeliveryChargeAmt() >=0.0D){
+					scheduleDeliveryCost = entrymodel.getRefundedScheduleDeliveryChargeAmt();
+				}
+					
+		totalPriceValue = totalPriceValue + deliveryCost+scheduleDeliveryCost;
 		String totalPriceString = (totalPriceValue != null) ? currencyInstance
 				.format(totalPriceValue) : "";
 		/********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
@@ -570,7 +578,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				.format(orderEntry.getTotalPrice()) : currencyInstance
 				.format(orderEntry.getTotalPrice());*/
 		Double totalPrice = (null != orderEntry.getTotalPrice()) ? orderEntry.getTotalPrice() : 0D;
-		totalPrice = totalPrice + deliveryCost;
+		totalPrice = totalPrice + deliveryCost+scheduleDeliveryCost;
 		String totalPriceString = (null != totalPrice) ? currencyInstance
 				.format(totalPrice) : "";
 		/********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/		
@@ -615,6 +623,9 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 							.equals(ConsignmentStatus.RETURN_COMPLETED))) {
 				totalRefundAmount = orderEntry.getNetAmountAfterAllDisc();
 			}
+		}
+		if(null != orderEntry.getRefundedScheduleDeliveryChargeAmt() && orderEntry.getRefundedScheduleDeliveryChargeAmt() >=0.0D){
+			totalRefundAmount = totalRefundAmount+orderEntry.getRefundedScheduleDeliveryChargeAmt().doubleValue();
 		}
 		if (null != orderEntry.getRefundedDeliveryChargeAmt()) {
 			totalRefundAmount = totalRefundAmount

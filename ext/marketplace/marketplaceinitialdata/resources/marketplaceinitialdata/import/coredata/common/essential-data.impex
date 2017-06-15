@@ -203,7 +203,7 @@ INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];qu
 INSERT_UPDATE Trigger;job(code)[unique=true];cronExpression;maxAcceptableDelay;
 #;sync mplProductCatalog\:Staged->Online;0 0/10 * * * ?;30;
 #Change for TISPT-215
-;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
+#;sync mplProductCatalog\:Staged->Online;0 0 0/5 * * ?;;
 #Commented as per Changes for TISPT-345                                         
 
 

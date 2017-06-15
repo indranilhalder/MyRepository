@@ -24,7 +24,7 @@
 <%--                    ---------------------                            --%>
 
 
-<!-- UDO for page type "${currentPageType}" -->
+
 <div id="tealiumHome"></div>
 <c:choose>
 	<%-- <c:when test="${currentPageType == 'homepage'}">

@@ -1776,6 +1776,7 @@ $("#otpMobileNUMField").focus(function(){
 	$('.security_code').prop('disabled', false); 
 }
  
+
 //TPR-3402
  
  
@@ -1806,6 +1807,7 @@ $("#otpMobileNUMField").focus(function(){
  	else return eval("document." + objId);
  }
  /**************End of character count********/
+
  
 
  function populateBillingAddress(){ 
@@ -1837,7 +1839,6 @@ $("#otpMobileNUMField").focus(function(){
 	 $("#country").val("India"); 
 	 }
 	 $("#myCounter").html((120));
-
 	 }, 
 	 error : function(resp) { 
 
@@ -2457,8 +2458,8 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		  	 validate = false;
   	  }
     }
-
 	 result=lastName.value;
+
 	if(result == undefined || result == "")
 	{	
 		$("#lastnameError").show();

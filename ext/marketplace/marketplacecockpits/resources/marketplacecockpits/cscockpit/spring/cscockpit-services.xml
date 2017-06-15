@@ -45,6 +45,13 @@
         <property name="commonI18NService" ref="commonI18NService"/>
     </bean>
     
+    <!-- bean definition for store agent specific user role -->
+    <alias name="defaultStoreAgentUserRoleService" alias="storeAgentUserRole"/>
+    <bean id="defaultStoreAgentUserRoleService"
+          class="com.tisl.mpl.cockpits.cscockpit.services.impl.StoreAgentUserRoleService">
+     
+    </bean>
+    
     <bean id="marketplaceServiceabilityCheckHelper"	
     	class="com.tisl.mpl.cockpits.cscockpit.widgets.helpers.impl.MarketplaceServiceabilityCheckHelperImpl">
 	</bean>
@@ -74,6 +81,39 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!--  stopping default cscockpit search
 	<alias alias="csProductSearchService" name="mplDefaultCsCommerceSearchService"/> 
+	-->
+	
+	<!-- Product search related changes  
+	
+	custom search service  -->
+	
+	<alias alias="csProductSearchService" name="defaultMplCsProductFlexibleSearchService"/>
+	
+	<alias alias="defaultMplCsProductFlexibleSearchService" name="defaultMplCsProductFlexibleSearchService" />
+	<bean id="defaultMplCsProductFlexibleSearchService" parent="baseCsFlexibleSearchService">
+		<property name="flexibleSearchQueryBuilder" ref="baseMplCsProductSolrSearchQueryBuilder"/>
+		<property name="postSearchMetaProcessors">
+			<list>
+				<bean class="de.hybris.platform.cscockpit.services.search.meta.processor.ProductPromotionsProcessor">
+					<property name="csPromotionService" ref="csPromotionService"/>
+				</bean>
+				<bean class="com.tisl.mpl.cockpits.cscockpit.services.search.meta.processor.MplProductPriceProcessor">
+					<property name="buyBoxFacade" ref="buyBoxFacade" />
+				</bean>
+				<!-- <bean class="de.hybris.platform.cscockpit.services.search.meta.processor.ProductPriceProcessor">
+					<property name="commercePriceService" ref="commercePriceService"/>
+				</bean> -->
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!-- custom query builder  -->
+	
+	<alias alias="baseMplCsProductSolrSearchQueryBuilder" name="defaultMplBaseCsProductSolrSearchQueryBuilder" />
+	<bean id="defaultMplBaseCsProductSolrSearchQueryBuilder" abstract="false" scope="tenant" class="com.tisl.mpl.cockpits.services.search.DefaultMplProductSearchQueryBuilder"/>
 
 </beans>

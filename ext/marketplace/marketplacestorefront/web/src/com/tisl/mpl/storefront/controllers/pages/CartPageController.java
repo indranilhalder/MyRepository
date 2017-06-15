@@ -14,6 +14,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
@@ -60,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -185,14 +187,58 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCart(final Model model, @RequestParam(value = "ussid", required = false) final String ussid,
 			@RequestParam(value = "pincode", required = false) final String pinCode,
-			@RequestParam(value = "isLux", required = false) final boolean isLux) throws CMSItemNotFoundException,
-			CommerceCartModificationException, CalculationException
+			@RequestParam(value = "isLux", required = false) final boolean isLux,
+			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request)
+			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
 		try
 		{
+			CartModel externalCart = null;
 			CartModel cartModel = null;
+			final String currentUser = userService.getCurrentUser().getUid();
+			//TPR-5666 | check on cartGuid parameter
+			if (cartGuid != null)
+			{
+				externalCart = mplCartFacade.getCartByGuid(cartGuid);
+				// If invalid cartGuid
+				if (externalCart == null)
+				{
+					return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.INVALID_CART_URL;
+				}
+				else
+				{
+					final String externalCartUser = externalCart.getUser().getUid();
+					// fetching existing cart by guid
+					if (!externalCartUser.equalsIgnoreCase(MarketplacecommerceservicesConstants.ANONYMOUS))
+					{
+						return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+					}
+					// fetching anonymous cart by guid
+					else
+					{
+						//merging in case of logged in user
+						if (!currentUser.equalsIgnoreCase(MarketplacecommerceservicesConstants.ANONYMOUS))
+						{
+							mplCartFacade.mergeCarts(externalCart, getCartService().getSessionCart());
+							return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+						}
+						// show fetched cart for anonymous user
+						else
+						{
+							getCartService().setSessionCart(externalCart);
+						}
+						cartModel = getCartService().getSessionCart();
+					}
+				}
+
+			}
+			else
+			{
+				cartModel = getCartService().getSessionCart();
+			}
+
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
@@ -304,8 +350,25 @@ public class CartPageController extends AbstractPageController
 			}
 			else if (isLux)
 			{
-				final CartData luxCart = mplCartFacade.getLuxCart();
-				prepareDataForPage(model, luxCart);
+				boolean found = false;
+				CartData luxCart = null;
+				for (final Cookie cookie : request.getCookies())
+				{
+					if (cookie.getName().equals("mpl-cart") && StringUtils.isNotEmpty(cookie.getValue()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if (found)
+				{
+					luxCart = mplCartFacade.getLuxCart();
+					prepareDataForPage(model, luxCart);
+				}
+				else
+				{
+					prepareDataForPage(model, mplCartFacade.getSessionCartWithEntryOrdering(true));
+				}
 			}
 			else
 			{
@@ -794,7 +857,15 @@ public class CartPageController extends AbstractPageController
 				}
 				// Redirect to the cart page on update success so that the browser doesn't re-post again
 				//return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
-				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//TPR-5666 | check on cartGuid Parameter
+				if (StringUtil.isEmpty(request.getParameter("cartGuid")))
+				{
+					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				}
+				else
+				{
+					returnPage = REDIRECT_PREFIX + "/cart?cartGuid=" + request.getParameter("cartGuid");
+				}
 			}
 
 

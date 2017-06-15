@@ -12,6 +12,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.order.payment.JusPayPaymentInfoModel;
 import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
@@ -34,7 +35,7 @@ import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
 import de.hybris.platform.voucher.model.VoucherModel;
-import com.tisl.mpl.core.enums.WalletEnum;
+
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -63,6 +64,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
 import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -152,6 +154,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	//	private MplFraudModelService mplFraudModelService;
 
 	private static final String middleDigits = "000";
+
+	private static final String threeZero = "000";
+	private static final String twoZero = "00";
+	private static final String oneZero = "0";
+
+
+
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
 
@@ -160,9 +169,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -269,15 +279,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 * 
-				 * 
+				 *
+
+				 *
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
 				orderModel.setType("Parent");
-				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel)
+				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
+						|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
 				{
-					LOG.debug("Payment Info COD");
+					LOG.debug("Payment Info for cod or juspay");
 					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 				else
@@ -571,9 +583,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -587,9 +599,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -621,9 +634,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderModel.setIsWallet(WalletEnum.NONWALLET);
 			}
-			
+
 			final List<OrderModel> orderList = getSubOrders(orderModel);
-			
+
 			//TISPRO-249
 			//OrderIssues:-  re factoring done
 			if (CollectionUtils.isNotEmpty(orderList))
@@ -669,7 +682,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//OrderIssues:-  Code moved to upward
 			//		orderModel.setChildOrders(orderList);
 			//getModelService().save(orderModel);
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
+			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel || 
+					WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 			}
@@ -710,13 +724,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param subOrderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -817,13 +831,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param subOrderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -1408,13 +1422,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
-	 * 
-	 * 
+
+	 *
+	 *
+	 *
 	 * @param orderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -2287,8 +2302,29 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					&& sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE))
 			{
 				final String orderLineIdSequence = getMplCommerceCartService().generateOrderLineId();
-				orderEntryModel.setOrderLineId(sellerID.concat(middleDigits).concat(orderLineIdSequence));
-				orderEntryModel.setTransactionID(sellerID.concat(middleDigits).concat(orderLineIdSequence));
+
+				//Transaction ID have to strict with 15 digits, using the middle 3 zeros
+				switch (orderLineIdSequence.length())
+				{
+
+					case 6:
+						orderEntryModel.setOrderLineId(sellerID.concat(threeZero).concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(threeZero).concat(orderLineIdSequence));
+						break;
+					case 7:
+						orderEntryModel.setOrderLineId(sellerID.concat(twoZero).concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(twoZero).concat(orderLineIdSequence));
+						break;
+					case 8:
+						orderEntryModel.setOrderLineId(sellerID.concat(oneZero).concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(oneZero).concat(orderLineIdSequence));
+						break;
+					default:
+						orderEntryModel.setOrderLineId(sellerID.concat(orderLineIdSequence));
+						orderEntryModel.setTransactionID(sellerID.concat(orderLineIdSequence));
+
+				}
+
 			}
 			else
 			{
