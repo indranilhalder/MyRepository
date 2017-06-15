@@ -491,6 +491,7 @@
 														  	<c:otherwise>
 														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
 																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
+																<span>${cancelPopover}</span>						
 																</c:if>
 														  	</c:otherwise>
 														</c:choose>
