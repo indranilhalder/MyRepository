@@ -341,7 +341,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				fullfillmentDataMap = getMplCartFacade().getFullfillmentMode(cartData);
 
 				//TIS-397
-				deliveryModeDataMap = mplCheckoutFacade.repopulateTshipDeliveryCost(deliveryModeDataMap, cartData);
+				//deliveryModeDataMap = mplCheckoutFacade.repopulateTshipDeliveryCost(deliveryModeDataMap, cartData);
 
 				model.addAttribute("deliveryModeData", deliveryModeDataMap);
 				model.addAttribute("deliveryMethodForm", new DeliveryMethodForm());
@@ -637,12 +637,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-								/*
-								 * return MarketplacecommerceservicesConstants.REDIRECT +
-								 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
-								 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-								 */
-								/**** PRDI-36/INC144315559 *******/
+						/*
+						 * return MarketplacecommerceservicesConstants.REDIRECT +
+						 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
+						 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+						 */
+						/**** PRDI-36/INC144315559 *******/
 						model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSID,
 								cartUssidData.getDeliveryAddress().getId());
 
@@ -662,7 +662,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
-					//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
+			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 			//TISST-7473
 			/*
@@ -2682,7 +2682,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequireHardLogIn
 	public @ResponseBody String calculateDeliveryCost(
 			@PathVariable(MarketplacecheckoutaddonConstants.DELIVERYCOST) final String deliveryCost)
-					throws NoSuchAlgorithmException, CalculationException
+			throws NoSuchAlgorithmException, CalculationException
 	{
 
 		//LOG.info("deliveryCost " + deliveryCost);
