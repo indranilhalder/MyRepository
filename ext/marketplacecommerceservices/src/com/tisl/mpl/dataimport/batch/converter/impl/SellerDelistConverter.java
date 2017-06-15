@@ -117,7 +117,7 @@ public class SellerDelistConverter extends DefaultImpexConverter
 
 
 		result = sBuffer.toString();
-		return escapeQuotes(result);
+		return escapeQuotes(result);//TISSTRT-1609-Fix
 	}
 
 	private String defferedDate()
