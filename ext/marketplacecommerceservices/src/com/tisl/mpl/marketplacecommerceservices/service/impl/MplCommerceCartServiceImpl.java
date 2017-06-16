@@ -1489,7 +1489,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					//TISPRD-3072 ends
 
 					pincodeServiceData.setFullFillmentType(fullfillmentType.toUpperCase());
-					if (richAttributeModel.get(0).getShippingModes() != null
+					if (CollectionUtils.isNotEmpty(richAttributeModel) && richAttributeModel.get(0).getShippingModes() != null
 							&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 					{
 						pincodeServiceData.setTransportMode(MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0)
@@ -1502,7 +1502,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					pincodeServiceData.setSellerId(sellerInfo.getSellerID());
 					pincodeServiceData.setUssid(wishlist2EntryModel.getUssid());
 
-					if (null != richAttributeModel.get(0).getPaymentModes()
+					if (CollectionUtils.isNotEmpty(richAttributeModel)
+							&& null != richAttributeModel.get(0).getPaymentModes()
 							&& ((PaymentModesEnum.valueOf("COD")).toString().equalsIgnoreCase(
 									richAttributeModel.get(0).getPaymentModes().getCode()) || (PaymentModesEnum.valueOf("BOTH"))
 									.toString().equalsIgnoreCase(richAttributeModel.get(0).getPaymentModes().getCode())))
@@ -1569,7 +1570,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 					wishlist2EntryModel.getUssid());
 
-			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+			if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 			{
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 				fullfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes() != null ? richAttributeModel.get(0)
@@ -1582,7 +1583,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			final List<MplZoneDeliveryModeValueModel> deliveryModes = getMplDeliveryCostService().getDeliveryModesAndCost(
 					MarketplacecommerceservicesConstants.INR, wishlist2EntryModel.getUssid());
-			if (null != deliveryModes && !deliveryModes.isEmpty())
+			if (CollectionUtils.isNotEmpty(deliveryModes))
 			{
 				for (final MplZoneDeliveryModeValueModel deliveryEntry : deliveryModes)
 				{
@@ -1598,7 +1599,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				}
 			}
 			pincodeServiceData.setFullFillmentType(fullfillmentType.toUpperCase());
-			if (richAttributeModel.get(0).getShippingModes() != null
+			if (CollectionUtils.isNotEmpty(richAttributeModel) && richAttributeModel.get(0).getShippingModes() != null
 					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 			{
 				pincodeServiceData.setTransportMode(MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0).getShippingModes()
@@ -1611,7 +1612,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			pincodeServiceData.setSellerId(sellerInfo.getSellerID());
 			pincodeServiceData.setUssid(wishlist2EntryModel.getUssid());
 
-			if (null != richAttributeModel.get(0).getPaymentModes()
+			if (CollectionUtils.isNotEmpty(richAttributeModel)
+					&& null != richAttributeModel.get(0).getPaymentModes()
 					&& ((PaymentModesEnum.valueOf("COD")).toString().equalsIgnoreCase(
 							richAttributeModel.get(0).getPaymentModes().getCode()) || (PaymentModesEnum.valueOf("BOTH")).toString()
 							.equalsIgnoreCase(richAttributeModel.get(0).getPaymentModes().getCode())))
@@ -2520,13 +2522,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/**
-	 *
+	 * 
 	 * @Desc fetching reservation details
 	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param pincode
 	 *
 	 * @throws EtailNonBusinessExceptions
@@ -2569,7 +2571,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
-									//  INC144316545 START
+									//  INC144316545 START 
 									if (null != salesApplication && salesApplication.equals(SalesApplication.MOBILE))
 									{
 										if (null != item.getFulfillmentType())
@@ -4427,7 +4429,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @author TECHOUTS
 	 * @param cartSoftReservationData
 	 * @param abstractOrderData
-	 *
+	 * 
 	 * @return void
 	 */
 	//commented for CAR:127
