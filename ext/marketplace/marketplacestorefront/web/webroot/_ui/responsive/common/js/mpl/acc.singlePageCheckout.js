@@ -31,6 +31,7 @@ ACC.singlePageCheckout = {
 			case "address.postcode.invalid.numeric.length" : message="Post code should be of 6 digit numeric only"; break;
 			case "address.addressType.select" : message="Please select an address Type"; break;
 			case "clientSideAddressFormValidationFailed" : message=ACC.singlePageCheckout.formValidationErrorCount+" errors occured. Please re-enter to continue"; break;
+			case "noStoresFound" : message="Unable to find Stores"; break;
 			default:message="No message specified"; 
 		}
 		return message;
@@ -691,6 +692,10 @@ ACC.singlePageCheckout = {
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
         	}
+    		else
+    		{
+    			$("#singlePagePickupPersonPopup").modal('show');
+    		}
     	}
 	},
 	
@@ -1664,24 +1669,24 @@ removeExchangeFromCart : function (){
 		$("#make_mrupee_payment_up").css("display","none");
 	},
 	
-	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
-	getPickUpPersonPopUpMobile:function(){
-		var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
-		var data="";
-		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
-		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
-				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-		});
-	        
-		xhrPickupPersonResponse.done(function(data) { 
-			//Populating popup
-			$("#singlePagePickupPersonPopup .content").html(data);
-			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
-			
-		});
-		$("#singlePagePickupPersonPopup").modal('show');
-	
-	},
+//	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
+//	getPickUpPersonPopUpMobile:function(){
+//		var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
+//		var data="";
+//		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
+//		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
+//				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+//		});
+//	        
+//		xhrPickupPersonResponse.done(function(data) { 
+//			//Populating popup
+//			$("#singlePagePickupPersonPopup .content").html(data);
+//			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
+//			
+//		});
+//		$("#singlePagePickupPersonPopup").modal('show');
+//	
+//	},
 	
 	
 	
