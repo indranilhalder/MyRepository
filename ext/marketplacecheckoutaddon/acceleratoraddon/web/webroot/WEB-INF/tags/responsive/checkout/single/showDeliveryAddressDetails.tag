@@ -62,7 +62,7 @@
 										onclick="ACC.singlePageCheckout.getEditAddress(this,event);"
 										id="link_${deliveryAddress.id}"></a>
 									</span>
-									<div style="cursor:pointer;" onclick="ACC.singlePageCheckout.proceedOnAddressSelection(this,'${deliveryAddress.id}');">	
+									<div  style="cursor:pointer;" onclick="ACC.singlePageCheckout.proceedOnAddressSelection(this,'${deliveryAddress.id}');">	
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
 												<input type="radio" class="radio1" name="selectedAddressCode"
@@ -230,7 +230,7 @@
 	<c:if test="${empty deliveryAddresses}">
 		<script>
 		$(document).ready(function(){
-			if(!ACC.singlePageCheckout.getIsResponsive)
+			if(!ACC.singlePageCheckout.getIsResponsive())
 			{
 				ACC.singlePageCheckout.getAddAddress();
 			}
