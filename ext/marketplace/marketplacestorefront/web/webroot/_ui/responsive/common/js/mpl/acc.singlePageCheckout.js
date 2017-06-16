@@ -1972,7 +1972,12 @@ removeExchangeFromCart : function (){
 		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{	
 			ACC.singlePageCheckout.showAjaxLoader();
-			var url=$("#selectDeliveryMethodFormMobile").attr("action");
+			var isPincodeRestrictedPromoPresent="";
+			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
+			{
+				isPincodeRestrictedPromoPresent=$("#isPincodeRestrictedPromoPresent").text().trim();
+			}
+			var url=$("#selectDeliveryMethodFormMobile").attr("action")+"?locRestrictedPromoPresent="+isPincodeRestrictedPromoPresent;
 			var data=$("#selectDeliveryMethodFormMobile").serialize();
 		    var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
 	      

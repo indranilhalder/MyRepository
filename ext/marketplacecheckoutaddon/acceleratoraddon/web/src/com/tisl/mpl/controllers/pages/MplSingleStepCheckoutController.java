@@ -59,7 +59,6 @@ import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
-import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.storelocator.GPS;
 import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
@@ -91,8 +90,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sourceforge.pmd.util.StringUtil;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -100,7 +97,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.beans.BindingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceUtils;
@@ -444,6 +440,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			if (!isAjax)
 			{
+				model.addAttribute("isPincodeRestrictedPromoPresent",
+						Boolean.valueOf(mplCartFacade.checkPincodeRestrictedPromoOnCartProduct(cartModel)));
 				//Tealium related data population
 				final String cartLevelSellerID = populateCheckoutSellers(cartUssidData);
 				model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
@@ -466,6 +464,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					prepareModelForDeliveryMode(model, cartModel);
 				}
 			}
+			if (isAjax)
+			{
+				//final String selectedAddress = getSessionService().getAttribute("selectedAddress");
+				//model.addAttribute("selectedAddress", selectedAddress);
+				model.addAttribute("isResponsive", Boolean.valueOf(isResponsive));
+				return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveryAddressCarousel;
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -486,132 +491,125 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			LOG.error("EtailBusinessExceptions in checkoutPage method ", e);
 			return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 		}
-		if (isAjax)
-		{
-			//final String selectedAddress = getSessionService().getAttribute("selectedAddress");
-			//model.addAttribute("selectedAddress", selectedAddress);
-			model.addAttribute("isResponsive", Boolean.valueOf(isResponsive));
-			return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.DeliveryAddressCarousel;
-		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.SingleStepCheckout.SinglePageCheckoutPage;
 	}
 
-	/**
-	 * This is a GET method to check pincode serviceability used to check pincode on entering six digits without
-	 * recalculate cart will return a JSON response
-	 *
-	 * @return String
-	 * @throws EtailNonBusinessExceptions
-	 */
-	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKPINCODE, method = RequestMethod.GET)
-	//@RequireHardLogIn
-	public @ResponseBody JSONObject checkPincode(
-			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode)
-	{
-		String returnStatement = null;
-		final JSONObject jsonObject = new JSONObject();
-		//TISSEC-11
-		final String regex = "\\d{6}";
-		try
-		{
-			String isServicable = MarketplacecommerceservicesConstants.Y;
-
-			if (selectedPincode.matches(regex))
-			{
-				LOG.debug("selectedPincode " + selectedPincode);
-				ServicesUtil.validateParameterNotNull(selectedPincode, "pincode cannot be null");
-
-				List<PinCodeResponseData> responseData = null;
-				String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
-
-				if (StringUtil.isNotEmpty(selectedPincode))
-				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
-				}
-				try
-				{
-					final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
-
-					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
-					{
-						if (!StringUtil.isEmpty(selectedPincode))
-						{
-							responseData = mplCartFacade.getOMSPincodeResponseData(selectedPincode, cartData, null);
-							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
-
-						}
-						if (responseData != null)
-						{
-							for (PinCodeResponseData pinCodeResponseData : responseData)
-							{
-
-								if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
-										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
-								{
-									isServicable = MarketplacecommerceservicesConstants.N;
-									break;
-								}
-								else if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
-										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
-								{
-									//  TISPRD-1951  START //
-
-									// Checking whether inventory is availbale or not
-									// if inventory is not available for particular delivery Mode
-									// then removing that deliveryMode in Choose DeliveryMode Page
-									try
-									{
-										pinCodeResponseData = mplCartFacade.getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
-									}
-									catch (final Exception e)
-									{
-										LOG.error("Exception occured while checking inventory " + e.getCause());
-									}
-									//  TISPRD-1951  END //
-								}
-							}
-						}
-						else
-						{
-							isServicable = MarketplacecommerceservicesConstants.N;
-						}
-						final ObjectMapper objectMapper = new ObjectMapper();
-						jsonResponse = objectMapper.writeValueAsString(responseData);
-					}
-
-					LOG.debug(">> isServicable :" + isServicable + " >> json " + jsonResponse);
-				}
-				catch (final EtailNonBusinessExceptions ex)
-				{
-					ExceptionUtil.etailNonBusinessExceptionHandler(ex);
-					LOG.error("EtailNonBusinessExceptions while checking pincode serviceabilty ", ex);
-				}
-				catch (final Exception ex)
-				{
-					LOG.error("Exception while checking pincode serviceabilty ", ex);
-				}
-
-				returnStatement = isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
-						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + jsonResponse;
-			}
-			else
-			{
-				isServicable = MarketplacecommerceservicesConstants.N;
-				returnStatement = isServicable;
-			}
-			jsonObject.put("pincodeData", returnStatement);
-		}
-		catch (final EtailNonBusinessExceptions ex)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
-			LOG.error("EtailNonBusinessExceptions while checkPincodeServiceability ", ex);
-		}
-		catch (final Exception ex)
-		{
-			LOG.error("Exception in checkPincodeServiceability ", ex);
-		}
-		return jsonObject;
-	}
+	//	/**
+	//	 * This is a GET method to check pincode serviceability used to check pincode on entering six digits without
+	//	 * recalculate cart will return a JSON response
+	//	 *
+	//	 * @return String
+	//	 * @throws EtailNonBusinessExceptions
+	//	 */
+	//	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHECKPINCODE, method = RequestMethod.GET)
+	//	//@RequireHardLogIn
+	//	public @ResponseBody JSONObject checkPincode(
+	//			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode)
+	//	{
+	//		String returnStatement = null;
+	//		final JSONObject jsonObject = new JSONObject();
+	//		//TISSEC-11
+	//		final String regex = "\\d{6}";
+	//		try
+	//		{
+	//			String isServicable = MarketplacecommerceservicesConstants.Y;
+	//
+	//			if (selectedPincode.matches(regex))
+	//			{
+	//				LOG.debug("selectedPincode " + selectedPincode);
+	//				ServicesUtil.validateParameterNotNull(selectedPincode, "pincode cannot be null");
+	//
+	//				List<PinCodeResponseData> responseData = null;
+	//				String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+	//
+	//				if (StringUtil.isNotEmpty(selectedPincode))
+	//				{
+	//					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+	//				}
+	//				try
+	//				{
+	//					final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+	//
+	//					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
+	//					{
+	//						if (!StringUtil.isEmpty(selectedPincode))
+	//						{
+	//							responseData = mplCartFacade.getOMSPincodeResponseData(selectedPincode, cartData, null);
+	//							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
+	//
+	//						}
+	//						if (responseData != null)
+	//						{
+	//							for (PinCodeResponseData pinCodeResponseData : responseData)
+	//							{
+	//
+	//								if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+	//										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+	//								{
+	//									isServicable = MarketplacecommerceservicesConstants.N;
+	//									break;
+	//								}
+	//								else if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
+	//										&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
+	//								{
+	//									//  TISPRD-1951  START //
+	//
+	//									// Checking whether inventory is availbale or not
+	//									// if inventory is not available for particular delivery Mode
+	//									// then removing that deliveryMode in Choose DeliveryMode Page
+	//									try
+	//									{
+	//										pinCodeResponseData = mplCartFacade.getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
+	//									}
+	//									catch (final Exception e)
+	//									{
+	//										LOG.error("Exception occured while checking inventory " + e.getCause());
+	//									}
+	//									//  TISPRD-1951  END //
+	//								}
+	//							}
+	//						}
+	//						else
+	//						{
+	//							isServicable = MarketplacecommerceservicesConstants.N;
+	//						}
+	//						final ObjectMapper objectMapper = new ObjectMapper();
+	//						jsonResponse = objectMapper.writeValueAsString(responseData);
+	//					}
+	//
+	//					LOG.debug(">> isServicable :" + isServicable + " >> json " + jsonResponse);
+	//				}
+	//				catch (final EtailNonBusinessExceptions ex)
+	//				{
+	//					ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+	//					LOG.error("EtailNonBusinessExceptions while checking pincode serviceabilty ", ex);
+	//				}
+	//				catch (final Exception ex)
+	//				{
+	//					LOG.error("Exception while checking pincode serviceabilty ", ex);
+	//				}
+	//
+	//				returnStatement = isServicable + MarketplacecheckoutaddonConstants.STRINGSEPARATOR + selectedPincode
+	//						+ MarketplacecheckoutaddonConstants.STRINGSEPARATOR + jsonResponse;
+	//			}
+	//			else
+	//			{
+	//				isServicable = MarketplacecommerceservicesConstants.N;
+	//				returnStatement = isServicable;
+	//			}
+	//			jsonObject.put("pincodeData", returnStatement);
+	//		}
+	//		catch (final EtailNonBusinessExceptions ex)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(ex);
+	//			LOG.error("EtailNonBusinessExceptions while checkPincodeServiceability ", ex);
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			LOG.error("Exception in checkPincodeServiceability ", ex);
+	//		}
+	//		return jsonObject;
+	//	}
 
 	/*
 	 * This method will be used for responsive site for location restricted promotion. Used to fetch the eligible
@@ -1654,7 +1652,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
 
 				//TIS-397
-				deliveryModeDataMap = mplCheckoutFacade.repopulateTshipDeliveryCost(deliveryModeDataMap, cartData);
+				//deliveryModeDataMap = mplCheckoutFacade.repopulateTshipDeliveryCost(deliveryModeDataMap, cartData);
 
 				model.addAttribute("deliveryModeData", deliveryModeDataMap);
 				model.addAttribute("deliveryMethodForm", new DeliveryMethodForm());
@@ -1704,9 +1702,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String enterDeliveryModeStep(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(required = false, defaultValue = "false") final boolean isResponsive) throws UnsupportedEncodingException
 	{
-		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
-		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
-		List<PinCodeResponseData> responseData = null;
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
@@ -1735,88 +1730,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
-			mplCouponFacade.releaseVoucherInCheckout(serviceCart);
-			mplCartFacade.removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
-
-
-			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
-			final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-
-			if (StringUtils.isNotEmpty(defaultPinCodeId) && (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries())))
-			{
-				//CAR-126/128/129
-				responseData = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
-				if (CollectionUtils.isEmpty(responseData))
-				{
-					responseData = mplCartFacade.getOMSPincodeResponseData(defaultPinCodeId, cartData, serviceCart);
-				}
-				if (CollectionUtils.isNotEmpty(responseData))
-				{
-					// TPR-429 START
-					//final String cartLevelSellerID = populateCheckoutSellers(cartData);
-					//model.addAttribute(MarketplacecheckoutaddonConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
-					// TPR-429 END
-
-					//  TISPRD-1951  START //
-
-					// Checking whether inventory is availbale or not
-					// if inventory is not available for particular delivery Mode
-					// then removing that deliveryMode in Choose DeliveryMode Page
-					for (PinCodeResponseData pinCodeResponseData : responseData)
-					{
-						try
-						{
-							if (pinCodeResponseData != null && pinCodeResponseData.getIsServicable() != null
-									&& pinCodeResponseData.getIsServicable().equalsIgnoreCase(MarketplacecommerceservicesConstants.Y))
-							{
-								pinCodeResponseData = mplCartFacade.getVlaidDeliveryModesByInventory(pinCodeResponseData, cartData);
-							}
-						}
-						catch (final Exception e)
-						{
-							LOG.error("Exception occured while checking inventory " + e.getCause());
-						}
-					}
-					//  TISPRD-1951  END //
-					deliveryModeDataMap = mplCartFacade.getDeliveryMode(cartData, responseData, serviceCart);
-					fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartData);
-
-					//TIS-397
-					deliveryModeDataMap = mplCheckoutFacade.repopulateTshipDeliveryCost(deliveryModeDataMap, cartData);
-
-					model.addAttribute("deliveryModeData", deliveryModeDataMap);
-					model.addAttribute("deliveryMethodForm", new DeliveryMethodForm());
-					model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
-					model.addAttribute(MarketplacecheckoutaddonConstants.FULFILLMENTDATA, fullfillmentDataMap);
-					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWDELIVERYMETHOD, Boolean.TRUE);
-					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDRESS, Boolean.FALSE);
-					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
-					//model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
-					model.addAttribute("defaultPincode", defaultPinCodeId);
-
-					//TISPRO-625
-
-					//final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null) ? Boolean.TRUE: Boolean.FALSE;
-					//model.addAttribute(MarketplacecheckoutaddonConstants.CART_EXPRESS_CHECKOUT_SELECTED, isExpressCheckoutSelected);
-
-					//	this.prepareDataForPage(model);
-					model.addAttribute("metaRobots", "noindex,nofollow");
-					//model.addAttribute("checkoutPageName", checkoutPageName);
-					model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
-				}
-				else
-				{
-					final String requestQueryParam = UriUtils.encodeQuery("?msg="
-							+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-				}
-			}
-			else
-			{
-				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
-						+ "&type=redirect", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
-			}
+			prepareModelForDeliveryMode(model, serviceCart);
 			//final String is_responsive = getSessionService().getAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
 
 			if (isResponsive)
@@ -2581,7 +2495,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			//TISPT-400 ends
+			//INC144315801 starts
+			if (deliveryMethodForm.getDeliveryMethodEntry() == null)
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "Unable to set delivery options, Try again."
+						+ "&type=error", UTF);
+				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+			//INC144315801 ends
 
 			Double finalDeliveryCost = Double.valueOf(0.0);
 
@@ -4714,6 +4635,77 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute("isCart", Boolean.FALSE);
 		}
 
+		//Added for mRupee
+
+		//getting merchant for mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_URL, configurationService.getConfiguration()
+				.getString(MarketplacecheckoutaddonConstants.MRUPEEURL));
+
+		//getting redirect url mRupee
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_CODE,
+				configurationService.getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_MERCHANT_CODE));
+
+		model.addAttribute(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION,
+				configurationService.getConfiguration().getString(MarketplacecheckoutaddonConstants.MRUPEE_NARRATION_VALUE));
+
+		//mRupee configuration ends
+
+
+
+		//		for (final OrderEntryData cartEntryData : cartData.getEntries())
+		//		{
+		//			final CartModel cartModel = getCartService().getSessionCart();
+		//			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		//			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+		//			{
+		if (null != cartData)
+		{
+			if (null != cartData.getEntries())
+			{
+				//TISSTRT-1501 ends
+				for (final OrderEntryData cartEntryData : cartData.getEntries())
+				{
+					final CartModel cartModel = getCartService().getSessionCart();
+					final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+					for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+					{
+						if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+						{
+							if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+							{
+								cartEntryData.setEddDateBetWeen(cartEntryModel.getSddDateBetween());
+							}
+						}
+					}
+
+					if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+					{
+						if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+						{
+							// final CartModel cartModel = getCartService().getSessionCart();
+							final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+							cartData.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
+									Double.valueOf(configModel.getSdCharge())));
+						}
+					}
+				}
+				//TISSTRT-1501 starts
+			}
+
+			//			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+			//			{
+			//				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+			//				{
+			//					// final CartModel cartModel = getCartService().getSessionCart();
+			//					final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			//					cartData
+			//							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
+			//				}
+			//			}
+
+		}
+		//			}
+		//TISSTRT-1501 ends
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				configurationService.getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
 		model.addAttribute(MarketplacecheckoutaddonConstants.SOPFORM, new PaymentDetailsForm());
