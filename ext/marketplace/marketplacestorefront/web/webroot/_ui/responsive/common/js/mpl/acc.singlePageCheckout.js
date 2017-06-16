@@ -1903,7 +1903,7 @@ removeExchangeFromCart : function (){
 		
 		return false;
 	},
-	
+	//function called when payment mode is selected in responsive.
 	onPaymentModeSelection:function(paymentMode)
 	{
 		var formValidationSuccess=true;
@@ -1913,7 +1913,11 @@ removeExchangeFromCart : function (){
 			formValidationSuccess=ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
 			if(!formValidationSuccess)
 			{
-				ACC.singlePageCheckout.resetPaymentModes();
+				//Removing payment mode selection incase of address form validation failure
+				$("#selectAddressFormMobile input,textarea,select").on("focus.formValidationFailed,change.formValidationFailed",function(){
+					ACC.singlePageCheckout.resetPaymentModes();
+					$("#selectAddressFormMobile input,textarea,select").off("focus.formValidationFailed,change.formValidationFailed");
+				});
 	    		data={displaymessage:"clientSideAddressFormValidationFailed",type:"errorCode"}
 	    		ACC.singlePageCheckout.processError("#newAddressMobileErrorMessage",data);
 	        	ACC.singlePageCheckout.scrollToDiv("newAddressMobileErrorMessage",100);
