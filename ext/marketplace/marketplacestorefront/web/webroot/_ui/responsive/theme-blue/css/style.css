@@ -68903,3 +68903,8 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 	padding-left: 0px;
 }
 /* UF-361/TPR-6034 */
+/* UF-349 start */
+.modal.size-guide .sizes .details{
+	display: none;
+}
+/* UF-349 end */
