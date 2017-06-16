@@ -386,8 +386,8 @@
 														</div>
 														<div class="statusDate">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered:" /></span>&nbsp;
-															<c:forEach items="${deliveryFlag.statusRecords}" var="date">
-															<span>${date}</span>
+															<c:forEach items="${deliveryFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
@@ -401,8 +401,8 @@
 														</div>
 														<div class="statusDate">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped:" /></span>&nbsp;
-															<c:forEach items="${shippingFlag.statusRecords}" var="date">
-															<span>${date}</span>
+															<c:forEach items="${shippingFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
