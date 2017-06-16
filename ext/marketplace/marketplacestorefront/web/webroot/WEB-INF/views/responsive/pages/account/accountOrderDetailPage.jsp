@@ -544,14 +544,14 @@
 									<!--R2.3 TISRLEE-1615- Start   -->
 									     <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
-													   <p>
+													   <p class="order_history_del_mode">
 										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
 											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                        <p class="order_history_del_mode"><span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  </p>
                                                      </c:if>
 													</c:otherwise>
 										 </c:choose>
@@ -3608,8 +3608,9 @@ input[type="radio"]:checked {
 	background: #000;
 }
 </style>
+<!-- R2.3: END: End of  AWB CSS for PopUp -->
 
-<!-- added for track order iframe styling-->
+<!-- added for track order iframe styling start-->
 <c:if test="${param.frame ne null}">
 <style>
 body .account p.track-order-header{
@@ -3625,7 +3626,9 @@ body .account .left-nav, body .account .right-account .order-history .navigation
 body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
 body .account .right-account .order-history.order-details .product-block li.item .actions,
-body .account .nav-orderHistory, body .account .account-header{
+body .account .nav-orderHistory, body .account .account-header,
+body .account .editIconCSS,
+body .account .right-account .order-history.order-details li.item .item-fulfillment .order_history_del_mode{
 	display: none !important;
 }
 
@@ -3675,10 +3678,43 @@ body .account .right-account .order-history.order-details .product-block{
 body .account .right-account .order-history.order-details li.header>ul{
 	margin-bottom: 16px;
 }
-body.page-order .body-Content{
+body.page-order .body-Content,
+body .account .right-account .order-history.order-details li.item{
 	padding-bottom:0;
+}
+body .account .right-account .order-history.order-details li.item .order{
+	margin-bottom: 10px;
+}
+body .account .wrapper{
+	margin-bottom: 0;
+}
+body.page-order .mainContent-wrapper, body.page-order, body.page-order main{
+	height: auto;
+	min-height: auto;
+}
+body .account .right-account .order-history.order-details li.item .status .nav{
+	text-align: left;
+}
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(3){
+	padding-right: 0;
+}
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1),
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
+	width: auto;
+    padding-left: 45px;
+}
+body .account .right-account .order-history .product-block li.item .attributes{
+	margin-top:0px;
+}
+body .account .right-account .order-history .product-block li.item .attributes p:last-child {
+    margin-top: 15px;
+}
+@media (max-width: 790px){
+body .account .right-account .order-history .product-block li.header {
+    padding-left: 20px;
+    padding-top: 30px;
+}
 }
 </style>
 </c:if>
-
-<!-- R2.3: END: End of  AWB CSS for PopUp -->
+<!-- added for track order iframe styling end-->

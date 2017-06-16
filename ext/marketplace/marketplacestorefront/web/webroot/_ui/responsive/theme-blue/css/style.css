@@ -69773,7 +69773,7 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
 
 /* TPR-6013 track order modal start */
 .track-order-modal .content{
-	width: 85%;
+	width: 80%;
     max-width: 100%;
     height: 550px;
     border-radius: 8px;
