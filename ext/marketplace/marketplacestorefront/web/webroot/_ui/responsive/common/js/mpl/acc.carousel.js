@@ -1066,6 +1066,12 @@ BlpBestOffersCarousel: function(){
 		$(".product-image-container.device .owl-stage-outer").prepend($(".product-image-container.device .wishlist-icon"))
 	},
 	AddressCarousel: function(){
+		if($(".checkTab .addressList_wrapper .address-list").length == 2){
+			$("#address_carousel").addClass("two_address");
+		}
+		if($(".checkTab .addressList_wrapper .address-list").length == 1){
+			$("#address_carousel").addClass("one_address");
+		}
 	      $("#address_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
 	                'initialize.owl.carousel initialize.owl.carousel ' +
 	                'to.owl.carousel changed.owl.carousel',

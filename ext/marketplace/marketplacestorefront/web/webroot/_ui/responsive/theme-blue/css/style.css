@@ -67184,6 +67184,25 @@ background:#f8f8f8;
 	}
  }
 /*tab mobile checkout header end*/
+@media(min-width: 768px){
+.addressList_wrapper.owl-carousel#address_carousel .owl-stage{
+	margin: 0px auto;
+}
+.addressList_wrapper.owl-carousel.one_address#address_carousel .owl-stage{
+	padding-left:41px;
+}
+.addressList_wrapper.owl-carousel.one_address#address_carousel .owl-stage .owl-item:last-child{
+	margin-right: 0 !important;
+}
+}
+@media(min-width: 1280px){
+	.addressList_wrapper.owl-carousel.two_address#address_carousel .owl-stage{
+	padding-left:41px;
+}
+.addressList_wrapper.owl-carousel.two_address#address_carousel .owl-stage .owl-item:last-child{
+	margin-right: 0 !important;
+}
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */

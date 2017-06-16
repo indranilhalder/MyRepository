@@ -297,7 +297,7 @@ display: none;}
 			<!-- </div> -->
 			<!-- R2.3: END -->
 		<%-- <formElement:formInputBox idKey="address.locality" labelKey="address.locality" path="locality" inputCSS="form-control" mandatory="true"/> --%>
-		<div class='full'>
+		<div class='half'>
 		<!-- TISUAT-4696  /TPR-215 / R2.3 --> 
 		<formElement:formInputBox idKey="address.townCity" inputCSS="address_townCity"
 			labelKey="address.townCity" path="townCity" 
@@ -318,7 +318,7 @@ display: none;}
 			</div> 
 			</div> --><!-- R2.3: END: Commented -->
 			<!-- R2.3: START -->
-			<div class="full address-select">
+			<div class="half address-select">
 				<div class="mainDrop">
 				<formElement:formSelectBox idKey="address.states" 
 					selectCSSClass="address_states addressRead" labelKey="address.states"
