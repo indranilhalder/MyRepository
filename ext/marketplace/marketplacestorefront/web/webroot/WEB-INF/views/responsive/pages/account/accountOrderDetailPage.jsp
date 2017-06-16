@@ -1087,7 +1087,7 @@
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
+																<li>Ready For Pickup</li>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -1788,7 +1788,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
+														<p class="track-order-pickup">${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -2813,7 +2813,7 @@
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
+																<li>Ready For Pickup</li>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -3635,7 +3635,7 @@ body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
 body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
-body .account .editIconCSS{
+body .account .editIconCSS, .track-order-pickup, .track-order-pickup + a[type="button"]{
 	display: none !important;
 }
 
@@ -3713,6 +3713,8 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
 	width: auto;
     padding-left: 45px;
+    max-width: 102px;
+    vertical-align: top;
 }
 body .account .right-account .order-history .product-block li.item .attributes{
 	margin-top:0px;
@@ -3745,11 +3747,13 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 @media (max-width: 500px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
     padding-left: 22px;
+    max-width: 82px;
 }
 }
 @media (max-width: 386px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    padding-left: 18px;
+    padding-left: 15px;
+    max-width: 70px;
 }
 }
 </style>
