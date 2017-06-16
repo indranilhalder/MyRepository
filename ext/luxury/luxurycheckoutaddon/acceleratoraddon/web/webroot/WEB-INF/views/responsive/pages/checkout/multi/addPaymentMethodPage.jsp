@@ -11,6 +11,7 @@
 <%@ taglib prefix="address" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/address" %>
 <%@ taglib prefix="cart" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/cart" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
+<%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
 
 <c:url value="${currentStepUrl}" var="choosePaymentMethodUrl" />
 <spring:url value="/checkout/multi/debitTermsAndConditions" var="getDebitTermsAndConditionsUrl"/>
@@ -219,7 +220,7 @@
 											<c:when test="${map.key eq 'Credit Card'}">
 												<input type="hidden" id="CreditCard" value="${map.value}" />
 	
-												<li class="active">
+												<li class="active payment-tab">
 													<span id="viewPaymentCredit" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
@@ -552,7 +553,7 @@
 											<c:when test="${map.key eq 'Debit Card'}">
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
-		    									<li>
+		    									<li class="payment-tab">
 		    										<span id="viewPaymentDebit" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
@@ -693,7 +694,7 @@
 						                    	<fieldset>
 						                    	   <div class="row mt-20">
 							                        	<div class="full account-only col-md-12">
-						 									<label><spring:theme code="text.cardtype"/> *</label>
+						 									<%-- <label><spring:theme code="text.cardtype"/> *</label> --%>
 						 										<select>
 						  											<option><spring:theme code="text.select"/></option>
 						  										</select>
@@ -701,16 +702,16 @@
 													</div>
 													<div class="row mt-20">
 							                            <div class="controls full col-md-6">
-							                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label>
+							                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
 							                            	
 							                             <input type="text" class="card_number form-control" id="cardNoDc" maxlength="16" autocomplete="off" placeholder="Enter your card number"> 
 							                            	<input type="hidden" id="cardTypeDc" disabled="disabled"/>
 							                            	<span class="error-message" id="cardNoErrorDc"></span>
 														</div>
 															 <div class="controls full exp  col-md-4">
-							                             	<label class="control-label expires">
+							                             	<%-- <label class="control-label expires">
 							                             		<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiryDate"/>
-							                             	</label>
+							                             	</label> --%>
 							                            	<select class="card_exp_month form-control" name="expmm" > 	
 								                            	<option value="month"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.mm"/></option>
 																<option value="01"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.01"/></option>
@@ -739,8 +740,8 @@
 							                                <div class="controls full cvv  col-md-2">														
 																<input type="hidden" id="cvvHelpContent" value="<spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVVHelpContent"/>">
 																<input type="hidden" id="cvvHelpContent" value="${cvvHelp}">
-								                            	<label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label>
-								                           		<input type="password" autocomplete="new-password" class="security_code span1 form-control" name="cvv" maxlength="4" />
+								                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/><span class="cvv_mobile"> [?]</span></label> --%>
+								                           		<input type="password" autocomplete="new-password" class="security_code span1 form-control" name="cvv" maxlength="4" placeholder="CVV"/>
 								                           		<a href="#cvvHelpText" class="cvvHelp" id="cvvHelp"></a>
 								                           		<span class="error-message" id="cvvErrorDc"></span> 
 						                                   </div>
@@ -795,7 +796,7 @@
 											<c:when test="${map.key eq 'Netbanking'}">
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
-			    								<li>
+			    								<li class="payment-tab">
 			      	 								<span id="viewPaymentNetbanking" >
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
@@ -810,7 +811,7 @@
 													</div>
 													<!-- Terms & Conditions Link -->
 													<div class="pay top-padding nbButton mt-20 mb-20">
-														<button type="button" class="make_payment payment-button btn-lg btn-primary" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+														<button type="button" class="make_payment btn-lg btn-primary" id="make_nb_payment" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 														<div class="terms">
 														<p class="redirect"><spring:theme code="text.secure.payment.gateway"/></p>
 														<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a></p>
@@ -1047,7 +1048,7 @@
 											</c:when>
 											<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
-												<li>
+												<li class="payment-tab">
 				       								<span id="viewPaymentCOD" >
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
