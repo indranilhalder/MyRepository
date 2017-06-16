@@ -25460,6 +25460,7 @@ div.variantFormContainer{
 		font-family:"Montserrat";
 		font-size:12px;
 		margin-bottom:20px;
+		display: none;			/* 	TPR-6013 Order History  */
 	}
 	.nav-orderHistory::before {
 		content: "";
@@ -69650,7 +69651,7 @@ body .account .right-account .order-history:not(.responsiveProfile) .product-blo
 .commonBlock.greenBlock .roundedDiv{
 	background-color: #7ed321;
 }
-.commonBlock.greenBlock .rectangularDivQuarter{
+.commonBlock.greenBlock .rectangularDivQuarter,.commonBlock.greenBlock .rectangularDiv{
 	border-color:#7ed321;
 }
 .commonBlock .rectangularDivQuarter{
@@ -69768,6 +69769,12 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
 	}
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li:nth-child(4){
 	    text-align: left;	
+}
+body .account .right-account .order-history.order-details li.header div.totals{
+	padding-top: 0;
+}
+body .account .right-account .order-history.order-details li.header div.payment-method{
+	padding-top: 48px;
 }
 /* TPR-6013 Order Details ends */
 
