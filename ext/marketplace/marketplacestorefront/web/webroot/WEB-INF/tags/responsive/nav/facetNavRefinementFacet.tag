@@ -62,7 +62,7 @@ function navigateToPage(queryString,textString)
 
 <ycommerce:testId code="facetNav_title_${facetData.code}">
 <c:if test="${facetData.values.size()>0}">
-	<li class="facet js-facet ${facetData.name}">
+	<li class="facet js-facet ${fn:replace(facetData.name,' ','_')}">
 		<div class="facet-name js-facet-name">
 		
 		<c:choose>
@@ -547,6 +547,7 @@ function navigateToPage(queryString,textString)
 				<input type="hidden" id="facetTopValuesCnt" value="${fn:length(facetData.topValues)}"/>
 		    	<input type="hidden" id="remainingFacetValuesCnt" value="${fn:length(facetData.values)}"/>
 			</c:if>
+			
 			<c:if test="${not empty facetData.topValues}">
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />
