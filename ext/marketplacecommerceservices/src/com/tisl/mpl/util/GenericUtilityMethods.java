@@ -1668,7 +1668,8 @@ public class GenericUtilityMethods
 
 					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
 
-					totalDeliveryCharge += entry.getCurrDelCharge().doubleValue();
+					totalDeliveryCharge += (entry.getCurrDelCharge().doubleValue() + entry.getScheduledDeliveryCharge().doubleValue());
+
 				}
 			}
 		}

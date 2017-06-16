@@ -4769,8 +4769,15 @@ function applyPromotion(bankName,binValue,formSubmit)
 					//UF-260
 					if(response.totalDiscntIncMrp.value != 0){
 						$("#promotionApplied").css("display","block");
-						document.getElementById("promotion").innerHTML=response.totalDiscntIncMrp.formattedValue;
+						$("#promotion").html(response.totalDiscntIncMrp.formattedValue);
 					}
+					//TISSTRT-1605
+					if(parseFloat(response.deliveryCost.value) > 0){
+						$("#deliveryCostSpanId").html=response.deliveryCost.formattedValue;
+			 		}else{
+			 			$("#deliveryCostSpanId").html="Free";
+			 		}
+					
 					
 					// TISST-7955
 					var ussidPriceJson = JSON.parse(response.ussidPriceDetails);
