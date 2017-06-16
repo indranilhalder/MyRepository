@@ -361,7 +361,7 @@ public class ProductPageController extends MidPageController
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, final HttpServletRequest request, final HttpServletResponse response)
-					throws CMSItemNotFoundException, UnsupportedEncodingException
+			throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		//final was written here
 		String returnStatement = null;
@@ -380,8 +380,8 @@ public class ProductPageController extends MidPageController
 
 			// TPR- 4389 STARTS FROM HERE
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
-					productModel.getProductCategoryType(), productCode);
+			final Map<String, String> reviewAndRating = mplGigyaReviewService
+					.getReviewsAndRatingByCategoryId(productModel.getProductCategoryType(), productCode);
 
 			if (reviewAndRating != null)
 			{
@@ -479,7 +479,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 * 
+				 *
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -689,13 +689,13 @@ public class ProductPageController extends MidPageController
 			//TPR-430 Start
 			if (breadcrumbs.size() > 0)
 			{
-						.replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY, breadcrumbs.get(0).getName().replaceAll(REGEX, "")
-						.replaceAll(" ", "_").toLowerCase());			}
+				model.addAttribute(ModelAttributetConstants.PRODUCT_CATEGORY,
+						breadcrumbs.get(0).getName().replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase());
+			}
 			if (breadcrumbs.size() > 1)
 			{
-				model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME, breadcrumbs.get(1).getName().replaceAll(REGEX, "")
-						.replaceAll(" ", "_").toLowerCase());
+				model.addAttribute(ModelAttributetConstants.PAGE_SUBCATEGORY_NAME,
+						breadcrumbs.get(1).getName().replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase());
 			}
 			if (breadcrumbs.size() > 2)
 			{
@@ -896,7 +896,7 @@ public class ProductPageController extends MidPageController
 	public @ResponseBody JSONObject getBuyboxDataForSizeGuide(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode,
 			@RequestParam(ControllerConstants.Views.Fragments.Product.SELLER_ID) final String sellerId)
-					throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+			throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		LOG.debug(String.format("BUYBOZFORSIZEGUIDEAJAX : productCode:  %s | sellerId : %s ", productCode, sellerId));
 
@@ -1271,7 +1271,7 @@ public class ProductPageController extends MidPageController
 			@RequestParam(value = ModelAttributetConstants.SELECTED_SIZE, required = false) final String selectedSize,
 			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId, //CKD:TPR-250
 			final Model model, @Valid final SellerInformationDetailsForm form, final HttpServletRequest request)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		final StringBuilder allVariants = new StringBuilder();
 		String returnStatement = null;
@@ -1565,7 +1565,7 @@ public class ProductPageController extends MidPageController
 	{ RequestMethod.GET, RequestMethod.POST })
 	public String postReview(@PathVariable String productCode, final ReviewForm form, final BindingResult result,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 
 	{
 		if (null != productCode)
@@ -1671,7 +1671,7 @@ public class ProductPageController extends MidPageController
 			+ "/writeReview", method = RequestMethod.POST)
 	public String writeReview(@PathVariable String productCode, final ReviewForm form, final BindingResult result,
 			final Model model, final HttpServletRequest request, final RedirectAttributes redirectAttrs)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		if (null != productCode)
 		{
@@ -2244,7 +2244,8 @@ public class ProductPageController extends MidPageController
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
 			@RequestParam("variantCode") String variantCode,
 			@RequestParam(value = MarketplacecommerceservicesConstants.SELLERIDPARAM, required = false) final String sellerId //CKD:TPR-250
-	) throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException	{
+	) throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+	{
 		JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
 		try
@@ -2559,7 +2560,7 @@ public class ProductPageController extends MidPageController
 			+ "/otherSellerDetails", method = RequestMethod.GET)
 	public List<SellerInformationData> getOtherSellerDetails(
 			@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode)
-					throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
+			throws JSONException, CMSItemNotFoundException, UnsupportedEncodingException, com.granule.json.JSONException
 	{
 		if (null != productCode)
 		{
@@ -2700,7 +2701,7 @@ public class ProductPageController extends MidPageController
 			+ "/getOfferMessage", method = RequestMethod.GET)
 	public JSONObject populateOfferMessage(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) final String productCode)
-					throws com.granule.json.JSONException
+			throws com.granule.json.JSONException
 	{
 		final JSONObject buyboxJson = new JSONObject();
 		buyboxJson.put(ModelAttributetConstants.ERR_MSG, ModelAttributetConstants.EMPTY);
@@ -2936,7 +2937,7 @@ public class ProductPageController extends MidPageController
 	//@RequireHardLogIn
 	public boolean removeFromWl(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
 			@RequestParam(USSID) final String ussid, @RequestParam("wish") final String wishName, final Model model)
-					throws CMSItemNotFoundException
+			throws CMSItemNotFoundException
 	{
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 
@@ -3022,8 +3023,8 @@ public class ProductPageController extends MidPageController
 	 */
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-getIAResponse", method = RequestMethod.GET)
-	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids) throws JSONException,
-			com.granule.json.JSONException
+	public @ResponseBody JSONObject getIAResponse(@RequestParam(IA_USS_IDS) final String ussids)
+			throws JSONException, com.granule.json.JSONException
 	{
 		final String ussidList[] = ussids.split(",");
 		final StringBuilder ussidIds = new StringBuilder();
@@ -3035,8 +3036,8 @@ public class ProductPageController extends MidPageController
 			ussidIds.append(',');//Sonar fix
 		}
 		final JSONObject buyboxJson = new JSONObject();
-		final Map<String, List<Double>> dataMap = buyBoxFacade.getBuyBoxDataForUssids(ussidIds.toString().substring(0,
-				ussidIds.lastIndexOf(",")));
+		final Map<String, List<Double>> dataMap = buyBoxFacade
+				.getBuyBoxDataForUssids(ussidIds.toString().substring(0, ussidIds.lastIndexOf(",")));
 		LOG.debug("##################Data Map for IA" + dataMap);
 		return buyboxJson.put("iaResponse", dataMap);
 	}
@@ -3051,7 +3052,8 @@ public class ProductPageController extends MidPageController
 	//update the message for Freebie product TPR-1754
 
 	@ResponseBody
-	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN + "/getFreebieMessage", method = RequestMethod.GET)
+	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.USSID_CODE_PATH_NEW_PATTERN
+			+ "/getFreebieMessage", method = RequestMethod.GET)
 	public JSONObject populateFreebieMessage(@RequestParam(ControllerConstants.Views.Fragments.Product.USSID) final String ussId)
 			throws com.granule.json.JSONException, EtailNonBusinessExceptions, FlexibleSearchException, UnknownIdentifierException
 	{
@@ -3099,8 +3101,8 @@ public class ProductPageController extends MidPageController
 	{
 		if (null != productData.getBrand())
 		{
-			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname()) ? productData
-					.getBrand().getBrandname().toLowerCase() : null);
+			model.addAttribute("msiteBrandName", StringUtils.isNotBlank(productData.getBrand().getBrandname())
+					? productData.getBrand().getBrandname().toLowerCase() : null);
 			/*
 			 * model.addAttribute("msiteBrandCode", StringUtils.isNotBlank(productData.getBrand().getBrandCode()) ?
 			 * productData .getBrand().getBrandCode().toLowerCase() : null);
@@ -3109,11 +3111,11 @@ public class ProductPageController extends MidPageController
 
 			if (null != productData.getBrand().getBrandDescription())
 			{
-				model.addAttribute(
-						"brandInfo",
-						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT ? productData
-								.getBrand().getBrandDescription() : StringUtils.substring(productData.getBrand().getBrandDescription(),
-								0, MplConstants.BRANDINFO_CHAR_LIMIT));
+				model.addAttribute("brandInfo",
+						productData.getBrand().getBrandDescription().length() <= MplConstants.BRANDINFO_CHAR_LIMIT
+								? productData.getBrand().getBrandDescription()
+								: StringUtils.substring(productData.getBrand().getBrandDescription(), 0,
+										MplConstants.BRANDINFO_CHAR_LIMIT));
 			}
 
 		}
@@ -3216,7 +3218,7 @@ public class ProductPageController extends MidPageController
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-productClassAttribs", method = RequestMethod.GET)
 	public @ResponseBody String getAjaxProductClassAttribs(
 			@RequestParam(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode, final Model model)
-					throws com.granule.json.JSONException
+			throws com.granule.json.JSONException
 	{
 		LOG.debug("***************************productClassAttribs call for*************" + productCode);
 		String returnStatement = null;
@@ -3264,7 +3266,8 @@ public class ProductPageController extends MidPageController
 		}
 		return returnStatement;
 	}
-private boolean isLuxurySite()
+
+	private boolean isLuxurySite()
 	{
 
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
@@ -3274,4 +3277,5 @@ private boolean isLuxurySite()
 			return true;
 		}
 		return false;
-	}}
+	}
+}
