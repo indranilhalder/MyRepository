@@ -149,6 +149,9 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 
 	public static final String LUXURY_STYLE_SWATCH = "luxuryStyleSwatch";
 
+	//added for jewellery
+	public static final String JEWELLERY_STYLE_SWATCH = "fineJewelstyleSwatch";
+
 	public static final String CA = "CA";
 	public static final String CU = "CU";
 	public static final String CDP = "CDP";
@@ -163,6 +166,7 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String EQUALS_TO = "=";
 	public static final String COLON = ":";
 	public static final String FORWARD_SLASHES = "//";
+
 	public static final String PRODUCT_TYPE = "FineJewellery";
 
 	private MarketplaceFacadesConstants()

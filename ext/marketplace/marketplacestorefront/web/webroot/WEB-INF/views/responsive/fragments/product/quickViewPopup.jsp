@@ -323,7 +323,22 @@ display:none;
 	<div class="imageList" style="overflow: hidden;">
 		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
-				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
+			<c:choose>
+			<c:when test="${product.rootCategory=='FineJewellery'}">
+			<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
+					<span class="thumb ${(varStatus.index==0)? "active":""}">
+						<c:if test="${container.fineJewelthumbnailquickview.mediaType.code eq 'Image'}">
+							<img src="${container.fineJewelthumbnailquickview.url}" data-type="image" data-zoomimagesrc="${container.fineJewelsuperZoom.url}"  data-primaryimagesrc="${container.fineJewelproductquickview.url}" data-galleryposition="${varStatus.index}" alt="${container.fineJewelthumbnailquickview.altText}" title="${container.fineJewelthumbnailquickview.altText}" />	
+						</c:if>
+						<c:if test="${container.fineJewelthumbnailquickview.mediaType.code eq 'Video'}">
+							<%-- <img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}" /> --%>
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.fineJewelthumbnailquickview.url}?rel=0&enablejsapi=1" />
+					    </c:if>
+					</span>
+			</li>
+			</c:when>
+			<c:otherwise>
+			<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
@@ -333,7 +348,9 @@ display:none;
 							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
 					    </c:if>
 					</span>
-				</li>
+			</li>
+			</c:otherwise>
+			</c:choose>
 			</c:forEach>
 		</ul>
 	</div>
@@ -349,9 +366,18 @@ display:none;
     <div class="main-image">
 	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
-    <a href="${productUrl}"> <product:productPrimaryImage
-				product="${product}" format="product" />
+	<c:choose>
+	<c:when test="${product.rootCategory=='FineJewellery'}">
+	<a href="${productUrl}"> <product:productPrimaryImage
+				product="${product}" format="fineJewelproductquickview" />
 		</a>
+	</c:when>
+	<c:otherwise>
+	 <a href="${productUrl}"> <product:productPrimaryImage
+				product="${product}" format="product" />
+				</a>
+	</c:otherwise>
+	</c:choose>
 <!-- 		<div class="zoom" style="z-index:10000;">
 		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
 		</div> -->
