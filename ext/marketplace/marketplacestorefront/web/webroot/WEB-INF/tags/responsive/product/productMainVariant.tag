@@ -251,7 +251,6 @@ share mobile -->
 			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
 				code="product.variants.size.guide" />
 		</a>
-		
 		<!-- Added for PDP Size ChartChange -->
 		<ul id="variant" class="variant-select">
 			<%-- <c:choose>

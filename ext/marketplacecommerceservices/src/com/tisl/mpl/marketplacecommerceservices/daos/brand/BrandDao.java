@@ -24,4 +24,12 @@ public interface BrandDao
 	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId);
 
 	public List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(final String emailId);
+
+
+	/**
+	 * @param emailId
+	 * @param isLuxury
+	 * @return
+	 */
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(String emailId, String isLuxury);
 }

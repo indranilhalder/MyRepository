@@ -34,4 +34,11 @@ public interface BrandFacade
 	 * @return
 	 */
 	List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(String emailId);
+
+	/**
+	 * @param emailId
+	 * @param string
+	 * @return
+	 */
+	List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(String emailId, String string);
 }
