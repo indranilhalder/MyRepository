@@ -92,8 +92,18 @@ $( document ).ready(function() {
 					<li class="productItemInfo">
 						<div class="product-img">
 						<c:url value="${product.url}" var="productUrl" />
+						<!-- INC_11089 Start -->
+						<c:choose>
+						<c:when test="${not empty product.luxIndicator and fn:toLowerCase(product.luxIndicator)=='luxury'}">
+							<a href="${productUrl}"><product:productPrimaryImage
+									product="${product}" format="luxuryThumbnail" /></a>
+						</c:when>
+						<c:otherwise>
 							<a href="${productUrl}"><product:productPrimaryImage
 									product="${product}" format="thumbnail" /></a>
+						</c:otherwise>
+						</c:choose>
+						<!-- INC_11089 End -->
 						</div>
 						<div class="product">
 						<div class="cart-product-info">
