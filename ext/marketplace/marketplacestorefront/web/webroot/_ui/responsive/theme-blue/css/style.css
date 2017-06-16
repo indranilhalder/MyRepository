@@ -69781,7 +69781,7 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
     overflow: hidden;
     border: 0;
 }
-.track-order-header{
+.track-order-header, .track-order-del-charge{
 	display: none;
 }
 .track-order-modal .content > .close:before {
