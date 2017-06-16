@@ -34,7 +34,7 @@
 					<h3>${footerSocialTitle}</h3>
 					<p class="soc-links">
 						<c:forEach var="socialIcon" items="${footerImageList}" >
-							<a class="link" href="${socialIcon.urlLink}">
+							<a class="link" href="javascript:;">
 								<img src="${socialIcon.media.url}" alt="${socialIcon.title}">
 							</a>
 						</c:forEach>

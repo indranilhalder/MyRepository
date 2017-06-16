@@ -368,39 +368,9 @@
 			}
 		}
 		.coupon-container{
-		    max-width: 350px;
-		    border: 1px solid #d2d2d2;
-		    margin-left: 15px;
-		    border-radius: 3px;
-		    background: #F4F6F9;
-		    padding:0px;
+			padding: 0px;
 			h2{
 				border:0px;
-				padding:0px;
-				margin:0px;
-			}
-			.coupon-box{
-				display: inline-block;
-			    width: 100%;
-			    padding-top: 10px;
-			    .left{
-			    	float: left;
-				    width: 50%;
-				    padding: 15px;
-				    border-top: 1px solid #d2d2d2;
-				    text-align:center;
-				    color: #B9966B;
-				    p{
-				    	color:#333;
-				    }
-			    }
-			    .right{
-			    	float: right;
-				    width: 50%;
-				    padding: 15px;
-				    border-top: 1px solid #d2d2d2;
-				    text-align:center;
-			    }
 			}
 		}
 		.customer-service{
@@ -436,18 +406,6 @@
 		}
 	}
 }
-
-.page-termsOfUse{
-	.account{
-		.wrapper{
-			.right-account{
-				width:100%;
-			}
-		}
-	}
-}
-
-
 .breadcrumbs.wrapper{
     list-style-type: none;
 	margin-top: 12px;
@@ -545,54 +503,7 @@
 				width:100%;
 			}
 		} 
-		.left-nav-footer-mobile{
-			width: 100%;
-		    padding: 10px;
-		    border: 1px solid #d2d2d2;
-		    border-radius: 3px;
-		}
-		.left-nav-footer-mobile + .selectboxit-container{
-			display:none;
-		}
 	} 
 	
 	
-}
-
-/*content pages */
-.tab-wrapper, .customer-care-boxes, .breadcrumbs wrapper {
-	display : none;
-}
-
-.contact-us-header {
-	margin-bottom: 30px;
-    text-align: center;
-	> .content {
-		margin-bottom: 20px;
-    	line-height: 2em;
-	}
-	ul {
-		list-style-type: none;
-	}
-	p {
-		margin-bottom : 0;
-		text-align : left;
-	}
-	.copy {
-		margin: 0 auto 50px;
-	    width: 60%;
-	    display: block;
-    }
-}
-.contactUsOptions {
-	display: inline-block;
-    width: 33%;
-    
-    a{
-	    color: #B9966B;
-	    text-decoration: underline;
-	}
-	img, img+div{ 
-		display: inline-block;
-	}
 }

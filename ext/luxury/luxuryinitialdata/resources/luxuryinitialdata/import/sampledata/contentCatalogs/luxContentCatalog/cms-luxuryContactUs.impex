@@ -32,10 +32,6 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;Section1;;CMSParagraphComponent;
 ;Section2;;CMSMediaParagraphComponent;
-;Section3;;CMSParagraphComponent;
-;Section4A;;CMSParagraphComponent;
-;Section4B;;CMSParagraphComponent;
-;Section4C;;CMSParagraphComponent;  
 ;TopHeader;;;wide               
 ;MiddleHeader;;;wide               
 ;SiteLogo;;;logo               
@@ -48,12 +44,8 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;Footer;;;footer
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;Section1-contact;Section1 slot for Contact Us Page;true;breadcrumbComponent;;;
+;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
 ;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
-;;Section3-contact;Section3 slot for Contact Us Page;true;NeedAssistanceComponent;;;
-;;Section4A-contact;Section4A slot for Contact Us Page;true;SupportOfficeComponent;;;
-;;Section4B-contact;Section4B slot for Contact Us Page;true;CorporateOfficeComponent;;;
-;;Section4C-contact;Section4C slot for Contact Us Page;true;HelplineComponent;;;
 ;;MiddleHeader;helpLink;true;LuxuryHelpLink  
 ;;SiteLogoSlot;site logo;true;SiteLogoComponent      
 ;;SearchBoxSlot;Search Box;true;luxury-SearchBox
@@ -69,10 +61,6 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;Section1-ContactUsPageTemplate;Section1;;Section1-contact;true
 ;;Section2-ContactUsPageTemplate;Section2;;Section2-contact;true
-;;Section3-ContactUsPageTemplate;Section3;;Section3-contact;true
-;;Section4A-ContactUsPageTemplate;Section4A;;Section4A-contact;true
-;;Section4B-ContactUsPageTemplate;Section4B;;Section4B-contact;true
-;;Section4C-ContactUsPageTemplate;Section4C;;Section4C-contact;true
 ;;TopHeader-ContactUsPageTemplate;TopHeader;;TopHeaderSlot;true          
 ;;MiddleHeaderHelpLink-ContactUsPageTemplate;MiddleHeader;;MiddleHeader;true          
 ;;SiteLogo-ContactUsPageTemplate;SiteLogo;;SiteLogoSlot;true          
