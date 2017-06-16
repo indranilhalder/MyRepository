@@ -1896,7 +1896,7 @@
 												<c:if test="${not empty entry.product.colour}">
 													<p>Color: ${entry.product.colour}</p>
 												</c:if>
-												<p>
+												<p class="track-order-price">
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
@@ -1904,6 +1904,11 @@
 															displayFreeForZero="true" />
 													</ycommerce:testId>
 												</p>
+												<p class="track-order-del-charge"><span class="shipping-text"><spring:theme code="text.account.order.delivery1Charges" text="Scheduled Delivery & Shipping Charges"/>:</span>
+											<span class="amt"> <format:price
+												priceData="${subOrder.deliveryCost}"
+												displayFreeForZero="true" />
+												</span></p>
 											</div>
 											<c:if test="${not empty entry.imeiDetails}">
 												<p>Serial Number: ${entry.imeiDetails.serialNum}</p>
@@ -3622,13 +3627,15 @@ body .account p.track-order-header{
   	color: #000000;
   	padding-left: 20px;
 }
+body .account  .track-order-del-charge{
+	display: block;
+}
 body .account .left-nav, body .account .right-account .order-history .navigation,
 body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
 body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
-body .account .editIconCSS,
-body .account .right-account .order-history.order-details li.item .item-fulfillment .order_history_del_mode{
+body .account .editIconCSS{
 	display: none !important;
 }
 
@@ -3652,6 +3659,10 @@ font-size: 11px;
   text-align: left;
   color: #bbbbbb;
   font-weight: normal;
+  padding-bottom: 2px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p span{
+  font-weight: normal !important;
 }
 body .account .right-account .order-history.order-details li.header .delivery-address{
 	padding: 0;
@@ -3706,13 +3717,39 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 body .account .right-account .order-history .product-block li.item .attributes{
 	margin-top:0px;
 }
-body .account .right-account .order-history .product-block li.item .attributes p:last-child {
+body .account .right-account .order-history .product-block li.item .attributes p.track-order-price {
     margin-top: 15px;
 }
+body .account .right-account .order-history.order-details .product-block li.item .details {
+    width: 40%;
+}
+body .account .right-account .order-history.order-details .product-block li.item .details .shipping-text,
+body .account .right-account .order-history .product-block li.item .attributes p:last-child span.priceFormat{
+    display: inline !important;
+    width: auto !important;
+}
+
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
     padding-top: 30px;
+}
+body .account .right-account .order-history.order-details .product-block li.item .details {
+    width: 100%;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status{
+	padding-left:0;
+	padding-right: 0;
+}
+}
+@media (max-width: 500px){
+	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    padding-left: 22px;
+}
+}
+@media (max-width: 386px){
+	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    padding-left: 18px;
 }
 }
 </style>
