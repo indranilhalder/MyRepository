@@ -379,14 +379,33 @@
 													<c:set value="${orderStatus['SHIPPING']}" var="shippingFlag"/>
 													<c:set value="${orderStatus['DELIVERY']}" var="deliveryFlag"/>
 													<c:set value="${orderStatus['CANCEL']}" var="cancelFlag"/>
+													<c:set value="${orderStatus['RETURN']}" var="returnFlag"/>
+													
 													
 													<input type="hidden" value="${deliveryFlag.responseCode}"/>
 													<input type="hidden" value="${shippingFlag.responseCode}"/>
 													<input type="hidden" value="${approvedFlag.responseCode}"/>
 													<input type="hidden" value="${cancelFlag.responseCode}"/>
+													<input type="hidden" value="${returnFlag.responseCode}"/>
+													
 													
 													<c:choose>
-														<c:when test="${not empty cancelFlag and cancelFlag ne null}">
+													<c:when test="${not empty returnFlag and returnFlag ne null}">
+													<div class="orderUpdatesBlock">
+														<div class="status statusCancel">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span>
+														</div>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span>&nbsp;
+															<c:forEach items="${cancelFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
+															</c:forEach>
+														</div>
+														</div>
+													</c:when>
+													<c:otherwise>
+													<c:choose>
+													<c:when test="${not empty cancelFlag and cancelFlag ne null}">
 														<div class="orderUpdatesBlock">
 														<div class="status statusCancel">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>
@@ -450,6 +469,8 @@
 														</c:otherwise>
 														</c:choose>
 														</c:otherwise>
+													</c:choose>
+													</c:otherwise>
 													</c:choose>
 													
 
