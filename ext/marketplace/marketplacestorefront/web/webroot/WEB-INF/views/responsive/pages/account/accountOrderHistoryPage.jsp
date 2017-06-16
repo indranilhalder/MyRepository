@@ -378,6 +378,9 @@
 													<c:set value="${orderStatus['APPROVED']}" var="approvedFlag"/>
 													<c:set value="${orderStatus['SHIPPING']}" var="shippingFlag"/>
 													<c:set value="${orderStatus['DELIVERY']}" var="deliveryFlag"/>
+													<input type="hidden" value="${deliveryFlag.responseCode}"/>
+													<input type="hidden" value="${shippingFlag.responseCode}"/>
+													<input type="hidden" value="${approvedFlag.responseCode}"/>
 													<c:choose>
 														<c:when test="${not empty deliveryFlag and deliveryFlag ne null}">
 														<div class="orderUpdatesBlock">
@@ -386,8 +389,8 @@
 														</div>
 														<div class="statusDate">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered:" /></span>&nbsp;
-															<c:forEach items="${deliveryFlag.statusRecords}" var="date">
-															<span>${date}</span>
+															<c:forEach items="${deliveryFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
@@ -401,8 +404,8 @@
 														</div>
 														<div class="statusDate">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped:" /></span>&nbsp;
-															<c:forEach items="${shippingFlag.statusRecords}" var="date">
-															<span>${date}</span>
+															<c:forEach items="${shippingFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
