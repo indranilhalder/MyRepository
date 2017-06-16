@@ -193,6 +193,11 @@ ACC.singlePageCheckout = {
 	        	ACC.singlePageCheckout.hideAjaxLoader();
 			});
 		}
+		else
+		{
+			data={displaymessage:"clientSideAddressFormValidationFailed",type:"errorCode"}
+    		ACC.singlePageCheckout.processError("#addressMessage",data);
+		}
 		return false;	
 	},
 	
@@ -262,6 +267,11 @@ ACC.singlePageCheckout = {
 	        xhrResponse.always(function(){
 	        	ACC.singlePageCheckout.hideAjaxLoader();
 			});
+		}
+		else
+		{
+			data={displaymessage:"clientSideAddressFormValidationFailed",type:"errorCode"}
+    		ACC.singlePageCheckout.processError("#addressMessage",data);
 		}
 		return false;	
 	},
@@ -680,9 +690,10 @@ ACC.singlePageCheckout = {
                 if(data.type=="response")
                 {              
                 	$("#selectedAddressDivId").show();
-                	
-                	
-                	ACC.singlePageCheckout.getPickUpPersonForm(data.pickupPersonName,data.pickupPersonMobileNo);
+                	var pickupPersonName=data.pickupPersonName;
+                	var pickupPersonMobileNo=data.pickupPersonMobileNo;
+                	$("#selectedAddressHighlight").html(data.fullAddress);
+                	ACC.singlePageCheckout.getPickUpPersonForm(pickupPersonName,pickupPersonMobileNo);
             		
                 }
             }
