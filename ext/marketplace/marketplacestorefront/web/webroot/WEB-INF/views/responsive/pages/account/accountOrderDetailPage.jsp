@@ -3627,8 +3627,7 @@ body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
 body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
-body .account .editIconCSS,
-body .account .right-account .order-history.order-details li.item .item-fulfillment .order_history_del_mode{
+body .account .editIconCSS{
 	display: none !important;
 }
 
@@ -3652,6 +3651,10 @@ font-size: 11px;
   text-align: left;
   color: #bbbbbb;
   font-weight: normal;
+  padding-bottom: 2px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p span{
+  font-weight: normal !important;
 }
 body .account .right-account .order-history.order-details li.header .delivery-address{
 	padding: 0;

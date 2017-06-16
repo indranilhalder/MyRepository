@@ -69803,3 +69803,6 @@ body .account .right-account .order-history.order-details li.header>ul>li {
 body .right-account .order-history .cancellation-request-block.success>div h2.trackOrderLnHt{
 	height: auto; /* TISPRDT-1498 fix */
 }
+body .account .right-account .info.card-list h2 {
+    height: auto;	/* TISPRDT-1501 fix */
+}
