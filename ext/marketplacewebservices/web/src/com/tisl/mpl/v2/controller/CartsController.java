@@ -2240,6 +2240,7 @@ public class CartsController extends BaseCommerceController
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 				List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
 				GetWishListProductWsDTO gwlp = null;
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
 				{
 					if (null != abstractOrderEntry)
@@ -2251,7 +2252,6 @@ public class CartsController extends BaseCommerceController
 							/////////// TISSAM-14
 							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 							{
-								final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 								if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
 								{
 									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
@@ -2270,13 +2270,12 @@ public class CartsController extends BaseCommerceController
 							//TPR-6117 STARTS
 							if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
 									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
-									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < 5)
+									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 							{
 								gwlp.setMaxQuantityAllowed(abstractOrderEntry.getProduct().getMaxOrderQuantity().toString());
 							}
 							else
 							{
-								final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 								gwlp.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
 							}
 

@@ -135,6 +135,7 @@ import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
 
 
+
 /**
  * @author TCS
  *
@@ -243,6 +244,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param recentlyAddedFirst
 	 * 
 	 * 
@@ -260,6 +269,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return CartData
 	 * 
 	 * 
@@ -277,6 +294,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -308,11 +333,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
 	 * @param recentlyAddedFirst
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -425,6 +454,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// Commented For OOTB Call.
@@ -516,6 +547,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return List<CartData>
 	 */
 	@Override
@@ -544,6 +583,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param code
 	 * 
 	 * 
@@ -561,6 +608,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param quantity
 	 * 
 	 * 
@@ -578,6 +633,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param ussid
 	 * 
 	 * 
@@ -595,6 +658,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return CartModificationData
 	 * 
 	 * 
@@ -612,6 +683,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CommerceCartModificationException
 	 */
 
@@ -677,6 +756,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -694,6 +781,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param ussid
 	 * 
 	 * 
@@ -711,6 +806,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Map<String, String>
 	 * 
 	 * 
@@ -728,6 +831,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -754,6 +865,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param addressData
 	 * 
 	 * 
@@ -771,6 +890,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Map<String, String>
 	 * 
 	 * 
@@ -788,6 +915,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -814,6 +949,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -831,6 +974,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Map<String, String>
 	 * 
 	 * 
@@ -848,6 +999,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -874,6 +1033,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -891,6 +1058,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Map<String, String>
 	 * 
 	 * 
@@ -908,6 +1083,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -934,6 +1117,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -951,6 +1142,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param omsDeliveryResponse
 	 * 
 	 * 
@@ -968,6 +1167,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
 	 * 
 	 * 
@@ -985,6 +1192,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -1013,6 +1228,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param addressData
 	 * 
 	 * 
@@ -1030,6 +1253,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return String
 	 * 
 	 * 
@@ -1047,6 +1278,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -1074,6 +1313,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param ussid
 	 * 
 	 * 
@@ -1091,6 +1338,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Collection<CartModel>
 	 * 
 	 * 
@@ -1108,6 +1363,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws InvalidCartException
 	 */
 	@Override
@@ -1131,6 +1394,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		/* return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartModel); *///TISPT-179 Point 2
 
+        //TISPT-179 Point 2
 
 		return mplCommerceCartService.getGiftYourselfDetails(minGiftQuantity, allWishlists, pincode, cartData);
 	}
@@ -1204,6 +1468,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1324,6 +1596,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param pincode
 	 * 
 	 * 
@@ -1341,6 +1621,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -1358,6 +1646,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return List<PinCodeResponseData>
 	 * 
 	 * 
@@ -1375,6 +1671,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1443,6 +1747,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					if (StringUtils.isNotEmpty(sellerData.getDeliveryFulfillModebyP1()))
 					{
 						final String globalCodeFulfilmentTypeByp1 = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData
+
 
 						.getDeliveryFulfillModebyP1().toUpperCase());
 						if (StringUtils.isNotEmpty(globalCodeFulfilmentTypeByp1))
@@ -1568,6 +1873,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					}
 
 
+
 					else if (sellerData.getMopPrice() != null
 							&& StringUtils.isNotEmpty(sellerData.getMopPrice().getValue().toString()))
 					{
@@ -1606,6 +1912,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				}
 
 				final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entryData
+
 
 				.getSelectedUssid());
 
@@ -1723,6 +2030,131 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * @DESC Discount specific to the promotions TIS-386
 	 * @return Map<String, String>
@@ -1769,6 +2201,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param userModel
 	 * 
 	 * 
@@ -1786,6 +2226,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param pincode
 	 * 
 	 * 
@@ -1803,6 +2251,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return GetWishListWsDTO
 	 * 
 	 * 
@@ -1820,6 +2276,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1855,6 +2319,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param deliveryModeMap
 	 * 
 	 * 
@@ -1872,6 +2344,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param pincodeResponseData
 	 * 
 	 * 
@@ -1889,6 +2369,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return boolean
 	 * 
 	 * 
@@ -1906,6 +2394,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	/*
@@ -1914,6 +2410,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * {
 	 * 
 	 * 
+
+
 	 * ServicesUtil.validateParameterNotNull(deliveryModeMap, "deliveryModeMap cannot be null");
 	 * ServicesUtil.validateParameterNotNull(pincodeResponseData, "pincodeResponseData cannot be null"); return
 	 * mplCommerceCartService.addCartCodEligible(deliveryModeMap, pincodeResponseData, cartModel); }
@@ -1949,6 +2447,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -1966,6 +2472,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param omsDeliveryResponse
 	 * 
 	 * 
@@ -1983,6 +2497,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return void
 	 * 
 	 * 
@@ -2000,6 +2522,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 * 
 	 * 
@@ -2017,6 +2547,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws ParseException
 	 */
 	@Override
@@ -2044,6 +2582,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param productCode
 	 * 
 	 * 
@@ -2061,6 +2607,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param qty
 	 * 
 	 * 
@@ -2078,6 +2632,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return String
 	 * 
 	 * 
@@ -2095,6 +2657,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CommerceCartModificationException
 	 */
 	@Override
@@ -2261,21 +2831,29 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
 	 * @param requestType
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @param abstractOrderModel
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @return boolean
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2308,26 +2886,36 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
 	 * @param requestType
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @param abstractOrderModel
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @param defaultPinCodeId
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @return boolean
 	 * 
 	 * 
 	 * 
 	 * 
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2552,6 +3140,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#removeDeliveryandPaymentMode(de.hybris.platform.core.model.order.
 	 * CartModel )
 	 */
@@ -2650,6 +3246,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param selectedPincode
 	 * 
 	 * 
@@ -2667,6 +3271,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return String
 	 * 
 	 * 
@@ -2684,6 +3296,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -2748,6 +3368,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
 
 
+
 									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
 											|| ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
 													.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
@@ -2767,6 +3388,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 												|| (selectedDeliveryMode
 														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
+
+
 
 
 
@@ -2898,9 +3521,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 
+
+
+
+
+
+
+
 						{
 							LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
 							final CartModificationData cartModification = updateCartEntry(cartEntryModel.getEntryNumber().longValue(), 0);
+
 
 
 							if (cartModification.getQuantity() == 0)
@@ -2999,11 +3630,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 
+
+
+
+
 							.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate()))))
 					{
 						LOG.debug(">> Removing Cart entry for delisted ussid for " + cartEntryModel.getSelectedUSSID());
 						final CartModificationData cartModification = updateCartEntryMobile(
 								cartEntryModel.getEntryNumber().longValue(), 0, cartModel);
+
+
 
 
 
@@ -3016,6 +3653,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						}
 						else
 						{
+
 
 							LOG.debug(">> Delisted item Could not removed item from cart for " + ussid
 									+ " trying for hard reset ...... ");
@@ -3070,6 +3708,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param cartData
 	 * 
 	 * 
@@ -3087,6 +3733,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param omsDeliveryResponse
 	 * 
 	 * 
@@ -3104,6 +3758,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return Map<String, List<MarketplaceDeliveryModeData>>
 	 * 
 	 * 
@@ -3121,6 +3783,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws CMSItemNotFoundException
 	 */
 	@Override
@@ -3149,6 +3819,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return ArrayList<Integer>
 	 */
 	@Override
@@ -3335,6 +4013,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @param wishlistEntryModel
 	 * 
 	 * 
@@ -3352,6 +4038,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @return boolean
 	 * 
 	 * 
@@ -3369,6 +4063,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
+
+
+
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3607,9 +4309,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 						// Total MRP
 
+
 						totMrp = BigDecimal.valueOf((null != cartEntryModel.getMrp() ? Double.valueOf((cartEntryModel.getMrp()
 
+
 						.doubleValue() * cartEntryModel.getQuantity().doubleValue())) : totMrp).doubleValue());
+
 
 
 						cartEntryModel.setTotalMrp(Double.valueOf(totMrp.doubleValue()));
@@ -3706,6 +4411,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Override
 	public InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(
 			final InvReserForDeliverySlotsRequestData cartdata, final CartModel cart)
+
+
 
 
 	{
@@ -3912,6 +4619,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#notifyEmailAndSmsOnInventoryFail(de.hybris.platform.core.model.order
 	 * .OrderModel)
@@ -3950,6 +4659,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
+
+
+
 	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#getLuxCart()
 	 */
 	@Override
@@ -3982,6 +4696,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 * 
 	 * 
 	 * 
+
+
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#getCartDataFromCartModel(de.hybris.platform.core.model.order.CartModel)
 	 */
@@ -4021,6 +4737,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	{
 		this.orderConverter = orderConverter;
 	}
+
 
 	/**
 	 * @return the promotionsService
@@ -4127,6 +4844,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/**
 	 * 
+
 	 * get EDD INFormation for Ussid
 	 *
 	 * @param cartModel
@@ -4577,12 +5295,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	//TPR-5346 STARTS
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#isMaxProductQuantityAlreadyAdded(java.lang.String, long, long,
-	 * java.lang.String)
+	/**
+	 * this method will check if the max quantity configured for the product is laready added in the cart or not
 	 */
+
 	@Override
 	public String isMaxProductQuantityAlreadyAdded(final Integer maxCount, final String code, final long qty, long stock,
 			final String ussid, final long checkMaxLimList)
@@ -4606,7 +5322,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 			final CartData cartData = getSessionCartWithEntryOrdering(true);
 
-			if (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty())
+			if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()) && !cartData.getEntries().isEmpty())
 			{
 				for (final OrderEntryData entry : cartData.getEntries())
 				{
@@ -4622,6 +5338,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						}
 						else
 						{
+
 							LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
 
 							if (entry.getQuantity().longValue() >= stock)
@@ -4680,11 +5397,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * 
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#checkMaxLimit(java.lang.String)
+   /**
+	 * This method will check the max quantity configured for the product at cart level
 	 */
 	@Override
 	public long checkMaxLimit(final String code, final CartModel cartModel)
@@ -4698,10 +5412,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#checkMaxLimitUpdate(long)
+	/**
+	 * This method will check the max quantity configured for the product and update the cart accordingly
 	 */
 	@Override
 	public boolean checkMaxLimitUpdate(final long entryNumber, final long quantityToBeUpdated)
@@ -4710,11 +5422,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.checkMaxLimitUpdate(entryNumber, quantityToBeUpdated);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.facade.checkout.MplCartFacade#checkMaxLimitCheckout(de.hybris.platform.core.model.order.CartModel)
+   /**
+	 * This method will check the max quantity configured for the product
 	 */
 	@Override
 	public boolean checkMaxLimitCheckout(final CartModel serviceCart)
@@ -4723,106 +5432,128 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return mplCommerceCartService.checkMaxLimitCheckout(serviceCart);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.tisl.mpl.facade.checkout.MplCartFacade#UpdateCartOnMaxLimExceeds(de.hybris.platform.core.model.order.CartModel
-	 * )
+/**
+	 * This method will update the cart entry with respect to the max quantity configured for the product
+	 *
+	 * @param cartModel
+	 * @return
 	 */
 	@Override
-	public boolean UpdateCartOnMaxLimExceeds(CartModel cartModel)
+	//	public boolean UpdateCartOnMaxLimExceeds(CartModel cartModel)
+	public Map<String, String> updateCartOnMaxLimExceeds(final CartModel cartModel)
 	{
 		// YTODO Auto-generated method stub
 		final Map<String, Long> productMap = new HashMap();
 
-		boolean updateCartOnMaxLimExceeds = true;
+		//boolean updateCartOnMaxLimExceeds = true;
+		final Map<String, String> hMap = new HashMap<String, String>();
+		final int maximum_configured_quantiy = siteConfigService
+				.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+
 		int remainingcount;
 		int updateEntryCount;
 		int entryCount = 0;
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 		{
-
-
-			if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-					&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 			{
-				if (entry.getQuantity().longValue() > entry.getProduct().getMaxOrderQuantity().intValue())
+				//				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+				//						&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+				if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+						&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 				{
-					try
-					{
-						final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), entry
-								.getProduct().getMaxOrderQuantity().intValue());
 
-						if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
-						{
-							LOG.debug("updating from cart........");
-							//return false;
-							cartModel = getCartService().getSessionCart();
-							updateCartOnMaxLimExceeds = false;
-						}
-					}
-					catch (final CommerceCartModificationException ex)
+					if (entry.getQuantity().longValue() > entry.getProduct().getMaxOrderQuantity().intValue())
 					{
-						LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+						try
+						{
+							final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
+									entry.getProduct().getMaxOrderQuantity().intValue());
+
+							if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
+							{
+								LOG.debug("updating from cart........");
+								//return false;
+								//cartModel = getCartService().getSessionCart();
+								//updateCartOnMaxLimExceeds = false;
+								hMap.put(entry.getProduct().getCode(), "true");
+							}
+						}
+						catch (final CommerceCartModificationException ex)
+						{
+							LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+						}
 					}
 				}
 			}
 		}
 
 		//		for (final AbstractOrderEntryModel entry : cartModel.getEntries()) keeping the lastest entry in the cart
-		for (final AbstractOrderEntryModel entry : Lists.reverse(cartModel.getEntries()))
+
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 		{
-
-
-			entryCount = entryCount + entry.getQuantity().intValue();
-			if (!productMap.isEmpty())
+			for (final AbstractOrderEntryModel entry : Lists.reverse(cartModel.getEntries()))
 			{
-				if (productMap.get(entry.getProduct().getCode()) != null)
+				entryCount = entryCount + entry.getQuantity().intValue();
+				if (MapUtils.isNotEmpty(productMap))
 				{
 
-
-
-
-
-					if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
-							&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+					if (productMap.get(entry.getProduct().getCode()) != null)
 					{
-						if (entry.getQuantity().longValue() + productMap.get(entry.getProduct().getCode()).longValue() > entry
-								.getProduct().getMaxOrderQuantity().intValue())
+
+
+						//					if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+						//							&& entry.getProduct().getMaxOrderQuantity().intValue() < 5)
+
+						if (entry.getProduct().getMaxOrderQuantity() != null && entry.getProduct().getMaxOrderQuantity().intValue() > 0
+								&& entry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 						{
-							try
+
+							if (entry.getQuantity().longValue() + productMap.get(entry.getProduct().getCode()).longValue() > entry
+									.getProduct().getMaxOrderQuantity().intValue())
 							{
-								//remainingcount = entry.getQuantity().intValue() - entry.getProduct().getMaxOrderQuantity().intValue();
-								remainingcount = entryCount - entry.getProduct().getMaxOrderQuantity().intValue();
-								if (remainingcount >= 0)
+
+								try
 								{
-									updateEntryCount = entry.getQuantity().intValue() - remainingcount;
-									//									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), 0);
-
-									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
-											updateEntryCount);
-
-									if (cartModification.getQuantity() >= 0)
+									//remainingcount = entry.getQuantity().intValue() - entry.getProduct().getMaxOrderQuantity().intValue();
+									remainingcount = entryCount - entry.getProduct().getMaxOrderQuantity().intValue();
+									if (remainingcount >= 0)
 									{
-										LOG.debug("removing from cart........");
-										updateCartOnMaxLimExceeds = false;
-										//return false;
+										updateEntryCount = entry.getQuantity().intValue() - remainingcount;
+										//									final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(), 0);
+
+										final CartModificationData cartModification = updateCartEntry(entry.getEntryNumber().intValue(),
+												updateEntryCount);
+
+										if (cartModification.getQuantity() >= 0)
+
+										{
+											LOG.debug("removing from cart........");
+											//updateCartOnMaxLimExceeds = false;
+											//return false;
+											hMap.put(entry.getProduct().getCode(), "true");
+										}
 									}
 								}
+								catch (final CommerceCartModificationException ex)
+								{
+									LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+								}
 							}
-							catch (final CommerceCartModificationException ex)
+
+							else
 							{
-								LOG.error("CommerceCartModificationException while remove item from minicart ", ex);
+
+								productMap.put(entry.getProduct().getCode(), Long.valueOf(
+										productMap.get(entry.getProduct().getCode()).longValue() + entry.getQuantity().longValue()));
 							}
 						}
-						else
-						{
-							productMap.put(
-									entry.getProduct().getCode(),
-									Long.valueOf(productMap.get(entry.getProduct().getCode()).longValue()
-											+ entry.getQuantity().longValue()));
-						}
+
+					}
+					else
+					{
+						productMap.put(entry.getProduct().getCode(), entry.getQuantity());
 					}
 				}
 				else
@@ -4830,14 +5561,16 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					productMap.put(entry.getProduct().getCode(), entry.getQuantity());
 				}
 			}
-			else
-			{
-				productMap.put(entry.getProduct().getCode(), entry.getQuantity());
-			}
+
+
+
+
 		}
 
 		//return true;
-		return updateCartOnMaxLimExceeds;
+
+		return hMap;
 	}
 	//TPR-5346 ENDS
 }
+

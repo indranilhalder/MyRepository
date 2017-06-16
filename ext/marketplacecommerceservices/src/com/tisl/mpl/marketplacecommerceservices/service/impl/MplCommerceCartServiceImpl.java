@@ -5971,10 +5971,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	//TPR-5346 STARTS
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#checkMaxLimit(java.lang.String,
-	 * de.hybris.platform.core.model.order.CartModel)
+	 * This method will check the max quantity configured for the product at cart level
 	 */
 	@Override
 	public long checkMaxLimit(final String code, CartModel cartModel)
@@ -5985,21 +5982,22 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			cartModel = getCartService().getSessionCart();
 		}
-		for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 		{
-			if (StringUtils.equalsIgnoreCase(code, entry.getProduct().getCode()))
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 			{
-				//checkMaxLimList.add(entry.getProduct().getCode());
-				checkMaxLimList += entry.getQuantity().longValue();
+				if (StringUtils.equalsIgnoreCase(code, entry.getProduct().getCode()))
+				{
+					//checkMaxLimList.add(entry.getProduct().getCode());
+					checkMaxLimList += entry.getQuantity().longValue();
+				}
 			}
 		}
 		return checkMaxLimList;
 	}
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#checkMaxLimitUpdate(long, long)
+	 * This method will check the max quantity configured for the product and update the cart accordingly
 	 */
 	@Override
 	public boolean checkMaxLimitUpdate(final long entryNumber, final long quantityToBeUpdated)
@@ -6063,6 +6061,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		return true;
 	}
 
+	/**
+	 * Will get the entry number which will be updated
+	 *
+	 * @param cartModel
+	 * @param entryNumber
+	 * @return AbstractOrderEntryModel
+	 */
 	protected AbstractOrderEntryModel getEntryForNumberUpdate(final CartModel cartModel, final int entryNumber)
 	{
 		if (cartModel.getEntries() != null && CollectionUtils.isNotEmpty(cartModel.getEntries()))
@@ -6080,11 +6085,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#checkMaxLimitCheckout(de.hybris.platform
-	 * .core.model.order.CartModel)
+	 * This method will check the max quantity configured for the product at cart level
 	 */
 	@Override
 	public boolean checkMaxLimitCheckout(final CartModel serviceCart)

@@ -249,43 +249,46 @@ public class CartPageController extends AbstractPageController
 
 
 				//TPR-5346 STARTS
+
+				//This method will update the cart  with respect to the max quantity configured for the product
 				//String ReachedMaxLimitforproduct = null;
+				final Map<String, String> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(cartModel);
 
-				Boolean updateCartOnMaxLimExceeds = (Boolean) model.asMap().get("updateCartOnMaxLimExceeds");
-
-				if (updateCartOnMaxLimExceeds == null)
+				if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
 				{
-					updateCartOnMaxLimExceeds = getMplCartFacade().UpdateCartOnMaxLimExceeds(cartModel);
-				}
-
-				if (!updateCartOnMaxLimExceeds)
-				{
-					//ReachedMaxLimitforproduct = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-					//					model.addAttribute(MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT, ReachedMaxLimitforproduct);
-					//GlobalMessages.addErrorMessage(model, ReachedMaxLimitforproduct);
 					String errorMsg = null;
-					cartModel = getCartService().getSessionCart();
-					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-					for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
+					final Map<String, String> msgMap = new HashMap<String, String>();
+					if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
 					{
-
-						if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
-								&& null != orderEntry.getProduct().getMaxOrderQuantity())
+						for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
 						{
-							errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
-									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
-									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.MIDCOUNTMSG
-									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-									+ orderEntry.getProduct().getMaxOrderQuantity().toString()
-									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
-									+ MarketplacecommerceservicesConstants.LASTCOUNTMSG;
+
+							if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
+									&& null != orderEntry.getProduct().getMaxOrderQuantity())
+							{
+								errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.MIDCOUNTMSG
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ orderEntry.getProduct().getMaxOrderQuantity().toString()
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.LASTCOUNTMSG;
+								msgMap.put(orderEntry.getProduct().getCode(), errorMsg);
+							}
 						}
 					}
-					GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
-
+					if (MapUtils.isNotEmpty(msgMap))
+					{
+						for (final Map.Entry<String, String> entry : msgMap.entrySet())
+						{
+							if (updateCartOnMaxLimExceeds.containsKey(entry.getKey()))
+							{
+								GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, entry.getValue());
+							}
+						}
+					}
 					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
-					prepareDataForPage(model, cartData);
-					return returnPage;
 				}
 				//TPR-5346 ENDS
 

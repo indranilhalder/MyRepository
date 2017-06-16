@@ -24,6 +24,7 @@ import de.hybris.platform.product.ProductService;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -122,7 +123,10 @@ public class AddToCartController extends AbstractController
 			}
 
 			//TPR-5346 start
+			//Configurable Cart Quantity Restrictions(max quantity added to be restricted at pdp page)
 			String maxQuantityAlreadyAdded = "";
+
+			String maxQuantityAdded = "";
 
 			final int maximum_configured_quantiy = siteConfigService.getInt(
 
@@ -138,8 +142,12 @@ public class AddToCartController extends AbstractController
 			else
 			{
 				final long checkMaxLimList = mplCartFacade.checkMaxLimit(code, null);
-				maxQuantityAlreadyAdded = mplCartFacade.isMaxProductQuantityAlreadyAdded(product.getMaxOrderQuantity(), code, qty,
-						stock, ussid, checkMaxLimList);
+				maxQuantityAdded = mplCartFacade.isMaxProductQuantityAlreadyAdded(product.getMaxOrderQuantity(), code, qty, stock,
+						ussid, checkMaxLimList);
+				if (StringUtils.isNotEmpty(maxQuantityAdded))
+				{
+					maxQuantityAlreadyAdded = maxQuantityAdded + "|" + product.getMaxOrderQuantity();
+				}
 			}
 			//TPR-5346 end
 
