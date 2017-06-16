@@ -69627,6 +69627,18 @@ body .account .right-account .order-history:not(.responsiveProfile) .product-blo
     color: green;
     opacity: 0.5;
 }
+.status.statusShipped span{
+	color: rgb(165,194,191);
+    border-color: rgb(165,194,191);
+}
+.status.statusCancel span{
+	color: red;
+    border-color: red;
+}
+.status.statusConfirmed span{
+	color:rgb(156,182,209);
+	border-color: rgb(156,182,209);
+}
 
 /* TPR-6013 My Orders ends*/
 

@@ -378,13 +378,32 @@
 													<c:set value="${orderStatus['APPROVED']}" var="approvedFlag"/>
 													<c:set value="${orderStatus['SHIPPING']}" var="shippingFlag"/>
 													<c:set value="${orderStatus['DELIVERY']}" var="deliveryFlag"/>
+													<c:set value="${orderStatus['CANCEL']}" var="cancelFlag"/>
+													
 													<input type="hidden" value="${deliveryFlag.responseCode}"/>
 													<input type="hidden" value="${shippingFlag.responseCode}"/>
 													<input type="hidden" value="${approvedFlag.responseCode}"/>
+													<input type="hidden" value="${cancelFlag.responseCode}"/>
+													
 													<c:choose>
+														<c:when test="${not empty cancelFlag and cancelFlag ne null}">
+														<div class="orderUpdatesBlock">
+														<div class="status statusCancel">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>
+														</div>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>&nbsp;
+															<c:forEach items="${cancelFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
+															</c:forEach>
+														</div>
+														</div>
+														</c:when>
+														<c:otherwise>
+														<c:choose>
 														<c:when test="${not empty deliveryFlag and deliveryFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status">
+														<div class="status statusDelivered">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered" /></span>
 														</div>
 														<div class="statusDate">
@@ -399,7 +418,7 @@
 														<c:choose>
 														<c:when test="${not empty shippingFlag and shippingFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status">
+														<div class="status statusShipped">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped" /></span>
 														</div>
 														<div class="statusDate">
@@ -414,7 +433,7 @@
 														<c:choose>
 															<c:when test="${not empty approvedFlag and approvedFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status">
+														<div class="status statusConfirmed">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
 														</div>
 														<div class="statusDate">
@@ -429,9 +448,8 @@
 														</c:otherwise>
 														</c:choose>
 														</c:otherwise>
-														
-														
-														
+														</c:choose>
+														</c:otherwise>
 													</c:choose>
 													
 
