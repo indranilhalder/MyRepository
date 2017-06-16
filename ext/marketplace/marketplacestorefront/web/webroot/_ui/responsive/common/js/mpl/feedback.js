@@ -3653,7 +3653,7 @@ $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab
 	$(this).addClass("active");
 	});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
-});
+
 
 
 /* start change of PRDI-92 */
