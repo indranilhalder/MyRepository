@@ -743,20 +743,25 @@ public class DefaultMplProductSearchFacade<ITEM extends ProductData> extends Def
 	protected SolrSearchQueryData decodeSearchCategoryState(final SearchStateData searchState, final String categoryCode)
 	{
 		final SolrSearchQueryData searchQueryData = (SolrSearchQueryData) getSearchQueryDecoder().convert(searchState.getQuery());
-		/*
-		 * final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms(); final
-		 * SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData(); if (categoryCode != null) {
-		 *
-		 * if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX)) {
-		 * solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY); } else if
-		 * (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX)) {
-		 * solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND); }
-		 * solrSearchQueryTermData.setValue(categoryCode); filterTerms.add(solrSearchQueryTermData);
-		 * searchQueryData.setFilterTerms(filterTerms);
-		 *
-		 *
-		 * }
-		 */
+
+		//INC144317341 starts
+		if (categoryCode != null && !categoryCode.startsWith(MarketplacecommerceservicesConstants.LSH))
+		{
+			final List<SolrSearchQueryTermData> filterTerms = searchQueryData.getFilterTerms();
+			final SolrSearchQueryTermData solrSearchQueryTermData = new SolrSearchQueryTermData();
+			if (categoryCode.startsWith(MarketplacecommerceservicesConstants.SELLER_NAME_PREFIX))
+			{
+				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.CATEGORY);
+			}
+			else if (categoryCode.startsWith(MarketplacecommerceservicesConstants.BRAND_NAME_PREFIX))
+			{
+				solrSearchQueryTermData.setKey(MarketplaceCoreConstants.BRAND);
+			}
+			solrSearchQueryTermData.setValue(categoryCode);
+			filterTerms.add(solrSearchQueryTermData);
+			searchQueryData.setFilterTerms(filterTerms);
+		}
+		//INC144317341 ends
 		populateSolrSearchQueryData(searchState, searchQueryData);
 		return searchQueryData;
 	}

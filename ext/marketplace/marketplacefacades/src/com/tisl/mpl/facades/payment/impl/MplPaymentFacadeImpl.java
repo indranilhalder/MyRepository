@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -85,11 +86,11 @@ import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
+import com.tisl.mpl.model.BankModel;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
-
 
 /**
  * @author TCS
@@ -1370,7 +1371,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void saveCODPaymentInfo(final Double cartValue, final Double totalCODCharge, final AbstractOrderModel abstractOrderModel) //Parameter abstractOrderModel added extra for TPR-629
 			throws EtailNonBusinessExceptions, Exception
 	{
-		if (null != abstractOrderModel)
+		if (abstractOrderModel != null)
 		{
 			//getting the current user
 			//OrderIssues:- Customer data is getting from Order in place of session
@@ -1384,7 +1385,7 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 			//SONAR FIX updated
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			if (null != abstractOrderModel.getTotalPriceWithConv() && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
@@ -1661,11 +1662,11 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : saving bank name in session -- TISPRO-179
-	 *
+	 * 
 	 * @param bankName
-	 *
+	 * 
 	 * @return Boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1716,9 +1717,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -2511,7 +2512,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 
 				LOG.error("Juspay Request Structure " + request);
-
 				//creating InitOrderResponse
 				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
 				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
@@ -2557,7 +2557,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		//		}
 	}
 
-
+	@Override
+	public String makeGetPaymentStatusCall(final String url)
+	{
+		final String key = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY);
+		return new PaymentService().getCockpitOrderPaymentstatus(url, key);
+	}
 
 
 	/**
@@ -2989,7 +2995,38 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 
 
+	//TPR-4461 BANK RESTRICTION CHECK STARTS HERE
+	/**
+	 * TPR-4461
+	 *
+	 * @param banklist
+	 * @param bank
+	 * @return boolean
+	 *
+	 */
 
+	@Override
+	public boolean validateBank(final List<BankModel> bankList, final String bank)
+	{
+		final Iterator it = bankList.iterator();
+		if (StringUtils.isNotEmpty(bank))
+		{
+			while (it.hasNext())
+			{
+
+				final BankModel bankData = (BankModel) it.next();
+				if (StringUtils.equalsIgnoreCase(bankData.getBankName(), bank))
+				{
+					return true;
+
+				}
+			}
+		}
+
+		return false;
+	}
+
+	//TPR-4464 BANK RESTRICTION CHECK ENDS HERE
 
 
 

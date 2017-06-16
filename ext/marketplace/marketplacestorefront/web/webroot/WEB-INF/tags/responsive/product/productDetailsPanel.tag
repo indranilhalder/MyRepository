@@ -78,6 +78,10 @@ tr.d0 td {
 <input type="hidden" id="product_id" value="${product_id}" />
 <input type="hidden" id="page_subcategory_name" value="${page_subcategory_name}" />
 <input type="hidden" id="page_subcategory_name_l3" value="${page_subcategory_name_l3}" />
+<!-- For KIDSWEAR L4 is being added if present -->
+<c:if test="${not empty page_subcategory_name_l4}">
+<input type="hidden" id="page_subcategory_name_l4" value="${page_subcategory_name_l4}" />
+</c:if>
 <input type="hidden" id="product_brand" value="${product_brand}" />
 <input type="hidden" id="site_section_detail" value="${site_section_detail}" />
 <input type="hidden" id="product_category" value="${product_category}" />
@@ -101,8 +105,14 @@ tr.d0 td {
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
+
+
+<!-- UF-160 -->
+<input type="hidden" id="isLargeAppliance" value="${isLargeAppliance}" />
+
 <!-- CKD:TPR-250 -->
 <input type="hidden" id="msiteBuyBoxSellerId" value="${msiteBuyBoxSellerId}"/> 
+
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
@@ -143,6 +153,28 @@ tr.d0 td {
 					</div>
 				</c:forEach>
 			</div>
+			<!-- start change for INC144314454 -->
+			<div class="modal fade" id="videoModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  				<div class="overlay" data-dismiss="modal" onclick="closing()"></div>
+      				<div class="modal-content content"  style="width:53%; height:60%; overflow:hidden;">
+           			<button type="button" class="close pull-right" onclick="closingVideo()" aria-hidden="true" data-dismiss="modal"  style="width: 15px; height: 15px; top:0; right:0px;">     TISPRO-508
+            		</button>
+					<iframe name="videoFrame" id="player" width="100%" height="100%" frameborder="0" allowfullscreen ></iframe>
+      			</div>
+			</div>
+			<style>
+			#videoModal1 .content > .close:before {
+			    content: "\00d7";
+			    color: #fff;
+			    font-family: "Montserrat";
+			    font-size: 17px;
+			    font-weight: 600;
+			    -webkit-transition: font-weight 0.15s;
+			    -moz-transition: font-weight 0.15s;
+			    transition: font-weight 0.15s;
+			}
+			</style>
+			<!-- end change for INC144314454 -->
 		</div>
 		
 		<div class="wishAddSucess">
@@ -400,7 +432,11 @@ tr.d0 td {
 	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
-	<div id="productContentDivId"></div>
+	<!-- changes for UF-238 -->
+	
+	<div id="productContentDivId">
+	<c:if test="${not empty aplusHTML}">${aplusHTML}</c:if>
+	</div>
 <c:choose>
 		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>

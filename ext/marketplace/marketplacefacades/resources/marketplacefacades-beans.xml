@@ -19,7 +19,7 @@
 			type="de.hybris.platform.commercefacades.product.data.ImageData" />
 	</bean>
 	<!-- placeholder for pincode responses -->
-	<bean
+	<bean 
 		class="de.hybris.platform.commercefacades.product.data.PinCodeResponseDetailsData">
 		<property name="validResponses" type="java.util.List&lt;PinCodeResponseData>" />
 		<property name="allResponses" type="java.util.List&lt;PinCodeResponseData>" />
@@ -87,6 +87,9 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="price"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- Promotional channel added for TISPRD-8944 -->	
+		<property name="specialPriceMobile"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />	
 		<property name="sellerName" type="String" />
 		<property name="sellerArticleSKU" type="String" />
 		<property name="sellerId" type="String" />
@@ -105,6 +108,7 @@
 		<!-- <property name="deliveryModes" type="String" />
 		<property name="isCod" type="String" />
 		 -->
+		
 		<!--  TISRLEE-1586 03-01-2017-->
 		<property name="isSellerHandlingTime" type="boolean" />
 	</bean>
@@ -142,7 +146,7 @@
 		<property name="isFragile" type="String" />
 		<property name="isPrecious" type="String" />
 		<property name="sellerHandlingTime" type="Integer"/>
-		
+
 	</bean>
 
 
@@ -166,6 +170,9 @@
 			<property name="otherSellers" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.SellerInformationData>"></property> -->
 		<property name="productMRP"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- Promotional channel added for TISPRD-8944 -->	
+		<property name="mobileprice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />	
 		<property name="productMOP"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="swatchColor" type="java.util.List&lt;java.lang.String>"></property>
@@ -239,6 +246,8 @@
         <property name="priceMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
         <property name="savingsMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
         <!-- TPR-250 changes -->
+         <!--CKD:PRDI-350  -->
+         <property name="availabilityMap" type="java.util.Map&lt;String,Integer>"></property>
 
 <!-- Optimization # 4 -->
 		<property name="homepageImageurl" type="java.lang.String"></property>
@@ -247,6 +256,10 @@
  <property name="level3CategoryCode" type="String"></property>
  <property name="level3CategoryName" type="String"></property>
  		<!-- TPR-1083 Addition for Exchange End -->
+		<!-- Added for Kidswear -->
+		<property name="rootCategoryL2" type="String"></property>
+		<!-- Added for Kidswear Ends -->
+
 	</bean>
 
 	<!-- pdp changes begins -->
@@ -260,6 +273,9 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="spPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<!-- Promotional channel added for TISPRD-8944 -->	
+		<property name="spPriceMobile"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />	
 		<property name="mrpPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="sellerID" type="String"></property>
@@ -290,7 +306,7 @@
 		<property name="brandCode" type="String" />
 		<property name="brandDescription" type="String" />
 		<!-- CKD:TPR-250 End-->
-
+		
 	</bean>
 
 
@@ -444,7 +460,7 @@
 			<property name="pickupName" type="String"/>
 			<property name="pickupPhoneNumber" type="String"/>
 			<property name="deliveryAddressList"
-			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />	
+			type="java.util.List&lt;de.hybris.platform.commercefacades.user.data.AddressData>" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.data.OrderDataTransactionForXML">
@@ -764,6 +780,8 @@
     	<!-- TPR-472 -->
     	<property name="icid" type="String" />
     	<property name="componentType" type="String" />
+    	<!-- TPR-5168 -->
+    	<property name="icid2" type="String" />
     </bean>
 
     <bean class="com.tisl.mpl.facades.cms.data.TextComponentData">
@@ -1022,14 +1040,14 @@
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>
 	
-	<!-- TPR-978 -->
-	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
-		<property name="section" type="String" />		
-		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
-		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
-		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
-	</bean>
-	
+
+
+
+
+
+
+
+
 	<!-- TPR-774 -->
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">		
 		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
@@ -1037,7 +1055,16 @@
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
 	</bean>
 	<!-- TPR-774 -->
+	
+		<!-- TPR-978 -->
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductContentData">
+		<property name="section" type="String" />		
+		<property name="textList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="imageList" type="java.util.List&lt;java.lang.String>"></property>
+		<property name="videoList" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
 
+	
 
 	<bean class="com.tisl.mpl.facades.data.BulkCancelStoreData">
 		<property name="subOrderDetails" type="de.hybris.platform.commercefacades.order.data.OrderData"></property>
@@ -1048,7 +1075,7 @@
 		<property name="returnStatus" type="java.lang.Boolean"></property>
 	</bean>
 
-	
+
 	<!-- TPR-1984 -->
 	<bean class="com.tisl.mpl.facades.data.NPSFeedbackQRDetailData">
 		<property name="questionCode" type="String"></property>
@@ -1117,8 +1144,27 @@
 		<property name="error" type="String"></property>
 	</bean>
 
-    <!-- R2.3 FL04 Changes -->
-	
+	<!-- TPR-258 -->
+
+	<bean class="com.tisl.mpl.facades.data.STWJsonRecomendationData">
+		<property name="listingId" type="String"></property>
+		<property name="productName" type="String"></property>
+		<property name="categoryL1" type="String"></property>
+		<property name="productBrand" type="String"></property>
+		<property name="imageUrl" type="String"></property>
+		<property name="availableSizes" type="String"></property>
+		<property name="availableColors" type="String"></property>
+		<property name="mrp" type="String"></property>
+		<property name="mop" type="String"></property>
+		<property name="productUrl" type="String"></property>
+	</bean>
+
+	<bean class="com.tisl.mpl.facades.data.STWJsonData">
+		<property name="status" type="java.lang.Integer"></property>
+		<property name="statusMessage" type="String"></property>
+		<property name="recommendations" type="java.util.List&lt;com.tisl.mpl.facades.data.STWJsonRecomendationData>"></property>
+	</bean>
+	    <!-- R2.3 FL04 Changes -->	
 	<bean class="com.tisl.mpl.facade.data.LandMarksData">
 		<property name="landmarksCode" type="String"></property>
 		<property name="landmark" type="String"></property>
@@ -1169,8 +1215,7 @@
 		<property name="storeName" type="String"></property>
 		<property name="storeAddress" type="String"></property>
 		<property name="date" type="String"></property>
-	</bean>
-	
+	</bean>	
 	<!-- TPR-1083 Exchange Start -->
 		
 	<bean class="com.tisl.mpl.facades.product.data.ExchangeGuideData">
@@ -1181,3 +1226,4 @@
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
 </beans>
+

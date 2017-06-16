@@ -68,6 +68,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
 
+	<!-- TPR-4683 -->
+	<import	resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_instant_import-spring.xml" />
 		
 <!-- TPR-1316 -->	
 	<import
@@ -1445,7 +1447,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="mplCategorySource" parent="abstractCategorySource">
 		<property name="rootCategory" value="MSH1,LSH1" />
 	</bean>
-	
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH1" />
@@ -1736,6 +1737,19 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
 		<property name="sizeSystems">
 			<list><!-- based on EN_13402 -->
+			<!-- TISPRDT-1447: kidswear size facet are not coming in order -->
+				<value>0-6M</value>
+				<value>6-12M</value>
+				<value>1-2Y</value>
+				<value>2-4Y</value>
+				<value>4-6Y</value>
+				<value>6-8Y</value>
+				<value>8-10Y</value>
+				<value>10-12Y</value>
+				<value>12-14Y</value>
+				<value>14-16Y</value>
+				<value>FREESIZE</value>
+			<!-- TISPRDT-1447: kidswear size facet are not coming in order -->
 				<value>XXS</value>
 				<value>XS</value>
 				<value>S</value>
@@ -1760,6 +1774,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 				<value>${footwear.header.EURO}</value>
 				<value>${footwear.header.footlength}</value>
 				<value>${footwear.header.Witdth}</value>
+				<!-- TISPRDT-1447: kidswear size facet are not coming in order -->
+				<value>S/M</value> 
+				<value>M/L</value> 
+				<value>L/XL</value>
 			</list>
 			</property>
 	</bean>
@@ -1835,6 +1853,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
  		autowire="byName" >
  	</bean>
+
   <!--   mrupee changes -->
      <bean id="mplThirdPartyWalletCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.payment.cronjob.MplThirdPartyWalletCronJob" autowire="byName">
     </bean>
@@ -1882,5 +1901,22 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="start" value="100000001" />
 		<property name="numeric" value="false" />
 	</bean>
+
+    <!-- TISPRD-8944 -->
+	<bean id="mplMobilePriceValueProvider"
+	class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePriceValueProvider"
+	parent="abstractPropertyFieldValueProvider">
+	<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	<property name="mplPriceRowService" ref="mplPriceRowService" />
+	<property name="priceService" ref="priceService" />
+	<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- End TISPRD-8944 -->
+    
+    <!-- Change for CAR-271 -->
+    <bean id="customPromotionService" class="de.hybris.platform.promotions.jalo.CustomPromotion" >
+    
+	</bean>
+    
 			
 </beans>

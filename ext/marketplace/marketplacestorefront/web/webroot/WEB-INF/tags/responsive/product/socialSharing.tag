@@ -27,19 +27,16 @@
 				 var PopUpLeftPosition = screen.width/2 - popUpWidth/2;
 				    var PopUpTopPosition= screen.height/2 - popUpHeight/2;
 			function openPopup(url,buttontype) {
-				//alert(buttontype);
-				//TPR-674
-				utag.link({link_obj: this, link_text: buttontype , event_type : 'share_button_click' ,product_id : productIdArray});
+				//TPR-674 //tpr-5344 
+				utag.link({link_text: buttontype , event_type : 'share_button_click' ,product_id : productIdArray});
 				    window.open(url, 'popup_id','scrollbars,resizable,height='+popUpHeight+',width='+ popUpWidth +',left='+ PopUpLeftPosition +',top='+ PopUpTopPosition);
 			      return false;
 			    }
 			$(document).on('click','.mail.mailproduct',function(){
-			//	alert("yeaaaahhhhh")
-				utag.link({link_obj: this, link_text: 'share_email' , event_type : 'share_button_click',product_id : productIdArray });
+				utag.link({link_text: 'share_email' , event_type : 'share_button_click',product_id : productIdArray });
 			})
 			$(document).on('click','.g-interactivepost',function(){
-		//alert("g+...")
-		utag.link({link_obj: this, link_text: 'share_googleplus' , event_type : 'share_button_click',product_id : productIdArray });
+		utag.link({ link_text: 'share_googleplus' , event_type : 'share_button_click',product_id : productIdArray });
 			})
 </script>
 
@@ -60,7 +57,7 @@
 	        data-contenturl=""
 	        data-clientid='${googleClientid}'
 	        data-cookiepolicy="single_host_origin"
-	        data-prefilltext="<spring:theme code="share.pretext"/><spring:theme code="share.posttext"/>"
+	        data-prefilltext="<spring:theme code="share.pretext" arguments="${siteurl}"/><spring:theme code="share.posttext"/>"
 	        data-calltoactionlabel="OPEN"
 	        data-calltoactionurl="">
 	        <a class="gp"></a>

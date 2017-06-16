@@ -24,6 +24,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.tisl.mpl.core.model.BrandComponentModel;
+import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.brand.BrandDao;
@@ -259,5 +260,17 @@ public class DefaultBrandService implements BrandService
 	{
 		// YTODO Auto-generated method stub
 		return brandDao.checkEmailIdForMarketplace(emailId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.brand.BrandService#priorityBrands()
+	 */
+	@Override
+	public List<PriorityBrandsModel> priorityBrands(final String categoryCode)
+	{
+		// YTODO Auto-generated method stub
+		return brandDao.priorityBrands(categoryCode);
 	}
 }

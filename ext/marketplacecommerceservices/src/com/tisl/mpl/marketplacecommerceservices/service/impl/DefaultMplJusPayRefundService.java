@@ -143,8 +143,10 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				}
 				for (final PaymentTransactionEntryModel paymentTransactionEntry : paymentTransaction.getEntries())
 				{
-					if (PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType())
-							&& "success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()))
+					if ((PaymentTransactionType.CAPTURE.equals(paymentTransactionEntry.getType()) || PaymentTransactionType.AUTHORIZATION
+							.equals(paymentTransactionEntry.getType()))
+							&& ("success".equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus()) || "ACCEPTED"
+									.equalsIgnoreCase(paymentTransactionEntry.getTransactionStatus())))
 					{
 						auditid = paymentTransactionEntry.getRequestToken();
 						break;
@@ -695,7 +697,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	 */
 	@Override
 	public boolean makeRefundOMSCall(final AbstractOrderEntryModel orderEntry,
-			final PaymentTransactionModel paymentTransactionModel, final Double amount, final ConsignmentStatus newOrderLineStatus,String refundCategoryType)
+			final PaymentTransactionModel paymentTransactionModel, final Double amount, final ConsignmentStatus newOrderLineStatus,
+			final String refundCategoryType)
 	{
 
 		if (orderEntry != null)
@@ -708,7 +711,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						: StringUtils.EMPTY);
 				refundInfo.setRefundedBankTrxStatus(paymentTransactionModel.getStatus() != null ? paymentTransactionModel.getStatus()
 						: StringUtils.EMPTY);
-				refundInfo.setRefundedAmt(amount.floatValue());				
+				refundInfo.setRefundedAmt(amount.floatValue());
 			}
 			else
 			{
@@ -727,8 +730,9 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final List<RefundInfo> refundInfos = new ArrayList<RefundInfo>(2);
 			refundInfos.add(refundInfo);
 			String statusCode = null;
-			if(null != newOrderLineStatus && null != newOrderLineStatus.getCode()) {
-				 statusCode = newOrderLineStatus.getCode();
+			if (null != newOrderLineStatus && null != newOrderLineStatus.getCode())
+			{
+				statusCode = newOrderLineStatus.getCode();
 			}
 			try
 			{
@@ -747,15 +751,18 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 					statusCode = globalCode.getGlobalCode();
 				}
 				final String referenceNumber = ((OrderModel) orderEntry.getOrder()).getParentReference().getCode();
-				try {
+				try
+				{
 					final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(refundInfos, referenceNumber,
-							orderEntry.getTransactionID(), statusCode,refundCategoryType);
+							orderEntry.getTransactionID(), statusCode, refundCategoryType);
 					if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
 					{
 						return true;
 					}
-				}catch(Exception e) {
-					LOG.error("Exception while calling to oms "+e.getMessage());
+				}
+				catch (final Exception e)
+				{
+					LOG.error("Exception while calling to oms " + e.getMessage());
 				}
 
 			}
@@ -787,7 +794,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 		//}
 
 		final RefundInfoResponse resp = mplRefundStatusService.refundStatusDatatoWsdto(new ArrayList<RefundInfo>(),
-				referenceNumber, orderEntry.getTransactionID(), statusCode,null);
+				referenceNumber, orderEntry.getTransactionID(), statusCode, null);
 
 		if (resp != null && "true".equalsIgnoreCase(resp.getReceived()))
 		{
@@ -896,12 +903,13 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			{
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
-				// Added in R2.3 START 
-				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge().doubleValue()
-						: NumberUtils.DOUBLE_ZERO.doubleValue();
-			// Added in R2.3 END
-				
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost+scheduleDeliveryCost;
+				// Added in R2.3 START
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
+				// Added in R2.3 END
+
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost
+						+ scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
@@ -909,7 +917,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
 				getModelService().save(orderEntry);
 
-				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED,null);
+				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_INITIATED, null);
 
 				// Making RTM entry to be picked up by webhook job
 				final RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(
@@ -957,23 +965,23 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (orderEntry != null)
 			{
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ orderEntry.getCurrDelCharge().doubleValue()+orderEntry.getScheduledDeliveryCharge().doubleValue();
+						+ orderEntry.getCurrDelCharge().doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
-				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge().doubleValue()
-						: NumberUtils.DOUBLE_ZERO.doubleValue();
+				final double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
 				orderEntry.setCurrDelCharge(NumberUtils.DOUBLE_ZERO);
-				// Added in R2.3 START 
+				// Added in R2.3 START
 				orderEntry.setRefundedScheduleDeliveryChargeAmt(Double.valueOf(scheduleDeliveryCost));
 				orderEntry.setScheduledDeliveryCharge(NumberUtils.DOUBLE_ZERO);
-			// Added in R2.3 END
+				// Added in R2.3 END
 				getModelService().save(orderEntry);
 
-				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_IN_PROGRESS,null);
+				makeRefundOMSCall(orderEntry, null, Double.valueOf(refundedAmount), ConsignmentStatus.REFUND_IN_PROGRESS, null);
 
 			}
 		}

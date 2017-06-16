@@ -69,6 +69,9 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				addDeliveryAddress(source, target);
 				addPaymentInformation(source, target);
 				addMplDeliveryMethod(source, target);
+				//TPR-5346
+				addMaxCountMethod(source, target);
+
 				/* TPR-928 */
 				final DecimalFormat formatter = new DecimalFormat("0.00");
 				//Defect-Fix ProductLevelDiscounts were Not Considered
@@ -373,6 +376,24 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 			target.setTotalDiscounts(cartTotalDiscount);
 		}
 
+	}
+
+	//TPR-5346
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+	private void addMaxCountMethod(final CartModel source, final CartData target)
+	{
+
+		for (final AbstractOrderEntryModel entry : source.getEntries())
+		{
+			for (final OrderEntryData targetEntry : target.getEntries())
+			{
+				targetEntry.setMaxCountReached(entry.isMaxCountReached());
+			}
+		}
 	}
 
 	/**

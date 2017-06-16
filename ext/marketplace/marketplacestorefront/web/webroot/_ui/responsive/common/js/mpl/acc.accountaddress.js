@@ -316,7 +316,7 @@ function editAddress(addressId) {
         			type: "GET",
         			beforeSend:function() {
         				var staticHost=$('#staticHost').val();
-        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='"+staticHost+"/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
+        				$("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><div class='loaderDiv' style=' z-index: 10001;position: fixed;top: 50%;left:50%;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif' class='spinner'><div>");
         			},
         			data: { 'orderCode' : orderCode, 'transactionId' : transactionId, 'reasonCode' : reasonCode, 'ticketTypeCode' : ticketTypeCode, 'ussid' : ussid },
         			cache: false,
@@ -333,7 +333,7 @@ function editAddress(addressId) {
         					$(".reason").css("display","block");
         					$(".reason #reasonTitle").text("Reason for Cancellation:");
         					$(".reason #reasonDesc").text(reasonDesc);
-        					$("body .spinner,body #no-click").remove();
+        					$("body .loaderDiv,body #no-click").remove();
         					//TPR-4752 | for order cancellation reason
          					if(typeof utag !="undefined"){
    			 				   utag.link({
@@ -346,7 +346,7 @@ function editAddress(addressId) {
         					$(".cancellation-request-block #resultTitle").text("Failure!");
         					$(".cancellation-request-block #resultDesc").text(bogoreason);
         					$(".reason").css("display","none");
-        					$("body .spinner,body #no-click").remove();
+        					$("body .loaderDiv,body #no-click").remove();
         					if(typeof utag !="undefined"){
         					   utag.link({error_type : 'cancel_confirmation_error'});
         					}
@@ -359,14 +359,14 @@ function editAddress(addressId) {
         				$("#cancelSuccess"+orderCode+ussid).show();
         			},
         			complete:function() {
-        				$("body .spinner,body #no-click").remove();
+        				$("body .loaderDiv,body #no-click").remove();
         			},
         			error : function(resp) {
         				alert("Error");
         				if(typeof utag !="undefined"){
         				   utag.link({error_type : 'cancel_confirmation_error'});
         				}
-        				$("body .spinner,body #no-click").remove();
+        				$("body .loaderDiv,body #no-click").remove();
         			}
         		});
         	}
@@ -676,7 +676,8 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+				//UF-277
+				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>Please enter a valid first name</font>";
 				proceed = false;
 			}
 		}
@@ -687,8 +688,8 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-
-				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+				//UF-277
+				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Please enter a valid last name</font>";
 				proceed = false;
 			}
 		}
@@ -699,7 +700,8 @@ function editAddress(addressId) {
 					"display" : "block",
 					"margin-top" : "10px"
 				});
-				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid Email ID</font>";
+				//UF-277
+				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid email ID</font>";
 				proceed = false;
 			}
 		}
@@ -709,7 +711,8 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter an Email ID</font>";
+			//changes for UF-277
+			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid email ID.</font>";
 			proceed = false;
 		}
 		
@@ -723,7 +726,8 @@ function editAddress(addressId) {
 					"display" : "block",
 					"padding-top" : "10px"
 				});
-				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+				//UF-277
+				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid phone number</font>";
 				proceed = false;
 			}
 		}
@@ -920,6 +924,15 @@ function editAddress(addressId) {
 				return false;
 			}
 		}
+		else if((document.getElementById("profilenickName").value) == null||(document.getElementById("profilenickName").value) == ""){
+			$("#errfn").css({
+				"display" : "block",
+				"margin-top" : "10px"
+			});
+			//UF-277
+			document.getElementById("errnn").innerHTML = "<font color='#ff1c47' size='2'>Add a nickname please.</font>";
+			return false;
+		}
 	}
 
 	function kpressnn() {
@@ -987,7 +1000,8 @@ function editAddress(addressId) {
 				"display" : "block",
 				"margin-top" : "10px"
 			});
-			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Oops! The passwords don't match.</font>";
+			//UF-277
+			document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>The passwords don’t match. Try again, please.</font>";
 			flag = false;
 		}
 		else{
@@ -1111,7 +1125,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("firstName").value)) { 
         	$("#errddressfn").css({"display":"block"});
 
-            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+            document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>Please enter a valid first name.</font>";
             flagFn = false;
         }
         if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -1122,7 +1136,7 @@ function editAddress(addressId) {
         else if (!regexCharSpace.test(document.getElementById("lastName").value)) { 
         	$("#errddressln").css({"display":"block"});
 
-            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+            document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Please enter a valid last name.</font>";
             flagLn = false;
         }
         if (addressForm.line1.value == null || addressForm.line1.value == "") {
@@ -1147,16 +1161,16 @@ function editAddress(addressId) {
         }
         else if (addressForm.postcode.value.length > 6 || addressForm.postcode.value.length < 6 || isNaN(addressForm.postcode.value) || regexSpace.test(addressForm.postcode.value)) {
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
         	flagPost = false;
         } else if(addressForm.postcode.value == "000000"){
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
         	flagPost = false;
         }
         else if(addressForm.postcode.value.startsWith("0")){
         	$("#errddressPost").css({"display":"block"});
-        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+        	document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
         	flagPost = false;
         }
         if (addressForm.townCity.value == null || addressForm.townCity.value == "") {
@@ -1167,13 +1181,13 @@ function editAddress(addressId) {
         /*added code, TISRLEE-1648*/
         else if (!regexCharWithSpace.test(document.getElementById("townCity").value)) { 
         	$("#errddressCity").css({"display":"block"});
-        	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
+        	document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid city.</font>";
         	flagCity = false;
         }
         /*added code, TISRLEE-1648*/
         if (selectedValueState == 0) {
         	$("#errddressState").css({"display":"block"});
-        	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>";
+        	document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select a valid state.</font>";
         	flagState = false;
         }
         if (addressForm.mobileNo.value == null || addressForm.mobileNo.value == "") {

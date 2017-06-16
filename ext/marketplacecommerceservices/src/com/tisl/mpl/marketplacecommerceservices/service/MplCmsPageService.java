@@ -10,14 +10,17 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSPageService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
@@ -64,4 +67,14 @@ public interface MplCmsPageService extends CMSPageService
 
 	public AbstractPageModel getPageForIdandCatalogVersion(final String id, final CatalogVersionModel cv)
 			throws CMSItemNotFoundException;
+
+	//TPR-1072
+	public List<BrandComponentModel> getBrandsForShopByBrand();
+
+	/**
+	 * @param siteUid
+	 * @return CMSSite
+	 * @CAR-285
+	 */
+	public CMSSiteModel getSiteforId(String siteUid) throws CMSItemNotFoundException;
 }

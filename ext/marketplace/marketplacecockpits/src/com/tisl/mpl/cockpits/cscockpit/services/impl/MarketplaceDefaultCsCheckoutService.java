@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -19,6 +21,7 @@ import com.tisl.mpl.cockpits.cscockpit.services.MarketplaceCsCheckoutService;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.OTPModel;
 import com.tisl.mpl.enums.OTPTypeEnum;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.BlacklistService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
@@ -63,6 +66,9 @@ public class MarketplaceDefaultCsCheckoutService extends
 	
 	@Autowired
 	private MplDelistingService mplDelistingService;
+	
+	@Resource
+	private AgentIdForStore agentIdForStore;
 	
 
 	public boolean isLineItemDeliveryModeRequired() {
@@ -123,6 +129,11 @@ public class MarketplaceDefaultCsCheckoutService extends
 	@Override
 	protected void validateCartForCheckout(CartModel cart) throws ValidationException{
 		List<ResourceMessage> errorMessages = new ArrayList<ResourceMessage>();
+		/**
+		 * TPR-5712: OIS change to handle delisted products
+		 */
+		final String sellerId = agentIdForStore
+				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 		if (cart == null)
 		{
 			errorMessages.add(new ResourceMessage("placeOrder.validation.invalidCart"));
@@ -185,7 +196,8 @@ public class MarketplaceDefaultCsCheckoutService extends
 						&& sellerInformationModelList.get(0).getSellerAssociationStatus() != null
 						&& (sellerInformationModelList.get(0).getSellerAssociationStatus().getCode()
 								.equalsIgnoreCase(MarketplacecommerceservicesConstants.NO) || (sellerInformationModelList.get(0)
-								.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate())))){
+								.getEndDate() != null && sysDate.after(sellerInformationModelList.get(0).getEndDate())))
+						&& !(StringUtils.isNotEmpty(sellerId))){
 					LOG.debug(">> Cart entry for delisted ussid for " + entry.getSelectedUSSID());
 					errorMessages.add(new ResourceMessage("placeOrder.validation.entryDelisted",Arrays.asList(entry.getInfo())));
 				}

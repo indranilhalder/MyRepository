@@ -75,7 +75,19 @@ public class MplSendOrderFromCommerceToCRMImpl implements MplSendOrderFromCommer
 					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_PASSWORD);
 			final String userId = configurationService.getConfiguration().getString(
 					MarketplacecclientservicesConstants.CUSTOMERMASTER_ENDPOINT_USERID);
+
+			//CAR-295
+			final String readTimeout = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CRM_SEND_ORDER_READ_TIMEOUT, "3000").trim();
+			//CAR-295
+			final String connectionTimeout = configurationService.getConfiguration()
+					.getString(MarketplacecclientservicesConstants.CRM_SEND_ORDER_CON_TIMEOUT, "3000").trim();
+
 			client.addFilter(new HTTPBasicAuthFilter(userId, password));
+			//CAR-295 :: Implementing Timeout parameter for CRM Order creation webservice call
+			client.setConnectTimeout(Integer.valueOf(connectionTimeout));
+			client.setReadTimeout(Integer.valueOf(readTimeout));
+
 			webResource = client.resource(UriBuilder.fromUri(
 					configurationService.getConfiguration().getString("crm.ordercreate.endpoint.url")).build());
 		}

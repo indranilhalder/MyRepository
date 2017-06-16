@@ -63,6 +63,7 @@ public interface BuyBoxService
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
+
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
 
@@ -76,5 +77,18 @@ public interface BuyBoxService
 	 */
 	//CKD:TPR-250
 	List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String sellerID) throws EtailNonBusinessExceptions;
+	
+	/**
+	 * TPR-5712
+	 * buybox price for all seller
+	 * @param productCode
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	public List<BuyBoxModel> buyboxPriceForAllSeller(final String productCode) throws EtailNonBusinessExceptions;
+
+
+	//TISPRD-8944
+	List<BuyBoxModel> buyboxPriceMobile(String productCode) throws EtailNonBusinessExceptions;
 
 }

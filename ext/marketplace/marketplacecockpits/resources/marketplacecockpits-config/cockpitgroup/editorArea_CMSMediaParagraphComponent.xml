@@ -16,6 +16,8 @@
         <property qualifier="SimpleCMSComponent.deeplinkTypeVal"/>
         <property qualifier="SimpleCMSComponent.componentType"/>	
         <property qualifier="CMSParagraphComponent.content" editor="wysiwyg"/>
+         <!-- TPR-5168 -->
+		<property qualifier="CMSMediaParagraphComponent.icid2"/>	
         <property qualifier="CMSMediaParagraphComponent.media" editor="simpleMediaReferenceSelector">
             <parameter>
                 <name>mimeTypes</name>

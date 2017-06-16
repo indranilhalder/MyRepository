@@ -8,12 +8,17 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -26,8 +31,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +56,7 @@ import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.MplPaymentInfoData;
+import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -70,6 +78,7 @@ public class GenericUtilityMethods
 	private static final Logger LOG = Logger.getLogger(GenericUtilityMethods.class);
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	private static final String REGEX = "[^\\w\\s]";
 
 
 	/**
@@ -96,11 +105,13 @@ public class GenericUtilityMethods
 		}
 		return status;
 	}
-	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException, JsonMappingException, IOException
-	  {
-	   ObjectMapper mapper = new ObjectMapper();
-	  return  mapper.readValue(stringJson, classType);
-	  }
+
+	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException,
+			JsonMappingException, IOException
+	{
+		final ObjectMapper mapper = new ObjectMapper();
+		return mapper.readValue(stringJson, classType);
+	}
 
 	/**
 	 * @Description: Sends the year from Date
@@ -217,7 +228,11 @@ public class GenericUtilityMethods
 				dateBefore = date1;
 				dateAfter = date1;
 			}
-			noOfDays = (int) ((dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60 * 60 * 24));
+			// Change regarding INC144316821
+			double result;
+			result = ((dateAfter.getTime() - dateBefore.getTime()) / (1000.0 * 60.0 * 60.0 * 24.0));
+			noOfDays = (int) Math.ceil(result);
+			//	noOfDays = (int) ((dateAfter.getTime() - dateBefore.getTime()) / (1000 * 60 * 60 * 24));
 		}
 		return noOfDays;
 	}
@@ -502,63 +517,63 @@ public class GenericUtilityMethods
 	 * @param productSellerData
 	 * @return flag
 	 */
-	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
-			final List<SellerInformationModel> productSellerData)
-	{
-		boolean flag = false;
-		boolean checkFlag = false;
-		List<SellerMaster> sellerData = null;
-		try
-		{
-			if (null == restrictionList || restrictionList.isEmpty())
-			{
-				flag = true;
-			}
-			else
-			{
-				if (null != productSellerData)
-				{
-					for (final AbstractPromotionRestriction restriction : restrictionList)
-					{
-						if (restriction instanceof EtailSellerSpecificRestriction)
-						{
-							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
-							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
-							for (final SellerMaster seller : sellerData)
-							{
-								for (final SellerInformationModel speficSeller : productSellerData)
-								{
-									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
-									{
-										checkFlag = true;
-									}
-								}
-							}
-							if (checkFlag)
-							{
-								flag = true;
-								break;
-							}
-							else
-							{
-								flag = false;
-								break;
-							}
-						}
-						else
-						{
-							flag = true;
-						}
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage());
-		}
-		return flag;
-	}
+	//	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean flag = false;
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				flag = true;
+	//			}
+	//			else
+	//			{
+	//				if (null != productSellerData)
+	//				{
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailSellerSpecificRestriction)
+	//						{
+	//							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+	//							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+	//							for (final SellerMaster seller : sellerData)
+	//							{
+	//								for (final SellerInformationModel speficSeller : productSellerData)
+	//								{
+	//									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
+	//									{
+	//										checkFlag = true;
+	//									}
+	//								}
+	//							}
+	//							if (checkFlag)
+	//							{
+	//								flag = true;
+	//								break;
+	//							}
+	//							else
+	//							{
+	//								flag = false;
+	//								break;
+	//							}
+	//						}
+	//						else
+	//						{
+	//							flag = true;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return flag;
+	//	}
 
 	/**
 	 * @Description: Freebie will not be applied if no Seller Restriction is added
@@ -588,67 +603,67 @@ public class GenericUtilityMethods
 	 * @param productSellerData
 	 * @return boolean
 	 */
-	public static boolean checkExcludeSellerData(final List<AbstractPromotionRestriction> restrictionList,
-			final List<SellerInformationModel> productSellerData)
-	{
-		boolean excludeSellerFlag = false;
-		boolean checkFlag = false;
-		List<SellerMaster> sellerData = null;
-		try
-		{
-			if (null == restrictionList || restrictionList.isEmpty())
-			{
-				excludeSellerFlag = false;
-			}
-			else
-			{
-				if (CollectionUtils.isNotEmpty(productSellerData))
-				{
-					for (final AbstractPromotionRestriction restriction : restrictionList)
-					{
-						if (restriction instanceof EtailExcludeSellerSpecificRestriction)
-						{
-							final EtailExcludeSellerSpecificRestriction excludeSellerRestrict = (EtailExcludeSellerSpecificRestriction) restriction;
-							sellerData = excludeSellerRestrict.getSellerMasterList();
-
-							for (final SellerMaster seller : sellerData)
-							{
-								for (final SellerInformationModel speficSeller : productSellerData)
-								{
-									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
-									{
-										checkFlag = true;
-									}
-								}
-							}
-
-							if (checkFlag)
-							{
-								excludeSellerFlag = true;
-								break;
-							}
-							else
-							{
-								excludeSellerFlag = false;
-								break;
-							}
-
-						}
-						else
-						{
-							excludeSellerFlag = false;
-						}
-					}
-				}
-
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage());
-		}
-		return excludeSellerFlag;
-	}
+	//	public static boolean checkExcludeSellerData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean excludeSellerFlag = false;
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				excludeSellerFlag = false;
+	//			}
+	//			else
+	//			{
+	//				if (CollectionUtils.isNotEmpty(productSellerData))
+	//				{
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+	//						{
+	//							final EtailExcludeSellerSpecificRestriction excludeSellerRestrict = (EtailExcludeSellerSpecificRestriction) restriction;
+	//							sellerData = excludeSellerRestrict.getSellerMasterList();
+	//
+	//							for (final SellerMaster seller : sellerData)
+	//							{
+	//								for (final SellerInformationModel speficSeller : productSellerData)
+	//								{
+	//									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
+	//									{
+	//										checkFlag = true;
+	//									}
+	//								}
+	//							}
+	//
+	//							if (checkFlag)
+	//							{
+	//								excludeSellerFlag = true;
+	//								break;
+	//							}
+	//							else
+	//							{
+	//								excludeSellerFlag = false;
+	//								break;
+	//							}
+	//
+	//						}
+	//						else
+	//						{
+	//							excludeSellerFlag = false;
+	//						}
+	//					}
+	//				}
+	//
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return excludeSellerFlag;
+	//	}
 
 	/**
 	 * @Description : Populate the Excluded Product and Manufacture Data in separate Lists
@@ -877,63 +892,63 @@ public class GenericUtilityMethods
 	 * @param productSellerData
 	 * @return flag
 	 */
-	public static boolean checkBOGOData(final List<AbstractPromotionRestriction> restrictionList,
-			final List<SellerInformationModel> productSellerData)
-	{
-		boolean flag = false;
-		boolean checkFlag = false;
-		List<SellerMaster> sellerData = null;
-		try
-		{
-			if (null == restrictionList || restrictionList.isEmpty())
-			{
-				flag = false;
-			}
-			else
-			{
-				if (null != productSellerData)
-				{
-					for (final AbstractPromotionRestriction restriction : restrictionList)
-					{
-						if (restriction instanceof EtailSellerSpecificRestriction)
-						{
-							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
-							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
-							for (final SellerMaster seller : sellerData)
-							{
-								for (final SellerInformationModel speficSeller : productSellerData)
-								{
-									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
-									{
-										checkFlag = true;
-									}
-								}
-							}
-							if (checkFlag)
-							{
-								flag = true;
-								break;
-							}
-							else
-							{
-								flag = false;
-								break;
-							}
-						}
-						else
-						{
-							flag = false;
-						}
-					}
-				}
-			}
-		}
-		catch (final Exception e)
-		{
-			LOG.error(e.getMessage());
-		}
-		return flag;
-	}
+	//	public static boolean checkBOGOData(final List<AbstractPromotionRestriction> restrictionList,
+	//			final List<SellerInformationModel> productSellerData)
+	//	{
+	//		boolean flag = false;
+	//		boolean checkFlag = false;
+	//		List<SellerMaster> sellerData = null;
+	//		try
+	//		{
+	//			if (null == restrictionList || restrictionList.isEmpty())
+	//			{
+	//				flag = false;
+	//			}
+	//			else
+	//			{
+	//				if (null != productSellerData)
+	//				{
+	//					for (final AbstractPromotionRestriction restriction : restrictionList)
+	//					{
+	//						if (restriction instanceof EtailSellerSpecificRestriction)
+	//						{
+	//							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+	//							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+	//							for (final SellerMaster seller : sellerData)
+	//							{
+	//								for (final SellerInformationModel speficSeller : productSellerData)
+	//								{
+	//									if (seller.getId().equalsIgnoreCase(speficSeller.getSellerID()))
+	//									{
+	//										checkFlag = true;
+	//									}
+	//								}
+	//							}
+	//							if (checkFlag)
+	//							{
+	//								flag = true;
+	//								break;
+	//							}
+	//							else
+	//							{
+	//								flag = false;
+	//								break;
+	//							}
+	//						}
+	//						else
+	//						{
+	//							flag = false;
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			LOG.error(e.getMessage());
+	//		}
+	//		return flag;
+	//	}
 
 
 
@@ -1048,6 +1063,8 @@ public class GenericUtilityMethods
 		String page_subCategory_name = null;
 		String cartTotal = null;
 		String page_subcategory_name_L3 = null;
+		//For kidswear L4 needs to be populated
+		String page_subcategory_name_L4 = null;
 		final List<String> productBrandList = new ArrayList<String>();
 		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productIdList = new ArrayList<String>();
@@ -1059,11 +1076,15 @@ public class GenericUtilityMethods
 		final List<String> productUnitPriceList = new ArrayList<String>();
 		final List<String> pageSubCategories = new ArrayList<String>();
 		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+		//For kidswear L4 needs to be populated
+		final List<String> pageSubcategoryNameL4List = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
 		String productCatL1 = null;
 		String productCatL2 = null;
 		String productCatL3 = null;
 		//for tealium
+		//For kidswear L4 needs to be populated
+		String productCatL4 = null;
 
 		String order_shipping_charge = "";
 		final List<String> orderShippingCharges = new ArrayList<String>();
@@ -1147,23 +1168,51 @@ public class GenericUtilityMethods
 						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
 							final String[] categoryNames = categoryName.toString().split(":");
-							//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-							category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
-							productCategoryList.add(category);
+							if (categoryNames.length == 5)
+							{
+								//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+								category = categoryNames[3].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								productCategoryList.add(category);
 
-							//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-							//	.toLowerCase());
+								//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
 
-							page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
-							pageSubCategories.add(page_subCategory_name);
+								page_subCategory_name = categoryNames[2].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubCategories.add(page_subCategory_name);
 
-							//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-							//	.toLowerCase());
+								//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
 
-							page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
-							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+								page_subcategory_name_L3 = categoryNames[1].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
+								//For kidswear L4 needs to be populated
+								page_subcategory_name_L4 = categoryNames[0].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
+							}
+							else
+							{
+								//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+								category = categoryNames[2].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								productCategoryList.add(category);
 
+								//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
+
+								page_subCategory_name = categoryNames[1].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubCategories.add(page_subCategory_name);
+
+								//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
+
+								page_subcategory_name_L3 = categoryNames[0].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+
+								//For kidswear L4 needs to be populated
+								//Commented as per TISPRDT-1462
+								//page_subcategory_name_L4 = "\" \"";
+								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
+							}
 						}
 
 						//TPR-430 ends
@@ -1239,12 +1288,14 @@ public class GenericUtilityMethods
 					productCatL3 = StringUtils.join(pageSubcategoryNameL3List, ',');
 
 				}
-
+				//For kidswear L4 needs to be populated
+				productCatL4 = StringUtils.join(pageSubcategoryNameL4List, ',');
 
 				model.addAttribute("pageSubCategories", productCatL1);
 				model.addAttribute("productCategoryList", productCatL2);
 				model.addAttribute("page_subcategory_name_L3", productCatL3);
-
+				//For kidswear L4 needs to be populated
+				model.addAttribute("page_subcategory_name_L4", productCatL4);
 			}
 		}
 		catch (final Exception te)
@@ -1532,7 +1583,7 @@ public class GenericUtilityMethods
 	//TPR-1285
 	/**
 	 * Return the Prefix
-	 * 
+	 *
 	 * @param prefix
 	 * @return prefix
 	 */
@@ -1575,7 +1626,155 @@ public class GenericUtilityMethods
 		}
 		return salesApplication;
 	}
-	
+
+	/**
+	 * UF-260
+	 *
+	 * @param model
+	 * @param cartModel
+	 * @param priceData
+	 */
+	public static void getCartPriceDetails(final Model model, final AbstractOrderModel cartModel,
+			final MplPromoPriceData responseData)
+	{
+		final PriceDataFactory priceDataFactory = Registry.getApplicationContext().getBean("priceDataFactory",
+				PriceDataFactory.class);
+		Long cartTotalMrp = Long.valueOf(0);
+		double cartTotalNetSelPrice = 0.0D;
+		double couponDiscount = 0.0D;
+		double cartEntryNetSellPrice = 0.0D;
+		final DecimalFormat df = new DecimalFormat("#.##");
+		double totalDeliveryCharge = 0;
+
+		if (cartModel.getEntries() != null && !cartModel.getEntries().isEmpty())
+		{
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (!entry.getGiveAway().booleanValue())
+				{
+					final Long cartEntryMrp = Long.valueOf((entry.getMrp().longValue()) * (entry.getQuantity().longValue()));
+					cartTotalMrp = Long.valueOf(cartTotalMrp.longValue() + cartEntryMrp.longValue());
+
+					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
+					}
+					else
+					{
+						cartEntryNetSellPrice = Double.parseDouble(df.format((entry.getBasePrice().doubleValue())
+								* (entry.getQuantity().doubleValue())));
+					}
+					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
+
+					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
+
+					totalDeliveryCharge += entry.getCurrDelCharge().doubleValue();
+				}
+			}
+		}
+		final BigDecimal cartTotalMrpValue = new BigDecimal(cartTotalMrp.longValue());
+		final PriceData cartTotalMrpVal = priceDataFactory.create(PriceDataType.BUY, cartTotalMrpValue,
+				MarketplacecommerceservicesConstants.INR);
+
+		//if (!(cartModel instanceof OrderModel) && (OrderStatus.PAYMENT_PENDING.equals(cartModel.getStatus())))
+		if (cartModel instanceof CartModel)
+		{
+			couponDiscount = 0.0D;
+		}
+
+		final BigDecimal totalDiscount = new BigDecimal(cartTotalMrp.longValue() - cartTotalNetSelPrice - couponDiscount);
+		final PriceData totalDiscountVal = priceDataFactory.create(PriceDataType.BUY, totalDiscount,
+				MarketplacecommerceservicesConstants.INR);
+		if (null != model)
+		{
+			model.addAttribute("cartTotalMrp", cartTotalMrpVal);
+			model.addAttribute("totalDiscount", totalDiscountVal);
+		}
+		if (null != responseData)
+		{
+			responseData.setTotalDiscntIncMrp(totalDiscountVal);
+
+			////TISSTRT-1605
+			if (totalDeliveryCharge > 0)
+			{
+				final PriceData totalDeliveryChargeVal = priceDataFactory.create(PriceDataType.BUY, new BigDecimal(
+						totalDeliveryCharge), MarketplacecommerceservicesConstants.INR);
+				responseData.setDeliveryCost(totalDeliveryChargeVal);
+			}
+		}
+	}
+
+	/**
+	 * @Description: Verifies Seller Data corresponding to the cart added Product
+	 * @param restrictionList
+	 * @param productSellerData
+	 * @return flag
+	 */
+	public static boolean checkSellerData(final List<AbstractPromotionRestriction> restrictionList,
+			final List<SellerInformationModel> productSellerData)
+	{
+		boolean checkFlag = false;
+		List<SellerMaster> sellerData = null;
+		try
+		{
+			if (null == restrictionList || restrictionList.isEmpty())
+			{
+				checkFlag = true;
+			}
+			else
+			{
+				if (null != productSellerData)
+				{
+					boolean isSellerIncluded = false;
+
+					for (final AbstractPromotionRestriction restriction : restrictionList)
+					{
+						if (restriction instanceof EtailSellerSpecificRestriction)
+						{
+							final EtailSellerSpecificRestriction etailSellerSpecificRestriction = (EtailSellerSpecificRestriction) restriction;
+							sellerData = etailSellerSpecificRestriction.getSellerMasterList();
+							isSellerIncluded = true;
+							break;
+						}
+						else if (restriction instanceof EtailExcludeSellerSpecificRestriction)
+						{
+							final EtailExcludeSellerSpecificRestriction excludeSellerRestriction = (EtailExcludeSellerSpecificRestriction) restriction;
+							sellerData = excludeSellerRestriction.getSellerMasterList();
+							break;
+						}
+					}
+
+					if (sellerData == null)
+					{
+						checkFlag = true;
+					}
+					else
+					{
+						final SellerInformationModel speficSeller = productSellerData.get(0);
+						final String sellerInformationId = speficSeller != null ? speficSeller.getSellerID() : "";
+
+						for (final SellerMaster seller : sellerData)
+						{
+							if ((seller.getId().equalsIgnoreCase(sellerInformationId) && isSellerIncluded)
+									|| (!seller.getId().equalsIgnoreCase(sellerInformationId) && !isSellerIncluded))
+							{
+								checkFlag = true;
+								break;
+							}
+						}
+
+					}
+
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error(e.getMessage());
+		}
+		return checkFlag;
+	}
+
 	/**
 	 * For UF-93
 	 *
@@ -1598,5 +1797,5 @@ public class GenericUtilityMethods
 		}
 		return null;
 	}
-	
+
 }

@@ -1776,6 +1776,7 @@ $("#otpMobileNUMField").focus(function(){
 	$('.security_code').prop('disabled', false); 
 }
  
+
 //TPR-3402
  
  
@@ -1806,6 +1807,7 @@ $("#otpMobileNUMField").focus(function(){
  	else return eval("document." + objId);
  }
  /**************End of character count********/
+
  
 
  function populateBillingAddress(){ 
@@ -1837,7 +1839,6 @@ $("#otpMobileNUMField").focus(function(){
 	 $("#country").val("India"); 
 	 }
 	 $("#myCounter").html((120));
-
 	 }, 
 	 error : function(resp) { 
 
@@ -2005,14 +2006,14 @@ function validateName() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -2062,7 +2063,7 @@ function validateCVV() {
 	{
 		var number = handle[0].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -2076,7 +2077,7 @@ function validateCVV() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -2400,7 +2401,7 @@ function validatePin() {
 		return false;
 	}
 	else if(!regex.test(number)) {
-		errorHandle.innerHTML = "Please enter valid Pincode.";
+		errorHandle.innerHTML = "Please enter a valid Pincode.";
 		return false;
 	}
 	errorHandle.innerHTML = "";
@@ -2457,8 +2458,8 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		  	 validate = false;
   	  }
     }
-
 	 result=lastName.value;
+
 	if(result == undefined || result == "")
 	{	
 		$("#lastnameError").show();
@@ -3772,10 +3773,19 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a Last name.";
         return false;
 	}
-	else if (!regex.test(name)) {
+	//commented for TISSTRT-1601
+	/*else if (!regex.test(name)) {
 		errorHandle.innerHTML = "Only alphabets and spaces allowed.";
         return false;
-    }
+    }*/
+	else if(!regex.test(name) && identifier=="firstName"){
+		errorHandle.innerHTML = "Please enter a valid first name";
+        return false;
+	}
+	else if(!regex.test(name) && identifier=="lastName"){
+		errorHandle.innerHTML = "Please enter a valid last name";
+        return false;
+	}
 	else if (name.length < 1 && identifier=="firstName") {
 		errorHandle.innerHTML = "Name should be longer."; 
 		return false;

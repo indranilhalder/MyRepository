@@ -88,9 +88,13 @@ display: none;
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm"
+				<!-- INC144315801 starts-->
+				<%-- <form:form id="selectDeliveryMethodForm"
 							action="${request.contextPath}/checkout/multi/delivery-method/check"
-							method="post" commandName="deliveryMethodForm">
+							method="post" commandName="deliveryMethodForm"> --%>
+				<form:form id="selectDeliveryMethodForm"
+							action="${request.contextPath}/checkout/multi/delivery-method/check" commandName="deliveryMethodForm">
+				<!-- INC144315801 ends-->			
 				<!-- TISCR-305 starts -->
 				<!-- TISPRO-625 starts -->
 				<input type="hidden" id="isExpressCheckoutSelected"
@@ -228,21 +232,31 @@ display: none;
 																
         <div class="address-list ${showItem}" id="${singleAddress}">
         	<c:choose>
-			<c:when test="${deliveryAddress.defaultAddress}">
-          <input type="radio" class="radio1" name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" checked="checked" />
-          <label for="radio_${deliveryAddress.id}"></label>
-           </c:when>
-           <c:otherwise>
-           	<input type="radio" class="radio1"
-																		name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" />
-          	<label for="radio_${deliveryAddress.id}"></label>
-           </c:otherwise>
-           
-           </c:choose>
+	        	<c:when test="${empty deliveryAddressID}">
+	        		<c:choose>
+						<c:when test="${deliveryAddress.defaultAddress}">
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" checked="checked" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:otherwise>
+					</c:choose>
+	        	</c:when>
+	        	<c:otherwise>
+		        	<c:choose>
+						<c:when test="${deliveryAddress.id eq deliveryAddressID}">
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" checked="checked" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:otherwise>
+					</c:choose>
+	        	</c:otherwise>
+	        </c:choose>
            
           
           <p class="address"> 
@@ -535,7 +549,7 @@ display: none;
 									
 						<!--  If no address is present -->
 						<c:if test="${empty deliveryAddresses}"> 
-						<div id="emptyAddress" style="color:red;display:none;">Please select a delivery address</div>		
+						<div id="emptyAddress" style="color:red;display:none;">We don't have a saved address. Add a new address now.</div>		
 										<form id="selectAddressForm"
 									action="${request.contextPath}/checkout/multi/delivery-method/select-address"
 									method="get">

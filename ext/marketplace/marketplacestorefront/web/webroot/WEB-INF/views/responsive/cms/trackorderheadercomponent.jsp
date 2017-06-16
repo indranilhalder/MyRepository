@@ -10,13 +10,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<!-- <ul class="header-trackOrder"> -->
 
-<!-- <c:set var="urlToAccess" value="#" />
-<c:if test="${isSignedInUser eq 'no'  }">
-<c:set var="urlToAccess" value="/login" />
-  <c:url var="urlToAccess" value="${urlToAccess }"></c:url>
-</c:if> -->
+
 <c:url var="urlToAccess" value="${notificationUrl }"></c:url>
 
 <c:choose>
@@ -41,7 +36,8 @@
 		</li>
 		</c:if>
 		
-		
+
+		<!-- UF-249 -->
 		<c:if test="${ empty notificationCount and isSignedInUser eq 'no'}">
 		
 		<li class="track trackOrder">
@@ -55,12 +51,3 @@
 		</c:otherwise>
 		
 		</c:choose>
-	
-		
-			
-
-
-
-
-		<!-- </ul> -->
-

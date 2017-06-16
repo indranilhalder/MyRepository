@@ -806,8 +806,14 @@ public final class ModelAttributetConstants
 	public static final String PAGE_SUBCATEGORY_NAME = "page_subcategory_name";
 	public static final String PAGE_SUBCATEGORY_NAME_L3 = "page_subcategory_name_l3";
 	public static final String SHOP_BY_LOOK = "shopbylook".intern();
+	//For KIDSWEAR tealium data
+	public static final String PAGE_SUBCATEGORY_NAME_L4 = "page_subcategory_name_l4";
 	//LW-230
 	public static final String IS_LUXURY = "isLuxury";
+
+
+	//UF-160
+	public static final String IS_LARGE_APPLIANCE = "isLargeAppliance";
 
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
@@ -837,4 +843,16 @@ public final class ModelAttributetConstants
 	public static final String RETURN_SCHEDULE_INFO = "ScheduleDatesEmpty";
 
 	public static final String TSHIP = "TSHIP";
+
+	//TPR-1072
+	public static final String CRAWLINGFLAG = "crawling.enabled";
+	public static final String USERAGENT = "user-agent";
+	public static final String COMPONENT = "component";
+	public static final String NAVIGATIONBARSLOT = "NavigationBarSlot";
+	public static final String ATOZBRANDSCOMPONENT = "AToZBrandsComponent";
+	public static final String SHOPBYBRANDDATALIST = "shopByBrandDataList";
+	public static final String FOOTERSLOT = "FooterSlot";
+	public static final String GOOGLEBOT = "googlebot";
+
+	public static final String NO ="no";
 }

@@ -492,6 +492,8 @@
 		<!-- TPR-1083 Exchange Start -->
 		<property name="exchangeApplied" type="String" />
 		<!-- TPR-1083 Exchange End -->
+		<!-- TPR-5346 -->
+		<property name="maxCountReached" type="boolean"/>
 	</bean>
 	<!-- Attribute to handle the order cancel status for My Account ends -->
 	
@@ -629,6 +631,7 @@
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
     	<property name="promoExpiryMsg" type="String" />		<!-- TPR-629 -->
+    	<property name="totalDiscntIncMrp" type="de.hybris.platform.commercefacades.product.data.PriceData" />	<!-- UF-260 -->
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->
@@ -832,4 +835,13 @@
 		<property name="priceList" type="java.util.Set&lt;String>" />
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
+	<!-- TPR-1072 START -->
+	<bean class="com.tisl.mpl.data.ShopByBrandData">
+ 		<property name="masterBrandUrl" type="String" />
+ 		<property name="masterBrandName" type="String" />
+ 		<property name="subBrandList" type="java.util.List" />
+ 		<property name="subBrands" type="java.util.Collection" />
+ 		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
+ 	</bean>
+	<!-- TPR-1072 END -->
 </beans>

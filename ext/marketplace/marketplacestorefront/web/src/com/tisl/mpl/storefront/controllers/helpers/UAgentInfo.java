@@ -20,13 +20,13 @@ public class UAgentInfo
 	private boolean initCompleted = false;
 	private boolean isWebkit = false; //Stores the result of DetectWebkit()
 	private boolean isMobilePhone = false; //Stores the result of DetectMobileQuick()
-	private boolean isIphone = false; //Stores the result of DetectIphone()
+	private boolean iphone = false; //Stores the result of DetectIphone()                        //SONAR FIX
 	private boolean isAndroid = false; //Stores the result of DetectAndroid()
 	private boolean isAndroidPhone = false; //Stores the result of DetectAndroidPhone()
-	private boolean isTierTablet = false; //Stores the result of DetectTierTablet()
-	private boolean isTierIphone = false; //Stores the result of DetectTierIphone()
-	private boolean isTierRichCss = false; //Stores the result of DetectTierRichCss()
-	private boolean isTierGenericMobile = false; //Stores the result of DetectTierOtherPhones()
+	private boolean tierTablet = false; //Stores the result of DetectTierTablet()                //SONAR FIX
+	private boolean tierIphone = false; //Stores the result of DetectTierIphone()                //SONAR FIX
+	private boolean tierRichCss = false; //Stores the result of DetectTierRichCss()              //SONAR FIX
+	private boolean tierGenericMobile = false; //Stores the result of DetectTierOtherPhones()    //SONAR FIX
 
 	// Initialize some initial smartphone string variables.
 	private static final String engineWebKit = "webkit";
@@ -158,52 +158,62 @@ public class UAgentInfo
 
 	/**
 	 * Return whether the device is an Iphone or iPod Touch
-	 * 
+	 *
 	 * @return isIphone
 	 */
-	public boolean getIsIphone()
+
+	//Sonar Issue Fix For Kidswear: getIsIphone()--> IsIphone()
+	public boolean isIphone()
 	{
-		return isIphone;
+		return iphone;
 	}
 
 	/**
 	 * Return whether the device is in the Tablet Tier.
-	 * 
+	 *
 	 * @return isTierTablet
 	 */
-	public boolean getIsTierTablet()
+
+	//Sonar Issue Fix For Kidswear: getIsTierTablet()--> IsTierTablet()
+	public boolean isTierTablet()
 	{
-		return isTierTablet;
+		return tierTablet;
 	}
 
 	/**
 	 * Return whether the device is in the Iphone Tier.
-	 * 
+	 *
 	 * @return isTierIphone
 	 */
-	public boolean getIsTierIphone()
+
+	//Sonar Issue Fix For Kidswear: getIsTierIphone()--> IsTierIphone()
+	public boolean isTierIphone()
 	{
-		return isTierIphone;
+		return tierIphone;
 	}
 
 	/**
 	 * Return whether the device is in the 'Rich CSS' tier of mobile devices.
-	 * 
+	 *
 	 * @return isTierRichCss
 	 */
-	public boolean getIsTierRichCss()
+
+	//Sonar Issue Fix For Kidswear: getIsTierRichCss()--> IsTierRichCss()
+	public boolean isTierRichCss()
 	{
-		return isTierRichCss;
+		return tierRichCss;
 	}
 
 	/**
 	 * Return whether the device is a generic, less-capable mobile device.
-	 * 
+	 *
 	 * @return isTierGenericMobile
 	 */
-	public boolean getIsTierGenericMobile()
+
+	//Sonar Issue Fix For Kidswear: getIsTierGenericMobile()--> IsTierGenericMobile()
+	public boolean isTierGenericMobile()
 	{
-		return isTierGenericMobile;
+		return tierGenericMobile;
 	}
 
 	/**
@@ -213,32 +223,32 @@ public class UAgentInfo
 	{
 		//Save these properties to speed processing
 		this.isWebkit = detectWebkit();
-		this.isIphone = detectIphone();
+		this.iphone = detectIphone();
 		this.isAndroid = detectAndroid();
 		this.isAndroidPhone = detectAndroidPhone();
 
 		//Generally, these tiers are the most useful for web development
 		this.isMobilePhone = detectMobileQuick();
-		this.isTierTablet = detectTierTablet();
-		this.isTierIphone = detectTierIphone();
+		this.tierTablet = detectTierTablet();
+		this.tierIphone = detectTierIphone();
 
 		//Optional: Comment these out if you NEVER use them
-		this.isTierRichCss = detectTierRichCss();
-		this.isTierGenericMobile = detectTierOtherPhones();
+		this.tierRichCss = detectTierRichCss();
+		this.tierGenericMobile = detectTierOtherPhones();
 
 		this.initCompleted = true;
 	}
 
 	/**
 	 * Detects if the current device is an iPhone.
-	 * 
+	 *
 	 * @return detection of an iPhone
 	 */
 	public boolean detectIphone()
 	{
-		if ((this.initCompleted) || (this.isIphone))
+		if ((this.initCompleted) || (this.iphone))
 		{
-			return this.isIphone;
+			return this.iphone;
 		}
 
 		// The iPad and iPod touch say they're an iPhone! So let's disambiguate.
@@ -247,7 +257,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is an iPod Touch.
-	 * 
+	 *
 	 * @return detection of an iPod Touch
 	 */
 	public boolean detectIpod()
@@ -257,7 +267,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is an iPad tablet.
-	 * 
+	 *
 	 * @return detection of an iPad
 	 */
 	public boolean detectIpad()
@@ -267,7 +277,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is an iPhone or iPod Touch.
-	 * 
+	 *
 	 * @return detection of an iPhone or iPod Touch
 	 */
 	public boolean detectIphoneOrIpod()
@@ -278,7 +288,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects *any* iOS device: iPhone, iPod Touch, iPad.
-	 * 
+	 *
 	 * @return detection of an Apple iOS device
 	 */
 	public boolean detectIos()
@@ -289,7 +299,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects *any* Android OS-based device: phone, tablet, and multi-media player. Also detects Google TV.
-	 * 
+	 *
 	 * @return detection of an Android device
 	 */
 	public boolean detectAndroid()
@@ -311,7 +321,7 @@ public class UAgentInfo
 	 * Detects if the current device is a (small-ish) Android OS-based device used for calling and/or multi-media (like a
 	 * Samsung Galaxy Player). Google says these devices will have 'Android' AND 'mobile' in user agent. Ignores tablets
 	 * (Honeycomb and later).
-	 * 
+	 *
 	 * @return detection of an Android phone
 	 */
 	public boolean detectAndroidPhone()
@@ -337,7 +347,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current device is a (self-reported) Android tablet. Google says these devices will have 'Android'
 	 * and NOT 'mobile' in their user agent.
-	 * 
+	 *
 	 * @return detection of an Android tablet
 	 */
 	public boolean detectAndroidTablet()
@@ -365,7 +375,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is an Android OS-based device and the browser is based on WebKit.
-	 * 
+	 *
 	 * @return detection of an Android WebKit browser
 	 */
 	public boolean detectAndroidWebKit()
@@ -375,7 +385,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is a GoogleTV.
-	 * 
+	 *
 	 * @return detection of GoogleTV
 	 */
 	public boolean detectGoogleTV()
@@ -385,7 +395,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is based on WebKit.
-	 * 
+	 *
 	 * @return detection of a WebKit browser
 	 */
 	public boolean detectWebkit()
@@ -401,7 +411,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is EITHER a Windows Phone 7.x OR 8 device
-	 * 
+	 *
 	 * @return detection of Windows Phone 7.x OR 8
 	 */
 	public boolean detectWindowsPhone()
@@ -411,7 +421,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects a Windows Phone 7 device (in mobile browsing mode).
-	 * 
+	 *
 	 * @return detection of Windows Phone 7
 	 */
 	public boolean detectWindowsPhone7()
@@ -421,7 +431,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects a Windows Phone 8 device (in mobile browsing mode).
-	 * 
+	 *
 	 * @return detection of Windows Phone 8
 	 */
 	public boolean detectWindowsPhone8()
@@ -432,7 +442,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current browser is a Windows Mobile device. Excludes Windows Phone 7.x and 8 devices. Focuses on
 	 * Windows Mobile 6.xx and earlier.
-	 * 
+	 *
 	 * @return detection of Windows Mobile
 	 */
 	public boolean detectWindowsMobile()
@@ -458,7 +468,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is any BlackBerry. Includes BB10 OS, but excludes the PlayBook.
-	 * 
+	 *
 	 * @return detection of Blackberry
 	 */
 	public boolean detectBlackBerry()
@@ -469,7 +479,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is a BlackBerry 10 OS phone. Excludes tablets.
-	 * 
+	 *
 	 * @return detection of a Blackberry 10 device
 	 */
 	public boolean detectBlackBerry10Phone()
@@ -479,7 +489,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is on a BlackBerry tablet device. Example: PlayBook
-	 * 
+	 *
 	 * @return detection of a Blackberry Tablet
 	 */
 	public boolean detectBlackBerryTablet()
@@ -490,7 +500,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current browser is a BlackBerry device AND uses a WebKit-based browser. These are signatures for
 	 * the new BlackBerry OS 6. Examples: Torch. Includes the Playbook.
-	 * 
+	 *
 	 * @return detection of a Blackberry device with WebKit browser
 	 */
 	public boolean detectBlackBerryWebKit()
@@ -501,7 +511,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current browser is a BlackBerry Touch device, such as the Storm, Torch, and Bold Touch. Excludes
 	 * the Playbook.
-	 * 
+	 *
 	 * @return detection of a Blackberry touchscreen device
 	 */
 	public boolean detectBlackBerryTouch()
@@ -514,7 +524,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current browser is a BlackBerry device AND has a more capable recent browser. Excludes the
 	 * Playbook. Examples, Storm, Bold, Tour, Curve2 Excludes the new BlackBerry OS 6 and 7 browser!!
-	 * 
+	 *
 	 * @return detection of a Blackberry device with a better browser
 	 */
 	public boolean detectBlackBerryHigh()
@@ -529,7 +539,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current browser is a BlackBerry device AND has an older, less capable browser. Examples: Pearl,
 	 * 8800, Curve1
-	 * 
+	 *
 	 * @return detection of a Blackberry device with a poorer browser
 	 */
 	public boolean detectBlackBerryLow()
@@ -540,7 +550,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is the Symbian S60 Open Source Browser.
-	 * 
+	 *
 	 * @return detection of Symbian S60 Browser
 	 */
 	public boolean detectS60OssBrowser()
@@ -553,7 +563,7 @@ public class UAgentInfo
 	 *
 	 * Detects if the current device is any Symbian OS-based device, including older S60, Series 70, Series 80, Series
 	 * 90, and UIQ, or other browsers running on these devices.
-	 * 
+	 *
 	 * @return detection of SymbianOS
 	 */
 	public boolean detectSymbianOS()
@@ -564,7 +574,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is on a PalmOS device.
-	 * 
+	 *
 	 * @return detection of a PalmOS device
 	 */
 	public boolean detectPalmOS()
@@ -581,7 +591,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is on a Palm device running the new WebOS.
-	 * 
+	 *
 	 * @return detection of a Palm WebOS device
 	 */
 	public boolean detectPalmWebOS()
@@ -591,7 +601,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is on an HP tablet running WebOS.
-	 * 
+	 *
 	 * @return detection of an HP WebOS tablet
 	 */
 	public boolean detectWebOSTablet()
@@ -601,7 +611,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects Opera Mobile or Opera Mini.
-	 * 
+	 *
 	 * @return detection of an Opera browser for a mobile device
 	 */
 	public boolean detectOperaMobile()
@@ -611,7 +621,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects Opera Mobile on an Android phone.
-	 * 
+	 *
 	 * @return detection of an Opera browser on an Android phone
 	 */
 	public boolean detectOperaAndroidPhone()
@@ -621,7 +631,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects Opera Mobile on an Android tablet.
-	 * 
+	 *
 	 * @return detection of an Opera browser on an Android tablet
 	 */
 	public boolean detectOperaAndroidTablet()
@@ -633,7 +643,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current device is an Amazon Kindle (eInk devices only). Note: For the Kindle Fire, use the normal
 	 * Android methods.
-	 * 
+	 *
 	 * @return detection of a Kindle
 	 */
 	public boolean detectKindle()
@@ -643,7 +653,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current Amazon device is using the Silk Browser. Note: Typically used by the the Kindle Fire.
-	 * 
+	 *
 	 * @return detection of an Amazon Kindle Fire in Silk mode.
 	 */
 	public boolean detectAmazonSilk()
@@ -653,7 +663,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is a Garmin Nuvifone.
-	 * 
+	 *
 	 * @return detection of a Garmin Nuvifone
 	 */
 	public boolean detectGarminNuvifone()
@@ -663,7 +673,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects a device running the Bada smartphone OS from Samsung.
-	 * 
+	 *
 	 * @return detection of a Bada device
 	 */
 	public boolean detectBada()
@@ -673,7 +683,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects a device running the Tizen smartphone OS.
-	 * 
+	 *
 	 * @return detection of a Tizen device
 	 */
 	public boolean detectTizen()
@@ -683,7 +693,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects a device running the Meego OS.
-	 * 
+	 *
 	 * @return detection of a Meego device
 	 */
 	public boolean detectMeego()
@@ -693,7 +703,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects the Danger Hiptop device.
-	 * 
+	 *
 	 * @return detection of a Danger Hiptop
 	 */
 	public boolean detectDangerHiptop()
@@ -703,7 +713,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current browser is a Sony Mylo device.
-	 * 
+	 *
 	 * @return detection of a Sony Mylo device
 	 */
 	public boolean detectSonyMylo()
@@ -713,7 +723,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is on one of the Maemo-based Nokia Internet Tablets.
-	 * 
+	 *
 	 * @return detection of a Maemo OS tablet
 	 */
 	public boolean detectMaemoTablet()
@@ -732,7 +742,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is an Archos media player/Internet tablet.
-	 * 
+	 *
 	 * @return detection of an Archos media player
 	 */
 	public boolean detectArchos()
@@ -742,7 +752,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is an Internet-capable game console.
-	 * 
+	 *
 	 * @return detection of any Game Console
 	 */
 	public boolean detectGameConsole()
@@ -752,7 +762,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is a Sony Playstation.
-	 * 
+	 *
 	 * @return detection of Sony Playstation
 	 */
 	public boolean detectSonyPlaystation()
@@ -763,7 +773,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current device is a handheld gaming device with a touchscreen and modern iPhone-class browser.
 	 * Includes the Playstation Vita.
-	 * 
+	 *
 	 * @return detection of a handheld gaming device
 	 */
 	public boolean detectGamingHandheld()
@@ -773,7 +783,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is a Nintendo game device.
-	 * 
+	 *
 	 * @return detection of Nintendo
 	 */
 	public boolean detectNintendo()
@@ -784,7 +794,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device is a Microsoft Xbox.
-	 * 
+	 *
 	 * @return detection of Xbox
 	 */
 	public boolean detectXbox()
@@ -794,7 +804,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects whether the device is a Brew-powered device.
-	 * 
+	 *
 	 * @return detection of a Brew device
 	 */
 	public boolean detectBrewDevice()
@@ -804,7 +814,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects whether the device supports WAP or WML.
-	 * 
+	 *
 	 * @return detection of a WAP- or WML-capable device
 	 */
 	public boolean detectWapWml()
@@ -814,7 +824,7 @@ public class UAgentInfo
 
 	/**
 	 * Detects if the current device supports MIDP, a mobile Java technology.
-	 * 
+	 *
 	 * @return detection of a MIDP mobile Java-capable device
 	 */
 	public boolean detectMidpCapable()
@@ -828,7 +838,7 @@ public class UAgentInfo
 
 	/**
 	 * Check to see whether the device is any device in the 'smartphone' category.
-	 * 
+	 *
 	 * @return detection of a general smartphone device
 	 */
 	public boolean detectSmartphone()
@@ -840,7 +850,7 @@ public class UAgentInfo
 	/**
 	 * Detects if the current device is a mobile device. This method catches most of the popular modern devices. Excludes
 	 * Apple iPads and other modern tablets.
-	 * 
+	 *
 	 * @return detection of any mobile device using the quicker method
 	 */
 	public boolean detectMobileQuick()
@@ -896,7 +906,7 @@ public class UAgentInfo
 	 * The longer and more thorough way to detect for a mobile device. Will probably detect most feature phones,
 	 * smartphone-class devices, Internet Tablets, Internet-enabled game consoles, etc. This ought to catch a lot of the
 	 * more obscure and older devices, also -- but no promises on thoroughness!
-	 * 
+	 *
 	 * @return detection of any mobile device using the more thorough method
 	 */
 	public boolean detectMobileLong()
@@ -927,14 +937,14 @@ public class UAgentInfo
 	/**
 	 * The quick way to detect for a tier of devices. This method detects for the new generation of HTML 5 capable,
 	 * larger screen tablets. Includes iPad, Android (e.g., Xoom), BB Playbook, WebOS, etc.
-	 * 
+	 *
 	 * @return detection of any device in the Tablet Tier
 	 */
 	public boolean detectTierTablet()
 	{
-		if ((this.initCompleted) || (this.isTierTablet))
+		if ((this.initCompleted) || (this.tierTablet))
 		{
-			return this.isTierTablet;
+			return this.tierTablet;
 		}
 
 		return detectIpad() || detectAndroidTablet() || detectBlackBerryTablet() || detectWebOSTablet();
@@ -943,14 +953,14 @@ public class UAgentInfo
 	/**
 	 * The quick way to detect for a tier of devices. This method detects for devices which can display iPhone-optimized
 	 * web content. Includes iPhone, iPod Touch, Android, Windows Phone 7 and 8, BB10, WebOS, Playstation Vita, etc.
-	 * 
+	 *
 	 * @return detection of any device in the iPhone/Android/Windows Phone/BlackBerry/WebOS Tier
 	 */
 	public boolean detectTierIphone()
 	{
-		if ((this.initCompleted) || (this.isTierIphone))
+		if ((this.initCompleted) || (this.tierIphone))
 		{
-			return this.isTierIphone;
+			return this.tierIphone;
 		}
 
 		return detectIphoneOrIpod() || detectAndroidPhone() || detectWindowsPhone() || detectBlackBerry10Phone()
@@ -962,14 +972,14 @@ public class UAgentInfo
 	 * The quick way to detect for a tier of devices. This method detects for devices which are likely to be capable of
 	 * viewing CSS content optimized for the iPhone, but may not necessarily support JavaScript. Excludes all iPhone Tier
 	 * devices.
-	 * 
+	 *
 	 * @return detection of any device in the 'Rich CSS' Tier
 	 */
 	public boolean detectTierRichCss()
 	{
-		if ((this.initCompleted) || (this.isTierRichCss))
+		if ((this.initCompleted) || (this.tierRichCss))
 		{
-			return this.isTierRichCss;
+			return this.tierRichCss;
 		}
 
 		boolean result = false;
@@ -999,14 +1009,14 @@ public class UAgentInfo
 	/**
 	 * The quick way to detect for a tier of devices. This method detects for all other types of phones, but excludes the
 	 * iPhone and RichCSS Tier devices.
-	 * 
+	 *
 	 * @return detection of a mobile device in the less capable tier
 	 */
 	public boolean detectTierOtherPhones()
 	{
-		if ((this.initCompleted) || (this.isTierGenericMobile))
+		if ((this.initCompleted) || (this.tierGenericMobile))
 		{
-			return this.isTierGenericMobile;
+			return this.tierGenericMobile;
 		}
 
 		//Exclude devices in the other 2 categories

@@ -119,6 +119,17 @@ ACC.product = {
 	addToBag: function(){
 	
 		$(document).on('click','#addToCartForm .js-add-to-cart',function(event){
+			//UF-160
+			var isLargeApplnc = $("#isLargeAppliance").val();
+			if(isLargeApplnc == "true" && pinCodeChecked == false){
+				
+				$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#addToCartLargeAppliance').text() + "</font>");
+				$("#addToCartFormTitle").show().fadeOut(6000);
+				$('#pin').focus();
+				$('#pin').css("border", "1px solid #000");
+				return false;
+			}
+			//UF-160 ends
 			ACC.product.sendAddToBag("addToCartForm");
 			event.preventDefault();
 			return false;
@@ -169,6 +180,7 @@ ACC.product = {
 			 if ($('#variant.size-g li').hasClass('selected'))
 			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
+				$(".modal").modal('hide');	 //INC144315891
 			 
 			}else{
 					$("#sizeSelectedSizeGuide").html("<font color='#ff1c47'>" + $('#sizeSelectedSizeGuide').text() + "</font>");
@@ -450,8 +462,8 @@ sendAddToBag : function(formId, isBuyNow) {
 	$('.js-add-to-cart').attr("disabled", "disabled");
 	
 	var staticHost=$('#staticHost').val();
-	$("body").append("<div id='bag-clickSpin' style='opacity:0.15; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="bagspinner" style="position: fixed; left: 45%;top:45%; height: 30px;">'); 
+	$("body").append("<div id='bag-clickSpin' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="bagspinner"></div>');  
 	
 	var input_name = "qty";
 	var stock_id = "stock";
@@ -490,7 +502,10 @@ sendAddToBag : function(formId, isBuyNow) {
 						$('#ajax-loader').show();
 					},
 					success : function(data) {
-						
+						//TPR-5346
+						if(data.indexOf("|")){
+							var values=data.split("|");
+							}
 						
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 						if (data.indexOf("cnt:") >= 0) {
@@ -510,13 +525,17 @@ sendAddToBag : function(formId, isBuyNow) {
 							
 							// ACC.product.displayAddToCart(data,formId,false);
 							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
-						} 
+
+						}
 						else if(data=="maxqtyexchange")
 						{
 							$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#exchangeRestriction').html()+"</font>");
 							$("#"+formId+"Title").show().fadeOut(5000);
 						}
-						else if (data == "reachedMaxLimit") {
+						else if (values[0] == "reachedMaxLimitforproduct") {//TPR-5346 STARTS
+							$("#" + formId + "Title").html("You can only order upto" +" "+values[1]+ " "+"pieces of this item.");
+							$("#" + formId + "Title").show().fadeOut(5000);//TPR-5346 ENDS
+						} else if (data == "reachedMaxLimit") {
 							$("#" + formId + "Title").html("");
 							$("#" + formId + "Title").html(
 									"<br/><font color='#ff1c47'>"
@@ -627,16 +646,16 @@ sendAddToBag : function(formId, isBuyNow) {
 							}
 						}
 						
-						$("#bag-clickSpin,.bagspinner").remove();			
+						$("#bag-clickSpin,.loaderDiv").remove();			
 					},
 					complete : function() {
 						$('#ajax-loader').hide();
 						forceUpdateHeader();
-						$("#bag-clickSpin,.bagspinner").remove();
+						$("#bag-clickSpin,.loaderDiv").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 					},
 					error : function(resp) {
-						$("#bag-clickSpin,.bagspinner").remove();
+						$("#bag-clickSpin,.loaderDiv").remove();
 						$('.js-add-to-cart').removeAttr("disabled");//For TISPRD-4631
 					}
 				});
@@ -1456,7 +1475,8 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 				
 				$('.mini-transient-bag').remove();
 				$('.mini-transient-bag-mobile').remove();		/*UF-47*/
-				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>has been added to your cart</span>";
+				/*UF-277*/
+				var transientCartHtml="<div class='mini-transient-bag' ><span class='mini-cart-close'>+</span><ul class='my-bag-ul'><li class='item'><ul><li><div class='product-img'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'><img class='picZoomer-pic' src='"+response.productImageUrl+"'></a></div><div class='product'><p class='company'></p><h3 class='product-name'><a href='"+ACC.config.encodedContextPath+response.productUrl+"'>"+response.productTitle+"</a></h3><span class='addedText'>It's been added to your bag</span>";
 				var transientCartHtmlMobile="<div class='mini-transient-bag-mobile'><span class='addedTextMobile'>Item added to Cart</span></div>";		/*UF-47*/
 				if(typeof response.offer!=='undefined'){
 					transientCartHtml+="<div class='transient-offer'>"+response.offer+"</div>";
@@ -1502,10 +1522,11 @@ applyBrandFilter: function(){$allListElements = $('ul > li.filter-brand').find("
 	{
 		if($(window).width() > 773) {
 			$("#cboxClose").click();
+		} /*added as part of PRDI-90*/
 			$('body.modal-open').css('overflow-y','hidden');
 			$(".modal").modal('hide');
 			$('body').css('overflow-y','auto');
-		} 
+		//} /*commented as part of PRDI-90*/
 		
 	}
 };
@@ -1659,7 +1680,7 @@ $(document).on("click",'#applyCustomPriceFilter',function(){
 						var browserURL = window.location.href.split('?');
 						var staticHost=$('#staticHost').val();
 						$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-						$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+						$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 						
 						//TPR-645 start  -- INC_11511  fix--h3 tag done
 						filterValue = (minPriceSearchTxt+"-"+maxPriceSearchTxt).replace(/,/g,"");

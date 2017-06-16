@@ -42,8 +42,9 @@ import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
-import com.tisl.mpl.util.GenericUtilityMethods;
 
+//Sonar Issue Fixed For Kidswear
+//import com.tisl.mpl.util.GenericUtilityMethods;
 
 /**
  * Default implementation of {@link GUIDCookieStrategy}
@@ -62,7 +63,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
 
 	private ExtendedUserService userService;
-	
+
 	//Added for UF-93
 	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
 
@@ -82,7 +83,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	{
 		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
 	}
-	
+
 	/**
 	 * @return the userService
 	 */
@@ -188,10 +189,25 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				//Commenting this as this is not required
 				//getLuxuryUserCookieGenerator().addCookie(response, userService.getAccessTokenForUser(customer.getOriginalUid()));
 				/** Added for UF-93 **/
+				//				if ("true".equalsIgnoreCase(request.getParameter("j_RememberMe")))
+				//				{
+				//					lastUserLoggedInCookieGenerator.addCookie(response,
+				//							new String(Base64.encodeBase64String(customer.getOriginalUid().getBytes())));
+				//					LOG.error("DefaultGUIDCookieStrategy.setCookie() 'RememberMe':: "
+				//							+ request.getSession().getAttribute("j_RememberMe"));
+				//				}
+				//				else
+				//				{
+				//					final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+				//					if (null != cookie)
+				//					{
+				//						lastUserLoggedInCookieGenerator.removeCookie(response); // Remove the Cookie if Remember Me not Seleceted. Thi sis not to be displayed next time.
+				//					}
+				//				}
 				lastUserLoggedInCookieGenerator.addCookie(response,
 						new String(Base64.encodeBase64String(customer.getOriginalUid().getBytes())));
 				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
-						//+ customer.getOriginalUid().getBytes());
+				//+ customer.getOriginalUid().getBytes());
 				/** Ends for UF-93 **/
 			}
 		}
@@ -359,7 +375,7 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 
 	/**
 	 * @param cookieGenerator
-	 *           the cookieGenerator to set 
+	 *           the cookieGenerator to set
 	 */
 	@Required
 	public void setCookieGenerator(final CookieGenerator cookieGenerator)

@@ -88,6 +88,7 @@
 					<div class="navigation" id=order_pagination>
 						<h2>
 							<spring:theme text="My Orders" />		<!--  UF-249 text change -->
+
 						</h2>
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
@@ -249,6 +250,7 @@
 															</p>
 															<p>
 																<%-- <spring:theme text="Delivery Charges:" /> --%>
+
 																<span>	<spring:theme code="text.account.order.delivery2" text="Scheduled Delivery and Shipping Charges:"/>
 																&nbsp;</span>
 															<c:choose>
@@ -386,10 +388,11 @@
 														</c:if>
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
-														<!-- TISCR-410 -->  
+														<!-- TISCR-410 -->
 															<%-- R2.3: Commented <c:if test="${entry.isCancellationMissed eq 'true'}">
 																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 															</c:if> --%>
+
 														<!-- TISCR-410 ends -->
 														<!--Chairman Demo Changes end-->
 														<!-- changes for TISSTRT-1173 -->
@@ -515,7 +518,7 @@
 																			</c:forEach>
 																		</form:select>
 																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
-																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div> 
+																					code="text.cancel.requestDropdown.selected.error" text="Let us know why you would like to cancel this product."/></div> 
 																	</div>
 																	<form:hidden path="ticketTypeCode"
 																		class="ticketTypeCodeClass" value="C" />

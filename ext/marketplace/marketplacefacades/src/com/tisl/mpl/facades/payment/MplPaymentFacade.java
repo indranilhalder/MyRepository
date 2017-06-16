@@ -33,6 +33,7 @@ import com.tisl.mpl.data.SavedCardData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
+import com.tisl.mpl.model.BankModel;
 
 
 /**
@@ -479,5 +480,25 @@ public interface MplPaymentFacade
 	 * @param refNo
 	 */
 	String getWalletAuditEntries(String refNo);
+	/***
+	 * cscockpit specific order payment status call
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public String makeGetPaymentStatusCall(final String url);
+
+
+
+	/**
+	 * Added for TPR-4461
+	 * 
+	 * @param banklist
+	 * @param bank
+	 * @param boolean
+	 */
+	public boolean validateBank(final List<BankModel> bankList, final String bank);
+
+
 
 }

@@ -38,6 +38,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.MplPaymentAuditStatusEnum;
 import com.tisl.mpl.core.model.JuspayEBSResponseDataModel;
+import com.tisl.mpl.core.model.JuspayOrderStatusModel;
 import com.tisl.mpl.core.model.JuspayRefundResponseModel;
 import com.tisl.mpl.core.model.JuspayWebhookModel;
 import com.tisl.mpl.core.model.MplPaymentAuditEntryModel;
@@ -124,7 +125,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
-			validateWebHookData(webHookDetailList);
+			validateWebHookData(webHookDetailList, true);
 		}
 	}
 
@@ -132,25 +133,29 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @Description : Fetch From Audit based on Web Hook Details
 	 * @param webHookDetailList
 	 */
-	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList) throws EtailNonBusinessExceptions
+	private void validateWebHookData(final List<JuspayWebhookModel> webHookDetailList, final boolean flag)
+			throws EtailNonBusinessExceptions
 	{
 		if (CollectionUtils.isNotEmpty(webHookDetailList))
 		{
 			final List<JuspayWebhookModel> uniqueList = new ArrayList<JuspayWebhookModel>();
 
-			for (final JuspayWebhookModel oModel : webHookDetailList)
-			{
-				if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
+			if (flag)
+			{//check only if call is coming from method fetchWebHookData
+				for (final JuspayWebhookModel oModel : webHookDetailList)
 				{
-					/*
-					 * final OrderModel ordrMdl =
-					 * getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if ((null !=
-					 * ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode())) ||
-					 * ordrMdl.getIsWallet() == null) {
-					 */
-					//getting all the webhook data where isExpired is Y and adding into a list
-					uniqueList.add(oModel);
-					//}
+					if (null != oModel.getOrderStatus() && oModel.getIsExpired().booleanValue())
+					{
+						/*
+						 * final OrderModel ordrMdl =
+						 * getMplPaymentService().fetchOrderOnGUID(oModel.getOrderStatus().getOrderId()); if ((null !=
+						 * ordrMdl.getIsWallet() && WalletEnum.NONWALLET.toString().equals(ordrMdl.getIsWallet().getCode()))
+						 * || ordrMdl.getIsWallet() == null) {
+						 */
+						//getting all the webhook data where isExpired is Y and adding into a list
+						uniqueList.add(oModel);
+						//}
+					}
 				}
 			}
 
@@ -210,21 +215,27 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 */
 	private void processWebhook(final JuspayWebhookModel hook, final List<JuspayWebhookModel> webHookDetailList)
 	{
+
+		final JuspayOrderStatusModel juspayOrderStatus = hook.getOrderStatus();
 		//TISPRO-607
-		if (null != hook.getOrderStatus())
+		/*
+		 * if (null != hook.getOrderStatus()) { // final OrderModel order =
+		 * getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId()); // if ((null !=
+		 * order.getIsWallet() && WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode())) // ||
+		 * order.getIsWallet() == null) // {**********Commented for mRupee if
+		 * (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds())) { //For Positive Flow // final OrderModel order =
+		 * getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId()); // if
+		 * (order.getIsWallet().getCode().equals(WalletEnum.NONWALLET.toString())) // { getResponseBasedOnStatus(hook,
+		 * hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus()); //} } //For Refund Flow else { //Action
+		 * for refund scenarios performActionForRefund(webHookDetailList); //Processed in Webhook
+		 * updateWebHookExpired(hook); } // } }
+		 */
+		if (null != juspayOrderStatus)
 		{
-			//			final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
-			//			if ((null != order.getIsWallet() && WalletEnum.NONWALLET.toString().equals(order.getIsWallet().getCode()))
-			//					|| order.getIsWallet() == null)
-			//			{**********Commented for mRupee
-			if (CollectionUtils.isEmpty(hook.getOrderStatus().getRefunds()))
+			if (CollectionUtils.isEmpty(juspayOrderStatus.getRefunds()))
 			{
 				//For Positive Flow
-				//				final OrderModel order = getMplPaymentService().fetchOrderOnGUID(hook.getOrderStatus().getOrderId());
-				//				if (order.getIsWallet().getCode().equals(WalletEnum.NONWALLET.toString()))
-				//				{
-				getResponseBasedOnStatus(hook, hook.getOrderStatus().getOrderId(), hook.getOrderStatus().getStatus());
-				//}
+				getResponseBasedOnStatus(hook, juspayOrderStatus.getOrderId(), juspayOrderStatus.getStatus());
 			}
 			//For Refund Flow
 			else
@@ -234,8 +245,8 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 				//Processed in Webhook
 				updateWebHookExpired(hook);
 			}
-			//	}
 		}
+
 	}
 
 	/**
@@ -1044,9 +1055,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 						//Logic changed for TPR-629
 						//isParentOrder = checkParentOrderExists(guid);
 						//if (isParentOrder)
-						final OrderModel orderModel = getParentOrder(guid);
+						//final OrderModel orderModel = getParentOrder(guid);
+						final String orderStatus = getOdrStatus(guid);
 
-						if (null == orderModel)
+						if (null == orderStatus)//if (null == orderModel)
 						{
 							try
 							{
@@ -1084,8 +1096,10 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 
 						//Logic when juspay webhook data does not come before payment_timeout TAT ---- TPR-629
 						//PaymentFix2017 :- PAYMENT_FAILED Status added to handle Event posting First with ORDER_FAILED then ORDER_SUCCEEDED
-						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus())
-								|| OrderStatus.PAYMENT_FAILED.equals(orderModel.getStatus()))
+						//						else if (OrderStatus.PAYMENT_TIMEOUT.equals(orderModel.getStatus())
+						//								|| OrderStatus.PAYMENT_FAILED.equals(orderModel.getStatus()))
+						//						{
+						else if (OrderStatus.PAYMENT_TIMEOUT.toString().equals(orderStatus) || OrderStatus.PAYMENT_FAILED.toString().equals(orderStatus))
 						{
 							final PaymentService juspayService = new PaymentService();
 
@@ -1293,7 +1307,7 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 		webHookDetailList = juspayWebHookDao.fetchSpecificWebHookData(mplConfigDate, startTime);
 		if (null != webHookDetailList && !webHookDetailList.isEmpty())
 		{
-			validateWebHookData(webHookDetailList);
+			validateWebHookData(webHookDetailList, false);
 		}
 	}
 
@@ -1713,6 +1727,18 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions
 	{
 		return getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
+
+	}
+	/**
+	 * To check whether there is a parent order status exists for the guid against which Payment took place
+	 *
+	 * @param orderGuid
+	 * @return String
+	 */
+
+	private String getOdrStatus(final String orderGuid) throws EtailNonBusinessExceptions
+	{
+		return getJuspayWebHookDao().fetchStatusOnGUID(orderGuid);
 
 	}
 

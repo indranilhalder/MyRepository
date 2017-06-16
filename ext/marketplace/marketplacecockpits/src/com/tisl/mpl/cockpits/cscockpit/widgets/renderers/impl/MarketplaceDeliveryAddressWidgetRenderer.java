@@ -37,6 +37,7 @@ import com.tisl.mpl.facades.data.PincodeData;
 import com.tisl.mpl.facades.populators.CustomAddressPopulator;
 import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.daos.AccountAddressDao;
+
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 
 import de.hybris.platform.cockpit.model.meta.TypedObject;
@@ -976,12 +977,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						Messagebox.OK, Messagebox.ERROR);
 					return;
 			}
-			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(cityField.getValue()))
+			//INC144316265
+			/*else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(cityField.getValue()))
 			{
 					Messagebox.show(LabelUtils.getLabel(widget, "invalidCityChar"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 					return;
-			}
+			}*/
 			
 			else if (stateFieldListBox.getSelectedItem() == null || stateFieldListBox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
 			{

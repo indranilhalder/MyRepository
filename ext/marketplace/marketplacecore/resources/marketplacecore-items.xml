@@ -1329,9 +1329,18 @@
 					optional="true" />
 			</targetElement>
 		</relation>
-
+       <!-- Relation between PriceRows and MplPricePromoRel  -->
+        <relation code="MplPriceRowPromotionRelation"
+            	autocreate="true" generate="true" localized="false">
+            <sourceElement qualifier="priceRow" type="PriceRow"
+            	cardinality ="one">
+            </sourceElement>
+            <targetElement qualifier="promotionalPriceRow" type="PromotionalPriceRow"
+         	    cardinality ="many">
+            </targetElement>
+        </relation> 
+       
 	</relations>
-
 	<itemtypes>
 		<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports -->
 
@@ -1720,8 +1729,18 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
-
-
+					<!-- Added for KidsWear -->
+					<attribute qualifier="productCategoryTypeL2" type="java.lang.String">
+						<description>Represent the product's master Category</description>
+						<modifiers read="true" write="true" optional="true"
+							unique="false" />
+						<persistence type="property">
+							<columntype database='oracle'>
+								<value>VARCHAR2(100)</value>
+							</columntype>
+						</persistence>
+					</attribute>
+					<!-- Added for KidsWear Ends-->
 				</attributes>
 			</itemtype>
 
@@ -2046,6 +2065,72 @@
 
 				</attributes>
 			</itemtype>
+			<!-- Channel Specific Promotion Start New table  -->
+			<itemtype code="PromotionalPriceRow" extends="GenericItem" generate="true"
+				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.PromotionalPriceRow">
+				<deployment table="MplPromotionalPriceRow" typecode="16001" />
+				<attributes>
+					<attribute type="java.lang.Double" qualifier="specialPrice"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="promotionStartDate"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.util.Date" qualifier="promotionEndDate"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.lang.Double" qualifier="promotionValue"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.lang.Boolean" qualifier="isPercentage"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute type="java.lang.Double" qualifier="maxDiscount"
+						autocreate="true" generate="true">
+						<persistence type='property' />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute qualifier="promotionIdentifier" type="java.lang.String">
+						<description>Stores the Promotion Code</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="false" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+					<attribute qualifier="PromotionChannel" type="java.lang.String">
+						<description>Stores the Promotional Channel</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" removable="false" initial="true" private="false"
+							partof="false" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<!-- Channel Specific Promotion Stop -->	
 			<!-- Product SizeGuide -->
 			<itemtype code="SizeGuide" extends="GenericItem" generate="true"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.SizeGuide">
@@ -3008,6 +3093,23 @@
 			</itemtype>
 
 			<itemtype code="CODPaymentInfo" extends="PaymentInfo"
+				autocreate="true" generate="false">
+				<attributes>
+					<attribute qualifier="cashOwner" autocreate="true"
+						type="java.lang.String">
+						<modifiers read="true" write="true" search="true"
+							optional="false" />
+						<persistence type="property" />
+						<custom-properties>
+							<property name="hmcIndexField">
+								<value>"thefield"</value>
+							</property>
+						</custom-properties>
+					</attribute>
+				</attributes>
+			</itemtype>
+			
+			<itemtype code="JusPayPaymentInfo" extends="PaymentInfo"
 				autocreate="true" generate="false">
 				<attributes>
 					<attribute qualifier="cashOwner" autocreate="true"
@@ -4222,6 +4324,13 @@
 						<persistence type="property" />
 						<description>Attribute that stores the url of the media of the paragraph.</description>
 					</attribute>
+					<!-- TPR-5168 --> 
+					<attribute qualifier="icid2" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is used for analytics tracking for mobile app</description>
+					</attribute>
+					<!-- TPR-5168 ends -->
 				</attributes>
 			</itemtype>
 
@@ -4591,6 +4700,13 @@
 						<persistence type="property" />
 						<description>This is a description of the banner that might be shown below the banner</description>
 					</attribute>
+					<!-- TPR-5168 -->
+					<attribute qualifier="icid2" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This is used for analytics tracking for mobile app</description>
+					</attribute>
+					<!-- TPR-5168 ends -->
 				</attributes>
 			</itemtype>
 
@@ -5772,6 +5888,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Added in R2.3 for sending edToHd and SDB information to fico END -->
+					<!-- TPR-5346 -->
+					<attribute qualifier="maxCountReached" autocreate="true"
+						type="boolean">
+						<defaultvalue>false</defaultvalue>
+						<description>MaxCount for product</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
 				</attributes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
@@ -5854,6 +5980,13 @@
 					</attribute>
 					<!--  Added for Third Party Wallet -->
 					
+
+					<!-- Adding attribute to identify Place order agents-->
+					<attribute qualifier="agentId" type="java.lang.String">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					
 					<attribute qualifier="deliveryAddresses" type="addressList">
 						<modifiers optional="true" />
 						<persistence type="property" />
@@ -5873,6 +6006,7 @@
 					<attribute qualifier="changeDeliveryRejectsCount" type="java.lang.Integer">
 						<modifiers optional="true" />
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
+
 						<persistence type="property" />
 					</attribute>
 				</attributes>
@@ -6314,6 +6448,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Changes PRDI-50 End -->
+					<!-- Channel Specific Promotion Start -->
+					<attribute qualifier="specialPriceMobile" type="java.lang.Double">
+						<description>SpecialPriceMobile</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="weightageMobile" type="java.lang.Double">
+						<description>Weightage Mobile</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Channel Specific Promotion End -->
 				</attributes>
 				<indexes>
 					<index name="BuyBox_IDX">
@@ -6442,6 +6586,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Changes PRDI-50 End -->
+					<!-- Channel Specific Promotion Start -->
+					<attribute qualifier="specialPriceMobile" type="java.lang.Double">
+						<description>SpecialPriceMobile</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="weightageMobile" type="java.lang.Double">
+						<description>WeightageMobile</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Channel Specific Promotion End -->							
 				</attributes>
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
@@ -10012,8 +10166,28 @@
 					</index>
 				</indexes>
 			</itemtype>
-			<itemtype code="ProductOfferDetail" autocreate="true"
-				generate="true">
+			
+			<itemtype code="PriorityBrands" autocreate="true" generate="true">
+				<deployment table="priorityBrand" typecode="18013" />
+				<attributes>
+					<attribute autocreate="true" qualifier="brandId" type="java.lang.String" generate="true">
+					    <description>Brand Id for priority</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+						<attribute autocreate="true" qualifier="categoryId" type="java.lang.String" generate="true">
+					    <description>category Id for priority</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>
+					<attribute autocreate="true" qualifier="priority" type="java.lang.String" generate="true">
+					    <description>priroty for brands</description>
+						<persistence type="property" />
+						<modifiers unique="true" optional="false" />
+					</attribute>					
+				</attributes>
+			</itemtype>
+			<itemtype code="ProductOfferDetail" autocreate="true" generate="true">
 				<deployment table="ProductOfferDetail" typecode="16999" />
 				<attributes>
 					<attribute autocreate="true" qualifier="productId" type="java.lang.String"

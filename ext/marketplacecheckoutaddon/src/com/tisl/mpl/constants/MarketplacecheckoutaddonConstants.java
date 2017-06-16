@@ -19,6 +19,12 @@ package com.tisl.mpl.constants;
  */
 public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplacecheckoutaddonConstants
 {
+	//TPR-4461 starts here
+	//public static final String VOUCHERPAYMENTMODERESTRICTIONMESSAGE = "Sorry,Your Voucher is not applicable for the current payment mode you selected";
+	public static final String BINBANKCHECK = "/binBankCheck/{bin:.*}";
+	public static final String REDIRECTTOCOUPON = "redirect_with_coupon";
+	//TPR-4461 ends here
+
 	public static final String EXTENSIONNAME = "marketplacecheckoutaddon";
 	public static final String MPLPAYMENTURL = "/checkout/multi/payment-method";
 	public final static String PAYMENT_METHOD = "payment-method";
@@ -180,6 +186,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String TIMEOUT = "timeout";
 	//TPR-429
 	public static final String CHECKOUT_SELLER_IDS = "checkoutSellerIDs";
+	//PRDI-36/INC144315559
+	public static final String DELIVERYADDRESSID = "deliveryAddressID";
 
 	// Request Mapping URL
 

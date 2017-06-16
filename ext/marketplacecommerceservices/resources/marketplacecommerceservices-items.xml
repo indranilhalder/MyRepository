@@ -72,6 +72,12 @@
 			<value code="C2C" />
 			<value code="CDA" />
 		</enumtype>
+		<enumtype generate="true" code="oISPaymentTypeEnum" autocreate="true"
+			dynamic="true">
+			<value code="Credit" />
+			<value code="Debit" />
+			<value code="Netbanking" />
+		</enumtype>
 		<enumtype code="orderStatus" autocreate="false" generate="true"
 			dynamic="true">
 			<value code="PLACED" />
@@ -618,6 +624,14 @@
 					<persistence type="property" />
 					<modifiers read="true" write="true" search="false"
 						optional="true" />
+				</attribute>
+					<!-- TPR-4065,if promotion is getting created through bulk load -->
+					<attribute qualifier="isBulk" autocreate="true" 
+					type="java.lang.Boolean">
+					<description>Flag to indicate that the promotion is for bulk promo or not</description>
+					<defaultvalue>Boolean.TRUE</defaultvalue>
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="true" />
 				</attribute>
 				<!-- Added For TPR-996 -->
  				 <attribute qualifier="termsAndCondition" type="localized:java.lang.String">

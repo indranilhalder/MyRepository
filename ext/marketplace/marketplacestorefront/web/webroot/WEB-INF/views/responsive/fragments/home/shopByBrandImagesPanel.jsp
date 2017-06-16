@@ -4,17 +4,19 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-	<c:if test="${layout eq 'FiveBrandImages'}">
+<c:forEach items="${shopByBrandDataList}"
+			var="brandData">
+	<c:if test="${brandData.layout eq 'FiveBrandImages'}">
 			<li class="short images">
 				<%-- <div class="toggle">
 				<c:url var="subBrandUrl" value="${subBrandUrl}"></c:url>
 			</div>  --%>
-			<div class="view_brands"><a href="${masterBrandUrl}"><h4>
+			<div class="view_brands"><a href="${brandData.masterBrandUrl}"><h4>
 						<b> <spring:theme code="navigation.brand.viewAll" /> ${masterBrandName}
 
 						</b>
 					</h4></a>
-			</div> <c:forEach items="${subBrandList}"
+			</div> <c:forEach items="${brandData.subBrandList}"
 					var="subBrand">
 					<!-- TISPRD-1381 Brand Issue Fix -->
 					<c:if test="${not empty subBrand.subBrandUrl}">
@@ -34,18 +36,18 @@
 				</c:forEach>
 			</li>
 	</c:if>
-	<c:if test="${layout eq 'OneCloumnOneBrandImage'}">	
+	<c:if test="${brandData.layout eq 'OneCloumnOneBrandImage'}">	
 				<li class="short images">
 					<div class="view_brands">
-					<a href="${masterBrandUrl}"><h4>
-						<b> <spring:theme code="navigation.brand.viewAll" /> ${masterBrandName}
+					<a href="${brandData.masterBrandUrl}"><h4>
+						<b> <spring:theme code="navigation.brand.viewAll" /> ${brandData.masterBrandName}
 
 						</b>
 					</h4></a>
 					</div>
 
 				<ul class="words" style="width: 50%; float: left">
-					<c:forEach items="${subBrands}" var="subBrand">
+					<c:forEach items="${brandData.subBrands}" var="subBrand">
 					<c:set var="catName" value="${fn:split(subBrand.name, '||')}" />
 						<c:url var="subBrandUrl"
 							value="/${catName[1]}/c-${fn:toLowerCase(subBrand.code)}"></c:url>
@@ -55,7 +57,7 @@
 							</div></li>
 					</c:forEach>
 				</ul> <c:set var="count" value="0" /> <c:forEach
-					items="${subBrandList}" var="subBrand">
+					items="${brandData.subBrandList}" var="subBrand">
 					<div class="" style="width: 50%; float: right">
 						<div>
 
@@ -77,3 +79,4 @@
 				</c:forEach>
 			</li>
 </c:if>
+</c:forEach>

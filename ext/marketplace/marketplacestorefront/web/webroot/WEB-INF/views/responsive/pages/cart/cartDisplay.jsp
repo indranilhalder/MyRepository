@@ -40,7 +40,7 @@
 				<!-- error message position change as part of UF-61 -->
  				<p id="unserviceablepincode_tooltip" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
      			<p id="error-Id_tooltip" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
- 				<p id="emptyId_tooltip" style="display:none">Enter <span>pincode</span> on the left to continue</p> 
+ 				<p id="emptyId_tooltip" style="display:none">Enter <span class="red-text">pincode</span> on the <span class="pin-desktop">left</span><span class="pin-responsive">top</span> to continue</p> 
 			</li>
 
 			<!-- TISBOX-879
@@ -147,10 +147,18 @@
 	</div>
 	</div>
 	<script>
-                               $(window).on('load',function(){ 
+
+				//UF-70 Commenting onload call to checkIsServicable() and making it on ready in marketplacecheckoutaddon.js
+   				//window.onload =	function(){
+   						//checkIsServicable();   						
+   				//}
+
+
+                             /*   $(window).on('load',function(){ 
    						checkIsServicable();
    						
-   				});
+   				}); */
+
 	</script>
 <!-- TISCR-320 -->
 <%-- <span class="continue-shopping">
@@ -165,3 +173,6 @@
 		<cart:cartGiftYourself/>
 
 </c:if>
+
+<!-- UF-70 -->
+<input type="hidden" name="isPincodeRestrictedPromoPresent" id="isPincodeRestrictedPromoPresentId" value="${isPincodeRestrictedPromoPresent}">

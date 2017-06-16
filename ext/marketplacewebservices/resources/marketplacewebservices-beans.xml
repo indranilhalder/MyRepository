@@ -245,17 +245,33 @@
 		<property name="super_category_name" type="String" />
 		<property name="subCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSubHierarchyData>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 --> 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSubHierarchyData">
 		<property name="sub_category_name" type="String" />
 		<property name="sub_category_id" type="String" />
 		<property name="supersubCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyData">
 
 		<property name="super_sub_category_id" type="String" />
 		<property name="super_sub_category_name" type="String" />
+		<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 --> 
+		
 
 	</bean>
 
@@ -271,17 +287,32 @@
 		<property name="super_category_name" type="String" />
 		<property name="subCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSubHierarchyWsDTO>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSubHierarchyWsDTO">
 		<property name="sub_category_name" type="String" />
 		<property name="sub_category_id" type="String" />
 		<property name="supersubCategories"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyWsDTO>" />
+			<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.DepartmentSuperSubHierarchyWsDTO">
 
 		<property name="super_sub_category_id" type="String" />
 		<property name="super_sub_category_name" type="String" />
+		<!-- TISQAUAT-613 --> 
+		<property name="deepLinkType" type="String" />
+		<property name="deepLinkId" type="String" />
+		<property name="deepLinkVal" type="String" />
+		<!-- TISQAUAT-613 -->
 
 	</bean>
 	<!-- Shop by dept Mobile -->
@@ -682,6 +713,8 @@
 	<!-- TPR-1083 Start-->
 	<property name="exchangeId" type="String"/>
 	<property name="exchangeMessage" type="String"/>
+		<!-- TPR-6117 -->
+			<property name="maxQuantityAllowed" type="String" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -810,6 +843,8 @@
 		<property name="pickupPersonMobile" type="String" />
 
 		<property name="cartGuid" type="String"></property>
+		<!-- TPR-6117 -->
+		<property name="reachedMaxLimitforproduct" type="String"></property>
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
@@ -1024,6 +1059,7 @@
 		<property name="orderId" type="String"></property>
 		<property name="cartGuid" type="String"></property>
 		<property name="status" type="String"></property>
+		<property name="errorMessage" type="String"></property>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.StateWsDto">
@@ -1099,6 +1135,7 @@
 		<property name="totalPrice" type="String" />
 		<property name="orderId" type="String" />
 		<property name="otpStatus" type="String" />
+		<property name="errorMessage" type="String" />
 		<property name="paymentModes" type="java.util.Map&lt;String,Boolean>" />
 		<property name="listofPotentialRestriction"
 			type="java.util.List&lt;com.tisl.mpl.wsdto.PotentialRestrictionData>" />
@@ -1680,6 +1717,8 @@
 		<!-- TPR-472 -->
 		<property name="icid" type="String" />
 		<property name="componentType" type="String" />
+		<!-- TPR-5168 -->
+    	<property name="icid2" type="String" /> 
 	</bean>
 
 	<!-- <bean class="com.tisl.mpl.wsdto.TextComponentWsDTO"> <property name="text" 
@@ -2272,6 +2311,7 @@
 		<property name="couponDiscount" type="String" />
 		<property name="discount" type="String" />
 		<property name="total" type="String" />
+		<property name="couponMessage" type="String" />
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.GigyaWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="sessionToken" type="String" />
@@ -2841,6 +2881,7 @@
     	<property name="narration" type="String"/>
     	<property name="retUrl" type="String"/>
     	<property name="checksum " type="String"/>
+    	<property name="errorMessage " type="String"/>
     </bean>
 
 <bean class="com.tisl.mpl.wsdto.WalletPaymentWsDTO" extends="com.tisl.mpl.wsdto.ErrorDTO">

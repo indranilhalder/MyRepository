@@ -4,7 +4,7 @@
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<!-- <div id="navigation" style="margin-top: -2px;"></div> -->
+
 
 
 <c:if test="${component.uid eq 'ShopByBrandComponent' }">
@@ -34,7 +34,7 @@
 			</div>
 			<span id="mobile-menu-toggle" class="mainli"></span>
 
-			<!-- Rendering the sub-brand images if the layout is FiveBrandImages  -->
+			
 			<c:if test="${component.layout eq 'FiveBrandImages'}">
 				<ul class="images" id="${component.uid}"></ul>
 			</c:if>
@@ -43,7 +43,7 @@
 				<ul id="${component.uid}" class="images">
 				</ul>
 			</c:if>
-			<!-- Rendering the brands alphabetically if the layout is AtoZ -->
+			
 			<c:if test="${component.layout eq 'AtoZ'}">
 				<ul class="a-z">
 					<li class="short images" id="atozbrandsdiplay">
@@ -62,10 +62,3 @@
 		</li>
 	</c:forEach>
 </ul>
-
-
-<!-- </div> -->
-
-
-
-

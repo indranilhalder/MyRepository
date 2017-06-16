@@ -17,7 +17,7 @@ function constructDepartmentHierarchy(inputArray) {
 					var categoryName = categoryDetails[1];
 					var facetCount = 0;
 					
-					if(categoryDetails[2] == "L3")
+					if(categoryDetails[2] == "L3" || categoryDetails[2] == "L4")
 					{
 						//categoryName += "  (" +categoryDetails[5] + ")";
 						facetCount = "  (" +categoryDetails[5] + ")";
@@ -339,7 +339,7 @@ function donotShowAll()
 
 		updateProductStock(stockLevel,sizeMatched, serpSizeList,minPriceSize,product);
 		//updtae sale price
-		if(productPromotion!=""){
+		if(typeof(productPromotion)!='undefined' && productPromotion!=""){//PRDI-34 issue fix
 		findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 		}
 

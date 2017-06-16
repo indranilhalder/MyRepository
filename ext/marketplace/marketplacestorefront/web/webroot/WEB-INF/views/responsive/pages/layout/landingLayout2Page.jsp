@@ -10,6 +10,15 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- TPR-1072 START -->
+<c:if test="${not empty googlebot}">
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/shopByBrandImagesPanel.jsp"%></div>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/footerPanel.jsp"%></div>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/cms/navigationbarcollectioncomponent.jsp"%></div>
+</c:if>
+<!-- TPR-1072 END -->
+
 <template:page pageTitle="${pageTitle}">
 	<div class="no-space homepage-banner">
 		<cms:pageSlot position="Section1" var="feature">
@@ -33,9 +42,7 @@
 	<div id="brandsYouLove" class="home-brands-you-love-wrapper feature-collections"></div>
 	<div id="bestOffers" class="best-offers feature-collections"></div>
 	<div id="promobannerhomepage" class="buy-banner"></div>
-	<!-- <div id="bestPicks" class="feature-collections"></div> -->
 	<div id="productYouCare" class="feature-collections"></div>
-	<!-- <div class="feature-categories" id="ia_categories_favorites"></div> -->
 	<div class="feature-collections">
 	<div id="stayQued" class="qued"></div>
 	<div id="newAndExclusive" class=""></div>
@@ -44,23 +51,12 @@
 	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div> -->
-	<div class="trending" id="ia_products_hot"></div>
-
-	<%-- <!-- Start of Code added for TPR 1313 -->
-	<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.category.ids')" var="IACategories"/> 
-    <input type="hidden"  id="categoryIdHotNow" value="${IACategories}" />	 
-	<c:set var="categoryIdlist" value="${fn:split(IACategories, ',')}" />
-	<c:forEach var="categoryIds" items="${categoryIdlist}">	
-		<c:set var="categoryId" value="${fn:substringBefore(categoryIds, '-')}" />
-		<div class="trending" id="ia_products_hot_${categoryId}"></div>
-	</c:forEach>
-	<!-- End of Code added for TPR 1313 --> --%>
 	
-	<!-- For Infinite Analytics End -->
+	<div id="stw_widget"></div>
+	<div class="trending" id="ia_products_hot"></div>
 	<div id="showcase" class="showcase feature-collections"></div>
 	
 	<div id="showcaseMobile" class="showcase feature-collections"></div>
-    <!-- Store Locator  -->
 	 <cms:pageSlot position="Section7" var="feature" element="div">
 		<cms:component component="${feature}" />
      </cms:pageSlot>

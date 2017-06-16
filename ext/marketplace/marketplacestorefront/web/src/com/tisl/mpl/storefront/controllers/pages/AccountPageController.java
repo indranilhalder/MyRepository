@@ -1326,6 +1326,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
 
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
+
 			}
 		}
 		catch (final IllegalArgumentException e)
@@ -1715,9 +1718,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()  && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
+						}else{
+							productRichAttrOfQuickDrop=ModelAttributetConstants.NO;
 						}
 					}
 
@@ -2896,7 +2901,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 		}
-		if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+		if (null != request.getParameterMap() && request.getParameterMap().containsValue(isLux))
 		{
 			returnAction = returnAction + "?" + isLux + "=true";
 		}

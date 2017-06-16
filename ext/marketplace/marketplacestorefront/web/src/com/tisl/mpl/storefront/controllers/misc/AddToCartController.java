@@ -13,16 +13,20 @@
  */
 package com.tisl.mpl.storefront.controllers.misc;
 
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.AbstractController;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartModificationData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.product.ProductService;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,9 +37,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.helper.AddToCartHelper;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.web.forms.MplAddToCartForm;
-import com.tisl.mpl.helper.AddToCartHelper;
+
 
 /**
  * Controller for Add to Cart functionality which is not specific to a certain page.
@@ -61,6 +66,15 @@ public class AddToCartController extends AbstractController
 
 	//@Resource(name = "sessionService")
 	//private SessionService sessionService;
+
+	//TPR-5346 STARTS
+	@Resource(name = "productService")
+	private ProductService productService;
+
+	@Autowired
+	private SiteConfigService siteConfigService;
+
+	//TPR-5346 ENDS
 
 
 	@ResponseBody
@@ -110,7 +124,37 @@ public class AddToCartController extends AbstractController
 				//model.addAttribute(MarketplacecommerceservicesConstants.ERROR_MSG_TYPE, "basket.error.quantity.invalid");
 				//model.addAttribute(ModelAttributetConstants.QUANTITY, Long.valueOf(0L));
 			}
-			final String maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+
+			//TPR-5346 start
+			//Configurable Cart Quantity Restrictions(max quantity added to be restricted at pdp page)
+			String maxQuantityAlreadyAdded = "";
+
+			String maxQuantityAdded = "";
+
+			final int maximum_configured_quantiy = siteConfigService.getInt(
+
+			MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+
+			final ProductModel product = productService.getProductForCode(code);
+
+			if (product.getMaxOrderQuantity() == null || product.getMaxOrderQuantity().intValue() <= 0
+					|| product.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
+			{
+				maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+			}
+			else
+			{
+				final long checkMaxLimList = mplCartFacade.checkMaxLimit(code, null);
+				maxQuantityAdded = mplCartFacade.isMaxProductQuantityAlreadyAdded(product.getMaxOrderQuantity(), code, qty, stock,
+						ussid, checkMaxLimList);
+				if (StringUtils.isNotEmpty(maxQuantityAdded))
+				{
+					maxQuantityAlreadyAdded = maxQuantityAdded + "|" + product.getMaxOrderQuantity();
+				}
+			}
+			//TPR-5346 end
+
+			//final String maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 			if (maxQuantityAlreadyAdded.isEmpty())
 			{
 				LOG.debug("We are allowed to add this product by checking max quantity");

@@ -93,6 +93,11 @@
 							<c:if test="${numberItemsInCart -numberShowing == 1}">&nbsp;<spring:theme code="cart.popup.more.item" /></c:if>
 							</div>
 							</c:if>
+
+							<%-- <div class="totalPayable">
+								<spring:theme code="cart.popup.totalPayable" />&nbsp;<span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
+							</div> --%>
+
 							 <%-- <div class="totalPayable">*** ${(cartData.deliveryCost.formattedValue)}
 								<spring:theme code="cart.popup.totalPayable" /><span class="total-payable-amount">${cartData.totalPriceWithConvCharge.formattedValue}</span> 
 							</div> --%>
@@ -110,8 +115,7 @@
 									</div>
 		   						</c:otherwise>
 							</c:choose> 
-							
-				
+
 							<a href="${cartUrl}" class="go-to-bag mini-cart-checkout-button">
 							<spring:theme code="mpl.minicart.myBag" /></a>
 							</li>       

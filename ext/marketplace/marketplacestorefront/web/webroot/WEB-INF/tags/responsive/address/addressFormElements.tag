@@ -361,8 +361,10 @@ display: none;}
 						<c:set var='countryIsoCode'  value='${country.isocode}' />
 					</c:if>
 				</c:forEach>
-				<label class="control-label " for="country"> Country*</label>
-				<input type="text" id="country" value='${countyName}'  readonly /> 
+				<label class="control-label " for="country"> Country</label>
+				 <!-- Added for UF-199 -->
+				${countyName} <spring:theme code="text.addressBook.CountryServiceable" /> 
+				<%-- <input type="text" id="country" value='${countyName}'  readonly />  --%>
 			   	<input type="hidden" id="country"  name="countryIso" value="${countryIsoCode}"/>
 			</div>
 		</div>

@@ -80,6 +80,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.localization.Localization;
+import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 
 import java.math.BigDecimal;
@@ -122,6 +123,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.InvalidPaymentInfoException;
@@ -259,6 +261,30 @@ public class CartsController extends BaseCommerceController
 	private AddToCartHelper addToCartHelper;
 
 
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+
+	@Resource(name = "mplCouponFacade")
+	private MplCouponFacade mplCouponFacade;
+
+	/**
+	 * @return the mplCouponFacade
+	 */
+	public MplCouponFacade getMplCouponFacade()
+	{
+		return mplCouponFacade;
+	}
+
+	/**
+	 * @param mplCouponFacade
+	 *           the mplCouponFacade to set
+	 */
+	public void setMplCouponFacade(final MplCouponFacade mplCouponFacade)
+	{
+		this.mplCouponFacade = mplCouponFacade;
+	}
+
+
 	//	@Autowired
 	//	private CartService cartService;
 	//@Autowired
@@ -268,6 +294,24 @@ public class CartsController extends BaseCommerceController
 
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
+
+	/**
+	 * @return the voucherService
+	 */
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+
 
 	//private static final String DEPRECATION = "deprecation";
 	private static final String APPLICATION_TYPE = "application/json";
@@ -1932,8 +1976,9 @@ public class CartsController extends BaseCommerceController
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, channel);
-				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
+				//TPR-6117
+				//				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				//				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2186,12 +2231,21 @@ public class CartsController extends BaseCommerceController
 					validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 				}
 
+				//TPR-6117
+				final boolean checkMaxLimList = mplCartFacade.checkMaxLimitUpdate(entryNumber, quantity.longValue());
+				if (!checkMaxLimList)
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9110);
+				}
+				//TPR-6117
+
 				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false, cartModel);
 				//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
 				final List<AbstractOrderEntryModel> abstractOrderEntryList = cartModel.getEntries();
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 				List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
 				GetWishListProductWsDTO gwlp = null;
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
 				{
 					if (null != abstractOrderEntry)
@@ -2203,7 +2257,6 @@ public class CartsController extends BaseCommerceController
 							/////////// TISSAM-14
 							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 							{
-								final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 								if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
 								{
 									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
@@ -2218,6 +2271,21 @@ public class CartsController extends BaseCommerceController
 							}
 							////////
 							gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
+
+							//TPR-6117 STARTS
+							if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
+									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
+									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+							{
+								gwlp.setMaxQuantityAllowed(abstractOrderEntry.getProduct().getMaxOrderQuantity().toString());
+							}
+							else
+							{
+								gwlp.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+							}
+
+							//TPR-6117 Ends
+
 						}
 						gwlpList.add(gwlp);
 					}
@@ -3272,9 +3340,10 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/applyCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value =
+	{ "/applyCoupons", "/{cartId}/applyCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ApplyCouponsDTO applyCoupons(@PathVariable final String cartId, @RequestParam final String couponCode,
+	public ApplyCouponsDTO applyCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
@@ -3295,10 +3364,11 @@ public class CartsController extends BaseCommerceController
 			//Redeem coupon for cartModel
 			if (orderModel == null)
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartGuid);
 				if (cartModel == null)
 				{
-					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 				}
 				else
@@ -3309,6 +3379,7 @@ public class CartsController extends BaseCommerceController
 					applycouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
 				}
 			}
 			else
@@ -3316,6 +3387,7 @@ public class CartsController extends BaseCommerceController
 				applycouponDto = mplCouponWebFacade.applyVoucher(couponCode, null, orderModel, paymentMode);
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(orderModel));
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3367,9 +3439,10 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/releaseCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value =
+	{ "/releaseCoupons", "/{cartId}/releaseCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ReleaseCouponsDTO releaseCoupons(@PathVariable final String cartId, @RequestParam final String couponCode,
+	public ReleaseCouponsDTO releaseCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
 			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
@@ -3388,10 +3461,11 @@ public class CartsController extends BaseCommerceController
 			//Release coupon for cartModel
 			if (null == orderModel)
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartGuid);
 				if (cartModel == null)
 				{
-					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 				}
 				else
@@ -3839,6 +3913,7 @@ public class CartsController extends BaseCommerceController
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
 			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
 					deliverySlotsRequestData, cartModel);
+
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{

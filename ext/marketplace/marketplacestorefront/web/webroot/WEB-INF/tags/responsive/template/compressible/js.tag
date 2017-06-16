@@ -8,17 +8,13 @@
 <template:javaScriptVariables />
 
 <script>
-//Added for TISPRD-8621
 $(document).ready(function(){
 	var location = window.location.href.split('?')[0];
 	var params = window.location.href.split('?')[1];
-	console.log(location);
-	console.log(params);
 	if(!params) {
 		window.history.replaceState("","",location);
 	}
 });
-//Added for TISPRD-8621
 
 var loginStatus = '${sessionScope.loginSuccess}';
 
@@ -26,47 +22,9 @@ $(document).on("click", ".header-myAccountSignOut", function() {
 	window.localStorage.removeItem("eventFired");
 });
 
-//TPR-565
-/* $(document).on("click","form .pagination_a_link",function(e){
-	e.preventDefault();
-	var hrefurl = $(this).attr('href');
-	// Added For TISPRD-8621
-	var searchCategory = $("#paginationForm input[name='searchCategory']").val();	
-	var q = $("#paginationForm input[name='q']").val();
-	var pageSize = $("#paginationForm input[name='pageSize']").val();	
-	
-	if (!searchCategory && ( q === ":relevance" || q.indexOf(":relevance:isLuxuryProduct:false") != -1 )) {	
-	$("#paginationForm").find(':input[name="searchCategory"]').attr('disabled', true);	
-	$("#paginationForm").find(':input[name="q"]').attr('disabled', true);
-	$("#paginationForm").find(':input[name="pageSize"]').attr('disabled', true);
-	}
-	// Added For TISPRD-8621
-	$("#paginationForm").attr("action", hrefurl);
-	$(this).closest('form').submit();
- });  
- $(document).on("click","form .pagination_a_link",function(e){
-		e.preventDefault();
-		var hrefurl = $(this).attr('href');
-		// Added For TISPRD-8621
-		var searchCategory = $("#paginationForm input[name='searchCategory']").val();	
-		var q = $("#paginationForm input[name='q']").val();
-		var pageSize = $("#paginationForm input[name='pageSize']").val();
-		
-		if (!searchCategory && ( q === ":relevance" || q.indexOf(":relevance:isLuxuryProduct:false") != -1 )) {	
-		$("#paginationFormBottom").find(':input[name="searchCategory"]').attr('disabled', true);	
-		$("#paginationFormBottom").find(':input[name="q"]').attr('disabled', true);
-		$("#paginationFormBottom").find(':input[name="pageSize"]').attr('disabled', true);
-		}
-		// Added For TISPRD-8621
-		$("#paginationFormBottom").attr("action", hrefurl);
-		$(this).closest('form').submit();
-	 });  */
-
-//TISPRO-183 -- Firing Tealium event only after successful user login
 if(loginStatus){
 	if (localStorage.getItem("eventFired")==null || window.localStorage.getItem("eventFired")!="true") {
 		localStorage.setItem("eventFired","true");
-	//	console.log("Login Success!!!");
 		if(typeof utag == "undefined"){
 			console.log("Utag is undefined")
 		}
@@ -74,11 +32,6 @@ if(loginStatus){
 			console.log("Firing Tealium Event")
 			utag.link({ "event_type" : "Login", "link_name" : "Login" });
 		}
-		
-		//fireTealiumEvent();
-		
-		
-		
 	}  
 }
 </script>
@@ -89,7 +42,6 @@ if(loginStatus){
 <script type="text/javascript"
 	src="${commonResourcePath}/bootstrap/dist/js/bootstrap.min.js"></script>
 
-<!-- R2.3: START FL04 -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
@@ -97,20 +49,17 @@ if(loginStatus){
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
 	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
+
 </c:if>
-<!-- R2.3: END FL04 -->
-<!-- LW-230 Start -->
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
 <c:choose>
-<c:when test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
-<script type="text/javascript" src="${headerWidgetJsSource}"></script>
-</c:when>
-<c:otherwise>
-<c:if test="${not empty isLuxury and isLuxury == 'true'}">
-<script type="text/javascript" src="${headerWidgetJsSource}"></script>
-</c:if>
-</c:otherwise>
+	<c:when test="${ not empty param.isLux and param.isLux eq true }">
+		<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+	</c:when>
+	<c:when test="${not empty isLuxury and isLuxury == 'true'}">
+		<script type="text/javascript" src="${headerWidgetJsSource}"></script>
+	</c:when>
 </c:choose> 
  <%-- <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/> 
  <c:if test="${(param.isLux ne null and param.isLux eq true) and ((not empty isLuxury and isLuxury != 'false') or (empty isLuxury))}">
@@ -121,7 +70,6 @@ if(loginStatus){
 	<script type="text/javascript" src="${headerWidgetJsSource}"></script>
 </c:if>  --%>
 
-<!-- LW-230 End -->
 <c:choose>
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplminjs/>
@@ -142,7 +90,6 @@ if(loginStatus){
  --%>
 
 
-<!--- START: INSERTED for MSD --->
 <c:if test="${isMSDEnabled}">
 	<c:choose>
 	<c:when test="${product.rootCategory=='Clothing'}">
@@ -180,11 +127,4 @@ div.blockMsg {
     color: #fff;
     margin-left:20px;
 }
-/* div.blockUI.blockOverlay{
-	opacity : .09 !important;
-	top : 100px !important;
-} */
-
-</style> 
-
-<!--- END:MSD --->
+</style>

@@ -161,6 +161,11 @@ public class SiteMapController extends AbstractPageController
 						final CategoryModel department = categoryService.getCategoryForCode(categoryModel.getCode());
 						final Collection<CategoryModel> secondLevelCategories = department.getCategories();
 
+						//code changes for INC_10885
+						final StringBuilder catName1 = new StringBuilder();
+						catName1.append(department.getName()).append("||").append(department.getLinkComponents().get(0).getUrl());
+						department.setName(catName1.toString());
+						//code changes for INC_10885
 
 
 						// Iterating through the second level categories

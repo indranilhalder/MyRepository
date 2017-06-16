@@ -10,6 +10,7 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -63,7 +65,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -109,7 +111,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getHomePageForMobile()
 	 */
 	@Override
@@ -130,7 +132,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getLandingPageForCategory(de.hybris.platform
 	 * .category.model.CategoryModel)
@@ -204,7 +206,7 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService#getContentSlotByUidForPage(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -251,5 +253,23 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 		return ((AbstractPageModel) pages.iterator().next());
 	}
 
-}
+	//TPR-1072
+	@Override
+	public List<BrandComponentModel> getBrandsForShopByBrand()
+	{
+		return mplCmsPageDao.getBrandsForShopByBrand();
 
+	}
+	
+	/**
+	 * @param siteUid
+	 * @return CMSSite
+	 * @CAR-285
+	 */
+	@Override
+	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException
+	{
+		return mplCmsPageDao.getSiteforId(siteUid);
+	}
+
+}

@@ -269,7 +269,7 @@
 
 															<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
-																	text="Are you sure you want to delete this address?" />
+																	text="Are sure you want to delete this address?" />
 															</p>
 
 															<div class="buttons">

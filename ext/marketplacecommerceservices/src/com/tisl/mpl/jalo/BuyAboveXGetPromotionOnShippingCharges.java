@@ -105,16 +105,25 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 					boolean sellerFlag = false;
 					Map<String, Integer> validProdQCountMap = new HashMap<String, Integer>();
 
-					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+					//					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+					//					{
+					//						validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList);
+					//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
+					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+					//						sellerFlag = true;
+					//					}
+					//					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+					//					{
+					//						validUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(arg0, order, restrictionList);
+					//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
+					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+					//						sellerFlag = true;
+					//					}
+
+					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
+							|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
 					{
 						validUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(arg0, order, restrictionList);
-						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
-						setSellersubTotalValue(orderSubtotalAfterDiscounts);
-						sellerFlag = true;
-					}
-					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
-					{
-						validUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(arg0, order, restrictionList);
 						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(arg0, validUssidMap);
 						setSellersubTotalValue(orderSubtotalAfterDiscounts);
 						sellerFlag = true;
@@ -253,7 +262,7 @@ public class BuyAboveXGetPromotionOnShippingCharges extends GeneratedBuyAboveXGe
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.promotions.jalo.AbstractPromotion#getResultDescription(de.hybris.platform.jalo.SessionContext,
 	 * de.hybris.platform.promotions.jalo.PromotionResult, java.util.Locale)

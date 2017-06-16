@@ -64,6 +64,12 @@ public class SalesOrderXMLUtility
 	private String payemntrefid = null;
 	private boolean xmlToFico = true;
 
+	private static String REFUNDED_DELIVERY_MESSAGE = "setting refunded delivery charge...";
+
+	//SONAR FIX
+	//private static String EXPRESS_DELIVERY_CHARGE_MESSAGE="set express del charge from curr del charge";
+
+
 	//@Autowired
 	//private MplSellerInformationService mplSellerInformationService;
 
@@ -459,35 +465,44 @@ public class SalesOrderXMLUtility
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("express-delivery"))
 						{
 							LOG.debug("inside express del");
+							// TISPRDT-1186 START
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting current delivery charge...");
-								xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+						   //	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
-								xmlData.setExpressdeliveryCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
+								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
+							xmlData.setExpressdeliveryCharge(0.00);
+							 //	TISPRDT-1186 END 
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
-
+							
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
-								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
+								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)// INC144316465 STARTS
+							{
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
-								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+								xmlData.setScheduleDelCharge(0.00);
 							}
-
+							// INC144316465 end
 						}
 						else if (null != zoneDelivery && null != zoneDelivery.getDeliveryMode() && entry.getCurrDelCharge() != null
 								&& entry.getRefundedDeliveryChargeAmt() != null && null != zoneDelivery.getDeliveryMode().getCode()
 								&& zoneDelivery.getDeliveryMode().getCode().equalsIgnoreCase("home-delivery"))
 						{
-							
+
 							LOG.debug("inside home del");
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
@@ -496,20 +511,31 @@ public class SalesOrderXMLUtility
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedDeliveryChargeAmt());
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
-
+						// TISPRDT-1186 START 
+							xmlData.setExpressdeliveryCharge(0.00);
+						// TISPRDT-1186 END 
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
-								LOG.debug("setting schedule delivery charge..."+entry.getScheduledDeliveryCharge());
+								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
 								xmlData.setScheduleDelCharge(entry.getScheduledDeliveryCharge().doubleValue());
+							}
+							// INC144316465 STARTS
+							else if (null != entry.getRefundedScheduleDeliveryChargeAmt()
+									&& entry.getRefundedScheduleDeliveryChargeAmt().doubleValue() > 0)
+							{
+								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedScheduleDeliveryChargeAmt());
+								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
 							}
 							else
 							{
-								LOG.debug("setting refunded delivery charge..."+entry.getRefundedScheduleDeliveryChargeAmt());
-								xmlData.setScheduleDelCharge(entry.getRefundedScheduleDeliveryChargeAmt().doubleValue());
+								xmlData.setScheduleDelCharge(0.00);
 							}
+
+							// INC144316465 end
+
 							LOG.debug("set del charge");
 						}
 					}

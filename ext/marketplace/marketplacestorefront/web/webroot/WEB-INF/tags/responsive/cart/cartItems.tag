@@ -386,7 +386,9 @@ tr.d0 td {
 									<c:choose>
 										<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-											<!-- TPR-970 changes--><span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
+											<!-- TPR-970 changes--><%-- <span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span> --%>
+												<!-- UF-260 -->
+												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
 												<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 										</c:when>
@@ -442,7 +444,9 @@ tr.d0 td {
 				<input type="hidden" name="entryNumber"		value="${entry.entryNumber}" />
 				<input type="hidden" name="productCode"		value="${entry.product.code}" />
 				<input type="hidden" name="initialQuantity" value="${entry.quantity}" />
-				
+				<c:if test="${param.cartGuid ne null}">		<!-- For TPR-5666 -->
+					<input type="hidden" name="cartGuid" value="${param.cartGuid}" />
+				</c:if>
 				<ycommerce:testId code="cart_product_quantity">
 					<c:set var="priceBase" value="${entry.basePrice.formattedValue}" />
 					<c:set var="subPrice" value="${entry.basePrice.value}" />
@@ -1187,16 +1191,22 @@ tr.d0 td {
    <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
-            <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
+            <%-- <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li> --%>
+            <!-- UF-260 -->
+            <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartTotalMrp}"/></ycommerce:testId></span></li>
             <li id="subtotal_Value" style="display:none"><spring:theme code="basket.page.totals.subtotal"/><span class="amt"><span id="subtotalValue"></span></span></li>
             <li id="discount_Value" style="display:none"><spring:theme code="basket.page.totals.savings"/> <span class="amt"><span id="discountValue"></span></span></li>
             <li id="total_Value" class="totalValue" style="display:none"><spring:theme code="basket.page.totals.total"/><span class="amt"><span id="totalValue"></span></span></li>
-         <c:if test="${cartData.totalDiscounts.value > 0}">
-        <li id="discount"><spring:theme code="basket.page.totals.savings"/><span class="amt">
+         <%-- <c:if test="${cartData.totalDiscounts.value > 0}"> --%>
+       <%--  <li id="discount" style='${cartData.totalDiscounts.value > 0?"display:block;":"display:none;"}'><spring:theme code="basket.page.totals.savings"/><span class="amt">
         <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
-       <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/>
+       <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/> --%>
+        <%-- </c:if>  --%>
+         <!-- UF-260 -->
+         <c:if test="${totalDiscount.value > 0}">
+	        <li id="discount"><spring:theme code="text.account.order.savings"/><span class="amt">
+	        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${totalDiscount}"/></ycommerce:testId>
         </c:if> 
-        
         </span></li>
             
             <li id="total"><spring:theme code="basket.page.totals.total"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
