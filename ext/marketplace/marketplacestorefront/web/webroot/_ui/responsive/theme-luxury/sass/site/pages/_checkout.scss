@@ -674,3 +674,32 @@
 .checkout-content .checkout-shipping .heading-form h3{
  font-size: 14px;
 }
+
+  #newCardCC .card-group  .controls.col-md-6,  
+  #newCardCC .card-group .controls.col-md-4,  
+   #newCardCC .card-group .controls.col-md-2,    
+   #newCardCC .card-group .controls.col-md-12, #debitCard .card-group  .controls.col-md-6,  #debitCard .card-group  .controls.col-md-4,   #debitCard .card-group  .controls.col-md-2{
+     padding-left: 10px;
+    padding-right: 10px;
+ }
+.address-list.hideItem{
+      border-bottom: 1px solid #ccc;
+    margin-bottom: 15px
+}
+.wrapper{
+  background: transparent;
+  box-shadow: none;
+  border: 0px;
+}
+.deliveryaddress .choose-address .btn-section{
+     text-align: right;
+}
+.viewMore{
+     text-decoration: underline;
+}
+.address-list.hideItem .edit{
+ float:right;
+}
+.address-list.hideItem .address-details{
+     clear: both;
+}

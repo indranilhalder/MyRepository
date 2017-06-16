@@ -19,7 +19,7 @@
 	</c:otherwise>
 </c:choose>
 
-<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/uistyles-min.css"/>
+<%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/uistyless-min.css"/> --%>
 
 
 <%--  AddOn Theme CSS files --%>

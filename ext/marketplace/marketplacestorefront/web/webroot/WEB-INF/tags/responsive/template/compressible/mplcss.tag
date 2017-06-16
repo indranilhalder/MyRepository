@@ -1,4 +1,4 @@
-<%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/style.css"/> --%>
+<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/style.css"/>
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jquery-picZoomer.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/reset.css"/>
 <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/jqtree.css"/> --%>
