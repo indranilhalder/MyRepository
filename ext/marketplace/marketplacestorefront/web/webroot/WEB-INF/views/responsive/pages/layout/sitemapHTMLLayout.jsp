@@ -20,7 +20,9 @@
 			<section>
 				<c:set var="catName" value="${fn:split(megamap.key.name, '||')}" />
 				<h4 class="r2-borderBottom">
-					<a href="/${catName[1]}/c-${fn:toLowerCase(megamap.key.code)}">${catName[0]}</a>
+					<!-- br -->
+					
+					<a href="${catName[1]}/c-${fn:toLowerCase(megamap.key.code)}">${catName[0]}</a>
 				</h4>
 				<ul>
 				<c:forEach var="l2MegaMap" items="${megamap.value}">

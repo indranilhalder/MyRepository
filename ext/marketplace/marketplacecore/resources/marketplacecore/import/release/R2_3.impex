@@ -1,0 +1,1242 @@
+###################################### AddressHistory_Impex.impex starts ##############################################
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+#
+# Load medias
+#
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+                                         ;order_addressHistoryList_cockpitGroup_ui_config;text/xml; Order_AddressHistoryList_CockpitGroup.xml; $jarResource/xml/Order_AddressHistoryList_CockpitGroup.xml
+
+#
+# Setup cockpit configuration 
+#
+INSERT_UPDATE CockpitUIComponentConfiguration;code[unique=true];factoryBean;objectTemplateCode[unique=true];principal(uid)[unique=true];media(code);
+                                             ;addressHistoryList;listViewConfigurationFactory;Address;cockpitgroup;order_addressHistoryList_cockpitGroup_ui_config;
+###################################### AddressHistory_Impex.impex ends ##############################################
+###################################### Address_OrderDetailsAddress.impex starts ##############################################
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+#
+# Load medias
+#
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;address_orderdetailsbillingaddress_cockpitgroup_ui_config;text/xml; Address_OrderDetailsAddress_CockpitGroup.xml; $jarResource/xml/Address_OrderDetailsAddress_CockpitGroup.xml
+;address_orderdetailsdeliveryaddress_cockpitgroup_ui_config;text/xml; Address_OrderDetailsAddress_CockpitGroup.xml; $jarResource/xml/Address_OrderDetailsAddress_CockpitGroup.xml
+
+###################################### Address_OrderDetailsAddress.impex ends ##############################################
+###################################### cockpit_impex.impex starts ##############################################
+
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+#
+# Load medias
+#
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;address_customeraddresslist_cockpitgroup_ui_config;text/xml; Address_CustomerAddressList_CockpitGroup.xml; $jarResource/xml/Address_CustomerAddressList_CockpitGroup.xml
+;address_customeraddresslisteditor_cockpitgroup_ui_config;text/xml; Address_CustomerAddressListEditor_CockpitGroup.xml;$jarResource/xml/Address_CustomerAddressListEditor_CockpitGroup.xml
+
+#
+# Setup cockpit configuration 
+#
+INSERT_UPDATE CockpitUIComponentConfiguration;code[unique=true];factoryBean;objectTemplateCode[unique=true];principal(uid)[unique=true];media(code);
+;customerAddressList;listViewConfigurationFactory;Address;cockpitgroup;address_customeraddresslist_cockpitgroup_ui_config;
+;customerAddressListEditor;editorConfigurationFactory;Address;cockpitgroup;address_customeraddresslisteditor_cockpitgroup_ui_config;
+###################################### cockpit_impex.impex ends ##############################################
+###################################### commerce_r23_v1_0.impex starts ##############################################
+INSERT_UPDATE MplBUCConfigurations;airDeliveryBuffer[unique=true];surDeliveryBuffer[unique=true];sdCharge[unique=true];edCharge[unique=true]
+                                  ;1;4;250.30;500.30
+								  
+INSERT_UPDATE MplTimeSlots;timeslotType[unique=true];fromTime[unique=true];toTime[unique=true]
+                          ;"SD";"08:00";"10:00"
+						  ;"SD";"11:00";"13:00"
+						  ;"ED";"08:00";"10:00"
+						  
+INSERT_UPDATE MplLPHolidays;lpname[unique=true];workingDays[unique=true]
+                           ;all;0,1,2,3,4,5,6
+###################################### commerce_r23_v1_0.impex ends ##############################################
+###################################### CsCOCKPIT_LandMark_And_AddressHistory_Impex.impex starts ##############################################
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+#
+# Load medias
+#
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;address_orderdetailsbillingaddress_cockpitgroup_ui_config;text/xml; Address_OrderDetailsAddress_CockpitGroup.xml; $jarResource/xml/Address_OrderDetailsAddress_CockpitGroup.xml
+;address_orderdetailsdeliveryaddress_cockpitgroup_ui_config;text/xml; Address_OrderDetailsAddress_CockpitGroup.xml; $jarResource/xml/Address_OrderDetailsAddress_CockpitGroup.xml
+;order_addressHistoryList_cockpitGroup_ui_config;text/xml; Order_AddressHistoryList_CockpitGroup.xml; $jarResource/xml/Order_AddressHistoryList_CockpitGroup.xml
+
+#
+# Setup cockpit configuration 
+#
+INSERT_UPDATE CockpitUIComponentConfiguration;code[unique=true];factoryBean;objectTemplateCode[unique=true];principal(uid)[unique=true];media(code);
+;orderDetailsBillingAddress;listViewConfigurationFactory;Address;cockpitgroup;address_orderdetailsbillingaddress_cockpitgroup_ui_config;
+;orderDetailsDeliveryAddress;listViewConfigurationFactory;Address;cockpitgroup;address_orderdetailsdeliveryaddress_cockpitgroup_ui_config;
+;addressHistoryList;listViewConfigurationFactory;Address;cockpitgroup;order_addressHistoryList_cockpitGroup_ui_config;
+
+###################################### CsCOCKPIT_LandMark_And_AddressHistory_Impex.impex ends ##############################################
+###################################### email-content.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Language
+$lang=en
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+# Language
+$lang=en
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderUnDeliveredEmailTemplate;$jarResourceCms/structure-view/structure_orderUnDeliveredEmailTemplate.vm
+;;DeliveryAddessIssueEmailTemplate;$jarResourceCms/structure-view/structure_deliveryAddressIssueEmailTemplate.vm
+;;OrderOutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderOutForDeliveryEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderUnDeliveredEmailTemplate  ;Order UnDelivered Email Template    ;true;OrderUnDeliveredEmail  ;mpl_Email_Order_UnDelivered_Subject    ;mpl_Email_Order_UnDelivered_Body    ;EmailPage
+;;DeliveryAddessIssueEmailTemplate  ;Delivery AddressIssue Email Template    ;true;DeliveryAddressIssueEmail  ;mpl_Email_Delivery_Address_Issue_Subject    ;mpl_Email_Delivery_Address_Issue_Body    ;EmailPage
+;;OrderOutForDeliveryEmailTemplate  ;Order OutForDelivery Email Template    ;true;OrderOutForDeliveryEmail  ;mpl_Email_Order_OutForDelivery_Subject    ;mpl_Email_Order_OutForDelivery_Body    ;EmailPage
+
+
+# ContentSlotName For OrderUnDeliveredEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderUnDeliveredEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+# ContentSlotName For DeliveryAddressIssueEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='DeliveryAddessIssueEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+# ContentSlotName For OrderOutForDeliveryEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderOutForDeliveryEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailUnDeliveredLogoSlot;Default Site Logo Slot;true
+;;EmailOrderRefOneSlot;Default Order Reference One Slot;true
+;;EmailOrderRefTwoSlot;Default Order Reference Two Slot;true
+;;EmailTrackOrderOneSlot;Default Email Track Order One Slot;true
+;;EmailTrackOrderTwoSlot;Default Track Order Two Slot;true
+;;EmailOrderConfirmPwdfbSlot;Default Order Confirmation Facebook Slot;true
+;;EmailOrderConfirmgplusSlot;Default Order Confirmation Gooogle Plus Slot;true
+
+#ContentSlotForTemplate For OrderUnDeliveredEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderUnDeliveredEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderUnDeliveredEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderUnDeliveredEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderUnDeliveredEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderUnDeliveredEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderUnDeliveredEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderUnDeliveredEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderUnDeliveredEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-OrderUnDeliveredEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderUnDeliveredEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderUnDeliveredEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderUnDeliveredEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderUnDeliveredEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderUnDeliveredEmail;gplus;;EmailgplusConfSlot;true
+;;youtube-OrderUnDeliveredEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderUnDeliveredEmail;app;;EmailappConfSlot;true
+
+#ContentSlotForTemplate For DeliveryAddessIssueEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='DeliveryAddessIssueEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-DeliveryAddressIssueEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-DeliveryAddressIssueEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-DeliveryAddressIssueEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-DeliveryAddressIssueEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-DeliveryAddressIssueEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-DeliveryAddressIssueEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-DeliveryAddressIssueEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-DeliveryAddressIssueEmail;Tip;;EmailTipConfSlot;true
+;;Description-DeliveryAddressIssueEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-DeliveryAddressIssueEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-DeliveryAddressIssueEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-DeliveryAddressIssueEmail;fb;;EmailfbConfSlot;true
+;;gplus-DeliveryAddressIssueEmail;gplus;;EmailgplusConfSlot;true
+;;youtube-DeliveryAddressIssueEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-DeliveryAddressIssueEmail;app;;EmailappConfSlot;true
+
+#ContentSlotForTemplate For OrderOutForDeliveryEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderOutForDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderOutForDeliveryEmailEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderOutForDeliveryEmailEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderOutForDeliveryEmailEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderOutForDeliveryEmailEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderOutForDeliveryEmailEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderOutForDeliveryEmailEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderOutForDeliveryEmailEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-OrderOutForDeliveryEmailEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderOutForDeliveryEmailEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderOutForDeliveryEmailEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderOutForDeliveryEmailEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderOutForDeliveryEmailEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderOutForDeliveryEmailEmail;gplus;;EmailgplusConfSlot;true
+;;youtube-OrderOutForDeliveryEmailEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderOutForDeliveryEmailEmail;app;;EmailappConfSlot;true
+
+
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_UnDelivered_Body;"Order UnDelivered Email Body";$emailResource/email-orderUndeliveredBody.vm
+;mpl_Email_Order_UnDelivered_Subject;"Order UnDelivered Email Subject";$emailResource/email-orderUndeliveredSubject.vm
+;mpl_Email_Delivery_Address_Issue_Body;"Delivery Address Issue Subject";$emailResource/email-orderDeliveryAddressIssueBody.vm
+;mpl_Email_Delivery_Address_Issue_Subject;"Order UnDelivered Email Subject";$emailResource/email-orderDeliveryAddressIssueSubject.vm
+;mpl_Email_Order_OutForDelivery_Body;"Order UnDelivered Email Body";$emailResource/email-orderUndeliveredBody.vm
+;mpl_Email_Order_OutForDelivery_Subject;"Order UnDelivered Email Subject";$emailResource/email-orderUndeliveredSubject.vm
+
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderUnDeliveredEmail;Order UnDelivered Email;OrderUnDeliveredEmailTemplate;true;
+;;DeliveryAddressIssueEmail;Order UnDelivered Email;DeliveryAddessIssueEmailTemplate;true;
+;;OrderOutForDelivery;Order UnDelivered Email;OrderUnDeliveredEmailTemplate;true;
+
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;OrderUnDeliveredEmail;"customerservices@tataunistore.in";"Customer Services Team"
+;;DeliveryAddressIssueEmail;"customerservices@tataunistore.in";"Customer Services Team"
+;;OrderOutForDelivery;"customerservices@tataunistore.in";"Customer Services Team"
+
+ # Render template Delivery Address Issue Email Tempalte  
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_UnDelivered_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_UnDelivered_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Delivery_Address_Issue_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Delivery_Address_Issue_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_OutForDelivery_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_OutForDelivery_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+
+###################################### email-content.impex ends ##############################################
+###################################### OrderConfirmation.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Language
+$lang=en
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
+
+###################################### OrderConfirmation.impex ends ##############################################
+###################################### Return_To_Store.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Language
+$lang=en
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderReturnToStoreEmailTemplate;$jarResourceCms/structure-view/structure_returnToStoreTemplate.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderReturnToStoreEmailTemplate  ;Order ReturnToStore EmailTemplate    ;true;OrderReturnToStoreEmail  ;mpl_Email_Order_ReturnToStore_Subject    ;mpl_Email_Order_ReturnToStore_Body    ;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderReturnToStoreEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailReturnToStoreLogoSlot;Default Site Logo Slot;true
+;;EmailOrderRefOneSlot;Default Order Reference One Slot;true
+;;EmailOrderRefTwoSlot;Default Order Reference Two Slot;true
+
+
+#ContentSlotForTemplate For OrderReturnToStoreEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderReturnToStoreEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderReturnToStoreEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderReturnToStoreEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderReturnToStoreEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderReturnToStoreEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderReturnToStoreEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;Tip-OrderReturnToStoreEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderReturnToStoreEmail;Description;;EmailDescriptionConfSlot;true
+;;smileyimg-OrderReturnToStoreEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderReturnToStoreEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderReturnToStoreEmail;gplus;;EmailgplusConfSlot;true
+;;youtube-OrderReturnToStoreEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderReturnToStoreEmail;app;;EmailappConfSlot;true
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_ReturnToStore_Body;"Order ReturnToStore Email Body";$emailResource/email-returnToStoreBody.vm
+;mpl_Email_Order_ReturnToStore_Subject;"Order ReturnToStore Email Subject";$emailResource/email-returnToStoreSubject.vm
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderReturnToStoreEmail;Order RetunToStore Email;OrderReturnToStoreEmailTemplate;true;
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;OrderReturnToStoreEmail;"customerservices@tataunistore.in";"Customer Services Team"
+
+
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_ReturnToStore_Body;$emailPackageName.OrderReturnToStoreEmailContext
+;mpl_Email_Order_ReturnToStore_Subject;$emailPackageName.OrderReturnToStoreEmailContext
+
+###################################### Return_To_Store.impex ends ##############################################
+###################################### Return_To_Store_Updated.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Language
+$lang=en
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+# Language
+$lang=en
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderReturnToStoreEmailTemplate;$jarResourceCms/structure-view/structure_returnToStoreTemplate.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderReturnToStoreEmailTemplate  ;Order ReturnToStore EmailTemplate    ;true;OrderReturnToStoreEmail  ;mpl_Email_Order_ReturnToStore_Subject    ;mpl_Email_Order_ReturnToStore_Body    ;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderReturnToStoreEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailReturnToStoreLogoSlot;Default Site Logo Slot;true
+;;EmailOrderRefOneSlot;Default Order Reference One Slot;true
+;;EmailOrderRefTwoSlot;Default Order Reference Two Slot;true
+
+
+#ContentSlotForTemplate For OrderReturnToStoreEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderReturnToStoreEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderReturnToStoreEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderReturnToStoreEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderReturnToStoreEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderReturnToStoreEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderReturnToStoreEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;Tip-OrderReturnToStoreEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderReturnToStoreEmail;Description;;EmailDescriptionConfSlot;true
+;;smileyimg-OrderReturnToStoreEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderReturnToStoreEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderReturnToStoreEmail;gplus;;EmailgplusConfSlot;true
+;;youtube-OrderReturnToStoreEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderReturnToStoreEmail;app;;EmailappConfSlot;true
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_ReturnToStore_Body;"Order ReturnToStore Email Body";$emailResource/email-returnToStoreBody.vm
+;mpl_Email_Order_ReturnToStore_Subject;"Order ReturnToStore Email Subject";$emailResource/email-returnToStoreSubject.vm
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderReturnToStoreEmail;Order RetunToStore Email;OrderReturnToStoreEmailTemplate;true;
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;OrderReturnToStoreEmail;"customerservices@tataunistore.in";"Customer Services Team"
+
+
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_ReturnToStore_Body;$emailPackageName.OrderReturnToStoreEmailContext
+;mpl_Email_Order_ReturnToStore_Subject;$emailPackageName.OrderReturnToStoreEmailContext
+
+###################################### Return_To_Store_Updated.impex ends ##############################################
+###################################### TISRLEE-1563.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Language
+$lang=en
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+# Language
+$lang=en
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderUnDeliveredEmailTemplate;$jarResourceCms/structure-view/structure_orderUnDeliveredEmailTemplate.vm
+;;DeliveryAddressIssueEmailTemplate;$jarResourceCms/structure-view/structure_deliveryAddressIssueEmailTemplate.vm
+;;OrderOutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderOutForDeliveryEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderUnDeliveredEmailTemplate  ;Order UnDelivered Email Template    ;true;OrderUnDeliveredEmail  ;mpl_Email_Order_UnDelivered_Subject    ;mpl_Email_Order_UnDelivered_Body    ;EmailPage
+;;DeliveryAddressIssueEmailTemplate  ;Delivery AddressIssue Email Template    ;true;DeliveryAddressIssueEmail  ;mpl_Email_Delivery_Address_Issue_Subject    ;mpl_Email_Delivery_Address_Issue_Body    ;EmailPage
+;;OrderOutForDeliveryEmailTemplate  ;Order OutForDelivery Email Template    ;true;OrderOutForDeliveryEmail  ;mpl_Email_Order_OutForDelivery_Subject    ;mpl_Email_Order_OutForDelivery_Body    ;EmailPage
+
+
+# ContentSlotName For OrderUnDeliveredEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderUnDeliveredEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+# ContentSlotName For DeliveryAddressIssueEmail
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='DeliveryAddressIssueEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+# ContentSlotName For OrderOutForDeliveryEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderOutForDeliveryEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+#ContentSlotForTemplate For OrderUnDeliveredEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderUnDeliveredEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderUnDeliveredEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderUnDeliveredEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderUnDeliveredEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderUnDeliveredEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderUnDeliveredEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderUnDeliveredEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderUnDeliveredEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-OrderUnDeliveredEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderUnDeliveredEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderUnDeliveredEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderUnDeliveredEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderUnDeliveredEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderUnDeliveredEmail;gplus;;EmailgplusConfSlot;true
+;;twitter-OrderUnDeliveredEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-OrderUnDeliveredEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderUnDeliveredEmail;app;;EmailappConfSlot;true
+
+#ContentSlotForTemplate For DeliveryAddessIssueEmailTemplate
+
+REMOVE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];
+;;SiteLogo-DeliveryAddressIssueEmail
+;;TopContent-DeliveryAddressIssueEmail
+;;BottomContent-DeliveryAddressIssueEmail
+;;OrderReferenceNumberOne-DeliveryAddressIssueEmail
+;;OrderReferenceNumberTwo-DeliveryAddressIssueEmail
+;;TrackOrder1-DeliveryAddressIssueEmail
+;;TrackOrder2-DeliveryAddressIssueEmail
+;;Tip-DeliveryAddressIssueEmail
+;;Description-DeliveryAddressIssueEmail
+;;OrderConfirmationBannerTwo-DeliveryAddressIssueEmail
+;;smileyimg-DeliveryAddressIssueEmail
+;;fb-DeliveryAddressIssueEmail
+;;gplus-DeliveryAddressIssueEmail
+;;twitter-DeliveryAddressIssueEmail
+;;youtube-DeliveryAddressIssueEmail
+;;app-DeliveryAddressIssueEmail
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='DeliveryAddressIssueEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-DeliveryAddressIssueEmail;SiteLogo ; ;EmailSiteLogoConfSlot ;true
+;;TopContent-DeliveryAddressIssueEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-DeliveryAddressIssueEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-DeliveryAddressIssueEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-DeliveryAddressIssueEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-DeliveryAddressIssueEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-DeliveryAddressIssueEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-DeliveryAddressIssueEmail;Tip;;EmailTipConfSlot;true
+;;Description-DeliveryAddressIssueEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-DeliveryAddressIssueEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-DeliveryAddressIssueEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-DeliveryAddressIssueEmail;fb;;EmailfbConfSlot;true
+;;gplus-DeliveryAddressIssueEmail;gplus;;EmailgplusConfSlot;true
+;;twitter-DeliveryAddressIssueEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-DeliveryAddressIssueEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-DeliveryAddressIssueEmail;app;;EmailappConfSlot;true
+
+#ContentSlotForTemplate For OrderOutForDeliveryEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderOutForDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderOutForDeliveryEmailEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderOutForDeliveryEmailEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderOutForDeliveryEmailEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderOutForDeliveryEmailEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderOutForDeliveryEmailEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderOutForDeliveryEmailEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderOutForDeliveryEmailEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-OrderOutForDeliveryEmailEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderOutForDeliveryEmailEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderOutForDeliveryEmailEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderOutForDeliveryEmailEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderOutForDeliveryEmailEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderOutForDeliveryEmailEmail;gplus;;EmailgplusConfSlot;true
+;;twitter-OrderOutForDeliveryEmailEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-OrderOutForDeliveryEmailEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderOutForDeliveryEmailEmail;app;;EmailappConfSlot;true
+
+
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_UnDelivered_Body;"Order UnDelivered Email Body";$emailResource/email-orderUndeliveredBody.vm
+;mpl_Email_Order_UnDelivered_Subject;"Order UnDelivered Email Subject";$emailResource/email-orderUndeliveredSubject.vm
+;mpl_Email_Delivery_Address_Issue_Body;"Delivery Address Issue Subject";$emailResource/email-orderDeliveryAddressIssueBody.vm
+;mpl_Email_Delivery_Address_Issue_Subject;"Order Address Email Subject";$emailResource/email-orderDeliveryAddressIssueSubject.vm
+;mpl_Email_Order_OutForDelivery_Body;"Order OutForDelivery Email Body";$emailResource/email-orderOutForDeliveryBody.vm 
+;mpl_Email_Order_OutForDelivery_Subject;"Order OutForDelivery Email Subject";$emailResource/email-orderOutForDeliverySubject.vm
+
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderUnDeliveredEmail;Order UnDelivered Email;OrderUnDeliveredEmailTemplate;true;
+;;DeliveryAddressIssueEmail;Order AddressIssue Email;DeliveryAddressIssueEmailTemplate;true;
+;;OrderOutForDelivery;Order OutForDelivery Email;OrderOutForDeliveryEmailTemplate;true;
+
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;OrderUnDeliveredEmail;"customerservices@tataunistore.in";"Customer Services Team"
+;;DeliveryAddressIssueEmail;"customerservices@tataunistore.in";"Customer Services Team"
+;;OrderOutForDelivery;"customerservices@tataunistore.in";"Customer Services Team"
+
+ # Render template Delivery Address Issue Email Tempalte  
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_UnDelivered_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_UnDelivered_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Delivery_Address_Issue_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Delivery_Address_Issue_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_OutForDelivery_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_OutForDelivery_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+
+###################################### TISRLEE-1563.impex ends ##############################################
+###################################### TISRLEE-2327.impex starts ##############################################
+$jarResource=jar:com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants&/marketplacecockpits/cscockpit
+
+#
+# Load medias
+#
+INSERT_UPDATE CockpitUIConfigurationMedia;code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+                                         ;order_addressHistoryList_cockpitGroup_ui_config;text/xml; Order_AddressHistoryList_CockpitGroup.xml; $jarResource/xml/Order_AddressHistoryList_CockpitGroup.xml
+
+#
+# Setup cockpit configuration 
+#
+INSERT_UPDATE CockpitUIComponentConfiguration;code[unique=true];factoryBean;objectTemplateCode[unique=true];principal(uid)[unique=true];media(code);
+                                             ;addressHistoryList;listViewConfigurationFactory;Address;cockpitgroup;order_addressHistoryList_cockpitGroup_ui_config;
+###################################### TISRLEE-2327.impex ends ##############################################
+###################################### TISRLEE-3958.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Language
+$lang=en
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+
+# Language
+$lang=en
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderUnDeliveredEmailTemplate;$jarResourceCms/structure-view/structure_orderUnDeliveredEmailTemplate.vm
+;;DeliveryAddressIssueEmailTemplate;$jarResourceCms/structure-view/structure_deliveryAddressIssueEmailTemplate.vm
+;;OrderOutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderOutForDeliveryEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderUnDeliveredEmailTemplate  ;Order UnDelivered Email Template    ;true;OrderUnDeliveredEmail  ;mpl_Email_Order_UnDelivered_Subject    ;mpl_Email_Order_UnDelivered_Body    ;EmailPage
+;;DeliveryAddressIssueEmailTemplate  ;Delivery AddressIssue Email Template    ;true;DeliveryAddressIssueEmail  ;mpl_Email_Delivery_Address_Issue_Subject    ;mpl_Email_Delivery_Address_Issue_Body    ;EmailPage
+;;OrderOutForDeliveryEmailTemplate  ;Order OutForDelivery Email Template    ;true;OrderOutForDeliveryEmail  ;mpl_Email_Order_OutForDelivery_Subject    ;mpl_Email_Order_OutForDelivery_Body    ;EmailPage
+
+
+# ContentSlotName For OrderUnDeliveredEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderUnDeliveredEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+# ContentSlotName For DeliveryAddressIssueEmail
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='DeliveryAddressIssueEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+# ContentSlotName For OrderOutForDeliveryEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderOutForDeliveryEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+#ContentSlotForTemplate For OrderUnDeliveredEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderUnDeliveredEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderUnDeliveredEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderUnDeliveredEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderUnDeliveredEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderUnDeliveredEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderUnDeliveredEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderUnDeliveredEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderUnDeliveredEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-OrderUnDeliveredEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderUnDeliveredEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderUnDeliveredEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderUnDeliveredEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderUnDeliveredEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderUnDeliveredEmail;gplus;;EmailgplusConfSlot;true
+;;twitter-OrderUnDeliveredEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-OrderUnDeliveredEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderUnDeliveredEmail;app;;EmailappConfSlot;true
+
+#ContentSlotForTemplate For DeliveryAddessIssueEmailTemplate
+
+REMOVE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];
+;;SiteLogo-DeliveryAddressIssueEmail
+;;TopContent-DeliveryAddressIssueEmail
+;;BottomContent-DeliveryAddressIssueEmail
+;;OrderReferenceNumberOne-DeliveryAddressIssueEmail
+;;OrderReferenceNumberTwo-DeliveryAddressIssueEmail
+;;TrackOrder1-DeliveryAddressIssueEmail
+;;TrackOrder2-DeliveryAddressIssueEmail
+;;Tip-DeliveryAddressIssueEmail
+;;Description-DeliveryAddressIssueEmail
+;;OrderConfirmationBannerTwo-DeliveryAddressIssueEmail
+;;smileyimg-DeliveryAddressIssueEmail
+;;fb-DeliveryAddressIssueEmail
+;;gplus-DeliveryAddressIssueEmail
+;;twitter-DeliveryAddressIssueEmail
+;;youtube-DeliveryAddressIssueEmail
+;;app-DeliveryAddressIssueEmail
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='DeliveryAddressIssueEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-DeliveryAddressIssueEmail;SiteLogo ; ;EmailSiteLogoConfSlot ;true
+;;TopContent-DeliveryAddressIssueEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-DeliveryAddressIssueEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-DeliveryAddressIssueEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-DeliveryAddressIssueEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-DeliveryAddressIssueEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-DeliveryAddressIssueEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-DeliveryAddressIssueEmail;Tip;;EmailTipConfSlot;true
+;;Description-DeliveryAddressIssueEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-DeliveryAddressIssueEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-DeliveryAddressIssueEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-DeliveryAddressIssueEmail;fb;;EmailfbConfSlot;true
+;;gplus-DeliveryAddressIssueEmail;gplus;;EmailgplusConfSlot;true
+;;twitter-DeliveryAddressIssueEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-DeliveryAddressIssueEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-DeliveryAddressIssueEmail;app;;EmailappConfSlot;true
+
+#ContentSlotForTemplate For OrderOutForDeliveryEmailTemplate
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderOutForDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderOutForDeliveryEmailEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderOutForDeliveryEmailEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderOutForDeliveryEmailEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderOutForDeliveryEmailEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderOutForDeliveryEmailEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderOutForDeliveryEmailEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderOutForDeliveryEmailEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;Tip-OrderOutForDeliveryEmailEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderOutForDeliveryEmailEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderOutForDeliveryEmailEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderOutForDeliveryEmailEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderOutForDeliveryEmailEmail;fb;;EmailfbConfSlot;true
+;;gplus-OrderOutForDeliveryEmailEmail;gplus;;EmailgplusConfSlot;true
+;;twitter-OrderOutForDeliveryEmailEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-OrderOutForDeliveryEmailEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-OrderOutForDeliveryEmailEmail;app;;EmailappConfSlot;true
+
+
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_UnDelivered_Body;"Order UnDelivered Email Body";$emailResource/email-orderUndeliveredBody.vm
+;mpl_Email_Order_UnDelivered_Subject;"Order UnDelivered Email Subject";$emailResource/email-orderUndeliveredSubject.vm
+;mpl_Email_Delivery_Address_Issue_Body;"Delivery Address Issue Subject";$emailResource/email-orderDeliveryAddressIssueBody.vm
+;mpl_Email_Delivery_Address_Issue_Subject;"Order Address Email Subject";$emailResource/email-orderDeliveryAddressIssueSubject.vm
+;mpl_Email_Order_OutForDelivery_Body;"Order OutForDelivery Email Body";$emailResource/email-orderOutForDeliveryBody.vm 
+;mpl_Email_Order_OutForDelivery_Subject;"Order OutForDelivery Email Subject";$emailResource/email-orderOutForDeliverySubject.vm
+
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;OrderUnDeliveredEmail;Order UnDelivered Email;OrderUnDeliveredEmailTemplate;true;
+;;DeliveryAddressIssueEmail;Order AddressIssue Email;DeliveryAddressIssueEmailTemplate;true;
+;;OrderOutForDelivery;Order OutForDelivery Email;OrderOutForDeliveryEmailTemplate;true;
+
+
+# Email Pages
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
+;;OrderUnDeliveredEmail;"customerservices@tataunistore.in";"Customer Services Team"
+;;DeliveryAddressIssueEmail;"customerservices@tataunistore.in";"Customer Services Team"
+;;OrderOutForDelivery;"customerservices@tataunistore.in";"Customer Services Team"
+
+ # Render template Delivery Address Issue Email Tempalte  
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;mpl_Email_Order_UnDelivered_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_UnDelivered_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Delivery_Address_Issue_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Delivery_Address_Issue_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_OutForDelivery_Body;$emailPackageName.OrderSecondaryStatusEmailContext
+;mpl_Email_Order_OutForDelivery_Subject;$emailPackageName.OrderSecondaryStatusEmailContext
+
+###################################### TISRLEE-3958.impex ends ##############################################
+###################################### TISRLEE_1610.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Import config properties into impex macros
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;OrderRefundEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundEmailTemplate.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderRefundEmailTemplate;Order Refund Email Template;true;orderRefundEmail;mpl_Email_Order_Refund_Subject;mpl_Email_Order_Refund_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent
+
+REMOVE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];
+;;SiteLogo-OrderRefundEmail
+;;Tip-OrderRefundEmail
+;;Description-OrderRefundEmail
+;;AppDownloadUrl-OrderRefundEmail
+;;smileyimg-OrderRefundEmail
+;;fb-OrderRefundEmail
+;;tweet-OrderRefundEmail
+;;youtube-OrderRefundEmail
+;;insta-OrderRefundEmail
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderRefundEmail;SiteLogo;;EmailSiteLogoRefundSlot;true
+;;Tip-OrderRefundEmail;Tip;;EmailTipCUSlot;true
+;;Description-OrderRefundEmail;Description;;EmailDescriptionRefundSlot;true
+;;AppDownloadUrl-OrderRefundEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-OrderRefundEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;fb-OrderRefundEmail;fb;;EmailfbCUSlot;true
+;;tweet-OrderRefundEmail;tweet;;EmailtweetSlot;true
+;;youtube-OrderRefundEmail;youtube;;EmailYouTubeSlot;true
+;;insta-OrderRefundEmail;insta;;EmailInstaSlot;true
+###################################### TISRLEE_1610.impex ends ##############################################
+###################################### TISRLREG-2967.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Language
+$lang=en
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_ReturnToStore_Body;"Order ReturnToStore Email Body";$emailResource/email-returnToStoreBody.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderReturnToStoreEmailTemplate  ;Order ReturnToStore EmailTemplate    ;true;OrderReturnToStoreEmail  ;mpl_Email_Order_ReturnToStore_Subject    ;mpl_Email_Order_ReturnToStore_Body    ;EmailPage
+
+###################################### TISRLREG-2967.impex ends ##############################################
+###################################### TISRLUAT-162.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Language
+$lang=en
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_Refund_Body;"Order Refund Email Body";$emailResource/email-orderRefundBody.vm
+
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;OrderRefundEmailTemplate;Order Refund Email Template;true;orderRefundEmail;mpl_Email_Order_Refund_Subject;mpl_Email_Order_Refund_Body;EmailPage
+
+###################################### TISRLUAT-162.impex ends ##############################################
+###################################### TISRLUAT-162_Media.impex starts ##############################################
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailSiteLogoRefundImage;/images/theme/headerBanner.jpg;
+;;DescriptionConfImage;/images/theme/ConfDescription.jpg;
+;;TipImage;/images/theme/Tip.jpg;
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoRefundSlot;EmailSiteLogoRefundImage
+;;EmailTipCUSlot;TipImage
+;;EmailDescriptionRefundSlot;DescriptionConfImage
+
+###################################### TISRLUAT-162_Media.impex ends ##############################################
+###################################### TISRLUAT-41.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Import config properties into impex macros
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;ShippingConfirmationEmailTemplate;Shipping Confirmation Email Template;true;shippingConfirmationEmail;mpl_Email_ShippingConfirmation_Subject;mpl_Email_ShippingConfirmation_Body;EmailPage
+
+
+#Shipping Confirmation Event
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];validComponentTypes(code)
+;HOTCSiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Tip;;$wideContent;
+;HOTCTrackOrder1;;$wideContent;
+;HOTCDeliveryPerson1;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+REMOVE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];
+;;HOTCSiteLogo-ShippingConfirmationEmail
+;;HOTCTrackOrder1-ShippingConfirmationEmail
+;;HOTCDeliveryPerson1-ShippingConfirmationEmail
+;;smileyimg-ShippingConfirmationEmail
+;;fb-ShippingConfirmationEmail
+;;AppDownloadUrl-ShippingConfirmationEmail
+;;tweet-ShippingConfirmationEmail
+;;youtube-ShippingConfirmationEmail
+;;insta-ShippingConfirmationEmail
+;;Tip-ShippingConfirmationEmail
+
+#Shipping Confirmation Event
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;HOTCSiteLogo-ShippingConfirmationEmail;HOTCSiteLogo;;EmailSiteLogoHOTCSlot;true
+;;HOTCTrackOrder1-ShippingConfirmationEmail;HOTCTrackOrder1;;EmailTrackOrder1HOTCSlot;true
+;;HOTCDeliveryPerson1-ShippingConfirmationEmail;HOTCDeliveryPerson1;;EmailDeliveryPerson1HOTCSlot;true
+;;smileyimg-ShippingConfirmationEmail;smileyimg;;EmailsmileyimgRegSlot;true
+;;fb-ShippingConfirmationEmail;fb;;EmailfbRegSlot;true
+;;AppDownloadUrl-ShippingConfirmationEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;tweet-ShippingConfirmationEmail;tweet;;EmailtweetSlot;true
+;;youtube-ShippingConfirmationEmail;youtube;;EmailYouTubeSlot;true
+;;insta-ShippingConfirmationEmail;insta;;EmailInstaSlot;true
+;;Tip-ShippingConfirmationEmail;Tip;;EmailTipCUSlot;true
+###################################### TISRLUAT-41.impex ends ##############################################
+###################################### TISRLUAT-41_Media.impex starts ##############################################
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=mplContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=mplProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+;;/images/theme/track-btn.jpg;track-btn.jpg;$siteResource/images/theme/track-btn.jpg;;
+;;/images/theme/img6.jpg;img6.jpg;$siteResource/images/theme/img6.jpg;;
+;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
+;;/images/theme/Luxury_App.jpg;Luxury_App.jpg;$siteResource/images/theme/Luxury_App.jpg;;
+;;/images/theme/Luxury_Fb.jpg;Luxury_Fb.jpg;$siteResource/images/theme/Luxury_Fb.jpg;;
+;;/images/theme/TweeterImage.jpg;TweeterImage.jpg;$siteResource/images/theme/TweeterImage.jpg;;
+;;/images/theme/Luxury_youtube.jpg;Luxury_youtube.jpg;$siteResource/images/theme/Luxury_youtube.jpg;;
+;;/images/theme/Luxury_Insta.jpg;Luxury_Insta.jpg;$siteResource/images/theme/Luxury_Insta.jpg;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailSiteLogoHOTCImage;/images/theme/headerBanner.jpg;;
+;;Track1HOTCImage;/images/theme/track-btn.jpg;
+;;HOTCDeliveryPerson1;/images/theme/img6.jpg;
+;;EmailsmileyImage;/images/theme/smileyimg.jpg;
+;;AppDownloadImage;/images/theme/Luxury_App.jpg;
+;;EmailfbImage;/images/theme/Luxury_Fb.jpg;
+;;EmailtweetImage;/images/theme/TweeterImage.jpg;
+;;EmailYouTubeImage;/images/theme/Luxury_youtube.jpg;
+;;EmailInstagramImage;/images/theme/Luxury_Insta.jpg;
+;;EmailTipsImage;/images/theme/Luxury_Tip.jpg;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoHOTCSlot;EmailSiteLogoHOTCImage
+;;EmailTrackOrder1HOTCSlot;Track1HOTCImage
+;;EmailsmileyimgRegSlot;EmailsmileyImage
+;;AppDownloadUrlSlot;AppDownloadImage
+;;EmailfbRegSlot;EmailfbImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+;;EmailTipConfSlot;EmailTipsImage
+###################################### TISRLUAT-41_Media.impex ends ##############################################
+
+###################################### TISRLUAT-902.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Import config properties into impex macros
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;CustomerProfileUpdateEmailTemplate;$jarResourceCms/structure-view/structure_customerProfileUpdateEmailTemplate.vm
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;CustomerProfileUpdateEmailTemplate;Customer Profile Update Email Template;true;customerProfileUpdateEmail;mpl_Email_CustomerProfileUpdate_Subject;mpl_Email_CustomerProfileUpdate_Body;EmailPage
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CustomerProfileUpdateEmailTemplate'];validComponentTypes(code)
+;CustomerProfileUpdateSiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Tip;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+REMOVE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];
+;;SiteLogo-CustomerProfileUpdateEmail
+;;TopContent-CustomerProfileUpdateEmail
+;;BottomContent-CustomerProfileUpdateEmail
+;;Tip-CustomerProfileUpdateEmail
+;;AppDownloadUrl-CustomerProfileUpdateEmail
+;;smileyimg-CustomerProfileUpdateEmail
+;;fb-CustomerProfileUpdateEmail
+;;tweet-CustomerProfileUpdateEmail
+;;youtube-CustomerProfileUpdateEmail
+;;insta-CustomerProfileUpdateEmail
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='CustomerProfileUpdateEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-CustomerProfileUpdateEmail;CustomerProfileUpdateSiteLogo;;EmailSiteLogoCUSlot;true
+;;TopContent-CustomerProfileUpdateEmail;TopContent;;EmailTopCUSlot;true
+;;BottomContent-CustomerProfileUpdateEmail;BottomContent;;EmailBottomCUSlot;true
+;;Tip-CustomerProfileUpdateEmail;Tip;;EmailTipCUSlot;true
+;;AppDownloadUrl-CustomerProfileUpdateEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-CustomerProfileUpdateEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;fb-CustomerProfileUpdateEmail;fb;;EmailfbCUSlot;true
+;;tweet-CustomerProfileUpdateEmail;tweet;;EmailtweetSlot;true
+;;youtube-CustomerProfileUpdateEmail;youtube;;EmailYouTubeSlot;true
+;;insta-CustomerProfileUpdateEmail;insta;;EmailInstaSlot;true
+###################################### TISRLUAT-902.impex ends ##############################################
+###################################### TISRLUAT-906.impex starts ##############################################
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=mpl
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
+
+
+
+# Import config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+# Language
+$lang=en
+
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_Order_Confirmation_Body;"Order Confirmation Email Body";$emailResource/email-orderConfirmationBody.vm
+
+###################################### TISRLUAT-906.impex ends ##############################################

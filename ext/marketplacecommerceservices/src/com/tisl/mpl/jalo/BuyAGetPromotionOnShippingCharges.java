@@ -449,7 +449,8 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 				if (totalCount >= eligibleQuantity.intValue())
 				{
 					final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
+							validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList,
+							getCode());
 
 					validProductFinalList.putAll(validProductList);
 					validProductUssidFinalMap.putAll(validProductUssidMap);
@@ -597,6 +598,7 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
 
+
 	/**
 	 * Building the Hash Key for Promotion
 	 *
@@ -618,3 +620,4 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 	}
 
 }
+

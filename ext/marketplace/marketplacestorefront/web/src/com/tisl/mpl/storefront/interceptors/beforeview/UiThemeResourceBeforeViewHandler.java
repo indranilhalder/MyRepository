@@ -105,6 +105,7 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 	@Resource(name = "userService")
 	private UserService userService;
 
+	@SuppressWarnings("boxing")
 	@Override
 	public void beforeView(final HttpServletRequest request, final HttpServletResponse response, final ModelAndView modelAndView)
 	{
@@ -223,6 +224,9 @@ public class UiThemeResourceBeforeViewHandler implements BeforeViewHandler
 		{
 			modelAndView.addObject(ModelAttributetConstants.BUILD_NUMBER, currentSite.getBuildNumber());
 		}
+
+		//UF-287
+		modelAndView.addObject(ModelAttributetConstants.NO_CACHE, java.lang.Math.round(java.lang.Math.random() * 2));
 	}
 
 	protected List getAddOnCommonCSSPaths(final String contextPath, final String uiExperience, final List<String> addOnNames)

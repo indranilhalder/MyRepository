@@ -1,3 +1,4 @@
+
 /**
  *
  */
@@ -30,7 +31,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.MplDeliveryAddressInfoModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
-/*import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;*/
 import com.tisl.mpl.marketplacecommerceservices.daos.changedeliveryaddress.MplDeliveryAddressDao;
 //import com.tis.mpl.facade.changedelivery.Impl.ChangeDeliveryAddressFacadeImpl;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryAddressService;
@@ -41,6 +41,9 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
 
+/*import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;*/
+
+
 /**
  * @author Techouts
  *
@@ -49,7 +52,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final String LOG_ERROR_MSG_MODEL_SAVING_EXCEPTION_WHILE_SETTING_STATUS = "ModelSavingException while setting status ";
 
@@ -67,12 +70,12 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	@Autowired
 	SessionService sessionService;
-	@Autowired 
+	@Autowired
 	MplSellerMasterService sellerMasterService;
-	
+
 	@Autowired
 	private MplDeliveryCostService mplDeliveryCostService;
-	
+
 	private static final Logger LOG = Logger.getLogger(MplDeliveryAddressServiceImpl.class);
 
 
@@ -82,7 +85,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	{
 		final List<String> ChangableOrdeStatus = Arrays.asList(OrderStatus.PAYMENT_SUCCESSFUL.getCode(),
 				OrderStatus.ORDER_ALLOCATED.getCode(), OrderStatus.PICK_LIST_GENERATED.getCode(),
-				OrderStatus.ORDER_REALLOCATED.getCode(),OrderStatus.ORDER_REJECTED.getCode(),
+				OrderStatus.ORDER_REALLOCATED.getCode(), OrderStatus.ORDER_REJECTED.getCode(),
 				OrderStatus.PENDING_SELLER_ASSIGNMENT.getCode());
 		boolean isAddressChangable = false;
 
@@ -108,8 +111,10 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						{
 							final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
 									.getSelectedUSSID());
-							if(null != sellerInfoModel ) {
-								SellerMasterModel sellerMasterInfo= sellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
+							if (null != sellerInfoModel)
+							{
+								final SellerMasterModel sellerMasterInfo = sellerMasterService.getSellerMaster(sellerInfoModel
+										.getSellerID());
 								if (null != sellerMasterInfo && null != sellerMasterInfo.getIsCDAllowed())
 								{
 									isCdAllowed = sellerMasterInfo.getIsCDAllowed();
@@ -117,13 +122,17 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 									{
 										LOG.debug("Is CD allowed for seller " + sellerInfoModel.getSellerID() + " " + isCdAllowed);
 									}
-								}else {
+								}
+								else
+								{
 									isCdAllowed = MarketplacecommerceservicesConstants.N;
 								}
-							}else {
+							}
+							else
+							{
 								isCdAllowed = MarketplacecommerceservicesConstants.N;
 							}
-							
+
 
 						}
 						if (!deliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT)
@@ -174,14 +183,14 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	/**
 	 * This method is used to save the changed delivery Address
-	 * 
+	 *
 	 * @param newAddressModel
 	 * @param orderModel
 	 * @return boolean
 	 */
 
 	@Override
-	public boolean saveDeliveryAddress(final AddressModel newAddressModel, final OrderModel orderModel,boolean isNewAddress)
+	public boolean saveDeliveryAddress(final AddressModel newAddressModel, final OrderModel orderModel, final boolean isNewAddress)
 	{
 		LOG.info("Inside saveDeliveryAddress Method");
 		boolean isDeliveryAddressChanged = false;
@@ -192,14 +201,15 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			{
 				if (orderModel != null)
 				{
-					
-		            //Change Ed to HD Delivery Mode
-					if(!newAddressModel.getPostalcode().equalsIgnoreCase(orderModel.getDeliveryAddress().getPostalcode())){
+
+					//Change Ed to HD Delivery Mode
+					if (!newAddressModel.getPostalcode().equalsIgnoreCase(orderModel.getDeliveryAddress().getPostalcode()))
+					{
 						convertEDToHDDeliveryMode(orderModel);
 					}
-					  
-					List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
-					Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
+
+					final List<AddressModel> deliveryAddressesList = new ArrayList<AddressModel>();
+					final Collection<AddressModel> deliveryAddresses = orderModel.getDeliveryAddresses();
 					newAddressModel.setOwner(orderModel.getDeliveryAddress().getOwner());
 					if (null != deliveryAddresses && !deliveryAddresses.isEmpty())
 					{
@@ -217,34 +227,35 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						modelService.save(childOrder);
 					}
 					isDeliveryAddressChanged = true;
-					
-					 //Mpl Delivery Address Report
-					MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+
+					//Mpl Delivery Address Report
+					final MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
 							.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
 					if (mplDeliveryAddressInfoModel != null)
 					{
-						mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(
-								mplDeliveryAddressInfoModel.getChangeDeliveryTotalRequests().intValue() + 1));
+						mplDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(mplDeliveryAddressInfoModel
+								.getChangeDeliveryTotalRequests().intValue() + 1));
 						modelService.save(mplDeliveryAddressInfoModel);
 					}
 					else
 					{
-						MplDeliveryAddressInfoModel newDeliveryAddressInfoModel =modelService.create(MplDeliveryAddressInfoModel.class);
+						final MplDeliveryAddressInfoModel newDeliveryAddressInfoModel = modelService
+								.create(MplDeliveryAddressInfoModel.class);
 						newDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
 						newDeliveryAddressInfoModel.setOrderId(orderModel.getCode());
 						modelService.save(newDeliveryAddressInfoModel);
 					}
-					
-						UserModel user = orderModel.getUser();
-						Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
-						if (null != user && null != user.getAddresses())
-						{
-							customerAddressesList.addAll(user.getAddresses());
-						}
 
-						user.setAddresses(customerAddressesList);
-						modelService.save(user);
-					boolean isEditAddress = getCustomerProfileAddress(customerAddressesList, newAddressModel, orderModel
+					final UserModel user = orderModel.getUser();
+					final Collection<AddressModel> customerAddressesList = new ArrayList<AddressModel>();
+					if (null != user && null != user.getAddresses())
+					{
+						customerAddressesList.addAll(user.getAddresses());
+					}
+
+					user.setAddresses(customerAddressesList);
+					modelService.save(user);
+					final boolean isEditAddress = getCustomerProfileAddress(customerAddressesList, newAddressModel, orderModel
 							.getDeliveryAddress().getPk().toString());
 					if (!isEditAddress)
 					{
@@ -253,7 +264,9 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 						user.setAddresses(customerAddressesList);
 						modelService.save(user);
 
-					}else{
+					}
+					else
+					{
 						modelService.saveAll(customerAddressesList);
 						user.setAddresses(customerAddressesList);
 						modelService.save(user);
@@ -274,15 +287,15 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	/**
 	 * @param customerAddressesList
 	 * @param newAddressModel
-	 * @return 
+	 * @return
 	 */
-	private boolean getCustomerProfileAddress(Collection<AddressModel> customerAddressesList, AddressModel newAddressModel,
-			String addressID)
+	private boolean getCustomerProfileAddress(final Collection<AddressModel> customerAddressesList,
+			final AddressModel newAddressModel, final String addressID)
 	{
 		boolean isEditAddress = false;
 		if (StringUtils.isNotBlank(addressID))
 		{
-			for (AddressModel model : customerAddressesList)
+			for (final AddressModel model : customerAddressesList)
 			{
 				if (model.getPk().toString().equalsIgnoreCase(addressID))
 				{
@@ -309,12 +322,12 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 		return isEditAddress;
 	}
-	
-	
+
+
 
 	/**
 	 * This method is used to save the failure requests of change delivery address
-	 * 
+	 *
 	 * @param orderModel
 	 */
 
@@ -324,7 +337,7 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		try
 		{
 			//Mpl Delivery Address Report
-			MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
+			final MplDeliveryAddressInfoModel mplDeliveryAddressInfoModel = mplDeliveryAddressDao
 					.getMplDeliveryAddressReportModelByOrderId(orderModel.getCode());
 			if (mplDeliveryAddressInfoModel != null)
 			{
@@ -344,7 +357,8 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			}
 			else
 			{
-				MplDeliveryAddressInfoModel newDeliveryAddressInfoModel = modelService.create(MplDeliveryAddressInfoModel.class);
+				final MplDeliveryAddressInfoModel newDeliveryAddressInfoModel = modelService
+						.create(MplDeliveryAddressInfoModel.class);
 				newDeliveryAddressInfoModel.setChangeDeliveryTotalRequests(Integer.valueOf(1));
 				newDeliveryAddressInfoModel.setChangeDeliveryRejectsCount(Integer.valueOf(1));
 				newDeliveryAddressInfoModel.setOrderId(orderModel.getCode());
@@ -410,20 +424,20 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 
 	/**
 	 * This method used for save Date and time information into AbstractOrderEntryModel selected by customer
-	 * 
+	 *
 	 * @param transactionSDDtoList
 	 * @param orderModel
 	 */
 
 	@Override
-	public void saveSelectedDateAndTime(OrderModel orderModel, List<TransactionSDDto> transactionSDDtoList)
+	public void saveSelectedDateAndTime(final OrderModel orderModel, final List<TransactionSDDto> transactionSDDtoList)
 	{
 		try
 		{
-			String ussID=null;
-			for (OrderModel subOrder : orderModel.getChildOrders())
+			String ussID = null;
+			for (final OrderModel subOrder : orderModel.getChildOrders())
 			{
-				for (AbstractOrderEntryModel entryModel : subOrder.getEntries())
+				for (final AbstractOrderEntryModel entryModel : subOrder.getEntries())
 				{
 					if (!MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase(entryModel.getMplDeliveryMode()
 							.getDeliveryMode().getCode())
@@ -431,11 +445,11 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 					{
 
 
-						//get Entry related(OrderLine) Information  
-						TransactionSDDto transactionSDDto = getEntryData(transactionSDDtoList, entryModel.getTransactionID());
+						//get Entry related(OrderLine) Information
+						final TransactionSDDto transactionSDDto = getEntryData(transactionSDDtoList, entryModel.getTransactionID());
 						if (transactionSDDto != null)
 						{
-							//Save Transaction level  Entry model 
+							//Save Transaction level  Entry model
 							entryModel.setEdScheduledDate(transactionSDDto.getPickupDate());
 							entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
 							entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
@@ -443,15 +457,15 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 							if (!entryModel.getSelectedUSSID().equalsIgnoreCase(ussID))
 							{
 								saveMainOrderEntry(orderModel, transactionSDDto, entryModel.getSelectedUSSID());
-								ussID=entryModel.getSelectedUSSID();
+								ussID = entryModel.getSelectedUSSID();
 							}
 						}
- 
+
 					}
 				}
 			}
-			
-			
+
+
 		}
 		catch (final ModelSavingException e)
 		{
@@ -465,15 +479,15 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 	}
 
 	//Save SelectedDateAndTime
-	private void saveMainOrderEntry(OrderModel orderModel, TransactionSDDto transactionSDDto, String ussID)
+	private void saveMainOrderEntry(final OrderModel orderModel, final TransactionSDDto transactionSDDto, final String ussID)
 	{
 		try
 		{
-			for (AbstractOrderEntryModel entryModel : orderModel.getEntries())
+			for (final AbstractOrderEntryModel entryModel : orderModel.getEntries())
 			{
 				if (StringUtils.isNotEmpty(entryModel.getSelectedUSSID()) && ussID.equalsIgnoreCase(entryModel.getSelectedUSSID()))
 				{
-					//Save Transaction level  Entry model 
+					//Save Transaction level  Entry model
 					entryModel.setEdScheduledDate(transactionSDDto.getPickupDate());
 					entryModel.setTimeSlotFrom(transactionSDDto.getTimeSlotFrom());
 					entryModel.setTimeSlotTo(transactionSDDto.getTimeSlotTo());
@@ -491,17 +505,17 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 
 	}
-	
+
 
 	/**
 	 * This method used for check Entry(OrderLine) Related information
-	 * 
+	 *
 	 * @param transactionSDDtoList
 	 * @param transactionID
 	 */
-	private TransactionSDDto getEntryData(List<TransactionSDDto> transactionSDDtoList, String transactionID)
+	private TransactionSDDto getEntryData(final List<TransactionSDDto> transactionSDDtoList, final String transactionID)
 	{
-		for (TransactionSDDto transactionSDDto : transactionSDDtoList)
+		for (final TransactionSDDto transactionSDDto : transactionSDDtoList)
 		{
 			if (StringUtils.isNotEmpty(transactionID) && StringUtils.isNotEmpty(transactionSDDto.getTransactionID()))
 			{
@@ -513,43 +527,43 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 		}
 		return null;
 	}
-	
+
 	//convert Ed To HD Order Bug-ID TATA-679
-	private void convertEDToHDDeliveryMode(OrderModel orderModel)
+	private void convertEDToHDDeliveryMode(final OrderModel orderModel)
 	{
 		try
 		{
-			for (OrderModel subOrder : orderModel.getChildOrders())
+			for (final OrderModel subOrder : orderModel.getChildOrders())
 			{
-				for (AbstractOrderEntryModel entry : subOrder.getEntries())
+				for (final AbstractOrderEntryModel entry : subOrder.getEntries())
 				{
 					if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(entry.getMplDeliveryMode()
 							.getDeliveryMode().getCode()))
 					{
-						MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
+						final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
 								MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
 								entry.getSelectedUSSID());
-						      entry.setMplDeliveryMode(deliveryModel);
-						      entry.setIsEDtoHD(Boolean.TRUE);
+						entry.setMplDeliveryMode(deliveryModel);
+						entry.setIsEDtoHD(Boolean.TRUE);
 						modelService.saveAll(entry);
 					}
 
 				}
 			}
-			
-			for (AbstractOrderEntryModel mainEntry : orderModel.getEntries())
+
+			for (final AbstractOrderEntryModel mainEntry : orderModel.getEntries())
 			{
 				if (MarketplacecommerceservicesConstants.EXPRESS_DELIVERY.equalsIgnoreCase(mainEntry.getMplDeliveryMode()
 						.getDeliveryMode().getCode()))
 				{
-					MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
+					final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(
 							MarketplacecommerceservicesConstants.HOME_DELIVERY, MarketplacecommerceservicesConstants.INR,
 							mainEntry.getSelectedUSSID());
 					mainEntry.setMplDeliveryMode(deliveryModel);
 					modelService.saveAll(mainEntry);
 				}
 			}
-			
+
 		}
 		catch (final ModelSavingException e)
 		{
@@ -560,4 +574,5 @@ public class MplDeliveryAddressServiceImpl implements MplDeliveryAddressService
 			LOG.error("Exception occure while setting " + nullPointerException.getMessage());
 		}
 	}
+
 }

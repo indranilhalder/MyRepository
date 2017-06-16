@@ -61,7 +61,7 @@
 										<multi-checkout:login actionNameKey="checkout.login.loginAndCheckout" action="${loginAndCheckoutActionUrl}"/>
 									</li>
 									<li class="or"><span class="vr-line"></span><span class="or-rounded"><spring:theme code="text.or" /></span><span class="vrt-line"></span></li>
-									<li id="sign_up_content">
+									<li id="sign_up_content" class="active">
 										<c:url value="/checkout/multi/checkoutlogin/checkoutRegister" var="registerAndCheckoutActionUrl" />
 										<multi-checkout:register actionNameKey="checkout.login.registerAndCheckout" action="${registerAndCheckoutActionUrl}" />
 									</li>

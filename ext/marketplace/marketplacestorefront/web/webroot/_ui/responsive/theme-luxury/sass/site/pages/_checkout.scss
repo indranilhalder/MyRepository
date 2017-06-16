@@ -488,62 +488,55 @@
 .checkout-paymentmethod.nav{
     padding: 0px;
 }
-.checkout-paymentmethod{  
-    
-    li.payment-tab{
-        
+.checkout-paymentmethod{
+    li{     
         position: relative;
         border-top: 1px solid #ccc;
-        padding-top: 50px;
+            padding-top: 50px;
         margin: 10px 0px;
-        list-style: none;  
-        cursor: pointer;
+        list-style: none;
         
-        &:first-child{
-         border-top:0px;
-        }
-      
-        span{   
-            
+        span{
             top: 20px;
             position: absolute;
             padding-left: 30px;
-            
-            &:before{
-                content: "";
-                width: 20px;
-                height: 20px;
-                border-radius: $border-radius-small;
-                background: #fff;
-                border: 1px solid #c8c7cc;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                margin: auto; 
-                
-            }
-           
-        }          
-        &.active{
-            span{  
-                 &:before{
-                    color: #fff;
-                    background: #b99d6b url('../images/tick.png') no-repeat;
-                    background-position: 3px 1px;
-                    border-color:#b99d6b;
-                    text-align: center;
-                    line-height: 16px;
-                }
-            }
         }
+    }
+    
+    li:first-child{
+         border-top:0px;
+    }
+    
+    li span:before{
+        
+     content: "";
+	width: 20px;
+	height: 20px;
+	border-radius: $border-radius-small;
+	background: #fff;
+	border: 1px solid #c8c7cc;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+    }
+    
+    li.active span:before{
+        
+       color: #fff;
+        background: #b99d6b url('../images/tick.png') no-repeat;
+        background-position: 3px 1px;
+        border-color:#b99d6b;
+        text-align: center;
+        line-height: 16px;
     }
 }
 .checkout-shipping.addNewAddress .formaddress{
-    width:100%!important;
+ width:100%!important;
  }
  .i18nAddressForm.address-form .row{
-    background: transparent;
+ background: transparent;
     border: 0px;
  }
  .addressList_wrapper .address-list .addresslist-left{
@@ -681,37 +674,32 @@
 .checkout-content .checkout-shipping .heading-form h3{
  font-size: 14px;
 }
-#cardDebit{
-  display:none;
- } 
- .controls .card_exp_month, .controls .card_exp_year{
- width: 49%;
-    display: inline-block;
+
+  #newCardCC .card-group  .controls.col-md-6,  
+  #newCardCC .card-group .controls.col-md-4,  
+   #newCardCC .card-group .controls.col-md-2,    
+   #newCardCC .card-group .controls.col-md-12, #debitCard .card-group  .controls.col-md-6,  #debitCard .card-group  .controls.col-md-4,   #debitCard .card-group  .controls.col-md-2{
+     padding-left: 10px;
+    padding-right: 10px;
  }
-.creditDebitLabelRadio input{
- 
- display:none;
+.address-list.hideItem{
+      border-bottom: 1px solid #ccc;
+    margin-bottom: 15px
 }
-.creditDebitLabelRadio label{
- width:150px;
- text-align:center;
- padding:10px;
- border:#000;
- border-radius:3px;
- border:1px solid #000;
- background:#fff;
+.wrapper{
+  background: transparent;
+  box-shadow: none;
+  border: 0px;
 }
-.creditDebitLabelRadio input:checked + label{
- background:#000;
- color:#fff;
- 
+.deliveryaddress .choose-address .btn-section{
+     text-align: right;
 }
-.checkout-headline{
-    font-size: 24px;   
-    
+.viewMore{
+     text-decoration: underline;
 }
-.breadcrumbs.wrapper{
-    padding: 0px;
-    
-    
+.address-list.hideItem .edit{
+ float:right;
+}
+.address-list.hideItem .address-details{
+     clear: both;
 }

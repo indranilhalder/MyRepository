@@ -90,6 +90,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.facade.category.MplCategoryFacade;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.helpmeshop.HelpMeShopFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
@@ -162,6 +163,10 @@ public class SearchPageController extends AbstractSearchPageController
 	private UserService userService;
 	@Autowired
 	private WishlistFacade wishlistFacade;
+
+	//TPR-4471
+	@Autowired
+	private MplCategoryFacade mplCategoryFacade;
 
 	@Resource(name = "productSearchFacade")
 	private ProductSearchFacade<ProductData> productSearchFacade;
@@ -241,6 +246,13 @@ public class SearchPageController extends AbstractSearchPageController
 			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final HttpServletRequest request,
 			final Model model) throws CMSItemNotFoundException
 	{
+		//CKD:TPR-250:Start
+		if (StringUtils.isNotBlank(mSellerID))
+		{
+			model.addAttribute("msiteSellerId", mSellerID);
+			model.addAttribute("mSellerID", mSellerID);
+		}
+
 		//---------------start--------------
 		String whichSearch = null;
 		ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = null;
@@ -540,6 +552,25 @@ public class SearchPageController extends AbstractSearchPageController
 	{
 
 		populateRefineSearchResult(searchQuery, page, showMode, sortCode, searchText, pageSize, request, model);
+		//CKD:TPR-250 :Start
+		if (null != searchQuery && searchQuery.contains("sellerId:"))
+		{
+			String sellerId = null;
+			String sellerName = null;
+			try
+			{
+				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Search Page: Search Page:Problem retrieving microsite SellerId / Sellername for facet Search >>>>>", ex);
+			}
+			model.addAttribute("msiteSellerId", sellerId);
+			model.addAttribute("mSellerID", sellerId);
+			model.addAttribute("mSellerName", sellerName);
+		}
+		//CKD:TPR-250: End
 		return ControllerConstants.Views.Pages.Search.FacetResultPanel;
 	}
 
@@ -578,6 +609,23 @@ public class SearchPageController extends AbstractSearchPageController
 		else
 		{
 			model.addAttribute("lazyInterface", Boolean.FALSE);
+		}
+		if (null != searchQuery && searchQuery.contains("sellerId:"))
+		{
+			String sellerId = null;
+			String sellerName = null;
+			try
+			{
+				sellerId = searchQuery.split("sellerId:", 2)[1].substring(0, 6);
+				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Search Page:Problem retrieving microsite SellerId / Sellername for Search >>>>>", ex);
+			}
+			model.addAttribute("msiteSellerId", sellerId);
+			model.addAttribute("mSellerID", sellerId);
+			model.addAttribute("mSellerName", sellerName);
 		}
 		return getViewForPage(model);
 	}
@@ -1603,6 +1651,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 
+
 	/**
 	 * @description method is to add products in wishlist in popup in plp
 	 * @param productCode
@@ -1611,12 +1660,14 @@ public class SearchPageController extends AbstractSearchPageController
 	 * @param response
 	 * @throws CMSItemNotFoundException
 	 */
+
 	@ResponseBody
 	@RequestMapping(value = RequestMappingUrlConstants.ADD_WISHLIST_IN_POPUP_PLP, method = RequestMethod.GET)
 	//@RequireHardLogIn
 	public boolean addWishListsForPLP(@RequestParam(ModelAttributetConstants.PRODUCT) final String productCode,
-			@RequestParam("wish") final String wishName, @RequestParam("sizeSelected") final String sizeSelected, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws CMSItemNotFoundException
+			@RequestParam("ussid") final String ussid, @RequestParam("wish") final String wishName,
+			@RequestParam("sizeSelected") final String sizeSelected, final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws CMSItemNotFoundException
 	{
 		model.addAttribute(ModelAttributetConstants.MY_ACCOUNT_FLAG, ModelAttributetConstants.N_CAPS_VAL);
 
@@ -1624,7 +1675,7 @@ public class SearchPageController extends AbstractSearchPageController
 		try
 		{
 			//add = productDetailsHelper.addToWishListInPopup(productCode, ussid, wishName, Boolean.valueOf(sizeSelected));
-			add = productDetailsHelper.addSingleToWishListForPLP(productCode, Boolean.valueOf(sizeSelected));
+			add = productDetailsHelper.addSingleToWishListForPLP(productCode, ussid, Boolean.valueOf(sizeSelected));
 
 		}
 		catch (final EtailBusinessExceptions e)

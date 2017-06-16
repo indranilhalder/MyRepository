@@ -260,4 +260,15 @@ public class DefaultBrandService implements BrandService
 		// YTODO Auto-generated method stub
 		return brandDao.checkEmailIdForMarketplace(emailId);
 	}
+
+	/**
+	 * @param emailId
+	 * @param isLuxury
+	 * @return
+	 */
+	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury)
+	{
+		return brandDao.checkEmailIdForluxury(emailId, isLuxury);
+	}
+
 }

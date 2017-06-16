@@ -14,7 +14,6 @@
 package com.tisl.mpl.storefront.security.cookie;
 
 
-import de.hybris.platform.core.Registry;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import javax.annotation.Resource;
@@ -30,7 +29,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.CookieGenerator;
 
 import com.tisl.mpl.storefront.constants.MessageConstants;
-import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 
 
 /**
@@ -43,7 +41,6 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	public static final boolean DEFAULT_COOKIE_PATH = true;
 	public static final String LOCALHOST = "localhost";
 	public static final String DOMAIN = "shared.cookies.domain";
-
 
 
 	private boolean useDefaultPath = DEFAULT_COOKIE_PATH;
@@ -90,10 +87,12 @@ public class EnhancedCookieGenerator extends CookieGenerator
 
 	private String customDomain;
 
-	protected ConfigurationService getConfigurationService()
-	{
-		return Registry.getApplicationContext().getBean(ModelAttributetConstants.CONFIGURATION_SERVICE, ConfigurationService.class);
-	}
+	//sonar fix
+	/*
+	 * protected ConfigurationService getConfigurationService() { return
+	 * Registry.getApplicationContext().getBean(ModelAttributetConstants.CONFIGURATION_SERVICE,
+	 * ConfigurationService.class); }
+	 */
 
 	protected boolean isHttpOnly()
 	{
@@ -137,13 +136,15 @@ public class EnhancedCookieGenerator extends CookieGenerator
 				setEnhancedCookie(cookie);
 				cookie.setPath("/"); //TISPT-307
 				//SISA FIX
+				//cookie.setSecure(true);
+				//sonar fix
+				//final String domain = getConfigurationService().getConfiguration().getString(DOMAIN);
 				final String domain = configurationService.getConfiguration().getString(DOMAIN);
 
 				if (null != domain && !domain.equalsIgnoreCase(LOCALHOST))
 				{
 					cookie.setSecure(true);
 				}
-
 
 				if (isHttpOnly())
 				{
@@ -183,8 +184,9 @@ public class EnhancedCookieGenerator extends CookieGenerator
 	 */
 	protected void setEnhancedCookie(final Cookie cookie)
 	{
-		final int str = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-				MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
+		//sonar fix
+		final int str = Integer.parseInt(configurationService.getConfiguration()
+				.getString(MessageConstants.LOGIN_COOKIE_EXPIRY_DAY));
 		final int expiryTime = 60 * 60 * 24 * str; // 24h in seconds
 		cookie.setMaxAge(expiryTime);
 	}

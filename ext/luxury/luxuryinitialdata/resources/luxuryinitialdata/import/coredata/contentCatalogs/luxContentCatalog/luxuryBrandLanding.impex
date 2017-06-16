@@ -82,16 +82,11 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;bagShow-look1col21;bag-look1col21;
 ;;bagShow-look1col22;bag-look1col22;
 ;;bagShow-look2col1;bag-look2col1;
-;;MenHeroBanner;MenHeroBanner;
+;;MenBanner;MenHeroBanner;
 ;;Men-MiniLookBook;Men-MiniLookBook;
 ;;Brand-team;Brand-team;
 ;;pickitup-poster;pickitup-poster;
 ;;mobile-RedPoster;mobile-RedPoster;
-
-
-INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url
-;;Men-Banner;Men Banner;MenHeroBanner;"<div class='banner-content'><p class='banner-title'>Men's Collection</p><p class='banner-sub-title'>Own your style</p><a href='#'>Discover</a></div>";"/menlanding";
-
 
 INSERT_UPDATE CMSParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;content;
 ;;Brand-shopByFav;Brand-shopByFav;"<section class='look-book clearfix'><h3 class='section-title'>Shop by Category</h3><p class='mb-40 section-content'>Shop your favourites</p><div class='look-book-link'><ul class='list-unstyled clearfix'><li><a href='#'>Polos &amp; T-shirts</a></li><li><a href='#'>Casual Shirts</a></li><li><a href='#'>Jeans</a></li><li><a href='#'>Casual Trousers</a></li><li><a href='#'>Formal Shirts</a></li><li><a href='#'>Formal Trousers</a></li><li><a href='#'>Sweatshirts &amp; Sweaters</a></li><li><a href='#'>Casual Jackets &amp; Blazers Underwear</a></li><li><a href='#'>Underwear</a></li></ul></div></section>";
@@ -102,7 +97,7 @@ INSERT_UPDATE LuxurySimpleBannerComponent;$contentCV[unique=true];uid[unique=tru
 
 INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;CoachType1Banner;Category Type Banner 1;CoachType1Banner;/;CoachHeroBanner
-;;Men-HeroBanner;Men Banner;MenHeroBanner;/;MenHeroBanner
+;;MenHeroBanner;Men Banner;MenHeroBanner;/;MenHeroBanner
 ;;MenHeroBanner1;Men Banner1;MenHeroBanner1;/;MenHeroBanner
 ;;MenHeroBanner2;Men Banner2;MenHeroBanner2;/;MenHeroBanner
 ;;MenHeroBanner3;Men Banner3;MenHeroBanner3;/;MenHeroBanner
@@ -135,7 +130,7 @@ INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title
 
 INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef)                                              					;&componentRef
 ;;BrandBannerRotating;Brand Banner Rotating;CoachType2Banner,CoachType3Banner,CoachType4Banner;CategoryBannerRotating
-;;MenBannerRotating;Men Brand Banner Rotating;MenHeroBanner1,MenHeroBanner2,MenHeroBanner3;MensBannerRotating
+;;MenBannerRotating;Men Brand Banner Rotating;MenHeroBanner,MenHeroBanner1,MenHeroBanner2,MenHeroBanner3;MensBannerRotating
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryBrandLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
 ;Brand-TopHeaderSlot;;;wide
@@ -153,7 +148,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Brand-siteLogoSlot;Brand siteLogo;true;Brand-team;
 ;;Brand-MiniCartSlot;Brand MiniCart;true;
 ;;Brand-HeroBannerSlot;Brand HeroBanner;true;Men-BannerVideo1
-;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;Men-lookBook
+;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Brand-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Brand-ShowCase1Slot;Brand ShowCase1;true;Bag-ShowCase
 ;;Brand-ShowCase2Slot;Brand ShowCase2;true;
@@ -180,8 +175,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-MiniCartSlot;Gender MiniCart;true;
 ;;Men-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Men-FooterSlot;Gender Footer;true;
-;;Men-HeroBannerSlot;Brand HeroBanner;true;Men-Banner
-;;Men-BannerDescriptionSlot;Brand BannerDescription;true;Men-lookBook
+;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
+;;Men-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Men-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
 ;;Men-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
@@ -204,7 +199,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Women-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Women-FooterSlot;Gender Footer;true;
 ;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
-;;Women-BannerDescriptionSlot;Brand BannerDescription;true;Men-lookBook
+;;Women-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Women-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
 ;;Women-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase

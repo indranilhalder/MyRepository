@@ -42,26 +42,31 @@
 </c:if>
 
 <c:if test="${hasShippedItems}">
-	
+
 		<c:choose>
 			<c:when test="${showDeliveryAddress and not empty deliveryAddress}">
-			<h2>Delivery Details</h2>
+			<!-- <h2>Delivery Details</h2> -->
 				<p><spring:theme code="checkout.pickup.items.to.be.shipped" text="Shipping Address"/></p>
 				<address>
 				<span>
 					<b>${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}</b>
-					<c:if test="${ not empty deliveryAddress.line1 }">
-						${fn:escapeXml(deliveryAddress.line1)},&nbsp;
+					<!-- TISUATSE-69 starts -->
+					<c:if test="${ empty deliveryAddressLine2  && empty deliveryAddressLine3}">
+						${fn:escapeXml(deliveryAddress.line1)},
 					</c:if>
-					<c:if test="${ not empty deliveryAddressLine2 }">
-					
-						${fn:escapeXml(deliveryAddress.line2)},
+					<c:if test="${ not empty deliveryAddressLine2 && empty deliveryAddressLine3}">
+						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)},
 					</c:if>
-					<c:if test="${ not empty deliveryAddressLine3 }">
-					
-						${fn:escapeXml(deliveryAddress.line3)},
+					<c:if test="${empty deliveryAddressLine2 && not empty deliveryAddressLine3 }">
+						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line3)},
 					</c:if>
+					<c:if test="${not empty deliveryAddressLine2 && not empty deliveryAddressLine3 }">
+						${fn:escapeXml(deliveryAddress.line1)}${fn:escapeXml(deliveryAddress.line2)}${fn:escapeXml(deliveryAddress.line3)},
+					</c:if>
+					<!-- TISUATSE-69 ends -->
+					<!-- <br> -->
 					<c:if test="${ not empty deliveryAddress.landmark && deliveryAddress.landmark != 'NA'}">
+						<br>
 						${fn:escapeXml(deliveryAddress.landmark)},
 					</c:if>
 					<br>
@@ -173,6 +178,10 @@
 					</c:otherwise>
 					</c:choose>
                   </p>
+
+                    </div>
+                   
+
                     
                   <%--   <div class="method">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
@@ -191,6 +200,7 @@
                     <p class="delivery-est">Delivered in 3-5 business days</p>
                   </div> -->
                   <div class="variants">
+
 					<c:forEach items="${entry.product.baseOptions}" var="option">
 						<c:if test="${not empty option.selected and option.selected.url eq entry.product.url}">
 							<c:forEach items="${option.selected.variantOptionQualifiers}" var="selectedOption">
@@ -228,12 +238,49 @@
 						</ul>
 					</c:if>
 				</div>
-                </div>
-			
-			
-			
-			
 				</div>
+				</li>
+				<li>
+                    <div class="method item-mthd">
+                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
+                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+                  <p class="delivery-method-description delivery-method-description-time">
+                  
+                 <%--  <c:out value="${entry.mplDeliveryMode.description}"></c:out> --%>
+        
+                  </p>
+                  
+                  <c:choose>
+                       <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+                         <p class="delivery-method-description delivery-method-description-time">
+                         Delivered ON ${entry.selectedDeliverySlotDate} Between  ${entry.timeSlotFrom} TO ${entry.timeSlotTo}
+                        </p>
+                       </c:when>
+                       <c:otherwise>
+                       <p class="delivery-method-description delivery-method-description-time">
+                         Your Order Will Be Delivered   ${entry.eddDateBetWeen} 
+                        </p>
+                       
+                       </c:otherwise>
+                  
+                  </c:choose>
+                  </div>
+             </li>
+                  <!-- <div class="method">
+                    <h3>Shipping Method:</h3>
+                    <p>Home Delivery - Free</p>
+                    <p class="delivery-est">Delivered in 3-5 business days</p>
+                  </div> -->
+                  
+                
+			
+			
+			
+			<!-- TISSQAUAT-4062 starts --> 
+				<!-- </div> -->
+			<!-- TISSQAUAT-4062 ends -->
+			
+				<!-- </div> -->
 			
 			<%-- <div class="price"><format:price priceData="${entry.basePrice}" displayFreeForZero="true"/></div>
 			<div class="details">
@@ -279,9 +326,15 @@
 				</div>
 			</div> --%>
 			<!--  <div class="stock-status">Item In Stock</div> -->
+
+		<!-- TISSQAUAT-4062 starts -->
+		<!-- </li> -->
+		<!-- TISSQAUAT-4062 ends -->
+
 	
-		</li>
-		<li>
+		<!-- </li> -->
+		<!-- TISUATSE-121 start -->
+		<%-- <li>
 		    <div class="method item-mthd">
                    <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
                    <p class="delivery-method-description">
@@ -293,7 +346,7 @@
                    </p>
                   <p class="delivery-method-description delivery-method-description-time">
                   
-                 <%--  <c:out value="${entry.mplDeliveryMode.description}"></c:out> --%>
+                  <c:out value="${entry.mplDeliveryMode.description}"></c:out>
                   </p>
                    <c:choose>
                        <c:when test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
@@ -310,7 +363,8 @@
                   
                   </c:choose>
                   </div>
-		</li>
+		</li> --%>
+		<!-- TISUATSE-121 end -->
 	</c:if>
 </c:forEach>
 </ul>
@@ -329,7 +383,7 @@
 	
 		<c:choose>
 			<c:when test="${showDeliveryAddress and not empty deliveryAddress}">
-			<h2>Delivery Details</h2>
+			<!-- <h2>Delivery Details</h2> -->
 				<p><spring:theme code="checkout.pickup.items.to.be.shipped" text="Shipping Address"/></p>
 				<address>
 					${fn:escapeXml(deliveryAddress.title)}${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}
@@ -437,18 +491,7 @@
 					</c:otherwise>
 					</c:choose>
                   </p>
-                    
-                    <div class="method">
-                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
-                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
-                  <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
-                  </div>
-                  <!-- <div class="method">
-                    <h3>Shipping Method:</h3>
-                    <p>Home Delivery - Free</p>
-                    <p class="delivery-est">Delivered in 3-5 business days</p>
-                  </div> -->
-                  <div class="variants">
+                    <div class="variants">
 					<c:forEach items="${entry.product.baseOptions}" var="option">
 						<c:if test="${not empty option.selected and option.selected.url eq entry.product.url}">
 							<c:forEach items="${option.selected.variantOptionQualifiers}" var="selectedOption">
@@ -486,7 +529,21 @@
 						</ul>
 					</c:if>
 				</div>
-                </div>
+				</div>
+				</li>
+				<li>
+                    <div class="method item-mthd">
+                   <h3> <spring:theme code="checkout.multi.shipmentMethod"/></h3>
+                   <p class="delivery-method-description"><c:out value="${entry.mplDeliveryMode.name}"></c:out>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+                  <p class="delivery-method-description delivery-method-description-time"><c:out value="${entry.mplDeliveryMode.description}"></c:out></p>
+                  </div>
+                  <!-- <div class="method">
+                    <h3>Shipping Method:</h3>
+                    <p>Home Delivery - Free</p>
+                    <p class="delivery-est">Delivered in 3-5 business days</p>
+                  </div> -->
+                  
+                
 			
 		</li>
 	</c:if>

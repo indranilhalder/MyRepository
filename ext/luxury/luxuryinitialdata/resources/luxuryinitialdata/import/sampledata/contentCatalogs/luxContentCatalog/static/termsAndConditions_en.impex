@@ -6,7 +6,7 @@
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
 $picture=media(code, $contentCV);
 $siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
 

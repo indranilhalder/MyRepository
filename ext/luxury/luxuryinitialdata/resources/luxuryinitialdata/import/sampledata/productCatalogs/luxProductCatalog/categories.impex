@@ -17,10 +17,12 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MPH1110;Women's Apparel;MPH11;luxProductCatalog:Staged;$uidGroup
 ;MPH1111;Men's Apparel;MPH11;luxProductCatalog:Staged;$uidGroup
 ;MPH1112;Kids Apparel;MPH11;luxProductCatalog:Staged;$uidGroup
+
 ;MPH1111100100;Formal shirt;MPH1111100;luxProductCatalog:Staged;$uidGroup
 ;MPH1111100101;Formal trousers;MPH1111100;luxProductCatalog:Staged;$uidGroup
 ;MPH1111100102;Formal suits;MPH1111100;luxProductCatalog:Staged;$uidGroup
 ;MPH1111100103;Formal coats & jackets;MPH1111100;luxProductCatalog:Staged;$uidGroup
+
 ;MPH1111101100;T-Shirts;MPH1111101;luxProductCatalog:Staged;$uidGroup
 ;MPH1111101101;casual shirts;MPH1111101;luxProductCatalog:Staged;$uidGroup
 ;MPH1111101102;Jeans;MPH1111101;luxProductCatalog:Staged;$uidGroup
@@ -30,12 +32,14 @@ INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalog
 ;MPH1111101106;Sweaters;MPH1111101;luxProductCatalog:Staged;$uidGroup
 ;MPH1111101107;Casual jackets and blazers;MPH1111101;luxProductCatalog:Staged;$uidGroup
 ;MPH1111101108;Track pants;MPH1111101;luxProductCatalog:Staged;$uidGroup
+
 ;MPH1111102100;Sports tshirt;MPH1111102;luxProductCatalog:Staged;$uidGroup
 ;MPH1111102101;Sports shorts;MPH1111102;luxProductCatalog:Staged;$uidGroup
 ;MPH1111102102;Sports sets;MPH1111102;luxProductCatalog:Staged;$uidGroup
 ;MPH1111102103;Sports jackets;MPH1111102;luxProductCatalog:Staged;$uidGroup
 ;MPH1111102104;Track pants;MPH1111102;luxProductCatalog:Staged;$uidGroup
 ;MPH1111102105;Swimwear;MPH1111102;luxProductCatalog:Staged;$uidGroup
+
 ;MPH1111105100;Socks;MPH1111105;luxProductCatalog:Staged;$uidGroup
 ;MPH1110100100;Sarees;MPH1110100;luxProductCatalog:Staged;$uidGroup
 ;MPH1110100101;Kurta & kurtis;MPH1110100;luxProductCatalog:Staged;$uidGroup

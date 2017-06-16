@@ -28,7 +28,8 @@ public class AccountAddressValidator implements Validator
 	private static final int MAX_FIELD_LENGTH = 255;
 	private static final int MAX_POSTCODE_LENGTH = 10;
 	private static final int MAX_FIELD_LENGTH_NEW = 140;
-	private static final int MAX_FIELD_LENGTH_UPDATED = 40;//TPR-215
+	//private static final int MAX_FIELD_LENGTH_UPDATED = 40;//TPR-215
+	private static final int MAX_FIELD_LENGTH_UPDATED = 120;//TPR-3402
 	//private static final int MAX_FIELD_LENGTH_UPDATED = 30; //TISUAT-4696
 	private static final int MAX_FIELD_LENGTH_STATE = 20;
 	private static final int MAX_FIELD_LENGTH_COUNTRY = 15;
@@ -168,10 +169,10 @@ public class AccountAddressValidator implements Validator
 	{
 		FIRSTNAME("firstName", "address.firstName.invalid"), LASTNAME("lastName", "address.lastName.invalid"), LINE1("line1",
 				"address.line1.invalid"), LINE2("line2", "address.line2.invalid"), LINE3("line3", "address.line3.invalid"), TOWN(
-						"townCity", "address.townCity.invalid"), POSTCODE("postcode", "address.postcode.invalid"), REGION("regionIso",
-								"address.regionIso.invalid"), COUNTRY("countryIso", "address.country.invalid"), ADDRESSTYPE("addressType",
-										"address.addressType.invalid"), STATE("state", "address.selectState"), LOCALITY("locality",
-												"address.locality.invalid"), MOBILE("mobileNo", "address.mobile.invalid");
+				"townCity", "address.townCity.invalid"), POSTCODE("postcode", "address.postcode.invalid"), REGION("regionIso",
+				"address.regionIso.invalid"), COUNTRY("countryIso", "address.country.invalid"), ADDRESSTYPE("addressType",
+				"address.addressType.invalid"), STATE("state", "address.selectState"), LOCALITY("locality",
+				"address.locality.invalid"), MOBILE("mobileNo", "address.mobile.invalid");
 
 
 		private final String fieldKey;

@@ -1,6 +1,7 @@
 /*** Eclipse Class Decompiler plugin, copyright (c) 2012 Chao Chen (cnfree2000@hotmail.com) ***/
 package com.tisl.mpl.marketplacecommerceservices.strategy;
 
+
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commerceservices.delivery.DeliveryService;
 import de.hybris.platform.commerceservices.externaltax.ExternalTaxesService;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -44,8 +46,10 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
+import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
@@ -70,7 +74,9 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private ConfigurationService configurationService;
 	@Autowired
 	private Converter<OrderModel, OrderData> orderConverter;
-
+	/*
+	 * @Autowired private MplDeliveryCostService deliveryCostService;
+	 */
 	@Autowired
 	private NotificationService notificationService;
 
@@ -81,13 +87,22 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Autowired
 	private MplCommerceCartService mplCommerceCartService;
 
+	@Resource
+	private AgentIdForStore agentIdForStore;
+
+
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
 			EtailNonBusinessExceptions
 	{
+
 		final CartModel cartModel = parameter.getCart();
 		ServicesUtil.validateParameterNotNull(cartModel, "Cart model cannot be null");
 		final CommerceOrderResult result = new CommerceOrderResult();
+
+		final String agentId = agentIdForStore
+				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+
 		try
 		{
 			final String modeOfPayment = cartModel.getModeOfPayment();
@@ -161,6 +176,7 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					getPromotionsService().transferPromotionsToOrder(cartModel, orderModel, false);
 					final Double subTotal = orderModel.getSubtotal();
+					LOG.info("order subTotal is -- " + subTotal);
 					final boolean deliveryCostPromotionApplied = isDeliveryCostPromotionApplied(orderModel);
 					Double totalPrice = Double.valueOf(0.0);
 
@@ -196,16 +212,36 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 					//orderModel.setTotalPrice(totalPrice);
 					//orderModel.setTotalPrice(totalPriceWithconv);
+					orderModel.setDeliveryCost(Double.valueOf(getDeliveryCost(orderModel)));
 					orderModel.setTotalPriceWithConv(totalPriceWithconv);
 
 					orderModel.setModeOfOrderPayment(modeOfPayment);
 
+
+					LOG.info("Mode of Payment in placeOrder is -- " + modeOfPayment);
+
+					if (MarketplacecommerceservicesConstants.MRUPEE.equalsIgnoreCase(modeOfPayment))
+					{
+						orderModel.setIsWallet(WalletEnum.MRUPEE);
+					}
+					else
+					{
+						orderModel.setIsWallet(WalletEnum.NONWALLET);
+
+					}
+					//storing agent id in the order model in case of store manager login in cscockpit
+					if (StringUtils.isNotEmpty(agentId))
+					{
+
+						orderModel.setAgentId(agentId);
+					}
 					getModelService().save(orderModel);
 
 					/*
 					 * result.setOrder(orderModel); // OrderIssues:- 9 digit Order Id getting populated after Order Split and
 					 * Submit order process for cod, hence moved here afterPlaceOrder(parameter, result);
 					 */
+					LOG.info("Mode of Order Payment in placeOrder is -- " + orderModel.getModeOfOrderPayment());
 				}
 				catch (final Exception e)
 				{
@@ -214,10 +250,13 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							+ orderModel.getCode() + "mode of payment :" + modeOfPayment);
 					LOG.error("Error while submit order:" + e.getMessage());
 				}
+
 				afterPlaceOrder(parameter, result);
 
 				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+						&& (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD") || orderModel.getModeOfOrderPayment()
+								.equalsIgnoreCase("JusPay")))
+
 				{
 					//Order splitting and order fulfilment process will only be triggered for COD orders from here - TPR-629
 					try
@@ -236,8 +275,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 				//afterPlaceOrder(parameter, result);  // 9 digit Order Id getting populated after Order Split and Submit order process for cod, hence moved before
 
-				if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment())
-						&& orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+				if ((StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()) && orderModel.getModeOfOrderPayment()
+						.equalsIgnoreCase("COD")) || StringUtils.isNotEmpty(agentId))
 				{
 					//Added to trigger notification for only COD orders TPR-629
 					final String trackOrderUrl = configurationService.getConfiguration().getString(
@@ -270,6 +309,44 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		{
 			getExternalTaxesService().clearSessionTaxDocument();
 		}
+	}
+
+	/**
+	 * @param orderModel
+	 * @return delCost
+	 */
+	private double getDeliveryCost(final OrderModel orderModel)
+	{
+		// YTODO Auto-generated method stub
+		final Double delCost = Double.valueOf(orderModel.getDeliveryCost().doubleValue());
+		//		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
+		//		{
+		//			final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entry.getMplDeliveryMode()
+		//					.getDeliveryMode().getCode(), orderModel.getCurrency().getIsocode(), entry.getSelectedUSSID());
+		//
+		//			if (delCost.doubleValue() <= 0)
+		//			{
+		//				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && !entry.getIsBOGOapplied().booleanValue())
+		//				{
+		//					delCost = Double.valueOf((valueModel.getValue().doubleValue() * entry.getQuantity().intValue()));
+		//					entry.setCurrDelCharge(delCost);
+		//				}
+		//				if (entry.getGiveAway() != null && !entry.getGiveAway().booleanValue() && entry.getIsBOGOapplied().booleanValue())
+		//				{
+		//					delCost = Double.valueOf((valueModel.getValue().doubleValue() * (entry.getQuantity().intValue() - entry
+		//							.getQualifyingCount().intValue())));
+		//					entry.setCurrDelCharge(delCost);
+		//				}
+		//				if (entry.getGiveAway() != null && entry.getGiveAway().booleanValue())
+		//				{
+		//					final Double deliveryCost = Double.valueOf(0.0D);
+		//					entry.setCurrDelCharge(deliveryCost);
+		//					LOG.warn("skipping deliveryCost for freebee [" + entry.getSelectedUSSID() + "] due toeb freebee ");
+		//				}
+		//			}
+		//
+		//		}
+		return delCost.doubleValue();
 	}
 
 	private boolean checkOrder(final OrderModel order)
@@ -340,9 +417,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 * 
+	 *
+	 *
 	 * @param cartModel
-	 * 
+	 *
+	 *
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -358,8 +437,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 		Double totalPrice = Double.valueOf(0);
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
-		final Double deliveryCost = orderModel.getDeliveryCost();
-
+		Double deliveryCost = orderModel.getDeliveryCost();
+		if (deliveryCost.doubleValue() <= 0.0)
+		{
+			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
+		}
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
 
@@ -372,26 +454,45 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	private Double fetchTotalPrice(final OrderModel orderModel)
 	{
 		Double totalPrice = Double.valueOf(0);
-		double scheduleDeliveryCharge=0.0D;
+		final double scheduleDeliveryCharge = 0.0D;
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
 		final Double subtotal = orderModel.getSubtotal();
-		final Double deliveryCost = orderModel.getDeliveryCost();
-
+		Double deliveryCost = orderModel.getDeliveryCost();
 		//		final Double discount = Double.valueOf(orderData.getTotalDiscounts().getValue().doubleValue());
 		//		final Double totalPrice = Double.valueOf(subtotal.doubleValue() + deliveryCost.doubleValue() - discount.doubleValue());
-
+		if (deliveryCost.doubleValue() <= 0.0)
+		{
+			deliveryCost = Double.valueOf(getDeliveryCost(orderModel));
+		}
 		final Double discount = getTotalDiscount(orderModel.getEntries(), false);
-		//Start  Add schedule delivery charges for COD order TISRLUAT-1097
-		/*for(AbstractOrderEntryModel entry :orderModel.getEntries()){
-			if(entry.getScheduledDeliveryCharge()!=null && entry.getScheduledDeliveryCharge().doubleValue()>0 ){
-				scheduleDeliveryCharge+=entry.getScheduledDeliveryCharge().doubleValue();
-			}
-		}*/
-		//End  Add schedule delivery charges for COD order TISRLUAT-1097
-		
-		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge +deliveryCost.doubleValue()  - discount.doubleValue());
+
+		totalPrice = Double.valueOf(subtotal.doubleValue() + scheduleDeliveryCharge + deliveryCost.doubleValue()
+				- discount.doubleValue());
+		LOG.info("totalPrice for order entry in fetchTotalPrice is = " + totalPrice);
+
 		return totalPrice;
 	}
+
+	//SONAR FIX
+
+	/*
+	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
+	 * Double.valueOf(0);
+	 *
+	 *
+	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
+	 *
+	 *
+	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
+	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
+	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
+	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
+	 * oModel.getCartLevelDisc().doubleValue()); } }
+	 *
+	 *
+	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
+	 */
+
 
 	private Double getTotalDiscount(final List<AbstractOrderEntryModel> entries, final boolean deliveryFlag)
 	{
@@ -419,8 +520,12 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 							.doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d : oModel.getCartLevelDisc().doubleValue());
 				}
 			}
+			LOG.info("deliveryCost for order entry in getTotalDiscount is = " + deliveryCost);
+			LOG.info("promoDiscount for order entry in getTotalDiscount is = " + promoDiscount);
+			LOG.info("couponDiscount for order entry in getTotalDiscount is = " + couponDiscount);
 
 			discount = Double.valueOf(deliveryCost + couponDiscount + promoDiscount);
+			LOG.info("discount for order entry in getTotalDiscount is = " + discount);
 		}
 		return discount;
 	}

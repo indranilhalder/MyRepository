@@ -128,7 +128,7 @@
 									
 							</div>
 							
-							<div class="select calender halfwidth select-bar" >
+							<div class="select calender halfwidth" >
 							    <%--  <label><spring:theme code="profile.dateOfBirth"
 											text="Date Of Birth" /></label>	 --%>
 								 <div class="half_span">
@@ -190,7 +190,7 @@
 									</div>
 							</div>
 							
-							<div class=" select calender halfwidth select-bar"  >
+							<div class=" select calender halfwidth"  >
 								<%-- <label><spring:theme code="profile.dateOfAnniversary"
 											text="Anniversary Date" /></label> --%>
 								<div class="half_span">

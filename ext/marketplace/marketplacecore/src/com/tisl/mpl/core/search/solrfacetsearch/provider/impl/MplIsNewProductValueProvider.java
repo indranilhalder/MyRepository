@@ -105,6 +105,8 @@ public class MplIsNewProductValueProvider extends AbstractPropertyFieldValueProv
 		if (null != existDate)
 		{
 			final Date sysDate = new Date();
+			LOG.info("sysdate" + sysDate + " sysdate ");
+
 			final long dayDiff = calculateDays(existDate, sysDate);
 
 			LOG.info("******" + existDate + "  --- dayDiff: " + dayDiff);

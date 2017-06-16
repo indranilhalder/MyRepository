@@ -9,10 +9,16 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
-
-
-	 <p class="title">  ${order.mplPaymentInfo.paymentOption} Information:</p>
+ 
+	 <c:choose>
+  		<c:when test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
+  			<p class="title">  <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /> Information:</p>
+  		</c:when>
+  		<c:otherwise>
+  			<p class="title">  ${order.mplPaymentInfo.paymentOption} Information:</p>
+  		</c:otherwise>
+  	</c:choose>
+	 
    <address>
    <c:if test="${not empty order.mplPaymentInfo.paymentOption && order.mplPaymentInfo.paymentOption eq 'COD'}">
     
@@ -46,5 +52,12 @@
     Monthly Installment&nbsp;-&nbsp; ${order.mplPaymentInfo.emiInfo.monthlyInstallment}<br>
     Total Interest Payable&nbsp;-&nbsp;  ${order.mplPaymentInfo.emiInfo.interestPayable}
     </c:if>
+    
+    <!-- Added for third party wallet -->
+    <c:if test="${not empty order.mplPaymentInfo.paymentOption && fn:toLowerCase(order.mplPaymentInfo.paymentOption) eq 'mrupee'}">
+   ${order.mplPaymentInfo.paymentOption}<br>
+   ${order.mplPaymentInfo.cardAccountHolderName}<br>
+   </c:if>
+    
    </address>   
    

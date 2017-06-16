@@ -164,6 +164,7 @@ public class MarketplacecclientservicesConstants
 	public static final String PROXY_PORT = "http.proxyPort";
 	public static final String CATEGORY_ID = "categoryId".intern();
 	public static final String STREAM_ID = "streamId".intern();
+	public static final String INCLUDE_STREAM_INFO = "streamInfo".intern();
 	public static final String COMMENT_ID = "commentID";
 	public static final String SENDER_UID = "senderUID";
 	public static final String COMMENT_TEXT = "commentText";
@@ -181,6 +182,8 @@ public class MarketplacecclientservicesConstants
 	public static final String QUALITY = "Quality";
 	public static final String OVERALL = "_overall";
 	public static final String COMMENTS = "comments";
+	public static final String STREAM_INFO = "streamInfo";
+	public static final String AVG_RATINGS = "avgRatings";
 	public static final String URL = "url";
 	public static final String HTML = "html";
 	public static final String TYPE = "type";
@@ -189,6 +192,7 @@ public class MarketplacecclientservicesConstants
 
 	public static final String REVIEWS_CATEGORYID_EXCEPTION = "Gigya 'getReviewsByCategoryProductId' for UID error ";
 	public static final String REVIEWS_EDIT_EXCEPTION = "Gigya 'editReviews' error ";
+	public static final String REVIEWS_RATING_EXCEPTION = "Gigya 'rating and review count' error";
 	public static final String REVIEWS_DELETE_EXCEPTION = "Gigya 'deleteReviews' error ";
 	public static final String REVIEWS_UID_EXCEPTION = "Gigya 'getReviewsByUID'  UID error";
 
@@ -254,13 +258,10 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_DELIVERY_SLOT_URL = "oms.deliveryslot.url";
 	public static final String CNC = "CNC";
 
+
 	public static final String YES = "YES".intern();
 	public static final String NO = "NO".intern();
-
-	public static final String LUXURYPREFIX = "lux";
+	public static final String OMSTIMEOUT = "5000";	public static final String LUXURYPREFIX = "lux";
 	public static final String LUXURY_RATING_SECRETKEY = "luxury.gigya.secretkey".intern();
 	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
-
-
-
 }

@@ -58,6 +58,7 @@ import com.tisl.mpl.binDb.model.BinModel;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BankforNetbankingModel;
 import com.tisl.mpl.core.model.EMIBankModel;
+import com.tisl.mpl.core.model.MplPaymentAuditModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.SavedCardModel;
 import com.tisl.mpl.data.EMITermRateData;
@@ -87,6 +88,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.OTPGenericService;
 import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wallet.service.DefaultMplMrupeePaymentService;
 
 
 /**
@@ -134,6 +136,9 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 
 	private static final Logger LOG = Logger.getLogger(MplPaymentFacadeImpl.class);
 	private static final String ERROR_FRREBIE = "Populating deliveryPointOfService for freebie from parent, parent ussid ";
+
+	@Resource(name = "mRupeeService")
+	private DefaultMplMrupeePaymentService mRupeeService;
 
 	/**
 	 * This method returns the map of all active Payment modes(eg. Credit Card, Debit Card, COD, etc.) and their
@@ -1378,7 +1383,8 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			final List<AbstractOrderEntryModel> entries = abstractOrderModel.getEntries();
 
 			// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
-			if (abstractOrderModel.getTotalPriceWithConv() != null || abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
+			//SONAR FIX updated
+			if (null != abstractOrderModel.getTotalPriceWithConv() && abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 			{
 				getMplPaymentService().setPaymentTransactionForCOD(abstractOrderModel);
 			}
@@ -2198,6 +2204,17 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 			if (MapUtils.isEmpty(paymentMode))
 			{
 				paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+				LOG.info("Outside if block..." + paymentMode);
+				if (null == paymentMode)
+				{
+					LOG.info("Inside paymentMode is empty...");
+					final Map<String, Double> paymentInfo = new HashMap<String, Double>();
+					LOG.info("Mode of Order Payment" + orderModel.getModeOfOrderPayment());
+					LOG.info("Total Price is " + orderModel.getTotalPriceWithConv().doubleValue());
+					paymentInfo.put(orderModel.getModeOfOrderPayment(),
+							Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+					paymentMode = paymentInfo;
+				}
 			}
 
 			//creating OrderStatusRequest
@@ -2494,7 +2511,6 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 				}
 
 				LOG.error("Juspay Request Structure " + request);
-
 				//creating InitOrderResponse
 				final InitOrderResponse initOrderResponse = juspayService.initOrder(request);
 				if (null != initOrderResponse && StringUtils.isNotEmpty(initOrderResponse.getOrderId()))
@@ -2540,7 +2556,13 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 		//		}
 	}
 
-
+	@Override
+	public String makeGetPaymentStatusCall(final String url)
+	{
+		final String key = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.JUSPAYMERCHANTTESTKEY);
+		return new PaymentService().getCockpitOrderPaymentstatus(url, key);
+	}
 
 
 	/**
@@ -3199,6 +3221,142 @@ public class MplPaymentFacadeImpl implements MplPaymentFacade
 	public void setMplCommerceCartService(final MplCommerceCartService mplCommerceCartService)
 	{
 		this.mplCommerceCartService = mplCommerceCartService;
+	}
+
+	/**
+	 * This method makes mRupee reference num and generates checksum
+	 *
+	 * @param cart
+	 * @param walletName
+	 * @param channelWeb
+	 * @return List<String>
+	 */
+	@Override
+	public List<String> createWalletorder(final AbstractOrderModel cart, final String walletName, final String channelWeb)
+	{
+		String walletOrderId = null;
+		final List<String> arryList = new ArrayList<String>();
+		//Generates mRupee reference num
+		walletOrderId = getMplPaymentService().createWalletPaymentId();
+		arryList.add(walletOrderId);
+		final Double cartTotal = cart.getTotalPrice();
+
+		//	final MrupeePaymentService mRupeeService = new MrupeePaymentService();
+		//Generates mRupee checksum
+		final String checksumKey = mRupeeService.generateCheckSum(walletOrderId, cartTotal.toString());
+
+		LOG.debug("Order Id created for Wallet by key generator is " + walletOrderId);
+		getSessionService().setAttribute(MarketplacecommerceservicesConstants.WALLETORDERID, walletOrderId);
+		getSessionService().setAttribute(MarketplacecommerceservicesConstants.CHECKSUMKEY, checksumKey);
+		arryList.add(checksumKey);
+		return arryList;
+
+	}
+
+
+
+	/**
+	 * This method makes entry for mRupee orders in Audit table.
+	 *
+	 * @param status
+	 * @param channelWeb
+	 * @param guid
+	 * @param walletOrderId
+	 */
+	@Override
+	public void entryInTPWaltAudit(final String status, final String channelWeb, final String guid, final String walletOrderId)
+	{
+		//Commented for Mobile use
+		//final String status = request.getParameter("STATUS");
+		//final String mWRefCode = request.getParameter("MWREFNO");
+		//	getMplPaymentService().entryInTPWaltAudit(request, channelWeb, guid, walletOrderId);
+
+		getMplPaymentService().entryInTPWaltAudit(status, channelWeb, guid, walletOrderId);
+
+	}
+
+
+
+	/**
+	 * This methods saves the payment transaction and info for mRupee orders.
+	 *
+	 * @param order
+	 * @param request
+	 */
+	@Override
+	public void saveTPWalletPaymentInfo(final AbstractOrderModel order, final HttpServletRequest request)
+	{
+		//getting the current user
+		//final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+		CustomerModel mplCustomer = null;
+		final Map<String, Double> paymentMode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODE);
+		String custName = null;
+
+		if (null != order)
+		{
+			mplCustomer = (CustomerModel) order.getUser();
+			final List<AbstractOrderEntryModel> entries = order.getEntries();
+
+			//setting payment transaction for mRupee orders
+			//Commented for Mobile use
+			//	getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, cart, request);
+			final String refernceCode = request.getParameter("REFNO");
+			final Double transactionAmount = Double.valueOf(request.getParameter("AMT"));
+			getMplPaymentService().setTPWalletPaymentTransaction(paymentMode, order, refernceCode, transactionAmount);
+
+
+			if (null != mplCustomer)
+			{
+				if (StringUtils.isNotEmpty(mplCustomer.getFirstName()) && !mplCustomer.getFirstName().equalsIgnoreCase(" "))
+				{
+					custName = mplCustomer.getFirstName();
+					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order, refernceCode));
+				}
+
+				else
+				{
+					custName = StringUtils.trim(order.getDeliveryAddress().getFirstname());
+					modelService.save(getMplPaymentService().saveTPWalletPaymentInfo(custName, entries, order, refernceCode));
+				}
+
+			}
+			getMplPaymentService().paymentModeApportion(order);
+
+			LOG.info("Total Convenience Price in walletPayment::saveTPWalletPaymentInfo" + order.getTotalPriceWithConv());
+
+			LOG.info("Total Price in walletPayment::saveTPWalletPaymentInfo" + order.getTotalPrice());
+
+		}
+		else
+		{
+			LOG.debug("Unable to save Third Party Wallet PAyment Info");
+		}
+
+
+
+
+	}
+
+
+
+	/**
+	 * This methods gets guid from audit table based on the reference no.
+	 *
+	 * @param refNo
+	 * @return String
+	 */
+	@Override
+	public String getWalletAuditEntries(final String refNo)
+	{
+		MplPaymentAuditModel auditModel = new MplPaymentAuditModel();
+		String guid = null;
+
+		auditModel = getMplPaymentService().getWalletAuditEntries(refNo);
+		if (null != auditModel)
+		{
+			guid = auditModel.getCartGUID();
+		}
+		return guid;
 	}
 
 

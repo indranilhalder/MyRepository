@@ -54,8 +54,27 @@ public interface BuyBoxDao
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code) throws EtailNonBusinessExceptions;
 
+
+	//TPR-3736
+	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param productCode
+	 * @param pdpproduct
+	 * @return
+	 */
+	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String pdpproduct) throws EtailNonBusinessExceptions;
+
 	//INC144315542_INC144314878_INC_11113
 
 	public List<BuyBoxModel> getBuyboxPricesForSizeVariant(String productCode) throws EtailNonBusinessExceptions;
+
+	/**
+	 * TPR-5712 dao to get price for all the sellers
+	 *
+	 * @param productCode
+	 * @return
+	 */
+	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
 
 }

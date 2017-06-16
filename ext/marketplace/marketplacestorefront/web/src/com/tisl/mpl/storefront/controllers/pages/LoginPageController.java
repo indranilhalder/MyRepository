@@ -28,10 +28,12 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
@@ -67,9 +69,11 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FBConnection;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
+import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.storefront.web.forms.validator.RegisterPageValidator;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -99,9 +103,29 @@ public class LoginPageController extends AbstractLoginPageController
 	@Autowired
 	private MplCustomerProfileFacade mplCustomerProfileFacade;
 
-	@Autowired
-	private CommonUtils commonUtils;
 
+	//Added for UF-93
+	@Autowired
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;	@Autowired
+	private CommonUtils commonUtils;
+	/**
+	 * @return the lastUserLoggedInCookieGenerator
+	 */
+	public LastUserLoggedInCookieGenerator getLastUserLoggedInCookieGenerator()
+	{
+		return lastUserLoggedInCookieGenerator;
+	}
+
+	/**
+	 * @param lastUserLoggedInCookieGenerator
+	 *           the lastUserLoggedInCookieGenerator to set
+	 */
+	public void setLastUserLoggedInCookieGenerator(final LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator)
+	{
+		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
+	}
+
+	//Added for UF-93
 	/**
 	 * @return the registerPageValidator
 	 */
@@ -319,6 +343,20 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
+			
+			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
+			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+			if (null != cookie && null != cookie.getValue())
+			{
+				final String encodedCookieValue = cookie.getValue();
+
+				final String decodedCookieValue = new String(Base64.decodeBase64(encodedCookieValue.getBytes())); // No need of encodedCookieValue null check as cookie.value is check earlier.
+				model.addAttribute("lastLoggedInUser", decodedCookieValue);
+
+				//LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
+			}
+			/** End UF-93 **/
+
 			returnPage = getDefaultLoginPage(false, session, model);
 		}
 		catch (final EtailBusinessExceptions e)
@@ -394,6 +432,15 @@ public class LoginPageController extends AbstractLoginPageController
 
 			getRegisterPageValidator().validate(form, bindingResult);
 			//return processRegisterUserRequestNew(referer, form, bindingResult, model, request, response, redirectModel);
+			/** Added for UF-93 **/
+			if (StringUtils.isNotEmpty(request.getParameter("email")))
+			{
+				lastUserLoggedInCookieGenerator.addCookie(response,
+						new String(Base64.encodeBase64String(request.getParameter("email").getBytes())));
+				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
+				//+ customer.getOriginalUid().getBytes());
+			}
+			/** Ends for UF-93 **/
 			returnPage = processRegisterUserRequestNew(form, bindingResult, model, request, response, redirectModel);
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute("formErrorReg", bindingResult.getFieldErrors());

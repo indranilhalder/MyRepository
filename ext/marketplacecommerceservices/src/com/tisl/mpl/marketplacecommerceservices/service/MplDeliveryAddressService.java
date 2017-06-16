@@ -30,24 +30,28 @@ public interface MplDeliveryAddressService
 	 * @param orderCode
 	 * @return flag
 	 */
-	public boolean saveDeliveryAddress(AddressModel newAddressModel,OrderModel orderModel,boolean isNewAddress);
+	public boolean saveDeliveryAddress(AddressModel newAddressModel, OrderModel orderModel, boolean isNewAddress);
 
 	/***
-	 * set status for change delivery address Request 
+	 * set status for change delivery address Request
+	 * 
 	 * @param orderModel
 	 */
-   public void deliveryAddressFailureRequest(OrderModel orderModel);
-  
-   
+	public void deliveryAddressFailureRequest(OrderModel orderModel);
+
+
 	/**
-	 *  This method is used to check whether order has Schedule delivery items or not
-	 * @param  orderModel
+	 * This method is used to check whether order has Schedule delivery items or not
+	 * 
+	 * @param orderModel
 	 */
 	public boolean checkScheduledDeliveryForOrder(OrderModel orderModel);
 
-	
+
 	public List<MplDeliveryAddressInfoModel> getMplDeliveryAddressReportModels(final Date fromDate, final Date toDate);
-	
-	public void saveSelectedDateAndTime(OrderModel orderModel,List<TransactionSDDto> transactionSDDto);
+
+	public void saveSelectedDateAndTime(OrderModel orderModel, List<TransactionSDDto> transactionSDDto);
+
 
 }
+

@@ -5,6 +5,11 @@
 
 <div class="carousel-component">
 <div class="feature-collections">
+
+<!-- changes for tpr-599 -->
+<input type="hidden" id="slideByOffer" value="${component.slideBy}">
+<input type="hidden" id="autoPlayOffer" value="${component.autoPlay}">
+<input type="hidden" id="autoplayTimeoutOffer" value="${component.autoplayTimeout}">
 <h2>${component.title}</h2>
 </div>
 	<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference offersCarousel" id="shopByLookCarousel">
@@ -22,13 +27,24 @@
 						</a>
 					</div>
 					<div class="details short-info">
-						<c:if test="${not empty item.content}">
-							${item.content}  
+					<c:set var="itemContent" value="${item.content}"></c:set>
+						<c:if test="${not empty itemContent}">
+							${itemContent}  
 						</c:if>
 					</div>
 				</div>
 			</div>
 		</c:forEach>
 	</div>
+	<!-- sprint8(tpr-1672(home page,clp,blp)) -->
+	<a href="<c:if test='${not empty component.buttonLink}'>
+							${component.buttonLink}  
+						</c:if>" class="view-best-offers">
+						<c:if test="${not empty component.buttonText}">
+							${component.buttonText}  
+						</c:if>
+						</a>
+	<!-- sprint8(tpr-1672(home page,clp,blp)) -->
+						
 </div> 
 

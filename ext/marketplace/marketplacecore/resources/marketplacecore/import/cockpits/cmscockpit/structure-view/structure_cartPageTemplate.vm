@@ -61,6 +61,11 @@
 			</tr>
 			<tr>
 				<td colspan="4" class="structureViewSection">
+					<cockpit code="EmptyCartSignIn" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" class="structureViewSection">
 					<hr />
 				</td>
 			</tr>
