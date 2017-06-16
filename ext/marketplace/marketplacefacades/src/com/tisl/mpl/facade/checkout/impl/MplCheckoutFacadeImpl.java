@@ -195,6 +195,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	@Autowired
 	private ShortUrlService googleShortUrlService;
 
+	/*
+	 * @Resource(name = "stockPromoCheckService") private ExtStockLevelPromotionCheckService stockPromoCheckService;
+	 */
 	//TISPT-400
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedPromoCartConverter;
@@ -469,57 +472,36 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 		if (cartModel != null)
 		{
-			final Double subTotal = getCartService().getSessionCart().getSubtotal();
-			double finalDeliveryCost = 0.0D;
-			//Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
-			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
-			{
-				double entryLevelDeliveryCost=0.0D;
-				if (null != cartEntryModel
-						&& cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE))
-				{
-					if (cartEntryModel.getScheduledDeliveryCharge() != null
-							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() > 0.0)
-					{
-						finalDeliveryCost += 0.0D;
-						entryLevelDeliveryCost = 0.0D;
-					}
-					cartEntryModel.setCurrDelCharge(Double.valueOf(entryLevelDeliveryCost));
-				}
-				else
-				{
-					// bug fix for TISPRDT-990
-					if (cartData.getDeliveryCost().getValue().doubleValue() >= 0.0)
-					{
-						for (final OrderEntryData cardEntryData : cartData.getEntries())
-						{
-							if (cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID()))
-							{
-								if (null != cardEntryData.getMplDeliveryMode()
-										&& null != cardEntryData.getMplDeliveryMode().getDeliveryCost())
-								{
-									finalDeliveryCost += cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
-											.doubleValue();
-									entryLevelDeliveryCost=cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue()
-											.doubleValue();
-								}
-							}
-						}
-					}
-					/*else
-					{
-						//finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue();
-						//entryLevelDeliveryCost=cartData.getDeliveryCost().getValue().doubleValue();
-					}*/
+			/*
+			 * final Double subTotal = getCartService().getSessionCart().getSubtotal(); double finalDeliveryCost = 0.0D;
+			 * //double finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue(); final
+			 * List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries(); for (final AbstractOrderEntryModel
+			 * cartEntryModel : cartEntryList) { if (null != cartEntryModel &&
+			 * cartEntryModel.getFulfillmentMode().equalsIgnoreCase(MarketplacecommerceservicesConstants.TSHIPCODE)) { if
+			 * (cartEntryModel.getScheduledDeliveryCharge() != null &&
+			 * cartEntryModel.getScheduledDeliveryCharge().doubleValue() > 0.0) { finalDeliveryCost += 0.0D; }
+			 * cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost)); } else { if
+			 * (cartData.getDeliveryCost().getValue().doubleValue() == 0.0) { for (final OrderEntryData cardEntryData :
+			 * cartData.getEntries()) { if
+			 * (cardEntryData.getSelectedUssid().equalsIgnoreCase(cartEntryModel.getSelectedUSSID())) { if (null !=
+			 * cardEntryData.getMplDeliveryMode() && null != cardEntryData.getMplDeliveryMode().getDeliveryCost()) {
+			 * finalDeliveryCost = cardEntryData.getMplDeliveryMode().getDeliveryCost().getDoubleValue() .doubleValue(); }
+			 * } } } else { finalDeliveryCost = cartData.getDeliveryCost().getValue().doubleValue(); }
+			 * 
+			 * cartEntryModel.setCurrDelCharge(Double.valueOf(finalDeliveryCost)); } } modelService.saveAll(cartEntryList);
+			 * final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost);
+			 * cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+			 * cartModel.setDeliveryCost(Double.valueOf(finalDeliveryCost)); getModelService().save(cartModel);
+			 * 
+			 * //return true; calculateStatus = true;
+			 */
 
-					cartEntryModel.setCurrDelCharge(Double.valueOf(entryLevelDeliveryCost));
-				}
-			}
-			modelService.saveAll(cartEntryList);
-			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost);
+
+			final Double subTotal = getCartService().getSessionCart().getSubtotal();
+			final Double finalDeliveryCost = Double.valueOf(cartData.getDeliveryCost().getValue().doubleValue());
+			final Double totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + finalDeliveryCost.doubleValue());
 			cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
-			cartModel.setDeliveryCost(Double.valueOf(finalDeliveryCost));
+			cartModel.setDeliveryCost(finalDeliveryCost);
 			getModelService().save(cartModel);
 
 			//return true;
@@ -872,7 +854,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 			if (!StringUtil.isEmpty(defaultPinCodeId))
 			{
-				responseData = mplCartFacade.getOMSPincodeResponseData(defaultPinCodeId, cartData);
+				responseData = mplCartFacade.getOMSPincodeResponseData(defaultPinCodeId, cartData, null);
 			}
 			if (responseData != null)
 			{
@@ -938,6 +920,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		boolean result = true;
 		if (abstractOrderModel != null)
 		{
+
 			final Set<PromotionResultModel> promotion = abstractOrderModel.getAllPromotionResults();
 			//IQA changes
 			if (CollectionUtils.isNotEmpty(promotion))
@@ -946,6 +929,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				{
 					if (promo.getCertainty().floatValue() == 1.0F)
 					{
+
 						//Changed to handle promotion for both cart and order
 						if (promo.getPromotion() != null && (promo.getPromotion().getEnabled().booleanValue())
 								|| getSellerBasedPromotionService().getPromoDetails(promo.getPromotion().getCode()))
@@ -965,6 +949,23 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							break;
 						}
 					}
+					//TPR-965 starts
+					//					if (result && promo.getPromotion() instanceof LimitedStockPromotionModel)
+					//					{
+					//						final boolean payRestrictionsPresent = checkIfPaymentRestrictions(promo.getPromotion());
+					//						int numRestrictions = 0;
+					//						if (payRestrictionsPresent)
+					//						{
+					//							numRestrictions = promo.getPromotion().getRestrictions().size();
+					//						}
+					//						if (payRestrictionsPresent && numRestrictions == 1)
+					//						{
+					//							//do nothing
+					//						}
+					//
+					//						//	result = checkIsStockPromoValid(promo.getPromotion(), abstractOrderModel, promo.getConsumedEntries());
+					//					}
+					//TPR-965 ends
 				}
 			}
 		}
@@ -973,8 +974,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			//return false;
 			result = false;
 		}
+
 		return result;
 	}
+
+
+	//	/**
+	//	 * @param promotion
+	//	 * @return
+	//	 */
+	//	private boolean checkIfPaymentRestrictions(final AbstractPromotionModel promotion)
+	//	{
+	//		boolean isPresent = false;
+	//		for (final AbstractPromotionRestrictionModel restriction : promotion.getRestrictions())
+	//		{
+	//			if (restriction instanceof PaymentModeSpecificPromotionRestrictionModel)
+	//			{
+	//				isPresent = true;
+	//				break;
+	//			}
+	//
+	//		}
+	//		return isPresent;
+	//	}
+
+
 
 	/**
 	 * @ Override TSHIP : TIS 397
@@ -990,9 +1014,9 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			throws EtailNonBusinessExceptions
 	{
 
-		 List<PinCodeResponseData> pincoderesponseDataList = null;
-			   pincoderesponseDataList = getSessionService().getAttribute(
-						MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
+		List<PinCodeResponseData> pincoderesponseDataList = null;
+		pincoderesponseDataList = getSessionService().getAttribute(
+				MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
 
 		LOG.debug("******responceData******** " + pincoderesponseDataList);
 
@@ -1019,7 +1043,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes()
 									.getCode())
 					{
-						
+
 						//	if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE))
 						//	{
 						//		marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
@@ -1027,32 +1051,46 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 						//	}
 
 						// For Release 1 , TShip delivery cost will always be zero . Hence , commneting the below code which check configuration from HAC
-					if(null != pincoderesponseDataList && pincoderesponseDataList.size()>0){
+						if (null != pincoderesponseDataList && pincoderesponseDataList.size() > 0)
+						{
 							for (final PinCodeResponseData responseData : pincoderesponseDataList)
 							{
 								if (marketplaceDeliveryModeData.getSellerArticleSKU().equals(responseData.getUssid()))
 								{
 									for (final DeliveryDetailsData detailsData : responseData.getValidDeliveryModes())
 									{
-											if (null != detailsData.getFulfilmentType() && detailsData.getFulfilmentType().equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-													&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
+										if (null != detailsData.getFulfilmentType()
+												&& detailsData.getFulfilmentType().equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
+												&& cartData.getTotalPrice().getValue().doubleValue() > Double
+														.parseDouble(tshipThresholdValue))
 
-											{
-												marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
-														Double.valueOf(0.0)));
-											}
+										{
+											marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+													Double.valueOf(0.0)));
+										}
 									}
 								}
 							}
+						}
+						/*
+						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
+						 * cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
+						 *
+						 * {
+						 *
+						 * //******New Code Added for TPR-579 : TSHIP Shipping Charges****************** if
+						 * (validate(fulfillmentType, marketplaceDeliveryModeData.getFulfillmentType())) {
+						 * marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+						 * marketplaceDeliveryModeData.getDeliveryCost().getDoubleValue())); } else {
+						 * marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+						 * Double.valueOf(0.0))); } //******************New Code Added for TPR-579 : TSHIP Shipping Charges
+						 * ends*********** } }
+						 *
+						 * marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
+						 * Double.valueOf(0.0))); }
+						 */
 					}
-						/*if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE)
-								&& cartData.getTotalPrice().getValue().doubleValue() > Double.parseDouble(tshipThresholdValue))
 
-						{
-							marketplaceDeliveryModeData.setDeliveryCost(createPrice(getCartService().getSessionCart(),
-									Double.valueOf(0.0)));
-						}*/
-				  }
 				}
 			}
 		}
@@ -1060,6 +1098,22 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		return deliveryModeDataMap;
 	}
 
+	/**
+	 * New Code Added for TPR-579: Matches Fulfillment Modes
+	 *
+	 * @param fulfillmentType
+	 * @param fulfillmentTypeData
+	 * @return flag
+	 */
+	//sonar fix
+	/*
+	 *
+	 * private boolean validate(final String fulfillmentType, final String fulfillmentTypeData) { boolean flag = false;
+	 * if (fulfillmentType.equalsIgnoreCase(fulfillmentTypeData)) { flag = true; } return flag; }
+	 */
+
+
+	@SuppressWarnings("javadoc")
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1501,7 +1555,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	}
 
 
-
 	/**
 	 * This method submits the order - ie. initiates the order fulfilment process TPR-629
 	 *
@@ -1871,6 +1924,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 	}
 
 
+
 	/**
 	 * @description: It is used for fetching order details for code ,without user checking
 	 * @param orderNumber
@@ -1908,6 +1962,7 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
 
 	/**
 	 * @param String

@@ -3,7 +3,11 @@ package com.tisl.mpl.marketplacecommerceservices.daos;
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
 import de.hybris.platform.core.model.order.OrderModel;
+
+import de.hybris.platform.core.model.user.CustomerModel;
+
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
+
 
 import java.util.Date;
 import java.util.List;
@@ -95,7 +99,18 @@ public interface OrderModelDao
 	 * @return List
 	 */
 	List<BulkCancellationProcessModel> getAllBulkCancelData();
+
+
+	/**
+	 * @param customer
+	 * @param agentId
+	 * @return
+	 */
+	List<OrderModel> getOrderByAgent(CustomerModel customer, String agentId);
+
+
 	
 	public PointOfServiceModel getPointOfService(String storeId);
 	
+
 }

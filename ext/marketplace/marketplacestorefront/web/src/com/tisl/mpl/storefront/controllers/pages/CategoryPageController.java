@@ -78,8 +78,8 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.model.SeoContentModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
-import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+
+import com.tisl.mpl.facade.category.MplCategoryFacade;import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
@@ -121,6 +121,8 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//Added for TISLUX-91 s
 	@Autowired
 	private ConfigurationService configurationService;
+	@Autowired
+	private MplCategoryFacade mplCategoryFacade;
 
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
@@ -166,7 +168,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 	private static final String SPECIAL_CHARACTERS = "[^\\w\\s]";
 	private int pageSiseCount;
 	//UF-15,16
-	private static final Integer PAGE_SIZE = new Integer(24);
+	//sonar fix
+	//private static final Integer PAGE_SIZE = new Integer(24);
+
+	private static final Integer PAGE_SIZE = Integer.valueOf(24);
 
 	/**
 	 * @return the pageSiseCount
@@ -216,6 +221,28 @@ public class CategoryPageController extends AbstractCategoryPageController
 		String searchCode = new String(categoryCode);
 		//SEO: New pagination detection TISCR 340
 		pageNo = getPaginatedPageNo(request);
+
+		//CKD:TPR-250 :Start
+		if (null != searchQuery && searchQuery.contains(MarketplacecommerceservicesConstants.SELLERIDSEARCH))
+		{
+			String sellerId = null;
+			String sellerName = null;
+			try
+			{
+				sellerId = searchQuery.split(MarketplacecommerceservicesConstants.SELLERIDSEARCH, 2)[1].substring(0, 6);
+				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("CategoryPage-Problem retrieving microsite SellerId / Sellername for left hand facets >>>>>", ex);
+			}
+			model.addAttribute("msiteSellerId", sellerId);
+			model.addAttribute("mSellerID", sellerId);
+			model.addAttribute("mSellerName", sellerName);
+		}
+		//CKD:TPR-250: End
+
+
 		//applying search filters
 		if (searchQuery != null)
 		{
@@ -386,6 +413,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 		pageSize = PAGE_SIZE;
 		categoryCode = categoryCode.toUpperCase();
 		String returnStatement = null;
+		//CKD:TPR-250-Start
+		identifyMicroSellerId(searchQuery, model, request);
+		//CKD:TPR-250-End
 		if (!redirectIfLuxuryCategory(categoryCode, response))
 		{
 			String searchCode = new String(categoryCode);
@@ -423,6 +453,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
 
 			CategoryModel category = null;
+
 			try
 			{
 				category = categoryService.getCategoryForCode(categoryCode);
@@ -478,7 +509,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 					//final ContentPageModel categoryLandingPage = getLandingPageForCategory(category); // CAR-237 called above at line 392 once. doing the same logic to throw pt # 4
 					if (categoryLandingPage == null)
 					{
-						throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+						//throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+						//changes for CAR-280
+						throw new CMSItemNotFoundException("Category Landing page is not configured for PLP" + category.getName());
 					}
 
 					/*
@@ -518,9 +551,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			catch (final CMSItemNotFoundException exp)
 
 			{
-				LOG.error("************** category method exception " + exp);
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(exp, MarketplacecommerceservicesConstants.E0000));
+				LOG.error("************** category method exception " + exp.getMessage());
 
 				try
 				{
@@ -590,6 +621,59 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 		}
 		return returnStatement;
+	}
+
+	/**
+	 * @param searchQuery
+	 * @param model
+	 * @param request
+	 */
+	private void identifyMicroSellerId(final String searchQuery, final Model model, final HttpServletRequest request)
+	{
+		final String requestURL = request.getRequestURL().toString();
+		//TPR-4471
+		//		String sellerName = null;
+		String sellerId = null;
+		if (requestURL.matches(MplConstants.MSITE_SLR_SLS_HIERARCHY_URL_PTRN_RGX))
+		{
+			try
+			{
+				sellerId = requestURL.split(MplConstants.MSITE_SLR_SLS_PTRN_PART1, 2)[1].substring(0, 6);
+			}
+			catch (final StringIndexOutOfBoundsException ex)
+			{
+				LOG.error("SellerId should not be less than 6 characters >>>>>", ex);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Category Page-Problem retrieving microsite SellerId / Sellername from seller Sales Hierarchy URL >>>>>",
+						ex);
+			}
+		}
+		else if (null != searchQuery && searchQuery.contains(MarketplacecommerceservicesConstants.SELLERIDSEARCH))
+		{
+			try
+			{
+				sellerId = searchQuery.split(MarketplacecommerceservicesConstants.SELLERIDSEARCH, 2)[1].substring(0, 6);
+			}
+			catch (final StringIndexOutOfBoundsException ex)
+			{
+				LOG.error("SellerId should not be less than 6 characters >>>>>", ex);
+			}
+			catch (final Exception ex)
+			{
+				LOG.error("Category Page-Problem retrieving microsite SellerId / Sellername from category carousal URL >>>>>", ex);
+			}
+		}
+		//				if (StringUtils.isNotBlank(sellerId))
+		//				{
+		//					sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+		//				}
+
+		model.addAttribute("msiteSellerId", sellerId);
+		model.addAttribute("mSellerID", sellerId);
+		//				model.addAttribute("mSellerName", sellerName);
+
 	}
 
 	/**
@@ -1105,10 +1189,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 		try
 		{
 			//categoryLandingPage = getLandingPageForCategory(category); // CAR -237 not called as categoryLandingPage is already sent and available Code review pt#4
-			if (categoryLandingPage == null)
-			{
-				throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
-			}
+			//changes for CAR-280
+			//if (categoryLandingPage == null)
+			//{
+			//throw new CMSItemNotFoundException("Could not find a landing page for the category" + category.getName());
+			//}
 
 			//(TPR-243) SEO Meta Tags and Titles for Landing Page *: starts
 			seoContentList = category.getSeoContents(); // CAR-235 - added to remove duplicate category.getSeoContents() calls at LIne # 1005 & 1064
@@ -1134,9 +1219,10 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 			//setUpMetaDataForContentPage(model, categoryLandingPage);
 		}
-		catch (final CMSItemNotFoundException e)
+		//changes for CAR-280
+		catch (final Exception e)
 		{
-			LOG.error("SEO meta content error ---" + e.getMessage());
+			LOG.debug("SEO meta content error ---" + e.getMessage());
 		}
 	}
 

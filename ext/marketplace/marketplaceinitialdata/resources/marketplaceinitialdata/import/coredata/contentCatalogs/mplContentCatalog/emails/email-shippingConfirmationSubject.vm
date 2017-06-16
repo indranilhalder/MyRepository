@@ -1,1 +1,1 @@
-Your order  ${ctx.orderCode} has been shipped!
+Your order  ${ctx.pOrderCode} has been shipped!

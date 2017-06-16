@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -69,6 +70,7 @@ public class GenericUtilityMethods
 	private static final Logger LOG = Logger.getLogger(GenericUtilityMethods.class);
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 	private static final String MISSING_IMAGE_URL = "/_ui/desktop/theme-blue/images/missing-product-300x300.jpg";
+	private static final String REGEX = "[^\\w\\s]";
 
 
 	/**
@@ -95,11 +97,13 @@ public class GenericUtilityMethods
 		}
 		return status;
 	}
-	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException, JsonMappingException, IOException
-	  {
-	   ObjectMapper mapper = new ObjectMapper();
-	  return  mapper.readValue(stringJson, classType);
-	  }
+
+	public static Object jsonToObject(final Class<?> classType, final String stringJson) throws JsonParseException,
+			JsonMappingException, IOException
+	{
+		final ObjectMapper mapper = new ObjectMapper();
+		return mapper.readValue(stringJson, classType);
+	}
 
 	/**
 	 * @Description: Sends the year from Date
@@ -1047,6 +1051,8 @@ public class GenericUtilityMethods
 		String page_subCategory_name = null;
 		String cartTotal = null;
 		String page_subcategory_name_L3 = null;
+		//For kidswear L4 needs to be populated
+		String page_subcategory_name_L4 = null;
 		final List<String> productBrandList = new ArrayList<String>();
 		final List<String> productCategoryList = new ArrayList<String>();
 		final List<String> productIdList = new ArrayList<String>();
@@ -1058,11 +1064,15 @@ public class GenericUtilityMethods
 		final List<String> productUnitPriceList = new ArrayList<String>();
 		final List<String> pageSubCategories = new ArrayList<String>();
 		final List<String> pageSubcategoryNameL3List = new ArrayList<String>();
+		//For kidswear L4 needs to be populated
+		final List<String> pageSubcategoryNameL4List = new ArrayList<String>();
 		final List<String> adobeProductSkuList = new ArrayList<String>();
 		String productCatL1 = null;
 		String productCatL2 = null;
 		String productCatL3 = null;
 		//for tealium
+		//For kidswear L4 needs to be populated
+		String productCatL4 = null;
 
 		String order_shipping_charge = "";
 		final List<String> orderShippingCharges = new ArrayList<String>();
@@ -1146,23 +1156,51 @@ public class GenericUtilityMethods
 						if (StringUtils.isNotEmpty(categoryName.toString()))
 						{
 							final String[] categoryNames = categoryName.toString().split(":");
-							//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
-							category = categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
-							productCategoryList.add(category);
+							if (categoryNames.length == 5)
+							{
+								//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+								category = categoryNames[3].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								productCategoryList.add(category);
 
-							//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-							//	.toLowerCase());
+								//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
 
-							page_subCategory_name = categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
-							pageSubCategories.add(page_subCategory_name);
+								page_subCategory_name = categoryNames[2].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubCategories.add(page_subCategory_name);
 
-							//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
-							//	.toLowerCase());
+								//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
 
-							page_subcategory_name_L3 = categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase();
-							pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+								page_subcategory_name_L3 = categoryNames[1].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
 
+								//For kidswear L4 needs to be populated
+								page_subcategory_name_L4 = categoryNames[0].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
+							}
+							else
+							{
+								//category = appendQuote(categoryNames[2].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").toLowerCase());
+								category = categoryNames[2].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								productCategoryList.add(category);
 
+								//page_subCategory_name = appendQuote(categoryNames[1].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
+
+								page_subCategory_name = categoryNames[1].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubCategories.add(page_subCategory_name);
+
+								//page_subcategory_name_L3 = appendQuote(categoryNames[0].replaceAll("[^\\w\\s]", "").replaceAll(" ", "_")
+								//	.toLowerCase());
+
+								page_subcategory_name_L3 = categoryNames[0].replaceAll(REGEX, "").replaceAll(" ", "_").toLowerCase();
+								pageSubcategoryNameL3List.add(page_subcategory_name_L3);
+
+								//For kidswear L4 needs to be populated
+								//Commented as per TISPRDT-1462
+								//page_subcategory_name_L4 = "\" \"";
+								pageSubcategoryNameL4List.add(page_subcategory_name_L4);
+							}
 						}
 
 						//TPR-430 ends
@@ -1238,12 +1276,14 @@ public class GenericUtilityMethods
 					productCatL3 = StringUtils.join(pageSubcategoryNameL3List, ',');
 
 				}
-
+				//For kidswear L4 needs to be populated
+				productCatL4 = StringUtils.join(pageSubcategoryNameL4List, ',');
 
 				model.addAttribute("pageSubCategories", productCatL1);
 				model.addAttribute("productCategoryList", productCatL2);
 				model.addAttribute("page_subcategory_name_L3", productCatL3);
-
+				//For kidswear L4 needs to be populated
+				model.addAttribute("page_subcategory_name_L4", productCatL4);
 			}
 		}
 		catch (final Exception te)
@@ -1528,6 +1568,26 @@ public class GenericUtilityMethods
 	}
 
 
+	//TPR-1285
+	/**
+	 * Return the Prefix
+	 *
+	 * @param prefix
+	 * @return prefix
+	 */
+	public static String changePrefix(String prefix)
+	{
+		prefix = prefix.replaceAll("[^\\w/-]", "-");
+		//TISSTRT-1297
+		if (prefix.contains("--"))
+		{
+			prefix = prefix.replaceAll("--", "-");
+		}
+		return prefix;
+	}
+
+
+
 	/**
 	 * @Description : Return Channel Data
 	 * @param channel
@@ -1553,6 +1613,29 @@ public class GenericUtilityMethods
 			salesApplication.add(SalesApplication.CALLCENTER);
 		}
 		return salesApplication;
+	}
+
+	/**
+	 * For UF-93
+	 *
+	 * @doc This Generic method is written for retrieving cookie from request for a given Cookie Name
+	 * @param HttpServletRequest
+	 *           , String
+	 * @return Cookie
+	 */
+	public static Cookie getCookieByName(final HttpServletRequest request, final String cookieName)
+	{
+		if (request != null && request.getCookies() != null && cookieName != null)
+		{
+			for (final Cookie cookie : request.getCookies())
+			{
+				if (cookieName.equals(cookie.getName()))
+				{
+					return cookie;
+				}
+			}
+		}
+		return null;
 	}
 
 }

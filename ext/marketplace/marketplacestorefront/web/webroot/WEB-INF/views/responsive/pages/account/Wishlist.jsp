@@ -25,7 +25,7 @@
 
 <template:page pageTitle="${pageTitle}">
 	<!-- LW-230 -->
-	<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+	<input type="hidden" id="isLuxury" name="isLuxury" value="${isLuxury}"/>
 	
 	<body class="wishlist" onload="readyFunction();">
 
@@ -238,17 +238,25 @@
 								<c:set value="${wpproduct.sellerInfoData}" var="seller" />
 								<c:set value="${product.ussID}" var="entry_ussid" />
 								<c:url value="${product.url}" var="productUrl" />
+
+								
 								<li>
 									<div class="product-info">
                                           
-										 <c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
+										<c:if test="${fn:toLowerCase(product.luxIndicator)=='marketplace' or empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="thumbnail" /></a>
-														</c:if>
+										<!--  TISPRD-9318  -->
+										<c:set value="${ycommerce:productImage(product, 'cartIcon')}" var="cartImage"/>
+														
+										</c:if>
 										<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
 										<a href="${productUrl}"> <product:productPrimaryImage
 														product="${product}" format="luxuryCartPage" /></a>
-														</c:if>
+										<!--  TISPRD-9318  -->				
+										<c:set value="${ycommerce:productImage(product, 'luxuryCartIcon')}" var="cartImage"/>
+														
+										</c:if>
 										
 										<div>
 											<ul>
@@ -364,11 +372,18 @@
 												<input type="hidden" name="ussid" value="${seller.ussid}" />
 												<input type="hidden" name="productCodePost"
 													value="${product.code}" />
-													<!-- For Infinite Analytics Start-->
-													<input type="hidden" name="productArrayForIA" value="${product.code}"/>
-													<!-- For Infinite Analytics End-->
+												<!-- For Infinite Analytics Start-->
+												<input type="hidden" name="productArrayForIA" value="${product.code}"/>
+												<!-- For Infinite Analytics End-->
 												<input type="hidden" name="wishlistNamePost"
 													value="${particularWishlistName}" />
+													
+												<!--  TISPRD-9318  -->
+												<c:if test="${not empty cartImage  && not empty cartImage.url }" >
+												<input type="hidden" id="cart_icon_wishlist_${product.ussID}" name="cartIconWishlist" value="${cartImage.url}"/>
+												</c:if>
+												<input type="hidden" name="productName" value="${product.name}" />	
+												<!--  End TISPRD-9318  -->
 												<c:choose>
 													<c:when test="${not empty wpproduct.isOutOfStock && wpproduct.isOutOfStock eq 'Y'}">
 	<!-- TISPRO-588 -->													<span id="outOfStockIdwl">                                                      

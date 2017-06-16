@@ -33,7 +33,7 @@
 				</c:if> --%>
 
 				<li class="logged_in dropdown ajaxloginhi" >
-				<span class="material-icons">&#xE8A6;</span>
+				<span class="material-icons"></span>
 				<ycommerce:testId code="header_LoggedUser">
 					<c:set var="userName" value="${user.firstName}"/>
 						<%-- <c:if test="${not empty userName}">
@@ -79,7 +79,7 @@
 				<div class="right">
 					<ul>
 						<li class="dropdown sign-in-dropdown sign-in ajaxloginhi">
-						<span class="material-icons">&#xE8A6;</span>
+						<span class="material-icons"></span>
 						<ycommerce:testId
 						code="header_Login_link">
 						<a id="socialLogin" class="headeruserdetails" href="<c:url value="/login"/>" role="button"

@@ -20,6 +20,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.cscockpit.exceptions.PaymentException;
 import de.hybris.platform.cscockpit.exceptions.ValidationException;
 import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
@@ -138,6 +139,20 @@ public interface MarketplaceCheckoutController extends
 			MplZoneDeliveryModeValueModel deliveryMode);
 
 	void setCODPaymentMode(final CartModel cartModel);	//TPR-3471
+
+
+	
+	void processJuspayPayment(final CartModel cart, final CustomerModel customer);
+	
+	String juspayPaymentValidation(String commerceOrderId);
+	
+	boolean jusPayprocessPaymentTxn(CartModel cart) throws PaymentException, 
+					ValidationException, Exception;
+	
+	boolean processJusPayPaymentOnSelect() throws PaymentException, ValidationException;
+	
+	void setJusPayPaymentModeOnSelect(final CartModel cartModel);
+
 	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData, CartModel cartModel);
 	public Double getScheduleDeliveryCharges();
 	public SellerInformationModel getSellerInformationByUssid(String Ussid);

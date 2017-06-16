@@ -164,7 +164,9 @@ ACC.product = {
 			
 			 $("#sizeQty").val($("#sizeGuideQty").val());
 			//alert($('#variant.size-g option:selected').val());
-			 if($('#variant.size-g option:selected').val()!="#")
+			 // Sanity issue (Product is added to bag without selecting size guide)
+			 //if($('#variant.size-g option:selected').val()!="#")
+			 if ($('#variant.size-g li').hasClass('selected'))
 			 {
 				ACC.product.sendAddToBagSizeGuide("addToCartSizeGuide");
 			 
@@ -310,6 +312,14 @@ sendAddToBagWl: function(formId){
 				formId_splitdata = formId.split("_");
 				ACC.product.showTransientCart(formId_splitdata[2]);
 				ACC.product.addToBagFromWl(formId_splitdata[2],true);
+				// TISPRD-9318
+				var cartImageSrc=$("#"+formId+" input[name=cartIconWishlist]").val();
+				var productCodePost=$("#"+formId+" input[name=productCodePost]").val();
+				var productName=$("#"+formId+" input[name=productName]").val();
+				console.log("cartImageSrc:"+cartImageSrc+" code:"+productCodePost+" name:"+productName);
+				
+				Header.showAddToBagPopOver(productCodePost, cartImageSrc, productName);
+				// End TISPRD-9318
 				//$("#"+formId+"Title").show().fadeOut(7000);
 				//ACC.product.displayAddToCart(data,formId,false);				
 				$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
@@ -661,10 +671,12 @@ sendAddToBagQuick:function(formId){
 
 			//$("#"+formId+"Title.sellerAddToBagTitle").show().fadeOut(5000);
 			//$("#"+formId+" "+".addToCartSerpTitle").show().fadeOut(5000);
+			//Sanity issue fixing
+			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 			ACC.product.showTransientCart(ussid);
 			ACC.product.scrollForTransientCart();
 			//ACC.product.displayAddToCart(data,formId,false);
-			$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
+			
 			}
 			else if(data=="reachedMaxLimit") {
 				$("#"+formId+"Title").html("");
@@ -894,6 +906,7 @@ sendAddToBagQuick:function(formId){
 	
 	//SizeGuide 
 	sendAddToBagSizeGuide: function(formId){
+		
 		//alert("Size Guide sendAddToBagSizeGuide 3 "+formId);
 		
 		var input_name="qty";

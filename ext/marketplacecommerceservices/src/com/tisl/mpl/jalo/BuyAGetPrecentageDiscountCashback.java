@@ -13,7 +13,6 @@ import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
-import de.hybris.platform.promotions.jalo.PromotionOrderEntryAdjustAction;
 import de.hybris.platform.promotions.jalo.PromotionOrderEntryConsumed;
 import de.hybris.platform.promotions.jalo.PromotionResult;
 import de.hybris.platform.promotions.jalo.PromotionsManager;
@@ -28,13 +27,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
+import com.tisl.mpl.pojo.MplLimitedOfferData;
 import com.tisl.mpl.promotion.helper.MplPromotionHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
@@ -53,6 +55,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	private double totalCashback = 0.0D;
 	//private double totalPricevalue;
 	private int noOfProducts = 0;
+
+	private int stockCount = 0;
 
 	/**
 	 * @Description: Method for Item Creation
@@ -75,8 +79,8 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 
 	/**
 	 * @Description : Buy Product A get Percentage or Amount Discount cashback
-	 * @param : SessionContext paramSessionContext
-	 * @param : PromotionEvaluationContext paramPromotionEvaluationContext
+	 * @param paramSessionContext
+	 * @param evaluationContext
 	 * @return : List<PromotionResult> promotionResults
 	 */
 	@Override
@@ -85,8 +89,14 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	{
 		List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final AbstractOrder order = evaluationContext.getOrder();
+
+
 		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
 		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
+		//final List<Product> promotionProductList = new ArrayList<>(getProducts());
+		//final List<Category> promotionCategoryList = new ArrayList<>(getCategories());
+
 		final List<AbstractPromotionRestriction> restrictionList = new ArrayList<AbstractPromotionRestriction>(getRestrictions()); // Fetching Promotion set Restrictions
 		//final List<Product> excludedProductList = new ArrayList<Product>();
 		//final List<String> excludeManufactureList = new ArrayList<String>();
@@ -109,12 +119,17 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 			//changes end for omni cart fix @atmaram
 			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag) // if Restrictions return valid && Channel is valid
 			{
+				final Map<String, Integer> validProductFinalList = new ConcurrentHashMap<String, Integer>();
+				final Map<String, AbstractOrderEntry> validProductUssidFinalMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+
+				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+
 				//getting the valid products
 				//				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 				//						.getValidProdListForBuyXofAPromo(order, paramSessionContext, promotionProductList, promotionCategoryList,
 				//								restrictionList, excludedProductList, excludeManufactureList, null, null); // Adding Eligible Products to List
 
-				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
+				//final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 				//getting the valid products
 				final Map<String, AbstractOrderEntry> validProductUssidMap = getDefaultPromotionsManager()
 						.getValidProdListForBuyXofA(order, paramSessionContext, allowedProductList, restrictionList, null, null); // Adding Eligible Products to List
@@ -122,7 +137,11 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				if (!getDefaultPromotionsManager().promotionAlreadyFired(paramSessionContext, validProductUssidMap))
 				{
 					promotionResults = promotionEvaluation(paramSessionContext, evaluationContext, validProductUssidMap,
-							restrictionList, allowedProductList);
+							restrictionList, validProductFinalList, validProductUssidFinalMap, allowedProductList);
+
+					//Setting values
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST, validProductUssidFinalMap);
+					paramSessionContext.setAttribute(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT, validProductFinalList);
 				}
 			}
 		}
@@ -144,13 +163,14 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 	/**
 	 * @Description : Promotion Evaluation Method
 	 * @param paramSessionContext
-	 * @param paramPromotionEvaluationContext
+	 * @param evaluationContext
 	 * @param validProductUssidMap
 	 * @return promotionResults
 	 */
 	private List<PromotionResult> promotionEvaluation(final SessionContext paramSessionContext,
 			final PromotionEvaluationContext evaluationContext, final Map<String, AbstractOrderEntry> validProductUssidMap,
-			final List<AbstractPromotionRestriction> restrictionList, final List<Product> allowedProductList)
+			final List<AbstractPromotionRestriction> restrictionList, final Map<String, Integer> validProductFinalList,
+			final Map<String, AbstractOrderEntry> validProductUssidFinalMap, final List<Product> allowedProductList)
 	{
 		final List<PromotionResult> promotionResults = new ArrayList<PromotionResult>();
 		final List<Product> promoProductList = new ArrayList<Product>();
@@ -160,14 +180,48 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 		boolean flagForDeliveryModeRestrEval = false;
 		boolean flagForPaymentModeRestrEval = false;
 		final double maxDiscount = getMaxDiscount() == null ? 0.0D : getMaxDiscount().doubleValue();
+		boolean isExhausted = false;
+
+
+		for (final AbstractOrderEntry entry : validProductUssidMap.values())
+		{
+			totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
+		}
+
+		//Added for TPR-4354
+		if (getMplPromotionHelper().validateForStockRestriction(restrictionList) && null != eligibleQuantity
+				&& eligibleQuantity.intValue() > 0)
+		{
+			final int offerQuantity = (totalCount / eligibleQuantity.intValue());
+			final MplLimitedOfferData data = getMplPromotionHelper().checkCustomerRedeemCount(restrictionList, this.getCode(),
+					order, eligibleQuantity.intValue());
+
+			isExhausted = data.isExhausted();
+			final int customerOfferCount = data.getActualCustomerCount();
+			final int eligibleStockCount = getDefaultPromotionsManager().getStockRestrictionVal(restrictionList)
+					* eligibleQuantity.intValue();
+
+			if (customerOfferCount > 0)
+			{
+				setStockCount(eligibleQuantity.intValue() * customerOfferCount);
+			}
+			else
+			{
+				setStockCount(eligibleStockCount);
+			}
+			if (customerOfferCount > 0 && offerQuantity > customerOfferCount)
+			{
+				totalCount = (eligibleQuantity.intValue() * customerOfferCount);
+			}
+			else if (totalCount >= eligibleStockCount)
+			{
+				totalCount = eligibleStockCount;
+			}
+		}
 
 		if (GenericUtilityMethods.checkBrandAndCategoryMinimumAmt(validProductUssidMap, paramSessionContext, evaluationContext,
-				this, restrictionList))
+				this, restrictionList) && !isExhausted)
 		{
-			for (final AbstractOrderEntry entry : validProductUssidMap.values())
-			{
-				totalCount += entry.getQuantity().intValue(); // Fetches total count of Valid Products
-			}
 			noOfProducts = totalCount;
 
 			List<PromotionOrderEntryConsumed> remainingItemsFromTail = null;
@@ -194,86 +248,98 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 
 				//Promotion Value Calculations
 				final int totalFactorCount = totalCount / eligibleQuantity.intValue();
-				final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-						validProductUssidMap, totalCount, eligibleQuantity.longValue(), paramSessionContext, restrictionList);
+				final Map<String, Integer> validProductList = getDefaultPromotionsManager()
+						.getSortedValidProdUssidMap(validProductUssidMap, totalCount, eligibleQuantity.longValue(),
+								paramSessionContext, restrictionList, getCode());
 
-				int totalValidProdCount = 0;
-				for (final String key : validProductList.keySet())
+				if (MapUtils.isNotEmpty(validProductUssidMap))
 				{
-					totalValidProdCount += validProductList.get(key).intValue(); // Fetches total count of Valid Products
-				}
-				//for delivery mode restriction check
-				flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
-						validProductUssidMap, order);
-				//for payment mode restriction check
-				flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
-						paramSessionContext);
+					validProductFinalList.putAll(validProductList);
+					validProductUssidFinalMap.putAll(validProductUssidMap);
 
-				if (flagForPaymentModeRestrEval && flagForDeliveryModeRestrEval) // If Total no of valid Products exceeds Qualifying Count
-				{
-					final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext), order,
-							MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(
-							paramSessionContext, getDiscountPrices(paramSessionContext), order,
-							MarketplacecommerceservicesConstants.DISCOUNT_PRICES) : new Double(0.0);
-					final double totalPricevalue = getDefaultPromotionsManager().getTotalValidProdPrice(validProductUssidMap,
-							validProductList);
-					final double percentageDiscountForAmount = getDefaultPromotionsManager().getConvertedPercentageDiscount(
-							totalValidProdCount, discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
-
-					if (!isPercentageOrAmount().booleanValue())
+					int totalValidProdCount = 0;
+					for (final String key : validProductList.keySet())
 					{
-						percentageDiscount = percentageDiscountForAmount; //Getting the amount discount
+						totalValidProdCount += validProductList.get(key).intValue(); // Fetches total count of Valid Products
 					}
-					else
+					//for delivery mode restriction check
+					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
+							validProductUssidMap, order);
+					//for payment mode restriction check
+					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
+							paramSessionContext);
+
+					if (flagForPaymentModeRestrEval && flagForDeliveryModeRestrEval) // If Total no of valid Products exceeds Qualifying Count
 					{
-						final double totalSavings = totalPricevalue * (totalFactorCount * percentageDiscount / 100);
-						final double totalMaxDiscount = totalFactorCount * maxDiscount;
-						if (totalSavings > totalMaxDiscount && totalMaxDiscount != 0)
+						final Double discountPrice = getPriceForOrder(paramSessionContext, getDiscountPrices(paramSessionContext),
+								order, MarketplacecommerceservicesConstants.DISCOUNT_PRICES) != null ? (Double) getPriceForOrder(
+								paramSessionContext, getDiscountPrices(paramSessionContext), order,
+								MarketplacecommerceservicesConstants.DISCOUNT_PRICES) : new Double(0.0);
+						final double totalPricevalue = getDefaultPromotionsManager().getTotalValidProdPrice(validProductUssidMap,
+								validProductList);
+						final double percentageDiscountForAmount = getDefaultPromotionsManager().getConvertedPercentageDiscount(
+								totalValidProdCount, discountPrice.doubleValue(), eligibleQuantity, totalPricevalue);
+
+						if (!isPercentageOrAmount().booleanValue())
 						{
-							percentageDiscount = (totalMaxDiscount * 100) / totalPricevalue;
+							percentageDiscount = percentageDiscountForAmount; //Getting the amount discount
 						}
-					}
-
-					for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
-					{
-						//evaluationContext.startLoggingConsumed(this);
-						totalCashback = 0.0D;
-						final AbstractOrderEntry entry = mapEntry.getValue();
-						final String validUssid = mapEntry.getKey();
-						final long quantityOfOrderEntry = entry.getQuantity(paramSessionContext).longValue();
-
-						final double percentageDiscountvalue = percentageDiscount / 100.0D;
-						if (percentageDiscount < 100)
+						else
 						{
-							//total adjustment to be deducted from total price
-							final int eligibleCount = validProductList.get(validUssid).intValue();
-
-							final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * eligibleCount);
-							totalCashback += adjustment;
-
-							final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
-							consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount, eligibleCount,
-									entry));
-
-							tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
-
-
-							final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext,
-									this, evaluationContext.getOrder(), 1.0F);
-							final PromotionOrderEntryAdjustAction poeac = PromotionsManager.getInstance()
-									.createPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);//no adjust requirement in case of bank cashback
-							//final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
-							result.setConsumedEntries(paramSessionContext, consumed);
-							result.addAction(paramSessionContext, poeac);
-							promoProductList.add(entry.getProduct());
-							promotionResults.add(result);
+							final double totalSavings = totalPricevalue * (totalFactorCount * percentageDiscount / 100);
+							final double totalMaxDiscount = totalFactorCount * maxDiscount;
+							if (totalSavings > totalMaxDiscount && totalMaxDiscount != 0)
+							{
+								percentageDiscount = (totalMaxDiscount * 100) / totalPricevalue;
+							}
 						}
 
-					}
-					//if (promoProductList.size() > 0) // To check that another Product Promotion does not apply on the product
-					if (CollectionUtils.isNotEmpty(promoProductList))
-					{
-						getPromotionUtilityPOJO().setPromoProductList(promoProductList);
+						paramSessionContext
+								.setAttribute(MarketplacecommerceservicesConstants.PROMOCODE, String.valueOf(this.getCode()));
+
+						for (final Map.Entry<String, AbstractOrderEntry> mapEntry : validProductUssidMap.entrySet())
+						{
+							//evaluationContext.startLoggingConsumed(this);
+							totalCashback = 0.0D;
+							final AbstractOrderEntry entry = mapEntry.getValue();
+							final String validUssid = mapEntry.getKey();
+							final long quantityOfOrderEntry = entry.getQuantity(paramSessionContext).longValue();
+
+							final double percentageDiscountvalue = percentageDiscount / 100.0D;
+							if (percentageDiscount < 100)
+							{
+								//total adjustment to be deducted from total price
+								final int eligibleCount = validProductList.get(validUssid).intValue();
+
+								final double adjustment = -(entry.getBasePrice().doubleValue() * percentageDiscountvalue * eligibleCount);
+								totalCashback += adjustment;
+
+								final List<PromotionOrderEntryConsumed> consumed = new ArrayList<PromotionOrderEntryConsumed>();
+								consumed.add(getDefaultPromotionsManager().consume(paramSessionContext, this, eligibleCount,
+										eligibleCount, entry));
+
+								tcMapForValidEntries.put(validUssid, Integer.valueOf((int) quantityOfOrderEntry - eligibleCount));
+
+
+								final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext,
+										this, evaluationContext.getOrder(), 1.0F);
+								final CustomPromotionOrderEntryAdjustAction poeac = getDefaultPromotionsManager()
+										.createCustomPromotionOrderEntryAdjustAction(paramSessionContext, entry, quantityOfOrderEntry, 0.0D);
+								//								final PromotionOrderEntryAdjustAction poeac = PromotionsManager.getInstance()
+								//										.createPromotionOrderEntryAdjustAction(paramSessionContext, entry, 0.0D);//no adjust requirement in case of bank cashback
+								//final List consumed = evaluationContext.finishLoggingAndGetConsumed(this, true);
+								result.setConsumedEntries(paramSessionContext, consumed);
+								result.addAction(paramSessionContext, poeac);
+								promoProductList.add(entry.getProduct());
+								promotionResults.add(result);
+							}
+
+						}
+						//if (promoProductList.size() > 0) // To check that another Product Promotion does not apply on the product
+						if (CollectionUtils.isNotEmpty(promoProductList))
+						{
+							getPromotionUtilityPOJO().setPromoProductList(promoProductList);
+						}
 					}
 				}
 			}
@@ -300,15 +366,39 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 				result.setConsumedEntries(remainingItemsFromTail);
 				promotionResults.add(result);
 			}
+			else if (getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				if (noOfProducts >= getStockCount())
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+							evaluationContext.getOrder(), 1.00F);
+					promotionResults.add(result);
+				}
+				else if (noOfProducts < getStockCount() && (noOfProducts % eligibleQuantity.intValue() == 0))
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+							evaluationContext.getOrder(), 1.00F);
+					promotionResults.add(result);
+				}
+				else if (noOfProducts < getStockCount() && !(noOfProducts % eligibleQuantity.intValue() == 0))
+				{
+					final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+							evaluationContext.getOrder(), 0.00F);
+					promotionResults.add(result);
+				}
+			}
 
 		}
 		else
 		{
-			//certainty check
-			final float certainty = 0.00F;
-			final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
-					evaluationContext.getOrder(), certainty);
-			promotionResults.add(result);
+			if (!getMplPromotionHelper().validateForStockRestriction(restrictionList))
+			{
+				//certainty check
+				final float certainty = 0.00F;
+				final PromotionResult result = PromotionsManager.getInstance().createPromotionResult(paramSessionContext, this,
+						evaluationContext.getOrder(), certainty);
+				promotionResults.add(result);
+			}
 		}
 
 		return promotionResults;
@@ -316,9 +406,9 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 
 	/**
 	 * @Description : Assign Promotion Fired and Potential-Promotion Message
-	 * @param : SessionContext paramSessionContext
-	 * @param : PromotionResult paramPromotionResult
-	 * @param : Locale paramLocale
+	 * @param paramSessionContext
+	 * @param paramPromotionResult
+	 * @param paramLocale
 	 * @return : String
 	 */
 	@Override
@@ -452,6 +542,25 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
 
+	
+	/**
+	 * @return the stockCount
+	 */
+	public int getStockCount()
+	{
+		return stockCount;
+	}
+
+	/**
+	 * @param stockCount
+	 *           the stockCount to set
+	 */
+	public void setStockCount(final int stockCount)
+	{
+		this.stockCount = stockCount;
+	}
+
+
 	/**
 	 * Building the Hash Key for Promotion
 	 *
@@ -472,3 +581,4 @@ public class BuyAGetPrecentageDiscountCashback extends GeneratedBuyAGetPrecentag
 		builder.append(modifyDate);
 	}
 }
+

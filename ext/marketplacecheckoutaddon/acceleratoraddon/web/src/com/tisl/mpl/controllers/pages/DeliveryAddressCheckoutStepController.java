@@ -201,7 +201,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		 * getAddressVerificationResultHandler().handleResult(verificationResult, newAddress, model, redirectModel,
 		 * bindingResult, getAddressVerificationFacade().isCustomerAllowedToIgnoreAddressSuggestions(),
 		 * "checkout.multi.address.updated");
-		 *
+		 * 
 		 * if (addressRequiresReview) { storeCmsPageInModel(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); setUpMetaDataForContentPage(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); return
@@ -230,7 +230,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	/*
 	 * private List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) {
 	 * CartSoftReservationData cartSoftReservationData;
-	 *
+	 * 
 	 * final List<CartSoftReservationData> cartSoftReservationDataList = new ArrayList<CartSoftReservationData>(); for
 	 * (final OrderEntryData entry : cartData.getEntries()) { cartSoftReservationData = new CartSoftReservationData();
 	 * cartSoftReservationData.setUSSID(entry.getSelectedSellerInformation().getUssid());
@@ -241,7 +241,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 	 * cartSoftReservationData.setIsCOD("true");
 	 * cartSoftReservationData.setTransportMode(entry.getDeliveryMode().getName());
 	 * cartSoftReservationData.setFulfillmentType("");
-	 *
+	 * 
 	 * cartSoftReservationDataList.add(cartSoftReservationData); } return cartSoftReservationDataList; }
 	 */
 
@@ -341,6 +341,7 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		{
 			model.addAttribute("addressForm", new AccountAddressForm());
 			GlobalMessages.addErrorMessage(model, "address.error.formentry.invalid");
+			LOG.error("+++++++++++Error in edit address 2222+++++++++++" + bindingResult.hasErrors());
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 
@@ -387,18 +388,18 @@ public class DeliveryAddressCheckoutStepController extends AbstractCheckoutStepC
 		 * getAddressVerificationResultHandler().handleResult(verificationResult, newAddress, model, redirectModel,
 		 * bindingResult, getAddressVerificationFacade().isCustomerAllowedToIgnoreAddressSuggestions(),
 		 * "checkout.multi.address.updated");
-		 *
+		 * 
 		 * if (addressRequiresReview) { if (StringUtils.isNotBlank(addressForm.getCountryIso())) {
 		 * model.addAttribute("regions", getI18NFacade().getRegionsForCountryIso(addressForm.getCountryIso()));
 		 * model.addAttribute("country", addressForm.getCountryIso()); } storeCmsPageInModel(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL)); setUpMetaDataForContentPage(model,
 		 * getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-		 *
+		 * 
 		 * if (StringUtils.isNotEmpty(addressForm.getAddressId())) { final AddressData addressData =
 		 * getCheckoutFacade().getDeliveryAddressForCode(addressForm.getAddressId()); if (addressData != null) {
 		 * model.addAttribute("showSaveToAddressBook", Boolean.valueOf(!addressData.isVisibleInAddressBook()));
 		 * model.addAttribute("edit", Boolean.TRUE); } }
-		 *
+		 * 
 		 * return MarketplacecheckoutaddonControllerConstants.AddEditDeliveryAddressPage; }
 		 */
 

@@ -22,14 +22,14 @@
 	data-count="${wishlistproductcount}" id="myWishlistHeader"><spring:theme
 			code="header.link.myWishList" /></a>
 	<div class="wishlist-info"></div>
-		<span id="movedToWishlist_Cart" style="display:none;color:#60A119; "><!-- We've moved it to your wishlist</span> --><spring:theme code="moved.wishlist.cartmsg"/></span>
+		<span id="movedToWishlist_Cart" style="display:none;color:#60A119; "><spring:theme code="moved.wishlist.cartmsg"/></span>
 		</li>
 
 <div class="modal fade" id="createNewList">
 
 
 	<div class="modal-content content" style="width: 35%">
-		<!-- Dynamically Insert Content Here -->
+		
 
 
 		<button type="button" class="close pull-right" data-dismiss="modal"
@@ -45,8 +45,8 @@
 				<label for="list-name" class="required"><spring:theme
 						code="wishlist.list.name" /></label>
 				<li>
-					<!-- <input type="hidden" id="editWishListOld"
-										name="wishlistOldName" value="" /> --> 
+					<%-- <input type="hidden" id="editWishListOld"
+										name="wishlistOldName" value="" /> --%> 
 					<input type="text"
 					id="newWishlistName" name="newWishlistData" value="" maxlength="40" />
 				</li>
@@ -67,5 +67,6 @@
 	</div>
 	<div class="overlay" data-dismiss="modal"></div>
 </div>
+
 
 

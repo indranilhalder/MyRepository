@@ -81,7 +81,7 @@
 	margin-bottom: 10px;
 	color: #333;
 	font-size: 14px;
-	margin-left: 10px;
+	margin-left: 0px;
 }
 
 .deliverySlotOptions .deliverySlotRadio .col-md-4 {
@@ -157,7 +157,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 	    width: 31%;
 	    /* padding: 20px 0 0; */
 	    float: right;
-	    text-align:center;
+	    text-align: left;
 }
  /* R2.3 TISRLREG-2465 Author Tribhuvan Start*/
 @media (max-width: 767px){
@@ -267,18 +267,20 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 	});
 </script>
 	<div class="checkout-shipping-items">
-		<h1>
+	<div class="checkout-headers">
+		<h1 class="title-name">
 			
 			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
 			
 			 
 		</h1>
-		<p><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode "></spring:theme>&nbsp;<span>${defaultPinCode}</span></p>
-		<span></span>
-		
-		<ul id="deliveryradioul" class="checkout-table product-block">
+		<p class="desk-view"><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode "></spring:theme><span>${defaultPinCode}</span></p>
+		<span style="display:none"></span>
+
+		</div>
+		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
 				<li class="header">
-					<ul class="headline">
+					<ul class="headline mybag-item-head">
 					
 						<li class="delivery" id="header4"><spring:theme code="text.delivery.modes"/></li>
 						<li class="delivery" id="header4">Delivery Slots</li>
@@ -297,12 +299,26 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 								<ul>
 									<li class="deliverySlotProduct">
 										<div >
-											<div class="thumb product-img">
+										
+										<!-- TISPRDT-1094 START --> 
+											<%-- <div class="thumb product-img">
 												<a href="${productUrl}"><product:productPrimaryImage
 														product="${entry.product}" format="thumbnail" /></a>
-											</div>
-													   
-													   
+											</div> --%>
+											<div class="thumb product-img">
+												<c:choose>
+													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="luxuryCartIcon" /></a>
+													</c:when>
+													<c:otherwise>
+															<a href="${productUrl}"><product:productPrimaryImage
+																	product="${entry.product}" format="thumbnail" /></a>
+															
+													</c:otherwise>
+												</c:choose>
+											</div>		   
+													 <!-- TISPRDT-1094 END -->   
 											<div class="details product" >
 												<h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3>
 												<ycommerce:testId code="cart_product_name">

@@ -9,11 +9,14 @@ $(document).ready(function(){
 		$('.Manufacturer.Temp03 a.show-more').remove();
 		$('.Manufacturer.Temp03 .Padd').after(showMoreLink);
 	}
+	if($(".Temp03 .Padd h2:first-child").is(':empty')){
+		$(".Temp03 .Padd h2").first().hide();
+	}
 });
 </script>
 <div class="Manufacturer Temp03">
 	<div class="Padd">
-		<h2>From the Manufacturer</h2>
+		<h2>${cmsPage.title}</h2>
 		<ul>
 			<li>     
 		        <div class="media">

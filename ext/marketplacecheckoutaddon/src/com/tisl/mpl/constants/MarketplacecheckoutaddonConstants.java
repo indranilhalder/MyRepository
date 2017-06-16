@@ -110,7 +110,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String CREATEDEBITCARDORDER = "/createDebitCardOrder";
 	public static final String MERCHANTID = "payment.juspay.merchantID";
 	public final static String PAYMENTCOD = "COD";
-	public final static String PAYMENTMODE = "paymentMode";
+	public final static String PAYMENTMODE = "paymentMode".intern();
 	public final static String PAYMENTMODEFORPROMOTION = "paymentModeForPromotion";
 	public final static String CARDPAYMENTERRORMSG = "Card Payment Cancelled. Please select a Payment Method and proceed again";
 	public final static String SETSHIPPINGADDRESS = "/setShippingAddress";
@@ -309,11 +309,32 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	/* Gigya Social Login */
 	public final static String SOCIALLOGIN = "/socialLogin";
 	public static final String CHECKSESSIONACTIVE = "/checkSessionActive";
+
+	/* mRupee Changes */
+	public final static String MRUPEERETURNMETHOD = "payment.mRupee.returnMethod".intern();
+
+	public final static String MRUPEEURL = "payment.mRupee.baseUrl".intern();
+
+	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
+
+	public final static String THIRDPARTYWALLET = "ThirdPartyWallet";
+
+	public final static String MRUPEE_NARRATION = "narration";
+
+	public static final String MRUPEE_CODE = "mCode";
+
+	public static final String MRUPEE_MERCHANT_URL = "mRupeeUrl";
+
+	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
+	public static final String REFNUMBER = "refNumber".intern();
     public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
 	
 	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
 	
 	public static final String DELIVERY_SLOTS_TO_SESSION = "deliverySlotstoSession";
+
+	//INC144315475
+	public static final String CARTTOORDERCONVERT = "cartToOrderConvert";
 }

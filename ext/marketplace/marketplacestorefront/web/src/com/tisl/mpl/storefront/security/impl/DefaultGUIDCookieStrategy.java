@@ -39,8 +39,11 @@ import org.springframework.web.util.CookieGenerator;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
 import com.tisl.mpl.storefront.interceptors.beforecontroller.RequireHardLoginBeforeControllerHandler;
 import com.tisl.mpl.storefront.security.cookie.KeepAliveCookieGenerator;
+import com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.security.cookie.LuxuryUserCookieGenerator;
+//Sonar Issue Fixed For Kidswear
+//import com.tisl.mpl.util.GenericUtilityMethods;
 
 
 /**
@@ -60,6 +63,26 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 	private LuxuryEmailCookieGenerator luxuryEmailCookieGenerator;
 
 	private ExtendedUserService userService;
+
+	//Added for UF-93
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
+
+	/**
+	 * @return the lastUserLoggedInCookieGenerator
+	 */
+	public LastUserLoggedInCookieGenerator getLastUserLoggedInCookieGenerator()
+	{
+		return lastUserLoggedInCookieGenerator;
+	}
+
+	/**
+	 * @param lastUserLoggedInCookieGenerator
+	 *           the lastUserLoggedInCookieGenerator to set
+	 */
+	public void setLastUserLoggedInCookieGenerator(final LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator)
+	{
+		this.lastUserLoggedInCookieGenerator = lastUserLoggedInCookieGenerator;
+	}
 
 	/**
 	 * @return the userService
@@ -165,7 +188,12 @@ public class DefaultGUIDCookieStrategy implements GUIDCookieStrategy
 				getLuxuryEmailCookieGenerator().addCookie(response, encrypt(customer.getOriginalUid()));
 				//Commenting this as this is not required
 				//getLuxuryUserCookieGenerator().addCookie(response, userService.getAccessTokenForUser(customer.getOriginalUid()));
-
+				/** Added for UF-93 **/
+				lastUserLoggedInCookieGenerator.addCookie(response,
+						new String(Base64.encodeBase64String(customer.getOriginalUid().getBytes())));
+				//LOG.error("DefaultGUIDCookieStrategy.setCookie() 'customer.getOriginalUid().getBytes()':: "
+				//+ customer.getOriginalUid().getBytes());
+				/** Ends for UF-93 **/
 			}
 		}
 

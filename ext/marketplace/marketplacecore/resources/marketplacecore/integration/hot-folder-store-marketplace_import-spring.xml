@@ -400,12 +400,12 @@
 					$categories=target(code, $catalogVersion)[unique=true]
 					$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
 					$unit=unit(code,$classSystemVersion)
-				INSERT_UPDATE classAttributeAssignment;classificationAttribute(code)[unique=true];attributeType(code);classificationClass(code)[unique=true];attributeValues(code);mandatory(code);multiValued(code);
+				INSERT_UPDATE classAttributeAssignment;classificationAttribute(code)[unique=true];$unit;attributeType(code);classificationClass(code)[unique=true];attributeValues(code);mandatory(code);multiValued(code);
 				
             </value>
         </property>
         <property name="impexRow">
-            <value>;{0};{1};{2};{3};{4};{5}</value>
+            <value>;{0};{1};{2};{3};{4};{5};{6}</value>
         </property>
         </bean> 
       <bean id="batchMediaNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
@@ -546,7 +546,8 @@
         </bean>  
         <!-- Converter for Brand Import --> 
    
-    <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <!--  CKD:TPR-250: Start: Addition of brand code-->
+           <!--   <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
        <property name="header">
  	     <value> # Insert Brand
  	     $productCatalog=mplProductCatalog
@@ -559,6 +560,20 @@
             <value>;{+0};{1};{+2}</value>
         </property>
         
+    </bean> -->
+         
+    <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+       <property name="header">
+ 	     <value> # Insert Brand
+ 	     $productCatalog=mplProductCatalog
+				$classificationCatalog=pcmClassification
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+               INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion
+            </value>
+        </property>
+         <property name="impexRow">
+	            <value>;{+0};{1};{+2};{3}</value>
+	     </property>
     </bean>
     
      <!-- Converter for SEO Import --> 

@@ -169,6 +169,7 @@
 
 <script type="text/javascript" >
 $(document).ready(function (){
+	$('#j_username_login').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved...
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptcha",
 		type: 'GET',

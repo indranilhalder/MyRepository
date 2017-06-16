@@ -87,7 +87,7 @@
 				<div class="order-history">
 					<div class="navigation" id=order_pagination>
 						<h2>
-							<spring:theme text="Order History" />
+							<spring:theme text="My Orders" />		<!--  UF-249 text change -->
 						</h2>
 						<c:if test="${not empty searchPageData.results}">
 						<!-- TISPRO-48 ---- Set values in hidden filed for lazy loading pagination -->
@@ -248,8 +248,9 @@
 																</ycommerce:testId>
 															</p>
 															<p>
-																<spring:theme text="Delivery Charges:" />
-																&nbsp;
+																<%-- <spring:theme text="Delivery Charges:" /> --%>
+																<span>	<spring:theme code="text.account.order.delivery2" text="Scheduled Delivery and Shipping Charges:"/>
+																&nbsp;</span>
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
 																	<%-- <spring:theme code="order.free"  /> --%>

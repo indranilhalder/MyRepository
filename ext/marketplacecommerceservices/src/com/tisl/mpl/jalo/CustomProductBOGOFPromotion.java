@@ -489,6 +489,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 		boolean flagForPaymentModeRestrEval = false;
 		final int qualifyingCount = getQualifyingCount(paramSessionContext).intValue(); // Get the Promotion set Qualifying count
 		//final Map<AbstractOrderEntry, Double> customBogoPromoDataMap = new HashMap<>();
+		final PromotionsManager promotionsManager = PromotionsManager.getInstance();
 
 		LOG.debug("Qualifying Count for Promotion" + qualifyingCount);
 		try
@@ -524,7 +525,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 				if (totalQty >= qualifyingCount)
 				{
 					final Map<String, Integer> qCMapForCatLevelBOGO = getDefaultPromotionsManager().getSortedValidProdUssidMap(
-							validProductUssidMap, totalQty, qualifyingCount, paramSessionContext, restrictionList);
+							validProductUssidMap, totalQty, qualifyingCount, paramSessionContext, restrictionList, getCode());
 
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForABPromo(restrictionList,
 							validProductUssidMap, order);
@@ -544,7 +545,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 
 						getDefaultPromotionsManager().populateSortedValidProdUssidMap(validProductUssidMap, validFreeCount,
-								paramSessionContext, restrictionList, QCMapForFreeItems);
+								paramSessionContext, restrictionList, QCMapForFreeItems, getCode());
 
 						final List<PromotionOrderEntryConsumed> freeItems = consumeFromHead(paramSessionContext, comparator,
 								validFreeCount, orderView.getAllEntries(paramSessionContext), QCMapForFreeItems, tcMapForValidEntries);
@@ -655,7 +656,10 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 								consumedItemsFromTail);
 						totalConsumedItems.addAll(freeItems);
 
-						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
+						//						final PromotionResult result = getDefaultPromotionsManager().createPromotionResult(paramSessionContext, this,
+						//								paramPromotionEvaluationContext.getOrder(), 1.0F);
+
+						final PromotionResult result = promotionsManager.createPromotionResult(paramSessionContext, this,
 								paramPromotionEvaluationContext.getOrder(), 1.0F);
 
 						result.setActions(paramSessionContext, actions);
@@ -749,4 +753,5 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 	{
 		return Registry.getApplicationContext().getBean("mplPromotionHelper", MplPromotionHelper.class);
 	}
+
 }

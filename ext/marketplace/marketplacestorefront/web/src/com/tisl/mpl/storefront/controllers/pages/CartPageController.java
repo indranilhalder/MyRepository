@@ -14,6 +14,7 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+
 import de.hybris.platform.acceleratorfacades.flow.impl.SessionOverrideCheckoutFlowFacade;
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.acceleratorservices.controllers.page.PageType;
@@ -60,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -185,19 +187,63 @@ public class CartPageController extends AbstractPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCart(final Model model, @RequestParam(value = "ussid", required = false) final String ussid,
 			@RequestParam(value = "pincode", required = false) final String pinCode,
-			@RequestParam(value = "isLux", required = false) final boolean isLux) throws CMSItemNotFoundException,
-			CommerceCartModificationException, CalculationException
+			@RequestParam(value = "isLux", required = false) final boolean isLux,
+			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request)
+			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
 		try
 		{
-			 CartModel cartModel = getCartService().getSessionCart();
+			CartModel externalCart = null;
+			CartModel cartModel = null;
+			final String currentUser = userService.getCurrentUser().getUid();
+			//TPR-5666 | check on cartGuid parameter
+			if (cartGuid != null)
+			{
+				externalCart = mplCartFacade.getCartByGuid(cartGuid);
+				// If invalid cartGuid
+				if (externalCart == null)
+				{
+					return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.INVALID_CART_URL;
+				}
+				else
+				{
+					final String externalCartUser = externalCart.getUser().getUid();
+					// fetching existing cart by guid
+					if (!externalCartUser.equalsIgnoreCase(MarketplacecommerceservicesConstants.ANONYMOUS))
+					{
+						return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+					}
+					// fetching anonymous cart by guid
+					else
+					{
+						//merging in case of logged in user
+						if (!currentUser.equalsIgnoreCase(MarketplacecommerceservicesConstants.ANONYMOUS))
+						{
+							mplCartFacade.mergeCarts(externalCart, getCartService().getSessionCart());
+							return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+						}
+						// show fetched cart for anonymous user
+						else
+						{
+							getCartService().setSessionCart(externalCart);
+						}
+						cartModel = getCartService().getSessionCart();
+					}
+				}
+
+			}
+			else
+			{
+				cartModel = getCartService().getSessionCart();
+			}
+
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
 			{
-				
+				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
 				//setExpressCheckout(serviceCart); //TISPT-104
@@ -304,8 +350,25 @@ public class CartPageController extends AbstractPageController
 			}
 			else if (isLux)
 			{
-				final CartData luxCart = mplCartFacade.getLuxCart();
-				prepareDataForPage(model, luxCart);
+				boolean found = false;
+				CartData luxCart = null;
+				for (final Cookie cookie : request.getCookies())
+				{
+					if (cookie.getName().equals("mpl-cart") && StringUtils.isNotEmpty(cookie.getValue()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if (found)
+				{
+					luxCart = mplCartFacade.getLuxCart();
+					prepareDataForPage(model, luxCart);
+				}
+				else
+				{
+					prepareDataForPage(model, mplCartFacade.getSessionCartWithEntryOrdering(true));
+				}
 			}
 			else
 			{
@@ -320,9 +383,16 @@ public class CartPageController extends AbstractPageController
 				model.addAttribute(ModelAttributetConstants.WELCOME_BACK_MESSAGE, MessageConstants.WELCOME_BACK_MESSAGE);
 			}
 			//TPR-174
-			cartModel.setMerged(false);
-			modelService.save(cartModel);
+
+			//TISSQAUATS-522
+			if (null != cartModel)
+			{
+				cartModel.setMerged(false);
+				modelService.save(cartModel);
+			}
+
 			LOG.error("CartPageController : showCart : cartModel setMerged saved");
+
 			final String msdjsURL = getConfigurationService().getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(getConfigurationService().getConfiguration().getString("msd.enabled"));
 			model.addAttribute(ModelAttributetConstants.MSD_JS_URL, msdjsURL);
@@ -359,7 +429,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 *
+	 * 
 	 * }
 	 */
 
@@ -640,7 +710,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 *
+	 * 
 	 * @param model ,redirectModel
 	 */
 
@@ -787,7 +857,15 @@ public class CartPageController extends AbstractPageController
 				}
 				// Redirect to the cart page on update success so that the browser doesn't re-post again
 				//return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
-				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//TPR-5666 | check on cartGuid Parameter
+				if (StringUtil.isEmpty(request.getParameter("cartGuid")))
+				{
+					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				}
+				else
+				{
+					returnPage = REDIRECT_PREFIX + "/cart?cartGuid=" + request.getParameter("cartGuid");
+				}
 			}
 
 
@@ -1351,13 +1429,14 @@ public class CartPageController extends AbstractPageController
 						//{
 						if (!StringUtil.isEmpty(selectedPincode))
 						{
-							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+							responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData, null);
 							getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseData); //CAR-126/128/129
 
 						}
 						if (null != responseData)
 						{
-							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION, responseData);
+							getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION,
+									responseData);
 						}
 						if (responseData != null)
 						{
@@ -1475,7 +1554,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1532,7 +1611,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -1693,7 +1772,7 @@ public class CartPageController extends AbstractPageController
 			{
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData);
+					responseData = getMplCartFacade().getOMSPincodeResponseData(selectedPincode, cartData, null);
 				}
 
 				for (PinCodeResponseData pinCodeResponseData : responseData)

@@ -25,6 +25,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -52,6 +53,7 @@ import com.tisl.mpl.juspay.request.GetOrderStatusRequest;
 import com.tisl.mpl.juspay.response.DeleteCardResponse;
 import com.tisl.mpl.juspay.response.GetOrderStatusResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.ExtendedUserService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.service.MplCartWebService;
 import com.tisl.mpl.service.MplPaymentWebService;
 import com.tisl.mpl.util.DiscountUtility;
@@ -99,8 +101,10 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 	private Converter<AddressModel, AddressData> customAddressConverter;
 	private Converter<CreditCardPaymentInfoModel, CCPaymentInfoData> creditCardPaymentInfoConverter;
 
-	//	@Resource(name = "sessionService")
-	//	private SessionService sessionService;
+
+	@Resource
+	private MplPaymentService mplPaymentService;
+
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
 
@@ -369,6 +373,15 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 						cart.setConvenienceCharges(Double.valueOf(0.0));
 						//getModelService().save(cart);
 					}
+
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE))
+					{
+						cart.setModeOfPayment(MarketplacewebservicesConstants.MRUPEE);
+						cart.setConvenienceCharges(Double.valueOf(0.0));
+						//getModelService().save(cart);
+					}
+
 					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
 						cart.setModeOfPayment(MarketplacewebservicesConstants.COD);
@@ -553,6 +566,13 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 						order.setConvenienceCharges(Double.valueOf(0.0));
 						getModelService().save(order);
 					}
+					else if (StringUtils.isNotEmpty(paymentMode)
+							&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.MRUPEE))
+					{
+						order.setModeOfOrderPayment(MarketplacewebservicesConstants.MRUPEE);
+						order.setConvenienceCharges(Double.valueOf(0.0));
+						getModelService().save(order);
+					}
 					else if (StringUtils.isNotEmpty(paymentMode) && paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.COD))
 					{
 						order.setModeOfOrderPayment(MarketplacewebservicesConstants.COD);
@@ -728,7 +748,7 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.MplPaymentWebFacade#potentialPromotionOnPaymentMode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -804,6 +824,8 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 			notificationFacade.sendOrderConfirmationNotification(order);
 			//CAR-110
 			//orderData = mplCheckoutFacade.getOrderDetailsForCode(order);
+			//order confirmation email and sms
+			getNotificationFacade().sendOrderConfirmationNotification(order);
 			updated = true;
 		}
 		else
@@ -1024,4 +1046,82 @@ public class MplPaymentWebFacadeImpl implements MplPaymentWebFacade
 		this.creditCardPaymentInfoConverter = creditCardPaymentInfoConverter;
 	}
 
+	/**
+	 * This method makes entry for mobile mRupee orders in Audit table
+	 *
+	 * @param status
+	 * @param channelmobile
+	 * @param guid
+	 * @param walletOrderId
+	 */
+	@Override
+	public void entryInTPWaltAuditMobile(final String status, final String channelmobile, final String guid,
+			final String walletOrderId)
+	{
+		mplPaymentService.entryInTPWaltAudit(status, channelmobile, guid, walletOrderId);
+	}
+
+	/**
+	 * This method saves payment info model for mobile mRupee orders and the returning the order
+	 *
+	 * @param cart
+	 * @param refernceCode
+	 * @param paymentMode
+	 *
+	 */
+	@Override
+	public void saveTPWalletPaymentInfoMobile(final AbstractOrderModel cart, final String refernceCode,
+			final Map<String, Double> paymentMode, final String amount)
+	{
+		//getting the current user
+		//final CustomerModel mplCustomer = (CustomerModel) getUserService().getCurrentUser();
+		CustomerModel mplCustomer = null;
+		String custName = null;
+		if (null != cart)
+		{
+			mplCustomer = (CustomerModel) cart.getUser();
+			final List<AbstractOrderEntryModel> entries = cart.getEntries();
+			//setting payment transaction for
+			mplPaymentService.setTPWalletPaymentTransaction(paymentMode, cart, refernceCode, Double.valueOf(amount));
+			if (null != mplCustomer)
+			{
+
+				if (StringUtils.isNotEmpty(mplCustomer.getFirstName()) && !mplCustomer.getFirstName().equalsIgnoreCase(" "))
+				{
+					custName = mplCustomer.getFirstName();
+					modelService.save(mplPaymentService.saveTPWalletPaymentInfo(custName, entries, cart, refernceCode));
+				}
+
+				else
+				{
+					custName = cart.getDeliveryAddress().getFirstname();
+					modelService.save(mplPaymentService.saveTPWalletPaymentInfo(custName, entries, cart, refernceCode));
+				}
+
+			}
+			mplPaymentService.paymentModeApportion(cart);
+		}
+		else
+		{
+			LOG.debug("Unable to save Third Party Wallet PAyment Info");
+		}
+	}
+
+
+	/**
+	 * @return the notificationFacade
+	 */
+	public NotificationFacade getNotificationFacade()
+	{
+		return notificationFacade;
+	}
+
+	/**
+	 * @param notificationFacade
+	 *           the notificationFacade to set
+	 */
+	public void setNotificationFacade(final NotificationFacade notificationFacade)
+	{
+		this.notificationFacade = notificationFacade;
+	}
 }

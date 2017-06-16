@@ -203,14 +203,14 @@ public final class MessageConstants
 	public static final String GOOGLE_LOGIN = "GOOGLE_LOGIN";
 	public static final String GOOGLEUSER = "google";
 	public static final String USER_LOGIN_TYPE = "userLoginType";
-	public static final String SUCCESS = "success";
+	public static final String NPSFEEDBACK_SAVE_ERROR = "text.nps.feedback.failure";
+    public static final String SUCCESS = "success";
 	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
 	public static final String UPDATED = "Updated";
 	public static final String VALIDATE_ERROR = "Validation Error";
 
 	//track order
 	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
-
 
 	//Gender Based landing
 	public static final String MALE = "MALE";
@@ -223,4 +223,3 @@ public final class MessageConstants
 	public static final String LUXURY_GIGYA_SOCIALLOGIN_URL = "luxury.gigya.sociallogin.url";
 
 }
-

@@ -328,9 +328,29 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 
 		Double totalPriceValue = ObjectGetValueUtils.getDoubleValue(
 				valueContainer, totalPricePD);
+		/********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
+		/*String totalPriceString = (totalPriceValue != null) ? currencyInstance
+				.format(totalPriceValue) : "";*/
+		Double currDeliveryCost = (null != entrymodel.getCurrDelCharge()) ? ((entrymodel
+				.getRefundedDeliveryChargeAmt() != null && entrymodel
+				.getRefundedDeliveryChargeAmt() > entrymodel.getCurrDelCharge()) ? entrymodel
+				.getRefundedDeliveryChargeAmt() : entrymodel.getCurrDelCharge())
+				: 0d;
+		Double deliveryCost = (null != entrymodel.getPrevDelCharge()) ? ((entrymodel
+				.getPrevDelCharge() > currDeliveryCost) ? entrymodel
+				.getPrevDelCharge() : currDeliveryCost) : 0d;
+				// Adding ScheduleDelivery Charges To the total Price
+				Double scheduleDeliveryCost = 0.0D;
+				if(null !=  entrymodel.getScheduledDeliveryCharge() && entrymodel.getScheduledDeliveryCharge() >0.0D) {
+					scheduleDeliveryCost = entrymodel.getScheduledDeliveryCharge();
+				}else if(null != entrymodel.getRefundedScheduleDeliveryChargeAmt() && entrymodel.getRefundedScheduleDeliveryChargeAmt() >=0.0D){
+					scheduleDeliveryCost = entrymodel.getRefundedScheduleDeliveryChargeAmt();
+				}
+					
+		totalPriceValue = totalPriceValue + deliveryCost+scheduleDeliveryCost;
 		String totalPriceString = (totalPriceValue != null) ? currencyInstance
 				.format(totalPriceValue) : "";
-
+		/********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
 		Div tempDiv = new Div();
 		Listcell rowLabel = new Listcell();
 		createTotalPriceLink(widget, tempDiv, item, totalPriceString);
@@ -516,9 +536,12 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		final Double deliveryCostDisc = Double.valueOf(orderEntry
 				.getPrevDelCharge().doubleValue()
 				- orderEntry.getCurrDelCharge().doubleValue());
-		deliveryDiscountString = deliveryDiscountString
-				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
-						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
+		deliveryDiscountString = deliveryDiscountString+deliveryCostDisc;
+//				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
+//						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
+//		deliveryDiscountString = deliveryDiscountString
+//				+ (mplFindDeliveryFulfillModeStrategy.isTShip(orderEntry
+//						.getSelectedUSSID()) ? 0d : deliveryCostDisc);
 		final Label deliveryDiscountlabel2 = new Label(
 				currencyInstance
 						.format(deliveryDiscountString > 0 ? deliveryDiscountString
@@ -550,9 +573,15 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 				"totalPrice", new Object[0]));
 		totalPricelabel1.setSclass("asslabel");
 		dataRow7.appendChild(totalPricelabel1);
-		String totalPriceString = (null != orderEntry.getTotalPrice()) ? currencyInstance
+		/********************************* TPR-4401 Delivery Charge Addition Starts Here ****************************************************/
+		/*String totalPriceString = (null != orderEntry.getTotalPrice()) ? currencyInstance
 				.format(orderEntry.getTotalPrice()) : currencyInstance
-				.format(orderEntry.getTotalPrice());
+				.format(orderEntry.getTotalPrice());*/
+		Double totalPrice = (null != orderEntry.getTotalPrice()) ? orderEntry.getTotalPrice() : 0D;
+		totalPrice = totalPrice + deliveryCost+scheduleDeliveryCost;
+		String totalPriceString = (null != totalPrice) ? currencyInstance
+				.format(totalPrice) : "";
+		/********************************* TPR-4401 Delivery Charge Addition Ends Here ****************************************************/		
 		final Label totalPricelabel2 = new Label(totalPriceString);
 		totalPricelabel2.setSclass("asslabel");
 		dataRow7.appendChild(totalPricelabel2);
@@ -594,6 +623,9 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 							.equals(ConsignmentStatus.RETURN_COMPLETED))) {
 				totalRefundAmount = orderEntry.getNetAmountAfterAllDisc();
 			}
+		}
+		if(null != orderEntry.getRefundedScheduleDeliveryChargeAmt() && orderEntry.getRefundedScheduleDeliveryChargeAmt() >=0.0D){
+			totalRefundAmount = totalRefundAmount+orderEntry.getRefundedScheduleDeliveryChargeAmt().doubleValue();
 		}
 		if (null != orderEntry.getRefundedDeliveryChargeAmt()) {
 			totalRefundAmount = totalRefundAmount

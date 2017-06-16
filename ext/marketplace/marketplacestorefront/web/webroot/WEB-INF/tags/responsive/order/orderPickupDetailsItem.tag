@@ -124,6 +124,7 @@
 									<format:price priceData="${entry.currDelCharge}"/>
 							</c:otherwise>
 						</c:choose>
+						</li>	
                       <li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li>
                     </ul> 
                   </li>
@@ -216,7 +217,20 @@
                      <p><spring:theme code="text.deliveryMethod" text="Available Delivery Options:"/></p>
                     <ul class="${entry.mplDeliveryMode.name}">
                        <li class="deliver-type">${entry.mplDeliveryMode.name}</li>
-                      <li class="deliver">${entry.mplDeliveryMode.description}</li>
+                       <!-- TISSQAUAT-1537 starts -->
+                       <li class="deliver">
+                       <c:choose>
+							<c:when test="${entry.currDelCharge.value=='0.0'}">
+										<%-- <spring:theme code="order.free"  /> --%>
+										<ycommerce:testId code="orderDetails_productTotalPrice_label"><format:price priceData="${entry.currDelCharge}" displayFreeForZero="true"/></ycommerce:testId>
+							</c:when>
+						 	<c:otherwise>
+									<format:price priceData="${entry.currDelCharge}"/>
+							</c:otherwise>
+						</c:choose>
+                       </li>
+                       <!-- TISSQAUAT-1537 ends -->
+                      <li class="deliver deliver-desc">${entry.mplDeliveryMode.description}</li>
                     </ul>
                   </li>
                 </ul> 

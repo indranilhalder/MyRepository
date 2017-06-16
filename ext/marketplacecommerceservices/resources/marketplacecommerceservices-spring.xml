@@ -470,6 +470,13 @@
 		<property name="modelService" ref="modelService" />
 		<property name="configurationService" ref="configurationService" />
 	</bean>
+	
+	<alias alias="jusPayPaymentService" name="jusPayPaymentServiceImpl" />
+	<bean id="jusPayPaymentServiceImpl"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.JuspayPaymentServiceImpl">
+		<property name="modelService" ref="modelService" />
+		<property name="configurationService" ref="configurationService" />
+	</bean>
 
 	<alias name="defaultCommerceSolrSearchResponseConverter" alias="commerceSolrSearchResponseConverter" />
 	<bean id="defaultCommerceSolrSearchResponseConverter" parent="abstractPopulatingConverter">
@@ -542,6 +549,12 @@
 		<property name="baseSiteService" ref="baseSiteService" />
 		<property name="cartService" ref="cartService" />
 		<property name="commerceUpdateCartEntryStrategy" ref="commerceUpdateCartEntryStrategy" />
+	</bean>
+	
+	<!-- agent id for store service -->
+	<alias name="defaultAgentIdForStoreService" alias="agentIdForStore" />
+	<bean id="defaultAgentIdForStoreService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.AgentIdForStoreImpl">
 	</bean>
 
 	<!-- MplCommerceCartDao start -->
@@ -655,6 +668,7 @@
 	<bean id="buyBoxService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.BuyBoxServiceImpl">
 		<property name="buyBoxDao" ref="buyBoxDao" />
+		<property name="configurationService" ref="configurationService" />
 	</bean>
 
 	<bean id="buyBoxDao"
@@ -961,6 +975,11 @@
 
 	<bean id="mplJusPayRefundService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplJusPayRefundService" />
+		
+		<!-- Mrupee implementation -->	
+	
+		<bean id="mplMWalletRefundService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService" />
 
 	<!-- For Bulk Upload of Promotions -->
 	<bean id="promotionCreationJob"
@@ -1217,6 +1236,8 @@
 		<property name="cartFactory" ref="cartFactory" />
 		<property name="commerceAddToCartStrategy" ref="commerceAddToCartStrategy" />
 		<property name="guidKeyGenerator" ref="guidKeyGenerator" />
+		<!-- Commented due to cart merge Issue,During Promotion Caching Implementation need to override rebuildsessioncart and rewriteentriesfromcarttocart -->
+<!-- 		<property name="cartValidityPeriod" value="0"/> -->
 	</bean>
 
 
@@ -1258,6 +1279,17 @@
 		<property name="numeric" value="true" />
 	</bean>
 	<!-- Key generator for COD Payment Transaction Ends -->
+	
+	<!-- Key generator for Third Party Wallet -->
+	<bean id="walletOrderIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="walletOrderId" />
+		<property name="digits" value="9" />
+		<property name="start" value="#{configurationService.configuration.getProperty('wallet.orderId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+	<!-- Key generator for Third Party Wallet Ends --> 
 
 
 	<!-- For Payment Web Hook Integration -->
@@ -1878,8 +1910,10 @@
 		<property name="interceptor" ref="exSellerBulkLoadInterceptor" />
 		<property name="typeCode" value="EtailExcludeSellerSpecificRestriction" />
 	</bean>
+
 	
 	<!-- TPR-1282 -->
+
 	<alias name="mplCmsCacheService" alias="cmsCacheService"/>
 	<bean id="mplCmsCacheService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplCmsCacheServiceImpl"
 		parent="defaultCmsCacheService">
@@ -1904,6 +1938,7 @@
 		 
 	<bean id="businessContentImportDao" class="com.tisl.mpl.businesscontentimport.BulkContentCreationDaoImpl" >
 		</bean>
+		
 	<!-- TPR-3487 -->	
 	<bean id="DeliveryCostInterceptor" class="com.tisl.mpl.interceptor.SaveDeliveryCostInterceptor" />
 
@@ -1969,9 +2004,100 @@
             </bean>
         </property>
     </bean>
+   <!--  mrupee changes starts -->
+   <bean id="mRupeeWalletService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplThirdPartyWalletServiceImpl">
+      <property name="configurationService" ref="configurationService" />
+      <property name="orderService" ref="orderService" />
+      <property name="orderConverter" ref="orderConverter"/>
+   </bean>
+   <bean id="mplThirdPartyWalletDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplThirdPartyWalletDaoImpl">
+   </bean>
+  <!--  mrupee changes ends -->
 	<!-- Old Cron Job Deletion Logic ends: -->
+
+	<!-- TPR-1285 Start -->
+	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
+	<bean id="mplProductPageSiteMapGenerator"
+	    class="com.tisl.mpl.sitemap.generator.impl.MplProductPageSiteMapGenerator"
+	    parent="defaultProductPageSiteMapGenerator">
+	</bean>
+	
+	<alias name="mplCustomPageSiteMapGenerator" alias="mplCustomPageSiteMapGenerator"/>
+	<bean id="mplCustomPageSiteMapGenerator"
+		class="com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator"
+	    parent="abstractSiteMapGenerator">
+		<property name="siteMapUrlDataConverter" ref="mplCustomPageToSiteMapUrlDataConverter"/>
+		<property name="siteMapPageEnum" value="CUSTOM"/>
+	    <property name="cmsPageService" ref="cmsPageService"/>
+	</bean> 
+	
+	
+	<alias name="mplCustomPageToSiteMapUrlDataConverter" alias="mplCustomPageToSiteMapUrlDataConverter"/>
+	<bean id="mplCustomPageToSiteMapUrlDataConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="de.hybris.platform.acceleratorservices.sitemap.data.SiteMapUrlData"/>
+		<property name="populators">
+			<list>
+				<ref bean="mplCustomPageToSiteMapUrlDataPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<alias name="mplCustomPageToSiteMapUrlDataPopulator" alias="mplCustomPageToSiteMapUrlDataPopulator"/>
+	<bean id="mplCustomPageToSiteMapUrlDataPopulator"
+	      class="com.tisl.mpl.converter.populator.MplCustomPageToSiteMapUrlDataPopulator">
+	</bean>	
+	
+	<alias name="mplProductModelToSiteMapUrlDataPopulator" alias="productModelToSiteMapUrlDataPopulator"/>
+ 	<bean id="mplProductModelToSiteMapUrlDataPopulator"
+ 	      class="com.tisl.mpl.converter.populator.MplProductModelToSiteMapUrlDataPopulator"
+ 	      parent="defaultProductModelToSiteMapUrlDataPopulator">
+ 	</bean>
+ 	<!-- TPR-965 STARTS-->
+	 <bean id="stockPromoCheckService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.ExtStockLevelPromotionCheckServiceImpl">
+	</bean>
+	 <bean id="stockPromoCheckDao"
+		class="com.tisl.mpl.promotion.dao.impl.ExtStockLevelPromotionCheckDaoImpl">
+		<property name="flexibleSearchService" ref="flexibleSearchService" />
+		<property name="modelService" ref="modelService" />
+	</bean>
+	<!-- TPR-965 ENDS-->
+<!-- TPR-1285 End -->
+
+<!-- TPR-978 -->
+<bean id="aPlusContentPrepareInterceptor" class="com.tisl.mpl.interceptor.APlusContentPrepareInterceptor" autowire="byName"></bean>
+<bean id="AplusContentPrepareInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="aPlusContentPrepareInterceptor"></property>
+<property name="typeCode" value="APlusContent"></property>
+</bean>
+
+<bean id="aPlusContentValidateInterceptor" class="com.tisl.mpl.interceptor.APlusContentValidateInterceptor" autowire="byName"></bean>
+<bean id="AplusContentValidateInterceptor" class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+<property name="interceptor" ref="aPlusContentValidateInterceptor"></property>
+<property name="typeCode" value="APlusContent"></property>
+</bean>
+<!-- TPR-1984 START -->
+<bean id="npsFeedbackQuestionService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.NPSFeedbackQuestionServiceImpl">
+ 	</bean>
+ 	
+ <bean id="npsFeedbackQuestionDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.NPSFeedbackQuestionDaoImpl" />
+<!-- Key generator for NPS -->
+	<bean id="npsIdGenerator"
+		class="de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator"
+		init-method="init" scope="tenant">
+		<property name="key" value="npsId" />
+		<property name="digits" value="6" />
+		<property name="start" value="#{configurationService.configuration.getProperty('npsmailer.npsId.startId')}" />
+		<property name="numeric" value="true" />
+	</bean>
+<!-- TPR-1984 END -->
+
+
+
    <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
 <bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
+
     <!--bean id="nodeWarmupService" class="com.hybris.yps.nodewarmer.service.NodeWarmupService">
 		<property name="warmerStrategies">
 			<list>
@@ -1989,7 +2115,12 @@
 				</bean>
 			</list>
 		</property>
-	</bean -->
+
+	</bean> -->
+	<!-- Old Cron Job Deletion Logic ends: -->
+
+
+
 	<!-- Node Warmer Changes: -->
 	
 	
@@ -2013,5 +2144,35 @@
 		<property name="defaultEncoding" value="utf8" />
 	 </bean>
 	 <!--  R2.3 Added 27-02-2017 END-->
+	 
+	 
+	 
+	 <!-- Changes for CAR-267 -->
+   
+    <!-- <bean id="promotions.manager" class="de.hybris.platform.promotions.jalo.CachingPromotionsManager" init-method="init" destroy-method="destroy" scope="tenant" >
+    	  <property name="cache" ref="promotionsCachingStrategy"/>
+	</bean>
+	
+	<bean id="mplMemcachedClientHelper" class="com.tisl.mpl.cache.strategy.MplMemcachedClientHelper" >
+	<constructor-arg value = "${promotion.memcache.env.ip}"/>
+	 </bean>
+	 <alias alias="promotionsCachingStrategy" name="defaultPromotionsCachingStrategy"/>
+		<bean id="defaultPromotionsCachingStrategy" class="com.tisl.mpl.cache.strategy.MplDefaultCachingStrategy" scope="tenant"> 
+		<property name="memCacheEnabled" value="${promotion.memcache.enabled}"/>
+	</bean>-->
+	
+    <!-- Override the Cart so that calls to get promotion results can be intercepted -->
+   
+    <!--<bean id="de.hybris.platform.jalo.order.Cart" class="de.hybris.platform.promotions.jalo.order.PromotionCart" scope="prototype" />
+	-->
+    <!-- CACHING FINISH -->
+     <!-- CAR-285 Start Zipping XML Creation and Copying Job Sitemap Start -->
+    <bean id="siteMapZipperJob" class="com.tisl.mpl.sitemap.generator.impl.SiteMapZipperJob"
+		parent="abstractJobPerformable">
+			<property name="modelService" ref="modelService" />
+			</bean>
+    
+    <!-- CAR-285 End -->
 </beans>
+
 

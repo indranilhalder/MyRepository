@@ -77,6 +77,16 @@ var productSizeVar = '${productSize}';
 </script>
 <!-- logic for displaying color and size variant -->
 <!-- displaying colour swatches -->
+
+<!--CKD:TPR-250:Start -->
+<c:choose>
+	<c:when test="${not empty param.sellerId}">
+		<c:set var="msiteSellerId" value="${param.sellerId}" />
+		<c:set var="msiteSellerForSize" value="&sellerId=${msiteSellerId}" />
+	</c:when>
+</c:choose>
+<!--CKD:TPR-250:End -->
+
 <c:choose>
 <c:when test="${not empty sellerPage}">
 <product:productVariant/>
@@ -91,9 +101,19 @@ var productSizeVar = '${productSize}';
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
-						<li><c:url value="${variantOption.defaultUrl}"
-								var="variantUrl" />
-								 <a href="${variantUrl}">								
+						<li>
+						<!--CKD:TPR-250:Start  -->
+									<c:choose>
+											<c:when test="${not empty msiteSellerId}">
+												<c:url value="${variantOption.defaultUrl}?sellerId=${msiteSellerId}" var="variantUrl" />
+											</c:when>
+											<c:otherwise>
+												<c:url value="${variantOption.defaultUrl}" var="variantUrl" />
+											</c:otherwise>
+										</c:choose> 
+										  <a href="${variantUrl}">
+								<!--CKD:TPR-250:End  -->
+															
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose>
@@ -274,20 +294,24 @@ share mobile -->
 								
 								<c:forEach var="entry" items="${variantOption.sizeLink}">
 									<c:url value="${entry.key}" var="link" />
-									<%--  <a href="${link}?selectedSize=true">${entry.value}</a> --%>
+									<%--  <a href="${link}?selectedSize=true${msiteSellerForSize}">${entry.value}</a> --%>
 									<c:choose>
 										<c:when test="${(variantOption.code eq product.code)}">
 											<c:choose>
 												<c:when test="${selectedSize eq null}">
-													<li><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
+
+												<!--CKD:TPR-250  -->
+													<li><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:when>
 												<c:otherwise>
-														<li class="selected"><a href="${link}?selectedSize=true"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+													<!--CKD:TPR-250  -->
+													<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${link}?selectedSize=true"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+											<!--CKD:TPR-250  -->
+										<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
 										</c:otherwise>
 									</c:choose>
 								</c:forEach>
@@ -311,16 +335,19 @@ share mobile -->
 												
 												
 													<c:when test="${selectedSize eq null}">
-														<li><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
+														<!--CKD:TPR-250  -->
+														<li><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 													</c:when>
 													
 												<c:otherwise>
-														<li class="selected"><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
+													<!--CKD:TPR-250  -->
+														<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 												</c:otherwise>
 												</c:choose>
 											</c:when>	
 										<c:otherwise>
-											<li data-vcode="${link}"><a href="${link}?selectedSize=true" data-productCode="${variantOption.code}">${entry.value}</a></li>
+											<!--CKD:TPR-250  -->
+											<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
 										</c:otherwise>												
 												</c:choose>
 											</c:forEach>

@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.contents.components.AbstractCMSComponentModel;
@@ -22,7 +21,9 @@ import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSContentSlotService;
+import de.hybris.platform.cms2lib.model.components.BannerComponentModel;
 import de.hybris.platform.cms2lib.model.components.ProductCarouselComponentModel;
+import de.hybris.platform.cms2lib.model.components.RotatingImagesComponentModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.product.ProductFacade;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -67,22 +69,26 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
+import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
+import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
+import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
-import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -145,6 +151,9 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
 
+	@Resource(name = "mplCmsFacade")
+	private MplCmsFacade mplCmsFacade;
+
 	/**
 	 * @return the notificationFacade
 	 */
@@ -198,10 +207,12 @@ public class HomePageController extends AbstractPageController
 	 * @return getViewForPage
 	 * @throws CMSItemNotFoundException
 	 */
+	@SuppressWarnings("boxing")
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(
 			@RequestParam(value = ModelAttributetConstants.LOGOUT, defaultValue = ModelAttributetConstants.FALSE) final boolean logout,
-			final Model model, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+			final Model model, final RedirectAttributes redirectModel, final HttpServletRequest request)
+			throws CMSItemNotFoundException
 	{
 		if (logout)
 		{
@@ -209,11 +220,13 @@ public class HomePageController extends AbstractPageController
 			return REDIRECT_PREFIX + ROOT;
 		}
 
-
 		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
 		updatePageTitle(model, getContentPageForLabelOrId(null));
-
+		//UF-287
+		final JSONObject singleBanner = getHomePageBanners("Online", "yes");
+		model.addAttribute("mobileBanner", singleBanner.get("moblileBanners"));
+		model.addAttribute("desktopBanner", singleBanner.get("desktopBanners"));
 		return getViewForPage(model);
 	}
 
@@ -263,7 +276,124 @@ public class HomePageController extends AbstractPageController
 		storeContentPageTitleInModel(model, getPageTitleResolver().resolveHomePageTitle(cmsPage.getTitle()));
 	}
 
+	/**
+	 * @description This method gives us the images of desktop and mobile banners
+	 * @param version
+	 * @return JSONObject
+	 */
+	@SuppressWarnings("boxing")
+	@ResponseBody
+	@RequestMapping(value = "/getHomePageBanners", method = RequestMethod.GET)
+	public JSONObject getHomePageBanners(@RequestParam(VERSION) final String version,
+			@RequestParam(required = false, defaultValue = "", value = "init-load") final String initLoad)
+	{
+		List<AbstractCMSComponentModel> components = new ArrayList<AbstractCMSComponentModel>();
+		final JSONObject homePageBannerJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homeSlotSection1 = cmsPageService.getContentSlotByUidForPage(HOMEPAGE, "Section1-TMPHomepage",
+					version);
+			if (CollectionUtils.isNotEmpty(homeSlotSection1.getCmsComponents()))
+			{
+				components = homeSlotSection1.getCmsComponents();
+			}
+			for (final AbstractCMSComponentModel component : components)
+			{
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
+				if (component instanceof RotatingImagesComponentModel)
+				{
+
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
+					{
+						final RotatingImagesComponentModel homePageBanners = (RotatingImagesComponentModel) component;
+
+						final LinkedHashSet<String> desktopBanners = new LinkedHashSet<String>();
+						final LinkedHashSet<String> moblileBanners = new LinkedHashSet<String>();
+						for (final BannerComponentModel banner : homePageBanners.getBanners())
+						{
+
+							if (banner instanceof MplBigPromoBannerComponentModel)
+							{
+								final MplBigPromoBannerComponentModel bannerComponent = (MplBigPromoBannerComponentModel) banner;
+								if (bannerComponent.getVisible() && homepageComponentService.showOnTimeRestriction(bannerComponent))
+								{
+									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+									{
+										moblileBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+									else
+									{
+										desktopBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+								}
+
+							}
+							else if (banner instanceof MplBigFourPromoBannerComponentModel)
+							{
+								final MplBigFourPromoBannerComponentModel bannerComponent = (MplBigFourPromoBannerComponentModel) banner;
+								if (bannerComponent.getVisible() && homepageComponentService.showOnTimeRestriction(bannerComponent))
+								{
+									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+									{
+										moblileBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+									else
+									{
+										desktopBanners.add(bannerComponent.getBannerImage().getUrl());
+									}
+								}
+							}
+							else
+							{
+								if (banner.getVisible() && homepageComponentService.showOnTimeRestriction(banner))
+								{
+									if (null != banner.getBannerView() && banner.getBannerView().getCode().equalsIgnoreCase("mobileView"))
+									{
+										moblileBanners.add(banner.getMedia().getUrl());
+									}
+									else
+									{
+										desktopBanners.add(banner.getMedia().getUrl());
+									}
+								}
+							}
+							if (StringUtils.isNotEmpty(initLoad))
+							{
+								break;
+							}
+
+						}
+						homePageBannerJson.put("desktopBanners", desktopBanners);
+						homePageBannerJson.put("moblileBanners", moblileBanners);
+					}
+					else
+					{
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
+					}
+				}
+			}
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return homePageBannerJson;
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLove", method = RequestMethod.GET)
@@ -285,12 +415,22 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
-					brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
+					{
+						final MplShowcaseComponentModel brandsYouLoveComponent = (MplShowcaseComponentModel) component;
+						brandsYouLoveJson = getJSONForShowcaseComponent(brandsYouLoveComponent);
+					}
+					else
+					{
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
+					}
 				}
 			}
 		}
@@ -327,6 +467,7 @@ public class HomePageController extends AbstractPageController
 			title = showCaseComponent.getTitle();
 		}
 		showCaseComponentJson.put(TITLE, title);
+
 		final JSONArray subComponentJsonArray = new JSONArray();
 
 		if (CollectionUtils.isNotEmpty(showCaseComponent.getShowcaseItems()))
@@ -336,38 +477,49 @@ public class HomePageController extends AbstractPageController
 			String brandLogoAltText = EMPTY_STRING;
 			for (final MplShowcaseItemComponentModel showcaseItem : showCaseComponent.getShowcaseItems())
 			{
-				final JSONObject showCaseItemJson = new JSONObject();
-				showCaseItemJson.put("compId", showcaseItem.getUid());
-				showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
-				if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
+				//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+				if (showcaseItem.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(showcaseItem))
 				{
-					if (null != showcaseItem.getLogo())
+					final JSONObject showCaseItemJson = new JSONObject();
+					showCaseItemJson.put("compId", showcaseItem.getUid());
+					showCaseItemJson.put("showByDefault", showcaseItem.getShowByDefault());
+					if (null != showCaseComponent.getLayout() && showCaseComponent.getLayout().equals(ShowCaseLayout.BRANDSHOWCASE))
 					{
-						if (StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+						if (null != showcaseItem.getLogo())
 						{
-							brandLogoUrl = showcaseItem.getLogo().getURL();
+							if (StringUtils.isNotEmpty(showcaseItem.getLogo().getURL()))
+							{
+								brandLogoUrl = showcaseItem.getLogo().getURL();
+							}
+							showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
+							if (StringUtils.isNotEmpty(showcaseItem.getLogo().getAltText()))
+							{
+								brandLogoAltText = showcaseItem.getLogo().getAltText();
+							}
+							showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
 						}
-						showCaseItemJson.put("brandLogoUrl", brandLogoUrl);
-						if (StringUtils.isNotEmpty(showcaseItem.getLogo().getAltText()))
-						{
-							brandLogoAltText = showcaseItem.getLogo().getAltText();
-						}
-						showCaseItemJson.put("brandLogoAltText", brandLogoAltText);
 					}
+					else
+					{
+						String headerText = EMPTY_STRING;
+						if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
+						{
+							headerText = showcaseItem.getHeaderText();
+						}
+						showCaseItemJson.put("headerText", headerText);
+					}
+					subComponentJsonArray.add(showCaseItemJson);
 				}
 				else
 				{
-					String headerText = EMPTY_STRING;
-					if (StringUtils.isNotEmpty(showcaseItem.getHeaderText()))
-					{
-						headerText = showcaseItem.getHeaderText();
-					}
-					showCaseItemJson.put("headerText", headerText);
+					LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
 				}
-				subComponentJsonArray.add(showCaseItemJson);
 			}
 		}
-
+		// Changes implemented for TPR-1121
+		showCaseComponentJson.put("autoPlay", showCaseComponent.getAutoPlay());
+		showCaseComponentJson.put("slideBy", showCaseComponent.getSlideBy());
+		showCaseComponentJson.put("autoplayTimeout", showCaseComponent.getAutoplayTimeout());
 		showCaseComponentJson.put("subComponents", subComponentJsonArray);
 
 		return showCaseComponentJson;
@@ -609,105 +761,125 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof ProductCarouselComponentModel)
 				{
-					final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
-
-					String title = EMPTY_STRING;
-					if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
 					{
-						title = newAndExclusiveComponent.getTitle();
-					}
-					newAndExclusiveJson.put(TITLE, title);
-					final JSONArray newAndExclusiveJsonArray = new JSONArray();
+						final ProductCarouselComponentModel newAndExclusiveComponent = (ProductCarouselComponentModel) component;
+						String title = EMPTY_STRING;
 
-					//#1 reduced calls to newAndExclusiveComponent.getProducts() using
-					final List<ProductModel> productList = newAndExclusiveComponent.getProducts();
 
-					if (CollectionUtils.isNotEmpty(productList))
-					{
-						for (final ProductModel newAndExclusiveProducts : productList)
+						if (StringUtils.isNotEmpty(newAndExclusiveComponent.getTitle()))
 						{
-							//START :code added for 'NEW' tag on the product image
-							for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
+							title = newAndExclusiveComponent.getTitle();
+						}
+
+						//#1 reduced calls to newAndExclusiveComponent.getProducts() using
+						final List<ProductModel> productList = newAndExclusiveComponent.getProducts();
+						newAndExclusiveJson.put(TITLE, title);
+
+						// Changes implemented for TPR-1121
+						newAndExclusiveJson.put("autoPlay", newAndExclusiveComponent.getAutoPlayNewIn());
+						newAndExclusiveJson.put("slideBy", newAndExclusiveComponent.getSlideByNewIn());
+						newAndExclusiveJson.put("autoplayTimeout", newAndExclusiveComponent.getAutoplayTimeoutNewIn());
+
+						final JSONArray newAndExclusiveJsonArray = new JSONArray();
+
+						if (CollectionUtils.isNotEmpty(productList))
+						{
+
+							for (final ProductModel newAndExclusiveProducts : productList)
 							{
-								if (null != seller.getStartDate() && new Date().after(seller.getStartDate())
-										&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
+								//START :code added for 'NEW' tag on the product image
+								for (final SellerInformationModel seller : newAndExclusiveProducts.getSellerInformationRelator())
 								{
-									if (null != allowNew && allowNew.equalsIgnoreCase(Y))
+									if (null != seller.getStartDate() && new Date().after(seller.getStartDate())
+											&& null != seller.getEndDate() && new Date().before(seller.getEndDate()))
 									{
-										//Find the oldest startDate of the seller
-										if (null == existDate)
+										if (null != allowNew && allowNew.equalsIgnoreCase(Y))
 										{
-											existDate = seller.getStartDate();
-										}
-										else if (existDate.after(seller.getStartDate()))
-										{
-											existDate = seller.getStartDate();
+											//Find the oldest startDate of the seller
+											if (null == existDate)
+											{
+												existDate = seller.getStartDate();
+											}
+											else if (existDate.after(seller.getStartDate()))
+											{
+												existDate = seller.getStartDate();
+											}
 										}
 									}
 								}
-							}
-							final JSONObject newAndExclusiveProductJson = new JSONObject();
-							if (null != existDate && isNew(existDate))
-							{
-								newAndExclusiveProductJson.put("isNew", Y);
-							}
-							//END :code added for 'NEW' tag on the product image
+								final JSONObject newAndExclusiveProductJson = new JSONObject();
+								if (null != existDate && isNew(existDate))
+								{
+									newAndExclusiveProductJson.put("isNew", Y);
+								}
+								//END :code added for 'NEW' tag on the product image
 
 
-							ProductData product = null;
-							product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS2);
-							//#4 Image Call
-							if (StringUtils.isBlank(product.getHomepageImageurl()))
-							{
-								newAndExclusiveProductJson.put("productImageUrl", GenericUtilityMethods.getMissingImageUrl());
-							}
-							else
-							{
-								newAndExclusiveProductJson.put("productImageUrl", product.getHomepageImageurl());
-							}
-							newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
-							newAndExclusiveProductJson.put("productUrl", product.getUrl());
-							String price = null;
-							try
-							{
-								price = getProductPrice(product);
-							}
-							catch (final EtailBusinessExceptions e)
-							{
-								price = EMPTY_STRING;
-								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-							}
-							catch (final EtailNonBusinessExceptions e)
-							{
-								price = EMPTY_STRING;
-								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
-							}
-							catch (final Exception e)
-							{
-								price = EMPTY_STRING;
-								LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+
+								ProductData product = null;
+								product = productFacade.getProductForOptions(newAndExclusiveProducts, PRODUCT_OPTIONS2);
+								//#4 Image Call
+								if (StringUtils.isBlank(product.getHomepageImageurl()))
+								{
+									newAndExclusiveProductJson.put("productImageUrl", GenericUtilityMethods.getMissingImageUrl());
+								}
+								else
+								{
+									newAndExclusiveProductJson.put("productImageUrl", product.getHomepageImageurl());
+								}
+								newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
+								newAndExclusiveProductJson.put("productUrl", product.getUrl());
+								String price = null;
+								try
+								{
+									price = getProductPrice(product);
+								}
+								catch (final EtailBusinessExceptions e)
+								{
+									price = EMPTY_STRING;
+									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+								}
+								catch (final EtailNonBusinessExceptions e)
+								{
+									price = EMPTY_STRING;
+									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+								}
+								catch (final Exception e)
+								{
+									price = EMPTY_STRING;
+									LOG.error(EXCEPTION_MESSAGE_PRICE + product.getCode());
+								}
+								//#2 If Price is available then only show Products
+								if (!StringUtils.isEmpty(price))
+								{
+									newAndExclusiveProductJson.put("productPrice", price);
+									newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+								}
+
+								existDate = null;
+
 							}
 							//#2 If Price is available then only show Products
-							if (!StringUtils.isEmpty(price))
+							if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
 							{
-								newAndExclusiveProductJson.put("productPrice", price);
-								newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
+								newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 							}
-
-							existDate = null;
-
-						}
-						//#2 If Price is available then only show Products
-						if (!CollectionUtils.isEmpty(newAndExclusiveJsonArray))
-						{
-							newAndExclusiveJson.put("newAndExclusiveProducts", newAndExclusiveJsonArray);
 						}
 					}
+					else
+					{
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
+					}
 				}
+
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -772,15 +944,15 @@ public class HomePageController extends AbstractPageController
 			{
 				if (buyBoxData.getSpecialPrice() != null)
 				{
-					productPrice = buyBoxData.getSpecialPrice().getFormattedValue();
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 				}
 				else if (buyBoxData.getPrice() != null)
 				{
-					productPrice = buyBoxData.getPrice().getFormattedValue();
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
 				}
 				else
 				{
-					productPrice = buyBoxData.getMrp().getFormattedValue();
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
 				}
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
@@ -892,12 +1064,22 @@ public class HomePageController extends AbstractPageController
 
 			for (final AbstractCMSComponentModel component : components)
 			{
-				LOG.info("Found Component>>>>with id :::" + component.getUid());
+				//Sonar fix
+				//LOG.info("Found Component>>>>with id :::" + component.getUid());
+				LOG.info(MplConstants.COMPONENT_GUID_FOUND + component.getUid());
 
 				if (component instanceof MplShowcaseComponentModel)
 				{
-					final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
-					collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+					//TPR-559 Show/Hide Components and Sub-components //TPR-558 Scheduling of banners
+					if (component.getVisible().booleanValue() && homepageComponentService.showOnTimeRestriction(component))
+					{
+						final MplShowcaseComponentModel collectionShowcaseComponent = (MplShowcaseComponentModel) component;
+						collectionShowcase = getJSONForShowcaseComponent(collectionShowcaseComponent);
+					}
+					else
+					{
+						LOG.info(MarketplacecommerceservicesConstants.HOMEPAGELOGINFO);
+					}
 				}
 			}
 
@@ -962,6 +1144,39 @@ public class HomePageController extends AbstractPageController
 		}
 		return showCaseItemJson;
 	}
+
+	//TPR-1672
+	@ResponseBody
+	@RequestMapping(value = "/getBestOffers", method = RequestMethod.GET)
+	public JSONObject getBestOffers(@RequestParam(VERSION) final String version)
+	{
+		JSONObject getBestOffersJson = new JSONObject();
+		try
+		{
+			final ContentSlotModel homepageSectionBestOfferSlot = cmsPageService.getContentSlotByUidForPage(HOMEPAGE,
+					"BestOffersSectionSlot-Homepage", version);
+			//return homepageComponentService.getBestPicksJSON(homepageSection4CSlot);
+			getBestOffersJson = homepageComponentService.getBestOffersJSON(homepageSectionBestOfferSlot);
+		}
+
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+		}
+		catch (final Exception e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
+		}
+		return getBestOffersJson;
+	}
+
 
 
 	/**
@@ -1135,7 +1350,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
@@ -1222,39 +1437,23 @@ public class HomePageController extends AbstractPageController
 	@RequestMapping(value = "/getFooterContent", method = RequestMethod.GET)
 	public String getFooterContent(@RequestParam(value = "id") final String slotId, final Model model)
 	{
+		//changes in footer for Thread Dumps-code merge issue resolved
+
 		try
 		{
 
-			FooterComponentModel footer = null;
-			NeedHelpComponentModel needHelpFooter = null;
-			final ContentSlotModel footerSlot = contentSlotService.getContentSlotForId(slotId);
 
-			if (null != footerSlot && CollectionUtils.isNotEmpty(footerSlot.getCmsComponents()))
-			{
-				for (final AbstractCMSComponentModel cmsComponentModel : footerSlot.getCmsComponents())
-				{
-					if (cmsComponentModel instanceof FooterComponentModel)
-					{
-						footer = (FooterComponentModel) cmsComponentModel;
-					}
-					if (cmsComponentModel instanceof NeedHelpComponentModel)
-					{
-						needHelpFooter = (NeedHelpComponentModel) cmsComponentModel;
-					}
-				}
-			}
+			final FooterComponentData fData = mplCmsFacade.getContentSlotData(slotId);
 
 
-			//final FooterComponentModel footer = cmsComponentService.getSimpleCMSComponent(componentId);
-			model.addAttribute("footerSocialIconList", footer.getFooterImageList());
-			model.addAttribute("footerText", footer.getFooterText());
-			model.addAttribute("notice", footer.getNotice());
-			model.addAttribute("footerAppImageList", footer.getFooterAppImageList());
-			model.addAttribute("navigationNodes", footer.getNavigationNodes());
-			model.addAttribute("wrapAfter", footer.getWrapAfter());
-
-			//Need help section
-			model.addAttribute("contactNumber", (needHelpFooter == null) ? "" : needHelpFooter.getContactNumber());
+			model.addAttribute("footerSocialIconList", fData.getFooterSocialIconList());
+			model.addAttribute("footerText", fData.getFooterText());
+			model.addAttribute("notice", fData.getNotice());
+			model.addAttribute("footerAppImageList", fData.getFooterAppImageList());
+			model.addAttribute("navigationNodes", fData.getNavigationNodes());
+			model.addAttribute("wrapAfter", fData.getWrapAfter());
+			//			//Need help section
+			model.addAttribute("contactNumber", fData.getContactNumber());
 
 		}
 

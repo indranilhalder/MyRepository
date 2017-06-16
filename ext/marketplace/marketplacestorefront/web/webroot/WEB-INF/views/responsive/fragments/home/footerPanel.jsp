@@ -17,7 +17,7 @@
 			<spring:theme code="text.newsletter.placeholder" text="Enter your email to Sign up for our newsletter" var="newsletterPlaceholder" />
 			<input type="text" name="email"  id="mailtext"  placeholder="${newsletterPlaceholder}" />
 			<button id ="submit" type="submit" onclick="return emailvalidate();"><spring:theme code="footer.submit"/></button>
-			<div>&emsp;</div>
+			<!-- <div>&emsp;</div> --> <!-- commented as part of UF-249 -->
 			<div id="error_message" style="display:block;font-size:12px;"></div>
 	</div>
 	
@@ -29,11 +29,11 @@
 			<%-- <c:forEach items="${component.footerImageList}" var="banner">
 					<a href="${banner.urlLink}" ><span class="spriteImg"></span></a>
 			</c:forEach> --%>
-			<a href="https://plus.google.com/107413929814020009505" class="gplus"><span class="spriteImg"></span></a>
-			<a href="https://www.facebook.com/TataCLiQ/" class="facebook"><span class="spriteImg"></span></a>
-			<a href="https://twitter.com/tatacliq" class="twitter"><span class="spriteImg"></span></a>
-			<a href="https://www.instagram.com/tatacliq/" class="insta"><span class="spriteImg"></span></a>
-			<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" class="youtube"><span class="spriteImg"></span></a>
+			<a href="https://plus.google.com/107413929814020009505" class="gplus" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://www.facebook.com/TataCLiQ/" class="facebook" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://twitter.com/tatacliq" class="twitter" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://www.instagram.com/tatacliq/" class="insta" target="_blank"><span class="spriteImg"></span></a>
+			<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" class="youtube" target="_blank"><span class="spriteImg"></span></a>
 		</div>
 	</div>
 	
@@ -45,7 +45,7 @@
 		<h3><spring:theme code="text.download.app"/></h3>
 		<div class="links">
 			<c:forEach items="${footerAppImageList}" var="banner">
-					<a href="${banner.urlLink}" class="appios"><span class="spriteImg"></span></a>
+					<a href="${banner.urlLink}" class="appios" target="_blank"><span class="spriteImg"></span></a>
 			</c:forEach>
 		</div>
 	</div>
