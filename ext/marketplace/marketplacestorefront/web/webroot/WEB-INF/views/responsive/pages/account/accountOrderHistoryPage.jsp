@@ -378,6 +378,9 @@
 													<c:set value="${orderStatus['APPROVED']}" var="approvedFlag"/>
 													<c:set value="${orderStatus['SHIPPING']}" var="shippingFlag"/>
 													<c:set value="${orderStatus['DELIVERY']}" var="deliveryFlag"/>
+													<input type="hidden" value="${deliveryFlag.responseCode}"/>
+													<input type="hidden" value="${shippingFlag.responseCode}"/>
+													<input type="hidden" value="${approvedFlag.responseCode}"/>
 													<c:choose>
 														<c:when test="${not empty deliveryFlag and deliveryFlag ne null}">
 														<div class="orderUpdatesBlock">
