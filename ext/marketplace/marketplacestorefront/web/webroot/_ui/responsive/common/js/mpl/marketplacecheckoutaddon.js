@@ -4703,7 +4703,12 @@ function applyPromotion(bankName,binValue,formSubmit)
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
-
+				//TISSTRT-1605
+				if(parseFloat(response.deliveryCost.value) > 0){
+					$("#deliveryCostSpanId").html=response.deliveryCost.formattedValue;
+		 		}else{
+		 			$("#deliveryCostSpanId").html="Free";
+		 		}
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
 				{
@@ -4771,12 +4776,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 						$("#promotionApplied").css("display","block");
 						$("#promotion").html(response.totalDiscntIncMrp.formattedValue);
 					}
-					//TISSTRT-1605
-					if(parseFloat(response.deliveryCost.value) > 0){
-						$("#deliveryCostSpanId").html=response.deliveryCost.formattedValue;
-			 		}else{
-			 			$("#deliveryCostSpanId").html="Free";
-			 		}
+					
 					
 					
 					// TISST-7955
