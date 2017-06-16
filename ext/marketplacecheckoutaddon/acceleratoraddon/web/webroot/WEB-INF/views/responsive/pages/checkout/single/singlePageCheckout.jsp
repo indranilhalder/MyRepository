@@ -79,13 +79,13 @@
 	</div>
 </div>
 </c:if>
-<span id="deviceType">${deviceType}</span>
+<span id="deviceType" style="display:none;">${deviceType}</span>
 <c:if test="${deviceType ne 'normal'}">
 <div id="singlePageMobile">
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
 		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper">
-		<p class="change-mobile">Change</p>
+		<p class="change-mobile" id="address-change-link">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="chooseDeliveryAddressMobile">

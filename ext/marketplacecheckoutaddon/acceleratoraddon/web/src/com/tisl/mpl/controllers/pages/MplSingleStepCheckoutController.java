@@ -399,8 +399,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
 			if ((StringUtils.isEmpty(isServicable)) || (isServicable.equalsIgnoreCase("N")))
 			{
-				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -1120,6 +1119,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute(MarketplacecheckoutaddonConstants.SHOWSAVEDTOADDRESSBOOK, Boolean.TRUE);
 			model.addAttribute(MarketplacecheckoutaddonConstants.ADDRESSTYPE, getMplCheckoutFacade().getAddressType());
 			model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE);
+			model.addAttribute(ModelAttributetConstants.IS_DEFAULT_ADDRESS, Boolean.FALSE);
 			this.prepareDataForPage(model);
 			model.addAttribute("metaRobots", "noindex,nofollow");
 		}
@@ -1478,6 +1478,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return jsonObj;
 				}
 				saveAndSetDeliveryAddress(addressForm, false);
+				jsonObj.put("displaymessage", "Address Set and Saved successfull.");
+				jsonObj.put("type", "response");
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -1594,8 +1596,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				accountAddressFacade.addaddress(newAddress, (CustomerModel) oModel.getUser());
 			}
 		}
-		newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
-				|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
+		//		newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
+		//				|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
+		newAddress.setDefaultAddress(Boolean.TRUE.booleanValue());
 		getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 	}
 

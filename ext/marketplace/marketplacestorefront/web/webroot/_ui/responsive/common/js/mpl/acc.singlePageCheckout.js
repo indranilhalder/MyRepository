@@ -1,3 +1,9 @@
+//-----------------------------COMMENTS ON DIV USED TO DISPLAY ERROR MESSAGE-----------------------------//
+//	1.newAddressMobileErrorMessage	:	Used to display error messages in case of new address in responsive
+//	2.addressMessage				:	Common div Used to display error messages in case of new address in responsive and web, For example validation errors.
+//	3.selectedAddressMessageMobile	:	Used to display error messages(for ex: serviceability failure) in case a user selects an existing address in responsive
+//	4.selectedAddressMessage		:	Used to display error messages(for ex: serviceability failure) in case a user selects an existing address in web
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 ACC.singlePageCheckout = {
 
 	_autoload: [
@@ -409,6 +415,7 @@ ACC.singlePageCheckout = {
 		var zipcode = document.getElementsByName("postcode")[0].value;
 		var txtMobile = document.getElementsByName("MobileNo")[0].value;
 		var result=firstName.value;
+		$(".otherLandMarkError").hide();
 		 
 		if(result == undefined || result == "" )
 		{	
@@ -532,6 +539,18 @@ ACC.singlePageCheckout = {
 			$("#addressmobileError").hide();
 		}
 	   
+		result=$("#otherLandmark").val();
+		if(result != null){
+		   if(result.trim() == ''){
+	  	        $(".otherLandMarkError").show();
+		  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+		  	    validate = false;
+	  	     }else if(/[^a-zA-Z0-9]/.test(result)){
+	  		      $(".otherLandMarkError").show();
+			  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+			  	 validate = false;
+	  	  }
+	    }
 	   
 	   	if(address1.value.indexOf('#')!=-1)
 	   	{
@@ -1575,7 +1594,7 @@ removeExchangeFromCart : function (){
 			});
 	},
 	mobileAccordion:function(){
-		$(".change-mobile").on("click", function(){
+		$("#address-change-link").on("click", function(){
 			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
 			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 			$(this).hide();
@@ -1592,7 +1611,7 @@ removeExchangeFromCart : function (){
 	},
 	formValidationErrorCount:0,
 /****************MOBILE STARTS HERE************************/
-//-----------------------------COMMENTS-----------------------------//
+//-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
 //	2.isAddressSet		:	Used to track if existing address has been set as delivery address in cartModel for responsive
 //	3.isDeliveryModeSet	:	Used to track if delivery mode has been set in cartModel for responsive
@@ -1601,7 +1620,8 @@ removeExchangeFromCart : function (){
 //	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
 //	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
 //	8.paymentModeSelected:	Used to track the selected payment mode for responsive
-/////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	mobileValidationSteps:{
 		isAddressSaved:false,
 		isAddressSet:false,
@@ -1667,7 +1687,6 @@ removeExchangeFromCart : function (){
 	
 	getMobileAddAddress:function(){
 		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
-		
 		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
 		{//Will enter if an user selects new address after selecting a payment mode
 			ACC.singlePageCheckout.resetValidationSteps();
@@ -1736,7 +1755,7 @@ removeExchangeFromCart : function (){
 				xhrResponse.done(function(response, textStatus, jqXHR) {
 					//Hiding address pincode serviceability failure error messages
 	            	$("#selectedAddressMessageMobile").hide();
-	            	$("#newAddressMobileErrorMessage").hide();
+	            	$("#addressMessage").hide();
 	            	if(!isNew)
                 	{
 	            		//Remove new address radio nutton check
@@ -1748,8 +1767,8 @@ removeExchangeFromCart : function (){
 		                {
 		                	if(isNew)
 		                	{
-		                		ACC.singlePageCheckout.processError("#newAddressMobileErrorMessage",response);
-		                		ACC.singlePageCheckout.scrollToDiv("newAddressMobileErrorMessage",100);
+		                		ACC.singlePageCheckout.processError("#addressMessage",response);
+		                		ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
 		                	}
 		                	else
 	                		{
@@ -1805,7 +1824,9 @@ removeExchangeFromCart : function (){
 	attachOnPincodeKeyUpEvent:function()
 	{	
 		$('.address_postcode').on('keyup',function(){
+			$("#addressMessage").html("");
 			var pincode=$('.address_postcode').val();
+			$(".otherLandMarkError").html("");
 			var regPostcode = /^([1-9])([0-9]){5}$/;
 			if(pincode.length>=6)
 			{
@@ -1832,7 +1853,7 @@ removeExchangeFromCart : function (){
 			ACC.singlePageCheckout.showAjaxLoader();
 			try{
 				var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
-				var data=$("form#selectAddressFormMobile").serialize().replace(/\+/g,'%20');
+				var data=$("#selectAddressFormMobile form#addressForm").serialize().replace(/\+/g,'%20');
 				
 				ACC.singlePageCheckout.showAjaxLoader();
 				var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
@@ -1849,6 +1870,7 @@ removeExchangeFromCart : function (){
 		        	if (jqXHR.responseJSON) {
 		                if(data.type!="response")
 		                {
+		            		ACC.singlePageCheckout.resetPaymentModes();
 		                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
 		                	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 		                }
@@ -1857,6 +1879,7 @@ removeExchangeFromCart : function (){
 		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
 		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
 		                	ACC.singlePageCheckout.getDeliveryAddresses();
+		                	$("#address-change-link").show();
 		                }
 		            }
 				});
@@ -1899,6 +1922,7 @@ removeExchangeFromCart : function (){
         	if (jqXHR.responseJSON) {
                 if(data.type!="response")
                 {
+                	ACC.singlePageCheckout.resetPaymentModes();
                 	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
                 	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
                 }
@@ -1925,13 +1949,13 @@ removeExchangeFromCart : function (){
 			if(!formValidationSuccess)
 			{
 				//Removing payment mode selection incase of address form validation failure
-				$("#selectAddressFormMobile input,textarea,select").on("focus.formValidationFailed,change.formValidationFailed",function(){
+				$("#selectAddressFormMobile .clickableDivMobile,input,textarea,select").on("click.formValidationFailed,focus.formValidationFailed,change.formValidationFailed",function(){
 					ACC.singlePageCheckout.resetPaymentModes();
-					$("#selectAddressFormMobile input,textarea,select").off("focus.formValidationFailed,change.formValidationFailed");
+					$("#selectAddressFormMobile .clickableDivMobile,input,textarea,select").off("click.formValidationFailed,focus.formValidationFailed,change.formValidationFailed");
 				});
 	    		data={displaymessage:"clientSideAddressFormValidationFailed",type:"errorCode"}
-	    		ACC.singlePageCheckout.processError("#newAddressMobileErrorMessage",data);
-	        	ACC.singlePageCheckout.scrollToDiv("newAddressMobileErrorMessage",100);
+	    		ACC.singlePageCheckout.processError("#addressMessage",data);
+	        	ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
 	        	return false;
 			}
 		}
@@ -1960,8 +1984,9 @@ removeExchangeFromCart : function (){
 	        	if (jqXHR.responseJSON) {
 	                if(data.type!="response")
 	                {
-	                	//TODO handle error here 
-	                	ACC.singlePageCheckout.processError("",data);
+	                	ACC.singlePageCheckout.resetPaymentModes();
+	                	ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+	    	        	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                }
 	                if(data.type=="response")
 	                {
