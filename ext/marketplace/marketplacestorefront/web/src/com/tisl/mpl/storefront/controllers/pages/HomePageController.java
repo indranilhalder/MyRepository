@@ -13,7 +13,6 @@
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
-import com.tisl.mpl.storefront.constants.MessageConstants;
 import de.hybris.platform.acceleratorcms.model.components.FooterComponentModel;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.AbstractPageController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -85,6 +84,7 @@ import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.model.cms.components.NeedHelpComponentModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
+import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
 import com.tisl.mpl.storefront.constants.RequestMappingUrlConstants;
 import com.tisl.mpl.storefront.controllers.ControllerConstants;
@@ -224,27 +224,33 @@ public class HomePageController extends AbstractPageController
 	@Override
 	protected ContentPageModel getContentPageForLabelOrId(final String labelOrId) throws CMSItemNotFoundException
 	{
-		String siteId = getSiteConfigService().getProperty("luxury.site.id");
-		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId)){
-			String gender = getCustomerFacade().getCurrentCustomer().getGender();
-			if(gender != null && !(gender.isEmpty())) {
-				switch (gender) {
-					case MessageConstants.MALE: {
-						String key = getSiteConfigService().getProperty(MessageConstants.MENLANDING);
+		final String siteId = getSiteConfigService().getProperty("luxury.site.id");
+		if ((getCmsSiteService().getCurrentSite().getUid()).equalsIgnoreCase(siteId))
+		{
+			final String gender = getCustomerFacade().getCurrentCustomer().getGender();
+			if (gender != null && !(gender.isEmpty()))
+			{
+				switch (gender)
+				{
+					case MessageConstants.MALE:
+					{
+						final String key = getSiteConfigService().getProperty(MessageConstants.MENLANDING);
 						return super.getContentPageForLabelOrId(key);
 					}
-					case MessageConstants.FEMALE: {
-						String key = getSiteConfigService().getProperty(MessageConstants.WOMENLANDING);
+					case MessageConstants.FEMALE:
+					{
+						final String key = getSiteConfigService().getProperty(MessageConstants.WOMENLANDING);
 						return super.getContentPageForLabelOrId(key);
 					}
-					default: {
+					default:
+					{
 						return super.getContentPageForLabelOrId(labelOrId);
 					}
 				}
 			}
 
-	}
-	return super.getContentPageForLabelOrId(labelOrId);
+		}
+		return super.getContentPageForLabelOrId(labelOrId);
 	}
 
 	/**
@@ -300,8 +306,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 
@@ -403,8 +409,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return showCaseItemJson;
 	}
@@ -415,7 +421,8 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem,
+			final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -544,8 +551,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getBestPicksJson;
 	}
@@ -573,8 +580,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getProductsYouCareJson;
 	}
@@ -823,8 +830,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getPromoBannerHomepageJson;
 	}
@@ -858,8 +865,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return getStayQuedHomepageJson;
@@ -908,8 +915,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 
 		return collectionShowcase;
@@ -950,8 +957,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return showCaseItemJson;
 	}
@@ -990,8 +997,8 @@ public class HomePageController extends AbstractPageController
 	@ResponseBody
 	@RequestMapping(value = ModelAttributetConstants.NEWSLETTER, method = RequestMethod.GET)
 	public String saveNewsletterSubscriptionEmail(@RequestParam(value = "email") String emailId,
-			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) String gender,
-			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) Boolean isLuxury)
+			@RequestParam(value = "gender", required = false, defaultValue = ModelAttributetConstants.EMPTY) final String gender,
+			@RequestParam(value = "isLuxury", required = false, defaultValue = ModelAttributetConstants.FALSE) final Boolean isLuxury)
 	{
 		final MplNewsLetterSubscriptionModel newsLetter = modelService.create(MplNewsLetterSubscriptionModel.class);
 		emailId = emailId.toLowerCase();
@@ -1001,26 +1008,33 @@ public class HomePageController extends AbstractPageController
 		}
 		else
 		{
-			//newsLetter.setEmailId(emailId);
-			final boolean result = brandFacade.checkEmailId(emailId);
 
-			//newsLetter.setIsSaved(Boolean.TRUE);
-
-			if (result)
+			if (isLuxury)
 			{
-				newsLetter.setEmailId(emailId);
-				if (isLuxury)
+				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade.checkEmailIdForluxury(emailId,
+						"1");
+
+				if (null == newsLetterSubscriptionList || newsLetterSubscriptionList.isEmpty())
 				{
+					newsLetter.setEmailId(emailId);
 					newsLetter.setGender(gender);
 					newsLetter.setIsLuxury(Boolean.TRUE);
+					modelService.save(newsLetter);
+					return "success";
 				}
 				else
 				{
-					newsLetter.setIsMarketplace(Boolean.TRUE);
+					return "fail";
 				}
-				modelService.save(newsLetter);
-				return "success";
 			}
+			/*
+			 * else { //newsLetter.setEmailId(emailId); final boolean result = brandFacade.checkEmailId(emailId);
+			 *
+			 * //newsLetter.setIsSaved(Boolean.TRUE);
+			 *
+			 * if (result) { newsLetter.setEmailId(emailId); newsLetter.setIsMarketplace(Boolean.TRUE);
+			 * modelService.save(newsLetter); return "success"; }
+			 */
 			else
 			{
 				final List<MplNewsLetterSubscriptionModel> newsLetterSubscriptionList = brandFacade
@@ -1044,7 +1058,10 @@ public class HomePageController extends AbstractPageController
 				return "fail";
 			}
 		}
+
+
 	}
+
 
 	public boolean validateEmailAddress(final String email)
 	{
@@ -1193,8 +1210,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		//return getBestPicksJson;
 
@@ -1253,8 +1270,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return ControllerConstants.Views.Fragments.Home.FooterPanel;
 	}
