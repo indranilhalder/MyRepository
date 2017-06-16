@@ -2795,8 +2795,19 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
-			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
+			//alert('here');
 			$("#addToCartFormTitle").show();
+			//$('#addToCartFormTitle').remove();
+			if ($(window).width() < 768) {
+				setTimeout(function(){
+					$('#addToCartFormTitle').fadeOut(2000);		
+				},2000);	
+			}
+			
+			/*setTimeout(function(){
+				$('#addToCartFormTitle').remove();		
+			},4000);*/
 			//For pdp analytics changes
 			utag.link({"error_type":"size_not_selected"});
 	 	    return false;

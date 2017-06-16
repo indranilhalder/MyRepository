@@ -68903,3 +68903,82 @@ body.page-viewAllTrending #ia_products_hot .listing.wrapper .left-block .listing
 	padding-left: 0px;
 }
 /* UF-361/TPR-6034 */
+.listing-leftmenu .size .facet-list .filter-Size .facet-mark,
+.listing-leftmenu .Size .facet-list .filter-size .facet-mark, 
+.listing-leftmenu .size .facet-list .filter-size .facet-mark,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-mark{
+  display: block !important;
+  }
+.listing-leftmenu .size .facet-list .filter-Size .facet-text, 
+.listing-leftmenu .Size .facet-list .filter-size .facet-text, 
+.listing-leftmenu .size .facet-list .filter-size .facet-text, 
+.listing-leftmenu .Size .facet-list .filter-Size .facet-text{
+  display: block;
+  margin-left: 17px;
+  line-height: 18px;
+  width: auto;
+  height: auto;
+  font-size: 13px;
+  text-transform: capitalize !important;
+  border: none;
+    }
+.listing-leftmenu .size .facet-list .filter-Size .facet-text,
+.listing-leftmenu .Size .facet-list .filter-size .facet-text,
+.listing-leftmenu .size .facet-list .filter-size .facet-text,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-text{
+    line-height: 18px;
+    width: auto;
+    height: auto;
+    color: #000;
+    opacity: 0.9;
+    font-size: 13px;
+    text-transform: capitalize !important;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    text-align: left;
+    margin-left: 0px;
+    display: inline-block;
+    vertical-align: top;
+    }
+ .product-facet .facet.size .facet-list li.filter-Size, 
+ .product-facet .facet.Size .facet-list li.filter-size,
+ .product-facet .facet.size .facet-list li.filter-size,
+ .product-facet .facet.Size .facet-list li.filter-Size{
+     display: block;
+     width: 100%; 
+     margin-left: 0px;
+     height: 25px;
+     }
+  /* .listing-leftmenu .size .facet-list .filter-Size .facet-text .facet-count, 
+  .listing-leftmenu .Size .facet-list .filter-size .facet-text .facet-count, 
+  .listing-leftmenu .size .facet-list .filter-size .facet-text .facet-count, 
+  .listing-leftmenu .Size .facet-list .filter-Size .facet-text .facet-count{
+     padding-left: 5px;
+     } */
+ @media(max-width: 767px){    
+ #addToCartFormTitle {
+    position: fixed;
+    z-index: 10000;
+    line-height: 36px;
+    padding: 0 10px;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+    height: 36px;
+    opacity: 0.9;
+    border-radius: 18px;
+    background-color: #a5173c;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+}
+.addToCartTitle font{
+	color: #fff !important;
+}
+}
+.addToCartTitle font{
+	color: #ff1c47;
+}
