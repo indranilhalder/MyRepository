@@ -9,6 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="luxuryProduct" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/product"%>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/shared/theme" %>
 
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.static.resource.host')" var="staticHost"/>
 <style type="text/css">
