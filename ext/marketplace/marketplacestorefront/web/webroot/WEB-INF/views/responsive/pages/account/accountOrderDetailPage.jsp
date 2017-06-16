@@ -3749,7 +3749,7 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 }
 @media (max-width: 386px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    padding-left: 22px;
+    padding-left: 18px;
 }
 }
 </style>
