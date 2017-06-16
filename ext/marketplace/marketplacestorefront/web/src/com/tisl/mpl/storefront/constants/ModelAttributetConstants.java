@@ -855,5 +855,13 @@ public final class ModelAttributetConstants
 	public static final String FOOTERSLOT = "FooterSlot";
 	public static final String GOOGLEBOT = "googlebot";
 
-	public static final String NO ="no";
+	public static final String NO = "no";
+
+	//TPR-1283
+	public static final String DESCRIPTION_TEXT1 = " - Shop for ";
+	public static final String DESCRIPTION_TEXT2 = " Online at best price in India at Tata CLiQ. Choose from wide range of ";
+	public static final String DESCRIPTION_TEXT3 = " and get 100% genuine products.";
+	public static final String TITLE_TEXT1 = " | Buy ";
+	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
+
 }

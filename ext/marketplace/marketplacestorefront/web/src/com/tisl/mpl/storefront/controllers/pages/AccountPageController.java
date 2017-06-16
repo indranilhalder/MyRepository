@@ -132,6 +132,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -230,7 +231,7 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 
 /**
  * Controller for home page
@@ -768,7 +769,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						final Map<String, List<AWBResponseData>> statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(
 								orderEntryData, subOrder, subOrderModel);
 						List<AWBResponseData> response = null;
-						AWBResponseData approved = null, shipped = null, delivery = null;
+						AWBResponseData approved = null, shipped = null, delivery = null, cancel = null, returns = null;
 						final Map<String, AWBResponseData> orderStatus = new HashMap<String, AWBResponseData>();
 
 
@@ -792,9 +793,25 @@ public class AccountPageController extends AbstractMplSearchPageController
 							delivery = response.get(0);
 						}
 
+						response = statusTrackMap.get("CANCEL");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							cancel = response.get(0);
+						}
+
+						response = statusTrackMap.get("RETURN");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							returns = response.get(0);
+						}
 						orderStatus.put("APPROVED", approved);
 						orderStatus.put("SHIPPING", shipped);
 						orderStatus.put("DELIVERY", delivery);
+						orderStatus.put("CANCEL", cancel);
+						orderStatus.put("RETURN", returns);
+
 						orderWithStatus.put(orderEntryData.getOrderLineId(), orderStatus);
 					}
 					subOrderDetailsList.add(subOrder);

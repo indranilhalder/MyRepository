@@ -25460,6 +25460,7 @@ div.variantFormContainer{
 		font-family:"Montserrat";
 		font-size:12px;
 		margin-bottom:20px;
+		display: none;			/* 	TPR-6013 Order History  */
 	}
 	.nav-orderHistory::before {
 		content: "";
@@ -69626,6 +69627,18 @@ body .account .right-account .order-history:not(.responsiveProfile) .product-blo
     color: green;
     opacity: 0.5;
 }
+.status.statusShipped span{
+	color: rgb(165,194,191);
+    border-color: rgb(165,194,191);
+}
+.status.statusCancel span{
+	color: red;
+    border-color: red;
+}
+.status.statusConfirmed span{
+	color:rgb(156,182,209);
+	border-color: rgb(156,182,209);
+}
 
 /* TPR-6013 My Orders ends*/
 
@@ -69650,7 +69663,7 @@ body .account .right-account .order-history:not(.responsiveProfile) .product-blo
 .commonBlock.greenBlock .roundedDiv{
 	background-color: #7ed321;
 }
-.commonBlock.greenBlock .rectangularDivQuarter{
+.commonBlock.greenBlock .rectangularDivQuarter,.commonBlock.greenBlock .rectangularDiv{
 	border-color:#7ed321;
 }
 .commonBlock .rectangularDivQuarter{
@@ -69769,11 +69782,17 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li:nth-child(4){
 	    text-align: left;	
 }
+body .account .right-account .order-history.order-details li.header div.totals{
+	padding-top: 0;
+}
+body .account .right-account .order-history.order-details li.header div.payment-method{
+	padding-top: 48px;
+}
 /* TPR-6013 Order Details ends */
 
 /* TPR-6013 track order modal start */
 .track-order-modal .content{
-	width: 85%;
+	width: 80%;
     max-width: 100%;
     height: 550px;
     border-radius: 8px;
@@ -69781,7 +69800,7 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
     overflow: hidden;
     border: 0;
 }
-.track-order-header{
+.track-order-header, .track-order-del-charge{
 	display: none;
 }
 .track-order-modal .content > .close:before {
@@ -69800,3 +69819,9 @@ body .account .right-account .order-history.order-details li.header>ul>li {
 	}
 }
 /* TPR-6013 track order modal end */
+body .right-account .order-history .cancellation-request-block.success>div h2.trackOrderLnHt{
+	height: auto; /* TISPRDT-1498 fix */
+}
+body .account .right-account .info.card-list h2 {
+    height: auto;	/* TISPRDT-1501 fix */
+}
