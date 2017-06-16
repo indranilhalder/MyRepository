@@ -27,6 +27,9 @@ public interface BuyBoxDao
 
 	List<BuyBoxModel> buyBoxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
+	//added for jewellery
+	public List<BuyBoxModel> buyBoxPriceForJewellery(String pcmUssid) throws EtailNonBusinessExceptions;
+
 	List<BuyBoxModel> getBuyboxPricesForSearch(String ProductCode) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> invalidatePkofBuybox(Date currenttime) throws EtailNonBusinessExceptions;
@@ -67,6 +70,13 @@ public interface BuyBoxDao
 
 	//for fine jewellery pdp
 	public ProductModel getProductDetailsByProductCode(final String productcode);
+
+
+	/**
+	 * @param pcmUssid
+	 * @return
+	 */
+
 
 
 }

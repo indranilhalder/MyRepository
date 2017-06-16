@@ -52,6 +52,26 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	 * 
 	 * @param - productCode
 	 * 
+	 * @return- buyBoxList
+	 */
+	@Override
+	//added for jewellery
+	public List<BuyBoxModel> buyboxPriceForJewellery(final String pcmUssid) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
+	{
+
+		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceForJewellery(pcmUssid);
+
+
+
+		return buyBoxList;
+	}
+
+	/*
+	 * This service method will return buybox prices for product code
+	 * 
+	 * @param - productCode
+	 * 
 	 * @return- List<BuyBoxModel>
 	 */
 

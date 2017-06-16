@@ -25,6 +25,7 @@ import de.hybris.platform.commercefacades.product.data.PromotionData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -65,6 +66,7 @@ import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.enums.OnlineExclusiveEnum;
+import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.product.MplProductFacade;
@@ -75,6 +77,7 @@ import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplKeywordRedirectDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.seller.product.facades.ProductOfferDetailFacade;
@@ -143,6 +146,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 
 	/**
 	 * @throws CMSItemNotFoundException
@@ -275,7 +282,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -472,7 +479,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			SellerInformationData buyboxdataCheck = null;
 			if (null != productData)
 			{
-				buyboxdataCheck = buyboxdata(productData, ussid);
+				buyboxdataCheck = buyboxdata(productData, ussid, productModel);
 				if (null != buyboxdataCheck && null != buyboxdataCheck.getIsCod())
 				{
 					isProductCOD = buyboxdataCheck.getIsCod();
@@ -1139,12 +1146,36 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param ussid
 	 * @return SellerInformationData
 	 */
-	private SellerInformationData buyboxdata(final ProductData productData, final String ussid)
+	private SellerInformationData buyboxdata(final ProductData productData, String ussid, final ProductModel productModel)
 	{
 
 		final SellerInformationData buyBoxData = new SellerInformationData();
 		try
 		{
+			//for fine jewellery
+			if (null != productData && null != productData.getRootCategory()
+					&& StringUtils.equalsIgnoreCase(productData.getRootCategory(), MarketplacewebservicesConstants.FINEJEWELLERY))
+			{
+				final String variantUssid = ussid;
+				LOG.debug("variant ussid : " + variantUssid);
+				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(ussid);
+				ussid = jewelleryInfo.get(0).getPCMUSSID();
+				LOG.debug("pcm ussid : " + ussid);
+
+				for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
+				{
+					if ((sellerInfo.getSellerAssociationStatus() == null || sellerInfo.getSellerAssociationStatus().equals(
+							SellerAssociationStatusEnum.YES))
+							&& (null != sellerInfo.getStartDate() && new Date().after(sellerInfo.getStartDate())
+									&& null != sellerInfo.getEndDate() && new Date().before(sellerInfo.getEndDate())))
+					{
+						for (final RichAttributeModel richattr : sellerInfo.getRichAttribute())
+						{
+							buyBoxData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(richattr, variantUssid));
+						}
+					}
+				}
+			}
 
 			if (null != productData && null != productData.getSeller() && !productData.getSeller().isEmpty())
 			{
@@ -1202,7 +1233,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							buyBoxData.setAvailableStock(seller.getAvailableStock());
 						}
 
-						if (null != seller.getDeliveryModes())
+						if (null != seller.getDeliveryModes() && !(seller.getDeliveryModes().isEmpty()))
 						{
 							buyBoxData.setDeliveryModes(seller.getDeliveryModes());
 						}

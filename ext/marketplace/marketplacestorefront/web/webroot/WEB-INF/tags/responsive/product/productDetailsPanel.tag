@@ -440,25 +440,52 @@ tr.d0 td {
 
 			<div id="fb-root"></div>
 			<div class="Wrap">
-				<cms:pageSlot position="PinCodeService" var="component">
-					<cms:component component="${component}" />
-				</cms:pageSlot>
+				
+			<cms:pageSlot position="PinCodeService" var="component">
+				<cms:component component="${component}" />
+			</cms:pageSlot>
+			
 			</div>
 
-			<!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
-			<c:if test="${product.rootCategory =='FineJewellery'}">
-				<div class="certified-by">
-					<h2>certified by</h2>
-					<ul>
-						<li><img src="images/certified-by.jpg" alt="certified by"></li>
-						<li>30 day returns</li>
-						<li>tata guarantee</li>
-					</ul>
-				</div>
-			</c:if>
-			<!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
-			<ul class="wish-share desktop">
-
+           <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery'}">
+             <div class="certified-by"> 
+              <h2>certified by</h2>
+              <ul>
+               <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
+               <li>30 day returns</li>
+               <li>tata guarantee</li> -->
+            <c:forEach var="certification" items="${certificationfeatureValueDataList}">
+            <li>
+              <c:if test="${certification.value=='AGL'}">
+                 <img src="${commonResourcePath}/images/Visa.png" alt="certified by">
+             </c:if>
+             <c:if test="${certification.value=='Tanishq'}">  
+                 <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">  
+            </c:if>
+             <c:if test="${certification.value=='AGS'}">
+                 <img src="${commonResourcePath}/images/American_Express.png" alt="certified by">
+            </c:if>
+             <c:if test="${certification.value=='AGTA'}">
+                 <img src="${commonResourcePath}/images/Maestro.png" alt="certified by">         
+            </c:if>
+             <c:if test="${certification.value=='HRD'}">  
+                 <img src="${commonResourcePath}/images/Discover.png" alt="certified by">    
+            </c:if>
+            </li>     
+           </c:forEach>
+         </ul>
+      </div>
+          <div class="certified-by">
+           <ul>
+            <li>30 day returns</li>
+            <li>tata guarantee</li>
+           
+           </ul>
+          </div>
+      </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
+          <ul class="wish-share desktop">
 				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
 				<!-- Commented as per PDP CR Change -->
 				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>

@@ -167,6 +167,8 @@ public class MarketplaceFacadesConstants extends GeneratedMarketplaceFacadesCons
 	public static final String COLON = ":";
 	public static final String FORWARD_SLASHES = "//";
 
+	public static final String PRODUCT_TYPE = "FineJewellery";
+
 	private MarketplaceFacadesConstants()
 	{
 		//empty

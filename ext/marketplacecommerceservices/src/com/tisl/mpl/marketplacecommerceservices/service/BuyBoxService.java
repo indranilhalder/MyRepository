@@ -21,6 +21,9 @@ public interface BuyBoxService
 {
 
 	List<BuyBoxModel> buyboxPrice(String productCode) throws EtailNonBusinessExceptions;
+	
+	//added for jewellery
+	List<BuyBoxModel> buyboxPriceForJewellery(String pcmUssid) throws EtailNonBusinessExceptions;
 
 	//List<BuyBoxModel> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
 
