@@ -2470,6 +2470,82 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	/**
+	 * This method is called when a user select change pincode at cnc page.
+	 *
+	 * @param pin
+	 * @param productCode
+	 * @param sellerId
+	 * @return if successful retursn list of pos for a prouct else null.
+	 * @throws CMSItemNotFoundException
+	 * @throws UnsupportedEncodingException
+	 */
+	@ResponseBody
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.UPDATE_CHECK_PINCODE, method = RequestMethod.GET)
+	public String upDatePincodeServicabilityCheck(@RequestParam(value = "pin") final String pin,
+			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String ussId,
+			@RequestParam(value = "entryNumber") final String entryNumber, final Model model) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
+	{
+		if (LOG.isDebugEnabled())
+		{
+			LOG.debug("from upDatePincodeServicabilityCheck method when customer change pincode at cnc page");
+			LOG.debug("New Pincode is::::::::" + pin);
+			LOG.debug("Ussid is::::::::" + ussId);
+			LOG.debug("entryNumber is::::::::" + entryNumber);
+		}
+		//final List<PointOfServiceData> stores = new ArrayList<PointOfServiceData>();
+		List<StoreLocationResponseData> omsResponse = new ArrayList<StoreLocationResponseData>();
+		List<ProudctWithPointOfServicesData> productWithPOS = new ArrayList<ProudctWithPointOfServicesData>();
+		List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
+
+		//call to check pincode serviceability
+		boolean status = false;
+
+		//call service to get list of ATS and ussid
+
+		try
+		{
+			omsResponse = pincodeServiceFacade.getListofStoreLocationsforPincode(pin, ussId, productCode, null);
+			if (omsResponse.size() > 0)
+			{
+				productWithPOS = getProductWdPos(omsResponse, model, null);
+			}
+		}
+		catch (final ClientEtailNonBusinessExceptions e)
+		{
+			LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
+			if (null != e.getErrorCode()
+					&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+							.equalsIgnoreCase(e.getErrorCode())))
+			{
+				storeLocationRequestDataList = pincodeServiceFacade.getStoresFromCommerce(pin, ussId);
+				if (storeLocationRequestDataList.size() > 0)
+				{
+					//populates oms response to data object
+					productWithPOS = getProductWdPos(model, null, storeLocationRequestDataList);
+				}
+			}
+		}
+
+		if (CollectionUtils.isNotEmpty(productWithPOS))
+		{
+			status = true;
+			//stores = productWithPOS.get(0).getPointOfServices();
+
+			model.addAttribute("entryNumber", entryNumber);
+			model.addAttribute("defaultPincode", pin);
+			model.addAttribute("pwpos", productWithPOS);
+		}
+
+		if (!status)
+		{
+			final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "noStoresFound" + "&type=errorCode", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+		}
+		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PickupLocationFragmentPanel;
+	}
+
+	/**
 	 * This method gets called when the "Use Selected Delivery Method" button is clicked. It sets the selected delivery
 	 * mode on the checkout facade and reloads the page highlighting the selected delivery Mode.
 	 *
