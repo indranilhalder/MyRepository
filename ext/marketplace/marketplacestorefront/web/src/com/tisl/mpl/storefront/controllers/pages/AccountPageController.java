@@ -661,7 +661,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		List<OrderEntryData> cancelProduct = new ArrayList<OrderEntryData>();
 		final Map<String, Map<String, AWBResponseData>> orderWithStatus = new HashMap<String, Map<String, AWBResponseData>>();
-
+		//TPR-6013
+		ConsignmentModel consignmentModel = null;
+		String consignmentStatus = ModelAttributetConstants.EMPTY;
 
 		LOG.debug("Step1-************************Order History");
 		try
@@ -786,8 +788,20 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							shipped = response.get(0);
 						}
-						response = statusTrackMap.get("DELIVERY");
+						//TPR-6013
+						consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
+						consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
 
+						if (null != consignmentModel
+								&& null != consignmentModel.getInvoice()
+								&& null != consignmentModel.getInvoice().getInvoiceUrl()
+								&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+						{
+							final AWBResponseData deliveryAWBData = new AWBResponseData();
+							deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
+							delivery = deliveryAWBData;
+						}
 						if (CollectionUtils.isNotEmpty(response))
 						{
 							delivery = response.get(0);
