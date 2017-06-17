@@ -69386,17 +69386,17 @@ header > .content .top.active > .toggle > span:first-child{
     transition-property: top, transform;
     transform: rotate(45deg);
     margin-top: 7px;
-    transition: background 0s 0.3s;
+    transition: background 0s 0.3s linear;
     transition-duration: 0.3s, 0.3s;
-  transition-delay: 0.3s, 0s;
+  transition-delay: 0.3s, 0s linear;
 }
 header > .content .top.active > .toggle > span:last-child{
     transition-property: bottom, transform;
     transform: rotate(-45deg);
     margin-top: -7px;
-    transition: background 0s 0.3s;
+    transition: background 0s 0.3s linear;
     transition-duration: 0.3s, 0.3s;
-  transition-delay: 0.3s, 0s;
+  transition-delay: 0.3s, 0s linear;
 }
 header > .content .top.active > .toggle > span:nth-child(2){
     display: none;
@@ -69404,7 +69404,7 @@ header > .content .top.active > .toggle > span:nth-child(2){
 header > .content .top .toggle span:first-child,
 header > .content .top .toggle span,
 header > .content .top .toggle span:last-child{
-transition: background 0s 0.3s;
+transition: background 0s 0.3s linear;
 }
 } 
 /*UF-373 end*/
