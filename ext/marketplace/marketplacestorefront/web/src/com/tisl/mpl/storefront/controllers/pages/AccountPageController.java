@@ -802,10 +802,6 @@ public class AccountPageController extends AbstractMplSearchPageController
 							deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
 							delivery = deliveryAWBData;
 						}
-						if (CollectionUtils.isNotEmpty(response))
-						{
-							delivery = response.get(0);
-						}
 
 						response = statusTrackMap.get("CANCEL");
 
