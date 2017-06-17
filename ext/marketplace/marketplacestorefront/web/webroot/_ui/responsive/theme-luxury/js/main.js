@@ -117,9 +117,12 @@ TATA.CommonFunctions = {
                     	 }
                     	 
                     	 if($("#extRegisterForm .invalided-error").length > 0){
-                    		 $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");
+                    		 /*$("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");*/
+                             $("#extRegisterForm .invalided-error").html("Please enter valid email address");
                     	 }else{
-                    		 $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
+                    		//$("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
+                    		 
+                    		 $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
                     	 }
                      }
                  });						
@@ -204,7 +207,7 @@ TATA.CommonFunctions = {
     },
 	Toggle: function() {
 
-		$('.toggle-link').on('click', function(e){
+		/*$('.toggle-link').on('click', function(e){
             e.preventDefault();
             e.stopPropagation();
             var Target = $(this).data("target-id");
@@ -215,7 +218,25 @@ TATA.CommonFunctions = {
 			$('.toggle-skip').not(Target).removeClass('active');
 			$(Target).toggleClass('active');
 			return false;
-		});
+		});*/
+        
+        $('.toggle-link').on('click', function(e){
+   		 e.preventDefault(), e.stopPropagation();
+   		 var elem = $(this);
+   		 var Target = $(this).data("target-id");
+   		 if(elem.hasClass("luxury-login")){
+					TATA.CommonFunctions.loadSignInForm(elem);
+					$('#mypopUpModal').modal();
+	    			$('.modal-backdrop').on("click", function(){
+		    			$('#mypopUpModal').modal('hide');
+		    		});
+	    	 } else {
+	    		$('.toggle-skip').not(Target).removeClass('active');
+				$(Target).toggleClass('active');
+				return false;
+	    	 }
+   		
+		});				
 
 	},
     

@@ -83,14 +83,20 @@
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 					<li class="header-account-link">
-						<a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="javascript:;" data-href="/luxurylogin/signin">Sign In</a>
+					
+					<a class="toggle-link luxury-login hidden-xs" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"> Sign in</a>
+  						
+  						
+						
+						
+						<!-- <a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="javascript:;" data-href="/luxurylogin/signin">Sign In</a>
 						<div class="header-account toggle-skip text-center" id="header-account">
 							<div class="header-account-inner clearfix" id="login-container">
 								<div class="header-account-section header-forget-pass"></div>
 								<div class="header-account-section header-sign-in"></div>
 								<div class="header-account-section header-signup"></div>
 							</div>
-						</div>
+						</div> -->
 					</li>
 					</sec:authorize>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
@@ -164,3 +170,17 @@
 		class="container">
 		<cms:component component="${component}" />
 	</cms:pageSlot>
+	
+	<div class="modal fade text-center" id="mypopUpModal" >
+  						 <div class="modal-dialog">
+  							<div class="modal-content">
+  							<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
+								<div class="header-account-inner clearfix" id="login-container">
+									<div class="header-account-section header-forget-pass"></div>
+									<div class="header-account-section header-sign-in"></div>
+									<div class="header-account-section header-signup"></div>
+								</div>
+								</div>
+								</div>
+						</div>
+						</div>

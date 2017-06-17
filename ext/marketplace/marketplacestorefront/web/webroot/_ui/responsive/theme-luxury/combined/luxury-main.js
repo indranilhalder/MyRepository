@@ -12997,7 +12997,7 @@ TATA.CommonFunctions = {
                     success: function(data) {
                         if ("email" != $(data).filter("input#hasErrorsInReg").val()) return $(".regEmailErr").html(""), 
                         location.reload(), !1;
-                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!") : $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
+                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Please enter valid email address") : $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
                     }
                 });
             }
@@ -13071,10 +13071,12 @@ TATA.CommonFunctions = {
     Toggle: function() {
         $(".toggle-link").on("click", function(e) {
             e.preventDefault(), e.stopPropagation();
-            var Target = $(this).data("target-id"), elem = $(this);
-            return elem.hasClass("luxury-login") && TATA.CommonFunctions.loadSignInForm(elem), 
-            $(".toggle-skip").not(Target).removeClass("active"), $(Target).toggleClass("active"), 
-            !1;
+            var elem = $(this), Target = $(this).data("target-id");
+            if (!elem.hasClass("luxury-login")) return $(".toggle-skip").not(Target).removeClass("active"), 
+            $(Target).toggleClass("active"), !1;
+            TATA.CommonFunctions.loadSignInForm(elem), $("#mypopUpModal").modal(), $(".modal-backdrop").on("click", function() {
+                $("#mypopUpModal").modal("hide");
+            });
         });
     },
     DocumentClick: function() {
