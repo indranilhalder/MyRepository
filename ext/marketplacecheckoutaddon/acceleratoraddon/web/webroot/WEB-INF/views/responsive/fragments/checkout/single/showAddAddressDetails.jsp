@@ -81,3 +81,4 @@
 			</div>
 		</div>
 	</div>
+	<script>ACC.singlePageCheckout.hideAjaxLoader();</script>

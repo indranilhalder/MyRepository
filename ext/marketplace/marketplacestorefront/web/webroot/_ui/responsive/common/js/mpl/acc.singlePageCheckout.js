@@ -134,12 +134,16 @@ ACC.singlePageCheckout = {
 	
 	getEditAddress:function(element,event){
 		event.preventDefault();
+		//The ajax loader is loaded here and hidden in last line of showEditAddressDetails.jsp
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + $(element).attr("href");
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			ACC.singlePageCheckout.hideAjaxLoader();
+			data={displaymessage:"Network error occured",type:"error"};
+			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
 		});
         
         xhrResponse.done(function(data) {
@@ -152,7 +156,7 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.always(function(){
-        	ACC.singlePageCheckout.hideAjaxLoader();
+        	//ACC.singlePageCheckout.hideAjaxLoader();
 		});
         
 		return false;	
@@ -209,12 +213,16 @@ ACC.singlePageCheckout = {
 	},
 	
 	getAddAddress:function(){
+		//The ajax loader is loaded here and hidden in last line of showAddAddressDetails.jsp
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/new-address";
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
         
         xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+			ACC.singlePageCheckout.hideAjaxLoader();
+			data={displaymessage:"Network error occured",type:"error"};
+			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
 		});
         
         xhrResponse.done(function(data) {
@@ -223,7 +231,7 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.always(function(){
-        	ACC.singlePageCheckout.hideAjaxLoader();
+        	//ACC.singlePageCheckout.hideAjaxLoader();
 		});
         
 		return false;	
@@ -1569,16 +1577,18 @@ removeExchangeFromCart : function (){
 	
 	showAjaxLoader:function(){
 		var staticHost = $('#staticHost').val();
-		if($("#no-click,.spinner").length==0)
+		if($("#no-click,.loaderDiv").length==0)
 		{
 			//Below 2 lines for adding spinner
+			//$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+			//$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		}
 	},
 	
 	hideAjaxLoader:function(){
-		$("#no-click,.spinner").remove();
+		$("#no-click,.loaderDiv").remove();
 	},
 	
 	ReviewPriceAlignment:function(){
@@ -1865,7 +1875,7 @@ removeExchangeFromCart : function (){
 		        
 		        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
-					data={displaymessage:"Network error occured",type:"error"}
+					data={displaymessage:"Network error occured",type:"error"};
 					ACC.singlePageCheckout.hideAjaxLoader();
 					ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
                 	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
@@ -1917,7 +1927,7 @@ removeExchangeFromCart : function (){
       
 	    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
-			data={displaymessage:"Network error occured",type:"error"}
+			data={displaymessage:"Network error occured",type:"error"};
 			ACC.singlePageCheckout.hideAjaxLoader();
 			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
         	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
@@ -1984,7 +1994,7 @@ removeExchangeFromCart : function (){
 		    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
 				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-				data={displaymessage:"Network error occured",type:"error"}
+				data={displaymessage:"Network error occured",type:"error"};
 				ACC.singlePageCheckout.hideAjaxLoader();
 				ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
 	        	ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);

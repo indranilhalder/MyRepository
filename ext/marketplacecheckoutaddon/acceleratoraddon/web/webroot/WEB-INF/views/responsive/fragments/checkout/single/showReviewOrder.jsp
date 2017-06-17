@@ -118,14 +118,16 @@
 
 						<ul class="item-edit-details">
 						<li class="cart_exchange">
-			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/>
+			              		<%-- <c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
    								<!-- //to do spring theme for exchange -->
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
    								<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   								<%-- 
    								<c:if test="${empty exchangeId}">
 									<c:set var="isExchangeavailable" value=" "/>
-								</c:if>
+								</c:if>--%>
    		
-   									${isExchangeavailable}
+   									<span style="display:none">${isExchangeavailable}</span>
 			              		</li>
 							<c:if test="${entry.updateable}">
 								<c:forEach items="${entry.product.seller}" var="seller">
@@ -365,10 +367,12 @@
 										test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 										<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
 											<!-- TPR-970 changes-->
-											<span id="cartCentOfferDisplay_${entry.entryNumber}"><span
+											<%-- <span id="cartCentOfferDisplay_${entry.entryNumber}"><span
 												class="off-bag">${entry.cartLevelPercentage}<spring:theme
 														code="off.bag.percentage" />
-													<format:price priceData="${entry.amountAfterAllDisc}" /></span></span>
+													<format:price priceData="${entry.amountAfterAllDisc}" /></span></span> --%>
+											<!-- UF-260 -->
+											<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
 											<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 										</c:if>
 									</c:when>
@@ -592,11 +596,15 @@
 		<%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> --%>
 		<%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 		<ul class="totals">
-			<li id="subtotal"><spring:theme
+			<%-- <li id="subtotal"><spring:theme
 					code="basket.page.totals.subtotal" /> <span class="amt"><ycommerce:testId
 						code="Order_Totals_Subtotal">
 						<format:price priceData="${cartData.subTotal}" />
-					</ycommerce:testId></span></li>
+					</ycommerce:testId></span></li> --%>
+			<!-- UF-260 -->
+								   
+																				  
+            <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartTotalMrp}"/></ycommerce:testId></span></li>
 			<li id="subtotal_Value" style="display: none"><spring:theme
 					code="basket.page.totals.subtotal" /><span class="amt"><span
 					id="subtotalValue"></span></span></li>
@@ -606,8 +614,8 @@
 			<li id="total_Value" class="totalValue" style="display: none"><spring:theme
 					code="basket.page.totals.total" /><span class="amt"><span
 					id="totalValue"></span></span></li>
-			<c:if test="${cartData.totalDiscounts.value > 0}">
-				<li id="discount">
+			<%-- <c:if test="${cartData.totalDiscounts.value > 0}"> --%>
+				<%-- <li id="discount">
 					<spring:theme	code="basket.page.totals.savings" />
 					<span class="amt">
 						<ycommerce:testId code="Order_Totals_Savings">
@@ -618,9 +626,13 @@
 						<spring:theme code="text.percentage" />
 						<spring:theme code="text.parenthesis.close" />
 					</span>
-				</li>
-			</c:if>
-
+				</li> --%>
+			<%-- </c:if> --%>
+         <!-- UF-260 -->
+         <c:if test="${totalDiscount.value > 0}">
+	        <li id="discount"><spring:theme code="text.account.order.savings"/><span class="amt">
+	        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${totalDiscount}"/></ycommerce:testId>
+        </c:if>
 			
 
 			<li id="total"><spring:theme code="basket.page.totals.total" /><span

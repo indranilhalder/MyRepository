@@ -3134,8 +3134,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		try
 		{
-			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 
+			final CartModel cartModel = cartService.getSessionCart();
+			mplCartFacade.setCartSubTotal(cartModel);
+			mplCartFacade.totalMrpCal(cartModel);
+			//UF-260
+			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
+
+			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade
 					.getDeliveryModeMapForReviewOrder(cartData);
 			model.addAttribute("deliveryModeData", delModeDataPopulateMap);
@@ -4255,8 +4261,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							session.removeAttribute("deliveryMethodForm");
 						}
 						applyPromotions();
-						mplCartFacade.setCartSubTotal(cartModel);
-						mplCartFacade.totalMrpCal(cartModel);
+						//mplCartFacade.setCartSubTotal(cartModel);
+						//mplCartFacade.totalMrpCal(cartModel);
 
 						//Re-populating delivery address after recalculation of cart
 						getMplCustomAddressFacade().setDeliveryAddress(addressData);

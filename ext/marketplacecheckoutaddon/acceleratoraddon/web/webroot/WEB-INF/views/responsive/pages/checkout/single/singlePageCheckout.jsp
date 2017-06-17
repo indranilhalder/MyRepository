@@ -80,7 +80,7 @@
 </div>
 </c:if>
 <span id="deviceType" style="display:none;">${deviceType}</span>
-<span id="isPincodeRestrictedPromoPresent">${isPincodeRestrictedPromoPresent}</span>
+<span id="isPincodeRestrictedPromoPresent" style="display:none;">${isPincodeRestrictedPromoPresent}</span>
 <c:if test="${deviceType ne 'normal'}">
 <div id="singlePageMobile">
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
