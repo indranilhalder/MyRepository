@@ -789,18 +789,21 @@ public class AccountPageController extends AbstractMplSearchPageController
 							shipped = response.get(0);
 						}
 						//TPR-6013
-						consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
-						consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
-
-						if (null != consignmentModel
-								&& null != consignmentModel.getInvoice()
-								&& null != consignmentModel.getInvoice().getInvoiceUrl()
-								&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
-										.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+						if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
 						{
-							final AWBResponseData deliveryAWBData = new AWBResponseData();
-							deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
-							delivery = deliveryAWBData;
+							consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
+							consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+
+							if (null != consignmentModel
+									&& null != consignmentModel.getInvoice()
+									&& null != consignmentModel.getInvoice().getInvoiceUrl()
+									&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+							{
+								final AWBResponseData deliveryAWBData = new AWBResponseData();
+								deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
+								delivery = deliveryAWBData;
+							}
 						}
 
 						response = statusTrackMap.get("CANCEL");
