@@ -393,13 +393,13 @@
 													<c:choose>
 													<c:when test="${not empty returnFlags and returnFlags ne null}">
 													<div class="orderUpdatesBlock">
-														<div class="status statusCancel">
-															<!-- <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span> -->
-														</div>
+														<%-- <div class="status statusCancel">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span> 
+														</div> --%>
 														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span>&nbsp;
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Return request date" /></span>&nbsp;
 															<c:forEach items="${returnFlags.statusRecords}" var="recordDate">
-															<!--  <span>${recordDate.date}</span>-->
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
@@ -408,13 +408,13 @@
 													<c:choose>
 													<c:when test="${not empty cancelFlags and cancelFlags ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status statusCancel">
-															<!--  <span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>-->
-														</div>
+														<%-- <div class="status statusCancel">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>
+														</div> --%>
 														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>&nbsp;
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancellation request date" /></span>&nbsp;
 															<c:forEach items="${cancelFlags.statusRecords}" var="recordDate">
-															<!--  <span>${recordDate.date}</span>-->
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
