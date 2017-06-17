@@ -18572,6 +18572,7 @@ body .account .right-account .order-history.order-details .product-block li.item
 body .account .right-account .order-history.order-details li.item .item-fulfillment p {
   font-weight: 600;
   font-size: 12px;
+  margin-top: 2px !important;		/* TISPRDT-1516 */
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment {
   margin-left: 20px;
