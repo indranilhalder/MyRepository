@@ -2744,9 +2744,12 @@ $("#otpMobileNUMField").focus(function(){
  	if (objCnt) {
  		if(bName == "Netscape"){	
  			objCnt.textContent=maxL-objVal.length;
- 			//console.log("inside textcontent");}
- 		else{objCnt.innerText=maxL-objVal.length;
- 		//console.log("inside innerText");}
+ 			//console.log("inside textcontent");
+ 		}
+ 		else{
+ 			objCnt.innerText=maxL-objVal.length;
+ 			//console.log("inside innerText");
+ 		}
  	}
  
  	return true;
