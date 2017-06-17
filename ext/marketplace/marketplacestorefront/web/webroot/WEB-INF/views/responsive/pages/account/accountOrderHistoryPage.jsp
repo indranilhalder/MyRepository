@@ -134,7 +134,7 @@
 
 									<ul class="product-block">
 
-										<%-- <li class="header">
+										<li class="header">
 											<ul>
 												<li class="date"><span><spring:theme
 															code="text.orderHistory.order.placed" /></span> <fmt:formatDate
@@ -179,9 +179,9 @@
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
 															code="text.orderHistory.track.order" /></a></li>
 											</ul>
-										</li> --%>
+										</li>
 										
-										<li class="header">
+										<%-- TPR-6013 wrong UI <li class="header">
 											<ul>
 												<li class="viewDetails">
 												<span class="orderNumber"><spring:theme code="text.orderHistory.order.place" text="Order"/>#${orderHistoryDetail.code}</span> 
@@ -199,7 +199,7 @@
 												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
 															code="text.orderHistory.track.order" /></a></li>
 											</ul>
-										</li>
+										</li> --%>
 										
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
 											var="subOrder" varStatus="status">
