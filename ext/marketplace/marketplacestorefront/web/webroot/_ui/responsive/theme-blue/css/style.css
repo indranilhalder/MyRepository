@@ -69304,6 +69304,7 @@ body.page-viewAllTrending #ia_products_hot .listing-leftmenu .checkbox-menu{
 		padding: 29px 20px;
     	border: 1px solid #eeeeee;
     	margin-right: 18px;
+    	margin-bottom: 16px;
 	}
 	/* TPR-6013 My Profile Order Ends */
 	
@@ -69907,6 +69908,7 @@ body .right-account .order-details .deliveryTrack .dot-arrow{
 }
 body .account .right-account .order-history.order-details li.item .status .message{
 	width: 100% !important;
+	top: 60px !important;
 	border-radius: 2px;
 	    border: none;
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.24), 0 0 4px 0 rgba(0,0,0,0.12);
@@ -69916,17 +69918,19 @@ body .account .right-account .order-history.order-details li.item .status .messa
 	font-weight: normal;
 	text-align: center;
 }
- body .account .right-account .order-history.order-details li.item .status .message:after{
+ body .account .right-account .order-history.order-details li.item .status .message > p:after{
 	content: "";
-    width: 0;
-    height: 0;
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-bottom: 9px solid #fff;
+    width: 15px;
+    height: 15px;
     position: absolute;
-    top: 28px;
-    left: 50%;
+    top: -6px;
+    left: 7px;
     z-index: 1001;
+    -moz-box-shadow: 3px 3px 5px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+    box-shadow: 2px 2px 5px -1px #ccc;
+    background-color: #fff;
+    transform: rotate(225deg);
 } 
 .status.statusConfirmed span, .status.statusShipped span, .status.statusDelivered span{
 	display: none;
@@ -69936,21 +69940,27 @@ body .account .right-account .order-history.order-details li.item .status .messa
     height: 30px;
     width: 68px;
     float: right;
+    margin-bottom: 11px;
 }
 .status.statusShipped{
     background: url(../images/my-account-sprite-v1.png) no-repeat -161px 0px;
     height: 30px;
     width: 82px;
     float: right;
+    margin-bottom: 11px;
 }
 .status.statusDelivered{
     background: url(../images/my-account-sprite-v1.png) no-repeat -240px 0px;
     height: 30px;
     width: 82px;
     float: right;
+    margin-bottom: 11px;
 }
 .statusDate{
 	clear: both;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
+    display: none;
 }
 @media (max-width: 790px){
 .responsiveProfile .status span {
@@ -69962,5 +69972,8 @@ body .account .right-account .order-history.order-details li.item .status .messa
 .responsiveProfile .status span {
     top: auto;
     right: auto;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:nth-of-type(even) {
+    opacity: 1;
 }
 }

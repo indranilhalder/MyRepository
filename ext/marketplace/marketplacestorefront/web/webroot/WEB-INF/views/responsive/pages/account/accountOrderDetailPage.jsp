@@ -3611,12 +3611,12 @@ body .account .right-account .order-history .product-block li.item .attributes p
     display: inline !important;
     width: auto !important;
 }
-body .account .right-account .order-history.order-details li.item .status.suman ul.nav li,
-body .account .right-account .order-history.order-details li.item .status.suman ul.progtrckr.tabs li{
+body .account .right-account .order-history.order-details li.item .status.suman ul.nav > li,
+body .account .right-account .order-history.order-details li.item .status.suman ul.progtrckr.tabs > li{
 	width: 25%;
 }
-body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.nav li,
-body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.progtrckr.tabs li{
+body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.nav > li,
+body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.progtrckr.tabs > li{
 	width: 20%;
 }
 body .account .right-account .order-history.order-details li.header>ul>li.placed_date {
