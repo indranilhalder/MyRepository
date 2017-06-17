@@ -1455,7 +1455,7 @@ $(document).ready(function(){
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
 		} else if(len == 1) {
-			$(this).children("span.dot").first().css("marginLeft","33%");
+			/*$(this).children("span.dot").first().css("marginLeft","33%");*/		/*TPR-6013 Order History */
 		}
 
 	}); 

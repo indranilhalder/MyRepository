@@ -2241,10 +2241,72 @@
 										  </c:forEach>
 										<div class="deliveryTrack status suman"
 											id="tracker_${entry.transactionId}">
-											
-											<!-- Commented for TPR-6013 Order Details Starts -->
-											
-										<%-- 	<ul class="progtrckr tabs">
+											<ul class="nav">
+
+												<li>Approval</li>
+
+												<c:choose>
+													<c:when
+														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
+														<li>Processing</li>
+													</c:when>
+
+												</c:choose>
+
+
+												<c:if test="${fn:length(cancelStatus) gt 0}">
+													<li>Cancel</li>
+												</c:if>
+
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>READY for PickUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if test="${fn:length(cancelStatus) eq 0}">
+																<li>Shipping</li>
+
+															</c:if>
+														</c:otherwise>
+													</c:choose>
+
+												<!-- For RTO handling productDelivered -->
+
+													<c:choose>
+														<c:when
+															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>PickedUp</li>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<c:if
+																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+																<li>Delivery</li>
+															</c:if>
+														</c:otherwise>
+
+
+
+
+													</c:choose>
+
+													<c:if
+														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
+														<li>Return</li>
+													</c:if>
+
+												<%-- <c:if
+													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
+													<li>Delivery</li>
+												</c:if>
+												--%>
+											</ul>
+											<ul class="progtrckr tabs">
 												
 												<!-------------------------------- Approval Block --------------------------------------->
 												<c:set var="displayMsgVar" value="" />
@@ -2366,8 +2428,8 @@
 												<!--End Processing Block -->
 
 
-												<c:choose>
-												<c:when test="${fn:length(cancelStatus) gt 0}">
+												<%-- <c:choose>
+												<c:when test="${fn:length(cancelStatus) gt 0}"> --%>
 
 												<c:if test="${fn:length(cancelStatus) gt 0}">
 													<!--------------------------------------- Cancel Block ------------------------------------------>
@@ -2424,11 +2486,11 @@
 														</c:forEach> <span class="end "></span></li>
 													<!--End Cancel Block -->
 												</c:if>
-												</c:when>
-												<c:otherwise>
+												<%-- </c:when>
+												<c:otherwise> --%>
 
-												</c:otherwise>
-												</c:choose>
+												<%-- </c:otherwise>
+												</c:choose> --%>
 
 
 
@@ -2559,7 +2621,7 @@
 												</c:if>
 												
 												<!------------------------------- Delivery Block ------------------------------------->
-												
+												<%-- 
 												 <c:if
 													test="${fn:length(cancelStatus) eq 0 }">
 													<li class="progress progtrckr-done delivery-status">
@@ -2572,7 +2634,7 @@
 														</p>
 													</li>
 												</c:if>
-												
+												--%>
 												<!-- End Delivery Block -->
 												
 												
@@ -2637,7 +2699,7 @@
 																 		</c:otherwise>
 																 		</c:choose>	
 																 	</c:if>
-																			
+																	<%-- 		
 																	<div id="track-more-info-return">
 																		<p class="active">
 																			<span class="view-more-consignment-return"
@@ -2654,7 +2716,7 @@
 																		id="returnRecord${entry.orderLineId}_${loop.index}">
 
 																	</div>
-
+--%>
 																</div>
 															</c:if>
 
@@ -2669,193 +2731,6 @@
 												</c:if>
 												<!--End Return Block -->
 												
-											</ul> --%>
-											
-											<!--Commented for TPR-6013 Order Details Ends -->
-											
-											<ul class="progtrckr tabs">
-											<!-------------------------------- Approval Block --------------------------------------->
-												<c:set var="displayMsgVar" value="" />
-												<li class="progress progtrckr-done orderStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
-												
-													
-													
-													<c:forEach items="${approvedStatus}" var="productStatus" varStatus="loop">
-													
-													<c:choose>
-													
-													<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-														<div class="commonBlock greenBlock"> 
-															<div class="roundedDiv"></div>
-															<div class="rectangularDivQuarter"></div>
-														</div>
-													</c:when>
-													
-													
-													
-													</c:choose>
-													
-													</c:forEach>
-													
-													<div class="commonBlock grayBlock">
-														<div class="roundedDiv"></div>
-														<div class="rectangularDivQuarter"></div>
-													</div>
-													
-													
-												
-												</li>
-											<!--End Approval Block -->
-											
-											<!-------------------------------------------- Processing Block ---------------------------->
-											
-											<c:set var="displayMsgVar" value="" />
-											
-											<c:if test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
-													
-												<li class="progress progtrckr-done processingStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
-														<c:set value="${0}" var="dotCount" /> 
-														<c:forEach items="${processingStatus}" var="productStatus" varStatus="loop">
-														<c:if test="${loop.last}">
-														<c:choose>
-														<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-														<div class="commonBlock greenBlock">
-															<div class="rectangularDiv"></div>
-															<div class="roundedDiv"></div>
-															<div class="rectangularDivQuarter"></div>
-														 </div>
-														</c:when>
-														
-														</c:choose>
-														
-														</c:if>
-														
-														</c:forEach>
-														
-														<div class="commonBlock grayBlock">
-															<div class="rectangularDiv"></div>
-															<div class="roundedDiv"></div>
-															<div class="rectangularDivQuarter"></div>
-														</div>
-														
-												</li>
-												
-											</c:if>
-											<!--End Processing Block -->
-											
-											<!------------------------------- Shipping Block --------------------------------->
-											
-											<c:if test="${fn:length(cancelStatus) eq 0}">
-											<c:set var="displayMsgVar" value="" />
-											<li class="progress progtrckr-done shippingStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
-											<c:set value="${0}" var="dotCount" />
-											<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
-											<c:choose>
-											<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-											<div class="commonBlock greenBlock">
-												<div class="rectangularDiv"></div>
-												<div class="roundedDiv"></div>
-												<div class="rectangularDivQuarter"></div>
-											</div>
-																	<c:set var="dotCount" value="${dotCount + 1}" />
-											</c:when>
-											</c:choose>
-											</c:forEach>
-											<div class="commonBlock grayBlock">
-												<div class="rectangularDiv"></div>
-												<div class="roundedDiv"></div>
-												<div class="rectangularDivQuarter"></div>
-											</div>
-											</li>
-											</c:if>
-											<!-- End Shipping Block -->
-											
-											<!--------------------------------- Return Block -------------------------------------->
-											
-											<li class="progress progtrckr-done returnStatus processing" orderlineid="${entry.orderLineId}" ordercode="${subOrder.code}">
-											<c:if test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-											<c:set var="displayMsgVar" value="" />
-											
-											<c:when test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<div class="commonBlock greenBlock"> 
-																		<div class="rectangularDiv"></div>
-																		<div class="roundedDiv"></div>
-																	</div>
-																	<c:set var="dotCount" value="${dotCount + 1}" />
-																</c:when>
-											</c:if>
-											<div class="commonBlock grayBlock">
-												<div class="rectangularDiv"></div>
-												<div class="roundedDiv"></div>
-											</div>
-											</li>
-											
-											</ul>
-											
-											<ul class="nav">
-												
-												<li>Approved</li>
-
-												<c:choose>
-													<c:when
-														test="${(fn:length(cancelStatus) gt 0 && fn:length(processingStatus) gt 0) || fn:length(cancelStatus) eq 0}">
-														<li>Processed</li>
-													</c:when>
-
-												</c:choose>
-
-
-												<c:if test="${fn:length(cancelStatus) gt 0}">
-													<li>Cancel</li>
-												</c:if>
-
-													<c:choose>
-														<c:when
-															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
-															</c:if>
-														</c:when>
-														<c:otherwise>
-															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>Shipped</li>
-
-															</c:if>
-														</c:otherwise>
-													</c:choose>
-
-												<!-- For RTO handling productDelivered -->
-
-													<c:choose>
-														<c:when
-															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
-															<c:if
-																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-																<li>PickedUp</li>
-															</c:if>
-														</c:when>
-														<c:otherwise>
-															<c:if
-																test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-																<li>Delivered</li>
-															</c:if>
-														</c:otherwise>
-
-
-
-
-													</c:choose>
-
-													<c:if
-														test="${fn:length(returnStatus) gt 0 and fn:length(cancelStatus) eq 0}">
-														<li>Return</li>
-													</c:if>
-
-												<%-- <c:if
-													test="${fn:length(cancelStatus) eq 0 and fn:length(returnStatus) gt 0 }">
-													<li>Delivery</li>
-												</c:if>
-												--%>
 											</ul>
 
 										</div>

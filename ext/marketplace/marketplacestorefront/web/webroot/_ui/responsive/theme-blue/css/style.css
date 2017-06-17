@@ -16705,7 +16705,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li 
     float: left;
     text-transform: uppercase;
     font-weight: 500;
-    text-align: center;
+    /* text-align: center; */		/* Commented for TPR-6013 Order History  */
     line-height: 30px;
     width:auto;
 }
@@ -16742,18 +16742,23 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     z-index: 2;
     content: "";
     display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #A9143C;
-    border: 2px solid #fff;
-    box-shadow: 0 0 0 3px #A9143C;
+    /* width: 10px;
+    height: 10px; */		/* Commented for TPR-6013 Order History  */
+    width: 16px;		/* TPR-6013 Order History  */	
+  	height: 16px;		/* TPR-6013 Order History  */
+    border-radius: 100%;		/* TPR-6013 Order History  */
+    /* background-color: #A9143C; */			/*Commented for TPR-6013 Order History  */
+        background-color: #7ed321;
+    /* border: 2px solid #fff;
+    box-shadow: 0 0 0 3px #A9143C; */
     position:relative;
-    top:-2px;
+    /* top:-2px; */			/* Commented for TPR-6013 Order History  */
+    top:3px;		/* TPR-6013 Order History  */
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.trackOrder_00cbe9:before {
-	background-color: #A9143C;
-    box-shadow: 0 0 0 3px #A9143C;}
+	/* background-color: #A9143C;
+    box-shadow: 0 0 0 3px #A9143C; */			/* Commented for TPR-6013 Order History  */
+  }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.trackOrder_ff1c47:before {
 	background-color: #A9143C;
     box-shadow: 0 0 0 3px #A9143C;}
@@ -16766,12 +16771,16 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.inactive:before {
     background-color: #e3e3e3;
-    box-shadow: 0 0 0 3px #e3e3e3;
+    /* box-shadow: 0 0 0 3px #e3e3e3; */			/* TPR-6013 Order History  */
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot {
     display: inline-block;
     float: left;
-    width: 33.3333%
+   /*  width: 33.3333% */			/* Commented for TPR-6013 Order History  */
+   margin-left: 0 !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start.gray:after {
+    border-color: #e3e3e3;
 }
 @media (max-width: 650px) {
     body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:nth-of-type(even) {
@@ -16792,7 +16801,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start:before {
     content: '';
-    border-left: 3px solid #b9b9b9;
+    /* border-left: 3px solid #b9b9b9; */		/*Commented for TPR-6013 Order History  */
     position: absolute;
     bottom: 25%;
     left: 0;
@@ -16800,16 +16809,17 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start:after {
     content: '';
-    border-bottom: 3px solid #b9b9b9;
+    border-bottom: 3px solid #7ed321;
     position: absolute;
     bottom: 50%;
     left: 0;
     z-index: -1;
-    width: 100%
+    /* width: 100% */
+    width:20%;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.end:before {
     content: '';
-    border-right: 3px solid #b9b9b9;
+    /* border-right: 3px solid #b9b9b9; */		/* Commented for TPR-6013 Order History */ 
     position: absolute;
     bottom: 25%;
     right: 0;
@@ -16817,15 +16827,15 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.end:after {
     content: '';
-    border-bottom: 3px solid #b9b9b9;
+    /* border-bottom: 3px solid #b9b9b9; */				/* 	TPR-6013 Order History  */
     position: absolute;
     bottom: 50%;
     right: -100%;
     width: 100%
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
-    border: 3px solid #b9b9b9;
-    height: 60px
+   /*  border: 3px solid #b9b9b9;
+    height: 60px */				/* TPR-6013 Order History  */
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status p {
     margin-top: 15px;
@@ -27957,8 +27967,8 @@ body .right-account .order-details .deliveryTrack  ul.progtrckr.tabs .message ul
 	text-transform: none;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
-	padding:0px;
-	height:40px;
+	/* padding:0px;
+	height:40px; */				/* TPR-6013 Order History */ 
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status p{
 	margin-top:0px;
@@ -27998,8 +28008,8 @@ body .account .right-account .order-history.order-details li.item .status .messa
 	display:none;
 }
   body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
-	margin-top:5px;
-	display:table;
+	/* margin-top:5px;
+	display:table; */			/* TPR-6013 Order History  */
 	}
   body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status > p{
 	display: table-cell;
@@ -69615,18 +69625,18 @@ body .account .right-account .order-history:not(.responsiveProfile) .product-blo
 .mobileHeader{
 	display:none;
 }
-.status {
+/* .status {
     margin-bottom: 12px;
     text-align: right;
 }
 .status span {
     text-transform: uppercase;
     border: 2px solid green;
-    /* margin-bottom: 6px; */
+    margin-bottom: 6px;
     padding: 5px;
     color: green;
     opacity: 0.5;
-}
+} */
 .status.statusShipped span{
 	color: rgb(165,194,191);
     border-color: rgb(165,194,191);
@@ -69788,6 +69798,32 @@ body .account .right-account .order-history.order-details li.header div.totals{
 body .account .right-account .order-history.order-details li.header div.payment-method{
 	padding-top: 48px;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:first-child span.startOfStart {
+    display: none;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:last-child span.start{
+	display:none;
+}
+span.startOfStart:after {
+    content: '';
+    border-bottom: 3px solid #7ed321;
+    position: absolute;
+    bottom: 50%;
+    left: -80%;
+    z-index: -1;
+    width: 80%;
+    /* position: relative; */
+}
+span.startOfStart.gray:after {
+    border-color: #e3e3e3;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot.deactive {
+    margin-left: 0 !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot.deactive:nth-child(2) {
+    display: none;
+}
+
 /* TPR-6013 Order Details ends */
 
 /* TPR-6013 track order modal start */
