@@ -545,13 +545,13 @@
 									     <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p class="order_history_del_mode">
-										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+										                 <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>
 											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                        <p class="order_history_del_mode"><span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  </p>
+                                                        <p class="order_history_del_mode"><span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  </p>
                                                      </c:if>
 													</c:otherwise>
 										 </c:choose>
@@ -584,7 +584,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
+														<p>${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -1747,13 +1747,13 @@
 								             <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p>
-										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+										                 <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>
 											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                         <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
                                                      </c:if>
 													</c:otherwise>
 											  </c:choose>

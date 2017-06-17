@@ -16652,6 +16652,7 @@ body .account .right-account .order-history.order-details li.item:not(.in-store)
     border-top: solid 1px #eeeeee;		/* TPR-6013 Order History  */
     line-height: 0;			/* TPR-6013 Order History  */
     margin-bottom: 16px;	/* TPR-6013 Order History */ 
+    color: #666666;			/* TPR-6013 Order History */
 }
 body .account .right-account .order-history.order-details li.item .order {
     position: relative;
@@ -18567,12 +18568,16 @@ body .account .right-account .order-history.order-details .product-block li.item
     position: relative;		
     left: 30px;		
     bottom: 0px;
-    margin:15px 0;	
+    margin:15px 0;
+    left:0;	
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment p {
   font-weight: 600;
   font-size: 12px;
-  margin-top: 2px !important;		/* TISPRDT-1516 */
+  margin-top: 2px;		/* TISPRDT-1516 */
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p:last-of-type{
+	margin-bottom: 10px;			/* TISPRDT-1516 */
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment {
   margin-left: 20px;
