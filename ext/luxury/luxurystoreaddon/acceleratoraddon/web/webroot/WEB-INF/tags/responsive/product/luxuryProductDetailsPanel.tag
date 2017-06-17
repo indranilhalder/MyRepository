@@ -134,7 +134,19 @@ tr.d0 td {
                       <source src="${videoUrl}" type="video/mp4">  
                     </video>
                   </div>		
-				<div class="offer-icon"><span class="new"></span></div>
+				<div class="offer-icon">
+					<c:choose>
+						<c:when test="${isNew eq true}">
+							<span class="newarrival"></span>
+						</c:when>
+						<c:when test="${isOnSale eq true }">
+							<span class="onsale"></span>
+						</c:when>
+						<c:when test="${isExclusive eq true}">
+							<span class="exclusive"></span>
+						</c:when>
+					</c:choose>
+				</div>
 			</div>
 			
 						
@@ -504,6 +516,5 @@ tr.d0 td {
 </div>
 </div>
 </div>
-
 
 

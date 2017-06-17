@@ -75,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -111,13 +112,16 @@ import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.data.EMITermRateData;
 import com.tisl.mpl.data.WishlistData;
+import com.tisl.mpl.enums.OnlineExclusiveEnum;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
@@ -133,6 +137,7 @@ import com.tisl.mpl.facades.product.data.SizeGuideData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
 import com.tisl.mpl.marketplacecommerceservices.service.PDPEmailNotificationService;
+import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -145,6 +150,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.util.MplBuyBoxUtility;
 
 import atg.taglib.json.util.JSONException;
 
@@ -315,6 +321,22 @@ public class ProductPageController extends MidPageController
 	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
+
+	@Autowired
+	private CommonUtils commonUtils;
+
+	@Resource(name = "mplBuyBoxUtility")
+	private MplBuyBoxUtility mplBuyBoxUtility;
+
+	/**
+	 * @return the mplBuyBoxUtility
+	 */
+	public MplBuyBoxUtility getMplBuyBoxUtility()
+	{
+		return mplBuyBoxUtility;
+	}
+
+
 
 	/**
 	 * @param buyBoxFacade
@@ -1891,6 +1913,11 @@ public class ProductPageController extends MidPageController
 				findCanonicalProduct(productData, model);
 			}
 
+			if (commonUtils.isLuxurySite())
+			{
+				populateProuctFlag(productModel, model);
+			}
+
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
@@ -1903,6 +1930,128 @@ public class ProductPageController extends MidPageController
 		}
 
 	}
+
+	/**
+	 * @param productModel
+	 * @param model
+	 */
+	@SuppressWarnings("boxing")
+	private void populateProuctFlag(final ProductModel productModel, final Model model)
+	{
+
+
+		model.addAttribute("isNew", findIsNew(productModel));
+		model.addAttribute("isOnSale", findIsOnSale(productModel));
+		model.addAttribute("isExclusive", findIsExclusive(productModel));
+
+	}
+
+	/**
+	 * @param productModel
+	 * @return
+	 */
+	private boolean findIsNew(final ProductModel productModel)
+	{
+		Date existDate = null;
+		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
+		{
+			if (seller != null)
+			{
+				//Find the oldest startDate of the seller
+				if (null == existDate && seller.getStartDate() != null)
+				{
+					existDate = seller.getStartDate();
+				}
+				else if (seller.getStartDate() != null && existDate.after(seller.getStartDate()))
+				{
+					existDate = seller.getStartDate();
+				}
+			}
+		}
+
+		if (null != existDate && isNew(existDate))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isNew(final Date existDate)
+	{
+		boolean newAttr = false;
+		if (null != existDate)
+		{
+			final Date sysDate = new Date();
+			final long dayDiff = calculateDays(existDate, sysDate);
+
+			LOG.info("******" + existDate + "  --- dayDiff: " + dayDiff);
+			final String validDaysSt = configurationService.getConfiguration().getString("attribute.new.validDays");
+			final int validDays = validDaysSt == null ? 0 : Integer.parseInt(validDaysSt);
+
+			if (validDays > dayDiff)
+			{
+				newAttr = true;
+			}
+		}
+
+		return newAttr;
+	}
+
+
+	private long calculateDays(final Date dateEarly, final Date dateLater)
+	{
+		return (dateLater.getTime() - dateEarly.getTime()) / (24 * 60 * 60 * 1000);
+	}
+
+	/**
+	 * @param productModel
+	 * @return
+	 */
+	private boolean findIsOnSale(final ProductModel productModel)
+	{
+		double discountedPercent = 0.0;
+		final BuyBoxModel buyboxWinner = mplBuyBoxUtility.getLeastPriceBuyBoxModel(productModel);
+		if (buyboxWinner != null)
+		{
+
+			if (null != buyboxWinner.getSpecialPrice() && buyboxWinner.getSpecialPrice().intValue() > 0)
+			{
+				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getSpecialPrice().doubleValue()) * 100)
+						/ buyboxWinner.getMrp().doubleValue();
+			}
+			else if (null != buyboxWinner.getPrice() && buyboxWinner.getPrice().intValue() > 0
+					&& buyboxWinner.getMrp().intValue() > buyboxWinner.getPrice().intValue())
+			{
+				discountedPercent = ((buyboxWinner.getMrp().doubleValue() - buyboxWinner.getPrice().doubleValue()) * 100)
+						/ buyboxWinner.getMrp().doubleValue();
+			}
+		}
+
+		return discountedPercent > 0.0;
+	}
+
+	/**
+	 * @param productModel
+	 * @return
+	 */
+	private boolean findIsExclusive(final ProductModel productModel)
+	{
+		boolean isOnlineExclusive = false;
+		for (final SellerInformationModel seller : productModel.getSellerInformationRelator())
+		{
+			if (seller != null)
+			{
+				final OnlineExclusiveEnum onlineExclusiveEnum = seller.getOnlineExclusive();
+				if (null != onlineExclusiveEnum)
+				{
+					isOnlineExclusive = true;
+					break;
+				}
+			}
+		}
+		return isOnlineExclusive;
+	}
+
 
 	/**
 	 * @param productData
