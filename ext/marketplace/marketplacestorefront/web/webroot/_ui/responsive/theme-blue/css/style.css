@@ -18572,6 +18572,7 @@ body .account .right-account .order-history.order-details .product-block li.item
 body .account .right-account .order-history.order-details li.item .item-fulfillment p {
   font-weight: 600;
   font-size: 12px;
+  margin-top: 2px !important;		/* TISPRDT-1516 */
 }
 body .account .right-account .order-history.order-details li.item .item-fulfillment {
   margin-left: 20px;
@@ -45759,6 +45760,7 @@ body .account .right-account .password h2,body .account .right-account .signOut 
 	font-size: 16px;
 	margin-bottom: 2px;
 	line-height: 16px;
+	height: auto;		/* TISPRDT-1519 */
 }
 body .account .right-account .info.card-list h2{
 	margin-bottom: 0;
@@ -69384,17 +69386,17 @@ header > .content .top.active > .toggle > span:first-child{
     transition-property: top, transform;
     transform: rotate(45deg);
     margin-top: 7px;
-    transition: background 0s 0.3s;
+    transition: background 0s 0.3s linear;
     transition-duration: 0.3s, 0.3s;
-  transition-delay: 0.3s, 0s;
+  transition-delay: 0.3s, 0s linear;
 }
 header > .content .top.active > .toggle > span:last-child{
     transition-property: bottom, transform;
     transform: rotate(-45deg);
     margin-top: -7px;
-    transition: background 0s 0.3s;
+    transition: background 0s 0.3s linear;
     transition-duration: 0.3s, 0.3s;
-  transition-delay: 0.3s, 0s;
+  transition-delay: 0.3s, 0s linear;
 }
 header > .content .top.active > .toggle > span:nth-child(2){
     display: none;
@@ -69402,7 +69404,7 @@ header > .content .top.active > .toggle > span:nth-child(2){
 header > .content .top .toggle span:first-child,
 header > .content .top .toggle span,
 header > .content .top .toggle span:last-child{
-transition: background 0s 0.3s;
+transition: background 0s 0.3s linear;
 }
 } 
 /*UF-373 end*/
@@ -69860,4 +69862,105 @@ body .right-account .order-history .cancellation-request-block.success>div h2.tr
 }
 body .account .right-account .info.card-list h2 {
     height: auto;	/* TISPRDT-1501 fix */
+}
+
+
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.trackOrder_ff1c47:before {
+	background-color: #7ed321;
+    box-shadow: none; }
+    body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.trackOrder_ffc200:before {
+	background-color: #7ed321;
+    box-shadow: none;}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot.not-processed:before {
+    background-color: #7ed321;
+    box-shadow: none;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:last-of-type{
+		float: right;
+    	left: 16px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:not(:last-child):before{
+		content: '';
+    border-bottom: 3px solid #ddd;
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.paymentStatus:before,
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.full_track:before{
+    border-bottom: 3px solid #7ed321;
+}
+body .account .right-account .order-history.order-details li.item .status{
+	display: table;
+}
+body .account .right-account .order-history.order-details li.item .status .nav{
+	display: table-footer-group;
+}
+body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
+	text-align: left;
+    padding-left: 0 !important;
+}
+body .right-account .order-details .deliveryTrack .dot-arrow{
+	display: none !important;
+}
+body .account .right-account .order-history.order-details li.item .status .message{
+	width: 100% !important;
+	border-radius: 2px;
+	    border: none;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.24), 0 0 4px 0 rgba(0,0,0,0.12);
+}
+body .account .right-account .order-history.order-details li.item .status .message *{
+	color: #000 !important;
+	font-weight: normal;
+	text-align: center;
+}
+ body .account .right-account .order-history.order-details li.item .status .message:after{
+	content: "";
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #fff;
+    position: absolute;
+    top: 28px;
+    left: 50%;
+    z-index: 1001;
+} 
+.status.statusConfirmed span, .status.statusShipped span, .status.statusDelivered span{
+	display: none;
+}
+.status.statusConfirmed{
+    background: url(../images/my-account-sprite-v1.png) no-repeat -91px 0px;
+    height: 30px;
+    width: 68px;
+    float: right;
+}
+.status.statusShipped{
+    background: url(../images/my-account-sprite-v1.png) no-repeat -161px 0px;
+    height: 30px;
+    width: 82px;
+    float: right;
+}
+.status.statusDelivered{
+    background: url(../images/my-account-sprite-v1.png) no-repeat -240px 0px;
+    height: 30px;
+    width: 82px;
+    float: right;
+}
+.statusDate{
+	clear: both;
+}
+@media (max-width: 790px){
+.responsiveProfile .status span {
+    top: auto;
+    right: auto;
+}
+}
+@media (max-width: 650px){
+.responsiveProfile .status span {
+    top: auto;
+    right: auto;
+}
 }

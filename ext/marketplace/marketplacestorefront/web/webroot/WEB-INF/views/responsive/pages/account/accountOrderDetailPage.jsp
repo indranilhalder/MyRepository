@@ -89,13 +89,13 @@
 							<ul>
 							
 								<li><span>Order #</span>${subOrder.code}</li>
-								<li><span><spring:theme
+								<li class="placed_date"><span><spring:theme
 											code="text.orderHistory.order.place" text="Placed on:" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
 										
 										<!-- Commented for TPR-6013 Order History -->
-								<li><span>Total: </span> 
+								<li class="price"><span>Total: </span> 
 								<!-- TISSIT-1773 -->
 								<format:price	priceData="${subOrder.totalPrice}" />
 								
@@ -1788,7 +1788,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
+														<p class="track-order-pickup">${entry.mplDeliveryMode.name}</p><span>: </span> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -3291,7 +3291,8 @@ $("#saveBlockData").click(function(){
 			}
 		   
 		  <!-- End of  AWB Jquery codes PopUp  -->
-		  });  
+		  }); 
+		  $("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
 		</script>
 
 		<!--   AWB CSS for PopUp -->
@@ -3510,7 +3511,7 @@ body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
 body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
-body .account .editIconCSS{
+body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span{
 	display: none !important;
 }
 
@@ -3541,7 +3542,7 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 }
 body .account .right-account .order-history.order-details li.header .delivery-address{
 	padding: 0;
-    width: 100%;
+   /*  width: 100%; */
     font-size: 12px;
     line-height: 1.33;
     letter-spacing: 0.8px;
@@ -3563,6 +3564,11 @@ body .account .right-account .order-history.order-details .product-block{
 }
 body .account .right-account .order-history.order-details li.header>ul{
 	margin-bottom: 16px;
+	width: 50%;
+	float: left;
+}
+body .account .right-account .order-history.order-details li.header>ul> li{
+	width: 100%;
 }
 body.page-order .body-Content,
 body .account .right-account .order-history.order-details li.item{
@@ -3588,6 +3594,8 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
 	width: auto;
     padding-left: 45px;
+    /* max-width: 102px; */
+    vertical-align: top;
 }
 body .account .right-account .order-history .product-block li.item .attributes{
 	margin-top:0px;
@@ -3603,7 +3611,26 @@ body .account .right-account .order-history .product-block li.item .attributes p
     display: inline !important;
     width: auto !important;
 }
-
+body .account .right-account .order-history.order-details li.item .status.suman ul.nav li,
+body .account .right-account .order-history.order-details li.item .status.suman ul.progtrckr.tabs li{
+	width: 25%;
+}
+body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.nav li,
+body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.progtrckr.tabs li{
+	width: 20%;
+}
+body .account .right-account .order-history.order-details li.header>ul>li.placed_date {
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+}
+body .account .right-account .order-history.order-details li.header>ul>li.price,
+body .account .right-account .order-history.order-details li.header>ul>li.recipient {
+display: none;
+}
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
@@ -3620,11 +3647,13 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 @media (max-width: 500px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
     padding-left: 22px;
+    /* max-width: 82px; */
 }
 }
 @media (max-width: 386px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    padding-left: 18px;
+    padding-left: 15px;
+    /* max-width: 70px; */
 }
 }
 </style>
