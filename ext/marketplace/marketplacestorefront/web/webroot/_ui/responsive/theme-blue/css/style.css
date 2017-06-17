@@ -70812,3 +70812,14 @@ span#juspayErrorMsg{
     }
 }
 /* TISSTRT-1620 end */
+/* TISBBC-12 start */
+@media (min-width: 640px){
+.findStoresNearMe{
+      margin-top: 20px !important;
+	  }
+	  }
+
+.container_store_finder #storeFinderForm{
+     margin-top: 20px;
+	 }
+/* TISBBC-12 end */
