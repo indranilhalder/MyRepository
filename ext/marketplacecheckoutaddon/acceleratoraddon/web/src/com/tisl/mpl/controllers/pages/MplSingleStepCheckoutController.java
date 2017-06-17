@@ -4216,10 +4216,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			if (mplCartFacade.hasEntries())
 			{
 				//Fetch delivery point of service before recalculation of cart
-				CartModel cartModelBeforeRecalculation = null;
+				//	CartModel cartModel = null;
 				final Map deliveryPOSMap = new HashMap();
-				cartModelBeforeRecalculation = cartService.getSessionCart();
-				for (final AbstractOrderEntryModel entry : cartModelBeforeRecalculation.getEntries())
+				cartModel = cartService.getSessionCart();
+				for (final AbstractOrderEntryModel entry : cartModel.getEntries())
 				{
 					if (entry.getDeliveryPointOfService() != null)
 					{
@@ -4227,15 +4227,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					}
 				}
 				final CartModificationData cartModification = mplCartFacade.updateCartEntry(entryNumber, 0);
-				cartModel = cartService.getSessionCart();
+				//	cartModel = cartService.getSessionCart();
 				//Fetch delivery address before recalculation of cart
 				final AddressData addressData = mplCustomAddressFacade.getDeliveryAddress();
 
 				mplCouponFacade.releaseVoucherInCheckout(cartModel);
 				mplCartFacade.getCalculatedCart(cartModel);
-				mplCartFacade.setCartSubTotal(cartModel);
-				mplCartFacade.totalMrpCal(cartModel);
-
 
 				if (cartModification.getQuantity() == 0)
 				{
@@ -4257,13 +4254,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
 							session.removeAttribute("deliveryMethodForm");
 						}
+						applyPromotions();
+						mplCartFacade.setCartSubTotal(cartModel);
+						mplCartFacade.totalMrpCal(cartModel);
+
 						//Re-populating delivery address after recalculation of cart
 						getMplCustomAddressFacade().setDeliveryAddress(addressData);
 						//Re-populating delivery point of service after recalculation of cart
-						if (cartModelBeforeRecalculation != null)
-						{
-							getMplCheckoutFacade().rePopulateDeliveryPointOfService(deliveryPOSMap, cartModel);
-						}
+						getMplCheckoutFacade().rePopulateDeliveryPointOfService(deliveryPOSMap, cartModel);
+
 						final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 						Map<String, MarketplaceDeliveryModeData> deliveryModeDataMap = new HashMap<String, MarketplaceDeliveryModeData>();
 						deliveryModeDataMap = mplCartFacade.getDeliveryModeMapForReviewOrder(cartData);
@@ -4310,7 +4309,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4368,7 +4367,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
