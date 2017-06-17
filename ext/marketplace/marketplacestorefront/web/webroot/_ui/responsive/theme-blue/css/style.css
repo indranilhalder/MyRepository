@@ -45759,6 +45759,7 @@ body .account .right-account .password h2,body .account .right-account .signOut 
 	font-size: 16px;
 	margin-bottom: 2px;
 	line-height: 16px;
+	height: auto;		/* TISPRDT-1519 */
 }
 body .account .right-account .info.card-list h2{
 	margin-bottom: 0;
