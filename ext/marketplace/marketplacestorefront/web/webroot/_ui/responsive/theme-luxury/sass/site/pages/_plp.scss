@@ -247,6 +247,11 @@
                     span.sale-price{
                         padding-left: 20px;
 					}
+					@include media-breakpoint-down(sm) {
+					span.sale-price{
+                        padding-left: 10px;
+					}
+					}
 				}
 			}
 			.hover{
@@ -697,3 +702,9 @@
 		 }
 	}
 } 
+
+@include media-breakpoint-up(sm) {
+	.plp-wrapper .right-side-content .product-list-wrapper .product-grid .price-sec span.sale-price {
+		padding-left: 10px; 
+	}
+}

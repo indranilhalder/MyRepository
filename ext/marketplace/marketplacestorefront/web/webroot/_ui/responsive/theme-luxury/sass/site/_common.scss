@@ -511,6 +511,11 @@ footer{
       100% { transform: rotate(360deg); }
     }
 }
+  @include media-breakpoint-down(sm) {
+    	.loader:after {
+    		left: 34%; 
+    	}
+    }
 
 /*Loader CSS start */
 
@@ -568,4 +573,4 @@ video::-webkit-media-controls {
 }
 .error-message{
     color:$red;
-}
+} 
