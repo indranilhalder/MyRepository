@@ -16535,6 +16535,7 @@ body .account .right-account .order-history.order-details li.header div.delivery
 body .account .right-account .order-history.order-details li.header div.delivery-address address{
 	    font-size: 12px;
 	    word-wrap: break-word; /* TISSTRT-1507 */
+	    color: #666666;			/* TPR-6013 */
 }
 body .account .right-account .order-history.order-details li.header div h3{
     font-weight: 600
@@ -16645,6 +16646,17 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 body .account .right-account .order-history.order-details li.item:not(.in-store) .item-header,
 body .account .right-account .order-history.order-details li.item:not(.in-store) .item-fulfillment {
     display: none
+}
+body .account .right-account .order-history.order-details li.item#shipping-track-order:not(.in-store) .item-header{
+	display: block;
+}
+body .account .right-account .order-history.order-details li.item#shipping-track-order:not(.in-store) .item-header h2{
+	background-color: transparent;			/* TPR-6013 */
+	color:#000;				/* TPR-6013 */
+	font-weight: 600;		/* TPR-6013 */
+}
+body .account .right-account .order-history.order-details li.item#shipping-track-order:not(.in-store) .item-header{
+	border-bottom: 0;
 }
 body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
     display: block;
@@ -45983,10 +45995,12 @@ body .right-account .order-history .cancellation-request-block.success>div>h2.tr
 	line-height: 1.5;
 }
 body .account .right-account .order-history.order-details li.header div.delivery-address h2{
-	font-size: 14px;
-	margin-bottom: 0;
+	font-size: 16px;
+    margin-bottom: 0;
     font-weight: 600;
     letter-spacing: normal;
+    height: 16px;
+    margin-bottom: 16px;
 }
 #deleteReview .modal-dialog .modal-header>h1{
 	font-size: 100%;
@@ -69702,6 +69716,7 @@ body .account .right-account .order-history.order-details li.header>ul>li:first-
   	text-align: left;
   	color: #000000;
   	margin-bottom: 2px;
+  	font-weight: 600;
 }
 body .account .right-account .order-history.order-details li.header>ul>li:last-child{
 	height: 16px;
@@ -69736,6 +69751,7 @@ body .account .right-account .order-history.order-details li.header .payment-met
   	text-align: left;
   	color: #000000;
   	margin-bottom: 16px;
+  	font-weight: 600;
 }
 body .account .right-account .order-history.order-details li.header .payment-method > h2 + span{
 	
@@ -69802,9 +69818,11 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
 }
 body .account .right-account .order-history.order-details li.header div.totals{
 	padding-top: 0;
+	float:left;
 }
 body .account .right-account .order-history.order-details li.header div.payment-method{
 	padding-top: 48px;
+	color: #666;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:first-child span.startOfStart {
     display: none;

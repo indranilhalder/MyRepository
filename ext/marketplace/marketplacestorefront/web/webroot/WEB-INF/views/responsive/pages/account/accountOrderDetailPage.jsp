@@ -95,7 +95,7 @@
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
 										
 										<!-- Commented for TPR-6013 Order History -->
-								<li class="price"><span>Total: </span> 
+								<%-- <li class="price"><span>Total: </span> 
 								<!-- TISSIT-1773 -->
 								<format:price	priceData="${subOrder.totalPrice}" />
 								
@@ -111,8 +111,8 @@
 								</c:choose>
 								
 								
-								</li>
-								<li class="recipient"><span><spring:theme
+								</li> --%>			<!-- Commented for TPR-6013 Order History  -->
+								<%-- <li class="recipient"><span><spring:theme
 											code="text.orderHistory.recipient" /></span> <c:choose>
 										<c:when test="${subOrder.deliveryAddress != null}">
 												${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName}
@@ -120,7 +120,7 @@
 										<c:otherwise>
 												${subOrder.mplPaymentInfo.cardAccountHolderName}
 												</c:otherwise>
-									</c:choose></li>
+									</c:choose></li> --%>		<!-- Commented for TPR-6013 Order History  -->
 								<%-- <li><span>Order Reference Number: </span> ${subOrder.code}</li> --%>	
 								<!-- Commented for TPR-6013 Order History -->
 								
@@ -128,7 +128,7 @@
 
 
 							<div class="totals" id="anchor">
-								<h2>Total:</h2>
+								<h2>Total</h2>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
@@ -198,7 +198,7 @@
 								
 								<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
 							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
-							<div class="delivery-address">
+							<div class="delivery-address" style="display:none;">
 								<c:if test="${not empty creditCardBillingAddress.firstName}">
 									<h3>Billing Address:</h3>
 									
@@ -247,6 +247,60 @@
 											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 										</address>
 									</c:if> --%>
+							</div>
+							
+							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
+							<div class="delivery-address">
+								<h2>Billing Address</h2>
+								<c:if test="${not empty creditCardBillingAddress.firstName}">
+									<h3>Billing Address:</h3>
+									
+									<address>
+										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
+										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
+										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
+										<c:if test="${not empty creditCardLine2}">
+										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
+										</c:if>
+										<c:if test="${not empty creditCardLine3}">
+														${fn:escapeXml(creditCardBillingAddress.line3)},
+													</c:if>
+										<br>
+										<!-- R2.3: START -->
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
+										<!-- R2.3: END -->
+										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
+										<c:if test="${not empty creditCardBillingAddress.state}">
+														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
+													</c:if>
+										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
+										<br>
+										91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br>
+									</address>
+								</c:if>
+								<c:if test="${empty creditCardBillingAddress.firstName}">
+										<address>
+											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
+											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.line2)},
+											<c:if test="${not empty subOrder.deliveryAddress.line3}">
+														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+													</c:if>
+											<br>
+											${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+											<c:if test="${not empty subOrder.deliveryAddress.state}">
+														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+													</c:if>
+											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;IN
+											<br>
+											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+										</address>
+									</c:if>
 							</div>
 								
 								<!-- TPR-6013 Order History Ends -->
@@ -317,58 +371,7 @@
 							
 							<!-- Commented TPR-6013 Order History Starts -->
 							
-							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
-							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
-							<div class="delivery-address">
-								<c:if test="${not empty creditCardBillingAddress.firstName}">
-									<h3>Billing Address:</h3>
-									
-									<address>
-										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
-										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
-										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
-										<c:if test="${not empty creditCardLine2}">
-										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
-										</c:if>
-										<c:if test="${not empty creditCardLine3}">
-														${fn:escapeXml(creditCardBillingAddress.line3)},
-													</c:if>
-										<br>
-										<!-- R2.3: START -->
-										<c:if test="${not empty creditCardBillingAddress.landmark}">
-														${fn:escapeXml(creditCardBillingAddress.landmark)},
-										</c:if>
-										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
-										<!-- R2.3: END -->
-										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
-										<c:if test="${not empty creditCardBillingAddress.state}">
-														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
-													</c:if>
-										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
-										<br>
-										91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br>
-									</address>
-								</c:if>
-								<c:if test="${empty creditCardBillingAddress.firstName}">
-										<address>
-											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
-											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
-											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
-											${fn:escapeXml(subOrder.deliveryAddress.line2)},
-											<c:if test="${not empty subOrder.deliveryAddress.line3}">
-														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
-													</c:if>
-											<br>
-											${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
-											<c:if test="${not empty subOrder.deliveryAddress.state}">
-														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
-													</c:if>
-											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;IN
-											<br>
-											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
-										</address>
-									</c:if>
-							</div>
+							
 							
 							<!-- Commented TPR-6013 Order History Ends -->
 							
