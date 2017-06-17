@@ -69818,7 +69818,7 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
 }
 body .account .right-account .order-history.order-details li.header div.totals{
 	padding-top: 0;
-	float:left;
+	/* float:left; */
 }
 body .account .right-account .order-history.order-details li.header div.payment-method{
 	padding-top: 48px;
@@ -69930,7 +69930,7 @@ body .right-account .order-details .deliveryTrack .dot-arrow{
 	display: none !important;
 }
 body .account .right-account .order-history.order-details li.item .status .message{
-	width: 100% !important;
+	/* width: 100% !important; */
 	top: 60px !important;
 	border-radius: 2px;
 	    border: none;
@@ -69984,6 +69984,9 @@ body .account .right-account .order-history.order-details li.item .status .messa
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
     display: none;
+}
+.trackOrderDelivery{
+	display:none;
 }
 @media (max-width: 790px){
 .responsiveProfile .status span {
