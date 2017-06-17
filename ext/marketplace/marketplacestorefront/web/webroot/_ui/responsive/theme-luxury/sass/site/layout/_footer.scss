@@ -130,9 +130,11 @@ footer{
 					border-right:1px solid #eeddbb;
 					border-top-left-radius: $border-radius-large;
 					border-bottom-left-radius: $border-radius-large;
+                     height: 50px;
 				}
 				.gender{
 					border-right:1px solid #eeddbb;
+                     height: 50px;
 				}
 				.btn{
 					border-top-left-radius: 0px;
@@ -142,6 +144,7 @@ footer{
                     background-color: $gold-dark;
 					color:$btn-default-bg;
 					padding:14px;
+                     height: 50px;
 				}
 			}
             .selectboxit-options.selectboxit-list{
@@ -155,6 +158,9 @@ footer{
 			    border-left: 7px solid transparent;
 			    top:61%;
 			}
+            .selectboxit-container{
+                height: 50px;
+            }
 		}
 	}
 
@@ -250,7 +256,7 @@ footer{
 					&:last-child{
 						&:before{
 							background-position: -1800px 0;
-                            width: 64px;
+                            width: 55px;
                             height: 45px;
 						}
 					}
@@ -463,8 +469,10 @@ footer{
 			display:none;
 			.signup-email-wrapper{
 				.signup-email{
+                    
 					.email,.gender,.btn{
 						border-radius: $border-radius-large;
+                        
 					}
 				}
 			}
