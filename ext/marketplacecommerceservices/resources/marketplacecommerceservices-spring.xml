@@ -428,6 +428,7 @@
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplPaymentServiceImpl">
 		<property name="mplPaymentDao" ref="mplPaymentDao" />
 		<property name="discountUtility" ref="discountUtility" />
+		<property name="mplJusPayRefundService" ref="mplJusPayRefundService" /> <!-- Added for TPR-1348 AutoReefundInitiate -->
 	</bean>
 
 
