@@ -1,3 +1,9 @@
+//-----------------------------COMMENTS------------------------------------------------------------------//
+//	ACC.singlePageCheckout.js contains code relevant to single page checkout only. Ajax calls fired in 
+//	this js are mostly directed to MplSingleStepCheckoutController.java, With a few methods also directed to
+//	DeliveryMethodCheckoutStepController.java. PaymentMethodCheckoutStepController.java will come into picture once 
+//	PlaceOrder button is clicked.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-----------------------------COMMENTS ON DIV USED TO DISPLAY ERROR MESSAGE-----------------------------//
 //	1.newAddressMobileErrorMessage	:	Used to display error messages in case of new address in responsive
 //	2.addressMessage				:	Common div Used to display error messages in case of new address in responsive and web, For example validation errors.
@@ -36,7 +42,7 @@ ACC.singlePageCheckout = {
 		}
 		return message;
 	},
-	
+	//Function used to refresh delivery address owl carousel once a new address is added or an existing address edited.
 	getDeliveryAddresses:function(element){
 		
 		var url=ACC.config.encodedContextPath + "/checkout/single?isAjax=true&isResponsive="+ACC.singlePageCheckout.getIsResponsive();
@@ -131,7 +137,7 @@ ACC.singlePageCheckout = {
    
 		return false;	
 	},
-	
+	//Function used to fetch edit address form. 
 	getEditAddress:function(element,event){
 		event.preventDefault();
 		//The ajax loader is loaded here and hidden in last line of showEditAddressDetails.jsp
@@ -161,7 +167,7 @@ ACC.singlePageCheckout = {
         
 		return false;	
 	},
-	
+	//Function used to post previously fetched and edited address form.
 	postEditAddress:function(element){
 		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
@@ -211,7 +217,7 @@ ACC.singlePageCheckout = {
 		}
 		return false;	
 	},
-	
+	//Function used to get new address form.
 	getAddAddress:function(){
 		//The ajax loader is loaded here and hidden in last line of showAddAddressDetails.jsp
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -236,7 +242,7 @@ ACC.singlePageCheckout = {
         
 		return false;	
 	},
-	
+	//Function used to post new address form.
 	postAddAddress:function(element){
 		var form=$(element).closest("form");
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
@@ -290,7 +296,8 @@ ACC.singlePageCheckout = {
 		}
 		return false;	
 	},
-	
+	//Function called when proceed button on delivery options page is clicked. 
+	//This function will fetch slot delivery page or will proceed to review order page
 	proceedOnDeliveryModeSelection:function(element){
 		var entryNumbersId=$("#entryNumbersId").val();
 		var isCncPresent=$("#isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
@@ -305,14 +312,15 @@ ACC.singlePageCheckout = {
 			var entryNumbers=entryNumbersId.split("#");
 			for(var i=0;i<entryNumbers.length-1;i++)
 			{
-				if($("input[name='"+entryNumbers[i]+"']:checked").length<=0)
+				if($("input[name='"+entryNumbers[i]+"']").length>0 && $("input[name='"+entryNumbers[i]+"']:checked").length<=0)
 				{
-				 alert("No del mode checked");
+				 data={displaymessage:"Please select a delivery option to proceed.",type:"error"};
+				 ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
 				 return false;
 				}
 				if(isCncPresent=="true")
 	        	{
-					if($('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+					if($("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
     				{
         				cncSelected="true";							
 						if($("input[name='address"+entryNumbers[i]+"']:checked").length<=0)
@@ -350,10 +358,10 @@ ACC.singlePageCheckout = {
                 	{
                 		ACC.singlePageCheckout.getReviewOrder();
                 	}
-            		ACC.singlePageCheckout.getSelectedDeliveryModes();
+            		ACC.singlePageCheckout.getSelectedDeliveryModes("");
         		}
             } else {
-            	ACC.singlePageCheckout.getSelectedDeliveryModes();
+            	ACC.singlePageCheckout.getSelectedDeliveryModes("");
             	
             	//else
             	{
@@ -399,7 +407,7 @@ ACC.singlePageCheckout = {
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
 	},
-	
+	//Used to validate address form for mobile and web.
 	validateAddressForm:function(){
 		ACC.singlePageCheckout.formValidationErrorCount=0;
 		var errorCount=0;
@@ -583,7 +591,7 @@ ACC.singlePageCheckout = {
 			return true;
 		}
 	},
-	
+	//Function called when ever a user clicks on deliverHere/Save and Continue button(for edit and add address) button.
 	proceedOnAddressSelection:function(element,addressId){
 		var form=$(element).closest("form");
 		$("#radio_"+addressId).prop("checked", true);
@@ -659,7 +667,7 @@ ACC.singlePageCheckout = {
 	    })
       }
 	},
-	
+	//Function used to hide CNC store block when a user toggels between HD/ED and CNC
 	attachDeliveryModeChangeEvent:function()
 	{
 		$("#choosedeliveryMode input:radio")
@@ -732,7 +740,7 @@ ACC.singlePageCheckout = {
 		});
 	},
 	
-	getSelectedDeliveryModes:function(){
+	getSelectedDeliveryModes:function(callFrom){
 		var url=ACC.config.encodedContextPath + "/checkout/single/deliveryModesSelected";
 		var data="";
         var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
@@ -770,6 +778,21 @@ ACC.singlePageCheckout = {
                 	
                 	// For Review Order Highlight Display
                 	$("#selectedReviewOrderHighlight").html(data.CountItems + " Items, " + data.totalPrice);
+                	
+                	if(callFrom=="removeCartItem")
+                	{
+                		$.each(data.deliveryDetails,function(entryNumber,obj){
+                		    console.log("entryNumber="+entryNumber);	
+                		    console.log("obj.deliveryMode="+obj.deliveryMode);
+                		    console.log("obj.ussid="+obj.ussid);
+                		    $("#radio_"+entryNumber+"_"+obj.deliveryMode).prop('checked', true);
+                		    if(obj.deliveryMode=="click-and-collect" && typeof(obj.storeName)!='undefined' && obj.storeName!="")
+                		    {
+                		    	console.log("obj.storeName="+obj.storeName);
+                		    	ACC.singlePageCheckout.fetchStores(entryNumber,obj.ussid,obj.deliveryMode,callFrom,obj.storeName);
+                		    }
+                		});
+                	}
                 }
             }
 		});
@@ -784,7 +807,7 @@ ACC.singlePageCheckout = {
 		});
 	},
 	
-	fetchStores:function(entryNumber,sellerArticleSKU,deliveryCode)
+	fetchStores:function(entryNumber,sellerArticleSKU,deliveryCode,callFrom,storeName)
 	{
 		ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/cncStores";
@@ -878,8 +901,14 @@ ACC.singlePageCheckout = {
         		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
         			event.stopPropagation();
         		});
+        		
+        		//After remove from cart in review order page, Pre select store name using the code below
+        		if(callFrom=="removeCartItem")
+        		{
+        		    $("#cncStoreContainer"+entryNumber).find("[data-storeName='"+storeName+"']").prop('checked', true);
+        		}
             }
-		});
+		}); 
         
         xhrResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();
@@ -1377,12 +1406,33 @@ removeExchangeFromCart : function (){
 	        				}
 	        			});
 	        		//END:Code to show strike off price
-	        		var entryNumbers=$("#entryNumbersId").val();
-	        		var removeEntryNo=entryNumber+"#";
-	        		$("#entryNumbersId").val(entryNumbers.replace(removeEntryNo,""));
-	        		$("#delmode_item_li_"+entryNumber).remove();
-	        		ACC.singlePageCheckout.getSelectedDeliveryModes();
+//	        		var entryNumbers=$("#entryNumbersId").val();
+//	        		var removeEntryNo=entryNumber+"#";
+//	        		$("#entryNumbersId").val(entryNumbers.replace(removeEntryNo,""));
 	        		
+//	        		//Updating delivery options based on item removed from review order page at client side
+//	        		var matchingElements=[];
+//	        		var latestEntryNumbers="";
+//	        		$.each($("li.item.delivery_options"),function(i,li_deloptions){
+//	        			$.each($("li.item.review_order_li"),function(index,li_revieworder){
+//		        			if($(li_deloptions).attr("data-ussid")==$(li_revieworder).attr("data-ussid"))
+//		        			{
+//		        				matchingElements.push(li_deloptions);
+//		        			}
+//		        		});
+//	        		});
+//	        		$( "li.item.delivery_options" ).not(matchingElements).remove();
+//	        		
+//	        		//Updating entry number id's present in the cart delivery options at present
+//	        		//Note: Entry number might not be correct at client side for delivery options as entry number is subject to change on removal.
+//	        		//But it should not cause 
+//	        		$.each($("li.item.delivery_options"),function(index,li_deloptions){
+//	        			latestEntryNumbers=latestEntryNumbers+$(li_deloptions).attr("data-entryNumber")+"#";
+//	        		});
+//	        		$("#entryNumbersId").val(latestEntryNumbers);
+	        		
+	        		//ACC.singlePageCheckout.getSelectedDeliveryModes("");
+	        		ACC.singlePageCheckout.getDeliverOptionsPage("removeCartItem");
 	            }
 			});
 	        
@@ -1393,6 +1443,32 @@ removeExchangeFromCart : function (){
 //        		}
 	        	ACC.singlePageCheckout.hideAjaxLoader();
 	        });
+	},
+	//Function used to refresh delivery options page once an item is removed in review order
+	getDeliverOptionsPage:function(callFrom)
+	{
+		var url=ACC.config.encodedContextPath + "/checkout/single/choose?isCallAfterRemoveCartItem=true";
+		var data="";
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+        	if (jqXHR.responseJSON) {
+        		if(data.type!="response")
+                {
+        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+                }
+            } 
+        	else {
+        		$("#choosedeliveryMode").html(data);
+        		
+        		ACC.singlePageCheckout.getSelectedDeliveryModes(callFrom);
+        	}
+        });
+        
 	},
 	addToWishlistForReviewCart:function(ussid,productCode,alreadyAddedWlName)
 	{
@@ -1475,8 +1551,9 @@ removeExchangeFromCart : function (){
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 		return xhrResponse;
 	},
-	proceedWithPaymentForResponsive:function(){
+	proceedWithPaymentForResponsive:function(paymentMode){
 		ACC.singlePageCheckout.showAjaxLoader();
+		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
@@ -1486,7 +1563,8 @@ removeExchangeFromCart : function (){
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
                 {
-        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+        			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+            		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
                 }
         		else if(data.type=="response" && data.validation=="success")
     			{
@@ -1499,8 +1577,36 @@ removeExchangeFromCart : function (){
 	    				$("#selectedReviewOrderDivId").show();
 	    	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
 	    	      	}*/
+        			//If data.validation=="success" set prePaymentValidationDone to true
+        			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
+        			
+        			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
+        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
+        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        			});
+        	        
+        			xhrResponse.done(function(data, textStatus, jqXHR) {
+        	        	if (jqXHR.responseJSON) {
+        	        		if(data.type!="response")
+        	                {
+        	        			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+        	                }
+        	            }
+        	        	else
+    	        		{	//Updating order total div
+        	        		$("#oredrTotalSpanId").html(data);
+        	        		//Open payment mode form//apply promotion is called within
+                    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+    	        		}
+        	        });
+        			
+            		//If delivery modes will be changed all the validation flags will be reset.
+            		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
+            		
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
-	    	        populateAddress();
+        			populateAddress();
 	    	        populateAddressEmi();
     			}
         		else
@@ -1518,6 +1624,7 @@ removeExchangeFromCart : function (){
 	
 	proceedToPayment:function(element){
 		ACC.singlePageCheckout.showAjaxLoader();
+		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
@@ -1531,9 +1638,8 @@ removeExchangeFromCart : function (){
                 }
         		else if(data.type=="response" && data.validation=="success")
     			{
-        			var url = ACC.config.encodedContextPath + "/checkout/single/payment/orderDetails";
-        			var data = "";			
-        			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+        			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
+        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
         			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
         				console.log("ERROR:"+textStatus + ': ' + errorThrown);
         			});
@@ -1548,6 +1654,8 @@ removeExchangeFromCart : function (){
         	        	else
     	        		{	//Updating order total div
         	        		$("#oredrTotalSpanId").html(data);
+        	        		$("#selectedReviewOrderDivId").show();
+            				callOnReady();//This method is in showAddPaymentMethod.jsp
     	        		}
         	        });
         			
@@ -1555,8 +1663,6 @@ removeExchangeFromCart : function (){
         			$("#totalWithConvField").html(data.totalPrice);
         			$("#oredrTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice);*/
     	        	
-    				$("#selectedReviewOrderDivId").show();
-    				callOnReady();//This method is in showAddPaymentMethod.jsp
     	        	ACC.singlePageCheckout.showAccordion("#makePaymentDiv");
 	    	        //Calling the below methods to populate the latest shipping address(These methods are in marketplacecheckoutaddon.js)
 	    	        populateAddress();
@@ -1573,6 +1679,14 @@ removeExchangeFromCart : function (){
         xhrResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
+	},
+	
+	getOrderTotalsTag:function()
+	{
+		var url = ACC.config.encodedContextPath + "/checkout/single/payment/orderDetails";
+		var data = "";			
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+		return xhrResponse;
 	},
 	
 	showAjaxLoader:function(){
@@ -1635,6 +1749,7 @@ removeExchangeFromCart : function (){
 //	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
 //	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
 //	8.paymentModeSelected:	Used to track the selected payment mode for responsive
+//	9.prePaymentValidationDone:	Used to track cart validation before payment is made
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	mobileValidationSteps:{
@@ -1645,7 +1760,8 @@ removeExchangeFromCart : function (){
 		selectedAddressId:"",
 		isInventoryReserved:false,
 		isScheduleServiceble:false,
-		paymentModeSelected:""
+		paymentModeSelected:"",
+		prePaymentValidationDone:false
 	},
 
 	resetValidationSteps:function(){
@@ -1657,6 +1773,7 @@ removeExchangeFromCart : function (){
 		ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected="";
+		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2017,10 +2134,6 @@ removeExchangeFromCart : function (){
 	                	{
 	                		//Validate payment in responsive
 	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive();
-	                		//Open payment mode form//apply promotion is called within
-	                		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
-	                		//If delivery modes will be changed all the validation flags will be reset.
-	                		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
@@ -2035,7 +2148,7 @@ removeExchangeFromCart : function (){
 	        	ACC.singlePageCheckout.hideAjaxLoader();
 			});
 		}
-		else if(formValidationSuccess && ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		else if(formValidationSuccess && ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved && ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone)
     	{
     		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
     	}

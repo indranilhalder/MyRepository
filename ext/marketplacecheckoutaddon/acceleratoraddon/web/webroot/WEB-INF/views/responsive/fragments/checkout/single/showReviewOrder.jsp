@@ -46,7 +46,7 @@
 		<input type="hidden" name="hidWishlist" id="hidWishlist">
 
 
-		<li class="item" id="entry-${entry.entryNumber}">
+		<li class="item review_order_li" id="entry-${entry.entryNumber}" data-entryNumber="${entry.entryNumber}" data-ussid="${entry.selectedSellerInformation.ussid}">
 			<ul class="desktop">
 
 				<li class="productItemInfo">
@@ -409,10 +409,10 @@
 					<c:when test="${entry.giveAway}">
 						<li
 							id="${entry.selectedSellerInformation.ussid}_qty_${entry.giveAway}"
-							class="qty">
+							class="qty"></li>
 					</c:when>
 					<c:otherwise>
-						<li id="${entry.selectedSellerInformation.ussid}_qty" class="qty">
+						<li id="${entry.selectedSellerInformation.ussid}_qty" class="qty"></li>
 					</c:otherwise>
 				</c:choose>
 
@@ -443,7 +443,7 @@
 						<option value="${entry.quantity}" selected="selected" >${entry.quantity}</option>
 					</select>
 				</form>
-		</li>
+		
 
 
 		<c:choose>
@@ -453,6 +453,8 @@
 					id="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}"
 					class="delivery freebie-delivery">
 					<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">
+					</ul>
+				</li>
 			</c:when>
 			<c:otherwise>
 				<li id="${entry.selectedSellerInformation.ussid}_li"
@@ -496,12 +498,13 @@
 						</c:otherwise>
 					</c:choose>				
 					<ul id="${entry.selectedSellerInformation.ussid}">
+					</ul>
+				</li>
 			</c:otherwise>
 		</c:choose>
 
-</ul>
-</li>
-</ul>
+
+	</ul>
 
 </li>
 </c:forEach>
