@@ -4268,6 +4268,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						deliveryPOSMap.put(entry.getSelectedUSSID(), entry.getDeliveryPointOfService());
 					}
 				}
+				//TPR-1083 Start
+				if (cartModel.getExchangeAppliedCart() != null && cartModel.getExchangeAppliedCart().booleanValue())
+				{
+					exchangeGuideFacade.removeExchangefromCart(cartModel);
+				}
+				//TPR-1083 End
 				final CartModificationData cartModification = mplCartFacade.updateCartEntry(entryNumber, 0);
 				//	cartModel = cartService.getSessionCart();
 				//Fetch delivery address before recalculation of cart
@@ -4354,7 +4360,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4412,7 +4418,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
