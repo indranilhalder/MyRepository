@@ -31,7 +31,7 @@
 											<input class="radio_btn radio_btn${entryNumber}"
 											type="radio" name="address${entryNumber}"
 											id="address${entryNumber}${status.index}"
-											value="address${status.index}">
+											value="address${status.index}" data-storeName="${pos.name}">
 											<div class='pin bounce'>
 												<span class="text_in">${status.count}</span>
 											</div> <label

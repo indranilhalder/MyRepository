@@ -50,7 +50,7 @@
 						<c:forEach items="${cartData.entries}" var="entry">
 								<c:url value="${entry.product.url}" var="productUrl" />
 				
-								<li class="item delivery_options" id="delmode_item_li_${entry.entryNumber}">
+								<li class="item delivery_options" data-entryNumber="${entry.entryNumber}" data-ussid="${entry.selectedSellerInformation.ussid}">
 								<ul>
 									<li>
 											<div class="thumb product-img">
@@ -246,7 +246,7 @@
 																	</c:when>
 																	<c:when test="${delMode.code eq 'click-and-collect'}">
 																			<li class="${delMode.code }">
-																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
@@ -254,7 +254,7 @@
 																		<c:if test="${delModeChecked eq 'false'}">
 																			<script>
 																				$(document).ready(function(){
-																					ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }');
+																					ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');
 																				});
 																			</script>
 																		</c:if>

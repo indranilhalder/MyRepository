@@ -1600,15 +1600,31 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 	}
 
-	public String prepareModelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
+	private void prepareModelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
+			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
+	{
+		final CartModel serviceCart = cartModel;
+		mplCouponFacade.releaseVoucherInCheckout(serviceCart);
+		mplCartFacade.removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
+		modelForDeliveryMode(model, cartModel);
+	}
+
+	private void prepModelForDelModeWdoutRemDlMod(final Model model, final CartModel cartModel) throws VoucherOperationException,
+			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
+	{
+		final CartModel serviceCart = cartModel;
+		mplCouponFacade.releaseVoucherInCheckout(serviceCart);
+		//mplCartFacade.removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
+		modelForDeliveryMode(model, cartModel);
+	}
+
+	private String modelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
 			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		List<PinCodeResponseData> responseData = null;
 		final CartModel serviceCart = cartModel;
-		mplCouponFacade.releaseVoucherInCheckout(serviceCart);
-		mplCartFacade.removeDeliveryMode(serviceCart); //TISPT-104 // Cart recalculation method invoked inside this method
 		final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
 		final String defaultPinCodeId = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 
@@ -1700,7 +1716,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
 	public String enterDeliveryModeStep(final Model model, final RedirectAttributes redirectAttributes,
-			@RequestParam(required = false, defaultValue = "false") final boolean isResponsive) throws UnsupportedEncodingException
+			@RequestParam(required = false, defaultValue = "false") final boolean isResponsive,
+			@RequestParam(required = false, defaultValue = "false") final boolean isCallAfterRemoveCartItem)
+			throws UnsupportedEncodingException
 	{
 		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 		try
@@ -1730,7 +1748,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 
-			prepareModelForDeliveryMode(model, serviceCart);
+			if (isCallAfterRemoveCartItem)
+			{
+				prepModelForDelModeWdoutRemDlMod(model, serviceCart);
+			}
+			else
+			{
+				prepareModelForDeliveryMode(model, serviceCart);
+			}
 			//final String is_responsive = getSessionService().getAttribute(MarketplacecommerceservicesConstants.IS_RESPONSIVE);
 
 			if (isResponsive)
@@ -3247,6 +3272,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public @ResponseBody JSONObject deliveryModesSelected()
 	{
 		final JSONObject jsonObject = new JSONObject();
+		JSONObject jsonObjectSelected = null;
+		final JSONObject jsonEntryWiseDelMode = new JSONObject();
 		int homeDelivery = 0;
 		int expressDelivery = 0;
 		int clickNcollect = 0;
@@ -3256,7 +3283,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			for (final OrderEntryData cartD : cartData.getEntries())
 			{
+				jsonObjectSelected = new JSONObject();
 				final MarketplaceDeliveryModeData marketplaceDeliveryModeData = cartD.getMplDeliveryMode();
+
+				jsonObjectSelected.put("ussid", cartD.getSelectedUssid());
+				jsonObjectSelected.put("deliveryMode", marketplaceDeliveryModeData.getCode());
 				if (marketplaceDeliveryModeData.getCode().equalsIgnoreCase("home-delivery"))
 				{
 					homeDelivery++;
@@ -3265,10 +3296,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				{
 					expressDelivery++;
 				}
-				if (marketplaceDeliveryModeData.getCode().equalsIgnoreCase("click-and-collect"))
+				if (!cartD.isGiveAway() && marketplaceDeliveryModeData.getCode().equalsIgnoreCase("click-and-collect"))
 				{
+					jsonObjectSelected.put("storeName", cartD.getDeliveryPointOfService().getName());
 					clickNcollect++;
 				}
+				jsonEntryWiseDelMode.put(cartD.getEntryNumber().toString(), jsonObjectSelected);
 				countItems++;
 			}
 			jsonObject.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
@@ -3276,8 +3309,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			jsonObject.put("ed", expressDelivery);
 			jsonObject.put("cnc", clickNcollect);
 			jsonObject.put("CountItems", countItems);
+			jsonObject.put("deliveryDetails", jsonEntryWiseDelMode);
 			jsonObject.put("type", "response");
-
 		}
 		catch (final JSONException e)
 		{
@@ -3429,6 +3462,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@RequestMapping(value = "/payment/orderDetails", method = RequestMethod.GET)
 	public String getOrderDetailsTag(final Model model)
 	{
+		final CartModel cartModel = getCartService().getSessionCart();
+		//UF-260
+		GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 		final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(false);
 		model.addAttribute("cartData", cartData);
 		model.addAttribute("isCart", Boolean.TRUE);
@@ -4258,12 +4294,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							finalDeliveryCost = populateMplZoneDeliveryMode(deliveryMethodForm, cartModel);
 							final Map<String, Map<String, Double>> deliveryChargePromotionMap = null;
 							getMplCheckoutFacade().populateDeliveryCost(finalDeliveryCost, deliveryChargePromotionMap, cartModel); //TIS 400
-							session.removeAttribute("deliveryMethodForm");
+							//session.removeAttribute("deliveryMethodForm");
 						}
-						applyPromotions();
-						//mplCartFacade.setCartSubTotal(cartModel);
-						//mplCartFacade.totalMrpCal(cartModel);
+						final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
+						final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
+						applyPromotions();
+
+						//populate freebie data
+						populateFreebieProductData(cartModel, freebieModelMap, freebieParentQtyMap);
 						//Re-populating delivery address after recalculation of cart
 						getMplCustomAddressFacade().setDeliveryAddress(addressData);
 						//Re-populating delivery point of service after recalculation of cart
@@ -4315,7 +4354,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4373,7 +4412,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
