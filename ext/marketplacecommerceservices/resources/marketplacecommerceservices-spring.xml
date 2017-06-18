@@ -429,6 +429,7 @@
 		<property name="mplPaymentDao" ref="mplPaymentDao" />
 		<property name="discountUtility" ref="discountUtility" />
 		<property name="mplJusPayRefundService" ref="mplJusPayRefundService" /> <!-- Added for TPR-1348 AutoReefundInitiate -->
+		<property name="mplMWalletRefundService" ref="mplMWalletRefundService" />  <!-- Added for TPR-1348 AutoReefundInitiate -->
 	</bean>
 
 
