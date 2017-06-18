@@ -515,6 +515,17 @@
 											<!-- TISEE-6290 -->
 										</p>
 									</c:if>
+									<!-- TPR 1083 Start -->
+						  <c:if test="${not empty entry.exchangeApplied}">
+		              			<p class="cart_exchange">
+
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</p>
+			              		</c:if>
+			              		<!-- TPR 1083 End -->
+									
 									<c:if test="${not paymentError}">
 										<p>
 											<spring:message code="text.orderHistory.seller.order.number"></spring:message>
@@ -1730,6 +1741,16 @@
 											<span>${sellerOrder.code}</span>
 										</p>
 										
+										<!-- TPR 1083 Start -->
+						  <c:if test="${not empty entry.exchangeApplied}">
+		              			<p class="cart_exchange">
+
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</p>
+			              		</c:if>
+			              		<!-- TPR 1083 End -->
 											
 
 							<!--R2.3 TISRLEE-1615- Start   -->

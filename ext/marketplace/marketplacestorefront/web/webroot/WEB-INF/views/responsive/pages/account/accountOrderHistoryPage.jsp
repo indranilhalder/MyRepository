@@ -219,6 +219,16 @@
 														<h2 class="product-name">
 															<a href="${productUrl}">${entry.product.name}</a>
 														</h2>
+														<!-- TPR-1083 Start-->
+														  <c:if test="${not empty entry.exchangeApplied}">
+		              			<p class="cart_exchange">
+
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</p>
+			              		<!-- TPR-1083 End-->
+			              		</c:if>
 														<div class="attributes">
 
 															<p>
