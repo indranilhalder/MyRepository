@@ -1045,6 +1045,7 @@ function isNum(evt) {
 
 
 var pinCodeChecked = false;
+var pinCodeCheckajax=null;
 $(function() {
 
 	var regExp = /^([1-9])([0-9]){5}$/;
@@ -1119,8 +1120,7 @@ $(function() {
 							}
 							var dataString = "pin=" + pin + "&productCode="
 									+ productCode;
-							jQuery
-									.ajax({
+							pinCodeCheckajax=$.ajax({
 										// type: 'POST',
 										contentType : "application/json; charset=utf-8",
 										url : requiredUrl,
@@ -1217,7 +1217,7 @@ $(function() {
 														if (pincodedata['isServicable'] == 'Y') {
 															
 															 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
-															 $('#serviceablePinExc').show();
+															 $('#serviceablePinExc').hide();
 															 $('#wrongPinExc,#unsevisablePinExc,#unableprocessPinExc').hide();
 															 checkBuyBoxIdPresent = true;
 															deliveryModes = pincodedata['validDeliveryModes'];
@@ -3977,6 +3977,9 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#otherSellerLinkId").show();
+						//TPR-1083
+						$("#exchangeStickerId").hide();
+						
 					}
 
 
@@ -3985,6 +3988,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
 						$("#buyNowButton").hide();
+						
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
@@ -3997,6 +4001,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
 						 $("#allVariantOutOfStock").show();
+						//TPR-1083
+							$("#exchangeStickerId").hide();
 						
 					}
 					else if (isOOS() && data['othersSellersCount']==0){
@@ -4016,6 +4022,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
 						 $("#allVariantOutOfStock").show();
+						//TPR-1083
+							$("#exchangeStickerId").hide();
 						 
 						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && ($("#variant li").length == $("#variant li.strike").length)) {
@@ -4025,6 +4033,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#outOfStockId").show();
 						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
+						
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
@@ -4041,6 +4050,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 								$(this).parent().addClass('strike');
 								//$("#outOfStockId").hide();
 						});
+						//TPR-1083
+							$("#exchangeStickerId").hide();
 						
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && ($("#variant li").length == $("#variant li.strike").length)){
@@ -4065,6 +4076,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
+						//TPR-1083
+							$("#exchangeStickerId").hide();
 						
 					}
 					else if (data['othersSellersCount'] == 0) {
@@ -4136,6 +4149,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					 $("#variant li a").parent().addClass("strike");
 				 }
 				 //INC144316346
+				//TPR-1083
+					$("#exchangeStickerId").hide();
 			}
 		},
 		// For buybox seller and other seller in PDP
@@ -4361,6 +4376,7 @@ $(document).ready(function(){
 		document.getElementById("pdpPincodeCheck").className = "Check";
 		$("#exchangeDetails").hide();
 		$("#couponValue").hide();
+	    $("#exPinnotserviceable").hide();
 					
 		pdppin.value = this.value;	
 		pinform.value=this.value;
@@ -4373,12 +4389,19 @@ $(document).ready(function(){
 		
 	});
 
+	
 $("#pdpPincodeCheckExchnage").on("click",function(){
-	
+	//click on PDP pincode Check
 	$( "#pdpPincodeCheck" ).trigger( "click" );
-   
     
-	
+	$.when(pinCodeCheckajax).done(function(pincoeData){
+		
+	for (var i = 0; i < pincoeData.length; i++) {
+		
+		//check pincodeData if it is servicable
+		if (pincoeData[i]['isServicable'] == 'Y') 
+				
+{
   //ajax call to check greendust
 	var dataString = 'pin=' + $("#pinExc").val();
     var reversecheck=false;
@@ -4386,13 +4409,10 @@ $("#pdpPincodeCheckExchnage").on("click",function(){
 	var productCode =  $('#product_id').val();
 	var productArray =[];
 	productArray.push(productCode);
+	
 var req1=$.ajax({
 		url : ACC.config.encodedContextPath + "/p-checkReversePincode",
 		data : dataString,
-		/*data : {
-			'selectedEMIBank' : selectedBank,
-			'productVal' : productVal
-		},*/
 		type : "GET",
 		cache : false,
 		success : function(data) {
@@ -4411,11 +4431,11 @@ var req1=$.ajax({
 		}
 	});
 $.when(req1).done(function(data1){
-	
-	//!$('#buyNowButton').prop('disabled') && $('#serviceablePinExc').is(':visible') 
-    if(data1)
+	if(data1)
     {
-    	   	populateExchangeDetails();
+		//Message for successful pincode check
+		$("#serviceablePinExc").show();
+    	populateExchangeDetails();
     	if(typeof utag !="undefined"){
 			utag.link({
 				event_type : "exchange_pincode_true",
@@ -4425,6 +4445,9 @@ $.when(req1).done(function(data1){
 		}
     }
     else{
+    	//Message for unsuccessful exchange Pincode check
+    $("#exPinnotserviceable").show();
+	$("#serviceablePinExc").hide();
     	if(typeof utag !="undefined"){
 			utag.link({
 				event_type : "exchange_pincode_false",
@@ -4435,8 +4458,11 @@ $.when(req1).done(function(data1){
     }
 });
   
-  return false;
-   
+ // return false;
+				}
+				
+				}
+	
     //check all ok
     
 });
@@ -4444,7 +4470,7 @@ $.when(req1).done(function(data1){
 });
 //end document ready
 
-
+});
 function populateExchangeDetails()
 {
 	

@@ -60,6 +60,7 @@
 			<span id="emptyPinExc" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 			<span id="wrongPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
 			<span id="unsevisablePinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
+			<span id="exPinnotserviceable" style="display:none;color:#ff1c47">Sorry!! exchange offer is not serviceable</span>
 			<span id="serviceablePinExc" style="display:none;color:#339933"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
 			<span id="unableprocessPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
 		<!-- </span> -->
