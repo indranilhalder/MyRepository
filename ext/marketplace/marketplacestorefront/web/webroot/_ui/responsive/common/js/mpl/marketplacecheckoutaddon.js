@@ -8774,10 +8774,10 @@ $(".card_exp_month, .card_exp_year").on("change",function(){
 function populateIsExchangeApplied(response,stringCaller)
 {
 		//alert(stringCaller);
-	var exchangeId ="";
-		exchangeId=$('#exc_cart').val();
-	
-	
+	var isExchangeAppliedCart =$('#exchangeApplicable').val();
+		
+	if(isExchangeAppliedCart==='true')
+		{
 	var values=response['pincodeData'].split("|");
 	
 		var isServicable=values[0];
@@ -8797,12 +8797,14 @@ function populateIsExchangeApplied(response,stringCaller)
 			exchangePincode=deliveryModeJsonObj[key].exchangePincode;	
 		}
 		
-		if(isExchangeServicable && exchangePincode==selectedPincode && exchangeId)
+		if(isExchangeServicable && exchangePincode==selectedPincode)
 			{
 			$(".cart_exchange").css('display','block');
 			}
-		else if(exchangeId)
+		else
 			{
 			$("#exCartAlert").css('display','block');
+			$(".cart_exchange").css('display','none');
+		}
 		}
 }

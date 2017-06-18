@@ -64,7 +64,7 @@ tr.d0 td {
    <c:if test="${not empty cartLevelDiscountModified}">
    	<li class="promo-msg"># ${cartLevelDiscountModified}</li>
    </c:if>
-  
+    <input type="hidden" id="exchangeApplicable" value="${cartData.exchangeAppliedCart}">
   <%---start changes for TISPRD-9417 --%> 
   <%--<c:forEach items="${cartData.entries}" var="entry"> --%>
   <c:forEach items="${cartData.entries}" var="entry" varStatus="status">
@@ -159,18 +159,14 @@ tr.d0 td {
 		              
 		                
 		              <ul class="item-edit-details">
+		              <c:if test="${not empty entry.exchangeApplied}">
 		              			<li class="cart_exchange" style="display:none">
 <%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
 			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
 			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
-   								<!-- //to do spring theme for exchange -->
-   								<%-- 
-   								<c:if test="${empty exchangeId}">
-									<c:set var="isExchangeavailable" value=" "/>
-								</c:if>--%>
-   		
-   									${isExchangeavailable} 
+   										${isExchangeavailable} 
 			              		</li>
+			              		</c:if>
 		              	<c:if test="${entry.updateable}">
 		              			<c:forEach items="${entry.product.seller}" var="seller">
 								<c:if test="${seller.ussid eq entry.selectedSellerInformation.ussid }">

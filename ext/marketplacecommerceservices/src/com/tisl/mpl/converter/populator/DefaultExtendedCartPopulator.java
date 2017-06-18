@@ -98,7 +98,7 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 
 				/*
 				 * else if (target != null) {
-				 *
+				 * 
 				 * final String formate = formatter.format(100 * (target.getTotalDiscounts().getDoubleValue().doubleValue()
 				 * / (target .getSubTotal().getDoubleValue().doubleValue()))); target.setDiscountPercentage(formate); }
 				 */
@@ -152,6 +152,14 @@ public class DefaultExtendedCartPopulator extends CartPopulator
 				if (null != source.getMerged())
 				{
 					target.setGotMerged(source.getMerged().booleanValue());
+				}
+				if (null != source.getExchangeAppliedCart())
+				{
+					target.setExchangeAppliedCart(source.getExchangeAppliedCart());
+				}
+				else
+				{
+					target.setExchangeAppliedCart(Boolean.FALSE);
 				}
 			}
 			else
