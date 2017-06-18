@@ -459,6 +459,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute("openTab", "deliveryAddresses");
 				model.addAttribute("prePopulateTab", "payment#deliveryMethod");
 				prepareModelForPayment(model, cartUssidData);
+				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 				if (!deviceType.equals("normal"))
 				{
 					prepareModelForDeliveryMode(model, cartModel);
@@ -3609,6 +3610,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.FALSE); //INC144315475
 
 				//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 
 			}
 			//TPR-629 --- based on orderModel
@@ -3629,6 +3632,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.TRUE); //INC144315475
 
 				//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
 			}
 
 			//creating new Payment Form
@@ -4354,7 +4359,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4412,7 +4417,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
