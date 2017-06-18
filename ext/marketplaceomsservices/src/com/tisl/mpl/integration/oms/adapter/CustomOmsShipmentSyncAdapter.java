@@ -569,6 +569,15 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					sendOrderNotification(shipment, consignmentModel, orderModel, shipmentNewStatus);
 					//}
 					}
+					
+					//Added TPR-1348
+					if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
+							MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
+							&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
+					{
+						startAutomaticRefundProcess(orderModel); //Start the new Automatic Process
+					}
+
 					return true;
 				}
 				//R2.3  Start Bug Id TISRLUAT-986 20-02-2017 Start
