@@ -4244,21 +4244,28 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				{
 					Double deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 
-					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					//if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					if (!deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 					{
 						//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 						//								deliveryEntry.getSellerArticleSKU());
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-						deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
+
+
+						//deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 					}
-					else
-					{
-						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-						//		deliveryEntry.getSellerArticleSKU());
-						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-					}
+
+					// Blocked this particular code : As for CNC there will be no charge and hence DB Hit required
+					//					else
+					//					{
+					//						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+					//						//		deliveryEntry.getSellerArticleSKU());
+					//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+					//								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
+					//					}
+
+
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 				}
 			}
@@ -4407,7 +4414,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4465,7 +4472,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
