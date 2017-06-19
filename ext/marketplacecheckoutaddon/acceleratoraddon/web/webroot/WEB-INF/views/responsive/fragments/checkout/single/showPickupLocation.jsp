@@ -87,7 +87,7 @@
 	<span class="cnc_arrow"></span>
 		<div class="cnc_title_search">
 		<h1>
-			Select nearby store to pick up from (pincode ${defaultPincode}) <span>[?]</span>
+			Select nearby store to pick up from (pincode <span id="cncChangedPincode${entryNumber}">${defaultPincode}</span>) <span>[?]</span>
 		</h1>
 		<div class="cnc_search_wrapper">
 		<input class="cncStoreSearch" type="text" id="cncStoreSearch${entryNumber}" name="cncStoreSearch" placeholder="Search nearby store">
@@ -95,13 +95,15 @@
 		</div>
 		</div>
 		<div class="change_pincode_block block${entryNumber}">
-			<span class="change_txt txt${entryNumber}">Change Pincode?</span>
-			<div class="input${entryNumber} row" style="width: 111%">
-				<div class="col-md-8 col-sm-4 col-xs-4" style="padding:0px;">
-					<input style="width: 100%" type="text" name="changepin${entryNumber}" class="changepin${entryNumber}" maxlength="6" placeholder="Enter Pincode to Change.">
-				</div>
-				<div class="col-md-4 col-sm-2 col-xs-2">
-					<button type="button" class="submitPincode submitPincode${entryNumber}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${entryNumber}">Submit</button>
+			<span class="change_txt txt${entryNumber}">Change Pincode</span>
+			<div class="Rectangle-12 input${entryNumber} row" style="display:none;">
+				<span class="">
+						Want to pick from other area? 
+						Enter pincode below
+				</span>
+				<div class="" style="padding:0px;">
+					<input style="width: 100%" type="text" name="changepin${entryNumber}" class="Rectangle-29 changepin${entryNumber}" maxlength="6" placeholder="New Pincode">
+					<button type="button" class=".Rectangle-12 submitPincode submitPincode${entryNumber}" style="" name="submitPincode${entryNumber}">Submit</button>
 				</div>
 			</div>
 			<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;">
@@ -133,7 +135,7 @@
 <script>
 $(document).ready(function() {
 	$(".txt${entryNumber}").click(function(){
-		$(".txt${entryNumber}").hide();
+		//$(".txt${entryNumber}").hide();
 		$(".input${entryNumber}").show();
 	});
 	
@@ -208,3 +210,29 @@ function checkMobileNumberSpace(number) {
 	return /\s/g.test(number);
 }
 </script>
+
+<style>
+.Rectangle-29 {
+  width: 130px;
+  height: 42px;
+  background-color: #ffffff;
+  background-color: var(--white-two);
+  border: solid 1px #bbbbbb;
+}
+.Rectangle-12 {
+  width: 329px;
+  height: 190px;
+  background-color: #f8f8f8;
+  border: solid 1px #dddddd;
+}
+
+.Rectangle-12 {
+  width: 272px;
+  height: 140px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  background-color: var(--white-two);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
+  border: solid 1px #dddddd;
+}
+</style>

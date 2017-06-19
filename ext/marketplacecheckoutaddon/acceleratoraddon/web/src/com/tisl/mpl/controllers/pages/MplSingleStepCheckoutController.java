@@ -2419,7 +2419,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.UPDATE_CHECK_PINCODE, method = RequestMethod.GET)
 	public String upDatePincodeServicabilityCheck(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String ussId,
@@ -4417,7 +4416,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4475,7 +4474,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
