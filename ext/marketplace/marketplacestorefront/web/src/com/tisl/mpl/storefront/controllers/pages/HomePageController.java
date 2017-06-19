@@ -794,10 +794,13 @@ public class HomePageController extends AbstractPageController
 								}
 								newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 								newAndExclusiveProductJson.put("productUrl", product.getUrl());
+								Map<String, String> priceMap = new HashMap<String, String>();
 								String price = null;
 								try
 								{
-									price = getProductPrice(product);
+									//UF-319
+									priceMap = getProductPriceNewAndExclusive(product);
+									price = priceMap.get("dispPrice");
 								}
 								catch (final EtailBusinessExceptions e)
 								{
@@ -817,7 +820,7 @@ public class HomePageController extends AbstractPageController
 								//#2 If Price is available then only show Products
 								if (!StringUtils.isEmpty(price))
 								{
-									newAndExclusiveProductJson.put("productPrice", price);
+									newAndExclusiveProductJson.put("productPrice", priceMap);
 									newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
 								}
 
@@ -928,6 +931,93 @@ public class HomePageController extends AbstractPageController
 		}
 
 		return productPrice;
+	}
+
+	//Product-price map for UF-319
+
+	/**
+	 * @param buyBoxData
+	 * @param product
+	 * @return productPrice
+	 */
+	private Map<String, String> getProductPriceNewAndExclusive(final ProductData product)
+	{
+		final Map<String, String> productPriceMap = new HashMap<String, String>();
+		String productPrice = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{
+			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
+
+			if (buyBoxData != null)
+			{
+				if (buyBoxData.getSpecialPrice() != null)
+				{
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice))
+					{
+						productPriceMap.put("dispPrice", productPrice);
+					}
+				}
+				if (buyBoxData.getPrice() != null)
+				{
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					{
+						productPriceMap.put("dispPrice", productPrice);
+					}
+					/*
+					 * else if (productPrice != null && StringUtils.isNotEmpty(productPrice)) {
+					 * productPriceMap.put("strikePrice", productPrice); }
+					 */
+				}
+				if (buyBoxData.getMrp() != null)
+				{
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					{
+						productPriceMap.put("dispPrice", productPrice);
+						productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+					}
+					else if (productPrice != null && StringUtils.isNotEmpty(productPrice))
+					{
+						productPriceMap.put("strikePrice", productPrice);
+					}
+					else
+					{
+						if (productPriceMap.get("dispPrice") == null)
+						{
+							productPriceMap.put("dispPrice", MarketplacecommerceservicesConstants.EMPTY);
+						}
+						if (productPriceMap.get("strikePrice") == null)
+						{
+							productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+						}
+
+					}
+				}
+			}
+			else
+			{
+				productPriceMap.put("dispPrice", productPrice);
+				productPriceMap.put("strikePrice", productPrice);
+			}
+			LOG.info("ProductPrice>>>>>>>" + productPrice);
+			//productPriceMap.put("price", productPrice);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return productPriceMap;
 	}
 
 
