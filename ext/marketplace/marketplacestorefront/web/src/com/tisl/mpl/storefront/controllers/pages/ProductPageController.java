@@ -113,7 +113,6 @@ import com.google.gson.Gson;
 import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONObject;
-import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
@@ -148,7 +147,6 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.storefront.web.forms.SellerInformationDetailsForm;
 import com.tisl.mpl.util.ExceptionUtil;
-import com.tisl.mpl.util.MplBuyBoxUtility;
 
 
 
@@ -317,21 +315,6 @@ public class ProductPageController extends MidPageController
 	//private ConfigurationService configService;
 	@Resource(name = "customProductFacade")
 	private CustomProductFacadeImpl customProductFacade;
-
-	@Autowired
-	private CommonUtils commonUtils;
-
-	@Resource(name = "mplBuyBoxUtility")
-	private MplBuyBoxUtility mplBuyBoxUtility;
-
-	/**
-	 * @return the mplBuyBoxUtility
-	 */
-	public MplBuyBoxUtility getMplBuyBoxUtility()
-	{
-		return mplBuyBoxUtility;
-	}
-
 
 
 	/**
@@ -1900,11 +1883,6 @@ public class ProductPageController extends MidPageController
 				findCanonicalProduct(productData, model);
 			}
 
-			if (commonUtils.isLuxurySite())
-			{
-				populateProuctFlag(productData, model);
-			}
-
 		}
 		//populateVariantSizes(productData);
 		catch (final EtailBusinessExceptions e)
@@ -1918,19 +1896,7 @@ public class ProductPageController extends MidPageController
 
 	}
 
-	/**
-	 * @param productData
-	 * @param model
-	 */
-	@SuppressWarnings("boxing")
-	private void populateProuctFlag(final ProductData productData, final Model model)
-	{
 
-		model.addAttribute("isNew", productData.getIsProductNew());
-		model.addAttribute("isOnSale", productData.getIsOfferExisting());
-		model.addAttribute("isExclusive", productData.getIsOnlineExclusive());
-
-	}
 
 	/**
 	 * @param productData
