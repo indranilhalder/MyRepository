@@ -269,9 +269,10 @@
 	<%-- <analytics:analytics/> --%>
 	<%-- <generatedVariables:generatedVariables/> --%>
 	
-	
-	
 
+<c:if test="${param.frame ne null}">	
+<base target="_parent">
+</c:if>
 
 </head>
 <c:if test="${empty buildNumber}">
