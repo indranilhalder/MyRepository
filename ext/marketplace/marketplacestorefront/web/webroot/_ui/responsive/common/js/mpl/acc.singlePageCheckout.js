@@ -344,6 +344,7 @@ ACC.singlePageCheckout = {
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
             if (jqXHR.responseJSON) {
+            	ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=false;
             	if(data.type!="response" && data.type!="ajaxRedirect")
                 {
                 	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
@@ -979,15 +980,20 @@ ACC.singlePageCheckout = {
 			//$("#pickupPersonSubmit").text("1");
 			
 			$("#singlePagePickupPersonPopup").modal('hide');
-			//Slot delivery is present show slot delivery else goto review order.
-			if(ACC.singlePageCheckout.isSlotDeliveryAndCncPresent)
-			{
-				$("#singlePageChooseSlotDeliveryPopup").modal('show');
+			//Below code will only will execute for web as responsive does not have review order
+			//and slot delivery is show on different button click
+			if(!ACC.singlePageCheckout.getIsResponsive())
+			{	
+				//Slot delivery is present show slot delivery else goto review order.
+				if(ACC.singlePageCheckout.isSlotDeliveryAndCncPresent)
+				{
+					$("#singlePageChooseSlotDeliveryPopup").modal('show');
+				}
+				else
+				{
+					ACC.singlePageCheckout.getReviewOrder();
+				}
 			}
-			else
-			{
-				ACC.singlePageCheckout.getReviewOrder();
-			}    		
 			
 			if(typeof(utag)!="undefined")
 			{
