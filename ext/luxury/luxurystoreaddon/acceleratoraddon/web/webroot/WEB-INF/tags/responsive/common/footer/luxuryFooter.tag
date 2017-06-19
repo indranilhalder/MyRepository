@@ -24,13 +24,13 @@
 						<div class="col-sm-6 nopadding">
 							<input type="email" name="email" id="emailId" class="email col-sm-12" placeholder="Enter your email address">
 						</div>
-						<div class="col-sm-4 nopadding">
+						<div class="col-sm-3 nopadding">
 							<select id="gender" class="gender">
 								<option value="Male">Male</option>
 								<option value="Female">Female</option>
 							</select>
 						</div>
-						<div class="col-sm-2 nopadding">
+						<div class="col-sm-3 nopadding">
 							<button class="btn text-left" onclick="return newsletterSubscribe();">Sign Up</button>
 						</div>
 						<div id="error_message" style="display:block;font-size:12px;"></div>
