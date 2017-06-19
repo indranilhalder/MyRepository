@@ -198,6 +198,44 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	@Autowired
 	private MplJusPayRefundService mplJusPayRefundService; //Added for TPR-1348
 
+	/**
+	 * @return the mplJusPayRefundService
+	 */
+	public MplJusPayRefundService getMplJusPayRefundService()
+	{
+		return mplJusPayRefundService;
+	}
+
+
+	/**
+	 * @param mplJusPayRefundService
+	 *           the mplJusPayRefundService to set
+	 */
+	public void setMplJusPayRefundService(final MplJusPayRefundService mplJusPayRefundService)
+	{
+		this.mplJusPayRefundService = mplJusPayRefundService;
+	}
+
+
+	/**
+	 * @return the mplMWalletRefundService
+	 */
+	public MplMWalletRefundService getMplMWalletRefundService()
+	{
+		return mplMWalletRefundService;
+	}
+
+
+	/**
+	 * @param mplMWalletRefundService
+	 *           the mplMWalletRefundService to set
+	 */
+	public void setMplMWalletRefundService(final MplMWalletRefundService mplMWalletRefundService)
+	{
+		this.mplMWalletRefundService = mplMWalletRefundService;
+	}
+
+
 	@Autowired
 	private MplMWalletRefundService mplMWalletRefundService; //Added for TPR-1348
 
