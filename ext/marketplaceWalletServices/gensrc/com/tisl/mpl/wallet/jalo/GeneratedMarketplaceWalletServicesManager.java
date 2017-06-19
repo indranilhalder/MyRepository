@@ -1,7 +1,7 @@
 /*
  * ----------------------------------------------------------------
  * --- WARNING: THIS FILE IS GENERATED AND WILL BE OVERWRITTEN! ---
- * --- Generated at 16 Jun, 2017 8:23:04 PM                     ---
+ * --- Generated at Jun 19, 2017 10:33:17 AM                    ---
  * ----------------------------------------------------------------
  */
 package com.tisl.mpl.wallet.jalo;

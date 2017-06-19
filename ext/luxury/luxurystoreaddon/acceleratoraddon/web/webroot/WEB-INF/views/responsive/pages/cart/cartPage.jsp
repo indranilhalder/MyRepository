@@ -38,12 +38,13 @@
 			<div class="container">
 
 				<div class="row">
-					<div class="col-xs-12 col-sm-7 col-md-7">
+					<div class="col-xs-12 <c:out value="${not empty cartData.entries ? 'col-md-7 col-sm-7' : 'col-md-12 col-sm-12'}" />">
 
 						<div class="cartItems cart wrapper">
-							<h3 class="grayTxt"><spring:theme code="mpl.myBag" />(<label id="mybagcnt"></label> item) <span>Items in your cart are not reserved and can sell out.</span></h3>
+							
 							<!-- UF-62 -->
 							<c:if test="${not empty cartData.entries}">
+							    <h3 class="grayTxt"><spring:theme code="mpl.myBag" />(<label id="mybagcnt"></label> item) <span>Items in your cart are not reserved and can sell out.</span></h3>
 								<cms:pageSlot position="CenterLeftContentSlot" var="feature" >
 									<cms:component component="${feature}"/>
 								</cms:pageSlot>
@@ -65,7 +66,8 @@
 										<cms:component component="${feature}"/>
 									</cms:pageSlot>
 									<div class="emptyCart">
-										<h2>Your Shopping cart is empty</h2>
+										<img src="${themeResourcePath}/images/empty-cardicon.png">
+								   		<h2>Your Shopping cart is empty</h2>
 										<p>Add products to it.</p>
 										<button class="btn btn-primary btn-lg">Shop Men</button>
 										<button class="btn btn-primary btn-lg">Shop Women</button>
