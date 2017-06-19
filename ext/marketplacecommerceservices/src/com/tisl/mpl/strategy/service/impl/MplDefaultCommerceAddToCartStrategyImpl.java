@@ -17,7 +17,9 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -99,9 +101,27 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 			final long actualAllowedQuantityChange = getAllowedCartAdjustmentForProduct(cartModel, productModel, quantityToAdd,
 					deliveryPointOfService, ussid);
 			final Integer maxOrderQuantity = productModel.getMaxOrderQuantity();
+
+
 			final long cartLevel = checkCartLevel(productModel, cartModel, deliveryPointOfService);
 			final long cartLevelAfterQuantityChange = actualAllowedQuantityChange + cartLevel;
+			final long maxqtyExc = 1L;
+			if (StringUtils.isNotEmpty(parameter.getExchangeParam()) && cartLevelAfterQuantityChange > maxqtyExc)
+			{
 
+				final Long actualAllowedQuantityChangeExc = Long.valueOf(maxqtyExc - cartLevelAfterQuantityChange);
+				final List<CartEntryModel> modelList = getCartService().getEntriesForProduct(cartModel, productModel);
+				final Map<Integer, Long> updateMap = new HashMap<>();
+				for (final CartEntryModel model : modelList)
+				{
+					if (model.getSelectedUSSID().equals(parameter.getUssid()))
+					{
+						updateMap.put(model.getEntryNumber(), actualAllowedQuantityChangeExc);
+					}
+				}
+				getCartService().updateQuantities(cartModel, updateMap);
+
+			}
 			if (actualAllowedQuantityChange > 0L)
 			{
 				CartEntryModel cartEntryModel = null;
@@ -124,6 +144,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 
 					cartEntryModel = getCartService().addNewEntry(cartModel, productModel, actualAllowedQuantityChange, orderableUnit,
 							entryNumber.intValue(), entryNumber.intValue() >= 0);
+
 
 					if (cartEntryModel != null)
 					{
