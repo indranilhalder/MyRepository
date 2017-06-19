@@ -3110,6 +3110,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	{
 		try
 		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
 			Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 			final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
 			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
@@ -3160,6 +3166,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		try
 		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
 
 			final CartModel cartModel = cartService.getSessionCart();
 			mplCartFacade.setCartSubTotal(cartModel);
@@ -3217,15 +3229,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		final String countrycode = "IN,";
 		final String phoneCode = "+91";
 		final String comma = ",";
-		final AddressData addressData = mplCustomAddressFacade.getDeliveryAddress();
-		final StringBuilder pickupPerson = new StringBuilder();
-		pickupPerson.append((null != addressData.getFirstName()) ? addressData.getFirstName() : "").append(" ")
-				.append((null != addressData.getLastName()) ? addressData.getLastName() : "");
-
-		final String pickUpPersonMobile = (null != addressData.getPhone()) ? addressData.getPhone() : "";
 
 		try
 		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				jsonObject.put("url", MarketplacecheckoutaddonConstants.CART);
+				jsonObject.put("type", "redirect");
+				return jsonObject;
+			}
+			final AddressData addressData = mplCustomAddressFacade.getDeliveryAddress();
+			final StringBuilder pickupPerson = new StringBuilder();
+			pickupPerson.append((null != addressData.getFirstName()) ? addressData.getFirstName() : "").append(" ")
+					.append((null != addressData.getLastName()) ? addressData.getLastName() : "");
+
+			final String pickUpPersonMobile = (null != addressData.getPhone()) ? addressData.getPhone() : "";
 			jsonObject.put("firstName", addressData.getFirstName());
 			jsonObject.put("lastName", addressData.getLastName());
 			jsonObject.put("pickupPersonName", pickupPerson.toString());
@@ -3281,6 +3299,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		int countItems = 0;
 		try
 		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				jsonObject.put("url", MarketplacecheckoutaddonConstants.CART);
+				jsonObject.put("type", "redirect");
+				return jsonObject;
+			}
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			for (final OrderEntryData cartD : cartData.getEntries())
 			{
@@ -3461,8 +3485,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	@RequestMapping(value = "/payment/orderDetails", method = RequestMethod.GET)
-	public String getOrderDetailsTag(final Model model)
+	public String getOrderDetailsTag(final Model model) throws UnsupportedEncodingException
 	{
+		if (getUserFacade().isAnonymousUser())
+		{
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+		}
 		final CartModel cartModel = getCartService().getSessionCart();
 		//UF-260
 		GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
@@ -3727,8 +3757,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	@RequestMapping(value = "/pickupPerson/popup", method = RequestMethod.GET)
-	public String getPickUpPersonPopUp()
+	public String getPickUpPersonPopUp() throws UnsupportedEncodingException
 	{
+		if (getUserFacade().isAnonymousUser())
+		{
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+		}
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.PickupPersonForm;
 	}
 
@@ -4258,6 +4294,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				+ MarketplacecheckoutaddonConstants.GETREVIEWORDER;
 		try
 		{
+			if (getUserFacade().isAnonymousUser())
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
 			final long entryNumber = Long.parseLong(entryNumberString);
 
 			if (mplCartFacade.hasEntries())
