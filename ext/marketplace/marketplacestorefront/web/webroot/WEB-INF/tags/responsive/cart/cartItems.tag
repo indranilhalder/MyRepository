@@ -663,7 +663,7 @@ tr.d0 td {
 		<c:forEach items="${promoModified}" var="promoModified">
 			<c:choose>
 				<c:when	test="${promoModified.key == entry.entryNumber}">
-					<li># ${promoModified.value}</li>
+					<li>${promoModified.value}</li>
 				</c:when>
 			</c:choose>
 		</c:forEach>
@@ -671,7 +671,7 @@ tr.d0 td {
 			<c:forEach items="${priceModifiedMssg}" var="priceModifiedMssg">
 				<c:choose>
 					<c:when	test="${priceModifiedMssg.key == entry.entryNumber}">
-						<li># ${priceModifiedMssg.value}</li>
+						<li>${priceModifiedMssg.value}</li>
 					</c:when>
 				</c:choose>
 			</c:forEach>
