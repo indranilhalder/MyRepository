@@ -35,4 +35,7 @@ public interface BrandService
 	 * @return
 	 */
 	List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(String emailId);
+
+
+	List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury);
 }

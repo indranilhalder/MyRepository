@@ -266,10 +266,12 @@ public class DefaultBrandService implements BrandService
 	 * @param isLuxury
 	 * @return
 	 */
+	@Override
 	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury)
 	{
 		// YTODO Auto-generated method stub
-		return null;
+		return brandDao.checkEmailIdForluxury(emailId, isLuxury);
+
 	}
 
 }
