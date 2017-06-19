@@ -80,6 +80,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -125,6 +126,7 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
+import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -332,6 +334,8 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
+	@Autowired
+	private DateUtilHelper dateUtilHelper;
 
 
 	/*
@@ -341,6 +345,7 @@ public class MiscsController extends BaseController
 	 * @Autowired private MplCheckoutFacade mplCheckoutFacade;
 	 */
 	private static final Logger LOG = Logger.getLogger(MiscsController.class);
+	public static final String RETURN_TYPE_COD = "01";
 
 	/**
 	 * Lists all available languages (all languages used for a particular store). If the list of languages for a base
@@ -1862,18 +1867,7 @@ public class MiscsController extends BaseController
 						//}
 
 						final OrderData orderData = getOrderConverter().convert(subOrderModel);
-						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
-						{
-							codSelfShipData = new CODSelfShipData();
-							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
-							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
-							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
-							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
-							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
-							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
-							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
-							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-						}
+
 						LOG.debug("========Fetching order entry details for transaction id========" + oneTouchCrmObj.getTransactionId());
 						for (final OrderEntryData entry : orderData.getEntries())
 						{
@@ -1897,6 +1891,38 @@ public class MiscsController extends BaseController
 								oneTouchReturnDTOList.setOneTouchList(new ArrayList<OneTouchCancelReturnDTO>(outputList));
 								return oneTouchReturnDTOList;
 							}
+						}
+						//Bank details to be sent to FICO for COD return
+						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+								&& oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
+						{
+							codSelfShipData = new CODSelfShipData();
+							if (null != subOrderModel.getUser().getUid())
+							{
+								codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+							}
+							codSelfShipData.setOrderRefNo(oneTouchCrmObj.getOrderRefNum());
+							//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
+							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
+							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
+							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
+							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
+							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
+							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
+							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+							codSelfShipData.setPaymentMode(oneTouchCrmObj.getRefundType());
+							codSelfShipData.setAmount(orderEntry.getAmountAfterAllDisc().toString());
+							codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+							if (null != orderData.getCreated())
+							{
+								final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+								codSelfShipData
+										.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+								codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData
+										.getCreated())));
+							}
+
 						}
 						LOG.debug("========Fetching consignment details for order entry=========" + oneTouchCrmObj.getTransactionId());
 						//FETCHING ORDER CONSIGNMENT STATUS
