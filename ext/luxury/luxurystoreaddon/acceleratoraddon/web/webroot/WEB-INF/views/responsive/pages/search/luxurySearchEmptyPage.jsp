@@ -11,7 +11,7 @@
 <input type="hidden" id="search_results" value="${searchPageData.pagination.totalNumberOfResults}">
 <input type="hidden" id="search_type" value="${searchType}">	<!-- For TPR-666 -->
 <template:page pageTitle="${pageTitle}">
-		<div class="mainContent-wrapper">
+		<div class="mainContent-wrapper searchEmpty">
 			<h3 class="desktop"><spring:theme code="search.no.results" text="Sorry! No items matched your search. Why don't you try a less specific keyword?" /></h3>
 		</div>
 </template:page>

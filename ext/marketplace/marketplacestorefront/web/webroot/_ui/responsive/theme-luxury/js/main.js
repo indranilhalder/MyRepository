@@ -202,9 +202,19 @@ TATA.CommonFunctions = {
             },
             success: function(data) {
                 $("#login-container .header-forget-pass").html(data);
+                TATA.CommonFunctions.regsitrationGenderCheck();
             }
         });
     },
+    
+    regsitrationGenderCheck : function() {
+    	$(".sign-up-action .toggle-btn").on("click", function(event){
+			var id = $(this).attr("for");
+			$(".toggle").removeAttr("checked");
+			$("#"+id).attr("checked", "checked");
+ 		});
+    },
+    
 	Toggle: function() {
 
 		/*$('.toggle-link').on('click', function(e){
@@ -233,8 +243,11 @@ TATA.CommonFunctions = {
 	    	 } else {
 	    		$('.toggle-skip').not(Target).removeClass('active');
 				$(Target).toggleClass('active');
+                 if( $(Target).hasClass("header-search")) {
+                    $("#js-site-search-input").focus();
+                }
 				return false;
-	    	 }
+	    	 }           
    		
 		});				
 

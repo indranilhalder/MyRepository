@@ -577,8 +577,42 @@ video::-webkit-media-controls {
 .body-Content{
         padding-bottom: 0px!important;
 }
-wrapper{
+.wrapper{
     background: transparent;   
     border: 0px;
     box-shadow: none;
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-info {
+    color: #fff;
+    background-color: #2d2d2d;
+    border-color: #2d2d2d;
+    color: #fff;
+    
+    .close{
+        color: inherit;
+    }
+}
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    
+    .close{
+        color: inherit;
+    }
+}
+.alert-warning {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    
+    .close{
+        color: inherit;
+    }
 }

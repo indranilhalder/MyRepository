@@ -13064,8 +13064,14 @@ TATA.CommonFunctions = {
                 $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
             },
             success: function(data) {
-                $("#login-container .header-forget-pass").html(data);
+                $("#login-container .header-forget-pass").html(data), TATA.CommonFunctions.regsitrationGenderCheck();
             }
+        });
+    },
+    regsitrationGenderCheck: function() {
+        $(".sign-up-action .toggle-btn").on("click", function(event) {
+            var id = $(this).attr("for");
+            $(".toggle").removeAttr("checked"), $("#" + id).attr("checked", "checked");
         });
     },
     Toggle: function() {
@@ -13073,7 +13079,8 @@ TATA.CommonFunctions = {
             e.preventDefault(), e.stopPropagation();
             var elem = $(this), Target = $(this).data("target-id");
             if (!elem.hasClass("luxury-login")) return $(".toggle-skip").not(Target).removeClass("active"), 
-            $(Target).toggleClass("active"), !1;
+            $(Target).toggleClass("active"), $(Target).hasClass("header-search") && $("#js-site-search-input").focus(), 
+            !1;
             TATA.CommonFunctions.loadSignInForm(elem), $("#mypopUpModal").modal(), $(".modal-backdrop").on("click", function() {
                 $("#mypopUpModal").modal("hide");
             });

@@ -91,9 +91,11 @@ var productSizeVar = '${productSize}';
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
-						<li><c:url value="${variantOption.defaultUrl}"
+						<li>
+						<!-- HTML to write -->
+						 <c:url value="${variantOption.defaultUrl}"
 								var="variantUrl" />
-								 <a href="${variantUrl}">								
+								 <a href="${variantUrl}" class="tooltips">								
 								 <c:forEach
 									items="${variantOption.colourCode}" var="color">
 								<c:choose>
@@ -101,7 +103,9 @@ var productSizeVar = '${productSize}';
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
 								<c:when test="${empty variantOption.image}">
-						     	<span style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+						     	<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+						     	
+						     	<span class="toolInner"> Color : ${variantOption.colour} </span>
 								</c:when>							
 								<c:otherwise>
 								<c:set var="imageData" value="${variantOption.image}" />
@@ -113,7 +117,9 @@ var productSizeVar = '${productSize}';
 										<!--  set current selected color -->
 								</c:if>
 								</c:forEach>
-						</a></li>
+						</a> 
+						
+						</li>
 					</c:when>
 					<c:otherwise>
 

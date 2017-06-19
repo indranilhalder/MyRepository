@@ -502,13 +502,13 @@
 		    position: fixed;
 		    left: 0;
 		    top: 68px;
-		    overflow: auto;
-		    height: 100%;
+		    overflow-y: auto;
+		    //height: 100%;
 		}
 		&.active {
 			max-height: 630px;
 			@include media-breakpoint-down(sm) {
-				max-height: 100%;
+				//max-height: 100%;
 			}
 		}
 		&-inner{
@@ -517,8 +517,9 @@
 			position: relative;
 			@include transition(all 0.3s ease-in-out);
 			@include media-breakpoint-down(sm) {
-				left: -100%;
+				left: -107%;
     			width: 99999px;
+				overflow-x: hidden;
 			}
 		}
 		&-section {
@@ -537,21 +538,21 @@
 		&.active-forget-password {
 			height: 300px;
 			@include media-breakpoint-down(sm) {
-				height: 100%;
+				//height: 100%;
 			}
 			.header-account-inner{
-				left: 0;
+				left: -2px;
 			}
 		}
 		&.active-sign-up {
 			height: 630px;
 			@include media-breakpoint-down(sm) {
-				height: 100%;
+				//height: 100%;
 			}
 			.header-account-inner{
 				left: -860px;
 				@include media-breakpoint-down(sm) {
-					left:-200%;
+					left:-212%;
 				}
 			}
 		}
@@ -626,7 +627,7 @@
 					color: $gray-darker;
 				}
 				&:after{
-					background: $gray-darker;
+					/*background: $gray-darker;
 					content: "";
 					height: 100%;
 					position: absolute;
@@ -634,19 +635,19 @@
 					transition: left 200ms cubic-bezier(0.77, 0, 0.175, 1);
 					width: 100%;
 					z-index: -1;
-					border-radius: $border-radius-small;
+					border-radius: $border-radius-small;*/
 				}
 			}
 			&.toggle-left + label {
 				border-right: 0;
 				&:after{
-					left: 100%
+					//left: 100%
 				}
 			}
 			&.toggle-right + label{
 				margin-left: -5px;
 				&:after{
-					left: -100%;
+					//left: -100%;
 				}
 			}
 			&:checked + label {
@@ -659,6 +660,29 @@
 				}
 			}
 		}
+		.toggle[checked="checked"]+label {
+			cursor: default;
+		    color: #fff;
+		    transition: color .2s;
+		    z-index: 1;
+		}
+		
+		.toggle[checked="checked"]+label:after {
+		    left: 0 !important;
+		    background: $gray-darker;
+			content: "";
+			height: 100%;
+			position: absolute;
+			top: 0;
+			transition: left 200ms cubic-bezier(0.77, 0, 0.175, 1);
+			width: 100%;
+			z-index: -1;
+			border-radius: $border-radius-small;
+		}
+		input[type=radio].toggle[checked="checked"]+label:hover {
+			color : #fff;
+		}
+
 
 	}
 .header-inside{

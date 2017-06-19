@@ -548,14 +548,14 @@
  
 .color-swatch {
     padding: 0;
-    overflow: hidden; 
+   // overflow: hidden; 
         li {
             display: inline-block;
             margin: 0 2px;
-            float: left;
+            //float: left;
                 span {
-                    width: 23px !important;
-                    height: 23px !important;
+                    width: 33px !important;
+                    height: 33px !important;
                     border-radius: 50%;
                     display: block; 
                 }
@@ -896,5 +896,55 @@
 		.right-delivery-block {
 			width:100%;
 		}
+	}
+}
+
+/*Tool tip css */
+.tooltips {
+  position: relative;
+  display: inline;
+}
+.tooltips .toolInner {
+	position: absolute;
+    width: 170px !important;
+    color: #000;
+    background: #fff;
+    border: 1px solid #d2d2d2;
+    height: 38px !important;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 6px;
+    visibility : hidden;
+}
+.tooltips .toolInner:before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 54%;
+  margin-left: -9px;
+  border-top: 10px solid #d2d2d2;
+  border-right: 11px solid transparent;
+  border-left: 10px solid transparent;
+  width: 0; height: 0;
+  
+}
+.tooltips .toolInner:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 54%;
+  margin-left: -8px;
+  width: 0; height: 0;
+  border-top: 8px solid #fff;
+  border-right: 11px solid transparent;
+  border-left: 8px solid transparent;
+}
+a:hover.tooltips {
+	.toolInner {
+	  visibility: visible;
+	  bottom: 33px;
+	  left: 52%;
+	  margin-left: -76px;
+	  z-index: 999;
 	}
 }

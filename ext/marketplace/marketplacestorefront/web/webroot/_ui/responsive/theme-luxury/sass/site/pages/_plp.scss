@@ -716,3 +716,16 @@
 		padding-left: 10px; 
 	}
 }
+
+/* search empty */
+.searchEmpty {
+    display: table;
+    text-align : center;
+    width: 100%;
+    min-height: 200px;
+}
+.searchEmpty h3{
+    margin-top: 0;
+    vertical-align: middle;
+    display: table-cell;
+} 
