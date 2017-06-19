@@ -416,7 +416,7 @@
 								<address>
 									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
 									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
-									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
+									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span>, 
 									<c:if test="${empty subOrderLine2  && empty subOrderLine3}">
 									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
 									</c:if>
@@ -433,13 +433,13 @@
 
 									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
 									</c:if>
-									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
+									, <span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
 												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
 									</c:if>
 									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
-									<br>
-									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
+									, 
+									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span>
 								</address>
 							</div>
 							</div>
@@ -489,22 +489,20 @@
 		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
 		                                           </c:if>
 	                                            </c:forEach> 
-	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
+	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s): CLiQ & PiQ</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															<br>
-															<br>
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
-															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}<br></c:if>
+															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}, </c:if>
 															  <c:if test="${not empty pos.line1}">	${fn:escapeXml(pos.line1)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.line2}">${fn:escapeXml(pos.line2)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.state}">${fn:escapeXml(pos.state)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.country.name}">${fn:escapeXml(pos.country.name)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.postalCode}">${fn:escapeXml(pos.postalCode)}&nbsp;</c:if>
-															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}<br></c:if>
-															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)} <br></c:if>
+															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}, </c:if>
+															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)}</c:if>
 															</address>
 													</c:if>
 															</div>
@@ -1090,7 +1088,7 @@
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
+																<li>Ready For Pickup</li>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -1694,22 +1692,20 @@
 		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
 		                                           </c:if>
 	                                            </c:forEach> 
-	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
+	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s): CLiQ & PiQ</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															<br>
-															<br>
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
-															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}<br></c:if>
+															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}, </c:if>
 															  <c:if test="${not empty pos.line1}">	${fn:escapeXml(pos.line1)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.line2}">${fn:escapeXml(pos.line2)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.state}">${fn:escapeXml(pos.state)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.country.name}">${fn:escapeXml(pos.country.name)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.postalCode}">${fn:escapeXml(pos.postalCode)}&nbsp;</c:if>
-															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}<br></c:if>
-															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)} <br></c:if>
+															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}, </c:if>
+															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)}</c:if>
 															</address>
 													</c:if>
 															</div>
@@ -2265,7 +2261,7 @@
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
+																<li>Ready For Pickup</li>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -2773,6 +2769,11 @@
  
         <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
 	<!-- R2.3: END -->
+	<c:if test="${param.frame ne null}">
+	<div class="bottom" id="ia_category_code"></div>
+	<div id="js-site-search-input"></div>
+	<div id="userLoginType"></div>
+	</c:if>
 </template:page>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
@@ -3295,7 +3296,19 @@ $("#saveBlockData").click(function(){
 		   
 		  <!-- End of  AWB Jquery codes PopUp  -->
 		  }); 
+		  /* TPR-6013 track order modal js start */
+		  $("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot").last().addClass("last_dot");
 		  $("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").find("span.dot").last().hasClass("inactive"))){
+				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").addClass("full_track");
+			}
+		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.returnStatus.processing").find("span.dot").last().hasClass("inactive"))){
+				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.returnStatus.processing").addClass("full_track");
+			}
+		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.cancelStatus.processing").find("span.dot").last().hasClass("inactive"))){
+				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.cancelStatus.processing").addClass("full_track");
+			}
+			/* TPR-6013 track order modal js end */
 		</script>
 
 		<!--   AWB CSS for PopUp -->
@@ -3514,7 +3527,8 @@ body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
 body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
-body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span{
+body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span,
+#userLoginType, #js-site-search-input, #ia_category_code{
 	display: none !important;
 }
 
@@ -3634,6 +3648,65 @@ body .account .right-account .order-history.order-details li.header>ul>li.price,
 body .account .right-account .order-history.order-details li.header>ul>li.recipient {
 display: none;
 }
+body .account .right-account .order-history.order-details li.header div.delivery-address h2 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  text-align: left;
+  color: #000000;
+  padding: 0px 20px;
+  font-weight: normal !important;
+  height: auto;
+    margin-bottom: 10px;
+}
+#shipping-track-order .item-header p{
+	font-size: 12px;
+	font-weight: normal !important;
+	padding: 0px 20px;
+	color: #666666;
+	display: none;
+}
+#shipping-track-order .item-header h2 + .col-md-8.col-sm-6, #shipping-track-order .item-header h3 + .col-md-8.col-sm-6{
+	font-size: 12px;
+	font-weight: normal;
+	padding: 0px;
+	width: 100%;
+}
+#shipping-track-order .item-header address{
+	padding: 0px 20px;
+	color: #666666;
+	margin-bottom: 5px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment {
+	font-size: 11px;
+    font-style: italic;
+    line-height: 1.27;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #bbbbbb;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment span{
+	font-weight: normal !important;
+}
+body .account .right-account .order-history.order-details li.item .order {
+    margin-bottom: 5px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	background-color:  transparent;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address {
+    display: none;
+}
+body .account .right-account .order-history.order-details li.item{
+	clear: both;
+}
+body .account .right-account .order-history.order-details li.item{
+	border-top: 0px;
+}
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
@@ -3645,6 +3718,12 @@ body .account .right-account .order-history.order-details .product-block li.item
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status{
 	padding-left:0;
 	padding-right: 0;
+}
+body .account .right-account .order-history.order-details .product-block li.item .image {
+    min-height: auto;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+    padding-left: 12.5%;
 }
 }
 @media (max-width: 500px){

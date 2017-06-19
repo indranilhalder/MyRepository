@@ -1459,9 +1459,9 @@ $(document).ready(function(){
 		}
 
 	}); 
-	$(".progtrckr").each(function(){
+	/*$(".progtrckr").each(function(){
 		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
-	});
+	});*/	/*TPR-6013 Order History */
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
@@ -3660,13 +3660,33 @@ $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab
 $(document).on("click","body .account .right-account .password .blue.changePass",function(){
 	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
 	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.changePassResponsive",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
 	$("body .account .right-account .password .blue.crossPass").css("display","block");
 });
 $(document).on("click","body .account .right-account .password .blue.crossPass",function(){
 	$("body .account .right-account .password #frmUpdatePassword").css("display","");
 	$(this).css("display","");
-	$("body .account .right-account .password .blue.changePass").css("display","block");
+	if ($(window).width() > 790) {
+		$("body .account .right-account .password .blue.changePass").css("display","block");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	} else {
+		$("body .account .right-account .password .blue.changePass").css("display","none");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+	}   
+	
 });
+/*$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+});*/
 
 $(".deliveryTrack.status.suman").each(function(){
 	$(this).find(".progtrckr.tabs").find("li").each(function(){

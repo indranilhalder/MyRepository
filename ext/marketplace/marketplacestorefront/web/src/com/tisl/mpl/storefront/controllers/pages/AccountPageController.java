@@ -187,6 +187,7 @@ import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.GenderData;
@@ -800,8 +801,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 									&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
 											.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 							{
+								final SimpleDateFormat smdfDate = new SimpleDateFormat(
+										MarketplacecclientservicesConstants.DATE_FORMAT_AWB);
 								final AWBResponseData deliveryAWBData = new AWBResponseData();
+								final StatusRecordData statusRecordData = new StatusRecordData();
+								final List<StatusRecordData> listStatusRecordData = new ArrayList<StatusRecordData>();
+								statusRecordData.setDate(smdfDate.format(orderEntryData.getConsignment().getStatusDate()));
 								deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
+								listStatusRecordData.add(statusRecordData);
+								deliveryAWBData.setStatusRecords(listStatusRecordData);
 								delivery = deliveryAWBData;
 							}
 						}

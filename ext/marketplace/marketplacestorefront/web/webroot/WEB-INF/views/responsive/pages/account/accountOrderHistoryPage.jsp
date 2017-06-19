@@ -300,7 +300,7 @@
 														</div>
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
-															<p>
+															<p class="order-serial-num">
 																<spring:theme code="text.orderHistory.serial.number" />
 																&nbsp; ${entry.imeiDetails.serialNum}
 															</p>
@@ -330,7 +330,7 @@
 															</c:choose>
 														</c:forEach> --%>
 
-														<p>
+														<p  class="order-serial-num">
 															<spring:theme
 																code="text.orderHistory.seller.order.number" />&nbsp;
 															${subOrder.code}
@@ -397,7 +397,7 @@
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span> 
 														</div> --%>
 														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Return request date" /></span>&nbsp;
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Return Request Date: " /></span>&nbsp;
 															<c:forEach items="${returnFlags.statusRecords}" var="recordDate">
 															<span>${recordDate.date}</span>
 															</c:forEach>
@@ -412,7 +412,7 @@
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>
 														</div> --%>
 														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancellation request date" /></span>&nbsp;
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancellation Request Date: " /></span>&nbsp;
 															<c:forEach items="${cancelFlags.statusRecords}" var="recordDate">
 															<span>${recordDate.date}</span>
 															</c:forEach>
