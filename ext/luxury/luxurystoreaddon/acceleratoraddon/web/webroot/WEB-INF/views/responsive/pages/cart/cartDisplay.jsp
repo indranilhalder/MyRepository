@@ -103,7 +103,7 @@
 		<!-- <a href="/store" class="continue-shopping"> Continue Shopping</a> --><!-- store url change -->
 		<!-- <a href="/" class="continue-shopping"> Continue Shopping</a> -->
 
-		<div class="top block MyBag-pincode" id="pinCodeDispalyDiv" style="display : none">
+		<div class="top block MyBag-pincode" id="pinCodeDispalyDiv">
 				<%-- <h2><spring:theme code="cart.delivery.options" /></h2> --%>		<!-- UF-63 -->
 				<%-- <input type="hidden"  name = "defaultPinCodeIdsDefault" id= "defaultPinCodeIdsDefault"  value="${defaultPinCode}"/>
                     <div id="defaultPinDiv">
@@ -123,14 +123,14 @@
                     <p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p> --%>
 				<c:choose>
 					<c:when test="${not empty defaultPinCode}">
-						<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+						<input type="text" class="form-control" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 					</c:when>
 					<c:otherwise>
-						<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
+						<input type="text" class="form-control" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 					</c:otherwise>
 				</c:choose>
 				<input type="hidden" id="pinId" value="${defaultPinCode}"/>
-				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				<button class="btn btn-primary btn-md" id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 
 				<!-- error message position change as part of UF-61 -->
 				<p id="unserviceablepincode" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>

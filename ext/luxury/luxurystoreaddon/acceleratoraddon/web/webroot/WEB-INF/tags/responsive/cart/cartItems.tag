@@ -174,12 +174,11 @@
 								<c:choose>
 								<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc || not empty entry.productPerDiscDisplay}">
 								<!-- TPR-970 changes-->	<c:set var="totalPrice"  value="${entry.totalPrice}"/>
-								<!-- TPR-970 changes-->   <span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalPrice}"/>
-																		<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
-				 													</span>
+								<!-- TPR-970 changes-->   <div class="delSeat" id="totalPrice_${entry.entryNumber}">
+								<!-- TPR-970 changes-->		<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" /></div>
 								</c:when>
 								<c:otherwise>
-								<span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
+								<div id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalMrp}"/></div>
 								</c:otherwise>
 								</c:choose>
 								</c:when>
@@ -321,7 +320,7 @@
 									</form:select>
 								</c:when>
 								<c:otherwise>
-									<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input">
+									<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
 										<c:forEach items="${configuredQuantityList}"
 												   var="quantity">
 											<form:option value="${quantity}"></form:option>

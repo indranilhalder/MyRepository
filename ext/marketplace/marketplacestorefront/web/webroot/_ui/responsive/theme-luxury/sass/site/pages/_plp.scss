@@ -354,6 +354,10 @@
 									    height: 20px;
 									    top: 0;
 									    border-radius: $border-radius-small;
+                                        @include media-breakpoint-down(sm) {
+                                            left: 25px;
+                                        }
+                                        
 									}
 									.ivory::before{background:#f5eccb !important;}
 									.deepgray::before{background:#9b9b9b !important;}
@@ -660,6 +664,10 @@
 								.le-checkbox{
 									label{
 										width:100%;
+                                        @include media-breakpoint-down(sm) {
+                                            padding-left: 51px;    
+                                            
+                                        }
 									}
 									input[type=checkbox]~label::before{
 										border-radius:50%;
