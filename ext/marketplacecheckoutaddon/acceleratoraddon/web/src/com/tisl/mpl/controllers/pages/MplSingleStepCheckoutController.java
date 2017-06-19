@@ -1571,6 +1571,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final RegionData regionData = getI18NFacade().getRegion(addressForm.getCountryIso(), addressForm.getRegionIso());
 			newAddress.setRegion(regionData);
 		}
+		newAddress.setDefaultAddress(true);
 		if (addressForm.getSaveInAddressBook() != null)
 		{
 			newAddress.setVisibleInAddressBook(Boolean.TRUE.equals(addressForm.getSaveInAddressBook()));
@@ -1597,7 +1598,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		//		newAddress.setDefaultAddress(getUserFacade().isAddressBookEmpty() || getUserFacade().getAddressBook().size() == 1
 		//				|| Boolean.TRUE.equals(addressForm.getDefaultAddress()));
-		newAddress.setDefaultAddress(Boolean.TRUE.booleanValue());
 		getMplCustomAddressFacade().setDeliveryAddress(newAddress);
 	}
 
