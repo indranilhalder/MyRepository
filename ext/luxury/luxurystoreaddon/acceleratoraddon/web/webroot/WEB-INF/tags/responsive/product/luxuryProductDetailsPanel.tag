@@ -136,13 +136,13 @@ tr.d0 td {
                   </div>		
 				<div class="offer-icon">
 					<c:choose>
-						<c:when test="${isNew eq true}">
+						<c:when test="${product.isProductNew eq true}">
 							<span class="newarrival"></span>
 						</c:when>
-						<c:when test="${isOnSale eq true }">
+						<c:when test="${product.isOfferExisting eq true }">
 							<span class="onsale"></span>
 						</c:when>
-						<c:when test="${isExclusive eq true}">
+						<c:when test="${product.isOnlineExclusive eq true}">
 							<span class="exclusive"></span>
 						</c:when>
 					</c:choose>

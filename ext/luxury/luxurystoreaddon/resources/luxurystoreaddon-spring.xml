@@ -58,6 +58,22 @@
 		<property name="extensionName" value="luxurystoreaddon" />
 	</bean>
 	
+	<alias name="luxuryProductClassificationPopulatorList" alias="productClassificationPopulatorList"/>
+	<bean id="luxuryProductClassificationPopulatorList" parent="defaultProductClassificationPopulatorList">
+		<property name="populators">
+			<list merge="true">
+				<ref bean="luxuryProductFlagsPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<alias name="defaultLuxuryProductFlagsPopulator" alias="luxuryProductFlagsPopulator"/>
+	<bean id="defaultLuxuryProductFlagsPopulator" parent="baseProductPopulator"
+			class="com.tisl.lux.facades.populators.LuxuryProductFlagsPopulator">
+		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility"/>
+		<property name="configurationService" ref="configurationService" />
+	</bean>
+	
 <!-- Logic for resolving view resolver for addon prefix supporting multi site -->
 	
 	<util:map id="addonReplacePrefixMap" >
