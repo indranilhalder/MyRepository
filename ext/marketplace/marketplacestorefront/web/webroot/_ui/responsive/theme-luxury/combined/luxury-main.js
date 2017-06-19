@@ -13283,7 +13283,7 @@ TATA.CommonFunctions = {
     },
     Footer: function() {
         $(window).width() >= 768 && $("footer").find(".accordion").removeClass("accordion"), 
-        $("#main-nav > ul").addClass("footer-cloned-ul").clone().appendTo(".footer-popular-search"), 
+        $("#main-nav > ul.mega-menu").addClass("footer-cloned-ul").clone().appendTo(".footer-popular-search"), 
         $(".footer-popular-search .footer-cloned-ul > li").append("<br/>"), $(".footer-popular-search .footer-cloned-ul > li").each(function() {
             $(this).find(".sub-menu").length ? $(this).show() : $(this).hide();
         }), $(document).on("click", ".accordion h3", function() {

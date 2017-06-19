@@ -56,6 +56,34 @@
 	@include media-breakpoint-up(md) {
 		height: 149px;
 	}
+    
+    @include media-breakpoint-down(sm) {           
+         #createNewList{
+                display: none;
+            }
+        .main-nav{
+            
+            .mob-menu{
+                margin-top: 50px;
+
+                .wishlist{
+                    padding-left: 15px; 
+                }
+
+                .mob-login{
+                    border-bottom: 1px solid #fff;
+                }
+                
+                .account-userTitle.account-userTitle-custom{
+                    font-size: 14px;
+                    padding-top: 0px;
+                }
+
+            }
+            
+        }
+	}
+    
 	&, .main-nav, .logo {
 		@include transition(all 0.3s ease-in-out);
 	}
@@ -338,6 +366,12 @@
 			> li {
 				display: inline-block;
 				vertical-align: middle;
+                margin-right: 6px;
+                
+                &:last-child {
+                     margin-right: 0px;
+                }
+                
 				& + li {
 					margin-left: 10px;
 					@include media-breakpoint-up(sx) {
@@ -391,9 +425,9 @@
                     width: 16px;
                     height: 20px;
 				}
-				@include media-breakpoint-down(sm) {
+				/*@include media-breakpoint-down(sm) {
 						display: none;
-				}
+				}*/
 			}
 			li.header-bag-link{
 				display:none;
@@ -817,4 +851,7 @@
     text-align: center;
     background-color: #000;
     border-radius: .25rem;
+}
+.account-userTitle.account-userTitle-custom{
+    font-size: 12px;
 }

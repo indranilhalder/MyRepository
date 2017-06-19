@@ -64,11 +64,37 @@
 	              </a>
 				</div>
 				<nav class="main-nav" id="main-nav">
-					<ul>
+					<ul  class="mega-menu">
 						<cms:pageSlot position="NavigationBar" var="feature">
 							<cms:component component="${feature}" />
 						</cms:pageSlot>
 						
+					</ul>
+					
+					<ul class="hidden-sm hidden-md hidden-lg mob-menu">						
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<li class="wishlist"><a href="#" class="wishlist"><cms:pageSlot position="WishList" var="WishList" limit="1">
+									<cms:component component="${WishList}" element="li"/>
+									</cms:pageSlot> Wishlist</a> 
+								</li>
+							</sec:authorize>							
+							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+							<li class="mob-login">
+								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"> Sign in</a>
+ 						
+							</li>
+						</sec:authorize>
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<li class="mob-login"><a href="/logout">Sign Out</a>
+							</sec:authorize>
+							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+								<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
+								<ycommerce:testId code="header_LoggedUser">
+									<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
+								</ycommerce:testId>
+									</a>
+								</li>
+							</sec:authorize>
 					</ul>
 					
 					<div class="main-nav-close" id="main-nav-close"></div>
