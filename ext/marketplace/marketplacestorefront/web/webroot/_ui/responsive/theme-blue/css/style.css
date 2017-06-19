@@ -70003,3 +70003,11 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     opacity: 1;
 }
 }
+/* TISPRDT-1524 start */
+.form_field-input #updatePwd-checkPwd{
+	margin-bottom: 40px;
+}
+.updatePassword #frmUpdatePassword .blue{
+	margin-top: -30px;
+}
+/* TISPRDT-1524 end */
