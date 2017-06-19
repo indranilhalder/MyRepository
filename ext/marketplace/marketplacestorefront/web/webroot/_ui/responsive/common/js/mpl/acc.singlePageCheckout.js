@@ -2146,7 +2146,7 @@ removeExchangeFromCart : function (){
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 	                	{
 	                		//Validate payment in responsive
-	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive();
+	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive(paymentMode);
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
