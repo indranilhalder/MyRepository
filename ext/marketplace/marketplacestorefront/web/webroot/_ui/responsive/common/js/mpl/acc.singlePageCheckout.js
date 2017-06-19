@@ -556,20 +556,31 @@ ACC.singlePageCheckout = {
 			$("#addressmobileError").hide();
 		}
 	   
-		result=$("#otherLandmark").val();
-		if(result != null){
-		   if(result.trim() == ''){
-	  	        $(".otherLandMarkError").show();
-		  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
-		  	    validate = false;
-		  	  errorCount++;
-	  	     }else if(/[^a-zA-Z0-9]/.test(result)){
-	  		      $(".otherLandMarkError").show();
-			  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
-			  	 validate = false;
-			  	errorCount++;
-	  	  }
-	    }
+	   	var landMark=$( "#address.landmarks" ).val();
+	   	if(landMark=="Other")
+	   	{
+			result=$("#otherLandmark").val();
+			if(result != null){
+			   if(result.trim() == ''){
+		  	        $(".otherLandMarkError").show();
+			  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+			  	    validate = false;
+					errorCount++;
+		  	     }else if(/[^a-zA-Z0-9]/.test(result)){
+		  		      $(".otherLandMarkError").show();
+				  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+				  	 validate = false;
+					 errorCount++;
+		  	  }
+		    }
+	   	}
+	   	else if(landMark=="NA")
+   		{
+	   		$(".otherLandMarkError").show();
+		  	$(".otherLandMarkError").text("Select a landmark to proceed");
+		  	validate = false;
+		  	errorCount++;
+   		}
 	   
 	   	if(address1.value.indexOf('#')!=-1)
 	   	{
