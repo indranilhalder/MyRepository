@@ -69,7 +69,7 @@
 								<formElement:formSelectBox idKey="profile.gender"
 									labelKey="profile.gender" path="gender" mandatory="false"
 									skipBlank="false" skipBlankMessageKey="profile.select.gender"
-									items="${genderData}" selectCSSClass="form-control" />
+									items="${genderData}" selectCSSClass="form-control" selectedValue="MALE" />
 							</div>
 							<!-- TPR-6013 -->
 							<div class="half quarter">
