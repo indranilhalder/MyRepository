@@ -3704,6 +3704,9 @@ body .account .right-account .order-history.order-details li.header div.delivery
 body .account .right-account .order-history.order-details li.item{
 	clear: both;
 }
+body .account .right-account .order-history.order-details li.item{
+	border-top: 0px;
+}
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;

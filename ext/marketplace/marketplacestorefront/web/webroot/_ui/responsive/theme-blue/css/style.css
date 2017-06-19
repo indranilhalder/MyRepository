@@ -70058,6 +70058,10 @@ body .account .right-account form div.select.calender.quarter.anniversaryday
  margin-top: 40px;
  margin-bottom: 55px;
  }
+ body .account .right-account #frmUpdatePassword button.blue{
+ width: auto;
+ min-width: 200px;
+ }
 body .account .right-account form .half.quarter.account-profileEmail.quarter,
 body .account .right-account form .quarter.phone.quarter{
  margin-top: 40px;
@@ -70100,12 +70104,30 @@ body .account .right-account form input{
 body .account .right-account .responsiveProfile.password .blue.changePassResponsive{
 	display: none;
 }
+body .account .right-account .password .blue.changePassResponsive{
+	display: none;
+} 
+body .account .right-account .password.responsiveProfile #frmUpdatePassword button.blue{
+	background-color: #A9143C;
+    width: auto !important;
+	height: 42px;
+    line-height: 40px;
+    font-size: 12px;
+    padding: 0 20px;
+    letter-spacing: 1px;
+    min-width: 200px !important;
+    font-weight: 500;
+    clear: both;
+    color: #fff;
+    text-align: center;
+    }
 @media(min-width: 791px) and (max-width: 980px){
 	body .account .right-account .signOut p{
 	width: 60%;
 	}
 }
 @media(max-width: 790px){
+
 	body .account .right-account .responsiveProfile.password .blue.changePass{
 	display: none;
 	}
@@ -70168,7 +70190,7 @@ body .account .right-account .responsiveProfile.password .blue.changePassRespons
     padding-right: 5px;
 	}
 }
-/*  my profile changes end */
+/*  my profile changes end */ 
 
 body .account .right-account ul.pagination_ul {
     background-image: linear-gradient(to bottom, #f9f9f9, #ffffff);
@@ -70271,6 +70293,18 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 .body .account .right-account .order-history.order-details li.item:nth-child(3) .status .message{
 	left: -200% !important;
 }
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.viewDetailsAnchor,
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.trackOrderAnchor{
+	position: relative;
+    right: -20px;
+	
+}
+body .account .right-account .order-history .top .pagination.mobile {
+    right: 20px;
+}
+body .account .right-account .order-history .navigation2 {
+    margin-right: 18px;
+}
 @media(max-width: 790px){
 	body .account .right-account ul.pagination_ul {
     background-image: linear-gradient(to bottom, #ffffff, #ffffff);
@@ -70322,5 +70356,23 @@ body .account .right-account .order-history.order-details .product-block li.item
 }
 .order-history.order-details *{
 	font-weight: normal !important;
+}
+body .account .right-account .order-history .top .pagination.mobile {
+    right: 0px;
+    padding: 0 15px;
+}
+body .account .right-account .order-history .navigation2 {
+    margin-right: 0px;
+}
+body .account .right-account .order-history .bottom .pagination.mobile{
+	padding: 0 15px;
+}
+.pagination-bar.listing-menu.bottom {
+    width: auto;
+    display: inline-block;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment, 
+body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
+    line-height: 18px;
 }
 }

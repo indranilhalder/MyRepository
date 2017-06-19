@@ -397,7 +397,7 @@
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span> 
 														</div> --%>
 														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Return Request Date" /></span>&nbsp;
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Return Request Date: " /></span>&nbsp;
 															<c:forEach items="${returnFlags.statusRecords}" var="recordDate">
 															<span>${recordDate.date}</span>
 															</c:forEach>
@@ -412,7 +412,7 @@
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>
 														</div> --%>
 														<div class="statusDate">
-															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancellation Request Date" /></span>&nbsp;
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancellation Request Date: " /></span>&nbsp;
 															<c:forEach items="${cancelFlags.statusRecords}" var="recordDate">
 															<span>${recordDate.date}</span>
 															</c:forEach>
