@@ -2419,7 +2419,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
-	@ResponseBody
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.UPDATE_CHECK_PINCODE, method = RequestMethod.GET)
 	public String upDatePincodeServicabilityCheck(@RequestParam(value = "pin") final String pin,
 			@RequestParam(value = "productCode") final String productCode, @RequestParam(value = "sellerId") final String ussId,
@@ -3178,10 +3177,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
-
+			final List<PinCodeResponseData> responseData = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
-			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade
-					.getDeliveryModeMapForReviewOrder(cartData);
+			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade.getDeliveryModeMapForReviewOrder(
+					cartData, responseData);
 			model.addAttribute("deliveryModeData", delModeDataPopulateMap);
 			final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			model.addAttribute("defaultPincode", defaultPincode);
@@ -4244,21 +4244,28 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				{
 					Double deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 
-					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					//if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					if (!deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 					{
 						//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 						//								deliveryEntry.getSellerArticleSKU());
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-						deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
+
+
+						//deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 					}
-					else
-					{
-						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-						//		deliveryEntry.getSellerArticleSKU());
-						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-					}
+
+					// Blocked this particular code : As for CNC there will be no charge and hence DB Hit required
+					//					else
+					//					{
+					//						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+					//						//		deliveryEntry.getSellerArticleSKU());
+					//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+					//								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
+					//					}
+
+
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 				}
 			}
@@ -4362,8 +4369,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						getMplCheckoutFacade().rePopulateDeliveryPointOfService(deliveryPOSMap, cartModel);
 
 						final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+						final List<PinCodeResponseData> responseData = getSessionService().getAttribute(
+								MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 						Map<String, MarketplaceDeliveryModeData> deliveryModeDataMap = new HashMap<String, MarketplaceDeliveryModeData>();
-						deliveryModeDataMap = mplCartFacade.getDeliveryModeMapForReviewOrder(cartData);
+						deliveryModeDataMap = mplCartFacade.getDeliveryModeMapForReviewOrder(cartData, responseData);
 
 						model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 						model.addAttribute("deliveryModeData", deliveryModeDataMap);
