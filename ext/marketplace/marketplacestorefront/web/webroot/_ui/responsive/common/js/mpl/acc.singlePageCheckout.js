@@ -708,10 +708,6 @@ ACC.singlePageCheckout = {
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
         	}
-    		else
-    		{
-    			$("#singlePagePickupPersonPopup").modal('show');
-    		}
     	}
 	},
 	
@@ -1796,24 +1792,23 @@ removeExchangeFromCart : function (){
 		$("#make_mrupee_payment_up").css("display","none");
 	},
 	
-//	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
-//	getPickUpPersonPopUpMobile:function(){
-//		var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
-//		var data="";
-//		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
-//		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
-//				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-//		});
-//	        
-//		xhrPickupPersonResponse.done(function(data) { 
-//			//Populating popup
-//			$("#singlePagePickupPersonPopup .content").html(data);
-//			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
-//			
-//		});
-//		$("#singlePagePickupPersonPopup").modal('show');
-//	
-//	},
+	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
+	getPickUpPersonPopUpMobile:function(){
+		var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
+		var data="";
+		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
+		xhrPickupPersonResponse.fail(function(xhr, textStatus, errorThrown) {
+				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+	        
+		xhrPickupPersonResponse.done(function(data) { 
+			//Populating popup
+			$("#singlePagePickupPersonPopup .content").html(data);
+			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
+			
+		});
+		$("#singlePagePickupPersonPopup").modal('show');	
+	},
 	
 	
 	

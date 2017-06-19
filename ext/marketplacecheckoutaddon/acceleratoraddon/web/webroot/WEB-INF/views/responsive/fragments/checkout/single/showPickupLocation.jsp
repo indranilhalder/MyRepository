@@ -69,7 +69,7 @@
 			success : function(data) {
 				if(ACC.singlePageCheckout.getIsResponsive())
 				{
-					ACC.singlePageCheckout.getPickUpPersonForm();
+					ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
 					//$("#singlePagePickupPersonPopup").modal('show');
 				}
 				$(".continue_btn, .continue_btn_a").css("pointer-events", "all");
