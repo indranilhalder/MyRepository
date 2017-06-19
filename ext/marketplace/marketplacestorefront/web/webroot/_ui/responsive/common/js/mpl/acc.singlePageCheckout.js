@@ -1577,29 +1577,29 @@ removeExchangeFromCart : function (){
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
-//        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
-//        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-//        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-//        			});
-//        	        
-//        			xhrResponse.done(function(data, textStatus, jqXHR) {
-//        	        	if (jqXHR.responseJSON) {
-//        	        		if(data.type!="response")
-//        	                {
-//        	        			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
-//		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
-//        	                }
-//        	            }
-//        	        	else
-//    	        		{	//Updating order total div
-//        	        		$("#oredrTotalSpanId").html(data);
-//        	        		//Open payment mode form//apply promotion is called within
-//                    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
-//    	        		}
-//        	        });
+        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
+        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        			});
+        	        
+        			xhrResponse.done(function(data, textStatus, jqXHR) {
+        	        	if (jqXHR.responseJSON) {
+        	        		if(data.type!="response")
+        	                {
+        	        			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+        	                }
+        	            }
+        	        	else
+    	        		{	//Updating order total div
+        	        		$("#oredrTotalSpanId").html(data);
+        	        		//Open payment mode form//apply promotion is called within
+                    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+    	        		}
+        	        });
         			
-        			//Open payment mode form//apply promotion is called within
-            		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+//        			//Open payment mode form//apply promotion is called within
+//            		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
             		//If delivery modes will be changed all the validation flags will be reset.
             		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
             		
@@ -1637,28 +1637,28 @@ removeExchangeFromCart : function (){
         		else if(data.type=="response" && data.validation=="success")
     			{
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
-//        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
-//        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-//        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-//        			});
-//        	        
-//        			xhrResponse.done(function(data, textStatus, jqXHR) {
-//        	        	if (jqXHR.responseJSON) {
-//        	        		if(data.type!="response")
-//        	                {
-//        	        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
-//        	                }
-//        	            }
-//        	        	else
-//    	        		{	//Updating order total div
-//        	        		$("#oredrTotalSpanId").html(data);
-//        	        		$("#selectedReviewOrderDivId").show();
-//            				callOnReady();//This method is in showAddPaymentMethod.jsp
-//    	        		}
-//        	        });
+        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
+        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        			});
+        	        
+        			xhrResponse.done(function(data, textStatus, jqXHR) {
+        	        	if (jqXHR.responseJSON) {
+        	        		if(data.type!="response")
+        	                {
+        	        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+        	                }
+        	            }
+        	        	else
+    	        		{	//Updating order total div
+        	        		$("#oredrTotalSpanId").html(data);
+        	        		$("#selectedReviewOrderDivId").show();
+            				callOnReady();//This method is in showAddPaymentMethod.jsp
+    	        		}
+        	        });
         			
-        			$("#selectedReviewOrderDivId").show();
-    				callOnReady();//This method is in showAddPaymentMethod.jsp
+//        			$("#selectedReviewOrderDivId").show();
+//    				callOnReady();//This method is in showAddPaymentMethod.jsp
         			
         			/*//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);
