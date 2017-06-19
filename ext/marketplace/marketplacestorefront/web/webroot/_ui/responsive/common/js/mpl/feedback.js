@@ -1459,9 +1459,9 @@ $(document).ready(function(){
 		}
 
 	}); 
-	$(".progtrckr").each(function(){
+	/*$(".progtrckr").each(function(){
 		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
-	});
+	});*/	/*TPR-6013 Order History */
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)

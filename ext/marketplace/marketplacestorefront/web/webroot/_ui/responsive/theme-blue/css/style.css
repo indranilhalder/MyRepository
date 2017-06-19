@@ -69903,6 +69903,14 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 		float: right;
     	left: 16px;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot.last_dot{
+		float: right;
+    	left: 16px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing.cancelStatus span.dot.last_dot {
+    float: right;
+    left: -100px;
+}
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:not(:last-child):before{
 		content: '';
     border-bottom: 3px solid #ddd;
@@ -69911,6 +69919,19 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     left: 0;
     z-index: -1;
     width: 100%;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.returnStatus:before,
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.cancelStatus:before{
+	content: '';
+    border-bottom: 3px solid #ddd;
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.cancelStatus:before {
+    width: calc(100% - 100px);
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.paymentStatus:before,
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.full_track:before{
@@ -69927,7 +69948,8 @@ body .account .right-account .order-history.order-details li.item .status> ul.na
     padding-left: 0 !important;
 }
 body .right-account .order-details .deliveryTrack .dot-arrow{
-	display: none !important;
+	/* display: none !important; */
+	top: 46px;
 }
 body .account .right-account .order-history.order-details li.item .status .message{
 	/* width: 100% !important; */
@@ -69941,7 +69963,7 @@ body .account .right-account .order-history.order-details li.item .status .messa
 	font-weight: normal;
 	text-align: center;
 }
- body .account .right-account .order-history.order-details li.item .status .message > p:after{
+ /* body .account .right-account .order-history.order-details li.item .status .message > p:after{
 	content: "";
     width: 15px;
     height: 15px;
@@ -69954,7 +69976,7 @@ body .account .right-account .order-history.order-details li.item .status .messa
     box-shadow: 2px 2px 5px -1px #ccc;
     background-color: #fff;
     transform: rotate(225deg);
-} 
+}  */
 .status.statusConfirmed span, .status.statusShipped span, .status.statusDelivered span{
 	display: none;
 }
@@ -69988,6 +70010,9 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 .trackOrderDelivery{
 	display:none;
 }
+body .account .right-account .order-history.order-details li.item .status> ul.nav >li {
+    vertical-align: top;
+}
 @media (max-width: 790px){
 .responsiveProfile .status span {
     top: auto;
@@ -70001,5 +70026,14 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:nth-of-type(even) {
     opacity: 1;
+}
+}
+@media (max-width: 420px){
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing.cancelStatus span.dot.last_dot {
+    float: right;
+    left: -50px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.cancelStatus:before {
+    width: calc(100% - 50px);
 }
 }
