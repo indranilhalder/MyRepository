@@ -69906,6 +69906,10 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 		float: right;
     	left: 16px;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing.paymentStatus span.dot{
+		float: left;
+    	left: auto;
+}
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot.last_dot{
 		float: right;
     	left: 16px;
@@ -69936,7 +69940,6 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.cancelStatus:before {
     width: calc(100% - 100px);
 }
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress.paymentStatus:before,
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.full_track:before{
     border-bottom: 3px solid #7ed321;
 }
@@ -70166,3 +70169,158 @@ body .account .right-account .responsiveProfile.password .blue.changePassRespons
 	}
 }
 /*  my profile changes end */
+
+body .account .right-account ul.pagination_ul {
+    background-image: linear-gradient(to bottom, #f9f9f9, #ffffff);
+}
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.viewDetailsAnchor, body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor{
+	background: transparent;
+}
+body .account .right-account .order-history .product-block li.item .actions a{
+	font-size: 11px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	background-color:  transparent;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address h2 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  text-align: left;
+  color: #000000;
+  padding: 0px 20px;
+  font-weight: normal !important;
+  height: auto;
+    margin-bottom: 10px;
+}
+#shipping-track-order .item-header p{
+	font-size: 12px;
+	font-weight: normal !important;
+	padding: 0px 20px;
+	color: #666666;
+	display: none;
+}
+#shipping-track-order .item-header h2 + .col-md-8.col-sm-6, #shipping-track-order .item-header h3 + .col-md-8.col-sm-6{
+	font-size: 12px;
+	font-weight: normal;
+	padding: 0px;
+	width: 100%;
+}
+#shipping-track-order .item-header address{
+	padding: 0px 20px;
+	color: #666666;
+	margin-bottom: 5px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment {
+	font-size: 11px;
+    font-style: italic;
+    line-height: 1.27;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #bbbbbb;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment span{
+	font-weight: normal !important;
+}
+body .account .right-account .order-history.order-details li.item .order {
+    margin-bottom: 5px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	background-color:  transparent;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address {
+    position: relative;
+    top: -20px;
+}
+body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment{
+	border: none;
+}
+body .account .right-account .order-history.order-details li.item{
+	padding-top: 20px;
+	border-top: solid 1px #eeeeee;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p.track-order-pickup{
+	display: inline;
+	margin-left: -15px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p.track-order-pickup + span{
+	display: inline;
+}
+#pickName {
+    padding-top: 0;
+    display: inline;
+    margin-left: 0;
+    padding-left: 0px !important;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment{
+	padding-top: 5px !important;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p {
+    font-weight: normal;
+}
+.editIconCSS{
+	margin-bottom: 5px;
+}
+.body .account .right-account .order-history.order-details li.item:nth-child(2) .status .message{
+	left: -100% !important;
+}
+.body .account .right-account .order-history.order-details li.item:nth-child(3) .status .message{
+	left: -200% !important;
+}
+@media(max-width: 790px){
+	body .account .right-account ul.pagination_ul {
+    background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+    position: relative;
+}
+body .account .right-account .order-history .top .pagination.mobile {
+    top: 61px;
+}
+body .account .right-account .order-history .navigation #displayPaginationCountUp {
+    margin-top: 20px;
+}
+body .account .right-account .order-history .product-block li.header>ul>li:first-child span.orderNumber{
+	display: none;
+}
+body .account .right-account ul.pagination_ul:first-of-type{
+	border-top: 1px solid #eeeeee;
+}
+body .account .right-account .order-history .product-block li.item .attributes, .order-serial-num{
+	display: none;
+}
+body .account .right-account .order-history .product-block li.item .orderUpdatesBlock {
+    width: calc(100% - 70px);
+    float: right;
+}
+body .account .right-account .order-history .product-block li.item .orderUpdatesBlock .statusDate {
+    text-align: left;
+}
+body .account .right-account .order-history .product-block li.item .orderUpdatesBlock .status {
+    position: absolute;
+    top: 20px;
+    right: 0;
+}
+body .account .right-account .order-history .product-block li.item .details {
+    padding-right: 70px;
+    padding-left: 70px;
+}
+body .account .right-account .order-history .product-block li.item .image {
+    min-height: auto;
+}
+body .account .right-account .order-history.order-details li.header div {
+    padding-left: 0px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3,
+#shipping-track-order .item-header address {
+    padding: 0px;
+}
+body .account .right-account .order-history.order-details .product-block li.item .image {
+    min-height: auto;
+}
+.order-history.order-details *{
+	font-weight: normal !important;
+}
+}
