@@ -202,17 +202,8 @@ TATA.CommonFunctions = {
             },
             success: function(data) {
                 $("#login-container .header-forget-pass").html(data);
-                TATA.CommonFunctions.regsitrationGenderCheck();
             }
         });
-    },
-    
-    regsitrationGenderCheck : function() {
-    	$(".sign-up-action .toggle-btn").on("click", function(event){
-			var id = $(this).attr("for");
-			$(".toggle").removeAttr("checked");
-			$("#"+id).attr("checked", "checked");
- 		});
     },
     
 	Toggle: function() {
@@ -281,6 +272,14 @@ TATA.CommonFunctions = {
             }else if(e.target.id == "luxuryForgotPasswordByEmailAjax"){
             	TATA.CommonFunctions.forgotPasswordValidate();
             	$("#forgottenPwdForm").submit();
+            }
+            
+            if(element.hasClass("toggle-btn")){
+            	var id = element.attr("for");
+    			$(".toggle").removeAttr("checked");
+    			$("#"+id).attr("checked", "checked");
+    			var genderValue = $("#"+id).val();
+    			$('#gender').val(genderValue);
             }
             
             if(element.hasClass("header-login-target-link")){

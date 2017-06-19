@@ -13064,14 +13064,8 @@ TATA.CommonFunctions = {
                 $("#login-container .header-forget-pass").html('<div class="luxury-loader"></div>');
             },
             success: function(data) {
-                $("#login-container .header-forget-pass").html(data), TATA.CommonFunctions.regsitrationGenderCheck();
+                $("#login-container .header-forget-pass").html(data);
             }
-        });
-    },
-    regsitrationGenderCheck: function() {
-        $(".sign-up-action .toggle-btn").on("click", function(event) {
-            var id = $(this).attr("for");
-            $(".toggle").removeAttr("checked"), $("#" + id).attr("checked", "checked");
         });
     },
     Toggle: function() {
@@ -13101,6 +13095,13 @@ TATA.CommonFunctions = {
             $("#forgottenPwdForm").submit()), element.hasClass("header-login-target-link")) {
                 var targetID = element.data("target-id");
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
+            }
+            if(element.hasClass("toggle-btn")){
+            	var id = element.attr("for");
+    			$(".toggle").removeAttr("checked");
+    			$("#"+id).attr("checked", "checked");
+    			var genderValue = $("#"+id).val();
+    			$('#gender').val(genderValue);
             }
         });
     },
