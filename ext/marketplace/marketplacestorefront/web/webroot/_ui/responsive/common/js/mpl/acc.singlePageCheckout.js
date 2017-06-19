@@ -562,10 +562,12 @@ ACC.singlePageCheckout = {
 	  	        $(".otherLandMarkError").show();
 		  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
 		  	    validate = false;
+		  	  errorCount++;
 	  	     }else if(/[^a-zA-Z0-9]/.test(result)){
 	  		      $(".otherLandMarkError").show();
 			  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
 			  	 validate = false;
+			  	errorCount++;
 	  	  }
 	    }
 	   
