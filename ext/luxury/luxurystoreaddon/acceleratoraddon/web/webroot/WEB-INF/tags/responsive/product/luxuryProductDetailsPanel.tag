@@ -160,10 +160,10 @@ tr.d0 td {
 				<%-- <input id="emiCuttOffAmount" type="hidden" value="${emiCuttOffAmount}"/>
 				<!-- EMI section -->
 				<product:emiDetail product="${product}" /> --%>
-			<!-- <span id="productPromotionSection"> --><!-- UF-60 wrapping product:productPromotionSection in a span -->
+			<span id="productPromotionSection" style="display: none;"><!-- UF-60 wrapping product:productPromotionSection in a span -->
 			<!-- promotion  section -->
-			<%-- <product:productPromotionSection product="${product}" />
-			</span> --%>
+			<%-- <product:productPromotionSection product="${product}" /> --%>
+			</span>
 			
 				<div class="pdp-social-links text-center">
 					<ul>
