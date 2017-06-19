@@ -409,10 +409,10 @@
 					<c:when test="${entry.giveAway}">
 						<li
 							id="${entry.selectedSellerInformation.ussid}_qty_${entry.giveAway}"
-							class="qty"></li>
+							class="qty">
 					</c:when>
 					<c:otherwise>
-						<li id="${entry.selectedSellerInformation.ussid}_qty" class="qty"></li>
+						<li id="${entry.selectedSellerInformation.ussid}_qty" class="qty">
 					</c:otherwise>
 				</c:choose>
 
@@ -443,6 +443,7 @@
 						<option value="${entry.quantity}" selected="selected" >${entry.quantity}</option>
 					</select>
 				</form>
+				</li>
 		
 
 
