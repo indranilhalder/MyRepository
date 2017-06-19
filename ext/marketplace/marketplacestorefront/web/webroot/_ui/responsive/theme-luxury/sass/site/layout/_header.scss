@@ -66,8 +66,18 @@
             .mob-menu{
                 margin-top: 50px;
 
-                .wishlist{
-                    padding-left: 15px; 
+                .wishlist-mob{
+                    padding-left: 15px;                     
+                   
+                        &:before{
+                            top:13px;
+                            left:0px;
+                            width: 22px;
+                            height: 20px;
+                            background-image: $Sprite_icon;
+                            background-position: -1021px -56px;
+                        }
+                    
                 }
 
                 .mob-login{

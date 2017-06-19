@@ -13504,6 +13504,16 @@ TATA.CommonFunctions = {
             TATA.Pages.LANDING.owlCarosel_customize();
         }
     },
+    CHECKOUT: {
+        Netbanking: function() {
+            $("payment-tab #viewPaymentNetbanking").on("click", function() {
+                $(".net-bank.netbankingPanel ul li").addClass("le-radio");
+            });
+        },
+        init: function() {
+            TATA.Pages.Checkout.Netbanking();
+        }
+    },
     PDP: {
         wishlistInit: function() {
             $(document).on("click", ".add-to-wl-pdp", function() {
@@ -13722,7 +13732,7 @@ TATA.CommonFunctions = {
     },
     init: function() {
         var _self = TATA.Pages;
-        _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
+        _self.PLP.init(), _self.PDP.init(), _self.CHECKOUT.init(), _self.LANDING.init();
     }
 }, $(document).ready(function() {
     TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt(), 

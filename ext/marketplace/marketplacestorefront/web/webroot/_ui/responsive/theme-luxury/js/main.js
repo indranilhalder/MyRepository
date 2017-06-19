@@ -972,6 +972,22 @@ TATA.Pages = {
 			_self.owlCarosel_customize();
 		}
 	},
+    
+    CHECKOUT:  {
+        
+        Netbanking: function(){
+            
+            $("payment-tab #viewPaymentNetbanking").on('click', function(){ 
+
+                $(".net-bank.netbankingPanel ul li").addClass("le-radio");
+            });
+        },
+        
+        init: function () {
+			var _self = TATA.Pages.Checkout;
+			_self.Netbanking();            
+		}
+    },
 	
 	PDP:  {
 	
@@ -1313,10 +1329,13 @@ TATA.Pages = {
 		}
 	},
 	
+
+        
 	init: function () {
 		var _self = TATA.Pages;
 		_self.PLP.init();
 		_self.PDP.init();
+        _self.CHECKOUT.init();
 		_self.LANDING.init();
 	}
 };
