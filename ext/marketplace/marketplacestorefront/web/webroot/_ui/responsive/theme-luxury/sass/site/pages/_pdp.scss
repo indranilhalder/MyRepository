@@ -7,6 +7,10 @@
 	padding-right: 15px;
     
     
+    .strike-price, .saving-price, .savings, .our-price{
+        font-size: 18px;
+        font-weight: 600;
+    } 
 	.pdp-left {
 		margin-bottom: 20px;
 	}
@@ -73,7 +77,7 @@
 	}
 	.price-feature {
 		margin-top: 20px;
-		margin-bottom: 20px;
+		margin-bottom: 0px;
 		span {
 			& + span {
 				margin-left: 15px;
