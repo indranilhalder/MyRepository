@@ -80,7 +80,7 @@
 							</sec:authorize>							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
 							<li class="mob-login">
-								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"> Sign in</a>
+								<a class="toggle-link luxury-login" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin">Sign in or Sign up</a>
  						
 							</li>
 						</sec:authorize>

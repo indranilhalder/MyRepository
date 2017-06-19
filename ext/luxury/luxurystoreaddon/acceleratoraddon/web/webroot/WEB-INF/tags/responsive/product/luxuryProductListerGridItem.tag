@@ -57,7 +57,8 @@
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="searchPage"/>
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxuryModel"/>
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxurySecondary"/>
-					<div class="offer-icon">
+				</div>
+				<div class="offer-icon">
 						<c:if test="${product.isProductNew eq true && !product.isOfferExisting}">
 							<span class="newarrival"></span>
 						</c:if>
@@ -68,7 +69,6 @@
 							<span class="onsale"></span>
 						</c:if>
 					</div>
-				</div>
 			</a>
 			<a href="javascript:;" class="add-to-wishlist" data-product="${product.url}"></a>
 			<span class="plpWlcode" style="display: none;">${product.url}</span>

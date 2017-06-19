@@ -84,10 +84,10 @@
 		<security:remember-me key="marketplacestorefront" services-ref="rememberMeServices"/>
 
 		<!-- SSL / AUTHENTICATED pages -->
-		<security:intercept-url pattern="/my-account/addressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="http" />
-		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="http" />
-		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
-		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="http" />
+		<security:intercept-url pattern="/my-account/addressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')"/>
+		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')"/>
+		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')"/>
+		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')"/>
 	        
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> --> <!-- Everything should be secure -->
 		<security:intercept-url pattern="/login" requires-channel="http" />
@@ -123,6 +123,7 @@
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('default.session.timeout')}"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
+		<property name="httpOnly" value="true"/>
 	</bean>
 	<!-- POC End -->
 	
