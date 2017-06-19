@@ -3295,6 +3295,8 @@ $("#saveBlockData").click(function(){
 			}
 		   
 		  <!-- End of  AWB Jquery codes PopUp  -->
+		  	//To remove small green line from inactive dots
+		  	$(".deliveryTrack.status .progtrckr.tabs li span.dot.inactive").siblings(".start").removeClass('start');
 		  }); 
 		  /* TPR-6013 track order modal js start */
 		  $("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot").last().addClass("last_dot");
