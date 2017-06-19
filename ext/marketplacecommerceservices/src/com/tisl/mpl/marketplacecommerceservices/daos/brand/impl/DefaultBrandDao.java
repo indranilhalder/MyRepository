@@ -195,3 +195,4 @@ public class DefaultBrandDao extends AbstractItemDao implements BrandDao
 		return null;
 	}
 }
+

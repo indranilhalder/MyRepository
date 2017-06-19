@@ -31,14 +31,19 @@ public interface BrandFacade
 
 	/**
 	 * @param emailId
+	 * @param string
+	 * @return
+	 */
+	List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(String emailId, String string);
+
+	/**
+	 * @param emailId
 	 * @return
 	 */
 	List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(String emailId);
 
 	/**
 	 * @param emailId
-	 * @param string
 	 * @return
 	 */
-	List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(String emailId, String string);
 }

@@ -78,6 +78,7 @@ public class DefaultBrandFacade implements BrandFacade
 		return brandService.checkEmailIdForMarketplace(emailId);
 	}
 
+	@Override
 	public List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury)
 	{
 

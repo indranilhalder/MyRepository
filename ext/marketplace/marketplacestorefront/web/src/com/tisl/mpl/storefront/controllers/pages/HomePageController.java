@@ -389,8 +389,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return homePageBannerJson;
 	}
@@ -1171,8 +1171,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getBestOffersJson;
 	}
@@ -1350,7 +1350,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
