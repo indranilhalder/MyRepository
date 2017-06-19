@@ -169,6 +169,7 @@
 					<h2><spring:theme code="profile.Password" text="Password"/></h2>	
 					<p><spring:theme code="profile.Password.Details" text="Already set correctly"/></p>
 					<button type="button" class="blue changePass">CHANGE PASSWORD</button>
+					<button type="button" class="blue changePassResponsive">CHANGE</button>
 					<button type="button" class="blue crossPass">X</button>
 
 					<div>
@@ -217,7 +218,7 @@
 							</fieldset>
 							<button type=button class="blue"
 								onClick="return validatePassword();">
-								<spring:theme code="cart.modal.save.changes" text="Save Changes" />
+								<spring:theme code="cart.modal.save.changes1" text="Save Changes" />
 							</button>
 						</form:form>
 
