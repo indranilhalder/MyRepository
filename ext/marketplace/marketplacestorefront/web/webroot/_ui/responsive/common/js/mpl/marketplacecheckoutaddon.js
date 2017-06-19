@@ -4717,8 +4717,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
-				//TISTRT-1605
-				if(parseFloat(response.deliveryCost.value) > 0){
+				//TISTRT-1605 //TISBBC-35
+				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
 					$("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue);
 		 		}else{
 		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
