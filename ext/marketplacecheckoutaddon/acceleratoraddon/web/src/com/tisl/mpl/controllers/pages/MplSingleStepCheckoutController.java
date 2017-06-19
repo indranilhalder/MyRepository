@@ -3178,10 +3178,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
-
+			final List<PinCodeResponseData> responseData = getSessionService().getAttribute(
+					MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
-			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade
-					.getDeliveryModeMapForReviewOrder(cartData);
+			final Map<String, MarketplaceDeliveryModeData> delModeDataPopulateMap = mplCartFacade.getDeliveryModeMapForReviewOrder(
+					cartData, responseData);
 			model.addAttribute("deliveryModeData", delModeDataPopulateMap);
 			final String defaultPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
 			model.addAttribute("defaultPincode", defaultPincode);
@@ -4369,8 +4370,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						getMplCheckoutFacade().rePopulateDeliveryPointOfService(deliveryPOSMap, cartModel);
 
 						final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+						final List<PinCodeResponseData> responseData = getSessionService().getAttribute(
+								MarketplacecommerceservicesConstants.SESSION_PINCODE_RES);
 						Map<String, MarketplaceDeliveryModeData> deliveryModeDataMap = new HashMap<String, MarketplaceDeliveryModeData>();
-						deliveryModeDataMap = mplCartFacade.getDeliveryModeMapForReviewOrder(cartData);
+						deliveryModeDataMap = mplCartFacade.getDeliveryModeMapForReviewOrder(cartData, responseData);
 
 						model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
 						model.addAttribute("deliveryModeData", deliveryModeDataMap);
