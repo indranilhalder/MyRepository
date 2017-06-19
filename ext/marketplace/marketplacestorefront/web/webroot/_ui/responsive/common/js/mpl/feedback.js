@@ -3577,6 +3577,20 @@ $("#sameAsShippingEmi").click(function(){
 /*TISSQAEE-335*/
 $(window).on("load resize",function(){
 	topLeftLocator();
+	
+	/* UF-338 starts */
+	$(".product-info>div.tabs-block .tabs .tab-details > ul li:contains(Brand Color)").each(function(){
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);
+
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);		//Code Repeat
+	});
+	
+	/* UF-338 ends */
+	
 });
 $(document).ajaxComplete(function(){
 	topLeftLocator();
