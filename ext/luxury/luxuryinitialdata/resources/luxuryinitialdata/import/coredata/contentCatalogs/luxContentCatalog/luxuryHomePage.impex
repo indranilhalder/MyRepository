@@ -7,7 +7,6 @@ $contentCatalog=$storePrefixContentCatalog
 $productCatalog=luxProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
-# Import modulegen config properties into impex macros
 $lang=en
 
 $category=category(code, $productCV)
@@ -15,6 +14,7 @@ $product=product(code, $productCV)
 $picture=media(code, $contentCV)
 $luxuryStoreAddonPrefix=addon:/luxurystoreaddon
 
+# Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
 
@@ -111,7 +111,7 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;LeftContent;text/png;getapp.png;$jarResourceCms/preview-images/getapp.png;;             
 ;;RightContent;text/png;EGV.png;$jarResourceCms/preview-images/EGV.png                                                      
 ;;WeeklySpecialSvg-1;text/png;weeklySpecialSvg1.png;$jarResourceCms/preview-images/weeklySpecialSvg1.png;;             
-;;WeeklySpecialBanner-1;text/png;weeklySpecialBanner1.png;$jarResourceCms/preview-images/weeklySpecialBanner1.png;;             
+;;WeeklySpecialBanner-1;text/png;weeklySpecialBanner1.png;$jarResourceCms/preview-images/weeklySpecialBanner1.png;;
 ;;WeeklySpecialSvg-2;text/png;weeklySpecialSvg2.png;$jarResourceCms/preview-images/weeklySpecialSvg2.png;;             
 ;;WeeklySpecialBanner-2;text/png;weeklySpecialBanner2.png;$jarResourceCms/preview-images/weeklySpecialBanner2.png;;             
 ;;WeeklySpecialSvg-3;text/png;weeklySpecialSvg3.png;$jarResourceCms/preview-images/weeklySpecialSvg3.png;;             
@@ -151,7 +151,7 @@ INSERT_UPDATE WeeklySpecialBanner;$contentCV[unique=true];uid[unique=true];svglo
                                   
                                   
 INSERT_UPDATE WeeklySpecial;$contentCV[unique=true];uid[unique=true];title;weeklySpecialBanners(uid,$contentCV)        
-;;HomePageWeaklySpecialBanner;New on Luxury this week;weeklySpecial1,weeklySpecial2,weeklySpecial3
+;;HomePageWeaklySpecialBanner;New on Luxury this week;weeklySpecial1,weeklySpecial2,weeklySpecial3,weeklySpecial1,weeklySpecial2,weeklySpecial3
 
 
 
