@@ -151,7 +151,7 @@ INSERT_UPDATE WeeklySpecialBanner;$contentCV[unique=true];uid[unique=true];svglo
                                   
                                   
 INSERT_UPDATE WeeklySpecial;$contentCV[unique=true];uid[unique=true];title;weeklySpecialBanners(uid,$contentCV)        
-;;HomePageWeaklySpecialBanner;New on Luxury this week;weeklySpecial1,weeklySpecial2,weeklySpecial3
+;;HomePageWeaklySpecialBanner;New on Luxury this week;weeklySpecial1,weeklySpecial2,weeklySpecial3,weeklySpecial1,weeklySpecial2,weeklySpecial3,weeklySpecial1,weeklySpecial2,weeklySpecial3
 
 
 
