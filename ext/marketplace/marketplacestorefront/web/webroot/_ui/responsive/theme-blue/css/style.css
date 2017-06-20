@@ -69952,6 +69952,7 @@ body .account .right-account .order-history.order-details li.item .status .nav{
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
 	text-align: left;
     padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 body .right-account .order-details .deliveryTrack .dot-arrow{
 	/* display: none !important; */
@@ -70254,10 +70255,10 @@ body .account .right-account .order-history.order-details li.item .order {
 #shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
 	background-color:  transparent;
 }
-body .account .right-account .order-history.order-details li.header div.delivery-address {
+/* body .account .right-account .order-history.order-details li.header div.delivery-address {
     position: relative;
     top: -20px;
-}
+} */
 body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment{
 	border: none;
 }
@@ -70287,10 +70288,10 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 .editIconCSS{
 	margin-bottom: 5px;
 }
-.body .account .right-account .order-history.order-details li.item:nth-child(2) .status .message{
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message{
 	left: -100% !important;
 }
-.body .account .right-account .order-history.order-details li.item:nth-child(3) .status .message{
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(3) .message{
 	left: -200% !important;
 }
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.viewDetailsAnchor,
@@ -70305,10 +70306,55 @@ body .account .right-account .order-history .top .pagination.mobile {
 body .account .right-account .order-history .navigation2 {
     margin-right: 18px;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start:after {
+    width: 25px;
+}
+body .account .right-account .order-history.order-details li.header div.totals {
+    vertical-align: top;
+}
+body .account .right-account .order-history.order-details li.header>ul>li{
+	width: 100%;
+}
+body .account .right-account .info .myprofile h2{
+	margin-bottom:0;
+}
+body .account .right-account form .quarter.lastNaming,
+body .account .right-account form .full.phone input{
+	margin-left: -1px;
+}
+body .account .right-account form input, body .account .right-account form select {
+    letter-spacing: 0.6px;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls:after{
+	right: 10px;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #f9f9f9, #ffffff);
+}
+body .account .right-account .order-history.order-details li.header *{
+	background: transparent !important;
+}
+body .account .right-account .password .blue.crossPass:before{
+	content: "\00d7";
+    color: #000;
+    font-size: 26px;
+    font-weight: bold;
+    -webkit-transition: font-weight 0.15s;
+    -moz-transition: font-weight 0.15s;
+    transition: font-weight 0.15s;
+    position: relative;
+    top: -14px;
+}
+.editIconCSS a#changeAddressLink {
+    margin-left: 5px;
+}
 @media(max-width: 790px){
 	body .account .right-account ul.pagination_ul {
     background-image: linear-gradient(to bottom, #ffffff, #ffffff);
     position: relative;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #ffffff, #ffffff);
 }
 body .account .right-account .order-history .top .pagination.mobile {
     top: 61px;
@@ -70375,4 +70421,30 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
     line-height: 18px;
 }
+body .account .account-header {
+    margin-bottom:0;
+    padding-bottom: 20px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start{
+	position: static;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+    padding-left: 15.5%;
+    padding-right: 0;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status:not(.suman) {
+    padding-left: 12.5%;
+}
+.editIconCSS a#changeAddressLink {
+    margin-left: -15px;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address {
+    padding-bottom: 30px;
+}
+}
+
+@media (max-width: 767px){
+footer>div>ul>li h3>img{ 
+	left: 0px; 
+	}
 }

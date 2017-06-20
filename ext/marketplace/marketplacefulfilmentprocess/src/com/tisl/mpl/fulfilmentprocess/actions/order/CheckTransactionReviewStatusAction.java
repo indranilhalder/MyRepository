@@ -281,7 +281,12 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 
 				//Initiating refund
 				final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
-
+				//Creating cancel order ticket
+				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
+				if (ticketstatus)
+				{
+					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
+				}
 				//Refund model mapping for initiated refund
 				//Refund code executed first to avoid refund failure during oms inventory call
 				if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
@@ -306,15 +311,15 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
 				}
 
-				mplCommerceCartService.isInventoryReserved(null,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
-						null, SalesApplication.WEB);
-
-				//Creating cancel order ticket
-				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
-				if (ticketstatus)
+				try
 				{
-					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
+					mplCommerceCartService.isInventoryReserved(null,
+							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
+							null, SalesApplication.WEB);
+				}
+				catch (final Exception e)
+				{
+					LOG.error(e.getMessage(), e);
 				}
 
 			}

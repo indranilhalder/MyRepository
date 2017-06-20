@@ -3079,7 +3079,7 @@ $(function() {
 					    			$("#pickName").text(name);
 					    			$("#pickNo").text(mobile);
 					    			$(".pickup_Edit").css("display","none");
-					    			$(".pickupeditbtn").css("display","block");
+					    			$(".pickupeditbtn").css("display","inline-block"); //TISPRDT-1550
 					    			if(status="sucess"){
 							    		$.ajax({	  
 											type: "POST",
@@ -3295,10 +3295,16 @@ $("#saveBlockData").click(function(){
 			}
 		   
 		  <!-- End of  AWB Jquery codes PopUp  -->
+		  	//To remove small green line from inactive dots
+		  	$(".deliveryTrack.status .progtrckr.tabs li span.dot.inactive").siblings(".start").removeClass('start');
 		  }); 
 		  /* TPR-6013 track order modal js start */
-		  $("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot").last().addClass("last_dot");
-		  $("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+			$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
+			});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+			});
 		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").find("span.dot").last().hasClass("inactive"))){
 				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").addClass("full_track");
 			}
@@ -3525,13 +3531,17 @@ body .account  .track-order-del-charge{
 body .account .left-nav, body .account .right-account .order-history .navigation,
 body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
-body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
 body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span,
 #userLoginType, #js-site-search-input, #ia_category_code{
 	display: none !important;
 }
-
+body .account .right-account .order-history .product-block li.item .image{
+	min-height: 135px;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+}
 body .account .right-account .order-history.order-details li.item .item-fulfillment,
 body .account .right-account .order-history.order-details .product-block{
 	margin: 0 !important;
@@ -3581,7 +3591,7 @@ body .account .right-account .order-history.order-details .product-block{
 }
 body .account .right-account .order-history.order-details li.header>ul{
 	margin-bottom: 16px;
-	width: 50%;
+	width: 100%;
 	float: left;
 }
 body .account .right-account .order-history.order-details li.header>ul> li{
@@ -3723,7 +3733,7 @@ body .account .right-account .order-history.order-details .product-block li.item
     min-height: auto;
 }
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
-    padding-left: 12.5%;
+    padding-left: 14.5%;
 }
 }
 @media (max-width: 500px){
@@ -3736,6 +3746,11 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
     padding-left: 15px;
     /* max-width: 70px; */
+}
+}
+@media(min-width: 1061px){
+	body .account .right-account .order-history.order-details .product-block li.item .details {
+    width: calc(50% - 170px);
 }
 }
 </style>

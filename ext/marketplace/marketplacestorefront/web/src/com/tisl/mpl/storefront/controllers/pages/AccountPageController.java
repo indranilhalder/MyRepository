@@ -132,7 +132,6 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -232,7 +231,7 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 /**
  * Controller for home page
@@ -806,7 +805,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 								final AWBResponseData deliveryAWBData = new AWBResponseData();
 								final StatusRecordData statusRecordData = new StatusRecordData();
 								final List<StatusRecordData> listStatusRecordData = new ArrayList<StatusRecordData>();
-								statusRecordData.setDate(smdfDate.format(orderEntryData.getConsignment().getStatusDate()));
+								LOG.info(">>>>>>>>>> consignmentModel.getDeliveryDate() " + consignmentModel.getDeliveryDate());
+								if (null != consignmentModel.getDeliveryDate())
+								{
+									statusRecordData.setDate(smdfDate.format(consignmentModel.getDeliveryDate()));
+								}
 								deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
 								listStatusRecordData.add(statusRecordData);
 								deliveryAWBData.setStatusRecords(listStatusRecordData);
