@@ -983,7 +983,7 @@ TATA.Pages = {
         },
         
         init: function () {
-			var _self = TATA.Pages.Checkout;
+			var _self = TATA.Pages.CHECKOUT;
 			_self.Netbanking();            
 		}
     },

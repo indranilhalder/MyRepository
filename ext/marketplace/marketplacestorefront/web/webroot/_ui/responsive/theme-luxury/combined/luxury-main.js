@@ -13092,16 +13092,15 @@ TATA.CommonFunctions = {
             if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") ? (TATA.CommonFunctions.signInValidate(), 
             $("#loginForm").submit()) : "luxury_register" == e.target.id ? (TATA.CommonFunctions.signUpValidate(), 
             $("#extRegisterForm").submit()) : "luxuryForgotPasswordByEmailAjax" == e.target.id && (TATA.CommonFunctions.forgotPasswordValidate(), 
-            $("#forgottenPwdForm").submit()), element.hasClass("header-login-target-link")) {
+            $("#forgottenPwdForm").submit()), element.hasClass("toggle-btn")) {
+                var id = element.attr("for");
+                $(".toggle").removeAttr("checked"), $("#" + id).attr("checked", "checked");
+                var genderValue = $("#" + id).val();
+                $("#gender").val(genderValue);
+            }
+            if (element.hasClass("header-login-target-link")) {
                 var targetID = element.data("target-id");
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
-            }
-            if(element.hasClass("toggle-btn")){
-            	var id = element.attr("for");
-    			$(".toggle").removeAttr("checked");
-    			$("#"+id).attr("checked", "checked");
-    			var genderValue = $("#"+id).val();
-    			$('#gender').val(genderValue);
             }
         });
     },
@@ -13512,7 +13511,7 @@ TATA.CommonFunctions = {
             });
         },
         init: function() {
-            TATA.Pages.Checkout.Netbanking();
+            TATA.Pages.CHECKOUT.Netbanking();
         }
     },
     PDP: {
