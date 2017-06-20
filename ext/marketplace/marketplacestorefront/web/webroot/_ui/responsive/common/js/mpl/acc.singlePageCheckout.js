@@ -344,6 +344,7 @@ ACC.singlePageCheckout = {
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
             if (jqXHR.responseJSON) {
+            	ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=false;
             	if(data.type!="response" && data.type!="ajaxRedirect")
                 {
                 	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
@@ -362,44 +363,18 @@ ACC.singlePageCheckout = {
         		}
             } else {
             	ACC.singlePageCheckout.getSelectedDeliveryModes("");
-            	
-            	//else
+            	if(isCncPresent=="true" && cncSelected=="true")
             	{
-            		//$("#choosedeliveryMode").html(data);
+            		$("#singlePagePickupPersonPopup").modal('show');
+            		//Code to delay slot delivery till the user saves pickup person details
+            		ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=true;
+            		$("#singlePageChooseSlotDeliveryPopup #modalBody").html(data);
+            	}
+            	else
+            	{//Code to show slot delivery page if CNC is not present
             		var elementId="singlePageChooseSlotDeliveryPopup";
             		ACC.singlePageCheckout.modalPopup(elementId,data);
-            	}
-//            	$("#reviewOrder").html(data);
-//            	//START:Code to show strike off price
-//        		$("#off-bag").show();
-//
-//        		$("li.price").each(function(){
-//        				if($(this).find(".off-bag").css("display") === "block"){
-//        					$(this).find("span.delSeat").addClass("delAction");
-//        				}
-//        				else{
-//        					$(this).find("span.delSeat").removeClass("delAction");
-//        				}
-//        			});
-//        		//END:Code to show strike off price
-//            	if($('body').find('a.cart_move_wishlist').length > 0){
-//            	$('a.cart_move_wishlist').popover({ 
-//            		html : true,
-//            		content: function() {
-//            			return $('.add-to-wishlist-container').html();
-//            		}
-//            	});
-//            	}
-            	
-//            	else
-//            	{
-//            		ACC.singlePageCheckout.showAccordion("#reviewOrder");
-//            	}
-//            	ACC.singlePageCheckout.ReviewPriceAlignment();
-//            	$(window).on("resize", function() {
-//            		ACC.singlePageCheckout.ReviewPriceAlignment();
-//            	});
-            	
+            	}            	
             }
         });
         
@@ -715,8 +690,8 @@ ACC.singlePageCheckout = {
         	        
         		xhrPickupPersonResponse.done(function(data) { 
         			//Populating popup
-        			$("#singlePagePickupPersonPopup .content").html(data);
-        			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
+        			$("#singlePagePickupPersonPopup #modalBody").html(data);
+        			$("#singlePagePickupPersonPopup #modalBody").data("htmlPopulated","YES");
         			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
@@ -1005,8 +980,20 @@ ACC.singlePageCheckout = {
 			//$("#pickupPersonSubmit").text("1");
 			
 			$("#singlePagePickupPersonPopup").modal('hide');
-			ACC.singlePageCheckout.getReviewOrder();
-    		//ACC.singlePageCheckout.showAccordion("#reviewOrder");
+			//Below code will only will execute for web as responsive does not have review order
+			//and slot delivery is show on different button click
+			if(!ACC.singlePageCheckout.getIsResponsive())
+			{	
+				//Slot delivery is present show slot delivery else goto review order.
+				if(ACC.singlePageCheckout.isSlotDeliveryAndCncPresent)
+				{
+					$("#singlePageChooseSlotDeliveryPopup").modal('show');
+				}
+				else
+				{
+					ACC.singlePageCheckout.getReviewOrder();
+				}
+			}
 			
 			if(typeof(utag)!="undefined")
 			{
@@ -1590,29 +1577,29 @@ removeExchangeFromCart : function (){
         			ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=true;
         			
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
-//        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
-//        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-//        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-//        			});
-//        	        
-//        			xhrResponse.done(function(data, textStatus, jqXHR) {
-//        	        	if (jqXHR.responseJSON) {
-//        	        		if(data.type!="response")
-//        	                {
-//        	        			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
-//		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
-//        	                }
-//        	            }
-//        	        	else
-//    	        		{	//Updating order total div
-//        	        		$("#oredrTotalSpanId").html(data);
-//        	        		//Open payment mode form//apply promotion is called within
-//                    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
-//    	        		}
-//        	        });
+        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
+        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        			});
+        	        
+        			xhrResponse.done(function(data, textStatus, jqXHR) {
+        	        	if (jqXHR.responseJSON) {
+        	        		if(data.type!="response")
+        	                {
+        	        			ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",data);
+		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+        	                }
+        	            }
+        	        	else
+    	        		{	//Updating order total div
+        	        		$("#oredrTotalSpanId").html(data);
+        	        		//Open payment mode form//apply promotion is called within
+                    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+    	        		}
+        	        });
         			
-        			//Open payment mode form//apply promotion is called within
-            		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+//        			//Open payment mode form//apply promotion is called within
+//            		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
             		//If delivery modes will be changed all the validation flags will be reset.
             		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
             		
@@ -1650,28 +1637,28 @@ removeExchangeFromCart : function (){
         		else if(data.type=="response" && data.validation=="success")
     			{
         			//Function to re-create order totals section inorder to take delivery mode specific promotion into account
-//        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
-//        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-//        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
-//        			});
-//        	        
-//        			xhrResponse.done(function(data, textStatus, jqXHR) {
-//        	        	if (jqXHR.responseJSON) {
-//        	        		if(data.type!="response")
-//        	                {
-//        	        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
-//        	                }
-//        	            }
-//        	        	else
-//    	        		{	//Updating order total div
-//        	        		$("#oredrTotalSpanId").html(data);
-//        	        		$("#selectedReviewOrderDivId").show();
-//            				callOnReady();//This method is in showAddPaymentMethod.jsp
-//    	        		}
-//        	        });
+        			var xhrResponse=ACC.singlePageCheckout.getOrderTotalsTag();
+        			xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+        				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+        			});
+        	        
+        			xhrResponse.done(function(data, textStatus, jqXHR) {
+        	        	if (jqXHR.responseJSON) {
+        	        		if(data.type!="response")
+        	                {
+        	        			ACC.singlePageCheckout.processError("#reviewOrderMessage",data);
+        	                }
+        	            }
+        	        	else
+    	        		{	//Updating order total div
+        	        		$("#oredrTotalSpanId").html(data);
+        	        		$("#selectedReviewOrderDivId").show();
+            				callOnReady();//This method is in showAddPaymentMethod.jsp
+    	        		}
+        	        });
         			
-        			$("#selectedReviewOrderDivId").show();
-    				callOnReady();//This method is in showAddPaymentMethod.jsp
+//        			$("#selectedReviewOrderDivId").show();
+//    				callOnReady();//This method is in showAddPaymentMethod.jsp
         			
         			/*//$("#orderDetailsSectionId").html(data);
         			$("#totalWithConvField").html(data.totalPrice);
@@ -1753,6 +1740,7 @@ removeExchangeFromCart : function (){
 		return winWidth<768?true:false;
 	},
 	formValidationErrorCount:0,
+	isSlotDeliveryAndCncPresent:false,
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -1821,8 +1809,8 @@ removeExchangeFromCart : function (){
 	        
 		xhrPickupPersonResponse.done(function(data) { 
 			//Populating popup
-			$("#singlePagePickupPersonPopup .content").html(data);
-			$("#singlePagePickupPersonPopup").data("htmlPopulated","YES");
+			$("#singlePagePickupPersonPopup #modalBody").html(data);
+			$("#singlePagePickupPersonPopup #modalBody").data("htmlPopulated","YES");
 			
 		});
 		$("#singlePagePickupPersonPopup").modal('show');	
