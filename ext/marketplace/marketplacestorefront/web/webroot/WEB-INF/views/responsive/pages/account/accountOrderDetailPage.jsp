@@ -1490,7 +1490,7 @@
 												<!-- End Shipping Block -->
 												<!------------------------------- Delivery Block ------------------------------------->
 												 <!-- For RTO handling productDelivered -->
-												<c:if
+												<%-- TPR_6013 <c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
 													<li class="progress progtrckr-done delivery-status">
 														
@@ -1500,8 +1500,59 @@
 															</c:if>
 														</p> 
 													</li>
+												</c:if> --%>
+												<c:if
+													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
+													<li class="progress progtrckr-done delivery-status processing">
+													<c:set value="${0}" var="dotCount" /> 
+														<!-- <p>  -->
+															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
+																	<%-- ${orderActualDeliveryDateMap[entry.orderLineId]} --%>
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																	</span>
+																	
+													<!-- Prepare popup message  -->
+															<c:if test="${productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar"
+																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+
+																<c:forEach items="${productStatus.statusRecords}"
+																	var="statusRecord">
+																	<c:set var="displayMsgVar"
+																		value="${displayMsgVar}
+																		<ul>
+																		<li>${statusRecord.statusDescription}</li>
+																		</ul>" />
+																</c:forEach>
+
+															</c:if>
+
+															<!-- Prepare popup message  ends -->
+
+														<c:set value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}" var="showBlock" />
+
+															<c:if test="${productStatus.isSelected eq true}">
+																<div class="order message trackOrdermessage_${productStatus.colorCode} order-placed-arrow"
+																	id="orderStatus${entry.orderLineId}_${loop.index}"
+																	style="display: ${showBlock};">${displayMsgVar}
+																</div>
+															<%-- 	<c:set var="dotCount" value="${dotCount + 1}" /> --%>
+															</c:if>
+
+														<!-- setting to default if both enabled and selected are true -->
+															<c:if test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar" value="" />
+															</c:if>		
+																	
+															</c:if>
+														<!-- </p> -->
+													    <%-- <c:forEach var="i" begin="${dotCount}" end="1">
+															<span class="dot inactive"></span>
+														</c:forEach> --%>
+													</li>
 												</c:if>
-												
 												<!------------------------------- Delivery Block ------------------------------------->
 												<%-- 
 												 <c:if
@@ -2466,7 +2517,7 @@
 														<!-- <span class="start"></span> --> <c:set value="${0}"
 															var="dotCount" /> 
 															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
-
+															<c:if test="${productStatus.responseCode ne 'DELIVERED'}">
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
@@ -2561,7 +2612,7 @@
 																test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
-															 
+														</c:if>	 
 														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
 															<span class="dot inactive"></span>
 														</c:forEach> <!-- <span class="end"></span> -->
@@ -2572,7 +2623,7 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status">
+													<li class="progress progtrckr-done delivery-status processing">
 													<c:set value="${0}" var="dotCount" /> 
 														<!-- <p>  -->
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
@@ -2582,7 +2633,23 @@
 																		class="dot-arrow">
 																	</span>
 																	
-													<!-- Prepare popup message  ends -->
+													<!-- Prepare popup message  -->
+															<c:if test="${productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar"
+																	value="${displayMsgVar}<p>${productStatus.shipmentStatus}</p>" />
+
+																<c:forEach items="${productStatus.statusRecords}"
+																	var="statusRecord">
+																	<c:set var="displayMsgVar"
+																		value="${displayMsgVar}
+																		<ul>
+																		<li>${statusRecord.statusDescription}</li>
+																		</ul>" />
+																</c:forEach>
+
+															</c:if>
+
+															<!-- Prepare popup message  ends -->
 
 														<c:set value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}" var="showBlock" />
 
@@ -2591,7 +2658,7 @@
 																	id="orderStatus${entry.orderLineId}_${loop.index}"
 																	style="display: ${showBlock};">${displayMsgVar}
 																</div>
-																<c:set var="dotCount" value="${dotCount + 1}" />
+															<%-- 	<c:set var="dotCount" value="${dotCount + 1}" /> --%>
 															</c:if>
 
 														<!-- setting to default if both enabled and selected are true -->
@@ -2601,9 +2668,9 @@
 																	
 															</c:if>
 														<!-- </p> -->
-													    <c:forEach var="i" begin="${dotCount}" end="1">
+													    <%-- <c:forEach var="i" begin="${dotCount}" end="1">
 															<span class="dot inactive"></span>
-														</c:forEach>
+														</c:forEach> --%>
 													</li>
 												</c:if>
 												
