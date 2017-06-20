@@ -183,7 +183,7 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 					<li><span>Return within 30days </span>of placing your order</li>
 					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
 				</ul>"
-;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='#'>Know More</a></p></div>"
+;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>FREE SHIPPNG + FREE RETURNS <a href='#'>KNOW MORE</a></p></div>"
 
                                                                      
  # CMS Footer Component               
