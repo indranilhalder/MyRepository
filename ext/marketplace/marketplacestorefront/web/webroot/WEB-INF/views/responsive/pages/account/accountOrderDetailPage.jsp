@@ -1493,20 +1493,12 @@
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
 													<li class="progress progtrckr-done delivery-status">
-														<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-														</span>
-														<div class="order message trackOrdermessage_ processing-stage-arrow1"
-																		id="processingStatus"
-																		style="display: none;">${orderActualDeliveryDateMap[entry.orderLineId]}
-
-														</div>
-														<%-- <p> 
+														
+														 <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p> --%>
+														</p> 
 													</li>
 												</c:if>
 												
@@ -2472,8 +2464,8 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
 
 															<c:choose>
 																<c:when
@@ -2581,11 +2573,37 @@
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
 													<li class="progress progtrckr-done delivery-status">
-														<p> 
+													<c:set value="${0}" var="dotCount" /> 
+														<!-- <p>  -->
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
-																	${orderActualDeliveryDateMap[entry.orderLineId]}
+																	<%-- ${orderActualDeliveryDateMap[entry.orderLineId]} --%>
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																	</span>
+																	
+													<!-- Prepare popup message  ends -->
+
+														<c:set value="${ (productStatus.responseCode eq currentStatusMap[entry.orderLineId]) ? 'block' : 'none'}" var="showBlock" />
+
+															<c:if test="${productStatus.isSelected eq true}">
+																<div class="order message trackOrdermessage_${productStatus.colorCode} order-placed-arrow"
+																	id="orderStatus${entry.orderLineId}_${loop.index}"
+																	style="display: ${showBlock};">${displayMsgVar}
+																</div>
+																<c:set var="dotCount" value="${dotCount + 1}" />
 															</c:if>
-														</p>
+
+														<!-- setting to default if both enabled and selected are true -->
+															<c:if test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
+																<c:set var="displayMsgVar" value="" />
+															</c:if>		
+																	
+															</c:if>
+														<!-- </p> -->
+													    <c:forEach var="i" begin="${dotCount}" end="1">
+															<span class="dot inactive"></span>
+														</c:forEach>
 													</li>
 												</c:if>
 												
