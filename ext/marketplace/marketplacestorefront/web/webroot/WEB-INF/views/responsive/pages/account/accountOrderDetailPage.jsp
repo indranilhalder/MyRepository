@@ -3531,13 +3531,17 @@ body .account  .track-order-del-charge{
 body .account .left-nav, body .account .right-account .order-history .navigation,
 body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
-body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
 body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span,
 #userLoginType, #js-site-search-input, #ia_category_code{
 	display: none !important;
 }
-
+body .account .right-account .order-history .product-block li.item .image{
+	min-height: 135px;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+}
 body .account .right-account .order-history.order-details li.item .item-fulfillment,
 body .account .right-account .order-history.order-details .product-block{
 	margin: 0 !important;
@@ -3587,7 +3591,7 @@ body .account .right-account .order-history.order-details .product-block{
 }
 body .account .right-account .order-history.order-details li.header>ul{
 	margin-bottom: 16px;
-	width: 50%;
+	width: 100%;
 	float: left;
 }
 body .account .right-account .order-history.order-details li.header>ul> li{
@@ -3729,7 +3733,7 @@ body .account .right-account .order-history.order-details .product-block li.item
     min-height: auto;
 }
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
-    padding-left: 12.5%;
+    padding-left: 14.5%;
 }
 }
 @media (max-width: 500px){
