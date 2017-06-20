@@ -1470,7 +1470,10 @@ $(document).ready(function(){
 
 	});
 	$(".progtrckr").each(function(){
-		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+		//$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+		if($(this).find(".progress.processing .dot:not(.inactive)").last().next(".message").css("display") == "block"){
+			$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show(); //TISPRDT-1570
+		}
 	});	/*TPR-6013 Order History */
 	
 	/*$(window).on("load resize",function(){

@@ -69863,7 +69863,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     height: 550px;
     border-radius: 8px;
     box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.5);
-    overflow: hidden;
+    /* overflow: hidden; */
+    -webkit-overflow-scrolling:touch;
     border: 0;
 }
 .track-order-header, .track-order-del-charge{
