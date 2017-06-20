@@ -805,7 +805,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 								final AWBResponseData deliveryAWBData = new AWBResponseData();
 								final StatusRecordData statusRecordData = new StatusRecordData();
 								final List<StatusRecordData> listStatusRecordData = new ArrayList<StatusRecordData>();
-
+								LOG.info(">>>>>>>>>> consignmentModel.getDeliveryDate() " + consignmentModel.getDeliveryDate());
 								if (null != consignmentModel.getDeliveryDate())
 								{
 									statusRecordData.setDate(smdfDate.format(consignmentModel.getDeliveryDate()));
