@@ -12995,7 +12995,7 @@ TATA.CommonFunctions = {
                     dataType: "html",
                     data: $(form).serialize(),
                     success: function(data) {
-                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return $(".regEmailErr").html(""), 
+                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return $(".invalided-error").html(""), 
                         location.reload(), !1;
                         $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Please enter valid email address") : $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
                     }
@@ -13086,24 +13086,40 @@ TATA.CommonFunctions = {
             elem.removeClass("active"), setTimeout(function() {
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password");
             }, 500);
-        }), elem.click(function(e) {
-            e.stopPropagation(), e.preventDefault();
+        }), elem.click(function(e){
+			e.stopPropagation();
+			e.preventDefault();
             var element = $(e.target);
-            if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") ? (TATA.CommonFunctions.signInValidate(), 
-            $("#loginForm").submit()) : "luxury_register" == e.target.id ? (TATA.CommonFunctions.signUpValidate(), 
-            $("#extRegisterForm").submit()) : "luxuryForgotPasswordByEmailAjax" == e.target.id && (TATA.CommonFunctions.forgotPasswordValidate(), 
-            $("#forgottenPwdForm").submit()), element.hasClass("toggle-btn")) {
-                var id = element.attr("for");
-                $(".toggle").removeAttr("checked"), $("#" + id).attr("checked", "checked");
-                var genderValue = $("#" + id).val();
-                $("#gender").val(genderValue);
+            if(element.hasClass("register_link")){
+            	TATA.CommonFunctions.loadRegisterForm(element);
+            }else if(element.hasClass("js-password-forgotten")){
+            	TATA.CommonFunctions.loadForgotPasswordForm(element);
+            }else if(element.hasClass("header-signInButton")){
+            	TATA.CommonFunctions.signInValidate();
+            	$("#loginForm").submit();
+            }else if(e.target.id == "luxury_register"){
+            	$(".invalided-error").html("");
+            	TATA.CommonFunctions.signUpValidate();
+            	$("#extRegisterForm").submit();
+            }else if(e.target.id == "luxuryForgotPasswordByEmailAjax"){
+            	TATA.CommonFunctions.forgotPasswordValidate();
+            	$("#forgottenPwdForm").submit();
             }
-            if (element.hasClass("header-login-target-link")) {
-                var targetID = element.data("target-id");
-                $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
+            
+            if(element.hasClass("toggle-btn")){
+            	var id = element.attr("for");
+    			$(".toggle").removeAttr("checked");
+    			$("#"+id).attr("checked", "checked");
+    			var genderValue = $("#"+id).val();
+    			$('#gender').val(genderValue);
             }
-        });
-    },
+            
+            if(element.hasClass("header-login-target-link")){
+        		var targetID = element.data('target-id');
+        		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
+            }
+		});
+	},
     MainBanner: function() {
         $(".main-banner").slick({
             arrows: !1,
