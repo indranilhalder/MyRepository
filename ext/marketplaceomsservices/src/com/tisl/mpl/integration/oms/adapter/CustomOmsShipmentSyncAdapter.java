@@ -544,6 +544,9 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 				
 			}
 				createRefundEntry(shipment,shipmentNewStatus, consignmentModel, orderModel);
+				LOG.info("**** before if checking >shipmentCurrentStatus ::" + shipmentCurrentStatus + " |  shipmentNewStatus :: "
+						+ shipmentNewStatus);
+
 				if (ObjectUtils.notEqual(shipmentCurrentStatus, shipmentNewStatus))
 				{
 					if(!checkConsignmentStatus){
@@ -571,6 +574,8 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 					}
 					
 					//Added TPR-1348
+					LOG.info("**** before if checking for startAutomaticRefundProcess: >shipmentNewStatus :: " + shipmentNewStatus+ " AUTO_REFUND_ENABLED: " + configurationService.getConfiguration().getString(MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED));
+
 					if ("Y".equalsIgnoreCase(configurationService.getConfiguration().getString(
 							MarketplaceomsservicesConstants.AUTO_REFUND_ENABLED))
 							&& ConsignmentStatus.RETURN_CLOSED.equals(shipmentNewStatus))
