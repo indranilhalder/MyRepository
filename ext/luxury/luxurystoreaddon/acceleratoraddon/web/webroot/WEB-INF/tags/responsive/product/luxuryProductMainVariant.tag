@@ -105,7 +105,7 @@ var productSizeVar = '${productSize}';
 								<c:when test="${empty variantOption.image}">
 						     	<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
 						     	
-						     	<span class="toolInner"> Color : ${variantOption.colour} </span>
+						     	<span class="toolInner" title="${variantOption.colour}"> Color : ${variantOption.colour} </span>
 								</c:when>							
 								<c:otherwise>
 								<c:set var="imageData" value="${variantOption.image}" />

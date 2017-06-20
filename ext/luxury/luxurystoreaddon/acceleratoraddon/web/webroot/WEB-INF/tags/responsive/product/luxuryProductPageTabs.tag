@@ -98,7 +98,7 @@ var buyboxskuId='';
 			</div>
 		</c:if>
 		
-		<div class="accordion-title emi-header">	
+		<div class="accordion-title emi-header" id="emiStickerId" style="display: none;">	
 			 <h4>EMI Options</h4><i class="accordion-icon"></i>
 			</div>					
 			<div class="accordion-content full-box">
