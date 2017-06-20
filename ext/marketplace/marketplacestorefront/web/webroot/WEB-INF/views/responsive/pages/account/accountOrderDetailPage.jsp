@@ -1384,16 +1384,26 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																	<c:choose>
+																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
 																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																		class="dot-arrow">
 																	</span>
+																		</c:when>
+																		<c:otherwise>
+																		<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																		</span>
+																		</c:otherwise>
+																	</c:choose>
+																	
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -1482,8 +1492,16 @@
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+														</c:forEach> 
+														<c:forEach var="i" begin="${dotCount}" end="1">
+															<c:choose>
+															<c:when test="${i eq 1}">
+															<span class="dot inactive" style="float: right;"></span>
+															</c:when>
+															<c:otherwise>
 															<span class="dot inactive"></span>
+															</c:otherwise>
+															</c:choose>
 														</c:forEach> <!-- <span class="end"></span> -->
 													</li>
 												</c:if>
@@ -1492,7 +1510,7 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status processing">
+													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
 														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
@@ -2468,10 +2486,21 @@
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																	<c:choose>
+																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
 																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																		class="dot-arrow">
 																	</span>
+																		</c:when>
+																		<c:otherwise>
+																		<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																		</span>
+																		</c:otherwise>
+																	</c:choose>
+																	
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -2560,7 +2589,8 @@
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+														</c:forEach> 
+														<c:forEach var="i" begin="${dotCount}" end="1">
 															<c:choose>
 															<c:when test="${i eq 1}">
 															<span class="dot inactive" style="float: right;"></span>
@@ -2577,7 +2607,7 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status processing">
+													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
 														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
@@ -3269,6 +3299,14 @@ $("#saveBlockData").click(function(){
 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 			$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
 			});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing.returnStatus span.dot").first().css("margin-left","0px");
+				$(this).find("ul>li.progress.processing.returnStatus span.dot").last().css("float","right");
+				});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing.cancelStatus span.dot").first().css("margin-left","0px");
+				$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
+				});
 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 				$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
 			});

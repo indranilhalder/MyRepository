@@ -1467,6 +1467,10 @@ $(document).ready(function(){
 		if(len == 2) {
 			$(this).children("span.dot").css("marginLeft","16.5%");
 		} 
+		
+		if(len == 4) {
+			$(this).children("span.dot").css("marginLeft","8%");
+		} 
 
 	});
 	$(".progtrckr").each(function(){

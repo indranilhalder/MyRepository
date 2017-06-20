@@ -69939,12 +69939,12 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     z-index: -1;
     width: 100%;
 }
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress.cancelStatus:before {
+/* body .account .right-account .order-history.order-details li.item .status>ul>li.progress.cancelStatus:before {
     width: calc(100% - 100px);
-}
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress.full_track:before{
+} */
+/* body .account .right-account .order-history.order-details li.item .status>ul>li.progress.full_track:before{
     border-bottom: 3px solid #7ed321;
-}
+} */
 body .account .right-account .order-history.order-details li.item .status{
 	display: table;
 }
