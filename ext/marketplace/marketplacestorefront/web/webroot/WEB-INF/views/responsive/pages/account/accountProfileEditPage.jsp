@@ -170,7 +170,7 @@
 					<p><spring:theme code="profile.Password.Details" text="Already set correctly"/></p>
 					<button type="button" class="blue changePass">CHANGE PASSWORD</button>
 					<button type="button" class="blue changePassResponsive">CHANGE</button>
-					<button type="button" class="blue crossPass">X</button>
+					<button type="button" class="blue crossPass"></button>
 
 					<div>
 						<form:form id="frmUpdatePassword" action="update-password"

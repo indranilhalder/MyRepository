@@ -70334,6 +70334,20 @@ body .account .right-account .order-history.order-details li.header{
 body .account .right-account .order-history.order-details li.header *{
 	background: transparent !important;
 }
+body .account .right-account .password .blue.crossPass:before{
+	content: "\00d7";
+    color: #000;
+    font-size: 26px;
+    font-weight: bold;
+    -webkit-transition: font-weight 0.15s;
+    -moz-transition: font-weight 0.15s;
+    transition: font-weight 0.15s;
+    position: relative;
+    top: -14px;
+}
+.editIconCSS a#changeAddressLink {
+    margin-left: 5px;
+}
 @media(max-width: 790px){
 	body .account .right-account ul.pagination_ul {
     background-image: linear-gradient(to bottom, #ffffff, #ffffff);
@@ -70420,6 +70434,12 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 }
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status:not(.suman) {
     padding-left: 12.5%;
+}
+.editIconCSS a#changeAddressLink {
+    margin-left: -15px;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address {
+    padding-bottom: 30px;
 }
 }
 
