@@ -70315,10 +70315,32 @@ body .account .right-account .order-history.order-details li.header div.totals {
 body .account .right-account .order-history.order-details li.header>ul>li{
 	width: 100%;
 }
+body .account .right-account .info .myprofile h2{
+	margin-bottom:0;
+}
+body .account .right-account form .quarter.lastNaming,
+body .account .right-account form .full.phone input{
+	margin-left: -1px;
+}
+body .account .right-account form input, body .account .right-account form select {
+    letter-spacing: 0.6px;
+}
+body .account .right-account .info fieldset form .half.quarter.titleName .controls:after{
+	right: 10px;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #f9f9f9, #ffffff);
+}
+body .account .right-account .order-history.order-details li.header *{
+	background: transparent !important;
+}
 @media(max-width: 790px){
 	body .account .right-account ul.pagination_ul {
     background-image: linear-gradient(to bottom, #ffffff, #ffffff);
     position: relative;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #ffffff, #ffffff);
 }
 body .account .right-account .order-history .top .pagination.mobile {
     top: 61px;
@@ -70399,4 +70421,10 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status:not(.suman) {
     padding-left: 12.5%;
 }
+}
+
+@media (max-width: 767px){
+footer>div>ul>li h3>img{ 
+	left: 0px; 
+	}
 }
