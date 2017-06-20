@@ -46,7 +46,7 @@
 	<spring:theme code="product.addtocart.success" />
 </div>
 	<div class="buy-btn-holder clearfix">
-	<div id="buyNow" class="col-md-6">
+	<div id="buyNow" class="col-md-6  mt-10">
 		<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />		
 		
 	        <button  id="" type="button" class="btn-block js-add-to-cart btn btn-primary btn-lg btn-block">
@@ -91,7 +91,7 @@
 		<div class="stock-status">
 			${productStockLevel}
 		</div>
-		<div class="row addtocart-button">
+		<div class="addtocart-button  mt-10">
 			<action:actions element="div"  parentComponent="${component}"/>
 		</div>
 		</div>
