@@ -9,8 +9,12 @@
 	}
 	.brand-img{
 		position: relative;
-		width: 348px;
+		width: 95%;
 		margin: auto;
+        
+        @include media-breakpoint-down(sm) {
+            width: 45%;
+        }
 		
 		.brand-bg{
 			&:after{
