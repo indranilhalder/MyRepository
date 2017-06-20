@@ -90,7 +90,7 @@
 		<security:intercept-url pattern="/my-account/**" access="hasRole('ROLE_CUSTOMERGROUP')"/>
 	        
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> --> <!-- Everything should be secure -->
-		<security:intercept-url pattern="/login" requires-channel="http" />
+		<security:intercept-url pattern="/login"/>
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
 		<security:intercept-url pattern="/login/pw/change" requires-channel="http" />
 		<security:form-login
