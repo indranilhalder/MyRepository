@@ -1889,6 +1889,20 @@ function populateEnhancedSearch(enhancedSearchData)
 	
 	function lazyLoadfunction() {
 		
+		if ($(window).scrollTop() + $(window).height() >= $('#bestPicks').offset().top) {
+	        if(!$('#bestPicks').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#bestPicks').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
+	            'LandingPage2Template') {
+	            	getBestPicksAjaxCall();
+	        }
+	        }
+	}
+		
 		if ($(window).scrollTop() + $(window).height() >= $('#brandsYouLove').offset().top) {
 	        if(!$('#brandsYouLove').attr('loaded')) {
 	            //not in ajax.success due to multiple sroll events
@@ -1939,19 +1953,7 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	        }
 	}
-		if ($(window).scrollTop() + $(window).height() >= $('#bestPicks').offset().top) {
-	        if(!$('#bestPicks').attr('loaded')) {
-	            //not in ajax.success due to multiple sroll events
-	            $('#bestPicks').attr('loaded', true);
-
-	            //ajax goes here
-	            //by theory, this code still may be called several times
-	            if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
-	            'LandingPage2Template') {
-	            	getBestPicksAjaxCall();
-	        }
-	        }
-	}
+		
 		
 		if ($(window).scrollTop() + $(window).height() >= $('#productYouCare').offset().top) {
 	        if(!$('#productYouCare').attr('loaded')) {
