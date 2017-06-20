@@ -1539,6 +1539,7 @@ public class CustomOmsShipmentSyncAdapter extends DefaultOmsShipmentSyncAdapter 
 		}
 		catch (final Exception e)
 		{
+			LOG.error(e.getStackTrace());
 			LOG.error("CustomOmsShipmentSyncAdapter: error creating AutoRefundProcess for Order #" + orderModel.getCode());
 		}
 	}
