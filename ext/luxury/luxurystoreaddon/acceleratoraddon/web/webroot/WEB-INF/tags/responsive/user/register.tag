@@ -62,7 +62,7 @@
 			<input name="gender" id="gender" type="hidden" value="MALE">
 		</div>
 		<ycommerce:testId code="register_Register_button">
-			<button type="submit" onclick="return checkSignUpValidation('login');" class="btn btn-primary btn-block mb-20" id="luxury_register"><spring:theme code='${actionNameKey}' /></button>
+			<button type="submit" class="btn btn-primary btn-block mb-20" id="luxury_register"><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
 	<p class="h4 text-center"><spring:theme code="luxury.header.flyout.signup.member"/>
