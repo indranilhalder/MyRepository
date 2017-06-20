@@ -69952,6 +69952,7 @@ body .account .right-account .order-history.order-details li.item .status .nav{
 body .account .right-account .order-history.order-details li.item .status> ul.nav >li{
 	text-align: left;
     padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 body .right-account .order-details .deliveryTrack .dot-arrow{
 	/* display: none !important; */
@@ -70390,5 +70391,12 @@ body .account .account-header {
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start{
 	position: static;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+    padding-left: 15.5%;
+    padding-right: 0;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status:not(.suman) {
+    padding-left: 12.5%;
 }
 }

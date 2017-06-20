@@ -3587,7 +3587,7 @@ body .account .right-account .order-history.order-details .product-block{
 }
 body .account .right-account .order-history.order-details li.header>ul{
 	margin-bottom: 16px;
-	width: 50%;
+	width: 100%;
 	float: left;
 }
 body .account .right-account .order-history.order-details li.header>ul> li{
@@ -3729,7 +3729,7 @@ body .account .right-account .order-history.order-details .product-block li.item
     min-height: auto;
 }
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
-    padding-left: 12.5%;
+    padding-left: 14.5%;
 }
 }
 @media (max-width: 500px){
