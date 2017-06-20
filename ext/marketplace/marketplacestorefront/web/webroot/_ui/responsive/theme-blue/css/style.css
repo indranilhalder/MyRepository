@@ -25633,7 +25633,7 @@ div.variantFormContainer{
 	body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment{
 		margin-left: 0;
 		padding-top: 30px;
-		margin-top: 0;
+		margin-top: 50px;	/* TISPRDT-1574 */
 	}
 	body .account .right-account .order-history.order-details.responsiveProfile li.header div.payment-method{
 		padding-top: 30px;
@@ -47652,6 +47652,7 @@ float: right;
 	.tabs-block .nav>li#tabs_brandInfo{
 		text-align: center;
 		font-size: 12px;
+		padding-left: 0px;    /*add for TISPRDT-1544*/
 	}
 	.tabs-block .nav>li#tabs_styleNotes {
 		width: 25%;
@@ -47784,7 +47785,7 @@ float: right;
 
 @media(max-width:400px){
 	.tabs-block .nav>li#tabs_brandInfo{
-		text-align: right;
+		/* text-align: right; */	/*TISPRDT-1544*/
 	}
 }
 /*Mobile
@@ -70448,3 +70449,8 @@ footer>div>ul>li h3>img{
 	left: 0px; 
 	}
 }
+/*start of TISPRDT-1571*/
+.has-error .help-block{
+    padding-bottom: 18px !important;
+}
+/*end of TISPRDT-1571*/
