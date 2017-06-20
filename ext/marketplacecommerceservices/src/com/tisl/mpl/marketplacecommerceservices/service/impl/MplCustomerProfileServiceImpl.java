@@ -456,7 +456,7 @@ public class MplCustomerProfileServiceImpl implements MplCustomerProfileService
 						oGenderData.setCode(Gender.MALE.getCode());
 					}
 					else if (oModelData.getCode().equals(Salutation.MRS.getCode())
-							|| oModelData.getCode().equals(Salutation.MISS.getCode()))
+							|| oModelData.getCode().equals(Salutation.MS.getCode()))
 					{
 						oGenderData.setName(oModelData.getCode());
 						oGenderData.setCode(Gender.FEMALE.getCode());
