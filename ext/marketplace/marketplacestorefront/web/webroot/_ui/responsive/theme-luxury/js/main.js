@@ -111,7 +111,6 @@ TATA.CommonFunctions = {
                      success: function(data) {
                     	 var hasErrors=$(data).filter("input#hasErrorsInReg").val();
                     	 if(hasErrors != "email"){	                    		 
-                    		 $(".regEmailErr").html("");
                     		 location.reload();
                     		 return false;
                     	 }
@@ -267,6 +266,7 @@ TATA.CommonFunctions = {
             	TATA.CommonFunctions.signInValidate();
             	$("#loginForm").submit();
             }else if(e.target.id == "luxury_register"){
+            	$(".invalided-error").html("");
             	TATA.CommonFunctions.signUpValidate();
             	$("#extRegisterForm").submit();
             }else if(e.target.id == "luxuryForgotPasswordByEmailAjax"){
