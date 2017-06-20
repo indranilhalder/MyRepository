@@ -34,7 +34,7 @@
 
 		<security:session-management session-authentication-strategy-ref="fixation" />
 		<!-- <security:intercept-url pattern="/**" requires-channel="http" /> -->
-		<security:intercept-url pattern="/login" requires-channel="http" />
+		<security:intercept-url pattern="/login"/>
 		<security:intercept-url pattern="/login/checkout" requires-channel="http" />
 
 		<security:form-login
