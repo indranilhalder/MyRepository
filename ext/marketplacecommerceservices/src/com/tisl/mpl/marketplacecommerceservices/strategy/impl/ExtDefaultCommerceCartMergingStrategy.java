@@ -111,6 +111,12 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 					newCartParameter.setUssid((null != entry.getSelectedUSSID()) ? entry.getSelectedUSSID() : "");
 					newCartParameter.setUnit(entry.getUnit());
 					newCartParameter.setCreateNewEntry(false);
+					if (fromCart.getExchangeAppliedCart() != null && fromCart.getExchangeAppliedCart().booleanValue()
+							&& StringUtils.isNotEmpty(entry.getExchangeId()))
+					{
+						newCartParameter.setExchangeParam(entry.getExchangeId());
+
+					}
 					//TPR-174
 					cartMerged = true;
 					//getModelService().save(toCart);
