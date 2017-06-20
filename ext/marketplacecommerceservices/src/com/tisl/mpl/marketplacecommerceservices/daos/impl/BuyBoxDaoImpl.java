@@ -726,41 +726,59 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	 * view seller details
 	 */
 	@Override
-	public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions
+	//CKD: TPR-3809
+	//public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions
+	public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode,final String prodCatType) throws EtailNonBusinessExceptions
 	{
+		
+		//CKD: TPR-3809 :Start
+				String sellerArticleSKU = "sellerArticleSKU";
+				if (StringUtils.isNotEmpty(prodCatType) && prodCatType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+					sellerArticleSKU="pussid";
+				}
+				//CKD: TPR-3809 :End
 		final Set<Map<BuyBoxModel, RichAttributeModel>> buyboxdataset = new LinkedHashSet<Map<BuyBoxModel, RichAttributeModel>>();
 		String queryString = StringUtils.EMPTY;
+		String notaDelistedSellerQuery = StringUtils.EMPTY;
 		final String sellerId = agentIdForStore
 				.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
 		try
 		{
 			if (StringUtils.isNotEmpty(sellerId))
 			{
+				notaDelistedSellerQuery =" and( {b.delisted}  IS NULL or {b.delisted}=0 ) ";
+			}
 				queryString = "select {b.pk},{rich.pk} from {"
 						+ BuyBoxModel._TYPECODE
 						+ " as b JOIN "
 						+ SellerInformationModel._TYPECODE
-						+ " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
+						//CKD: TPR-3809
+						//+ " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
+						+ " as seller ON {b."+sellerArticleSKU+"}={seller.sellerArticleSKU} "
 						+ " JOIN CatalogVersion as cat ON {cat.pk}={seller.catalogversion} "
 						+ " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } "
-						+ " where {cat.version}='Online' and {b.product} = ?productCode and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc";
+						+ " where {cat.version}='Online' and {b.product} = ?productCode"
+						+ notaDelistedSellerQuery+ 
+						"and (sysdate between {b.sellerstartdate} and {b.sellerenddate}) order by {b.weightage} desc,{b.available} desc";
 
 
 				LOG.debug(QUERY_CLASS + queryString);
-			}
-			else
+			//}
+		/*	else
 			{
 				queryString = "select {b.pk},{rich.pk} from {"
 						+ BuyBoxModel._TYPECODE
 						+ " as b JOIN "
 						+ SellerInformationModel._TYPECODE
-						+ " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
+						//CKD: TPR-3809
+						//+ " as seller ON {b.sellerArticleSKU}={seller.sellerArticleSKU} "
+						+ " as seller ON {b."+sellerArticleSKU+"}={seller.sellerArticleSKU} "
 						+ " JOIN CatalogVersion as cat ON {cat.pk}={seller.catalogversion} "
 						+ " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } "
 						+ " where {cat.version}='Online' and {b.product} = ?productCode and( {b.delisted}  IS NULL or {b.delisted}=0 )  and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc";
 
 				LOG.debug(QUERY_CLASS + queryString);
-			}
+			}*/
 
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);

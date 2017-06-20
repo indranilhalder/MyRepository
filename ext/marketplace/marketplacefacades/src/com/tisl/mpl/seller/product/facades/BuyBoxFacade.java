@@ -28,7 +28,9 @@ public interface BuyBoxFacade
 	//Added channel for TISPRD-8944
 	public Map<String, Object> buyboxPricePDP(String ProductCode, String bBoxSellerId, String Channel) throws EtailNonBusinessExceptions;
 
-	public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	//CKD: TPR-3809
+	//public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	public List<SellerInformationData> getsellersDetails(String productCode, String productCatType) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param productModel

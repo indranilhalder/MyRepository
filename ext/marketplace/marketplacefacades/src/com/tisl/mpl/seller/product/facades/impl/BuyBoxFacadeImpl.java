@@ -716,12 +716,16 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	 * @return SellerInformationDataList
 	 */
 	@Override
-	public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
+	//CKD: TPR-3809
+	//public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
+	public List<SellerInformationData> getsellersDetails(final String productCode,final String prodCatType) throws EtailNonBusinessExceptions,
 			EtailBusinessExceptions
 	{
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
-
-		for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode))
+		
+		//CKD: TPR-3809
+		//for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode))
+		for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode,prodCatType))
 		{
 			for (final Map.Entry<BuyBoxModel, RichAttributeModel> entry : resultMap.entrySet())
 			{
