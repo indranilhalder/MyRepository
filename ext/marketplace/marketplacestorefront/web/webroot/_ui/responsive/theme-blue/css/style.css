@@ -70254,10 +70254,10 @@ body .account .right-account .order-history.order-details li.item .order {
 #shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
 	background-color:  transparent;
 }
-body .account .right-account .order-history.order-details li.header div.delivery-address {
+/* body .account .right-account .order-history.order-details li.header div.delivery-address {
     position: relative;
     top: -20px;
-}
+} */
 body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment{
 	border: none;
 }
@@ -70287,10 +70287,10 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 .editIconCSS{
 	margin-bottom: 5px;
 }
-.body .account .right-account .order-history.order-details li.item:nth-child(2) .status .message{
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message{
 	left: -100% !important;
 }
-.body .account .right-account .order-history.order-details li.item:nth-child(3) .status .message{
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(3) .message{
 	left: -200% !important;
 }
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.viewDetailsAnchor,
@@ -70304,6 +70304,15 @@ body .account .right-account .order-history .top .pagination.mobile {
 }
 body .account .right-account .order-history .navigation2 {
     margin-right: 18px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start:after {
+    width: 25px;
+}
+body .account .right-account .order-history.order-details li.header div.totals {
+    vertical-align: top;
+}
+body .account .right-account .order-history.order-details li.header>ul>li{
+	width: 100%;
 }
 @media(max-width: 790px){
 	body .account .right-account ul.pagination_ul {
@@ -70374,5 +70383,12 @@ body .account .right-account .order-history .bottom .pagination.mobile{
 body .account .right-account .order-history.order-details li.item .item-fulfillment, 
 body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-fulfillment {
     line-height: 18px;
+}
+body .account .account-header {
+    margin-bottom:0;
+    padding-bottom: 20px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start{
+	position: static;
 }
 }
