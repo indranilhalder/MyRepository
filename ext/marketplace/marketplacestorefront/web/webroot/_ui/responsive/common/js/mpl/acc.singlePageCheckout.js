@@ -532,7 +532,7 @@ ACC.singlePageCheckout = {
 			$("#addressmobileError").hide();
 		}
 	   
-	   	var landMark=$( "#address.landmarks" ).val();
+	   	var landMark=$( ".address_landmarks option:selected" ).val();
 	   	if(landMark=="Other")
 	   	{
 			result=$("#otherLandmark").val();
@@ -552,8 +552,8 @@ ACC.singlePageCheckout = {
 	   	}
 	   	else if(landMark=="NA")
    		{
-	   		$(".otherLandMarkError").show();
-		  	$(".otherLandMarkError").text("Select a landmark to proceed");
+	   		$(".selectLandMarkError").show();
+		  	$(".selectLandMarkError").text("Select a landmark to proceed");
 		  	validate = false;
 		  	errorCount++;
    		}

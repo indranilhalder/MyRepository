@@ -283,6 +283,7 @@ display: none;}
 						skipBlank="false" 
 						items="${abc}"
 						itemValue="name" />
+						<div class="error_text selectLandMarkError"></div>
 				</div>
 			</div>
 			<div class='half'>
