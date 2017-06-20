@@ -16790,7 +16790,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     display: inline-block;
     float: left;
    /*  width: 33.3333% */			/* Commented for TPR-6013 Order History  */
-   margin-left: 0 !important;
+   /* margin-left: 0 !important; */
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start.gray:after {
     border-color: #e3e3e3;
@@ -69903,22 +69903,22 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     background-color: #7ed321;
     box-shadow: none;
 }
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:last-of-type{
+/* body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot:last-of-type{
 		float: right;
     	left: 16px;
-}
+} */
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing.paymentStatus span.dot{
 		float: left;
     	left: auto;
 }
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot.last_dot{
+/* body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing span.dot.last_dot{
 		float: right;
     	left: 16px;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress.processing.cancelStatus span.dot.last_dot {
     float: right;
     left: -100px;
-}
+} */
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:not(:last-child):before{
 		content: '';
     border-bottom: 3px solid #ddd;
@@ -70012,9 +70012,9 @@ body .account .right-account .order-history.order-details li.item .status .messa
 .statusDate{
 	clear: both;
 }
-body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
+/* body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
     display: none;
-}
+} */
 .trackOrderDelivery{
 	display:none;
 }

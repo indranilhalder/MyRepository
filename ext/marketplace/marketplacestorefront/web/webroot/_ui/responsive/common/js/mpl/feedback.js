@@ -1450,18 +1450,28 @@ $(document).ready(function(){
 		/*--- END of  Mobile view Left menu Sign In toggle---- */
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
 	
-	$(".progtrckr .progress.processing").each(function(){
+	/*$(".progtrckr .progress.processing").each(function(){
 		var len = $(this).children("span.dot").length;
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
 		} else if(len == 1) {
-			/*$(this).children("span.dot").first().css("marginLeft","33%");*/		/*TPR-6013 Order History */
+			$(this).children("span.dot").first().css("marginLeft","33%");		TPR-6013 Order History 
 		}
 
-	}); 
-	/*$(".progtrckr").each(function(){
+	}); */
+	$(".progtrckr .progress.processing").each(function(){
+		var len = $(this).children("span.dot").length;
+		if(len == 3) {
+			$(this).children("span.dot").css("marginLeft","12%");
+		}
+		if(len == 2) {
+			$(this).children("span.dot").css("marginLeft","16.5%");
+		} 
+
+	});
+	$(".progtrckr").each(function(){
 		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
-	});*/	/*TPR-6013 Order History */
+	});	/*TPR-6013 Order History */
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
