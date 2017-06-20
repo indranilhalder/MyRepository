@@ -66,22 +66,22 @@
  
     <!-- 1) Scan for files -->
     
-    <file:inbound-channel-adapter id="batchFilesMarketplaceCategory" directory="#{baseDirectoryMarketplaceInstantImport}"
+    <file:inbound-channel-adapter id="batchFilesMarketplaceInstantImport" directory="#{baseDirectoryMarketplaceInstantImport}"
         filename-regex="^(.*)-(\d+)\.csv" comparator="fileOrderComparator" auto-startup="#{configurationService.configuration.getProperty('etail.batch.import.hotfolder.enabled')}">
         <int:poller fixed-rate="1000" />
     </file:inbound-channel-adapter>
  
     <!-- 2) move the file to processing and setup header -->
     
-    <file:outbound-gateway request-channel="batchFilesMarketplaceCategory" reply-channel="batchFilesMarketplaceCategoryProc"
+    <file:outbound-gateway request-channel="batchFilesMarketplaceInstantImport" reply-channel="batchFilesMarketplaceInstantImportProc"
         directory="#{baseDirectoryMarketplaceInstantImport}/processing" delete-source-files="true" />
 
 	<!-- 3) transform csv to impex file -->
 	
- 	<int:service-activator input-channel="batchFilesMarketplaceCategoryProc" output-channel="batchFilesHeaderInit"
+ 	<int:service-activator input-channel="batchFilesMarketplaceInstantImportProc" output-channel="batchFilesHeaderInit"
         ref="MarketplaceCategoryHeaderSetupTask" method="execute" />
  
- 	<bean id="MarketplaceCategoryHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+ 	<bean id="MarketplaceInstantImportHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
         <property name="catalog" value="mplProductCatalog" />
         <property name="net" value="false" />
         <property name="storeBaseDirectory" ref="baseDirectoryMarketplaceInstantImport" />
@@ -90,186 +90,186 @@
  <!-- Transformer converters mappings -->
  
  		 <!-- Transformer for Category Import -->
-    <bean id="batchCategoryConverterMapping"
+    <bean id="marketplaceInstantImportConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="category"
-    p:converter-ref="batchCategoryConverter"/>
+    p:converter-ref="mplIIbatchCategoryConverter"/>
         
     
      <!-- Transformer Bulk Return Initiation -->
-    <bean id="batchBulkReturnInitiationConverterMapping"
+    <bean id="marketplaceReturnInitiationConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="bulk_return_initiation"
-    p:converter-ref="batchBulkReturnInitiationConverter"/>
+    p:converter-ref="mplIIbatchBulkReturnInitiationConverter"/>
 	
 	<!-- Transformer Bulk Cancel Initiation -->
-    <bean id="batchBulkCancelInitiationConverterMapping"
+    <bean id="mplCancelInitiationConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="bulk_cancel_initiation"
-    p:converter-ref="batchBulkCancelInitiationConverter"/>
+    p:converter-ref="mplIIbatchBulkCancelInitiationConverter"/>
     
      <!-- Transformer for Classification Attribute Import -->
-      <bean id="batchClassificationAttributeConverterMapping"
+      <bean id="mplInstantImportAttributeConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="classification_attributes"
-    p:converter-ref="batchClassificationAttributeConverter"/>
+    p:converter-ref="mplIIbatchClassificationAttributeConverter"/>
     
       <!-- Transformer for Classification Attribute Value Import -->
-      <bean id="batchClassificationAttributeValueConverterMapping"
+      <bean id="mplInstantImportAttributeValueConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="classification_attribute_values"
-    p:converter-ref="batchClassificationAttributeValueConverter"/>
+    p:converter-ref="mplIIbatchClassificationAttributeValueConverter"/>
     
       <!-- Transformer for Classification Class Import -->
-    <bean id="batchClassificationClassConverterMapping"
+    <bean id="mplClassConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="classification_class"
-    p:converter-ref="batchClassificationClassConverter"/>
+    p:converter-ref="mplIIbatchClassificationClassConverter"/>
     
      <!-- Transformer for Class Attribute Assignment Import -->
-    <bean id="batchClassAttributeAssignmentConverterMapping"
+    <bean id="mplbatchClassAttributeAssignmentConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="class_attribute_assignment"
-    p:converter-ref="batchClassAttributeAssignmentConverter"/>
+    p:converter-ref="mplIIbatchClassAttributeAssignmentConverter"/>
     
- <bean id="batchMediaNewConverterMapping" 
+ <bean id="mplIIbatchMediaNewConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
 		  p:mapping="mplmedia" 
-		  p:converter-ref="batchMediaNewConverter"/>
+		  p:converter-ref="mplIIbatchMediaNewConverter"/>
 		  
-	<bean id="batchMediaMimeConverterMapping" 
+	<bean id="mplIIbatchMediaMimeConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
 		  p:mapping="mplmedia" 
-		  p:converter-ref="batchMediaMimeConverter"/>
+		  p:converter-ref="mplIIbatchMediaMimeConverter"/>
 
-	<bean id="batchMediaContainerNewConverterMapping" 
+	<bean id="mplIIbatchMediaContainerNewConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
 		  p:mapping="mplmedia_container" 
-		  p:converter-ref="batchMediaContainerNewConverter"/>
+		  p:converter-ref="mplIIbatchMediaContainerNewConverter"/>
 
-	<bean id="batchMediaProductNewConverterMapping"
+	<bean id="mplIIbatchMediaProductNewConverterMapping"
 	class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 	p:mapping="mplmedia_product"
-	 p:converter-ref="batchMediaProductNewConverter" />
+	 p:converter-ref="mplIIbatchMediaProductNewConverter" />
 	 
-	 <bean id="batchCategoryMediaConverterMapping"
+	 <bean id="mplIIbatchCategoryMediaConverterMapping"
 	class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 	p:mapping="category_media"
-	 p:converter-ref="batchCategoryMediaConverter" />
+	 p:converter-ref="mplIIbatchCategoryMediaConverter" />
     
      <!-- Transformer for Rich attributes Import -->
     
-    <bean id="batchProductRichAttributesMapping"
+    <bean id="mplIIbatchProductRichAttributesMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="richattribute_product"
-     p:converter-ref="batchProductRichAttributesConverter"/>
+     p:converter-ref="mplIIbatchProductRichAttributesConverter"/>
     
     <!-- Transformer for Global Identifier Import -->
     
-    <bean id="batchGlobalIdentifierMapping"
+    <bean id="mplIIbatchGlobalIdentifierMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="global_identifier"
-     p:converter-ref="batchGlobalIdentifierConverter"/>
+     p:converter-ref="mplIIbatchGlobalIdentifierConverter"/>
       
       <!-- Transformer for Seo Import -->
     
-    <bean id="batchSEOMapping"
+    <bean id="mplIIbatchSEOMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="seocontent"
-     p:converter-ref="batchSeoConverter"/>
+     p:converter-ref="mplIIbatchSeoConverter"/>
      
       <!-- Transformer for Brand Import -->
    
-    <bean id="batchBrandMapping"
+    <bean id="mplIIbatchBrandMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="brand"
-     p:converter-ref="batchBrandConverter"/>
+     p:converter-ref="mplIIbatchBrandConverter"/>
      
     
       <!-- Transformer for Product Feature Import -->
-      <bean id="batchProductFeatureMapping"
+      <bean id="mplIIbatchProductFeatureMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="product_feature"
-     p:converter-ref="batchProductFeatureConverter"/>
+     p:converter-ref="mplIIbatchProductFeatureConverter"/>
      
       <!-- Transformer for Product Import -->
-     <bean id="batchProductConverterMapping"
+     <bean id="mplIIbatchProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mplproduct"
-    p:converter-ref="batchProductConverter"/>
+    p:converter-ref="mplIIbatchProductConverter"/>
     
      <!-- Transformer for  Variant Product Import -->
-    <bean id="batchVarProductConverterMapping"
+    <bean id="mplIIbatchVarProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="variant_product"
-    p:converter-ref="batchVarProductConverter"/>
+    p:converter-ref="mplIIbatchVarProductConverter"/>
     
      <!-- Transformer for Product Relation Import -->
-    <bean id="batchProdReferenceConverterMapping"
+    <bean id="mplIIbatchProdReferenceConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="product_reference"
-    p:converter-ref="batchProdReferenceConverter"/>
+    p:converter-ref="mplIIbatchProdReferenceConverter"/>
     
  <!-- Transformer for Size Guide Import -->
-    <bean id="bbatchProdSizeguideConverterMapping"
+    <bean id="mplIIbbatchProdSizeguideConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="product_sizeguide"
-    p:converter-ref="batchProdSizeguideConverter"/>
+    p:converter-ref="mplIIbatchProdSizeguideConverter"/>
     
-    <bean id="batchSellerRichAttributesMapping"
+    <bean id="mplIIbatchSellerRichAttributesMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="richattribute_seller"
-     p:converter-ref="batchSellerRichAttributesConverter"/>
+     p:converter-ref="mplIIbatchSellerRichAttributesConverter"/>
      
     <!-- Transformer for Seller Import -->    
-     <bean id="batchSellerMapping"
+     <bean id="mplIIbatchSellerMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="seller"
-     p:converter-ref="batchSellerConverter"/>
+     p:converter-ref="mplIIbatchSellerConverter"/>
      
       <!-- Transformer for Seller Import -->    
-     <bean id="batchSalesCategoryMapping"
+     <bean id="mplIIbatchSalesCategoryMapping"
      class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
      p:mapping="sales_category"
-     p:converter-ref="batchSalesCategoryConverter"/>
+     p:converter-ref="mplIIbatchSalesCategoryConverter"/>
      
      <!--     Transformer for  Seller Delisting Import   -->
    
-    <bean id="batchSellerDelistingConverterMapping"
+    <bean id="mplIIbatchSellerDelistingConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="delist_seller"
-    p:converter-ref="batchSellerDelistingConverter"/>
+    p:converter-ref="mplIIbatchSellerDelistingConverter"/>
    
   <!--     Transformer for  SkuID Delisting Import   --> 
    
-   <bean id="batchSkuIDDelistingConverterMapping"
+   <bean id="mplIIbatchSkuIDDelistingConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="delist_sku"
-    p:converter-ref="batchSkuIDDelistingConverter"/>
+    p:converter-ref="mplIIbatchSkuIDDelistingConverter"/>
     
     
     <!--     Transformer for Online Exclusive Import   --> 
     
-     <bean id="batchOnlineExclusiveConverterMapping"
+     <bean id="mplIIbatchOnlineExclusiveConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="online_exclusive"
-    p:converter-ref="batchOnlineExclusiveConverter"/>
+    p:converter-ref="mplIIbatchOnlineExclusiveConverter"/>
     
     
      <!-- Transformer for SellerPriority update -->
-    <bean id="batchUpdateSellerPriorityConverterMapping"
+    <bean id="mplIIbatchUpdateSellerPriorityConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="priority_seller"
-    p:converter-ref="batchSellerPriorityConverter"/>
+    p:converter-ref="mplIIbatchSellerPriorityConverter"/>
     
      <!-- Transformer for PromotedProduct update -->
-    <bean id="batchPromotedProductConverterMapping"
+    <bean id="mplIIbatchPromotedProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="promoted_product"
-    p:converter-ref="batchPromotedProductConverter"/>
+    p:converter-ref="mplIIbatchPromotedProductConverter"/>
     
       <!-- Converter for seller Import -->
-      <bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+      <bean id="mplIIbatchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
               	$catalogVersion=catalogversion(catalog(id[default=mplProductCatalog]),version[default='Online'])[unique=true]
@@ -294,7 +294,7 @@
  	  <!-- Converters -->
  	  
  	  <!-- Converter for Category Import -->
-  	<bean id="batchCategoryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+  	<bean id="mplIIbatchCategoryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -312,7 +312,7 @@
         </bean>
         
         <!-- Converter for Classification Attribute Import --> 
- 	 <bean id="batchClassificationAttributeConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+ 	 <bean id="mplIIbatchClassificationAttributeConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -337,7 +337,7 @@
         </bean> 
         
         <!-- Converter for Classification Attribute Value Import --> 
-        <bean id="batchClassificationAttributeValueConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <bean id="mplIIbatchClassificationAttributeValueConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -362,7 +362,7 @@
        
        
        <!-- Converter for Classification Class Import --> 
- 	  <bean id="batchClassificationClassConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+ 	  <bean id="mplIIbatchClassificationClassConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -386,7 +386,7 @@
         </bean>
         
         <!-- Converter for Class Attribute Assignment Import --> 
-      <bean id="batchClassAttributeAssignmentConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+      <bean id="mplIIbatchClassAttributeAssignmentConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -408,7 +408,7 @@
             <value>;{0};{1};{2};{3};{4};{5}</value>
         </property>
         </bean> 
-      <bean id="batchMediaNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+      <bean id="mplIIbatchMediaNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
@@ -433,7 +433,7 @@
 			<value>;{0};{1};{2};{3};$URI{4};{5};{6};{7};{8};;</value>
 		</property>
 	</bean>
-	<bean id="batchMediaMimeConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+	<bean id="mplIIbatchMediaMimeConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
@@ -457,7 +457,7 @@
 			<value>;{3};{6};</value>
 		</property>
 	</bean>
-	<bean id="batchMediaContainerNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+	<bean id="mplIIbatchMediaContainerNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
@@ -481,7 +481,7 @@
 			<value>;{+0};{+1};</value>
 		</property>
 	</bean>
-	<bean id="batchCategoryMediaConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+	<bean id="mplIIbatchCategoryMediaConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				$productCatalog=mplProductCatalog
@@ -499,7 +499,7 @@
 	</bean>
 	
 	<!-- Converter for Category Media Relation -->
-	<bean id="batchMediaProductNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+	<bean id="mplIIbatchMediaProductNewConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
 		<property name="header">
 			<value>#{defaultImpexProductHeader}
 				# Macros / Replacement Parameter definitions
@@ -526,7 +526,7 @@
 	
 		<!-- Converter for Product Relation Import --> 
  	         
-        <bean id="batchProdReferenceConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <bean id="mplIIbatchProdReferenceConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -563,7 +563,7 @@
         
     </bean>  -->
     
-    <bean id="batchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+    <bean id="mplIIbatchBrandConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
        <property name="header">
  	     <value> # Insert Brand
  	     $productCatalog=mplProductCatalog
@@ -578,7 +578,7 @@
     </bean>
     
      <!-- Converter for SEO Import --> 
-     <bean id="batchSeoConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="mplIIbatchSeoConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value># Insert SEO
             	$productCatalog=mplProductCatalog
@@ -594,7 +594,7 @@
     
  	           <!-- Converter for Global Identifier Import -->
  	            
-  <bean id="batchGlobalIdentifierConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+  <bean id="mplIIbatchGlobalIdentifierConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
        <property name="header">
  	     <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -613,7 +613,7 @@
       
     <!-- Converter for Product Feature Import --> 
     
-    <bean id="batchProductFeatureConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+    <bean id="mplIIbatchProductFeatureConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -682,7 +682,7 @@ $language=language(isocode)[default='en'][unique=true];
         </bean> -->
         
       <!-- Converter for Rich Attributes For Product Import --> 
-     <bean id="batchProductRichAttributesConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="mplIIbatchProductRichAttributesConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -702,7 +702,7 @@ $language=language(isocode)[default='en'][unique=true];
         </property>
         </bean>
          <!-- Converter for SizeGuide For Product Import --> 
-     <bean id="batchProdSizeguideConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="mplIIbatchProdSizeguideConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -728,7 +728,7 @@ $language=language(isocode)[default='en'][unique=true];
 	
 	        <!-- Converter for Seller Import --> 
 
-    <bean id="batchSellerConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+    <bean id="mplIIbatchSellerConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -751,7 +751,7 @@ $language=language(isocode)[default='en'][unique=true];
        </bean>
 
 
- <bean id="batchSalesCategoryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+ <bean id="mplIIbatchSalesCategoryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	INSERT_UPDATE SellerSalesCategory;sellerRootCategoryId[unique=true];sellerId[unique=true];active
@@ -764,7 +764,7 @@ $language=language(isocode)[default='en'][unique=true];
 
         <!-- Converter for SkuID Delisting Relation Import -->
         
-        <bean id="batchSkuIDDelistingConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <bean id="mplIIbatchSkuIDDelistingConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -785,7 +785,7 @@ $language=language(isocode)[default='en'][unique=true];
         
         <!-- Converter for Seller Delisting Relation Import -->
         
-        <bean id="batchSellerDelistingConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <bean id="mplIIbatchSellerDelistingConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -805,7 +805,7 @@ $language=language(isocode)[default='en'][unique=true];
         </bean>
         
          <!-- Converter for Rich Attributes For Product Import --> 
-     <bean id="batchSellerRichAttributesConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="mplIIbatchSellerRichAttributesConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -826,7 +826,7 @@ $language=language(isocode)[default='en'][unique=true];
         </bean>
         
         <!-- Converter for Online Exclusive Import --> 
-     <bean id="batchOnlineExclusiveConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="mplIIbatchOnlineExclusiveConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>$productCatalog=mplProductCatalog
 				$classificationCatalog=pcmClassification
@@ -845,7 +845,7 @@ $language=language(isocode)[default='en'][unique=true];
         </property>
         </bean>
     <!-- Converter for Promoted Product Import --> 
-    <bean id="batchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+    <bean id="mplIIbatchPromotedProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -1167,7 +1167,7 @@ $language=language(isocode)[default='en'][unique=true];
        
                   
            <!-- Converter for Product Import --> 
-    <bean id="batchProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+    <bean id="mplIIbatchProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -1193,7 +1193,7 @@ $language=language(isocode)[default='en'][unique=true];
      
                 
     <!-- Converter for Variant Product Import --> 
-     <bean id="batchVarProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+     <bean id="mplIIbatchVarProductConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -1392,7 +1392,7 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
         </bean> -->
         
 		<!-- Converter for Bulk Return Initiation For Order Import --> 
-       <bean id="batchBulkReturnInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+       <bean id="mplIIbatchBulkReturnInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
              <value>
 				INSERT_UPDATE BulkReturnProcess;parentOrderNo(code);transactionId[unique=true];loadStatus(code);errorDescription(code);
@@ -1404,7 +1404,7 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
         </bean>
         
          <!-- Converter for Bulk Cancel Initiation For Order Import --> 
-       <bean id="batchBulkCancelInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+       <bean id="mplIIbatchBulkCancelInitiationConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
         <property name="header">
              <value>
 				INSERT_UPDATE BulkCancellationProcess;parentOrderNo(code);transactionId(code)[unique=true];loadStatus(code);statusDescription(code);
