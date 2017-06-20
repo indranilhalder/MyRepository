@@ -1271,9 +1271,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @description method is called to set address from list and save in cart in payment button radio click
 	 * @param selectedAddressCode
 	 * @return Json Object
+	 * @throws JSONException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVESELECTADDRESSURL, method = RequestMethod.GET)
 	public @ResponseBody JSONObject selectAddressResponsive(@RequestParam("selectedAddressCode") final String selectedAddressCode)
+			throws JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -1315,15 +1317,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while selecting address ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting address ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while selecting  address:" + e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 
 		}
 		return jsonObj;
@@ -1443,6 +1451,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVEDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm, final BindingResult bindingResult)
+			throws JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -1485,15 +1494,24 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  saving new address ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+			return jsonObj;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while saving new address ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+			return jsonObj;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while saving new address :", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+			return jsonObj;
 		}
 		return jsonObj;
 	}
@@ -3221,7 +3239,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	@RequestMapping(value = "/deliveryAddress", method = RequestMethod.GET)
-	public @ResponseBody JSONObject getDeliveryAddress()
+	public @ResponseBody JSONObject getDeliveryAddress() throws JSONException
 	{
 		final JSONObject jsonObject = new JSONObject();
 		String addressLine = null;
@@ -3279,16 +3297,20 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final JSONException e)
 		{
 			LOG.error("JSONException  while fetching selected delivery address ", e);
+			jsonObject.put("displaymessage", "jsonExceptionMsg");
+			jsonObject.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception  while fetching selected delivery address ", e);
+			jsonObject.put("displaymessage", "jsonExceptionMsg");
+			jsonObject.put("type", "errorCode");
 		}
 		return jsonObject;
 	}
 
 	@RequestMapping(value = "/deliveryModesSelected", method = RequestMethod.GET)
-	public @ResponseBody JSONObject deliveryModesSelected()
+	public @ResponseBody JSONObject deliveryModesSelected() throws JSONException
 	{
 		final JSONObject jsonObject = new JSONObject();
 		JSONObject jsonObjectSelected = null;
@@ -3340,10 +3362,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final JSONException e)
 		{
 			LOG.error("JSONException  while fetching selected delivery address ", e);
+			jsonObject.put("displaymessage", "jsonExceptionMsg");
+			jsonObject.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception  while fetching selected delivery address ", e);
+			jsonObject.put("displaymessage", "jsonExceptionMsg");
+			jsonObject.put("type", "errorCode");
 		}
 		return jsonObject;
 	}
@@ -3367,7 +3393,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	@RequestMapping(value = "/validatePayment", method = RequestMethod.GET)
 	public @ResponseBody JSONObject validatePaymentDetails(final RedirectAttributes redirectAttributes)
-			throws UnsupportedEncodingException
+			throws UnsupportedEncodingException, JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -3479,6 +3505,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final Exception e)
 		{
 			e.printStackTrace();
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 		}
 
 		return jsonObj;
@@ -5062,9 +5090,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @description method is called to set address from list and save in cart in payment button radio click
 	 * @param selectedAddressCode
 	 * @return Json Object
+	 * @throws JSONException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.REMOVEEXCHANGEFROMCART, method = RequestMethod.GET)
-	public @ResponseBody JSONObject removeAllExchangeFromCart()
+	public @ResponseBody JSONObject removeAllExchangeFromCart() throws JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
 		try
@@ -5102,15 +5131,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions Removing Exchange from Cart ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  Removing Exchange from Cart ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 		}
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured while Removing Exchange from Cart" + e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
 		}
 		return jsonObj;
 	}

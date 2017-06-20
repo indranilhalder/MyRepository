@@ -38,6 +38,7 @@ ACC.singlePageCheckout = {
 			case "address.addressType.select" : message="Please select an address Type"; break;
 			case "clientSideAddressFormValidationFailed" : message=ACC.singlePageCheckout.formValidationErrorCount+" errors occured. Please re-enter to continue"; break;
 			case "noStoresFound" : message="Unable to find Stores"; break;
+			case "jsonExceptionMsg" : message="Exception Occured in json block"; break;
 			default:message="No message specified"; 
 		}
 		return message;
