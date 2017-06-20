@@ -1384,9 +1384,9 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
+															<input type="hidden" name="BlaBla" value="${productStatus.responseCode}"/>
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
@@ -1493,11 +1493,20 @@
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
 													<li class="progress progtrckr-done delivery-status">
-														<p> 
+														<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+														</span>
+														<div class="order message trackOrdermessage_ processing-stage-arrow1"
+																		id="processingStatus"
+																		style="display: none;">${orderActualDeliveryDateMap[entry.orderLineId]}
+
+														</div>
+														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p>
+														</p> --%>
 													</li>
 												</c:if>
 												
@@ -1625,45 +1634,6 @@
 								</c:forEach>
 															
 							</c:if> 
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-												
 							
 							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
