@@ -56,7 +56,7 @@
 				<li id="convChargeFieldId">
 					<span><spring:theme code="basket.page.totals.convenience"/></span>
 					<span id="convChargeField" style="float: right">
-		</span>
+				</span>
 				</li>
 					<%-- Commented due to making confusion in the Payment page calculation --%>
 				<!-- Tag used for Delivery Mode and Delivery Address Page promotion display TISBOX-1618-->
@@ -95,9 +95,9 @@
 				<li class="total" id="total">
 					<div id="totalPriceConvChargeId">
 						<span><spring:theme code="basket.page.totals.total"/> </span>
-						<!-- <span id="totalWithConvField" style="float: right"> -->
-						<format:price priceData="${cartData.totalPrice}"/>
-						<!-- </span> -->
+						<span id="totalWithConvField" style="float: right">
+							<format:price priceData="${cartData.totalPrice}"/>
+						</span>
 					</div>
 				</li>
 

@@ -7,7 +7,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common" %>
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
 <!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+<input type="hidden" id="isLuxury" value="true"/>
 
 <template:page pageTitle="${pageTitle}">
 

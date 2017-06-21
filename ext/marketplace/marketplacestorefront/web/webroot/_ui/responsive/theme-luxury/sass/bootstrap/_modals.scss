@@ -130,6 +130,22 @@
   overflow: scroll;
 }
 
+@include media-breakpoint-up(sm) {         
+   #mypopUpModal .modal-dialog{
+        width: 430px;
+        margin: 30px auto;
+        overflow: hidden;
+    }
+}
+
+@include media-breakpoint-down(sm) {         
+   #mypopUpModal .modal-dialog{
+       .modal-content{
+           padding: 0px;
+       }
+    }
+}
+    
 // Scale up the modal
 @media (min-width: $screen-sm-min) {
   // Automatically set modal's width for larger viewports
@@ -137,6 +153,7 @@
     width: $modal-md;
     margin: 30px auto;
   }
+
   .modal-content {
     @include box-shadow(0 5px 15px rgba(0,0,0,.5));
   }
