@@ -140,7 +140,7 @@ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[
 ;$solrIndexedType; searchCapacity   	  ;string ;            ;	;    ;true;    ;    ;mplCapacityValueProvider;
 ;$solrIndexedType; mobileBrandName        ;string ;            ;	;    ;    ;    ;    ;mplMobileBrandNameValueProvider;
 ;$solrIndexedType; isProductNew           ;boolean;            ;    ;    ;    ;	   ;	;mplIsProductNewValueProvider;
-;$solrIndexedType; ussID  		 		  ;string ;            ;	;    ;	  ;    ;    ;mplUssIDValueProvider;
+;$solrIndexedType; ussID  		 		  ;string ;            ;	;    ;true;    ;    ;mplUssIDValueProvider;
 
 ;$solrIndexedType; isDiscountedPrice      ;double;            ;    ;    ;    ;	   ;     ;mplDiscountedPriceValueProvider;
 

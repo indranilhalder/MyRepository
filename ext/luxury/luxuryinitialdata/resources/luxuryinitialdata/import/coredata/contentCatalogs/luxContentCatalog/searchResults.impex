@@ -21,8 +21,6 @@ UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[tr
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
 ;;WishListSlot;Wish List;true;MyWishList
-#;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
-#;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;LuxProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true          
@@ -42,15 +40,39 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
-#;;LuxProductsListingPageMSH12;Luxury Products Listing Page For MSH12;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1236106
-#;;LuxProductsListingPageMSH13;Luxury Products Listing Page For MSH13;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1236105
-                 
-
-#INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='LuxProductsListingPageMSH12'];contentSlot(uid,$contentCV)[unique=true];
-#;;LuxPLPBannerSlotForMSH12;LuxPLPBannerPosition;LuxProductsListingPageMSH12;LuxPLPBannerSlot;
-#;;LuxPLPVisualFilterSlotForMSH12;LuxPLPVisualFilterPosition;LuxProductsListingPageMSH12;LuxPLPVisualFilterSlot;
-#;;LuxPLPBannerSlotForMSH13;LuxPLPBannerPosition;LuxProductsListingPageMSH13;LuxPLPBannerSlot;
-#;;LuxPLPVisualFilterSlotForMSH13;LuxPLPVisualFilterPosition;LuxProductsListingPageMSH13;LuxPLPVisualFilterSlot;    
 
 INSERT_UPDATE NeedHelpComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;ContactNumber;;
 ;;NeedHelp;Need Help;NeedHelp;1-800-123-4567;;
+
+
+#Impex for PLP with Visual filter & Banner
+
+INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
+;;visual-filter-100001SHW0001	;visual-filter-100001SHW0001;Visual Category for 100001SHW0001;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
+;;visual-filter-100009K0001K11	;visual-filter-100009K0001K11;Visual Category for 100009K0001K11;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(uid,$contentCV);
+;;PLP-Banner-100001SHW0001;PLP Banner Rotating for 100001SHW0001;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;
+;;PLP-Banner-100009K0001K11;PLP Banner Rotating for 100009K0001K11;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;LuxPLPBannerSlot-100001SHW0001;PLP Hero Banner for 100001SHW0001;true;PLP-Banner-100001SHW0001
+;;LuxPLPVisualFilterSlot-100001SHW0001;PLP Visual Filter for 100001SHW0001;true;visual-filter-100001SHW0001
+;;LuxPLPBannerSlot-100009K0001K11;PLP Hero Banner for 100009K0001K11;true;PLP-Banner-100009K0001K11
+;;LuxPLPVisualFilterSlot-100009K0001K11;PLP Visual Filter for 100009K0001K11;true;visual-filter-100009K0001K11
+;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
+;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
+;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;LuxProductsListingPage-100001SHW0001;Luxury Products Listing Page For 100001SHW0001;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1116101
+;;LuxProductsListingPage-100009K0001K11;Luxury Products Listing Page For 100009K0001K11;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1116
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true];
+;;LuxPLPBannerSlotFor100001SHW0001;LuxPLPBannerPosition;LuxProductsListingPage-100001SHW0001;LuxPLPBannerSlot-100001SHW0001;
+;;LuxPLPVisualFilterSlotFor100001SHW0001;LuxPLPVisualFilterPosition;LuxProductsListingPage-100001SHW0001;LuxPLPVisualFilterSlot-100001SHW0001;
+;;LuxPLPBannerSlotFor100009K0001K11;LuxPLPBannerPosition;LuxProductsListingPage-100009K0001K11;LuxPLPBannerSlot-100009K0001K11;
+;;LuxPLPVisualFilterSlotFor100009K0001K11;LuxPLPVisualFilterPosition;LuxProductsListingPage-100009K0001K11;LuxPLPVisualFilterSlot-100009K0001K11;
