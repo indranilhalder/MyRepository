@@ -25654,7 +25654,7 @@ div.variantFormContainer{
 	
 	/* TPR-6013 responsive mobile my profile common starts */
 	body .account .account-header{
-		display: block;
+		display: none;
 	}
 	/* TPR-6013 responsive mobile my profile common ends */
 }
@@ -70509,3 +70509,17 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     left: -378% !important;
 }
 } 
+@media(max-width: 790px){
+	body .account .right-account{
+	border-top: 1px solid #eeeeee;
+	margin-top: -48px;
+	}
+	body .account .right-account.order-history.responsiveProfile.navigation#order_pagination h2{
+	margin-top: 10px;
+	}
+}
+@media(max-width: 767px){
+	body .account .right-account{
+	margin-top: -29px;
+	}
+}
