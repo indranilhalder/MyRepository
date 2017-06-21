@@ -971,7 +971,7 @@ display: none;
 	</div></div>
 		
 	<div class="right-block shipping col-md-4">
-			<div class="checkout-order-summary">
+			<div class="orderSummary">
 			<div class="order-summary-header"><h2>Summary</h2></div>
 				<multi-checkout:orderTotals cartData="${cartData}"
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
