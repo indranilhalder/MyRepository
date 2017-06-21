@@ -70523,3 +70523,6 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 	margin-top: -29px;
 	}
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start{
+	    display: none;
+}

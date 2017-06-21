@@ -3336,6 +3336,10 @@ $("#saveBlockData").click(function(){
 						$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
 						});
 				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.progtrckr-done.returnStatus span.dot").last().css("margin-left","0px");
+						$(this).find("ul>li.progress.progtrckr-done.returnStatus span.dot").last().css("width","9%");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 						$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
 					});
 			});
