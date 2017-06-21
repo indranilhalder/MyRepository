@@ -116,8 +116,8 @@
 		    			$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 					# Set product approval status to Approved only for those products that have prices.
 					$productCatalog=mplProductCatalog		
-		   			 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']		
-		   			 $approved=approvalstatus(code)[default='approved']
+		   			$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']		
+		   			$approved=approvalstatus(code)[default='approved']
 					$unit=unit(code[unique=true,default=pieces])
 					$currency=currency(isocode)[unique=true][default=INR]
 					$minqtd=minqtd[default=1]
