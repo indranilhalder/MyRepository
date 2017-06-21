@@ -252,7 +252,7 @@
 							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
 							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
 							<div class="delivery-address">
-								<h2>Billing Address</h2>
+								<%-- <h2>Billing Address</h2> --%>
 								<c:if test="${not empty creditCardBillingAddress.firstName}">
 									<h3>Billing Address:</h3>
 									
@@ -282,7 +282,7 @@
 										91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br>
 									</address>
 								</c:if>
-								<c:if test="${empty creditCardBillingAddress.firstName}">
+								<%-- <c:if test="${empty creditCardBillingAddress.firstName}">
 										<address>
 											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
 											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
@@ -300,7 +300,7 @@
 											<br>
 											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 										</address>
-									</c:if>
+									</c:if> --%>
 							</div>
 								
 								<!-- TPR-6013 Order History Ends -->
