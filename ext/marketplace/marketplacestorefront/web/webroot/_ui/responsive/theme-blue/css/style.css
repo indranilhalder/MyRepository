@@ -25633,7 +25633,7 @@ div.variantFormContainer{
 	body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment{
 		margin-left: 0;
 		padding-top: 30px;
-		margin-top: 50px;	/* TISPRDT-1574 */
+		margin-top: 50px !important;	/* TISPRDT-1574 */
 	}
 	body .account .right-account .order-history.order-details.responsiveProfile li.header div.payment-method{
 		padding-top: 30px;
@@ -70291,13 +70291,13 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 	margin-bottom: 5px;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message{
-	left: -100% !important;
+	left: -97% !important;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(3) .message{
 	left: -200% !important;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message{
-	left: -400% !important;
+	left: -386% !important;
 }
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.viewDetailsAnchor,
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.trackOrderAnchor{
@@ -70477,3 +70477,35 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     top:3px;		/* TPR-6013 Order History  */
 }
 }
+@media(max-width: 790px){
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message{
+ left: -395% !important;
+ }
+ body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
+    left: -99% !important;
+}
+}
+@media(max-width: 650px){
+	body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.delivery-status.processing.full_track{
+	height: 21px !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
+    left: -96% !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message {
+    left: -392% !important;
+}
+}
+@media(max-width: 480px){
+	body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
+    left: -95% !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message {
+    left: -386% !important;
+}
+}
+@media(max-width: 350px){
+	body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message {
+    left: -378% !important;
+}
+} 
