@@ -431,8 +431,13 @@ public class MarketplaceCheckoutControllerImpl extends
 		/**
 		 * TPR-5712 : if store manager logged in
 		 */
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
 		
 		if (configurationService
 				.getConfiguration()
@@ -706,35 +711,18 @@ public class MarketplaceCheckoutControllerImpl extends
 			
 			for(final SellerInformationModel seller : listOfSeller)
 			{
-				if(seller.getSellerID().equalsIgnoreCase(agentId))
+				if(seller.getSellerID().equalsIgnoreCase(agentId) 
+						&& codCheckForOIS(seller,nonCodProduct))
 				{
-					for(final RichAttributeModel richAttribute : seller.getRichAttribute()) 
+					return true;
+				}
+				else
+				{
+					if((agentId.equalsIgnoreCase( agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP)))
+					&& codCheckForOIS(seller,nonCodProduct))
 					{
-						boolean tShip = false;
-						if (DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
-						{
-							tShip = true;
-						}
-						else if (null != richAttribute.getIsSshipCodEligible()
-								&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))
-						{
-								tShip = true;
-						}
-						else
-						{
-							nonCodProduct = true;
-							return nonCodProduct;
-						}
-						if(tShip)
-						{
-							if (!(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.BOTH) 
-									|| 
-									(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.COD))))	
-							{
-								nonCodProduct = true;
-								return nonCodProduct;
-							}
-						}
+						return true;
 					}
 				}
 			}
@@ -755,12 +743,51 @@ public class MarketplaceCheckoutControllerImpl extends
 		return nonCodProduct;
 	}
 	
+	public boolean codCheckForOIS(final SellerInformationModel seller,boolean nonCodProduct )
+	{
+		for(final RichAttributeModel richAttribute : seller.getRichAttribute()) 
+		{
+			boolean tShip = false;
+			if (DeliveryFulfillModesEnum.TSHIP.getCode().equalsIgnoreCase(richAttribute.getDeliveryFulfillModes().getCode()))
+			{
+				tShip = true;
+			}
+			else if (null != richAttribute.getIsSshipCodEligible()
+					&& richAttribute.getIsSshipCodEligible().getCode().equalsIgnoreCase("true"))
+			{
+					tShip = true;
+			}
+			else
+			{
+				nonCodProduct = true;
+				return nonCodProduct;
+			}
+			if(tShip)
+			{
+				if (!(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.BOTH) 
+						|| 
+						(null != richAttribute.getPaymentModes() && richAttribute.getPaymentModes().equals(PaymentModesEnum.COD))))	
+				{
+					nonCodProduct = true;
+					return nonCodProduct;
+				}
+			}
+		}
+		return nonCodProduct;
+	}
+	
 	@Override
 	public boolean processPayment(CartModel cart) throws PaymentException,
 			ValidationException ,Exception{
 		
-		final String agentId = agentIdForStore.getAgentIdForStore(
+		String agentId = agentIdForStore.getAgentIdForStore(
 				MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREMANAGERAGENTGROUP);
+		if (StringUtils.isEmpty(agentId))
+		{
+			agentId = agentIdForStore
+					.getAgentIdForStore(MarketplacecommerceservicesConstants.CSCOCKPIT_USER_GROUP_STOREADMINAGENTGROUP);
+		}
+		
 		if (StringUtils.isNotEmpty(agentId))
 		{
 			if(isNonCodProductExistForAgent(cart, agentId))
