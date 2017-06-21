@@ -16751,6 +16751,7 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     font-size: 20px;
     cursor:pointer;
 }
+
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot:before {
     z-index: 2;
     content: "";
@@ -16860,7 +16861,6 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status {
         height: 40px;
         padding: 5px 0;
-        margin-top: 10px
     }
     body .account .right-account .order-history.order-details li.item .status>ul>li.delivery-status p {
         margin-top: 0;
@@ -70296,6 +70296,9 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(3) .message{
 	left: -200% !important;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message{
+	left: -400% !important;
+}
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.viewDetailsAnchor,
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.trackOrderAnchor{
 	position: relative;
@@ -70455,3 +70458,22 @@ footer>div>ul>li h3>img{
     padding-bottom: 18px !important;
 }
 /*end of TISPRDT-1571*/
+@media (max-width: 650px) {
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.dot:before {
+    z-index: 2;
+    content: "";
+    display: inline-block;
+    /* width: 10px;
+    height: 10px; */		/* Commented for TPR-6013 Order History  */
+    width: 10px;		/* TPR-6013 Order History  */	
+  	height: 10px;		/* TPR-6013 Order History  */
+    border-radius: 100%;		/* TPR-6013 Order History  */
+    /* background-color: #A9143C; */			/*Commented for TPR-6013 Order History  */
+        background-color: #7ed321;
+    /* border: 2px solid #fff;
+    box-shadow: 0 0 0 3px #A9143C; */
+    position:relative;
+    /* top:-2px; */			/* Commented for TPR-6013 Order History  */
+    top:3px;		/* TPR-6013 Order History  */
+}
+}

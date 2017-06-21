@@ -3296,7 +3296,7 @@ $("#saveBlockData").click(function(){
 		  	$(".deliveryTrack.status .progtrckr.tabs li span.dot.inactive").siblings(".start").removeClass('start');
 		  }); 
 		  /* TPR-6013 track order modal js start */
-		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+/* 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 			$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
 			});
 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
@@ -3309,7 +3309,7 @@ $("#saveBlockData").click(function(){
 				});
 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 				$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
-			});
+			}); */
 		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").find("span.dot").last().hasClass("inactive"))){
 				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").addClass("full_track");
 			}
@@ -3321,6 +3321,24 @@ $("#saveBlockData").click(function(){
 			}
 		  
 			/* TPR-6013 track order modal js end */
+			
+			$(document).ready(function(){
+				
+				$("body .account .right-account .order-history.order-details li.item .status").each(function(){
+					$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
+					});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing.returnStatus span.dot").first().css("margin-left","0px");
+						$(this).find("ul>li.progress.processing.returnStatus span.dot").last().css("float","right");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing.cancelStatus span.dot").first().css("margin-left","0px");
+						$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+					});
+			});
 		</script>
 
 		<!--   AWB CSS for PopUp -->
