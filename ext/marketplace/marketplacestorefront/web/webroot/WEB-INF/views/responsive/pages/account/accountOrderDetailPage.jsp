@@ -1384,16 +1384,26 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																	<c:choose>
+																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
 																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																		class="dot-arrow">
 																	</span>
+																		</c:when>
+																		<c:otherwise>
+																		<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																		</span>
+																		</c:otherwise>
+																	</c:choose>
+																	
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -1482,8 +1492,16 @@
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+														</c:forEach> 
+														<c:forEach var="i" begin="${dotCount}" end="1">
+															<c:choose>
+															<c:when test="${i eq 1}">
+															<span class="dot inactive" style="float: right;"></span>
+															</c:when>
+															<c:otherwise>
 															<span class="dot inactive"></span>
+															</c:otherwise>
+															</c:choose>
 														</c:forEach> <!-- <span class="end"></span> -->
 													</li>
 												</c:if>
@@ -1492,12 +1510,12 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status">
-														<p> 
+													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
+														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p>
+														</p> --%>
 													</li>
 												</c:if>
 												
@@ -1625,45 +1643,6 @@
 								</c:forEach>
 															
 							</c:if> 
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-												
 							
 							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
@@ -2502,16 +2481,26 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																	<c:choose>
+																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
+																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
 																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																		class="dot-arrow">
 																	</span>
+																		</c:when>
+																		<c:otherwise>
+																		<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																		class="dot-arrow">
+																		</span>
+																		</c:otherwise>
+																	</c:choose>
+																	
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -2600,8 +2589,16 @@
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+														</c:forEach> 
+														<c:forEach var="i" begin="${dotCount}" end="1">
+															<c:choose>
+															<c:when test="${i eq 1}">
+															<span class="dot inactive" style="float: right;"></span>
+															</c:when>
+															<c:otherwise>
 															<span class="dot inactive"></span>
+															</c:otherwise>
+															</c:choose>
 														</c:forEach> <!-- <span class="end"></span> -->
 													</li>
 												</c:if>
@@ -2610,12 +2607,12 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status">
-														<p> 
+													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
+														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p>
+														</p> --%>
 													</li>
 												</c:if>
 												
@@ -3299,12 +3296,20 @@ $("#saveBlockData").click(function(){
 		  	$(".deliveryTrack.status .progtrckr.tabs li span.dot.inactive").siblings(".start").removeClass('start');
 		  }); 
 		  /* TPR-6013 track order modal js start */
-		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+/* 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 			$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
 			});
 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing.returnStatus span.dot").first().css("margin-left","0px");
+				$(this).find("ul>li.progress.processing.returnStatus span.dot").last().css("float","right");
+				});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing.cancelStatus span.dot").first().css("margin-left","0px");
+				$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
+				});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
 				$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
-			});
+			}); */
 		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").find("span.dot").last().hasClass("inactive"))){
 				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").addClass("full_track");
 			}
@@ -3314,7 +3319,26 @@ $("#saveBlockData").click(function(){
 		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.cancelStatus.processing").find("span.dot").last().hasClass("inactive"))){
 				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.cancelStatus.processing").addClass("full_track");
 			}
+		  
 			/* TPR-6013 track order modal js end */
+			
+			$(document).ready(function(){
+				
+				$("body .account .right-account .order-history.order-details li.item .status").each(function(){
+					$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
+					});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing.returnStatus span.dot").first().css("margin-left","0px");
+						$(this).find("ul>li.progress.processing.returnStatus span.dot").last().css("float","right");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing.cancelStatus span.dot").first().css("margin-left","0px");
+						$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+					});
+			});
 		</script>
 
 		<!--   AWB CSS for PopUp -->
@@ -3531,6 +3555,7 @@ body .account  .track-order-del-charge{
 body .account .left-nav, body .account .right-account .order-history .navigation,
 body .account .right-account .order-history.order-details li.header .totals,
 body .account .right-account .order-history.order-details li.header .payment-method,
+body .account .right-account .order-history.order-details .product-block li.item .actions,
 body .account .nav-orderHistory, body .account .account-header,
 body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span,
 #userLoginType, #js-site-search-input, #ia_category_code{
