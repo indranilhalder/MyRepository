@@ -34,7 +34,7 @@ import com.hybris.oms.domain.deliveredvspromised.dto.DeliveredVsPromised;
 import com.hybris.oms.domain.deliveredvspromised.dto.DeliveredVsPromisedReport;
 import com.hybris.oms.domain.sshiptxninfo.dto.SShipTxnInfo;
 import com.hybris.oms.tata.renderer.DeliveredVsPromisedRenderer;
-
+import com.hybris.oms.tata.constants.TataomsbackofficeConstants;
 
 /**
  * @author prabhakar
@@ -72,19 +72,33 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 		super.initialize(comp);
 		final Calendar cal = Calendar.getInstance();
 		int defaultdays = 1;
-		final String defaultDaysConfigValue = Config.getParameter("backoffice.defaultconfig.reportdays").trim();
-		if (defaultDaysConfigValue != null)
-		{
-			defaultdays = Integer.parseInt(defaultDaysConfigValue);
+		String defaultdaysConfig = Config.getParameter(TataomsbackofficeConstants.DELIVERY_PROMISED_REPORT_DEFAULT_DAYS);
+		if ( defaultdaysConfig != null)
+		{   
+			try
+			{
+				defaultdays = Integer.parseInt(defaultdaysConfig);
+			}catch(Exception exception)
+			{
+				LOG.error("Exception while reading configuration: " + TataomsbackofficeConstants.DELIVERY_PROMISED_REPORT_DEFAULT_DAYS + 
+						". Configured Value = " + defaultdaysConfig + " . Used Default as 1. Exception = " + exception);
+			}
+		} else 
+		{	
+			LOG.info("Value for " + TataomsbackofficeConstants.DELIVERY_PROMISED_REPORT_DEFAULT_DAYS + " is not configured, used Default as 1");
 		}
 		cal.add(Calendar.DATE, -defaultdays);
-		LOG.info("inside initialize method" + "Start Date " + cal.getTime() + "******* End Date " + new Date());
 		final SShipTxnInfo requestDto = new SShipTxnInfo();
 		requestDto.setFromDate(cal.getTime());
 		requestDto.setToDate(new Date());
 		startDate = dateFormat.format(cal.getTime());
 		endDate = dateFormat.format(new Date());
-		displayDeliveredVsPromisedData(requestDto);
+		try{
+		    displayDeliveredVsPromisedData(requestDto);
+		}catch(Exception exception)
+		{
+			LOG.info("unable to get the  data use search parameter ");
+		}
 	}
 
 	/**

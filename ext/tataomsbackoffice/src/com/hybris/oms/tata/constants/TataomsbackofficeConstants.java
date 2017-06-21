@@ -64,7 +64,8 @@ public final class TataomsbackofficeConstants extends GeneratedTataomsbackoffice
 	public static final String SCHEDULEDDELIVERY_EDIT = "sdItemEdit";
 	public static final String EXPRESSDELIVERY_EDIT = "edItemEdit";
 	public static final String RETURNDELIVERY_EDIT = "rdItemEdit";
-
+    public static final String DELIVERY_PROMISED_REPORT_DEFAULT_DAYS = "backoffice.promisedReport.defaultReportDays";
+	
 	private TataomsbackofficeConstants()
 	{
 		//empty to avoid instantiating this constant class
