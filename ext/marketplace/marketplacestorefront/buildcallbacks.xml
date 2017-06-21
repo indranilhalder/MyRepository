@@ -105,9 +105,9 @@
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css/minifier-temp-ie8" name="lxstorefront.mincss.temp.ie8.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css/minifier-temp-ie9" name="lxstorefront.mincss.temp.ie9.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/css" name="lxstorefront.css.dir" />
-	<property location="${lxstorefront.mincss.temp.dir}/yuicompressor.jar" name="minifier.yui.compresser.jar" />
-	<property location="${lxstorefront.mincss.temp.ie8.dir}/yuicompressor.jar" name="minifier.ie8.yui.compresser.jar" />
-	<property location="${lxstorefront.mincss.temp.ie9.dir}/yuicompressor.jar" name="minifier.ie9.yui.compresser.jar" />
+	<property location="${lxstorefront.mincss.temp.dir}/yuicompressor.jar" name="lxstorefront.minifier.yui.compresser.jar" />
+	<property location="${lxstorefront.mincss.temp.ie8.dir}/yuicompressor.jar" name="lxstorefront.minifier.ie8.yui.compresser.jar" />
+	<property location="${lxstorefront.mincss.temp.ie9.dir}/yuicompressor.jar" name="lxstorefront.minifier.ie9.yui.compresser.jar" />
 
 	<!-- End properties for min-css for mpl -->
 
@@ -239,7 +239,7 @@
 	</macrodef>
 
 
-	<!-- 
+	<!--
 		Called whenever 'ant ear' is used. this callback can be used to modify the content of the ear file
 
 		${ear.path}: 			path to ear
@@ -274,17 +274,17 @@
 					<!-- End delete directories for min-css for mpl -->
 
 					<!-- Start delete directories for min-css lux -->
-					
+
 					<delete dir="${lxstorefront.mincss.temp.dir}" />
 					<delete dir="${lxstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${lxstorefront.mincss.temp.ie9.dir}" />
 					<delete file="${lxstorefront.css.dir}/tmpmain.min.css" />
 					<delete file="${lxstorefront.css.dir}/main-ie8-min.css" />
 					<delete file="${lxstorefront.css.dir}/main-ie9-min.css" />
-					
+
 					<!-- End delete directories for min-css  lux -->
 
-					
+
 					<mkdir dir="${mpstorefront.minjs.dir}" />
 					<mkdir dir="${lxstorefront.minjs.dir}" />
 
@@ -299,7 +299,7 @@
 					<mkdir dir="${lxstorefront.mincss.temp.ie8.dir}" />
 					<mkdir dir="${lxstorefront.mincss.temp.ie9.dir}" />
 					<!-- End make directories for min-css for lux -->
-					
+
 					<echo message="Minifying JS..." />
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />
@@ -405,16 +405,17 @@
 					</concat>
 <!--					<copy file="${mpstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${mpstorefront.css.dir}/main-ie8-min.css" />
 					<copy file="${mpstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${mpstorefront.css.dir}/main-ie9-min.css" />
--->					
+-->
 					<delete dir="${mpstorefront.mincss.temp.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${mpstorefront.mincss.temp.ie9.dir}" />
 					<!-- End min-css steps mpl -->
 
 					<!-- Start min-css steps for lux -->
-					<copy file="${yui.compresser.jar}" tofile="${minifier.yui.compresser.jar}" />
-					<copy file="${yui.compresser.jar}" tofile="${minifier.ie8.yui.compresser.jar}" />
-					<copy file="${yui.compresser.jar}" tofile="${minifier.ie9.yui.compresser.jar}" />
+					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.yui.compresser.jar}" />
+					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.ie8.yui.compresser.jar}" />
+					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.ie9.yui.compresser.jar}" />
+
 					<copy todir="${lxstorefront.mincss.temp.dir}">
 						<fileset dir="${lxstorefront.css.dir}" includes="*.css" excludes="hybris.cms.live.edit.css,main-ie8.css,main-ie9.css,fonts.min.css,preload.css" />
 					</copy>
@@ -425,35 +426,35 @@
 						<fileset dir="${lxstorefront.css.dir}" includes="main-ie9.css" />
 					</copy>
 					<echo message="Minifying CSS for lux..." />
-					<pathconvert pathsep=" " property="customcssfiles">
+					<pathconvert pathsep=" " property="luxurycustomcssfiles">
 						<fileset dir="${lxstorefront.mincss.temp.dir}">
 							<include name="*.css" />
 						</fileset>
 					</pathconvert>
-					<pathconvert pathsep=" " property="ie8cssfiles">
+					<pathconvert pathsep=" " property="luxuryie8cssfiles">
 						<fileset dir="${lxstorefront.mincss.temp.ie8.dir}">
 							<include name="*.css" />
 						</fileset>
 					</pathconvert>
-					<pathconvert pathsep=" " property="ie9cssfiles">
+					<pathconvert pathsep=" " property="luxuryie9cssfiles">
 						<fileset dir="${lxstorefront.mincss.temp.ie9.dir}">
 							<include name="*.css" />
 						</fileset>
 					</pathconvert>
-					<java jar="${minifier.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.dir}" fork="true">
+					<java jar="${lxstorefront.minifier.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.dir}" fork="true">
 						<arg line="--type css" />
 						<arg line="-o '.css$:-min.css'" />
-						<arg line="${customcssfiles}" />
+						<arg line="${luxurycustomcssfiles}" />
 					</java>
-					<java jar="${minifier.ie8.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.ie8.dir}" fork="true">
+					<java jar="${lxstorefront.minifier.ie8.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.ie8.dir}" fork="true">
 						<arg line="--type css" />
 						<arg line="-o '.css$:-min.css'" />
-						<arg line="${ie8cssfiles}" />
+						<arg line="${luxuryie8cssfiles}" />
 					</java>
-					<java jar="${minifier.ie9.yui.compresser.jar}" dir="${mpstorefront.mincss.temp.ie9.dir}" fork="true">
+					<java jar="${lxstorefront.minifier.ie9.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.ie9.dir}" fork="true">
 						<arg line="--type css" />
 						<arg line="-o '.css$:-min.css'" />
-						<arg line="${ie9cssfiles}" />
+						<arg line="${luxuryie9cssfiles}" />
 					</java>
 					<echo message="Merging minfied CSS for lux..." />
 					<concat destfile="${lxstorefront.css.dir}/tmpmain.min.css" append="true">

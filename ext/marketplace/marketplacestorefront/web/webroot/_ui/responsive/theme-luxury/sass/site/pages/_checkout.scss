@@ -419,7 +419,36 @@
         
     }
 }
-.right-block .checkout-order-summary{
+
+.right-block .cartBottomCheck{
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    
+    #defaultPinCodeIdsBtm{
+        width: 55%;
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #d2d2d2;
+        border-radius: 3px;
+    }
+    #pinCodeButtonIdsBtm{
+        width: 43%;
+        display: inline-block;
+        padding: 10px 16px;
+        font-size: 14px;
+        line-height: 1.33333;
+        border-radius: 4px;
+        background-color: #2d2d2d;
+        color: #fff;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid transparent
+    }
+}
+.right-block .orderSummary{
     border: 1px solid #ccc;  
     border-radius: 5px 5px 5px 5px;
     
@@ -443,15 +472,15 @@
             list-style: none;
             margin: 10px 0px;
         }
-        .subTotalSpan, .amt, #promotionApplied span, .shipping span , #convChargeFieldId span{
+        /*.subTotalSpan, .amt, #promotionApplied span, .shipping span , #convChargeFieldId span{
             width: 49%;
             display: inline-block;
             
-        }
-        .amt, #promotion, #deliveryCostSpanId, #convChargeField{
+        }*/
+        /*.amt, #promotion, #deliveryCostSpanId, #convChargeField{
             text-align: right;
             float: none!important;
-        }
+        }*/
         #couponApplied{
             display: none;
         }        
@@ -474,6 +503,18 @@
             }
             
         }
+    }
+    
+    .orderTotal{
+        .orderValue{
+            .priceFormat{
+                float: none;
+            }
+        }
+    }
+    
+    .checkoutBtn{
+        padding: 0px;
     }
 }
 
@@ -743,3 +784,36 @@
 .address-list.hideItem .address-details{
      clear: both;
 }
+
+/*Order confirmation page*/
+.checkout-success-body.thanks{
+    .btn-design{
+        .left, .right{
+            display: inline-block;
+        }
+        .left{
+            margin-right: 50px;
+            @include media-breakpoint-down(sm) {
+              margin-right:0px;
+                margin-bottom: 10px;
+            }  
+            
+            .btn.btn-default{
+                width:100%
+            }
+        }
+        .right{
+           margin-left: 50px; 
+           @include media-breakpoint-down(sm) {
+              margin-left:0px;                
+            }  
+            
+            .btn.btn-default{
+                width:100%
+            }
+        }
+    }
+}
+
+
+/*Order confirmation page*/
