@@ -4,12 +4,16 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogService;
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 
 import java.util.List;
 
+import de.hybris.platform.site.BaseSiteService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,12 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	@Autowired
 	private CatalogService catalogService;
 
+	@Autowired
+	BaseSiteService baseSiteService;
+
+	@Autowired
+	private CatalogVersionService catalogVersionService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -48,10 +58,13 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		if (aticleSKUID != null)
 		{
 			//TISEE-5429 , TISEE-5458
-			final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
+			final CatalogVersionModel onlineCatalog = getCatalogVersionSession();
+
+
+					/*catalogService.getCatalogVersion(
 					MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
 					MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
-
+*/
 
 			return mplSellerInformationDAO.getSellerInforationDetails(aticleSKUID, onlineCatalog);
 		}
@@ -171,6 +184,22 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 			return getMplSellerInformationDAO().getSellerInformationBySellerID(catalogVersion, sellerID);
 		}
 		return null;
+	}
+
+	private CatalogVersionModel getCatalogVersionSession()
+	{
+		CatalogVersionModel catalogVersionModel = null;
+		final List<CatalogModel> productCatalogs = baseSiteService.getProductCatalogs(baseSiteService.getCurrentBaseSite());
+		if (CollectionUtils.isNotEmpty(productCatalogs))
+		{
+			catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
+		}
+		else
+		{
+			catalogVersionModel = catalogVersionService
+					.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
+		}
+		return catalogVersionModel;
 	}
 
 	/*
