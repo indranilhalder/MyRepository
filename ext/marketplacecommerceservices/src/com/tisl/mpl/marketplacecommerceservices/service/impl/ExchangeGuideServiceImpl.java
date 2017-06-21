@@ -97,9 +97,9 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @returns All L4 for which Exchange is Applicable
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getDistinctL4()
 	 */
 	@Override
@@ -111,11 +111,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * @Javadoc
-	 *
+	 * 
 	 * @param String categoryCode
-	 *
+	 * 
 	 * @param ExchangeCouponValueModel pricematrix
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getExchangeGuideList(java.lang.String)
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#changePincode(java.lang.String)
 	 */
 	@Override
@@ -203,7 +203,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#removeFromTransactionTable(java.lang.String)
 	 */
@@ -235,7 +235,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#getTeporaryExchangeModelforId(java.lang.
 	 * String)
@@ -394,9 +394,39 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	}
 
+	@Override
+	public void changeGuidforCartMerge(final CartModel cart)
+	{
+		String exIdStringList = null;
+		final List<ExchangeTransactionModel> listToSave = new ArrayList<>();
+		for (final AbstractOrderEntryModel entry : cart.getEntries())
+		{
+			if (StringUtils.isNotEmpty(entry.getExchangeId()))
+			{
+				if (StringUtils.isEmpty(exIdStringList))
+				{
+					exIdStringList = entry.getExchangeId();
+				}
+				else
+				{
+					exIdStringList = exIdStringList + "," + entry.getExchangeId();
+				}
+
+			}
+		}
+		final List<ExchangeTransactionModel> exTraxList = getTeporaryExchangeModelforId(exIdStringList);
+		for (final ExchangeTransactionModel exTrax : exTraxList)
+		{
+			exTrax.setCartguid(cart.getGuid());
+			listToSave.add(exTrax);
+		}
+
+		modelService.saveAll(listToSave);
+	}
+
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService#addToExchangeTable(com.tisl.mpl.core.model
 	 * .ExchangeTransactionModel)

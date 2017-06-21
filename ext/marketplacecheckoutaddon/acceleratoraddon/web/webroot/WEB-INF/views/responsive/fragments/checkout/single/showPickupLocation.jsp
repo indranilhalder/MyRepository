@@ -185,12 +185,11 @@ $(document).ready(function() {
 				$.ajax({
 			          url :  ACC.config.encodedContextPath +"/checkout/single/updatePincodeCheck",
 			          type: "GET",
-			          dataType : "json",
+			          dataType : "html",
 			    	  cache: false,
-			    	  contentType : "application/json; charset=utf-8",
 			          data : dataString${entryNumber},   
 			          success : function(data) {
-			        	 $("cncUlDiv${entryNumber}").html(data);
+			        	 $("#cncUlDiv${entryNumber}").html(data);
 			          },
 			          error : function(xhr, data, error) {
 			        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
