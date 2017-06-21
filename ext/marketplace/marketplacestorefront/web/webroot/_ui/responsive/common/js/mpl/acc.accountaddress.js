@@ -942,7 +942,11 @@ function validateForm() {
 	var todaydateFormat = new Date(mm + '/' + dd + '/' + yyyy);
 	var sysDateIntVal = parseInt(yyyy + "" + mm + "" + dd);
 	var isDOA = false;
-	// Date of Birth
+	if($("#dateOfBrithPicker").val() == ""){
+		
+		
+	}else
+		// Date of Birth
 	if ((isNaN(ValueDOB) || isNaN(ValueMOB) || isNaN(ValueYOB))) {
 		$("#errdobDay").css({
 			"display" : "block",
@@ -976,8 +980,9 @@ function validateForm() {
 	}
 
 	// Anniversary
-
-	if ((isNaN(ValueDOA) || isNaN(ValueMOA) || isNaN(ValueYOA))) {
+	if($("#anniversaryDatePicker").val() == ""){
+		
+	}else 	if ((isNaN(ValueDOA) || isNaN(ValueMOA) || isNaN(ValueYOA))) {
 		$("#errdoaDay").css({
 			"display" : "block",
 			"margin-top" : "10px"
@@ -1034,7 +1039,7 @@ function validateForm() {
 		$("#myProfileError").html(errorLI);
 		$(".myprofile").show();
 		$('html, body').animate({
-	        scrollTop: $(".account-header").offset().top
+	        scrollTop: $(".breadcrumbs").offset().top
 	    }, 1000);
 	}
 	return proceed;

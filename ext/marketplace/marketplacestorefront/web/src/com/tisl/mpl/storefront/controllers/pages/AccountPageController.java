@@ -186,6 +186,7 @@ import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
 import com.tisl.mpl.facades.product.data.GenderData;
@@ -660,7 +661,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		List<OrderEntryData> cancelProduct = new ArrayList<OrderEntryData>();
 		final Map<String, Map<String, AWBResponseData>> orderWithStatus = new HashMap<String, Map<String, AWBResponseData>>();
-
+		//TPR-6013
+		ConsignmentModel consignmentModel = null;
+		String consignmentStatus = ModelAttributetConstants.EMPTY;
 
 		LOG.debug("Step1-************************Order History");
 		try
@@ -768,7 +771,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						final Map<String, List<AWBResponseData>> statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(
 								orderEntryData, subOrder, subOrderModel);
 						List<AWBResponseData> response = null;
-						AWBResponseData approved = null, shipped = null, delivery = null;
+						AWBResponseData approved = null, shipped = null, delivery = null, cancel = null, returns = null;
 						final Map<String, AWBResponseData> orderStatus = new HashMap<String, AWBResponseData>();
 
 
@@ -785,16 +788,54 @@ public class AccountPageController extends AbstractMplSearchPageController
 						{
 							shipped = response.get(0);
 						}
-						response = statusTrackMap.get("DELIVERY");
+						//TPR-6013
+						if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+						{
+							consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
+							consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+
+							if (null != consignmentModel
+									&& null != consignmentModel.getInvoice()
+									&& null != consignmentModel.getInvoice().getInvoiceUrl()
+									&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+							{
+								final SimpleDateFormat smdfDate = new SimpleDateFormat(
+										MarketplacecclientservicesConstants.DATE_FORMAT_AWB);
+								final AWBResponseData deliveryAWBData = new AWBResponseData();
+								final StatusRecordData statusRecordData = new StatusRecordData();
+								final List<StatusRecordData> listStatusRecordData = new ArrayList<StatusRecordData>();
+								LOG.info(">>>>>>>>>> consignmentModel.getDeliveryDate() " + consignmentModel.getDeliveryDate());
+								if (null != consignmentModel.getDeliveryDate())
+								{
+									statusRecordData.setDate(smdfDate.format(consignmentModel.getDeliveryDate()));
+								}
+								deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
+								listStatusRecordData.add(statusRecordData);
+								deliveryAWBData.setStatusRecords(listStatusRecordData);
+								delivery = deliveryAWBData;
+							}
+						}
+
+						response = statusTrackMap.get("CANCEL");
 
 						if (CollectionUtils.isNotEmpty(response))
 						{
-							delivery = response.get(0);
+							cancel = response.get(0);
 						}
 
+						response = statusTrackMap.get("RETURN");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							returns = response.get(0);
+						}
 						orderStatus.put("APPROVED", approved);
 						orderStatus.put("SHIPPING", shipped);
 						orderStatus.put("DELIVERY", delivery);
+						orderStatus.put("CANCEL", cancel);
+						orderStatus.put("RETURN", returns);
+
 						orderWithStatus.put(orderEntryData.getOrderLineId(), orderStatus);
 					}
 					subOrderDetailsList.add(subOrder);

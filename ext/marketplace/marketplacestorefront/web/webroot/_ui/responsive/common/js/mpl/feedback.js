@@ -1450,18 +1450,35 @@ $(document).ready(function(){
 		/*--- END of  Mobile view Left menu Sign In toggle---- */
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
 	
-	$(".progtrckr .progress.processing").each(function(){
+	/*$(".progtrckr .progress.processing").each(function(){
 		var len = $(this).children("span.dot").length;
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
 		} else if(len == 1) {
-			$(this).children("span.dot").first().css("marginLeft","33%");
+			$(this).children("span.dot").first().css("marginLeft","33%");		TPR-6013 Order History 
 		}
 
-	}); 
-	$(".progtrckr").each(function(){
-		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+	}); */
+	$(".progtrckr .progress.processing").each(function(){
+		var len = $(this).children("span.dot").length;
+		if(len == 3) {
+			$(this).children("span.dot").css("marginLeft","12%");
+		}
+		if(len == 2) {
+			$(this).children("span.dot").css("marginLeft","16.5%");
+		} 
+		
+		if(len == 4) {
+			$(this).children("span.dot").css("marginLeft","8%");
+		} 
+
 	});
+	$(".progtrckr").each(function(){
+		//$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+		if($(this).find(".progress.processing .dot:not(.inactive)").last().next(".message").css("display") == "block"){
+			$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show(); //TISPRDT-1570
+		}
+	});	/*TPR-6013 Order History */
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
@@ -3660,13 +3677,33 @@ $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab
 $(document).on("click","body .account .right-account .password .blue.changePass",function(){
 	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
 	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.changePassResponsive",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
 	$("body .account .right-account .password .blue.crossPass").css("display","block");
 });
 $(document).on("click","body .account .right-account .password .blue.crossPass",function(){
 	$("body .account .right-account .password #frmUpdatePassword").css("display","");
 	$(this).css("display","");
-	$("body .account .right-account .password .blue.changePass").css("display","block");
+	if ($(window).width() > 790) {
+		$("body .account .right-account .password .blue.changePass").css("display","block");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	} else {
+		$("body .account .right-account .password .blue.changePass").css("display","none");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+	}   
+	
 });
+/*$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+});*/
 
 $(".deliveryTrack.status.suman").each(function(){
 	$(this).find(".progtrckr.tabs").find("li").each(function(){
