@@ -303,7 +303,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					}
 				}
 
-
+				getModelService().save(orderModel);
 				////////////// Order Issue:- Order  ID updated first then Voucher Invalidation Model update
 
 				//final Collection<DiscountModel> voucherColl = getVoucherService().getAppliedVouchers(orderModel);
