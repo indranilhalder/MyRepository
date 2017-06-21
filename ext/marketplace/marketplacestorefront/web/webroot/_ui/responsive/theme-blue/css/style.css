@@ -70534,3 +70534,10 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 	width: 430% !important;
 	}
 }
+/* TISPRDT-1605 start */
+@media (max-width: 767px){
+.luxury-header .header-inner{
+	z-index: 999;
+}
+}
+/* TISPRDT-1605 end */
