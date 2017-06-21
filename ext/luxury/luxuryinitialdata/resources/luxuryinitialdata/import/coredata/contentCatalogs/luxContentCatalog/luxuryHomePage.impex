@@ -62,7 +62,7 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;OnSaleCategoryLink;OnSale Category Link;/onsale;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale              
 ;;KidsCategoryLink;Kids Category Link;/kids;KidsCategoryLink;KidsCategoryLink;;;;Kids
 ;;SaleCategoryLink;Sale Category Link;/sale;SaleCategoryLink;SaleCategoryLink;;;;Sale           
-;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Help"                       
+;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Customer Care"                       
 ;;LuxuryFreeShippingLink;Luxury Free Shipping Link;/free-shipping;;;;;;"Free Shipping + free return"
 ;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us             
 ;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;FAQ           
