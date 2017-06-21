@@ -6,7 +6,7 @@
     right: 0;
 	top: -100px;
     margin: auto;
-    max-width: 300px;
+    max-width: 350px;
     text-align: center;
     opacity: 0;
 	font-size: 14px;
@@ -58,6 +58,10 @@
 .wishAddSucessPlp{
     margin-left: 30px;
     line-height: 20px; 
+    
+    span{
+        padding-left: 26px;
+    }
 }
 .wishAddSucessPlp, .wishRemoveSucessPlp{
    color:green; 

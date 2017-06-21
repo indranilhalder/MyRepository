@@ -95,7 +95,7 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
 ;OnlineShoppingNavNode;;Online Shopping;ONLINE SHOPPING;;;MenCategoryLink,WomenCategoryLink,KidsCategoryLink,BeautyCategoryLink,SaleCategoryLink;OnlineShoppingNavNode
-;UsefulLinksNavNode;;Useful Links;USEFUL LINKS;;;ContactUsLink,FrequentlyAskedQuestionsLink,TermsAndConditions,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink,BlogLink;UsefulLinksNavNode;
+;UsefulLinksNavNode;;Useful Links;USEFUL LINKS;;;ContactUsLink,FrequentlyAskedQuestionsLink,TermsAndConditions,TermsOfUse,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink,BlogLink;UsefulLinksNavNode;
 
 INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
 ;;NewArrivalsBarComponent;New Arrivals;10;NewArrivalsNavNode;NewArrivalsCategoryLink;;AUTO;NewArrivalsBarComponent
