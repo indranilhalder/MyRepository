@@ -54,9 +54,9 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css"/>
 </c:if>
 <c:if test="${not empty productMediadnsHost1}">
-<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css"/> --%>
+<link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css"/>
 </c:if>
-
+ --%>
 <!-- TISPT-325 ENDS -->
 
 
