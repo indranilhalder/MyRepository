@@ -112,9 +112,11 @@
  	<!-- Converter for Price Import --> 
        <bean id="batchMplpriceConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexConverter">
         <property name="header">
-            <value>	$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
+            <value>			
+		    			$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 					# Set product approval status to Approved only for those products that have prices.
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']		
+					$productCatalog=mplProductCatalog		
+		   			 $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']		
 		   			 $approved=approvalstatus(code)[default='approved']
 					$unit=unit(code[unique=true,default=pieces])
 					$currency=currency(isocode)[unique=true][default=INR]
