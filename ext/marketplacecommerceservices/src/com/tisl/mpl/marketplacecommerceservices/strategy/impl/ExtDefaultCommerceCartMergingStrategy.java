@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtCommerceCartMergingStrategy;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 
@@ -46,6 +47,8 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 	private BaseSiteService baseSiteService;
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
 
 	private static final String MOBILE = "MOBILE";
 
@@ -150,6 +153,7 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 			if (CollectionUtils.isNotEmpty(entryNumberList))
 			{
 				changeQuantitieswithExchangeOffer(toCart, entryNumberList);
+				exchangeService.changeGuidforCartMerge(toCart);
 			}
 		}
 
