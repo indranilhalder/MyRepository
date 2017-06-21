@@ -8,10 +8,10 @@ $productCatalogName=MarketPlace Product Catalog
 $productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
 $picture=media(code, $contentCV);
 $siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
-$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
 $medias=medias(code, $contentCV);
 $lang=en
 $mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
 
 
 UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];content

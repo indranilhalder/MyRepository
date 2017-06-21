@@ -7,7 +7,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/common" %>
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/responsive/checkout/multi" %>
 <!-- LW-230 -->
-<input type="hidden" id="isLuxury" value="${isLuxury}"/>
+<input type="hidden" id="isLuxury" value="true"/>
 
 <template:page pageTitle="${pageTitle}">
 
@@ -38,7 +38,7 @@
 			<div class="container">
 
 				<div class="row">
-					<div class="col-xs-12 <c:out value="${not empty cartData.entries ? 'col-md-7 col-sm-7' : 'col-md-12 col-sm-12'}" />">
+					<div class="col-xs-12 <c:out value="${not empty cartData.entries ? 'col-md-8 col-sm-8' : 'col-md-12 col-sm-12'}" />">
 
 						<div class="cartItems cart wrapper">
 							
@@ -87,10 +87,10 @@
 
 
 					<c:if test="${not empty cartData.entries}">
-						<div class="col-xs-12 col-sm-5 col-md-4 offset-md-1">
+						<div class="col-xs-12 col-sm-4 col-md-4 right-block">
 							<div class="orderSummaryBlock mt-30">
 								<cms:pageSlot position="CenterRightContentSlot" var="feature"
-											  element="div" class="right-block orderSummary mb-20">
+											  element="div" class="orderSummary mb-20">
 									<cms:component component="${feature}" />
 								</cms:pageSlot>
 									<%-- <cms:pageSlot position="BottomContentSlot" var="feature" element="div" class="col-xs-9" >
@@ -124,7 +124,7 @@
 									<p id="emptyIdBtm" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
 								</div>
 							</div>
-							<div class="checkoutBtn text-center">
+							<div class="checkoutBtn text-center mt-20">
 								<a href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
 								<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
 							</div>

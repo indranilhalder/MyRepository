@@ -7,7 +7,6 @@ $contentCatalog=$storePrefixContentCatalog
 $productCatalog=luxProductCatalog
 $contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Staged])[default=$productCatalog:Staged]
-# Import modulegen config properties into impex macros
 $lang=en
 
 $category=category(code, $productCV)
@@ -15,21 +14,26 @@ $product=product(code, $productCV)
 $picture=media(code, $contentCV)
 $luxuryStoreAddonPrefix=addon:/luxurystoreaddon
 
+# Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
 $jarResourceCms=$config-jarResourceCmsValue
 
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
-;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true    
-;;LuxuryProductDetailsPageTemplate;Luxury Product Details Page Template;$luxuryStoreAddonPrefix/pages/product/luxuryProductLayoutPage;ProductPage            
+;;luxuryHomePageTemplate;Luxury Home Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryHomePage;ContentPage;true
+;;LuxuryProductDetailsPageTemplate;Luxury Product Details Page Template;$luxuryStoreAddonPrefix/pages/product/luxuryProductLayoutPage;ProductPage
+;;luxuryAccountWishlistPageTemplate;Wishlist Page Template;$luxuryStoreAddonPrefix/pages/account/Wishlist;ContentPage
 
-                           
+
 UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;luxuryHomePageTemplate;$jarResourceCms/structure-view/structure_luxuryHomePage.vm
-;;LuxuryProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_LuxuryProductDetailsPageTemplate.vm                                           
-                           
+;;LuxuryProductDetailsPageTemplate;$jarResourceCms/structure-view/structure_LuxuryProductDetailsPageTemplate.vm
+;;luxuryAccountWishlistPageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
+
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;homepage;Homepage;luxuryHomePageTemplate;homepage
+;;wishlist;Wishlist Page;luxuryAccountWishlistPageTemplate;wishlist
+
 
 INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
 ;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
@@ -37,7 +41,7 @@ INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;;
 ;;MiniCart;Mini Cart;MiniCart;SUBTOTAL;3;;
 
-                           
+
 INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;shownProductCount;;
 ;;MyWishList;My WishList;MyWishList;3;;
 
@@ -51,71 +55,71 @@ INSERT_UPDATE LuxEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=t
 
 
 
-INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]         
-;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;               
-;;NewArrivalsCategoryLink;New Arrivals Category Link;/new-arrivals;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival               
-;;WomenCategoryLink;Women Category Link;/womenlanding;WomenCategoryLink;WomenCategoryLink;;;;Women      
-;;MenCategoryLink;Men Category Link;/menlanding;MenCategoryLink;MenCategoryLink;;;;Men    
-;;LifestyleCategoryLink;Lifestyle Category Link;/lifestyle;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style           
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
+;;HomepageNavLink;Home Page Nav Link;/;HomepageNavLink;HomepageNavLink;;;;
+;;NewArrivalsCategoryLink;New Arrivals Category Link;/new-arrivals;NewArrivalsCategoryLink;NewArrivalsCategoryLink;;;;New Arrival
+;;WomenCategoryLink;Women Category Link;/womenlanding;WomenCategoryLink;WomenCategoryLink;;;;Women
+;;MenCategoryLink;Men Category Link;/menlanding;MenCategoryLink;MenCategoryLink;;;;Men
+;;LifestyleCategoryLink;Lifestyle Category Link;/lifestyle;LifestyleCategoryLink;LifestyleCategoryLink;;;;Life Style
 ;;BeautyCategoryLink;Beauty Category Link;/beauty;BeautyCategoryLink;BeautyCategoryLink;;;;Beauty
-;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers           
-;;OnSaleCategoryLink;OnSale Category Link;/onsale;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale              
+;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers
+;;OnSaleCategoryLink;OnSale Category Link;/onsale;OnSaleCategoryLink;OnSaleCategoryLink;;;; On Sale
 ;;KidsCategoryLink;Kids Category Link;/kids;KidsCategoryLink;KidsCategoryLink;;;;Kids
-;;SaleCategoryLink;Sale Category Link;/sale;SaleCategoryLink;SaleCategoryLink;;;;Sale           
-;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Help"                       
+;;SaleCategoryLink;Sale Category Link;/sale;SaleCategoryLink;SaleCategoryLink;;;;Sale
+;;LuxuryHelpLink;Luxury Help Link;/help;;;;;;"Help"
 ;;LuxuryFreeShippingLink;Luxury Free Shipping Link;/free-shipping;;;;;;"Free Shipping + free return"
-;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us             
-;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;FAQ           
-;;TermsAndConditions;Terms And Conditions;/terms-conditions;;;;;;Terms and Conditions    
+;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us
+;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;FAQ
+;;TermsAndConditions;Terms And Conditions;/terms-conditions;;;;;;Terms and Conditions
 ;;TermsOfUse;Terms Of Use;/terms-use;;;;;;Terms Of Use
-;;TrackOrdersLink;Track Orders Link;/trackorders;;;;;;Track Orders               
+;;TrackOrdersLink;Track Orders Link;/trackorders;;;;;;Track Orders
 ;;ShippingLink;Shipping Link;/shipping;;;;;;Shipping
-;;CancellationLink;Cancellation Link;/cancellation;;;;;;Cancellation               
+;;CancellationLink;Cancellation Link;/cancellation;;;;;;Cancellation
 ;;ReturnsLink;Returns Link;/returns;;;;;;Returns
 ;;BlogLink;Blog Link;/blog;;;;;;Blog
-                                       
+
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef;
 ;root;;root;;;;root;
 ;SiteRootNode;;SiteRootNode;root;;;SiteRootNode;
-          
-INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef          
-;LuxuryNavNode;;Luxury Site;SiteRootNode;HomepageNavLink;LuxuryNavNode     
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;LuxuryNavNode;;Luxury Site;SiteRootNode;HomepageNavLink;LuxuryNavNode
 ;NewArrivalsNavNode;;New Arrivals Category;LuxuryNavNode;NewArrivalsCategoryLink;NewArrivalsNavNode
-;WomenNavNode;;Women Category;LuxuryNavNode;WomenCategoryLink;WomenNavNode      
-;MenNavNode;;Men Category;LuxuryNavNode;MenCategoryLink;MenNavNode        
-;LifestyleNavNode;;Lifestyle Category;LuxuryNavNode;LifestyleCategoryLink;LifestyleNavNode  
-;BeautyNavNode;;Beauty Category;LuxuryNavNode;BeautyCategoryLink;BeautyNavNode     
-;DesignersNavNode;;Designers Category;LuxuryNavNode;DesignersCategoryLink;DesignersNavNode  
-;OnSaleNavNode;;OnSale Category;LuxuryNavNode;OnSaleCategoryLink;OnSaleNavNode     
+;WomenNavNode;;Women Category;LuxuryNavNode;WomenCategoryLink;WomenNavNode
+;MenNavNode;;Men Category;LuxuryNavNode;MenCategoryLink;MenNavNode
+;LifestyleNavNode;;Lifestyle Category;LuxuryNavNode;LifestyleCategoryLink;LifestyleNavNode
+;BeautyNavNode;;Beauty Category;LuxuryNavNode;BeautyCategoryLink;BeautyNavNode
+;DesignersNavNode;;Designers Category;LuxuryNavNode;DesignersCategoryLink;DesignersNavNode
+;OnSaleNavNode;;OnSale Category;LuxuryNavNode;OnSaleCategoryLink;OnSaleNavNode
 
 
-INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef             
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
 ;OnlineShoppingNavNode;;Online Shopping;ONLINE SHOPPING;;;MenCategoryLink,WomenCategoryLink,KidsCategoryLink,BeautyCategoryLink,SaleCategoryLink;OnlineShoppingNavNode
 ;UsefulLinksNavNode;;Useful Links;USEFUL LINKS;;;ContactUsLink,FrequentlyAskedQuestionsLink,TermsAndConditions,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink,BlogLink;UsefulLinksNavNode;
 
-INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef          
+INSERT_UPDATE LuxuryNavigationBarComponent;$contentCV[unique=true];uid[unique=true];name;wrapAfter;navigationNode(&nodeRef);link(uid, $contentCV);styleClass;dropDownLayout(code);&componentRef
 ;;NewArrivalsBarComponent;New Arrivals;10;NewArrivalsNavNode;NewArrivalsCategoryLink;;AUTO;NewArrivalsBarComponent
-;;WomenBarComponent;Women;10;WomenNavNode;WomenCategoryLink;;AUTO;WomenBarComponent      
-;;MenBarComponent;Men;10;MenNavNode;MenCategoryLink;;AUTO;MenBarComponent        
-;;LifestyleBarComponent;Lifestyle;10;LifestyleNavNode;LifestyleCategoryLink;;AUTO;LifestyleBarComponent  
-;;BeautyBarComponent;Beauty;10;BeautyNavNode;BeautyCategoryLink;;AUTO;BeautyBarComponent     
-;;DesignersBarComponent;Designers;10;DesignersNavNode;DesignersCategoryLink;;AUTO;DesignersBarComponent  
-;;OnSaleBarComponent;On Sale;10;OnSaleNavNode;OnSaleCategoryLink;;AUTO;OnSaleBarComponent     
+;;WomenBarComponent;Women;10;WomenNavNode;WomenCategoryLink;;AUTO;WomenBarComponent
+;;MenBarComponent;Men;10;MenNavNode;MenCategoryLink;;AUTO;MenBarComponent
+;;LifestyleBarComponent;Lifestyle;10;LifestyleNavNode;LifestyleCategoryLink;;AUTO;LifestyleBarComponent
+;;BeautyBarComponent;Beauty;10;BeautyNavNode;BeautyCategoryLink;;AUTO;BeautyBarComponent
+;;DesignersBarComponent;Designers;10;DesignersNavNode;DesignersCategoryLink;;AUTO;DesignersBarComponent
+;;OnSaleBarComponent;On Sale;10;OnSaleNavNode;OnSaleCategoryLink;;AUTO;OnSaleBarComponent
 
 INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid[unique=true];name;components(uid, $contentCV);
 ;;NavBarComponent;Luxury Navigation Bar Collection Component;NewArrivalsBarComponent,WomenBarComponent,MenBarComponent,LifestyleBarComponent,BeautyBarComponent,DesignersBarComponent,OnSaleBarComponent;
 
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];internalURL;             
-;;shopMen;text/png;ShopMen.png;$jarResourceCms/preview-images/ShopMen.png;;/men-landing             
-;;shopWomen;text/png;womenshop.png;$jarResourceCms/preview-images/womenshop.png;;             
-;;LeftContent;text/png;getapp.png;$jarResourceCms/preview-images/getapp.png;;             
-;;RightContent;text/png;EGV.png;$jarResourceCms/preview-images/EGV.png                                                      
-;;WeeklySpecialSvg-1;text/png;weeklySpecialSvg1.png;$jarResourceCms/preview-images/weeklySpecialSvg1.png;;             
-;;WeeklySpecialBanner-1;text/png;weeklySpecialBanner1.png;$jarResourceCms/preview-images/weeklySpecialBanner1.png;;             
-;;WeeklySpecialSvg-2;text/png;weeklySpecialSvg2.png;$jarResourceCms/preview-images/weeklySpecialSvg2.png;;             
-;;WeeklySpecialBanner-2;text/png;weeklySpecialBanner2.png;$jarResourceCms/preview-images/weeklySpecialBanner2.png;;             
-;;WeeklySpecialSvg-3;text/png;weeklySpecialSvg3.png;$jarResourceCms/preview-images/weeklySpecialSvg3.png;;             
-;;WeeklySpecialBanner-3;text/png;weeklySpecialBanner3.png;$jarResourceCms/preview-images/weeklySpecialBanner3.png;;             
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];internalURL;
+;;shopMen;text/png;ShopMen.png;$jarResourceCms/preview-images/ShopMen.png;;/men-landing
+;;shopWomen;text/png;womenshop.png;$jarResourceCms/preview-images/womenshop.png;;
+;;LeftContent;text/png;getapp.png;$jarResourceCms/preview-images/getapp.png;;
+;;RightContent;text/png;EGV.png;$jarResourceCms/preview-images/EGV.png
+;;WeeklySpecialSvg-1;text/png;weeklySpecialSvg1.png;$jarResourceCms/preview-images/weeklySpecialSvg1.png;;
+;;WeeklySpecialBanner-1;text/png;weeklySpecialBanner1.png;$jarResourceCms/preview-images/weeklySpecialBanner1.png;;
+;;WeeklySpecialSvg-2;text/png;weeklySpecialSvg2.png;$jarResourceCms/preview-images/weeklySpecialSvg2.png;;
+;;WeeklySpecialBanner-2;text/png;weeklySpecialBanner2.png;$jarResourceCms/preview-images/weeklySpecialBanner2.png;;
+;;WeeklySpecialSvg-3;text/png;weeklySpecialSvg3.png;$jarResourceCms/preview-images/weeklySpecialSvg3.png;;
+;;WeeklySpecialBanner-3;text/png;weeklySpecialBanner3.png;$jarResourceCms/preview-images/weeklySpecialBanner3.png;;
 ;;amazingBrands;text/png;amazingBrands.png;$jarResourceCms/preview-images/amazingBrands.png;;WeeklySpecialBannerImage-1;
 ;;freeShipping;text/png;freeShipping.png;$jarResourceCms/preview-images/freeShipping.png;;WeeklySpecialBannerImage-1;
 ;;customerService;text/png;customerService.png;$jarResourceCms/preview-images/customerService.png;;WeeklySpecialBannerImage-1;
@@ -125,7 +129,7 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;instagram;text/png;instagram.png;$jarResourceCms/preview-images/instagram.png;;WeeklySpecialBannerImage-1;
 ;;googleplay;text/png;googleplay.png;$jarResourceCms/preview-images/googleplay.png;;WeeklySpecialBannerImage-1;
 ;;appstore;text/png;appstore.png;$jarResourceCms/preview-images/appstore.png;;WeeklySpecialBannerImage-1;
-                                    
+
 
 
 
@@ -137,44 +141,44 @@ INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=
 
 
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
-;;shopMenContent;shopMen             
-;;shopWomenContent;shopWomen           
-;;HomeLeftContentSlot;LeftContent         
-;;HomeRightContentSlot;RightContent  
+;;shopMenContent;shopMen
+;;shopWomenContent;shopWomen
+;;HomeLeftContentSlot;LeftContent
+;;HomeRightContentSlot;RightContent
 
-#WeeklySpecialBanner           
+#WeeklySpecialBanner
 
-INSERT_UPDATE WeeklySpecialBanner;$contentCV[unique=true];uid[unique=true];svglogo(code,$contentCV);image(code,$contentCV);url          
+INSERT_UPDATE WeeklySpecialBanner;$contentCV[unique=true];uid[unique=true];svglogo(code,$contentCV);image(code,$contentCV);url
 ;;weeklySpecial1;WeeklySpecialSvg-1;WeeklySpecialBanner-1;"/armani"
 ;;weeklySpecial2;WeeklySpecialSvg-2;WeeklySpecialBanner-2;"/michale-kros"
 ;;weeklySpecial3;WeeklySpecialSvg-3;WeeklySpecialBanner-3;"/armani"
-                                  
-                                  
-INSERT_UPDATE WeeklySpecial;$contentCV[unique=true];uid[unique=true];title;weeklySpecialBanners(uid,$contentCV)        
-;;HomePageWeaklySpecialBanner;New on Luxury this week;weeklySpecial1,weeklySpecial2,weeklySpecial3
+
+
+INSERT_UPDATE WeeklySpecial;$contentCV[unique=true];uid[unique=true];title;weeklySpecialBanners(uid,$contentCV)
+;;HomePageWeaklySpecialBanner;New on Luxury this week;weeklySpecial1,weeklySpecial2,weeklySpecial3,weeklySpecial1,weeklySpecial2,weeklySpecial3,weeklySpecial1,weeklySpecial2,weeklySpecial3
 
 
 
-INSERT_UPDATE ShopOnLuxuryElement;$contentCV[unique=true];uid[unique=true];title;image(code,$contentCV);description                                                                                      
+INSERT_UPDATE ShopOnLuxuryElement;$contentCV[unique=true];uid[unique=true];title;image(code,$contentCV);description
 ;;amazingBrands;1,500+ amazing brands;amazingBrands;Authenticity & quality of the product is gauranteed. The products sold come with all the original
 ;;freeShipping;Free shipping + free return;freeShipping;Authenticity & quality of the product is gauranteed. The products sold come with all the original
 ;;customerService;World class customer service;customerService;Authenticity & quality of the product is gauranteed. The products sold come with all the original
 
 
-INSERT_UPDATE ShopOnLuxury;$contentCV[unique=true];uid[unique=true];shopOnLuxuryTitle;shopOnLuxuryElements(uid,$contentCV)      
+INSERT_UPDATE ShopOnLuxury;$contentCV[unique=true];uid[unique=true];shopOnLuxuryTitle;shopOnLuxuryElements(uid,$contentCV)
 ;;ShopOnLuxury;Why Shop On Luxury;amazingBrands,freeShipping,customerService
 
-                                    
+
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;SiteLogoComponent;Site logo ;SiteLogoComponent;"/";tulSiteLogo
-;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook            
-;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter             
-;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube             
-;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://instagram.com";instagram           
-;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay          
-;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore            
-                                      
-                                    
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook
+;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter
+;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube
+;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://instagram.com";instagram
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore
+
+
 
 # CMS Paragraph Components
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;content[lang=$lang]
@@ -183,22 +187,22 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 					<li><span>Return within 30days </span>of placing your order</li>
 					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
 				</ul>"
-;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>FREE SHIPPNG + FREE RETURNS <a href='#'>KNOW MORE</a></p></div>"
+;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='#'>Know More</a></p></div>"
 
-                                                                     
- # CMS Footer Component               
+
+# CMS Footer Component
 INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV); footerBarContent(uid,$contentCV);
 ;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
-                
-# CMS tabs components  
+
+# CMS tabs components
 INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];name;visible;&componentRef;;;
 ;;deliveryTab;Delivery tab;true;deliveryTab;;;
 
 INSERT_UPDATE CMSTabParagraphContainer;$contentCV[unique=true];uid[unique=true];name;visible;simpleCMSComponents(uid, $contentCV);&componentRef;;
-;;TabPanelContainer;Tab container;true;deliveryTab;TabPanelContainer;; 
+;;TabPanelContainer;Tab container;true;deliveryTab;TabPanelContainer;;
 
 INSERT_UPDATE BreadcrumbComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
-;;breadcrumbComponent;Breadcrumb CMS Component;breadcrumbComponent 
+;;breadcrumbComponent;Breadcrumb CMS Component;breadcrumbComponent
 
 # CMS VariantSelector Components
 INSERT_UPDATE ProductVariantSelectorComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
@@ -210,7 +214,7 @@ INSERT_UPDATE LuxuryAddToCartAction;$contentCV[unique=true];uid[unique=true];url
 
 # CMS ProductAddToCart Components
 INSERT_UPDATE LuxuryProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
-;;LuxuryAddToCart;Product Add To Cart;LuxuryAddToCartAction;LuxuryAddToCart     
+;;LuxuryAddToCart;Product Add To Cart;LuxuryAddToCartAction;LuxuryAddToCart
 
 # CMS ProductReferences Components
 INSERT_UPDATE ProductReferencesComponent;$contentCV[unique=true];uid[unique=true];name;productReferenceTypes(code);maximumNumberProducts;&componentRef;;
@@ -218,7 +222,7 @@ INSERT_UPDATE ProductReferencesComponent;$contentCV[unique=true];uid[unique=true
 ;;Others;Others;OTHERS;5;Others;;
 ;;Similar;Similar;SIMILAR;5;Similar;;
 ;;accessories;Accessories;ACCESSORIES;5;accessories;;
-;;UpSelling;Up Selling;UPSELLING;5;UpSelling;;     
+;;UpSelling;Up Selling;UPSELLING;5;UpSelling;;
 
 #pdp changes for configuring number of images to be shown in pdp
 INSERT_UPDATE ConfigureImagesCountComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
@@ -228,22 +232,22 @@ INSERT_UPDATE ConfigureProductsCountComponent;$contentCV[unique=true];uid[unique
 ;;ConfigureProductsCount;Configure product count;ConfigureProductsCount;;;
 
 INSERT_UPDATE PincodeServiceComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;
-;;LuxuryPinCodeService;Pincode Service Avilability;LuxuryPinCodeService;;;                        
-                                    
-                                    
-# Create Content Slots              
+;;LuxuryPinCodeService;Pincode Service Avilability;LuxuryPinCodeService;;;
+
+
+# Create Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
-;;MiddleHeader;helpLink;true;LuxuryHelpLink  
-;;SiteLogoSlot;site logo;true;SiteLogoComponent      
-;;SearchBoxSlot;Search Box;true;luxury-SearchBox       
-;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true;Home-ShopMen               
-;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true;Home-ShopWomen             
-;;LeftContentSlot;Middle Left Banner;true;Home-LeftContent          
-;;RightContentSlot;Middle Right Banner;true;Home-RightContent         
-;;HomePageCurosel;Home Page Curosel;true;HomePageWeaklySpecialBanner  
-;;WhyShopOnLuxury;Why Shop On Luxury;true;ShopOnLuxury                 
+;;MiddleHeader;helpLink;true;LuxuryHelpLink
+;;SiteLogoSlot;site logo;true;SiteLogoComponent
+;;SearchBoxSlot;Search Box;true;luxury-SearchBox
+;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true;Home-ShopMen
+;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true;Home-ShopWomen
+;;LeftContentSlot;Middle Left Banner;true;Home-LeftContent
+;;RightContentSlot;Middle Right Banner;true;Home-RightContent
+;;HomePageCurosel;Home Page Curosel;true;HomePageWeaklySpecialBanner
+;;WhyShopOnLuxury;Why Shop On Luxury;true;ShopOnLuxury
 ;;TopHeaderSlot;Top header slot;true;Home-TopBannerContent
-;;FooterSlot;Footer;true;LuxuryFooterComponent        
+;;FooterSlot;Footer;true;LuxuryFooterComponent
 ;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
 ;;WishListSlot;Wish List;true;MyWishList
 ;;MiniCartSlot;Mini Cart;true;MiniCart
@@ -257,37 +261,54 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;ConfigureImagesCountSlot;ConfigureImagesCountComponent;true;ConfigureImagesCount
 #pdp changes for configuring number of products to be shown in pdp
 ;;ConfigureProductsCountSlot;ConfigureProductsCountComponent;true;ConfigureProductsCount
-;;PinCodeServiceSlot;Pin Code Service;true;LuxuryPinCodeService                                                  
-                           
-                                                
-                          
- #Slot for Offers Page Template
+;;PinCodeServiceSlot;Pin Code Service;true;LuxuryPinCodeService
+
+
+
+# Account Wishlist Page Template
+# Template used for Wishlist page
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryAccountWishlistPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;SideContent;;;narrow
+;BodyContent;;;wide
+;BottomContent;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+
+
+#Slot for Offers Page Template
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];validComponentTypes(code);compTypeGroup(code)
-;TopHeaderSlot;;;wide               
-;MiddleHeader;;;wide               
-;SiteLogo;;;logo               
-;HeaderLinks;;;headerlinks        
-;SearchBox;;;searchbox          
-;MiniCart;;;minicart             
-;NavigationBar;;;navigation         
-;TopBannerMen;;;wide               
-;TopBannerWomen;;;wide               
-;LeftContentSlot;;RotatingImagesComponent;     
-;RightContentSlot;;MplOfferImageCarouselComponent;     
-;HomePageCurosel;;;wide               
-;WhyShopOnLuxury;;;wide               
-;Footer;;;wide          
+;TopHeaderSlot;;;wide
+;MiddleHeader;;;wide
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopBannerMen;;;wide
+;TopBannerWomen;;;wide
+;LeftContentSlot;;RotatingImagesComponent;
+;RightContentSlot;;MplOfferImageCarouselComponent;
+;HomePageCurosel;;;wide
+;WhyShopOnLuxury;;;wide
+;Footer;;;wide
 
 ########### Content Sloat Name for Luxury ##########################
 # Product Details Page Template
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
-;TopHeaderSlot;;;wide               
-;MiddleHeader;;;wide               
-;SiteLogo;;;logo               
-;HeaderLinks;;;headerlinks        
-;SearchBox;;;searchbox          
-;MiniCart;;;minicart                
-;NavigationBar;;;navigation 
+;TopHeaderSlot;;;wide
+;MiddleHeader;;;wide
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
 ;Section1;;;wide
 ;Section2;;;wide
 ;Section3;;;wide
@@ -305,39 +326,55 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 #pdp changes for configuring number of products to be shown in pdp
 ;ConfigureProductsCountSlot;;ConfigureProductsCountComponent
 #pin code
-;PinCodeServiceSlot;;PincodeServiceComponent   
-                   
-                          
-                              
+;PinCodeServiceSlot;;PincodeServiceComponent
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryAccountWishlistPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-luxuryAccountWishlistPage;TopHeaderSlot;;TopHeaderSlot;true
+;;SiteLogo-luxuryAccountWishlistPage;SiteLogo;;SiteLogoSlot;true
+;;NavigationBar-luxuryAccountWishlistPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-luxuryAccountWishlistPage;MiniCart;;MiniCartSlot;true
+;;WishList-luxuryAccountWishlistPage;WishList;;WishListSlot;true
+;;Footer-luxuryAccountWishlistPage;Footer;;FooterSlot;true
+;;HeaderLinks-luxuryAccountWishlistPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-luxuryAccountWishlistPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-luxuryAccountWishlistPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-luxuryAccountWishlistPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;WhyShopOnLuxury-luxuryAccountWishlistPage;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;Footer-luxuryAccountWishlistPage;Footer;;FooterSlot;true
+
+
+
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryHomePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;TopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true          
-;;MiddleHeaderHelpLink;MiddleHeader;;MiddleHeader;true          
-;;SiteLogo;SiteLogo;;SiteLogoSlot;true          
-;;HeaderLinks;HeaderLinks;;HeaderLinksSlot;true          
-;;SearchBox;SearchBox;;SearchBoxSlot;true          
-;;MiniCart;MiniCart;;MiniCartSlot;true  
-;;WishList;WishList;;WishListSlot;true     
-;;NavigationBar;NavigationBar;;NavigationBarSlot;true          
-;;HomeTopBannerMen;TopBannerMen;;HomeTopHeroBannerLeft;true          
-;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true                  
-;;LeftContentSlot;LeftContentSlot;;LeftContentSlot;true          
-;;RightContentSlot;RightContentSlot;;RightContentSlot;true          
-;;HomePageCurosel;HomePageCurosel;;HomePageCurosel;true          
-;;WhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true          
-;;Footer;Footer;;FooterSlot;true      
+;;TopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true
+;;MiddleHeaderHelpLink;MiddleHeader;;MiddleHeader;true
+;;SiteLogo;SiteLogo;;SiteLogoSlot;true
+;;HeaderLinks;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox;SearchBox;;SearchBoxSlot;true
+;;MiniCart;MiniCart;;MiniCartSlot;true
+;;WishList;WishList;;WishListSlot;true
+;;NavigationBar;NavigationBar;;NavigationBarSlot;true
+;;HomeTopBannerMen;TopBannerMen;;HomeTopHeroBannerLeft;true
+;;HomeTopBannerWomen;TopBannerWomen;;HomeTopHeroBannerRight;true
+;;LeftContentSlot;LeftContentSlot;;LeftContentSlot;true
+;;RightContentSlot;RightContentSlot;;RightContentSlot;true
+;;HomePageCurosel;HomePageCurosel;;HomePageCurosel;true
+;;WhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;Footer;Footer;;FooterSlot;true
 
 ############################### Luxury Content slot for page template
 
 # Bind Content Slots to Page Templates
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryProductDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;TopHeaderSlot-LuxuryProductDetails;TopHeaderSlot;;TopHeaderSlot;true          
-;;MiddleHeaderHelpLink-LuxuryProductDetails;MiddleHeader;;MiddleHeader;true          
-;;SiteLogo-LuxuryProductDetails;SiteLogo;;SiteLogoSlot;true          
-;;HeaderLinks-LuxuryProductDetails;HeaderLinks;;HeaderLinksSlot;true          
-;;SearchBox-LuxuryProductDetails;SearchBox;;SearchBoxSlot;true          
-;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true     
-;;WishList-LuxuryProductDetails;WishList;;WishListSlot;true          
-;;NavigationBar-LuxuryProductDetails;NavigationBar;;NavigationBarSlot;true 
+;;TopHeaderSlot-LuxuryProductDetails;TopHeaderSlot;;TopHeaderSlot;true
+;;MiddleHeaderHelpLink-LuxuryProductDetails;MiddleHeader;;MiddleHeader;true
+;;SiteLogo-LuxuryProductDetails;SiteLogo;;SiteLogoSlot;true
+;;HeaderLinks-LuxuryProductDetails;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-LuxuryProductDetails;SearchBox;;SearchBoxSlot;true
+;;MiniCart-LuxuryProductDetails;MiniCart;;MiniCartSlot;true
+;;WishList-LuxuryProductDetails;WishList;;WishListSlot;true
+;;NavigationBar-LuxuryProductDetails;NavigationBar;;NavigationBarSlot;true
 ;;Tabs-LuxuryProductDetails;Tabs;;TabsSlot;true
 ;;Footer-LuxuryProductDetails;Footer;;FooterSlot;true
 ;;VariantSelector-LuxuryProductDetails;VariantSelector;;VariantSelectorSlot;true

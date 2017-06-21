@@ -128,6 +128,20 @@
 									
 							</div>
 							
+							
+							
+							     	 <div class="select gender  le-radio clearfix">
+					        	<c:forEach items="${genderData}" var="varGender" varStatus="i">
+					        	<div class="le-radio halfwidth">
+						        	 <form:radiobutton path="gender" value="${varGender.code}"/>
+						             <label for="gender${i.count}">${varGender.name}</label>
+					             </div>
+					            </c:forEach>
+					        </div>
+					        
+					        
+					        
+							
 							<div class="select calender halfwidth select-bar" >
 							    <%--  <label><spring:theme code="profile.dateOfBirth"
 											text="Date Of Birth" /></label>	 --%>
@@ -211,6 +225,7 @@
 										</c:forEach>
 									</form:select>
 							     </div>
+							     
 								<div class="half_span label_disabled">
 								<%-- <formElement:formSelectBox idKey="profile.blank" labelKey="profile.blank" path="dateOfAnniversaryMonth" mandatory="false" skipBlank="false" 
 							 skipBlankMessageKey="profile.select.month" items="${monthList}" selectCSSClass="form-control"/></div>	 --%>	
@@ -253,16 +268,21 @@
 								<formElement:formSelectBox idKey="profile.gender" labelKey="profile.gender" path="gender" mandatory="false" skipBlank="false" 
 							 skipBlankMessageKey="profile.select.gender" items="${genderData}" selectCSSClass="form-control"/></div> --%>
 							 
-							 <div class="select gender halfwidth le-radio clearfix">
+							 <%-- <div class="select gender halfwidth le-radio clearfix">
 					        	<c:forEach items="${genderData}" var="varGender" varStatus="i">
 					        	<div class="le-radio halfwidth">
 						        	 <form:radiobutton path="gender" value="${varGender.code}"/>
 						             <label for="gender${i.count}">${varGender.name}</label>
 					             </div>
 					            </c:forEach>
-					        </div>
-					        
-							<div class="block-element">
+					        </div> --%>
+
+					        					       					        
+		                       <div class="half halfwidth block-element">
+		                     <a class="button" href="update-password"> <spring:theme code="text.account.profile.changePassword.mobile" text="Change password"/></a>
+		                      </div>
+					        					       					        
+							<div class="half halfwidth block-element">
 								<button type="submit" class="blue"><spring:theme code="cart.modal.save.changes" text="Save Changes" /></button>
 							</div>
 						</form:form>
@@ -275,49 +295,49 @@
 			
 				<!-- Update Password -->
 				
-				<div class="password">
-					<h2><spring:theme code="profile.Password" text="Password"/></h2>	
-					<p><spring:theme code="profile.Password.details" text="If you aren't a bot, you can change your password here."/></p>
+				<!-- <div class="password"> -->
+					<%-- <h2><spring:theme code="profile.Password" text="Password"/></h2>	
+					<p><spring:theme code="profile.Password.details" text="If you aren't a bot, you can change your password here."/></p> --%>
 					
 					<div >
 						<form:form id="frmUpdatePassword" action="update-password" method="post" commandName="updatePasswordForm" autocomplete="off">
-						<fieldset>
+					
 						
-						<div class="full span password-input halfwidth">
-									<%-- <label><spring:theme code="text.mplCustomerProfileForm.CurrPwd" text="Current Password*" /></label> --%>
+						<%-- <div class="full span password-input halfwidth">
+									<label><spring:theme code="text.mplCustomerProfileForm.CurrPwd" text="Current Password*" /></label>
 										<!-- <input type="password" path="currentPassword" id="currentPassword"
-										onkeypress="kpresscp()"	 maxlength="140" /> -->
+										onkeypress="kpresscp()"	 maxlength="140" /> 
 										
 										<form:password path="currentPassword" onkeyup="kpresscp()" placeholder="Current Password"/>
 										
 									<div class="errorMessage"><div id="errCurpwd"></div></div>
-									</div> 
+									</div>  
 						
 						
 						 <div class="half password-input halfwidth">
-									<%-- <label><spring:theme code="text.mplCustomerProfileForm.NewPwd" text="New Password*" /></label> --%>
+									<label><spring:theme code="text.mplCustomerProfileForm.NewPwd" text="New Password*" /></label>
 										<!-- <input type="password" path="newPassword" id="newPassword"
-										onkeypress="kpressnp()"	 maxlength="140" /> -->
+										onkeypress="kpressnp()"	 maxlength="140" /> 
 										<form:password path="newPassword" onkeyup="kpressnp()"  placeholder="New Password"/>
 									<div class="errorMessage"><div id="errNewpwd"></div></div>
-									</div> 
+									</div>  
 						
-			        	 <div class="half password-input halfwidth">
-									<%-- <label><spring:theme code="text.mplCustomerProfileForm.CnfNewPwd" text="Confirm New Password*" /></label> --%>
+			        	  <div class="half password-input halfwidth">
+									<label><spring:theme code="text.mplCustomerProfileForm.CnfNewPwd" text="Confirm New Password*" /></label>
 										<!-- <input type="password"  path="checkNewPassword" id="checkNewPassword"
-										onkeypress="kpresscnp()" maxlength="140" /> -->
+										onkeypress="kpresscnp()" maxlength="140" /> 
 										<form:password path="checkNewPassword" onkeyup="kpresscnp()" placeholder="New Password"/>
 									<div class="errorMessage"><div id="errCnfNewpwd"></div></div>
 									</div>  
 						
 						
-						<%-- 	<div class="half password-input">
+							<div class="half password-input">
 								<formElement:formPasswordBox idKey="profile.checkNewPassword" labelKey="profile.checkNewPassword" path="checkNewPassword" inputCSS="form-control password" mandatory="true"/>
-							</div> --%>
-							</fieldset>
+							</div> 
+							
 							<div>
 								<button type=button class="blue" onClick="return validatePassword();"><spring:theme code="cart.modal.save.changes" text="Save Changes"/></button>
-							</div>
+							</div> --%>
 						</form:form>
 
 					</div>
@@ -325,22 +345,22 @@
 				<!-- End of Update Password -->
 			
 				<!-- Update NickName -->
-				<div class="nickname">
+				<%-- <div class="nickname">
 					<h2><spring:theme code="profile.Nickname" text="Nickname"/></h2>
 					<p><spring:theme code="profile.Nickname.details" text="What's your alter ego called?"/></p>
 						<form:form action="update-nickName" method="post" commandName="mplCustomerProfileForm">
 						<fieldset>
 							<div class="full">
-								<%-- <label><spring:theme text="Nick Name" /></label> --%>
+								<label><spring:theme text="Nick Name" /></label>
 										<form:input path="nickName" id="profilenickName"
 										onkeyup="kpressnn()"	 maxlength="40" placeholder="Nick Name"/>
 								<div class="errorMessage"><div id="errnn"></div></div>
-							<%-- <formElement:formInputBox idKey="profile.nickName" labelKey="profile.nickName" path="nickName" inputCSS="form-control" mandatory="false"/> --%>
+							<formElement:formInputBox idKey="profile.nickName" labelKey="profile.nickName" path="nickName" inputCSS="form-control" mandatory="false"/>
 							</div>
 							</fieldset>
 								<button type="submit" class="blue" onClick="return validateNickName();"><spring:theme code="text.account.setyourName" text="Set Your Preferred Name" /></button>
 						</form:form>
-				</div>
+				</div> --%>
 			<!-- End of Update Password -->
 			
 			

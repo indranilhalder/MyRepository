@@ -13182,32 +13182,58 @@ TATA.CommonFunctions = {
             $(this).siblings(".add-to-wishlist").addClass("added"));
         }), $("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1 && $(".add-to-wl-pdp").addClass("added");
     },
-    wishlistInit: function() {
-        $(document).on("click", ".add-to-wishlist", function() {
-            $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
-        });
+    wishlistInit: function(){
+    	TATA.CommonFunctions.luxuryForceUpdateHeader();
+    	$(document).on("click",".add-to-wishlist",function(){
+			if ($(this).hasClass("added")){
+				TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
+			} else {
+				TATA.CommonFunctions.addToWishlist($(this).data("product"),this);
+			}
+		});
+
         var wishlistHover;
+
         $("a#myWishlistHeader").on("mouseover touchend", function(e) {
-            e.stopPropagation(), wishlistHover = setTimeout(function() {
-                $.ajax({
+            e.stopPropagation();
+            wishlistHover = setTimeout(function(){
+            	$.ajax({
                     url: ACC.config.encodedContextPath + "/headerWishlist",
-                    type: "GET",
-                    data: "&productCount=" + $("li.wishlist").find("a#myWishlistHeader").attr("data-count"),
+                    type: 'GET',
+                    //data: "&productCount=" + $(this).attr("data-count"),
+                    data: "&productCount=" + $('li.wishlist').find('a#myWishlistHeader').attr("data-count"),
                     success: function(html) {
-                        $("div.wishlist-info").html(html), TATA.CommonFunctions.fillHeartForItemsInWishlist();
+                        $("div.wishlist-info").html(html);
+                        /*TPR-844*/
+                        TATA.CommonFunctions.fillHeartForItemsInWishlist();
+        				/*TPR-844*/
                     }
                 });
-            }, 300);
-        }), $("a#myWishlistHeader").on("mouseleave", function() {
-            clearTimeout(wishlistHover);
+            },300);
+
+        });
+
+        $("a#myWishlistHeader").on("mouseleave", function() {
+        	clearTimeout(wishlistHover);
         });
     },
+    luxuryForceUpdateHeader: function(){
+		$.ajax({
+	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
+	        type: 'GET',
+	        cache:false,
+	        success: function(data) {
+	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
+	        	luxuryHeaderLoggedinStatus = data.loggedInStatus;
+	        }
+	    });
+	},
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
         return productURL.substring(n + 1, productURL.length).toUpperCase();
     },
     addToWishlist: function(productURL, element) {
-        if (!headerLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
+        if (!luxuryHeaderLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
         var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP", sizeSelected = !0;
         $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
         var ussid = $(element).attr("data-ussid"), dataString = "wish=&product=" + productCode + "&ussid=" + ussid + "&sizeSelected=" + sizeSelected;
@@ -13237,7 +13263,7 @@ TATA.CommonFunctions = {
         var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/removeFromWishListInPLP", sizeSelected = !0;
         $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
         var ussid = $(element).attr("data-ussid"), dataString = "wish=&product=" + productCode + "&ussid=" + ussid + "&sizeSelected=" + sizeSelected;
-        return headerLoggedinStatus ? ($.ajax({
+        return luxuryHeaderLoggedinStatus ? ($.ajax({
             contentType: "application/json; charset=utf-8",
             url: requiredUrl,
             data: dataString,
@@ -13533,7 +13559,7 @@ TATA.CommonFunctions = {
     PDP: {
         wishlistInit: function() {
             $(document).on("click", ".add-to-wl-pdp", function() {
-                if (!headerLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
+                if (!luxuryHeaderLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
                 var dataString = TATA.Pages.PDP.getDataString();
                 if ($(this).hasClass("added")) TATA.Pages.PDP.removeFromWishlist(dataString); else {
                     var sizeSelected = !0;
@@ -13750,12 +13776,15 @@ TATA.CommonFunctions = {
         var _self = TATA.Pages;
         _self.PLP.init(), _self.PDP.init(), _self.CHECKOUT.init(), _self.LANDING.init();
     }
-}, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt(), 
-    $(".header-login-target-link").on("click", function() {
-        var targetID = $(this).data("target-id");
-        $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
-    });
+}, $(document).ready(function () {
+	var luxuryHeaderLoggedinStatus = false;
+	TATA.CommonFunctions.init();
+	TATA.Pages.init();
+	$("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt();  
+	$('.header-login-target-link').on('click', function(){
+		var targetID = $(this).data('target-id');
+		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
+	});
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {

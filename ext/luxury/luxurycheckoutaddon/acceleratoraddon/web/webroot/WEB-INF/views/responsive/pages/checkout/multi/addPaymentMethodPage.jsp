@@ -1066,6 +1066,7 @@
 										<!-- TISPT-235 Code changed for COD using AJAX -->
 										<input type="hidden" id="cartValue" value="${cartValue}" />
 										<input type="hidden" id="httpRequest" value="${request}" />
+										<input type="hidden" id="codEligible" value="${codEligible}" />
 										<%-- <p style="color:#a9143c;"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.desc"/></p>
 										<div class="amtPayable"><h4><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.amtPayable"/>
 										&nbsp;<span id="codAmount"></span></h4>&nbsp;<span id="convChargeMessage"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cod.convChargeMsg"/></span>
@@ -1284,8 +1285,8 @@
 		 <%-- <multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/> --%>
 		
 		<div class="order-summary-header"><h2>Summary</h2></div>
-		<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="true" showTax="true" isCart="true" orderData="${orderData}"/>
-		<multi-checkout:coupons isCart="true"/>
+		<multiCheckout:orderTotals cartData="${cartData}" showTaxEstimate="true" showTax="true" isCart="true" orderData="${orderData}"/>
+		<multiCheckout:coupons isCart="true"/>
 
 	
 	</div>

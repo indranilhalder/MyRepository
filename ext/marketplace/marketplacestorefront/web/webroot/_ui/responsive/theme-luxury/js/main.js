@@ -387,6 +387,7 @@ TATA.CommonFunctions = {
 	},
 
     wishlistInit: function(){
+    	TATA.CommonFunctions.luxuryForceUpdateHeader();
     	$(document).on("click",".add-to-wishlist",function(){
 			if ($(this).hasClass("added")){
 				TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
@@ -420,6 +421,18 @@ TATA.CommonFunctions = {
         	clearTimeout(wishlistHover);
         });
     },
+    
+   luxuryForceUpdateHeader: function(){
+		$.ajax({
+	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
+	        type: 'GET',
+	        cache:false,
+	        success: function(data) {
+	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
+	        	luxuryHeaderLoggedinStatus = data.loggedInStatus;
+	        }
+	    });
+	},
 
     urlToProductCode : function(productURL){
 		var n = productURL.lastIndexOf("-");
@@ -428,7 +441,7 @@ TATA.CommonFunctions = {
     },
     
 	addToWishlist: function(productURL, element){
-		if(!headerLoggedinStatus) {
+		if(!luxuryHeaderLoggedinStatus) {
 			$(".luxury-login").trigger("click");
 			return false;
 		}
@@ -490,7 +503,7 @@ TATA.CommonFunctions = {
 	    var ussid = $(element).attr("data-ussid");
 	    var dataString = 'wish=' + wishName + '&product=' + productCode + '&ussid=' + ussid + '&sizeSelected=' + sizeSelected;
 		
-	    if(!headerLoggedinStatus) {
+	    if(!luxuryHeaderLoggedinStatus) {
 			$(".wishAddLoginPlp").addClass("active");
 			setTimeout(function(){
 				$(".wishAddLoginPlp").removeClass("active")
@@ -992,7 +1005,7 @@ TATA.Pages = {
 	
 		wishlistInit: function(){
 			$(document).on("click",".add-to-wl-pdp",function(){
-				if(!headerLoggedinStatus) {
+				if(!luxuryHeaderLoggedinStatus) {
 					$(".luxury-login").trigger("click");
 					return false;
 				}
@@ -1317,6 +1330,7 @@ TATA.Pages = {
 		// PDP Page initiate
 		init: function () {
 			var _self = TATA.Pages.PDP;
+			
 			_self.Slider();
             _self.Zoomer();
             _self.openPopup();
@@ -1340,6 +1354,7 @@ TATA.Pages = {
 };
 
 $(document).ready(function () {
+	var luxuryluxuryHeaderLoggedinStatus = false;
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
 	$("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt();  
