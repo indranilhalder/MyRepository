@@ -455,7 +455,7 @@ ACC.singlePageCheckout = {
 		if(result == undefined || result == "")
 		{
 			$("#addressline1Error").show();
-			$("#addressline1Error").html("<p>Address Line 1 cannot be blank</p>");
+			$("#addressline1Error").html("<p>Address Line cannot be blank</p>");
 			validate= false;
 			errorCount++;
 		}
