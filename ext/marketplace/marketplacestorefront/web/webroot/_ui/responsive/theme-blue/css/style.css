@@ -70561,7 +70561,12 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     font-size: 10px;
 }
 }
-
+@media (max-width: 413px){
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    font-size: 8px;
+    color: #ccc;
+}
+}
 /*TISPRDT-1609 start*/
 body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>select {
     padding-right: 0;
