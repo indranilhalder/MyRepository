@@ -40,7 +40,7 @@ import com.tisl.mpl.model.SellerInformationModel;
  */
 public class SellerDelistConverter extends DefaultImpexConverter
 {
-
+	private final static String NEWLINECONSTANT = "\n";//sonar fix
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -105,7 +105,7 @@ public class SellerDelistConverter extends DefaultImpexConverter
 
 				sBuffer.append(SEMICOLON_CHAR).append(row.get(Integer.valueOf(0))).append(SEMICOLON_CHAR).append(sim.getUSSID())
 						.append(SEMICOLON_CHAR).append(sellerAssociationStatus).append(SEMICOLON_CHAR)
-						.append(row.get(Integer.valueOf(2))).append(SEMICOLON_CHAR).append(defferedDate()).append("\n");
+						.append(row.get(Integer.valueOf(2))).append(SEMICOLON_CHAR).append(defferedDate()).append(NEWLINECONSTANT);//sonar fix
 
 			}
 
