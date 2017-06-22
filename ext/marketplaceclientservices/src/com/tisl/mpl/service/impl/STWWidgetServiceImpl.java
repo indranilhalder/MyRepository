@@ -24,7 +24,7 @@ import com.tisl.mpl.service.STWWidgetService;
  */
 public class STWWidgetServiceImpl implements STWWidgetService
 {
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private static final Logger LOG = Logger.getLogger(STWWidgetServiceImpl.class);//sonar fix
 	private String use;
 	private String domain;
 	private String method;
@@ -49,7 +49,7 @@ public class STWWidgetServiceImpl implements STWWidgetService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.STWWidgetService#callSTWService()
 	 */
 
