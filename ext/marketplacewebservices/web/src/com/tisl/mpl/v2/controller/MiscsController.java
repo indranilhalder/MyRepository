@@ -1833,6 +1833,8 @@ public class MiscsController extends BaseController
 		String consignmentStatus = null;
 		String transactionId = null;
 		CODSelfShipData codSelfShipData = null;
+		//New addition
+
 		try
 		{
 			//Converting XML to JAVA Object
@@ -1849,6 +1851,7 @@ public class MiscsController extends BaseController
 			//Iterating over each object
 			outer: for (final OneTouchCancelReturnCrmRequestDTO oneTouchCrmObj : crmReqObj.getOneTouchCancelReturnRequestDTOlist())
 			{
+				//returnFulfillmentType = null;
 				codSelfShipData = null;
 				//loopFlag = "N";
 				consignmentStatus = null;
@@ -2023,7 +2026,7 @@ public class MiscsController extends BaseController
 									resultFlag = cancelReturnFacade.oneTouchReturn(orderData, orderEntry,
 											oneTouchCrmObj.getReturnReasonCode(), oneTouchCrmObj.getTicketType(),
 											SalesApplication.CALLCENTER, oneTouchCrmObj.getPincode(), orderEntriesModel, subOrderModel,
-											codSelfShipData);
+											codSelfShipData, oneTouchCrmObj.getUSSID(), oneTouchCrmObj.getTransactionId());
 									//Return is successfull
 									for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
 									{

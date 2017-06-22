@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -281,7 +280,7 @@ public interface CancelReturnFacade
 	 */
 	public boolean oneTouchReturn(OrderData subOrderDetails, OrderEntryData orderEntry, String reasonCode, String ticketTypeCode,
 			SalesApplication salesApplication, String returnPincode, List<AbstractOrderEntryModel> orderEntriesModel,
-			OrderModel subOrderModel, CODSelfShipData codSelfShipData);
+			OrderModel subOrderModel, CODSelfShipData codSelfShipData, final String ussid, String txnId);
 
 	/**
 	 * Method: for pincode serviceability part of one touch CRM--TPR-1345
