@@ -682,8 +682,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			//OrderIssues:-  Code moved to upward
 			//		orderModel.setChildOrders(orderList);
 			//getModelService().save(orderModel);
-			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel || orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel || 
-					WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
+			if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof CreditCardPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof DebitCardPaymentInfoModel
+					|| orderModel.getPaymentInfo() instanceof NetbankingPaymentInfoModel
+					|| WalletEnum.MRUPEE.equals(orderModel.getIsWallet()))
 			{
 				getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 			}
@@ -1384,6 +1388,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	{
 		final HashSet masterSet = new HashSet();
 		final List<String> innerList = new ArrayList<String>();
+
+		if (subOrderList == null)
+		{
+			return Collections.EMPTY_LIST;
+		}
 		for (final OrderModel subOrderModel : subOrderList)
 		{
 			final List<AbstractOrderEntryModel> subOrderEntries = subOrderModel.getEntries();
