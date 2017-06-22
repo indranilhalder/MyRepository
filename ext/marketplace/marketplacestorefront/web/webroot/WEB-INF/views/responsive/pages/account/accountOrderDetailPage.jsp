@@ -1397,11 +1397,11 @@
 																			</span>
 																		</c:when>
 																		<c:when test="${productStatus.responseCode eq 'PICKCONF'}">
-																			<c:set var="extraStyle" value=""></c:set>
+																			<%-- <c:set var="extraStyle" value=""></c:set>
 																			<c:if test="${loop.index > 0}">
 																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
-																			</c:if>
-																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" ${extraStyle}> <img
+																			</c:if> --%>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
 																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																				class="dot-arrow">
 																			</span>
@@ -2504,11 +2504,11 @@
 																			</span>
 																		</c:when>
 																		<c:when test="${productStatus.responseCode eq 'PICKCONF'}">
-																			<c:set var="extraStyle" value=""></c:set>
+																			<%-- <c:set var="extraStyle" value=""></c:set>
 																			<c:if test="${loop.index > 0}">
 																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
-																			</c:if>
-																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" ${extraStyle} > <img
+																			</c:if> --%>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
 																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																				class="dot-arrow">
 																			</span>
