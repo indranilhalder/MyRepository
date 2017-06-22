@@ -1396,7 +1396,7 @@
 																				class="dot-arrow">
 																			</span>
 																		</c:when>
-																		<c:when test="${productStatus.responseCode eq 'PICKCONF'}">
+																		<c:when test="${productStatus.responseCode eq 'PICK_CONFIRMED'}">
 																			<%-- <c:set var="extraStyle" value=""></c:set>
 																			<c:if test="${loop.index > 0}">
 																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
@@ -2503,7 +2503,7 @@
 																				class="dot-arrow">
 																			</span>
 																		</c:when>
-																		<c:when test="${productStatus.responseCode eq 'PICKCONF'}">
+																		<c:when test="${productStatus.responseCode eq 'PICK_CONFIRMED'}">
 																			<%-- <c:set var="extraStyle" value=""></c:set>
 																			<c:if test="${loop.index > 0}">
 																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
