@@ -130,7 +130,6 @@
    				autocreate="true" generate="true" type="list" />
 		<!-- Added in R2.3 END  -->
 
-
 	</collectiontypes>
 
 
@@ -871,7 +870,6 @@
 		</enumtype>
 		<!-- Added for third Party Wallet -->
 
-
 		<!-- TPR-1285 ENUM added -->
 		<enumtype code="siteMapUpdateModeEnum" autocreate="true"
 			generate="true" dynamic="true">
@@ -1343,7 +1341,6 @@
         </relation> 
        
 	</relations>
-
 	<itemtypes>
 		<!-- TPR-628 : Make changes to Banners rendering in MObile Viewports -->
 
@@ -1732,6 +1729,14 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
+					 <!--  Jewellery Changes added below  -->
+                    
+                      <attribute qualifier="JewelleryType" type="java.lang.String"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<description>This value refer the jewellery type </description>
+					</attribute>					
+
 					<!-- Added for KidsWear -->
 					<attribute qualifier="productCategoryTypeL2" type="java.lang.String">
 						<description>Represent the product's master Category</description>
@@ -1744,14 +1749,6 @@
 						</persistence>
 					</attribute>
 					<!-- Added for KidsWear Ends-->
-                     <!--  Jewellery Changes added below  -->
-                    
-                      <attribute qualifier="JewelleryType" type="java.lang.String"
-						generate="true" autocreate="true">
-						<persistence type="property" />
-						<description>This value refer the jewellery type </description>
-					</attribute>
-
 				</attributes>
 			</itemtype>
 
@@ -5917,7 +5914,6 @@
 						<persistence type="property" />
 					</attribute>
 					
-
 				</attributes>
 			</itemtype>
 			<!-- Tata Etail change - Apportioned value capturing ends -->
@@ -6477,16 +6473,6 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Changes PRDI-50 End -->
-					<!-- Channel Specific Promotion Start -->
-					<attribute qualifier="specialPriceMobile" type="java.lang.Double">
-						<description>SpecialPriceMobile</description>
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="weightageMobile" type="java.lang.Double">
-						<description>Weightage Mobile</description>
-						<persistence type="property" />
-					</attribute>
-					<!-- Channel Specific Promotion End -->
 					 <!--   Jewellery Changews added below  -->
                      
                      <attribute qualifier="PUSSID" type="java.lang.String">
@@ -6502,6 +6488,16 @@
 						<description>PLP Minimum Price</description>
 						<persistence type="property" />
 					</attribute>
+					<!-- Channel Specific Promotion Start -->
+					<attribute qualifier="specialPriceMobile" type="java.lang.Double">
+						<description>SpecialPriceMobile</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="weightageMobile" type="java.lang.Double">
+						<description>Weightage Mobile</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Channel Specific Promotion End -->
 				</attributes>
 				<indexes>
 					<index name="BuyBox_IDX">
@@ -6630,16 +6626,6 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- Changes PRDI-50 End -->
-					<!-- Channel Specific Promotion Start -->
-					<attribute qualifier="specialPriceMobile" type="java.lang.Double">
-						<description>SpecialPriceMobile</description>
-						<persistence type="property" />
-					</attribute>
-					<attribute qualifier="weightageMobile" type="java.lang.Double">
-						<description>WeightageMobile</description>
-						<persistence type="property" />
-					</attribute>
-					<!-- Channel Specific Promotion End -->							
 					<!-- Jewellery changes added below  -->
 					
 					<attribute qualifier="PUSSID" type="java.lang.String">
@@ -6655,6 +6641,16 @@
 						<description>PLP Minimum Price</description>
 						<persistence type="property" />
 					</attribute>
+					<!-- Channel Specific Promotion Start -->
+					<attribute qualifier="specialPriceMobile" type="java.lang.Double">
+						<description>SpecialPriceMobile</description>
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="weightageMobile" type="java.lang.Double">
+						<description>WeightageMobile</description>
+						<persistence type="property" />
+					</attribute>
+					<!-- Channel Specific Promotion End -->							
 				</attributes>
 				<indexes>
 					<index name="BuyBoxCommerce_IDX">
@@ -7316,7 +7312,6 @@
 					</attribute>
 					<!-- TPR-1083 End -->
 				</attributes>
-
 				<!-- new indexes added for performace improvement -->
 				<indexes>
 					<index name="CARTS_IDX_MSS">
@@ -7508,83 +7503,6 @@
 							optional="true" />
 						<persistence type="property" />
 					</attribute>
-
-					<!--Start Added new Attributes for Order Update -->
-
-					<attribute qualifier="returnInscan" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for returnInscan</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="returnPickUp" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for returnPickUp</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="awbSecondaryStatus" type="java.lang.String">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for awbSecondaryStatus</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="returnAwbSecondaryStatus" type="java.lang.String">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for returnAwbSecondaryStatus</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="isEDtoHD" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for isEDtoHD</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="ssb" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for ssb</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="sdb" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for sdb</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="isEDtoHDCheck" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for isEDtoHD</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="ssbCheck" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for ssb</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="sdbCheck" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for sdb</description>
-						<persistence type="property" />
-					</attribute>
-
-					<attribute qualifier="returnInitiateCheck" type="java.lang.Boolean">
-						<modifiers optional="true" read="true" write="true" />
-						<description>for return Initiate</description>
-						<persistence type="property" />
-					</attribute>
-					<!--R2.3 Start Bug Id TISRLUAT-986 20-02-2017 Start -->
-					<attribute qualifier="isInscan" type="java.lang.Boolean">
-						<description>for order Inscan status</description>
-						<defaultvalue>Boolean.FALSE</defaultvalue>
-						<modifiers optional="true" read="true" write="true" />
-						<persistence type="property" />
-					</attribute>
-					<!--R2.3 End -->
-					<!--End Added new Attributes for Order Update -->
 
 					<!--Start Added new Attributes for Order Update -->
 
@@ -10322,6 +10240,7 @@
 					</index>
 				</indexes>
 			</itemtype>
+			
 			<itemtype code="PriorityBrands" autocreate="true" generate="true">
 				<deployment table="priorityBrand" typecode="18013" />
 				<attributes>
@@ -10343,7 +10262,6 @@
 				</attributes>
 			</itemtype>
 			<itemtype code="ProductOfferDetail" autocreate="true" generate="true">
-
 				<deployment table="ProductOfferDetail" typecode="16999" />
 				<attributes>
 					<attribute autocreate="true" qualifier="productId" type="java.lang.String"
@@ -10730,7 +10648,7 @@
 		</typegroup>
 
 		<typegroup name="NPSFeedbackGroup">
-			<itemtype code="NPSFeedbackQuestion" generate="true"
+			 <itemtype code="NPSFeedbackQuestion" generate="true"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.NPSFeedbackQuestion">
 				<deployment table="MplNPSFeedbackQuestion" typecode="15810" />
 
@@ -10765,8 +10683,7 @@
 					</attribute>
 
 				</attributes>
-			</itemtype>
-
+			</itemtype>  
 			<itemtype code="NPSFeedback" generate="true" autocreate="true"
 				jaloclass="com.tisl.mpl.core.jalo.NPSFeedback">
 				<deployment table="MplNPSFeedback" typecode="15901" />
@@ -11610,6 +11527,7 @@
 				</indexes>
 			</itemtype>
 		</typegroup>
+		<!-- End CAR-274 -->
 		
 		              <!-- Jewellery Changes Start -->
                                                                                       	
@@ -12508,4 +12426,3 @@
 		</typegroup>
 	</itemtypes>
 </items>
-

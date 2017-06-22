@@ -1,10 +1,8 @@
-
 package com.tisl.mpl.seller.product.facades.impl;
 
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
-import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -12,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 //sonar fix
 //import java.util.Collections;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +86,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
 
-
 	private static final String BUYBOX_LIST = "buyboxList";
 
 	/**
@@ -138,10 +134,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 
-
-
-
-
 	//TISPRM-56
 
 	/**
@@ -156,7 +148,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	@Override
 	public Map<String, Object> buyboxPricePDP(final String productCode, final String bBoxSellerId //CKD:TPR-250
-	,String Channel) throws EtailNonBusinessExceptions
+			, final String Channel) throws EtailNonBusinessExceptions
 	{
 		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
@@ -1040,10 +1032,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
-	 * 
-
-
+	 *
+	 *
+	 *
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1098,15 +1090,19 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 
 		// TISRLEE-1586 03-01-2017
-		if (StringUtils.isNotEmpty(product.getProductCategoryType()) && product.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		final String productcode = buyBoxMod.getProduct();
+		ProductModel product = null;
+		String productcategory = null;
+		//	SellerInformationModel sellerInfoModel = null;
+		if (StringUtils.isNotEmpty(productcode))
 		{
-			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxMod
-					.getSellerArticleSKU());
-			sellerInfoModel = mplSellerInformationService.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+			product = buyBoxService.getProductDetailsByProductCode(productcode);
+
 		}
-		else
+		if (null != product && StringUtils.isNotEmpty(product.getProductCategoryType()))
 		{
-			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+			productcategory = product.getProductCategoryType();
 		}
 		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
@@ -1195,8 +1191,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			//for (int i = 1; i <= end; i++)
 			for (int i = start; i <= end; i++)
 			{
-							//if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
-	if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0
+				//if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0)
+				if (null != buyboxModelList.get(i).getSpecialPrice() && buyboxModelList.get(i).getSpecialPrice().doubleValue() > 0
 						&& buyboxModelList.get(i).getAvailable().intValue() > 0 // CKD:TPR-250 not considering OOS elements for min price calculation
 				)
 

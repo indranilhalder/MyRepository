@@ -1,3 +1,38 @@
+package com.tisl.mpl.marketplacecommerceservices.service.impl;
+
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
+import de.hybris.platform.catalog.CatalogService;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
+import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
+import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.CartModificationData;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
+import de.hybris.platform.commercefacades.product.ProductFacade;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData;
+import de.hybris.platform.commercefacades.product.data.CategoryData;
+import de.hybris.platform.commercefacades.product.data.DeliveryDetailsData;
+import de.hybris.platform.commercefacades.product.data.ImageData;
+import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
+import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.commercefacades.product.data.ServiceableSlavesData;
+import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
+import de.hybris.platform.commercefacades.user.UserFacade;
+import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.commerceservices.order.CommerceCartModification;
+import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCartService;
+import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -523,7 +558,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
-				//final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
+				final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
 				final String sellectedUssid = entry.getSelectedUssid();
 				deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
 
@@ -2626,7 +2661,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 
 				//											final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode()
-					//													.toUpperCase();
+				//													.toUpperCase();
 				//											entry.setFulfillmentTypeP1(fulfilmentType);
 				//										}
 				//									}
@@ -4114,6 +4149,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						String deliveryModeGlobalCode = null;
 						String deliveryMode = null;
 						cartSoftReservationData = new CartSoftReservationData();
+						String fulfillmentType = null;
+
 						//commented for CAR:127
 						/*
 						 * if (entryModel.getSelectedUSSID() != null) {
@@ -4302,7 +4339,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							 * entryModel.getSelectedUSSID());
 							 */
-							final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+							SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 									entryModel.getSelectedUssid());
 
 							if (null == sellerInfoModel)
@@ -4323,7 +4360,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
 										&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 								{
-									final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+									fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 									cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
 									//commented for CAR:127
 									//if (entryModel.getGiveAway().booleanValue())

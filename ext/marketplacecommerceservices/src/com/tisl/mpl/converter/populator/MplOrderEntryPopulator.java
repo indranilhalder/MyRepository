@@ -157,28 +157,31 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	 * @param target
 	 */
 
-	private void addDeliverySlots(AbstractOrderEntryModel source, OrderEntryData target)
+	private void addDeliverySlots(final AbstractOrderEntryModel source, final OrderEntryData target)
 	{
 		if (null != source.getScheduledDeliveryCharge())
 		{
 			target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge());
 		}
-		if(null != source.getEdScheduledDate()){
+		if (null != source.getEdScheduledDate())
+		{
 			target.setSelectedDeliverySlotDate(source.getEdScheduledDate());
 		}
-		if(null != source.getTimeSlotFrom()){
+		if (null != source.getTimeSlotFrom())
+		{
 			target.setTimeSlotFrom(source.getTimeSlotFrom());
 		}
-		if(null != source.getTimeSlotTo()){
+		if (null != source.getTimeSlotTo())
+		{
 			target.setTimeSlotTo(source.getTimeSlotTo());
 		}
-		
+
 		if (StringUtils.isNotEmpty(source.getSddDateBetween()))
 		{
 			target.setEddDateBetWeen(source.getSddDateBetween());
 		}
 	}
-	
+
 	/**
 	 * @param source
 	 * @param target
@@ -382,48 +385,49 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	}
 
 
-//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
-//	{
-//		final ProductModel productModel = source.getProduct();
-//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
-//
-//		// TO-DO
-//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
-//		{
-//			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
-//			{
-//				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
-//						.getSelectedUSSID());
-//
-//				if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
-//				{
-//					final SellerInformationData sellerInfoData = new SellerInformationData();
-//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-//					target.setSelectedSellerInformation(sellerInfoData);
-//					break;
-//				}
-//			}
-//			else
-//			{
-//				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
-//				{
-//					final SellerInformationData sellerInfoData = new SellerInformationData();
-//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-//					target.setSelectedSellerInformation(sellerInfoData);
-//					break;
-//				}
-//			}
-//		}
-//	}
-//
+	//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+	//	{
+	//		final ProductModel productModel = source.getProduct();
+	//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+	//
+	//		// TO-DO
+	//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+	//		{
+	//			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+	//			{
+	//				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+	//						.getSelectedUSSID());
+	//
+	//				if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+	//				{
+	//					final SellerInformationData sellerInfoData = new SellerInformationData();
+	//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+	//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+	//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+	//					target.setSelectedSellerInformation(sellerInfoData);
+	//					break;
+	//				}
+	//			}
+	//			else
+	//			{
+	//				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
+	//				{
+	//					final SellerInformationData sellerInfoData = new SellerInformationData();
+	//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+	//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+	//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+	//					target.setSelectedSellerInformation(sellerInfoData);
+	//					break;
+	//				}
+	//			}
+	//		}
+	//	}
+	//
 
 
 
-//	@Override
+	//	@Override
+	@Override
 	protected void addDeliveryMode(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		if (orderEntry.getMplDeliveryMode() != null)
@@ -505,6 +509,32 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	{
 		return getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(val.doubleValue()),
 				orderEntry.getOrder().getCurrency());
+	}
+
+	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+	{
+		final ProductModel productModel = source.getProduct();
+		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+
+		// TO-DO
+		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+		{
+			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+			{
+				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+						.getSelectedUSSID());
+
+				if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+				{
+					final SellerInformationData sellerInfoData = new SellerInformationData();
+					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+					target.setSelectedSellerInformation(sellerInfoData);
+					break;
+				}
+			}
+		}
 	}
 
 	/**

@@ -2,8 +2,8 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
-import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.core.model.product.ProductModel;
+import de.hybris.platform.jalo.JaloSession;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.internal.dao.AbstractItemDao;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -226,7 +226,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 					+ BuyBoxModel.WEIGHTAGE + "} DESC,{bb:" + BuyBoxModel.AVAILABLE + "} DESC";
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForPrice);
 			query.addQueryParameter("pussid", pcmUssid);
-			log.debug("QueryStringFetchingPrice" + query);
+			LOG.debug("QueryStringFetchingPrice" + query);
 
 			final List<BuyBoxModel> retList = flexibleSearchService.<BuyBoxModel> search(query).getResult();
 			return retList;
@@ -1192,7 +1192,8 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 	}
 
 
-	 /* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyboxSellerPricesForSearch(java.util.List)
 	 */
@@ -1210,7 +1211,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			sellerV = sellerV + "'" + sellerSKUVariable + "'" + ",";
 		}
 
-		log.debug(Integer.valueOf(sellerV.length()));
+		LOG.debug(Integer.valueOf(sellerV.length()));
 
 		final String sellerVarb = sellerV.substring(0, sellerV.length() - 1);
 
