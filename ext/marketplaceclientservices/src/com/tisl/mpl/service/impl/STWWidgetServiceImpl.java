@@ -35,6 +35,8 @@ public class STWWidgetServiceImpl implements STWWidgetService
 	private static final String AMPERSAND = "&";
 	private static final String QUESTION = "?";
 	private static final String SLASH = "/";
+	private static final String NEW_LINE="\n";
+	
 
 	SocketAddress addr = null;
 	Proxy proxy = null;
@@ -223,10 +225,11 @@ public class STWWidgetServiceImpl implements STWWidgetService
 					String readLine;
 					while ((readLine = br.readLine()) != null)
 					{
-						sb.append(readLine + "\n");
+						sb.append(readLine + NEW_LINE);
 					}
 					br.close();
 					return sb.toString();
+				default://Sonar Fix	
 			}
 
 		}

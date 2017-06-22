@@ -2698,28 +2698,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						if (entry.getQuantity().longValue() >= stock)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-							LOG.debug("You are about to exceede the max inventory");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to be out of inventory");
 							break;
 						}
 
 						if (qty + entry.getQuantity().longValue() > stock)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.INVENTORY_WIIL_EXCEDE;
-							LOG.debug("You are about to exceede the max inventory");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to exceede the max inventory");
 							break;
 						}
 
 						if (entry.getQuantity().longValue() >= maximum_configured_quantiy)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.CROSSED_MAX_LIMIT;
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to exceede the max configured quantity");
 							break;
 						}
 
 						if (qty + entry.getQuantity().longValue() > maximum_configured_quantiy)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT;
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to reach the max quantity");
 							break;
 						}
 						break;
@@ -2731,12 +2731,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				if (qty > stock)
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-					LOG.debug("You are about to exceede the max inventory");
+					LOG.debug("isMaxQuantityAlreadyAdded::You are going out of inventory");
 				}
 				if (qty > maximum_configured_quantiy)
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT;
-					LOG.debug("You are about to exceede the max quantity");
+					LOG.debug("isMaxQuantityAlreadyAdded::You have reached max quantity");
 				}
 
 			}
@@ -5333,39 +5333,39 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						if (checkMaxLimList != 0 && checkMaxLimList >= maxProductQuantityAlreadyAdded.intValue())
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max quantity");
 							break;
 						}
 						else
 						{
 
 							LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
-
+							
 							if (entry.getQuantity().longValue() >= stock)
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to be out of inventory");
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > stock)
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.INVENTORY_WIIL_EXCEDE;
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max inventory");
 								break;
 							}
 
 							if (entry.getQuantity().longValue() >= maxProductQuantityAlreadyAdded.intValue())
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max configured quantity");
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > maxProductQuantityAlreadyAdded.intValue())
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to reach the max quantity");
 								break;
 							}
 						}
@@ -5377,12 +5377,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				if (qty > stock)
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-					LOG.debug("You are about to exceede the max inventory");
+					LOG.debug("isMaxProductQuantityAlreadyAdded::You are going out of inventory");
 				}
 				if (qty > maxProductQuantityAlreadyAdded.intValue())
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT;
-					LOG.debug("You are about to exceede the max quantity");
+					LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached max quantity");
 				}
 
 			}
