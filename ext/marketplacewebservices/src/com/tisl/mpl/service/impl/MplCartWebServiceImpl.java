@@ -2796,40 +2796,39 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						if (checkMaxLimList != 0 && checkMaxLimList >= maxProductQuantityAlreadyAdded.intValue())
 						{
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max quantity");
 							addToCartFlag = true;
 							break;
 
 						}
 						else
 						{
-							LOG.debug(
-									"Product already present in the cart so now we will check the qunatity present in the cart already");
+							LOG.debug("isMaxProductQuantityAlreadyAdded::Product already present in the cart so now we will check the qunatity present in the cart already");
 
 							if (entry.getQuantity().longValue() >= stock)
 							{
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max inventory");
 								addToCartFlag = true;
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > stock)
 							{
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached the max inventory");
 								addToCartFlag = true;
 								break;
 							}
 
 							if (entry.getQuantity().longValue() >= maxProductQuantityAlreadyAdded.intValue())
 							{
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached the max quantity");
 								addToCartFlag = true;
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > maxProductQuantityAlreadyAdded.intValue())
 							{
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached the max quantity");
 								addToCartFlag = true;
 								break;
 							}
@@ -2842,12 +2841,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (qty > stock)
 				{
 					addToCartFlag = true;
-					LOG.debug("You are about to exceede the max inventory");
+					LOG.debug("isMaxProductQuantityAlreadyAdded(EmptyCartEntry)::You are about to exceede the max inventory");
 				}
 				if (qty > maxProductQuantityAlreadyAdded.intValue())
 				{
 					addToCartFlag = true;
-					LOG.debug("You are about to exceede the max quantity");
+					LOG.debug("isMaxProductQuantityAlreadyAdded(EmptyCartEntry)::You are about to exceede the max quantity");
 				}
 
 			}
