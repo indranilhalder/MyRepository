@@ -1391,16 +1391,22 @@
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
 																	<c:choose>
 																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
 																		</c:when>
-																		<c:otherwise>
-																		<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																		</span>
+																		<c:when test="${productStatus.responseCode eq 'PICKCONF'}">
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																		</c:when>
+																		<c:otherwise>																			
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																			class="dot-arrow">
+																			</span>
 																		</c:otherwise>
 																	</c:choose>
 																	
@@ -2488,16 +2494,22 @@
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
 																	<c:choose>
 																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																		</c:when>
+																		<c:when test="${productStatus.responseCode eq 'PICKCONF'}">
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
 																		</c:when>
 																		<c:otherwise>
-																		<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																		</span>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																			class="dot-arrow">
+																			</span>
 																		</c:otherwise>
 																	</c:choose>
 																	
