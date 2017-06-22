@@ -117,11 +117,11 @@ TATA.CommonFunctions = {
                     	 
                     	 if($("#extRegisterForm .invalided-error").length > 0){
                     		 /*$("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");*/
-                             $("#extRegisterForm .invalided-error").html("Please enter valid email address");
+                             $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");
                     	 }else{
                     		//$("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
                     		 
-                    		 $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
+                    		 $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
                     	 }
                      }
                  });						
