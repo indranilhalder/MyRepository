@@ -324,7 +324,7 @@ public class DefaultJuspayEBSServiceImpl implements JuspayEBSService
 				LOG.debug(" order state ====> " + op.getState() + "=====and process name=====>" + processDefinitionName);
 				if (StringUtils.isNotEmpty(op.getProcessDefinitionName())
 						&& op.getProcessDefinitionName().equalsIgnoreCase(processDefinitionName)
-						&& ProcessState.WAITING.equals(op.getState()) && null != op.getOrder()
+						&& (ProcessState.WAITING.equals(op.getState()) || ProcessState.ERROR.equals(op.getState())) && null != op.getOrder()
 						&& StringUtils.isNotEmpty(op.getOrder().getCode()))
 				{
 					LOG.debug(" inside if .. triffering review decision event " + op.getOrder().getCode());
