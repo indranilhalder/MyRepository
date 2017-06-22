@@ -70291,13 +70291,13 @@ body .account .right-account .order-history.order-details li.item .item-fulfillm
 	margin-bottom: 5px;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message{
-	left: -97% !important;
+	left: -100% !important;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(3) .message{
 	left: -200% !important;
 }
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message{
-	left: -386% !important;
+	left: -400% !important;
 }
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.viewDetailsAnchor,
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history:not(.responsiveProfile) .product-block li.header>ul>li.trackOrderAnchor{
@@ -70477,41 +70477,12 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
     top:3px;		/* TPR-6013 Order History  */
 }
 }
-@media(max-width: 790px){
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message{
- left: -395% !important;
- }
- body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
-    left: -99% !important;
-}
-}
+
 @media(max-width: 650px){
 	body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.delivery-status.processing.full_track{
-	height: 21px !important;
-}
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
-    left: -96% !important;
-}
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message {
-    left: -392% !important;
+	height: 23px !important;
 }
 }
-@media(max-width: 480px){
-	body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(2) .message {
-    left: -95% !important;
-}
-body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message {
-    left: -386% !important;
-}
-}
-@media(max-width: 350px){
-	body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(5) .message {
-    left: -378% !important;
-}
-body .account .right-account .order-history.order-details li.item .status .message.trackOrdermessage_00cbe9{
-	width: 444% !important;
-}
-} 
 @media(max-width: 790px){
 	body .account .right-account{
 	border-top: 1px solid #eeeeee;
@@ -70529,11 +70500,6 @@ body .account .right-account .order-history.order-details li.item .status .messa
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress span.start{
 	    display: none;
 }
-@media(max-width: 390px) and (min-width: 351px){
-	body .account .right-account .order-history.order-details li.item .status .message.trackOrdermessage_00cbe9{
-	width: 430% !important;
-	}
-}
 /* TISPRDT-1605 start */
 @media (max-width: 767px){
 .luxury-header .header-inner{
@@ -70541,3 +70507,36 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 }
 }
 /* TISPRDT-1605 end */
+
+/*TISPRDT-1589 start*/
+#track-more-info p span {
+    position: static;
+}
+/*TISPRDT-1589 end*/
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(4) .message {
+    left: -300% !important;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:last-of-type .message {
+    margin-left: 14px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:first-of-type .message {
+    margin-left: -5px;
+}
+body .right-account .order-details .deliveryTrack .dot-arrow{
+	width: 20px;
+	top: 48px;
+}
+@media (max-width: 790px) {
+body .right-account .order-details .deliveryTrack .dot-arrow:last-of-type{
+	left:-2px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:last-of-type .message {
+    margin-left: 8px;
+}
+}
+@media (max-width: 650px) {
+	body .right-account .order-details .deliveryTrack .dot-arrow {
+    top: 52px;
+    width: 14px;
+}
+}

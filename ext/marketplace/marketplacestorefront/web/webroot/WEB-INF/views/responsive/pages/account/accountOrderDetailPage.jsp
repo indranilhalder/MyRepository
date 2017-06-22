@@ -3784,6 +3784,12 @@ body .account .right-account .order-history.order-details .product-block li.item
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
     padding-left: 14.5%;
 }
+body .account .right-account .order-history.order-details li.item:last-of-type .order {
+    margin-bottom: 5px;
+}
+body .account .right-account {
+    border-top: 0px;
+}
 }
 @media (max-width: 500px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
