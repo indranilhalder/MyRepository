@@ -173,15 +173,16 @@
 												<li class="order-number"><span><spring:theme
 															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 
-												<li class="links"><a
+												<li class="viewDetailsAnchor"><a
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
-															code="text.orderHistory.view.order" /></a> <a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
+															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
+															<!-- &pageAnchor=trackOrder -->
+												<li class="trackOrderAnchor"><a href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}"><spring:theme
 															code="text.orderHistory.track.order" /></a></li>
 											</ul>
 										</li> --%>
 										
-										<li class="header">
+										<!-- TPR-6013 wrong UI --> <li class="header">
 											<ul>
 												<li class="viewDetails">
 												<span class="orderNumber"><spring:theme code="text.orderHistory.order.place" text="Order"/>#${orderHistoryDetail.code}</span> 
@@ -299,7 +300,7 @@
 														</div>
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
-															<p>
+															<p class="order-serial-num">
 																<spring:theme code="text.orderHistory.serial.number" />
 																&nbsp; ${entry.imeiDetails.serialNum}
 															</p>
@@ -329,7 +330,7 @@
 															</c:choose>
 														</c:forEach> --%>
 
-														<p>
+														<p  class="order-serial-num">
 															<spring:theme
 																code="text.orderHistory.seller.order.number" />&nbsp;
 															${subOrder.code}
@@ -378,16 +379,57 @@
 													<c:set value="${orderStatus['APPROVED']}" var="approvedFlag"/>
 													<c:set value="${orderStatus['SHIPPING']}" var="shippingFlag"/>
 													<c:set value="${orderStatus['DELIVERY']}" var="deliveryFlag"/>
+													<c:set value="${orderStatus['CANCEL']}" var="cancelFlags"/>
+													<c:set value="${orderStatus['RETURN']}" var="returnFlags"/>
+													
+													
+													<input type="hidden" value="${deliveryFlag.responseCode}"/>
+													<input type="hidden" value="${shippingFlag.responseCode}"/>
+													<input type="hidden" value="${approvedFlag.responseCode}"/>
+													<input type="hidden" value="${cancelFlags.responseCode}"/>
+													<input type="hidden" value="${returnFlags.responseCode}"/>
+													
+													
 													<c:choose>
+													<c:when test="${not empty returnFlags and returnFlags ne null}">
+													<div class="orderUpdatesBlock">
+														<%-- <div class="status statusCancel">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Returned" /></span> 
+														</div> --%>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Return Request Date: " /></span>&nbsp;
+															<c:forEach items="${returnFlags.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
+															</c:forEach>
+														</div>
+														</div>
+													</c:when>
+													<c:otherwise>
+													<c:choose>
+													<c:when test="${not empty cancelFlags and cancelFlags ne null}">
+														<div class="orderUpdatesBlock">
+														<%-- <div class="status statusCancel">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancelled" /></span>
+														</div> --%>
+														<div class="statusDate">
+															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Cancellation Request Date: " /></span>&nbsp;
+															<c:forEach items="${cancelFlags.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
+															</c:forEach>
+														</div>
+														</div>
+														</c:when>
+														<c:otherwise>
+														<c:choose>
 														<c:when test="${not empty deliveryFlag and deliveryFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status">
+														<div class="status statusDelivered">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered" /></span>
 														</div>
 														<div class="statusDate">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Delivered:" /></span>&nbsp;
-															<c:forEach items="${deliveryFlag.statusRecords}" var="date">
-															<span>${date}</span>
+															<c:forEach items="${deliveryFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
@@ -396,13 +438,13 @@
 														<c:choose>
 														<c:when test="${not empty shippingFlag and shippingFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status">
+														<div class="status statusShipped">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped" /></span>
 														</div>
 														<div class="statusDate">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Shipped:" /></span>&nbsp;
-															<c:forEach items="${shippingFlag.statusRecords}" var="date">
-															<span>${date}</span>
+															<c:forEach items="${shippingFlag.statusRecords}" var="recordDate">
+															<span>${recordDate.date}</span>
 															</c:forEach>
 														</div>
 														</div>
@@ -411,7 +453,7 @@
 														<c:choose>
 															<c:when test="${not empty approvedFlag and approvedFlag ne null}">
 														<div class="orderUpdatesBlock">
-														<div class="status">
+														<div class="status statusConfirmed">
 															<span><spring:theme code="text.orderHistory.seller.order.numbe" text="Confirmed" /></span>
 														</div>
 														<div class="statusDate">
@@ -426,9 +468,10 @@
 														</c:otherwise>
 														</c:choose>
 														</c:otherwise>
-														
-														
-														
+														</c:choose>
+														</c:otherwise>
+													</c:choose>
+													</c:otherwise>
 													</c:choose>
 													
 
@@ -491,7 +534,7 @@
 														  	<c:otherwise>
 														  		<c:if test="${entry.isCancellationMissed eq 'true'}">
 																						<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
-																<span>${cancelPopover}</span>						
+																<span style="display: none;">${cancelPopover}</span>						
 																</c:if>
 														  	</c:otherwise>
 														</c:choose>

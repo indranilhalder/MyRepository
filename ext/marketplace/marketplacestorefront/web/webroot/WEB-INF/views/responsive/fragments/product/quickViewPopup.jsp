@@ -270,7 +270,7 @@ tr.d0 td {
  	 
  		
  }
- $('.main-image a img.picZoomer-pic').on('load', function(){
+ /* $('.main-image a img.picZoomer-pic').on('load', function(){
 	 	console.log("jsp image is loaded");
 	 	var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 		console.log("jsp mainImageHeight is " + mainImageHeight);
@@ -293,6 +293,21 @@ tr.d0 td {
 	    if (this.complete) {
 	        $(this).trigger("load");
 	    }
+	}); */
+	$(window).load(function() {	
+		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+		var thumbnailImageHeight = (mainImageHeight / 5);
+		var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
+		$(".imageList ul li img").css("height", thumbnailImageHeight);
+		$("#previousImage").css("opacity","0.5");
+		$("#nextImage").css("opacity","1");
+		/* var listHeight = $(".imageList li").height(); */ /*commented as part of PRDI-68*/
+		 var listHeight = thumbnailImageHeight + 13.6;		/*added as part of PRDI-68*/
+		if($("#previousImage").length){
+			$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+			$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
+		}
+		$(".imageListCarousel").show();
 	});
  </script>
  <style type="text/css">
@@ -366,7 +381,7 @@ display:none;
 		<img src="${commonResourcePath}/images/thin_top_arrow_333.png"/><%-- <spring:theme code="product.othersellers.previous" /> --%>
 	</button>
 </c:if>
-	<div class="imageList" style="overflow: hidden;">
+	<div class="imageList" style="overflow: hidden;${(thumbNailImageLength > imgCount)?"height:480px":""}">
 		<ul class="jcarousel-skin imageListCarousel" style="display:block; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
 				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->

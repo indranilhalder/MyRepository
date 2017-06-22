@@ -68,8 +68,8 @@
 							<div class="half quarter titleName">
 								<formElement:formSelectBox idKey="profile.gender"
 									labelKey="profile.gender" path="gender" mandatory="false"
-									skipBlank="false" skipBlankMessageKey="profile.select.gender"
-									items="${genderData}" selectCSSClass="form-control" />
+									skipBlank="true" 
+									items="${genderData}" selectCSSClass="form-control" selectedValue="MALE" />
 							</div>
 							<!-- TPR-6013 -->
 							<div class="half quarter">
@@ -123,10 +123,20 @@
 								<div class="half_span">
 									<label><spring:theme code="profile.dateOfBirth"
 											text="Date Of Birth" /></label>
-									<form:input path="dateOfBrithPicker" id="dateOfBrithPicker"
-										maxlength="10"
-										placeholder="Date Of Birth" type="date"
-										value="${dobYear}-${dobMonth}-${dobDay}" />
+									<c:choose>
+										<c:when test="${not empty dobDay and dobDay ne '' and not empty dobMonth and dobMonth ne '' and not empty dobYear and dobYear ne ''}">
+											<form:input path="dateOfBrithPicker"
+											id="dateOfBrithPicker" maxlength="10"
+											placeholder="Date Of Birth" type="text"
+											value="${dobYear}-${dobMonth}-${dobDay}" />
+										</c:when>
+										<c:otherwise>
+											<form:input path="dateOfBrithPicker"
+											id="dateOfBrithPicker" maxlength="10"
+											placeholder="Date Of Birth" type="text"
+											value="" />
+										</c:otherwise>
+									</c:choose>
 								</div>
 
 								<div class="errorMessage">
@@ -138,11 +148,20 @@
 								<div class="half_span">
 									<label><spring:theme code="profile.dateOfAnniversary"
 											text="Anniversary Date" /></label>
-
-									<form:input path="anniversaryDatePicker"
-										id="anniversaryDatePicker" maxlength="10"
-										placeholder="Date Of Anniversary" type="date"
-										value="${doaYear}-${doaMonth}-${doaDay}" />
+									<c:choose>
+										<c:when test="${not empty doaDay and doaDay ne '' and not empty doaMonth and doaMonth  ne '' and not empty doaYear  and doaYear  ne ''}">
+											<form:input path="anniversaryDatePicker"
+											id="anniversaryDatePicker" maxlength="10"
+											placeholder="Date Of Anniversary" type="text"
+											value="${doaYear}-${doaMonth}-${doaDay}" />
+										</c:when>
+										<c:otherwise>
+											<form:input path="anniversaryDatePicker"
+											id="anniversaryDatePicker" maxlength="10"
+											placeholder="Date Of Anniversary" type="text"
+											value="" />
+										</c:otherwise>
+									</c:choose>
 								</div>
 								<div class="errorMessage">
 									<div id="errdoaDay"></div>
@@ -169,7 +188,8 @@
 					<h2><spring:theme code="profile.Password" text="Password"/></h2>	
 					<p><spring:theme code="profile.Password.Details" text="Already set correctly"/></p>
 					<button type="button" class="blue changePass">CHANGE PASSWORD</button>
-					<button type="button" class="blue crossPass">X</button>
+					<button type="button" class="blue changePassResponsive">CHANGE</button>
+					<button type="button" class="blue crossPass"></button>
 
 					<div>
 						<form:form id="frmUpdatePassword" action="update-password"
@@ -217,7 +237,7 @@
 							</fieldset>
 							<button type=button class="blue"
 								onClick="return validatePassword();">
-								<spring:theme code="cart.modal.save.changes" text="Save Changes" />
+								<spring:theme code="cart.modal.save.changes1" text="Save Changes" />
 							</button>
 						</form:form>
 
@@ -236,5 +256,27 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
+	<script>
+		$(document).ready(function(){
+			
+		    var pickerAnni = new Pikaday({ 
+		    field: document.getElementById('anniversaryDatePicker'),
+		    format: 'YYYY-MM-DD',
+		    firstDay: 1,
+	        yearRange: [1950,2030],
+		    onSelect: function() {
+	        }
+		    });
+		    var pickerDob = new Pikaday({ 
+			    field: document.getElementById('dateOfBrithPicker'),
+			    format: 'YYYY-MM-DD',
+			    firstDay: 1,
+		        yearRange: [1950,2030],
+			    onSelect: function() {
+		        }
+			    });
+		});
+	   
+	</script>
 </template:page>
