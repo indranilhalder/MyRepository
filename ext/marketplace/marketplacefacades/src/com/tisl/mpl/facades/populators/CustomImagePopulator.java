@@ -109,6 +109,7 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 			//variantOptionData.setVariantOptionQualifiers(variantOptionQualifiers);
 			variantOptionData.setCode(variantProductModel.getCode());
 			variantOptionData.setUrl(getProductModelUrlResolver().resolve(variantProductModel));
+			variantOptionData.setProductType(variantProductModel.getProductCategoryType());
 			//Stock Level wont be set for Product, as stock will be set at USSID level.All calculations will be done from Buy Box.
 			//variantOptionData.setStock(getStockConverter().convert(variantProductModel));
 
@@ -141,6 +142,13 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 					&& variantProductModel.getLuxIndicator().getCode().equalsIgnoreCase("luxury"))
 			{
 				styleSwatch = MarketplaceFacadesConstants.LUXURY_STYLE_SWATCH;
+			}
+
+			//added for jewellery
+			if (null != variantProductModel.getProductCategoryType()
+					&& variantProductModel.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+			{
+				styleSwatch = MarketplaceFacadesConstants.JEWELLERY_STYLE_SWATCH;
 			}
 
 			final MediaModel media = getMediaWithImageFormat(mediaContainer, styleSwatch);

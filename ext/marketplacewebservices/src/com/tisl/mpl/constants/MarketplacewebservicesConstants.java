@@ -546,6 +546,9 @@ public class MarketplacewebservicesConstants
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 	public final static String FAIL = "fail";
+	public static final String TRAVELANDLUGGAGE = "travelandluggage";
+
+
 	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
 
 	public static final String TO = "TO";
@@ -557,5 +560,6 @@ public class MarketplacewebservicesConstants
 	public static final String FORWARD_SLASHES = "//";
 	//TPR-6117
 	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "MAX QUANTITY ADDED";
+	public static final String FINEJEWELLERY = "finejewellery";
 
 }

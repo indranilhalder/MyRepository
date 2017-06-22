@@ -120,6 +120,7 @@ import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
+import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
@@ -228,6 +229,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	private VoucherService voucherService;
 	//Added for TPR-4461 ends here
 
+	//Added for tpr-3782
+	@Resource(name = "priceBreakupFacade")
+	private PriceBreakupFacade priceBreakupFacade;
+
 	//@Autowired
 	//private MplCouponFacade mplCouponFacade;
 
@@ -275,7 +280,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@RequireHardLogIn
 	//@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.PAYMENT_METHOD)
 	public String enterStep(final Model model, final RedirectAttributes redirectAttributes,
-			@RequestParam(value = "value", required = false, defaultValue = "") final String guid) throws CMSItemNotFoundException
+			@RequestParam(value = "value", required = false, defaultValue = "") final String guid,
+			@RequestParam(value = "dispMsg", required = false) final String dispMsg) throws CMSItemNotFoundException
 	{
 		//OrderIssues:-  multiple Payment Response from juspay restriction
 
@@ -413,6 +419,15 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							freebieModelMap.put(orderEntry.getSelectedUssid(), orderEntry.getMplDeliveryMode());
 							freebieParentQtyMap.put(orderEntry.getSelectedUssid(), orderEntry.getQuantity());
 						}
+						//Added for 3782
+						//if (null != orderEntry.getProduct()
+						//		&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(orderEntry.getProduct()
+						//				.getProductCategoryType()))
+						//{
+						//	final boolean breakupLoad = priceBreakupFacade.createPricebreakupOrder(orderEntry);
+
+						//}
+						//End of changes for TPR-3782
 					}
 				}
 
@@ -548,7 +563,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					MarketplacecheckoutaddonConstants.ERRORMSG);
 			return getCheckoutStep().previousStep();
 		}
-
+		if (StringUtils.isNotEmpty(dispMsg))
+		{
+			model.addAttribute("dispMsg", dispMsg);
+		}
 		//return values
 		model.addAttribute("checkoutPageName", checkoutPageName);
 		return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.AddPaymentMethodPage;
@@ -1148,13 +1166,37 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//added for CAR:127
 				//Existing code for cart
 				boolean redirectFlag = false;
+
+
+				//TPR3780 STARTS HERE
+				final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+				//TPR3780 ENDS HERE
+
+
 				//commented for CAR:127
 				/*
 				 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 				 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 				 */
+
 				final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 						MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+
+
+				//TPR3780 STARTS HERE
+				final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+				final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+				if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+				{
+					return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+				}
+
+				//TPR3780 ENDS HERE
+
+
+
 				if (!inventoryReservationStatus)
 				{
 					getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -1314,13 +1356,38 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+
+
+					//TPR3780 STARTS HERE
+					final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+					//TPR3780 ENDS HERE
+
+
 					//commented for CAR:127
 					/*
 					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 					 */
+
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+					//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+
+
+					//TPR3780 STARTS HERE
+					final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+					final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+					if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+					{
+						return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+					}
+
+					//TPR3780 ENDS HERE
+
+
+
 					if (!inventoryReservationStatus)
 					{
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -1672,7 +1739,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				//TISSTRT-1501 starts
 			}
-
 			//			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
 			//			{
 			//				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
@@ -1683,6 +1749,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
 			//				}
 			//			}
+
 
 		}
 		//			}
@@ -3519,7 +3586,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid,final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
@@ -3717,13 +3784,35 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//TISUTO-12 , TISUTO-11
 				if (!redirectFlag)
 				{
+
+					//TPR3780 STARTS HERE
+					final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+					//TPR3780 ENDS HERE
+
 					//commented for CAR:127
 					/*
 					 * final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
 					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 					 */
+
 					final boolean inventoryReservationStatus = getMplCartFacade().isInventoryReserved(
+
+					//MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, null);
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
+
+					//TPR3780 STARTS HERE
+					final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+					final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+
+					if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+					{
+						return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+					}
+
+					//TPR3780 ENDS HERE
+
+
 					if (!inventoryReservationStatus)
 					{
 
@@ -3968,7 +4057,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		return orderId;
 	}
-
 
 
 
@@ -4750,6 +4838,24 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return cartLevelSellerID;
 	}
 
+	//added for 3782
+
+	/**
+	 * @return the priceBreakupFacade
+	 */
+	public PriceBreakupFacade getPriceBreakupFacade()
+	{
+		return priceBreakupFacade;
+	}
+
+	/**
+	 * @param priceBreakupFacade
+	 *           the priceBreakupFacade to set
+	 */
+	public void setPriceBreakupFacade(final PriceBreakupFacade priceBreakupFacade)
+	{
+		this.priceBreakupFacade = priceBreakupFacade;
+	}
 
 	//TPR-429 change:- PaymentPage redirect fix
 	public static String populateCheckoutSellersForOrder(final OrderData orderData)

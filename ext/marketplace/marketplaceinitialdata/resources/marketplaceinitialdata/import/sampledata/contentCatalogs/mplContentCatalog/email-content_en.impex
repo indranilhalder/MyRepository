@@ -90,7 +90,9 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 ;;/images/theme/Luxury_twiiter.jpg;Luxury_twiiter.jpg;$siteResource/images/theme/Luxury_twiiter.jpg;;
 ;;/images/theme/Luxury_youtube.jpg;Luxury_youtube.jpg;$siteResource/images/theme/Luxury_youtube.jpg;;
 ;;/images/theme/Luxury_Insta.jpg;Luxury_Insta.jpg;$siteResource/images/theme/Luxury_Insta.jpg;;
-
+###fine jewelley changes
+;;/images/theme/product1.jpg;product1.jpg;$siteResource/images/theme/product1.jpg;;
+;;/images/theme/product2.jpg;product2.jpg;$siteResource/images/theme/product2.jpg;;
 
 
 
@@ -113,7 +115,9 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;Emailyoutube;/images/theme/Luxury_youtube.jpg;
 ;;Emailtwitter;/images/theme/Luxury_twiiter.jpg;
 ;;EmailInstagramImage;/images/theme/Luxury_Insta.jpg
-
+###fine jewellery changes
+;;ForwardSealImage;/images/theme/product1.jpg
+;;ReverseSealImage;/images/theme/product2.jpg
 
 ## reset password changes
 ;;EmailForgotPasswordHeaderImage;/images/theme/forgot_password_header.jpg;
@@ -225,7 +229,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailtweetSlot;Emailtwitter
 ;;EmailYouTubeSlot;EmailYouTubeImage
 ;;EmailInstaSlot;EmailInstagramImage
-
+###fine jewellery changes
+;;ForwardSealDeliverySlot;ForwardSealImage
+;;ReverseSealDeliverySlot;ReverseSealImage
 
 # HOTC Email-Shipping Confirmation
 
@@ -251,6 +257,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailYouTubeSlot;EmailYouTubeImage
 ;;EmailInstaSlot;EmailInstagramImage
 ;;EmailTipCUSlot;TipImage
+###fine jewellery changes
+;;ForwardSealHOTCSlot;ForwardSealImage
+;;ReverseSealHOTCSlot;ReverseSealImage
 
 ##entries for reset password
 

@@ -25,12 +25,14 @@ import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -67,6 +69,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 
 	@Resource
 	private AgentIdForStore agentIdForStore;
+	//for Jewellery
+	@Resource
+	private BuyBoxService buyBoxService;
 
 	/**
 	 * @return the mplPriceRowService
@@ -197,8 +202,23 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 					for (final RichAttributeModel rm : sellerInformationModel.getRichAttribute())
 					{
 
-						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
-								sellerInformationModel.getSellerArticleSKU()));
+						//changes for Jewellery pincode service in pdp
+						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+						{
+							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+									buyBoxService.buyboxPriceForJewellery(sellerInformationModel.getSellerArticleSKU()));
+
+							final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+							sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm, sellerArticleSKU));
+						}
+						//end
+
+						else
+						{
+							sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
+									sellerInformationModel.getSellerArticleSKU()));
+						}
+
 
 						final PaymentModesEnum paymentEnum = rm.getPaymentModes();
 

@@ -46,6 +46,7 @@ import com.tisl.mpl.sellerinfo.facades.MplSellerInformationFacade;
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
 import com.tisl.mpl.util.ExceptionUtil;
+import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
 import com.tisl.mpl.wsdto.InventoryReservResponse;
 
@@ -526,10 +527,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 					
 					InventoryReservListResponse inventoryReservListResponse = null;
 					try
-					{
-						inventoryReservListResponse = inventoryReservationService
-								.convertDatatoWsdto(cartdatalist, cart.getGuid(),
-										pincode,MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+					{	//added for jewellery
+						final InventoryReservListRequest reqestData = inventoryReservationService.convertDatatoWsdto(
+								cartdatalist, cart.getGuid(), pincode, MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART);
+						inventoryReservListResponse = inventoryReservationService.reserveInventoryAtCheckout(reqestData);
 					}
 					catch (final ClientEtailNonBusinessExceptions e)
 					{

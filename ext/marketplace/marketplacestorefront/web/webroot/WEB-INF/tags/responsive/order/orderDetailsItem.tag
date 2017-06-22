@@ -13,7 +13,7 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>
@@ -23,11 +23,10 @@
 
 <c:set var="bogoGiveaway" value="false" />
 <c:forEach items="${orderGroup.entries}" var="entry">
-	<c:if 
-	test="${ entry.isBOGOapplied || entry.giveAway}">
-	<c:set var="bogoGiveaway" value="true" />	
+	<c:if test="${ entry.isBOGOapplied || entry.giveAway}">
+		<c:set var="bogoGiveaway" value="true" />
 	</c:if>
-</c:forEach> 
+</c:forEach>
 
 <c:forEach items="${orderGroup.entries}" var="entry">
 
@@ -36,19 +35,24 @@
 		<ul class="desktop">
 			<li>
 				<div class="product-img">
-					<c:choose>
-						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-												<a href="${productUrl}"> <product:productPrimaryImage
-														product="${entry.product}" format="luxuryCartIcon" />
-												</a>
-																	</c:when>
-																	<c:otherwise>
-																			<a href="${productUrl}"> <product:productPrimaryImage
-														product="${entry.product}" format="thumbnail" />
-												</a>
-												
-						</c:otherwise>
-					</c:choose>
+					<c:if
+						test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+						<a href="${productUrl}"> <product:productPrimaryImage
+								product="${entry.product}" format="luxuryCartIcon" />
+						</a>
+					</c:if>
+					<c:if
+						test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
+						<a href="${entryProductUrl}"><product:productPrimaryImage
+								product="${entry.product}" format="fineJewelthumbnail" /> </a>
+					</c:if>
+					<c:if
+						test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory != 'FineJewellery'}">
+						<a href="${productUrl}"> <product:productPrimaryImage
+								product="${entry.product}" format="thumbnail" />
+						</a>
+
+					</c:if>
 				</div>
 				<div class="product">
 
@@ -78,29 +82,29 @@
 					<c:if test="${not empty parentOrder.appliedProductPromotions}">
 						<ul>
 							<c:set var="displayed" value="false" />
-						
+
 							<c:forEach items="${parentOrder.appliedProductPromotions}"
 								var="promotion">
-								
+
 								<c:forEach items="${promotion.consumedEntries}"
 									var="consumedEntry">
-									
-						 <c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
-									
-									<c:if 
-										test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
-										<c:set var="displayed" value="true" />
-										<li><span>${promotion.description}</span></li>
-									</c:if>
 
-									<c:if
-										test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
-										<c:set var="displayed" value="true" />
-										<li><span>${promotion.description}</span></li>
+									<c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
+
+										<c:if
+											test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+											<c:set var="displayed" value="true" />
+											<li><span>${promotion.description}</span></li>
+										</c:if>
+
+										<c:if
+											test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+											<c:set var="displayed" value="true" />
+											<li><span>${promotion.description}</span></li>
+										</c:if>
 									</c:if>
-									</c:if>
-									</c:forEach>
-						</c:forEach>
+								</c:forEach>
+							</c:forEach>
 						</ul>
 					</c:if>
 					<ul>
@@ -128,11 +132,11 @@
 						</span>
 					</p>
 					<ul class="item-details">
-					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-					</ul> 
-					</div>
-					  
-					</li>
+						<%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
+					</ul>
+				</div>
+
+			</li>
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
@@ -147,6 +151,23 @@
 							<c:otherwise>
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
+						</c:choose> <%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
+						<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
+						<c:choose>
+							<c:when
+								test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
+
+								<li class="deliver deliver-desc">Your Order Will Be
+									Delivered on ${entry.selectedDeliverySlotDate} -
+									${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
+
+							</c:when>
+							<c:otherwise>
+								<li class="deliver deliver-desc">Your Order Will Be
+									Delivered ${entry.eddDateBetWeen}</li>
+
+							</c:otherwise>
+
 						</c:choose>
 						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
 					<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>

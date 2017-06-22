@@ -273,6 +273,19 @@ public interface ControllerConstants
 
 			}
 
+			interface Pancard
+			{
+
+				String PanCardDetail = "pages/pancard/pancardupload";
+				String panCardUploadSuccess = "pages/pancard/pancarduploadsuccess";
+				String panCardUploadUpdate = "pages/pancard/pancarduploadupdate";
+				String panCardApproved = "pages/pancard/pancardapproved";
+				String panCardUploadDetailsError = "pages/pancard/pancarduploaddetailserror";
+
+
+
+			}
+
 		}
 
 		interface Fragments
@@ -364,6 +377,17 @@ public interface ControllerConstants
 				public static final String IS_COD = "isCod";
 				public static final String ALL_OF_STOCK = "allOOStock";
 				public static final String BUYBOZFORSIZEGUIDEAJAX = "-buyboxDataForSizeGuide";
+
+
+				//for price breakup(TPR-3752)
+				public static final String PRICE_BREAKUP = "priceBreakup";
+				public static final String JEWEL_DESCRIPTION = "jewelDescription";
+				/*
+				 * <!-- //TPR-3752 Jewel Heading Added -->
+				 */public static final String DISPLAYCONFIGATTR = "displayconfigattr";
+
+				//ends
+
 
 				//TISPRM-56
 				public static final String AVAILABILITY = "availibility";

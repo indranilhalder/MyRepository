@@ -575,6 +575,64 @@ $(document).ready(function(){
 				// $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
 	/*----END of  PDP tabs -----*/
+
+	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+			 
+			 
+			 $(".FineJewellery .nav.pdp, .FashionJewellery .nav.pdp").owlCarousel({
+					items: 5,
+					loop: false,
+					nav: false,
+					dots: false,
+					navText: [],
+					touchDrag: true,
+					mouseDrag: true,
+				    responsive: {
+						0 : {
+						  items: 2,
+						  autoHeight: false,
+						  stagePadding: 0,
+						},
+						480 : {
+						   items: 2,
+						  autoHeight: false,
+						},
+						768 : {
+						   items: 4,
+						   autoHeight: false,
+						   stagePadding: 0,
+						},
+						980 : {
+						   items: 4,
+						},
+						1024 : {
+						   items: 4,
+						}
+					 }
+				});
+			 
+	/*----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+			 
+	/*----Start of  PDP tabs for Jewellery -----*/
+			 
+			 if($(".tabs-block").hasClass("FineJewellery") || $(".tabs-block").hasClass("FashionJewellery")){			 
+				 $(".tabs-block.FineJewellery .nav.pdp .owl-item, .tabs-block.FashionJewellery .nav.pdp .owl-item").on("click",function(e) {
+					 var count = $(".tabs-block .nav.pdp .owl-item").index(this);
+					 $(".tabs-block .nav.pdp .owl-item").removeClass("current");
+					 $(this).addClass("current");
+					 $("ul.tabs.pdp>li").removeClass("active");
+					 $("ul.tabs.pdp>li").eq(count).addClass("active");
+			    }); 
+			 } else {
+				 $(".tabs-block .nav.pdp li").on("click",function(e) {
+	 				$("ul.nav.pdp li").removeClass('active'); 
+	 				$(this).addClass('active');
+	 				var count = $(this).index();
+	 				$("ul.tabs.pdp>li").removeClass('active'); 
+	 				$("ul.tabs.pdp>li").eq(count).addClass("active");
+			    }); 
+			 }
+	/*----END of  PDP tabs for Jewellery -----*/
 	
 	/*----Start of  SHop by brand A_E hover functionality  -----*/
 			 $(".range").hide();
@@ -3676,4 +3734,3 @@ $(window).on("load resize click",function(){
 	},500);
 });
 /* end change of PRDI-92 */
-

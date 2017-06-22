@@ -404,8 +404,7 @@
 															</button>
 														</span>
 													</c:if>
-                                                    
-													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')}">
+													<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Electronics')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Watches')||(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'TravelAndLuggage') }">
 														<span>
 															<button id="addToCartButtonwl" type="${buttonType}"
 																class="blue button js-add-to-cart_wl">
@@ -413,7 +412,8 @@
 															</button>
 														</span>
 														</c:if>
-														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')}">
+														 <!-- Add to cart from wishlist added for Jewellery -->
+														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')|| (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FineJewellery') || (empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'FashionJewellery')}">
 														<span id="addToCartButtonId" style="display: none">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"

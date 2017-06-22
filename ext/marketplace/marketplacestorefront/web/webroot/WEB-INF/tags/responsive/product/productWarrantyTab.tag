@@ -11,10 +11,19 @@
 
 
 <div class="tabs_warranty">
-<c:forEach items="${Warranty}" var="warranty">
-  				<ul>
-  					<li>${warranty}</li>
-  				</ul>
-  			</c:forEach>
-	
+
+<c:choose>
+	<c:when test = "${product.rootCategory!='FineJewellery'}">
+		<c:forEach items="${Warranty}" var="warranty">
+			<ul>
+				<li>${warranty}</li>
+			</ul>
+		</c:forEach>	
+	</c:when>
+	<c:otherwise>
+		<c:forEach items="${Warranty}" var="warranty">
+			<p>${warranty}</p>
+		</c:forEach>	
+	</c:otherwise>
+</c:choose>
 </div>

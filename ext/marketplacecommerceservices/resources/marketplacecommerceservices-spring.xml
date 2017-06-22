@@ -817,6 +817,18 @@
 	<bean id="sizeGuideService"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.SizeGuideServiceImpl">
 	</bean>
+	
+	<!-- for price breakup -->
+	<bean id="priceBreakupService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.PriceBreakupServiceImpl">
+		<property name="jewelleryAttrMapping" ref="jewelleryAttrMapping"></property>
+	</bean>
+	
+	<bean id="priceBreakupDao"
+		class="com.tisl.mpl.marketplacecommerceservices.daos.impl.PriceBreakupDaoImpl">
+	</bean>
+	<!-- for price breakup -->
+	
 	<!-- for merchant master -->
 	<bean id="merchantmaster" class="com.tisl.mpl.integration.job.MerchantMaster"
 		autowire="byName" />
@@ -1975,8 +1987,7 @@
 			autowire="byName">
 		<property name="modelService" ref="modelService" />
 	</bean>
-	
-	
+
 	<!-- Old Cron Job Deletion Logic : Added as part of PT FIX-->
 	<alias name="mplcleanupCronJobsPerformable" alias="cleanupCronJobsPerformable" />
 	<bean id="mplcleanupCronJobsPerformable" parent="abstractGenericMaintenanceJobPerformable">
@@ -2014,6 +2025,7 @@
    </bean>
   <!--  mrupee changes ends -->
 	<!-- Old Cron Job Deletion Logic ends: -->
+
 
 	<!-- TPR-1285 Start -->
 	<alias name="mplProductPageSiteMapGenerator" alias="productPageSiteMapGenerator"/>
@@ -2095,6 +2107,73 @@
 
 
 
+
+	<!-- Jewellery Changes Start --> 
+	
+	<alias name="mplJewelleryService" alias="mplJewelleryService" />
+	<bean id="mplJewelleryService" class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplJewelleryServiceImpl"
+			autowire="byName">
+	</bean>
+	
+	
+	<alias name="mplJewelleryDao" alias="mplJewelleryDao" />
+	<bean id="mplJewelleryDao" class="com.tisl.mpl.marketplacecommerceservices.daos.impl.MplJewelleryDaoImpl"
+			autowire="byName">
+	</bean>
+	
+	<bean id="mplJewelleryUtility" class="com.tisl.mpl.util.MplJewelleryUtility">
+		<property name="mplJewelleryService" ref="mplJewelleryService" />
+	</bean>
+	<bean id="MplleadVariantWeightService"
+		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplleadVariantWeightServiceImpl" />
+	<!-- Jewellery Changes End -->
+
+	<!-- added for jewellery attribute mapping starts -->
+	
+	<alias name="defaultJewelleryAttrMapping" alias="jewelleryAttrMapping" />
+	<util:map id="defaultJewelleryAttrMapping" map-class="java.util.HashMap">
+		<entry key = "goldValue" 	value = "Gold" ></entry>
+		<entry key = "silverValue" 	value = "Silver" ></entry>
+		<entry key = "platinumValue" 	value = "Platinum" ></entry>
+		<entry key = "solitaireValue" 	value = "Solitaire" ></entry>
+		<entry key = "diamond"    	value = "Diamond" ></entry>
+		<entry key = "gemstone"   	value = "Gems Stone" ></entry>
+		<entry key = "makingcharge" value = "Making Charge" ></entry>
+		<entry key = "wastagetax" 	value = "Taxes And Duties" ></entry>				
+
+	</util:map>
+	<!-- //TPR-3752 Jewel Heading Added -->
+	<!-- added for jewellery attribute mapping ends -->
+	
+	<alias name="defaultJewelleryDescMapping" alias="jewelleryDescMapping" />
+	<util:map id="defaultJewelleryDescMapping" map-class="java.util.HashMap">
+	    <entry key ="stonefinejwlry1" 	value = "stonesizefinejwlry1" ></entry>
+		<entry key = "stonefinejwlry2" 	value = "stonesizefinejwlry2" ></entry>
+		<entry key = "stonefinejwlry3" 	value = "stonesizefinejwlry3" ></entry>
+		<entry key = "stonefinejwlry4" 	value = "stonesizefinejwlry4" ></entry>	
+		<entry key = "stonefinejwlry5" 	value = "stonesizefinejwlry5" ></entry>
+		<entry key = "stonefinejwlry6" 	value = "stonesizefinejwlry6" ></entry>	
+		<entry key = "stonefinejwlry7" 	value = "stonesizefinejwlry7" ></entry>		
+		<entry key = "stonefinejwlry8" 	value = "stonesizefinejwlry8" ></entry>	
+		<entry key = "stonefinejwlry9"	value = "stonesizefinejwlry9" ></entry>
+		<entry key = "stonefinejwlry10" value = "stonesizefinejwlry10"></entry>	
+		<entry key = "metalfinejwlry" value = "metalweightfinejwlry"  ></entry>	
+		<entry key= "diamond" value= "diamondweightfinejwlry1,diamondweightfinejwlry2,diamondweightfinejwlry3,diamondweightfinejwlry4,diamondweightfinejwlry5,diamondweightfinejwlry6,diamondweightfinejwlry7"></entry>
+				
+					
+	</util:map>
+	
+	
+	<!-- For pancard details -->
+	
+	<bean id="mplPancardServiceImpl" class="com.tisl.mpl.marketplacecommerceservices.services.pancard.impl.MplPancardServiceImpl">
+	</bean>
+	
+	
+	<bean id="mplPancardDao" class="com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl.MplPancardDaoImpl">
+	</bean>
+
+
    <alias name="defaultmplReturnDao" alias="mplReturnDao"/>
 <bean class="com.tisl.mpl.returns.dao.impl.MplReturnDaoImpl" id="defaultmplReturnDao"></bean>
 
@@ -2131,6 +2210,7 @@
 		<property name="pickupStrategy" ref="pickupStrategy"/>
 		<property name="stockLevelProductStrategy" ref="stockLevelProductID"/>
 		<property name="storePickupDao" ref="storePickupDao"/>
+
 	</bean>
 	<bean id="mplDeliveryAddressServiceImpl"
 		class="com.tisl.mpl.marketplacecommerceservices.service.impl.MplDeliveryAddressServiceImpl"/>

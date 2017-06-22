@@ -724,6 +724,9 @@
 							<attribute name="invoice" />
 							<attribute name="returnAWBNum" />
 							<attribute name="returnCarrier" />
+							<!-- TPR-3809-->							
+							<attribute name="forwardSealNum" />
+							<attribute name="reverseSealNum" /> 
 						</listlayout>
 					</section>
 				</tab>
@@ -4243,7 +4246,6 @@
 		 </organizer>
 	</type>
 
-
  <!-- TPR-1083 Start -->
 	<explorertree>
 	
@@ -4518,7 +4520,6 @@
 	</type> 
  
  <!-- Added for TPR-4461 -->
-
 <type name="OrderShortUrlInfo" mode="append">
 	<organizer>
 		<search mode="replace">
@@ -4564,5 +4565,4 @@
 		</editor>
 	</organizer>
 </type>	
-
 </configuration>

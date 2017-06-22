@@ -17,6 +17,9 @@ ACC.quickview = {
 		// changes a value in a hidden form field in order
 		// to trigger a buffer update in a screen reader
 		$('#accesibility_refreshScreenReaderBufferField').attr('value', new Date().getTime());
+		$("#showquick").click(function() {
+			$("#showPriceBreakupquick").slideToggle("fast");
+		})
 	},
 	
 
@@ -323,6 +326,73 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				$("#sellerNameIdQuick").html(sellerName);
 				getRichAttributeQuickView(sellerName);
 				
+
+				
+				
+
+				/* PRICE BREAKUP STARTS HERE */
+				
+				/*$("#showPrice").show();*/
+				if(data['displayconfigattr'] == "Yes"){
+					$("#showPricequick").show();
+				}else if(data['displayconfigattr'] == "No"){
+					$("#showPricequick").hide();
+				}else{
+					$("#showPricequick").hide();
+				}
+				
+				var priceBreakupForPDP = data['priceBreakup'];
+					$.each(priceBreakupForPDP,function(key,value) {	
+						var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
+							$("#showPriceBreakupquick").append(pricebreakuplist);
+							
+						
+				});
+				
+				
+				
+				/* PRICE BREAKUP ENDS HERE */
+					
+					
+					/* JewelleryDetail STARTS HERE */
+					try{
+					var jwelQuick = $("#jwelQuick").val();
+					if (jwelQuick == "FineJewellery"){
+						var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
+						var j=0;
+						var jewelDetailslistForQuick = data['jewelDescription'];
+						$.each(jewelDetailslistForQuick,function(key,value) {	
+									jewelInfoKey[j] = key	;
+									jewelInfoValue[j] = value;
+									j++;
+							});
+					if (propQuick){
+						var property = propQuick.split(',');
+						var keyLOV = '' , valueLOV= '';
+						for (var i=0; i<property.length; i++){
+							var lovSplit = property[i].split("=");
+							valueLOV = lovSplit[lovSplit.length-1];
+							keyLOV = lovSplit[lovSplit.length-2];
+							jewelHeadingKey[i] = keyLOV;
+							jewelHeadingValue[i] = valueLOV;
+						}
+						for (var i=0; i<property.length; i++){
+							if (jewelHeadingValue[i] == "null"){
+								$(".key-labelquick").append('<span>'+ jewelHeadingKey[i] +'</span>')
+							}
+							else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
+								var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
+								$(".key-labelquick").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+								}
+							}
+						}
+					}
+				}
+				catch(err)
+					{				
+				     	}
+				/* JewelleryDetail ENDS HERE */
+
 			},
 			complete: function() {
 				if($('#pageType').val() != "/compare"){
@@ -344,6 +414,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					var discountPercentage = savingsOnProduct+"%";
 					quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discount,discountPercentage,stock);
 				}
+
 			}
 		});	
 		
@@ -726,6 +797,8 @@ function selectWishlist_quick(i) {
 			}
 
 			else if (data == "" || data == []) {
+			
+		
 				alert("Login 2");
 				loadDefaultWishListName_quick();
 
@@ -777,7 +850,7 @@ function openPop_quick(ussidfromSeller){
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
-    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage'){
     	sizeSelected=false;
     }
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
@@ -790,7 +863,7 @@ function openPop_quick(ussidfromSeller){
 		},3000);
 	}
 	else {
-			
+	 		
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
@@ -1026,6 +1099,25 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
+	if($("#quickViewVariant li").length > 0){
+		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage') {
+			// alert("Please select")
+			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			 				$("#addToCartFormQuickTitle").show();
+			  				$("#addToCartFormQuickTitle").fadeOut(5000);
+	 	    return false;
+	     }
+		}
+	/*buynow in quickview for Jewellery  added*/
+	 if($("#quickViewjewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='TravelAndLuggage') {
+	//	alert("please select size !"); 	 
+		$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		$("#addToCartFormQuickTitle").show();
+		$("#addToCartFormQuickTitle").fadeOut(5000);
+	    return false;
+	 }
+	 	
+		 ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
 	
 	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' ){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
@@ -1036,6 +1128,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
  }else{			 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
 }
+
 });
 /*End of quickview Emi*/
 /*TPR-924*/
@@ -1113,3 +1206,49 @@ function LoadWishLists(ussid, data, productCode) {
 	
 
 }
+/*quickview dropdown added for Jewellery*/
+$(document).on('change','#quickViewjewelleryvariant',function(event){
+	
+	//console.log('here');
+	 var target = $(this).val();
+	//	console.log(target);
+		var titleHeader = $('#quickViewTitle').html();
+		$.colorbox({
+            //iframe:true,
+            href:target,
+            close:'<span class="glyphicon glyphicon-remove"></span>',
+			title: titleHeader,
+			maxWidth:"100%",
+			height:"565px",
+			onComplete: function ()
+			{
+				//TPR-690
+				var productCode = productCodeQuickView;
+				utag.link({
+					link_obj: this, 
+					link_text: 'quick_view_click' ,
+					event_type : 'quick_view_click', 
+					product_sku_quick_view : productCode
+				});
+				
+				//TPR-690 ends
+				quickviewGallery();
+				ACC.quickview.refreshScreenReaderBuffer();
+				ACC.quickview.initQuickviewLightbox();
+				ACC.ratingstars.bindRatingStars($(".quick-view-stars"));
+			},
+
+			onClosed: function ()			{
+				ACC.quickview.refreshScreenReaderBuffer();
+				if((window.top==window) && $("body").hasClass("page-cartPage")) {
+				    // You're not in a frame, so you reload the site.
+				    window.setTimeout('location.reload()'); 
+			     }
+			}
+        });
+});
+$(document).ready(function() {
+	$("#showquick").click(function() {
+		$("#showPriceBreakupquick").slideToggle("fast");
+	});
+});

@@ -26,7 +26,7 @@ var buyboxskuId='';
 </script>
 
 <!-- Displaying different tabs in PDP page -->
-
+<!-- About Product, reviewsAndRatings and returnsAndRefunds Tab added for jewellery change  -->
 <c:set var="validTabs" value="${VALID_TABS}" />
 <div class="nav-wrapper">
 <ul class="nav pdp productNav">
@@ -52,6 +52,11 @@ var buyboxskuId='';
 
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
+	 <c:if test="${fn:contains(validTabs, 'aboutproduct')}">
+			<li id="tabs_aboutProduct" class="active">
+				<spring:theme code="product.product.aboutProduct" />
+			</li>
+		</c:if>
 <!-- 	TISPRD-7604 fix start -->
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li id="tabs_styleNotes" class="active">			<!-- added class 'active' PRDI-96 -->
@@ -59,6 +64,16 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 <!-- 	TISPRD-7604 fix end -->
+	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
+			<li id="tabs_styleNotes">
+				 <spring:theme code="product.product.reviewsAndRatings" />
+			</li>
+		</c:if>
+		<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+			<li id="tabs_styleNotes">
+				 <spring:theme code="product.product.returnsAndRefunds" />
+			</li>
+		</c:if>
 <!-- moved as part of PRDI-96 start -->
 <c:if test="${fn:contains(validTabs, 'details')}">
 		<li id="tabs_details">
@@ -103,9 +118,24 @@ var buyboxskuId='';
 	</c:if> --%>
 	<!-- commented as part of PRDI-96 end -->
 	<!-- INC144313814 fix end -->
+	<c:if test="${fn:contains(validTabs, 'aboutproduct')}">
+		<li id="about" class="tab-content active">
+			<product:productAboutProductTab product="${product}" />
+		</li>
+	</c:if>
 	<c:if test="${fn:contains(validTabs, 'stylenote')}">
 		<li  class="active">				<!-- added class 'active' PRDI-96 -->
 			<product:productStyleNotesTab product="${product}" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
+		<li id="review" class="tab-content">
+			<product:productReveiwsAndRatings product="${product}" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
+		<li id="return" class="tab-content">
+			<product:productReturnsAndRefunds product="${product}" />
 		</li>
 	</c:if>
 	<!-- moved as part of PRDI-96 start -->

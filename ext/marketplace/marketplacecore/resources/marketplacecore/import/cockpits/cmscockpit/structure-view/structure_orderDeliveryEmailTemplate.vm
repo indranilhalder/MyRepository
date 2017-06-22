@@ -71,6 +71,24 @@
 					<cockpit code="fast" />
 				</td>
 			</tr>
+			
+			
+			<tr>
+			<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
+				<cockpit code="ForwardSeal" />
+			</td>
+		    </tr>
+		    
+		    
+		    <tr>
+			<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
+				<cockpit code="ReverseSeal" />
+			</td>
+		    </tr>
+			
+			
+			
+			
 			<tr>
 				<td colspan="6" width="30%" style="vertical-align:top;" class="structureViewSection">
 					<cockpit code="OrderConfirmationBannerTwo" />

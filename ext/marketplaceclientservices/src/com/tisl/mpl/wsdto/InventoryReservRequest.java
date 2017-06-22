@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode","transportMode","ServiceableSlaves"})
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode","isJewellery","transportMode","ServiceableSlaves"})
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -34,15 +34,14 @@ public class InventoryReservRequest
 	private String deliveryMode;
 	@XmlElement(name = "quantity")
 	private String quantity;
-	
+	@XmlElement(name = "isJewellery")
+	private boolean isJewellery;	
 	@XmlElement(name = "ServiceableSlaves")
 	private List<ServiceableSlavesDTO> ServiceableSlaves;
 	
 	@XmlElement(name = "transportMode")
 	private String transportMode;
 	
-	
-
 	/**
 	 * @return the uSSID
 	 */
@@ -170,13 +169,28 @@ public class InventoryReservRequest
 	}
 
 	/**
+	 * @return the isJewellery
+	 */
+	public boolean isJewellery()
+	{
+		return isJewellery;
+	}
+
+	/**
+	 * @param isJewellery
+	 *           the isJewellery to set
+	 */
+	public void setJewellery(final boolean isJewellery)
+	{
+		this.isJewellery = isJewellery;
+	}
+    /**
 	 * @return the serviceableSlaves
 	 */
 	public List<ServiceableSlavesDTO> getServiceableSlaves()
 	{
 		return ServiceableSlaves;
 	}
-
 	/**
 	 * @param serviceableSlaves the serviceableSlaves to set
 	 */

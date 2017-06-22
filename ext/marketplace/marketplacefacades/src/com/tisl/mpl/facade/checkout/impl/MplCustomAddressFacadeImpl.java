@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,7 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 
@@ -76,11 +80,15 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	@Autowired
 	private SessionService sessionService;
 
 	private static final Logger LOG = Logger.getLogger(MplCustomAddressFacadeImpl.class);
+
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	/**
 	 * @return the cartFacade
@@ -724,6 +732,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
 		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
 				: Integer.toString(0);
+
 		List<PinCodeResponseData> pincoderesponseDataList = null;
 		pincoderesponseDataList = sessionService
 				.getAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
@@ -741,7 +750,19 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 							.getDeliveryCost(deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					//for fine jewellery
+					SellerInformationModel sellerInfoModel = null;
+					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(sellerArticleSKU);
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					}
+
 					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
 							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 					{
@@ -785,7 +806,6 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						 *
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
-
 					}
 
 					entry.setMplDeliveryMode(mplZoneDeliveryModeValueModel);
@@ -965,7 +985,7 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCustomAddressFacade#getDeliveryAddresses(de.hybris.platform.commercefacades.user
 	 * .data.AddressData)

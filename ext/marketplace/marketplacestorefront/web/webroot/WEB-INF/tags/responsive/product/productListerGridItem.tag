@@ -95,6 +95,9 @@
  <!--   tpr-250 CHANGES -->
 <input type ="hidden"  id="ussidVal" value="${ussidVal}"/>
  <!--   tpr-250 CHANGES -->
+<!--TPR-1886 | JEWELLERY  -->
+ <input type ="hidden"  id="priceRangeJewellery" value='${product.priceRangeJewellery}'/>
+
 
 <!-- <input type ="hidden"  id="productPromotion" value='${product.displayPromotion}'/> -->
 
@@ -262,7 +265,7 @@
 						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
-							                          || product.productCategoryType eq 'Footwear') }">
+							                          || product.productCategoryType eq 'Footwear'|| product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery') }">
 
 
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
@@ -381,8 +384,13 @@
 				</c:if>
 
 					<ycommerce:testId code="product_productPrice">
-				<!-- tpr-250 CHANGES -->
+				<!-- tpr-250 CHANGES --><!-- TPR-1886 | jewellery   -->
 				<c:choose>
+						<c:when test="${not empty product.priceRangeJewellery}">
+							<div class="price">
+								${product.priceRangeJewellery}
+							</div>
+						</c:when>
 				<c:when test="${fn:contains(currentQuery, 'sellerId')|| not empty msiteSellerId}">
 				<c:if
 						test="${priceValue.value > 0 && (mrpPriceValue.value > priceValue.value)}">

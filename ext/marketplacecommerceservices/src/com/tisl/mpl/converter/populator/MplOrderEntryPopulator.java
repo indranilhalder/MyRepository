@@ -12,6 +12,7 @@ import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData;
 import de.hybris.platform.commerceservices.strategies.ModifiableChecker;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
@@ -23,6 +24,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Required;
@@ -32,6 +35,8 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
+import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -45,6 +50,10 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	private ModifiableChecker<AbstractOrderEntryModel> entryOrderChecker;
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 	private Converter<ConsignmentEntryModel, ConsignmentEntryData> consignmentConverter;
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	@Override
 	protected PriceDataFactory getPriceDataFactory()
@@ -135,44 +144,41 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
 			addSellerInformation(source, target);
+			populateSellerInfo(source, target);
 			addDeliverySlots(source, target);
-			//TPR-1083 Start
-			addExchange(source, target);
-			//TPR-1083 End
+
 		}
 		target.setIsRefundable(source.isIsRefundable());
 	}
+
 
 	/**
 	 * @param source
 	 * @param target
 	 */
 
-	private void addDeliverySlots(final AbstractOrderEntryModel source, final OrderEntryData target)
+	private void addDeliverySlots(AbstractOrderEntryModel source, OrderEntryData target)
 	{
 		if (null != source.getScheduledDeliveryCharge())
 		{
 			target.setScheduledDeliveryCharge(source.getScheduledDeliveryCharge());
 		}
-		if (null != source.getEdScheduledDate())
-		{
+		if(null != source.getEdScheduledDate()){
 			target.setSelectedDeliverySlotDate(source.getEdScheduledDate());
 		}
-		if (null != source.getTimeSlotFrom())
-		{
+		if(null != source.getTimeSlotFrom()){
 			target.setTimeSlotFrom(source.getTimeSlotFrom());
 		}
-		if (null != source.getTimeSlotTo())
-		{
+		if(null != source.getTimeSlotTo()){
 			target.setTimeSlotTo(source.getTimeSlotTo());
 		}
-
+		
 		if (StringUtils.isNotEmpty(source.getSddDateBetween()))
 		{
 			target.setEddDateBetWeen(source.getSddDateBetween());
 		}
 	}
-
+	
 	/**
 	 * @param source
 	 * @param target
@@ -376,31 +382,48 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	}
 
 
-	//	@Override
-	//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
-	//	{
-	//		final ProductModel productModel = source.getProduct();
-	//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
-	//
-	//		// TO-DO
-	//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
-	//		{
-	//			if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
-	//			{
-	//				final SellerInformationData sellerInfoData = new SellerInformationData();
-	//				sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-	//				sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-	//				sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-	//				target.setSelectedSellerInformation(sellerInfoData);
-	//				break;
-	//			}
-	//		}
-	//	}
+//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+//	{
+//		final ProductModel productModel = source.getProduct();
+//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+//
+//		// TO-DO
+//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+//		{
+//			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+//			{
+//				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+//						.getSelectedUSSID());
+//
+//				if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+//				{
+//					final SellerInformationData sellerInfoData = new SellerInformationData();
+//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+//					target.setSelectedSellerInformation(sellerInfoData);
+//					break;
+//				}
+//			}
+//			else
+//			{
+//				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
+//				{
+//					final SellerInformationData sellerInfoData = new SellerInformationData();
+//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+//					target.setSelectedSellerInformation(sellerInfoData);
+//					break;
+//				}
+//			}
+//		}
+//	}
+//
 
 
 
-
-	@Override
+//	@Override
 	protected void addDeliveryMode(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		if (orderEntry.getMplDeliveryMode() != null)
@@ -501,23 +524,5 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			final Converter<MplZoneDeliveryModeValueModel, MarketplaceDeliveryModeData> mplDeliveryModeConverter)
 	{
 		this.mplDeliveryModeConverter = mplDeliveryModeConverter;
-	}
-
-	/**
-	 * @param source
-	 * @param target
-	 */
-	private void addExchange(final AbstractOrderEntryModel source, final OrderEntryData target)
-	{
-		if (StringUtils.isNotEmpty(source.getExchangeId()))
-		{
-			target.setExchangeApplied(source.getExchangeId());
-		}
-		else
-		{
-			target.setExchangeApplied("");
-		}
-
-
 	}
 }

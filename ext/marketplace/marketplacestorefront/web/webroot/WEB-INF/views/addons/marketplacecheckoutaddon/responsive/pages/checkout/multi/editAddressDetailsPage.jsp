@@ -50,6 +50,7 @@
 					 	 myLen=document.getElementById("address.line1").value.length;
   						$("#myCounter").html((120 - myLen));
   						
+
 					//TISST-13010
 					$(document).ready(function() {
 						showPromotionTag();

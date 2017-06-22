@@ -40,26 +40,28 @@
 			<input type="hidden" value="${status.index}" id="ProductCount">
 		</c:if>
 		<c:url value="${entry.product.url}" var="productUrl" />
-		<input type="hidden" value="${entry.selectedSellerInformation.ussid}"
+		<input type="hidden" value="${entry.selectedUssid}"
 			id=ussid />
 		<input type="hidden" value="${entry.product.code}" id="product" />
 		<input type="hidden" name="hidWishlist" id="hidWishlist">
 
 
-		<li class="item review_order_li" id="entry-${entry.entryNumber}" data-entryNumber="${entry.entryNumber}" data-ussid="${entry.selectedSellerInformation.ussid}">
+		<li class="item review_order_li" id="entry-${entry.entryNumber}" data-entryNumber="${entry.entryNumber}" data-ussid="${entry.selectedUssid}">
 			<ul class="desktop">
 
 				<li class="productItemInfo">
 
 					<div class="product-img">
 
-						<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
-							<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="cartPage" /></a>
+   						<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory != 'FineJewellery'}">
+   							<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="cartPage" /></a>
 						</c:if>
-
-						<c:if
-							test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
-							<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="luxuryCartPage" /></a>
+						<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
+							<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="fineJewelcartPage" /></a>
+						</c:if>
+																	
+					   <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
+					   	<a href="${productUrl}"><product:productPrimaryImage product="${entry.product}" format="luxuryCartPage" /></a>
 						</c:if>
 
 					</div> 
@@ -134,7 +136,7 @@
 								</c:forEach>
 								<ycommerce:testId code="cart_product_removeProduct">
 									<li><a class="review-remove-entry-button"
-										id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}" onclick="ACC.singlePageCheckout.removeCartItem(this,'removeItem');"><span><spring:theme
+										id="removeEntry_${entry.entryNumber}_${entry.selectedUssid}" onclick="ACC.singlePageCheckout.removeCartItem(this,'removeItem');"><span><spring:theme
 													code="cart.remove" /></span></a></li>
 									<li><form:form name="addToCartForm" method="post"
 											action="#" class="mybag-undo-form">
@@ -144,7 +146,7 @@
 												value="${entry.product.code}" />
 											<input type="hidden" name="wishlistNamePost" value="N" />
 											<input type="hidden" name="ussid"
-												value="${entry.selectedSellerInformation.ussid}" />
+												value="${entry.selectedUssid}" />
 											<input type="hidden" name="stock" value="${stock}" />
 											<div class="undo-text-wrapper">
 												<p>
@@ -164,7 +166,7 @@
 								<li><span id="addedMessage" style="display: none"></span> <a
 									class="move-to-wishlist-button cart_move_wishlist"
 									id="moveEntry_${entry.entryNumber}"
-									onclick="openPopFromCart('${entry.entryNumber}','${entry.product.code}','${entry.selectedSellerInformation.ussid}');"
+									onclick="openPopFromCart('${entry.entryNumber}','${entry.product.code}','${entry.selectedUssid}');"
 									data-toggle="popover" data-placement='bottom'><spring:theme
 											code="basket.move.to.wishlist" /></a></li>
 							</c:if>
@@ -408,22 +410,22 @@
 				<c:choose>
 					<c:when test="${entry.giveAway}">
 						<li
-							id="${entry.selectedSellerInformation.ussid}_qty_${entry.giveAway}"
+							id="${entry.selectedUssid}_qty_${entry.giveAway}"
 							class="qty">
 					</c:when>
 					<c:otherwise>
-						<li id="${entry.selectedSellerInformation.ussid}_qty" class="qty">
+						<li id="${entry.selectedUssid}_qty" class="qty">
 					</c:otherwise>
 				</c:choose>
 
 				<c:choose>
 					<c:when test="${entry.giveAway}">
 						<c:set var="updateFormId"
-							value="updateCartForm${entry.selectedSellerInformation.ussid}_${entry.giveAway}" />
+							value="updateCartForm${entry.selectedUssid}_${entry.giveAway}" />
 					</c:when>
 					<c:otherwise>
 						<c:set var="updateFormId"
-							value="updateCartForm${entry.selectedSellerInformation.ussid}" />
+							value="updateCartForm${entry.selectedUssid}" />
 					</c:otherwise>
 				</c:choose>
 	
@@ -451,14 +453,14 @@
 			<c:when test="${entry.giveAway}">
 				<!-- For Freebie item delivery mode will no tbe displayed -->
 				<li
-					id="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}"
+					id="${entry.selectedUssid}_li_${entry.giveAway}"
 					class="delivery freebie-delivery">
-					<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">
+					<ul id="${entry.selectedUssid}_${entry.giveAway}">
 					</ul>
 				</li>
 			</c:when>
 			<c:otherwise>
-				<li id="${entry.selectedSellerInformation.ussid}_li"
+				<li id="${entry.selectedUssid}_li"
 					class="delivery">
 					<p class="mobile-delivery">
 						<spring:theme code="basket.delivery.options" />
@@ -498,7 +500,7 @@
 							<p>${deliveryModeDataVal.description }</p>
 						</c:otherwise>
 					</c:choose>				
-					<ul id="${entry.selectedSellerInformation.ussid}">
+					<ul id="${entry.selectedUssid}">
 					</ul>
 				</li>
 			</c:otherwise>

@@ -100,7 +100,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
+import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -140,9 +140,6 @@ public class CartPageController extends AbstractPageController
 	@Resource(name = "siteConfigService")
 	private SiteConfigService siteConfigService;
 
-	//@Resource(name = "simpleBreadcrumbBuilder")
-	//private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;   //Sonar fix
-
 	@Autowired
 	private WishlistFacade wishlistFacade;
 
@@ -156,7 +153,7 @@ public class CartPageController extends AbstractPageController
 	private UserFacade userFacade;
 
 	@Autowired
-	private MplAccountAddressFacade accountAddressFacade;
+	private AccountAddressFacade accountAddressFacade;
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
@@ -195,6 +192,7 @@ public class CartPageController extends AbstractPageController
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+
 		try
 		{
 
@@ -241,6 +239,12 @@ public class CartPageController extends AbstractPageController
 			 * else { cartModel = getCartService().getSessionCart(); }
 			 */
 
+			//TPR-3780
+			final String flashupdateStatus = (String) model.asMap().get("flashupdateStatus");
+			final String flashtotalCartPriceAsString = (String) model.asMap().get("flashtotalCartPriceAsString");
+			model.addAttribute("priceNotificationUpdateStatus", flashupdateStatus);
+			model.addAttribute("totalCartPriceAsStringStatus", flashtotalCartPriceAsString);
+			//TPR-3780
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
@@ -326,6 +330,7 @@ public class CartPageController extends AbstractPageController
 				//				}
 				getMplCouponFacade().releaseVoucherInCheckout(cartModel); //TISPT-104
 				cartModel = getMplCartFacade().getCalculatedCart(cartModel); /// Cart recalculation method invoked inside this method
+
 				//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
 				//TISST-13010
 
@@ -374,6 +379,14 @@ public class CartPageController extends AbstractPageController
 				if (CollectionUtils.isNotEmpty(quantityConfigurationList))
 				{
 					model.addAttribute("configuredQuantityList", quantityConfigurationList);
+				}
+
+				//added for jewellery
+				final ArrayList<Integer> quantityConfigurationListForJewellery = getMplCartFacade()
+						.getQuantityConfiguratioListforJewellery();
+				if (CollectionUtils.isNotEmpty(quantityConfigurationListForJewellery))
+				{
+					model.addAttribute("configuredQuantityForJewellery", quantityConfigurationListForJewellery);
 				}
 				else
 				{
@@ -431,8 +444,7 @@ public class CartPageController extends AbstractPageController
 			}
 			else
 			{
-
-				prepareDataForPage(model, mplCartFacade.getSessionCartWithEntryOrdering(true));
+				prepareDataForPage(model, new CartData());
 			}
 			// for MSD
 			//TPR-174
@@ -1066,10 +1078,10 @@ public class CartPageController extends AbstractPageController
 			{
 				final String defaultPinCodeId = fetchPincode(isUserAnym);
 
-				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-
-				//if (getCartService().hasSessionCart()) TISPT-169
-				if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid()) && getCartService().hasSessionCart())
+				//final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true); TISPT-169
+				final CartModel cartModel = getCartService().getSessionCart();
+				//if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid())) TISPT-169
+				if (getCartService().hasSessionCart())
 				{
 					final Map<String, String> ussidMap = new HashMap<String, String>();
 					Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
@@ -1081,14 +1093,12 @@ public class CartPageController extends AbstractPageController
 					LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
 
 					//final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists(); TISPT-179 Point 1
-					//TISPT-169
-					final CartModel cartModel = getCartService().getSessionCart();
 					final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlistsForCustomer(cartModel.getUser());
 					//TISPT-179 Point 3
 					//entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId,cartModel); // Code moved to Facade and Impl
 
 					final Tuple2<?, ?> wishListPincodeObject = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity,
-							allWishlists, defaultPinCodeId, cartData);
+							allWishlists, defaultPinCodeId, getMplCartFacade().getSessionCartWithEntryOrdering(true));
 					entryModels = (List<Wishlist2EntryModel>) wishListPincodeObject.getFirst();
 
 					for (final Wishlist2EntryModel entryModel : entryModels)
@@ -1097,17 +1107,10 @@ public class CartPageController extends AbstractPageController
 						//TISEE-6376
 						if (entryModel.getProduct() != null)
 						{
-							/*
-							 * ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(),
-							 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
-							 * ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.PROMOTIONS,
-							 * ProductOption.STOCK, ProductOption.REVIEW, ProductOption.DELIVERY_MODE_AVAILABILITY));
-							 */
-
 							ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(), Arrays.asList(
-									ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-									ProductOption.SELLER, ProductOption.VARIANT_FULL));
-
+									ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY, ProductOption.DESCRIPTION,
+									ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.STOCK, ProductOption.REVIEW,
+									ProductOption.DELIVERY_MODE_AVAILABILITY));
 							if (!entryModel.getSizeSelected().booleanValue())
 							{
 								productData.setSize(StringUtils.EMPTY);
@@ -1146,9 +1149,9 @@ public class CartPageController extends AbstractPageController
 							}
 
 							//TISPT-169
-							for (final OrderEntryData cart : cartData.getEntries())
+							for (final AbstractOrderEntryModel cart : cartModel.getEntries())
 							{
-								if ((cart.getSelectedUssid().equals(entryModel.getUssid())))
+								if ((cart.getSelectedUSSID().equals(entryModel.getUssid())))
 								{
 									flag = false;
 									break;
@@ -1326,6 +1329,7 @@ public class CartPageController extends AbstractPageController
 		}
 		//TISPT-174
 		//populateTealiumData(model, cartData);
+		//merge changes of tcs_dev_master and jewellery
 		//final CartModel cartModel = getCartService().getSessionCart();
 		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 	}
@@ -1937,8 +1941,8 @@ public class CartPageController extends AbstractPageController
 
 				if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
 				{
-
-					getMplCartFacade().getCalculatedCart(getCartService().getSessionCart());
+					final CartModel cartModel = getCartService().getSessionCart();
+					getMplCartFacade().getCalculatedCart(cartModel);
 					cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 					jsonObject.put("cartData", cartData);
 					jsonObject.put("cartEntries", cartData.getEntries());

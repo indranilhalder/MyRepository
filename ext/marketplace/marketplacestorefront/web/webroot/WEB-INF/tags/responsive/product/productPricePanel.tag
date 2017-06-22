@@ -39,6 +39,31 @@
 		  <span></span>
 	</p>	
 	<br>
+
+	<!-- TPR-3780 STARTS HERE -->
+	<c:if test="${product.rootCategory=='FineJewellery' }">										
+	    <p class="disclaimer-txt more">
+	    	<spring:theme code="cart.price.disclaimer"/>
+	    </p>
+	</c:if>	
+	     
+		                					
+	<!-- TPR-3780 ENDS HERE -->	
+	
+	
+	<%--for price breakup(TPR-3752) --%>
+
+	 <%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
+		<div id = "showPrice">
+		 <p id = "show" class="pricebreakup-link"> </p>
+		</div>
+	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul>
+
+	 <%-- </c:if>  --%>
+	
+	<%--for price breakup(TPR-3752) --%>
+	
+	
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		
 	<input type="hidden" id="currency-for-mad" value="${product.productMRP.currencyIso}"/>

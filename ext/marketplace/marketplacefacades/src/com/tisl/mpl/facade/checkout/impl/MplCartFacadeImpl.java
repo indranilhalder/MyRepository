@@ -29,6 +29,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartRestorationExceptio
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.converters.Converters;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -107,6 +108,7 @@ import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
@@ -140,6 +142,7 @@ import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacade
 {
 	private static final Logger LOG = Logger.getLogger(MplCartFacadeImpl.class);
+	private static final String FINEJEWELLERY = "FineJewellery";
 	private ProductService productService;
 	private CartService cartService;
 	private MplCommerceCartService mplCommerceCartService;
@@ -189,6 +192,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	@Autowired
 	private MplConfigService mplConfigService;
@@ -347,6 +353,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 				for (final AbstractOrderEntryModel abstractOrderEntryModel : cartEntryModels)
 				{
+					orderEntryToUssidMap.put(abstractOrderEntryModel.getEntryNumber().toString(),
+							abstractOrderEntryModel.getSelectedUSSID());
+
 					if (null != abstractOrderEntryModel.getSelectedUSSID() && !abstractOrderEntryModel.getSelectedUSSID().isEmpty())
 					{
 						final String ussid = abstractOrderEntryModel.getSelectedUSSID();
@@ -390,6 +399,21 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									LOG.debug("got seller information data for cart line item number " + orderEntryData.getEntryNumber()
 											+ "seller name " + sellerInformationData.getSellername());
 									orderEntryData.setSelectedSellerInformation(sellerInformationData);
+								}
+								else if (FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+								{
+									final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+											.getJewelleryInfoByUssid(entryNumber.getValue());
+									if (CollectionUtils.isNotEmpty(jewelleryInfo))
+									{
+										final JewelleryInformationModel infoModel = jewelleryInfo.get(0);
+										if (infoModel.getPCMUSSID().equalsIgnoreCase(sellerInformationData.getUssid()))
+										{
+											LOG.debug("got seller information data for cart line Jewellery item :"
+													+ orderEntryData.getEntryNumber() + "seller name " + sellerInformationData.getSellername());
+											orderEntryData.setSelectedSellerInformation(sellerInformationData);
+										}
+									}
 								}
 							}
 						}
@@ -1113,16 +1137,22 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			throws EtailNonBusinessExceptions
 	{
 		//List<PinCodeResponseData> pinCodeResponseData = null;
+
 		final List<PincodeServiceData> pincodeServiceReqDataList = new ArrayList<PincodeServiceData>();
 		List<AbstractOrderEntryModel> cartEntryList = null;
+
+
+
 
 		final LocationDTO dto = new LocationDTO();
 		Location myLocation = null;
 		double configurableRadius = 0;
 		try
+
 		{
 			final PincodeModel pinCodeModelObj = pincodeService.getLatAndLongForPincode(pincode);
 			if (null != pinCodeModelObj)
+
 			{
 				final String configRadius = mplConfigService.getConfigValueById(MarketplaceFacadesConstants.CONFIGURABLE_RADIUS);
 				configurableRadius = Double.parseDouble(configRadius);
@@ -1134,13 +1164,17 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				LOG.debug("Selected Location for Longitude:" + myLocation.getGPS().getDecimalLongitude());
 			}
 			else
+
 			{
 				return null;
+
 			}
 		}
 		catch (final Exception e)
+
 		{
 			LOG.error("configurableRadius values is empty please add radius property in properties file " + e);
+
 		}
 
 		//Duplicate cart Fix
@@ -1152,6 +1186,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 		for (final OrderEntryData entryData : cartData.getEntries())
 		{
+
+
 
 			if (!entryData.isGiveAway())
 			{
@@ -1232,9 +1268,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						LOG.debug("getOMSPincodeResponseData : Seller id is null or empty for product selected");
 					}
 
-					if (StringUtils.isNotEmpty(sellerData.getUssid()))
+
+					/*
+					 * if (StringUtils.isNotEmpty(sellerData.getUssid())) {
+					 * pincodeServiceData.setUssid(sellerData.getUssid()); }
+					 */
+					if (StringUtils.isNotEmpty(entryData.getSelectedUssid()))
 					{
-						pincodeServiceData.setUssid(sellerData.getUssid());
+						pincodeServiceData.setUssid(entryData.getSelectedUssid());
 					}
 					else
 					{
@@ -1390,7 +1431,129 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	}
 
+	@Override
+	public List<PinCodeResponseData> getOMSPincodeResponseData(final String pincode, final CartData cartData,
+			final OrderEntryData entryData) throws EtailNonBusinessExceptions
+	{
+		List<PinCodeResponseData> pinCodeResponseData = null;
+		final List<PincodeServiceData> pincodeServiceReqDataList = new ArrayList<PincodeServiceData>();
+		if (!entryData.isGiveAway())
+		{
+			final PincodeServiceData pincodeServiceData = new PincodeServiceData();
+			pincodeServiceData.setProductCode(entryData.getProduct().getCode());
+			final SellerInformationData sellerData = entryData.getSelectedSellerInformation();
+			if (sellerData != null)
+			{
+				if (StringUtils.isNotEmpty(sellerData.getFullfillment()))
+				{
+					final String globalCodeFulfilmentType = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getFullfillment()
 
+					.toUpperCase());
+					if (StringUtils.isNotEmpty(globalCodeFulfilmentType))
+					{
+						pincodeServiceData.setFullFillmentType(globalCodeFulfilmentType.toUpperCase());
+					}
+					else
+					{
+						LOG.debug("getOMSPincodeResponseData : GLOBALCONSTANTSMAP fulfilement type not found");
+					}
+				}
+				else
+				{
+					LOG.debug("getOMSPincodeResponseData : Fullfillment is null or empty for product selected");
+				}
+
+				if (StringUtils.isNotEmpty(sellerData.getShippingMode()))
+				{
+					final String globalCodeShippingMode = MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(sellerData.getShippingMode()
+							.toUpperCase());
+					if (StringUtils.isNotEmpty(globalCodeShippingMode))
+					{
+						pincodeServiceData.setTransportMode(globalCodeShippingMode.toUpperCase());
+					}
+					else
+					{
+						LOG.debug("getOMSPincodeResponseData : GLOBALCONSTANTSMAP Transport mode not found");
+					}
+				}
+				else
+				{
+					LOG.debug("getOMSPincodeResponseData : ShippingMode is null or empty for product selected");
+				}
+
+				if (StringUtils.isNotEmpty(sellerData.getSellerID()))
+				{
+					pincodeServiceData.setSellerId(sellerData.getSellerID());
+				}
+				else
+				{
+					LOG.debug("getOMSPincodeResponseData : Seller id is null or empty for product selected");
+				}
+
+				if (StringUtils.isNotEmpty(sellerData.getUssid()))
+				{
+					pincodeServiceData.setUssid(sellerData.getUssid());
+				}
+				else
+				{
+					LOG.debug("getOMSPincodeResponseData : Ussid is null or empty for product selected");
+				}
+
+				if (StringUtils.isNotEmpty(sellerData.getIsCod()))
+				{
+					pincodeServiceData.setIsCOD(sellerData.getIsCod().toUpperCase());
+				}
+				else
+				{
+					LOG.debug("getOMSPincodeResponseData : Seller COD is null or empty for product selected");
+				}
+
+
+				if (entryData.getAmountAfterAllDisc() != null && entryData.getAmountAfterAllDisc().getValue() != null
+						&& entryData.getAmountAfterAllDisc().getValue().doubleValue() > 0.0)
+				{
+					pincodeServiceData.setPrice(Double.valueOf(entryData.getAmountAfterAllDisc().getValue().doubleValue()));
+				}
+				else if (sellerData.getSpPrice() != null && StringUtils.isNotEmpty(sellerData.getSpPrice().getValue().toString()))
+				{
+					pincodeServiceData.setPrice(new Double(sellerData.getSpPrice().getValue().doubleValue()));
+				}
+				else if (sellerData.getMopPrice() != null && StringUtils.isNotEmpty(sellerData.getMopPrice().getValue().toString()))
+				{
+					pincodeServiceData.setPrice(new Double(sellerData.getMopPrice().getValue().doubleValue()));
+				}
+				else if (sellerData.getMrpPrice() != null && StringUtils.isNotEmpty(sellerData.getMrpPrice().getValue().toString()))
+				{
+					pincodeServiceData.setPrice(new Double(sellerData.getMrpPrice().getValue().doubleValue()));
+				}
+				else
+				{
+					pincodeServiceData.setPrice(Double.valueOf(entryData.getBasePrice().getValue().doubleValue()));
+				}
+				pincodeServiceData.setDeliveryModes(sellerData.getDeliveryModes());
+			}
+			else
+			{
+				LOG.debug("getOMSPincodeResponseData : Seller information is null or empty for product selected");
+			}
+
+			if (StringUtils.isNotEmpty(cartData.getGuid()))
+			{
+				pincodeServiceData.setCartId(cartData.getGuid());
+			}
+			else
+			{
+				LOG.debug("getOMSPincodeResponseData : Cart GUID is null or empty for product selected");
+			}
+
+			pincodeServiceData.setIsDeliveryDateRequired(MarketplacecommerceservicesConstants.N);
+			pincodeServiceReqDataList.add(pincodeServiceData);
+		}
+		pinCodeResponseData = pinCodeFacade.getServiceablePinCodeCart(pincode, pincodeServiceReqDataList);
+
+		return pinCodeResponseData;
+
+	}
 
 
 	/**
@@ -2593,6 +2756,26 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		return quantityConfigurationList;
 	}
 
+
+	//added for jewellery
+
+	@Override
+	public ArrayList<Integer> getQuantityConfiguratioListforJewellery() throws EtailNonBusinessExceptions
+	{
+		final int minJwlQuantity = getSiteConfigService().getInt(
+				MarketplacecommerceservicesConstants.MINIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+		final int maxJwlQuantity = getSiteConfigService().getInt(
+				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
+
+		final ArrayList<Integer> quantityConfigurationJwlList = new ArrayList<Integer>();
+
+		for (int count = minJwlQuantity; count <= maxJwlQuantity; count++)
+		{
+			quantityConfigurationJwlList.add(Integer.valueOf(count));
+		}
+
+		return quantityConfigurationJwlList;
+	}
 
 	/**
 	 * Update cart quantity by quantity and entry number

@@ -9,6 +9,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCartMergingStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -27,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtCommerceCartMergingStrategy;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 
@@ -47,7 +50,17 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
 
+	@Resource(name = "commerceCartService")
+	private MplCommerceCartService mplCommerceCartService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 	private static final String MOBILE = "MOBILE";
+	//JEWELLERY CHANGES
+	private static final String FINEJEWELLERY = "FineJewellery";
+
+	//ENDS
 
 	@Override
 	public void mergeCarts(final CartModel fromCart, final CartModel toCart, final List<CommerceCartModification> modifications)
@@ -55,6 +68,7 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 	{
 		final UserModel currentUser = this.userService.getCurrentUser();
 		boolean cartMerged = false;
+
 		if ((currentUser == null) || (this.userService.isAnonymousUser(currentUser)))
 		{
 			throw new AccessDeniedException("Only logged user can merge carts!");
@@ -82,8 +96,20 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 
 		try
 		{
-			for (final AbstractOrderEntryModel entry : fromCart.getEntries())
+			for (final AbstractOrderEntryModel entryFromCart : fromCart.getEntries())
 			{
+				//JEWELLERY CHANGES
+				boolean jewelleryMarge = false;
+				String fromCartUssid = entryFromCart.getSelectedUSSID();
+				if (FINEJEWELLERY.equalsIgnoreCase(entryFromCart.getProduct().getProductCategoryType()))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(fromCartUssid);
+					if (org.apache.commons.collections.CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						fromCartUssid = jewelleryInfo.get(0).getPCMUSSID();
+					}
+				}
+				//ENDS
 				boolean isProductAddRequired = false;
 				if (null != fromCart.getChannel() && StringUtils.isNotEmpty(fromCart.getChannel().getCode())
 						&& !fromCart.getChannel().getCode().equalsIgnoreCase(MOBILE))
@@ -94,28 +120,58 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 				else
 				{
 					// freebie addition as normal product mobile issue fix TISEE-915
-					if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
+					if (null != entryFromCart.getGiveAway() && !entryFromCart.getGiveAway().booleanValue())
 					{
 						isProductAddRequired = true;
 					}
 				}
 				if (isProductAddRequired)
 				{
-					final CommerceCartParameter newCartParameter = new CommerceCartParameter();
+					//JEWELLERY CHANGES
+					for (final AbstractOrderEntryModel entryToCart : toCart.getEntries())
+					{
+						String toCartUssid = entryToCart.getSelectedUSSID();
+						if (FINEJEWELLERY.equalsIgnoreCase(entryToCart.getProduct().getProductCategoryType()))
+						{
+							final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(toCartUssid);
+							if (org.apache.commons.collections.CollectionUtils.isNotEmpty(jewelleryInfo))
+							{
+								toCartUssid = jewelleryInfo.get(0).getPCMUSSID();
+							}
+							if (fromCartUssid.equalsIgnoreCase(toCartUssid)
+									&& FINEJEWELLERY.equalsIgnoreCase(entryToCart.getProduct().getProductCategoryType()))
+							{
+								jewelleryMarge = true;
+							}
+						}
+						//ENDS
 
-					newCartParameter.setEnableHooks(true);
-					newCartParameter.setCart(toCart);
-					newCartParameter.setProduct(entry.getProduct());
-					newCartParameter.setPointOfService(entry.getDeliveryPointOfService());
-					newCartParameter.setQuantity((entry.getQuantity() == null) ? 0L : entry.getQuantity().longValue());
-					newCartParameter.setUssid((null != entry.getSelectedUSSID()) ? entry.getSelectedUSSID() : "");
-					newCartParameter.setUnit(entry.getUnit());
-					newCartParameter.setCreateNewEntry(false);
-					//TPR-174
-					cartMerged = true;
-					//getModelService().save(toCart);
-					mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
+					}
+					if (!jewelleryMarge)
+					{
+
+						final CommerceCartParameter newCartParameter = new CommerceCartParameter();
+
+						newCartParameter.setEnableHooks(true);
+						newCartParameter.setCart(toCart);
+						newCartParameter.setProduct(entryFromCart.getProduct());
+						newCartParameter.setPointOfService(entryFromCart.getDeliveryPointOfService());
+						newCartParameter.setQuantity((entryFromCart.getQuantity() == null) ? 0L : entryFromCart.getQuantity()
+								.longValue());
+						newCartParameter.setUssid((null != entryFromCart.getSelectedUSSID()) ? entryFromCart.getSelectedUSSID() : "");
+						newCartParameter.setUnit(entryFromCart.getUnit());
+						newCartParameter.setCreateNewEntry(false);
+						//TPR-174
+						cartMerged = true;
+						//getModelService().save(toCart);
+						mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
+
+					}
+
+
 				}
+
+
 			}
 		}
 		catch (final CommerceCartModificationException e)

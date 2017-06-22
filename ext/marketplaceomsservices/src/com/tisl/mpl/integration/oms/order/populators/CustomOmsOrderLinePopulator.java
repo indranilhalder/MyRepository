@@ -3,22 +3,32 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
+import de.hybris.platform.commercefacades.converter.ConfigurablePopulator;
+import de.hybris.platform.commercefacades.product.ProductOption;
+import de.hybris.platform.commercefacades.product.data.ClassificationData;
+import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
+import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -33,6 +43,7 @@ import com.hybris.oms.domain.order.OrderlineFulfillmentType;
 import com.hybris.oms.domain.order.Promotion;
 import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
@@ -40,6 +51,7 @@ import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
+import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerMasterModel;
 
@@ -47,6 +59,12 @@ import com.tisl.mpl.model.SellerMasterModel;
 /**
  * @author TCS
  *
+ */
+
+//Added for 3782
+/*
+ * @Resource(name = "productFeatureJewelleryOrderService") private ProductFeatureJewelleryOrderService
+ * productFeatureJewelleryOrderService;
  */
 
 
@@ -59,11 +77,16 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	private ProductAttributeStrategy productAttributeStrategy;
 	private OrderEntryNoteStrategy orderEntryNoteStrategy;
 	private OndemandTaxCalculationService ondemandTaxCalculationService;
+	@Resource(name = "productConverter")
+	private Converter<ProductModel, ProductData> productConverter;
+	@Resource(name = "productConfiguredPopulator")
+	private ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator;
+
+	//Added for 3782
+	private PriceBreakupService priceBreakupService;
+
 	@Autowired
 	private MplSellerMasterService mplSellerMasterService;
-
-
-	
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -94,22 +117,52 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			String isReturnToStoreEligible = MarketplaceomsservicesConstants.NO;
 			String productReturnToStoreEligibility = null;
 			String sellerReturnToStoreEligibility = null;
-			if (null != source.getProduct() && null != source.getProduct().getRichAttribute()
-					&& null != source.getProduct().getRichAttribute())
+			if (null != source.getProduct() && null != source.getProduct().getSellerInformationRelator())
 			{
-				final List<RichAttributeModel> productRichAttribute =  (List<RichAttributeModel>)source.getProduct().getRichAttribute();
-				// INC144316390 - Orders are not getting processed with normal flow due to Product Rich attribute missing   START 
-				if (null != productRichAttribute && !productRichAttribute.isEmpty() && null != productRichAttribute.get(0) && null !=productRichAttribute.get(0).getReturnAtStoreEligible())
+				final List<SellerInformationModel> sellerList = (List<SellerInformationModel>) source.getProduct()
+						.getSellerInformationRelator();
+				final List<RichAttributeModel> sellerRichAttributeList = new ArrayList<RichAttributeModel>();
+				if (null != sellerList)
 				{
-					productReturnToStoreEligibility = productRichAttribute.get(0).getReturnAtStoreEligible().getCode();
+					for (final SellerInformationModel seller : sellerList)
+					{
+						if (null != seller.getRichAttribute())
+						{
+							final ArrayList<RichAttributeModel> richattributeList = new ArrayList<RichAttributeModel>(
+									seller.getRichAttribute());
+							sellerRichAttributeList.add(richattributeList.get(0));
+						}
+					}
 				}
-				// INC144316390 - Orders are not getting processed with normal flow due to Product Rich attribute missing   END 
+				/*
+				 * final List<RichAttributeModel> productRichAttribute = (List<RichAttributeModel>) source.getProduct()
+				 * .getRichAttribute();
+				 */
+				if (null != sellerRichAttributeList.get(0) && null != sellerRichAttributeList.get(0).getReturnAtStoreEligible())
+				{
+					productReturnToStoreEligibility = sellerRichAttributeList.get(0).getReturnAtStoreEligible().getCode();
+				}
 			}
-			if (null != richAttributeModel && null != richAttributeModel.get(0)&& null !=richAttributeModel.get(0).getReturnAtStoreEligible())
+//			if (null != source.getProduct() && null != source.getProduct().getRichAttribute()
+//					&& null != source.getProduct().getRichAttribute())
+//			{
+//				final List<RichAttributeModel> productRichAttribute =  (List<RichAttributeModel>)source.getProduct().getRichAttribute();
+//				// INC144316390 - Orders are not getting processed with normal flow due to Product Rich attribute missing   START 
+//				if (null != productRichAttribute && !productRichAttribute.isEmpty() && null != productRichAttribute.get(0) && null !=productRichAttribute.get(0).getReturnAtStoreEligible())
+//				{
+//					productReturnToStoreEligibility = productRichAttribute.get(0).getReturnAtStoreEligible().getCode();
+//				}
+//				// INC144316390 - Orders are not getting processed with normal flow due to Product Rich attribute missing   END 
+//			}
+			if (null != richAttributeModel && null != richAttributeModel.get(0)
+					&& null != richAttributeModel.get(0).getReturnAtStoreEligible())
 			{
 				sellerReturnToStoreEligibility = richAttributeModel.get(0).getReturnAtStoreEligible().getCode();
 			}
-			if(null != sellerReturnToStoreEligibility && sellerReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES) && null != productReturnToStoreEligibility && productReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES))
+			if(null != sellerReturnToStoreEligibility 
+					&& sellerReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES)
+					&& null != productReturnToStoreEligibility
+					&& productReturnToStoreEligibility.equalsIgnoreCase(MarketplaceomsservicesConstants.YES))
 			{
 				isReturnToStoreEligible = MarketplaceomsservicesConstants.YES;
 			}
@@ -132,6 +185,45 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setProductName(source.getProduct().getName());
 			}
+
+			/* Added For Jewellery */
+			if (null != source.getProduct()
+					&& source.getProduct().getProductCategoryType()
+							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+			{
+				populateJewelleryInfo(source, target);
+			}
+			/*
+			 * source.getOrderJewelEntry().getDiamondRate1(); source.getOrderJewelEntry().getDiamondRate2();
+			 * source.getOrderJewelEntry().getDiamondRate3(); source.getOrderJewelEntry().getDiamondRate4();
+			 * source.getOrderJewelEntry().getDiamondRate5(); source.getOrderJewelEntry().getDiamondRate6();
+			 * source.getOrderJewelEntry().getDiamondRate7(); source.getOrderJewelEntry().getDiamondtotalprice();
+			 * source.getOrderJewelEntry().getGemStoneRate1(); source.getOrderJewelEntry().getGemStoneRate2();
+			 * source.getOrderJewelEntry().getGemStoneRate3(); source.getOrderJewelEntry().getGemStoneRate4();
+			 * source.getOrderJewelEntry().getGemStoneRate5(); source.getOrderJewelEntry().getGemStoneRate6();
+			 * source.getOrderJewelEntry().getGemStoneRate7(); source.getOrderJewelEntry().getGemStoneRate8();
+			 * source.getOrderJewelEntry().getGemStoneRate9(); source.getOrderJewelEntry().getGemStoneRate10();
+			 * source.getOrderJewelEntry().getGemstonetotalprice(); source.getOrderJewelEntry().getMakingCharge();
+			 * source.getOrderJewelEntry().getWastageTax();
+			 * 
+			 * }
+			 */
+
+
+			/*
+			 * if (null != source.getProduct()) { final ProductModel product = source.getProduct(); for (final
+			 * CategoryModel category : product.getClassificationClasses().) { category.getName();
+			 * 
+			 * 
+			 * if (category.getCode().contains("MSH")) { category.getName(); //category.gets }
+			 * 
+			 * }
+			 * 
+			 * 
+			 * }
+			 */
+			/* Added For Jewellery */
+
 
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
@@ -227,6 +319,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			}
 
 
+
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
 
@@ -271,14 +364,13 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setFulfillmentMode(String.valueOf(source.getFulfillmentMode()));
 			}
-			
-			
+
+
 			if (source.getFulfillmentTypeP1() != null)
 			{
 				target.setFulfillmentTypeP1(String.valueOf(source.getFulfillmentTypeP1().toUpperCase()));
 			}else if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
-
 			{
 				final String fulfilmentType = richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode().toUpperCase();
 				target.setFulfillmentTypeP1(fulfilmentType);
@@ -431,7 +523,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			target.setTaxCategory(MarketplaceomsservicesConstants.TAX_CATEGORY);
 
 
-			    //added new attribute isLPAWBEdit for orderLine
+			//added new attribute isLPAWBEdit for orderLine
 		   	final SellerMasterModel sellerMasterModel =mplSellerMasterService.getSellerMaster(sellerInfoModel.getSellerID());
 				if (sellerMasterModel != null && StringUtils.isNotEmpty(sellerMasterModel.getIsLPAWBEdit())
 						&& MarketplaceomsservicesConstants.Y.equalsIgnoreCase(sellerMasterModel.getIsLPAWBEdit()))
@@ -443,6 +535,139 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					target.setIsLPAWBEdit(Boolean.FALSE);
 				}
 			}
+	}
+	//Added for jewellery
+	/**
+	 * @param category
+	 */
+	/*
+	 * private void getCategoryName(final CategoryModel category) { // YTODO Auto-generated method stub try { if
+	 * (!category.getSupercategories().isEmpty()) { for (final CategoryModel superCategory :
+	 * category.getSupercategories()) { getCategoryName(superCategory); } } } catch (final Exception e) { throw new
+	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
+	 * 
+	 * }
+	 */
+
+	//Added for 3782
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+
+	private void populateJewelleryInfo(final OrderEntryModel source, final OrderLine target)
+	{
+
+		final ProductData productData = productConverter.convert(source.getProduct());
+		productConfiguredPopulator.populate(source.getProduct(), productData,
+				Arrays.asList(ProductOption.CATEGORIES, ProductOption.CLASSIFICATION));
+		if (null != productData.getClassifications())
+		{
+			final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+					productData.getClassifications());
+			for (final ClassificationData classification : ConfigurableAttributeList)
+			{
+				classification.getName();
+			}
+
+		}
+		final OrderJewelEntryModel jewelleryEntry = source.getOrderJewelEntry();
+		if (null != jewelleryEntry.getDiamondRate1())
+		{
+			jewelleryEntry.getDiamondRate1();
+		}
+		if (null != jewelleryEntry.getDiamondRate2())
+		{
+			jewelleryEntry.getDiamondRate2();
+		}
+		if (null != jewelleryEntry.getDiamondRate3())
+		{
+			jewelleryEntry.getDiamondRate3();
+		}
+		if (null != jewelleryEntry.getDiamondRate4())
+		{
+			jewelleryEntry.getDiamondRate4();
+		}
+		if (null != jewelleryEntry.getDiamondRate5())
+		{
+			jewelleryEntry.getDiamondRate5();
+		}
+		if (null != jewelleryEntry.getDiamondRate6())
+		{
+			jewelleryEntry.getDiamondRate6();
+		}
+		if (null != jewelleryEntry.getDiamondRate7())
+		{
+			jewelleryEntry.getDiamondRate7();
+		}
+		if (null != jewelleryEntry.getDiamondtotalprice())
+		{
+			jewelleryEntry.getDiamondtotalprice();
+		}
+		if (null != jewelleryEntry.getGemStoneRate1())
+		{
+			jewelleryEntry.getGemStoneRate1();
+		}
+		if (null != jewelleryEntry.getGemStoneRate1())
+		{
+			jewelleryEntry.getGemStoneRate1();
+		}
+		if (null != jewelleryEntry.getGemStoneRate2())
+		{
+			jewelleryEntry.getGemStoneRate2();
+		}
+		if (null != jewelleryEntry.getGemStoneRate3())
+		{
+			jewelleryEntry.getGemStoneRate3();
+		}
+		if (null != jewelleryEntry.getGemStoneRate4())
+		{
+			jewelleryEntry.getGemStoneRate4();
+		}
+		if (null != jewelleryEntry.getGemStoneRate5())
+		{
+			jewelleryEntry.getGemStoneRate5();
+		}
+		if (null != jewelleryEntry.getGemStoneRate6())
+		{
+			jewelleryEntry.getGemStoneRate6();
+		}
+		if (null != jewelleryEntry.getGemStoneRate7())
+		{
+			jewelleryEntry.getGemStoneRate7();
+		}
+		if (null != jewelleryEntry.getGemStoneRate8())
+		{
+			jewelleryEntry.getGemStoneRate8();
+		}
+		if (null != jewelleryEntry.getGemStoneRate9())
+		{
+			jewelleryEntry.getGemStoneRate9();
+		}
+		if (null != jewelleryEntry.getGemStoneRate10())
+		{
+			jewelleryEntry.getGemStoneRate10();
+		}
+		if (null != jewelleryEntry.getGemstonetotalprice())
+		{
+			jewelleryEntry.getGemstonetotalprice();
+		}
+		if (null != jewelleryEntry.getMakingCharge())
+		{
+			jewelleryEntry.getMakingCharge();
+		}
+		if (null != jewelleryEntry.getWastageTax())
+		{
+			jewelleryEntry.getWastageTax();
+		}
+
+
+		//final ProductFeatureModel jewelleryProductFeature = productFeatureJewelleryOrderService.ProductFeatureJewelleryOrderService(source.getSelectedUSSID());
+
+
+		//source.getProduct().getProductFeatureComponents();
+		//jewelleryEntry.getAbstractOrderEntryjewel().getProduct().getSupercategories();
 	}
 
 	/**
@@ -580,7 +805,21 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		this.mplSellerInformationService = mplSellerInformationService;
 	}
 
-	
-	
-}
+	//Added for 3782
+	/**
+	 * @return the priceBreakupService
+	 */
+	public PriceBreakupService getPriceBreakupService()
+	{
+		return priceBreakupService;
+	}
 
+	/**
+	 * @param priceBreakupService
+	 *           the priceBreakupService to set
+	 */
+	public void setPriceBreakupService(final PriceBreakupService priceBreakupService)
+	{
+		this.priceBreakupService = priceBreakupService;
+	}
+}

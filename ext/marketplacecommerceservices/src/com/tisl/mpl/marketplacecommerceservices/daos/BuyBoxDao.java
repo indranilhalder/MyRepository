@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,9 @@ public interface BuyBoxDao
 
 
 	List<BuyBoxModel> buyBoxPrice(String ProductCode) throws EtailNonBusinessExceptions;
+
+	//added for jewellery
+	public List<BuyBoxModel> buyBoxPriceForJewellery(String pcmUssid) throws EtailNonBusinessExceptions;
 
 	List<BuyBoxModel> getBuyboxPricesForSearch(String ProductCode) throws EtailNonBusinessExceptions;
 
@@ -64,6 +68,11 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String pdpproduct) throws EtailNonBusinessExceptions;
+	/**
+	 * @param sellerArticleSKUList
+	 * @return
+	 */
+	public List<BuyBoxModel> getBuyboxSellerPricesForSearch(List<String> sellerArticleSKUList) throws EtailNonBusinessExceptions;
 
 	//INC144315542_INC144314878_INC_11113
 
@@ -78,5 +87,8 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
+	//for fine jewellery pdp
+	public ProductModel getProductDetailsByProductCode(final String productcode);
+
 
 }

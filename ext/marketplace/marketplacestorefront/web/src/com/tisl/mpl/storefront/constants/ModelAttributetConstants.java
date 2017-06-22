@@ -218,6 +218,19 @@ public final class ModelAttributetConstants
 	public static final String WATCHES = "Watches";
 	//Added by SAP for Watches & FashionAccessories  :::  END
 
+	//Added  for Travel and Luggage  :::  START
+
+	public static final String TRAVELANDLUGGAGE = "TravelAndLuggage";
+	//Added  for Travel and Luggage  :::  END
+
+	//Added  for Fine Jewellery  :::  START
+	public static final String FINEJEWELLERY = "FineJewellery";
+	//Added  for Fine Jewellery  :::  END
+
+	//Added  for Fashion Jewellery  :::  START
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
+	//Added  for Fashion Jewellery  :::  END
+
 	public static final String INVITE_URL = "/store/mpl/en/login/?affiliateId=";
 	public static final String SELECT_DAY = "selectDay";
 	public static final String SELECT_MONTH = "selectmonth";

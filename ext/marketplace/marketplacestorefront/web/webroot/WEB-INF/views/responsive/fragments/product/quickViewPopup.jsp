@@ -19,6 +19,7 @@
 	src="${commonResourcePath}/bootstrap/js/popover.js"></script>
 	
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
  <style type="text/css">
 tr.d0 td {
   background-color:#E0E0E0 ;
@@ -337,7 +338,22 @@ display:none;
 	<div class="imageList" style="overflow: hidden;">
 		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
-				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
+			<c:choose>
+			<c:when test="${product.rootCategory=='FineJewellery'}">
+			<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
+					<span class="thumb ${(varStatus.index==0)? "active":""}">
+						<c:if test="${container.fineJewelthumbnailquickview.mediaType.code eq 'Image'}">
+							<img src="${container.fineJewelthumbnailquickview.url}" data-type="image" data-zoomimagesrc="${container.fineJewelsuperZoom.url}"  data-primaryimagesrc="${container.fineJewelproductquickview.url}" data-galleryposition="${varStatus.index}" alt="${container.fineJewelthumbnailquickview.altText}" title="${container.fineJewelthumbnailquickview.altText}" />	
+						</c:if>
+						<c:if test="${container.fineJewelthumbnailquickview.mediaType.code eq 'Video'}">
+							<%-- <img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}" /> --%>
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.fineJewelthumbnailquickview.url}?rel=0&enablejsapi=1" />
+					    </c:if>
+					</span>
+			</li>
+			</c:when>
+			<c:otherwise>
+			<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
@@ -347,7 +363,9 @@ display:none;
 							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
 					    </c:if>
 					</span>
-				</li>
+			</li>
+			</c:otherwise>
+			</c:choose>
 			</c:forEach>
 		</ul>
 	</div>
@@ -363,9 +381,18 @@ display:none;
     <div class="main-image">
 	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
-    <a href="${productUrl}"> <product:productPrimaryImage
-				product="${product}" format="product" />
+	<c:choose>
+	<c:when test="${product.rootCategory=='FineJewellery'}">
+	<a href="${productUrl}"> <product:productPrimaryImage
+				product="${product}" format="fineJewelproductquickview" />
 		</a>
+	</c:when>
+	<c:otherwise>
+	 <a href="${productUrl}"> <product:productPrimaryImage
+				product="${product}" format="product" />
+				</a>
+	</c:otherwise>
+	</c:choose>
 <!-- 		<div class="zoom" style="z-index:10000;">
 		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
 		</div> -->
@@ -462,6 +489,19 @@ display:none;
               <%-- &nbsp;<spring:theme code="product.by"/>&nbsp;<span id="sellerNameIdQuick"></span>${sellerName} --%>
             <!-- Convert into AJAX call -->    
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
+    
+    <!-- //TPR-3752 Jewel Heading Added -->
+			<c:choose>
+  				<c:when test="${product.rootCategory=='FineJewellery'}">
+  				<input id="jwelQuick" type="hidden" value="${product.rootCategory}"/>
+					<p class="key-labelquick">
+	  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
+						</c:forEach>
+	  			    </p>
+  				</c:when>
+  			</c:choose>
+    
+    
     <div class="price">
     
     
@@ -511,6 +551,23 @@ display:none;
 	  <span></span>
 	</p>
     
+    
+    <%--for price breakup(TPR-3752) --%>
+
+	
+	
+	<div id = "showPricequick">
+	
+	<p id = "showquick" class="pricebreakup-link">Price Breakup</p>
+	
+	</div>
+	<ul id="showPriceBreakupquick" class="price-breakuplist clearfix" style="display:none"></ul>
+
+	<%-- </c:if> --%>
+	
+	<%--for price breakup(TPR-3752) --%>
+  
+  
   </div>  
 	<%-- <div id="emiStickerId" class="Emi Emi_wrapper" style="display:none;">		
 				<spring:theme code="marketplace.emiavailable" />&nbsp;		
@@ -1062,5 +1119,8 @@ $(window).resize(function(){
 });
 
 /*add to wishlist st*/
-
+   
+    <!-- //TPR-3752 Jewel Heading Added -->
+var propQuick = '${mapConfigurableAttributes}';
+	propQuick =propQuick.replace(/[{}]/g, '');
 </script>

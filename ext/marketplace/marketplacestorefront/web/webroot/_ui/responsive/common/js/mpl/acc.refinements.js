@@ -512,8 +512,17 @@ ACC.refinements = {
 				//INC144316162 fix ends
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
+				//TISTNL-894 | Colourfamily mobile view
+				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-colour").length;
+				filterCount+=$(".facet_mobile .filter-colorfamilytrlg.selected-multi-colour").length;
+				//Dial Colour Watches mobile view
+				filterCount+=$(".facet_mobile .filter-dialColourWatches.selected-colour").length;
+				filterCount+=$(".facet_mobile .filter-dialColourWatches.selected-multi-colour").length;
+				
 				//TISQAUATS-12 starts 
 				filterCount+=$(".facet_mobile .filter-colour.selected-multi-colour").length;
+				
+				
 				//TISQAUATS-12 ends
 				filterCount+=$(".facet_mobile .filter-size.selected-size").length;
 			});
@@ -679,10 +688,10 @@ ACC.refinements = {
 			//$(this).parents(".filter-colour").toggleClass("selected-colour");
 			var colour_name = $(this).parent().find("input[name=facetValue]").val().split("_", 1);
 			if(colour_name == "Multi"){
-				$(this).parents(".filter-colour").toggleClass("selected-multi-colour");
+				$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-multi-colour");
 			}
 			else{
-				$(this).parents(".filter-colour").toggleClass("selected-colour");
+				$(this).parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
 			}
 			//TISQAUATS-12 ends
 			//TISQAUATS-12 starts
@@ -692,10 +701,10 @@ ACC.refinements = {
 			if ($('.facet_mobile .facet.js-facet.Colour .facet-list.js-facet-top-values.active li').length) {
 				var colourName = $(this).parent().find("input[name=facetValue]").val();
 				if(colour_name == "Multi"){
-					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour").toggleClass("selected-multi-colour");
+					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-multi-colour");
 				}
 				else{
-					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour").toggleClass("selected-colour");
+					$(this).closest('ul').next().find('li input[value="'+colourName+'"]').parents(".filter-colour, .filter-colorfamilytrlg").toggleClass("selected-colour");
 				}
 				var spanCountMoreColor = $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-colour").length;
 				spanCountMoreColor = spanCountMoreColor + $('.facet_mobile .facet.js-facet.Colour ul.facet-list.js-facet-list.facet-list-hidden.js-facet-list-hidden').find("li.selected-multi-colour").length;

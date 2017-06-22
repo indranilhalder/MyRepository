@@ -131,6 +131,19 @@ ACC.productDetail = {
 				window.location.href = url;
 			}
 		});
+		
+		// added for jewellery PDP size dropdown 		
+		$("#jewelleryvariant").change(function() {
+			var url = "";
+			var selectedIndex = 0;
+			$("#jewelleryvariant option:selected").each(function() {
+				url = $(this).attr('value');
+				selectedIndex = $(this).attr("index");
+			});
+			if (selectedIndex != 0) {
+				window.location.href = url;
+			}
+		});
 
 // added in merging.....
 	// Move to wish list msg
@@ -1045,7 +1058,6 @@ function isNum(evt) {
 
 
 var pinCodeChecked = false;
-var pinCodeCheckajax=null;
 $(function() {
 
 	var regExp = /^([1-9])([0-9]){5}$/;
@@ -1090,10 +1102,7 @@ $(function() {
 							if (pin == "") {
 								$('#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin')
 										.hide();
-								$('#unsevisablePinExc,#unableprocessPinExc,#wrongPinExc,#serviceablePinExc')
-								.hide();
 								$("#emptyPin").show();
-								$("#emptyPinExc").show();
 								$("#pdpPinCodeAvailable").hide();
 								
 								$('#addToCartButton').show();
@@ -1104,12 +1113,9 @@ $(function() {
 								return false;
 							} else if (!regExp.test(pin)) {
 								$('#unsevisablePin,#unableprocessPin,#emptyPin').hide();
-								$('#unsevisablePinExc,#unableprocessPinExc,#emptyPinExc').hide();
 								$("#wrongPin").show();
-								$("#wrongPinExc").show();
 								$("#pdpPinCodeAvailable").hide();
 								$("#serviceablePin").hide();
-								$("#serviceablePinExc").hide();
 							//	$("#pdpPinCodeAvailable").hide();
 								$('#addToCartButton').show();
 								$('#buyNowButton').attr("disabled",false);
@@ -1120,7 +1126,8 @@ $(function() {
 							}
 							var dataString = "pin=" + pin + "&productCode="
 									+ productCode;
-							pinCodeCheckajax=$.ajax({
+							jQuery
+									.ajax({
 										// type: 'POST',
 										contentType : "application/json; charset=utf-8",
 										url : requiredUrl,
@@ -1144,12 +1151,10 @@ $(function() {
 												$("#collectli").removeClass("selected");
 
 												$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin').hide();
-												$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc').hide();
 												$('#addToCartFormTitle').hide();
 												$('#addToCartButton-wrong').show();
 												$('#addToCartButton').hide();
 												$('#unsevisablePin').show();
-												$('#unsevisablePinExc').show();
 												$("#pdpPinCodeAvailable").hide();
 												
 												$('#buyNowButton').attr("disabled",true);
@@ -1217,9 +1222,7 @@ $(function() {
 														if (pincodedata['isServicable'] == 'Y') {
 															
 															 $('#serviceablePin').show();  //TISPRM-20::PDP show pincode serviceability msg  
-															 $('#serviceablePinExc').hide();
-															 $('#wrongPinExc,#unsevisablePinExc,#unableprocessPinExc').hide();
-															 checkBuyBoxIdPresent = true;
+															checkBuyBoxIdPresent = true;
 															deliveryModes = pincodedata['validDeliveryModes'];
 															var home = false;
 															var exp = false;
@@ -1345,8 +1348,6 @@ $(function() {
 															$("#collectli").removeClass("selected");
 															$('#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin')
 																	.hide();
-															$('#wrongPinExc,#unableprocessPinExc,#emptyPinExc,#serviceablePinExc')
-															.hide();
 															$('#addToCartFormTitle')
 																	.hide();
 															if ($("#stock").val() > 0) {
@@ -1358,7 +1359,6 @@ $(function() {
 															}
 															$('#addToCartButton').hide();
 															$('#unsevisablePin').show();
-															$('#unsevisablePinExc').show();
 															
 															/*TPR-642 & 640 */
 															utag.link({
@@ -1387,9 +1387,6 @@ $(function() {
 													$(
 															'#wrongPin,#unableprocessPin,#emptyPin')
 															.hide();
-													$(
-													'#wrongPinExc,#unableprocessPinExc,#emptyPinExc')
-													.hide();
 													$('#addToCartFormTitle').hide();
 													if ($("#stock").val() > 0) {
 														$('#addToCartButton-wrong').show();
@@ -1401,7 +1398,6 @@ $(function() {
 													// $('#addToCartButton-wrong').show();
 													$('#addToCartButton').hide();
 													$('#unsevisablePin').show();
-													$('#unsevisablePinExc').show();
 													$('#pdpPinCodeAvailable').hide();
 												}
 												
@@ -1415,10 +1411,8 @@ $(function() {
 
 											$('#wrongPin,#unsevisablePin,#emptyPin')
 													.hide();
-											$('#wrongPinExc,#unsevisablePinExc,#emptyPinExc')
-											.hide();
 											$('#unableprocessPin').show();
-											$('#unableprocessPinExc').show();
+											
 											//TPR-794
 											$("#pdpPinCodeAvailable").html("Available delivery options for the pincode " +pin+ " are");
 											var error =$('#unableprocessPin').val();
@@ -1503,7 +1497,7 @@ $( document ).ready(function() {
 	var productCode = $("#product").val();
 	var variantCodes = $("#product_allVariantsListingId").val();
 	var variantCodesJson = "";
-	var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
+    var msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(); //CKD:TPR-250
 	if(typeof(variantCodes)!= 'undefined' && variantCodes!= ""){
 		variantCodes = variantCodes.split(",");
 		variantCodesJson = JSON.stringify(variantCodes);
@@ -1519,6 +1513,7 @@ $( document ).ready(function() {
 	//var dataString = 'productCode=' + productCode;
 
 	/*var data =*/ getBuyBoxDataAjax(productCode,variantCodesJson);//Moving buybox call on load in a method so that it can be reused.UF-60
+	
 
 
 //}
@@ -1577,9 +1572,10 @@ function displayDeliveryDetails(sellerName) {
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
 				
-				 /*TISPRDT-878 start*/
+				/*TISPRDT-878 start*/
 				var fulFillmentP1 = data['fulfillmentType1'];
 				/*TISPRDT-878 END*/
+				
 
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
@@ -1599,7 +1595,9 @@ function displayDeliveryDetails(sellerName) {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
 				}*/
-				/*TISPRDT-878 Start*/
+
+
+/*TISPRDT-878 Start*/
 				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
 					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
 					   $('#fulFilledBySship').hide();  //INC_12055
@@ -2965,64 +2963,18 @@ function loadDefaultWishListName_SizeGuide() {
 
 		});*/
 		
+		/*		price breakup in PDP of fashion jewellery
+		*/		
+				$("#show").click(function() {
+					$("#showPriceBreakup").slideToggle("fast");
+					$(".pricebreakup-link").toggleClass("expand-breakup");
+				});
+		
 			/*UF-32*/
 		 $("a.otherSellersFont").click(function(){
 		 
 		 $("#sellerForm").submit();
 						 
-			});
-		 
-		 $("#pinExc").focus(function(){
-				//$("#pdpPincodeCheck").text("Check")
-				document.getElementById("pdpPincodeCheckExchnage").className = "Check";//UF-71
-			});
-		 
-		 $('#pinExc').val( $('#pdpPincodeCheck').val());
-		 
-		 $(".pdp .Exchange > p").on("click",function(e){
-				e.stopPropagation();
-				if(!$(this).hasClass("active") && $(window).width() > 1024)
-				{
-					$(this).addClass("active");
-					//openPopForBankEMI();
-				}
-			});
-			$(".pdp .Exchange .modal-content .Close").on("click",function(e){
-				e.stopPropagation();
-				$(".Exchange > p").removeClass("active mobile");
-				$(".Exchange-overlay").remove();
-				$("body").removeClass("no-scroll");
-				});
-			$(".pdp .Exchange > #Exchangemodal-content").on("click",function(e){
-				e.stopPropagation();
-				if($(window).width() > 1024){
-					$(".pdp .Exchange > p").addClass("active")
-				}
-			});
-			
-			$(".pdp .Exchange > p").on("click",function(){
-				if($(window).width() <= 1024){
-					$(this).addClass("active mobile");
-					$("body").append("<div class='Exchange-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-					//openPopForBankEMI();
-					$("body").addClass("no-scroll");
-					
-				}
-			});
-			$(document).on("click",".Exchange-overlay,.pdp .Exchange .modal-content .Close",function(){
-				$(".pdp .Exchange > p").removeClass("active mobile");
-				$(".Exchange-overlay").remove();
-				$("body").removeClass("no-scroll");
-			});
-			
-			$(window).resize(function(){
-				if($(window).width() > 1024){
-					$(".pdp .Exchange > p").removeClass("active mobile");
-					$(".pdp .Exchange-overlay").remove();
-					/*$(".Emi > p").removeClass("active mobile");
-					$(".emi-overlay").remove();*/
-					$("body").removeClass("no-scroll");
-				}
 			});
 	});
 	/*Wishlist In PDP changes*/
@@ -3230,7 +3182,7 @@ function loadDefaultWishListName_SizeGuide() {
 		
 	}
 
-//TPR-978
+	//TPR-978
 function getProductContents() {
 		
 		var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -3321,21 +3273,21 @@ function getProductContents() {
 
 
 
-function lazyLoadProductContents(){
-	if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
-        if(!$('#productContentDivId').attr('loaded')) {
-            //not in ajax.success due to multiple sroll events
-            $('#productContentDivId').attr('loaded', true);
+	function lazyLoadProductContents(){
+		if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
+	        if(!$('#productContentDivId').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#productContentDivId').attr('loaded', true);
 
 
-	        //ajax goes here
-	        //by theory, this code still may be called several times
-	        if ($('#productContentDivId').children().length == 0) {
-	        	getProductContents();
-	    	}
-    	}
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#productContentDivId').children().length == 0) {
+	            	getProductContents();
+	        }
+	        }
 	}
-}
+	}
 	
 	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
 		$(window).on('scroll load',function() {
@@ -3910,6 +3862,69 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 								}
 						});
 					});
+
+				/* PRICE BREAKUP STARTS HERE */
+				
+							
+				if(data['displayconfigattr'] == "Yes"){
+					$("#showPrice").show();
+					var priceBreakUp= '<p>Price Breakup</p>'
+					$("#show").append( priceBreakUp);
+				}else if(data['displayconfigattr'] == "No"){
+					$("#showPrice").hide();				
+				}else{
+					$("#showPrice").hide();
+				}
+				
+				var priceBreakupForPDP = data['priceBreakup'];
+					$.each(priceBreakupForPDP,function(key,value) {	
+						var pricebreakuplist = "<li><div class='price-d'>"+ key +"<span>"+ value.formattedValue +"</span></div></li>";
+							$("#showPriceBreakup").append(pricebreakuplist);
+							
+						
+				});
+				
+				/* PRICE BREAKUP ENDS HERE */
+					
+					/* JewelleryDetail STARTS HERE */
+					try{
+					var jwelPDP = $("#jwelPDP").val();
+					if (jwelPDP == "FineJewellery"){
+						var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
+						var j=0;
+						var jewelDetailslistForPDP = data['jewelDescription'];
+						$.each(jewelDetailslistForPDP,function(key,value) {	
+								jewelInfoKey[j] = key	;
+								jewelInfoValue[j] = value;
+								j++;
+					});
+					if (prop){
+						var property = prop.split(',');
+						var keyLOV = '' , valueLOV= '';
+						for (var i=0; i<property.length; i++){
+							var lovSplit = property[i].split("=");
+							valueLOV = lovSplit[lovSplit.length-1];
+							keyLOV = lovSplit[lovSplit.length-2];
+							jewelHeadingKey[i] = keyLOV;
+							jewelHeadingValue[i] = valueLOV;
+					}
+						for (var i=0; i<property.length; i++){
+							if (jewelHeadingValue[i] == "null"){
+								$(".key-label").append('<span>'+ jewelHeadingKey[i] +'</span>')
+								}
+							else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
+								var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
+								$(".key-label").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
+								}
+							}
+						}
+					}
+				}
+				  catch(err) {
+					  
+					}
+				  
+				/* JewelleryDetail ENDS HERE */
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
 
@@ -3977,9 +3992,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#otherSellerInfoId").show();
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#otherSellerLinkId").show();
-						//TPR-1083
-						$("#exchangeStickerId").hide();
-						
 					}
 
 
@@ -3988,7 +4000,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#addToCartButton").hide();
 						$("#outOfStockId").show();
 						$("#buyNowButton").hide();
-						
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
@@ -4001,8 +4012,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
 						 $("#allVariantOutOfStock").show();
-						//TPR-1083
-							$("#exchangeStickerId").hide();
 						
 					}
 					else if (isOOS() && data['othersSellersCount']==0){
@@ -4022,8 +4031,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
 						 $("#allVariantOutOfStock").show();
-						//TPR-1083
-							$("#exchangeStickerId").hide();
 						 
 						
 					}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && ($("#variant li").length == $("#variant li.strike").length)) {
@@ -4033,7 +4040,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#outOfStockId").show();
 						$("#allVariantOutOfStock").show();
 						$("#buyNowButton").hide();
-						
 						//}
 						$("#otherSellerInfoId").hide();
 						$("#otherSellerLinkId").show();
@@ -4050,8 +4056,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 								$(this).parent().addClass('strike');
 								//$("#outOfStockId").hide();
 						});
-						//TPR-1083
-							$("#exchangeStickerId").hide();
 						
 					}
 					else if (allStockZero == 'Y' && data['othersSellersCount']==0 && ($("#variant li").length == $("#variant li.strike").length)){
@@ -4076,8 +4080,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						 $("#pin").attr("disabled",true);
 						 $("#pdpPincodeCheckDList").show();
 						 $("#buyNowButton").attr("disabled",true);
-						//TPR-1083
-							$("#exchangeStickerId").hide();
 						
 					}
 					else if (data['othersSellersCount'] == 0) {
@@ -4149,8 +4151,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					 $("#variant li a").parent().addClass("strike");
 				 }
 				 //INC144316346
-				//TPR-1083
-					$("#exchangeStickerId").hide();
 			}
 		},
 		// For buybox seller and other seller in PDP
@@ -4358,250 +4358,5 @@ function getProductCodeFromPdpUrl(url)
 	//console.log("ProductCode="+productCode);
 	return productCode;
 }
+
 //End of UF-60 changes
-
-//TPR-1083 Start
-$(document).ready(function(){
-	
-	jQuery('#brandExchange').on('input', function() {
-		 $("#brandExchangeParam").val($("#brandExchange").val());
-		 $("#lbrand").text("Brand");
-			document.getElementById('lbrand').style.color = "#999999";
-	});
-	
-
-	var pdppin = document.getElementById("pin");
-	var pinform=document.getElementById("pincodeExchangeParam");
-	$("#pinExc").keyup(function() {
-		document.getElementById("pdpPincodeCheck").className = "Check";
-		$("#exchangeDetails").hide();
-		$("#couponValue").hide();
-	    $("#exPinnotserviceable").hide();
-					
-		pdppin.value = this.value;	
-		pinform.value=this.value;
-		
-	});
-	
-	$('#exchange_tc').change(function(){
-		
-		$("#error_tc").hide();
-		
-	});
-
-	
-$("#pdpPincodeCheckExchnage").on("click",function(){
-	//click on PDP pincode Check
-	$( "#pdpPincodeCheck" ).trigger( "click" );
-    
-	$.when(pinCodeCheckajax).done(function(pincoeData){
-		
-	for (var i = 0; i < pincoeData.length; i++) {
-		
-		//check pincodeData if it is servicable
-		if (pincoeData[i]['isServicable'] == 'Y') 
-				
-{
-  //ajax call to check greendust
-	var dataString = 'pin=' + $("#pinExc").val();
-    var reversecheck=false;
-    var pinExc = $('#pinExc').val();
-	var productCode =  $('#product_id').val();
-	var productArray =[];
-	productArray.push(productCode);
-	
-var req1=$.ajax({
-		url : ACC.config.encodedContextPath + "/p-checkReversePincode",
-		data : dataString,
-		type : "GET",
-		cache : false,
-		success : function(data) {
-			if (data != null) {
-				reversecheck=data;
-				//alert("successs");
-				//var pinExc = $('#pinExc').val();
-				//alert("exchnge pin boss "+pinExc);
-			} else {
-				alert("no data");
-			}
-														
-		},
-		error : function(resp) {
-			alert("error")
-		}
-	});
-$.when(req1).done(function(data1){
-	if(data1)
-    {
-		//Message for successful pincode check
-		$("#serviceablePinExc").show();
-    	populateExchangeDetails();
-    	if(typeof utag !="undefined"){
-			utag.link({
-				event_type : "exchange_pincode_true",
-				pincode  : pinExc,
-				product_id : productArray
-			});
-		}
-    }
-    else{
-    	//Message for unsuccessful exchange Pincode check
-    $("#exPinnotserviceable").show();
-	$("#serviceablePinExc").hide();
-    	if(typeof utag !="undefined"){
-			utag.link({
-				event_type : "exchange_pincode_false",
-				pincode  : pinExc,
-				product_id : productArray
-			});
-		}
-    }
-});
-  
- // return false;
-				}
-				
-				}
-	
-    //check all ok
-    
-});
-
-});
-//end document ready
-
-});
-function populateExchangeDetails()
-{
-	
-	$("#ussidExchange").val($("#ussid").val());
-	   $("#exStock").val($("#stock").val());
-	
-	var l3code = $('#l3code').val();
-	 var prodCode = $('#productcode').val();
-	var dataString = 'l3code=' + l3code;
-	var reversecheck=false;
-    var pinExc = $('#pinExc').val();
-	var productCode =  $('#product_id').val();
-	var productArray =[];
-	productArray.push(productCode);
-$.ajax({
-		url : ACC.config.encodedContextPath + "/p-exchange",
-		data : dataString,
-		type : "GET",
-		cache : false,
-		success : function(data) {
-			if (data != null) {
-				
-				
-				 var catOptions = "<option value= disabled selected>Select</option>";
-				   
-			        for (i = 0; i < data.l4categorylist.length; i++) {
-			        	    	           catOptions += "<option value='"+data.l4categorylist[i]+"'>" + data.l4categorylist[i] + "</option>";
-			        }
-			        document.getElementById("l4select").innerHTML = catOptions;
-			        
-			       
-			     activelist=data.isWorkinglist;
-			     pricelist=data.priceList;
-			        
-			      
-				$("#exchangeDetails").show();
-				document.getElementById('submit&Condition').style.display = "block";
-				
-				//alert("successs");
-				//var pinExc = $('#pinExc').val();
-				//alert("exchnge pin boss "+pinExc);
-			} else {
-				alert("no data");
-			}
-														
-		},
-		error : function(resp,error) {
-			alert("error:" + error);
-		}
-	});
-}
-
-
-
-function changeWorking(value) {
-	document.getElementById('submit&Condition').style.display = "block";
-	 document.getElementById('couponValue').style.display = "none";
-	  $("#l4Exchange").val(value);
-	  $("#ll4select").text("Type");
-		document.getElementById('ll4select').style.color = "#999999";
-	    if (value.length == 0) document.getElementById("activeselect").innerHTML = "<option></option>";
-    else {
-    	
-        var catOptions = "<option value= disabled selected>Select</option>";
-   
-        for (i = 0; i < activelist.length; i++) {
-           	          catOptions += "<option value='"+activelist[i].trim()+"'>" +activelist[i].trim()+ "</option>";
-        }
-        document.getElementById("activeselect").innerHTML = catOptions;
-    }
-}
-
-function changePrice(value) {
-	document.getElementById('submit&Condition').style.display = "block";
-	 document.getElementById('couponValue').style.display = "none";
-	 $("#lactiveselect").text("Working Condition");
-		document.getElementById('lactiveselect').style.color = "#999999";
-	
-	l4val=$('#l4select').val();
-	l4wokinval=l4val+"|"+value;
-	 $("#isWorkingExchange").val(l4wokinval);
-	    var catOptions = "";
-        for (i = 0; i < pricelist.length; i++)
-        {
-        	var price=pricelist[i].split("-");
-        	
-        	 if(l4wokinval===price[0].trim())
-       	   	{
-        		 
-        		 document.getElementById('priceselect').innerHTML =  price[1];
-        		
-       	   	}
-        	
-       }
-     
-}
-
-function onSubmitExc()
-{
-	var brand= $("#brandExchangeParam").val();
-	var l4select=$('#l4select').val();
-	var isError=false;
-	var isWorking=$('#activeselect').val();
-		if(!brand)
-			{
-			$("#lbrand").text("Please Enter Brand");
-			document.getElementById('lbrand').style.color = "red";
-			isError=true;
-			}
-		if(l4select==='disabled' ||!l4select )
-			{
-			$("#ll4select").text("Please Select Type");
-			document.getElementById('ll4select').style.color = "red";
-			isError=true;
-			}
-		if(isWorking==='disabled' ||!isWorking)
-			{
-			$("#lactiveselect").text("Please Select Working/Non Working");
-			document.getElementById('lactiveselect').style.color = "red";
-			isError=true;
-			}
-		if(!$('input#exchange_tc').is(':checked'))
-			{ $("#error_tc").text("Please Agree to the Terms & Condition");
-				document.getElementById('error_tc').style.color = "red";
-				isError=true;
-			}
-		if(!isError)
-			{
-	document.getElementById('couponValue').style.display = "block";
-	document.getElementById('submit&Condition').style.display = "none";
-			}
-	
-}
-//TPR-1083 End

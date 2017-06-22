@@ -714,7 +714,15 @@ function submitForm(){
 			data: {'guid' : guid},
 			cache: false,		
 			success : function(response) {
-				if(response=='redirect'){
+				
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+					alert("reload_for_inventory");
+				}
+				//TPR:3780:jewellery
+				
+				else if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 
 				}
@@ -1412,7 +1420,12 @@ function generateOTP(){
 		type: "POST",
 		cache: false,	
 		success : function(response) {
-			if(response=='redirect'){
+			//TPR:3780:jewellery
+			if(response=='reload_for_inventory'){
+				$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+			}
+			//TPR:3780:jewellery
+			else if(response=='redirect'){
 				$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 			}
 			else if(response=='redirect_to_payment'){
@@ -1720,7 +1733,13 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
-				if(response=='redirect'){
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}
+				//TPR:3780:jewellery
+				
+				else if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1848,7 +1867,12 @@ $("#otpMobileNUMField").focus(function(){
 			cache: false,
 			async: false,
 			success : function(response) {
-				if(response=='redirect'){
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}
+				//TPR:3780:jewellery
+				else if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1994,8 +2018,13 @@ $("#otpMobileNUMField").focus(function(){
 			type: "GET",
 			cache: false,
 			async: false,
-			success : function(response) {	
-				if(response=='redirect'){
+			success : function(response) {
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}
+				//TPR:3780:jewellery
+				else if(response=='redirect'){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -2162,8 +2191,13 @@ $("#otpMobileNUMField").focus(function(){
 			type: "GET",
 			cache: false,
 			async: false,
-			success : function(response) {	
-				if(response=='redirect'){
+			success : function(response) {
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}
+				//TPR:3780:jewellery
+				else if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 				}else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
@@ -5022,7 +5056,12 @@ function submitNBForm(){
 			type: "GET",
 			cache: false,
 			success : function(response) {
-				if(response=='redirect'){
+				//TPR:3780:jewellery
+				if(response=='reload_for_inventory'){
+					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?dispMsg=true");
+				}
+				//TPR:3780:jewellery
+				else if(response=='redirect'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/cart"); //TIS 404
 				}
 				//TPR-629

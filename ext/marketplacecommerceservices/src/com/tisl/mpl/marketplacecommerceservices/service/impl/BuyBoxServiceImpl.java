@@ -5,7 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
-
+import de.hybris.platform.core.model.product.ProductModel;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +78,24 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	}
 
 	//CKD:TPR-250: End
+
+	/*
+	 * This service method will return buybox prices for product code
+	 * 
+	 * @param - productCode
+	 * 
+	 * @return- buyBoxList
+	 */
+	@Override
+	//added for jewellery
+	public List<BuyBoxModel> buyboxPriceForJewellery(final String pcmUssid) throws EtailNonBusinessExceptions,
+			EtailBusinessExceptions
+	{
+
+		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceForJewellery(pcmUssid);
+
+		return buyBoxList;
+	}
 
 	/*
 	 * This service method will return buybox prices for product code
@@ -228,10 +246,23 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyboxSellerPricesForSearch(java.util.List)
+	 */
+	//JEWELLERY
+	@Override
+	public List<BuyBoxModel> getBuyboxSellerPricesForSearch(final List<String> SellerArticleSKUList)
+			throws EtailNonBusinessExceptions
+	{
+		return buyBoxDao.getBuyboxSellerPricesForSearch(SellerArticleSKUList);
+	}
+
 	//INC144315542_INC144314878_INC_11113
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService#getBuyboxPricesForSizeVariant(java.lang.String)
 	 */
@@ -262,4 +293,12 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceForAllSeller(productCode);
 		return buyBoxList;
 	}
+
+	@Override
+	public ProductModel getProductDetailsByProductCode(final String productcode)
+	{
+		return buyBoxDao.getProductDetailsByProductCode(productcode);
+	}
+
+
 }

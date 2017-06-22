@@ -8,6 +8,7 @@ import de.hybris.platform.commerceservices.service.data.CommerceCheckoutParamete
 import de.hybris.platform.commerceservices.service.data.CommerceOrderResult;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.LimitedStockPromoInvalidationModel;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -72,11 +73,13 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 //SONAR FIX
 //import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
+import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
@@ -114,8 +117,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource
 	private MplOrderDao mplOrderDao;
 
-	@Resource
+	@Resource(name = "mplJewelleryService")
+	MplJewelleryService mplJewelleryService;
+
+
+	@Autowired
 	private ConfigurationService configurationService;
+
+	//Added for tpr-3782
+	@Resource(name = "priceBreakupService")
+	private PriceBreakupService priceBreakupService;
+
 
 	@Resource
 	private MplCommerceCartService mplCommerceCartService;
@@ -1881,9 +1893,18 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				LOG.info("Cloned Entries for Order:- " + orderModel.getCode() + "  USSID:- "
 						+ abstractOrderEntryModel.getSelectedUSSID());
 
-				final SellerInformationModel sellerEntry = getMplSellerInformationService()
-						.getSellerDetail(abstractOrderEntryModel.getSelectedUSSID());
 
+				SellerInformationModel sellerEntry = getMplSellerInformationService().getSellerDetail(
+						abstractOrderEntryModel.getSelectedUSSID());
+				if (null == sellerEntry)
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService
+							.getJewelleryInfoByUssid(abstractOrderEntryModel.getSelectedUSSID());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						sellerEntry = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+					}
+				}
 				cachedSellerInfoMap.put(abstractOrderEntryModel.getSelectedUSSID(), sellerEntry);
 
 				if (StringUtils.isNotEmpty(sellerEntry.getSellerID()))
@@ -2171,6 +2192,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			}
 
+
 		}
 
 		//----added for child order consumed entry setup----------------//
@@ -2239,6 +2261,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 			OrderEntryModel orderEntryModel = getOrderService().addNewEntry(clonedSubOrder, abstractOrderEntryModel.getProduct(), 1,
 					abstractOrderEntryModel.getUnit(), -1, false);
+
 			orderEntryModel.setBasePrice(abstractOrderEntryModel.getBasePrice());
 			final SellerInformationModel sellerDetails = cachedSellerInfoMap.get(abstractOrderEntryModel.getSelectedUSSID());
 			final String sellerID = sellerDetails.getSellerID();
@@ -2339,6 +2362,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				orderEntryModel.setSellerForCoupon(abstractOrderEntryModel.getSellerForCoupon());
 			}
+
+
 			final DecimalFormat df = new DecimalFormat("#.##");
 			final double netSellingPrice = Double.parseDouble(df.format(price - productApportionvalue));
 			final double netAmountAfterAllDisc = Double
@@ -2393,6 +2418,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				orderEntryModel.setCurrDelCharge(deliveryCharge);
 				orderEntryModel.setScheduledDeliveryCharge(scheduleDeliveryCharge);
 			}
+
+			//Added for tpr-3782
+			if (null != abstractOrderEntryModel.getProduct()
+					&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(orderEntryModel.getProduct()
+							.getProductCategoryType()))
+			{
+				priceBreakupService.createPricebreakupOrder(orderEntryModel);
+
+			}
+
+			//ended for tpr-3782
 			// Start Order line  Code for OrderLine
 			if (abstractOrderEntryModel.getEdScheduledDate() != null)
 			{

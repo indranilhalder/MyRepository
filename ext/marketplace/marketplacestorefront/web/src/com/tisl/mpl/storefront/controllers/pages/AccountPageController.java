@@ -59,6 +59,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.constants.GeneratedCoreConstants.Enumerations.Gender;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -199,6 +200,7 @@ import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.facades.product.data.YearData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -304,6 +306,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 	public static final String RETURN_PINCODE = "returnPincodeAvailabilityCheck";
 	public static final String RETURN_ADDRESS = "returnAddress";
 	public static final String RETURN_Logistics_Availability = "returnLogisticsAvailability";
+
+	private static final String FINEJEWELLERY = "FineJewellery";
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	//	Variable declaration with @Resource annotation
 	@Resource(name = ModelAttributetConstants.ACCELERATOR_CHECKOUT_FACADE)
@@ -947,6 +954,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		OrderModel orderModel = null;
 		boolean luxFlag = false;
 		boolean addressChangeEligible = false;
+
+		String ussid = null;
+
 		try
 		{
 
@@ -1046,13 +1056,28 @@ public class AccountPageController extends AbstractMplSearchPageController
 									}
 								}
 							}
+							final ProductModel productModl = getMplOrderFacade().getProductForCode(orderEntry.getProduct().getCode());
+
+							if (productModl.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+
+							{ //SellerInformationModel sellerInfoModel = null;
+								final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+										.getSelectedUssid());
+								ussid = jewelleryInfo.get(0).getPCMUSSID();
+								//sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+								//added for jewellery
+							}
+							else
+							{
+								ussid = orderEntry.getSelectedUssid();
+							}
 
 							final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
 									.getSellerInformationRelator();
 
 							for (final SellerInformationModel sellerInformationModel : sellerInfo)
 							{
-								if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+								if (sellerInformationModel.getSellerArticleSKU().equals(ussid))
 								{
 									final List<RichAttributeModel> richAttributeModelForSeller = (List<RichAttributeModel>) sellerInformationModel
 											.getRichAttribute();
@@ -1230,6 +1255,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 									luxFlag = true; //Setting true if at least one luxury product found
 								}
 							}
+
 
 							final List<ReturnRequestModel> returnRequestModelList = cancelReturnFacade.getListOfReturnRequest(subOrder
 									.getCode());
@@ -7922,6 +7948,4 @@ public class AccountPageController extends AbstractMplSearchPageController
 		}
 
 	}
-
-
 }

@@ -4,6 +4,7 @@ package com.tisl.mpl.seller.product.facades.impl;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
@@ -43,6 +44,7 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -68,6 +70,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	//TISCR-414 - Chairmans demo feedback 10thMay CR
 	private static final String LINGERIE1 = "LINGERIE1";
 	private static final String LINGERIE2 = "LINGERIE2";
+	private static final String FINEJEWELLERY = "FineJewellery";
 
 	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger.getLogger(BuyBoxFacadeImpl.class);
@@ -83,6 +86,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private ProductDetailsHelper productDetailsHelper;
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 
 	private static final String BUYBOX_LIST = "buyboxList";
@@ -1080,8 +1085,29 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		buyboxData.setSellerId(buyBoxMod.getSellerId());
 		buyboxData.setSellerArticleSKU(buyBoxMod.getSellerArticleSKU());
 		buyboxData.setAvailable(buyBoxMod.getAvailable());
+		/*
+		 * //TPR-3752 Jewel Heading Added
+		 */
+		if (null != buyBoxMod.getPLPMaxPrice())
+		{
+			buyboxData.setPlpMaxPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMaxPrice()));
+		}
+		if (null != buyBoxMod.getPLPMinPrice())
+		{
+			buyboxData.setPlpMinPrice(productDetailsHelper.formPriceData(buyBoxMod.getPLPMinPrice()));
+		}
+
 		// TISRLEE-1586 03-01-2017
-		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		if (StringUtils.isNotEmpty(product.getProductCategoryType()) && product.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+		{
+			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxMod
+					.getSellerArticleSKU());
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+		}
+		else
+		{
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		}
 		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
 			final List<RichAttributeModel> richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
@@ -1293,4 +1319,3 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		return bBoxSellerIdFound;
 	}
 }
-

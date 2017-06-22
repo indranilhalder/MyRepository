@@ -152,6 +152,7 @@ public class MplDefaultCommerceAddToCartStrategyImpl extends DefaultCommerceAddT
 					cartEntryModel.setExchangeId(parameter.getExchangeParam());
 					exchangeApplied = Boolean.TRUE;
 				}
+
 				getCommerceCartCalculationStrategy().calculateCart(cartModel);
 				getModelService().save(cartEntryModel);
 

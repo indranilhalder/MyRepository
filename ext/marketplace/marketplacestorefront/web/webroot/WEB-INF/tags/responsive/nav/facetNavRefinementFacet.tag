@@ -133,7 +133,7 @@ function navigateToPage(queryString,textString)
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
 						<%-- INC_12606  check added for dialColour-classification--%>
-						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification')&& not empty facetValue.name}">
+						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification'|| facetData.code  eq 'colorfamilytrlg')&& not empty facetValue.name}">	<!-- For colorfamilytrlg checking-->
 						<li class="filter-colour">
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
@@ -298,8 +298,9 @@ function navigateToPage(queryString,textString)
 					<c:choose>
 
 						<%--  INC_12606  check added for dialColour-classification --%>
-						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification') && not empty facetValue.name }">						
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification'|| facetData.code  eq 'colorfamilytrlg') && not empty facetValue.name }">		<!-- For TPR-3955, colorfamilytrlg checking-->					
 						<li class="filter-colour">	
+
 							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">

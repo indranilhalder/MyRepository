@@ -53,6 +53,7 @@ import de.hybris.platform.commercefacades.product.data.ReviewData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.url.UrlResolver;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -134,7 +135,9 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.comparator.SizeGuideHeaderComparator;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
+import com.tisl.mpl.facade.product.MplJewelleryFacade;
 import com.tisl.mpl.facade.product.MplProductFacade;
+import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facade.product.SizeGuideFacade;
 import com.tisl.mpl.facade.product.impl.CustomProductFacadeImpl;
 import com.tisl.mpl.facades.data.MplAjaxProductData;
@@ -172,9 +175,6 @@ import com.tisl.mpl.util.ExceptionUtil;
 //@RequestMapping(value = "/**/p")
 public class ProductPageController extends MidPageController
 {
-	/**
-	 *
-	 */
 	private static final String PRODUCT_SIZE_TYPE = "productSizeType";
 	/**
 	 *
@@ -224,6 +224,16 @@ public class ProductPageController extends MidPageController
 	/**
 	 * Added by I313024 for TATAUNISTORE-15 END ::::
 	 */
+	private static final String TRAVELANDLUGGAGE = "travelandluggage";
+	/**
+	 * Added for travel and luggage
+	 */
+
+	private static final String FINEJEWELLERY = "finejewellery";
+	/**
+	 * Added for fine jewellery
+	 */
+	private static final String FASHIONJEWELLERY = "fashionjewellery";
 	private static final String IMG_COUNT = "imgCount";
 
 	private static final String SKU_ID_FOR_COD = "skuIdForCod";
@@ -332,6 +342,17 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "exchangeGuideFacade")
 	private ExchangeGuideFacade exchangeGuideFacade;
 
+	// Jewellery Changes
+	@Resource(name = "priceBreakupFacade")
+	private PriceBreakupFacade priceBreakupFacade;
+
+
+	@Resource(name = "mplJewelleryFacade")
+	private MplJewelleryFacade mplJewelleryFacade;
+
+	@Resource(name = "jewelleryDescMapping")
+	private Map<String, String> jewelleryDescMapping;
+
 	/**
 	 * @param buyBoxFacade
 	 *           the buyBoxFacade to set
@@ -382,6 +403,8 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
+
+
 
 	@RequestMapping(value = ControllerConstants.Views.Fragments.Product.PRODUCT_CODE_PATH_NEW_PATTERN, method = RequestMethod.GET)
 	public String productDetail(@PathVariable(ControllerConstants.Views.Fragments.Product.PRODUCT_CODE) String productCode,
@@ -1575,10 +1598,21 @@ public class ProductPageController extends MidPageController
 		}
 		final StringBuilder allVariants = new StringBuilder();
 		final ProductModel productModel = productService.getProductForCode(productCode);
-		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
-				//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
-				ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
+		ProductData productData = null;
+		if (!ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase("FineJewellery")
+				|| !ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase("FashionJewellery"))
+		{
+			productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+					//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
+		}
+		else
+		{
+			productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
+					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES, ProductOption.CLASSIFICATION,
+					ProductOption.GALLERY, ProductOption.VARIANT_FULL));//Fix for TISPT-150
+		}
 		//final String returnStatement = null;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -1852,7 +1886,7 @@ public class ProductPageController extends MidPageController
 	 * @throws CMSItemNotFoundException
 	 */
 
-
+	// Jewellery changes Added
 	protected void populateProductDetailForDisplay(final ProductModel productModel, final Model model,
 			final HttpServletRequest request) throws CMSItemNotFoundException
 	{
@@ -1886,7 +1920,11 @@ public class ProductPageController extends MidPageController
 			displayConfigurableAttribute(productData, model);
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
-					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType()))
+					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
@@ -2053,6 +2091,8 @@ public class ProductPageController extends MidPageController
 	 * @param productData
 	 * @param model
 	 */
+	// Jewellery changes added
+
 	private void displayConfigurableAttribute(final ProductData productData, final Model model)
 	{
 		final Map<String, String> mapConfigurableAttribute = new HashMap<String, String>();
@@ -2084,10 +2124,15 @@ public class ProductPageController extends MidPageController
 									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 							final String descValues = configurationService.getConfiguration().getString(
 									ModelAttributetConstants.DESC_PDP_PROPERTIES + productData.getRootCategory());
+							//for jwl certification
+							final String certificationValue = configurationService.getConfiguration().getString(
+									ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory() + ".certification");
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
-									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())))
+									|| (ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+									|| (ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(productData.getRootCategory())))
+
 							{
 
 								//								mapConfigurableAttribute.put(featureValueData.getValue(),
@@ -2112,11 +2157,17 @@ public class ProductPageController extends MidPageController
 								}
 							} //end apparel
 							  //electronics
-
-							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
+							/*
+							 * <!-- //TPR-3752 Jewel Heading Added -->
+							 */else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
+									|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
+
 							{
 								final String[] propertiesValues = properitsValue.split(",");
+								//for jwl certification
+								final String[] certificationValues = certificationValue.split(",");
+
 								if (propertiesValues != null && propertiesValues.length > 0)
 								{
 									//CKD:CAR-289
@@ -2124,7 +2175,8 @@ public class ProductPageController extends MidPageController
 											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
 									for (final String value : propertiesValues)
 									{
-										if (value.equalsIgnoreCase(featureData.getName()))
+										if (value.equalsIgnoreCase(featureData.getName())
+												&& !ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 										{
 											if (productFeatureMap.size() > 0)
 											{
@@ -2134,6 +2186,18 @@ public class ProductPageController extends MidPageController
 													productFeature != null && productFeature.getUnit() != null
 															&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
 															.getSymbol() : "");
+											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
+										}
+										else if (value.equalsIgnoreCase(featureData.getCode().substring(
+												featureData.getCode().lastIndexOf(".") + 1)))
+										{
+
+											if (productFeatureMap.size() > 0)
+											{
+												productFeatureMap.clear();
+											}
+
+											productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 										}
 									}
@@ -2158,7 +2222,33 @@ public class ProductPageController extends MidPageController
 								{
 									warrentyList.add(featureValueData.getValue());
 								}
+								if (featureData.getName().equalsIgnoreCase("certification"))
+								{
+									final List<FeatureValueData> featureValueDataList = new ArrayList<FeatureValueData>(
+											featureData.getFeatureValues());
+
+									final List<FeatureValueData> featureValueDataListFinal = new ArrayList<FeatureValueData>();
+									if (CollectionUtils.isNotEmpty(featureValueDataList) && certificationValues != null
+											&& certificationValues.length > 0)
+									{
+										for (final FeatureValueData featurevalueData : featureValueDataList)
+										{
+
+											for (final String certification : certificationValues)
+											{
+												if (certification.equalsIgnoreCase(featurevalueData.getValue()))
+												{
+													featureValueDataListFinal.add(featurevalueData);
+												}
+											}
+
+										}
+									}
+									model.addAttribute("certificationfeatureValueDataList", featureValueDataListFinal);
+
+								}
 							}
+
 							else
 							{
 								if (properitsValue.toLowerCase().contains(configurableAttributData.getCode().toLowerCase()))
@@ -2180,7 +2270,9 @@ public class ProductPageController extends MidPageController
 			}
 			//model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTE, mapConfigurableAttribute);
 			if (ModelAttributetConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory())
-					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory()))
+					|| ModelAttributetConstants.FOOTWEAR.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
+					|| ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 			{
 				model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
 
@@ -2385,8 +2477,10 @@ public class ProductPageController extends MidPageController
 
 			{
 				final List<BuyBoxData> buyboxdata = (List<BuyBoxData>) buydata.get("buyboxList");
+
 				buyboxJson = getPopulatedBuyBoxJson(buydata, buyboxJson);
 				buyboxJson.put("buyboxList", buyboxdata);
+
 			}
 			else
 			{
@@ -2857,11 +2951,29 @@ public class ProductPageController extends MidPageController
 	 * @param buyboxJson
 	 * @throws com.granule.json.JSONException
 	 */
+	@SuppressWarnings("boxing")
 	private JSONObject getPopulatedBuyBoxJson(final Map<String, Object> buydata, final JSONObject buyboxJson)
 			throws com.granule.json.JSONException
 	{
 		// YTODO Auto-generated method stub
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
+
+		//PRICE BREAKUP STARTS:TPR-3752
+
+		final String displayConfigurableAttributeForPriceBreakup = displayConfigurableAttributeForPriceBreakup(buyboxdata
+				.getSellerArticleSKU());
+		LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
+
+		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
+
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, PriceMap);
+
+		buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR, displayConfigurableAttributeForPriceBreakup);
+
+		//buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, JewelInfo);
+
+		//PRICE BREAKUP ENDS:TPR-3752
+
 		if (buyboxdata.getSpecialPrice() != null && buyboxdata.getSpecialPrice().getValue().doubleValue() > 0)
 		{
 			buyboxJson.put(ControllerConstants.Views.Fragments.Product.SPECIAL_PRICE, buyboxdata.getSpecialPrice());
@@ -2876,9 +2988,21 @@ public class ProductPageController extends MidPageController
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.MIN_PRICE, buyboxdata.getMinPrice());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ALL_OF_STOCK, buyboxdata.getAllOOStock());
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.SELLER_ID, buyboxdata.getSellerId());
-
 		buyboxJson.put("isOOsForMicro", buydata.get("isOOsForMicro"));//TPR-250
-
+		//JewelleryInfo Deatils for jewelHeading added starts here
+		if (null != buyboxdata.getPlpMaxPrice() && buyboxdata.getPlpMaxPrice().getDoubleValue() > 0
+				&& null != buyboxdata.getPlpMinPrice() && buyboxdata.getPlpMinPrice().getDoubleValue() > 0)
+		{
+			final List<JewelleryInformationModel> JewelInfo = mplJewelleryFacade.getJewelleryInfoByUssid(buyboxdata
+					.getSellerArticleSKU());
+			final Map<String, String> jewelDetails = new HashMap<String, String>();
+			for (final JewelleryInformationModel jewelInfo : JewelInfo)
+			{
+				jewelDetails.put(jewelInfo.getPIMAttributeId(), jewelInfo.getWeight());
+			}
+			buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, jewelDetails);
+		}
+		//JewelleryInfo Deatils for jewelHeading added ends here
 		//	 TISRLEE-1586 03-01-2017
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.ID_ED_SELLER_HANDLING_TIME, buyboxdata.isIsSellerHandlingTime());
 
@@ -2920,6 +3044,8 @@ public class ProductPageController extends MidPageController
 		}
 		return buyboxJson;
 	}
+
+
 
 	//TPR-978
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-fetchPageContents", method = RequestMethod.GET)
@@ -3130,7 +3256,6 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
-
 	//TPR-3736
 	/**
 	 * @param ussids
@@ -3264,6 +3389,57 @@ public class ProductPageController extends MidPageController
 	}
 
 	//CKD:TPR-250: End
+	/**
+	 * @param productCode
+	 * @return
+	 */
+	private String displayConfigurableAttributeForPriceBreakup(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		String displayConfigurableAttributeForPriceBreakup = "";
+		String productCode = buyBoxFacade.getpriceForUssid(ussid).getProduct();
+		if (null != productCode)
+		{
+			productCode = productCode.toUpperCase();
+		}
+
+		final ProductModel productModel = productService.getProductForCode(productCode);
+		final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
+				ProductOption.SELLER, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.CATEGORIES,
+				//ProductOption.GALLERY, ProductOption.PROMOTIONS, ProductOption.VARIANT_FULL, ProductOption.CLASSIFICATION));
+				ProductOption.GALLERY, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
+
+		if (null != productData.getClassifications())
+		{
+			final List<ClassificationData> ConfigurableAttributeList = new ArrayList<ClassificationData>(
+					productData.getClassifications());
+			for (final ClassificationData configurableAttributData : ConfigurableAttributeList)
+			{
+				if (configurableAttributData.getCode().equals("19na"))
+				{
+					final List<FeatureData> featureDataList = new ArrayList<FeatureData>(configurableAttributData.getFeatures());
+
+					for (final FeatureData featureData : featureDataList)
+					{
+						if (featureData.getCode().equals("pcmClassification/1/19na.pricebreakuponpdpfinejwlry"))
+						{
+							final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(
+									featureData.getFeatureValues());
+
+							for (final FeatureValueData featureValueData : featureValueList)
+							{
+								displayConfigurableAttributeForPriceBreakup = featureValueData.getValue();
+							}
+							LOG.debug("display price breakup on pdp :" + displayConfigurableAttributeForPriceBreakup);
+						}
+
+					}
+				}
+
+			}
+		}
+		return displayConfigurableAttributeForPriceBreakup;
+	}
 
 	@SuppressWarnings(BOXING)
 	@RequestMapping(value = PRODUCT_OLD_URL_PATTERN + "-ajaxProductData", method = RequestMethod.GET)

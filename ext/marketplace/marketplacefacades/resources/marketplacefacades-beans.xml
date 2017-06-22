@@ -17,6 +17,7 @@
 			type="java.util.Map&lt;String,java.util.List&lt;String>>" />
 		<property name="image"
 			type="de.hybris.platform.commercefacades.product.data.ImageData" />
+		<property name="ProductType" type="String"/>	
 	</bean>
 	<!-- placeholder for pincode responses -->
 	<bean 
@@ -86,6 +87,10 @@
 		<property name="specialPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="price"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="plpMaxPrice"
+			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+		<property name="plpMinPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<!-- Promotional channel added for TISPRD-8944 -->	
 		<property name="specialPriceMobile"
@@ -157,6 +162,9 @@
 		<!-- pdp changes begins -->
 		<property name="listingId" type="String"></property>
 		<property name="mrp" type="String"></property>
+		<!-- TPR-1886 | JEWELLERY START  -->
+ 		<property name="priceRangeJewellery" type="String"></property>
+ 		<!-- JEWELLERY END	 -->
 		<property name="seller"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.SellerInformationData>"></property>
 		<property name="brand"
@@ -240,6 +248,7 @@
 		<!-- CHANGES FOR TPR-249 -->
 		<property name="displaySizes" type="java.util.List&lt;java.lang.String>"></property>
 
+
          <!-- TPR-250 changes -->
         <property name="ussidList" type="java.util.Map&lt;String,String>"></property>
         <property name="mrpMap" type="java.util.Map&lt;String,de.hybris.platform.commercefacades.product.data.PriceData>"></property>
@@ -248,6 +257,7 @@
         <!-- TPR-250 changes -->
          <!--CKD:PRDI-350  -->
          <property name="availabilityMap" type="java.util.Map&lt;String,Integer>"></property>
+
 
 <!-- Optimization # 4 -->
 		<property name="homepageImageurl" type="java.lang.String"></property>
@@ -259,6 +269,7 @@
 		<!-- Added for Kidswear -->
 		<property name="rootCategoryL2" type="String"></property>
 		<!-- Added for Kidswear Ends -->
+
 
 	</bean>
 
@@ -638,6 +649,9 @@
 		<property name="isNumeric" type="java.lang.Boolean" />
 		<property name="unitType" type="java.lang.String" />
 		<!-- Search POC End -->
+		<!-- TPR-3548  Start-->
+		<property name="isNumericRange" type="java.lang.Boolean" />
+		<!-- TPR-3548 End -->
 	</bean>
  
 	<bean class="com.tisl.mpl.facades.product.data.AddressRadioTypeData">

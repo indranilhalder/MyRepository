@@ -47,6 +47,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
 
+		<!-- Jewellery hot-folder for jewellery price -->	
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_jewelleryprice-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
 	<!-- <import
@@ -1013,6 +1016,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
 
+	<!-- TPR-1886 | JEWELLERY START-->
+     <bean id="mplPriceValueRangeProviderJewellery"
+ 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPriceValueRangeProviderJewellery"
+ 		parent="abstractPropertyFieldValueProvider">
+ 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+ 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+ 		<property name="mplJewelleryUtility" ref="mplJewelleryUtility" />
+ 	</bean>
+ 	<!--  JEWELLERY  END-->
+
 	<bean id="mplMrpPriceValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMrpPriceValueProvider"
 		parent="abstractPropertyFieldValueProvider">
@@ -1782,6 +1795,27 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			</property>
 	</bean>
 	
+	<!-- TPR-3548 | Gender Facet Compare Start-->
+	<bean id="genderAttributeSortProvider"
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.GenderFacetTopValuesProvider">
+		<property name="comparator" ref="genderFacetAttributeComparator"/>
+	</bean>
+     <bean id="genderFacetAttributeComparator"
+	      class="com.tisl.mpl.core.comparator.GenderFacetComparator">
+		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
+		<property name="genderSystems">
+			<list>
+				<value>MEN</value>
+				<value>WOMEN</value>
+				<value>COUPLES</value>
+				<value>KIDS</value>
+				<value>BOYS</value>
+				<value>GIRLS</value>
+				<value>UNISEX</value>
+			</list>
+		</property>
+	</bean>
+	<!-- TPR-3548 | Gender Facet Compare End-->
 	 
   <!-- ============== configure beans for CRM Ticket and Refund Initiation Events ============== -->
   <bean id="sendUnCollectedOrderToCRMEventListener"
