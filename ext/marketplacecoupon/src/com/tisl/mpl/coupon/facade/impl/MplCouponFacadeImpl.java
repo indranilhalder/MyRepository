@@ -399,6 +399,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 										+ voucherCode);
 							}
 							/* TPR-1075 Changes End */
+							//TPR-4460 Changes
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+										+ voucherCode);
+							}
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+										+ voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+										+ voucherCode);
+							}
 							else
 							{
 								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
