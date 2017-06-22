@@ -217,10 +217,16 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		{
 			isSaved = true;
 			boolean hasExchangeinCart = false;
-			if (cart != null && cart.getExchangeAppliedCart() != null && cart.getExchangeAppliedCart().booleanValue())
+			if (cart != null)
 			{
-				hasExchangeinCart = true;
-
+				for (final AbstractOrderEntryModel entry : cart.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeId()))
+					{
+						hasExchangeinCart = true;
+						break;
+					}
+				}
 			}
 			if (!hasExchangeinCart && cart != null)
 			{
