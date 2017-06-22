@@ -61,6 +61,7 @@
               </optgroup> --%>
       </select>
      </div>
+      <div><h2 style="text-align: center;"><spring:theme code="text.heading.myaccount" /></h2></div>
 <div class="wrapper">		
 		
 	<!----- Left Navigation Starts --------->

@@ -51,6 +51,7 @@
               </optgroup>
       </select> --%>
 </h1>
+
 	<div class="luxury-mobile-myaccount visible-xs">
 		<select class="menu-select" onchange="window.location=this.options[this.selectedIndex].value;">
           <optgroup label="<spring:theme code="header.flyout.myaccount" />">
@@ -67,6 +68,7 @@
               </optgroup> --%>
       </select>
 	</div>
+	 <div><h2 style="text-align: center;"><spring:theme code="text.heading.myaccount" /></h2></div>
 		<div class="wrapper">
 				<!----- Left Navigation Starts --------->
 			<user:accountLeftNav pageName="addressBook"/>
