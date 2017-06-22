@@ -2179,12 +2179,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (isCodEligible)
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
 						addDataForCODToModel(model, cart); //moved to single code for reuse
 					}
 					else
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					}
 				}
 				else
@@ -2335,12 +2337,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (isCodEligible)
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
 						addDataForCODToModel(model, orderModel);
 					}
 					else
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					}
 				}
 				else
