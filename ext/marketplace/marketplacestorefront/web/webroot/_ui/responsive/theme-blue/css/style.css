@@ -70517,6 +70517,10 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:nth-child(4) .message {
     left: -300% !important;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress .message{
+	min-height: 83px; /* TISPRDT-1601 fix */
+	margin-left: 14px;
+}
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:last-of-type .message {
     margin-left: 14px;
 }
@@ -70531,12 +70535,21 @@ body .right-account .order-details .deliveryTrack .dot-arrow{
 body .right-account .order-details .deliveryTrack .dot-arrow:last-of-type{
 	left:-2px;
 }
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress .message{
+	margin-left: 8px;
+	}
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:last-of-type .message {
     margin-left: 8px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul>li.progress:first-of-type .message {
+    margin-left: -5px;
 }
 body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor{
 		right: 0px;	/* TISPRDT-1582 fix */
 		padding-left: 34px;	/* TISPRDT-1582 fix */
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment {
+    margin-top: 75px !important;
 }
 }
 @media (max-width: 650px) {
