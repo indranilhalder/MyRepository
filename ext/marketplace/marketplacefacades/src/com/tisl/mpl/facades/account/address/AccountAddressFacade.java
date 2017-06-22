@@ -537,6 +537,9 @@ public class AccountAddressFacade implements MplAccountAddressFacade
 					addressmodel.setAddressType(newAddress.getAddressType());
 					addressmodel.setLocality(newAddress.getLocality());
 					addressmodel.setAddressLine3(newAddress.getLine3());
+					//Start INC144316628 - Selected Landmark is not reflecting in commerce
+					addressmodel.setLandmark(newAddress.getLandmark());
+					//End INC144316628 - Selected Landmark is not reflecting in commerce
 				}
 
 				customerAccountService.saveAddressEntry(currentCustomer, addressmodel);

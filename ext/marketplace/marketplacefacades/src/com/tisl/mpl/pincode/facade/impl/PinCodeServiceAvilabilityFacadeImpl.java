@@ -12,7 +12,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+//SONAR FIX
+//import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.exception.ClientEtailNonBusinessExceptions;

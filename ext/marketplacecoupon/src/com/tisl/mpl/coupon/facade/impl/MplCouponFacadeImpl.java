@@ -102,11 +102,11 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 	private Converter<VoucherInvalidationModel, CouponHistoryData> voucherTransactionConverter;
 	@Resource(name = "voucherConverter")
 	private Converter<VoucherModel, VoucherData> voucherConverter;
-	
-	private final static String COMMACONSTANT=",";
-	private final static String DOTCONSTANT=".";
-	
-	
+
+	private final static String COMMACONSTANT = ",";
+	private final static String DOTCONSTANT = ".";
+
+
 
 
 	/**
@@ -399,6 +399,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 										+ voucherCode);
 							}
 							/* TPR-1075 Changes End */
+							//TPR-4460 Changes
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+										+ voucherCode);
+							}
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+										+ voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+										+ voucherCode);
+							}
 							else
 							{
 								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
@@ -1000,7 +1018,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			final DiscountModel discount = voucherList.get(0);
 
-			if (discount instanceof PromotionVoucherModel && discount != null)//null check added for discount as per IQA review //Sonar Fix
+			if (discount instanceof PromotionVoucherModel)//null check removed for sonar fix
 			{
 				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 				appliedVoucher = promotionVoucherModel;
@@ -1017,7 +1035,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 						if (CollectionUtils.isNotEmpty(paymentTypeList))
 						{
-							final String messagePaymentMode = "The coupon is valid for ";
+							final String messagePaymentMode = "This coupon code can be used on payments made by ";
 							sb.append(messagePaymentMode);
 							for (final PaymentTypeModel paymentType : paymentTypeList)
 							{
@@ -1026,12 +1044,12 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 							}
 							sb.deleteCharAt(sb.lastIndexOf(","));
 							//sb.append(".");//SonarFix
-							sb.append(DOTCONSTANT);
+							//sb.append(DOTCONSTANT);
 						}
 
 						if (CollectionUtils.isNotEmpty(bankLists))
 						{
-							final String messageVoucherBank = " The valid bank/s is/are ";
+							final String messageVoucherBank = " via ";
 							sb.append(messageVoucherBank);
 							for (final BankModel bank : bankLists)
 							{

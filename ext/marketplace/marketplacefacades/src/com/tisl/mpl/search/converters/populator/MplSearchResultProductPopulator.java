@@ -215,8 +215,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
-					getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
 		final Double mobilePriceValue = this.<Double> getValue(source, "mobileprice");
@@ -313,20 +313,20 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	/*
 	 * @Override protected void addImageData(final SearchResultValueData source, final String imageFormat, final String
 	 * mediaFormatQualifier, final ImageDataType type, final List<ImageData> images) {
-	 *
+	 * 
 	 * final Object imgObj = getValue(source, "img-" + mediaFormatQualifier); List<String> imgList = new ArrayList(); if
 	 * (imgObj instanceof ArrayList) { imgList = (List) imgObj; } else { final String imgStr = (String) imgObj;
 	 * imgList.add(imgStr); }
-	 *
-	 *
+	 * 
+	 * 
 	 * if (!imgList.isEmpty()) { for (int i = 0; i < imgList.size(); i++) { final ImageData imageSearchData =
 	 * createImageData(); imageSearchData.setImageType(type); imageSearchData.setFormat(imageFormat);
 	 * imageSearchData.setUrl(imgList.get(i)); images.add(imageSearchData);
-	 *
-	 *
+	 * 
+	 * 
 	 * }
-	 *
-	 *
+	 * 
+	 * 
 	 * } }
 	 */
 	/**
@@ -344,7 +344,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		final List<String> ussidList = (List<String>) getValue(source, "ussID");
 		//CKD:PRDI-350:Start
 		final Map<String, Integer> availabilityMap = new HashMap<String, Integer>();
-		/*if (CollectionUtils.isNotEmpty(ussidList) && ussidList.get(0).contains(":"))
+		if (CollectionUtils.isNotEmpty(ussidList) && ussidList.get(0).contains(":"))
 		{
 			final String[] value = ussidList.get(0).split(DELIMETER);
 			final String ussid = value[0];
@@ -361,7 +361,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 			saveMap.put(ussid.substring(0, 6), savings);
 
 
-		}*/
+		}
 		for (final String ussid : ussidList)
 		{
 			if (ussid.contains(":"))
@@ -371,7 +371,10 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				final String mrp = value[1];
 				final String price = value[2];
 				//CKD:PRDI-350
-				final Integer sellerStock = Integer.valueOf(value[3]);
+				Integer sellerStock=null;
+				if (null!=Integer.valueOf(value[3])){
+					sellerStock = Integer.valueOf(value[3]);
+				}
 				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
 						getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,

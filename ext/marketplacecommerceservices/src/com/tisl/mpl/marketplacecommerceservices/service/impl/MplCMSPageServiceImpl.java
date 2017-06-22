@@ -10,6 +10,7 @@ import de.hybris.platform.cms2.model.contents.contentslot.ContentSlotModel;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.cms2.model.relations.ContentSlotForPageModel;
+import de.hybris.platform.cms2.model.site.CMSSiteModel;
 import de.hybris.platform.cms2.servicelayer.services.impl.DefaultCMSPageService;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
@@ -257,6 +258,18 @@ public class MplCMSPageServiceImpl extends DefaultCMSPageService implements MplC
 	public List<BrandComponentModel> getBrandsForShopByBrand()
 	{
 		return mplCmsPageDao.getBrandsForShopByBrand();
+
+	}
+	
+	/**
+	 * @param siteUid
+	 * @return CMSSite
+	 * @CAR-285
+	 */
+	@Override
+	public CMSSiteModel getSiteforId(final String siteUid) throws CMSItemNotFoundException
+	{
+		return mplCmsPageDao.getSiteforId(siteUid);
 	}
 
 }

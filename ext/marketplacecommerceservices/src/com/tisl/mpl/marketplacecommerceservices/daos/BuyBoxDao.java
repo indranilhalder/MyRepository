@@ -71,5 +71,12 @@ public interface BuyBoxDao
 
 	// TISPRD-8944
 	List<BuyBoxModel> buyBoxPriceMobile(String ProductCode) throws EtailNonBusinessExceptions;
+	/**
+	 * TPR-5712 dao to get price for all the sellers
+	 *
+	 * @param productCode
+	 * @return
+	 */
+	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
 
 }

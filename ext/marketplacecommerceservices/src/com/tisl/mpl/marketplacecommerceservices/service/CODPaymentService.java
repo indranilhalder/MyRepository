@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
@@ -9,7 +9,7 @@ import de.hybris.platform.payment.model.PaymentTransactionModel;
 
 /**
  * @author TCS
- * 
+ *
  */
 public interface CODPaymentService
 {
@@ -39,4 +39,10 @@ public interface CODPaymentService
 	 * @param cart
 	 */
 	void removeCODPaymentInfo(CartModel cart);
+
+	/**
+	 * @param cart
+	 * @param amount
+	 */
+	void getTransactionModelForCards(CartModel cart, Double amount);
 }

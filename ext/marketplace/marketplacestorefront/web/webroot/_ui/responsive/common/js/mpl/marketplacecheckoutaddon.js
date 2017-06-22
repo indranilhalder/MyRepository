@@ -1721,12 +1721,13 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
 					$(".pay .spinner").remove();
-					$("#no-click,.spinner").remove();
+					$("#no-click,.loaderDiv").remove();
 									    
 				}
 				//TPR-4461 ENDS HERE
@@ -1849,11 +1850,12 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
+					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();									    
 				}
 				//TPR-4461 ENDS HERE
@@ -1937,7 +1939,7 @@ $("#otpMobileNUMField").focus(function(){
 		
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
 		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-		console.log(1);
+		//console.log(1);
 		/*TPR-3446 credit card ends*/
 		
 		// TISPRO-153
@@ -1996,11 +1998,12 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_cc_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
+					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();									    
 				}
 				//TPR-4461 ENDS HERE
@@ -2160,11 +2163,12 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
 					$(".pay button, #make_emi_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
+					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();
 									    
 				}
@@ -2733,16 +2737,19 @@ $("#otpMobileNUMField").focus(function(){
  function taCount(taObj,Cnt) { 
 	 						 
  	objCnt=createObject(Cnt);
- 	console.log("inside objcnt");
+ 	//console.log("inside objcnt");
  	objVal=taObj.value;
- 	console.log("inside objVal");
+ 	//console.log("inside objVal");
  	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
  	if (objCnt) {
  		if(bName == "Netscape"){	
  			objCnt.textContent=maxL-objVal.length;
- 			console.log("inside textcontent");}
- 		else{objCnt.innerText=maxL-objVal.length;
- 		console.log("inside innerText");}
+ 			//console.log("inside textcontent");
+ 		}
+ 		else{
+ 			objCnt.innerText=maxL-objVal.length;
+ 			//console.log("inside innerText");
+ 		}
  	}
  
  	return true;
@@ -4302,7 +4309,7 @@ $('#cardNo').keyup(function(){
 	       cardType = creditCardTypeFromNumber($(this).val());
 	   }
 	   else if($(this).val().length < 2){
-		   console.log('bbb');
+		  // console.log('bbb');
 		   document.getElementById("cardType").value="";
 		   $('ul.accepted-cards li').removeClass('active-card');
 	   }
@@ -4699,7 +4706,12 @@ function applyPromotion(bankName,binValue,formSubmit)
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
-
+				//TISTRT-1605 //TISBBC-35
+				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
+					$("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue);
+		 		}else{
+		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 		}
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
 				{
@@ -4977,8 +4989,8 @@ function submitNBForm(){
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
-		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		
 		/*TPR-3446 net banking ends*/
 		
@@ -5011,11 +5023,12 @@ function submitNBForm(){
 				}
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay button, .make_payment_top_nb").prop("disabled",false);
 					$(".pay button, .make_payment_top_nb").css("opacity","1");	
-					$(".pay .spinner").remove();
+					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();
 				}
 				//TPR-4461 ENDS HERE
@@ -5189,7 +5202,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 //	 			TISPRD-1666 - console replaced with alert and resp print
 	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
@@ -5223,9 +5236,9 @@ $(document).ready(function(){
 $(".edit_address").click(function(){
 	//var address_id = $(this).parents().find(".edit").next(".editnewAddresPage").attr("id");
 	var address_id = $(this).attr('id');
-	console.log(address_id);
+	//console.log(address_id);
 	var address_id_new = address_id.split('_');
-	console.log(address_id_new[1]);
+	//console.log(address_id_new[1]);
 	//$(this).parents().find(".address, label").toggle();
 	$.ajax({
  		url: ACC.config.encodedContextPath + $(this).attr("href"),
@@ -5247,9 +5260,9 @@ $(".edit_address").click(function(){
  			$("#"+address_id_new[1]).slideDown();
  			//TISRLEE-2328 Author Tribhuvan
  			 loadPincodeData("edit").done(function() {
-     			console.log("addressform line 394");
+     			//console.log("addressform line 394");
      		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-     		 console.log("addressform line 396 "+value);
+     		 //console.log("addressform line 396 "+value);
      		 otherLandMarkTri(value,"defult");
      		});
  		},
@@ -5275,7 +5288,7 @@ $(".regular-radio").click(function(){
  				$(".address-list input[type='radio']+label").removeClass("radio-checked");
  				
  				radio.attr('checked', 'checked');
- 				console.log(radio_label);
+ 				//console.log(radio_label);
  				radio_label.addClass('radio-checked');
  				//radio_label.css('background-color',' #999999');
  			}else{
@@ -5781,6 +5794,14 @@ function checkPincodeServiceability(buttonType,el)
 	} //CAR-246//UF-70
 	else if(selectedPincode!=="" && $("#isPincodeRestrictedPromoPresentId").val()=="true"){
 		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
+		// TPR-5666 | cartGuid Append in url during pincode servicability check
+		var cartGuidParamValue = getParameterByName("cartGuid");
+		if(typeof cartGuidParamValue != "undefined"){
+			$(location).attr('href',ACC.config.encodedContextPath + "/cart?cartGuid="+cartGuidParamValue+"&pincode="+selectedPincode);
+		}
+		else{
+			$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
+		}
 	}
 	else
     {
@@ -5930,16 +5951,16 @@ function checkPincodeServiceability(buttonType,el)
  			}*/
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
- 			console.log(resp);
+ 			//console.log(resp);
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
  			
 // TISPRD-1666 - console replaced with alert and resp print
  			var errorDetails=JSON.stringify(resp);
- 			console.log("errorDetails 1>> "+errorDetails);
+ 			//console.log("errorDetails 1>> "+errorDetails);
  			
  			handleExceptionOnServerSide(errorDetails);
- 			console.log('Some issue occured in checkPincodeServiceability');
+ 			//console.log('Some issue occured in checkPincodeServiceability');
  			// setTimeout(function(){
  	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
  	 			$("#no-click,.loaderDiv").remove();
@@ -5972,6 +5993,14 @@ function checkPincodeServiceability(buttonType,el)
 	
 
    }
+}
+
+//get parameter from URL
+
+function getParameterByName(name){
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search)){
+		return decodeURIComponent(name[1]);
+   } 
 }
 //TPR-970 changes starts
 function populateCartDetailsafterPincodeCheck(responseData){
@@ -6540,12 +6569,12 @@ function checkIsServicable()
 	 			// TISPRD-1666 - console replaced with alert and resp print
 	 			// alert("Some issues are there with Checkout at this time.
 				// Please try later or contact our helpdesk");
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
-	 			console.log('Some issue occured in checkPincodeServiceability');
+	 			//console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 			// TISPRM-65
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
@@ -6807,7 +6836,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			// alert("Some issues are there with Checkout at this time.
 				// Please try later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
@@ -7034,6 +7063,7 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//UF-277 TISSTRT-1601
 	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
@@ -7055,6 +7085,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="firstName") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
@@ -7063,6 +7094,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="lastName") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
@@ -7071,6 +7103,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
@@ -7079,6 +7112,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
@@ -7124,11 +7158,13 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
+	//TISSTRT-1601 UF-277 regex
 	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
+	//TISSTRT-1601 UF-277
 	else if(!regex.test(addressLine)){
 		errorHandle.innerHTML = "Please enter a valid Address";
         return false;
@@ -7233,6 +7269,7 @@ function validateCityEmi() {
 function validateState() {
 	var name=$("#state").val();
 	var errorHandle=document.getElementById("stateError");
+	//TISSTRT-1601 UF-277
 	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
@@ -7249,6 +7286,7 @@ function validateState() {
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
 	var errorHandle=document.getElementById("stateErrorEmi");
+	//TISSTRT-1601 UF-277
 	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
@@ -7364,7 +7402,7 @@ function expressbutton()
 	 			// alert("Some issues are there with Checkout at this time.
 				// Please try later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			handleExceptionOnServerSide(errorDetails);
@@ -7456,8 +7494,8 @@ $("#couponSubmitButton").click(function(){
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
 	 			
-	 			console.log(response.redeemErrorMsg);
-	 			$("#no-click,.spinner").remove(); //add for INC_11738
+	 			//console.log(response.redeemErrorMsg);
+	 			$("#no-click,.loaderDiv").remove(); //add for INC_11738
 
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			//INC144316021
@@ -7643,7 +7681,7 @@ $(".remove-coupon-button").click(function(){
 
 $(document).ready(function(){
 	$("#off-bag").show();
-	console.log($("*[data-id=savedCCard]").is(":checked"));
+	//console.log($("*[data-id=savedCCard]").is(":checked"));
 	if($('#couponFieldId').prop('readonly') == false)
 	{
 		var selection = $("#voucherDisplaySelection").val();
@@ -8293,8 +8331,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 		else{
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
-			
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 			$(".pay button, #make_mrupee_payment").prop("disabled",true);
 			$(".pay button, #make_mrupee_payment").css("opacity","0.5");
 			
@@ -8302,7 +8339,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 			var guid=$("#guid").val();
 			var walletName = $("#radioButton_MRupee").val();
 			var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
-			console.log("Calling createWalletOrder");
+			//console.log("Calling createWalletOrder");
 			$.ajax({
 				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
 				type: "GET",
@@ -8321,11 +8358,12 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					}
 					//TPR-4461 STARTS HERE
 					else if(response=='redirect_with_coupon'){
-						document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+						document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 						$("#juspayconnErrorDiv").css("display","block");
+						$("body,html").animate({ scrollTop: 0 });
 						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
 						$(".pay button, #make_mrupee_payment_up").css("opacity","1");
-						$(".pay .spinner").remove();
+						$(".pay .loaderDiv").remove();
 						$("#no-click,.spinner").remove();
 										    
 					}
@@ -8334,7 +8372,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 						window.sessionStorage.removeItem("header");
 						setTimeout(function(){ 			 
 							 var values=response.split("|"); 
-							 console.log("Response for mRupee is " + response);
+							 //console.log("Response for mRupee is " + response);
 							 	// To do later
 								  $("#REFNO").val(values[0]);
 								  $("#CHECKSUM").val(values[1]);
@@ -8346,7 +8384,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					}
 					$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
 					$(".pay button, #make_mrupee_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
+					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();
 				},
 				error:function(response){
@@ -8395,8 +8433,7 @@ function submitWalletForm(values) {
 	if(checkNull){
 		var staticHost=$('#staticHost').val();
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
-		
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		$(".pay button, #make_mrupee_payment").prop("disabled",true);
 		$(".pay button, #make_mrupee_payment").css("opacity","0.5");
 		$("#tpWallt_payment_form").submit() ;
@@ -8506,8 +8543,9 @@ function submitCODForm(){
 				//TPR-4461 STARTS HERE
 				else if(response=='redirect_with_coupon'){
 					// $(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
-					document.getElementById("juspayErrorMsg").innerHTML="Sorry,Voucher is not applicable for the PAYMENT MODE you have selected.Please select the correct PAYMENT MODE/BANK OR <a href='javascript:explicit_coupon_release_function();'><b><u>click here to release the voucher</u></b></a> and proceed.";
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
 					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
 					$(".pay .payment-button,.cod_payment_button_top").prop("disabled",false);
 					$(".pay .payment-button,.cod_payment_button_top").css("opacity","1");
 					//$(".pay button, #make_cc_payment_up").prop("disabled",false);

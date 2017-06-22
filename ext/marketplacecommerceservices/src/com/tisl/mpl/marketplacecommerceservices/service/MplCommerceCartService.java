@@ -546,5 +546,12 @@ public interface MplCommerceCartService
 	boolean checkMaxLimitCheckout(CartModel serviceCart);
 	//TPR-5346 ENDS
 
+	//TPR-5666 samsung cart changes
+	/**
+	 * @param cartGuid
+	 * @return
+	 * @throws InvalidCartException
+	 */
+	public CartModel fetchCartUsingGuid(String cartGuid) throws InvalidCartException;
 
 }

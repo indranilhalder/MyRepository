@@ -164,6 +164,7 @@ ACC.productDetail = {
 	
 
 
+
 	// SizeGuide
 		
 		// Sise Guide Select Color
@@ -189,7 +190,10 @@ ACC.productDetail = {
 		//added for Size guide Variant select
 
 
+
+
 	 $(document).on("click", '.variant-select li span, .color-swatch li span',
+
 
 				function() {
 				  var target = $(this).attr('data-producturl');
@@ -816,6 +820,7 @@ function setValidPrice(sellersArray, index) {
 			 //$("#dListedErrorMsg").show(); //Need to Change	
 			// $("#freebieProductMsgId").show();
 
+			 var prodCode=$("#productCodePost").val();
 			 var ussId=  $("#ussid").val();
 			 
 			//update the message for Freebie product TPR-1754
@@ -1433,8 +1438,10 @@ function isOOS(){
 	var disabledOption = $("#variant li.strike").length;
 	
 
+
     // availibility.length  was coming undefined even if availability was NOT Undefined
 	if(availibility!=undefined && typeof availibility === 'object')/* Change for TISSQAUAT-687 :: IE throws error*/ 
+
 
 
 {
@@ -1556,6 +1563,7 @@ function displayDeliveryDetails(sellerName) {
 				var fulFillmentP1 = data['fulfillmentType1'];
 				/*TISPRDT-878 END*/
 				
+
 				var leadTime=0;
 				if(null!=data['leadTimeForHomeDelivery']){
 					leadTime=data['leadTimeForHomeDelivery'];
@@ -1574,6 +1582,7 @@ function displayDeliveryDetails(sellerName) {
 					$('#fulFilledBySship').show();
 					$('#fulFilledBySship').html(sellerName);
 				}*/
+
 
 /*TISPRDT-878 Start*/
 				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
@@ -1594,6 +1603,7 @@ function displayDeliveryDetails(sellerName) {
 					   $('#fulFilledBySship').html(sellerName);
 					  }
 				/*TISPRDT-878 END*/
+
 					//INC144314017 start
 				if(!$('#pdpPincodeCheck').data('clicked')) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
@@ -2447,6 +2457,7 @@ function isOOSSizeGuide(){
 	//totalOptions = totalOptions -1; // UI got changed from select option to li strike off 
 	var disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
 	
+
 	// availibility.length  was coming undefined even if availability was NOT Undefined
 	if(availibility!=undefined && Object.keys(availibility).length > 0){
 		$.each(availibility,function(k,v){
@@ -3174,17 +3185,23 @@ function getProductContents() {
 								responsive : {
 									// breakpoint from 0 up
 									0 : {
+
 										items:1,
 									},	
+
 									// breakpoint from 767 up
 									768 : {
+
 										items:2,
 									},
+
 									// breakpoint from 1122 up
 									1123 : {
 										items:3,
 									}			
 								}	
+
+
 								/*navigation:true,
 								rewindNav: false,
 								navigationText :[],
@@ -3220,6 +3237,22 @@ function getProductContents() {
 	}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	function lazyLoadProductContents(){
 		if ($(window).scrollTop() + $(window).height() >= $('#productContentDivId').offset().top) {
 	        if(!$('#productContentDivId').attr('loaded')) {
@@ -3238,15 +3271,11 @@ function getProductContents() {
 
 	}
 	
-
-
 	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
 		$(window).on('scroll load',function() {
 		lazyLoadProductContents();
 		});
-		
 	}
-
 //PDP Specifications arrow
 $(document).ready(function(){
 var width=0;
@@ -3664,6 +3693,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 								//Removing spinner as tealium/Classattributes/giggya call can continue in backend
 								//$("#no-click,.spinner").remove();
 								$("#no-click,.loaderDiv").remove(); //UF-263
+
 								
 								//Start classification attributes
 								xhrClassAttrib=getClassificationAttributes(responseProductCode);
@@ -3780,6 +3810,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 			//TISPRM-56
 			var stockInfo = data['availibility'];
 
+
 			availibility = stockInfo;
 			$.each(stockInfo,function(key,value){
 
@@ -3821,6 +3852,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					var channelTypeWeb = $("#promolist").val();//added for TISTE-143
 					var promorestrictedSellers = $("#promotedSellerId").val();
 					var promoindentifier = $("#product_applied_promotion_code").val();
+
 					//added for TISTE-143
 					if(channelTypeWeb != undefined)
 					{
@@ -3859,6 +3891,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 
 					}
 
+
 					}//added for TISTE-143
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
@@ -3879,6 +3912,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#otherSellerLinkId").show();
 					}
+
 
 					else if (isOOS() && data['othersSellersCount']>0) {
 						//if( $("#variant,#sizevariant option:selected").val()!="#") {  //TISPRD-1173 TPR-465

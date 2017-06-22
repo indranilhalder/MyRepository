@@ -4,7 +4,7 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 
-<!-- New Homepage change -->
+
 <script>
 var homePageBannerTimeout='${timeout}';
 
@@ -25,16 +25,16 @@ var homePageBannerTimeout='${timeout}';
 				<c:url value="${banner.urlLink}" var="encodedUrl" />
 				<div class="item slide">
 
-					<!-- START: code for adding  3 sided and  4 sided banner component-->
+					<%-- START: code for adding  3 sided and  4 sided banner component--%>
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div> 
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 							<%--  <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
@@ -51,9 +51,9 @@ var homePageBannerTimeout='${timeout}';
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div> 
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 							 <%-- <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
@@ -102,7 +102,7 @@ var homePageBannerTimeout='${timeout}';
 	</div>
 	</div>
 	
-	<!-- g -->
+	
 	<div class="content-block-slider electronic-brand-slider">
 	<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference electronic-rotatingImage"
@@ -112,16 +112,16 @@ var homePageBannerTimeout='${timeout}';
 				<c:url value="${banner.urlLink}" var="encodedUrl" />
 				<div class="item slide">
 
-					<!-- START: code for adding  3 sided and  4 sided banner component-->
+					<%-- START: code for adding  3 sided and  4 sided banner component--%>
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
 							<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 							<%--  <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
@@ -138,9 +138,9 @@ var homePageBannerTimeout='${timeout}';
 								<div class="image">
 									<img src="${banner.bannerImage.url}">
 								</div>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 							 <%-- <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
@@ -196,14 +196,12 @@ var homePageBannerTimeout='${timeout}';
 			<c:if test="${ycommerce:evaluateRestrictions(banner)}">
 				<c:url value="${banner.urlLink}" var="encodedUrl" />
 				<div class="item slide">
-					<!-- START: code for adding  3 sided and  4 sided banner component-->
+					<%-- START: code for adding  3 sided and  4 sided banner component--%>
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
-								 <%-- <div class="image">
-									<img src="${banner.bannerImage.url}">
-								</div> --%>
-								<!-- UF-291 starts here -->
+								
+								
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <div class="image">
@@ -216,10 +214,10 @@ var homePageBannerTimeout='${timeout}';
 										</div>
 									</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
+								
 							 <%-- <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
@@ -233,10 +231,6 @@ var homePageBannerTimeout='${timeout}';
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
 							<div class="hero icid fourPromoBanner">
-								<%-- <div class="image">
-									Hello<img src="${banner.bannerImage.url}">
-								</div> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <div class="image">
@@ -249,10 +243,9 @@ var homePageBannerTimeout='${timeout}';
 										</div>
 									</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 							<%--  <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
@@ -277,11 +270,6 @@ var homePageBannerTimeout='${timeout}';
 								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>>
-								<%-- <img
-								src="${banner.media.url}"
-								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" /> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
@@ -290,7 +278,6 @@ var homePageBannerTimeout='${timeout}';
 										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
 								</a>
 							</c:when>
 							<c:otherwise>
@@ -301,11 +288,6 @@ var homePageBannerTimeout='${timeout}';
 								<span class="style_edit_title">${banner.headline}</span>
 								<a tabindex="-1" href="${urlWithIcid}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>>
-								<%-- <img
-								src="${banner.media.url}"
-								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" /> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
@@ -314,7 +296,6 @@ var homePageBannerTimeout='${timeout}';
 										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
 							</a>
 							</c:otherwise>
 						</c:choose>
@@ -324,7 +305,6 @@ var homePageBannerTimeout='${timeout}';
 			</c:if>
 		</c:forEach>
 	</div>
-	<!-- hiii -->
 		<div
 		class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference home-rotatingImage"
 		id="rotatingImageTimeoutMobile">
@@ -333,14 +313,10 @@ var homePageBannerTimeout='${timeout}';
 				<c:url value="${banner.urlLink}" var="encodedUrl" />
 				<div class="item slide">
 
-					<!-- START: code for adding  3 sided and  4 sided banner component-->
+					<%-- START: code for adding  3 sided and  4 sided banner component--%>
 					<c:choose>
 						<c:when test="${ banner.type eq 'Big 3 Sided Banner Component'}">
 							<div class="hero icid">
-								<%-- <div class="image">
-									<img src="${banner.bannerImage.url}">
-								</div> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <div class="image">
@@ -353,10 +329,10 @@ var homePageBannerTimeout='${timeout}';
 									</div>
 								</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here --> 
-								<!-- TPR-628----for mobile and desktop banner view -->
+								 
+								
 							<%--  <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.majorPromoText}</li>
 								</ul>
@@ -370,10 +346,6 @@ var homePageBannerTimeout='${timeout}';
 
 						<c:when test="${ banner.type eq 'Big 4 Sided Banner Component'}">
 							<div class="hero icid fourPromoBanner">
-								<%-- <div class="image">
-									Hello<img src="${banner.bannerImage.url}">
-								</div> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <div class="image">
@@ -386,10 +358,9 @@ var homePageBannerTimeout='${timeout}';
 									</div>
 								</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 						<%-- 	 <common:bannerImage view="${banner.bannerView.code}" image="${banner.bannerImage.url}"/> --%>
-								<!-- TPR-628----for mobile and desktop banner view -->
+								
 								<ul class="major-promos">
 									<li data-bannerid="${banner.pk}">${banner.promoText4}</li>
 								</ul>
@@ -413,11 +384,6 @@ var homePageBannerTimeout='${timeout}';
 							<c:when test="${fn:contains(encodedUrl,'?')}">
 								<a tabindex="-1" href="${encodedUrl}&icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>>
-								<%-- <img
-								src="${banner.media.url}"
-								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" /> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
@@ -426,17 +392,11 @@ var homePageBannerTimeout='${timeout}';
 									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
 								</a>
 							</c:when>
 							<c:otherwise>
 								<a tabindex="-1" href="${encodedUrl}?icid=${banner.pk}"
 								<c:if test="${banner.external}"> target="_blank"</c:if>>
-								<%-- <img
-								src="${banner.media.url}"
-								alt="${not empty banner.headline ? banner.headline : banner.media.altText}"
-								title="${not empty banner.headline ? banner.headline : banner.media.altText}" /> --%>
-								<!-- UF-291 starts here -->
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
@@ -445,7 +405,6 @@ var homePageBannerTimeout='${timeout}';
 									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:otherwise>	
 								</c:choose>
-								<!-- UF-291 ends here -->
 							</a>
 							</c:otherwise>
 						</c:choose>
@@ -455,7 +414,6 @@ var homePageBannerTimeout='${timeout}';
 			</c:if>
 		</c:forEach>
 	</div>
-	<!-- hii -->
 	</div>
 	</c:otherwise>
 	</c:choose>

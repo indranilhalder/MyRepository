@@ -431,7 +431,9 @@ tr.d0 td {
 				<input type="hidden" name="entryNumber"		value="${entry.entryNumber}" />
 				<input type="hidden" name="productCode"		value="${entry.product.code}" />
 				<input type="hidden" name="initialQuantity" value="${entry.quantity}" />
-				
+				<c:if test="${param.cartGuid ne null}">		<!-- For TPR-5666 -->
+					<input type="hidden" name="cartGuid" value="${param.cartGuid}" />
+				</c:if>
 				<ycommerce:testId code="cart_product_quantity">
 					<c:set var="priceBase" value="${entry.basePrice.formattedValue}" />
 					<c:set var="subPrice" value="${entry.basePrice.value}" />
@@ -661,7 +663,7 @@ tr.d0 td {
 		<c:forEach items="${promoModified}" var="promoModified">
 			<c:choose>
 				<c:when	test="${promoModified.key == entry.entryNumber}">
-					<li># ${promoModified.value}</li>
+					<li>${promoModified.value}</li>
 				</c:when>
 			</c:choose>
 		</c:forEach>
@@ -669,7 +671,7 @@ tr.d0 td {
 			<c:forEach items="${priceModifiedMssg}" var="priceModifiedMssg">
 				<c:choose>
 					<c:when	test="${priceModifiedMssg.key == entry.entryNumber}">
-						<li># ${priceModifiedMssg.value}</li>
+						<li>${priceModifiedMssg.value}</li>
 					</c:when>
 				</c:choose>
 			</c:forEach>

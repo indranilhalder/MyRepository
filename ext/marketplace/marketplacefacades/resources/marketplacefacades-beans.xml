@@ -246,6 +246,10 @@
 
 <!-- Optimization # 4 -->
 		<property name="homepageImageurl" type="java.lang.String"></property>
+		
+		<!-- Added for Kidswear -->
+		<property name="rootCategoryL2" type="String"></property>
+		<!-- Added for Kidswear Ends -->
 
 	</bean>
 

@@ -45,6 +45,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 
 import de.hybris.platform.cockpit.widgets.ListboxWidget;
+import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -54,6 +55,7 @@ import de.hybris.platform.cscockpit.widgets.controllers.BasketController;
 import de.hybris.platform.cscockpit.widgets.controllers.CheckoutController;
 import de.hybris.platform.cscockpit.widgets.models.impl.CheckoutCartWidgetModel;
 import de.hybris.platform.cscockpit.widgets.renderers.impl.AbstractCsListboxWidgetRenderer;
+import de.hybris.platform.order.exceptions.CalculationException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -81,6 +83,8 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 	
 	@Autowired 
 	private MplSellerInformationService mplSellerInformationService;
+	@Autowired
+	private CommerceCartService commerceCartService;
 	/**
 	 * Creates the content internal.
 	 *
@@ -244,7 +248,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			if (null != orderEntry && null != orderEntry.getProduct() && null != orderEntry.getProduct().getRichAttribute())
 			{
 				productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-				if (productRichAttributeModel != null && productRichAttributeModel.get(0).getScheduledDelivery() != null)
+				if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty() && productRichAttributeModel.get(0).getScheduledDelivery() != null)
 				{
 					productRichAttr = productRichAttributeModel.get(0).getScheduledDelivery().toString();
 				}
@@ -254,7 +258,7 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 			{
 				sellerRichAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
-				if (sellerRichAttributeModel != null && sellerRichAttributeModel.get(0).getScheduledDelivery() != null)
+				if (sellerRichAttributeModel != null && !sellerRichAttributeModel.isEmpty() && sellerRichAttributeModel.get(0).getScheduledDelivery() != null)
 				{
 					sellerRichAttr = sellerRichAttributeModel.get(0).getScheduledDelivery().toString();
 				}
@@ -521,16 +525,10 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 				
 				CartModel cartModel = (CartModel) orderEntry.getOrder();
 				orderEntry.setScheduledDeliveryCharge(0.0D);
-
-				try {
-					modelService.save(orderEntry);
-					modelService.save(cartModel);
-					modelService.refresh(cartModel);
-					((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-
+				modelService.save(orderEntry);
+				// INC-144316545- Delivery Charge Issue START
+				  recalculateCart(widget,cartModel);
+				// INC-144316545- Delivery Charge Issue END
 			}catch(ModelSavingException e) {
 				LOG.error("Exception while saving the date and tme"+e.getMessage());
 			}catch (Exception e) {
@@ -603,19 +601,46 @@ public class MplCheckoutScheduleDeliveryWidgetRenderer extends AbstractCsListbox
 			ScheduleDeliveryCharges = ((MarketplaceCheckoutController) widget.getWidgetController()).getScheduleDeliveryCharges();
 			orderEntry.setScheduledDeliveryCharge(ScheduleDeliveryCharges);
 			modelService.save(orderEntry);
-			modelService.save(cartModel);
-			modelService.refresh(cartModel);
-			try {
-				((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-
+			// INC-144316545- Delivery Charge Issue START
+			recalculateCart(widget,cartModel);
+			// INC-144316545- Delivery Charge Issue END
 		}catch(Exception e) {
 			LOG.error("Exception occurred While Saving Order Entry"+e.getMessage());
 		}
 	}
 
+	// Recalculating order After Selecting/Re-Setting Delivery Slot
+	private void recalculateCart(ListboxWidget<CheckoutCartWidgetModel, CheckoutController> widget, CartModel cartModel) {
+		Double totalDeliverycost=0.0D;
+		Double deliveryCost = 0.0D;
+		Double scheduleDelCharges = 0.0D;
+		if(null !=cartModel && null !=cartModel.getEntries() ) {
+			for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
+				if(null != cartEntry.getMplDeliveryMode() && null !=cartEntry.getMplDeliveryMode().getValue()) {
+					deliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+				}
+				if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
+					scheduleDelCharges+=cartEntry.getScheduledDeliveryCharge();
+				}
+			}
+		}
+		if(null != deliveryCost && deliveryCost >0.0) {
+			totalDeliverycost+=deliveryCost;
+		}
+		if(null != scheduleDelCharges && scheduleDelCharges >0.0) {
+			totalDeliverycost+=scheduleDelCharges;
+		}
+		cartModel.setDeliveryCost(totalDeliverycost);
+		modelService.save(cartModel);
+		try {
+			commerceCartService.recalculateCart(cartModel);
+		} catch (CalculationException e) {
+			LOG.error("Exception occurred while recalculating cart"+e.getMessage());
+		}
+		((BasketController)widget.getWidgetController().getBasketController()).dispatchEvent(null, widget, null);
+	}
+	
+	
 	private Map<String, List<String>> getDateAndTimeMap(String timeSlotType,
 			String edd) throws java.text.ParseException {
 		return mplDeliveryAddressController.getDateAndTimeMap(timeSlotType,edd); 
