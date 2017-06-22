@@ -76,11 +76,11 @@
 								</div>
 							</c:if>
 						</div>
-						<c:if test="${not empty cartData.entries}">
+						<%--<c:if test="${not empty cartData.entries}">
 							<!-- For Infinite Analytics Start -->
 							<div class="trending"  id="ia_products"></div>
 							<!-- For Infinite Analytics End -->
-						</c:if>
+						</c:if>--%>
 
 					</div>
 					<c:url value="/cart/checkout" var="checkoutUrl" scope="session"/>
