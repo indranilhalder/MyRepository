@@ -70480,7 +70480,8 @@ body .account .right-account .order-history.order-details li.item .status>ul>li.
 
 @media(max-width: 650px){
 	body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.delivery-status.processing.full_track{
-	height: 23px !important;
+	height: 20px !important;
+	padding: 0 0 10px 0;
 }
 }
 @media(max-width: 790px){
@@ -70542,6 +70543,9 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
 	body .right-account .order-details .deliveryTrack .dot-arrow {
     top: 52px;
     width: 14px;
+}
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    font-size: 10px;
 }
 }
 
