@@ -70533,6 +70533,10 @@ body .right-account .order-details .deliveryTrack .dot-arrow:last-of-type{
 body .account .right-account .order-history.order-details li.item .status>ul>li.progress:last-of-type .message {
     margin-left: 8px;
 }
+body.template-pages-account-accountOrderHistoryPage .account .right-account .order-history .product-block li.header>ul>li.trackOrderAnchor{
+		right: 0px;	/* TISPRDT-1582 fix */
+		padding-left: 34px;	/* TISPRDT-1582 fix */
+}
 }
 @media (max-width: 650px) {
 	body .right-account .order-details .deliveryTrack .dot-arrow {

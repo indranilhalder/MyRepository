@@ -3766,6 +3766,9 @@ body .account .right-account .order-history.order-details li.item{
 body .account .right-account .order-history.order-details li.item{
 	border-top: 0px;
 }
+body .account .right-account .order-history.order-details li.item .message {
+    margin-bottom: 5px;
+}
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
@@ -3784,11 +3787,11 @@ body .account .right-account .order-history.order-details .product-block li.item
 body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
     padding-left: 14.5%;
 }
-body .account .right-account .order-history.order-details li.item:last-of-type .order {
-    margin-bottom: 5px;
-}
 body .account .right-account {
     border-top: 0px;
+}
+body .account .right-account .order-history.order-details li.item .message {
+    margin-bottom: 5px;
 }
 }
 @media (max-width: 500px){
