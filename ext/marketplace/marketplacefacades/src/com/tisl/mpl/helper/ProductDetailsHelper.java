@@ -93,6 +93,7 @@ public class ProductDetailsHelper
 	 */
 	private static final String N = "N";
 	public static final String EMPTY = "";
+	private final static String COMMACONSTANT = ",";
 	/**
 	 *
 	 */
@@ -202,8 +203,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -256,13 +257,13 @@ public class ProductDetailsHelper
 		if (null != rich.getHomeDelivery() && rich.getHomeDelivery().equals(HomeDeliveryEnum.YES))
 		{
 			deliveryMode.append(MarketplaceFacadesConstants.HD);
-			deliveryMode.append(",");
+			deliveryMode.append(COMMACONSTANT);//sonar fix
 		}
 
 		if (null != rich.getClickAndCollect() && rich.getClickAndCollect().equals(ClickAndCollectEnum.YES))
 		{
 			deliveryMode.append(MarketplaceFacadesConstants.C_C);
-			deliveryMode.append(",");
+			deliveryMode.append(COMMACONSTANT);//sonar fix
 		}
 
 		if (null != rich.getExpressDelivery() && rich.getExpressDelivery().equals(ExpressDeliveryEnum.YES))
@@ -958,15 +959,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
