@@ -1386,6 +1386,7 @@
 														<!-- <span class="start"></span> --> <c:set value="${0}"
 															var="dotCount" /> 
 															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
+															<input type="hidden" name="shippingResponseCode" value="${productStatus.responseCode}" />
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
@@ -1396,7 +1397,7 @@
 																				class="dot-arrow">
 																			</span>
 																		</c:when>
-																		<c:when test="${productStatus.responseCode eq 'PICK_CONFIRMED'}">
+																		<c:when test="${productStatus.responseCode eq 'ORDER_COLLECTED'}">
 																			<%-- <c:set var="extraStyle" value=""></c:set>
 																			<c:if test="${loop.index > 0}">
 																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
@@ -2493,6 +2494,7 @@
 														<!-- <span class="start"></span> --> <c:set value="${0}"
 															var="dotCount" /> 
 															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
+															<input type="hidden" name="shippingResponseCode" value="${productStatus.responseCode}" />
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
@@ -2503,7 +2505,7 @@
 																				class="dot-arrow">
 																			</span>
 																		</c:when>
-																		<c:when test="${productStatus.responseCode eq 'PICK_CONFIRMED'}">
+																		<c:when test="${productStatus.responseCode eq 'ORDER_COLLECTED'}">
 																			<%-- <c:set var="extraStyle" value=""></c:set>
 																			<c:if test="${loop.index > 0}">
 																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
@@ -3767,7 +3769,7 @@ body .account .right-account .order-history.order-details li.item{
 	border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px;
+    margin-bottom: 5px !important;
 }
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
@@ -3791,7 +3793,7 @@ body .account .right-account {
     border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px;
+    margin-bottom: 5px !important;
 }
 }
 @media (max-width: 500px){
