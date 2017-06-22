@@ -70544,3 +70544,10 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
     width: 14px;
 }
 }
+
+/*TISPRDT-1609 start*/
+body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>select {
+    padding-right: 0;
+    padding-left: 10px;
+}
+/*TISPRDT-1609 end*/
