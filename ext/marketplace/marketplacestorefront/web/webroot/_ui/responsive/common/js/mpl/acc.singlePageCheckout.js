@@ -13,7 +13,7 @@
 ACC.singlePageCheckout = {
 
 	_autoload: [
-	    "mobileAccordion"
+	    //"mobileAccordion"
 	],
 	ajaxErrorMessages:function(code){
 		var message="";
@@ -1737,18 +1737,30 @@ removeExchangeFromCart : function (){
 				}
 			});
 	},
-	mobileAccordion:function(){
-		$("#address-change-link").on("click", function(){
-			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
-			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
-			$(this).hide();
-		});
-		/*$(".cancel-mobile").on("click", function(){
-			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").hide();
-			$(this).parents(".checkout_mobile_section").find(".change-mobile").show();
-			$(this).hide();
-		});*/
-	},
+	
+	
+	
+//	mobileAccordion:function(){
+//		$("#address-change-link").on("click", function(){
+//			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+//			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+//			$(this).hide();
+//		});
+//		$("#delivery-mode-change-link").on("click", function(){
+//			var entryNumbersId=$("#entryNumbersId").val();		            	
+//	    	var entryNumbers=entryNumbersId.split("#");
+//	    	for(var i=0;i<entryNumbers.length-1;i++)
+//	    	{
+//	    		$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();        	
+//	    	}
+//		});
+//		
+//		/*$(".cancel-mobile").on("click", function(){
+//			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").hide();
+//			$(this).parents(".checkout_mobile_section").find(".change-mobile").show();
+//			$(this).hide();
+//		});*/
+//	},
 	getIsResponsive:function(){
 		var winWidth=$(window).width();
 		return winWidth<768?true:false;
@@ -1946,11 +1958,45 @@ removeExchangeFromCart : function (){
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	
+		            	var entryNumbersId=$("#entryNumbersId").val();		            	
+		            	var entryNumbers=entryNumbersId.split("#");
+		            	for(var i=0;i<entryNumbers.length-1;i++)
+		            	{
+		            		$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
+			            		if(!$(obj).is(':checked'))
+			            		{
+			            			$(obj).parent("li").hide();
+			            		}
+			            		if($(obj).is(':checked'))
+			            		{
+			            			$(obj).hide();
+			            		}
+			            	});
+		            	}
+		            	
+		            	
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
 		 		});
 		}
 		
+	},
+	
+	changeAddress:function(element){
+		//$("#address-change-link").on("click", function(){
+			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+			$(element).hide();
+	    //});
+	},
+	
+	changeDeliveryMode:function(){
+		var entryNumbersId=$("#entryNumbersId").val();
+		var entryNumbers=entryNumbersId.split("#");
+		for(var i=0;i<entryNumbers.length-1;i++)
+		{
+		$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();        	
+		}
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
 	attachEventToResetFlagsOnDelModeChange:function()
