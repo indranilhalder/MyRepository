@@ -46,6 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -690,21 +691,42 @@ public class CategoryPageController extends AbstractCategoryPageController
 				String searchCode = new String(categoryCode);
 				//SEO: New pagination detection TISCR 340
 				pageNo = getPaginatedPageNo(request);
-				//applying search filters
 				/* TPR-1283 Changes --Starts */
 				final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 				final String urlName = getCategoryModelUrlResolver().resolve(category);
 				final String resolvedcatName = urlName.substring(1, urlName.lastIndexOf('/'));
 				setCategoryUrl(urlName);
 				/* TPR-1283 Changes --Ends */
+				//applying search filters
 				if (searchQuery != null)
 				{
 					getfilterListCountForSize(searchQuery);
 					model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
 					model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
 				}
+				/* PRDI-411 FIX--Start */
+				boolean isRedirectRequired = true;
+
+				final Enumeration<String> enums = request.getParameterNames();
+
+				while (enums.hasMoreElements())
+				{
+					final String paramKey = enums.nextElement();
+					if (paramKey.contains(ModelAttributetConstants.ICID))
+					{
+						isRedirectRequired = false;
+						break;
+					}
+					else if (paramKey.equalsIgnoreCase(ModelAttributetConstants.SHARE))
+					{
+						isRedirectRequired = false;
+						break;
+					}
+				}
+				/* PRDI-411 FIX--End */
+
 				/* TPR-1283 changes --Starts */
-				if (StringUtils.isNotEmpty(searchQuery) && searchQuery.contains(BRANDNAME))
+				if (StringUtils.isNotEmpty(searchQuery) && searchQuery.contains(BRANDNAME) && isRedirectRequired)
 				{
 					final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
 					//final int count = Integer.valueOf(Iterables.frequency(splitStr, "brand")).intValue();//SonarFix
