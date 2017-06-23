@@ -57,7 +57,7 @@ function navigateToPage(queryString,textString)
 <c:set var="url" value="${fn:substring(url, 0, subStringIndex)}" />
 </c:if>
 
-<ycommerce:testId code="facetNav_title_${facetData.name}">
+<ycommerce:testId code="facetNav_title_${facetData.code}">
 <c:if test="${facetData.values.size()>0}">
 	<li class="facet js-facet ${fn:replace(facetData.name,' ','_')}">
 		<div class="facet-name js-facet-name">
@@ -84,13 +84,14 @@ function navigateToPage(queryString,textString)
 			<c:if test="${not empty facetData.topValues}">
 				<ul class="facet-list js-facet-top-values active">
 					<c:forEach items="${facetData.topValues}" var="facetValue">
-						<li class="filter-${facetData.code}">
+ 							<%-- 			<li class="filter-${facetData.code}">    --%>
 						
 						<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
 						<c:choose>
-						
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">
-							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
+						<%-- TISPRDT-631  check added for dialColour-classification--%>
+						<c:when test="${(facetData.code eq 'colour'  || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification')&& not empty facetValue.name}">
+						<li class="filter-colour">	
+						<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
 								<form action="${url}" method="get" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217); height:26px; width: 26px; background-size:100%;"> 
@@ -134,9 +135,11 @@ function navigateToPage(queryString,textString)
 									<a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 								</c:otherwise>
 							</c:choose>
+							</li>
 						</c:when>
 						
 						<c:otherwise>
+						<li class="filter-${facetData.code}">
 							<c:if test="${facetData.multiSelect}">
 								<form action="${url}" method="get"> 
 									<input type="hidden" name="offer" value="${offer}"/>
@@ -161,6 +164,7 @@ function navigateToPage(queryString,textString)
 										</span>
 									</label>
 								</form>
+								
 							</c:if>
 							<c:if test="${not facetData.multiSelect}">
 								<c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
@@ -183,9 +187,10 @@ function navigateToPage(queryString,textString)
 									</ycommerce:testId> --%>
 								</span>
 							</c:if>
-							</c:otherwise>
-						</c:choose>
-						</li>
+							</li>
+						<%-- 						</li> --%>
+						</c:otherwise>
+					  </c:choose>
 					</c:forEach>
 				</ul>
 			</c:if>
@@ -193,11 +198,13 @@ function navigateToPage(queryString,textString)
 
 				<c:forEach items="${facetData.values}" var="facetValue">					
 				  <c:url value="${facetValue.query.url}" var="facetValueQueryUrl"/>
-					<li class="filter-${facetData.code}">
+		<%-- 			<li class="filter-${facetData.code}">	--%>
 
 					<c:choose>
-						<c:when test="${facetData.code eq 'colour' && not empty facetValue.name}">						
-							<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
+						<%--  TISPRDT-631  check added for dialColour-classification --%>
+						<c:when test="${(facetData.code eq 'colour' || facetData.code  eq 'dialColourWatches' || facetData.code eq 'dialColour-classification') && not empty facetValue.name }">						
+						<li class="filter-colour">							
+						<c:set var="colorAry" value="${fn:split(facetValue.code, '_')}" />
 							<c:choose>
 								<c:when test="${colorAry[0]=='Multi' || colorAry[0]=='multi'}">
 							<form action="${url}" method="get" style="background:url('${commonResourcePath}/images/multi.jpg'); border:1px solid rgb(204, 211, 217); height:26px; width:26px; background-size:100%;"> 
@@ -270,9 +277,11 @@ function navigateToPage(queryString,textString)
 									<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}&amp;searchCategory=${searchCategory}" title="${facetValue.name}" style="background-color:${colorHexCode}; border: 1px solid rgb(204, 211, 217)"></a> --%>
 								</c:otherwise>
 							</c:choose>
+							</li>
 						</c:when>
 						<%-- <c:when test="${facetData.name eq 'size'}"> --%>	
 						<c:when test="${facetData.code eq 'size' && not empty facetValue.name}">					
+						<li class="filter-${facetData.code}">	  
 							  <form action="${url}" method="get"> 
 								<input type="hidden" name="offer" value="${offer}"/>
 								<input type="hidden" name="searchCategory" value="${searchCategory}"/>
@@ -300,11 +309,12 @@ function navigateToPage(queryString,textString)
 								</form>
 						<%-- <a href="#">${facetValue.name}</a> --%>
 							<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>
+							</li>
 						</c:when>						
 						
 						<c:otherwise>
 							
-						
+						<li class="filter-${facetData.code}">
 					
 						<c:if test="${facetData.multiSelect}">											
 							<ycommerce:testId code="facetNav_selectForm"> 
@@ -425,10 +435,11 @@ function navigateToPage(queryString,textString)
 								</ycommerce:testId> --%> 
 							</span>
 						</c:if>
+						</li>
 							</c:otherwise>
 
 					</c:choose>
-					</li>
+<!-- 					</li> -->
 				</c:forEach>
 			</ul>
 			

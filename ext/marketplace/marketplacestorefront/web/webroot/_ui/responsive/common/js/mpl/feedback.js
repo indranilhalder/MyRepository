@@ -153,23 +153,21 @@ $(document).ready(function(){
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
-			
-			var getUrlParameter = function getUrlParameter(sParam) {
-			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			        sURLVariables = sPageURL.split('&'),
-			        sParameterName,
-			        i;
+			// For INC144315410
+			var findGetParameter = function findGetParameter(parameterName) {
+ 			    var result = null,
+ 		        tmp = [];
+ 			    location.search
+ 			    .substr(1)
+ 		        .split("&")
+ 		        .forEach(function (item) {
+ 		        tmp = item.split("=");
+ 		        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+ 		    });
+ 		    return result;
+			}
 
-			    for (i = 0; i < sURLVariables.length; i++) {
-			        sParameterName = sURLVariables[i].split('=');
-
-			        if (sParameterName[0] === sParam) {
-			            return sParameterName[1] === undefined ? true : sParameterName[1];
-			        }
-			    }
-			};
-
-			var isLux = getUrlParameter('isLux');
+			var isLux = findGetParameter('isLux');
 			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
 			console.log("isLuxury"+ isLuxury);
@@ -1452,18 +1450,35 @@ $(document).ready(function(){
 		/*--- END of  Mobile view Left menu Sign In toggle---- */
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
 	
-	$(".progtrckr .progress.processing").each(function(){
+	/*$(".progtrckr .progress.processing").each(function(){
 		var len = $(this).children("span.dot").length;
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
 		} else if(len == 1) {
-			$(this).children("span.dot").first().css("marginLeft","33%");
+			$(this).children("span.dot").first().css("marginLeft","33%");		TPR-6013 Order History 
 		}
 
-	}); 
-	$(".progtrckr").each(function(){
-		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+	}); */
+	$(".progtrckr .progress.processing").each(function(){
+		var len = $(this).children("span.dot").length;
+		if(len == 3) {
+			$(this).children("span.dot").css("marginLeft","12%");
+		}
+		if(len == 2) {
+			$(this).children("span.dot").css("marginLeft","16.5%");
+		} 
+		
+		if(len == 4) {
+			$(this).children("span.dot").css("marginLeft","8%");
+		} 
+
 	});
+	$(".progtrckr").each(function(){
+		//$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+		if($(this).find(".progress.processing .dot:not(.inactive)").last().next(".message").css("display") == "block"){
+			$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show(); //TISPRDT-1570
+		}
+	});	/*TPR-6013 Order History */
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
@@ -1774,7 +1789,7 @@ $(document).ready(function(){
 		$(window).on("load resize", function() {
 			var filter_height = 0;
 			if ($(".searchSpellingSuggestionPrompt").is(":visible")) {
-				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 72;
+				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 96; /* PRDI-69 */
 			 /*else {
 				filter_height=$(".facet-list.filter-opt").height() + 32;
 			}*/
@@ -1839,7 +1854,7 @@ $(document).ready(function(){
 		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
 		$(window).on("load resize", function() {
 			if($(window).width() <= 773){
-				$('.listing.wrapper .left-block').css('margin-top','20px');
+				/*$('.listing.wrapper .left-block').css('margin-top','20px');*/ /* PRDI-69 */
 				var search_text_height = $(".listing.wrapper .search-result h2").height();
 				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
 				
@@ -1859,7 +1874,7 @@ $(document).ready(function(){
 					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
 				}
 				if($(".searchSpellingSuggestionPrompt").height()>0){
-					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 40;
+					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 96; /* PRDI-69 */
 					$('.listing.wrapper .left-block').css('margin-top',left_block_top_margin+'px');
 				}
 			}
@@ -2745,9 +2760,26 @@ $(document).ready(function() {
 	});
 	$(document).on('click','.zoomLens',function(){hit();})
 	$(document).on('click','.product-image-container.device img',function(){
-		hit({
-			windowWidth : $(window).width()
-		});
+		if($(this).attr("data-type")=='image'){		/*add if for INC144314454*/
+			hit({
+				windowWidth : $(window).width()
+			});
+		/*start change for INC144314454*/
+		}else{
+			var url = $(this).attr("data-videosrc");
+			/*$("#player").show();
+			$("#player").attr("src",url);*/
+			$("#videoModal1 #player").attr("src",url).show();
+			$("#videoModal1").modal();
+			$("#videoModal1").addClass("active");
+			//$(".productImagePrimary .picZoomer-pic-wp img").hide();
+			/*$(".zoomContainer").remove();
+			$('.picZoomer-pic').removeData('zoom-image');*/
+			if ($(window).width() < 1025) {
+				$(".product-info .product-image-container.device").show();
+			}
+		}
+		/*end change for INC144314454*/
 	});
 	var pdpStyle;
 		 $(window).on('load resize',function(){	
@@ -3443,6 +3475,10 @@ $(window).on("load resize",function(){
 	else
 		$(".tabs-block .nav.pdp.productNav>li").css("width","");
 	/*TPR-5061*/
+	
+	/*$(".showcaseItem > a").removeClass("showcase-border");		TISSTRT-1525	
+	$(".showcaseItem").eq(1).find("a").addClass("showcase-border");		TISSTRT-1525*/
+	
 });
 
 
@@ -3455,6 +3491,8 @@ $(window).on("load resize",function(){
 if ($(".facet-list.filter-opt").children().length){
 	$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+	$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
 	/* UF-253 start */
 	if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 	var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
@@ -3479,9 +3517,9 @@ $(window).on("load resize", function() {
 			}
 	}	
 	/* UF-257 start */
-	if($('.smartbanner-show .smartbanner').css('display') == 'none'){
+	/*if($('.smartbanner-show .smartbanner').css('display') == 'none'){
 		$(".smartbanner-show").css("margin-top","0px");
-	}
+	}*/
 	/* UF-257 end */
 });
 /* UF-253 end */
@@ -3591,6 +3629,13 @@ $(window).on("load resize",function(){
 	
 	/* UF-338 ends */
 	
+	/* TPR-6013 responsive class addition starts*/
+	$("body .account .right-account .info,body .account .right-account .password,body .account .right-account .signOut,body .account .right-account .order-history").removeClass("responsiveProfile");
+	if($(window).width() <= 1007)
+		$("body .account .right-account .info,body .account .right-account .password").addClass("responsiveProfile");
+	if($(window).width() <= 773)
+		$("body .account .right-account .signOut,body .account .right-account .order-history").addClass("responsiveProfile");
+	/* TPR-6013 responsive class addition starts*/
 });
 $(document).ajaxComplete(function(){
 	topLeftLocator();
@@ -3613,15 +3658,73 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
+/*TPR-1283-code added for change heading height for brand filtered PLP--Starts*/
+$(window).on("load resize",function(){
+	var htH1 = $("body.page-productGrid .list_title h1").height();
+	var lineHtH1 = parseInt($("body.page-productGrid .list_title h1").css("line-height"));
+	var htH1Multiple = htH1/lineHtH1;
+	var paddingOrigin = parseInt($("body.page-productGrid .facet-list.filter-opt").css("padding-top"));
+	paddingOrigin = paddingOrigin + (lineHtH1 * (htH1Multiple-1));
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top",paddingOrigin);
+});
+/*TPR-1283-code added for change heading height for brand filtered PLP--Ends*/
 $(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").addClass("show_arrow");
 });
 $(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });
+/*added for UF-353*/
+$(document).ready(function(){
+	$("#footerByAjaxId ul li a[title='Store Locator']").parent().remove();
+});
+/*UF-353 end*/
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
 $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li",function(){
 	$(".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li").removeClass("active");
 	$(this).addClass("active");
 	});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
+
+/* TPR-6013 starts*/
+$(document).on("click","body .account .right-account .password .blue.changePass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.changePassResponsive",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	if ($(window).width() > 790) {
+		$("body .account .right-account .password .blue.changePass").css("display","block");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	} else {
+		$("body .account .right-account .password .blue.changePass").css("display","none");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+	}   
+	
+});
+/*$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+});*/
+
+$(".deliveryTrack.status.suman").each(function(){
+	$(this).find(".progtrckr.tabs").find("li").each(function(){
+	if($(this).find(".commonBlock").length === 2){
+	var index = $(this).index();
+	$(this).parents(".progtrckr.tabs").siblings(".nav").find("li").eq(index).addClass("greenProgress");
+
+	}
+	});
+	});
+/* TPR-6013 ends*/

@@ -51,6 +51,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.service.MplCustomerWebService;
 import com.tisl.mpl.service.MplSendOrderFromCommerceToCRM;
+import com.tisl.mpl.service.OrderWebService;
 
 
 public class CustomOmsOrderService extends DefaultOmsOrderService implements MplOmsOrderService
@@ -68,6 +69,8 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 	private PickupInfoFacade pickupInfoRestClient;
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
+	@Resource(name = "orderWebService")
+	OrderWebService orderWebService;
 
 	@Autowired
 	private ChangeDeliveryAddressFacade changeDeliveryAddressFacade;
@@ -147,7 +150,8 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 				}
 				getModelService().save(orderModel);
 
-				final Order orderResponse = getOrderRestClient().createOrder(order);
+				//final Order orderResponse = getOrderRestClient().createOrder(order);
+				final Order orderResponse = orderWebService.createOmsOrder(order);
 				final String responseXml = getOrderAuditXml(orderResponse);
 
 				if (StringUtils.isNotEmpty(responseXml))
@@ -173,7 +177,7 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		}
 		catch (final DuplicateEntityException dee)
 		{
-			LOG.error("DuplicateEntityException occured due to order already created", dee);
+			LOG.error("DuplicateEntityException occured due to order already created for OrderID : " + order.getOrderId(), dee);
 			//PaymentFix2017
 			orderModel.setIsSentToOMS(Boolean.TRUE);
 			getModelService().save(orderModel);
@@ -181,17 +185,17 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 		}
 		catch (final RestClientException rce)
 		{
-			LOG.error("RestClientException occured while creating order", rce);
+			LOG.error("RestClientException occured while creating order : " + order.getOrderId(), rce);
 			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, rce);
 
 		}
 		catch (final ClientHandlerException cex)
 		{
-			LOG.error("ClientHandlerException occured while creating order", cex);
+			LOG.error("ClientHandlerException occured while creating order : " + order.getOrderId(), cex);
 			result = new OrderPlacementResult(OrderPlacementResult.Status.ERROR, cex);
 			if (cex.getCause() instanceof SocketTimeoutException)
 			{
-				LOG.error("SocketTimeoutException occured while creating order", cex);
+				LOG.error("SocketTimeoutException occured while creating order :" + order.getOrderId(), cex);
 				result = new OrderPlacementResult(OrderPlacementResult.Status.FAILED, cex);
 
 			}
@@ -363,9 +367,9 @@ public class CustomOmsOrderService extends DefaultOmsOrderService implements Mpl
 
 	/*
 	 * @Desc Used for generating xml
-	 * 
+	 *
 	 * @param order
-	 * 
+	 *
 	 * @return String
 	 */
 	protected String getOrderAuditXml(final Order order)

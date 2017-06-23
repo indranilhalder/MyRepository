@@ -951,7 +951,9 @@ public class ProductPageController extends MidPageController
 								- buyboxdata.getSpecialPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -961,7 +963,9 @@ public class ProductPageController extends MidPageController
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 					}
@@ -1203,6 +1207,7 @@ public class ProductPageController extends MidPageController
 					}
 					catch (final Exception e)
 					{
+						ExceptionUtil.getCustomizedExceptionTrace(e);
 						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
@@ -2752,7 +2757,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getSpecialPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -2763,7 +2770,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 			}

@@ -71,8 +71,8 @@
 						<c:when test="${progressBarId eq checkoutStep.progressBarId}">
 							<c:set scope="page" var="activeCheckoutStepNumber"
 								value="${checkoutStep.stepNumber}" />
-							
-							 <div class="step-${checkoutStep.stepNumber}" ><a href="${stepUrl}" class="step-head js-checkout-step "><spring:theme
+							<c:set var="myAddressUrl" value="${fn:replace(stepUrl,'choose', 'select')}" />
+							 <div class="step-${checkoutStep.stepNumber}" ><a href="${myAddressUrl}" class="step-head js-checkout-step "><spring:theme
 									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
 						</c:when>
 						<c:when
@@ -82,7 +82,8 @@
 									code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
 						</c:when>
 						<c:otherwise>
-							<div class="step-${checkoutStep.stepNumber}"><a href="${stepUrl}" class="step-head js-checkout-step"><spring:theme
+						<c:set var="myAddressUrl" value="${fn:replace(stepUrl,'choose', 'select')}" />
+							<div class="step-${checkoutStep.stepNumber}"><a href="${myAddressUrl}" class="step-head js-checkout-step"><spring:theme
 								code="checkout.multi.${checkoutStep.progressBarId}" /><i class="fa fa-caret-right fa-caret"></i></a><span></span></div>
 							<!--  TISCR-304 end -->
 						</c:otherwise>
