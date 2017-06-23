@@ -3231,25 +3231,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					Double deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 
 					//if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
-					if (!deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 					{
-						//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-						//								deliveryEntry.getSellerArticleSKU());
+						//For TISBBC-43
+						getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode, deliveryEntry.getSellerArticleSKU(),
+								cartModel); //TISPT-400
+					}
+					else
+					{
+						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+						//		deliveryEntry.getSellerArticleSKU());
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-
-
-						//deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 					}
-
-					// Blocked this particular code : As for CNC there will be no charge and hence DB Hit required
-					//					else
-					//					{
-					//						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-					//						//		deliveryEntry.getSellerArticleSKU());
-					//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-					//								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-					//					}
 
 
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
