@@ -71,7 +71,7 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us
 ;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;FAQ
 ;;TermsAndConditions;Terms And Conditions;/terms-conditions;;;;;;Terms and Conditions
-;;TermsOfUse;Terms Of Use;/termsOfUse;;;;;;Terms Of Use
+;;TermsOfUse;Terms Of Use;/terms-use;;;;;;Terms Of Use
 ;;TrackOrdersLink;Track Orders Link;/trackorders;;;;;;Track Orders
 ;;ShippingLink;Shipping Link;/shipping;;;;;;Shipping
 ;;CancellationLink;Cancellation Link;/cancellation;;;;;;Cancellation
@@ -171,10 +171,10 @@ INSERT_UPDATE ShopOnLuxury;$contentCV[unique=true];uid[unique=true];shopOnLuxury
 
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;SiteLogoComponent;Site logo ;SiteLogoComponent;"/";tulSiteLogo
-;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook
-;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter
-;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube
-;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://instagram.com";instagram
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com/TATACLiQLuxury/";facebook
+;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://twitter.com/TATACLiQLuxury";twitter
+;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://www.youtube.com/channel/UCqsHukm7vFthbcB_JAoMe8A";youtube
+;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://www.instagram.com/TATACLiQLuxury/";instagram
 ;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay
 ;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore
 
