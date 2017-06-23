@@ -5404,11 +5404,33 @@ function checkServiceabilityRequired(buttonType,el){
 			);
 		}*/
 	}
+	// TPR-6029 | for checkout button click from cart | start
+	if(typeof _satellite != "undefined"){
+		_satellite.track('cpj_cart_checkout');
+	}
+	var buttonId = $(el).attr('id');
+	var buttonPosition;
+	if(buttonId.indexOf('down') < 0){
+		buttonPosition = "top";
+	}
+	else{
+		buttonPosition = "bottom";
+	}
+	
+	if(typeof digitalData.cpj.button != "undefined"){
+		digitalData.cpj.button.place = buttonPosition;
+	}
+	else{
+		digitalData.cpj.button = {
+			place : buttonPosition	
+		}
+	}
+	
+	// TPR-6029 | for checkout button click from cart | end
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
 	}
 	else{
-		
 		redirectToCheckout(checkoutLinkURlId);
 	}
 }
@@ -7025,6 +7047,8 @@ function updateCart(formId){
 		"event_type": "quantity_updated"
 	});
 	}
+	//TPR-6029
+	_satellite.track('cpj_cart_quantity_change');
 }
 
 

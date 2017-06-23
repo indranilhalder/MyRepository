@@ -594,9 +594,13 @@ sendAddToBag : function(formId, isBuyNow) {
 						if(!utagError){
 							if(isBuyNow){
 								utagAddProductToBag("buy_now",productCodeMSD);
+								//TPR-6029
+								dtmAddProductToBag("buy_now");
 							}
 							else{
 								utagAddProductToBag("add_to_bag",productCodeMSD);
+								//TPR-6029
+								dtmAddProductToBag("add_to_bag");
 							}
 						}
 						

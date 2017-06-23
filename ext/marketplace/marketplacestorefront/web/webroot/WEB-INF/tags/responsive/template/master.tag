@@ -56,7 +56,8 @@
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
 </c:if>
 
-
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('dtm.static.url')" var="dtmUrl"/>
+<script src="${dtmUrl}"></script>
 
 
 <%-- <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/preload.css"/> --%>
@@ -265,10 +266,7 @@
 	<%-- <analytics:analytics/> --%>
 	<%-- <generatedVariables:generatedVariables/> --%>
 	
-	
-	
-
-
+<div id ="DTMhome"></div>
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
@@ -397,10 +395,9 @@
 
 	<%-- Load JavaScript required by the site --%>
 	<template:javaScript/>
-	
+	<script type="text/javascript">_satellite.pageBottom();</script>
 	<%-- Inject any additional JavaScript required by the page --%>
 	<jsp:invoke fragment="pageScripts"/>	
-	
 </body>
 
 <debug:debugFooter/>

@@ -1315,7 +1315,8 @@ $(function() {
 																	pdp_pin_delivery : deliverModeTealium.join("_")
 																});
 															/*TPR-642 & 640 ends*/
-
+                                                              dtmPdpPincode("success",productCode,pin);
+																
 														} else {
 															//$("#home").hide();
 															//$("#homeli").hide();
@@ -1354,6 +1355,7 @@ $(function() {
 																pdp_pin_delivery : 'error'
 															});
 														/*TPR-642 & 640 ends*/
+															 dtmPdpPincode("failure",productCode,pin);
 														}
 													}
 												}
@@ -1979,7 +1981,9 @@ function openPopForBankEMI() {
 				event_type : 'emi_more_information',
 				product_id : productIdArray
 			});
-
+			//TPR-6029-EMI link click#33--start
+			_satellite.track('cpj_pdp_emi');
+			//TPR-6029-EMI link click#33--end
 		},
 		error : function(xhr, status, error) {
 
@@ -2043,6 +2047,16 @@ function populateEMIDetailsForPDP(){
 					});
 					}
 					/*TPR-641 ends*/
+					//TPR-6029-Bank select for EMI#33--start
+					if(typeof digitalData.cpj.emi != "undefined"){
+						digitalData.cpj.emi.bank = emiBankSelected;
+					}
+					else{
+						digitalData.cpj.emi = {
+							bank : emiBankSelected
+						}
+				    }
+					//TPR-6029-Bank select for EMI#33--end
 				},
 				error : function(resp) {
 					$('#emiSelectBank').show();
@@ -2902,9 +2916,11 @@ function loadDefaultWishListName_SizeGuide() {
 			e.preventDefault();
 			
 			/*TPR-694*/
-			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
-			
+			utag.link({ "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
 			/*TPR-694 ends */
+			if( typeof _satellite != undefined){
+				_satellite.track('offers_link_click');
+				}
 			offerPopup($("#promotionDetailsId").html());
 		});
 		$(document).on('hide.bs.modal', function () {
@@ -3193,6 +3209,8 @@ function getProductContents() {
 					"event_type": "a_plus_product",
 					"a_plus_product_id":productId
 				});
+				//TPR-6029 | dtm for A+ products
+				_satellite.track('cpj_pdp_a_plus');
 			}
 				 
 		},
