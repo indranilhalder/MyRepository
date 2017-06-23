@@ -1350,7 +1350,55 @@ TATA.Pages = {
 		_self.PDP.init();
         _self.CHECKOUT.init();
 		_self.LANDING.init();
-	}
+	},
+	editLuxuryAddress: function (addressId)
+	{
+				       var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
+				       var dataString = "&addressId="+addressId;
+				 
+				       $.ajax({
+				    	   url: requiredUrl,
+				    	   type: "GET",
+				    	   data: dataString,
+				    	   dataType : "json",
+				    	   cache: false,
+				    	   contentType : "application/json; charset=utf-8",
+				    	   success : function(data) {
+				   				$('#addressId').val(addressId);
+				   				$('#firstName').val(data.firstName);
+				   				$('#lastName').val(data.lastName);
+				   				$('#line1').val(data.line1);
+				   				$('#line2').val(data.line2);
+				   				$('#line3').val(data.line3);
+				   				$('#postcode').val(data.postcode);
+				   				$('.address_landmarks').val(data.landmark);
+				   				$('.address_landmarkOther').val(data.landmark);
+				   				loadPincodeData("edit").done(function() {
+				   					otherLandMarkTri(data.landmark,"defult");
+				   				});
+				   				$('#townCity').val(data.townCity);
+				   				$('#mobileNo').val(data.mobileNo);
+	$("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state);			   				
+				   				if(data.addressType=="Home")
+				   				{
+				   					document.getElementById("new-address-option-1").checked= true;
+				   				}
+				   				if(data.addressType=="Work")
+								{
+									document.getElementById("new-address-option-2").checked= true;
+								}
+				   				
+				   				$("#headerAdd").css("display","none");
+				   				$("#headerEdit").css("display","block");
+				   				
+				   				$("#addNewAddress").css("display","none");
+				   				$("#edit").css("display","block");
+				    	   },
+				    	   error : function(data) {
+				    		   	console.log(data.responseText) 
+				    	   }
+				       });
+	 } 
 };
 
 $(document).ready(function () {

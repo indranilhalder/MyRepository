@@ -73,9 +73,8 @@
 					
 					<ul class="hidden-sm hidden-md hidden-lg mob-menu">						
 							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-								<li class="wishlist-mob"><a href="#" class="wishlist"><cms:pageSlot position="WishList" var="WishList" limit="1">
-									<cms:component component="${WishList}" element="li"/>
-									</cms:pageSlot> Wishlist</a> 
+								<li class="wishlist-mob">
+									<a href="<c:url value="/my-account/wishList"/>" class="wishlist">Wishlist</a>
 								</li>
 							</sec:authorize>							
 							<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
