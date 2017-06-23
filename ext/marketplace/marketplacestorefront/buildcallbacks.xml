@@ -275,7 +275,7 @@
 
 					<!-- Start delete directories for min-css lux -->
 
-					<delete dir="${lxstorefront.mincss.temp.dir}" />
+					<!--<delete dir="${lxstorefront.mincss.temp.dir}" />-->
 					<delete dir="${lxstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${lxstorefront.mincss.temp.ie9.dir}" />
 					<delete file="${lxstorefront.css.dir}/tmpmain.min.css" />
@@ -295,7 +295,7 @@
 					<!-- End make directories for min-css for mpl-->
 
 					<!-- Start make directories for min-css for lux -->
-					<mkdir dir="${lxstorefront.mincss.temp.dir}" />
+					<!--<mkdir dir="${lxstorefront.mincss.temp.dir}" />-->
 					<mkdir dir="${lxstorefront.mincss.temp.ie8.dir}" />
 					<mkdir dir="${lxstorefront.mincss.temp.ie9.dir}" />
 					<!-- End make directories for min-css for lux -->
@@ -416,9 +416,10 @@
 					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.ie8.yui.compresser.jar}" />
 					<copy file="${yui.compresser.jar}" tofile="${lxstorefront.minifier.ie9.yui.compresser.jar}" />
 
-					<copy todir="${lxstorefront.mincss.temp.dir}">
+					<!--<copy todir="${lxstorefront.mincss.temp.dir}">
 						<fileset dir="${lxstorefront.css.dir}" includes="*.css" excludes="hybris.cms.live.edit.css,main-ie8.css,main-ie9.css,fonts.min.css,preload.css" />
-					</copy>
+					</copy>-->
+					<copy file="${lxstorefront.css.dir}/style.css" tofile="${lxstorefront.css.dir}/tmpmain.min.css" />
 					<copy todir="${lxstorefront.mincss.temp.ie8.dir}">
 						<fileset dir="${lxstorefront.css.dir}" includes="main-ie8.css" />
 					</copy>
@@ -426,11 +427,11 @@
 						<fileset dir="${lxstorefront.css.dir}" includes="main-ie9.css" />
 					</copy>
 					<echo message="Minifying CSS for lux..." />
-					<pathconvert pathsep=" " property="luxurycustomcssfiles">
-						<fileset dir="${lxstorefront.mincss.temp.dir}">
-							<include name="*.css" />
-						</fileset>
-					</pathconvert>
+					<!--<pathconvert pathsep=" " property="luxurycustomcssfiles">-->
+						<!--<fileset dir="${lxstorefront.mincss.temp.dir}">-->
+							<!--<include name="*.css" />-->
+						<!--</fileset>-->
+					<!--</pathconvert>-->
 					<pathconvert pathsep=" " property="luxuryie8cssfiles">
 						<fileset dir="${lxstorefront.mincss.temp.ie8.dir}">
 							<include name="*.css" />
@@ -441,11 +442,11 @@
 							<include name="*.css" />
 						</fileset>
 					</pathconvert>
-					<java jar="${lxstorefront.minifier.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.dir}" fork="true">
-						<arg line="--type css" />
+					<!--<java jar="${lxstorefront.minifier.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.dir}" fork="true">
+						<arg line="&#45;&#45;type css" />
 						<arg line="-o '.css$:-min.css'" />
 						<arg line="${luxurycustomcssfiles}" />
-					</java>
+					</java>-->
 					<java jar="${lxstorefront.minifier.ie8.yui.compresser.jar}" dir="${lxstorefront.mincss.temp.ie8.dir}" fork="true">
 						<arg line="--type css" />
 						<arg line="-o '.css$:-min.css'" />
@@ -457,15 +458,15 @@
 						<arg line="${luxuryie9cssfiles}" />
 					</java>
 					<echo message="Merging minfied CSS for lux..." />
-					<concat destfile="${lxstorefront.css.dir}/tmpmain.min.css" append="true">
+					<!--<concat destfile="${lxstorefront.css.dir}/tmpmain.min.css" append="true">
 						<fileset dir="${lxstorefront.mincss.temp.dir}">
 							<include name="*-min.css" />
 						</fileset>
-					</concat>
+					</concat>-->
 <!--					<copy file="${lxstorefront.mincss.temp.ie8.dir}/main-ie8-min.css" tofile="${lxstorefront.css.dir}/main-ie8-min.css" />
 					<copy file="${lxstorefront.mincss.temp.ie9.dir}/main-ie9-min.css" tofile="${lxstorefront.css.dir}/main-ie9-min.css" />
 -->
-					<delete dir="${lxstorefront.mincss.temp.dir}" />
+					<!--<delete dir="${lxstorefront.mincss.temp.dir}" />-->
 					<delete dir="${lxstorefront.mincss.temp.ie8.dir}" />
 					<delete dir="${lxstorefront.mincss.temp.ie9.dir}" />
 					

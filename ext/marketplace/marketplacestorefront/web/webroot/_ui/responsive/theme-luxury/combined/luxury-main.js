@@ -13780,7 +13780,7 @@ TATA.CommonFunctions = {
 	var luxuryHeaderLoggedinStatus = false;
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
-	$("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt();  
+	$("#gender, .select-bar select, #stateListBox, #landmark, .responsiveSort").selectBoxIt();
 	$('.header-login-target-link').on('click', function(){
 		var targetID = $(this).data('target-id');
 		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
