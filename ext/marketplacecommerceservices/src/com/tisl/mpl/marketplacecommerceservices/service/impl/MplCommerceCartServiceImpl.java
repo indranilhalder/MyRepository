@@ -635,6 +635,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									{
 										deliveryModeData.setFulfillmentType(deliveryModel.getDeliveryFulfillModes().getCode());
 									}
+								if(StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
+								{
+									deliveryModeData.setIsSelected(true);
+								}
+								else{
+									deliveryModeData.setIsSelected(false);
 								}
 								deliveryModeDataList.add(deliveryModeData);
 							}
@@ -676,8 +682,6 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 		return deliveryModeDataMap;
 	}
-
-
 
 	/**
 	 * Returns Fulfillment Details
