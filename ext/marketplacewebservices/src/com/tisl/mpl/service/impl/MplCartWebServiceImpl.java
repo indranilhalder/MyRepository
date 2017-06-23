@@ -568,7 +568,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		boolean delisted = false;
 		ProductModel productModel = null;
 		ProductModel selectedProductModel = null;
-        boolean maxQuantityAlreadyAdded = false;
+		boolean maxQuantityAlreadyAdded = false;
 		try
 		{
 
@@ -592,37 +592,51 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 						//TPR-6117  start
 
-						if (productModel.getMaxOrderQuantity() == null || productModel.getMaxOrderQuantity().intValue() <= 0
-								|| productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy
-								|| pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						//						if (productModel.getMaxOrderQuantity() == null || productModel.getMaxOrderQuantity().intValue() <= 0
+						//								|| productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy
+						//								|| pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						//						{
+						//							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+						//							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+						//						}
+						if (productModel.getMaxOrderQuantity() == null && pr.getQuantity().longValue() >= maximum_configured_quantiy)
 						{
 							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 						}
-						else if (null != productModel.getCode())
+						else if (null != productModel.getMaxOrderQuantity())
 						{
-							int productStock = 0;
-							final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-
-
-							if (buyboxdata.getAvailable() != null)
+							if (productModel.getMaxOrderQuantity().intValue() <= 0
+									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
 							{
-								productStock = buyboxdata.getAvailable().intValue();
-
+								//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 							}
-							final long checkMaxLimList = mplCartFacade.checkMaxLimit(productModel.getCode(), cartModel);
-							maxQuantityAlreadyAdded = isMaxProductQuantityAlreadyAdded(productModel.getMaxOrderQuantity(),
-									productModel.getCode(), quant, productStock, USSID, checkMaxLimList);
-						}
-						if (maxQuantityAlreadyAdded)
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9110);
+							else if (null != productModel.getCode())
+							{
+								int productStock = 0;
+								final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+
+
+								if (buyboxdata.getAvailable() != null)
+								{
+									productStock = buyboxdata.getAvailable().intValue();
+
+								}
+								final long checkMaxLimList = mplCartFacade.checkMaxLimit(productModel.getCode(), cartModel);
+								maxQuantityAlreadyAdded = isMaxProductQuantityAlreadyAdded(productModel.getMaxOrderQuantity(),
+										productModel.getCode(), quant, productStock, USSID, checkMaxLimList);
+							}
+							if (maxQuantityAlreadyAdded)
+							{
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9110);
+							}
 						}
 						//TPR-6117   End
 						//						if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
 						//						{
 						//							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
-						//	
+						//
 
 						if (Long.parseLong(quantity) + pr.getQuantity().longValue() > maximum_configured_quantiy)
 						{
@@ -958,7 +972,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				 * ProductOption.DELIVERY_MODE_AVAILABILITY ));
 				 */
 
-                final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0); 
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				final GetWishListProductWsDTO gwlp = new GetWishListProductWsDTO();
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
 				{
@@ -1244,13 +1258,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
 
 
-												.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
 										endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
 
 
 
-												.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 									}
 									if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
@@ -1329,13 +1343,13 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 										startValue = deliveryMode.getDeliveryMode().getStart() != null ? deliveryMode.getDeliveryMode()
 
 
-												.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+										.getStart().toString() : MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
 
 										endValue = deliveryMode.getDeliveryMode().getEnd() != null ? deliveryMode.getDeliveryMode()
 
 
 
-												.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+										.getEnd().toString() : MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 
 									}
 									if (StringUtils.isNotEmpty(deliveryMode.getDeliveryMode().getCode())
@@ -1781,10 +1795,10 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 
 
-									.filter(im -> im != null)
+							.filter(im -> im != null)
 
 
-									.filter(im -> im.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
+							.filter(im -> im.getFormat().toLowerCase().equals(MarketplacecommerceservicesConstants.THUMBNAIL))
 									.map(s -> s.getUrl()).findFirst().get();
 							gwlpFreeItem.setImageURL(imgUrl);
 						}
@@ -2003,7 +2017,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			//TPR-6117 STARTS
-		//	boolean updateCartOnMaxLimExceeds = true;
+			//	boolean updateCartOnMaxLimExceeds = true;
 
 			final Map<String, String> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
 			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds))
@@ -2057,7 +2071,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
 
 
-						- cartModel.getDeliveryCost().doubleValue());
+				- cartModel.getDeliveryCost().doubleValue());
 
 				final PriceData totalPrice = discountUtility.createPrice(cartModel,
 						Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -2214,7 +2228,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					final Double totalPriceWithoutDeliveryCharge = new Double(cartModel.getTotalPrice().doubleValue()
 
 
-							- cartModel.getDeliveryCost().doubleValue());
+					- cartModel.getDeliveryCost().doubleValue());
 
 					final PriceData totalPrice = discountUtility.createPrice(cartModel,
 							Double.valueOf(totalPriceWithoutDeliveryCharge.toString()));
@@ -2731,7 +2745,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						deliveryCost = priceDataFactory.create(PriceDataType.BUY, BigDecimal.valueOf(entry.getMplDeliveryMode()
 
 
-								.getValue().doubleValue()), orderModel.getCurrency().getIsocode());
+						.getValue().doubleValue()), orderModel.getCurrency().getIsocode());
 						deliveryModeData.setDeliveryCost(deliveryCost);
 					}
 				}
@@ -2859,7 +2873,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 		return addToCartFlag;
 	}
 
-    /**
+	/**
 	 * @return the mplDeliveryCostService
 	 */
 	public MplDeliveryCostService getMplDeliveryCostService()
@@ -2996,4 +3010,3 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 }
-
