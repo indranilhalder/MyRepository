@@ -2511,12 +2511,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @param deliveryMethodForm
 	 * @param bindingResult
 	 * @return - a URL to the page to load.
+	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLDELIVERYSELECTURL, method = RequestMethod.POST)
 	public String doSelectDeliveryMode(@ModelAttribute("deliveryMethodForm") final DeliveryMethodForm deliveryMethodForm,
-			final BindingResult bindingResult, final Model model, final HttpSession session) throws CMSItemNotFoundException
+			final BindingResult bindingResult, final Model model, final HttpSession session) throws CMSItemNotFoundException,
+			UnsupportedEncodingException
 	{
-		String returnPage = MarketplacecommerceservicesConstants.EMPTY;
 		try
 		{
 			if (getUserFacade().isAnonymousUser())
@@ -2660,21 +2661,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			LOG.error("CMSItemNotFoundException  while  selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
 		catch (final Exception e)
 		{
@@ -2682,9 +2689,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					MarketplacecommerceservicesConstants.E0000));
 			LOG.error("Exception  while selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+					+ "&type=redirect", UTF);
+			return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 		}
-		return returnPage;
 	}
 
 	/**
@@ -2816,7 +2824,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		{
 			LOG.error("CMSItemNotFoundException  while  selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			jsonObj.put("url", "/cart");
 			jsonObj.put("type", "redirect");
 		}
@@ -2825,7 +2832,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
 			LOG.error("EtailBusinessExceptions  while  selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			jsonObj.put("url", "/cart");
 			jsonObj.put("type", "redirect");
 		}
@@ -2834,7 +2840,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			ExceptionUtil.etailNonBusinessExceptionHandler(e);
 			LOG.error("EtailNonBusinessExceptions  while selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			jsonObj.put("url", "/cart");
 			jsonObj.put("type", "redirect");
 		}
@@ -2844,7 +2849,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					MarketplacecommerceservicesConstants.E0000));
 			LOG.error("Exception  while selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
-			//returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			jsonObj.put("url", "/cart");
 			jsonObj.put("type", "redirect");
 		}
@@ -4444,7 +4448,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4502,7 +4506,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

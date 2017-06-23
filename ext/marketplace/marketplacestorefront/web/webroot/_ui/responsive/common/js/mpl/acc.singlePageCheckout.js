@@ -989,7 +989,7 @@ ACC.singlePageCheckout = {
         xhrResponse.done(function(data) {
         	$(".pickUpPersonAjax").fadeIn(100);
 			//if($("#pickupPersonSubmit").text() != "1") {
-				$(".pickUpPersonAjax").append("<span class='pickupText'>Pickup Person Details Have Successfully Added.</span>");
+				$(".pickUpPersonAjax").html("<span class='pickupText'>Pickup Person Details Have Successfully Added.</span>");
 			//}
 			//$("#pickupPersonSubmit").text("1");
 			
@@ -1195,6 +1195,8 @@ ACC.singlePageCheckout = {
             if (jqXHR.responseJSON) {
             	if(data.type!="response")
                 {
+            		//Hiding pickup person pop up incase of server side error
+            		$("#singlePagePickupPersonPopup").modal('hide');
                 	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
                 }
          } else {
