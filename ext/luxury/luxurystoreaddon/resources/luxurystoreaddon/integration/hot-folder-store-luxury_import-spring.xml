@@ -406,7 +406,7 @@
  	     $productCatalog=luxProductCatalog
 				$classificationCatalog=pcmClassification
 				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
-               INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];$catalogVersion
+               INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];$catalogVersion;@standardSize[translator=com.tisl.lux.core.translator.LuxuryStandardSizeTranslator, default='stdSizeColorPlaceholder']
             </value>
         </property>
         <property name="impexRow">

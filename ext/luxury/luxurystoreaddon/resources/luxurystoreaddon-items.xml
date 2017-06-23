@@ -340,5 +340,29 @@
 				jaloclass="com.tisl.lux.jalo.cms.components.LuxuryPincodeServiceComponent">
 				<description>component for pincode service avialability</description>
 	</itemtype>
+	
+	<itemtype code="StandardSizeColor" autocreate="true" generate="true" jaloclass="com.tisl.lux.jalo.StandardSizeColor">
+		<deployment table="StandardSizeColor" typecode="13013" />
+		<attributes>
+			<attribute qualifier='brand' type="java.lang.String">
+               	<persistence type="property"/>
+			</attribute>
+			<attribute qualifier='category' type="java.lang.String">
+				<persistence type="property"/>
+			</attribute>
+			<attribute qualifier='standardSize' type="java.lang.String">
+				<persistence type="property"/>
+			</attribute>
+			<attribute qualifier='standardColor' type="java.lang.String">
+				<persistence type="property"/>
+			</attribute>
+			<attribute qualifier='brandSize' type="java.lang.String">
+				<persistence type="property"/>
+			</attribute>
+			<attribute qualifier='brandColor' type="java.lang.String">
+				<persistence type="property"/>
+			</attribute>
+		</attributes>
+	</itemtype>
 	</itemtypes>
 </items>
