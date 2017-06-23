@@ -533,7 +533,7 @@
 		<c:if test="${ not empty allWishLists}">
 
 			<div class="modal fade" id="manageMyList">
-				<div class="content" style="width:55%;max-width:450px;">
+				<div class="content">
 					<!-- Dynamically Insert Content Here -->
 					<div class="manage-wishlist-container">
 
@@ -543,13 +543,13 @@
 
 
 
-						<form action="" class="manage-wishlist" style="padding: 0;float:left;">
+						<form action="" class="manage-wishlist">
 							
 								<div class="other-sellers">
 									<table class="manage-wishlist other-sellers-table">
 										<thead>
 											<tr>
-												<th class="title"><spring:theme code="wishlist.text" /></th>
+												<th class="title" width="80%"><spring:theme code="wishlist.text" /></th>
 												<th class="default"></th> 
 												<th class="delete"><spring:theme code="wishlist.delete" /></th>
 											</tr>
@@ -662,7 +662,7 @@
 	<!--popup for remove product from wishlist start-->	
 		<div class="modal fade" id="removeProductConfirmation">
  		<div class="overlay" data-dismiss="modal"></div>
-			<div class="modal-dialog" style="top:-80%; background-color: #fff;">
+			<div class="modal-dialog">
 			<div class="modal-content">
 				<!-- Dynamically Insert Content Here -->
 				<div class="modal-header">
