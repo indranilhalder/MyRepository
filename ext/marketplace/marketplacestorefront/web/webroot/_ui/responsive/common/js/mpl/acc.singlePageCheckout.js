@@ -532,31 +532,44 @@ ACC.singlePageCheckout = {
 			$("#addressmobileError").hide();
 		}
 	   
-	   	var landMark=$( ".address_landmarks option:selected" ).val();
-	   	if(landMark=="Other")
-	   	{
-			result=$("#otherLandmark").val();
-			if(result != null){
-			   if(result.trim() == ''){
-		  	        $(".otherLandMarkError").show();
-			  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
-			  	    validate = false;
-					errorCount++;
-		  	     }else if(/[^a-zA-Z0-9]/.test(result)){
-		  		      $(".otherLandMarkError").show();
-				  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
-				  	 validate = false;
-					 errorCount++;
-		  	  }
-		    }
-	   	}
-	   	else if(landMark=="NA")
-   		{
-	   		$(".selectLandMarkError").show();
-		  	$(".selectLandMarkError").text("Select a landmark to proceed");
-		  	validate = false;
-		  	errorCount++;
-   		}
+	   var otherLandMark=$(".otherLandMark").val();
+	      if(otherLandMark != null && ! otherLandMark == ''){
+	    	  if(otherLandMark.trim() == ''){
+	    	    $(".otherLandMarkError").show();
+		  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+		  		validate = false;
+	    	  }else if(!/[a-zA-Z0-9]/.test(otherLandMark)){
+	    		  $(".otherLandMarkError").show();
+			  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+			  	 validate = false;
+	    	  }
+	      }
+	   
+	   	//var landMark=$( ".address_landmarks option:selected" ).val();
+//	   	if(landMark=="Other")
+//	   	{
+//			result=$("#otherLandmark").val();
+//			if(result != null){
+//			   if(result.trim() == ''){
+//		  	        $(".otherLandMarkError").show();
+//			  		$(".otherLandMarkError").text("Other LandMark cannot be allow  space");
+//			  	    validate = false;
+//					errorCount++;
+//		  	     }else if(/[^a-zA-Z0-9]/.test(result)){
+//		  		      $(".otherLandMarkError").show();
+//				  	  $(".otherLandMarkError").text("Other LandMark cannot be allow special characters");
+//				  	 validate = false;
+//					 errorCount++;
+//		  	  }
+//		    }
+//	   	}
+//	   	else if(landMark=="NA")
+//   		{
+//	   		$(".selectLandMarkError").show();
+//		  	$(".selectLandMarkError").text("Select a landmark to proceed");
+//		  	validate = false;
+//		  	errorCount++;
+//   		}
 	   
 	   	if(address1.value.indexOf('#')!=-1)
 	   	{
