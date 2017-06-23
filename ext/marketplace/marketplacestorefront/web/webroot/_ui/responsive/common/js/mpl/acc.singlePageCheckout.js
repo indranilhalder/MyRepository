@@ -833,6 +833,12 @@ ACC.singlePageCheckout = {
             	$('#cncStoreContainer'+entryNumber).find(".cnc_arrow").css("left",cnc_arrow_left+"px");
             	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
             	//CNC Carousel
+            	if($(".cnc_item .removeColor1").length == 2){
+        			$("#cnc_carousel").addClass("two_address");
+        		}
+        		if($(".cnc_item .removeColor1").length == 1){
+        			$("#cnc_carousel").addClass("one_address");
+        		}
             	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
         				'initialize.owl.carousel initialize.owl.carousel ' +
         				'to.owl.carousel changed.owl.carousel',
@@ -865,7 +871,6 @@ ACC.singlePageCheckout = {
         		$(".cnc_carousel").owlCarousel({
         			items:3,
         			loop: false,
-        			nav: true,
         			dots:false,
         			margin: 60,
         			navText:[],
@@ -877,15 +882,18 @@ ACC.singlePageCheckout = {
             				stagePadding: 36,
             				slideBy: 1,
             				margin: 0,
+            				nav: ($(".cnc_item .removeColor1").length <= 1)?false:true,
             			},
             			// breakpoint from 768 up
             			768 : {
             				items:2,
             				slideBy: 2,
+            				nav: ($(".cnc_item .removeColor1").length <= 2)?false:true,
             			},
             			// breakpoint from 1280 up
             			1280 : {
             				items:3,
+            				nav: ($(".cnc_item .removeColor1").length <= 3)?false:true,
             			}			
             		},
             		onRefresh: function () {

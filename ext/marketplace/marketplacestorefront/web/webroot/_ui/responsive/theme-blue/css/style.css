@@ -67655,6 +67655,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     #singlePageAddressPopup .product-block.addresses.new-form .full.country-select label,
     .new-address-form-mobile .product-block.addresses.new-form .full.country-select label{
     margin-bottom: 5px;
+    display: block;
     }
     #singlePageAddressPopup .product-block.addresses.new-form fieldset,
     .new-address-form-mobile .product-block.addresses.new-form fieldset{
@@ -67673,9 +67674,11 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 #singlePageAddressPopup .formaddress .checkout-indent #addressform_button_panel.form-actions #newAddressButton,
 .new-address-form-mobile .formaddress .checkout-indent #addressform_button_panel.form-actions #newAddressButton{
 	border: none;
+	position: static;
+	margin-top: -52px;
 }
 #singlePageAddressPopup .product-block.addresses.new-form fieldset > div  {
-    margin-bottom: 24px;
+    margin-bottom: 22px;
 }
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div {
     margin-bottom: 16px;
@@ -67688,6 +67691,14 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger {
     width: 100%;
     display: block;
+    height: auto !important;
+    padding: 13px 8px 14px 16px !important;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    color: #ff0000;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    border: solid 1px #ff0000;
 }
 	#singlePageAddressPopup .product-block.addresses.new-form fieldset select ,
 	.new-address-form-mobile .product-block.addresses.new-form fieldset select {
@@ -68012,10 +68023,60 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     /* padding-top: 7px; */
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search{
-	margin:24px 0px;
+	margin:24px 0px 0px;
   	padding-left: 58px;
   	padding-right: 59px;
   	overflow: hidden;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block{
+  	padding-left: 58px;
+  	padding-top: 0;
+  	margin-top: 2px;
+  	margin-bottom: 13px;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .change_txt{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	text-decoration: underline;
+  	cursor: pointer;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .change_txt + div{
+	width: 100%;
+    border: 0;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    margin-top: 10px;
+    box-shadow: none;
+    height: auto;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .pincodeValidation{
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 0 !important;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .change_txt + div > span{
+	margin-bottom: 10px;
+	display: inline-block;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .change_txt + div > div{
+	width: 320px;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .change_txt + div > div input{
+	border-color: #ddd;
+	width: 200px !important;
+    float: left;
+    margin-right: 10px;
+}
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .change_pincode_block .change_txt + div > div .submitPincode{
+    height: 40px;
+    padding: 0;
+    background-color: #a5173c;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: normal;
 }
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper{
 	float: right;
@@ -68057,6 +68118,9 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     -o-transform: translateX(-50%) translateY(-50%);
      transform: translateX(-50%) translateY(-50%);
     }
+.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width h1 span#cncChangedPincode1{
+	color: #000;
+}
 .cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width h1 span{
 	color: #878787;
 	margin: 0;
@@ -68993,6 +69057,9 @@ background:#f8f8f8;
  }
 /*tab mobile checkout header end*/
 @media(min-width: 768px){
+.cnc_carousel.owl-carousel#cnc_carousel .owl-stage{
+	margin: 0px auto;
+}
 .addressList_wrapper.owl-carousel#address_carousel .owl-stage{
 	margin: 0px auto;
 }
@@ -69002,12 +69069,24 @@ background:#f8f8f8;
 .addressList_wrapper.owl-carousel.one_address#address_carousel .owl-stage .owl-item:last-child{
 	margin-right: 0 !important;
 }
+.cnc_carousel.owl-carousel.one_address#cnc_carousel .owl-stage{
+	padding-left:41px;
+}
+.cnc_carousel.owl-carousel.one_address#cnc_carousel .owl-stage .owl-item:last-child{
+	margin-right: 0 !important;
+}
 }
 @media(min-width: 1280px){
-	.addressList_wrapper.owl-carousel.two_address#address_carousel .owl-stage{
+.addressList_wrapper.owl-carousel.two_address#address_carousel .owl-stage{
 	padding-left:41px;
 }
 .addressList_wrapper.owl-carousel.two_address#address_carousel .owl-stage .owl-item:last-child{
+	margin-right: 0 !important;
+}
+.cnc_carousel.owl-carousel.two_address#cnc_carousel .owl-stage{
+	padding-left:41px;
+}
+.cnc_carousel.owl-carousel.two_address#cnc_carousel .owl-stage .owl-item:last-child{
 	margin-right: 0 !important;
 }
 }
