@@ -818,5 +818,64 @@
     }
 }
 
+#savedCard{
+     background: #fff;   
+    border: 1px solid #ccc;
+    border-radius: 10px;
+        padding: 20px;
+
+}
+#savedCard #savedCreditCard .card.card-num{
+     display: inline-block;
+    width: 80%;
+
+}
+#savedCard #savedCreditCard .cvv.right-align-form{
+     display: inline-block;
+    width: 19%;
+
+}
+#savedCard #card_form{
+     background: #f9f9f9;
+    padding: 25px;
+    border: 1px solid #dee2eb;
+    border-radius: 10px;
+
+}
+#savedCard #savedCreditCard .cvv.right-align-form #cvv1{
+        width: 100%;
+
+}
+
+.card-flag, .card-button, .card-details{
+    display: inline-block;
+        vertical-align: middle;
+ 
+}
+.card-tab .credit_tab{
+ display: inline-block;   
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid #000;
+    background: #fff;
+    cursor: pointer;
+       vertical-align: top;
+}
+.card-tab .active_tab.credit_tab{
+ background: #000;
+    color: #fff;
+    cursor: pointer;
+}
+.card-tab .active_tab.credit_tab{
+ background: #000;
+    color: #fff;
+    cursor: pointer;
+}
+.card-tab .new_card_tab.credit_tab{
+     margin-left: -5px;
+}
+.card.card-num .card-details{
+     margin-left: 15px;
+}
 
 /*Order confirmation page*/

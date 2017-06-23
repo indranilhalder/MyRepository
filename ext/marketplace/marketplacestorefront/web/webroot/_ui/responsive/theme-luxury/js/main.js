@@ -985,7 +985,7 @@ TATA.Pages = {
 		}
 	},
     
-    CHECKOUT:  {
+  /*  CHECKOUT:  {
         
         Netbanking: function(){
             
@@ -1000,7 +1000,8 @@ TATA.Pages = {
 			_self.Netbanking();            
 		}
     },
-	
+	*/
+    
 	PDP:  {
 	
 		wishlistInit: function(){
@@ -1348,7 +1349,7 @@ TATA.Pages = {
 		var _self = TATA.Pages;
 		_self.PLP.init();
 		_self.PDP.init();
-        _self.CHECKOUT.init();
+       // _self.CHECKOUT.init();
 		_self.LANDING.init();
 	},
 	editLuxuryAddress: function (addressId)

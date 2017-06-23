@@ -12995,9 +12995,9 @@ TATA.CommonFunctions = {
                     dataType: "html",
                     data: $(form).serialize(),
                     success: function(data) {
-                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return $(".invalided-error").html(""), 
-                        location.reload(), !1;
-                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Please enter valid email address") : $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
+                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return location.reload(), 
+                        !1;
+                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!") : $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
                     }
                 });
             }
@@ -13086,40 +13086,24 @@ TATA.CommonFunctions = {
             elem.removeClass("active"), setTimeout(function() {
                 $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password");
             }, 500);
-        }), elem.click(function(e){
-			e.stopPropagation();
-			e.preventDefault();
+        }), elem.click(function(e) {
+            e.stopPropagation(), e.preventDefault();
             var element = $(e.target);
-            if(element.hasClass("register_link")){
-            	TATA.CommonFunctions.loadRegisterForm(element);
-            }else if(element.hasClass("js-password-forgotten")){
-            	TATA.CommonFunctions.loadForgotPasswordForm(element);
-            }else if(element.hasClass("header-signInButton")){
-            	TATA.CommonFunctions.signInValidate();
-            	$("#loginForm").submit();
-            }else if(e.target.id == "luxury_register"){
-            	$(".invalided-error").html("");
-            	TATA.CommonFunctions.signUpValidate();
-            	$("#extRegisterForm").submit();
-            }else if(e.target.id == "luxuryForgotPasswordByEmailAjax"){
-            	TATA.CommonFunctions.forgotPasswordValidate();
-            	$("#forgottenPwdForm").submit();
+            if (element.hasClass("register_link") ? TATA.CommonFunctions.loadRegisterForm(element) : element.hasClass("js-password-forgotten") ? TATA.CommonFunctions.loadForgotPasswordForm(element) : element.hasClass("header-signInButton") ? (TATA.CommonFunctions.signInValidate(), 
+            $("#loginForm").submit()) : "luxury_register" == e.target.id ? ($(".invalided-error").html(""), 
+            TATA.CommonFunctions.signUpValidate(), $("#extRegisterForm").submit()) : "luxuryForgotPasswordByEmailAjax" == e.target.id && (TATA.CommonFunctions.forgotPasswordValidate(), 
+            $("#forgottenPwdForm").submit()), element.hasClass("toggle-btn")) {
+                var id = element.attr("for");
+                $(".toggle").removeAttr("checked"), $("#" + id).attr("checked", "checked");
+                var genderValue = $("#" + id).val();
+                $("#gender").val(genderValue);
             }
-            
-            if(element.hasClass("toggle-btn")){
-            	var id = element.attr("for");
-    			$(".toggle").removeAttr("checked");
-    			$("#"+id).attr("checked", "checked");
-    			var genderValue = $("#"+id).val();
-    			$('#gender').val(genderValue);
+            if (element.hasClass("header-login-target-link")) {
+                var targetID = element.data("target-id");
+                $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
             }
-            
-            if(element.hasClass("header-login-target-link")){
-        		var targetID = element.data('target-id');
-        		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
-            }
-		});
-	},
+        });
+    },
     MainBanner: function() {
         $(".main-banner").slick({
             arrows: !1,
@@ -13182,52 +13166,36 @@ TATA.CommonFunctions = {
             $(this).siblings(".add-to-wishlist").addClass("added"));
         }), $("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1 && $(".add-to-wl-pdp").addClass("added");
     },
-    wishlistInit: function(){
-    	TATA.CommonFunctions.luxuryForceUpdateHeader();
-    	$(document).on("click",".add-to-wishlist",function(){
-			if ($(this).hasClass("added")){
-				TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
-			} else {
-				TATA.CommonFunctions.addToWishlist($(this).data("product"),this);
-			}
-		});
-
+    wishlistInit: function() {
+        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click", ".add-to-wishlist", function() {
+            $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
+        });
         var wishlistHover;
-
         $("a#myWishlistHeader").on("mouseover touchend", function(e) {
-            e.stopPropagation();
-            wishlistHover = setTimeout(function(){
-            	$.ajax({
+            e.stopPropagation(), wishlistHover = setTimeout(function() {
+                $.ajax({
                     url: ACC.config.encodedContextPath + "/headerWishlist",
-                    type: 'GET',
-                    //data: "&productCount=" + $(this).attr("data-count"),
-                    data: "&productCount=" + $('li.wishlist').find('a#myWishlistHeader').attr("data-count"),
+                    type: "GET",
+                    data: "&productCount=" + $("li.wishlist").find("a#myWishlistHeader").attr("data-count"),
                     success: function(html) {
-                        $("div.wishlist-info").html(html);
-                        /*TPR-844*/
-                        TATA.CommonFunctions.fillHeartForItemsInWishlist();
-        				/*TPR-844*/
+                        $("div.wishlist-info").html(html), TATA.CommonFunctions.fillHeartForItemsInWishlist();
                     }
                 });
-            },300);
-
-        });
-
-        $("a#myWishlistHeader").on("mouseleave", function() {
-        	clearTimeout(wishlistHover);
+            }, 300);
+        }), $("a#myWishlistHeader").on("mouseleave", function() {
+            clearTimeout(wishlistHover);
         });
     },
-    luxuryForceUpdateHeader: function(){
-		$.ajax({
-	        url: ACC.config.encodedContextPath + "/setheader?timestamp="+Date.now(),
-	        type: 'GET',
-	        cache:false,
-	        success: function(data) {
-	        	window.sessionStorage.setItem("header" , JSON.stringify(data));
-	        	luxuryHeaderLoggedinStatus = data.loggedInStatus;
-	        }
-	    });
-	},
+    luxuryForceUpdateHeader: function() {
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/setheader?timestamp=" + Date.now(),
+            type: "GET",
+            cache: !1,
+            success: function(data) {
+                window.sessionStorage.setItem("header", JSON.stringify(data)), luxuryHeaderLoggedinStatus = data.loggedInStatus;
+            }
+        });
+    },
     urlToProductCode: function(productURL) {
         var n = productURL.lastIndexOf("-");
         return productURL.substring(n + 1, productURL.length).toUpperCase();
@@ -13774,17 +13742,40 @@ TATA.CommonFunctions = {
     },
     init: function() {
         var _self = TATA.Pages;
-        _self.PLP.init(), _self.PDP.init(), _self.CHECKOUT.init(), _self.LANDING.init();
+        _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
+    },
+    editLuxuryAddress: function(addressId) {
+        var requiredUrl = ACC.config.encodedContextPath + "/my-account/populateAddressDetail", dataString = "&addressId=" + addressId;
+        $.ajax({
+            url: requiredUrl,
+            type: "GET",
+            data: dataString,
+            dataType: "json",
+            cache: !1,
+            contentType: "application/json; charset=utf-8",
+            success: function(data) {
+                $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
+                $("#line1").val(data.line1), $("#line2").val(data.line2), $("#line3").val(data.line3), 
+                $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
+                loadPincodeData("edit").done(function() {
+                    otherLandMarkTri(data.landmark, "defult");
+                }), $("#townCity").val(data.townCity), $("#mobileNo").val(data.mobileNo), $("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state), 
+                "Home" == data.addressType && (document.getElementById("new-address-option-1").checked = !0), 
+                "Work" == data.addressType && (document.getElementById("new-address-option-2").checked = !0), 
+                $("#headerAdd").css("display", "none"), $("#headerEdit").css("display", "block"), 
+                $("#addNewAddress").css("display", "none"), $("#edit").css("display", "block");
+            },
+            error: function(data) {
+                console.log(data.responseText);
+            }
+        });
     }
-}, $(document).ready(function () {
-	var luxuryHeaderLoggedinStatus = false;
-	TATA.CommonFunctions.init();
-	TATA.Pages.init();
-	$("#gender, .select-bar select, #stateListBox, #landmark, .responsiveSort").selectBoxIt();
-	$('.header-login-target-link').on('click', function(){
-		var targetID = $(this).data('target-id');
-		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
-	});
+}, $(document).ready(function() {
+    TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, #landmark, .responsiveSort").selectBoxIt(), 
+    $(".header-login-target-link").on("click", function() {
+        var targetID = $(this).data("target-id");
+        $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
+    });
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
