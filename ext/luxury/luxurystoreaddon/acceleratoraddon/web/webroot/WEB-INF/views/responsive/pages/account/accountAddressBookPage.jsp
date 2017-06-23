@@ -208,7 +208,7 @@
 																		<ycommerce:testId
 																			code="addressBook_editAddress_button">
 																			<a href="#editaddress" class="edit" 
-																				onclick="editAddress(${address.id})"> <spring:theme
+																				onclick="editLuxuryAddress(${address.id})"> <spring:theme
 																					code="text.edit" text="Edit" />
 																			</a>
 																		</ycommerce:testId>
@@ -398,8 +398,8 @@
 									<!-- TISEE-4696 -->
 									<div class="half no-display">
 									<%-- <label><spring:theme code="text.addressBook.firstName" text="First name *" /></label> --%>
-										<form:input path="firstName" id="firstName*"
-											onkeyup="kpressaddressfn()" maxlength="40" placeholder="First Name"/>
+										<form:input path="firstName" id="firstName"
+											onkeyup="kpressaddressfn()" maxlength="40" placeholder="First Name*"/>
 									<div class="errorMessage"><div id="erraddressfn"></div></div>
 									</div>
 									
@@ -408,44 +408,21 @@
 									
 									<div class="half no-display last-name">
 									<%-- <label><spring:theme code="text.addressBook.lastName" text="Last name *" /></label> --%>
-										<form:input path="lastName" id="lastName*"
+										<form:input path="lastName" id="lastName"
 											onkeyup="kpressaddressln()" maxlength="40" placeholder="last Name"/>
 										<div class="errorMessage"><div id="erraddressln"></div></div>
 									</div>
 									
-									<%-- <div class="half" style="clear:both;">
-									<label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label>
-										<form:input path="postcode" id="postcode" class="address_postcode"
-											onkeyup="kpressaddresspost()" maxlength="6" />
-											<div class="errorMessage"><div id="erraddressPost">   </div></div> 
-									</div> --%>
-
-									<!-- TISUAT-4696 /TPR-215-->
-									<div class="half" style="clear:both;">
-									<%-- <label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label> --%>
-										<form:input path="line1" id="line1" onkeyup="kpressaddressln1()"
-											maxlength="40" placeholder="Address Line1*"/>
-											<div class="errorMessage"><div id="erraddressline1"></div></div>
-									</div>
-									
-
-									<!-- TISUAT-4696  /TPR-215-->
-									<div class="half">
-									<%-- <label><spring:theme code="text.addressBook.addressline2" text="Address Line 2 " /></label> --%>
-										<form:input path="line2" id="line2" onkeyup="kpressaddressln2()"
-											maxlength="40" placeholder="Address Line2"/>
-											<div class="errorMessage"><div id="erraddressline2">   </div></div>
-									</div>
 							
 
-									<!-- TISUAT-4696  /TPR-215-->
-									<div class="half">
-									<%-- <label><spring:theme code="text.addressBook.landmark" text="Landmark " /></label> --%>
-										<form:input path="line3" id="line3" onkeyup="kpressaddressln3()"
-											maxlength="40" placeholder="Address Line3"/>
-											 <div class="errorMessage"><div id="erraddressline3">   </div></div> 
-									</div>
-									
+	                               <div class="half" style="clear:both;">
+									<%-- <label><spring:theme code="text.addressBook.addressline1" text="Address Line 1 *" /></label> --%>
+									<form:textarea rows="2" cols="60" path="line1" id="line1"  onKeyUp="kpressaddressln1()"  maxlength="120" placeholder="Full Address" />
+								<!-- 		<br><br>Remaining characters :<span id='myCounter'>120</span> -->
+											<div class="errorMessage"><div id="erraddressline1"></div></div>
+									</div>									
+
+																
 									<div class="half halfwidth">
 									<%-- <label><spring:theme code="text.addressBook.PinCode" text="PinCode *" /></label> --%>
 										<form:input path="postcode" id="postcode" class="address_postcode"
@@ -550,10 +527,10 @@
 									
 									<div class="adresstype mb-20 mt-20 text-center">
 									
-									<input type="radio" class="toggle" name="editRadioType"
-									   id="edit" Value="Save" onChange="onSelectRadio()" style="display: none;"/>
+								<%-- 	<input type="radio" class="toggle" name="editRadioType"
+									   id="addressType" Value="Save" onChange="onSelectRadio()" style="display: none;"/>
 									  <label class="toggle-btn save" for="new-address-edit" style="display: none;"> <spring:theme code="text.addressBook.Editaddress" text="Save"/> 
-											</label> 
+											</label>  --%>
 											
 											
 										<input type="radio" class="toggle" name="addressRadioType"
@@ -588,8 +565,8 @@
 												<label for="checkBox1">Mark as default address</label>
 									</div> --%> 
 								<div class="actions">
-								<%-- <button type="submit" class="blue" id="addNewAddress"><spring:theme code="text.account.addressBook.addAddress" text="ADD NEW ADDRESS" />
-									</button> --%>
+								 <button type="submit" class="blue" id="addNewAddress"><spring:theme code="text.account.addressBook.addAddress" text="ADD NEW ADDRESS" />
+									</button> 
 								<div class="text-center mt-20">
 									<button type="submit" class="blue account-addressEditButton" id="edit" ><spring:theme code="text.addressBook.editAddress" text="Save Address" />
 									</button>
