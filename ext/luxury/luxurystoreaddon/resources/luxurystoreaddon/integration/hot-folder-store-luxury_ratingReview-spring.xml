@@ -66,13 +66,13 @@
      <!-- Transformer for ratingReview Import -->
     <bean id="batchLuxratingReviewConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="luxratingReview"
+    p:mapping="mplratingReview"
     p:converter-ref="batchLuxratingReviewConverter"/>
            
       <!-- Transformer for Product Approval when ratingReview is given Import -->      
     <bean id="batchLuxratingReview_product_approvalConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="luxratingReview"
+    p:mapping="mplratingReview"
     p:converter-ref="batchLuxratingReview_product_approvalConverter"/>
     
    	 

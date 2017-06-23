@@ -31,7 +31,7 @@
 			<map>
 				<!-- default priority is 0 -->
 				<entry key="category" value="15" />
-				<entry key="luxproduct" value="14" />
+				<entry key="mplproduct" value="14" />
 				<entry key="variant_product" value="13" />
 				<entry key="seller" value="12" />
 				<entry key="richattribute_seller" value="11" />
@@ -41,9 +41,9 @@
 				<entry key="global_identifier" value="7" />
 				<entry key="product_reference" value="6" />
 				<entry key="product_feature" value="5" />
-				<entry key="luxmedia" value="4" />
-				<entry key="luxmedia_container" value="3" />
-				<entry key="luxmedia_product" value="2" />
+				<entry key="mplmedia" value="4" />
+				<entry key="mplmedia_container" value="3" />
+				<entry key="mplmedia_product" value="2" />
 				<entry key="category_media" value="1" /> 
 				<entry key="product_sizeguide" value="0" />
 				<entry key="online_exclusive" value="0" />
@@ -90,22 +90,22 @@
                 
 	<bean id="batchLuxuryMediaNewConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
-		  p:mapping="luxmedia" 
+		  p:mapping="mplmedia" 
 		  p:converter-ref="batchLuxuryMediaNewConverter"/>
 		  
 	<bean id="batchLuxuryMediaMimeConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
-		  p:mapping="luxmedia" 
+		  p:mapping="mplmedia" 
 		  p:converter-ref="batchLuxuryMediaMimeConverter"/>
 
 	<bean id="batchLuxuryMediaContainerNewConverterMapping" 
 		  class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping" 
-		  p:mapping="luxmedia_container" 
+		  p:mapping="mplmedia_container" 
 		  p:converter-ref="batchLuxuryMediaContainerNewConverter"/>
 
 	<bean id="batchLuxuryMediaProductNewConverterMapping"
 	class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-	p:mapping="luxmedia_product"
+	p:mapping="mplmedia_product"
 	 p:converter-ref="batchLuxuryMediaProductNewConverter" />
 	 
 	 <bean id="batchLuxuryCategoryMediaConverterMapping"
@@ -151,7 +151,7 @@
       <!-- Transformer for Product Import -->
      <bean id="batchLuxuryProductConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="luxproduct"
+    p:mapping="mplproduct"
     p:converter-ref="batchLuxuryProductConverter"/>
     
      <!-- Transformer for  Variant Product Import -->
