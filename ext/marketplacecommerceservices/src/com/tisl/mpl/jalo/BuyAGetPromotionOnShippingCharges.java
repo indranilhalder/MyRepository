@@ -465,9 +465,6 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 					final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
 
-					final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
-							paramSessionContext);
-
 					final boolean flagForPincodeRestriction = getDefaultPromotionsManager()
 							.checkPincodeSpecificRestriction(restrictionList, order);
 

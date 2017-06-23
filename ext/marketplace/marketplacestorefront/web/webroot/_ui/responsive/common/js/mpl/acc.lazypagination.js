@@ -326,7 +326,7 @@ $(document).ready(function() {
 
         });
       //Added for PRDI-109  and INC144315439
-        $(document).on('click','.responsiveSort',function(){ 
+        $(document).on('change','.responsiveSort',function(){ 
       //  $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
         	// INC144315462 and INC144315104
