@@ -884,6 +884,14 @@
 			<value code="cnc" /> <!-- CNC => only for click and collect -->
 			<value code="od" /> <!-- OD => only for home and express delivery -->
 		</enumtype>
+		
+		<enumtype generate="true" code="Salutation"
+			autocreate="true" dynamic="true">
+			<value code="Mr" /> <!-- ALL => comomn to all delivery -->
+			<value code="Ms" /> <!-- CNC => only for click and collect -->
+			<value code="Mrs" /> <!-- OD => only for home and express delivery -->
+		</enumtype>
+		
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true"
 			generate="true" dynamic="true">
 			<description>Component Type For Components</description>

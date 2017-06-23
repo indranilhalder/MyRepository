@@ -369,6 +369,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
 				model.addAttribute("defaultPincode", defaultPinCodeId);
 
+				//INC144316212
+				final String isDeliveryOptionPage = "yes";
+				model.addAttribute(MarketplacecheckoutaddonConstants.IS_DELIVERY_OPTION_PAGE, isDeliveryOptionPage);
+
 				//TISPRO-625
 
 				final Boolean isExpressCheckoutSelected = (serviceCart != null && serviceCart.getDeliveryAddress() != null)

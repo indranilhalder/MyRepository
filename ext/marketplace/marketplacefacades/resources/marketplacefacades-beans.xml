@@ -364,6 +364,7 @@
 		<property name="gender" type="String" />
 		<property name="encodedPassword" type="String" />
 		<property name="emailId" type="String" />
+		<property name="salutation" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.CommPrefData">

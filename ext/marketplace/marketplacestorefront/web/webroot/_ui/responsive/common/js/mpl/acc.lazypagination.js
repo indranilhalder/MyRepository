@@ -443,7 +443,8 @@ function ajaxPLPLoad(ajaxUrl){
             
             $(ulProduct).find('li.product-item').each(function() {
                 productItemArray.push($(this))
-            });           	
+            });
+            ACC.quickview.bindToUiCarouselLink();
         },
         complete: function() {
             $('.lazyLoadPagination').remove();
@@ -456,7 +457,7 @@ function ajaxPLPLoad(ajaxUrl){
 			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
 			}
-            ACC.quickview.bindToUiCarouselLink();
+            //ACC.quickview.bindToUiCarouselLink();
         }
     });
 }

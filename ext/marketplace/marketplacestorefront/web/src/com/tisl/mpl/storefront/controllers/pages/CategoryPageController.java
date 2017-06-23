@@ -238,8 +238,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @param request
 	 * @param response
 	 * @return String
-	 * @throws UnsupportedEncodingException
-	 * @throws CMSItemNotFoundException
 	 */
 	@RequestMapping(value =
 	{ NEW_BRAND_URL_PATTERN, NEW_BRAND_URL_PATTERN_PAGINATION }, method = RequestMethod.GET)
@@ -251,100 +249,90 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
-			CMSItemNotFoundException
+			final HttpServletRequest request, final HttpServletResponse response)
 	{
-		final boolean isBrand = true;
-		if (request.getServletPath().contains("&"))
-		{
-			request.getServletPath().replace("&", "-").replaceAll(SPACE_CHARACTERS, "").toLowerCase();
-		}
-		else
-		{
-			request.getServletPath().replaceAll(SPACE_CHARACTERS, "-").toLowerCase();
-		}
-		categoryCode = categoryCode.toUpperCase();
-		brandCode = brandCode.toUpperCase();
-		if (StringUtils.isNotEmpty(brandCode))
-		{
-			searchQuery = ":relevance:brand:" + brandCode;
-		}
-		String searchCode = new String(categoryCode);
-		//SEO: New pagination detection TISCR 340
-		pageNo = getPaginatedPageNo(request);
-		//applying search filters
-		if (searchQuery != null)
-		{
-			getfilterListCountForSize(searchQuery);
-			model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
-			model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
-		}
-		//TISPRD-2315(checking whether the link has been clicked for pagination)
-		if (checkIfPagination(request) && searchQuery == null)
-		{
-			searchQuery = RELEVANCE;
-		}
-
-		// Get page facets to include in facet field exclude tag
-		final String pageFacets = request.getParameter(PAGE_FACET_DATA);
-
-		//Storing the user preferred search results count
-		updateUserPreferences(pageSize);
-
-		//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
-				&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
-		{
-			searchCode = searchCode.substring(0, 5);
-
-		}
-		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
-		model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
-		final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
-		//Set the drop down text if the attribute is not empty or null
-		if (dropDownText != null && !dropDownText.isEmpty())
-		//Added For TISPRD-1243
-
-		{
-
-			if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
-
-			{
-				final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
-
-				if (categoryModel != null)
-				{
-					dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
-
-				}
-			}
-			//Added For TISPRD-1243
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
-
-		}
-		else
-		{
-			final String categoryName = (category == null) ? "" : category.getName();
-			model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
-		}
-		//int count = getSearchPageSize();
-		//Check if there is a landing page for the category
+		//EQA review comments added
 		try
 		{
-			//final UserPreferencesData preferencesData =
+			final boolean isBrand = true;
+			if (request.getServletPath().contains("&"))
+			{
+				request.getServletPath().replace("&", "-").replaceAll(SPACE_CHARACTERS, "").toLowerCase();
+			}
+			else
+			{
+				request.getServletPath().replaceAll(SPACE_CHARACTERS, "-").toLowerCase();
+			}
+			categoryCode = categoryCode.toUpperCase();
+			brandCode = brandCode.toUpperCase();
+			if (StringUtils.isNotEmpty(brandCode))
+			{
+				searchQuery = ":relevance:brand:" + brandCode;
+			}
+			String searchCode = new String(categoryCode);
+			//SEO: New pagination detection TISCR 340
+			pageNo = getPaginatedPageNo(request);
+			//applying search filters
+			if (searchQuery != null)
+			{
+				getfilterListCountForSize(searchQuery);
+				model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
+				model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
+			}
+			//TISPRD-2315(checking whether the link has been clicked for pagination)
+			if (checkIfPagination(request) && searchQuery == null)
+			{
+				searchQuery = RELEVANCE;
+			}
+
+			// Get page facets to include in facet field exclude tag
+			final String pageFacets = request.getParameter(PAGE_FACET_DATA);
+
+			//Storing the user preferred search results count
 			updateUserPreferences(pageSize);
-			//			if (preferencesData != null && preferencesData.getPageSize() != null)
-			//			{
-			//				count = preferencesData.getPageSize().intValue();
-			//			}
+
+			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
+			{
+				searchCode = searchCode.substring(0, 5);
+
+			}
+			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
+			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
+			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
+			//Set the drop down text if the attribute is not empty or null
+			if (dropDownText != null && !dropDownText.isEmpty())
+			//Added For TISPRD-1243
+
+			{
+
+				if (dropDownText.startsWith(DROPDOWN_CATEGORY) || dropDownText.startsWith(DROPDOWN_BRAND))
+
+				{
+					final CategoryModel categoryModel = categoryService.getCategoryForCode(dropDownText);
+
+					if (categoryModel != null)
+					{
+						dropDownText = (StringUtils.isNotEmpty(categoryModel.getName())) ? categoryModel.getName() : dropDownText;
+
+					}
+				}
+				//Added For TISPRD-1243
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, dropDownText);
+
+			}
+			else
+			{
+				final String categoryName = (category == null) ? "" : category.getName();
+				model.addAttribute(ModelAttributetConstants.DROP_DOWN_TEXT, categoryName);
+			}
+			updateUserPreferences(pageSize);
 
 			if (category != null)
 			{
 
 				final ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData> searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) performSearch(
 						categoryCode, searchQuery, pageNo, showMode, sortCode, getSearchPageSize(), resetAll, pageFacets);
-				//				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
-				//						model, request, response, "", isBrand);
 
 				//method signature modified for TPR-1283
 				final String performSearch = performSearchAndGetResultsPage(categoryCode, searchQuery, pageNo, showMode, sortCode,
@@ -371,7 +359,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 				model.addAttribute("categoryName", categoryName);
 
 				populateModel(model, searchPageData, ShowMode.Page);
-				//	model.addAttribute(ModelAttributetConstants.NORMAL_PRODUCTS, normalProductDatas);
 				model.addAttribute(ModelAttributetConstants.SHOW_CATEGORIES_ONLY, Boolean.FALSE);
 				// TPR-1282: For Category Footer
 				if (null != category.getCategoryFooterText())
@@ -398,77 +385,58 @@ public class CategoryPageController extends AbstractCategoryPageController
 
 				//update seo details
 				final CategoryModel brandModel = categoryService.getCategoryForCode(brandCode);
-				//final List<SeoContentModel> seoContent = new ArrayList<SeoContentModel>(brandModel.getSeoContents());
 				//meta tags are modified for TPR-1283
 				String metaKeywords = null;
 				String metaDescription = null;
 				String metaTitle = null;
 
-
-				final String brandName = brandModel.getName();
-
-				final String cateName = category.getName();
-
-				metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + " Online" + "," + " Buy " + brandName
-						+ " " + cateName + "," + " Buy " + brandName + " " + cateName + " Online";
-
-				metaDescription = brandName + " " + cateName + " - Shop for " + brandName + " " + cateName
-						+ " Online at best price in India at Tata CLiQ. Choose from wide range of " + cateName + " by " + brandName
-						+ " and get 100% genuine products.";
-
-
-				metaTitle = brandName + " " + cateName + " | Buy " + brandName + " " + cateName + " Online at Tata CLiQ ";
-
-				updatePageTitle(model, metaTitle);
-				setUpMetaData(model, metaKeywords, metaDescription);
-
-
-
-
-				/*
-				 * if (CollectionUtils.isNotEmpty(seoContent)) {
-				 *
-				 * metaKeywords = seoContent.get(seoContent.size() - 1).getSeoMetaKeyword(); metaDescription =
-				 * seoContent.get(seoContent.size() - 1).getSeoMetaDescription(); metaTitle =
-				 * seoContent.get(seoContent.size() - 1).getSeoMetaTitle();
-				 *
-				 *
-				 * setUpMetaDataForSeo(model, metaKeywords,metaDescription, metaTitle); updatePageTitle(model, metaTitle); }
-				 * else {
-				 *
-				 * metaKeywords = MetaSanitizerUtil.sanitizeKeywords(brandModel.getKeywords()); metaDescription =
-				 * MetaSanitizerUtil.sanitizeDescription(brandModel.getDescription());
-				 * updatePageTitle(brandModel,searchPageData.getBreadcrumbs(), model); setUpMetaData(model, metaKeywords,
-				 * metaDescription);
-				 *
-				 * }
-				 */
-
-				//update seo details
-				populateModel(model, searchPageData, ShowMode.Page);
-
-				/* TPR-1283 CHANGES --Starts */
-				//Added for heading change of the PLP of brand facet
-				final String supercatcode = categoryCode.substring(0, 5);
-				if (categoryCode != supercatcode)
+				//EQA Review Comments added
+				if (brandModel != null)
 				{
-					final String header = brandName + " " + cateName;
-					//model.addAttribute("flag", Boolean.valueOf(true));//SonarFix
-					model.addAttribute("flag", Boolean.TRUE);
-					model.addAttribute("modified_header", header);
-					model.addAttribute("cateName", cateName);
-				}
+					final String brandName = brandModel.getName();
 
-				if (categoryCode.equals(supercatcode))
-				{
-					response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-					final String categName = category.getName();
-					response.setHeader(LOCATION, "/" + categName + "/c-" + categoryCode.toLowerCase());
+					final String cateName = category.getName();
+
+					metaKeywords = brandName + " " + cateName + ", " + brandName + " " + cateName + " Online" + "," + " Buy "
+							+ brandName + " " + cateName + "," + " Buy " + brandName + " " + cateName + " Online";
+					//EQA Review Comments added
+					metaDescription = brandName + " " + cateName + ModelAttributetConstants.DESCRIPTION_TEXT1 + brandName + " "
+							+ cateName + ModelAttributetConstants.DESCRIPTION_TEXT2 + cateName + " by " + brandName
+							+ ModelAttributetConstants.DESCRIPTION_TEXT3;
+
+					//EQA Review Comments added
+					metaTitle = brandName + " " + cateName + ModelAttributetConstants.TITLE_TEXT1 + brandName + " " + cateName
+							+ ModelAttributetConstants.TITLE_TEXT2;
+
+					updatePageTitle(model, metaTitle);
+					setUpMetaData(model, metaKeywords, metaDescription);
+
+					//update seo details
+					populateModel(model, searchPageData, ShowMode.Page);
+
+					/* TPR-1283 CHANGES --Starts */
+					//Added for heading change of the PLP of brand facet
+					final String supercatcode = categoryCode.substring(0, 5);
+					if (categoryCode != supercatcode)
+					{
+						final String header = brandName + " " + cateName;
+						//model.addAttribute("flag", Boolean.valueOf(true));//SonarFix
+						model.addAttribute("flag", Boolean.TRUE);
+						model.addAttribute("modified_header", header);
+						model.addAttribute("cateName", cateName);
+					}
+
+					if (categoryCode.equals(supercatcode))
+					{
+						response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+						final String categName = category.getName();
+						response.setHeader(LOCATION, "/" + categName + "/c-" + categoryCode.toLowerCase());
+					}
+					//set empty for TPR-1283
+					model.addAttribute("otherProducts", "");
+					/* TPR-1283 CHANGES --Ends */
+					return performSearch;
 				}
-				//set empty for TPR-1283
-				model.addAttribute("otherProducts", "");
-				/* TPR-1283 CHANGES --Ends */
-				return performSearch;
 			}
 		}
 
@@ -502,7 +470,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 	 * @param request
 	 * @param response
 	 * @return String
-	 * @throws UnsupportedEncodingException
 	 */
 
 	@RequestMapping(value = NEW_CATEGORY_URL_PATTERN + "/getFacetData", method = RequestMethod.GET)
@@ -514,65 +481,65 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException
+			final HttpServletRequest request, final HttpServletResponse response)
 	{
-		categoryCode = categoryCode.toUpperCase();
-		String searchCode = new String(categoryCode);
-		//SEO: New pagination detection TISCR 340
-		pageNo = getPaginatedPageNo(request);
-
-		//CKD:TPR-250 :Start
-		if (null != searchQuery && searchQuery.contains(MarketplacecommerceservicesConstants.SELLERIDSEARCH))
-		{
-			String sellerId = null;
-			String sellerName = null;
-			try
-			{
-				sellerId = searchQuery.split(MarketplacecommerceservicesConstants.SELLERIDSEARCH, 2)[1].substring(0, 6);
-				sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
-			}
-			catch (final Exception ex)
-			{
-				LOG.error("CategoryPage-Problem retrieving microsite SellerId / Sellername for left hand facets >>>>>", ex);
-			}
-			model.addAttribute("msiteSellerId", sellerId);
-			model.addAttribute("mSellerID", sellerId);
-			model.addAttribute("mSellerName", sellerName);
-		}
-		//CKD:TPR-250: End
-
-
-		//applying search filters
-		if (searchQuery != null)
-		{
-			getfilterListCountForSize(searchQuery);
-			model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
-			model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
-		}
-		//TISPRD-2315(checking whether the link has been clicked for pagination)
-		if (checkIfPagination(request) && searchQuery == null)
-		{
-			searchQuery = RELEVANCE;
-		}
-
-		// Get page facets to include in facet field exclude tag
-		final String pageFacets = request.getParameter(PAGE_FACET_DATA);
-
-		//Storing the user preferred search results count
-		updateUserPreferences(pageSize);
-
-		//final List<ProductModel> heroProducts = new ArrayList<ProductModel>();
-		if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
-				&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
-		{
-			searchCode = searchCode.substring(0, 5);
-
-		}
-		model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
-		model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
+		//EQA review comments added
 		try
-		//try added for merge
 		{
+			categoryCode = categoryCode.toUpperCase();
+			String searchCode = new String(categoryCode);
+			//SEO: New pagination detection TISCR 340
+			pageNo = getPaginatedPageNo(request);
+
+			//CKD:TPR-250 :Start
+			if (null != searchQuery && searchQuery.contains(MarketplacecommerceservicesConstants.SELLERIDSEARCH))
+			{
+				String sellerId = null;
+				String sellerName = null;
+				try
+				{
+					sellerId = searchQuery.split(MarketplacecommerceservicesConstants.SELLERIDSEARCH, 2)[1].substring(0, 6);
+					sellerName = mplCategoryFacade.getSellerInformationBySellerID(sellerId);
+				}
+				catch (final Exception ex)
+				{
+					LOG.error("CategoryPage-Problem retrieving microsite SellerId / Sellername for left hand facets >>>>>", ex);
+				}
+				model.addAttribute("msiteSellerId", sellerId);
+				model.addAttribute("mSellerID", sellerId);
+				model.addAttribute("mSellerName", sellerName);
+			}
+			//CKD:TPR-250: End
+
+
+			//applying search filters
+			if (searchQuery != null)
+			{
+				getfilterListCountForSize(searchQuery);
+				model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
+				model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
+			}
+			//TISPRD-2315(checking whether the link has been clicked for pagination)
+			if (checkIfPagination(request) && searchQuery == null)
+			{
+				searchQuery = RELEVANCE;
+			}
+
+			// Get page facets to include in facet field exclude tag
+			final String pageFacets = request.getParameter(PAGE_FACET_DATA);
+
+			//Storing the user preferred search results count
+			updateUserPreferences(pageSize);
+
+			if (StringUtils.isNotEmpty(searchCode) && !(searchCode.substring(0, 5).equals(categoryCode))
+					&& (categoryCode.startsWith(MplConstants.SALES_HIERARCHY_ROOT_CATEGORY_CODE)))
+			{
+				searchCode = searchCode.substring(0, 5);
+
+			}
+			model.addAttribute(ModelAttributetConstants.SEARCH_CODE, searchCode);
+			model.addAttribute(ModelAttributetConstants.IS_CATEGORY_PAGE, Boolean.TRUE);
+
 			final CategoryModel category = categoryService.getCategoryForCode(categoryCode);
 			/* Added for TPR-1283 --Starts */
 			String catName = "";
@@ -616,7 +583,6 @@ public class CategoryPageController extends AbstractCategoryPageController
 			}
 			int count = getSearchPageSize();
 			//Check if there is a landing page for the category
-			//try{ try commented here to merge
 			final UserPreferencesData preferencesData = updateUserPreferences(pageSize);
 			if (preferencesData != null && preferencesData.getPageSize() != null)
 			{

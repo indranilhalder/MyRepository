@@ -5477,6 +5477,8 @@ function changeCTAButtonName(deliveryCode) {
 	// console.log(deliveryCode);
 	// TISPRO-625
 	var isExpressCheckoutSelected=$('#isExpressCheckoutSelected').val();
+	
+	var isDeliveryOptionPage=$('#isDeliveryOptionPage').val();
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Proceed To Store");
 		$("#deliveryMethodSubmitUp").text("Proceed To Store");
@@ -5486,8 +5488,15 @@ function changeCTAButtonName(deliveryCode) {
 		// $("#deliveryMethodSubmitUp").text("Choose Address");
 		if(isExpressCheckoutSelected=='true')
 		{
-			$("#deliveryMethodSubmit").text("Proceed to Payment");
-			$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			//INC144316212  
+			if(isDeliveryOptionPage == 'yes'){
+				$("#deliveryMethodSubmit").text("Proceed To Address");
+				$("#deliveryMethodSubmitUp").text("Proceed To Address");
+			} else {
+				$("#deliveryMethodSubmit").text("Proceed to Payment");
+				$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			}
+			
 		}
 		else
 		{

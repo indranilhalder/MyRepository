@@ -168,20 +168,20 @@ $(document).ready(function(){
 			}
 
 			var isLux = findGetParameter('isLux');
-			//console.log("isLux"+ isLux);
+			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
-			//console.log("isLuxury"+ isLuxury);
+			console.log("isLuxury"+ isLuxury);
 			if (isLuxury != "true" || isLuxury == "undefined"){
-				//console.log("isLuxury"+ isLuxury);
+				console.log("isLuxury"+ isLuxury);
 				isLuxury = false ;
 			}
 			if ( isLux == "false"){
-				//console.log("isLux"+ isLux);
+				console.log("isLux"+ isLux);
 				isLux = false ;
 			}
 			
 			var marketplaceHeader = (isLux || isLuxury) ? false : true ;
-			//console.log("marketplaceHeader"+ marketplaceHeader);
+			console.log("marketplaceHeader"+ marketplaceHeader);
 			if (isLux == "true"){
 				$(".marketplace-header").css("visibility","hidden");
 			}
@@ -1450,18 +1450,37 @@ $(document).ready(function(){
 		/*--- END of  Mobile view Left menu Sign In toggle---- */
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
 	
-	$(".progtrckr .progress.processing").each(function(){
+	/*$(".progtrckr .progress.processing").each(function(){
+
 		var len = $(this).children("span.dot").length;
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
 		} else if(len == 1) {
-			$(this).children("span.dot").first().css("marginLeft","33%");
+			$(this).children("span.dot").first().css("marginLeft","33%");		TPR-6013 Order History 
 		}
 
-	}); 
-	$(".progtrckr").each(function(){
-		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+	}); */
+	$(".progtrckr .progress.processing").each(function(){
+		var len = $(this).children("span.dot").length;
+		if(len == 3) {
+			$(this).children("span.dot").css("marginLeft","12%");
+		}
+		if(len == 2) {
+			$(this).children("span.dot").css("marginLeft","16.5%");
+		} 
+		
+		if(len == 4) {
+			$(this).children("span.dot").css("marginLeft","8%");
+		} 
+
 	});
+	$(".progtrckr").each(function(){
+		//$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+		if($(this).find(".progress.processing .dot:not(.inactive)").last().next(".message").css("display") == "block"){
+			$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show(); //TISPRDT-1570
+		}
+	});	/*TPR-6013 Order History */
+
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
@@ -2642,7 +2661,7 @@ function sortByFilterResult(top){
 			url : requiredUrl,
 			data : dataString,
 			success : function(response) {
-				//console.log(response);
+				console.log(response);
 				// putting AJAX respons to view
 				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
 				$('#facetSearchAjaxData .left-block').after(response);
@@ -2689,7 +2708,7 @@ function viewByFilterResult(top){
 			url : requiredUrl,
 			data : dataString,
 			success : function(response) {
-				//console.log(response);
+				console.log(response);
 				// putting AJAX respons to view
 				$('#facetSearchAjaxData .right-block, #facetSearchAjaxData .bottom-pagination, #facetSearchAjaxData .facet-list.filter-opt').remove();
 				$('#facetSearchAjaxData .left-block').after(response);
@@ -2792,14 +2811,14 @@ $(document).ready(function(){
 	
 	$(".timeout-slider").find(".owl-item.active").find(".item.slide").click(function(){
 		var link = $(this).find("a").attr("href");
-		//console.log(link);
+		console.log(link);
 	});
 	
 	$(".item.slide").find("a").click(function(){
 		  var link= $(this).attr("href"); //$(".item.slide").find("a").attr("href"); 
 		  var sublink=link.substr(0, link.indexOf('?')); 
 		  var id = "#"+sublink.split("#")[1];
-		  //console.log(id);
+		  console.log(id);
 		  $('html, body').animate({
 		        scrollTop: $(id).offset().top -100
 		    }, 1000);
@@ -3564,8 +3583,8 @@ $(document).on("click","button[name='pinCodeButtonId']",function(){
 }); 
 
 $(document).ajaxComplete(function(){
-	
-    //Modified for  UF-68 UF-69 UF-252
+
+	//Modified for  UF-68 UF-69 UF-252
 	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
 	$("body.page-cartPage a[class='checkoutButton checkout button red']").attr("onclick","return checkServiceabilityRequired('typeCheckout',this);");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
@@ -3606,9 +3625,18 @@ $("header .content nav > ul > li > ul > li").on("mouseout",function(){
 });
 
 
+
 /*TISSQAEE-335*/
 $(window).on("load resize",function(){
 	topLeftLocator();
+	
+	/* TPR-6013 responsive class addition starts*/
+	$("body .account .right-account .info,body .account .right-account .password,body .account .right-account .signOut,body .account .right-account .order-history").removeClass("responsiveProfile");
+	if($(window).width() <= 1007)
+		$("body .account .right-account .info,body .account .right-account .password").addClass("responsiveProfile");
+	if($(window).width() <= 773)
+		$("body .account .right-account .signOut,body .account .right-account .order-history").addClass("responsiveProfile");
+	/* TPR-6013 responsive class addition starts*/
 });
 $(document).ajaxComplete(function(){
 	topLeftLocator();
@@ -3648,6 +3676,11 @@ $(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 $(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });
+/*added for UF-353*/
+$(document).ready(function(){
+	$("#footerByAjaxId ul li a[title='Store Locator']").parent().remove();
+});
+/*UF-353 end*/
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
 $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li",function(){
 	$(".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li").removeClass("active");
@@ -3655,8 +3688,55 @@ $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab
 	});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
 
+/* TPR-6013 starts*/
+$(document).on("click","body .account .right-account .password .blue.changePass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.changePassResponsive",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	if ($(window).width() > 790) {
+		$("body .account .right-account .password .blue.changePass").css("display","block");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	} else {
+		$("body .account .right-account .password .blue.changePass").css("display","none");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+	}   
+	
+});
+/*$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+});*/
+
+$(".deliveryTrack.status.suman").each(function(){
+	$(this).find(".progtrckr.tabs").find("li").each(function(){
+	if($(this).find(".commonBlock").length === 2){
+	var index = $(this).index();
+	$(this).parents(".progtrckr.tabs").siblings(".nav").find("li").eq(index).addClass("greenProgress");
 
 
+
+
+
+
+
+
+	}
+	});
+	});
+/* TPR-6013 ends*/
 /* start change of PRDI-92 */
 $(document).ready(function() {
     if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
@@ -3666,6 +3746,8 @@ $(document).ready(function() {
 		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
 	}
 });
+
+
 $(window).on("load resize click",function(){
 	setTimeout(function(){
 		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
@@ -3677,4 +3759,13 @@ $(window).on("load resize click",function(){
 	},500);
 });
 /* end change of PRDI-92 */
+
+
+
+
+
+
+
+
+
 

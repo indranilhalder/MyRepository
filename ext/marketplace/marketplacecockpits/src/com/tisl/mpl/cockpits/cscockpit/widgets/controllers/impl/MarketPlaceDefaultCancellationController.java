@@ -395,8 +395,10 @@ public class MarketPlaceDefaultCancellationController extends
 						.getOrderEntriesModificationEntries()) {
 					OrderEntryModel orderEntry = modificationEntry
 							.getOrderEntry();
-					refundedAmount += orderEntry.getNetAmountAfterAllDisc()
-							+ orderEntry.getCurrDelCharge()+orderEntry.getScheduledDeliveryCharge()+orderEntry.getConvenienceChargeApportion();
+                                        ///TISPRDT-697
+					/*refundedAmount += orderEntry.getNetAmountAfterAllDisc()
+							+ orderEntry.getCurrDelCharge()+orderEntry.getScheduledDeliveryCharge()+orderEntry.getConvenienceChargeApportion();*/
+
 					// If CosignmentEnteries are present then update OMS with
 					// the state.
 					if (orderEntry != null
