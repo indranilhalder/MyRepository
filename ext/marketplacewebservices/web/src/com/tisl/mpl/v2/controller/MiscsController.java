@@ -19,6 +19,8 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.servicelayer.services.CMSComponentService;
 import de.hybris.platform.commercefacades.customer.CustomerFacade;
 import de.hybris.platform.commercefacades.order.CheckoutFacade;
+import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
@@ -51,6 +53,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
@@ -74,6 +77,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -120,8 +124,10 @@ import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
+import com.tisl.mpl.facade.checkout.MplCheckoutFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
+import com.tisl.mpl.facades.account.register.MplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.StateData;
@@ -155,11 +161,13 @@ import com.tisl.mpl.wsdto.BannerWsDTO;
 import com.tisl.mpl.wsdto.CategoryBrandDTO;
 import com.tisl.mpl.wsdto.CategorySNSWsData;
 import com.tisl.mpl.wsdto.CorporateAddressWsDTO;
+import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
 import com.tisl.mpl.wsdto.HelpAndServicestWsData;
 import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -202,13 +210,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -235,7 +243,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -263,17 +271,17 @@ public class MiscsController extends BaseController
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
+	 * 
 	 * /**
-	 *
+	 * 
 	 * /*
-	 *
+	 * 
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 *                APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 *                "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
-	 *                /**
-	 *
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 * 
+	 * /**
+	 * 
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -308,6 +316,13 @@ public class MiscsController extends BaseController
 	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	@Autowired
 	private SessionService sessionService;
+
+	//TPR-4512
+	@Resource
+	private MplOrderFacade mplOrderFacade;
+
+	@Resource
+	private MplCheckoutFacade mplCheckoutFacade;
 
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
@@ -677,9 +692,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1387,7 +1402,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1400,11 +1415,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; } =======
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1773,4 +1788,152 @@ public class MiscsController extends BaseController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}//LW-176 ends
+
+
+	@RequestMapping(value = "/{baseSiteId}/users/orderCustDetails", method = RequestMethod.GET, produces = APPLICATION_JSON)
+	@ResponseBody
+	public OrderInfoWsDTO fetchCustomerOrderInfo(@RequestParam final String orderRefNo, @RequestParam final String transactionId,
+			@RequestParam final String mobileNo) throws EtailNonBusinessExceptions
+	{
+		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
+		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
+
+		OrderModel orderModel = null;
+
+		OrderData orderData = null;
+
+		//OrderEntryData orderEntry = new OrderEntryData();
+		String consignmentStatus = null;
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+
+		try
+		{
+
+			if (StringUtils.isNotEmpty(orderRefNo))
+			{
+				orderModel = mplOrderFacade.getOrder(orderRefNo);
+				//orderModel = orderModelService.getOrder(orderRefNo);
+				if (orderModel != null)
+				{
+					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
+					//Orderdata = getOrderConverter().convert(orderModel);
+					final String orderTotal = orderData.getTotalPriceWithConvCharge().getFormattedValue();
+					if (StringUtils.isNotEmpty(orderTotal))
+					{
+						orderInfoWsDTO.setOrderTotal(orderTotal);
+					}
+					if (orderData.getCreated() != null)
+					{
+						final String orderDate = formatter.format(orderData.getCreated());
+						orderInfoWsDTO.setOrderDate(orderDate);
+					}
+					//final CustomerData customerData = customerFacade.getCurrentCustomer();
+					if (StringUtils.isNotEmpty(orderData.getDeliveryAddress().getPhone()))
+					{
+						orderInfoWsDTO.setCustMobileNo(mobileNo);
+					}
+
+					if (StringUtils.isNotEmpty(orderData.getDeliveryAddress().getFirstName())
+							&& StringUtils.isNotEmpty(orderData.getDeliveryAddress().getLastName()))
+					{
+						orderInfoWsDTO.setCustName(orderData.getDeliveryAddress().getFirstName() + " "
+								+ orderData.getDeliveryAddress().getLastName());
+					}
+
+					if (orderData.getEntries() != null)
+					{
+						final List<OrderEntryData> subOrderEntries = orderData.getEntries();
+						for (final OrderEntryData entry : subOrderEntries)
+						{
+							final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+							if (StringUtils.isNotEmpty(entry.getSelectedSellerInformation().getFullfillment()))
+							{
+								customerOrderInfoWsDTO.setShippingType(entry.getSelectedSellerInformation().getFullfillment());
+							}
+							if (StringUtils.isNotEmpty(entry.getTransactionId()))
+							{
+								customerOrderInfoWsDTO.setTransactionId(entry.getTransactionId());
+							}
+							if (StringUtils.isNotEmpty(entry.getSelectedSellerInformation().getSellername()))
+							{
+								customerOrderInfoWsDTO.setSellerName(entry.getSelectedSellerInformation().getSellername());
+							}
+							if (StringUtils.isNotEmpty(entry.getMplDeliveryMode().getName()))
+							{
+								customerOrderInfoWsDTO.setShippingMode(entry.getMplDeliveryMode().getName());
+							}
+							if (StringUtils.isNotEmpty(entry.getProduct().getName()))
+							{
+								customerOrderInfoWsDTO.setProductName(entry.getProduct().getName());
+							}
+							if (StringUtils.isNotEmpty(entry.getTotalPrice().getFormattedValue()))
+							{
+								customerOrderInfoWsDTO.setApportionedPrice(entry.getTotalPrice().getFormattedValue());
+							}
+							if ((entry.getExpectedDeliveryDate()) != null)
+							{
+								final String eddDate = formatter.format(entry.getExpectedDeliveryDate());
+								customerOrderInfoWsDTO.setEdd(eddDate);
+							}
+							if (null != entry.getConsignment() && null != entry.getConsignment().getStatus())
+							{
+								consignmentStatus = entry.getConsignment().getStatus().getCode();
+								customerOrderInfoWsDTO.setOrderStatus(consignmentStatus);
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setOrderStatus(orderData.getStatus().toString());
+							}
+
+							if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+							{
+								customerOrderInfoWsDTO.setPaymentType("POSTPAID");
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setPaymentType("PREPAID");
+							}
+							custdto.add(customerOrderInfoWsDTO);
+							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+						}
+					}
+
+				}
+				else
+				{
+					LOG.debug("############## Exception occured due to orderRefNo ###############");
+					orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+				}
+			}
+			else if (StringUtils.isNotEmpty(transactionId))
+			{
+				//
+			}
+			else if (StringUtils.isNotEmpty(mobileNo))
+			{
+				//
+			}
+			//final CartModel cartModel = cartService.getSessionCart();
+			//final String guid = cartModel.getGuid();
+
+			//orderModel = getMplPaymentFacade().getOrderByGuid(guid);
+
+			//OrderData orderData = null;
+
+			//final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderRefNo);
+
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured" + e.getMessage());
+			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		//customerOrderInfoWsDTO.setTransactionId(trId);
+		return orderInfoWsDTO;
+
+	}
+
+
 }
