@@ -13,7 +13,7 @@
 ACC.singlePageCheckout = {
 
 	_autoload: [
-	    "mobileAccordion"
+	    //"mobileAccordion"
 	],
 	ajaxErrorMessages:function(code){
 		var message="";
@@ -833,6 +833,12 @@ ACC.singlePageCheckout = {
             	$('#cncStoreContainer'+entryNumber).find(".cnc_arrow").css("left",cnc_arrow_left+"px");
             	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
             	//CNC Carousel
+            	if($(".cnc_item .removeColor1").length == 2){
+        			$("#cnc_carousel").addClass("two_address");
+        		}
+        		if($(".cnc_item .removeColor1").length == 1){
+        			$("#cnc_carousel").addClass("one_address");
+        		}
             	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
         				'initialize.owl.carousel initialize.owl.carousel ' +
         				'to.owl.carousel changed.owl.carousel',
@@ -865,7 +871,6 @@ ACC.singlePageCheckout = {
         		$(".cnc_carousel").owlCarousel({
         			items:3,
         			loop: false,
-        			nav: true,
         			dots:false,
         			margin: 60,
         			navText:[],
@@ -877,15 +882,18 @@ ACC.singlePageCheckout = {
             				stagePadding: 36,
             				slideBy: 1,
             				margin: 0,
+            				nav: ($(".cnc_item .removeColor1").length <= 1)?false:true,
             			},
             			// breakpoint from 768 up
             			768 : {
             				items:2,
             				slideBy: 2,
+            				nav: ($(".cnc_item .removeColor1").length <= 2)?false:true,
             			},
             			// breakpoint from 1280 up
             			1280 : {
             				items:3,
+            				nav: ($(".cnc_item .removeColor1").length <= 3)?false:true,
             			}			
             		},
             		onRefresh: function () {
@@ -1739,18 +1747,30 @@ removeExchangeFromCart : function (){
 				}
 			});
 	},
-	mobileAccordion:function(){
-		$("#address-change-link").on("click", function(){
-			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
-			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
-			$(this).hide();
-		});
-		/*$(".cancel-mobile").on("click", function(){
-			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").hide();
-			$(this).parents(".checkout_mobile_section").find(".change-mobile").show();
-			$(this).hide();
-		});*/
-	},
+	
+	
+	
+//	mobileAccordion:function(){
+//		$("#address-change-link").on("click", function(){
+//			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+//			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+//			$(this).hide();
+//		});
+//		$("#delivery-mode-change-link").on("click", function(){
+//			var entryNumbersId=$("#entryNumbersId").val();		            	
+//	    	var entryNumbers=entryNumbersId.split("#");
+//	    	for(var i=0;i<entryNumbers.length-1;i++)
+//	    	{
+//	    		$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();        	
+//	    	}
+//		});
+//		
+//		/*$(".cancel-mobile").on("click", function(){
+//			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").hide();
+//			$(this).parents(".checkout_mobile_section").find(".change-mobile").show();
+//			$(this).hide();
+//		});*/
+//	},
 	getIsResponsive:function(){
 		var winWidth=$(window).width();
 		return winWidth<768?true:false;
@@ -1948,11 +1968,45 @@ removeExchangeFromCart : function (){
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	
+		            	var entryNumbersId=$("#entryNumbersId").val();		            	
+		            	var entryNumbers=entryNumbersId.split("#");
+		            	for(var i=0;i<entryNumbers.length-1;i++)
+		            	{
+		            		$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
+			            		if(!$(obj).is(':checked'))
+			            		{
+			            			$(obj).parent("li").hide();
+			            		}
+			            		if($(obj).is(':checked'))
+			            		{
+			            			$(obj).hide();
+			            		}
+			            	});
+		            	}
+		            	
+		            	
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 		            }
 		 		});
 		}
 		
+	},
+	
+	changeAddress:function(element){
+		//$("#address-change-link").on("click", function(){
+			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
+			$(element).hide();
+	    //});
+	},
+	
+	changeDeliveryMode:function(){
+		var entryNumbersId=$("#entryNumbersId").val();
+		var entryNumbers=entryNumbersId.split("#");
+		for(var i=0;i<entryNumbers.length-1;i++)
+		{
+		$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();        	
+		}
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
 	attachEventToResetFlagsOnDelModeChange:function()

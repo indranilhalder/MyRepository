@@ -86,7 +86,7 @@
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
 		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper">
-		<p class="change-mobile" id="address-change-link">Change</p>
+		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress(this);">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="chooseDeliveryAddressMobile">
@@ -96,7 +96,7 @@
 	<div  class="checkout_mobile_section cart wrapper"  id="selectedDeliveryOptionsDivIdMobile">
 		<div class="checkout-mobile-heading">Delivery Method</div>
 		<div class="change-cancel-wrapper">
-		<p class="change-mobile">Change</p>
+		<p class="change-mobile" id="delivery-mode-change-link" onclick="ACC.singlePageCheckout.changeDeliveryMode();">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="choosedeliveryModeMobile">
