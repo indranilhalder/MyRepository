@@ -638,6 +638,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									{
 										deliveryModeData.setFulfillmentType(deliveryModel.getDeliveryFulfillModes().getCode());
 									}
+									//UF-314
+									deliveryModeData.setPriority(deliveryModel.getDeliveryMode().getPriority());
+
 									if (null != entry.getMplDeliveryMode() && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode()))
 									{
 										deliveryModeSelectedForEntry = true;
@@ -647,11 +650,17 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									{
 										deliveryModeData.setIsSelected(false);
 									}
-									deliveryModeDataList.add(deliveryModeData);
 								}
+								deliveryModeDataList.add(deliveryModeData);
 							}
-							deliveryModeDataMap.put(entry.getEntryNumber().toString(), deliveryModeDataList);
 						}
+						//UF-314
+						deliveryModeDataList.sort(Comparator.comparing(MarketplaceDeliveryModeData::getPriority).reversed());
+						if (!deliveryModeSelectedForEntry)
+						{
+							deliveryModeDataList.get(deliveryModeDataList.size() - 1).setIsSelected(true);//UF-281
+						}
+						deliveryModeDataMap.put(entry.getEntryNumber().toString(), deliveryModeDataList);
 					}
 				}
 			}
@@ -673,11 +682,17 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						deliveryModeData.setName(marketplaceDeliveryModeData.getName());
 						deliveryModeData.setSellerArticleSKU(entry.getSelectedSellerInformation().getUssid());
 						deliveryModeData.setDeliveryCost(marketplaceDeliveryModeData.getDeliveryCost());
+						//UF-314 Start
+						deliveryModeData.setPriority(marketplaceDeliveryModeData.getPriority());
+						//UF-314 End
 						deliveryModeDataList.add(deliveryModeData);
 					}
 				}
 				if (!deliveryModeDataList.isEmpty())
 				{
+					//UF-314
+					deliveryModeDataList.sort(Comparator.comparing(MarketplaceDeliveryModeData::getPriority).reversed());
+					deliveryModeDataList.get(0).setIsSelected(true);//UF-281
 					deliveryModeDataMap.put(entry.getEntryNumber().toString(), deliveryModeDataList);
 				}
 				else

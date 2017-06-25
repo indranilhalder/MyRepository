@@ -1951,6 +1951,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				boolean isSaveRequired = false;
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
 					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
@@ -1960,12 +1961,33 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							cartEntryModel.setEdScheduledDate("".trim());
 							cartEntryModel.setTimeSlotFrom("".trim());
 							cartEntryModel.setTimeSlotTo("".trim());
-
+						}
+						//UF-281
+						if (cartEntryModel.getScheduledDeliveryCharge() != null
+								&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+						{
+							isSaveRequired = true;
+							if (cartModel.getTotalPriceWithConv() != null)
+							{
+								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+										- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+							}
+							final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
+									- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+							cartModel.setDeliveryCost(finalDeliveryCost);
+							final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+									- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+							cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
 						}
 					}
 				}
 				modelService.saveAll(cartEntryList);
-
+				if (isSaveRequired)
+				{
+					modelService.save(cartModel);
+					modelService.refresh(cartModel);
+				}
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
 					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
@@ -4458,7 +4480,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4516,7 +4538,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
