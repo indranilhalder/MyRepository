@@ -1977,10 +1977,6 @@ removeExchangeFromCart : function (){
 			            		{
 			            			$(obj).parent("li").hide();
 			            		}
-			            		if($(obj).is(':checked'))
-			            		{
-			            			$(obj).hide();
-			            		}
 			            	});
 		            	}
 		            	
@@ -2000,13 +1996,20 @@ removeExchangeFromCart : function (){
 	    //});
 	},
 	
-	changeDeliveryMode:function(){
+	changeDeliveryMode:function(element){
 		var entryNumbersId=$("#entryNumbersId").val();
 		var entryNumbers=entryNumbersId.split("#");
 		for(var i=0;i<entryNumbers.length-1;i++)
 		{
-		$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();        	
+			//$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();
+			$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
+        		if(!$(obj).is(':checked'))
+        		{
+        			$(obj).parent("li").show();
+        		}
+        	});
 		}
+		$(element).hide();
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
 	attachEventToResetFlagsOnDelModeChange:function()

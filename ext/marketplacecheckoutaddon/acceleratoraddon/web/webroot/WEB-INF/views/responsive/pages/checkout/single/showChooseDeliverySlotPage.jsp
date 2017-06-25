@@ -32,6 +32,6 @@
 		<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Done</button>
 	</div>
 	<div>
-		<a href="javascript:void(0);" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Cancel</a>
+		<a href="javascript:void(0);" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</a>
 	</div>
 </div>

@@ -47,7 +47,9 @@
 					</ul>
 				</li> --%>
 						<c:set var="entryNumbersId" value=""/>
+						<c:set var="hideChangeLink" value="true"/>
 						<c:forEach items="${cartData.entries}" var="entry">
+							<c:set var="numberOfDelModesInEntry" value="0"/>
 								<c:url value="${entry.product.url}" var="productUrl" />
 				
 								<li class="item delivery_options" data-entryNumber="${entry.entryNumber}" data-ussid="${entry.selectedSellerInformation.ussid}">
@@ -226,6 +228,7 @@
 														<c:set var='delModeChecked'  value='false' />
 															
 														<c:forEach var="i" begin="1" end="${delModes}" step="1">
+															<c:set var="numberOfDelModesInEntry" value="${numberOfDelModesInEntry+1}"/>
 														    <c:set var="delMode" value="${deliveryModeDataMap.value[delModes-i]}" />
 															
 															<c:if test="${count==1}">
@@ -271,6 +274,9 @@
 															</c:choose>
 									
 														</c:forEach>
+														<c:if test="${numberOfDelModesInEntry>1}">
+															<c:set var="hideChangeLink" value="false"/>
+														</c:if>
 												</c:if>
 												</c:forEach>
 												</c:if>
@@ -291,5 +297,5 @@
 	</div>
 	<input type="hidden" name="isCncPresentInSinglePageCart" id="isCncPresentInSinglePageCart" value="${isCncPresentInSinglePageCart}"/>
 	<input type="hidden" name="entryNumbersId" id="entryNumbersId" value="${entryNumbersId}" />
+	<input type="hidden" name="hideChangeLink" id="hideChangeLink" value="${hideChangeLink}" />
 	</c:if>
-

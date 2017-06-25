@@ -20,8 +20,8 @@
 <script>
 	$(document).ready(function(){
 		var tmp = false;
-		$(".radioPardhu").mouseup(function(){
-			/* Set Values For Ajax Call */
+		/* $(".slotRadio").mouseup(function(){
+			 Set Values For Ajax Call 
 			var mplconfigModel = $('#mplconfigModel').val();
 			var selectedUssId;
 			var date;
@@ -63,9 +63,9 @@
     	 			
     	 		}
     	 	});
-		});
+		}); */
     	
-    	$(".reset").click(function(){
+/*     	$(".reset").click(function(){
     		var currentReset = $(this);
     		$(this).parent().parent().find(".pardhuBlock input[type='radio']").prop('checked', false);
     		$(this).parent().parent().find(".pardhuBlock input[data-name='time']").prop('checked', false);
@@ -93,7 +93,58 @@
     	});
  		
 		
-	});
+	}); */
+	function updateSlotForEntry(element)
+	{
+		if($(element).is(":checked"))
+		{
+			var mplconfigModel = $(element).attr("data-deliveryCost");
+			var selectedUssId = $(element).attr("data-ussid");
+			var date = $(element).attr("data-deliverySlotDate");
+			var time = $(element).attr("data-deliverySlotTime");
+			var dataString = 'deliverySlotCost='+mplconfigModel+'&deliverySlotDate='+date+'&deliverySlotTime='+time+'&ussId='+selectedUssId;
+			//alert(dataString);
+			
+			$.ajax({                            
+		 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/deliverySlotCostForEd",
+		 		data : dataString,
+		 		success : function(response) {
+		 			var result = response.split("-");
+		 			if(response == '-'){
+		 				
+		 			}else{
+		 			$("#deliveryCostSpanId").empty().text(result[0]);
+		 			$("#totalWithConvField").empty().text(result[1]);
+		 		}
+		 		},
+		 		error : function(error) {
+		 			
+		 		}
+		 	});
+		}
+	}
+	function resetSlotForEntry(element,radioElement)
+	{
+		$("input:radio[name="+radioElement+"]").prop('checked', false);
+		var ussId=$(element).attr('data-ussid');
+		var mplconfigModel= $(element).attr('data-deliveryCost');
+		var dataString = 'deliverySlotCost='+mplconfigModel+'&ussId='+ussId;
+		
+		 $.ajax({                            
+	 		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/updateDeliverySlotCostForEd",
+	 		data : dataString,
+	 		success : function(response) {
+	 			
+	 			currentReset.prop('disabled','disabled');
+	 			var result = response.split("-");
+	 			$("#deliveryCostSpanId").empty().text(result[0]);
+	 			$("#totalWithConvField").empty().text(result[1]);
+	 		},
+	 		error : function(error) {
+
+	 		}
+	 	}); 
+	}
 </script>
 <div class="checkout-shipping-items">
 	<div class="checkout-headers">
@@ -125,18 +176,18 @@
 						</div>
 					</li>
 					<li class="deliverySlotRadio">
-						<input type="hidden" id="mplconfigModel" name="mplconfigModel" value="${mplconfigModel}"/>
-						<input type="hidden" id="selectedUssId" name="selectedUssId" value="${entry.selectedUssid}"/>
+						<%-- <input type="hidden" id="mplconfigModel" name="mplconfigModel" value="${mplconfigModel}"/>
+						<input type="hidden" id="selectedUssId" name="selectedUssId" value="${entry.selectedUssid}"/> --%>
 						<div class="" id="content"  data-ajax="3bu1">
 							<c:choose>
 								<c:when test="${not empty entry.deliverySlotsTime}">
 									<div class="">
 										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
 											<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
-											<div class="col-md-12 NOP pardhuBlock">
+											<div class="">
 												<c:forEach items="${dateSlots.value}" var="timeSlots">
 													<span>	
-														<input type="radio" class="" data-name="date" name="date${scheduleIndex}" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="${dateSlots.key}">
+														<input type="radio" class="" name="date${scheduleIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onclick="updateSlotForEntry(this);">
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${timeSlots})</span>
 														<c:choose>
@@ -144,7 +195,7 @@
 																<span class="greyText">(Free)</span>
 															</c:when>
 															<c:otherwise>
-																<span class="">(${mplconfigModel})</span>
+																<span class="">(${currencySymbol} ${mplconfigModel})</span>
 															</c:otherwise>
 														</c:choose>
 													</span>
@@ -152,7 +203,7 @@
 											</div>
 										</c:forEach>
 										<div class="" align="left">
-											<button class="" type="button" data-ussid="${entry.selectedUssid}" disabled="disabled">Reset</button>
+											<button class="" type="button" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');">Reset</button>
 										</div>
 									</div>									
 								</c:when>

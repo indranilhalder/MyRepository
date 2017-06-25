@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -57,6 +58,7 @@ import de.hybris.platform.promotions.util.Tuple2;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.GPS;
@@ -124,7 +126,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
-import com.tisl.mpl.core.enums.WalletEnum;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.WalletEnum;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -288,6 +290,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@Resource(name = "exchangeGuideFacade")
 	private ExchangeGuideFacade exchangeGuideFacade;
 
+	@Resource(name = "commonI18NService")
+	private CommonI18NService commonI18NService;
+
 	/**
 	 * @return the mplCheckoutFacade
 	 */
@@ -395,7 +400,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
 			if ((StringUtils.isEmpty(isServicable)) || (isServicable.equalsIgnoreCase("N")))
 			{
-				//getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,MarketplacecommerceservicesConstants.TRUE_UPPER);
+				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
+						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -2123,6 +2129,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				model.addAttribute("mplconfigModel", deliverySlotCharge);
 				model.addAttribute("defaultPincode",
 						getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+
+				final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+				final String currencySymbol = currency.getSymbol();
+				model.addAttribute("currencySymbol", currencySymbol);
 
 				//				this.prepareDataForPage(model);
 				//			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
