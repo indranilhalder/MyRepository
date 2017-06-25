@@ -18,8 +18,8 @@
 
 <c:if test="${hasShippedItems}">
 <script>
-	$(document).ready(function(){
-		var tmp = false;
+	//$(document).ready(function(){
+		//var tmp = false;
 		/* $(".slotRadio").mouseup(function(){
 			 Set Values For Ajax Call 
 			var mplconfigModel = $('#mplconfigModel').val();
@@ -189,7 +189,7 @@
 													<span>	
 														<input type="radio" class="" name="date${scheduleIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onclick="updateSlotForEntry(this);">
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
-														<span class="dateTime1">&nbsp;(${timeSlots})</span>
+														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
 														<c:choose>
 															<c:when test="${empty mplconfigModel}">
 																<span class="greyText">(Free)</span>
