@@ -187,7 +187,7 @@
 											<div class="">
 												<c:forEach items="${dateSlots.value}" var="timeSlots">
 													<span>	
-														<input type="radio" class="" name="date${scheduleIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onclick="updateSlotForEntry(this);">
+														<input type="radio" class="" name="date${scheduleIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this);">
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
 														<c:choose>
