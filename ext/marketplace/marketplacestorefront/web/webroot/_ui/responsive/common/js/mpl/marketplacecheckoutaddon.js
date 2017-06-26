@@ -619,8 +619,11 @@ function displayDCForm(){
 		$(".make_payment_top_savedCard").css("display","block");
 		$(".make_payment_top_newCard").css("display","none");
 		$(".newCard").css("display","table-cell");
-		$("input[name=creditCards]:radio").first().prop("checked", false);
-		$("input[name=debitCards]:radio").first().prop("checked", true);
+		if(!ACC.singlePageCheckout.getIsResponsive())
+		{//UF-282
+			$("input[name=creditCards]:radio").first().prop("checked", false);
+			$("input[name=debitCards]:radio").first().prop("checked", true);
+		}
 		$(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
 		$(".card_token").parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
 		$(".card_token").parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
@@ -1294,8 +1297,11 @@ function displayFormForCC(){
 			//$("#savedDebitCard, #newCard, .savedCard, .newCardPayment").css("display","none");
 			$(".make_payment_top_newCard").css("display","none");
 			$(".newCard").css("display","table-cell");
-			$("input[name=debitCards]:radio").first().prop("checked", false);
-			$("input[name=creditCards]:radio").first().prop("checked", true);
+			if(!ACC.singlePageCheckout.getIsResponsive())
+			{//UF-282
+				$("input[name=debitCards]:radio").first().prop("checked", false);
+				$("input[name=creditCards]:radio").first().prop("checked", true);
+			}
 			$("#card li.header ul").append($("#emi li.newCard"));
 			$("#card li.header ul").append($("#emi li.savedCard"));
 			var bankName=$('.card_bank').val();

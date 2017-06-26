@@ -252,9 +252,4 @@
 			<div class="new-address-form-mobile"></div>
 		</div>
 	</c:if>
-
-
-<script>
-$(".mobileNotDefaultDelAddress").hide();
-</script>
 </div>

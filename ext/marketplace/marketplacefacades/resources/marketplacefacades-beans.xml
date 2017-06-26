@@ -570,6 +570,8 @@
 		<!-- UF-314 Start -->
 		<property name="priority" type="Integer" />
 		<!-- UF-314 End -->
+		<!-- UF-281 -->
+		<property name="isSelected" type="boolean" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
