@@ -46,6 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -684,9 +685,12 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
 			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws UnsupportedEncodingException,
-			CMSItemNotFoundException
+			final HttpServletRequest request, final HttpServletResponse response)
 	{
+		String returnStatement = null;
+		//EQA review comments added
+		try
+		{
 		final boolean isBrand = false;
 		//UF-15
 		pageSize = PAGE_SIZE;
@@ -707,20 +711,42 @@ public class CategoryPageController extends AbstractCategoryPageController
 			final String resolvedcatName = urlName.substring(1, urlName.lastIndexOf('/'));
 			setCategoryUrl(urlName);
 			/* TPR-1283 Changes --Ends */
-			if (searchQuery != null)
-			{
-				getfilterListCountForSize(searchQuery);
-				model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
-				model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
-			}
-			/* TPR-1283 changes --Starts */
-			if (StringUtils.isNotEmpty(searchQuery) && searchQuery.contains(BRANDNAME))
-			{
-				final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
-				//final int count = Integer.valueOf(Iterables.frequency(splitStr, "brand")).intValue();//SonarFix
-				final int count = Iterables.frequency(splitStr, BRANDNAME);
-				if (count == 1)
+				//applying search filters
+				if (searchQuery != null)
 				{
+					getfilterListCountForSize(searchQuery);
+					model.addAttribute(ModelAttributetConstants.SIZE_COUNT, Integer.valueOf(getfilterListCountForSize(searchQuery)));
+					model.addAttribute(ModelAttributetConstants.SEARCH_QUERY_VALUE, searchQuery);
+				}
+				/* PRDI-411 FIX--Start */
+				boolean isRedirectRequired = true;
+
+				final Enumeration<String> enums = request.getParameterNames();
+
+				while (enums.hasMoreElements())
+				{
+					final String paramKey = enums.nextElement();
+					if (paramKey.contains(ModelAttributetConstants.ICID))
+					{
+						isRedirectRequired = false;
+						break;
+					}
+					else if (paramKey.equalsIgnoreCase(ModelAttributetConstants.SHARE))
+					{
+						isRedirectRequired = false;
+						break;
+					}
+				}
+				/* PRDI-411 FIX--End */
+
+				/* TPR-1283 changes --Starts */
+				if (StringUtils.isNotEmpty(searchQuery) && searchQuery.contains(BRANDNAME) && isRedirectRequired)
+				{
+					final Iterable<String> splitStr = Splitter.on(':').split(searchQuery);
+					//final int count = Integer.valueOf(Iterables.frequency(splitStr, "brand")).intValue();//SonarFix
+					final int count = Iterables.frequency(splitStr, BRANDNAME);
+					if (count == 1)
+					{
 					String brandCode = "";
 					int cnt = 0;
 					final String[] tokens = searchQuery.split(":");
@@ -976,6 +1002,11 @@ public class CategoryPageController extends AbstractCategoryPageController
 					LOG.error(EXCEPTION_OCCURED + e1);
 				}
 			}
+		 }
+	  }
+		catch (final Exception e)
+		{
+			LOG.error(EXCEPTION_OCCURED + e);
 		}
 		return returnStatement;
 	}
