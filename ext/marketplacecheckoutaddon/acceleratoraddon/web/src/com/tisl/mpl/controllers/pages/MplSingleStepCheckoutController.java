@@ -1967,17 +1967,16 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 								&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
 						{
 							isSaveRequired = true;
-							if (cartModel.getTotalPriceWithConv() != null)
-							{
-								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
-										- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
-							}
-							final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
-									- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
-							cartModel.setDeliveryCost(finalDeliveryCost);
-							final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
-									- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
-							cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+							//							if (cartModel.getTotalPriceWithConv() != null)
+							//							{
+							//								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+							//										- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+							//							}
+							//final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue() - cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+							//cartModel.setDeliveryCost(finalDeliveryCost);
+							//							final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+							//									- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+							//							cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
 							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
 						}
 					}
@@ -2984,19 +2983,43 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				boolean isSaveRequired = false;
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 				{
 					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
 					{
+
 						if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
 						{
 							cartEntryModel.setEdScheduledDate("".trim());
 							cartEntryModel.setTimeSlotFrom("".trim());
 							cartEntryModel.setTimeSlotTo("".trim());
-
+							//UF-281
+							if (cartEntryModel.getScheduledDeliveryCharge() != null
+									&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+							{
+								isSaveRequired = true;
+								//							if (cartModel.getTotalPriceWithConv() != null)
+								//							{
+								//								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+								//										- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+								//							}
+								//final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue() - cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+								//cartModel.setDeliveryCost(finalDeliveryCost);
+								//							final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+								//									- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+								//							cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+								cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+							}
 						}
 					}
 				}
+				if (isSaveRequired)
+				{
+					modelService.save(cartModel);
+					modelService.refresh(cartModel);
+				}
+				//End of UF-281
 				modelService.saveAll(cartEntryList);
 
 				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
@@ -3171,12 +3194,41 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 			final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
-			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			String deliverySlotCharge = MarketplacecommerceservicesConstants.EMPTY;
 			final DecimalFormat df = new DecimalFormat("#.00");
+			final CartModel cartModel = getCartService().getSessionCart();
+			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+			boolean isSaveRequired = false;
+			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			{
+				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+				{
+
+					if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+					{
+						cartEntryModel.setEdScheduledDate("".trim());
+						cartEntryModel.setTimeSlotFrom("".trim());
+						cartEntryModel.setTimeSlotTo("".trim());
+						//UF-281
+						if (cartEntryModel.getScheduledDeliveryCharge() != null
+								&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+						{
+							isSaveRequired = true;
+
+							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+						}
+					}
+				}
+			}
+			if (isSaveRequired)
+			{
+				modelService.save(cartModel);
+				modelService.refresh(cartModel);
+			}
+			//End of UF-281
+			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			if (configModel.getSdCharge() > 0)
 			{
-				final CartModel cartModel = getCartService().getSessionCart();
 				cartDataSupport.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
 						Double.valueOf(configModel.getSdCharge())));
 				deliverySlotCharge = df.format(configModel.getSdCharge());
@@ -3227,7 +3279,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 
 			final CartModel cartModel = cartService.getSessionCart();
-			mplCartFacade.setCartSubTotal(cartModel);
+			mplCartFacade.setCartSubTotalForReviewOrder(cartModel);
 			mplCartFacade.totalMrpCal(cartModel);
 			//UF-260
 			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
@@ -4384,6 +4436,40 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					if (entry.getDeliveryPointOfService() != null)
 					{
 						deliveryPOSMap.put(entry.getSelectedUSSID(), entry.getDeliveryPointOfService());
+					}
+					//Removing slot delivery set in previous step
+					if (entry.getEntryNumber().longValue() == entryNumber)
+					{
+						//Start of UF-281
+						boolean isSaveRequired = false;
+						if (null != entry.getEdScheduledDate() && StringUtils.isNotEmpty(entry.getEdScheduledDate()))
+						{
+							entry.setEdScheduledDate("".trim());
+							entry.setTimeSlotFrom("".trim());
+							entry.setTimeSlotTo("".trim());
+						}
+						if (entry.getScheduledDeliveryCharge() != null && entry.getScheduledDeliveryCharge().doubleValue() != 0.0)
+						{
+							isSaveRequired = true;
+							if (cartModel.getTotalPriceWithConv() != null)
+							{
+								cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+										- Double.valueOf(entry.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+							}
+							final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
+									- entry.getScheduledDeliveryCharge().doubleValue());
+							cartModel.setDeliveryCost(finalDeliveryCost);
+							final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+									- entry.getScheduledDeliveryCharge().doubleValue());
+							cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+							entry.setScheduledDeliveryCharge(Double.valueOf(0));
+						}
+						if (isSaveRequired)
+						{
+							modelService.save(cartModel);
+							modelService.refresh(cartModel);
+						}
+						//End of UF-281
 					}
 				}
 				//TPR-1083 Start

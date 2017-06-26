@@ -233,7 +233,7 @@
 															
 															<c:if test="${count==1}">
 																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${delMode.sellerArticleSKU}" />
-																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.code}" />
+																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.defaultSelectedDelMode}" />
 															</c:if>
 														   <c:set var='count'  value='${count+1}' />
 
