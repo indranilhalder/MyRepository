@@ -1090,11 +1090,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 
 		// TISRLEE-1586 03-01-2017
-		final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
+		//final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
 		final String productcode = buyBoxMod.getProduct();
 		ProductModel product = null;
 		String productcategory = null;
-		//	SellerInformationModel sellerInfoModel = null;
+		SellerInformationModel sellerInfoModel = null;
 		if (StringUtils.isNotEmpty(productcode))
 		{
 			product = buyBoxService.getProductDetailsByProductCode(productcode);
@@ -1103,6 +1103,17 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		if (null != product && StringUtils.isNotEmpty(product.getProductCategoryType()))
 		{
 			productcategory = product.getProductCategoryType();
+		}
+
+		if (StringUtils.isNotEmpty(productcategory) && productcategory.equalsIgnoreCase(FINEJEWELLERY))
+		{
+			//			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxMod
+			//					.getSellerArticleSKU());
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getPUSSID());
+		}
+		else
+		{
+			sellerInfoModel = mplSellerInformationService.getSellerDetail(buyBoxMod.getSellerArticleSKU());
 		}
 		if (CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
