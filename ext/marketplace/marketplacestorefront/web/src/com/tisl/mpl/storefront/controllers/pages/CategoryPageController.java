@@ -695,7 +695,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 		//UF-15
 		pageSize = PAGE_SIZE;
 		categoryCode = categoryCode.toUpperCase();
-		String returnStatement = null;
+		
 		//CKD:TPR-250-Start
 		identifyMicroSellerId(searchQuery, model, request);
 		//CKD:TPR-250-End
