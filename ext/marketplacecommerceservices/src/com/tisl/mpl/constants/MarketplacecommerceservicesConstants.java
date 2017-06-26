@@ -2152,4 +2152,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	// added for TPR-1348 AutomatedOrder refund process
+	public static final String CLICK_AND_COLLECT = "click-and-collect";
+
 }
