@@ -25,6 +25,8 @@
     	<property name="couponReleased" type="boolean"/>
     	<property name="redeemErrorMsg" type="String"/>
     	<property name="voucherCode" type="String"/>
+    	<!-- couponMessageInfo added for TPR-4461 -->
+    	<property name="couponMessageInfo" type="String"/>  
     </bean>
     
       <bean class="com.tisl.mpl.data.VoucherDisplayData">

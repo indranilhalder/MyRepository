@@ -70,13 +70,15 @@
 							code="text.account.orderHistorylink" text="Back to Order History" />
 					</a>
 				</p>
+				<p class="track-order-header">Track Order</p>
 				<div class="order-history order-details">
 					<!-- Heading for saved Cards -->
 					<div class="navigation">
 						<h2>
 							<spring:theme text="Order Details" />
 						</h2>
-
+						
+						<p class="commonAccountPara">If you find any issue with the details, you can contact our customer care at 1800 208 8282.</p>
 
 					</div>
 
@@ -85,13 +87,17 @@
 						<li class="header">
 
 							<ul>
-								<li><span><spring:theme
-											code="text.orderHistory.order.placed" /></span> <c:if
+							
+								<li><span>Order #</span>${subOrder.code}</li>
+								<li class="placed_date"><span><spring:theme
+											code="text.orderHistory.order.place" text="Placed on:" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
-								<li><span>Total: </span> 
+										
+										<!-- Commented for TPR-6013 Order History -->
+								<%-- <li class="price"><span>Total: </span> 
 								<!-- TISSIT-1773 -->
-								<%-- <format:price	priceData="${subOrder.totalPrice}" /> --%>
+								<format:price	priceData="${subOrder.totalPrice}" />
 								
 								<c:choose>
 										<c:when test="${subOrder.net}">
@@ -105,8 +111,8 @@
 								</c:choose>
 								
 								
-								</li>
-								<li class="recipient"><span><spring:theme
+								</li> --%>			<!-- Commented for TPR-6013 Order History  -->
+								<%-- <li class="recipient"><span><spring:theme
 											code="text.orderHistory.recipient" /></span> <c:choose>
 										<c:when test="${subOrder.deliveryAddress != null}">
 												${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName}
@@ -114,19 +120,21 @@
 										<c:otherwise>
 												${subOrder.mplPaymentInfo.cardAccountHolderName}
 												</c:otherwise>
-									</c:choose></li>
-								<li><span>Order Reference Number: </span> ${subOrder.code}</li>
+									</c:choose></li> --%>		<!-- Commented for TPR-6013 Order History  -->
+								<%-- <li><span>Order Reference Number: </span> ${subOrder.code}</li> --%>	
+								<!-- Commented for TPR-6013 Order History -->
+								
 							</ul>
 
 
 							<div class="totals" id="anchor">
-								<h2>Total:</h2>
+								<h2>Total</h2>
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
-									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1" text="Scheduled Delivery and Shipping Charges"/></span>
+									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1Charges" text="Scheduled Delivery & Shipping Charges"/></span>
 									<%-- <spring:theme code="text.account.order.delivery"
 											text="Delivery" /> --%><span class="amt"> <format:price
 												priceData="${subOrder.deliveryCost}"
@@ -185,19 +193,131 @@
 									
 								</c:when>
 								<c:otherwise>
+								
+								<!-- TPR-6013 Order History Ends -->
+								
+								<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
+							<div class="delivery-address" style="display:none;">
+								<c:if test="${not empty creditCardBillingAddress.firstName}">
+									<h3>Billing Address:</h3>
+									
+									<address>
+										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
+										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
+										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
+										<c:if test="${not empty creditCardLine2}">
+										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
+										</c:if>
+										<c:if test="${not empty creditCardLine3}">
+														${fn:escapeXml(creditCardBillingAddress.line3)},
+													</c:if>
+										<br>
+										<!-- R2.3: START -->
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br><%-- ${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
+										<!-- R2.3: END -->
+										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
+										<c:if test="${not empty creditCardBillingAddress.state}">
+														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
+													</c:if>
+										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
+										<br>
+										<%-- 91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br> --%>
+									</address>
+								</c:if>
+								<%-- <c:if test="${empty creditCardBillingAddress.firstName}">
+										<address>
+											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
+											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.line2)},
+											<c:if test="${not empty subOrder.deliveryAddress.line3}">
+														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+													</c:if>
+											<br>
+											${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+											<c:if test="${not empty subOrder.deliveryAddress.state}">
+														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+													</c:if>
+											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;IN
+											<br>
+											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+										</address>
+									</c:if> --%>
+							</div>
+							
+							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
+							<div class="delivery-address">
+								<%-- <h2>Billing Address</h2> --%>
+								<c:if test="${not empty creditCardBillingAddress.firstName}">
+									<h3>Billing Address:</h3>
+									
+									<address>
+										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
+										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
+										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
+										<c:if test="${not empty creditCardLine2}">
+										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
+										</c:if>
+										<c:if test="${not empty creditCardLine3}">
+														${fn:escapeXml(creditCardBillingAddress.line3)},
+													</c:if>
+										<br>
+										<!-- R2.3: START -->
+										<c:if test="${not empty creditCardBillingAddress.landmark}">
+														${fn:escapeXml(creditCardBillingAddress.landmark)},
+										</c:if>
+										<br>${fn:escapeXml(creditCardBillingAddress.landmark)}
+										<!-- R2.3: END -->
+										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
+										<c:if test="${not empty creditCardBillingAddress.state}">
+														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
+													</c:if>
+										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
+										<br>
+										91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br>
+									</address>
+								</c:if>
+								<%-- <c:if test="${empty creditCardBillingAddress.firstName}">
+										<address>
+											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
+											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
+											${fn:escapeXml(subOrder.deliveryAddress.line2)},
+											<c:if test="${not empty subOrder.deliveryAddress.line3}">
+														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
+													</c:if>
+											<br>
+											${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
+											<c:if test="${not empty subOrder.deliveryAddress.state}">
+														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
+													</c:if>
+											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;IN
+											<br>
+											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
+										</address>
+									</c:if> --%>
+							</div>
+								
+								<!-- TPR-6013 Order History Ends -->
+								
 								<c:set var="paymentError" value="false"/>
 									<div class="payment-method">
 							<!-- Checked for mRupee order -->
 									 <c:choose>
   										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
-  											<h2>Payment Method: <spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
-									</h2>
+  											<h2>Payment Method</h2>
+  											<span><spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /></span>
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 									${subOrder.mplPaymentInfo.paymentOption}
   										</c:when>
 								  		<c:otherwise>
-								  			<h2>Payment Method:
-									${subOrder.mplPaymentInfo.paymentOption}</h2>
+								  			<h2>Payment Method</h2>
+								  			<span>${subOrder.mplPaymentInfo.paymentOption}</span>
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 								  		</c:otherwise>
 								  	</c:choose>
@@ -248,58 +368,13 @@
 									orderWsDTO.setPaymentCardExpire("NA");
 								} -->
 							</div>
-							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
-							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
-							<div class="delivery-address">
-								<c:if test="${not empty creditCardBillingAddress.firstName}">
-									<h3>Billing Address:</h3>
-									
-									<address>
-										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
-										${fn:escapeXml(creditCardBillingAddress.lastName)}<br>
-										${fn:escapeXml(creditCardBillingAddress.line1)},&nbsp;
-										<c:if test="${not empty creditCardLine2}">
-										${fn:escapeXml(creditCardBillingAddress.line2)},&nbsp;
-										</c:if>
-										<c:if test="${not empty creditCardLine3}">
-														${fn:escapeXml(creditCardBillingAddress.line3)},
-													</c:if>
-										<br>
-										<!-- R2.3: START -->
-										<c:if test="${not empty creditCardBillingAddress.landmark}">
-														${fn:escapeXml(creditCardBillingAddress.landmark)},
-										</c:if>
-										<br><%-- ${fn:escapeXml(creditCardBillingAddress.landmark)} --%>
-										<!-- R2.3: END -->
-										${fn:escapeXml(creditCardBillingAddress.town)},&nbsp;
-										<c:if test="${not empty creditCardBillingAddress.state}">
-														${fn:escapeXml(creditCardBillingAddress.state)},&nbsp;
-													</c:if>
-										${fn:escapeXml(creditCardBillingAddress.postalCode)}&nbsp;${fn:escapeXml(creditCardBillingAddress.country.isocode)}
-										<br>
-										<%-- 91&nbsp;${fn:escapeXml(creditCardBillingAddress.phone)} <br> --%>
-									</address>
-								</c:if>
-								<%-- <c:if test="${empty creditCardBillingAddress.firstName}">
-										<address>
-											${fn:escapeXml(subOrder.deliveryAddress.firstName)}&nbsp;
-											${fn:escapeXml(subOrder.deliveryAddress.lastName)}<br>
-											${fn:escapeXml(subOrder.deliveryAddress.line1)},&nbsp;
-											${fn:escapeXml(subOrder.deliveryAddress.line2)},
-											<c:if test="${not empty subOrder.deliveryAddress.line3}">
-														&nbsp;${fn:escapeXml(subOrder.deliveryAddress.line3)},
-													</c:if>
-											<br>
-											${fn:escapeXml(subOrder.deliveryAddress.town)},&nbsp;
-											<c:if test="${not empty subOrder.deliveryAddress.state}">
-														${fn:escapeXml(subOrder.deliveryAddress.state)},&nbsp;
-													</c:if>
-											${fn:escapeXml(subOrder.deliveryAddress.postalCode)}&nbsp;IN
-											<br>
-											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
-										</address>
-									</c:if> --%>
-							</div>
+							
+							<!-- Commented TPR-6013 Order History Starts -->
+							
+							
+							
+							<!-- Commented TPR-6013 Order History Ends -->
+							
 								</c:otherwise>
 							</c:choose>
 							
@@ -341,7 +416,7 @@
 								<address>
 									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
 									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
-									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
+									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span>, 
 									<c:if test="${empty subOrderLine2  && empty subOrderLine3}">
 									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
 									</c:if>
@@ -358,13 +433,13 @@
 
 									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
 									</c:if>
-									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
+									, <span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
 									<c:if test="${not empty subOrder.deliveryAddress.state}">
 												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
 									</c:if>
 									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
-									<br>
-									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
+									, 
+									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span>
 								</address>
 							</div>
 							</div>
@@ -414,22 +489,20 @@
 		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
 		                                           </c:if>
 	                                            </c:forEach> 
-	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
+	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s): CLiQ & PiQ</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															<br>
-															<br>
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
-															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}<br></c:if>
+															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}, </c:if>
 															  <c:if test="${not empty pos.line1}">	${fn:escapeXml(pos.line1)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.line2}">${fn:escapeXml(pos.line2)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.state}">${fn:escapeXml(pos.state)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.country.name}">${fn:escapeXml(pos.country.name)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.postalCode}">${fn:escapeXml(pos.postalCode)}&nbsp;</c:if>
-															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}<br></c:if>
-															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)} <br></c:if>
+															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}, </c:if>
+															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)}</c:if>
 															</address>
 													</c:if>
 															</div>
@@ -472,14 +545,14 @@
 									<!--R2.3 TISRLEE-1615- Start   -->
 									     <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
-													   <p>
-										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+													   <p class="order_history_del_mode">
+										                 <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>
 											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                        <p class="order_history_del_mode"><span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  </p>
                                                      </c:if>
 													</c:otherwise>
 										 </c:choose>
@@ -512,7 +585,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
+														<p>${entry.mplDeliveryMode.name} :</p> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -1015,7 +1088,7 @@
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
+																<li>Ready For Pickup</li>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -1311,16 +1384,37 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
+															<input type="hidden" name="shippingResponseCode" value="${productStatus.responseCode}" />
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
+																	<c:choose>
+																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																		</c:when>
+																		<c:when test="${productStatus.responseCode eq 'ORDER_COLLECTED'}">
+																			<%-- <c:set var="extraStyle" value=""></c:set>
+																			<c:if test="${loop.index > 0}">
+																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
+																			</c:if> --%>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																		</c:when>
+																		<c:otherwise>																			
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																			class="dot-arrow">
+																			</span>
+																		</c:otherwise>
+																	</c:choose>
+																	
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -1409,8 +1503,16 @@
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+														</c:forEach> 
+														<c:forEach var="i" begin="${dotCount}" end="1">
+															<c:choose>
+															<c:when test="${i eq 1}">
+															<span class="dot inactive" style="float: right;"></span>
+															</c:when>
+															<c:otherwise>
 															<span class="dot inactive"></span>
+															</c:otherwise>
+															</c:choose>
 														</c:forEach> <!-- <span class="end"></span> -->
 													</li>
 												</c:if>
@@ -1419,12 +1521,12 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status">
-														<p> 
+													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
+														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p>
+														</p> --%>
 													</li>
 												</c:if>
 												
@@ -1553,45 +1655,6 @@
 															
 							</c:if> 
 							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-												
-							
 							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
 								
@@ -1619,22 +1682,20 @@
 		                                                  <c:set value="${cncQuantity+parentRefEntry.quantity}" var="cncQuantity" />     
 		                                           </c:if>
 	                                            </c:forEach> 
-	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
+	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s): CLiQ & PiQ</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															<br>
-															<br>
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
-															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}<br></c:if>
+															  <c:if test="${not empty entry.deliveryPointOfService.displayName}"> ${fn:escapeXml(entry.deliveryPointOfService.displayName)}, </c:if>
 															  <c:if test="${not empty pos.line1}">	${fn:escapeXml(pos.line1)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.line2}">${fn:escapeXml(pos.line2)}&nbsp;</c:if>
 															  <c:if test="${not empty pos.state}">${fn:escapeXml(pos.state)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.country.name}">${fn:escapeXml(pos.country.name)},&nbsp;</c:if>
 															  <c:if test="${not empty pos.postalCode}">${fn:escapeXml(pos.postalCode)}&nbsp;</c:if>
-															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}<br></c:if>
-															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)} <br></c:if>
+															  <c:if test="${not empty pos.country.isocode}">${fn:escapeXml(pos.country.isocode)}, </c:if>
+															  <c:if test="${not empty pos.phone}">	+91&nbsp; ${fn:escapeXml(pos.phone)}</c:if>
 															</address>
 													</c:if>
 															</div>
@@ -1675,13 +1736,13 @@
 								             <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p>
-										                 <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>
+										                 <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>
 											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
 												  </c:when>
 													<c:otherwise>
 													<c:if test="${not empty entry.eddDateBetWeen}">
-                                                         <span style="font-weight: bold"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
+                                                         <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>  ${entry.eddDateBetWeen}  
                                                      </c:if>
 													</c:otherwise>
 											  </c:choose>
@@ -1716,7 +1777,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p style="margin-top: -8px;">${entry.mplDeliveryMode.name} :</p> 
+														<p class="track-order-pickup">${entry.mplDeliveryMode.name}</p><span>: </span> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -1790,10 +1851,27 @@
 
 									<div class="order">
 										<c:url value="${entry.product.url}" var="productUrl" />
-										<div class="image">
+										<!-- <div class="image">
 											<a href="${productUrl}"> <product:productPrimaryImage
 													product="${entry.product}" format="thumbnail" />
 											</a>
+										</div>-->
+										<!-- INC144315335 -->
+										<div class="image">
+											<c:choose>
+												<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+														<a href="${productUrl}"> <product:productPrimaryImage
+															product="${entry.product}" format="luxuryCartIcon" />
+													</a>
+							
+												</c:when>
+												<c:otherwise>
+														<a href="${productUrl}"> <product:productPrimaryImage
+															product="${entry.product}" format="thumbnail" />
+													</a>
+														
+												</c:otherwise>
+											</c:choose>
 										</div>
 										<div class="details">
 											<p>${entry.brandName}</p>
@@ -1807,7 +1885,7 @@
 												<c:if test="${not empty entry.product.colour}">
 													<p>Color: ${entry.product.colour}</p>
 												</c:if>
-												<p>
+												<p class="track-order-price">
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
@@ -1815,6 +1893,11 @@
 															displayFreeForZero="true" />
 													</ycommerce:testId>
 												</p>
+												<p class="track-order-del-charge"><span class="shipping-text"><spring:theme code="text.account.order.delivery1Charges" text="Scheduled Delivery & Shipping Charges"/>:</span>
+											<span class="amt"> <format:price
+												priceData="${subOrder.deliveryCost}"
+												displayFreeForZero="true" />
+												</span></p>
 											</div>
 											<c:if test="${not empty entry.imeiDetails}">
 												<p>Serial Number: ${entry.imeiDetails.serialNum}</p>
@@ -1835,7 +1918,7 @@
 													data-dismiss="modal" onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 														text="Cancel Order" /></a>
 												<!-- TISCR-410 -->
-												<spring:theme code="trackOrder.cancellableBefore.msg" />
+												<span><spring:theme code="trackOrder.cancellableBefore.msg" /></span>
 												
 											</c:if>
 											<c:if
@@ -1898,11 +1981,29 @@
 																	<li class="item look">
 																		<ul class="product-info">
 																			<li>
-																				<div class="product-img">
+																				<!-- <div class="product-img">
 																					<a href="${productUrl}"> <product:productPrimaryImage
 																							product="${entryCancel.product}"
 																							format="thumbnail" />
 																					</a>
+																				</div> -->
+																				
+																				<!-- INC144315335-->
+																				<div class="product-img">
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="luxuryCartIcon" />
+																							</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="thumbnail" />
+																							</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
@@ -2024,11 +2125,28 @@
 																	<li class="item look">
 																		<ul class="product-info">
 																			<li>
-																				<div class="product-img">
+																				<!--  <div class="product-img">
 																					<a href="${productUrl}"> <product:productPrimaryImage
 																							product="${entryCancel.product}"
 																							format="thumbnail" />
 																					</a>
+																				</div>-->
+																				<!-- INC144315335 -->
+																				<div class="product-img">
+																					<c:choose>
+																						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="luxuryCartIcon" />
+																							</a>
+																	
+																						</c:when>
+																						<c:otherwise>
+																								<a href="${productUrl}"> <product:productPrimaryImage
+																									product="${entry.product}" format="thumbnail" />
+																							</a>
+																								
+																						</c:otherwise>
+																					</c:choose>
 																				</div>
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
@@ -2133,7 +2251,7 @@
 														<c:when
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
-																<li>READY for PickUp</li>
+																<li>Ready For Pickup</li>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -2374,16 +2492,37 @@
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${shippingStatus}"
-															var="productStatus" varStatus="loop">
-
+															var="dotCount" /> 
+															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
+															<input type="hidden" name="shippingResponseCode" value="${productStatus.responseCode}" />
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
-																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
-																		class="dot-arrow">
-																	</span>
+																	<c:choose>
+																		<c:when test="${productStatus.responseCode eq 'DELIVERED'}">
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																		</c:when>
+																		<c:when test="${productStatus.responseCode eq 'ORDER_COLLECTED'}">
+																			<%-- <c:set var="extraStyle" value=""></c:set>
+																			<c:if test="${loop.index > 0}">
+																				<c:set var="extraStyle" value="style='float: right;'"></c:set>
+																			</c:if> --%>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}" style="float: right;"> <img
+																				src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																				class="dot-arrow">
+																			</span>
+																		</c:when>
+																		<c:otherwise>
+																			<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}"> <img
+																			src="${commonResourcePath}/images/thin_top_arrow_222.png"
+																			class="dot-arrow">
+																			</span>
+																		</c:otherwise>
+																	</c:choose>
+																	
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -2472,8 +2611,16 @@
 																<c:set var="displayMsgVar" value="" />
 															</c:if>
 															 
-														</c:forEach> <c:forEach var="i" begin="${dotCount}" end="1">
+														</c:forEach> 
+														<c:forEach var="i" begin="${dotCount}" end="1">
+															<c:choose>
+															<c:when test="${i eq 1}">
+															<span class="dot inactive" style="float: right;"></span>
+															</c:when>
+															<c:otherwise>
 															<span class="dot inactive"></span>
+															</c:otherwise>
+															</c:choose>
 														</c:forEach> <!-- <span class="end"></span> -->
 													</li>
 												</c:if>
@@ -2482,12 +2629,12 @@
 												 <!-- For RTO handling productDelivered -->
 												<c:if
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
-													<li class="progress progtrckr-done delivery-status">
-														<p> 
+													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
+														<%-- <p> 
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
-														</p>
+														</p> --%>
 													</li>
 												</c:if>
 												
@@ -2641,6 +2788,11 @@
  
         <div class="wrapBG" style="background-color: rgba(0, 0, 0, 0.5); width: 100%; height: 600px; position: fixed; top: 0px; left: 0px; z-index: 99999; display: none;"></div>
 	<!-- R2.3: END -->
+	<c:if test="${param.frame ne null}">
+	<div class="bottom" id="ia_category_code"></div>
+	<div id="js-site-search-input"></div>
+	<div id="userLoginType"></div>
+	</c:if>
 </template:page>
 <%-- <script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
@@ -2946,7 +3098,7 @@ $(function() {
 					    			$("#pickName").text(name);
 					    			$("#pickNo").text(mobile);
 					    			$(".pickup_Edit").css("display","none");
-					    			$(".pickupeditbtn").css("display","block");
+					    			$(".pickupeditbtn").css("display","inline-block"); //TISPRDT-1550
 					    			if(status="sucess"){
 							    		$.ajax({	  
 											type: "POST",
@@ -3162,7 +3314,57 @@ $("#saveBlockData").click(function(){
 			}
 		   
 		  <!-- End of  AWB Jquery codes PopUp  -->
-		  });  
+		  	//To remove small green line from inactive dots
+		  	$(".deliveryTrack.status .progtrckr.tabs li span.dot.inactive").siblings(".start").removeClass('start');
+		  }); 
+		  /* TPR-6013 track order modal js start */
+/* 		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+			$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
+			});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing.returnStatus span.dot").first().css("margin-left","0px");
+				$(this).find("ul>li.progress.processing.returnStatus span.dot").last().css("float","right");
+				});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing.cancelStatus span.dot").first().css("margin-left","0px");
+				$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
+				});
+		  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+				$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+			}); */
+		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").find("span.dot").last().hasClass("inactive"))){
+				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.shippingStatus.processing").addClass("full_track");
+			}
+		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.returnStatus.processing").find("span.dot").last().hasClass("inactive"))){
+				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.returnStatus.processing").addClass("full_track");
+			}
+		  if(!($("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.cancelStatus.processing").find("span.dot").last().hasClass("inactive"))){
+				$("body .account .right-account .order-history.order-details li.item .status>ul>li.progress.progtrckr-done.cancelStatus.processing").addClass("full_track");
+			}
+		  
+			/* TPR-6013 track order modal js end */
+			
+			$(document).ready(function(){
+				
+				$("body .account .right-account .order-history.order-details li.item .status").each(function(){
+					$(this).find("ul>li.progress.processing span.dot").last().addClass("last_dot");
+					});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing.returnStatus span.dot").first().css("margin-left","0px");
+						$(this).find("ul>li.progress.processing.returnStatus span.dot").last().css("float","right");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing.cancelStatus span.dot").first().css("margin-left","0px");
+						$(this).find("ul>li.progress.processing.cancelStatus span.dot").last().css("float","right");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.progtrckr-done.returnStatus span.dot").last().css("margin-left","0px");
+						$(this).find("ul>li.progress.progtrckr-done.returnStatus span.dot").last().css("width","9%");
+						});
+				  $("body .account .right-account .order-history.order-details li.item .status").each(function(){
+						$(this).find("ul>li.progress.processing span.dot:not(.inactive)").last().parents("li.progress").prevAll().addClass("full_track");
+					});
+			});
 		</script>
 
 		<!--   AWB CSS for PopUp -->
@@ -3358,7 +3560,259 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 input[type="radio"]:checked {
 	background: #000;
 }
-
 </style>
-
 <!-- R2.3: END: End of  AWB CSS for PopUp -->
+
+<!-- added for track order iframe styling start-->
+<c:if test="${param.frame ne null}">
+<style>
+body .account p.track-order-header{
+	display: block;
+	font-size: 16px;
+  	font-weight: 500;
+  	letter-spacing: 0.6px;
+  	text-align: left;
+  	color: #000000;
+  	padding-left: 20px;
+}
+body .account  .track-order-del-charge{
+	display: block;
+}
+body .account .left-nav, body .account .right-account .order-history .navigation,
+body .account .right-account .order-history.order-details li.header .totals,
+body .account .right-account .order-history.order-details li.header .payment-method,
+body .account .right-account .order-history.order-details .product-block li.item .actions,
+body .account .nav-orderHistory, body .account .account-header,
+body .account .editIconCSS, .track-order-pickup ~ a[type="button"], .track-order-pickup + span,
+#userLoginType, #js-site-search-input, #ia_category_code{
+	display: none !important;
+}
+body .account .right-account .order-history .product-block li.item .image{
+	min-height: 135px;
+}
+body .account .right-account .order-history.order-details li.header{
+	background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment,
+body .account .right-account .order-history.order-details .product-block{
+	margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment{
+	padding-left: 20px !important;
+}
+body .account .right-account .order-history .product-block li.header>ul{
+	margin-left:0;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p{
+font-size: 11px;
+  font-style: italic;
+  line-height: 1.27;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: #bbbbbb;
+  font-weight: normal;
+  padding-bottom: 2px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment p span{
+  font-weight: normal !important;
+}
+body .account .right-account .order-history.order-details li.header .delivery-address{
+	padding: 0;
+   /*  width: 100%; */
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.8px;
+    text-align: left;
+    color: #666666;
+    font-weight: normal;
+}
+body .account .right-account{
+	width: 100% !important;
+    margin: 0 !important;
+}
+body .account .right-account .order-history.order-details li.header>ul>li:first-child{
+	font-size: 14px;
+}
+body .account .right-account .order-history.order-details .product-block{
+	border: 0 !important;
+    margin: 0;
+    margin-top: 30px;
+}
+body .account .right-account .order-history.order-details li.header>ul{
+	margin-bottom: 16px;
+	width: 100%;
+	float: left;
+}
+body .account .right-account .order-history.order-details li.header>ul> li{
+	width: 100%;
+}
+body.page-order .body-Content,
+body .account .right-account .order-history.order-details li.item{
+	padding-bottom:0;
+}
+body .account .right-account .order-history.order-details li.item .order{
+	margin-bottom: 10px;
+}
+body .account .wrapper{
+	margin-bottom: 0;
+}
+body.page-order .mainContent-wrapper, body.page-order, body.page-order main{
+	height: auto;
+	min-height: auto;
+}
+body .account .right-account .order-history.order-details li.item .status .nav{
+	text-align: left;
+}
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(3){
+	padding-right: 0;
+}
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1),
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
+	width: auto;
+    padding-left: 45px;
+    /* max-width: 102px; */
+    vertical-align: top;
+}
+body .account .right-account .order-history .product-block li.item .attributes{
+	margin-top:0px;
+}
+body .account .right-account .order-history .product-block li.item .attributes p.track-order-price {
+    margin-top: 15px;
+}
+body .account .right-account .order-history.order-details .product-block li.item .details {
+    width: 40%;
+}
+body .account .right-account .order-history.order-details .product-block li.item .details .shipping-text,
+body .account .right-account .order-history .product-block li.item .attributes p:last-child span.priceFormat{
+    display: inline !important;
+    width: auto !important;
+}
+body .account .right-account .order-history.order-details li.item .status.suman ul.nav > li,
+body .account .right-account .order-history.order-details li.item .status.suman ul.progtrckr.tabs > li{
+	width: 25%;
+}
+body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.nav > li,
+body .account .right-account .order-history.order-details li.item .status:not(.suman) ul.progtrckr.tabs > li{
+	width: 20%;
+}
+body .account .right-account .order-history.order-details li.header>ul>li.placed_date {
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+}
+body .account .right-account .order-history.order-details li.header>ul>li.price,
+body .account .right-account .order-history.order-details li.header>ul>li.recipient {
+display: none;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address h2 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  text-align: left;
+  color: #000000;
+  padding: 0px 20px;
+  font-weight: normal !important;
+  height: auto;
+    margin-bottom: 10px;
+}
+#shipping-track-order .item-header p{
+	font-size: 12px;
+	font-weight: normal !important;
+	padding: 0px 20px;
+	color: #666666;
+	display: none;
+}
+#shipping-track-order .item-header h2 + .col-md-8.col-sm-6, #shipping-track-order .item-header h3 + .col-md-8.col-sm-6{
+	font-size: 12px;
+	font-weight: normal;
+	padding: 0px;
+	width: 100%;
+}
+#shipping-track-order .item-header address{
+	padding: 0px 20px;
+	color: #666666;
+	margin-bottom: 5px;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment {
+	font-size: 11px;
+    font-style: italic;
+    line-height: 1.27;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #bbbbbb;
+}
+body .account .right-account .order-history.order-details li.item .item-fulfillment span{
+	font-weight: normal !important;
+}
+body .account .right-account .order-history.order-details li.item .order {
+    margin-bottom: 5px;
+}
+#shipping-track-order .item-header h2, #shipping-track-order .item-header h3{
+	background-color:  transparent;
+}
+body .account .right-account .order-history.order-details li.header div.delivery-address {
+    display: none;
+}
+body .account .right-account .order-history.order-details li.item{
+	clear: both;
+}
+body .account .right-account .order-history.order-details li.item{
+	border-top: 0px;
+}
+body .account .right-account .order-history.order-details li.item .message {
+    margin-bottom: 5px !important;
+}
+@media (max-width: 790px){
+body .account .right-account .order-history .product-block li.header {
+    padding-left: 20px;
+    padding-top: 30px;
+}
+body .account .right-account .order-history.order-details .product-block li.item .details {
+    width: 100%;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status{
+	padding-left:0;
+	padding-right: 0;
+}
+body .account .right-account .order-history.order-details .product-block li.item .image {
+    min-height: auto;
+}
+body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+    padding-left: 14.5%;
+}
+body .account .right-account {
+    border-top: 0px;
+}
+body .account .right-account .order-history.order-details li.item .message {
+    margin-bottom: 5px !important;
+}
+}
+@media (max-width: 500px){
+	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    padding-left: 22px;
+    /* max-width: 82px; */
+}
+}
+@media (max-width: 386px){
+	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    padding-left: 15px;
+    /* max-width: 70px; */
+}
+}
+@media(min-width: 1061px){
+	body .account .right-account .order-history.order-details .product-block li.item .details {
+    width: calc(50% - 170px);
+}
+}
+</style>
+</c:if>
+<!-- added for track order iframe styling end-->

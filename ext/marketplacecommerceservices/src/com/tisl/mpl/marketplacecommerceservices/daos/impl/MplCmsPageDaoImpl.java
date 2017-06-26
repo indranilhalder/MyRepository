@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.CMSChannel;
+import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplShopByLookModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCmsPageDao;
 import com.tisl.mpl.model.SellerMasterModel;
@@ -436,6 +437,24 @@ public class MplCmsPageDaoImpl extends DefaultCMSPageDao implements MplCmsPageDa
 		return queryString;
 	}
 
+	/*
+	 * TPR-1072 to fetch all the brands UID
+	 */
+	@Override
+	public List<BrandComponentModel> getBrandsForShopByBrand()
+	{
+		final CatalogVersionModel catalogmodel = catalogVersionService.getCatalogVersion(configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.MPLCATELOG),
+				configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.MPLCATALOGNNAME));
+
+		final String queryString = "Select {" + BrandComponentModel.PK + "} from {" + BrandComponentModel._TYPECODE + "} where {"
+				+ BrandComponentModel.LAYOUT + "} is not null AND {" + BrandComponentModel.CATALOGVERSION + "}=?catVersion";
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter("catVersion", catalogmodel);
+		//		query.addQueryParameter("catVersion", catalogVersion);
+		return flexibleSearchService.<BrandComponentModel> search(query).getResult();
+	}
 	/**
 	 * @param siteUid
 	 * @return CMSSite

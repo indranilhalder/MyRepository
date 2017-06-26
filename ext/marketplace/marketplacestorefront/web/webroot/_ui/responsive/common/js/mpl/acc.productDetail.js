@@ -1,6 +1,4 @@
-	
-
-	ACC.productDetail = {
+ACC.productDetail = {
 
 	_autoload : [ "initPageEvents", "bindVariantOptions" ],
 
@@ -425,8 +423,20 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				    zoomType: "window",
 				    cursor: "crosshair",
 				    zoomWindowFadeIn: 500,
-				    zoomWindowFadeOut: 750
-				       });
+				    zoomWindowFadeOut: 750,
+				   /* onZoomedImageLoaded:function(z){
+				    	var mouse_X = 0;
+						var mouse_Y = 0;
+						$('.picZoomer-pic-wp .picZoomer-pic').on('hover',function(e){ 
+					        //console.log("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
+					        mouse_X = e.pageX;
+					        mouse_Y = e.pageY;
+						});
+						$(".zoomContainer .zoomLens").top(mouse_X);
+						$(".zoomContainer .zoomLens").l(mouse_X);
+				    	$(".zoomContainer .zoomLens").show();
+				    } */
+				 });
 			}
 		    }else{
 		    	var url = $(this).attr("data-videosrc");
@@ -1106,9 +1116,10 @@ $(function() {
 								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 								return false;
 							}
+							//TISPRDT-1606
 							var productCode = $('#product').val();
-							var dataString  = "pin=" + pin + "&productCode="
-									+ productCode;
+							var dataString  = "pin=" + pin + "&productCode="+ productCode;
+							
 							jQuery
 									.ajax({
 										// type: 'POST',
@@ -1577,14 +1588,18 @@ function displayDeliveryDetails(sellerName) {
 				/*TISPRDT-878 Start*/
 				if (null != fulFillment && fulFillment.toLowerCase() == 'both') {
 					   if (null != fulFillmentP1 && fulFillmentP1.toLowerCase() == 'tship') {
+					   $('#fulFilledBySship').hide();  //INC_12055
 					   $('#fulFilledByTship').show();
 					  }else {
+					   $('#fulFilledByTship').hide();  //INC_12055
 					   $('#fulFilledBySship').show();
 					   $('#fulFilledBySship').html(sellerName);
 					  }
 					    } else if (null != fulFillment && fulFillment.toLowerCase() == 'tship') {
+					   $('#fulFilledBySship').hide();  //INC_12055
 					   $('#fulFilledByTship').show();
 					 }else {
+					   $('#fulFilledByTship').hide();  //INC_12055
 					   $('#fulFilledBySship').show();
 					   $('#fulFilledBySship').html(sellerName);
 					  }
@@ -2283,43 +2298,89 @@ function CheckUserLogedIn() {
 //		});
 	
 }
-function nextImage()
+function nextImage(elem)
 {
-	var item_height = $(".product-info .imageListCarousel li").height();
-	var item_count = $(".product-info .imageListCarousel li").length/2;
-	var top = parseInt($(".product-info .imageListCarousel").css("top"));
-	if(!(top % item_height)){
-		if(parseInt($(".product-info .imageListCarousel").css("top")) > -item_height* (item_count-imagePageLimit)){
-		$(".product-info .imageListCarousel").animate({top: "-="+item_height+"px"},"250");
-		$("#previousImage,#zoomModal #previousImage").css("opacity","1");
+	var grandParentId = $(elem).parent().parent().attr('id');
+	if (grandParentId == 'pdp_gallery') {
+		$("#pdp_gallery .imageListCarousel li img").each(function(){
+			$(this).show();
+		});
+		var item_height = $("#pdp_gallery .imageListCarousel li").height();
+		var item_count = $("#pdp_gallery .imageListCarousel:first li").length;
+		var top = parseInt($("#pdp_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) > -item_height* (item_count-imagePageLimit)){
+			$("#pdp_gallery .imageListCarousel").animate({top: "-="+item_height+"px"},"250");
+			$("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity","1");
+			}
+			else{
+				$("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity","0.5");
+			}
 		}
-		else{
-			$("#nextImage,#zoomModal #nextImage").css("opacity","0.5");
+		if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) == (item_count-imagePageLimit-1)*(-item_height)){
+			$("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity","0.5");
 		}
 	}
-	if(parseInt($(".product-info .imageListCarousel").css("top")) == (item_count-imagePageLimit-1)*(-item_height)){
-		$("#nextImage,#zoomModal #nextImage").css("opacity","0.5");
+	else if (grandParentId == 'zoom_gallery') {
+		$("#zoom_gallery .imageListCarousel li img").each(function() {
+			if ($(this).attr('data-type') == "image") {
+				$(this).show();
+			}
+		});
+		var item_height = $("#zoom_gallery .imageListCarousel li").height();
+		var item_count = $("#zoom_gallery .imageListCarousel li").length;
+		var top = parseInt($("#zoom_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) > -item_height* (item_count-imagePageLimit)){
+			$("#zoom_gallery .imageListCarousel").animate({top: "-="+item_height+"px"},"250");
+			$("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity","1");
+			}
+			else{
+				$("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity","0.5");
+			}
+		}
+		if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) == (item_count-imagePageLimit-1)*(-item_height)){
+			$("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity","0.5");
+		}
 	}
-	
 }
+
 /*Display previous list of sellers after clicking previous link*/	
-function previousImage()
+function previousImage(elem)
 {
-	var item_height = $(".product-info .imageListCarousel li").height();
-	var top = parseInt($(".product-info .imageListCarousel").css("top"));
-	if(!(top % item_height)){
-		if(parseInt($(".product-info .imageListCarousel").css("top")) < 0 ){
-			$("#nextImage,#zoomModal #nextImage").css("opacity","1");
-			$(".product-info .imageListCarousel").animate({top: "+="+item_height+"px"},"250");
+	var grandParentId = $(elem).parent().parent().attr('id');
+	if (grandParentId == 'pdp_gallery') {
+		var item_height = $("#pdp_gallery .imageListCarousel li").height();
+		var top = parseInt($("#pdp_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) < 0 ){
+				$("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity","1");
+				$("#pdp_gallery .imageListCarousel").animate({top: "+="+item_height+"px"},"250");
+			}
+			else{
+				$("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity","0.5");
+			}
 		}
-		else{
-			$("#previousImage,#zoomModal #previousImage").css("opacity","0.5");
+		if(parseInt($("#pdp_gallery .imageListCarousel").css("top")) == -item_height){
+			$("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity","0.5");
 		}
 	}
-	if(parseInt($(".product-info .imageListCarousel").css("top")) == -item_height){
-		$("#previousImage,#zoomModal #previousImage").css("opacity","0.5");
+	else if (grandParentId == 'zoom_gallery') {
+		var item_height = $("#zoom_gallery .imageListCarousel li").height();
+		var top = parseInt($("#zoom_gallery .imageListCarousel").css("top"));
+		if(!(top % item_height)){
+			if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) < 0 ){
+				$("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity","1");
+				$("#zoom_gallery .imageListCarousel").animate({top: "+="+item_height+"px"},"250");
+			}
+			else{
+				$("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity","0.5");
+			}
+		}
+		if(parseInt($("#zoom_gallery .imageListCarousel").css("top")) == -item_height){
+			$("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity","0.5");
+		}
 	}
-	
 }
 
 $(".showDate").click(function(){
@@ -3576,15 +3637,15 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 								var mop = typeof(data['price'])!='undefined'?data['price']:null;
 								if(mrpPrice!=null)
 								{
-									$('#product_unit_price').val(mrpPrice.doubleValue);
+									$('#product_unit_price').val(mrpPrice.doubleValue.toFixed(2));
 								}
 								if (spPrice != null)
 								{
-									$('#product_list_price').val(spPrice.doubleValue);
+									$('#product_list_price').val(spPrice.doubleValue.toFixed(2));
 								}
 								else if (null != mop)
 								{
-									$('#product_list_price').val(mop.doubleValue);
+									$('#product_list_price').val(mop.doubleValue.toFixed(2));
 								}
 								if(typeof(data['availablestock'])!='undefined')
 								{
@@ -3660,8 +3721,11 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 									attachOnScrollEventForPdpOnSizeSelect();
 								}
 								
-								//Calling Tealium after 500 milisec
-								setTimeout(function(){tealiumCallOnPageLoad();}, 500);
+								//Calling Tealium after 500 milisec //TPR-5251
+								setTimeout(function(){
+	 								//tealiumCallOnPageLoad();
+	 								populateSizeSelectUtagObject();
+	 							}, 500)
 								
 								//Calling MSD if MSD is enabled
 //								if(typeof($('input[name=isMSDEnabled]').val())!='undefined' && $('input[name=isMSDEnabled]').val()=="true")
@@ -3777,9 +3841,14 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 
 					return false;
 				} else {
+					var channelTypeWeb = $("#promolist").val();//added for TISTE-143
 					var promorestrictedSellers = $("#promotedSellerId").val();
 					var promoindentifier = $("#product_applied_promotion_code").val();
-					if (promorestrictedSellers == null
+					
+					//added for TISTE-143
+					if(channelTypeWeb != undefined)
+					{
+					 if (promorestrictedSellers == null
 							|| promorestrictedSellers == undefined
 							|| promorestrictedSellers == "") {
 						//TPR-772
@@ -3788,7 +3857,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 							  $(".pdp-promo-title-link").show();
 						} 
 
-					} else {
+					 } else {
 						if (promorestrictedSellers.length > 0
 								&& !(promorestrictedSellers
 										.indexOf(data['sellerId']) == -1))
@@ -3809,7 +3878,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 								
 							}
 
-					}
+					 }
+					}//added for TISTE-143
 					var allStockZero = data['allOOStock'];
 					// var codEnabled = data['isCod'];
 					var sellerName = data['sellerName'];
@@ -4185,4 +4255,5 @@ function getProductCodeFromPdpUrl(url)
 	//console.log("ProductCode="+productCode);
 	return productCode;
 }
+
 //End of UF-60 changes

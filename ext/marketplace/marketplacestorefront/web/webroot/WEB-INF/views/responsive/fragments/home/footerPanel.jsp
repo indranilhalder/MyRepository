@@ -85,9 +85,14 @@
 <script>
 	function emailvalidate() {
 		<!-- TPR - 667--->
-		utag.link({
+		/*utag.link({
 		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	}); */
+		//TISSTRT-1527
+		utag.link({
+		 "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
 	}); 
+		
 		<!-- TPR - 667 ends --->
 		var mail = $("#mailtext").val();
 

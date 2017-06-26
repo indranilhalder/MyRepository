@@ -1031,36 +1031,36 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param entry
 	 * @return boolean
 	 */
-	public boolean checkSellerBOGOData(final SessionContext paramSessionContext,
-			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
-	{
-		boolean flag = false;
-		String ussid = MarketplacecommerceservicesConstants.EMPTY;
-		List<SellerInformationModel> productSellerData = null;
-		try
-		{
-			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID))
-			{
-				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
-				final CatalogVersionModel oModel = catalogData();
-				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid, oModel);
-				flag = GenericUtilityMethods.checkBOGOData(restrictionList, productSellerData);
-			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-		}
-		return flag;
-	}
+	//	public boolean checkSellerBOGOData(final SessionContext paramSessionContext,
+	//			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
+	//	{
+	//		boolean flag = false;
+	//		String ussid = MarketplacecommerceservicesConstants.EMPTY;
+	//		List<SellerInformationModel> productSellerData = null;
+	//		try
+	//		{
+	//			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID))
+	//			{
+	//				ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID).toString();
+	//				final CatalogVersionModel oModel = catalogData();
+	//				productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid, oModel);
+	//				flag = GenericUtilityMethods.checkBOGOData(restrictionList, productSellerData);
+	//			}
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+	//		}
+	//		return flag;
+	//	}
 
 	protected SellerBasedPromotionService getSellerBasedPromotionService()
 	{
@@ -2315,38 +2315,38 @@ public class DefaultPromotionManager extends PromotionsManager
 	 * @param entry
 	 * @return boolean
 	 */
-	public boolean isProductExcludedForSeller(final SessionContext paramSessionContext,
-			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
-	{
-		boolean flag = false;
-
-		try
-		{
-			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
-					&& isExSellerRestrExists(restrictionList))
-			{
-				final String ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
-						.toString();
-				final CatalogVersionModel oModel = catalogData();
-				final List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
-						oModel);
-				flag = GenericUtilityMethods.checkExcludeSellerData(restrictionList, productSellerData);
-			}
-		}
-		catch (final EtailBusinessExceptions e)
-		{
-			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-		}
-		catch (final EtailNonBusinessExceptions e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(e);
-		}
-		catch (final Exception e)
-		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
-		}
-		return flag;
-	}
+	//	public boolean isProductExcludedForSeller(final SessionContext paramSessionContext,
+	//			final List<AbstractPromotionRestriction> restrictionList, final AbstractOrderEntry entry)
+	//	{
+	//		boolean flag = false;
+	//
+	//		try
+	//		{
+	//			if (null != entry && null != entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+	//					&& isExSellerRestrExists(restrictionList))
+	//			{
+	//				final String ussid = entry.getAttribute(paramSessionContext, MarketplacecommerceservicesConstants.SELECTEDUSSID)
+	//						.toString();
+	//				final CatalogVersionModel oModel = catalogData();
+	//				final List<SellerInformationModel> productSellerData = getSellerBasedPromotionService().fetchSellerInformation(ussid,
+	//						oModel);
+	//				flag = GenericUtilityMethods.checkExcludeSellerData(restrictionList, productSellerData);
+	//			}
+	//		}
+	//		catch (final EtailBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+	//		}
+	//		catch (final EtailNonBusinessExceptions e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+	//		}
+	//		catch (final Exception e)
+	//		{
+	//			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e));
+	//		}
+	//		return flag;
+	//	}
 
 	/**
 	 * Check if Exclude Seller Restriction Exist
@@ -3030,10 +3030,10 @@ public class DefaultPromotionManager extends PromotionsManager
 				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
 				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
 				//						|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
-				if (isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
-				{
-					continue;
-				}
+				//				if (isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				//				{
+				//					continue;
+				//				}
 
 				//checking product is a valid product for promotion
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
@@ -4559,8 +4559,8 @@ public class DefaultPromotionManager extends PromotionsManager
 			boolean brandFlag = false;
 			boolean sellerFlag = false;
 			if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-					|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
-					|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+					|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList))
+			//|| isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
 			{
 				continue;
 			}
@@ -5007,15 +5007,16 @@ public class DefaultPromotionManager extends PromotionsManager
 				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
 				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
 				//						|| isProductExcludedForSeller(ctx, restrictionList, entry))
-				if (isProductExcludedForSeller(ctx, restrictionList, entry))
-				{
-					continue;
-				}
+				//				if (isProductExcludedForSeller(ctx, restrictionList, entry))
+				//				{
+				//					continue;
+				//				}
 
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
 				{
 					//brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
-					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
+					//sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
+					sellerFlag = checkSellerData(ctx, restrictionList, entry);
 				}
 
 				//if (sellerFlag && brandFlag)
@@ -5044,51 +5045,51 @@ public class DefaultPromotionManager extends PromotionsManager
 	 *
 	 * @return Map<String, AbstractOrderEntry>
 	 */
-	public Map<String, AbstractOrderEntry> getValidProductListBOGO(final AbstractOrder cart, final SessionContext ctx,
-			final List<Product> allowedProductList, final List<Product> excludedProductList,
-			final List<String> excludeManufactureList, final List<AbstractPromotionRestriction> restrictionList)
-	{
-		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
-
-
-		boolean brandFlag = false;
-		boolean sellerFlag = false;
-		boolean isFreebie = false;
-
-		for (final AbstractOrderEntry entry : cart.getEntries())
-		{
-
-			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
-			if (!isFreebie)
-			{
-				final Product product = entry.getProduct();
-
-				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
-						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
-						|| isProductExcludedForSeller(ctx, restrictionList, entry))
-				{
-					continue;
-				}
-
-				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
-				{
-					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
-					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
-				}
-
-				if (sellerFlag && brandFlag)
-				{
-					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
-
-					sellerFlag = false;
-					brandFlag = false;
-				}
-			}
-
-		}
-
-		return validProductUssidMap;
-	}
+	//	public Map<String, AbstractOrderEntry> getValidProductListBOGO(final AbstractOrder cart, final SessionContext ctx,
+	//			final List<Product> allowedProductList, final List<Product> excludedProductList,
+	//			final List<String> excludeManufactureList, final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//		final Map<String, AbstractOrderEntry> validProductUssidMap = new HashMap<String, AbstractOrderEntry>();
+	//
+	//
+	//		boolean brandFlag = false;
+	//		boolean sellerFlag = false;
+	//		boolean isFreebie = false;
+	//
+	//		for (final AbstractOrderEntry entry : cart.getEntries())
+	//		{
+	//
+	//			isFreebie = getMplPromotionHelper().validateEntryForFreebie(entry);
+	//			if (!isFreebie)
+	//			{
+	//				final Product product = entry.getProduct();
+	//
+	//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
+	//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
+	//						|| isProductExcludedForSeller(ctx, restrictionList, entry))
+	//				{
+	//					continue;
+	//				}
+	//
+	//				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
+	//				{
+	//					brandFlag = GenericUtilityMethods.checkBrandData(restrictionList, product);
+	//					sellerFlag = checkSellerBOGOData(ctx, restrictionList, entry);
+	//				}
+	//
+	//				if (sellerFlag && brandFlag)
+	//				{
+	//					validProductUssidMap.putAll(populateValidProductUssidMap(product, cart, restrictionList, ctx, entry));
+	//
+	//					sellerFlag = false;
+	//					brandFlag = false;
+	//				}
+	//			}
+	//
+	//		}
+	//
+	//		return validProductUssidMap;
+	//	}
 
 	/**
 	 * @Description : Populate Free Gift Count for Buy A Freebie Promotions
@@ -5452,7 +5453,8 @@ public class DefaultPromotionManager extends PromotionsManager
 		final StringBuilder promQuery = new StringBuilder(200);
 		promQuery.append("SELECT {promo.secondProducts} as secondProducts, {promo.excludedProducts} as excludedProducts  ");
 		promQuery.append(MarketplacecommerceservicesConstants.QUERYFROM).append(promotionType).append(" AS promo} ");
-		promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
+		promQuery.append(" WHERE {promo:pk} = ?promo ");
+		//promQuery.append(" WHERE {promo.secondProducts} IS NOT NULL AND {promo:pk} = ?promo ");
 
 		final List<List<String>> resultStr = getSession().getFlexibleSearch()
 				.search(ctx, promQuery.toString(), params, Arrays.asList(String.class, String.class), true, true, 0, -1).getResult();
