@@ -168,10 +168,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -278,9 +278,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * "Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 * 
-				 * 
-				 * 
+				 *
+				 *
+				 *
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -550,10 +550,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -879,8 +879,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 					if (null != entryModelList.getPrevDelCharge() && entryModelList.getPrevDelCharge().doubleValue() > 0D)
 					{
-						totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
-								- entryModelList.getCurrDelCharge().doubleValue();
+						//						totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
+						//								- entryModelList.getCurrDelCharge().doubleValue();
+
+						// For TISPRDT-1649
+
+						final double deliveryValue = entryModelList.getCurrDelCharge().doubleValue()
+								- entryModelList.getPrevDelCharge().doubleValue();
+
+						totalDeliveryDiscount += (deliveryValue) < 0 ? (-1) * (deliveryValue) : (deliveryValue);
+
 						LOG.debug("totalDeliveryDiscount:" + totalDeliveryDiscount);
 					}
 					else
@@ -937,14 +945,15 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
 							}
 
-							totalDeliveryPrice = delCost;
+							totalDeliveryPrice += delCost; // TISPRDT-1649
 							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
 						}
 						else
 						{
 							delCost = 0.0d;
 							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
-							totalDeliveryPrice = delCost;
+							totalDeliveryPrice += delCost; //TISPRDT-1649
+
 							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
 						}
 						modelService.save(entryModelList);
@@ -1377,10 +1386,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param orderList
 	 *
 	 *
