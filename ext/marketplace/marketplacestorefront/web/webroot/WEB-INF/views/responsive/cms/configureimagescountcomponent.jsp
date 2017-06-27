@@ -61,36 +61,13 @@ $(window).on("load resize", function() {
 			
 				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4687 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
-						<c:choose>
-								<c:when test="${product.rootCategory=='FineJewellery'}">
-									<c:if
-										test="${container.fineJewelthumbnail.mediaType.code eq 'Image'}">
-										<img src="${container.fineJewelthumbnail.url}"
-											data-type="image"
-											data-zoomimagesrc="${container.fineJewelsuperZoom.url}"
-											data-primaryimagesrc="${container.fineJewelproduct.url}"
-											data-galleryposition="${varStatus.index}"
-											alt="${container.thumbnail.altText}"
-											title="${container.thumbnail.altText}" />
-									</c:if>
-									<c:if
-										test="${container.fineJewelthumbnail.mediaType.code eq 'Video'}">
-										<img src="${commonResourcePath}/images/video-play.png"
-											data-type="video"
-											data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-										<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-									</c:if>
-								</c:when>
-							<c:otherwise>
-								<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-									<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
-								</c:if>
-								<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-								<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-								<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-								</c:if>
-							</c:otherwise>
-						</c:choose>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+						<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+					</c:if>
+					<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+					<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+					<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+					</c:if>
 				</span>
 				</li>
 			</c:forEach>
