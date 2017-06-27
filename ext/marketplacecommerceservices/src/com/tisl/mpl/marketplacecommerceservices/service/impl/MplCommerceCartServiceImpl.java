@@ -254,7 +254,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Autowired
 	private PriceDataFactory priceDataFactory;
 
-
+	@Autowired
+	private SessionService sessionService;
 
 	@Autowired
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
@@ -304,8 +305,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Autowired
 	private ExchangeGuideService exchangeService;
 
-	@Autowired
-	private SessionService sessionService;
+
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
@@ -3988,6 +3988,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
 
+
 			if (inventoryReservListResponse != null && CollectionUtils.isNotEmpty(inventoryReservListResponse.getItem()))
 			{
 				final List<InventoryReservResponse> inventoryReservResponseList = inventoryReservListResponse.getItem();
@@ -6049,7 +6050,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 
 									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry);
-
+									sessionService.setAttribute("replacedUssid", Boolean.TRUE);
 								}
 
 
@@ -6104,7 +6105,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 				//mplCommerceCartService.addToCartWithUSSID(addParameter);
 				getMplDefaultCommerceAddToCartStrategyImpl().addToCart(addParameter); //
-				setDeliveryModeForJewellery(ussid, cartEntry);
+
+				//	setDeliveryModeForJewellery(ussid, cartEntry);
 			}
 		}
 		catch (final CommerceCartModificationException e)
