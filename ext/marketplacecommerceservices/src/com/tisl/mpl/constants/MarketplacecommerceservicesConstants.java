@@ -1064,6 +1064,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String END_TIME = "END TIME";
 
 	public static final String LOADSTATUS = "loadstatus";
+	public static final String TRANSACTIONID = "transactionid";
 
 
 	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
@@ -1994,8 +1995,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_CANCEL_LOG_STEP_14 = "Initiate Bulk Cancellation Job : BulKCancellationProcessModel is EMPTY";
 	public static final String BULK_CANCEL_LOG_STEP_15 = "######################################### PROCESS ENDS ##############################################";
 	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
-			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS + "}=?loadstatus";
+			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.TRANSACTIONID + "}=?transactionid";
+	public static final String SUBORDER_DATA_FOR_BULK_CANCELLATION = "select {oe.pk} from {orderentry as oe},{BulkCancellationProcess as bc} where {oe.transactionID}={bc.transactionID} and {bc.loadstatus}='0'";
 
+	public static final String initiate_cancel_job_thread_sleep = "initiate.cancel.job.thread.sleep";
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
 
