@@ -1,0 +1,5 @@
+INSERT_UPDATE PromotionalPriceRow;promotionIdentifier[unique=true]
+;dummypromotionalpricerow
+
+REMOVE PromotionalPriceRow;promotionIdentifier[unique=true]
+;dummypromotionalpricerow
