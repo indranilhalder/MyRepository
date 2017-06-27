@@ -2,8 +2,6 @@
  *
  */
 package com.techouts.backoffice.widget.controller;
-
-import de.hybris.platform.core.GenericSearchConstants.LOG;
 import de.hybris.platform.util.Config;
 
 import java.text.DateFormat;
