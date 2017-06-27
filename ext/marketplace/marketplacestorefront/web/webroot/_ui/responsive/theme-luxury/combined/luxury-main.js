@@ -13257,7 +13257,7 @@ TATA.CommonFunctions = {
     leftBarAccordian: function() {
         $(window).width() >= 768 ? $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {
-                $(this).find(".allFacetValues").slideToggle();
+//                $(this).find(".allFacetValues").slideToggle();
             });
         }) : $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 

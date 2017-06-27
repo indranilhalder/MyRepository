@@ -552,7 +552,7 @@ TATA.CommonFunctions = {
             $(document).on('click', '.facetHead', function(e){
                 e.stopPropagation();
                 $(this).closest('.facet').toggleClass('open', function(){
-                    $(this).find('.allFacetValues').slideToggle();
+                    /*$(this).find('.allFacetValues').slideToggle();*/
                 });
             });
         }else{
