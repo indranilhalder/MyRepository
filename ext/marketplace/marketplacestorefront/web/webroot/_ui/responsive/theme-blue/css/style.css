@@ -72918,6 +72918,6 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
 }
 /*TISBBC-47 fix end*/
 
-#stw_widget .product-tile .short-info .color-swatch{
+#stw_widget .product-tile .short-info .color-swatch, #stw_widget_blp .product-tile .short-info .color-swatch{
 	display: none;
 }
