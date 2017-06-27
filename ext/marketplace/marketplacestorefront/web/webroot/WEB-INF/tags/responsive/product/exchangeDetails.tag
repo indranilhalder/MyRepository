@@ -30,10 +30,11 @@
 <span class="Close"></span>
   <div class="modal-header">   
     <h3 class="modal-title" id="myModalLabel"> 
-    	<span class="Exchange-tableTitle">Exchange Offer</span>
+    	<span class="Exchange-tableTitle"><spring:theme code="marketplace.exchange"/></span>
     
     	<br>    
-    	<span class="Exchange-subTitle">Let's check your pincode if your area is serviceable for this offer.</span>	
+    	
+    	<span class="Exchange-subTitle"><spring:theme code="marketplace.exchange.prepincodecheck"/></span>	
     </h3>  	<!-- UF-48 -->	 
   </div>
   
@@ -59,10 +60,10 @@
 		<!-- <span class="pincodeErrorMsg"> -->
 			<span id="emptyPinExc" style="display:none;color:#ff1c47"><spring:theme code="product.empty.pincode"/></span>
 			<span id="wrongPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.invalid"/></span>
-			<span id="unsevisablePinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unsevisable"/></span>
+			<span id="unsevisablePinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess.exchange"/></span>
 			<span id="exPinnotserviceable" style="display:none;color:#ff1c47">Sorry!! exchange offer is not serviceable</span>
-			<span id="serviceablePinExc" style="display:none;color:#339933"><spring:theme code="pincode.serviceable"/></span> <!-- Changes for TISPRM-20,65 -->
-			<span id="unableprocessPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess"/></span>
+			<span id="serviceablePinExc" style="display:none;color:#339933"><spring:theme code="pincode.serviceable.exchange"/></span> <!-- Changes for TISPRM-20,65 -->
+			<span id="unableprocessPinExc" style="display:none;color:#ff1c47"><spring:theme code="pincode.unableprocess.exchange"/></span>
 		<!-- </span> -->
 	</div>
 	</div>
@@ -103,9 +104,9 @@
 
 <div id="couponValue" style="display:none">
 <div class="couponMsg">
-You are eligible for coupon against your successful exchange 
+<spring:theme code="marketplace.exchange.success"/>
 <br>
- Coupons Worth INR <span id="priceselect"></span>
+ <spring:theme code="marketplace.exchange.couponWorth"/><span id="priceselect"></span>
  </div>
 <!--   <input type="button" value="Add to Bag" onclick="generateExchnangId()"> -->
  
