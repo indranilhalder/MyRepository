@@ -47,4 +47,10 @@ public interface MplProductDao extends ProductDao
 	 * @return
 	 */
 	public List<ProductModel> findProductListByCodeList(CatalogVersionModel catalogVersion, List<String> productCodeList);
+
+	/**
+	 * @param code
+	 * @return
+	 */
+	ProductModel findProductData(String code);
 }

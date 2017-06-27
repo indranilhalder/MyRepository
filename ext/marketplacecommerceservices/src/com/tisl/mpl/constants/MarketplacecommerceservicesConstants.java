@@ -2169,4 +2169,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//TPR-3782
+	public static final String GOLD = "GOLD";
+	public static final String SILVER = "SILVER";
+	public static final String PLATINUM = "PLATINUM";
+	public static final String SOLITAIRE = "SOLITAIRE";
 }
