@@ -7715,7 +7715,7 @@ $(document).ready(function(){
 	}
 	
 	$("li.price").each(function(){
-		if($(this).find(".off-bag").css("display") === "block"){
+		if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
 			$(this).find("span.delSeat").addClass("delAction");
 		}
 		else{
