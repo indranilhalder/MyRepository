@@ -445,7 +445,8 @@
         font-weight: 400;
         text-align: center;
         vertical-align: middle;
-        border: 1px solid transparent
+        border: 1px solid transparent;
+        margin-top: -5px;
     }
 }
 .right-block .orderSummary{
@@ -483,7 +484,17 @@
         }*/
         #couponApplied{
             display: none;
-        }        
+        }  
+        
+        .total{
+            #totalPriceConvChargeId{
+                #totalWithConvField{
+                    .priceFormat{
+                        width: 100%;
+                    }
+                }
+            }
+        }
     }
     .outstanding-totalss{
         margin: 15px;
