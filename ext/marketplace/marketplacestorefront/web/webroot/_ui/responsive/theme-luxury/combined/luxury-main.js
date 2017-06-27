@@ -13007,6 +13007,8 @@ TATA.CommonFunctions = {
         $("#forgottenPwdForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
+            	$("#forgottenPwdForm .invalided-error").html("");
+            	 $("#forgottenPwdForm .valid-message").html("");
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
             },
             rules: {
@@ -13024,8 +13026,19 @@ TATA.CommonFunctions = {
                     returnType: "text/html",
                     dataType: "html",
                     success: function(data) {
-                        "invalid_email" === data && ($("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.") : $("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>")), 
-                        "success" === data && $("#forgottenPwdForm .invalided-error").html("You've got an email");
+                    	$("#forgottenPwdForm .invalided-error").html("");
+       				    $("#forgottenPwdForm .valid-message").html("");
+                    	 if(data === "invalid_email"){
+                    		
+                    		if($("#forgottenPwdForm .invalided-error").length > 0){
+                    			$("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.");
+							}else{
+								$("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>");
+							}
+                    	 }
+                    	 if(data === "success"){
+                            $("#forgottenPwdForm").prepend("<div class='valid-message'>You've got an email.</div>");
+                    	 }
                     }
                 });
             }

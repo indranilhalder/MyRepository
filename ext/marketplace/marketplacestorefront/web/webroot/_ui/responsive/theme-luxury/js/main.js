@@ -5,6 +5,11 @@ if ( ! window.TATA )
 var TATA = window.TATA;
 
 TATA.CommonFunctions = {
+		
+		
+		
+		
+}
 	
 	signInValidate: function(){
 		$('#loginForm').validate({
@@ -133,6 +138,8 @@ TATA.CommonFunctions = {
         $("#forgottenPwdForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
+            	$("#forgottenPwdForm .invalided-error").html("");
+           	 $("#forgottenPwdForm .valid-message").html("");
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
             },
             rules: {
@@ -150,8 +157,10 @@ TATA.CommonFunctions = {
        				returnType:"text/html",
        				dataType: "html",
        				success: function(data) {
+       					$("#forgottenPwdForm .invalided-error").html("");
+       				    $("#forgottenPwdForm .valid-message").html("");
                     	 if(data === "invalid_email"){
-                    		$("#forgottenPwdForm .invalided-error").html("");
+                    		
                     		if($("#forgottenPwdForm .invalided-error").length > 0){
                     			$("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.");
 							}else{
@@ -159,7 +168,7 @@ TATA.CommonFunctions = {
 							}
                     	 }
                     	 if(data === "success"){
-                    		 $("#forgottenPwdForm .invalided-error").html("You've got an email");
+                            $("#forgottenPwdForm").prepend("<div class='valid-message'>You've got an email.</div>");
                     	 }
                      }
 				});
@@ -985,7 +994,7 @@ TATA.Pages = {
 		}
 	},
     
-  /*  CHECKOUT:  {
+    CHECKOUT:  {
         
         Netbanking: function(){
             
@@ -1000,8 +1009,7 @@ TATA.Pages = {
 			_self.Netbanking();            
 		}
     },
-	*/
-    
+	
 	PDP:  {
 	
 		wishlistInit: function(){
@@ -1349,64 +1357,16 @@ TATA.Pages = {
 		var _self = TATA.Pages;
 		_self.PLP.init();
 		_self.PDP.init();
-       // _self.CHECKOUT.init();
+        _self.CHECKOUT.init();
 		_self.LANDING.init();
-	},
-	editLuxuryAddress: function (addressId)
-	{
-				       var requiredUrl = ACC.config.encodedContextPath+"/my-account/populateAddressDetail";
-				       var dataString = "&addressId="+addressId;
-				 
-				       $.ajax({
-				    	   url: requiredUrl,
-				    	   type: "GET",
-				    	   data: dataString,
-				    	   dataType : "json",
-				    	   cache: false,
-				    	   contentType : "application/json; charset=utf-8",
-				    	   success : function(data) {
-				   				$('#addressId').val(addressId);
-				   				$('#firstName').val(data.firstName);
-				   				$('#lastName').val(data.lastName);
-				   				$('#line1').val(data.line1);
-				   				$('#line2').val(data.line2);
-				   				$('#line3').val(data.line3);
-				   				$('#postcode').val(data.postcode);
-				   				$('.address_landmarks').val(data.landmark);
-				   				$('.address_landmarkOther').val(data.landmark);
-				   				loadPincodeData("edit").done(function() {
-				   					otherLandMarkTri(data.landmark,"defult");
-				   				});
-				   				$('#townCity').val(data.townCity);
-				   				$('#mobileNo').val(data.mobileNo);
-	$("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state);			   				
-				   				if(data.addressType=="Home")
-				   				{
-				   					document.getElementById("new-address-option-1").checked= true;
-				   				}
-				   				if(data.addressType=="Work")
-								{
-									document.getElementById("new-address-option-2").checked= true;
-								}
-				   				
-				   				$("#headerAdd").css("display","none");
-				   				$("#headerEdit").css("display","block");
-				   				
-				   				$("#addNewAddress").css("display","none");
-				   				$("#edit").css("display","block");
-				    	   },
-				    	   error : function(data) {
-				    		   	console.log(data.responseText) 
-				    	   }
-				       });
-	 } 
+	}
 };
 
 $(document).ready(function () {
 	var luxuryluxuryHeaderLoggedinStatus = false;
 	TATA.CommonFunctions.init();
 	TATA.Pages.init();
-	$("#gender, .select-bar select, #stateListBox, #landmark, .responsiveSort").selectBoxIt();
+	$("#gender, .select-bar select, #stateListBox, #landmark").selectBoxIt();  
 	$('.header-login-target-link').on('click', function(){
 		var targetID = $(this).data('target-id');
 		$('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
