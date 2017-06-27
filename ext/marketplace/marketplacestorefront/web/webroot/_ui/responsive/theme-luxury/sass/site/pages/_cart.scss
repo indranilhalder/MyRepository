@@ -1,5 +1,7 @@
 .cartSection {
 	/*Common Styles Start*/
+    margin: 20px 0px;
+    
 	a {
 		color: $blue;
 		text-decoration: none;
@@ -165,6 +167,13 @@
 		.btn-lg {
 			font-size: 14px;
 		}
+	}
+    @include media-breakpoint-down(sm) {
+		.btn-lg {
+			width: 100%;
+            margin-right: 0px;
+            margin-left: 0px;
+		}        
 	}
 	/*Common Styles End*/
 	
@@ -528,7 +537,13 @@
     button {
         margin-right: 65px; 
         //&:first-child {    margin-right: 60px;  }
-        &:last-child {      margin-right: 0;   margin-left: 65px;  }
+        &:last-child {      margin-right: 0;   margin-left: 65px; 
+            @include media-breakpoint-down(sm) {
+               margin-left: 0px;
+                margin-top: 20px;
+            }
+        }
+        
      }
 }
 .itemsQty {

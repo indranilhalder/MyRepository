@@ -1344,8 +1344,6 @@ TATA.Pages = {
         }
     },
 
-
-
     init: function () {
         var _self = TATA.Pages;
         _self.PLP.init();
