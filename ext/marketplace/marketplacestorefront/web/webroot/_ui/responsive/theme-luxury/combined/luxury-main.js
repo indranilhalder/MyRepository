@@ -13004,6 +13004,7 @@ TATA.CommonFunctions = {
         });
     },
     forgotPasswordValidate: function() {
+        $("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .valid-message").html(""), 
         $("#forgottenPwdForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
@@ -13024,8 +13025,8 @@ TATA.CommonFunctions = {
                     returnType: "text/html",
                     dataType: "html",
                     success: function(data) {
-                        "invalid_email" === data && ($("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.") : $("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>")), 
-                        "success" === data && $("#forgottenPwdForm .invalided-error").html("You've got an email");
+                        "invalid_email" === data && ($("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html("Oops! This email ID isn't registered with us.") : $("#forgottenPwdForm").prepend("<div class='invalided-error'>Oops! This email ID isn't registered with us.</div>")), 
+                        "success" === data && $("#forgottenPwdForm").prepend("<div class='valid-message'>You've got an email.</div>");
                     }
                 });
             }
@@ -13512,16 +13513,6 @@ TATA.CommonFunctions = {
         },
         init: function() {
             TATA.Pages.LANDING.owlCarosel_customize();
-        }
-    },
-    CHECKOUT: {
-        Netbanking: function() {
-            $("payment-tab #viewPaymentNetbanking").on("click", function() {
-                $(".net-bank.netbankingPanel ul li").addClass("le-radio");
-            });
-        },
-        init: function() {
-            TATA.Pages.CHECKOUT.Netbanking();
         }
     },
     PDP: {
