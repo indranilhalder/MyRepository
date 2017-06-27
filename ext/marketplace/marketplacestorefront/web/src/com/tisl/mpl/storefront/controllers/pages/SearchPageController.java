@@ -257,6 +257,8 @@ public class SearchPageController extends AbstractSearchPageController
 		String micrositeDropDownText = "";
 		final String spellingSearchterm = searchText;
 		String spellingtermDYM = "";
+		//Added for INC144317053
+		boolean spellSuggestionFlag = false;
 		//UF-15
 		//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 		final PageableData pageableData = createPageableData(0, 24, null, ShowMode.Page);
@@ -364,6 +366,9 @@ public class SearchPageController extends AbstractSearchPageController
 								searchPageData.setSpellingSuggestion(spelling);
 								model.addAttribute("spellingSearchterm", spellingSearchterm);
 							}
+							//Added for INC144317053
+							spellSuggestionFlag = true;
+							model.addAttribute("spellSuggestionFlag", spellSuggestionFlag);
 						}
 						searchCategory = ALL;
 					}
