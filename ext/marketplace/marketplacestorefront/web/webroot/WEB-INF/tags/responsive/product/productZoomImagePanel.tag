@@ -66,16 +66,7 @@
 
 
 <div id="zoomId" class="super_zoom">
-	<c:choose>
-		<c:when test="${product.rootCategory =='FineJewellery'}">
-			<product:productPrimaryImage product="${product}"
-				format="fineJewelsuperZoom" />
-		</c:when>
-		<c:otherwise>
-			<product:productSuperZoomImage product="${product}"
-				format="superZoom" />
-		</c:otherwise>
-	</c:choose>
+	<product:productSuperZoomImage product="${product}" format="superZoom"/>
 </div>
 <script>
 $(document).ready(function(){
