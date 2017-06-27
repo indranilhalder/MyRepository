@@ -12,9 +12,9 @@
 <c:if test="${not empty lazyInterface}">
 	<c:set var="url" value="${url}/getFacetData"/>
 </c:if>
-<c:set var="facetClass" value="facet"/>
+<c:set var="facetClass" value="facet open"/>
 <c:if test="${facetData.name eq 'colour'}">
-	<c:set var="facetClass" value="facet half-width"/>
+	<c:set var="facetClass" value="facet half-width open"/>
 </c:if>
 <ycommerce:testId code="facetNav_title_${facetData.code}">
 	<c:if test="${facetData.values.size()>0}">
