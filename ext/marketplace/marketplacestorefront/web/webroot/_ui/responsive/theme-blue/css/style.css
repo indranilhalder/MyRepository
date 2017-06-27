@@ -72888,3 +72888,30 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
      margin-top: 20px;
 	 }
 /* TISBBC-12 end */
+
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.delSeat{
+	display: block;	
+}
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span > span.delSeat{
+	margin-right: 5px;
+}
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span > .off-bag{
+	display: inline-block;
+    width: auto;
+    vertical-align: top;
+    color: #000;
+}
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc{
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+body.page-cartPage .cart.wrapper .off-bag span:last-child{
+	display: inline !important;
+}
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc ~ span > .off-bag span:last-child{
+	font-size: 12px !important;
+}
+body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
+	font-size: 12px !important;
+	font-weight: normal !important;
+}
