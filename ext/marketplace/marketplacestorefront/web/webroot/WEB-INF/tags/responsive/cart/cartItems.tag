@@ -350,10 +350,10 @@ tr.d0 td {
 										<c:when test="${not empty entry.productPerDiscDisplay}">
 										<c:choose>
 												<c:when test="${not empty entry.productLevelDisc}">
-													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span></span>
+													<!-- TPR-970 changes--><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span></span>
 												</c:when>
 												<c:otherwise>
-													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)<format:price priceData="${entry.totalPrice}"/></span></span>
+													<!-- TPR-970 changes--><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span></span>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
