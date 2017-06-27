@@ -572,6 +572,7 @@
 		<!-- UF-314 End -->
 		<!-- UF-281 -->
 		<property name="isSelected" type="boolean" />
+		<property name="defaultSelectedDelMode" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
