@@ -68516,6 +68516,17 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 .checkout-shipping.addNewAddress .form-additionals{
 	display: none;
 }
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading{
+	padding: 12.5px 16px;
+    font-size: 16px;
+    line-height: 1.13;
+}
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading> div + div{
+	display: none;
+}
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading h4 span {
+    position: static;
+}
 @media(min-width: 768px){
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block.coupon label{
 	margin-bottom: 9px;
