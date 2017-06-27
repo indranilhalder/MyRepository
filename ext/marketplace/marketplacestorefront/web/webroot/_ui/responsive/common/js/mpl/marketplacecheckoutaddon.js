@@ -1745,6 +1745,19 @@ $("#otpMobileNUMField").focus(function(){
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
@@ -1872,7 +1885,21 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else{
 
 					 //TISPRO-313
 					if($(".redirect").val()=="false"){
@@ -2020,7 +2047,21 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{	
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else{	
 					//TISSTRT-1391
 					window.sessionStorage.removeItem("header");
 					 //TISPRO-313
@@ -2183,7 +2224,21 @@ $("#otpMobileNUMField").focus(function(){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{		
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else{		
 					 //TISPRO-313
 					 if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
@@ -5040,6 +5095,19 @@ function submitNBForm(){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TIS 404
 				}
