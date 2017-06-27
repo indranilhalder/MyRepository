@@ -69,8 +69,8 @@
 										<img src="${themeResourcePath}/images/empty-cardicon.png">
 								   		<h2>Your Shopping cart is empty</h2>
 										<p>Add products to it.</p>
-										<button class="btn btn-primary btn-lg">Shop Men</button>
-										<button class="btn btn-primary btn-lg">Shop Women</button>
+										<a href="/menlanding" class="btn btn-primary btn-lg">Shop Men</a></class>
+										<a href="/womenlanding" class="btn btn-primary btn-lg">Shop Women</a></class>
 									</div>
 									<span id="removeFromCart_Cart" style="display:none;color:#60A119;"><!-- And it's out!</span> --><spring:theme code="remove.product.cartmsg"/></span>
 								</div>
