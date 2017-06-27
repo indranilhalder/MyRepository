@@ -72916,6 +72916,9 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
 	font-size: 12px !important;
 	font-weight: normal !important;
 }
+body.page-cartPage span.delSeat.delAction{
+color: #ff2c43;
+}
 /*TISBBC-47 fix end*/
 
 #stw_widget .product-tile .short-info .color-swatch, #stw_widget_blp .product-tile .short-info .color-swatch{
