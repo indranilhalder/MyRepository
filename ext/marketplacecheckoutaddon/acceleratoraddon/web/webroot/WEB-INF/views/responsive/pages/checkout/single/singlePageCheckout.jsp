@@ -141,7 +141,8 @@
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
-
+<!-- The actual snackbar -->
+<div id="mobileSnackbar">Some text some message..</div>
 <div id="confirmOverlay" style="display:none">
     <div id="confirmBox" style="display:none">
 

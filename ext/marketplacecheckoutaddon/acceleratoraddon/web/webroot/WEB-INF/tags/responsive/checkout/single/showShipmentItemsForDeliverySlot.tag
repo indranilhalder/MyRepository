@@ -113,7 +113,7 @@
 		 			if(response == '-'){
 		 				
 		 			}else{
-		 			$("#deliveryCostSpanId").empty().text(result[0]);
+		 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
 		 			$("#totalWithConvField").empty().text(result[1]);
 		 		}
 		 		},
@@ -137,7 +137,7 @@
 	 			
 	 			currentReset.prop('disabled','disabled');
 	 			var result = response.split("-");
-	 			$("#deliveryCostSpanId").empty().text(result[0]);
+	 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
 	 			$("#totalWithConvField").empty().text(result[1]);
 	 		},
 	 		error : function(error) {

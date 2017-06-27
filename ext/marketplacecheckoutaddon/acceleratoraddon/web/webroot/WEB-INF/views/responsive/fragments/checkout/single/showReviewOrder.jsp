@@ -668,5 +668,4 @@
 				</c:choose>
 			</ycommerce:testId></span></li>
 </ul>
-
-
+<span id="totPriceWithoutRupeeSymbol" style="display:none">${cartData.totalPrice.formattedValueNoDecimal}</span>

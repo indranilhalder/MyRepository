@@ -5203,9 +5203,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			// TISST-13010
 	 			$("#cartPromotionApplied").css("display","block");
 	 			if(parseFloat(deliveryCost) > 0){
-	 				document.getElementById("deliveryCostSpanId").innerHTML=currency+deliveryCost;
+	 				$("#deliveryCostSpanId > span.priceFormat").html(currency+deliveryCost);
 		 		}else{
-	 				document.getElementById("deliveryCostSpanId").innerHTML="Free";
+		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
 		 		}
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
