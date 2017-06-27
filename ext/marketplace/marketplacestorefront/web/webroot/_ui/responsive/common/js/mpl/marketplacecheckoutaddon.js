@@ -1556,30 +1556,31 @@ $("#otpMobileNUMField").focus(function(){
  
 
  
- $("input[name=creditCards]:radio").each(function(){
-     var frm = $(this.form)
-     
- }).on('change', function(e){
-     var $this = $(this)
-     var cg = $this.parents("div.credit-card-group:first")
+// $("input[name=creditCards]:radio").each(function(){
+//     var frm = $(this.form)
+//     
+// }).on('change', function(e){
+function savedCreditCardRadioChange(radioId){
+  //var $this = $(this)
+    // var cg = $this.parents("div.credit-card-group:first")
 	     // TISBOX-1732
 	     $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display","none");
 	     $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
-		 $(e.currentTarget).removeClass("card_token_hide").addClass("card_token");
+		 $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
 		 $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 		 $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 		 $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		 $('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		 $('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	     $(e.currentTarget).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
-	     $(e.currentTarget).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
-	     $(e.currentTarget).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
-	     $(e.currentTarget).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	     $("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $("#"+radioId).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
@@ -1594,34 +1595,36 @@ $("#otpMobileNUMField").focus(function(){
 			}
 	     var bankName=$('.card_bank').val();
 	     setBankForSavedCard(bankName);
- });
+ //});
+}
  
  
  
-  $("input[name=debitCards]:radio").each(function(){
-	     var frm = $(this.form)
-	     
-	 }).on('change', function(e){
-	     var $this = $(this)
+//  $("input[name=debitCards]:radio").each(function(){
+//	     var frm = $(this.form)
+//	     
+//	 }).on('change', function(e){
+function savedDebitCardRadioChange(radioId){
+	     //var $this = $(this)
 	     // TISBOX-1732
 	     $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display","none");
-	     var cg = $this.parents("div.debit-card-group:first")
+	     //var cg = $this.parents("div.debit-card-group:first")
 	     $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
-	     $(e.currentTarget).removeClass("card_token_hide").addClass("card_token");
+	     $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
 	     $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 	     $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 	     $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 	     $('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 	     $('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	     $(e.currentTarget).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
-	     $(e.currentTarget).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
-	     $(e.currentTarget).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
-	     $(e.currentTarget).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	     $("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $("#"+radioId).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
@@ -1642,7 +1645,8 @@ $("#otpMobileNUMField").focus(function(){
 	     else{
 				$("#maestroMessage").css("display","none");
 	     }
-	 });
+	 //});
+}
   
   
   //$(document).on("focus", "#savedEMICard .credit-card-group .cvvValdiation", function() {

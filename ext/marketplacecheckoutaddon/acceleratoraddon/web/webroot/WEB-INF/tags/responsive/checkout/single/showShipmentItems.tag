@@ -240,7 +240,7 @@
 															<c:choose>
 																	<c:when test="${delMode.code eq 'home-delivery'}">
 																			
-																			<li class="${delMode.code }">
+																			<li class="${delMode.code } <c:if test="${!delMode.isSelected eq true}"> hideDelModeMobile</c:if>">
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}'); "  <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
@@ -248,7 +248,7 @@
 																		<%-- <c:set var='delModeChecked'  value='true' /> --%>			
 																	</c:when>
 																	<c:when test="${delMode.code eq 'click-and-collect'}">
-																			<li class="${delMode.code }">
+																			<li class="${delMode.code } <c:if test="${!delMode.isSelected eq true}"> hideDelModeMobile</c:if>">
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
@@ -264,7 +264,7 @@
 																		<%-- <c:set var='delModeChecked'  value='true' />	 --%>		
 																	</c:when>
 																	<c:otherwise>
-																			<li class="${delMode.code }">
+																			<li class="${delMode.code } <c:if test="${!delMode.isSelected eq true}"> hideDelModeMobile</c:if>">
 																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			

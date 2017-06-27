@@ -1576,7 +1576,7 @@ removeExchangeFromCart : function (){
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 		return xhrResponse;
 	},
-	proceedWithPaymentForResponsive:function(paymentMode){
+	proceedWithPaymentForResponsive:function(paymentMode,savedOrNew,radioId,callFromCvv){
 		ACC.singlePageCheckout.showAjaxLoader();
 		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
@@ -1629,8 +1629,18 @@ removeExchangeFromCart : function (){
         			
         			//Populating sub-total which is subject to change on order item removal
         			$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
-        			//Open payment mode form//apply promotion is called within
-            		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+        			if(savedOrNew=="savedCard")
+        			{
+        				////Code to be executed if a saved card is selected
+        				ACC.singlePageCheckout.paymentOnSavedCardSelection(paymentMode,savedOrNew,radioId,callFromCvv);
+        			}
+        			else
+        			{
+        				//Code to be executed if a new card is selected
+        				//Open payment mode form//apply promotion is called within
+        				ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+        			}
+            		
             		//If delivery modes will be changed all the validation flags will be reset.
             		ACC.singlePageCheckout.attachEventToResetFlagsOnDelModeChange();
             		
@@ -1829,9 +1839,33 @@ removeExchangeFromCart : function (){
 		$("#debit_payment_form")[0].reset();
 		$("#card").css("display","none");
 		$("#cardDebit").css("display","none");
-		$("#netbanking").css("display","none");
-		$("#emi").css("display","none");
-		$("#COD").css("display","none");
+		$("li#netbanking").css("display","none");
+		$("li#emi").css("display","none");
+		$("li#COD").css("display","none");
+		$("#MRUPEE").css("display","none");
+		$("#make_cc_payment_up").css("display","none");
+		$("#make_dc_payment_up").css("display","none");
+		$("#make_saved_dc_payment_up").css("display","none");
+		$("#make_nb_payment_up").css("display","none");
+		$("#make_emi_payment_up").css("display","none");
+		$("#paymentButtonId_up").css("display","none");
+		$("#make_mrupee_payment_up").css("display","none");
+		//Below is for Saved Card
+		$(".cvvValdiation").val("");
+		$("input:radio[name=debitCards]").prop("checked",false);
+		$("input:radio[name=creditCards]").prop("checked",false);
+	},
+	
+	resetPaymentModesOnSavedCardSelection:function()
+	{
+		$("li.paymentModeMobile").removeClass("active");
+		$("#payment_form")[0].reset();
+		$("#debit_payment_form")[0].reset();
+		$("#card").css("display","none");
+		$("#cardDebit").css("display","none");
+		$("li#netbanking").css("display","none");
+		$("li#emi").css("display","none");
+		$("li#COD").css("display","none");
 		$("#MRUPEE").css("display","none");
 		$("#make_cc_payment_up").css("display","none");
 		$("#make_dc_payment_up").css("display","none");
@@ -1992,17 +2026,17 @@ removeExchangeFromCart : function (){
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	
-		            	var entryNumbersId=$("#entryNumbersId").val();		            	
-		            	var entryNumbers=entryNumbersId.split("#");
-		            	for(var i=0;i<entryNumbers.length-1;i++)
-		            	{
-		            		$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
-			            		if(!$(obj).is(':checked'))
-			            		{
-			            			$(obj).parent("li").hide();
-			            		}
-			            	});
-		            	}
+//		            	var entryNumbersId=$("#entryNumbersId").val();		            	
+//		            	var entryNumbers=entryNumbersId.split("#");
+//		            	for(var i=0;i<entryNumbers.length-1;i++)
+//		            	{
+//		            		$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
+//			            		if(!$(obj).is(':checked'))
+//			            		{
+//			            			$(obj).parent("li").hide();
+//			            		}
+//			            	});
+//		            	}
 		            	
 		            	
 		            	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
@@ -2021,18 +2055,19 @@ removeExchangeFromCart : function (){
 	},
 	
 	changeDeliveryMode:function(element){
-		var entryNumbersId=$("#entryNumbersId").val();
-		var entryNumbers=entryNumbersId.split("#");
-		for(var i=0;i<entryNumbers.length-1;i++)
-		{
-			//$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();
-			$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
-        		if(!$(obj).is(':checked'))
-        		{
-        			$(obj).parent("li").show();
-        		}
-        	});
-		}
+//		var entryNumbersId=$("#entryNumbersId").val();
+//		var entryNumbers=entryNumbersId.split("#");
+//		for(var i=0;i<entryNumbers.length-1;i++)
+//		{
+//			//$("input:radio[name='"+entryNumbers[i]+"']").parent("li").show();
+//			$("input:radio[name='"+entryNumbers[i]+"']").each(function(i,obj){
+//        		if(!$(obj).is(':checked'))
+//        		{
+//        			$(obj).parent("li").show();
+//        		}
+//        	});
+//		}
+		$(".hideDelModeMobile").show();
 		$(element).hide();
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
@@ -2169,7 +2204,7 @@ removeExchangeFromCart : function (){
 		return false;
 	},
 	//function called when payment mode is selected in responsive.
-	onPaymentModeSelection:function(paymentMode)
+	onPaymentModeSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
@@ -2231,19 +2266,19 @@ removeExchangeFromCart : function (){
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 	                	{
 	                		//Validate payment in responsive
-	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive(paymentMode);
+	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive(paymentMode,savedOrNew,radioId,callFromCvv);
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
 	                		//TODO Toast for slot delivery should be created here
 	                		// Get the snackbar DIV
-	                	    var x = document.getElementById("snackbar");
+	                	    var x = $("#snackbar").addClass("show");
 
 	                	    // Add the "show" class to DIV
-	                	    x.className = "show";
+	                	   // x.className = "show";
 
 	                	    // After 3 seconds, remove the show class from DIV
-	                	    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 20000);
+	                	    setTimeout(function(){ $("#snackbar").removeClass("show"); }, 20000);
 	                	}
 	                }
 	                
@@ -2256,7 +2291,17 @@ removeExchangeFromCart : function (){
 		}
 		else if(formValidationSuccess && ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved && ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone)
     	{
-    		ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+			if(savedOrNew=="savedCard")
+			{
+				////Code to be executed if a saved card is selected
+				ACC.singlePageCheckout.paymentOnSavedCardSelection(paymentMode,savedOrNew,radioId,callFromCvv);
+			}
+			else
+			{
+				//Code to be executed if a new card is selected
+				//Open payment mode form//apply promotion is called within
+				ACC.singlePageCheckout.viewPaymentModeFormOnSelection(paymentMode);
+			}
     	}
 	},
 	//Method to get responsive slot delivery page
@@ -2322,6 +2367,33 @@ removeExchangeFromCart : function (){
 		if(paymentMode=="MRUPEE")
 		{
 			viewPaymentMRupee();
+		}
+	},
+	paymentOnSavedCardSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
+	{
+		if(paymentMode=="Credit Card")
+		{
+			if($("#"+radioId).is(":checked") && callFromCvv=='true')
+			{
+				//Do Nothing
+			}
+			else{
+				$("#"+radioId).prop("checked",true);
+				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection();
+				savedCreditCardRadioChange(radioId);
+			}
+		}
+		if(paymentMode=="Debit Card")
+		{
+			if($("#"+radioId).is(":checked") && callFromCvv=='true')
+			{
+				//Do Nothing
+			}
+			else{
+				$("#"+radioId).prop("checked",true);
+				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection();
+				savedDebitCardRadioChange(radioId);
+			}
 		}
 	}
 /****************MOBILE ENDS HERE************************/
