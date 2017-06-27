@@ -72889,6 +72889,7 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	 }
 /* TISBBC-12 end */
 
+/*TISBBC-47 fix start*/
 body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.delSeat{
 	display: block;	
 }
@@ -72914,4 +72915,9 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-dis
 body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
 	font-size: 12px !important;
 	font-weight: normal !important;
+}
+/*TISBBC-47 fix end*/
+
+#stw_widget .product-tile .short-info .color-swatch{
+	display: none;
 }

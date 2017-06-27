@@ -168,8 +168,8 @@ var stwRender = {
                 768: {
                     items: 3,
                 },
-                // breakpoint from 768 up
-                1280: {
+                // breakpoint from 1080 up
+                1080: {
                     items: 5,
                 }
             }
