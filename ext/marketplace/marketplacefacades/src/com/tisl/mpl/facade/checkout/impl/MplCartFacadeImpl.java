@@ -1017,6 +1017,53 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 	}
 
+	@Override
+	public void setCartSubTotalForReviewOrder(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		double subtotal = 0.0;
+		double totalPrice = 0.0;
+		Double discountValue = Double.valueOf(0.0);
+		final boolean cartSaveRequired = false; //TISPT 80
+		if (cartModel != null)
+		{
+			final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final double entryTotal = entry.getQuantity().doubleValue() * entry.getBasePrice().doubleValue();
+				subtotal += entryTotal;
+				//				//TISEE-581
+				//				if (entry.getPrevDelCharge().doubleValue() > 0 || entry.getCurrDelCharge().doubleValue() > 0)
+				//				{
+				//					cartSaveRequired = true;
+				//					entry.setPrevDelCharge(Double.valueOf(0));
+				//					entry.setCurrDelCharge(Double.valueOf(0));
+				//				}
+				//getModelService().save(entry); //TISPT 80
+			}
+			if (cartSaveRequired)
+			{
+				getModelService().saveAll(entries);
+			}
+
+			//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+
+			final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
+
+
+			////TISST-13010
+			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
+			{
+				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
+			}
+
+			totalPrice = subtotal - discountValue.doubleValue();
+
+			cartModel.setSubtotal(Double.valueOf(subtotal));
+			cartModel.setTotalPrice(Double.valueOf(totalPrice));
+			cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
+			getModelService().save(cartModel);
+		}
+	}
 
 
 	@Override
@@ -4301,8 +4348,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.N) || responseDataList == null)
 			{
-				sessionService.setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				//				sessionService.setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
+				//						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			}
 

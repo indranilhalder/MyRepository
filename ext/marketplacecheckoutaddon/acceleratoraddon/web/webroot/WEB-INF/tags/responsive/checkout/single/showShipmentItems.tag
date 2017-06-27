@@ -47,7 +47,9 @@
 					</ul>
 				</li> --%>
 						<c:set var="entryNumbersId" value=""/>
+						<c:set var="hideChangeLink" value="true"/>
 						<c:forEach items="${cartData.entries}" var="entry">
+							<c:set var="numberOfDelModesInEntry" value="0"/>
 								<c:url value="${entry.product.url}" var="productUrl" />
 				
 								<li class="item delivery_options" data-entryNumber="${entry.entryNumber}" data-ussid="${entry.selectedSellerInformation.ussid}">
@@ -223,14 +225,15 @@
 													
 															<c:set var='count'  value='1' />
 														<c:set var="delModes" value="${fn:length(deliveryModeDataMap.value)}" />
-														<c:set var='delModeChecked'  value='false' />
+														<%-- <c:set var='delModeChecked'  value='false' /> --%>
 															
 														<c:forEach var="i" begin="1" end="${delModes}" step="1">
+															<c:set var="numberOfDelModesInEntry" value="${numberOfDelModesInEntry+1}"/>
 														    <c:set var="delMode" value="${deliveryModeDataMap.value[delModes-i]}" />
 															
 															<c:if test="${count==1}">
 																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${delMode.sellerArticleSKU}" />
-																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.code}" />
+																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.defaultSelectedDelMode}" />
 															</c:if>
 														   <c:set var='count'  value='${count+1}' />
 
@@ -238,39 +241,42 @@
 																	<c:when test="${delMode.code eq 'home-delivery'}">
 																			
 																			<li class="${delMode.code }">
-																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}'); "  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}'); "  <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
-																		<c:set var='delModeChecked'  value='true' />			
+																		<%-- <c:set var='delModeChecked'  value='true' /> --%>			
 																	</c:when>
 																	<c:when test="${delMode.code eq 'click-and-collect'}">
 																			<li class="${delMode.code }">
-																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
 																		<c:set var="isCncPresentInSinglePageCart" value="true"></c:set>
-																		<c:if test="${delModeChecked eq 'false'}">
+																		<c:if test="${delMode.isSelected eq true}">
 																			<script>
 																				$(document).ready(function(){
 																					ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');
 																				});
 																			</script>
 																		</c:if>
-																		<c:set var='delModeChecked'  value='true' />			
+																		<%-- <c:set var='delModeChecked'  value='true' />	 --%>		
 																	</c:when>
 																	<c:otherwise>
 																			<li class="${delMode.code }">
-																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   <c:if test="${delModeChecked eq 'false'}">checked="checked"</c:if>/>
+																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
 																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
 																			
 																		<p>${delMode.description }</p></label></li>
-																		<c:set var='delModeChecked'  value='true' />
+																		<%-- <c:set var='delModeChecked'  value='true' /> --%>
 																	</c:otherwise>
 															</c:choose>
 									
 														</c:forEach>
+														<c:if test="${numberOfDelModesInEntry>1}">
+															<c:set var="hideChangeLink" value="false"/>
+														</c:if>
 												</c:if>
 												</c:forEach>
 												</c:if>
@@ -291,5 +297,5 @@
 	</div>
 	<input type="hidden" name="isCncPresentInSinglePageCart" id="isCncPresentInSinglePageCart" value="${isCncPresentInSinglePageCart}"/>
 	<input type="hidden" name="entryNumbersId" id="entryNumbersId" value="${entryNumbersId}" />
+	<input type="hidden" name="hideChangeLink" id="hideChangeLink" value="${hideChangeLink}" />
 	</c:if>
-

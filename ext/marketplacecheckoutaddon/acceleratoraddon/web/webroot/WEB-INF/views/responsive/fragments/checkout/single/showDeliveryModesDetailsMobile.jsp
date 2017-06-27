@@ -36,3 +36,9 @@
 			</div>
 		</div>
 	</form:form>
+	<script>
+		if($("#hideChangeLink").val()=="true")
+		{
+			$("#delivery-mode-change-link").hide();
+		}
+	</script>
