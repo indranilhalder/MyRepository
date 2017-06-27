@@ -370,7 +370,7 @@ tr.d0 td {
 									</c:otherwise>
 								</c:choose>
 								<c:if test="${not empty entry.cartLevelDisc}">
-								<p class="add-disc">Additional Discount:</p>
+								<p class="add-disc">Additional Discount</p>
 									<c:choose>
 										<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
