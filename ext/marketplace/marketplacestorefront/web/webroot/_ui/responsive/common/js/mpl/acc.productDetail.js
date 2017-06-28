@@ -445,6 +445,7 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				$("#videoModal #player").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
+				$("#videoModal").css("z-index", "100003");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
 				/*$(".zoomContainer").remove();
 				$('.picZoomer-pic').removeData('zoom-image');*/
@@ -2323,9 +2324,9 @@ function nextImage(elem)
 	}
 	else if (grandParentId == 'zoom_gallery') {
 		$("#zoom_gallery .imageListCarousel li img").each(function() {
-			if ($(this).attr('data-type') == "image") {
+			//if ($(this).attr('data-type') == "image") {
 				$(this).show();
-			}
+			//}
 		});
 		var item_height = $("#zoom_gallery .imageListCarousel li").height();
 		var item_count = $("#zoom_gallery .imageListCarousel li").length;

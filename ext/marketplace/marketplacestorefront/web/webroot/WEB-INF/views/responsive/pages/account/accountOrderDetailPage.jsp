@@ -3769,7 +3769,7 @@ body .account .right-account .order-history.order-details li.item{
 	border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
 }
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
@@ -3793,7 +3793,7 @@ body .account .right-account {
     border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
 }
 }
 @media (max-width: 500px){

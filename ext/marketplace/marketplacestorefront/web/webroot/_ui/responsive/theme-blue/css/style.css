@@ -70645,6 +70645,10 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
 body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment {
     margin-top: 75px !important;
 }
+body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header{
+ 	margin-bottom: -75px;
+ 	overflow: hidden;
+ }
 }
 @media (max-width: 650px) {
 	body .right-account .order-details .deliveryTrack .dot-arrow {
@@ -70652,12 +70656,12 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
     width: 14px;
 }
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    font-size: 10px;
+    font-size: 9px;
 }
 }
 @media (max-width: 413px){
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    font-size: 8px;
+    font-size: 9px;/* changed for TISPRDT-1612 */
     color: #ccc;
 }
 }
@@ -70667,3 +70671,26 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     padding-left: 10px;
 }
 /*TISPRDT-1609 end*/
+/* TISPRDT-1611 start */
+ @media (max-width: 790px){
+ .pagination-bar.listing-menu.pagination-order-history.bottom {
+      width: 90%;
+ }
+ }
+ @media (max-width: 767px){
+ .pagination-bar.listing-menu.pagination-order-history.bottom {
+     border: none;
+ }
+ }
+ /* TISPRDT-1611 end */
+ /*PRDI-402 fix start*/
+ .product-block.order-details .pickup_Edit .savebtn{
+ 	position: relative;
+ }
+ .product-block.order-details .pickup_Edit {
+     margin-bottom: 10px;
+ }
+ /*PRDI-402 fix end*/
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
+	font-size: 10px;
+}

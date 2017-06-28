@@ -1530,11 +1530,11 @@ $(document).ready(function(){
 		}
 		});
 
-	$(window).on("load resize", function() {
+	/*$(window).on("load resize", function() {
 		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 		var thumbnailImageHeight = (mainImageHeight / 5);
 			$(".imageList ul li img").css("height", thumbnailImageHeight);
-		});
+		});*/
 	
 	$('.marketplace-checkout').find('a').click(function(e){
 		e.preventDefault();
@@ -3728,3 +3728,14 @@ $(".deliveryTrack.status.suman").each(function(){
 	});
 	});
 /* TPR-6013 ends*/
+/*PRDI-402 start*/
+$(document).ready(function(){
+	if($(window).width() < 790){
+		$(".pagination_ul .product-block").each(function(){
+			if($(this).children().length == 1){
+				$(this).find('li.viewDetails').css('margin-bottom','30px');
+			}
+		});
+	}	
+});
+/*PRDI-402 end*/
