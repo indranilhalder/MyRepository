@@ -27,3 +27,8 @@ INSERT_UPDATE PromotionalPriceRow;promotionIdentifier[unique=true]
 
 REMOVE PromotionalPriceRow;promotionIdentifier[unique=true]
 ;dummypromotionalpricerow
+
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);sortableType(code);currency[default=false];localized
+[default=false];multiValue[default=false];useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider;valueProviderParameter
+;$solrIndexedType; mobileprice             ;double ;            ;true;    ;    ;    ;    ;mplMobilePriceValueProvider;
