@@ -70,6 +70,14 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	{
 		String shortUrl = null;
 		try {
+			OrderShortUrlInfoModel shortUrlInfoModel = getShortUrlReportModelByOrderId(orderCode);
+         if(null != shortUrlInfoModel && null != shortUrlInfoModel.getShortURL() && !shortUrlInfoModel.getShortURL().isEmpty()) {
+         	shortUrl = shortUrlInfoModel.getShortURL();
+         	if(LOG.isDebugEnabled()) {
+         		LOG.debug("Short URL  for Order id "+orderCode+ " is "+shortUrl);
+         	}
+         	return shortUrl;
+         }
 			LOG.info("Generating short url for order id :" + orderCode);
 			final String googleAPIUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
 			final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
