@@ -1492,7 +1492,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					return jsonObj;
 				}
 				saveAndSetDeliveryAddress(addressForm, false);
-				jsonObj.put("displaymessage", "Address Set and Saved successfull.");
+				jsonObj.put("isAddressSaved", "true");
+				jsonObj.put("isAddressSet", "true");
 				jsonObj.put("type", "response");
 			}
 		}
@@ -4570,7 +4571,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4628,7 +4629,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

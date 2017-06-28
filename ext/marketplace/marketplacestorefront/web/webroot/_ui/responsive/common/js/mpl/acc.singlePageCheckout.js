@@ -128,7 +128,7 @@ ACC.singlePageCheckout = {
         	}
         	else
         	{
-        		$("#chooseDeliveryAddressMobile").html(data);
+        		$("#chooseDeliveryAddressMobileDiv").html(data);
         	}
 		});
         
@@ -375,7 +375,7 @@ ACC.singlePageCheckout = {
             	{//Code to show slot delivery page if CNC is not present
             		var elementId="singlePageChooseSlotDeliveryPopup";
             		ACC.singlePageCheckout.modalPopup(elementId,data);
-            	}            	
+            	}
             }
         });
         
@@ -656,6 +656,14 @@ ACC.singlePageCheckout = {
 	     				console.log("Unable to set default address");
 	     			}
 	        	});
+	        	
+	        	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
+        		var couponCode=$("#couponFieldId").val();
+        		if(couponCode!="")
+        		{
+        			//Code is in marketplacecheckoutadon.js
+        			resetAppliedCouponFormOnRemoval();
+        		}
             }
 		});
         
@@ -966,6 +974,14 @@ ACC.singlePageCheckout = {
 			}
 			
 		
+	},
+	searchOnEnterPress:function(e,element,entryNumber)
+	{
+		var code = e.keyCode || e.which;
+	    if(code==13){
+	    	ACC.singlePageCheckout.searchCNCStores(element,entryNumber);
+	        // Enter pressed
+	    }
 	},
 	savePickupPersonDetails: function(element)
 	{
@@ -1504,6 +1520,14 @@ removeExchangeFromCart : function (){
         		
         		ACC.singlePageCheckout.getSelectedDeliveryModes(callFrom);
         	}
+        	
+        	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
+    		var couponCode=$("#couponFieldId").val();
+    		if(couponCode!="")
+    		{
+    			//Code is in marketplacecheckoutadon.js
+    			resetAppliedCouponFormOnRemoval();
+    		}
         });
         
 	},
@@ -1863,6 +1887,7 @@ removeExchangeFromCart : function (){
 		$("li#emi").css("display","none");
 		$("li#COD").css("display","none");
 		$("#MRUPEE").css("display","none");
+		$("#make_saved_cc_payment_up").css("display","none");
 		$("#make_cc_payment_up").css("display","none");
 		$("#make_dc_payment_up").css("display","none");
 		$("#make_saved_dc_payment_up").css("display","none");
@@ -1876,7 +1901,7 @@ removeExchangeFromCart : function (){
 		$("input:radio[name=creditCards]").prop("checked",false);
 	},
 	
-	resetPaymentModesOnSavedCardSelection:function()
+	resetPaymentModesOnSavedCardSelection:function(paymentMode)
 	{
 		$("li.paymentModeMobile").removeClass("active");
 		$("#payment_form")[0].reset();
@@ -1887,9 +1912,16 @@ removeExchangeFromCart : function (){
 		$("li#emi").css("display","none");
 		$("li#COD").css("display","none");
 		$("#MRUPEE").css("display","none");
+		if(paymentMode!="Credit Card")
+		{
+			$("#make_saved_cc_payment_up").css("display","none");
+		}
 		$("#make_cc_payment_up").css("display","none");
 		$("#make_dc_payment_up").css("display","none");
-		$("#make_saved_dc_payment_up").css("display","none");
+		if(paymentMode!="Debit Card")
+		{
+			$("#make_saved_dc_payment_up").css("display","none");
+		}
 		$("#make_nb_payment_up").css("display","none");
 		$("#make_emi_payment_up").css("display","none");
 		$("#paymentButtonId_up").css("display","none");
@@ -2067,7 +2099,6 @@ removeExchangeFromCart : function (){
 	},
 	
 	changeAddress:function(element){
-		
 		//$("#address-change-link").on("click", function(){
 			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
 			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
@@ -2174,8 +2205,8 @@ removeExchangeFromCart : function (){
 		                }
 		                if(data.type=="response")
 		                {
-		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
-		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved=="true"?true:false;
+		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet=="true"?true:false;
 		                	ACC.singlePageCheckout.getDeliveryAddresses();
 		                	$("#address-change-link").show();
 		                }
@@ -2404,6 +2435,7 @@ removeExchangeFromCart : function (){
 	},
 	paymentOnSavedCardSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
 	{
+		$("#paymentMode").val(paymentMode);
 		if(paymentMode=="Credit Card")
 		{
 			if($("#"+radioId).is(":checked") && callFromCvv=='true')
@@ -2412,7 +2444,7 @@ removeExchangeFromCart : function (){
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
-				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection();
+				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection(paymentMode);
 				savedCreditCardRadioChange(radioId);
 			}
 		}
@@ -2424,7 +2456,7 @@ removeExchangeFromCart : function (){
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
-				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection();
+				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection(paymentMode);
 				savedDebitCardRadioChange(radioId);
 			}
 		}
@@ -2465,7 +2497,7 @@ $(document).ready(function(){
 			}
 			if(defaultAddressPresent=="false")
 			{
-				$("#chooseDeliveryAddressMobile").find(".mobileNotDefaultDelAddress").show();
+				$("#chooseDeliveryAddressMobileDiv").find(".mobileNotDefaultDelAddress").show();
 				//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 				$("#chooseDeliveryAddressMobile .change-mobile").hide();
 			}

@@ -89,7 +89,7 @@
 		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress(this);">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
-		<div id="chooseDeliveryAddressMobile">
+		<div id="chooseDeliveryAddressMobileDiv">
 			<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
 		</div>
 	</div>
