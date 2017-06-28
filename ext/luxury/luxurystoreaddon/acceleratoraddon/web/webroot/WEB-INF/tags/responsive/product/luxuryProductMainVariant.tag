@@ -86,7 +86,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
 			<p>
-				<spring:theme code="text.colour" />
+				<h5><spring:theme code="product.text.colour" /></h5>
 			</p>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
