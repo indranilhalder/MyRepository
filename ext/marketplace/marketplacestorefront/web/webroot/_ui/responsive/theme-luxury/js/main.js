@@ -5,7 +5,15 @@ if ( ! window.TATA )
 var TATA = window.TATA;
 
 TATA.CommonFunctions = {
-
+    getUrlParameterByName: function(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    },
     signInValidate: function(){
         $('#loginForm').validate({
             onfocusout: false,
@@ -1410,6 +1418,10 @@ $(document).ready(function () {
         var targetID = $(this).data('target-id');
         $('#header-account').removeClass('active-sign-in active-sign-up active-forget-password').addClass('active-'+targetID);
     });
+    if(TATA.CommonFunctions.getUrlParameterByName("showPopup") === "true"){
+        $(".luxury-login").trigger("click");
+        window.history.pushState({}, null, '/');
+    }
 });
 
 $(window).scroll(function () {
