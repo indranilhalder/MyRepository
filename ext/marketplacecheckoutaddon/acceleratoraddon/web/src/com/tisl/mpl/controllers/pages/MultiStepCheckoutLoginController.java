@@ -13,6 +13,7 @@
  */
 package com.tisl.mpl.controllers.pages;
 
+import com.tisl.lux.facade.CommonUtils;
 import de.hybris.platform.acceleratorfacades.flow.CheckoutFlowFacade;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
@@ -80,6 +81,9 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	protected static final String SPRING_SECURITY_LAST_USERNAME = "SPRING_SECURITY_LAST_USERNAME";
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
+
+	@Autowired
+	public CommonUtils commonUtils;
 
 	@Resource(name = "registerPageValidator")
 	private RegisterPageValidator registerPageValidator;
@@ -158,7 +162,6 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			final HttpSession session, final Model model, final HttpServletRequest request,
 			final RedirectAttributes redirectAttributes) throws CMSItemNotFoundException, CommerceCartModificationException
 	{
-
 		try
 		{
 			final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
@@ -310,6 +313,9 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			}
 
 			model.addAttribute("pageName", pageName);
+			if(commonUtils.isLuxurySite()){
+				return "redirect:/cart?showPopup=true";
+			}
 			return MarketplacecheckoutaddonControllerConstants.Views.Pages.MultiStepCheckout.MplCheckOutLoginPage;
 		}
 		catch (final EtailBusinessExceptions e)

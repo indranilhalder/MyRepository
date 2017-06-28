@@ -33,6 +33,7 @@ public interface LuxurystoreaddonControllerConstants
 			{
 				String LoginPanelFragment = ADDON_PREFIX + "/fragments/home/luxLoginPanel";
 				String ForgotPasswordPanel = ADDON_PREFIX + "/fragments/home/forgottenPwd";
+				String RegisterFragment = ADDON_PREFIX + "/fragments/home/luxRegister";
 			}
 		}
 

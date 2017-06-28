@@ -1420,7 +1420,11 @@ $(document).ready(function () {
     });
     if(TATA.CommonFunctions.getUrlParameterByName("showPopup") === "true"){
         $(".luxury-login").trigger("click");
-        window.history.pushState({}, null, '/');
+        if(window.location.href.indexOf("/cart") > 0){
+            window.history.pushState({}, null, '/cart');
+        }else{
+            window.history.pushState({}, null, '/');
+        }
     }
 });
 

@@ -106,7 +106,8 @@ public class LoginPageController extends AbstractLoginPageController
 
 	//Added for UF-93
 	@Autowired
-	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;	@Autowired
+	private LastUserLoggedInCookieGenerator lastUserLoggedInCookieGenerator;
+	@Autowired
 	private CommonUtils commonUtils;
 	/**
 	 * @return the lastUserLoggedInCookieGenerator
@@ -224,16 +225,7 @@ public class LoginPageController extends AbstractLoginPageController
 
 			if (commonUtils.isLuxurySite())
 			{
-				if (loginError)
-				{
-					model.addAttribute(ModelAttributetConstants.MESSAGE, ModelAttributetConstants.EMAILORPASSINVALID);
-					return ControllerConstants.Views.Fragments.LuxuryHome.LoginFragment;
-				}
-				else
-				{
-					return ControllerConstants.Views.Fragments.LuxuryHome.RegisterFragment;
-				}
-
+				return "redirect:/?showPopup=true";
 			}
 			else
 			{

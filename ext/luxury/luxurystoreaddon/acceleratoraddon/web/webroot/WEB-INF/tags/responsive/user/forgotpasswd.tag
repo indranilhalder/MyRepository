@@ -24,7 +24,7 @@
 	</p>
 	<p class="mb-20">
 		<ycommerce:testId code="luxury_header_Signin_link">
-			 <a class="register_link header-login-target-link btn btn-default" href="/login?isSignInActive=N"  data-target-id="sign-up" role="button">
+			 <a class="register_link header-login-target-link btn btn-default" href="/luxurylogin/register?isSignInActive=N"  data-target-id="sign-up" role="button">
 			 	<spring:theme code="luxury.header.link.createaccount" />
 			 </a>
 		</ycommerce:testId>			

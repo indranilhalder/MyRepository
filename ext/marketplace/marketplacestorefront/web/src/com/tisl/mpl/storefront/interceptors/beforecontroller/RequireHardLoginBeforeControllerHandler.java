@@ -13,7 +13,10 @@
  */
 package com.tisl.mpl.storefront.interceptors.beforecontroller;
 
+import com.tisl.lux.facade.CommonUtils;
+import com.tisl.lux.facade.impl.CommonUtilsImpl;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
+import org.springframework.beans.factory.annotation.Autowired;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -47,12 +50,16 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 	public static final String SECURE_GUID_SESSION_KEY = "acceleratorSecureGUID";
 
 	private String loginUrl;
+	private String luxuryLoginUrl;
 	private String loginAndCheckoutUrl;
+	private String luxuryLoginAndCheckoutUrl;
 	private RedirectStrategy redirectStrategy;
 	private CookieGenerator cookieGenerator;
 	private UserService userService;
 	private SessionService sessionService;
 	private CartService cartService;
+	@Autowired
+	private CommonUtils commonUtils;
 
 	protected String getLoginUrl()
 	{
@@ -63,6 +70,28 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 	public void setLoginUrl(final String loginUrl)
 	{
 		this.loginUrl = loginUrl;
+	}
+
+	public String getLuxuryLoginAndCheckoutUrl()
+	{
+		return luxuryLoginAndCheckoutUrl;
+	}
+
+	@Required
+	public void setLuxuryLoginAndCheckoutUrl(final String luxuryLoginAndCheckoutUrl)
+	{
+		this.luxuryLoginAndCheckoutUrl = luxuryLoginAndCheckoutUrl;
+	}
+
+	protected String getLuxuryLoginUrl()
+	{
+		return luxuryLoginUrl;
+	}
+
+	@Required
+	public void setLuxuryLoginUrl(final String luxuryLoginUrl)
+	{
+		this.luxuryLoginUrl = luxuryLoginUrl;
 	}
 
 	protected RedirectStrategy getRedirectStrategy()
@@ -259,12 +288,15 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 	protected String getRedirectUrl(final HttpServletRequest request)
 	{
-		if (request != null && request.getServletPath().contains("checkout"))
-		{
-			return getLoginAndCheckoutUrl();
+		if(commonUtils.isLuxurySite() && request != null && !request.getServletPath().contains("checkout")){
+			return getLuxuryLoginUrl();
+		} else if (commonUtils.isLuxurySite() && request != null && request.getServletPath().contains("checkout")){
+			return getLuxuryLoginAndCheckoutUrl();
 		}
-		else
-		{
+
+		if (request != null && request.getServletPath().contains("checkout")) {
+			return getLoginAndCheckoutUrl();
+		} else {
 			return getLoginUrl();
 		}
 	}

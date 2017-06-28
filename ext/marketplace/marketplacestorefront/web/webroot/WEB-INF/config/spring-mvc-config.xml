@@ -78,6 +78,8 @@
 			<property name="userService" ref="userService" />
 			<property name="redirectStrategy" ref="redirectStrategy" />
 			<property name="loginUrl" value="/login" />
+			<property name="luxuryLoginUrl" value="/?showPopup=true" />
+			<property name="luxuryLoginAndCheckoutUrl" value="/cart?showPopup=true" />
 			<property name="loginAndCheckoutUrl" value="/checkout/multi/checkoutlogin/login" />
 			<property name="cookieGenerator" ref="guidCookieGenerator" />
 			<property name="sessionService" ref="sessionService" />

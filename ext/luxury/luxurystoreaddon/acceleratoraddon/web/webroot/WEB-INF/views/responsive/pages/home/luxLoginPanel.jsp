@@ -49,7 +49,7 @@
 			<li><div class="foot">
 				<spring:theme code="luxury.header.flyout.signup.member"/>
 				<ycommerce:testId code="luxury_header_Register_link">
-				<a class="register_link" href="<c:url value="/login?isSignInActive=N"/>"> 
+				<a class="register_link" href="<c:url value="/luxurylogin/register?isSignInActive=N"/>">
 				<spring:theme code="luxury.header.link.register" />
 				</a>
 				</ycommerce:testId>
