@@ -168,8 +168,16 @@
 													$(".removeColor${entryNumber} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
 													var name${status.index} = $(".name${entryNumber}${status.index}").text();
+													var storeName =  $(".displayName${entryNumber}${status.index}").text();
 													openPopForAdddPosToCartEntry('${poses.ussId}',name${status.index});
 													$(".radio_sel${entryNumber}${status.index}").addClass("colorChange");
+													if(typeof(utag)!='undefined')
+													{
+														utag.link({
+															link_text  : storeName+'store_seleted', 
+															event_type : storeName+'store_seleted'
+														});
+													}
 												});
 											});
 										</script>

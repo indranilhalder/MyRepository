@@ -664,8 +664,8 @@ ACC.singlePageCheckout = {
 		});
       if(typeof utag !="undefined")  {
 		utag.link({
-	        link_text: "proceed_pay_bottom_id2",
-	        event_type: "proceed_pay"
+	        link_text: "deliveryOptions_proceed_clicked",
+	        event_type: "proceed_button_clicked"
 	    })
       }
 	},
@@ -1375,16 +1375,28 @@ removeExchangeFromCart : function (){
 	
 	removeCartItem : function(element,clickFrom) {			
 		ACC.singlePageCheckout.showAjaxLoader();
+		var productId;
 			if(clickFrom=="removeItem")
 			{
 					var entryNumber1 = $(element).attr('id').split("_");
 					var entryNumber = entryNumber1[1];
-					var entryUssid = entryNumber1[2];			
+					var entryUssid = entryNumber1[2];
+					var divId = "entryItemReview"+entryNumber;
+					productId = $("#"+divId).find('#product').val();
 			}
 			if(clickFrom=="addItemToWl")
     		{
 				var entryNumber = $("#entryNo").val();
     		}
+			//tealium call for remove 
+    		if(typeof(utag)!='undefined')
+			{
+				utag.link({
+					link_text  : 'remove_from_review_order' , 
+					event_type : 'remove_from_review_order',
+					product_id :  productId
+				});
+			}
 			var url=ACC.config.encodedContextPath + "/checkout/single/removereviewcart";
 			var data="entryNumber="+entryNumber;
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
@@ -1668,7 +1680,9 @@ removeExchangeFromCart : function (){
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
-        
+		//tealium page name addition
+		$("#checkoutPageName").val("Payment Options");
+		  tealiumCallOnPageLoad();
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
@@ -1722,6 +1736,12 @@ removeExchangeFromCart : function (){
 		xhrValidateResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
+		if(typeof utag !="undefined")  {
+			utag.link({
+		        link_text: "reviewOrder_proceed_clicked",
+		        event_type: "proceed_button_clicked"
+		    })
+	      }
 	},
 	
 	getOrderTotalsTag:function()
