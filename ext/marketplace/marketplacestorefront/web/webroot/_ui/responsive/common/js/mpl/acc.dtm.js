@@ -544,3 +544,106 @@ function dtmSearchTags(){
 			}
 		}
 	})
+	
+	// TPR-6287 | filter tacking start
+	var restrictionFlag='false';
+	
+	$(document).on('click','.jqtree-title.jqtree_common',function(){
+		var filter_value= $(this).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['-]/g,"");
+		var filter_type=$(this).parents('form').siblings('div.facet-name.js-facet-name.facet_desktop').find('h3').text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/'/g,"");
+		if (typeof _satellite != "undefined") {
+			_satellite.track('filter_temp');
+	    }
+		if(typeof digitalData.filter != "undefined"){
+			if(typeof digitalData.filter.temp != "undefined"){
+				digitalData.filter.temp.type = filter_type;
+				digitalData.filter.temp.value = filter_value;
+			}
+			else{
+				digitalData.filter.temp = {
+					type : filter_type,
+					value : filter_value
+				}
+			}
+		}
+		else{
+			digitalData.filter = {
+				temp :  {
+					type : filter_type,
+					value : filter_value
+				}
+	     	}
+		}
+		restrictionFlag='true';
+	})
+	
+	
+	function setupSessionValuesDtm(){
+		if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
+			var filterTypeList=[];
+			var filterTypeFinalList=[];
+			var filterValueList=[];
+			var sessionPageUrl=window.location.href;
+			var finalFilterCombination='';
+			
+			$('.bottom-pagination .facet-list.filter-opt').children().each(function(){
+				var filterType = $(this).children().eq(0).attr('class').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+				filterTypeList.push(filterType);
+				var filterValue = $(this).children().eq(1).attr('value').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+				filterValueList.push(filterValue);
+				if(finalFilterCombination == ''){
+					finalFilterCombination = filterType +":"+ filterValue;
+				}
+				else{
+					finalFilterCombination = finalFilterCombination +"|"+ filterType +":"+ filterValue;
+				}
+			})
+			
+			$.each(filterTypeList, function(i, el){
+				if($.inArray(el, filterTypeFinalList) === -1){
+					filterTypeFinalList.push(el)
+				};
+			});
+			if(filterValueList.length > 0 && filterTypeList.length > 0){
+				if(typeof digitalData.filter != "undefined"){
+					if(typeof digitalData.filter.final != "undefined"){
+						digitalData.filter.final.type = filterTypeFinalList.toString();
+						digitalData.filter.final.value = filterValueList.toString();
+						digitalData.filter.final.combination = finalFilterCombination;
+					}
+					else{
+						digitalData.filter.final = {
+							type : filterTypeFinalList.toString(),
+							value : filterValueList.toString(),
+							combination : finalFilterCombination
+						}
+					}
+				}
+				else{
+					digitalData.filter = {
+						final :  {
+							type : filterTypeFinalList.toString(),
+							value : filterValueList.toString(),
+							combination : finalFilterCombination
+						}
+			     	}
+				}
+			}
+			
+			if (typeof _satellite != "undefined") {
+				_satellite.track('filter_final');
+		    }
+		}
+	}
+	
+	
+	$(window).unload(function(event) {
+		var pageType = $('#pageType').val();
+		if(pageType == 'category' || pageType == 'productsearch'){
+			if(restrictionFlag != 'true'){
+				setupSessionValuesDtm();
+			}
+		}
+	});
+	// TPR-6287 | filter tacking end
+	
