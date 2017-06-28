@@ -91,6 +91,11 @@ public interface BuyBoxDao
 	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
 	//for fine jewellery pdp
 	public ProductModel getProductDetailsByProductCode(final String productcode);
-
+	
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	String findPussid(String selectedUSSID);
 
 }

@@ -104,5 +104,11 @@ public interface BuyBoxService
 
 	//TISPRD-8944
 	List<BuyBoxModel> buyboxPriceMobile(String productCode) throws EtailNonBusinessExceptions;
-
+	
+	//CKD:TPR-3809
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	public String findPussid(String selectedUSSID);
 }

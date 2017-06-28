@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.GeneratedMarketplacecommerceservicesConstants.Enumerations.SellerAssociationStatusEnum;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -1268,6 +1269,32 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
+	}
+	
+	@Override
+	public String findPussid(final String productCocde)
+	{
+		String pussid = null;
+		try
+		{
+			final StringBuilder query = new StringBuilder();
+			query.append("SELECT {buyox." + BuyBoxModel.PK + "} ");
+			query.append("FROM {" + BuyBoxModel._TYPECODE + " AS buyox} ");
+			query.append("WHERE ({buyox." + BuyBoxModel.SELLERARTICLESKU + "}) = (?" + BuyBoxModel.SELLERARTICLESKU + ")");
+			final Map<String, Object> params = new HashMap<String, Object>();
+			params.put(BuyBoxModel.SELLERARTICLESKU, productCocde);
+			final List<BuyBoxModel> searchRes = flexibleSearchService.<BuyBoxModel> search(query.toString(), params).getResult();
+			if (CollectionUtils.isNotEmpty(searchRes))
+			{
+				pussid = searchRes.get(0).getPUSSID();
+			}
+		}
+		catch (final Exception ex)
+		{
+			log.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+		return pussid;
 	}
 
 }

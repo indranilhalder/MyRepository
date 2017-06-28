@@ -1329,4 +1329,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		return bBoxSellerIdFound;
 	}
+	
+	@Override
+	public String findPussid(final String selectedUSSID)
+	{
+		return buyBoxService.findPussid(selectedUSSID);
+	}
 }

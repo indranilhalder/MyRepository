@@ -169,7 +169,7 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	@Override
 	//CKD: TPR-3809
 	//public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode)
-	public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode,String prodCatType)
+	public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode, final String prodCatType)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		//CKD: TPR-3809
@@ -304,5 +304,10 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxDao.getProductDetailsByProductCode(productcode);
 	}
 
+	@Override
+	public String findPussid(final String selectedUSSID)
+	{
+		return buyBoxDao.findPussid(selectedUSSID);
+	}
 
 }

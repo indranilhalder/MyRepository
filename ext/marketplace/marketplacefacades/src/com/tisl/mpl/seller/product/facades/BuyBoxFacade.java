@@ -47,6 +47,13 @@ public interface BuyBoxFacade
 
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+	
+	//CKD:TPR-3809
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	public String findPussid(String selectedUSSID);
 
 
 }
