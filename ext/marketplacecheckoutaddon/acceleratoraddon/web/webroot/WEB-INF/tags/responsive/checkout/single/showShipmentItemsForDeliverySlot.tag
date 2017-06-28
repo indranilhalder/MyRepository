@@ -182,13 +182,13 @@
 							<c:choose>
 								<c:when test="${not empty entry.deliverySlotsTime}">
 									<div class="delslot">
-										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
+										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots"  varStatus="indexDateSlots">
 											<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
 											<div class="delslot_time">
-												<c:forEach items="${dateSlots.value}" var="timeSlots">
+												<c:forEach items="${dateSlots.value}" var="timeSlots" varStatus="indexTimeSlots">
 													<span class="delslot_timeslot">	
-														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this);">
-														<label class="delslot_radio" for="date${scheduleIndex}"></label>
+														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${indexDateSlots}${indexTimeSlots}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this);">
+														<label class="delslot_radio" for="date${scheduleIndex}${indexDateSlots}${indexTimeSlots}"></label>
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
 														<c:choose>
