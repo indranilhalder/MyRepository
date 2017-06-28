@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.PromotionalPriceRowModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.promotion.dao.UpdatePromotionalPriceDao;
 
@@ -122,10 +123,9 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	public MplConfigurationModel getCronDetails(final String code)
 	{
 		final String queryString = //
-		"SELECT {cm:" + MplConfigurationModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
-				+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
+				"SELECT {cm:" + MplConfigurationModel.PK + "} "//
+						+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
+						+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
@@ -138,16 +138,16 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	 * @param promoCode
 	 */
 	@Override
-	public List<PriceRowModel> fetchPromoPriceData(final String promoCode)
+	public List<PromotionalPriceRowModel> fetchPromoPriceData(final String promoCode)
 	{
-		List<PriceRowModel> priceRowList = null;
+		List<PromotionalPriceRowModel> priceRowList = null;
 		if (StringUtils.isNotEmpty(promoCode))
 		{
-			final String queryString = "SELECT {pk} FROM {PriceRow} WHERE  {promotionIdentifier} = ?promoCode";
+			final String queryString = "SELECT {pk} FROM {Promotionalpricerow} WHERE  {promotionIdentifier} = ?promoCode";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("promoCode", promoCode);
-			priceRowList = flexibleSearchService.<PriceRowModel> search(query).getResult();
+			priceRowList = flexibleSearchService.<PromotionalPriceRowModel> search(query).getResult();
 		}
 		return priceRowList;
 	}

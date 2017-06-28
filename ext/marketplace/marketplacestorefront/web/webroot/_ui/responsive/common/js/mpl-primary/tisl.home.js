@@ -487,6 +487,8 @@ function getBrandsYouLoveContentAjaxCall(id) {
                     /*$(".home-brands-you-love-carousel").css(
                         "margin-bottom", "120px");
                     $("#brandsYouLove").append(
+                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
+                    );
                         "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 200px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
                     );*/
                 },
@@ -609,6 +611,7 @@ function getBrandsYouLoveContentAjaxCall(id) {
                    /*$('#brandsYouLove .loaderDiv').remove();*/
                 },
                 error: function() {
+
                     /*$('#brandsYouLove .loaderDiv').remove();*/
                     /*$(".home-brands-you-love-carousel").css(
                         "margin-bottom", "33px");*/  /* UF-249 */
@@ -1407,7 +1410,7 @@ function getShowCaseAjaxCall() {
             data: dataString,
             success: function(response) {
                 //console.log(response.subComponents);
-            	//TPR-559 Show/Hide Components and Sub-components
+	        	//TPR-559 Show/Hide Components and Sub-components
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) { 
 	                defaultComponentId = "";
 	                renderHtml = "<h2>" + response.title + "</h2>" +
@@ -1433,11 +1436,11 @@ function getShowCaseAjaxCall() {
 	                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
 	            }  
 	            if($(".showcaseItem").length == 1){
-                	$(".showcaseItem").addClass("one_showcase");
-                }
-                if($(".showcaseItem").length == 2){
-                	$(".showcaseItem").addClass("two_showcase");
-                }
+	            	$(".showcaseItem").addClass("one_showcase");
+	            }
+	            if($(".showcaseItem").length == 2){
+	            	$(".showcaseItem").addClass("two_showcase");
+	            }
             },
             error: function() {
                 // globalErrorPopup('Failure!!!');
@@ -1463,8 +1466,9 @@ function getShowcaseContentAjaxCall(id) {
                     /*$(".showcase-switch").css("margin-bottom",
                         "80px");
                     $("#showcase").append(
-                        "<div class='loaderDiv' style='background: transparent;z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;display:inline-block;width:100px;height:100px;'><img src='"+staticHost+"/_ui/desktop/theme-blue/images/loading.gif' style='width:100%;'/></div>"
+                        "<div class='loaderDiv' style='z-index: 100000;position: absolute; top: 150px;left: 50%;margin-left: -50px;'><img src='"+staticHost+"/_ui/responsive/common/images/red_loader.gif'/></div>"
                     );*/
+
                 },
                 url: ACC.config.encodedContextPath +
                     "/getShowcaseContent",
@@ -2450,6 +2454,32 @@ $(document).ready(function()
 					});
 				}	
 			});
+
+		
+		//UF-162
+		$( document ).ready(function() {
+			var pageType = $('#pageType').val();
+			var isLux = $('#isLuxury').val();
+			if(pageType == "cart" && isLux == 'true') {
+				if ($('.luxury-footer').length > 0){ 
+					$(".luxury-footer .container > .row:first-child > div").hide(); 
+					$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide();
+				}
+			}
+			setTimeout(function() {
+				var pageType = $('#pageType').val();
+				var isLux = $('#isLuxury').val();
+				if(pageType == "cart" && isLux == 'true') {
+					if ($('.luxury-footer').length > 0){ 
+						$(".luxury-footer .container > .row:first-child > div").hide(); 
+						$(".luxury-footer .container .row div.footer-text, .luxury-footer .container .row div.footer-bottom-links").hide();
+					}
+				}
+			}, 5000);
+			
+		});
+		//UF-162 ends
+
 		/*Start TISSQAEE-325*/
 		$(document).ajaxComplete(function(){
 			paddingAdjust();
@@ -2551,4 +2581,4 @@ $(document).ready(function()
 			                }
 			            });
 			return showCaseMobile;
-			}		
+			}

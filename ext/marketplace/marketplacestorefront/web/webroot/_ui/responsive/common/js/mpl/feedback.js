@@ -1451,6 +1451,7 @@ $(document).ready(function(){
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
 	
 	/*$(".progtrckr .progress.processing").each(function(){
+
 		var len = $(this).children("span.dot").length;
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
@@ -1479,6 +1480,7 @@ $(document).ready(function(){
 			$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show(); //TISPRDT-1570
 		}
 	});	/*TPR-6013 Order History */
+
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
@@ -2644,7 +2646,7 @@ function sortByFilterResult(top){
 	
 	if($("input[name=customSku]").length > 0){
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2670,7 +2672,7 @@ function sortByFilterResult(top){
 			complete: function() {
 				// AJAX changes for custom price filter
 				$("#no-click").remove();
-				$(".spinner").remove();
+				$(".loaderDiv").remove();
 				
 			}
 		});
@@ -2691,7 +2693,7 @@ function viewByFilterResult(top){
 
 	if($("input[name=customSku]").length > 0){
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		$("body").append('<div class="loaderDiv"  style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2717,7 +2719,7 @@ function viewByFilterResult(top){
 			complete: function() {
 				// AJAX changes for custom price filter
 				$("#no-click").remove();
-				$(".spinner").remove();
+				$(".loaderDiv").remove();
 			}
 		});
 		
@@ -3581,9 +3583,12 @@ $(document).on("click","button[name='pinCodeButtonId']",function(){
 }); 
 
 $(document).ajaxComplete(function(){
+
+	//Modified for  UF-68 UF-69 UF-252
 	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	$("body.page-cartPage a[class='checkoutButton checkout button red']").attr("onclick","return checkServiceabilityRequired('typeCheckout',this);");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
-	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").attr("onclick","");
 	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
 	
 	/*TISSQAUATS-881*/
@@ -3610,6 +3615,15 @@ $("#sameAsShippingEmi").click(function(){
 		$(this).prev('h2').show();
 	}
 	});
+
+
+$("header .content nav > ul > li > ul > li").on("mouseover",function(){
+	$(this).parent().parent().find(".toggle").addClass("show_arrow");
+});
+$("header .content nav > ul > li > ul > li").on("mouseout",function(){
+	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
+});
+
 
 
 /*TISSQAEE-335*/
@@ -3645,7 +3659,8 @@ window.onload = function (){
 }
 
 function topLeftLocator(){
-var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 10;
+var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 20;	//TISSTRT-1611 fix
+
 $(".store-finder-legends").css("top",topLegend);
 var leftLegend = $(".store-finder-map.js-store-finder-map").outerWidth() + parseInt($(".store-finder-map.js-store-finder-map").parent(".js-store-finder").css("margin-left")) - $(".store-finder-legends").width() - parseInt($(".gmnoprint.gm-bundled-control").css("margin-right")) - 15;
 $(".store-finder-legends").css("left",leftLegend);
@@ -3724,6 +3739,13 @@ $(".deliveryTrack.status.suman").each(function(){
 	var index = $(this).index();
 	$(this).parents(".progtrckr.tabs").siblings(".nav").find("li").eq(index).addClass("greenProgress");
 
+
+
+
+
+
+
+
 	}
 	});
 	});
@@ -3739,3 +3761,25 @@ $(document).ready(function(){
 	}	
 });
 /*PRDI-402 end*/
+/* start change of PRDI-92 */
+$(document).ready(function() {
+    if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+        $(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+    }
+	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+	}
+});
+
+
+$(window).on("load resize click",function(){
+	setTimeout(function(){
+		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+			$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+		}
+		if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+			$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+		}
+	},500);
+});
+/* end change of PRDI-92 */

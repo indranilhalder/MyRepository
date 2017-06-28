@@ -95,10 +95,14 @@ AS
              stocklevels I,
              mplsellerinfo SI,
              products PR,
+             mplpromotionalpricerow pp1,
+             mplpromotionalpricerow pp2,
              mplpriorityleveldetails PLD
        WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
              AND P.p_sellerarticlesku = SI.p_sellerarticlesku
              AND PLD.p_ussid(+) = SI.p_sellerarticlesku
+             AND P.PK = pp1.p_pricerow(+)
+             AND P.PK = pp2.p_pricerow(+)
              AND P.p_product = PR.PK
 			 AND P.p_product<>v_pricefallbackpk
              AND P.p_catalogversion = v_catalogversion_buybox
@@ -107,6 +111,8 @@ AS
                   OR P.modifiedts > v_last_run_weightage
                   OR PLD.modifiedts > v_last_run_weightage
 				  --Changes for Delisting 27_02_17
+           OR pp1.modifiedts > v_last_run_weightage
+           OR pp2.modifiedts > v_last_run_weightage
 				   OR SI.P_DELISTDATE > v_last_run_weightage
 				  );
 				  
@@ -144,7 +150,12 @@ AS
                                 WHEN (specialprice = 0) THEN p_price
                                 ELSE specialprice
                              END)
-                               weightage_price
+                               weightage_price,
+                              (CASE
+                                WHEN (mobilespecialprice = 0) THEN p_price
+                                ELSE mobilespecialprice
+                             END)
+                               weightage_mobileprice
                        FROM (SELECT DISTINCT
                                     P.p_sellerarticlesku,
                                     PR.p_code,
@@ -152,16 +163,29 @@ AS
                                     (CASE
 
 
-                                        WHEN (v_prc_start_time_weightage BETWEEN
- P.p_promotionstartdate
+                                        WHEN ((pp1.p_promotionchannel is null OR pp1.p_promotionchannel='Web') AND  v_prc_start_time_weightage BETWEEN
+ pp1.p_promotionstartdate
                                                                              AND
- P.p_promotionenddate)
+ pp1.p_promotionenddate)
                                         THEN
-                                           p_specialprice
+                                           pp1.p_specialprice
                                         ELSE
                                            0
                                      END)
                                        specialprice,
+                                      (CASE
+
+
+                                        WHEN ((pp2.p_promotionchannel is null OR pp2.p_promotionchannel='Mobile') AND  v_prc_start_time_weightage BETWEEN
+ pp2.p_promotionstartdate
+                                                                             AND
+ pp2.p_promotionenddate)
+                                        THEN
+                                           pp2.p_specialprice
+                                        ELSE
+                                           0
+                                     END)
+                                       mobilespecialprice,
                                     P.p_promotionstartdate,
                                     P.p_promotionenddate,
                                     P.p_mrp,
@@ -182,11 +206,14 @@ AS
                                        AS maxVal,
 									   EV.sequencenumber AS status --Changes for Delisting 27_02_17
                                FROM pricerows P,
+                                    mplpromotionalpricerow pp1,
+                                    mplpromotionalpricerow pp2,
                                     stocklevels I,
                                     mplsellerinfo SI,
                                     products PR,
                                     mplpriorityleveldetails PLD,
 									enumerationvalues EV--Changes for Delisting 27_02_17
+                              
                               WHERE     P.p_sellerarticlesku =
                                            I.p_sellerarticlesku
 									AND P.p_product<>v_pricefallbackpk
@@ -194,6 +221,8 @@ AS
                                            SI.p_sellerarticlesku
                                     AND PLD.p_ussid(+) =
                                            SI.p_sellerarticlesku
+                                    AND P.PK = pp1.p_pricerow(+)
+                                    AND P.PK = pp2.p_pricerow(+)
                                     AND P.p_product = PR.PK
                                     AND P.p_catalogversion =
                                            v_catalogversion_buybox
@@ -205,7 +234,12 @@ AS
                                          OR P.modifiedts >
                                                v_last_run_weightage
                                          OR PLD.modifiedts >
-                                               v_last_run_weightage)) bb) S
+                                               v_last_run_weightage
+                                          OR pp1.modifiedts >
+                                               v_last_run_weightage
+                                           OR pp2.modifiedts >
+                                               v_last_run_weightage
+                                               )) bb) S
                  ON (B.p_sellerarticlesku = S.p_sellerarticlesku)
          WHEN MATCHED
          THEN
@@ -213,6 +247,7 @@ AS
 			   B.p_product = S.p_code,
                B.p_price = S.p_price,
                B.p_specialprice = NVL (specialprice, 0),
+               B.p_specialpricemobile = NVL(mobilespecialprice,0),
                B.p_mrp = S.p_mrp,
                B.p_available = S.p_available,
                B.p_sellername = S.p_sellername,
@@ -220,6 +255,7 @@ AS
                B.p_sellerenddate = S.P_enddate,
                B.modifiedts = v_prc_start_time_weightage,
                B.p_weightage = v_price_weightage * weightage_price + S.maxVal,
+               B.p_weightagemobile = v_price_weightage * weightage_mobileprice + S.maxVal,
 			   B.p_delisted = S.status --Changes for Delisting 27_02_17
          --+ v_inv_weightage * S.p_available
          WHEN NOT MATCHED
@@ -243,7 +279,10 @@ AS
                         B.createdts,
                         B.p_delisted,                     /* D-list changes */
                         B.aclts,
-                        B.propts)
+                        B.propts,
+                        B.p_specialpricemobile,
+                        B.p_weightagemobile
+                        )
                 VALUES ('0',
                         GETPK (v_itemtypecode_buybox, BUYBOX_SEQ.NEXTVAL),
                         S.p_sellerarticlesku,
@@ -264,31 +303,11 @@ AS
                         v_prc_start_time_weightage,
                         S.status,--Changes for Delisting 27_02_17
                         '0',
-                        '0');
+                        '0',
+                        NVL(mobilespecialprice,0),
+                        v_price_weightage * weightage_mobileprice + S.maxVal
+                        );
       END IF;
-
-
------- Start INC144314752 OOS issue 
-   UPDATE MplBuyBoxProcTable SET MplBuyBoxProcTable.modifiedts=v_prc_start_time_weightage,MplBuyBoxProcTable.p_oosmodifiedval=v_prc_start_time_weightage where pk in (
-   SELECT distinct
-          bbox1.pk as pk
-          from products p1, 
-          products p2,
-          MplBuyBoxProcTable bbox1,
-          MplBuyBoxProcTable bbox2,
-          stocklevels I
-          WHERE   
-          p1.p_colour=p2.p_colour 
-          and p1.p_baseproduct=p2.p_baseproduct 
-          and p1.p_code=bbox1.p_product
-          and p2.p_code=bbox2.p_product
-          and I.p_sellerarticlesku=bbox2.p_sellerarticlesku
-          and ((I.p_available>0 and bbox2.p_available<=0)
-          or (I.p_available<=0 and bbox2.p_available>0))
-          and I.modifiedts > v_last_run_weightage);
-    ------ INC144314752 OOS issue End 
-      --Update special price from pricerows if and only if promotion is active
-
 
 
       --Update special price specific weightage which has active promotions and no seller hierarchy applied
@@ -374,26 +393,34 @@ AS
              AND c.pk = CV.p_catalog
              AND CV.p_version = 'Online';
 
-      -- assign the count value into v_mergepromostdtcount variable
+     -- assign the count value into v_mergepromostdtcount variable
       SELECT COUNT (*)
         INTO v_mergepromostdtcount
-        FROM pricerows P, stocklevels I, mplpriorityleveldetails PLD
+        FROM pricerows P, stocklevels I, mplpriorityleveldetails PLD,
+        mplpromotionalpricerow pp1,mplpromotionalpricerow pp2
        WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
              AND P.p_catalogversion = v_catalogversion_buybox
+             AND P.PK = pp1.p_pricerow(+)
+             AND P.PK = pp2.p_pricerow(+)
              AND PLD.p_ussid(+) = I.p_sellerarticlesku
-             AND P.p_promotionstartdate BETWEEN v_last_run_price_update
-                                            AND v_prc_start_time_price_update;
+			 AND ((pp1.p_promotionstartdate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update)
+             OR (pp2.p_promotionstartdate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update))
+             ;
 
 
       -- assign the count value into v_mergepromoenddtcount variable
       SELECT COUNT (*)
         INTO v_mergepromoenddtcount
-        FROM pricerows P, stocklevels I, mplpriorityleveldetails PLD
+        FROM pricerows P, stocklevels I, mplpriorityleveldetails PLD,
+        mplpromotionalpricerow pp1,mplpromotionalpricerow pp2
        WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
              AND P.p_catalogversion = v_catalogversion_buybox
+             AND P.PK = pp1.p_pricerow(+)
+             AND P.PK = pp2.p_pricerow(+)
              AND PLD.p_ussid(+) = I.p_sellerarticlesku
-             AND P.p_promotionenddate BETWEEN v_last_run_price_update
-                                          AND v_prc_start_time_price_update;
+             AND ((pp1.p_promotionenddate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update)
+             OR (pp2.p_promotionenddate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update))
+             ;
 
       --Joins Price,p_available,Delta tables and merge the result data into buybox table based promo start time
 
@@ -402,8 +429,23 @@ AS
          MERGE INTO MplBuyBoxProcTable B
               USING (SELECT P.p_sellerarticlesku,
                             P.p_product,
-                            P.p_specialprice,
-                            I.p_available,
+                                (CASE
+                                     WHEN ((pp1.p_promotionchannel is null OR pp1.p_promotionchannel='Web'))
+                                       THEN
+                                          pp1.p_specialprice
+                                        ELSE
+                                          0
+                                   END)
+                                   specialprice,
+                                   (CASE
+                                     WHEN ((pp2.p_promotionchannel is null OR pp2.p_promotionchannel='Mobile'))
+                                       THEN
+                                          pp1.p_specialprice
+                                        ELSE
+                                          0
+                                   END)
+                                   mobilespecialprice,
+                                  I.p_available,
                               NVL (GREATEST (PLD.P_L1PRIORITY,
                                              PLD.P_L2PRIORITY,
                                              PLD.P_L3PRIORITY,
@@ -414,21 +456,28 @@ AS
                                AS maxVal
                        FROM pricerows P,
                             stocklevels I,
-                            mplpriorityleveldetails PLD
+                            mplpriorityleveldetails PLD,
+                            mplpromotionalpricerow pp1,
+                            mplpromotionalpricerow pp2
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
                             AND PLD.p_ussid(+) = I.p_sellerarticlesku
-                            AND P.p_promotionstartdate BETWEEN v_last_run_price_update
-                            AND v_prc_start_time_price_update)
+                            AND P.PK = pp1.p_pricerow(+)
+                            AND P.PK = pp2.p_pricerow(+)
+                            AND ((pp1.p_promotionstartdate BETWEEN v_last_run_price_update
+                            AND v_prc_start_time_price_update) OR (pp2.p_promotionstartdate BETWEEN v_last_run_price_update
+                            AND v_prc_start_time_price_update)))
                     S
                  ON (B.p_sellerarticlesku = S.p_sellerarticlesku)
          WHEN MATCHED
          THEN
             UPDATE SET
-               B.p_specialprice = NVL (S.p_specialprice, 0),
+               B.p_specialprice = NVL (S.specialprice, 0),
+               B.p_specialpricemobile = NVL(S.mobilespecialprice,0),
                B.p_available = S.p_available,
                B.modifiedts = v_prc_start_time_price_update,
-               B.p_weightage = v_price_weightage * S.p_specialprice + S.maxVal;
+               B.p_weightagemobile = v_price_weightage * S.mobilespecialprice + S.maxVal,
+               B.p_weightage = v_price_weightage * S.specialprice + S.maxVal;
       END IF;
 
       --Joins Price,p_available,Delta tables and merge the result data into buybox table based promo end time
@@ -449,21 +498,28 @@ AS
                                AS maxVal
                        FROM pricerows P,
                             stocklevels I,
-                            mplpriorityleveldetails PLD
+                            mplpriorityleveldetails PLD,
+							mplpromotionalpricerow pp1,
+                            mplpromotionalpricerow pp2
                       WHERE     P.p_sellerarticlesku = I.p_sellerarticlesku
                             AND P.p_catalogversion = v_catalogversion_buybox
                             AND PLD.p_ussid(+) = I.p_sellerarticlesku
-                            AND P.p_promotionenddate BETWEEN v_last_run_price_update
-                            AND v_prc_start_time_price_update)
+							AND P.PK = pp1.p_pricerow(+)
+                            AND P.PK = pp2.p_pricerow(+)
+                            AND (pp1.p_promotionenddate BETWEEN v_last_run_price_update
+                            AND v_prc_start_time_price_update) OR (pp2.p_promotionenddate BETWEEN v_last_run_price_update
+                            AND v_prc_start_time_price_update))
                     S
                  ON (B.p_sellerarticlesku = S.p_sellerarticlesku)
          WHEN MATCHED
          THEN
             UPDATE SET
                B.p_specialprice = 0,
+			   B.p_specialpricemobile = 0,
                B.p_price = S.p_price,
                B.p_available = S.p_available,
                B.modifiedts = v_prc_start_time_price_update,
+			   B.p_weightagemobile = v_price_weightage * S.p_price + S.maxVal,
                B.p_weightage = v_price_weightage * S.p_price + S.maxVal;
       END IF;
 

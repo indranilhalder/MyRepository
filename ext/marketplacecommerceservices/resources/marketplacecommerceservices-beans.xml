@@ -271,7 +271,7 @@
 		<!-- Added new ServiceableSlavesData   -->
 		<property name="serviceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ServiceableSlavesData>" />
 		<property name="cncServiceableSlaves" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CNCServiceableSlavesData>" />
-		
+
 	</bean>
 	<!--END: Added for Cart Soft Reservation -->
 	
@@ -489,6 +489,8 @@
 		<property name="isCancellationMissed" type="boolean"/>
 		
 		<property name="eddDateBetWeen" type="String"/>
+		<!-- TPR-5346 -->
+		<property name="maxCountReached" type="boolean"/>
 	</bean>
 	<!-- Attribute to handle the order cancel status for My Account ends -->
 	
@@ -626,6 +628,7 @@
     	<property name="deliveryCost" type="de.hybris.platform.commercefacades.product.data.PriceData" />
     	<property name="voucherDiscount" type="com.tisl.mpl.data.VoucherDiscountData" />
     	<property name="promoExpiryMsg" type="String" />		<!-- TPR-629 -->
+    	<property name="totalDiscntIncMrp" type="de.hybris.platform.commercefacades.product.data.PriceData" />		<!-- UF-260 -->
     </bean> 
 	
 	<!-- Data class for Payment Specific Promotions Ends-->

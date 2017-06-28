@@ -60,8 +60,8 @@
     					{
     						if($("#CreditCard").val()=="true")
         					{	
+    							displayCreditCardForm();
     							if($(window).width()>=768){
-        						displayCreditCardForm();
         						$("#viewPaymentCredit, #viewPaymentCreditMobile").parent("li").addClass("active");
     							}
         						$(".checkout-paymentmethod").css("display","block");
@@ -69,8 +69,8 @@
         					}
         					else if($("#DebitCard").val()=="true")
         					{
-        						if($(window).width()>=768){
         						displayDebitCardForm();
+        						if($(window).width()>=768){
         						$("#viewPaymentDebit, #viewPaymentDebitMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -78,8 +78,8 @@
         					}
         					else if($("#EMI").val()=="true")
         					{
-        						if($(window).width()>=768){
         						displayEMIForm();
+        						if($(window).width()>=768){
         						$("#viewPaymentEMI, #viewPaymentEMIMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -87,8 +87,8 @@
         					}
         					else if($("#Netbanking").val()=="true")
         					{
-        						if($(window).width()>=768){
         						displayNetbankingForm();
+        						if($(window).width()>=768){
         						$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -96,8 +96,8 @@
         					}
         					else if($("#COD").val()=="true")
         					{
-        						if($(window).width()>=768){
         						displayCODForm();
+        						if($(window).width()>=768){
         						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -106,8 +106,8 @@
     						
         					else if($("#TW").val()=="true")
         					{
-        						if($(window).width()>=768){
         						displayThrdPrtyWlt();
+        						if($(window).width()>=768){
         						$("#viewPaymentMRupee, #viewPaymentMRupeeMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");

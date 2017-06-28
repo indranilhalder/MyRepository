@@ -8,6 +8,7 @@ var filterValue = "";
 var filterName = "";
 var filterChecked = "";
 var countBrand=1;
+var countCustomPrice=0;	//TISPRDT-1645
 
 
 ACC.refinements = {
@@ -111,7 +112,7 @@ ACC.refinements = {
 		$(document).on("change",".js-product-facet .facet_desktop .js-facet-checkbox",function(){
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 			
 			var dataString = null;
 			var nonEmptyDataString= null;
@@ -262,7 +263,7 @@ ACC.refinements = {
 		$(document).on("click",".js-product-facet .facet_desktop .js-facet-colourbutton , .js-product-facet .facet_desktop .js-facet-sizebutton",function(){
 			
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 			
 			var dataString = null;
 			var nonEmptyDataString= null;
@@ -384,7 +385,7 @@ ACC.refinements = {
 		// AJAX for removal of filters
 		$(document).on("click",".facet-list.filter-opt .remove_filter , .any_price",function(e){
 			$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+			$("body").append('<div class="loaderDiv"  style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 			
 			// generating postAjaxURL
 			var pageURL = $(this).parent().attr('href');
@@ -502,7 +503,14 @@ ACC.refinements = {
 		$(document).on("click",".filter-apply",function(e){
 			// TPR-1507
 			var filterCount=0;
+			var url= window.location.href;	//INC144316162
 			$(".facet_mobile .facet.js-facet").each(function(){
+				//INC144316162 fix start
+				if (url.indexOf("isFacet") >= 0)
+				{
+					filterCount++;
+				}
+				//INC144316162 fix ends
 				filterCount+=$(this).find(".facet-list.js-facet-list li").find("input[type=checkbox]:checked").length;
 				filterCount+=$(".facet_mobile .filter-colour.selected-colour").length;
 				//TISQAUATS-12 starts 
@@ -521,7 +529,7 @@ ACC.refinements = {
 			// TPR-1507 Ends
 			else{
 				$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-				$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+				$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 				// generating postAjaxURL
 				var browserURL = window.location.href.split('?');
 				var dataString = null;
@@ -529,6 +537,12 @@ ACC.refinements = {
 				
 				//TISQAUATS-27 starts 
 				if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+					//TISPRDT-1645 starts
+					if(countCustomPrice==0){
+						countCustomPrice=1;
+						$("#applyCustomPriceFilterMob").click();
+					}
+					//TISPRDT-1645 ends
 					var minPriceSearchTxt = $('#customMinPriceMob').val();
 					var maxPriceSearchTxt = $('#customMaxPriceMob').val();
 					var price = "₹" + minPriceSearchTxt + "-" + "₹" + maxPriceSearchTxt;
@@ -648,7 +662,7 @@ ACC.refinements = {
 			else{*/
 			//TISQAUATS-12 ends 
 				$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-				$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+				$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 
 				var browserURL = window.location.href;
 				var pageURL;
@@ -813,6 +827,37 @@ ACC.refinements = {
 		//$(document).on("click","#applyCustomPriceFilter",function(e){
 		$(document).on("click","#applyCustomPriceFilterMob",function(e){
 		//TISQAUATS-27 ends
+			//TISPRDT-1645 starts
+			var currentQryParam = $('.currentPriceQueryParams').val();
+			//alert("CQP :"+currentQryParam);
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			dummyForm = $(this).parents("form");
+			if(updatedsearchQuery=='' && filterMobileQuery!=''){
+				
+				updatedsearchQuery=filterMobileQuery;
+			}else if(filterMobileQuery=='' && updatedsearchQuery==''){
+				updatedsearchQuery=currentQryParam;
+			}
+			else{
+				var ownVal = $(this).parents("form").find('input[name="facetValue"]').val();
+				var ownIdentifier = $(this).parents("li").attr('class').replace(/^(\S*).*/, '$1').replace('filter-',"");
+				var newFilter = ':' + ownIdentifier + ':' + ownVal;
+				if(updatedsearchQuery.indexOf(newFilter) > -1)
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}
+			}
+			if (countCustomPrice==1){
+				return false;
+			}
+			//alert("USQ :"+updatedsearchQuery);
+			countCustomPrice=0;
+			//dummyForm = $(this).parents("form");
+			//TISPRDT-1645 ends
+			
 			// generating postAjaxURL
 			$(".filter-apply").click();
 		});
@@ -892,7 +937,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			}
 			
 			$("#no-click").remove();
-			$(".spinner").remove();
+			$(".loaderDiv").remove();
 			//UF-15
 			if ($(".facet-list.filter-opt").children().length){
 				$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068

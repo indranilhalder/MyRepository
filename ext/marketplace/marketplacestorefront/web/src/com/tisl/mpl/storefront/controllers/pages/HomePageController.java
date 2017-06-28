@@ -88,9 +88,11 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
+import com.tisl.mpl.facades.data.STWJsonRecomendationData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -154,6 +156,26 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
+
+	@Resource(name = "STWFacade")
+	private STWWidgetFacade stwWidgetFacade;
+
+	/**
+	 * @return the stwWidgetFacade
+	 */
+	public STWWidgetFacade getStwWidgetFacade()
+	{
+		return stwWidgetFacade;
+	}
+
+	/**
+	 * @param stwWidgetFacade
+	 *           the stwWidgetFacade to set
+	 */
+	public void setStwWidgetFacade(final STWWidgetFacade stwWidgetFacade)
+	{
+		this.stwWidgetFacade = stwWidgetFacade;
+	}
 
 	@Resource(name = "mplCmsFacade")
 	private MplCmsFacade mplCmsFacade;
@@ -1665,4 +1687,29 @@ public class HomePageController extends AbstractPageController
 		return request.getRemoteAddr();
 	}
 
+	/**
+	 * UF-258 This is a Sales Traffic Widget with upstream data from the Dew Server
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
+	public JSONObject getStwWidgetDada(final HttpServletRequest request)
+	{
+		final JSONObject STWJObject = new JSONObject();
+		final String stwUse = configurationService.getConfiguration().getString("stw.use");
+		if (stwUse.equalsIgnoreCase("Y"))
+		{
+			final Map<String, String[]> stwRequest = request.getParameterMap();
+			final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData(stwRequest);
+			final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
+			final String stwWidgetHeading = configurationService.getConfiguration().getString("stw.heading");
+			final String stwWidgetBlpHeading = configurationService.getConfiguration().getString("stw.blpheading");
+			STWJObject.put("STWBlpHeading", stwWidgetBlpHeading);
+			STWJObject.put("STWHeading", stwWidgetHeading);
+			STWJObject.put("STWElements", stwRecData);
+			STWJObject.put("STWCategories", stwCategories);
+			STWJObject.put("visiterIP", getVisitorIpAddress(request));
+		}
+		return STWJObject;
+	}
 }

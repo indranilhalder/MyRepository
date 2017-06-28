@@ -187,11 +187,11 @@ $(document).ready(function(){
 						$(".mandetoryFieldMissing p").text("Sorry we are unable to connect to the service. Please try again later");
 					}
 					$("#validateOTPBtn").removeAttr("disabled");
-					$("#validateOTPBtn").parent().find("#spinner").remove();
+					$("#validateOTPBtn").parent().find(".loaderDiv").remove();
 				},
 				beforeSend:function(){
 					$("#validateOTPBtn").attr("disabled","disabled");
-					$("#validateOTPBtn").parent().append("<img style='position: absolute; left: 29%;' id='spinner' src='" + ACC.config.commonResourcePath + "/images/spinner.gif' />");
+					$("#validateOTPBtn").parent().append("<div class='loaderDiv' style='position: absolute; left: 40%;top:40%;'><img id='spinner' src='" + ACC.config.commonResourcePath + "/images/red_loader.gif' /></div>");
 				},
 				fail:function(fail){
 					alert("Sorry we are unable to connect to Click 2 Call service. Please try again later.");

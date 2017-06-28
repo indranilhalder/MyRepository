@@ -163,13 +163,14 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 
 	protected StockLevelStatus getBuyBoxStockLevelStatus(final String productCode, final String productType)
 	{
-		//final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
-		final int stockValue = buyBoxService.getBuyboxPricesForSearch(productCode).get(0).getAvailable().intValue();
+		//INC144317659
+		final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
+		//final int stockValue = buyBoxService.getBuyboxPricesForSearch(productCode).get(0).getAvailable().intValue();
 
 
 		StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
 
-		if (stockValue > 0)
+		if (availableStock > 0)
 		{
 			stockLevelStatus = StockLevelStatus.INSTOCK;
 		}

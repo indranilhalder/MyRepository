@@ -224,6 +224,10 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT = "oms.inventory.softreserv.read.timeout";
 	public static final String OMS_SEND_ORDER_CON_TIMEOUT = "oms.send.order.connection.timeout";
 	public static final String OMS_SEND_ORDER_READ_TIMEOUT = "oms.send.order.read.timeout";
+	//CAR 295
+	public static final String CRM_SEND_ORDER_CON_TIMEOUT = "crm.send.order.connection.timeout";
+	public static final String CRM_SEND_ORDER_READ_TIMEOUT = "crm.send.order.read.timeout";
+
 	public static final String OMS_HTTP_ERROR_CODE = "oms.http.error.code";
 	public static final String DELIVERY_DATE_FORMATTER = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 

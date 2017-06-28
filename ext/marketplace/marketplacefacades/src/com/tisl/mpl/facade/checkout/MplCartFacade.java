@@ -165,8 +165,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return CartModel
 	 * @throws CommerceCartModificationException
 	 */
-	CartModel createCart(final String emailId, final String baseSiteId) throws InvalidCartException,
-			CommerceCartModificationException;
+	CartModel createCart(final String emailId, final String baseSiteId)
+			throws InvalidCartException, CommerceCartModificationException;
 
 	/**
 	 * Method for adding item to cart for Mobile service
@@ -276,7 +276,7 @@ public interface MplCartFacade extends CartFacade
 
 	boolean addCartCodEligible(final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeMap,
 			final List<PinCodeResponseData> pincodeResponseData, CartModel cartModel, CartData cartData)
-			throws EtailNonBusinessExceptions;
+					throws EtailNonBusinessExceptions;
 
 	/*
 	 * @Desc checking max added quantity with store configuration
@@ -325,7 +325,7 @@ public interface MplCartFacade extends CartFacade
 
 	public boolean isInventoryReservedMobile(final String requestType, final AbstractOrderModel abstractOrderModel,
 			final String defaultPinCodeId, final InventoryReservListRequestWsDTO item, SalesApplication salesApplication)
-			throws EtailNonBusinessExceptions;
+					throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -417,8 +417,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return boolean
 	 * @throws EtailNonBusinessExceptions
 	 */
-	boolean isCartEntryDelistedMobile(final CartModel cartModel) throws CommerceCartModificationException,
-			EtailNonBusinessExceptions;
+	boolean isCartEntryDelistedMobile(final CartModel cartModel)
+			throws CommerceCartModificationException, EtailNonBusinessExceptions;
 
 
 	CartModel getCalculatedCart(CartModel cart) throws CommerceCartModificationException, EtailNonBusinessExceptions;
@@ -556,5 +556,42 @@ public interface MplCartFacade extends CartFacade
 	 * @return
 	 */
 	public void mergeCarts(CartModel sourceCartModel, CartModel targetCartModel);
+
+	/**
+	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	boolean checkPincodeRestrictedPromoOnCartProduct(CartModel cart);
+
+	//TPR-5346 STARTS
+	/**
+	 * @param code
+	 * @param qty
+	 * @param stock
+	 * @param ussid
+	 * @return String
+	 */
+	public String isMaxProductQuantityAlreadyAdded(Integer maxCount, String code, long qty, long stock, String ussid,
+			long checkMaxLimList);
+
+	/**
+	 * @param code
+	 * @return long
+	 */
+	long checkMaxLimit(String code, CartModel cartModel);
+
+	boolean checkMaxLimitUpdate(long entryNumber, long quantityToBeUpdated);
+
+	boolean checkMaxLimitCheckout(CartModel serviceCart);
+
+	/**
+	 * @param cartModel
+	 * @return boolean
+	 */
+	//boolean UpdateCartOnMaxLimExceeds(CartModel cartModel);
+	Map<String, String> updateCartOnMaxLimExceeds(CartModel cartModel);
+	//TPR-5346 ENDS
 
 }

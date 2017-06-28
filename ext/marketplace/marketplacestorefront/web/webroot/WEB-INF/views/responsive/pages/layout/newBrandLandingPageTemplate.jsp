@@ -127,11 +127,9 @@
 			</div>
 	</div>
 	
-	<%-- <div class="shop_for_blp">
-		<cms:pageSlot position="Section3A" var="feature">
-				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
-			</cms:pageSlot>
-	</div> --%>
+	
+	
+<div id="stw_widget_blp"></div>
 	
 	<div class="shop_for_blp">
 		<cms:pageSlot position="ShopForHeading" var="feature">
@@ -153,6 +151,7 @@
 				<cms:component component="${feature}" element="div" class="shop_for_component_blp"/>
 		</cms:pageSlot>
 	</div>
+
 	
 	<div id="productGrid" class="listing wrapper"> <!-- Added for TPR-198 -->
 			<!-- <div class="left-block"> -->

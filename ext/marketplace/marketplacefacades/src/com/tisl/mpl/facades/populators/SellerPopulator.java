@@ -164,6 +164,7 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
 			EtailNonBusinessExceptions
 	{
+
 		/**
 		 * TPR-5712: OIS change to handle delisted products
 		 */
@@ -178,8 +179,15 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 			final List<SellerInformationData> sellerDataList = new ArrayList<SellerInformationData>();
 			for (final SellerInformationModel sellerInformationModel : sellerList)
 			{
-				if ((sellerInformationModel.getSellerAssociationStatus() == null || sellerInformationModel
-						.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+				final SellerAssociationStatusEnum enumData = sellerInformationModel.getSellerAssociationStatus(); //CAR-283
+
+				//				if ((sellerInformationModel.getSellerAssociationStatus() == null || sellerInformationModel
+				//						.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+				//						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
+				//								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate())))
+
+				// If condition modified for CAR-283
+				if ((null == enumData || enumData.equals(SellerAssociationStatusEnum.YES))
 						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
 								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate())))
 				{
@@ -192,8 +200,13 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
 								sellerInformationModel.getSellerArticleSKU()));
 
-						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
-								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+						final PaymentModesEnum paymentEnum = rm.getPaymentModes();
+
+						//						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
+						//								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+
+						if ((null != paymentEnum && paymentEnum.equals(PaymentModesEnum.BOTH) || (null != paymentEnum && paymentEnum
+								.equals(PaymentModesEnum.COD))))
 						{
 							sellerData.setIsCod(MarketplaceFacadesConstants.Y);
 						}

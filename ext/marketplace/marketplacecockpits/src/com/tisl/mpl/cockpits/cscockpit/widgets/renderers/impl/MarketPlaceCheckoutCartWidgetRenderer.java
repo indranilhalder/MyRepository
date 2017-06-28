@@ -534,10 +534,9 @@ public class MarketPlaceCheckoutCartWidgetRenderer extends
 						append( ")").
 						append( " - ").
 						append( currencyInstance.format(deliveryEntry
-								.getValue())).
+								.getValue()*cartEntryModel.getQuantity())).// *cartEntryModel.getQuantity() added for PRDI-379
 						append( "  ").
-						append(mplFindDeliveryCostStrategy.getDeliveryModeDesc(deliveryEntry, cartEntryModel.getSelectedUSSID()) );
-						
+						append(mplFindDeliveryCostStrategy.getDeliveryModeDesc(deliveryEntry, cartEntryModel.getSelectedUSSID()) );						
 						Listitem deliveryModeItem = new Listitem(
 								sb.toString(),
 								getCockpitTypeService().wrapItem(deliveryEntry));

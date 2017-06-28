@@ -816,6 +816,10 @@ public final class ModelAttributetConstants
 	//LW-230
 	public static final String IS_LUXURY = "isLuxury";
 
+
+	//UF-160
+	public static final String IS_LARGE_APPLIANCE = "isLargeAppliance";
+
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
 	public static final String STRINGMEAASGE = "stringMessage";
@@ -863,5 +867,7 @@ public final class ModelAttributetConstants
 	public static final String DESCRIPTION_TEXT3 = " and get 100% genuine products.";
 	public static final String TITLE_TEXT1 = " | Buy ";
 	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
+	public static final String ICID = "icid";
+	public static final String SHARE = "share";
 
 }

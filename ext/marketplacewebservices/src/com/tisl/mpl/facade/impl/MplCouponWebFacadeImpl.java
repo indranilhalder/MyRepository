@@ -241,58 +241,64 @@ public class MplCouponWebFacadeImpl implements MplCouponWebFacade
 			JaloSecurityException, JaloPriceFactoryException, EtailBusinessExceptions
 	{
 		ReleaseCouponsDTO releaseCouponsDTO = new ReleaseCouponsDTO();
-		Map<String, Double> paymentInfo = null;
+		//final Map<String, Double> paymentInfo = null;
+		final boolean redeem = false;
+		VoucherDiscountData data = new VoucherDiscountData();
 		try
 		{
 			//Release coupon for cartModel
-			if (null == orderModel)
+			if (null != cartModel)
 			{
 
 				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
-				if (cartModel != null && StringUtils.isNotEmpty(paymentMode))
-				{
-					//Release the coupon
-					mplCouponFacade.releaseVoucher(couponCode, cartModel, null);
 
-					//Recalculate cart after releasing coupon
-					mplCouponFacade.recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
+				//Release the coupon
+				mplCouponFacade.releaseVoucher(couponCode, cartModel, null);
 
-					//Update paymentInfo from model
-					paymentInfo = new HashMap<String, Double>();
-					paymentInfo.put(paymentMode, Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue()));
-					mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
-					releaseCouponsDTO
-							.setTotal(String.valueOf(mplCheckoutFacade.createPrice(cartModel, cartModel.getTotalPriceWithConv())
-									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
-				}
-				else
+				//Recalculate cart after releasing coupon
+				mplCouponFacade.recalculateCartForCoupon(cartModel, null); //Handled changed method signature for TPR-629
+
+				data = mplCouponFacade.calculateValues(null, cartModel, true, redeem);
+
+				//Update paymentInfo from model
+				//paymentInfo = new HashMap<String, Double>();
+				//paymentInfo.put(paymentMode, Double.valueOf(cartModel.getTotalPriceWithConv().doubleValue()));
+				//mplCouponFacade.updatePaymentInfoSession(paymentInfo, cartModel);
+				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
 				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
+					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
 				}
+
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 			}
 			//Release coupon for orderModel
-			else
+			else if (null != orderModel)
 			{
 
 				LOG.debug("Step 1:::The coupon code to be released by the customer is ::: " + couponCode);
-
 				//Release the coupon
 				mplCouponFacade.releaseVoucher(couponCode, null, orderModel);
 
 				//Recalculate cart after releasing coupon
 				mplCouponFacade.recalculateCartForCoupon(null, orderModel); //Handled changed method signature for TPR-629
 
+				data = mplCouponFacade.calculateValues(orderModel, null, true, redeem);
+
 				//Update paymentInfo in
-				paymentInfo = new HashMap<String, Double>();
-				paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
+				//paymentInfo = new HashMap<String, Double>();
+				//paymentInfo.put(paymentMode, Double.valueOf(orderModel.getTotalPriceWithConv().doubleValue()));
 
-				mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
-
-				releaseCouponsDTO.setTotal(String.valueOf(mplCheckoutFacade
-						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				//mplCouponFacade.updatePaymentInfoSession(paymentInfo, orderModel);
+				if (null != data.getTotalPrice() && null != data.getTotalPrice().getValue())
+				{
+					releaseCouponsDTO.setTotal(String.valueOf(data.getTotalPrice().getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				}
 				releaseCouponsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
 
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9508);
 			}
 		}
 		catch (final VoucherOperationException e)
