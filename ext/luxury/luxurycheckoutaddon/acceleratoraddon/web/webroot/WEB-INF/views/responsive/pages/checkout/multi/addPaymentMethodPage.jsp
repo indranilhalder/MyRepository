@@ -320,7 +320,7 @@
 											</form>
 											<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
 											</li>
-											<li>	
+											<li style="text-align: right;">	
 		
 				<!-- Terms & Conditions Link -->
 					<div id="cvvErrorSavedCard2" class="card_cvvErrorSavedCard_popup error-message" style="display : none;">
@@ -539,7 +539,8 @@
 			            			</form>
 			            			<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
 		            			</li>
-		            		<li>
+		            			
+		            		<li style="text-align: right;">
 				<!-- Terms & Conditions Link -->
 				              
 				            		<div class="pay newCardPaymentCC">
@@ -658,7 +659,7 @@
 											<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
 											</li>
 											
-											<li>	
+											<li style="text-align: right">	
 		
 											<!-- Terms & Conditions Link -->
 											<!-- Adding here the cvv error message -->
@@ -791,7 +792,7 @@
 			            			</form>
 			            			<!-- <p class="redirect">You will be re-directed to secure payment gateway</p> -->
 		            			</li>
-		            		<li>
+		            		<li style="text-align: right">
 									<!-- Terms & Conditions Link -->
 			            		<div class="pay newCardPayment">
 									
