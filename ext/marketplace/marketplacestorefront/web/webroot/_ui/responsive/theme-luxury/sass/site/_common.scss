@@ -619,12 +619,14 @@ video::-webkit-media-controls {
 }
 
 /*Modal popup*/
-.modal {
+
+/*signin and signup section*/
+.signin-box.modal {
   text-align: center;
   padding: 0!important;
 }
 
-.modal:before {
+.signin-box.modal:before {
   content: '';
   display: inline-block;
   height: 100%;
@@ -632,16 +634,8 @@ video::-webkit-media-controls {
   margin-right: -4px;
 }
 
-.modal-dialog {
+.signin-box .modal-dialog {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
-}
-
-#manageMyList.modal:before, #removeProductConfirmation.modal:before, #createNewList.modal:before, #redirectsToPDP.modal:before, #deleteConfirmation.modal:before{
-  content:none;
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-  margin-right: -4px;
 }

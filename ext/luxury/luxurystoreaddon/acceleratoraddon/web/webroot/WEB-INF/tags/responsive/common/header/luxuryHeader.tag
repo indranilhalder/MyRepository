@@ -196,7 +196,7 @@
 		<cms:component component="${component}" />
 	</cms:pageSlot>
 	
-	<div class="modal fade text-center" id="mypopUpModal" >
+	<div class="modal fade text-center signin-box" id="mypopUpModal" >
   						 <div class="modal-dialog">
   							<div class="modal-content">
   							<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
