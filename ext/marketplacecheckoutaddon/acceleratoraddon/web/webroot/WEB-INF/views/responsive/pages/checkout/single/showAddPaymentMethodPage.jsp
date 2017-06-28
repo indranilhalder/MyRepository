@@ -373,7 +373,7 @@
 																</c:choose>
 																<input type="radio" data-id="savedCCard"
 																	name="creditCards" class="card_token creditCardsRadio"
-																	id="cc${status.index}" value="${map.value.cardToken}" onclick="" />
+																	id="cc${status.index}" value="${map.value.cardToken}" onclick="ACC.singlePageCheckout.onPaymentModeSelection('Credit Card','savedCard','cc${status.index}','false');" />
 																<label for="cc${status.index}" data-id="savedCCard"
 																	class="numbers"> <span>${map.value.cardBrand}</span>
 																	ending in ${map.value.cardEndingDigits}
@@ -402,7 +402,7 @@
 															<input type="password" autocomplete="off" placeholder="CVV"
 																class="cvvValdiation form-control security_code"
 																id="cvv${status.index+1}" maxlength="4"
-																onkeypress="return isNumber(event)" />
+																onkeypress="return isNumber(event)" onclick="ACC.singlePageCheckout.onPaymentModeSelection('Credit Card','savedCard','cc${status.index}','true');"/>
 															<div id="cvvErrorSavedCard"
 																class="card_cvvErrorSavedCard error-message">
 																<spring:theme
@@ -529,7 +529,7 @@
 																<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
 																<input type="radio" data-id="savedDCard" name="debitCards"
 																	class="card_token  debitCardsRadio"
-																	id="dc${status.index}" value="${map.value.cardToken}" onclick=""/>
+																	id="dc${status.index}" value="${map.value.cardToken}" onclick="ACC.singlePageCheckout.onPaymentModeSelection('Debit Card','savedCard','dc${status.index}','false');"/>
 																<label for="dc${status.index}" data-id="savedDCard"
 																	class="numbers"><span>${map.value.cardBrand}</span>
 																	ending in ${map.value.cardEndingDigits}</label>
@@ -556,7 +556,7 @@
 															<input type="password" autocomplete="off" placeholder="CVV"
 																class="cvvValdiation form-control security_code_hide"
 																id="cvv${status.index+1}" maxlength="4"
-																onkeypress="return isNumber(event)" /> <br>
+																onkeypress="return isNumber(event)"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Debit Card','savedCard','dc${status.index}','true');"/> <br>
 															<div id="cvvErrorSavedCard"
 																class="card_cvvErrorSavedCard error-message">
 																<spring:theme
@@ -620,7 +620,7 @@
 												<li class="paymentModeMobile">
 
 
-													<span id="viewPaymentCreditMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Credit Card');">
+													<span id="viewPaymentCreditMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Credit Card','newCard','','false');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
 												</li>
@@ -684,7 +684,7 @@
 																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange(cc${status.index});"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
@@ -947,7 +947,7 @@
 		    									<input type="hidden" id="DebitCard" value="${map.value}" />
 		    								
 		    									<li class="paymentModeMobile">
-		    										<span id="viewPaymentDebitMobile" onclick="ACC.singlePageCheckout.onPaymentModeSelection('Debit Card');">
+		    										<span id="viewPaymentDebitMobile" onclick="ACC.singlePageCheckout.onPaymentModeSelection('Debit Card','newCard','','false');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.DC" />
 													</span>
 												</li>
@@ -1012,7 +1012,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange(dc${status.index});"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -1194,7 +1194,7 @@
 			    								<input type="hidden" id="Netbanking" value="${map.value}" />
 			    							
 			    								<li class="paymentModeMobile">
-			      	 								<span id="viewPaymentNetbankingMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Netbanking');">
+			      	 								<span id="viewPaymentNetbankingMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('Netbanking','newCard','','false');">
 			      	 									<spring:theme code="checkout.multi.paymentMethod.selectMode.NB" />
 			      	 								</span>
 			      	 							</li>
@@ -1226,7 +1226,7 @@
 										<c:choose>
 			    							<c:when test="${map.key eq 'EMI'}">
 											<li class="paymentModeMobile">
-				       								<span id="viewPaymentEMIMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('EMI');">
+				       								<span id="viewPaymentEMIMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('EMI','newCard','','false');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.EMI" />
 													</span>
 												</li>
@@ -1460,7 +1460,7 @@
 			    							<c:when test="${map.key eq 'COD'}">
 			    								<input type="hidden" id="COD" value="${map.value}" />
 												<li class="paymentModeMobile">
-				       								<span id="viewPaymentCODMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('COD');">
+				       								<span id="viewPaymentCODMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('COD','newCard','','false');">
 				       									<spring:theme code="checkout.multi.paymentMethod.selectMode.COD" />
 				       								</span>
 			       								</li>
@@ -1609,7 +1609,7 @@
 												<input type="hidden" id="TW" value="${map.value}" />
 	
 												<li class="paymentModeMobile">
-													<span id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('MRUPEE');">
+													<span id="viewPaymentMRupeeMobile"  onclick="ACC.singlePageCheckout.onPaymentModeSelection('MRUPEE','newCard','','false');">
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" />
 													</span>
 												</li>

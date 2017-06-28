@@ -41,4 +41,5 @@
 		{
 			$("#delivery-mode-change-link").hide();
 		}
+		$(".hideDelModeMobile").hide();
 	</script>

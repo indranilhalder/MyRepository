@@ -3197,34 +3197,34 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			String deliverySlotCharge = MarketplacecommerceservicesConstants.EMPTY;
 			final DecimalFormat df = new DecimalFormat("#.00");
 			final CartModel cartModel = getCartService().getSessionCart();
-			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
-			boolean isSaveRequired = false;
-			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
-			{
-				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
-				{
-
-					if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
-					{
-						cartEntryModel.setEdScheduledDate("".trim());
-						cartEntryModel.setTimeSlotFrom("".trim());
-						cartEntryModel.setTimeSlotTo("".trim());
-						//UF-281
-						if (cartEntryModel.getScheduledDeliveryCharge() != null
-								&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
-						{
-							isSaveRequired = true;
-
-							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
-						}
-					}
-				}
-			}
-			if (isSaveRequired)
-			{
-				modelService.save(cartModel);
-				modelService.refresh(cartModel);
-			}
+			//final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+			//			boolean isSaveRequired = false;
+			//			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+			//			{
+			//				if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+			//				{
+			//
+			//					if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+			//					{
+			//						cartEntryModel.setEdScheduledDate("".trim());
+			//						cartEntryModel.setTimeSlotFrom("".trim());
+			//						cartEntryModel.setTimeSlotTo("".trim());
+			//						//UF-281
+			//						if (cartEntryModel.getScheduledDeliveryCharge() != null
+			//								&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+			//						{
+			//							isSaveRequired = true;
+			//
+			//							cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+			//						}
+			//					}
+			//				}
+			//			}
+			//			if (isSaveRequired)
+			//			{
+			//				modelService.save(cartModel);
+			//				modelService.refresh(cartModel);
+			//			}
 			//End of UF-281
 			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			if (configModel.getSdCharge() > 0)
@@ -3439,7 +3439,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				jsonEntryWiseDelMode.put(cartD.getEntryNumber().toString(), jsonObjectSelected);
 				countItems++;
 			}
-			jsonObject.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
+
+			jsonObject.put("totalPrice", cartData.getTotalPrice().getFormattedValueNoDecimal());
 			jsonObject.put("hd", homeDelivery);
 			jsonObject.put("ed", expressDelivery);
 			jsonObject.put("cnc", clickNcollect);
@@ -3480,7 +3481,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	@RequestMapping(value = "/validatePayment", method = RequestMethod.GET)
-	public @ResponseBody JSONObject validatePaymentDetails(final RedirectAttributes redirectAttributes)
+	public @ResponseBody JSONObject validatePaymentDetails(final Model model, final RedirectAttributes redirectAttributes)
 			throws UnsupportedEncodingException, JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
@@ -3586,7 +3587,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//model.addAttribute(MarketplacecheckoutaddonConstants.ISCART, Boolean.TRUE); //TPR-629
 
 			//model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartData);
+			//UF-260
+			GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
 			jsonObj.put("validation", "success");
+			jsonObj.put("subTotalPrice", model.asMap().get("cartTotalMrp"));
 			jsonObj.put("totalPrice", cartData.getTotalPriceWithConvCharge().getFormattedValueNoDecimal());
 			jsonObj.put("type", "response");
 		}
