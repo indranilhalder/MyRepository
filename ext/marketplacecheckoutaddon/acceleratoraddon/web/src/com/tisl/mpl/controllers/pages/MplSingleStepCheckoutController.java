@@ -2557,6 +2557,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//timeOutSet(model);
 
 			/*** Inventory Soft Reservation Start ***/
+			//TPR3780 STARTS HERE
+			//	final CartModel cartModelBeforeinventoryCheck = getCartService().getSessionCart();
+			//	final double prevTotalCartPrice = cartModelBeforeinventoryCheck.getTotalPrice().doubleValue();
+			//TPR3780 ENDS HERE
 
 			//commented for CAR:127
 
@@ -2573,7 +2577,6 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final boolean inventoryReservationStatus = mplCartFacade.isInventoryReserved(
 					MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_CART, cartUssidData, cartModel);
 
-
 			if (!inventoryReservationStatus)
 			{
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SESSION_ID, "TRUE");
@@ -2581,6 +2584,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
+
+			Boolean replaced = Boolean.FALSE;
+			replaced = getSessionService().getAttribute("replacedUssid");
+			//TPR3780 STARTS HERE
+
+
+			if (null != replaced && replaced.booleanValue())
+			{
+				//final String updateStatus = "updated";
+				final String updateStatus = MarketplacecheckoutaddonConstants.UPDATED;
+				//final String totalCartPriceAsString = String.valueOf(newTotalCartPrice);
+				//redirectAttributes.addFlashAttribute("flashupdateStatus", updateStatus);
+				//redirectAttributes.addFlashAttribute("flashtotalCartPriceAsString", totalCartPriceAsString);
+				//	return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
+				getSessionService().setAttribute("flashupdateStatus", updateStatus);
+				getSessionService().removeAttribute("replacedUssid");
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return REDIRECT_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
+
+			//TPR3780 ENDS HERE
+
 			/*** Inventory Soft Reservation Start ***/
 
 			LOG.debug(">>>>>>>>>>  Step 4:  Inventory soft reservation status  " + inventoryReservationStatus);
@@ -4417,7 +4443,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4475,7 +4501,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
