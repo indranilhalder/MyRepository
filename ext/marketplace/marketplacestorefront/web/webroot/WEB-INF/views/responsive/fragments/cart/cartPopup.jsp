@@ -29,24 +29,18 @@
 						<li>
 							<div class="product-img">
 								<c:choose>
-									<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-											<a href="${entryProductUrl}">
-										<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
-									</a>
-									</c:when>
-									<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and (entry.product.rootCategory)=='FineJewellery'}">
-											<a href="${entryProductUrl}">
-										<product:productPrimaryImage
-											product="${entry.product}" format="fineJewelcartIcon" />
-									</a>
-									</c:when>
-									<c:otherwise>
-											<a href="${entryProductUrl}">
-										<product:productPrimaryImage product="${entry.product}" format="cartIcon"/>
-									</a>
-											
-									</c:otherwise>
-								</c:choose>
+											<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+													<a href="${entryProductUrl}">
+												<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
+											</a>
+											</c:when>
+											<c:otherwise>
+													<a href="${entryProductUrl}">
+												<product:productPrimaryImage product="${entry.product}" format="cartIcon"/>
+											</a>
+													
+											</c:otherwise>
+										</c:choose>
 								</div>
 								<div class="product">
 									<p class="company"></p>

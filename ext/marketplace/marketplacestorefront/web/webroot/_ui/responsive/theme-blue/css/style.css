@@ -32751,10 +32751,10 @@ img.r2-app-brand-img {
 	    padding: 0 0 20px 0;
 		width: 33.33%;
 	}
-	.product-info .product-content.FineJewellery .wish-share.desktop,
+	/* .product-info .product-content.FineJewellery .wish-share.desktop,
 	.product-info .product-content.FashionJewellery .wish-share.desktop {
 		display: none;
-	}
+	} */
 }
 /*App landing page css ends*/
 .totalPayable{
@@ -46894,8 +46894,8 @@ float: right;
 }
 .product-info.wrapper .product-image-container.FineJewellery,
 .product-info.wrapper .product-image-container.FashionJewellery {
-	margin-left: 0;
-	width: 47%;
+	margin: 0 0 0 30px;
+	width: 35%;
 }
 
 
@@ -47169,7 +47169,7 @@ float: right;
 }
 .product-info .product-content.FineJewellery,
 .product-info .product-content.FashionJewellery {
-	padding: 0 30px 0 25px;
+	padding: 0;
 }
 .product-info .product-content .Wrap {
 	background: #fbfbfb none repeat scroll 0 0;
@@ -47178,10 +47178,8 @@ float: right;
 
 .product-info .FineJewellery .Wrap,
 .product-info .FashionJewellery .Wrap{
-	background: transparent;
-	border-top: 1px solid #ccc;
-	margin-top: 30px;
-	padding: 20px 0 0;
+	background: #fbfbfb none repeat scroll 0 0;
+    padding: 20px 8% 10px;
 }
 
 .product-info .product-content .delivery-block {
@@ -47215,14 +47213,14 @@ float: right;
 	cursor: pointer;
 }
 
-.product-info .product-content.FineJewellery .delivery-block li.do,
+/* .product-info .product-content.FineJewellery .delivery-block li.do,
 .product-info .product-content.FashionJewellery .delivery-block li.do{
 	border-bottom: 1px solid #ccc;
-}
-.product-info .product-content.FineJewellery .delivery-block li.do:last-child,
+} */
+/* .product-info .product-content.FineJewellery .delivery-block li.do:last-child,
 .product-info .product-content.FashionJewellery .delivery-block li.do:last-child{
 	border-bottom: none;
-}
+} */
 
 /* .product-info .product-content.FineJewellery .delivery-block li:last-child,
 .product-info .product-content.FashionJewellery .delivery-block li:last-child{
@@ -48556,11 +48554,8 @@ body.page-productDetails .breadcrumbs.wrapper {
  		margin-bottom: 0px;
  	}
  	.product-info .product-detail.FineJewellery, .product-info .product-detail.FashionJewellery{
- 		width: 52%;
+ 		width: 35%;
  	} 	
-	.FineJewellery .buy-btn-holder, .FashionJewellery .buy-btn-holder{
-		width: 50%;
-	}
  }
  
 .product-info .product-image-container.device .owl-carousel {
@@ -62095,10 +62090,10 @@ body.page-productDetails .gig-rating-readReviewsLink_pdp{
 	    width: 49%;
 	    margin-right: 1%;
 	}
-	.product-info .product-content.FineJewellery .delivery-block li.do,
+	/* .product-info .product-content.FineJewellery .delivery-block li.do,
 	.product-info .product-content.FashionJewellery .delivery-block li.do{
 		border-bottom: none;
-	}
+	} */
 
 /* 	UF-38	 */
 body.page-productGrid .plp-wishlist:hover:before,
@@ -62308,16 +62303,16 @@ padding: 10px 0px;
 	    width: 49%;
 	    margin-right: 1%;
 	}
-	.product-info .product-content.FineJewellery,
+	/* .product-info .product-content.FineJewellery,
 	.product-info .product-content.FashionJewellery,
 	.product-info .product-content.FineJewellery .delivery-block li .inline-form,
 	.product-info .product-content.FashionJewellery .delivery-block li .inline-form {
-		width: 50%;
-	}
-	.certified-by {
+		width: calc(30% - 50px);
+	} */
+	/* .certified-by {
     	border-bottom: 1px solid #ccc;
     	border-top: 1px solid #ccc;
-	}
+	} */
 	.product-info .size{
 		text-align: left;
 	}

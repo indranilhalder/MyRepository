@@ -3586,7 +3586,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
 			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
 			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
-			final String guid,final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
+			final String guid, final Model model) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
 		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
@@ -3786,7 +3786,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				{
 
 					//TPR3780 STARTS HERE
-					final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
+					//	final double prevTotalCartPrice = cart.getTotalPrice().doubleValue();
 					//TPR3780 ENDS HERE
 
 					//commented for CAR:127
@@ -3801,13 +3801,21 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cData, cart);
 
 					//TPR3780 STARTS HERE
-					final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
-					final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
+
+					Boolean replaced = Boolean.FALSE;
+					replaced = getSessionService().getAttribute("replacedUssid");
+					//	final CartModel cartModelAfterinventoryCheck = getCartService().getSessionCart();
+					//	final double newTotalCartPrice = cartModelAfterinventoryCheck.getTotalPrice().doubleValue();
 
 
-					if (!StringUtils.equals(String.valueOf(prevTotalCartPrice), String.valueOf(newTotalCartPrice)))
+					if (null != replaced && replaced.booleanValue())
 					{
-						return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+						//return MarketplacecheckoutaddonConstants.INVENTORYRESERVED;
+						final String updateStatus = MarketplacecheckoutaddonConstants.UPDATED;
+						getSessionService().removeAttribute("replacedUssid");
+						redirectFlag = true;
+						LOG.info("::setting redirect flag--inv reservation changed for new item::");
+						getSessionService().setAttribute("flashupdateStatus", updateStatus);
 					}
 
 					//TPR3780 ENDS HERE
