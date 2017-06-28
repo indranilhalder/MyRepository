@@ -69287,7 +69287,7 @@ body .account .right-account .order-history .product-block li.item .attributes p
   }
   
   body.page-search .listing.wrapper .right-block .listing-menu{
-  	/* display:none; */
+  	/* display:none; */				/* Commented for UF-408 */
   }		/*TISPRDT-1179*/
  /*  start of PRDI-177 */
 #OfferWrap .Inner .show-termsConditions p {
