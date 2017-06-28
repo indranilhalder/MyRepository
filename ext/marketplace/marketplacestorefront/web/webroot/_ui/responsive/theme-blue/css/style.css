@@ -68527,6 +68527,99 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading h4 span {
     position: static;
 }
+
+/*Delivery Slot modal start*/
+.modal#singlePageChooseSlotDeliveryPopup > div.content{
+	width: 475px;
+	border-radius: 8px;
+	box-shadow: 0 2px 16px 0 #000000;
+	border: none;
+	padding: 36px 36px 19px 36px !important;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content h1.title-name{
+font-size: 14px;
+  line-height: 1.29;
+  letter-spacing: 0.6px;
+  text-align: left;
+  margin-bottom: 7.5px;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item{
+	padding-top: 23.5px;
+	padding-bottom: 24.5px;
+	border-bottom: solid 2px #eeeeee;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item:last-child{
+	border-bottom: 0px;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotProduct{
+	width: 92px;
+	display: inline-block;
+	vertical-align: top;
+	padding-right: 24.7px;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotProduct .thumb{
+	border: 0;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotRadio{
+	width: calc(100% - 96px);
+    display: inline-block;
+    text-align: left;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotRadio span.delslot_timeslot{
+    display: block;
+    font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: #666666;
+  	margin-bottom: 14px;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotRadio span.delslot_timeslot span{
+  	color: #666666;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotRadio span.delslot_timeslot .greyText{
+	font-size: 11px;
+  	line-height: 1.36;
+  	letter-spacing: 0.6px;
+  	text-align: left;
+  	color: #999999;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotRadio span.delslot_timeslot input[type="radio"] + label:before{
+	box-shadow: 0 0 0 1px #979797;
+	top: -1px;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content li.item li.deliverySlotRadio div.delslot button.reset_link{
+	font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.6px;
+    float: right;
+    padding: 0;
+    height: auto;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content .delivery-slot-popup-wrapper .done_delslot{
+	width: 202px;
+    height: 42px;
+    padding: 0;
+    margin: 0px auto;
+    background-color: #a5173c;
+    color: #fff;
+    font-weight: normal;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    text-align: center;
+}
+.modal#singlePageChooseSlotDeliveryPopup > div.content .delivery-slot-popup-wrapper .cancel_delslot{
+	margin-top: 20px;
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    text-align: center;
+    color: #666666;
+}
+.modal#singlePageChooseSlotDeliveryPopup .content > .close:before{
+	color: #000;
+}
+/*Delivery Slot modal end*/
+
 @media(min-width: 768px){
 .cart.wrapper.checkout-payment .right-block.billing.checkout-list-right .block.coupon label{
 	margin-bottom: 9px;

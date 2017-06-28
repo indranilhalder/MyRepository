@@ -136,7 +136,7 @@
 <div class="modal fade" id="singlePageChooseSlotDeliveryPopup">
 	<div class="content" style="padding: 40px;">
 		<span id="modalBody" data-htmlPopulated="NO"></span>
-		<!-- <button class="close" data-dismiss="modal"></button> -->
+		<button class="close" data-dismiss="modal"></button>
 	</div>
 	<div class="overlay" data-dismiss="modal">
 	</div>

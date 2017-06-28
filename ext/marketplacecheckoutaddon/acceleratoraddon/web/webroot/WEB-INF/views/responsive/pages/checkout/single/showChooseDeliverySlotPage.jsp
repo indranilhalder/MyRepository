@@ -18,20 +18,20 @@
 
 
 
-<div class="checkout-content cart checkout wrapper">
+<div class="delivery-slot-popup-wrapper">
 	<ycommerce:testId code="checkoutStepTwo">				
 		<form:form id="selectDeliveryMethodForm" action="" method="get" >
-			<div class="checkout-shipping left-block">
-				<div class="checkout-indent">
+			<div class="delivery-slot-popup-container">
+				<!-- <div class="checkout-indent"> -->
 					<single-checkout:showShipmentItemsForDeliverySlot cartData="${cartData}"/>
-				</div>
+				<!-- </div> -->
 			</div>					
 		</form:form>
 	</ycommerce:testId>
 	<div>
-		<button type="button" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Done</button>
+		<button type="button" class="done_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Done</button>
 	</div>
 	<div>
-		<a href="javascript:void(0);" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</a>
+		<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</a>
 	</div>
 </div>
