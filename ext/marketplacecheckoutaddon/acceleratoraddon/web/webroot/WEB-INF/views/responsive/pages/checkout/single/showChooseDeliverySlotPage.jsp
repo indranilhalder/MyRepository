@@ -34,4 +34,11 @@
 	<div>
 		<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</a>
 	</div>
+	<!-- Below is for responsive -->
+	<div>
+		<button type="button" class="done_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');">Done</button>
+	</div>
+	<div>
+		<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');">Skip</a>
+	</div>
 </div>
