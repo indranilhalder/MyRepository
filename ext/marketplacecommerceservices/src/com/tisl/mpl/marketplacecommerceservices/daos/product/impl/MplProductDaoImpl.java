@@ -62,7 +62,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	public List<ProductModel> findProductsByCode(final String code)
 	{
 		LOG.debug("findProductsByCode: code********** " + code);
-		//final CatalogVersionModel catalogVersion = getCatalogVersion();
+		final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForProduct();
 		final StringBuilder stringBuilder = new StringBuilder(70);
 
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ").append(FROM_STRING).append(ProductModel._TYPECODE)
@@ -72,8 +72,8 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 				.append(CatalogVersionModel._TYPECODE).append(" AS cat ").append("ON {p:").append(ProductModel.CATALOGVERSION)
 				.append("}={cat:").append(CatalogVersionModel.PK).append("} }");
 
-		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {cat:" + CatalogVersionModel.VERSION
-				+ "} = 'Online' and  sysdate between {s.startdate} and {s.enddate} ";
+		final String inPart = "{p:" + ProductModel.CODE + "} = (?code) AND {cat:" + CatalogVersionModel.PK
+				+ "} = ?catalogVersion and  sysdate between {s.startdate} and {s.enddate} ";
 		stringBuilder.append("WHERE ").append(inPart);
 
 		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
@@ -81,7 +81,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 		query.addQueryParameter(CODE, code);
 
-		//query.addQueryParameter("catalogVersion", catalogVersion);
+		query.addQueryParameter("catalogVersion", catalogVersion);
 		query.setResultClassList(Collections.singletonList(ProductModel.class));
 		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
 		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
@@ -92,7 +92,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	public List<ProductModel> findProductsByCodeNew(final String code)
 	{
 		List<ProductModel> productList = null;
-		final CatalogVersionModel catalogVersion = getCatalogVersion();
+		final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForProduct();
 		final StringBuilder stringBuilder = new StringBuilder(70);
 
 		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
