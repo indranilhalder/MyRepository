@@ -56,8 +56,11 @@ var stwService = {
                 } else {
                     var header = stwRender.blpheader(json);
                     var carousel = stwRender.carousel(json);
+                    if(( carousel != undefined && carousel !="") && carousel!=null)
+                    {
                     var stw_block_Blp = "<div class='best_seller stw-list'>" + header + "</div>" + carousel;
                     $("#stw_widget_blp").html(stw_block_Blp);
+                    }
                     stwRender.bindCarousel();
                 }
             },
@@ -121,6 +124,9 @@ var stwRender = {
         return tabsFormationHtml;
     },
     carousel: function(STWJObject) {
+    	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null )
+    	    	{
+    	
         var stwWidgetProducts = "";
         stwWidgetProducts += '<div class="carousel-component">';
         stwWidgetProducts += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
@@ -144,6 +150,7 @@ var stwRender = {
         });
         stwWidgetProducts += '</div></div>';
         return stwWidgetProducts;
+        }
     },
     bindCarousel: function() {
         $(".stw-widget-owl").owlCarousel({
@@ -168,14 +175,15 @@ var stwRender = {
                 768: {
                     items: 3,
                 },
-                // breakpoint from 768 up
-                1280: {
+                // breakpoint from 1080 up
+                1080: {
                     items: 5,
                 }
             }
         });
     }
 }
+    
 $(document).ready(function() {
     if ($("#pageType").val() == "homepage" && $('#stw_widget').length == 1) {
         stw.renderTabsWidget();

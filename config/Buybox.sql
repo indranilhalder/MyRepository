@@ -310,29 +310,6 @@ AS
       END IF;
 
 
------- Start INC144314752 OOS issue 
-   UPDATE MplBuyBoxProcTable SET MplBuyBoxProcTable.modifiedts=v_prc_start_time_weightage,MplBuyBoxProcTable.p_oosmodifiedval=v_prc_start_time_weightage where pk in (
-   SELECT distinct
-          bbox1.pk as pk
-          from products p1, 
-          products p2,
-          MplBuyBoxProcTable bbox1,
-          MplBuyBoxProcTable bbox2,
-          stocklevels I
-          WHERE   
-          p1.p_colour=p2.p_colour 
-          and p1.p_baseproduct=p2.p_baseproduct 
-          and p1.p_code=bbox1.p_product
-          and p2.p_code=bbox2.p_product
-          and I.p_sellerarticlesku=bbox2.p_sellerarticlesku
-          and ((I.p_available>0 and bbox2.p_available<=0)
-          or (I.p_available<=0 and bbox2.p_available>0))
-          and I.modifiedts > v_last_run_weightage);
-    ------ INC144314752 OOS issue End 
-      --Update special price from pricerows if and only if promotion is active
-
-
-
       --Update special price specific weightage which has active promotions and no seller hierarchy applied
 
 
@@ -441,8 +418,8 @@ AS
              AND P.PK = pp1.p_pricerow(+)
              AND P.PK = pp2.p_pricerow(+)
              AND PLD.p_ussid(+) = I.p_sellerarticlesku
-             AND ((pp1.p_promotionstartdate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update)
-             OR (pp2.p_promotionstartdate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update))
+             AND ((pp1.p_promotionenddate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update)
+             OR (pp2.p_promotionenddate BETWEEN v_last_run_price_update AND v_prc_start_time_price_update))
              ;
 
       --Joins Price,p_available,Delta tables and merge the result data into buybox table based promo start time

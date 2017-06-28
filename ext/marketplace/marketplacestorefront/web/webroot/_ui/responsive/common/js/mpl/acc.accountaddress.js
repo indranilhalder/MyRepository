@@ -1287,7 +1287,7 @@ function validateAccountAddress() {
 			"display" : "block"
 		});
 
-		document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+		document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>Please enter a valid first name.</font>";
 		flagFn = false;
 	}
 	if (addressForm.lastName.value == null || addressForm.lastName.value == "") {
@@ -1301,7 +1301,7 @@ function validateAccountAddress() {
 			"display" : "block"
 		});
 
-		document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+		document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Please enter a valid last name.</font>";
 		flagLn = false;
 	}
 	if (addressForm.line1.value == null || addressForm.line1.value == "") {
@@ -1335,19 +1335,19 @@ function validateAccountAddress() {
 		$("#errddressPost").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+		document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
 		flagPost = false;
 	} else if (addressForm.postcode.value == "000000") {
 		$("#errddressPost").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+		document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
 		flagPost = false;
 	} else if (addressForm.postcode.value.startsWith("0")) {
 		$("#errddressPost").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>";
+		document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid pincode.</font>";
 		flagPost = false;
 	}
 	if (addressForm.townCity.value == null || addressForm.townCity.value == "") {
@@ -1363,7 +1363,7 @@ function validateAccountAddress() {
 		$("#errddressCity").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>";
+		document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid city.</font>";
 		flagCity = false;
 	}
 	/* added code, TISRLEE-1648 */
@@ -1371,7 +1371,7 @@ function validateAccountAddress() {
 		$("#errddressState").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>";
+		document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select a valid state.</font>";
 		flagState = false;
 	}
 	if (addressForm.mobileNo.value == null || addressForm.mobileNo.value == "") {
@@ -1386,19 +1386,19 @@ function validateAccountAddress() {
 		$("#errddressMob").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+		document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid phone number</font>";
 		flagMob = false;
 	} else if (regexSpace.test(addressForm.mobileNo.value)) {
 		$("#errddressMob").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+		document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid phone number</font>";
 		flagMob = false;
 	} else if (equalNoCheck.test(addressForm.mobileNo.value)) {
 		$("#errddressMob").css({
 			"display" : "block"
 		});
-		document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
+		document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid phone number</font>";
 		flagMob = false;
 	}
 
