@@ -72927,3 +72927,10 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 #stw_widget .product-tile .short-info .color-swatch, #stw_widget_blp .product-tile .short-info .color-swatch{
 	display: none;
 }
+/*TISPRDT-1670 fix start*/
+@media (max-width: 970px){
+	body.page-compare .product-tile .short-info .shop-now{
+		display: none;
+	}
+} 
+/*TISPRDT-1670 fix end*/
