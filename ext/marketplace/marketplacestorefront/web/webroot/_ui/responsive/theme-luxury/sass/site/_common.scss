@@ -637,3 +637,11 @@ video::-webkit-media-controls {
   text-align: left;
   vertical-align: middle;
 }
+
+#manageMyList.modal:before, #removeProductConfirmation.modal:before, #createNewList.modal:before, #redirectsToPDP.modal:before, #deleteConfirmation.modal:before{
+  content:none;
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
