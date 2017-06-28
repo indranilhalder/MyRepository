@@ -588,6 +588,12 @@ video::-webkit-media-controls {
     border: 1px solid transparent;
     border-radius: 4px;
     text-align: center;
+    height: auto!important;
+    position: relative;
+    .close{       
+        font-size:24px;
+        top:15px;       
+    }
 }
 .alert-info {
     color: #fff;
@@ -608,7 +614,7 @@ video::-webkit-media-controls {
         color: inherit;
     }
 }
-.alert-warning {
+.alert-warning, .alert-danger{
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1;
