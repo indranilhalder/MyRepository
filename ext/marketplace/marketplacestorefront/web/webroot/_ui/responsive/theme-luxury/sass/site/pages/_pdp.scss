@@ -1011,7 +1011,7 @@ a:hover.tooltips {
     }
   }
   
-  th, td {
+  td {
     text-align: left;
     @media (max-width: 767px) {
       display: block;
@@ -1025,5 +1025,19 @@ a:hover.tooltips {
     }
 
   }
+  th{
+        text-align: left;
+        @media (max-width: 767px) {
+          display: none;
+          padding: .25em 1em;
+          vertical-align: middle;
+          width: 100%;
+
+          &:last-child {
+            padding-right: 0;
+          }
+        }
+
+    }
   
 }

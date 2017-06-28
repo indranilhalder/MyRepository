@@ -1274,12 +1274,12 @@ TATA.Pages = {
                                 $("#emiTableTbody").show();
                                 for (var index = 0; index < data.length; index++) {
                                     contentData += '<tr>';
-                                    contentData += "<td>" + data[index].term + "</td>";
-                                    contentData += "<td>" + data[index].interestRate
+                                    contentData += "<td data-th='Tenure (Months)'>" + data[index].term + "</td>";
+                                    contentData += "<td data-th='Interest Rate'>" + data[index].interestRate
                                         + "</td>";
-                                    contentData += "<td>" + data[index].monthlyInstallment
+                                    contentData += "<td data-th='Monthly Installments'>" + data[index].monthlyInstallment
                                         + "</td>";
-                                    contentData += "<td>" + data[index].interestPayable
+                                    contentData += "<td data-th='Total Interest paid to bank'>" + data[index].interestPayable
                                         + "</td>";
                                     contentData += '</tr>';
                                 }
