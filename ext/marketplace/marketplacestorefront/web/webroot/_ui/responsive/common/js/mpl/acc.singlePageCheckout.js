@@ -2067,10 +2067,17 @@ removeExchangeFromCart : function (){
 	},
 	
 	changeAddress:function(element){
+		
 		//$("#address-change-link").on("click", function(){
 			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
 			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 			$(element).hide();
+			if(typeof utag !="undefined")  {
+				utag.link({
+			        link_text: "change_link_clicked",
+			        event_type: "change_link_clicked"
+			    })
+		      }
 	    //});
 	},
 	
@@ -2087,6 +2094,12 @@ removeExchangeFromCart : function (){
 //        		}
 //        	});
 //		}
+		if(typeof utag !="undefined")  {
+			utag.link({
+		        link_text: "change_link_clicked",
+		        event_type: "change_link_clicked"
+		    })
+	      }
 		$(".hideDelModeMobile").show();
 		$(element).hide();
 	},
