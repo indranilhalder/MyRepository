@@ -43,6 +43,8 @@ public class UiExperienceViewResolver extends InternalResourceViewResolver
 {
 	private static final Logger LOG = Logger.getLogger(UiExperienceViewResolver.class);
 
+	public static final String UNDERSCORE = "_";
+
 	private UiExperienceService uiExperienceService;
 	public Map<UiExperienceLevel, String> uiExperienceViewPrefix;
 	private String unknownUiExperiencePrefix;
@@ -104,7 +106,18 @@ public class UiExperienceViewResolver extends InternalResourceViewResolver
 	protected Object getCacheKey(final String viewName, final Locale locale)
 	{
 		// Incorporate the UiExperienceLevel into the view cache
-		return super.getCacheKey(viewName, locale) + "_" + getUiExperienceService().getUiExperienceLevel().getCode();
+		Object obj;
+		if (null != baseSiteService && null != baseSiteService.getCurrentBaseSite()
+				&& null != baseSiteService.getCurrentBaseSite().getUid())
+		{
+			obj = super.getCacheKey(baseSiteService.getCurrentBaseSite().getUid() + UNDERSCORE + viewName, locale) + UNDERSCORE
+					+ getUiExperienceService().getUiExperienceLevel().getCode();
+		}
+		else
+		{
+			obj = super.getCacheKey(viewName, locale) + UNDERSCORE + getUiExperienceService().getUiExperienceLevel().getCode();
+		}
+		return obj;
 	}
 
 	@Override

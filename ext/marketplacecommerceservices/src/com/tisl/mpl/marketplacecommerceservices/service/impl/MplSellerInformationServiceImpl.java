@@ -5,26 +5,23 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.catalog.CatalogService;
 import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 
 import java.util.List;
 
-import de.hybris.platform.site.BaseSiteService;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplSellerInformationDAO;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.model.SellerSalesCategoryModel;
+import com.tisl.mpl.util.CatalogUtils;
 
 
 /**
@@ -41,14 +38,14 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	private CatalogService catalogService;
 
 	@Autowired
-	BaseSiteService baseSiteService;
+	private CatalogVersionService catalogVersionService;
 
 	@Autowired
-	private CatalogVersionService catalogVersionService;
+	private CatalogUtils catalogUtils;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -58,13 +55,13 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		if (aticleSKUID != null)
 		{
 			//TISEE-5429 , TISEE-5458
-			final CatalogVersionModel onlineCatalog = getCatalogVersionSession();
+			final CatalogVersionModel onlineCatalog = catalogUtils.getSessionCatalogVersionForProduct();
 
 
-					/*catalogService.getCatalogVersion(
-					MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-					MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
-*/
+			/*
+			 * catalogService.getCatalogVersion( MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+			 * MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+			 */
 
 			return mplSellerInformationDAO.getSellerInforationDetails(aticleSKUID, onlineCatalog);
 		}
@@ -73,7 +70,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -186,25 +183,9 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		return null;
 	}
 
-	private CatalogVersionModel getCatalogVersionSession()
-	{
-		CatalogVersionModel catalogVersionModel = null;
-		final List<CatalogModel> productCatalogs = baseSiteService.getProductCatalogs(baseSiteService.getCurrentBaseSite());
-		if (CollectionUtils.isNotEmpty(productCatalogs))
-		{
-			catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
-		}
-		else
-		{
-			catalogVersionModel = catalogVersionService
-					.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
-		}
-		return catalogVersionModel;
-	}
-
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getContentPageBySellerID(de.hybris
 	 * .platform.catalog.model.CatalogVersionModel, java.lang.String)

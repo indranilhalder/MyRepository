@@ -13256,9 +13256,7 @@ TATA.CommonFunctions = {
     },
     leftBarAccordian: function() {
         $(window).width() >= 768 ? $(document).on("click", ".facetHead", function(e) {
-            e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {
-                $(this).find(".allFacetValues").slideToggle();
-            });
+            e.stopPropagation(), $(this).closest(".facet").toggleClass("open", function() {});
         }) : $(document).on("click", ".facetHead", function(e) {
             e.stopPropagation(), $(this).closest(".facet").addClass("open").find(".allFacetValues").show(), 
             $(this).closest(".facet").siblings().removeClass("open").find(".allFacetValues").hide();
@@ -13694,9 +13692,11 @@ TATA.CommonFunctions = {
                         success: function(data) {
                             if (null != data) {
                                 $("#emiTableTHead").show(), $("#emiTableTbody").show();
-                                for (var index = 0; index < data.length; index++) contentData += "<tr>", contentData += "<td>" + data[index].term + "</td>", 
-                                contentData += "<td>" + data[index].interestRate + "</td>", contentData += "<td>" + data[index].monthlyInstallment + "</td>", 
-                                contentData += "<td>" + data[index].interestPayable + "</td>", contentData += "</tr>";
+                                for (var index = 0; index < data.length; index++) contentData += "<tr>", contentData += "<td data-th='Tenure (Months)'>" + data[index].term + "</td>", 
+                                contentData += "<td data-th='Interest Rate'>" + data[index].interestRate + "</td>", 
+                                contentData += "<td data-th='Monthly Installments'>" + data[index].monthlyInstallment + "</td>", 
+                                contentData += "<td data-th='Total Interest paid to bank'>" + data[index].interestPayable + "</td>", 
+                                contentData += "</tr>";
                                 $("#emiTableTbody").html(contentData), $("#EMITermTable").show();
                             } else $("#emiNoData").show();
                             emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, "").toLowerCase(), 

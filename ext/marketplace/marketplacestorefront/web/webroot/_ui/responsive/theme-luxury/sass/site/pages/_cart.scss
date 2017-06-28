@@ -534,8 +534,14 @@
     text-align: center;
     h2 { font-size: 35px; margin-bottom: 15px; }
     p {  font-size: 20px; margin-bottom: 50px; }    
-    button {
+    button, a {
         margin-right: 65px; 
+        color: #fff;
+        
+        &:hover{
+            color: #fff;
+        }
+        
         //&:first-child {    margin-right: 60px;  }
         &:last-child {      margin-right: 0;   margin-left: 65px; 
             @include media-breakpoint-down(sm) {
@@ -576,7 +582,7 @@
 .MyBag-pincode {
     margin-bottom : 20px;
     #defaultPinCodeIds {
-        width: 200px;
+        width: 155px;
         display: inline-block;
     }
     #pinCodeButtonIds {

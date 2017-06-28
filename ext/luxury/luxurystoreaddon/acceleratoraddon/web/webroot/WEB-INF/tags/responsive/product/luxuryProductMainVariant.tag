@@ -86,7 +86,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
 			<p>
-				<spring:theme code="text.colour" />
+				<h5><spring:theme code="product.text.colour" /></h5>
 			</p>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
@@ -252,8 +252,8 @@ share mobile -->
 		<h5><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></h5>
 		<!-- Size guide Pop-up -->
 		<a class="size-guide" href="${sizeGuideUrl}" role="button"
-			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"> <spring:theme
-				code="product.variants.size.guide" />
+			data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}"><h5> <spring:theme
+				code="product.variants.view.size.guide" /></h5>
 		</a>
 		
 		<!-- Added for PDP Size ChartChange -->

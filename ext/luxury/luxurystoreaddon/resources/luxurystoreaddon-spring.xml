@@ -71,8 +71,11 @@
 	<bean id="defaultLuxuryProductFlagsPopulator" parent="baseProductPopulator"
 			class="com.tisl.lux.facades.populators.LuxuryProductFlagsPopulator">
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility"/>
+		<property name="promotionService" ref="promotionsService"/>
+		<property name="baseSiteService" ref="baseSiteService"/>
 		<property name="configurationService" ref="configurationService" />
-	</bean>
+		<property name="timeService" ref="timeService" />
+		</bean>
 	
 <!-- Logic for resolving view resolver for addon prefix supporting multi site -->
 	

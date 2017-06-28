@@ -438,7 +438,8 @@
 </script>
 					
 					<ycommerce:testId code="checkoutStepTwo">
-						<div class="checkout-shipping-items  left-block left-block-width">
+					<div class="row">
+						<div class="checkout-shipping-items  left-block left-block-width col-md-8">
 			<h1>
 					<spring:theme code="checkout.multi.cnc.header"></spring:theme>
 					<br>
@@ -1124,20 +1125,20 @@
 	     			 	<form name="pickupPersonDetails" action="#">
 	     				 <div style="display:none;">
 	      					 <span class="pickupperson"><h5 id="pickup"><spring:theme code="checkout.multi.cnc.pickup.person.name"/></h5></span></div>
-	       					 <div class="nameFullSubPanel">
-	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="inputname" placeholder="Enter Full Name*"  value="${pickupPersonName}"/>
+	       					 <div class="nameFullSubPanel mb-10 mt-10">
+	        					<input type="text" id="pickupPersonName" name="pickupPersonName"  maxlength="30" class="form-control" placeholder="Enter Full Name*"  value="${pickupPersonName}"/>
 	        					<div class="error_txt pickupPersonNameError"></div>
 	            			</div>
-	            			 <div class="nameBlankSubPanel">
-	        					<input type="text" name="pickupPersonName"  maxlength="30" class="inputname"/>
+	            			 <div class="nameBlankSubPanel mb-10">
+	        					<input type="text" name="pickupPersonName"  maxlength="30" class="form-control"/>
 	        					<div class="error_txt pickupPersonNameError"></div>
 	            			</div>
 	            			<div class="mobileSubPanel">
-								<input type="text" id="pickupPersonMobile" class="inputmobile" maxlength="10" placeholder="Enter Mobile Number*" value="${pickUpPersonMobile}"/><br/>
+								<input type="text" id="pickupPersonMobile" class="form-control" maxlength="10" placeholder="Enter Mobile Number*" value="${pickUpPersonMobile}"/><br/>
 								<div class="error_txt pickupPersonMobileError"></div>
 	        			    </div>
-				             <div class="submitSubPanel">
-				             <button type="button"  class="savenewid" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				             <div class="submitSubPanel mb-10">
+				             <button type="button"  class="savenewid btn btn-primary btn-lg" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>
@@ -1150,39 +1151,40 @@
 		</div>
 		</div>
 		
-		<div class="right-block shipping right-block-width">
+		<div class="right-block shipping right-block-width col-md-4">
 				<c:choose>
 					<c:when test="${expCheckout gt 0}">
-						<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
+						<a class="continue_btn btn btn-primary btn-lg btn-block " href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
 							<div class="continue_btn_anchor"><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></div>
 						</a>
 					</c:when>
 					<c:when test="${delModeCount gt 0}">
 					
 					<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
-									<button class="continue_btn" id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+									<button class="continue_btn " id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 					</form:form>
 					</c:when>
 					
 					<c:otherwise>
-					<a class="continue_btn" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
+					<a class="continue_btn  btn btn-primary btn-lg btn-block mb-20" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 							<div class="continue_btn_anchor"><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></div>
 					</a>
 					</c:otherwise>
 				</c:choose>
-				<div class="checkout-order-summary">
+				<div class="checkout-order-summary orderSummary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 				</div>
-			</div>
+			</div></div>
 			<div>
 				<input type="hidden" name="CSRFToken"
 											value="${CSRFToken}">
 			</div>
-		<div class="continue_holder">
+			<div class="row">
+		<div class="continue_holder col-md-12">
 			<c:choose>
 				<c:when test="${expCheckout gt 0}">
-					<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
+					<a class="continue_btn_a btn btn-primary btn-lg" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
 						<spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/>
 					</div>
@@ -1196,13 +1198,14 @@
 				</c:when>
 				
 				<c:otherwise>
-				<a class="continue_btn_a" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
+				<a class="continue_btn_a btn btn-primary btn-lg" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
 					<div class="continue_btn">
 						<spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/>
 					</div>
 				</a>
 				</c:otherwise>
 			</c:choose>
+		</div>
 		</div>
 		<script>
 			$(document).ready(function(){

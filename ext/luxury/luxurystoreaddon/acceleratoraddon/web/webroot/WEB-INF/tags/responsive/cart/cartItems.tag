@@ -146,9 +146,9 @@
 								<c:otherwise>
 								<c:choose>
 								<c:when test="${entry.isBOGOapplied eq true}">
-								<span class="delSeat" id="totalPrice_${entry.entryNumber}">
+								<div class="delSeat" id="totalPrice_${entry.entryNumber}">
 														 <format:price priceData="${strikeoffprice}" displayFreeForZero="true" />
-													</span>
+													</div>
 								<c:choose>
 								<c:when test="${entry.totalPrice.value<'1.00'}">
 								<span>Free</span>
@@ -190,11 +190,11 @@
 								<c:choose>
 								<c:when test="${mrpPrice.value.formattedValue != entry.totalMrp.formattedValue||not empty entry.cartLevelDisc}">
 								<!-- TPR-970 changes--><input type="hidden" id="basePrice_${entry.entryNumber}" value='${mrpPrice.value.formattedValue}'/>
-								<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
+								<!-- TPR-970 changes-->	<div id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></div>
 			</c:when>
 			<c:otherwise>
 				<c:if test="${mrpPrice.value.formattedValue != entry.totalMrp }">
-					<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
+					<!-- TPR-970 changes-->	<div id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></div>
 				</c:if>
 			</c:otherwise>
 			</c:choose>
@@ -217,10 +217,10 @@
 						<c:when test="${not empty entry.productPerDiscDisplay}">
 							<c:choose>
 								<c:when test="${not empty entry.productLevelDisc}">
-									<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></span></span></span>
+									<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><div   class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></div></span></span>
 								</c:when>
 								<c:otherwise>
-									<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.totalPrice}"/></span></span></span>
+									<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><div   class="delSeat"><format:price priceData="${entry.totalPrice}"/></div></span></span>
 								</c:otherwise>
 							</c:choose>
 						</c:when>
@@ -328,6 +328,10 @@
 									</form:select>
 								</c:otherwise>
 							</c:choose>
+							<!-- <select>
+							 <option>1</option>
+							 <option>2</option>
+							</select> -->
 						</ycommerce:testId>
 					</form:form>
 				</div>
@@ -1019,7 +1023,7 @@
     <div class="modify-order" style="  height: 50px; clear:both;   padding: 0 10px;">
 
         <div class="modify-order-options" style=" padding-top: 4px;"><span style="display: inline-block;float: left; margin-right: 8px;">Qty:</span>
-            <c:url value="/cart/update" var="cartUpdateFormAction" />
+           <c:url value="/cart/update" var="cartUpdateFormAction" />
             <div style="  width: 60%; float: left; display: inline-block;">
             <form:form id="updateCartForm${entry.entryNumber}"
                 action="${cartUpdateFormAction}" method="post"
