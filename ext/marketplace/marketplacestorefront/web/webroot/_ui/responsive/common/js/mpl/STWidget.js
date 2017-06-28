@@ -124,7 +124,7 @@ var stwRender = {
         return tabsFormationHtml;
     },
     carousel: function(STWJObject) {
-    	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null )
+    	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
     	    	{
     	
         var stwWidgetProducts = "";
