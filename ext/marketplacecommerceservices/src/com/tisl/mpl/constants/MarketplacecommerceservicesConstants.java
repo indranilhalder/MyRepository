@@ -2160,4 +2160,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// added for TPR-1348 AutomatedOrder refund process
 	public static final String CLICK_AND_COLLECT = "click-and-collect";
 
+	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+	public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
+
 }
