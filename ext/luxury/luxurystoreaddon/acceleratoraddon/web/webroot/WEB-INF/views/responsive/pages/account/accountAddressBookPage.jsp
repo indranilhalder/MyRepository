@@ -207,10 +207,8 @@
 																		
 																		<ycommerce:testId
 																			code="addressBook_editAddress_button">
-																			<a href="#editaddress" class="edit" 
-																				onclick="editLuxuryAddress(${address.id})"> <spring:theme
-																					code="text.edit" text="Edit" />
-																			</a>
+																			<a href="#editaddress" class="edit" data-addressId="${address.id}">
+																				 <spring:theme code="text.edit" text="Edit" />																			</a>
 																		</ycommerce:testId>
 																	</div>
 																</ycommerce:testId>
