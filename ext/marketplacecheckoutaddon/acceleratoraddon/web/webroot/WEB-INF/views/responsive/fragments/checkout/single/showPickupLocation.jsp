@@ -105,9 +105,7 @@
 					<input style="width: 100%" type="text" name="changepin${entryNumber}" class="changepin${entryNumber}" maxlength="6" placeholder="New Pincode">
 					<button type="button" class="submitPincode submitPincode${entryNumber}" style="" name="submitPincode${entryNumber}">Submit</button>
 				</div>
-			</div>
-			<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;">
-			
+				<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;"></div>
 			</div>
 		</div>
 		<%-- <div class="productCount">(for ${cnccount} out of ${delModeCount + cnccount}
