@@ -123,7 +123,7 @@
 									<%-- <form:input type="tel" id="mobileNo" inputCSS="form-text" path="mobileNumber" onblur="validateForm()"
 												onkeypress="kpressmob()" maxlength="10"/>  --%>
 										<form:input path="mobileNumber" id="profileMobileNumber"
-											onkeyup="kpressmob()" maxlength="10" />
+											onkeyup="kpressmob()" maxlength="10"  placeholder="Mobile Number"/>
 									<div class="errorMessage"><div id="errMob"></div></div>			
 								</div>
 									
