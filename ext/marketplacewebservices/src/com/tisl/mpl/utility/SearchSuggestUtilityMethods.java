@@ -171,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -819,7 +819,7 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setSellingPrice(productData.getMobileprice());
 				}
-				else if (null == productData.getMobileprice() && !specialMobileFlag && null != productData.getPrice()) //backward compatible
+				else if (!specialMobileFlag && null != productData.getPrice()) //backward compatible
 				{
 					sellingItemDetail.setSellingPrice(productData.getPrice());
 				}
