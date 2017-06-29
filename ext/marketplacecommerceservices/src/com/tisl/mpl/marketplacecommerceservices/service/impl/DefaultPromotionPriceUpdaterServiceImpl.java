@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -1162,9 +1163,18 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			 */
 			final List<PromotionalPriceRowModel> priceRowModelList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
 
+			final Set<PriceRowModel> priceModifiedtsChange = new HashSet<>();
+
+
 			if (CollectionUtils.isNotEmpty(priceRowModelList))
 			{
+				for (final PromotionalPriceRowModel priceRow : priceRowModelList)
+				{
+					priceModifiedtsChange.add(priceRow.getPriceRow());
+				}
+
 				modelService.removeAll(priceRowModelList);
+				modelService.saveAll(priceModifiedtsChange);
 			}
 		}
 
@@ -1222,7 +1232,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		try
 		{
 
-			if (brands.isEmpty() && rejectBrandList.isEmpty())//no need to proceed if there is no brand restriction
+			if (brands.isEmpty() && rejectBrandList.isEmpty()) //no need to proceed if there is no brand restriction
 			{
 				return true;
 			}
@@ -1257,7 +1267,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
 			{
 				//	final String productBrand = brandList.get(0);
-				if (rejectBrandList.contains(brandCode))//Car-158 CHNAGES
+				if (rejectBrandList.contains(brandCode)) //Car-158 CHNAGES
 				{
 					allow = false;
 				}
