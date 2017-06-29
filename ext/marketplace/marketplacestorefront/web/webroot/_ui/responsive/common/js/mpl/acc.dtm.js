@@ -74,11 +74,28 @@ $(document).ready(function(){
 	// For PDP
 	if (pageType == "product"
 			|| pageType == "/sellersdetailpage") {
+		//TPR-6300
+		var product_id = $("#product_id").val();
+		var product_category = $("#product_category").val();
+		var product_brand = $("#product_brand").val();
+		var product_discount = $("#product_discount").val();
+		digitalData.cpj = {
+			product : {
+				id : product_id,
+				category : product_category,
+				discount : product_discount
+			},
+			brand : {
+				name : product_brand
+			}
+		}
+		
 		if(Promo_Id != "" && Promo_Id !=""){
-		   digitalData.cpj = {
-				Promo_Id : Promo_Id
+		   digitalData.cpj.promo = {
+				id : Promo_Id
 		   }
 		}
+		
 		digitalData.product = {
 			seller : {
 				list : sellerList,
@@ -89,6 +106,9 @@ $(document).ready(function(){
 		digitalData.page.category.subCategory1 = product_category;
 		digitalData.page.category.subCategory2 = page_subcategory_name; 
 		digitalData.page.category.subCategory3 = page_subcategory_name_L3;
+		if(typeof _satellite !="undefined"){
+		    _satellite.track('cpj_pdp');
+		}
 	}		
 	// Generic Page Script
 	if (pageType != 'homepage' && pageType != 'product' && pageType != '/sellersdetailpage' && pageType != 'productsearch'
