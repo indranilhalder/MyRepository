@@ -2189,6 +2189,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		final CartModel cartModel = getCartService().getSessionCart();
 		final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 		{
 			if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
@@ -2267,7 +2269,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			formatDeliveryCost = df.format(finalDeliveryCost);
 		}
 
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 	// = "updateDeliverySlotCostForEd";
@@ -2279,6 +2282,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		final CartModel cartModel = getCartService().getSessionCart();
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 		{
@@ -2326,7 +2331,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			formatDeliveryCost = df.format(finalDeliveryCost);
 		}
 
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 

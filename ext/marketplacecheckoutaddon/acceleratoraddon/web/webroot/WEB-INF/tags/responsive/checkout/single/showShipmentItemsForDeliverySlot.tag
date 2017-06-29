@@ -113,10 +113,11 @@
 		 			if(response == '-'){
 		 				
 		 			}else{
+		 				
 		 			$("#resetButtonId"+entryNumber).removeAttr('disabled');
 		 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
 		 			$("#totalWithConvField").empty().text(result[1]);
-		 			//$("#outstanding-amount-mobile")
+		 			$("#outstanding-amount-mobile").empty().text(result[1]);
 		 		}
 		 		},
 		 		error : function(error) {
@@ -141,6 +142,7 @@
 	 			var result = response.split("-");
 	 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
 	 			$("#totalWithConvField").empty().text(result[1]);
+	 			$("#outstanding-amount-mobile").empty().text(result[1]);
 	 		},
 	 		error : function(error) {
 
