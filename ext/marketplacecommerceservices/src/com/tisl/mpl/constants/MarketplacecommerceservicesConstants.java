@@ -2175,4 +2175,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SILVER = "SILVER";
 	public static final String PLATINUM = "PLATINUM";
 	public static final String SOLITAIRE = "SOLITAIRE";
+	public static final String TANISHQ = "Tanishq";
 }

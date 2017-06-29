@@ -17,6 +17,7 @@ import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -117,6 +118,7 @@ import com.tisl.mpl.facades.product.data.StateData;
 import com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MPLReturnService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
@@ -275,6 +277,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 	@Autowired
 	private AccountAddressFacade accountAddressFacade;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 
 	@Override
@@ -1322,6 +1327,11 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 					sendTicketRequestData.setRefundType(refundType);
+					//TPR-4134
+					if (null != returnInfoData.getReverseSealForJwllry())
+					{
+						sendTicketLineItemData.setReverseSealForJwllry(returnInfoData.getReverseSealForJwllry());
+					}
 
 
 					if (!(returnInfoData.getReturnMethod().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_SELF)))
@@ -2423,10 +2433,27 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					String returnFulfillmentByP1 = null;
 					//getting the product code
 					final ProductModel productModel = mplOrderFacade.getProductForCode(eachEntry.getProduct().getCode());
-
+					String ussid = "";
 					for (final SellerInformationModel sellerInfo : productModel.getSellerInformationRelator())
 					{
-						if (eachEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID()))
+						//Added for jewellery
+						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+
+						{
+							final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(eachEntry
+									.getSelectedUssid());
+							ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getUSSID() : "";
+
+							LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + eachEntry.getSelectedUssid() + " is "
+									+ jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							ussid = sellerInfo.getUSSID();
+						}
+
+						//if (eachEntry.getSelectedUssid().equalsIgnoreCase(sellerInfo.getUSSID()))
+						if (eachEntry.getSelectedUssid().equalsIgnoreCase(ussid))
 						{
 							if (CollectionUtils.isNotEmpty(sellerInfo.getRichAttribute()))
 							{
@@ -3046,13 +3073,28 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	public List<String> getReturnableDates(final OrderEntryData orderEntryData)
 	{
 		List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
-		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-				orderEntryData.getSelectedUssid());
+		String ussid = "";
+		if (orderEntryData.getProduct().getRootCategory().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 
+		{ //SellerInformationModel sellerInfoModel = null;
+			final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntryData
+					.getSelectedUssid());
+			ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
 
+			LOG.debug("PCMUSSID FOR JEWELLERY :::::::::: " + "for " + orderEntryData.getSelectedUssid() + " is "
+					+ jewelleryInfo.get(0).getPCMUSSID());
+		}
+		else
+		{
+			ussid = orderEntryData.getSelectedUssid();
+		}
 
+		/*
+		 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+		 * orderEntryData.getSelectedUssid());
+		 */
 
-
+		final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
 		if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 		{
 
