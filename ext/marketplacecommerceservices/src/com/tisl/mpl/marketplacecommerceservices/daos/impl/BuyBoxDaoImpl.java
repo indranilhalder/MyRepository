@@ -1291,7 +1291,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		}
 		catch (final Exception ex)
 		{
-			log.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
+			LOG.debug(MarketplacecclientservicesConstants.EXCEPTION_IS + ex);
 			throw new EtailNonBusinessExceptions(ex);
 		}
 		return pussid;
