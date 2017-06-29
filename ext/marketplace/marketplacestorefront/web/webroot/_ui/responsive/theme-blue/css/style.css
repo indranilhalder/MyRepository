@@ -35514,6 +35514,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     padding: 24px 0 10px;
     border-bottom: 0 none;
     margin-bottom: 0;
+    margin-top: 0;
 }
 .prolist-sort {
     float: left !important;
@@ -35818,6 +35819,7 @@ color:#a9143c;
 }
 .listing.wrapper .right-block .facet-values.js-facet-values{
 	margin-left:-27%;
+	display: none;
 }
 .product-tile .image .new, .newExclusiveElement .new {
     left: 5px !important;
