@@ -73673,6 +73673,7 @@ span#juspayErrorMsg{
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq{
 	width: 50px;
+	height: 30px;
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before, 
 .product-info .product-detail.FashionJewellery .certified-by ul li.jwlryCertiTanishq:before{
@@ -73684,6 +73685,12 @@ span#juspayErrorMsg{
     left: 0;
     top: 8px;
     background: url(../images/cerified_logo.png) no-repeat 0px 0px;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGS,
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGTA,
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiHRD{
+	display: none;
 }
 @media (max-width: 1024px){
 .product-info.wrapper .product-image-container.FineJewellery.device, 
