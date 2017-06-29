@@ -56,7 +56,7 @@ text-decoration: none !important;
 						</tr>
 
   <tr>
-    <td colspan="3" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataCLiQ. Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
+    <td colspan="3" align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">So glad we get to do that, now that you've signed up for TataCLiQ Luxury . Our XXXHelpers told us you wanted an account with us. So here it is.  </td>
   </tr>
   <tr>
     <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">&nbsp;</td>
@@ -202,7 +202,7 @@ text-decoration: none !important;
 					 
 					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table border="0" cellspacing="0" cellpadding="0">
 					  <tr>
-                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
 						<tr>
 						  <td>${ctx.cmsSlotContents.smileyimg}</td></td>
@@ -227,7 +227,7 @@ text-decoration: none !important;
 				
 					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table border="0" cellspacing="0" cellpadding="0">
 						<tr>
-						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+						 <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@luxury.tatacliq.com">hello@luxury.tatacliq.com</a></p></td>
 						  </tr>
 						  <tr>
                
@@ -247,7 +247,7 @@ text-decoration: none !important;
 					
 					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;padding-left:13px"><table style="width:95%;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-						 <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy; 2016 Tata CLiQ | All Rights Reserved</td>
+						 <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&copy; 2016 Tata CLiQ Luxury| All Rights Reserved</td>
 						  <td align="left" valign="top">&nbsp;</td>
 						  <td align="right" valign="top"><table border="0" cellspacing="0" cellpadding="0" align="right">
 							<tr>

@@ -44,7 +44,7 @@
 <tr>
   <td align="left" valign="top">&nbsp;</td>
   <td align="left" valign="top" style="font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">
-    We're writing to inform you that the refund has been credited against uncollected item(s) from Tata CLiQ order ${ctx.orderCode}.Total amount of INR ${ctx.refundAomunt} is refunded
+    We're writing to inform you that the refund has been credited against uncollected item(s) from Tata CLiQ Luxury order ${ctx.orderCode}.Total amount of INR ${ctx.refundAomunt} is refunded
     </td>
   <td align="left" valign="top">&nbsp;</td>
 </tr>
@@ -68,7 +68,7 @@
 </tr>
 
 <tr>
-      #if($ctx.cmsSlotContents.handpick)<td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank">${ctx.cmsSlotContents.handpick}</a></td>#end
+      #if($ctx.cmsSlotContents.handpick)<td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.handpick}</a></td>#end
 </tr>
 
 <tr>
@@ -87,12 +87,12 @@
   <td height="5" align="left" valign="top" style="font-size:0; line-height:0;">&nbsp;</td>
 </tr>
 <tr>
-  <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+  <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@luxury.tatacliq.com">hello@luxury.tatacliq.com</a></p></td>
 </tr>
 <tr>
  <td><table width="572" border="0" cellspacing="0" cellpadding="0">
                   		<tr>
-                   	 		<td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                   	 		<td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ  Luxury| All Rights Reserved</td>
                     		<td>&nbsp;</td>
 				#if($ctx.cmsSlotContents.fb)<td width="27" align="right"><a href="https://www.facebook.com/TataCLiQ/">${ctx.cmsSlotContents.fb}</a></td>#end
 				#if($ctx.cmsSlotContents.youtube)<td width="27" align="right"><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA/">${ctx.cmsSlotContents.youtube}</a></td>#end

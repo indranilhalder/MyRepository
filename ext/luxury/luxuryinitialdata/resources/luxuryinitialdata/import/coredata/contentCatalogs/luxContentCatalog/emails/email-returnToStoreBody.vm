@@ -209,12 +209,12 @@ width:100%;
             </td>
          </tr>
               <!-- <tr>
-                <td height="70" align="center"><a href="https://www.tatacliq.com/apps" target="_blank"></a></td>
+                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank"></a></td>
               </tr> -->
 			   #if($ctx.cmsSlotContents.app)
          <tr bgcolor="#fbfbfb">
             <td colspan="5" align="center">
-               <a href="https://www.tatacliq.com/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
+               <a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
      ${ctx.cmsSlotContents.app}
     </a> 
             </td>
@@ -225,8 +225,8 @@ width:100%;
               </tr>
 			  
               <tr>
-                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p style="margin:0;margin-top:12px;">This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="tel:18002088282">1800 208 8282</a>. You can also write to us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a>. For help with our luxury products,
-               write to <a href="mailto:luxury@tatacliq.com">luxury@tatacliq.com</a>.</p></td>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p style="margin:0;margin-top:12px;">This email can't receive replies. Get in touch with us by contacting Tata CLiQ Luxury Care <a href="tel:18002088282">1800 208 8282</a>. You can also write to us at <a href="mailto:hello@luxury.tatacliq.com">hello@tatacliq.com</a>. For help with our luxury products,
+               write to <a href="mailto:luxury@luxury.tatacliq.com">luxury@tatacliq.com</a>.</p></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -234,7 +234,7 @@ width:100%;
               <tr>
                 <td><table width="572" border="0" cellspacing="0" cellpadding="0" style="width:95%;">
                   <tr>
-                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ | All Rights Reserved</td>
+                    <td align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ Luxury| All Rights Reserved</td>
                     <td>&nbsp;</td>
                     <td align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.fb}</a></td>
                     <td align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
