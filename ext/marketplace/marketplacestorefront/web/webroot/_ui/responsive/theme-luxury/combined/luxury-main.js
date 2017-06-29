@@ -13736,38 +13736,46 @@ TATA.CommonFunctions = {
             _self.luxury_overlay_close(), _self.wishlistInit(), _self.luxuryDeliveryOptions();
         }
     },
+    MYACCOUNT: {
+        init: function() {
+            $(".edit").on("click", function(e) {
+                var addressId = $(this).attr("data-addressId");
+                TATA.Pages.MYACCOUNT.editLuxuryAddress(addressId);
+            });
+        },
+        editLuxuryAddress: function(addressId) {
+            var requiredUrl = ACC.config.encodedContextPath + "/my-account/populateAddressDetail", dataString = "&addressId=" + addressId;
+            $.ajax({
+                url: requiredUrl,
+                type: "GET",
+                data: dataString,
+                dataType: "json",
+                cache: !1,
+                contentType: "application/json; charset=utf-8",
+                success: function(data) {
+                    $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
+                    $("#line1").val(data.line1), $("#line2").val(data.line2), $("#line3").val(data.line3), 
+                    $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
+                    loadPincodeData("edit").done(function() {
+                        otherLandMarkTri(data.landmark, "defult");
+                    }), $("#townCity").val(data.townCity), $("#mobileNo").val(data.mobileNo), $("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state), 
+                    "Home" == data.addressType && (document.getElementById("new-address-option-1").checked = !0), 
+                    "Work" == data.addressType && (document.getElementById("new-address-option-2").checked = !0), 
+                    $("#headerAdd").css("display", "none"), $("#headerEdit").css("display", "block"), 
+                    $("#addNewAddress").css("display", "none"), $("#edit").css("display", "block");
+                },
+                error: function(data) {
+                    console.log(data.responseText);
+                }
+            });
+        }
+    },
     init: function() {
         var _self = TATA.Pages;
-        _self.PLP.init(), _self.PDP.init(), _self.LANDING.init();
-    },
-    editLuxuryAddress: function(addressId) {
-        var requiredUrl = ACC.config.encodedContextPath + "/my-account/populateAddressDetail", dataString = "&addressId=" + addressId;
-        $.ajax({
-            url: requiredUrl,
-            type: "GET",
-            data: dataString,
-            dataType: "json",
-            cache: !1,
-            contentType: "application/json; charset=utf-8",
-            success: function(data) {
-                $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
-                $("#line1").val(data.line1), $("#line2").val(data.line2), $("#line3").val(data.line3), 
-                $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
-                loadPincodeData("edit").done(function() {
-                    otherLandMarkTri(data.landmark, "defult");
-                }), $("#townCity").val(data.townCity), $("#mobileNo").val(data.mobileNo), $("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state), 
-                "Home" == data.addressType && (document.getElementById("new-address-option-1").checked = !0), 
-                "Work" == data.addressType && (document.getElementById("new-address-option-2").checked = !0), 
-                $("#headerAdd").css("display", "none"), $("#headerEdit").css("display", "block"), 
-                $("#addNewAddress").css("display", "none"), $("#edit").css("display", "block");
-            },
-            error: function(data) {
-                console.log(data.responseText);
-            }
-        });
+        _self.PLP.init(), _self.PDP.init(), _self.LANDING.init(), _self.MYACCOUNT.init();
     }
 }, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, #landmark, .responsiveSort").selectBoxIt(), 
+    TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
     $(".header-login-target-link").on("click", function() {
         var targetID = $(this).data("target-id");
         $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
