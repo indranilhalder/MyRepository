@@ -32,7 +32,9 @@ import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartModification;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.commerceservices.order.CommerceCartRestoration;
 import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
+import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
@@ -107,6 +109,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServ
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
+import com.tisl.mpl.service.MplPaymentWebService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -194,6 +197,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Resource(name = "buyBoxFacade")
 	private BuyBoxFacade buyBoxFacade;
+
+	@Autowired
+	private CommerceCartService commerceCartService;
+
+	@Autowired
+	private MplPaymentWebService mplPaymentWebService;
 
 	/**
 	 * Service to create cart
@@ -966,6 +975,16 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
 				{
 					gwlp.setExchangeId(abstractOrderEntry.getExchangeId());
+					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
+					{
+						gwlp.setExchangeMessage(MarketplacewebservicesConstants.EXCHANGEAPPLIED);
+					}
+					else
+					{
+						gwlp.setExchangeMessage(
+								MarketplacewebservicesConstants.EXCHANGENOTAPPLIED + MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE + pincode);
+					}
 				}
 				if (null != abstractOrderEntry.getDeliveryPointOfService())
 				{
@@ -1680,14 +1699,14 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != obj)
 				{
 					gwlp.setPinCodeResponse(obj);
-					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
-					{
-						gwlp.setExchangeMessage("Exchange Applied");
-					}
-					else
-					{
-						gwlp.setExchangeMessage("Exchange Is Not Applicable For Pincode " + pincode);
-					}
+					//					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
+					//					{
+					//						gwlp.setExchangeMessage("Exchange Applied");
+					//					}
+					//					else
+					//					{
+					//						gwlp.setExchangeMessage("Exchange Is Not Applicable For Pincode " + pincode);
+					//					}
 
 				}
 
@@ -3180,6 +3199,80 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.B9004);
 		}
 		return result;
+	}
+
+	/**
+	 * Service to merge carts
+	 *
+	 * @param fromAnonymousCartGuid
+	 * @param toUserCartGuid
+	 * @return CartRestorationData
+	 * @throws CommerceCartRestorationException
+	 * @throws CommerceCartMergingException
+	 */
+	@Override
+	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
+			throws CommerceCartRestorationException, CommerceCartMergingException
+	{
+		final BaseSiteModel currentBaseSite = getBaseSiteService().getCurrentBaseSite();
+		final CartModel fromCart = getCommerceCartService().getCartForGuidAndSiteAndUser(fromAnonymousCartGuid, currentBaseSite,
+				userService.getAnonymousUser());
+
+		final CartModel toCart = getCommerceCartService().getCartForGuidAndSiteAndUser(toUserCartGuid, currentBaseSite,
+				userService.getCurrentUser());
+		final CartModel anonymousCartModel = null;
+		if (toCart == null)
+		{
+			throw new CommerceCartRestorationException("Cart cannot be null");
+		}
+
+		if (fromCart == null)
+		{
+			return restoreSavedCart(toUserCartGuid);
+		}
+
+		final CommerceCartParameter parameter = new CommerceCartParameter();
+		parameter.setEnableHooks(true);
+		//		parameter.setCart(toCart);
+		//TPR-1083 Online Exchange facilities to the customer for Large Appliances
+		if (null != fromCart && null != fromCart.getExchangeAppliedCart() && fromCart.getExchangeAppliedCart().booleanValue()
+				&& CollectionUtils.isNotEmpty(fromCart.getEntries()))
+		{
+			for (final AbstractOrderEntryModel entry : fromCart.getEntries())
+			{
+				if (StringUtils.isNotEmpty(entry.getExchangeId()))
+				{
+					parameter.setCart(fromCart);
+				}
+			}
+		}
+		else
+		{
+			parameter.setCart(toCart);
+		}
+		final CommerceCartRestoration restoration = getCommerceCartService().restoreCart(parameter);
+		parameter.setCart(cartService.getSessionCart());
+
+		//		commerceCartService.mergeCarts(fromCart, parameter.getCart(), restoration.getModifications());
+
+		//	TPR-1083 Online Exchange facilities to the customer for Large Appliances
+		if (null != fromCart && null != fromCart.getExchangeAppliedCart() && fromCart.getExchangeAppliedCart().booleanValue()
+				&& CollectionUtils.isNotEmpty(fromCart.getEntries()))
+		{
+			//			commerceCartService.mergeCarts(parameter.getCart(), toCart, restoration.getModifications());
+			commerceCartService.mergeCarts(toCart, parameter.getCart(), restoration.getModifications());
+		}
+		else
+		{
+			commerceCartService.mergeCarts(fromCart, parameter.getCart(), restoration.getModifications());
+		}
+
+		final CommerceCartRestoration commerceCartRestoration = getCommerceCartService().restoreCart(parameter);
+
+		commerceCartRestoration.setModifications(restoration.getModifications());
+
+		cartService.changeCurrentCartUser(userService.getCurrentUser());
+		return getCartRestorationConverter().convert(commerceCartRestoration);
 	}
 
 }
