@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "lineItems")
 @XmlType(propOrder =
-{ "lineItemId", "returnReasonCode", "cancelReasonCode", "timeSlotFrom", "timeSlotTo" })
+{ "lineItemId", "returnReasonCode", "cancelReasonCode", "timeSlotFrom", "timeSlotTo", "reverseSealForJwllry" })
 public class TicketlineItemsXMLData
 {
 	private String lineItemId;
@@ -25,6 +25,10 @@ public class TicketlineItemsXMLData
 	private String timeSlotTo;
 
 	//R2.3 Changes END
+
+	// TPR-4134
+	private String reverseSealForJwllry;
+
 	/**
 	 * @return the lineItemId
 	 */
@@ -115,6 +119,23 @@ public class TicketlineItemsXMLData
 		this.timeSlotTo = timeSlotTo;
 	}
 
+	/**
+	 * @return the reverseSealForJwllry
+	 */
+	@XmlElement(name = "reverseSealForJwllry")
+	public String getReverseSealForJwllry()
+	{
+		return reverseSealForJwllry;
+	}
+
+	/**
+	 * @param reverseSealForJwllry
+	 *           the reverseSealForJwllry to set
+	 */
+	public void setReverseSealForJwllry(final String reverseSealForJwllry)
+	{
+		this.reverseSealForJwllry = reverseSealForJwllry;
+	}
 
 
 
