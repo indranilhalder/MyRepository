@@ -832,6 +832,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		model.addAttribute(ModelAttributetConstants.BREADCRUMBS,
 				accountBreadcrumbBuilder.getBreadcrumbs(MessageConstants.TEXT_ACCOUNT_ORDERHISTORY));
 		model.addAttribute(ModelAttributetConstants.METAROBOTS, ModelAttributetConstants.NOINDEX_NOFOLLOW);
+		model.addAttribute(ModelAttributetConstants.WOMEN_LANDING_URL,configurationService.getConfiguration().getProperty("lux.women.landing"));
+		model.addAttribute(ModelAttributetConstants.MEN_LANDING_URL,configurationService.getConfiguration().getProperty("lux.men.landing"));
+		
 		return getViewForPage(model);
 	}
 

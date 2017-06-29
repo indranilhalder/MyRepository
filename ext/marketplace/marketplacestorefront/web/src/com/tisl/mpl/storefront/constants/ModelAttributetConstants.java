@@ -131,6 +131,8 @@ public final class ModelAttributetConstants
 
 	public static final String BREADCRUMBS = "breadcrumbs";
 	public static final String METAROBOTS = "metaRobots";
+	public static final String MEN_LANDING_URL = "menLandingurl";
+	public static final String WOMEN_LANDING_URL = "womenLandingUrl";
 	public static final String NOINDEX_NOFOLLOW = "noindex,nofollow";
 	public static final String INDEX_NOFOLLOW = "index,nofollow";
 

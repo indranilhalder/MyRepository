@@ -713,7 +713,7 @@
 							
 							<div class="empty-order-btn">	
 								<p class="mb-40">Start your search here</p>
-								<p><a class="lux-shopmen" href="javascript:;">Shop Men</a><a class="lux-shopwomen" href="javascript:;">Shop Women</a></p>
+								<p><a class="lux-shopmen" href="${menLandingurl}">Shop Men</a><a class="lux-shopwomen" href="${womenLandingUrl}">Shop Women</a></p>
 							</div>
 						</div>
 					</c:if>
