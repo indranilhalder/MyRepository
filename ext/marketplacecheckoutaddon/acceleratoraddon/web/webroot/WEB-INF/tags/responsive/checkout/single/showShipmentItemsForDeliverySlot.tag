@@ -94,7 +94,7 @@
  		
 		
 	}); */
-	function updateSlotForEntry(element)
+	function updateSlotForEntry(element,entryNumber)
 	{
 		if($(element).is(":checked"))
 		{
@@ -113,8 +113,10 @@
 		 			if(response == '-'){
 		 				
 		 			}else{
+		 			$("#resetButtonId"+entryNumber).removeAttr('disabled');
 		 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
 		 			$("#totalWithConvField").empty().text(result[1]);
+		 			//$("#outstanding-amount-mobile")
 		 		}
 		 		},
 		 		error : function(error) {
@@ -135,7 +137,7 @@
 	 		data : dataString,
 	 		success : function(response) {
 	 			
-	 			currentReset.prop('disabled','disabled');
+	 			$(element).attr('disabled',true);
 	 			var result = response.split("-");
 	 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
 	 			$("#totalWithConvField").empty().text(result[1]);
@@ -182,13 +184,15 @@
 							<c:choose>
 								<c:when test="${not empty entry.deliverySlotsTime}">
 									<div class="delslot">
-										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots"  varStatus="indexDateSlots">
+									<c:set var="lineItemIndex" value="0" scope="page"></c:set>
+										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
 											<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
 											<div class="delslot_time">
-												<c:forEach items="${dateSlots.value}" var="timeSlots" varStatus="indexTimeSlots">
+												<c:forEach items="${dateSlots.value}" var="timeSlots">
+												<c:set var="lineItemIndex" value="${lineItemIndex + 1}" scope="page"></c:set>
 													<span class="delslot_timeslot">	
-														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${indexDateSlots}${indexTimeSlots}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this);">
-														<label class="delslot_radio" for="date${scheduleIndex}${indexDateSlots}${indexTimeSlots}"></label>
+														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${lineItemIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this,'${entry.entryNumber}');">
+														<label class="delslot_radio" for="date${scheduleIndex}${lineItemIndex}"></label>
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
 														<c:choose>
@@ -203,7 +207,7 @@
 												</c:forEach>
 											</div>
 										</c:forEach>
-											<button class="reset_link" type="button" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');">Reset</button>
+											<button class="reset_link" type="button" id="resetButtonId${entry.entryNumber}" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');">Reset</button>
 									</div>									
 								</c:when>
 								<c:otherwise>

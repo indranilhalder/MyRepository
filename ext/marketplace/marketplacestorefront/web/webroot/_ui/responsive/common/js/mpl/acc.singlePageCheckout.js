@@ -722,7 +722,7 @@ ACC.singlePageCheckout = {
         		xhrPickupPersonResponse.done(function(data) { 
         			//Populating popup
         			$("#singlePagePickupPersonPopup #modalBody").html(data);
-        			$("#singlePagePickupPersonPopup #modalBody").data("htmlPopulated","YES");
+        			$("#singlePagePickupPersonPopup #modalBody").attr("data-htmlPopulated","YES");
         			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
@@ -1957,7 +1957,7 @@ removeExchangeFromCart : function (){
 					//Populating popup
 					var elementId="singlePagePickupPersonPopup";
             		ACC.singlePageCheckout.modalPopup(elementId,data);
-					$("#singlePagePickupPersonPopup #modalBody").data("htmlPopulated","YES");
+					$("#singlePagePickupPersonPopup #modalBody").attr("data-htmlPopulated","YES");
 				});
 				
 				xhrPickupPersonResponse.always(function(data) { 
@@ -2410,7 +2410,7 @@ removeExchangeFromCart : function (){
 	            	
 	            		var elementId="singlePageChooseSlotDeliveryPopup";
 	            		ACC.singlePageCheckout.modalPopup(elementId,data);
-	            		$("#singlePageChooseSlotDeliveryPopup #modalBody").data("htmlPopulated","YES");
+	            		$("#singlePageChooseSlotDeliveryPopup #modalBody").attr("data-htmlPopulated","YES");
 	            }
 	        });
 	        
