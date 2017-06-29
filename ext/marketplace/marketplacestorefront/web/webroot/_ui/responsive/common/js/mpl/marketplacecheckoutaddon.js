@@ -6066,8 +6066,9 @@ function populateCartDetailsafterPincodeCheck(responseData){
 					$("#totalPrice_"+entryNumber).addClass("delAction");
 					isOfferPresent=true;
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
@@ -6082,8 +6083,9 @@ function populateCartDetailsafterPincodeCheck(responseData){
 					isOfferPresent=true;
 					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
