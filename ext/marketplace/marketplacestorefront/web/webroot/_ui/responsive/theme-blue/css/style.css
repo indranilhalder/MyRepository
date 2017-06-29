@@ -71304,16 +71304,18 @@ span#juspayErrorMsg{
  #addToCartFormTitle {
     position: fixed;
     z-index: 10000;
-    line-height: 36px;
-    padding: 0 10px;
+    line-height: 18px;	/*changed for TISTE-159 fix*/
+    padding: 9px 10px;	/*changed for TISTE-159 fix*/
     bottom: 60px;
     left: 0;
     right: 0;
     margin: auto;
-    display: inline-block;
+    /* display: inline-block; */
+    display: none; /*added for TISTE-159 fix*/
+    color: #fff;	/*added for TISTE-159 fix*/
     text-align: center;
     width: 200px;
-    height: 36px;
+    min-height: 36px;	/*changed for TISTE-159 fix*/
     opacity: 0.9;
     border-radius: 18px;
     background-color: #a5173c;
@@ -72691,3 +72693,11 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 } 
 /*TISPRDT-1670 fix end*/
 
+/*TISTE-163 fix start*/
+.modal.size-guide .sizes .tables>div {
+    margin-bottom: 0px;
+}
+.modal.size-guide > .content {
+    min-height: 288px;
+}
+/*TISTE-163 fix end*/
