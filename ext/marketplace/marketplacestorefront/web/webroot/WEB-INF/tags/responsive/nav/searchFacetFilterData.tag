@@ -10,7 +10,7 @@
 		<div class="search-result">
 			<h2>
 				<c:choose>
-					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion && not empty searchPageData.results}">
+					<c:when test="${not empty searchPageData.spellingSuggestion.suggestion && not empty searchPageData.results && spellSuggestionFlag eq 'true'}">
 					<!-- Added for TPR-812 -->
 					<c:set var="resultCount" value="${fn:length(searchPageData.results)}" />					
 					<c:set var="resultStr" value="${resultCount > 1 ? 'results' : 'result'}" />

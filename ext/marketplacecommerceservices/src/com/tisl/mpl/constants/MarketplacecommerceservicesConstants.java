@@ -736,6 +736,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TYPE_MISMATCH_ERROR_CODE = "typeMismatch";
 	public static final String ERROR_MSG_TYPE = "errorMsg";
 	public static final String ERROR_MSG_TYPE_FREEBIE = "freebieErrorMsg";
+	public static final String ERROR_MSG_TYPE_MISMATCHUSSID = "mismatchUssid";
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
@@ -1063,6 +1064,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String END_TIME = "END TIME";
 
 	public static final String LOADSTATUS = "loadstatus";
+	public static final String TRANSACTIONID = "transactionid";
 
 
 	public static final String BULK_RETURN_DATA_QUERY_START = "SELECT {" + BulkReturnProcessModel.PK + "} FROM {"
@@ -1993,8 +1995,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BULK_CANCEL_LOG_STEP_14 = "Initiate Bulk Cancellation Job : BulKCancellationProcessModel is EMPTY";
 	public static final String BULK_CANCEL_LOG_STEP_15 = "######################################### PROCESS ENDS ##############################################";
 	public static final String BULK_CANCEL_DATA_QUERY_START = "SELECT {" + BulkCancellationProcessModel.PK + "} FROM {"
-			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.LOADSTATUS + "}=?loadstatus";
+			+ BulkCancellationProcessModel._TYPECODE + "} WHERE {" + BulkCancellationProcessModel.TRANSACTIONID + "}=?transactionid";
+	public static final String SUBORDER_DATA_FOR_BULK_CANCELLATION = "select {oe.pk} from {orderentry as oe},{BulkCancellationProcess as bc} where {oe.transactionID}={bc.transactionID} and {bc.loadstatus}='0'";
 
+	public static final String initiate_cancel_job_thread_sleep = "initiate.cancel.job.thread.sleep";
 	public static final String BULK_RETURN_SUCCESS_DESC = "Return Success";
 	public static final String BULK_RETURN_FAILURE_DESC = "Return Failure";
 
@@ -2155,5 +2159,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// added for TPR-1348 AutomatedOrder refund process
 	public static final String CLICK_AND_COLLECT = "click-and-collect";
+
+	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+	public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
 
 }

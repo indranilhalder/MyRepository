@@ -285,7 +285,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -396,7 +396,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						 * roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0; final BigDecimal
 						 * roundedOffValue = new BigDecimal((int) roundedOffValuebefore); //changed as per Ashish mail
 						 * productDetailMobile.setDiscount(roundedOffValue.toString());
-						 *
+						 * 
 						 * }
 						 */
 						if (buyBoxData.getSpecialPriceMobile() != null
@@ -1445,7 +1445,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @param productData
 	 * @return PromotionData
 	 */
-	private PromotionData getHighestPromotion(final ProductData productData, final String channel)
+	private PromotionData getHighestPromotion(final ProductData productData, final String channel, final BuyBoxData buyBoxData)
 	{
 		PromotionData highestPromotion = null;
 		try
@@ -1455,49 +1455,54 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				promotioncollection = productData.getPotentialPromotions();
 			}
-			final List<PromotionData> enabledPromotionList = new ArrayList<PromotionData>();
-			final Date todays_Date = new Date();
+			//INC144317611
+			//final List<PromotionData> enabledPromotionList = new ArrayList<PromotionData>();
+			//final Date todays_Date = new Date();
 			if (CollectionUtils.isNotEmpty(promotioncollection))
 			{
 				for (final PromotionData promodata : promotioncollection)
 				{
-					if (null != promodata.getEnabled() && promodata.getEnabled().booleanValue() && null != promodata.getStartDate()
-							&& null != promodata.getEndDate() && todays_Date.after(promodata.getStartDate())
-							&& todays_Date.before(promodata.getEndDate()))
+
+					final List<String> restrictedSellerList = promodata.getAllowedSellers();
+					final List<String> restrictedChannel = promodata.getChannels();
+
+					if (CollectionUtils.isEmpty(restrictedSellerList)
+							|| (CollectionUtils.isNotEmpty(restrictedSellerList) && restrictedSellerList.contains(buyBoxData
+									.getSellerId())))
 					{
-						if (CollectionUtils.isNotEmpty(promodata.getChannels()))
+						if (channel == null
+								|| CollectionUtils.isEmpty(restrictedChannel)
+								|| (channel.equalsIgnoreCase(SalesApplication.WEB.getCode()) && restrictedChannel
+										.contains(SalesApplication.WEB.getCode()))
+								|| (channel.equalsIgnoreCase(SalesApplication.MOBILE.getCode()) && restrictedChannel
+										.contains(SalesApplication.MOBILE.getCode())))
 						{
-							for (final String promoChannel : promodata.getChannels())
-							{
-								//TISLUX-1823 -For LuxuryWeb
-								if (channel != null && channel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
-								{
-									if (promoChannel.equalsIgnoreCase(SalesApplication.WEB.getCode()))
-									{
-										enabledPromotionList.add(promodata);
-									}
-								}
-								else
-								//For Mobile APP
-								{
-									if (promoChannel.equalsIgnoreCase(SalesApplication.MOBILE.getCode()))
-									{
-										enabledPromotionList.add(promodata);
-									}
-								}
-							}
+							highestPromotion = promodata;
+							break;
 						}
-						else
-						{
-							enabledPromotionList.add(promodata);
-						}
+
 					}
 
+					//INC144317611
+
+					/*
+					 * if (null != promodata.getEnabled() && promodata.getEnabled().booleanValue() && null !=
+					 * promodata.getStartDate() && null != promodata.getEndDate() &&
+					 * todays_Date.after(promodata.getStartDate()) && todays_Date.before(promodata.getEndDate())) { if
+					 * (CollectionUtils.isNotEmpty(promodata.getChannels())) { for (final String promoChannel :
+					 * promodata.getChannels()) { //TISLUX-1823 -For LuxuryWeb if (channel != null &&
+					 * channel.equalsIgnoreCase(SalesApplication.WEB.getCode())) { if
+					 * (promoChannel.equalsIgnoreCase(SalesApplication.WEB.getCode())) { enabledPromotionList.add(promodata);
+					 * } } else //For Mobile APP { if (promoChannel.equalsIgnoreCase(SalesApplication.MOBILE.getCode())) {
+					 * enabledPromotionList.add(promodata); } } } } else { enabledPromotionList.add(promodata); } }
+					 */
+
 				}
-				if (CollectionUtils.isNotEmpty(enabledPromotionList))
-				{
-					highestPromotion = checkHighestPriority(enabledPromotionList);
-				}
+				//INC144317611
+				/*
+				 * if (CollectionUtils.isNotEmpty(enabledPromotionList)) { highestPromotion =
+				 * checkHighestPriority(enabledPromotionList); }
+				 */
 			}
 		}
 		catch (final Exception e)
@@ -1545,7 +1550,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private PromotionMobileData getPromotionsForProduct(final ProductData productData, final BuyBoxData buyBoxData,
 			final List<SellerInformationMobileData> otherSellers, final String channel)
 	{
-		final PromotionData highestPrmotion = getHighestPromotion(productData, channel);
+		final PromotionData highestPrmotion = getHighestPromotion(productData, channel, buyBoxData);
 		PromotionMobileData promoMobiledata = null;
 		try
 		{

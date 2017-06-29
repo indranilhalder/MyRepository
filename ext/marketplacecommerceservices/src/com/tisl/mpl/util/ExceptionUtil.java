@@ -80,7 +80,16 @@ public class ExceptionUtil
 	{
 		if (null != e.getRootCause())
 		{
-			LOG.error("***********ETAIL Non Business Exception is :: " + e.getErrorCode() + "- " + e.getErrorMessage());
+			//INC144317663
+			if (null != e.getErrorCode())
+			{
+				LOG.error("***********ETAIL Non Business Exception is :: " + e.getErrorCode());
+			}
+			if (null != e.getErrorMessage())
+			{
+				LOG.error("***********ETAIL Non Business Exception is :: " + e.getErrorMessage());
+			}
+			//LOG.error("***********ETAIL Non Business Exception is :: " + e.getErrorCode() + "- " + e.getErrorMessage());
 			//			if (null != e.getRootCause().getClass())
 			//			{
 			//				LOG.error("*********ETAIL Non Business Exception is :: " + e.getRootCause().getClass().getCanonicalName());
@@ -91,8 +100,11 @@ public class ExceptionUtil
 		if (null != e.toString())
 		{
 			//LOG.error("************ETAIL Non Business Exception is :: " + e.toString());
- 			LOG.error("************ETAIL Non Business Exception is :: " + e.getErrorMessage());
- 			LOG.error(getCustomizedExceptionTrace(e.getRootCause()));
+			if (null != e.getErrorMessage())
+			{
+				LOG.error("************ETAIL Non Business Exception is :: " + e.getErrorMessage());
+			}
+			LOG.error(getCustomizedExceptionTrace(e.getRootCause()));
 		}
 	}
 }
