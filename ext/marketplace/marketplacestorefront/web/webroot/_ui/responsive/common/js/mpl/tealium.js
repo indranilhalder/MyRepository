@@ -1526,7 +1526,7 @@ $(document).on('click','.list_title .UlContainer .sort',function(){
 /*TPR-4719, TPR-4704 | Search Filter in SERP|PLP*/
 var restrictionFlag='false';
 
-function setupSessionValues(){
+function setupSessionValuesUtag(){
 	if($('.bottom-pagination .facet-list.filter-opt').children().length > 0){
 		var filterTypeList=[];
 		var filterTypeFinalList=[];
@@ -1766,7 +1766,7 @@ $(window).unload(function(event) {
 	var pageType = $('#pageType').val();
 	if(pageType == 'category' || pageType == 'productsearch'){
 		if(restrictionFlag != 'true'){
-			setupSessionValues();
+			setupSessionValuesUtag();
 		}
 	}
 });
