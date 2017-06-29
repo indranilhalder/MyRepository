@@ -308,7 +308,7 @@
 	.addresses{
 		.actions{
 			button{
-				display:block !important;
+				display:block;
 			}
 		}
 	}
@@ -595,4 +595,12 @@
 	img, img+div{ 
 		display: inline-block;
 	}
+}
+.account .wrapper .right-account textarea{
+    margin-bottom: 20px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    box-shadow: none;
 }
