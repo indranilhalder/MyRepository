@@ -1205,4 +1205,13 @@
 		<property name="storeAddress" type="String"></property>
 		<property name="date" type="String"></property>
 	</bean>
+	
+	<!--TPR-6117-->
+	<bean class="com.tisl.mpl.wsdto.MaxLimitData">
+		<property name="productCode" type="String" />
+		<property name="productName" type="String" />
+		<property name="ussid" type="String" />
+		<property name="maxQuantityAllowed" type="String" />
+		<property name="userSelectedQty" type="String" />
+	</bean>
 </beans>
