@@ -103,7 +103,7 @@ var productSizeVar = '${productSize}';
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
 								<c:when test="${empty variantOption.image}">
-						     	<span  style="background-color: ${color};border: 1px solid rgb(204, 211, 217); width:50px; height:73px" title="${variantOption.colour}"></span>
+						     	<span  style="background-color: ${color};box-shadow: 1px 1px 3px #ccc; width:50px; height:73px" title="${variantOption.colour}"></span>
 						     	
 						     	<span class="toolInner" title="${variantOption.colour}"> Color : ${variantOption.colour} </span>
 								</c:when>							
