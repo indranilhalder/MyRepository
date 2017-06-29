@@ -636,26 +636,35 @@ ACC.singlePageCheckout = {
 	        	
 	        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 	        	
-	        	var urlSetDefault=ACC.config.encodedContextPath + "/checkout/multi/delivery-method/set-default-address/" + addressId;
-	        	var xhrResponseSetDefault=ACC.singlePageCheckout.ajaxRequest(urlSetDefault,"GET","",false);
-	        	xhrResponseSetDefault.fail(function(xhr, textStatus, errorThrown) {
-	    			console.log("ERROR:"+textStatus + ': ' + errorThrown);
-	    		});
+//				Below code is not required any more as default address is being set in controller  itself	        	
+//	        	var urlSetDefault=ACC.config.encodedContextPath + "/checkout/multi/delivery-method/set-default-address/" + addressId;
+//	        	var xhrResponseSetDefault=ACC.singlePageCheckout.ajaxRequest(urlSetDefault,"GET","",false);
+//	        	xhrResponseSetDefault.fail(function(xhr, textStatus, errorThrown) {
+//	    			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+//	    		});
+//	        	
+//	        	xhrResponseSetDefault.done(function(data) {
+//	        		//alert(data);
+//	        		if(data.toString()=="true"){
+//	     				//console.log(radio);
+//	     				$(".addressList_wrapper input[type='radio']+label").removeClass("radio-checked");
+//	     				
+//	     				radio.attr('checked', 'checked');
+//	     				console.log(radio_label);
+//	     				radio_label.addClass('radio-checked');
+//	     				//radio_label.css('background-color',' #999999');
+//	     			}else{
+//	     				console.log("Unable to set default address");
+//	     			}
+//	        	});
 	        	
-	        	xhrResponseSetDefault.done(function(data) {
-	        		//alert(data);
-	        		if(data.toString()=="true"){
-	     				//console.log(radio);
-	     				$(".addressList_wrapper input[type='radio']+label").removeClass("radio-checked");
-	     				
-	     				radio.attr('checked', 'checked');
-	     				console.log(radio_label);
-	     				radio_label.addClass('radio-checked');
-	     				//radio_label.css('background-color',' #999999');
-	     			}else{
-	     				console.log("Unable to set default address");
-	     			}
-	        	});
+	        	//Radio button of the currently selected address is checked below
+	        	$(".addressList_wrapper input[type='radio']+label").removeClass("radio-checked");
+ 				
+ 				radio.attr('checked', 'checked');
+ 				console.log(radio_label);
+ 				radio_label.addClass('radio-checked');
+ 				//Radio button of the currently selected address is checked above
 	        	
 	        	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
         		var couponCode=$("#couponFieldId").val();
@@ -2131,7 +2140,10 @@ removeExchangeFromCart : function (){
 		        event_type: "change_link_clicked"
 		    })
 	      }
-		$(".hideDelModeMobile").show();
+		//$(".hideDelModeMobile").show();
+		$(".hideDelModeMobile").removeAttr('disabled');
+		$(".hideDelModeMobile").css("opacity","1");
+		$(".hideDelModeMobile").css("pointer-events","auto");
 		$(element).hide();
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)

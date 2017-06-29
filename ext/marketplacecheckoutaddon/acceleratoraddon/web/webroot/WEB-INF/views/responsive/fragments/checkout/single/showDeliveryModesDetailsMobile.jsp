@@ -41,5 +41,8 @@
 		{
 			$("#delivery-mode-change-link").hide();
 		}
-		$(".hideDelModeMobile").hide();
+		//$(".hideDelModeMobile").hide();
+		$(".hideDelModeMobile").attr('disabled', true);
+		$(".hideDelModeMobile").css("opacity","0.5");
+		$(".hideDelModeMobile").css("pointer-events","none");
 	</script>
