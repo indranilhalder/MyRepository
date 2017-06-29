@@ -128,7 +128,7 @@ ACC.singlePageCheckout = {
         	}
         	else
         	{
-        		$("#chooseDeliveryAddressMobile").html(data);
+        		$("#chooseDeliveryAddressMobileDiv").html(data);
         	}
 		});
         
@@ -375,7 +375,7 @@ ACC.singlePageCheckout = {
             	{//Code to show slot delivery page if CNC is not present
             		var elementId="singlePageChooseSlotDeliveryPopup";
             		ACC.singlePageCheckout.modalPopup(elementId,data);
-            	}            	
+            	}
             }
         });
         
@@ -656,6 +656,14 @@ ACC.singlePageCheckout = {
 	     				console.log("Unable to set default address");
 	     			}
 	        	});
+	        	
+	        	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
+        		var couponCode=$("#couponFieldId").val();
+        		if(couponCode!="")
+        		{
+        			//Code is in marketplacecheckoutadon.js
+        			resetAppliedCouponFormOnRemoval();
+        		}
             }
 		});
         
@@ -664,8 +672,8 @@ ACC.singlePageCheckout = {
 		});
       if(typeof utag !="undefined")  {
 		utag.link({
-	        link_text: "proceed_pay_bottom_id2",
-	        event_type: "proceed_pay"
+	        link_text: "deliveryOptions_proceed_clicked",
+	        event_type: "proceed_button_clicked"
 	    })
       }
 	},
@@ -966,6 +974,14 @@ ACC.singlePageCheckout = {
 			}
 			
 		
+	},
+	searchOnEnterPress:function(e,element,entryNumber)
+	{
+		var code = e.keyCode || e.which;
+	    if(code==13){
+	    	ACC.singlePageCheckout.searchCNCStores(element,entryNumber);
+	        // Enter pressed
+	    }
 	},
 	savePickupPersonDetails: function(element)
 	{
@@ -1375,16 +1391,28 @@ removeExchangeFromCart : function (){
 	
 	removeCartItem : function(element,clickFrom) {			
 		ACC.singlePageCheckout.showAjaxLoader();
+		var productId;
 			if(clickFrom=="removeItem")
 			{
 					var entryNumber1 = $(element).attr('id').split("_");
 					var entryNumber = entryNumber1[1];
-					var entryUssid = entryNumber1[2];			
+					var entryUssid = entryNumber1[2];
+					var divId = "entryItemReview"+entryNumber;
+					productId = $("#"+divId).find('#product').val();
 			}
 			if(clickFrom=="addItemToWl")
     		{
 				var entryNumber = $("#entryNo").val();
     		}
+			//tealium call for remove 
+    		if(typeof(utag)!='undefined')
+			{
+				utag.link({
+					link_text  : 'remove_from_review_order' , 
+					event_type : 'remove_from_review_order',
+					product_id :  productId
+				});
+			}
 			var url=ACC.config.encodedContextPath + "/checkout/single/removereviewcart";
 			var data="entryNumber="+entryNumber;
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
@@ -1492,6 +1520,14 @@ removeExchangeFromCart : function (){
         		
         		ACC.singlePageCheckout.getSelectedDeliveryModes(callFrom);
         	}
+        	
+        	//Resetting voucher on removal of cart item, we are doing it twice once in proceedOnAddressSelection,getDeliverOptionsPage
+    		var couponCode=$("#couponFieldId").val();
+    		if(couponCode!="")
+    		{
+    			//Code is in marketplacecheckoutadon.js
+    			resetAppliedCouponFormOnRemoval();
+    		}
         });
         
 	},
@@ -1668,7 +1704,9 @@ removeExchangeFromCart : function (){
 		xhrValidateResponse.fail(function(xhr, textStatus, errorThrown) {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
-        
+		//tealium page name addition
+		$("#checkoutPageName").val("Payment Options");
+		  tealiumCallOnPageLoad();
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
@@ -1722,6 +1760,12 @@ removeExchangeFromCart : function (){
 		xhrValidateResponse.always(function(){
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
+		if(typeof utag !="undefined")  {
+			utag.link({
+		        link_text: "reviewOrder_proceed_clicked",
+		        event_type: "proceed_button_clicked"
+		    })
+	      }
 	},
 	
 	getOrderTotalsTag:function()
@@ -1843,6 +1887,7 @@ removeExchangeFromCart : function (){
 		$("li#emi").css("display","none");
 		$("li#COD").css("display","none");
 		$("#MRUPEE").css("display","none");
+		$("#make_saved_cc_payment_up").css("display","none");
 		$("#make_cc_payment_up").css("display","none");
 		$("#make_dc_payment_up").css("display","none");
 		$("#make_saved_dc_payment_up").css("display","none");
@@ -1856,7 +1901,7 @@ removeExchangeFromCart : function (){
 		$("input:radio[name=creditCards]").prop("checked",false);
 	},
 	
-	resetPaymentModesOnSavedCardSelection:function()
+	resetPaymentModesOnSavedCardSelection:function(paymentMode)
 	{
 		$("li.paymentModeMobile").removeClass("active");
 		$("#payment_form")[0].reset();
@@ -1867,9 +1912,16 @@ removeExchangeFromCart : function (){
 		$("li#emi").css("display","none");
 		$("li#COD").css("display","none");
 		$("#MRUPEE").css("display","none");
+		if(paymentMode!="Credit Card")
+		{
+			$("#make_saved_cc_payment_up").css("display","none");
+		}
 		$("#make_cc_payment_up").css("display","none");
 		$("#make_dc_payment_up").css("display","none");
-		$("#make_saved_dc_payment_up").css("display","none");
+		if(paymentMode!="Debit Card")
+		{
+			$("#make_saved_dc_payment_up").css("display","none");
+		}
 		$("#make_nb_payment_up").css("display","none");
 		$("#make_emi_payment_up").css("display","none");
 		$("#paymentButtonId_up").css("display","none");
@@ -2051,6 +2103,12 @@ removeExchangeFromCart : function (){
 			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
 			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 			$(element).hide();
+			if(typeof utag !="undefined")  {
+				utag.link({
+			        link_text: "change_link_clicked",
+			        event_type: "change_link_clicked"
+			    })
+		      }
 	    //});
 	},
 	
@@ -2067,6 +2125,12 @@ removeExchangeFromCart : function (){
 //        		}
 //        	});
 //		}
+		if(typeof utag !="undefined")  {
+			utag.link({
+		        link_text: "change_link_clicked",
+		        event_type: "change_link_clicked"
+		    })
+	      }
 		$(".hideDelModeMobile").show();
 		$(element).hide();
 	},
@@ -2141,8 +2205,8 @@ removeExchangeFromCart : function (){
 		                }
 		                if(data.type=="response")
 		                {
-		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved;
-		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet;
+		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSaved=data.isAddressSaved=="true"?true:false;
+		                	ACC.singlePageCheckout.mobileValidationSteps.isAddressSet=data.isAddressSet=="true"?true:false;
 		                	ACC.singlePageCheckout.getDeliveryAddresses();
 		                	$("#address-change-link").show();
 		                }
@@ -2377,6 +2441,7 @@ removeExchangeFromCart : function (){
 	},
 	paymentOnSavedCardSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
 	{
+		$("#paymentMode").val(paymentMode);
 		if(paymentMode=="Credit Card")
 		{
 			if($("#"+radioId).is(":checked") && callFromCvv=='true')
@@ -2385,7 +2450,7 @@ removeExchangeFromCart : function (){
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
-				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection();
+				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection(paymentMode);
 				savedCreditCardRadioChange(radioId);
 			}
 		}
@@ -2397,7 +2462,7 @@ removeExchangeFromCart : function (){
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
-				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection();
+				ACC.singlePageCheckout.resetPaymentModesOnSavedCardSelection(paymentMode);
 				savedDebitCardRadioChange(radioId);
 			}
 		}
@@ -2438,7 +2503,7 @@ $(document).ready(function(){
 			}
 			if(defaultAddressPresent=="false")
 			{
-				$("#chooseDeliveryAddressMobile").find(".mobileNotDefaultDelAddress").show();
+				$("#chooseDeliveryAddressMobileDiv").find(".mobileNotDefaultDelAddress").show();
 				//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 				$("#chooseDeliveryAddressMobile .change-mobile").hide();
 			}

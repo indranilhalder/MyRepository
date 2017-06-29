@@ -36,6 +36,7 @@
 	</li>
 
 	<c:forEach items="${cartData.entries}" var="entry" varStatus="status">
+		<span id ="entryItemReview${entry.entryNumber}">
 		<c:if test="${status.last}">
 			<input type="hidden" value="${status.index}" id="ProductCount">
 		</c:if>
@@ -508,6 +509,7 @@
 	</ul>
 
 </li>
+</span>
 </c:forEach>
 </ul>
 

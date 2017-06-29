@@ -181,13 +181,14 @@
 						<div class="" id="content"  data-ajax="3bu1">
 							<c:choose>
 								<c:when test="${not empty entry.deliverySlotsTime}">
-									<div class="">
-										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots">
+									<div class="delslot">
+										<c:forEach items="${entry.deliverySlotsTime}" var="dateSlots"  varStatus="indexDateSlots">
 											<fmt:parseDate value="${dateSlots.key}" var="parseddeliveryDate" pattern="dd-MM-yyyy" />
-											<div class="">
-												<c:forEach items="${dateSlots.value}" var="timeSlots">
-													<span>	
-														<input type="radio" class="" name="date${scheduleIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this);">
+											<div class="delslot_time">
+												<c:forEach items="${dateSlots.value}" var="timeSlots" varStatus="indexTimeSlots">
+													<span class="delslot_timeslot">	
+														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${indexDateSlots}${indexTimeSlots}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this);">
+														<label class="delslot_radio" for="date${scheduleIndex}${indexDateSlots}${indexTimeSlots}"></label>
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
 														<c:choose>
@@ -195,20 +196,18 @@
 																<span class="greyText">(Free)</span>
 															</c:when>
 															<c:otherwise>
-																<span class="">(${currencySymbol} ${mplconfigModel})</span>
+																<span class="del_charge greyText">(${currencySymbol} ${mplconfigModel})</span>
 															</c:otherwise>
 														</c:choose>
 													</span>
 												</c:forEach>
 											</div>
 										</c:forEach>
-										<div class="" align="left">
-											<button class="" type="button" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');">Reset</button>
-										</div>
+											<button class="reset_link" type="button" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');">Reset</button>
 									</div>									
 								</c:when>
 								<c:otherwise>
-									<div class="">Not Applicable</div>
+									<div class="delslot_NA">Not Applicable</div>
 								</c:otherwise>
 							</c:choose>
 						</div>

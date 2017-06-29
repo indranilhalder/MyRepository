@@ -89,7 +89,7 @@
 		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress(this);">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
-		<div id="chooseDeliveryAddressMobile">
+		<div id="chooseDeliveryAddressMobileDiv">
 			<single-checkout:showDeliveryAddressDetailsMobile deliveryAddresses="${deliveryAddresses}"/>
 		</div>
 	</div>
@@ -136,7 +136,7 @@
 <div class="modal fade" id="singlePageChooseSlotDeliveryPopup">
 	<div class="content" style="padding: 40px;">
 		<span id="modalBody" data-htmlPopulated="NO"></span>
-		<!-- <button class="close" data-dismiss="modal"></button> -->
+		<button class="close" data-dismiss="modal"></button>
 	</div>
 	<div class="overlay" data-dismiss="modal">
 	</div>

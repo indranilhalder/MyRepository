@@ -76,10 +76,12 @@ function viewPaymentDebit(){
 		});
 		$("#make_dc_payment_up").show();
 	}
-	//TPR-665
-	utag.link({
-		"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 
@@ -99,10 +101,12 @@ function viewPaymentNetbanking(){
 	else{
 		redirectToCheckoutLogin();	
 	}
-	//TPR-665
-	utag.link({
-		"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 
@@ -128,10 +132,12 @@ function viewPaymentCOD(){
 	else{
 		redirectToCheckoutLogin();
 	}
-	//TPR-665
-	utag.link({
-		"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 
@@ -151,11 +157,12 @@ function viewPaymentEMI(){
 	else{
 		redirectToCheckoutLogin();
 	}
-	
-	//TPR-665
-	utag.link({
-		"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 // Mode button click function ends
@@ -1520,8 +1527,11 @@ $("#otpMobileNUMField").focus(function(){
 			$("#convChargeFieldId, #convChargeField").css("display","none");
 			document.getElementById("convChargeField").innerHTML=convCharge;
 			document.getElementById("totalWithConvField").innerHTML=totalPrice;
-			//INC144316021
-			document.getElementById("outstanding-amount").innerHTML=totalPrice;
+			if(document.getElementById("outstanding-amount")!=null)
+			{
+				//INC144316021
+				document.getElementById("outstanding-amount").innerHTML=totalPrice;
+			}
 			document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
@@ -7521,8 +7531,11 @@ $("#couponSubmitButton").click(function(){
 	 			$("#no-click,.loaderDiv").remove(); //add for INC_11738
 
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
-	 			//INC144316021
-                document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				//INC144316021
+	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			}
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
@@ -7657,7 +7670,9 @@ $("#couponFieldId").focus(function(){
 });
 
 
-$(".remove-coupon-button").click(function(){
+//$(".remove-coupon-button").click(function(){
+function removeAppliedVoucher(){
+	alert("calledHere");
 	var couponCode=$("#couponFieldId").val();
 	var guid=$("#guid").val();
 	$.ajax({
@@ -7667,8 +7682,11 @@ $(".remove-coupon-button").click(function(){
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
- 			//INC144316021
-            document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+ 			if(document.getElementById("outstanding-amount")!=null)
+ 			{
+ 				//INC144316021
+ 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+ 			}
 			document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);
  			// alert(response.totalPrice.formattedValue);
@@ -7677,31 +7695,45 @@ $(".remove-coupon-button").click(function(){
  			}
  			if(couponApplied==true){
  				//TPR-4460 changes -- invalidChannelError id added
- 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
- 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
+// 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+// 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				// $("#couponFieldId").attr('disabled','enabled');
  				//TPR-4461 starts here
-				$('#couponPaymentRestrictionMessage').hide();
+//				$('#couponPaymentRestrictionMessage').hide();
 			    //TPR-4461 ends here
- 				$('#couponFieldId').attr('readonly', false);
- 				var selection = $("#voucherDisplaySelection").val();
- 				$("#couponFieldId").val(selection);
+// 				$('#couponFieldId').attr('readonly', false);
+// 				var selection = $("#voucherDisplaySelection").val();
+// 				$("#couponFieldId").val(selection);
  				// $("#couponFieldId").val("");
  				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
  				$('#couponMessage').show();
  				$('#couponMessage').delay(2000).fadeOut('slow');
  				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
  			
- 				$("#couponSubmitButton").prop('disabled', false);
- 				$("#couponSubmitButton").css("opacity","1");
+// 				$("#couponSubmitButton").prop('disabled', false);
+// 				$("#couponSubmitButton").css("opacity","1");
+ 				
+ 				resetAppliedCouponFormOnRemoval();
  		},
  		error : function(resp) {
  		}
  	});	 
-});
-
-
+//});
+}
+function resetAppliedCouponFormOnRemoval()
+{
+	$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+		" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
+	//TPR-4461 starts here
+	$('#couponPaymentRestrictionMessage').hide();
+	//TPR-4461 ends here
+	$('#couponFieldId').attr('readonly', false);
+	var selection = $("#voucherDisplaySelection").val();
+	$("#couponFieldId").val(selection);
+	$("#couponSubmitButton").prop('disabled', false);
+	$("#couponSubmitButton").css("opacity","1");
+}
 $(document).ready(function(){
 	$("#off-bag").show();
 	//console.log($("*[data-id=savedCCard]").is(":checked"));
