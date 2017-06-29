@@ -129,7 +129,12 @@
   		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
    				autocreate="true" generate="true" type="list" />
 		<!-- Added in R2.3 END  -->
-
+		<!-- Added for TPR-6286  -->
+		<collectiontype code="AbstractOrderEntryListInvoice" elementtype="AbstractOrderEntry"
+			autocreate="true" generate="true" type="list" />
+			
+		<collectiontype code="ChildOrderListInvoice" elementtype="Order"
+			autocreate="true" generate="true" type="list" />
 	</collectiontypes>
 
 
@@ -5266,6 +5271,23 @@
 					<attribute qualifier="TransactionId" type="java.lang.String">
 						<persistence type="property" />
 						<description>Transaction Id</description>
+					</attribute>
+					<!-- Added for TPR-6286 -->
+					 <attribute qualifier="AbstractOrderEntryList" type="AbstractOrderEntryListInvoice">
+						<persistence type="property" />
+						<description>Abstract Order Entry</description>
+					</attribute>
+					<attribute qualifier="ChildOrderList" type="ChildOrderListInvoice">
+						<persistence type="property" />
+						<description>Child Order</description>
+					</attribute>
+					<attribute qualifier="DeliveryAddress" type="Address">
+						<persistence type="property" />
+						<description>Delivery Address</description>
+					</attribute>
+					<attribute qualifier="OrderPlacedDate" type="java.util.Date">
+						<persistence type="property" />
+						<description>Order Placed Date</description>
 					</attribute>
 				</attributes>
 
