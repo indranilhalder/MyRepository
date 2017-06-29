@@ -2893,6 +2893,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		final List<CartSoftReservationData> cartSoftReservationDataList = getSessionService().getAttribute(
 				MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION);
 		boolean isScheduleServiceble = false;
+		final Map<String, Map<String, List<String>>> deliveryTimeSlotMap = new HashMap<String, Map<String, List<String>>>();
 		LOG.debug("****************cartSoftReservationDataList :" + cartSoftReservationDataList.toString());
 		try
 		{
@@ -3068,6 +3069,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					}
 					LOG.debug("DeliveryMode :" + selectedDeliveryMode + "-- ProductScheduleDelivery" + productScheduleDelivery
 							+ "-- SellerScheduleDelivery" + sellerScheduleDelivery + "-- selectedUssId" + selectedUssId);
+
+					//final Map<String, Map<String, List<String>>> deliveryTimeSlotMap = new HashMap<String, Map<String, List<String>>>();
 					for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
 					{
 						if (!cartEntryData.isIsBOGOapplied() || !cartEntryData.isGiveAway())
@@ -3158,9 +3161,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 								}
 							}
 						}
+						deliveryTimeSlotMap.put(cartEntryData.getSelectedUssid(), cartEntryData.getDeliverySlotsTime());
 					}
 				}
-				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION, selectedDateBetWeen);
+				//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION, selectedDateBetWeen);
+				getSessionService().setAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION, deliveryTimeSlotMap);
 			}
 		}
 		catch (final EtailBusinessExceptions e)
@@ -3193,6 +3198,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
 			Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
+			Map<String, Map<String, List<String>>> deliveryTimeSlotMap = new HashMap<String, Map<String, List<String>>>();
 			final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
 			String deliverySlotCharge = MarketplacecommerceservicesConstants.EMPTY;
 			final DecimalFormat df = new DecimalFormat("#.00");
@@ -3226,12 +3232,25 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			//				modelService.refresh(cartModel);
 			//			}
 			//End of UF-281
+
 			final CartData cartDataSupport = mplCartFacade.getSessionCartWithEntryOrdering(true);
 			if (configModel.getSdCharge() > 0)
 			{
 				cartDataSupport.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel,
 						Double.valueOf(configModel.getSdCharge())));
 				deliverySlotCharge = df.format(configModel.getSdCharge());
+			}
+
+			deliveryTimeSlotMap = getSessionService().getAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
+			for (final OrderEntryData cartEntryData : cartDataSupport.getEntries())
+			{
+				for (final Map.Entry<String, Map<String, List<String>>> entry : deliveryTimeSlotMap.entrySet())
+				{
+					if (entry.getKey().equalsIgnoreCase(cartEntryData.getSelectedUssid()))
+					{
+						cartEntryData.setDeliverySlotsTime(entry.getValue());
+					}
+				}
 			}
 			fullfillmentDataMap = mplCartFacade.getFullfillmentMode(cartDataSupport);
 			model.addAttribute(MarketplacecheckoutaddonConstants.CARTDATA, cartDataSupport);
@@ -3240,6 +3259,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute("mplconfigModel", deliverySlotCharge);
 			model.addAttribute("defaultPincode",
 					getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+			final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+			final String currencySymbol = currency.getSymbol();
+			model.addAttribute("currencySymbol", currencySymbol);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -4570,7 +4592,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4628,7 +4650,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

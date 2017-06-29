@@ -2270,15 +2270,9 @@ removeExchangeFromCart : function (){
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
-	                		//TODO Toast for slot delivery should be created here
-	                		// Get the snackbar DIV
-	                	    var x = $("#snackbar").addClass("show");
-
-	                	    // Add the "show" class to DIV
-	                	   // x.className = "show";
-
-	                	    // After 3 seconds, remove the show class from DIV
-	                	    setTimeout(function(){ $("#snackbar").removeClass("show"); }, 20000);
+	                		//TODO Toast for slot delivery 
+	                		ACC.singlePageCheckout.showSnackBar();
+	                		
 	                	}
 	                }
 	                
@@ -2304,6 +2298,16 @@ removeExchangeFromCart : function (){
 			}
     	}
 	},
+	
+	showSnackBar:function(){
+		// Add the "show" class to DIV
+		var x = $("#mobileSnackbar").addClass("show");
+		$("#selectSnackbar").click(function(){
+			ACC.singlePageCheckout.getResponsiveSlotSelectionPage();
+		    
+		});
+		
+	},
 	//Method to get responsive slot delivery page
 	getResponsiveSlotSelectionPage:function(){
 		var htmlPopulated=$("#singlePageChooseSlotDeliveryPopup span#modalBody").attr("data-htmlPopulated");
@@ -2312,19 +2316,21 @@ removeExchangeFromCart : function (){
 			ACC.singlePageCheckout.showAjaxLoader();
 			var url=ACC.config.encodedContextPath + "/checkout/single/slotDelivery-responsive";
 			var data="";
-			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 	        
 	        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
-				console.log("ERROR:"+textStatus + ': ' + errorThrown);
+	        	console.log("ERROR:"+textStatus + ': ' + errorThrown);
 			});
 	        
 	        xhrResponse.done(function(data, textStatus, jqXHR) {
 	            if (jqXHR.responseJSON) {
 	            	if(data.type!="response")
 	                {
+	            		
 	                	ACC.singlePageCheckout.processError("#selecteDeliveryModeMessage",data);
 	                }
 	            } else {
+	            	
 	            	
 	            		var elementId="singlePageChooseSlotDeliveryPopup";
 	            		ACC.singlePageCheckout.modalPopup(elementId,data);
