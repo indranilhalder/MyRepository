@@ -32,12 +32,12 @@
 		});
 		
 		//$("#zoomModal").addClass("active");
-		$("div#zoom_gallery img").each(function() {
+		/* $("div#zoom_gallery img").each(function() {
 
 			if ($(this).attr('data-type') == "video") {
 				$(this).hide();
 			}
-		});
+		}); */
 		
 		if(opts.windowWidth < 1025) {
 			console.log(opts.windowWidth)
