@@ -59,6 +59,7 @@
                   <option value="Order History" data-href="order-history.php"> <spring:theme code="header.flyout.orders" /></option>
                   <option value="Saved Cards" data-href="account-cards.php"><spring:theme code="header.flyout.cards" /></option>
                   <option value="Saved Addresses" data-href="account-addresses.php"><spring:theme code="header.flyout.address" /></option>
+                  <option value=/store/mpl/en/faq data-href="faq.php"><spring:theme code="header.flyout.faq" /></option>
               </optgroup>
          
          <%--  <optgroup label="Share">

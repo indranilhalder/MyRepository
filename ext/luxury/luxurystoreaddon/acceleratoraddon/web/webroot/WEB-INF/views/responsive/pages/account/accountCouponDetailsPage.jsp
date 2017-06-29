@@ -108,6 +108,7 @@
 					<option value=/store/mpl/en/my-account/myInterest
 						data-href="account-addresses.php"><spring:theme
 							code="header.flyout.recommendations" /></option>
+							<option value=/store/mpl/en/faq data-href="faq.php"><spring:theme code="header.flyout.faq" /></option>
 				</optgroup>
 
 				<optgroup label="Credits">

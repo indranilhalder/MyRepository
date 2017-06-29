@@ -90,6 +90,7 @@
 							code="header.flyout.address" /></option>
 							<option value=/store/mpl/en/my-account/reviews
 						data-href="account-addresses.php"><spring:theme code="header.flyout.review" /></option>
+						<option value=/store/mpl/en/faq data-href="faq.php"><spring:theme code="header.flyout.faq" /></option>
 				</optgroup>
 
 				<%-- <optgroup label="Share">
