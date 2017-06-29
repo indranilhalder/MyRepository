@@ -3265,6 +3265,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute("mplconfigModel", deliverySlotCharge);
 			model.addAttribute("defaultPincode",
 					getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE));
+			getSessionService().removeAttribute(MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
 			final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
 			final String currencySymbol = currency.getSymbol();
 			model.addAttribute("currencySymbol", currencySymbol);
@@ -4598,7 +4599,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4656,7 +4657,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
