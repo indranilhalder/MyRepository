@@ -382,6 +382,12 @@ ACC.singlePageCheckout = {
         xhrResponse.always(function() {
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
+        if(typeof utag !="undefined")  {
+    		utag.link({
+    	        link_text: "deliveryMode_proceed_clicked",
+    	        event_type: "proceed_button_clicked"
+    	    })
+          } 
 	},
 	//Used to validate address form for mobile and web.
 	validateAddressForm:function(){
@@ -681,7 +687,7 @@ ACC.singlePageCheckout = {
 		});
       if(typeof utag !="undefined")  {
 		utag.link({
-	        link_text: "deliveryOptions_proceed_clicked",
+	        link_text: "deliveryAddress_proceed_clicked",
 	        event_type: "proceed_button_clicked"
 	    })
       }
@@ -1400,7 +1406,7 @@ removeExchangeFromCart : function (){
 	
 	removeCartItem : function(element,clickFrom) {			
 		ACC.singlePageCheckout.showAjaxLoader();
-		var productId;
+		var productId ="";
 			if(clickFrom=="removeItem")
 			{
 					var entryNumber1 = $(element).attr('id').split("_");
@@ -1408,20 +1414,21 @@ removeExchangeFromCart : function (){
 					var entryUssid = entryNumber1[2];
 					var divId = "entryItemReview"+entryNumber;
 					productId = $("#"+divId).find('#product').val();
+					//tealium call for remove 
+		    		if(typeof(utag)!='undefined')
+					{
+						utag.link({
+							link_text  : 'remove_from_review_order' , 
+							event_type : 'remove_from_review_order',
+							product_id :  productId
+						});
+					}
 			}
 			if(clickFrom=="addItemToWl")
     		{
 				var entryNumber = $("#entryNo").val();
     		}
-			//tealium call for remove 
-    		if(typeof(utag)!='undefined')
-			{
-				utag.link({
-					link_text  : 'remove_from_review_order' , 
-					event_type : 'remove_from_review_order',
-					product_id :  productId
-				});
-			}
+			
 			var url=ACC.config.encodedContextPath + "/checkout/single/removereviewcart";
 			var data="entryNumber="+entryNumber;
 			var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
