@@ -1449,15 +1449,6 @@ removeExchangeFromCart : function (){
 	        		{
 	        			ACC.product.addToBagFromWl(entryUssid,false);
 	        			$("#reviewOrder").html(data);
-	        			//tealium call for remove 
-		        		if(typeof(utag)!='undefined')
-						{
-							utag.link({
-								link_text  : 'remove_from_review_order' , 
-								event_type : 'remove_from_review_order',
-								product_id :  entryNumber
-							});
-						}
 	        		}
 	        		if(clickFrom=="addItemToWl")
 	        		{
