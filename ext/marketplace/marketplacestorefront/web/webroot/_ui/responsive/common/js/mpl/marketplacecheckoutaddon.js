@@ -7672,7 +7672,6 @@ $("#couponFieldId").focus(function(){
 
 //$(".remove-coupon-button").click(function(){
 function removeAppliedVoucher(){
-	alert("calledHere");
 	var couponCode=$("#couponFieldId").val();
 	var guid=$("#guid").val();
 	$.ajax({
@@ -8190,7 +8189,7 @@ function selectWishlist(i,productCode, ussid)
 function addToWishlistFromCart() {
 	var productCode = $("#product").val();
 	var ussid = $("#ussid").val();
-	alert("Into addToWishlistFromCart>>>"+ussid);
+	//alert("Into addToWishlistFromCart>>>"+ussid);
 	var wishName =wishListList[$("#hidWishlist").val()] ;
 	var requiredUrl = ACC.config.encodedContextPath + "/cart"+"/addToWishListFromCart";
 	var dataString = 'wish=' + wishName + '&product=' + productCode+ '&ussid=' + ussid;
