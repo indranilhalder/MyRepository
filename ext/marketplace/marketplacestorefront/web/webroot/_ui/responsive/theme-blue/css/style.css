@@ -72902,9 +72902,16 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span > .
     vertical-align: top;
     color: #000;
 }
-body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc{
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc,
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc-pincode{
 	margin-top: 10px;
 	margin-bottom: 5px;
+}
+body.page-cartPage span.priceFormat.priceFormatOnUpdate{
+	color: #000;
+}
+body.page-cartPage  .ItemAmtofferDisplayPrFm{
+	line-height: 12px;
 }
 body.page-cartPage .cart.wrapper .off-bag span:last-child{
 	display: inline !important;
@@ -72921,6 +72928,11 @@ color: #ff2c43;
 }
 body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.delSeat.mop{
 	display: inline-block;
+}
+@media(min-width: 1025px){
+	body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
+		padding: 10px 10px 30px 0px;
+	}
 }
 /*TISBBC-47 fix end*/
 
