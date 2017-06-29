@@ -285,7 +285,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -387,18 +387,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					// TPR-522
 					if (null != buyBoxData.getMrp())
 					{
-						// Below codes are commented for Channel specific promotion TISPRD-8944
-						/*
-						 * if (buyBoxData.getSpecialPrice() != null && buyBoxData.getSpecialPrice().getValue().doubleValue() >
-						 * 0) { final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue() -
-						 * buyBoxData.getSpecialPrice().getDoubleValue().doubleValue(); final double savingPriceCalPer =
-						 * (savingPriceCal / buyBoxData.getMrp().getDoubleValue().doubleValue()) * 100; final double
-						 * roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0; final BigDecimal
-						 * roundedOffValue = new BigDecimal((int) roundedOffValuebefore); //changed as per Ashish mail
-						 * productDetailMobile.setDiscount(roundedOffValue.toString());
-						 *
-						 * }
-						 */
+
+						// Below codes are Channel specific promotion TISPRD-8944
 						if (buyBoxData.getSpecialPriceMobile() != null
 								&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
 						{
@@ -408,6 +398,17 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
 							final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 							//changed as per Ashish mail
+							productDetailMobile.setDiscount(roundedOffValue.toString());
+
+						}
+						else if (buyBoxData.getSpecialPriceMobile() == null && buyBoxData.getSpecialPrice() != null
+								&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0)//backward compatible
+						{
+							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
+									- buyBoxData.getSpecialPrice().getDoubleValue().doubleValue();
+							final double savingPriceCalPer = (savingPriceCal / buyBoxData.getMrp().getDoubleValue().doubleValue()) * 100;
+							final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+							final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore); //changed as per Ashish mail
 							productDetailMobile.setDiscount(roundedOffValue.toString());
 
 						}
@@ -557,6 +558,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
+				} //backward compatible
+				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
+						&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
+						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				{
+					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
 				}
 
 				if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getFormattedValue()
@@ -564,12 +571,19 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
 				}
+
 				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPriceMobile().getValue());
+				}//backward compatible
+				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
+						&& null != buyBoxData.getSpecialPrice().getValue() && null != buyBoxData.getSpecialPrice().getValue()
+						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				{
+					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPrice().getValue());
 				}
 				//TISPRD-8944 Changes End
 				else if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue()
@@ -1189,13 +1203,15 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					if (null != seller.getUssid() && null != ussid && seller.getUssid().equalsIgnoreCase(ussid)) //for buy box seller
 					{
 						// Commented for channel specific promotion TISPRD-8944
-						/*
-						 * if (null != seller.getSpPrice()) { buyBoxData.setSpPrice(seller.getSpPrice()); }
-						 */
 						if (null != seller.getSpPriceMobile())
 						{
 							buyBoxData.setSpPriceMobile(seller.getSpPriceMobile());
 						}
+						else if (null == seller.getSpPriceMobile() && null != seller.getSpPrice()) //backward compatible
+						{
+							buyBoxData.setSpPrice(seller.getSpPrice());
+						}
+
 						if (null != seller.getMopPrice())
 						{
 							buyBoxData.setMopPrice(seller.getMopPrice());
@@ -1321,6 +1337,13 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					sellerMobileData.setSellerSpecialPrice(seller.getSpPriceMobile().getFormattedValue().toString());
 				}
+				else if (null == seller.getSpPriceMobile() && null != seller.getSpPrice()
+						&& null != seller.getSpPrice().getFormattedValue() && null != seller.getSpPrice().getValue()
+						&& seller.getSpPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
+				{
+					sellerMobileData.setSellerSpecialPrice(seller.getSpPrice().getFormattedValue().toString());
+				}
+
 				if (null != seller.getMopPrice() && null != seller.getMopPrice().getFormattedValue()
 						&& null != seller.getMopPrice().getValue() && seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
@@ -1374,7 +1397,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					isEMIeligible = getEMIforProduct(seller.getSpPriceMobile().getValue());
 				}
 				else if (null != seller.getMopPrice() && null != seller.getMopPrice().getValue()
-						&& seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+						&& seller.getMopPrice().getValue().compareTo(BigDecimal.ZERO) > 0) //backward compatible
 				{
 					isEMIeligible = getEMIforProduct(seller.getMopPrice().getValue());
 				}

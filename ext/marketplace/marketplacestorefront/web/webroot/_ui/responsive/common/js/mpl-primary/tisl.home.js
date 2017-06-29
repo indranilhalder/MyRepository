@@ -1414,7 +1414,7 @@ function getShowCaseAjaxCall() {
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) { 
 	                defaultComponentId = "";
 	                renderHtml = "<h2>" + response.title + "</h2>" +
-	                    "<div class='MenuWrap'><div class='mobile selectmenu'></div> <div class='showcase-heading showcase-switch'>";
+	                    "<div class='MenuWrap'><div class='showcase-heading showcase-switch'>";
 	                $.each(response.subComponents, function(k, v) {
 	                    if (!v.showByDefault) {
 	                        renderHtml +=
@@ -1433,7 +1433,7 @@ function getShowCaseAjaxCall() {
 	                renderHtml += "</div></div>";
 	                $('#showcase').html(renderHtml);
 	                getShowcaseContentAjaxCall(defaultComponentId);
-	                $('.selectmenu').text($(".showcaseItem .showcase-border").text());
+	                //$('.selectmenu').text($(".showcaseItem .showcase-border").text());
 	            }  
 	            if($(".showcaseItem").length == 1){
 	            	$(".showcaseItem").addClass("one_showcase");
@@ -1579,7 +1579,7 @@ $(document).ready(function(){
 getFooterOnLoad();
 
 $(document).on("click", ".showcaseItem", function() {
-	$('.selectmenu').text($(this).children().text());
+	//$('.selectmenu').text($(this).children().text());
 	/*TPR-650 Start*/
 	//TISQAEE-59
 	var name=$(this).parents('#showcase').children('h2').text().trim().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
@@ -1595,9 +1595,9 @@ $(document).on("click", ".showcaseItem", function() {
 $(window).on("load resize", function() {
     if ($(window).width() <= 767) {
         $(".showcase-heading").hide();
-        $(document).off("click",".selectmenu").on("click",".selectmenu",function() {
+        /*$(document).off("click",".selectmenu").on("click",".selectmenu",function() {
             $(".showcase-heading").slideToggle();
-        });
+        });*/
         $(document).off("click",".showcase-heading").on("click",".showcase-heading",function() {
             $(this).slideUp();
         });
@@ -2581,4 +2581,6 @@ $(document).ready(function()
 			                }
 			            });
 			return showCaseMobile;
+
 			}
+

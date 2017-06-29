@@ -71306,16 +71306,18 @@ span#juspayErrorMsg{
  #addToCartFormTitle {
     position: fixed;
     z-index: 10000;
-    line-height: 36px;
-    padding: 0 10px;
+    line-height: 18px;	/*changed for TISTE-159 fix*/
+    padding: 9px 10px;	/*changed for TISTE-159 fix*/
     bottom: 60px;
     left: 0;
     right: 0;
     margin: auto;
-    display: inline-block;
+    /* display: inline-block; */
+    display: none; /*added for TISTE-159 fix*/
+    color: #fff;	/*added for TISTE-159 fix*/
     text-align: center;
     width: 200px;
-    height: 36px;
+    min-height: 36px;	/*changed for TISTE-159 fix*/
     opacity: 0.9;
     border-radius: 18px;
     background-color: #a5173c;
@@ -72646,9 +72648,16 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span > .
     vertical-align: top;
     color: #000;
 }
-body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc{
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc,
+body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > .add-disc-pincode{
 	margin-top: 10px;
 	margin-bottom: 5px;
+}
+body.page-cartPage span.priceFormat.priceFormatOnUpdate{
+	color: #000;
+}
+body.page-cartPage  .ItemAmtofferDisplayPrFm{
+	line-height: 12px;
 }
 body.page-cartPage .cart.wrapper .off-bag span:last-child{
 	display: inline !important;
@@ -72666,8 +72675,31 @@ color: #ff2c43;
 body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.delSeat.mop{
 	display: inline-block;
 }
+@media(min-width: 1025px){
+	body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.price{
+		padding: 10px 10px 30px 0px;
+	}
+}
 /*TISBBC-47 fix end*/
 
 #stw_widget .product-tile .short-info .color-swatch, #stw_widget_blp .product-tile .short-info .color-swatch{
 	display: none;
+
 }
+
+/*TISPRDT-1670 fix start*/
+@media (max-width: 970px){
+	body.page-compare .product-tile .short-info .shop-now{
+		display: none;
+	}
+} 
+/*TISPRDT-1670 fix end*/
+
+/*TISTE-163 fix start*/
+.modal.size-guide .sizes .tables>div {
+    margin-bottom: 0px;
+}
+.modal.size-guide > .content {
+    min-height: 288px;
+}
+/*TISTE-163 fix end*/

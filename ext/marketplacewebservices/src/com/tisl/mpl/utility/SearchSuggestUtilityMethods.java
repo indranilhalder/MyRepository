@@ -171,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 *
+	 * 
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -683,18 +683,13 @@ public class SearchSuggestUtilityMethods
 				 */
 
 				//TPR-796
-				/*try
-				{
-					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
-					ExceptionUtil.getCustomizedExceptionTrace(e);
-					continue;
-				}*/
+				/*
+				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
+				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
+				 */
 
-				
+
 
 
 
@@ -824,14 +819,16 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setMrpPrice(productData.getProductMRP());
 				}
 				// Below codes are commented for channel specific promotion
-
-				/*
-				 * if (null != productData.getPrice()) { sellingItemDetail.setSellingPrice(productData.getPrice()); }
-				 */
 				if (null != productData.getMobileprice())
 				{
 					sellingItemDetail.setSellingPrice(productData.getMobileprice());
 				}
+				else if (null == productData.getMobileprice() && null != productData.getPrice()) //backward compatible
+				{
+					sellingItemDetail.setSellingPrice(productData.getPrice());
+				}
+
+
 
 				if (null != productData.getInStockFlag())
 				{
@@ -1019,21 +1016,21 @@ public class SearchSuggestUtilityMethods
 					{
 						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 						{
-							if (oldL1Filter.getCategoryCode()
-									.equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+							if (oldL1Filter.getCategoryCode().equals(
+									foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 							{
 								for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
 								{
-									if (oldL2DepartFilter.getCategoryCode()
-											.equals(foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
+									if (oldL2DepartFilter.getCategoryCode().equals(
+											foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
 									{
 										for (final DepartmentFilterWsDto oldL3DepartFilter : oldL2DepartFilter.getChildFilters())
 										{
-											if (oldL3DepartFilter.getCategoryCode()
-													.equals(foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
+											if (oldL3DepartFilter.getCategoryCode().equals(
+													foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
 											{
-												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(
-														foundDeparts[4].split(":"));
+												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
+														.split(":"));
 												if (oldL3DepartFilter.getChildFilters() != null
 														&& !oldL3DepartFilter.getChildFilters().isEmpty())
 												{
@@ -1059,8 +1056,9 @@ public class SearchSuggestUtilityMethods
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
 					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 					{
-						if (null != oldL1Filter.getCategoryCode() && oldL1Filter.getCategoryCode()
-								.equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						if (null != oldL1Filter.getCategoryCode()
+								&& oldL1Filter.getCategoryCode().equals(
+										foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 						{
 							final DepartmentFilterWsDto l2DepartFilter = new DepartmentFilterWsDto();
 							final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
@@ -1131,8 +1129,8 @@ public class SearchSuggestUtilityMethods
 								l2List.add(l2DepartFilter);
 								oldL1Filter.setChildFilters(l2List);
 							}
-							traversedDepartments
-									.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L1));
+							traversedDepartments.addAll(concateDepartmentString(departmentFil,
+									MarketplacecommerceservicesConstants.DEPT_L1));
 						}
 					}
 
@@ -1146,8 +1144,8 @@ public class SearchSuggestUtilityMethods
 						{
 							for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
 							{
-								if (oldL2DepartFilter.getCategoryCode()
-										.equals(foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
+								if (oldL2DepartFilter.getCategoryCode().equals(
+										foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
 								{
 									final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
 									List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
@@ -1195,8 +1193,8 @@ public class SearchSuggestUtilityMethods
 											l3List.add(l3DepartFilter);
 											oldL2DepartFilter.setChildFilters(l3List);
 										}
-										traversedDepartments
-												.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L2));
+										traversedDepartments.addAll(concateDepartmentString(departmentFil,
+												MarketplacecommerceservicesConstants.DEPT_L2));
 
 									}
 								}
@@ -1450,8 +1448,8 @@ public class SearchSuggestUtilityMethods
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 
 							//If facet name is "Include out of stock"  value will be false
-							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode())
-									&& values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
+									.equalsIgnoreCase("false")))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}
