@@ -49,6 +49,10 @@ $(document).ready(function(){
 			setTimeout(function(){
 				$('#addToCartFormTitle').fadeOut(2000);		
 			},2000);
+			//UF-390
+			$('html, body').animate({
+	              scrollTop: $('.product-info .product-image-container.device').height()
+	        }, 1000);
 		}	
 		//For pdp analytics changes
 		utag.link({"error_type":"size_not_selected"});
