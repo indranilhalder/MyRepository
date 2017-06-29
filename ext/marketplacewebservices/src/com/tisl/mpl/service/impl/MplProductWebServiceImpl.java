@@ -285,7 +285,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -311,6 +311,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		List<ClassificationMobileWsData> specificationsList = null;
 		//	PromotionMobileData potenitalPromo = null;
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 
 		try
 		{
@@ -389,7 +391,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 
 						// Below codes are Channel specific promotion TISPRD-8944
-						if (buyBoxData.getSpecialPriceMobile() != null
+						if (specialMobileFlag && buyBoxData.getSpecialPriceMobile() != null
 								&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
 						{
 							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
@@ -401,7 +403,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							productDetailMobile.setDiscount(roundedOffValue.toString());
 
 						}
-						else if (buyBoxData.getSpecialPriceMobile() == null && buyBoxData.getSpecialPrice() != null
+						else if (!specialMobileFlag && buyBoxData.getSpecialPrice() != null
 								&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0)//backward compatible
 						{
 							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
@@ -552,15 +554,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerName(buyBoxData.getSellerName());
 				}
 				//TISPRD-8944 Changes Start
-				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getFormattedValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
 				} //backward compatible
-				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
+				else if (!specialMobileFlag && null != buyBoxData && null == buyBoxData.getSpecialPriceMobile()
+						&& null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getFormattedValue()
+						&& null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
@@ -572,15 +575,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
 				}
 
-				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPriceMobile().getValue());
 				}//backward compatible
-				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getValue() && null != buyBoxData.getSpecialPrice().getValue()
+				else if (!specialMobileFlag && null != buyBoxData && null == buyBoxData.getSpecialPriceMobile()
+						&& null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getValue()
+						&& null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPrice().getValue());

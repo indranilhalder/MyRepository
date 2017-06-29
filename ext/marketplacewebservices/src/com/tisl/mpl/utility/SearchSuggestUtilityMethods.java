@@ -171,7 +171,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -656,7 +656,8 @@ public class SearchSuggestUtilityMethods
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
 
-
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 		//ProductData productDataImage = null;
 
 		for (final ProductData productData : searchPageData.getResults())
@@ -689,10 +690,6 @@ public class SearchSuggestUtilityMethods
 				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
 				 */
 
-
-
-
-
 				//TPR-796
 				try
 				{
@@ -704,7 +701,6 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
-
 
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
@@ -819,11 +815,11 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setMrpPrice(productData.getProductMRP());
 				}
 				// Below codes are commented for channel specific promotion
-				if (null != productData.getMobileprice())
+				if (specialMobileFlag && null != productData.getMobileprice())
 				{
 					sellingItemDetail.setSellingPrice(productData.getMobileprice());
 				}
-				else if (null == productData.getMobileprice() && null != productData.getPrice()) //backward compatible
+				else if (null == productData.getMobileprice() && !specialMobileFlag && null != productData.getPrice()) //backward compatible
 				{
 					sellingItemDetail.setSellingPrice(productData.getPrice());
 				}
