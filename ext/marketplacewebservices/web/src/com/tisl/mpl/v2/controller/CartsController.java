@@ -1684,7 +1684,9 @@ public class CartsController extends BaseCommerceController
 
 				try
 				{
-					cartFacade.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
+					//TPR-1083 Online Exchange facilities to the customer for Large Appliances
+					//	cartFacade.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
+					mplCartWebService.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
 					cart = getSessionCart();
 					if (null != cart && StringUtils.isNotEmpty(cart.getCode()))
 					{

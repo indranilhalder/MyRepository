@@ -1201,6 +1201,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				}
 			}
 			finaladdressData.setDefaultAddress(true);
+			finaladdressData.setVisibleInAddressBook(true);
+
 			final String selectedPincode = finaladdressData.getPostalCode();
 
 			//TISSEC-11
@@ -1224,6 +1226,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				}
 
 				getMplCustomAddressFacade().setDeliveryAddress(finaladdressData);
+				userFacade.setDefaultAddress(finaladdressData);
 
 				// Recalculating Cart Model
 				LOG.debug(">> Delivery cost " + cartData.getDeliveryCost().getValue());
@@ -1315,7 +1318,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				}
 			}
 			finaladdressData.setDefaultAddress(true);
+			finaladdressData.setVisibleInAddressBook(true);
 			getMplCustomAddressFacade().setDeliveryAddress(finaladdressData);
+			userFacade.setDefaultAddress(finaladdressData);
 			jsonObj.put("isAddressSet", "true");
 			jsonObj.put("type", "response");
 		}
