@@ -189,9 +189,12 @@ footer{
 			}
 		}
 		.app-info{
-			li{
-				display:inline-block;
-			}
+            .app-link{
+                li{
+                    display:block;
+                } 
+            }
+            
 		}
 		.get-in-touch{
 			p{
@@ -229,8 +232,7 @@ footer{
 				li{
 					&:before{
 
-						content: '';
-						background:$Sprite_icon no-repeat;
+						content: '';						
 						vertical-align: middle;
                         width: 55px;
                         height: 45px;
@@ -245,20 +247,23 @@ footer{
 
 					&:first-child{
 						&:before{
-							background-position: -1952px -55px;
+							background:$Sprite_icon1 no-repeat -206px -175px;
+                            width: 46px;
                             height: 45px;
 						}
 					}
 					&:nth-child(2){
 						&:before{
-							background-position: -1880px 0;
+                            background:$Sprite_icon no-repeat -1727px -41px;
+                            opacity: .6;
 						}
 					}
 					&:last-child{
 						&:before{
-							background-position: -1800px 0;
-                            width: 55px;
+							background:$Sprite_icon no-repeat -1800px -45px;
+                            width: 64px;
                             height: 45px;
+                            opacity: .6;
 						}
 					}
 			    }

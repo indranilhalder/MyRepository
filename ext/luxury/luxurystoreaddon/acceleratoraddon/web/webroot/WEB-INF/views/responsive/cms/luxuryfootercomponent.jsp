@@ -23,7 +23,7 @@
 			<div class="col-sm-4 col-md-4 col-lg-4 app-info">
 				<h3 class="">${footerAppTitle}<span class="sprite sp-minus"></span></h3>
 				<div class="">
-				<ul>
+				<ul class="app-link">
 					<c:forEach var="app" items="${footerAppImageList}" >
 						<li><a href="${app.urlLink}"><img src="${app.media.url}" alt="${app.title}"></a></li>
 					</c:forEach>
