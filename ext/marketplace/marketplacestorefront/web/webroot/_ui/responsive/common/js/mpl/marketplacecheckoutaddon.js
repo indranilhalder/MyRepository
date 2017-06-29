@@ -6048,7 +6048,7 @@ function populateCartDetailsafterPincodeCheck(responseData){
 				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
 			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			if(cartData[cart]['cartLevelPercentage']!=null){
+			if(cartData[cart]['cartLevelPercentage']!=null && cartData[cart]['cartLevelDisc']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
 				$(".add-disc-pincode").show();
