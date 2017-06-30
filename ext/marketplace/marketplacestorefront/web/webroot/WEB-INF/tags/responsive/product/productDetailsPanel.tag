@@ -155,42 +155,13 @@ tr.d0 td {
 					varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">
 					<div id="addiImageTab${varStatus.index}">
 						<span> 
-							<c:choose>
-								<c:when test="${product.rootCategory=='FineJewellery'}">
-									<c:if
-										test="${container.fineJewelthumbnail.mediaType.code eq 'Image'}">
-										<img src="${container.fineJewelthumbnail.url}" data-type="image"
-											data-zoomimagesrc="${container.fineJewelsuperZoom.url}"
-											data-primaryimagesrc="${container.fineJewelproduct.url}"
-											data-galleryposition="${varStatus.index}"
-											alt="${container.fineJewelthumbnail.altText}"
-											title="${container.fineJewelthumbnail.altText}" />
-									</c:if>
-									<c:if
-										test="${container.fineJewelthumbnail.mediaType.code eq 'Video'}">
-										<img src="${commonResourcePath}/images/video-play.png"
-											data-type="video"
-											data-videosrc="${container.fineJewelthumbnail.url}?rel=0&enablejsapi=1" />
-										<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-										<img src="${container.product.url}" data-type="image"
-											data-zoomimagesrc="${container.superZoom.url}"
-											data-primaryimagesrc="${container.product.url}"
-											data-galleryposition="${varStatus.index}"
-											alt="${container.thumbnail.altText}"
-											title="${container.thumbnail.altText}" />
-									</c:if>
-									<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-										<img src="${commonResourcePath}/images/video-play.png"
-											data-type="video"
-											data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-										<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-									</c:if>
-								</c:otherwise>
-							</c:choose>
+							<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+						</c:if>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+						</c:if>
 						</span>
 					</div>
 				</c:forEach>
@@ -474,7 +445,13 @@ tr.d0 td {
 			</cms:pageSlot>
 			
 			</div>
-
+             <ul class="wish-share desktop">
+				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+				<!-- Commented as per PDP CR Change -->
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+				<li><product:socialSharing product="${product}" /></li>
+			</ul>
+			
            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             <c:if test="${product.rootCategory =='FineJewellery'}">
              <div class="certified-by"> 
@@ -513,12 +490,7 @@ tr.d0 td {
           </div>
       </c:if>
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
-          <ul class="wish-share desktop">
-				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<!-- Commented as per PDP CR Change -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
-				<li><product:socialSharing product="${product}" /></li>
-			</ul>
+          
 		</div>
 
 		<%-- <div class="tabs-block">

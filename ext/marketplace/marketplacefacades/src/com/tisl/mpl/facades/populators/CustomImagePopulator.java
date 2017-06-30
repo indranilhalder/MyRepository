@@ -34,8 +34,8 @@ import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
  */
 
 
-public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET extends VariantOptionData> extends
-		VariantOptionDataPopulator
+public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET extends VariantOptionData>
+		extends VariantOptionDataPopulator
 {
 
 	protected static final Logger LOG = Logger.getLogger(CustomImagePopulator.class);
@@ -144,13 +144,6 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 				styleSwatch = MarketplaceFacadesConstants.LUXURY_STYLE_SWATCH;
 			}
 
-			//added for jewellery
-			if (null != variantProductModel.getProductCategoryType()
-					&& variantProductModel.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
-			{
-				styleSwatch = MarketplaceFacadesConstants.JEWELLERY_STYLE_SWATCH;
-			}
-
 			final MediaModel media = getMediaWithImageFormat(mediaContainer, styleSwatch);
 
 			if (media != null)
@@ -245,7 +238,8 @@ public class CustomImagePopulator<SOURCE extends VariantProductModel, TARGET ext
 		//			return picture.getMediaContainer();
 		//		}
 		//		return null;
-		return (variantProductModel != null && variantProductModel.getPicture() != null && variantProductModel.getPicture()
-				.getMediaContainer() != null) ? variantProductModel.getPicture().getMediaContainer() : null;
+		return (variantProductModel != null && variantProductModel.getPicture() != null
+				&& variantProductModel.getPicture().getMediaContainer() != null)
+						? variantProductModel.getPicture().getMediaContainer() : null;
 	}
 }

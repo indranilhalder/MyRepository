@@ -108,15 +108,7 @@
 			data-href="${productZoomImagesUrl}" target="_blank"
 			data-toggle="modal"
 			title="<spring:theme code="text.add.to.wishlist"/>">
-			<c:choose>
-				<c:when test="${product.rootCategory =='FineJewellery'}">
-					<product:productPrimaryImage product="${product}"
-						format="fineJewelproduct" />
-				</c:when>
-				<c:otherwise>
-					<product:productPrimaryImage product="${product}" format="zoom" />
-				</c:otherwise>
-			</c:choose>
+			<product:productPrimaryImage product="${product}" format="zoom"/>
 		</div>
 	</div>
 	<!-- 	<iframe name="videoFrame" id="videoFrame" width="400" height="560" frameborder="0"  style="display:none"  allowfullscreen ></iframe>

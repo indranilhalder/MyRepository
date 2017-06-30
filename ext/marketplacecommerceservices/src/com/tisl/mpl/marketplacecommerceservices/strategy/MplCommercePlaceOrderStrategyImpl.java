@@ -56,10 +56,11 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplOrderDao;
-import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
+import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 import com.tisl.mpl.model.BuyAGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAboveXGetPromotionOnShippingChargesModel;
@@ -104,6 +105,8 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	@Resource
 	private AgentIdForStore agentIdForStore;
 
+	private PriceBreakupService priceBreakupService;
+
 
 	@Override
 	public CommerceOrderResult placeOrder(final CommerceCheckoutParameter parameter) throws InvalidCartException,
@@ -131,6 +134,19 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 			ServicesUtil.validateParameterNotNull(customer, "Customer model cannot be null");
 
 			//TISPRD-958
+
+			for (final AbstractOrderEntryModel abstractOrderEntryModel : cartModel.getEntries())
+			{
+				if (null != abstractOrderEntryModel.getProduct()
+						&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(abstractOrderEntryModel.getProduct()
+								.getProductCategoryType()))
+				{
+					priceBreakupService.createPricebreakupOrder(abstractOrderEntryModel, null);
+
+				}
+				//End of changes for TPR-3782
+			}
+
 			final OrderModel orderModelExists = isOrderAlreadyExists(cartModel);
 			if (orderModelExists != null)
 			{
@@ -456,11 +472,11 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 
 	/*
 	 * @Desc To identify if already a order model exists with same cart guid //TISPRD-181
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return boolean
 	 */
 	private OrderModel isOrderAlreadyExists(final CartModel cartModel)
@@ -518,18 +534,18 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	 * private Double getTotalDiscountForTotalPrice(final List<AbstractOrderEntryModel> entries) { Double discount =
 	 * Double.valueOf(0);
 	 * 
-	 *
+	 * 
 	 * double promoDiscount = 0.0D; double couponDiscount = 0.0D;
-	 *
-	 *
+	 * 
+	 * 
 	 * if (CollectionUtils.isNotEmpty(entries)) { for (final AbstractOrderEntryModel oModel : entries) { if (null !=
 	 * oModel && !oModel.getGiveAway().booleanValue()) { couponDiscount += (null == oModel.getCouponValue() ? 0.0d :
 	 * oModel.getCouponValue().doubleValue()); promoDiscount += (null == oModel.getTotalProductLevelDisc() ? 0.0d :
 	 * oModel.getTotalProductLevelDisc() .doubleValue()) + (null == oModel.getCartLevelDisc() ? 0.0d :
 	 * oModel.getCartLevelDisc().doubleValue()); } }
 	 * 
-	 *
-	 *
+	 * 
+	 * 
 	 * discount = Double.valueOf(couponDiscount + promoDiscount); } return discount; }
 	 */
 
@@ -1050,5 +1066,23 @@ public class MplCommercePlaceOrderStrategyImpl implements MplCommercePlaceOrderS
 	{
 		this.voucherService = voucherService;
 	}
+
+	/**
+	 * @return the priceBreakupService
+	 */
+	public PriceBreakupService getPriceBreakupService()
+	{
+		return priceBreakupService;
+	}
+
+	/**
+	 * @param priceBreakupService
+	 *           the priceBreakupService to set
+	 */
+	public void setPriceBreakupService(final PriceBreakupService priceBreakupService)
+	{
+		this.priceBreakupService = priceBreakupService;
+	}
+
 
 }
