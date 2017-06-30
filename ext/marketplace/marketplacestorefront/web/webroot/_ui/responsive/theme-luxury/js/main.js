@@ -21,8 +21,9 @@ TATA.CommonFunctions = {
             	var fieldName = $(validator.errorList[0].element).attr("placeholder");
             	if(fieldName === "Enter Your Email Address"){
             		fieldName = "Email";
-            	} 
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(fieldName + validator.errorList[0].message) : $("#loginForm").prepend('<div class="invalided-error">' + fieldName + validator.errorList[0].message + "</div>"));
+            	}
+            	var errorMsg = fieldName + " is mandatory";
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(errorMsg) : $("#loginForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
                 j_username: {
@@ -56,8 +57,9 @@ TATA.CommonFunctions = {
             	var fieldName = $(validator.errorList[0].element).attr("placeholder");
             	if(fieldName === "Enter Your Email Address"){
             		fieldName = "Email";
-            	}            	 
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(fieldName + validator.errorList[0].message) : $("#extRegisterForm").prepend('<div class="invalided-error">' + fieldName + validator.errorList[0].message + "</div>"));
+            	}
+            	var errorMsg = fieldName + " is mandatory";
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(errorMsg) : $("#extRegisterForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
                 firstName: {
@@ -111,10 +113,11 @@ TATA.CommonFunctions = {
             onfocusout: !1,
             invalidHandler: function(form, validator) {
             	var fieldName = $(validator.errorList[0].element).attr("placeholder");
-            	if (fieldName === "Enter Your Email Address"){
+            	if(fieldName === "Enter Your Email Address"){
             		fieldName = "Email";
             	}
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(fieldName + validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + fieldName + validator.errorList[0].message + "</div>"));
+            	var errorMsg = fieldName + " is mandatory";
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(errorMsg) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
                 email: {
