@@ -14,15 +14,22 @@ TATA.CommonFunctions = {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
+    getCorrectErrorMessage: function(errorItem){
+    	var errorMsg = errorItem.message;
+    	if(errorMsg.indexOf("required") > 0){
+        	var fieldName = $(errorItem.element).attr("placeholder");
+        	if(fieldName === "Enter Your Email Address"){
+        		fieldName = "Email Address";
+        	}
+        	errorMsg = fieldName + " is manadatory";
+    	}
+    	return errorMsg;
+    },
     signInValidate: function() {
         $("#loginForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-            	var fieldName = $(validator.errorList[0].element).attr("placeholder");
-            	if(fieldName === "Enter Your Email Address"){
-            		fieldName = "Email";
-            	}
-            	var errorMsg = fieldName + " is mandatory";
+            	var errorMsg = TATA.CommonFunctions.getCorrectErrorMessage(validator.errorList[0]);
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(errorMsg) : $("#loginForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
@@ -54,11 +61,7 @@ TATA.CommonFunctions = {
         $("#extRegisterForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-            	var fieldName = $(validator.errorList[0].element).attr("placeholder");
-            	if(fieldName === "Enter Your Email Address"){
-            		fieldName = "Email";
-            	}
-            	var errorMsg = fieldName + " is mandatory";
+            	var errorMsg = TATA.CommonFunctions.getCorrectErrorMessage(validator.errorList[0]);
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(errorMsg) : $("#extRegisterForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
@@ -112,11 +115,7 @@ TATA.CommonFunctions = {
         $("#forgottenPwdForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-            	var fieldName = $(validator.errorList[0].element).attr("placeholder");
-            	if(fieldName === "Enter Your Email Address"){
-            		fieldName = "Enter a valid email address";
-            	}
-            	var errorMsg = fieldName + "";
+            	var errorMsg = TATA.CommonFunctions.getCorrectErrorMessage(validator.errorList[0]);
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(errorMsg) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
