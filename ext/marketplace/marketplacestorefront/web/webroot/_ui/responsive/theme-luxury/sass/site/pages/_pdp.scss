@@ -66,6 +66,17 @@
 	h5 {
 		font-weight: 700;
 	}
+    .size-feature>h5{
+        display: inline-block; 
+        width: 49%;
+    }
+    .size-feature .size-guide{
+        display: inline-block;
+        
+        h5{
+            display: inherit;
+        }
+    }
 	.merchant-info {
 		font-size: $font-size-small;
 		a {
@@ -286,6 +297,8 @@
 	background-color: #fbfbfb;
 	border-top: 2px solid #efefef;
 	clear: both;
+    cursor: pointer;
+    
 	.accordion-title {
 		border-bottom: 2px solid #efefef;
 		position: relative;
@@ -298,6 +311,7 @@
 			}
 		}
 		&.active .accordion-icon {
+             -webkit-transform: rotate(0deg);
 			transform: rotate(0deg);
 		}
 	}
@@ -430,7 +444,9 @@
 	    height: 20px;
 	    display: block;
 	    margin-top: -10px;
+        -Webkit-transition: all .1s ease-in-out; 
 		transition: all .1s ease-in-out; 
+        -Webkit-transform: rotate(-45deg);
 		transform: rotate(-45deg);
 		&:before, &:after {
 			position: absolute;
@@ -442,9 +458,11 @@
 		}
 
 		&:before {
+            -Webkit-transform: rotate(45deg);
 			transform: rotate(45deg);
 		}
 		&:after {
+            -Webkit-transform: rotate(-45deg);
 			transform: rotate(-45deg);
 		}
 	}
@@ -785,6 +803,11 @@
 			    padding: 10px 100px 10px 10px;
 			    width: 100%;
 			    border-radius: 3px;
+                line-height: 0;
+                box-shadow: none;
+                 @include media-breakpoint-down(sm) {
+                      line-height:normal;
+                }
     		}
     		button{
     			border: 0px;

@@ -6,6 +6,8 @@
         display:inline-block;
         width: 40px;
         height: 40px;
+        margin-right: 7px;
+        cursor: pointer;
 
     }
     li{
@@ -250,6 +252,7 @@ footer{
 							background:$Sprite_icon1 no-repeat -206px -175px;
                             width: 46px;
                             height: 45px;
+                            margin-right: 20px;
 						}
 					}
 					&:nth-child(2){
@@ -397,8 +400,13 @@ footer{
 		.footer-inner-wrapper {
 			padding-bottom:0px;
 			.accordion{
-				border-bottom: 1px solid #eaeaec;
+				border-top: 1px solid #eaeaec;
 				padding-top: 15px;
+                border-bottom: 1px solid #eaeaec;
+                
+                h3{                   
+                    cursor: pointer;
+                }
 			}
 			.accordion-content{
 				display:none;
@@ -407,7 +415,7 @@ footer{
 			.accordion-title,h3{
 				position:relative;
 				margin-bottom:0;
-        padding-bottom:20px;
+                padding-bottom:20px;
 				.sp-minus::after{
 					content: "+";
 					height: 10px;

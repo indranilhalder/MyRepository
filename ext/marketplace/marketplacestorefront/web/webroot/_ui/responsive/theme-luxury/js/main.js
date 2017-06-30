@@ -609,11 +609,12 @@ TATA.CommonFunctions = {
                 $(this).hide();
             }
         });
+        var Acc1 = $('.accordion').find('h3');
 
         $(document).on('click','.accordion h3', function(){
             //Expand or collapse this panel
             $(this).toggleClass('active').next().stop().slideToggle(500);
-            //Acc.not($(this)).removeClass('active');
+            Acc1.not($(this)).removeClass('active');
             //Hide the other panels
             $(".accordion-content").not($(this).next()).stop().slideUp(500);
             return false;
