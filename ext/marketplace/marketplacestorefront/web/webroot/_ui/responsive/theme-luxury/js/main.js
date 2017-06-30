@@ -114,9 +114,9 @@ TATA.CommonFunctions = {
             invalidHandler: function(form, validator) {
             	var fieldName = $(validator.errorList[0].element).attr("placeholder");
             	if(fieldName === "Enter Your Email Address"){
-            		fieldName = "Email";
+            		fieldName = "Enter a valid email address";
             	}
-            	var errorMsg = fieldName + " is mandatory";
+            	var errorMsg = fieldName + "";
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(errorMsg) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
