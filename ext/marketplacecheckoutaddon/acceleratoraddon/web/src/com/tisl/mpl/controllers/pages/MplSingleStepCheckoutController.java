@@ -128,7 +128,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.controllers.MarketplacecheckoutaddonControllerConstants;
-import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.WalletEnum;
+import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.model.MplLPHolidaysModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -4757,7 +4757,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4815,7 +4815,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -5462,4 +5462,64 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 		return jsonObj;
 	}
+
+	/**
+	 * @description method is called to update fields for tealium when remove is done from Review page of one page
+	 *              checkout
+	 * @return Json Object
+	 * @throws JSONException
+	 */
+	@RequestMapping(value = "/updateTealiumData", method = RequestMethod.GET)
+	public @ResponseBody JSONObject updateTealiumData(final Model model) throws UnsupportedEncodingException, JSONException
+	{
+
+		JSONObject jsonObj = new JSONObject();
+		try
+		{
+			final CartData cartData = mplCartFacade.getSessionCartWithEntryOrdering(true);
+
+			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+			jsonObj = populateTealiumDataForCartCheckoutJSON(model);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
+
+		return jsonObj;
+
+	}
+
+	private JSONObject populateTealiumDataForCartCheckoutJSON(final Model model)
+	{
+		final JSONObject json = new JSONObject();
+		try
+		{
+
+			json.put("productBrandList", model.asMap().get("productBrandList"));
+			json.put("productIdList", model.asMap().get("productIdList"));
+			json.put("productListPriceList", model.asMap().get("productListPriceList"));
+			json.put("productNameList", model.asMap().get("productNameList"));
+			json.put("productQuantityList", model.asMap().get("productQuantityList"));
+			json.put("productSkuList", model.asMap().get("productSkuList"));
+			json.put("productUnitPriceList", model.asMap().get("productUnitPriceList"));
+			json.put("adobe_product", model.asMap().get("adobe_product"));
+			json.put("cart_total", model.asMap().get("cart_total"));
+			json.put("orderShippingCharges", model.asMap().get("orderShippingCharges"));
+			json.put("pageSubCategories", model.asMap().get("pageSubCategories"));
+			json.put("productCategoryList", model.asMap().get("productCategoryList"));
+			json.put("page_subcategory_name_L3", model.asMap().get("page_subcategory_name_L3"));
+			json.put("page_subcategory_name_L4", model.asMap().get("page_subcategory_name_L4"));
+			json.put("checkoutSellerIDs", model.asMap().get("cartLevelSellerID"));
+		}
+		catch (final Exception te)
+		{
+			LOG.error("Error while populating tealium data in cart page:::::" + te.getMessage());
+		}
+		return json;
+	}
+
+
 }

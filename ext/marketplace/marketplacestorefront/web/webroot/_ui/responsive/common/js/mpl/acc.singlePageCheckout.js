@@ -1460,6 +1460,7 @@ removeExchangeFromCart : function (){
 	        		{
 	        			$("#reviewOrder").html(data);
 	        		}
+	        		ACC.singlePageCheckout.getTealiumData();
 	        		//START:Code to show strike off price
 	        		$("#off-bag").show();
 
@@ -1843,7 +1844,59 @@ removeExchangeFromCart : function (){
         xhrResponse.always(function() {
         });
 	},	
-	
+	//UF-398
+	getTealiumData:function()
+	{
+	var url=ACC.config.encodedContextPath + "/checkout/single/updateTealiumData";
+	var data="";
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+
+	xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log(" Tealium data error:"+textStatus + ': ' + errorThrown);
+	});
+    
+    xhrResponse.done(function(data, textStatus, jqXHR) {
+    	if(jqXHR.responseJSON){
+			var updatedProduct= data.productIdList;
+		    var updatedQuantity = data.productQuantityList ;
+		    var updatedproductListPrice = data.productListPriceList;
+		    var updatedProductName = data.productNameList;
+		    var updatedUnitPrice = data.productUnitPriceList;
+		    var updatedCartTotal = data.cart_total;
+		    var updatedBrand = data.productBrandList;
+		    var updatedCategory =  data.productCategoryList;
+		    var updatedSubCategory = data.pageSubCategories;
+		    var updatedSubCategoryL3 = data.page_subcategory_name_L3;
+		    var updatedSubCategoryL4 = data.page_subcategory_name_L4;
+		    var updatedAdobeSku = data.adobe_product;
+		    var updatedCheckoutSeller = data.checkoutSellerIDs;
+			$("#product_id").val(updatedProduct);
+			$("#product_sku").val(updatedProduct);
+			$("#adobe_product").val(updatedAdobeSku);
+		    $("#product_name").val(updatedProductName);
+			$("#product_quantity").val(updatedQuantity);
+			$("#product_list_price").val(updatedproductListPrice);
+			$("#product_unit_price").val(updatedUnitPrice);
+			$("#cart_total").val(updatedCartTotal);
+			$("#product_brand").val(updatedBrand);
+			$("#page_subcategory_L1").val(updatedCategory);
+			$("#product_category").val(updatedCategory);
+			$("#page_subcategory_L2").val(updatedSubCategory);
+			$("#page_subcategory_name").val(updatedSubCategory);
+			$("#page_subcategory_l3").val(updatedSubCategoryL3);
+			$("#page_subcategory_name_l3").val(updatedSubCategoryL3);
+			$("#page_subcategory_l4").val(updatedSubCategoryL4);
+			$("#page_subcategory_name_l4").val(updatedSubCategoryL4);
+			$("#checkoutSellerIDs").val(updatedCheckoutSeller);
+			tealiumCallOnPageLoad();
+			
+    	}
+				
+	});
+    
+    xhrResponse.always(function(){        	
+	});
+  },	
 	
 //	mobileAccordion:function(){
 //		$("#address-change-link").on("click", function(){
