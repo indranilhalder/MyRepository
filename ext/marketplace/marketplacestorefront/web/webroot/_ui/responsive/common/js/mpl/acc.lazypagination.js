@@ -253,7 +253,7 @@ $(document).ready(function() {
         $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
             	
-            	var productItemArrayLength = $('.product-listing.product-grid.lazy-grid,.product-listing.product-grid.lazy-grid-facet,.product-listing.product-grid.lazy-grid-normal,.product-listing.product-grid.custom-sku').find('li.product-item').length;
+            	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
             	if(productItemArrayLength > 16){
 		lazyPushInitalPage();
 		}
