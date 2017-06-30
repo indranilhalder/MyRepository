@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ClassificationData;
 import de.hybris.platform.commercefacades.product.data.FeatureData;
+import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
@@ -45,8 +46,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -123,14 +127,14 @@ public class ProductDetailsHelper
 	/*
 	 * private MplCheckoutFacade mplCheckoutFacade;
 	 *//**
-	   * @return the mplCheckoutFacade
-	   */
+	 * @return the mplCheckoutFacade
+	 */
 	/*
 	 * public MplCheckoutFacade getMplCheckoutFacade() { return mplCheckoutFacade; }
 	 *//**
-	   * @param mplCheckoutFacade
-	   *           the mplCheckoutFacade to set
-	   */
+	 * @param mplCheckoutFacade
+	 *           the mplCheckoutFacade to set
+	 */
 	/*
 	 * public void setMplCheckoutFacade(final MplCheckoutFacade mplCheckoutFacade) { this.mplCheckoutFacade =
 	 * mplCheckoutFacade; }
@@ -213,15 +217,15 @@ public class ProductDetailsHelper
 	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
-	   * @return the gigyaservice
-	   */
+	 * @return the gigyaservice
+	 */
 
 	/*
 	 * public GigyaService getGigyaservice() { return gigyaservice; }
 	 *//**
-	   * @param gigyaservice
-	   *           the gigyaservice to set
-	   */
+	 * @param gigyaservice
+	 *           the gigyaservice to set
+	 */
 	/*
 	 * public void setGigyaservice(final GigyaService gigyaservice) { this.gigyaservice = gigyaservice; }
 	 */
@@ -346,15 +350,13 @@ public class ProductDetailsHelper
 		{
 			for (final ClassificationData classData : productData.getClassifications())
 			{
-				if (classicationDataList.isEmpty() && !(classData.getName().equalsIgnoreCase(N_A))
+				if (classicationDataList.isEmpty()
+						&& !(classData.getName().equalsIgnoreCase(N_A))
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
 								.contains(classData.getName())
 								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
-										.contains(classData.getName())
-								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
-										.contains(classData.getName())
-								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
-										.contains(classData.getName())))
+										.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME).contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
 				}
@@ -370,23 +372,122 @@ public class ProductDetailsHelper
 					}
 					else
 					{
-						if (!(classData.getName().equalsIgnoreCase(N_A))&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
+						if (!(classData.getName().equalsIgnoreCase(N_A))
+								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
 										.contains(classData.getName())
 										|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
-												.contains(classData.getName())
-										|| configurationService.getConfiguration()
-												.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME)
-												.contains(classData.getName()))
-								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
-										.contains(classData.getName()))
+												.contains(classData.getName()) || configurationService.getConfiguration()
+										.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME).contains(classData.getName())))
 						{
 							classicationDataList.add(classData);
 						}
 					}
 				}
 			}
+			productData.setClassifications(classicationDataList);
 		}
-		productData.setClassifications(classicationDataList);
+	}
+
+
+	public void groupGlassificationDataForFineDeatils(final ProductData productData)
+	{
+		final LinkedHashMap<String, LinkedHashMap<String, List<String>>> featureDetails = new LinkedHashMap<String, LinkedHashMap<String, List<String>>>();
+		if (null != productData.getClassifications())
+		{
+			for (final ClassificationData classData : productData.getClassifications())
+			{
+				if (featureDetails.isEmpty()
+						&& !(classData.getName().equalsIgnoreCase(N_A))
+						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
+								.contains(classData.getName())))
+				{
+					final String classificationName = classData.getName();
+					final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+					final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
+					for (final FeatureData feature : classDataName)
+					{
+						final String featurename = feature.getName();
+						final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+						final List<String> featureValueList = new ArrayList<String>();
+						for (final FeatureValueData featurevalue : featuredvalue)
+						{
+							final String featureV = featurevalue.getValue();
+							final Set keys = featureMap.keySet();
+							final Iterator itr = keys.iterator();
+							String key = null;
+							if (keys.contains(featurename))
+							{
+								while (itr.hasNext())
+								{
+									key = (String) itr.next();
+									if (key != null && key == featurename)
+									{
+										featureMap.get(featurename).add(featureV);
+									}
+								}
+							}
+							else
+							{
+								featureValueList.add(featureV);
+								featureMap.put(featurename, featureValueList);
+							}
+						}
+					}
+					featureDetails.put(classificationName, featureMap);
+				}
+				else
+				{
+					if (!(classData.getName().equalsIgnoreCase(N_A))
+							&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
+									.contains(classData.getName())))
+					{
+						final String classificationName = classData.getName();
+						Map<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+						final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
+						if (featureDetails.keySet().contains(classificationName))
+						{
+							featureMap = featureDetails.get(classificationName);
+						}
+						else
+						{
+							featureMap = new HashMap<String, List<String>>();
+						}
+						for (final FeatureData feature : classDataName)
+						{
+
+							final String featurename = feature.getName();
+							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+							final List<String> featureValueList = new ArrayList<String>();
+							for (final FeatureValueData featurevalue : featuredvalue)
+							{
+								final String featureV = featurevalue.getValue();
+								final Set keys = featureMap.keySet();
+								final Iterator itr = keys.iterator();
+								String key = null;
+								if (keys.contains(featurename))
+								{
+									while (itr.hasNext())
+									{
+										key = (String) itr.next();
+										if (key != null && key == featurename)
+										{
+											featureMap.get(featurename).add(featureV);
+										}
+									}
+								}
+								else
+								{
+									featureValueList.add(featureV);
+									featureMap.put(featurename, featureValueList);
+								}
+							}
+						}
+						featureDetails.put(classificationName, featureMap);
+					}
+				}
+			}
+			productData.setFineJewelleryDeatils(featureDetails);
+		}
 	}
 
 	public ClassificationData getExistingClasificationData(final String name, final List<ClassificationData> classificationList)
@@ -401,6 +502,26 @@ public class ProductDetailsHelper
 		}
 		return classificationData;
 	}
+
+
+	//public ClassificationData getExistingClasificationDataForFine(final String name,
+	//			final Map<String, Map<String, List<String>>> classificationList)
+	//	{
+	//	ClassificationData classificationData = null;
+	//	for (final ClassificationData cData : classificationList)
+	//	{
+	//		if (cData.getName().equals(name))
+	//		{
+	//			classificationData = cData;
+	//		}
+	//	}
+	//	return classificationData;
+	//	}
+
+
+
+
+
 
 	public PriceData formPriceData(final Double price)
 	{
@@ -424,8 +545,8 @@ public class ProductDetailsHelper
 			final Wishlist2Model existingWishlist = wishlistFacade.getWishlistForName(wishName);
 			//  boolean add=
 			//checking whether the wishlist with given name exists or not
-			LOG.debug(
-					"addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: " + wishName);
+			LOG.debug("addToWishListInPopup: *****productCode: " + productCode + " **** ussid: " + ussid + " *** wishName: "
+					+ wishName);
 			if (null != existingWishlist)
 			{
 				add = wishlistFacade.addProductToWishlist(existingWishlist, productCode, ussid, sizeSelected.booleanValue());
@@ -1008,8 +1129,8 @@ public class ProductDetailsHelper
 				if (cookiedat != null && !cookiedat.isEmpty())
 
 				{
-					ck = new Cookie(URLEncoder.encode(cookiedat.get(0), MarketplaceFacadesConstants.UTF),
-							URLEncoder.encode(cookiedat.get(1), MarketplaceFacadesConstants.UTF));
+					ck = new Cookie(URLEncoder.encode(cookiedat.get(0), MarketplaceFacadesConstants.UTF), URLEncoder.encode(
+							cookiedat.get(1), MarketplaceFacadesConstants.UTF));
 					ck.setPath("/");
 					//ck.setMaxAge(0);
 					//if (!cookieSwitch.equalsIgnoreCase("N"))
@@ -1089,11 +1210,12 @@ public class ProductDetailsHelper
 							//						sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode()
 							//								.replaceAll("sizetype", ""));
 
-							if (StringUtils.isNotEmpty(
-									String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode())))
+							if (StringUtils.isNotEmpty(String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal
+									.getValue()).getCode())))
 							{
-								sizeGuideCode = String.valueOf(((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue())
-										.getCode().replaceAll("sizetype", "")).toUpperCase();
+								sizeGuideCode = String.valueOf(
+										((ClassificationAttributeValueModel) sizeGuidefeatureVal.getValue()).getCode().replaceAll(
+												"sizetype", "")).toUpperCase();
 							}
 						}
 						break;

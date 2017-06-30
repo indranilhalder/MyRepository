@@ -3887,8 +3887,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				/* PRICE BREAKUP ENDS HERE */
 					
 					/* JewelleryDetail STARTS HERE */
-					try{
-					var jwelPDP = $("#jwelPDP").val();
+					/*var jwelPDP = $("#jwelPDP").val();
 					if (jwelPDP == "FineJewellery"){
 						var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
 						var j=0;
@@ -3923,7 +3922,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				  catch(err) {
 					  
 					}
-				  
+				  */
 				/* JewelleryDetail ENDS HERE */
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
