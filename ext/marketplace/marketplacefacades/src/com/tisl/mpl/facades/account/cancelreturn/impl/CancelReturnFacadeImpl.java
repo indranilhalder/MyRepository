@@ -1533,7 +1533,8 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	@Override
 	public boolean createTicketInCRM(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String ticketTypeCode, final String reasonCode, final String refundType, final String ussid,
-			final CustomerData customerData, final OrderModel subOrderModel, final ReturnItemAddressData returnAddress)
+			final CustomerData customerData, final OrderModel subOrderModel, final ReturnItemAddressData returnAddress,
+			final String revSealForJwlry)
 	{
 		boolean ticketCreationStatus = false;
 
@@ -1553,9 +1554,12 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 				{
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 					sendTicketRequestData.setRefundType(refundType);
+					//TPR-4134
+					if (StringUtils.isNotEmpty(revSealForJwlry))
+					{
+						sendTicketLineItemData.setReverseSealForJwllry(revSealForJwlry);
 
-
-
+					}
 					boolean returnLogisticsCheck = true; //Start
 
 					final List<ReturnLogisticsResponseData> returnLogisticsRespList = checkReturnLogistics(subOrderDetails, pinCode,
@@ -3541,7 +3545,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	public boolean implementReturnItem(final OrderData subOrderDetails, final OrderEntryData subOrderEntry,
 			final String reasonCode, final String ussid, final String ticketTypeCode, final CustomerData customerData,
 			final String refundType, final boolean isReturn, final SalesApplication salesApplication,
-			final ReturnItemAddressData returnAddress)
+			final ReturnItemAddressData returnAddress, final String revSealJwlry)
 	{
 
 		LOG.debug("Step 1 :*********************************** isReturn:" + isReturn);
@@ -3624,7 +3628,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 						+ subOrderDetails.getCode());
 
 				final boolean ticketCreationStatus = createTicketInCRM(subOrderDetails, subOrderEntry, ticketTypeCode, reasonCode,
-						refundType, ussid, customerData, subOrderModel, returnAddress);
+						refundType, ussid, customerData, subOrderModel, returnAddress, revSealJwlry);
 
 				LOG.debug("Step 4.1:***********************************Ticket creation status for sub order:" + ticketCreationStatus);
 				LOG.debug("Step 5 :*********************************** Refund and OMS call started");
