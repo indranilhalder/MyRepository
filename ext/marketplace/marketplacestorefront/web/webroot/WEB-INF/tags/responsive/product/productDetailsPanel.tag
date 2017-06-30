@@ -422,13 +422,13 @@ tr.d0 td {
            </c:forEach>
          </ul>
       </div>
-          <div class="certified-by">
+          <!-- <div class="certified-by">
            <ul>
             <li>30 day returns</li>
             <li>tata guarantee</li>
            
            </ul>
-          </div>
+          </div> -->
       </c:if>
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 
@@ -534,11 +534,11 @@ tr.d0 td {
           
 		</div>
 
-		<%-- <div class="tabs-block">
+		 <div class="tabs-block">
 				<product:productPageTabs />
-			</div> --%>
+			</div>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
-		<c:set var="finejewellery">
+		<%-- <c:set var="finejewellery">
 			<spring:theme code='product.finejewellery' />
 		</c:set>
 		<c:choose>
@@ -547,7 +547,7 @@ tr.d0 td {
 					<product:productPageTabs />
 				</div>
 			</c:when>
-		</c:choose>
+		</c:choose> --%>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
 
 	</div>
