@@ -149,6 +149,16 @@
 	 		}
 	 	}); 
 	}
+	function updateFormInputElements(element,entryNumber)
+	{
+		if($(element).is(":checked"))
+		{
+			$("#ussidId"+entryNumber).val($(element).attr("data-ussid"));
+			$("#deliverySlotCostId"+entryNumber).val($(element).attr("data-deliveryCost"));
+			$("#deliverySlotDateId"+entryNumber).val($(element).attr("data-deliverySlotDate"));
+			$("#deliverySlotTimeId"+entryNumber).val($(element).attr("data-deliverySlotTime"));
+		}
+	}
 </script>
 <div class="checkout-shipping-items">
 	<div class="checkout-headers">
@@ -159,6 +169,11 @@
 	<ul id="deliveryradioul" class="">
 		<c:set var="scheduleIndex" value="0" scope="page"></c:set>
 		<c:forEach items="${cartData.entries}" var="entry">
+			<form:input type="hidden" id="entryNumberId${entry.entryNumber}" path="deliverySlotEntry[${entry.entryNumber}].entryNumber" value="${entry.entryNumber}" />
+			<form:input type="hidden" id="ussidId${entry.entryNumber}" path="deliverySlotEntry[${entry.entryNumber}].ussid" value="" />
+			<form:input type="hidden" id="deliverySlotCostId${entry.entryNumber}" path="deliverySlotEntry[${entry.entryNumber}].deliverySlotCost" value="" />
+			<form:input type="hidden" id="deliverySlotDateId${entry.entryNumber}" path="deliverySlotEntry[${entry.entryNumber}].deliverySlotDate" value="" />
+			<form:input type="hidden" id="deliverySlotTimeId${entry.entryNumber}" path="deliverySlotEntry[${entry.entryNumber}].deliverySlotTime" value="" />
 			<c:set var="scheduleIndex" value="${scheduleIndex + 1}" scope="page"></c:set>
 			<c:url value="${entry.product.url}" var="productUrl" />
 			<li class="item">
@@ -180,8 +195,6 @@
 						</div>
 					</li>
 					<li class="deliverySlotRadio">
-						<%-- <input type="hidden" id="mplconfigModel" name="mplconfigModel" value="${mplconfigModel}"/>
-						<input type="hidden" id="selectedUssId" name="selectedUssId" value="${entry.selectedUssid}"/> --%>
 						<div class="" id="content"  data-ajax="3bu1">
 							<c:choose>
 								<c:when test="${not empty entry.deliverySlotsTime}">
@@ -193,7 +206,7 @@
 												<c:forEach items="${dateSlots.value}" var="timeSlots">
 												<c:set var="lineItemIndex" value="${lineItemIndex + 1}" scope="page"></c:set>
 													<span class="delslot_timeslot">	
-														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${lineItemIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateSlotForEntry(this,'${entry.entryNumber}');">
+														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${lineItemIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateFormInputElements(this,'${entry.entryNumber}');">
 														<label class="delslot_radio" for="date${scheduleIndex}${lineItemIndex}"></label>
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
@@ -209,7 +222,7 @@
 												</c:forEach>
 											</div>
 										</c:forEach>
-											<button class="reset_link" type="button" id="resetButtonId${entry.entryNumber}" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');">Reset</button>
+											<button class="reset_link" type="button" id="resetButtonId${entry.entryNumber}" data-ussid="${entry.selectedUssid}"  data-deliveryCost="${mplconfigModel}" disabled="disabled" onclick="resetSlotForEntry(this,'date${scheduleIndex}');" style="display:none;">Reset</button>
 									</div>									
 								</c:when>
 								<c:otherwise>

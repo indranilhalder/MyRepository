@@ -120,6 +120,8 @@ import com.granule.json.JSONObject;
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.checkout.form.DeliveryMethodEntry;
 import com.tisl.mpl.checkout.form.DeliveryMethodForm;
+import com.tisl.mpl.checkout.form.DeliverySlotEntry;
+import com.tisl.mpl.checkout.form.DeliverySlotForm;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -1528,6 +1530,118 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return jsonObj;
 	}
 
+	//Added new  code for deliverySlots....
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.DELIVERY_SLOTCOST_FOR_ED, method = RequestMethod.POST)
+	@RequireHardLogIn
+	public @ResponseBody String calculateDeliverySlotCostForED(
+			@ModelAttribute("deliverySlotForm") final DeliverySlotForm deliverySlotForm)
+	{
+
+		if (deliverySlotForm.getDeliverySlotEntry() == null)
+		{
+			//TODO
+		}
+
+		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
+		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
+		if (deliverySlotForm.getDeliverySlotEntry() != null && !deliverySlotForm.getDeliverySlotEntry().isEmpty())
+		{
+			final CartModel cartModel = getCartService().getSessionCart();
+			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+			double deliverySlotCharge = 0.0;
+			boolean isCartSaveRequired = false;
+			for (final DeliverySlotEntry deliveryEntry : deliverySlotForm.getDeliverySlotEntry())
+			{
+
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
+					{
+						if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(deliveryEntry.getUssid()))
+						{
+							isCartSaveRequired = true;
+							//Start of UF-281
+							boolean isSaveRequired = false;
+							if (null != cartEntryModel.getEdScheduledDate()
+									&& StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+							{
+								cartEntryModel.setEdScheduledDate("".trim());
+								cartEntryModel.setTimeSlotFrom("".trim());
+								cartEntryModel.setTimeSlotTo("".trim());
+							}
+							if (cartEntryModel.getScheduledDeliveryCharge() != null
+									&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+							{
+								isSaveRequired = true;
+								if (cartModel.getTotalPriceWithConv() != null)
+								{
+									cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+											- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+								}
+								final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
+										- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+								cartModel.setDeliveryCost(finalDeliveryCost);
+								final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+										- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+								cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+								cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+							}
+							if (isSaveRequired)
+							{
+								modelService.save(cartModel);
+								modelService.refresh(cartModel);
+							}
+							//End of UF-281
+							cartEntryModel.setEdScheduledDate(deliveryEntry.getDeliverySlotDate());
+							if (null != deliveryEntry.getDeliverySlotTime())
+							{
+								final String[] timeSlots = deliveryEntry.getDeliverySlotTime().split(
+										MarketplacecommerceservicesConstants.TO);
+								cartEntryModel.setTimeSlotFrom(timeSlots[0].trim());
+								cartEntryModel.setTimeSlotTo(timeSlots[1].trim());
+								if (null != deliveryEntry.getDeliverySlotCost() && !deliveryEntry.getDeliverySlotCost().isEmpty()
+										&& !deliveryEntry.getDeliverySlotCost().matches("0"))
+								{
+									cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(deliveryEntry.getDeliverySlotCost()));
+									if (cartModel.getTotalPriceWithConv() != null
+											&& StringUtils.isNotEmpty(deliveryEntry.getDeliverySlotCost()))
+									{
+										cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+												+ Double.valueOf(deliveryEntry.getDeliverySlotCost()).doubleValue()));
+									}
+
+								}
+							}
+							deliverySlotCharge += Double.parseDouble(deliveryEntry.getDeliverySlotCost());
+						}//End of USSID comparison if
+					}//End of cart entry if
+
+				}//End of cart entry for loop
+			}//End of slot entry for loop
+			if (isCartSaveRequired)
+			{
+				modelService.saveAll(cartEntryList);
+			}
+			final Double subTotal = cartModel.getTotalPrice();
+			Double finalDeliveryCost = null;
+			Double totalPriceAfterDeliveryCost = null;
+			if (deliverySlotCharge != 0.0)
+			{
+				//final Double deliverySlotCharge = Double.valueOf(deliverySlotCost);
+				finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue() + deliverySlotCharge);
+				cartModel.setDeliveryCost(finalDeliveryCost);
+				totalPriceAfterDeliveryCost = Double.valueOf(subTotal.doubleValue() + deliverySlotCharge);
+				cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+				modelService.save(cartModel);
+				modelService.refresh(cartModel);
+				LOG.debug("Cart Moel Saved Successfully.....");
+				final DecimalFormat df = new DecimalFormat("#.00");
+				totalPriceFormatted = df.format(totalPriceAfterDeliveryCost);
+				formatDeliveryCost = df.format(finalDeliveryCost);
+			}
+		}//End of slot entry if
+		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+	}
 
 	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress)
 	{
@@ -2160,6 +2274,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
 				final String currencySymbol = currency.getSymbol();
 				model.addAttribute("currencySymbol", currencySymbol);
+				model.addAttribute("deliverySlotForm", new DeliverySlotForm());
 
 				//				this.prepareDataForPage(model);
 				//			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
@@ -3269,6 +3384,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
 			final String currencySymbol = currency.getSymbol();
 			model.addAttribute("currencySymbol", currencySymbol);
+			model.addAttribute("deliverySlotForm", new DeliverySlotForm());
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -4599,7 +4715,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4657,7 +4773,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

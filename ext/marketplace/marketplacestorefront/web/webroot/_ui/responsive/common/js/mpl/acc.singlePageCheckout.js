@@ -1817,6 +1817,26 @@ removeExchangeFromCart : function (){
 			});
 	},
 	
+	submitSlotDeliverySelection:function()
+	{
+		var url=$("#selectDeliverySlotForm").prop("action");
+		var data=$("#selectDeliverySlotForm").serialize();
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"POST",data,false);
+        
+        xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+        
+        xhrResponse.done(function(data, textStatus, jqXHR) {
+            var result = data.split("-");
+ 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
+ 			$("#totalWithConvField").empty().text(result[1]);
+ 			$("#outstanding-amount-mobile").empty().text(result[1]);
+        });
+        
+        xhrResponse.always(function() {
+        });
+	},	
 	
 	
 //	mobileAccordion:function(){
@@ -1906,6 +1926,8 @@ removeExchangeFromCart : function (){
 		$(".cvvValdiation").val("");
 		$("input:radio[name=debitCards]").prop("checked",false);
 		$("input:radio[name=creditCards]").prop("checked",false);
+		//Hiding SnackBar
+		ACC.singlePageCheckout.hideSnackBar();
 	},
 	
 	resetPaymentModesOnSavedCardSelection:function(paymentMode)
@@ -1933,6 +1955,8 @@ removeExchangeFromCart : function (){
 		$("#make_emi_payment_up").css("display","none");
 		$("#paymentButtonId_up").css("display","none");
 		$("#make_mrupee_payment_up").css("display","none");
+		//Hiding SnackBar
+		ACC.singlePageCheckout.hideSnackBar();
 	},
 	
 	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
@@ -2344,7 +2368,8 @@ removeExchangeFromCart : function (){
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{
-	                		//TODO Toast for slot delivery 
+	                		//TODO Toast for slot delivery
+	                		$("#singlePageChooseSlotDeliveryPopup #modalBody").attr("data-htmlPopulated","NO");
 	                		ACC.singlePageCheckout.showSnackBar();
 	                		
 	                	}
@@ -2376,11 +2401,36 @@ removeExchangeFromCart : function (){
 	showSnackBar:function(){
 		// Add the "show" class to DIV
 		var x = $("#mobileSnackbar").addClass("show");
-		$("#selectSnackbar").click(function(){
+		$("#selectSnackbar").on("click.showSnackBar",function(){
 			ACC.singlePageCheckout.getResponsiveSlotSelectionPage();
 		    
 		});
 		
+	},
+	hideSnackBar:function(){
+		// Remove the "show" class to DIV
+		var x = $("#mobileSnackbar").removeClass("show");
+		$("#selectSnackbar").off("click.showSnackBar",function(){
+			ACC.singlePageCheckout.getResponsiveSlotSelectionPage();
+		    
+		});
+		
+	},
+	onSlotDeliveryDoneClick:function(){
+		ACC.singlePageCheckout.submitSlotDeliverySelection();
+		$('#singlePageChooseSlotDeliveryPopup').modal('hide');
+		if(!ACC.singlePageCheckout.getIsResponsive())
+		{
+			ACC.singlePageCheckout.getReviewOrder();
+		}
+		
+	},
+	onSlotDeliveryCancelClick:function(){
+		$('#singlePageChooseSlotDeliveryPopup').modal('hide');
+		if(!ACC.singlePageCheckout.getIsResponsive())
+		{
+			ACC.singlePageCheckout.getReviewOrder();
+		}
 	},
 	//Method to get responsive slot delivery page
 	getResponsiveSlotSelectionPage:function(){
