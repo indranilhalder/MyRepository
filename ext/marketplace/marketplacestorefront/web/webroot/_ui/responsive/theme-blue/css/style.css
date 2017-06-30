@@ -72732,3 +72732,11 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
         padding-bottom: 20px;
     }
 } 
+
+/*TISTE-192 fix start*/
+@media (min-width: 791px){
+body .account .right-account .order-history.order-details li.item #pickNo{
+	padding-bottom: 10px;
+}
+} 
+/*TISTE-192 fix end*/
