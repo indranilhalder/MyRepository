@@ -1,4 +1,3 @@
-
 /**
  *
  */
@@ -268,5 +267,12 @@ public class MarketplacecclientservicesConstants
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
-}
 
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	public static final String APPROVED = "APPROVED".intern();
+	public static final String REJECTED = "REJECTED".intern();
+	public static final String NA = "NA".intern();
+	public static final String PANCARD = "PANCARD";
+	public static final String PANCARD_UPLOAD_URL = "pancard.upload.pi.url";
+}

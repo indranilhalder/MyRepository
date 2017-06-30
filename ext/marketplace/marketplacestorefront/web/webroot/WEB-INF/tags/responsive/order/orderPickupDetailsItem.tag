@@ -54,24 +54,20 @@
 		<ul class="desktop">
 			<li>
 				<div class="product-img">
-					<c:if
-						test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-						<a href="${productUrl}"> <product:productPrimaryImage
-								product="${entry.product}" format="luxuryCartIcon" />
+					<c:choose>
+										<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+												<a href="${productUrl}">
+							<product:productPrimaryImage product="${entry.product}" format="luxuryCartIcon"/>
 						</a>
-					</c:if>
-					<c:if
-						test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
-						<a href="${entryProductUrl}"><product:productPrimaryImage
-								product="${entry.product}" format="fineJewelthumbnail" /> </a>
-					</c:if>
-					<c:if
-						test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory != 'FineJewellery'}">
-						<a href="${productUrl}"> <product:productPrimaryImage
-								product="${entry.product}" format="thumbnail" />
+					
+										</c:when>
+										<c:otherwise>
+												<a href="${productUrl}">
+							<product:productPrimaryImage product="${entry.product}" format="thumbnail"/>
 						</a>
-
-					</c:if>
+												
+										</c:otherwise>
+									</c:choose>
 				</div>
 				<div class="product">
 

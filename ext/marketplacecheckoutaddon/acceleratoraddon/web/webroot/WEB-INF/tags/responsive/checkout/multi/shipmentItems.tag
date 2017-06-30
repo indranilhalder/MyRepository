@@ -59,11 +59,6 @@
 															<a href="${productUrl}"><product:productPrimaryImage
 																	product="${entry.product}" format="luxuryCartIcon" /></a>
 													</c:when>
-													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and (entry.product.rootCategory)=='FineJewellery'}">
-															<a href="${entryProductUrl}"> <product:productPrimaryImage
-																	product="${entry.product}" format="fineJewelcartIcon" />
-															</a>
-													</c:when>
 													<c:otherwise>
 															<a href="${productUrl}"><product:productPrimaryImage
 																	product="${entry.product}" format="thumbnail" /></a>

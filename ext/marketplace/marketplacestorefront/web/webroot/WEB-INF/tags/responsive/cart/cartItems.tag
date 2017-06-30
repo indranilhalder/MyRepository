@@ -98,21 +98,15 @@ tr.d0 td {
    
    <div class="product-img">
    
-   <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory != 'FineJewellery'}">
+<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
 												product="${entry.product}" format="cartPage" /></a>
 												</c:if>
-	<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and entry.product.rootCategory == 'FineJewellery'}">
-	<a href="${productUrl}"><product:productPrimaryImage
-	product="${entry.product}" format="fineJewelcartPage" /></a>
-	</c:if>
 												
    <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
 												product="${entry.product}" format="luxuryCartPage" /></a>
-												</c:if>
-   
-   </div>
+												</c:if>   </div>
    <span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
    
    <div class="product">

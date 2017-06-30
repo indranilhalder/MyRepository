@@ -21,7 +21,8 @@ public interface PriceBreakupService
 	//Added for 3782
 	/**
 	 * @param entry
+	 * @param childOrderEntry
 	 * @return
 	 */
-	public boolean createPricebreakupOrder(AbstractOrderEntryModel entry);
+	public boolean createPricebreakupOrder(AbstractOrderEntryModel entry, AbstractOrderEntryModel childOrderEntry);
 }

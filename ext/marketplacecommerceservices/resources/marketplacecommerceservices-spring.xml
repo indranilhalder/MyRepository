@@ -631,6 +631,8 @@
 		<property name="externalTaxesService" ref="externalTaxesService" />
 		<property name="commercePlaceOrderMethodHooks" ref="commercePlaceOrderMethodHooks" />
 		<property name="configurationService" ref="configurationService" />
+		<!-- TPR-3782 -->
+ 		<property name="priceBreakupService" ref="priceBreakupService" />
 
 	</bean>
 
@@ -2286,6 +2288,19 @@
 			</bean>
     
     <!-- CAR-285 End -->
+    
+    	 
+ 	 <!-- //Added for 3782 -->
+ 	<alias name="productJwelConverter" alias="productJwelConverter"/>
+ 	<bean id="productJwelConverter" parent="abstractPopulatingConverter">
+ 		<property name="targetClass" value="de.hybris.platform.commercefacades.product.data.ProductData"/>
+ 		<property name="populators">
+ 			<list>
+ 				<ref bean="productPopulator"/>
+ 			</list>
+ 		</property>
+ 	</bean>
+ 	<!-- //Added for 3782 -->
 </beans>
 
 

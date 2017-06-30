@@ -155,42 +155,13 @@ tr.d0 td {
 					varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">
 					<div id="addiImageTab${varStatus.index}">
 						<span> 
-							<c:choose>
-								<c:when test="${product.rootCategory=='FineJewellery'}">
-									<c:if
-										test="${container.fineJewelthumbnail.mediaType.code eq 'Image'}">
-										<img src="${container.fineJewelthumbnail.url}" data-type="image"
-											data-zoomimagesrc="${container.fineJewelsuperZoom.url}"
-											data-primaryimagesrc="${container.fineJewelproduct.url}"
-											data-galleryposition="${varStatus.index}"
-											alt="${container.fineJewelthumbnail.altText}"
-											title="${container.fineJewelthumbnail.altText}" />
-									</c:if>
-									<c:if
-										test="${container.fineJewelthumbnail.mediaType.code eq 'Video'}">
-										<img src="${commonResourcePath}/images/video-play.png"
-											data-type="video"
-											data-videosrc="${container.fineJewelthumbnail.url}?rel=0&enablejsapi=1" />
-										<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-									</c:if>
-								</c:when>
-								<c:otherwise>
-									<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-										<img src="${container.product.url}" data-type="image"
-											data-zoomimagesrc="${container.superZoom.url}"
-											data-primaryimagesrc="${container.product.url}"
-											data-galleryposition="${varStatus.index}"
-											alt="${container.thumbnail.altText}"
-											title="${container.thumbnail.altText}" />
-									</c:if>
-									<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-										<img src="${commonResourcePath}/images/video-play.png"
-											data-type="video"
-											data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-										<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-									</c:if>
-								</c:otherwise>
-							</c:choose>
+							<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+						</c:if>
+						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+						</c:if>
 						</span>
 					</div>
 				</c:forEach>
@@ -418,7 +389,48 @@ tr.d0 td {
 			<product:sellerInfoDetailsSection/>
 			</div> --%>
 
-
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery'}">
+             <div class="certified-by"> 
+              <h2>certified by</h2>
+              <ul>
+               <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
+               <li>30 day returns</li>
+               <li>tata guarantee</li> -->
+            <c:forEach var="certification" items="${certificationfeatureValueDataList}">
+              <c:if test="${certification.value=='AGL'}">
+                 <%-- <li class="jwlryCerti"><img src="${commonResourcePath}/images/Visa.png" alt="certified by"></li> --%>
+                 <li class="jwlryCertiAGL"></li>
+             </c:if>
+             <c:if test="${certification.value=='Tanishq'}">  
+                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
+                <li class="jwlryCertiTanishq"></li>
+             </c:if>
+             <c:if test="${certification.value=='AGS'}">
+                <%--  <img src="${commonResourcePath}/images/American_Express.png" alt="certified by"> --%>
+                <li class="jwlryCertiAGS"></li>
+            </c:if>
+             <c:if test="${certification.value=='AGTA'}">
+                 <%-- <img src="${commonResourcePath}/images/Maestro.png" alt="certified by"> --%>
+                 <li class="jwlryCertiAGTA"></li>         
+            </c:if>
+             <c:if test="${certification.value=='HRD'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiHRD"></li>  
+            </c:if>
+            </li>     
+           </c:forEach>
+         </ul>
+      </div>
+          <!-- <div class="certified-by">
+           <ul>
+            <li>30 day returns</li>
+            <li>tata guarantee</li>
+           
+           </ul>
+          </div> -->
+      </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 
 		</div>
 
@@ -474,8 +486,14 @@ tr.d0 td {
 			</cms:pageSlot>
 			
 			</div>
-
-           <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+             <ul class="wish-share desktop">
+				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+				<!-- Commented as per PDP CR Change -->
+				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+				<li><product:socialSharing product="${product}" /></li>
+			</ul>
+			
+           <%-- <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             <c:if test="${product.rootCategory =='FineJewellery'}">
              <div class="certified-by"> 
               <h2>certified by</h2>
@@ -512,20 +530,15 @@ tr.d0 td {
            </ul>
           </div>
       </c:if>
-            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
-          <ul class="wish-share desktop">
-				<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
-				<!-- Commented as per PDP CR Change -->
-				<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
-				<li><product:socialSharing product="${product}" /></li>
-			</ul>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE--> --%>
+          
 		</div>
 
-		<%-- <div class="tabs-block">
+		 <div class="tabs-block">
 				<product:productPageTabs />
-			</div> --%>
+			</div>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
-		<c:set var="finejewellery">
+		<%-- <c:set var="finejewellery">
 			<spring:theme code='product.finejewellery' />
 		</c:set>
 		<c:choose>
@@ -534,7 +547,7 @@ tr.d0 td {
 					<product:productPageTabs />
 				</div>
 			</c:when>
-		</c:choose>
+		</c:choose> --%>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
 
 	</div>

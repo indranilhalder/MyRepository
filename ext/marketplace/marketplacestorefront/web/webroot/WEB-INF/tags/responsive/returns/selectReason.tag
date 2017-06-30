@@ -58,6 +58,21 @@
 									</c:forEach>									
 							</form:select>
 						</div>
+						
+						<!-- TPR-4134 -->
+						<input type="hidden" id="ifShowReverseSeal" value="${showReverseSeal}">
+						<c:if test="${showReverseSeal ne null && showReverseSeal eq 'true'}">
+							<div class="col-md-7 col-sm-7 col-xs-12 reverseSealJwlry">
+								<b><spring:theme code="text.order.returns.reverseSeal.message"></spring:theme> <a href="#revSealHelpText" class="revSeal" id="revSeal"><spring:theme code="text.order.returns.reverseSeal.popUp"></spring:theme></a></b> <br/><br/>
+								<form:radiobutton class="radioButton" path="reverseSeal" value="Y"/><label><spring:theme code="text.order.returns.reverseSeal.radioYes"></spring:theme></label>
+								<form:radiobutton class="radioButton" path="reverseSeal" value="N"/><label><spring:theme code="text.order.returns.reverseSeal.radioNo"></spring:theme></label>
+								<div id="revSealHelpContent" style="display : none;">
+									<span class="revSealText"><input id="revSealHelpText" value="<spring:theme code="text.order.returns.reverseSeal.helpText"/>"></span>
+									<span class="revSealImage"><img src="${commonResourcePath}/images/Jewellery_ReverseSeal.jpg" alt=""></span>
+								</div>
+							</div>
+					   </c:if>
+						
 						<p style="clear:both"></p>
 						<div class="button_holder">
 								<button onclick="checkReturnSelected()" type="button" class="light-blue submit-request" ><spring:theme code="text.returRequest.continueButton" text="Continue"/></button>
@@ -65,3 +80,7 @@
 					</div>
 				</div>
 			
+
+						</div>
+					</div>
+				</div>	

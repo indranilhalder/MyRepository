@@ -108,30 +108,22 @@
 			data-href="${productZoomImagesUrl}" target="_blank"
 			data-toggle="modal"
 			title="<spring:theme code="text.add.to.wishlist"/>">
-			<c:choose>
-				<c:when test="${product.rootCategory =='FineJewellery'}">
-					<product:productPrimaryImage product="${product}"
-						format="fineJewelproduct" />
-				</c:when>
-				<c:otherwise>
-					<product:productPrimaryImage product="${product}" format="zoom" />
-				</c:otherwise>
-			</c:choose>
+			<product:productPrimaryImage product="${product}" format="zoom"/>
 		</div>
 	</div>
 	<!-- 	<iframe name="videoFrame" id="videoFrame" width="400" height="560" frameborder="0"  style="display:none"  allowfullscreen ></iframe>
  -->
 
-	<c:if
+	<%-- <c:if
 		test="${product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
 		<ul class="wish-share desktop">
 
-			<%-- <li><!-- <span id="addedMessage" style="display:none"></span> -->
+			<li><!-- <span id="addedMessage" style="display:none"></span> -->
 			<!-- Commented as per PDP CR Change -->
-			<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li> --%>
+			<a onClick="openPop();" id="wishlist" class="wishlist" data-toggle="popover" data-placement="bottom"><spring:theme code="text.add.to.wishlist"/></a></li>
 			<li><product:socialSharing product="${product}" /></li>
 		</ul>
-	</c:if>
+	</c:if> --%>
 </div>
 
 <!-- Change for Showing ZOOM Box -->

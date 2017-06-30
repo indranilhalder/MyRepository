@@ -2169,4 +2169,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	//TPR-3782
+	public static final String GOLD = "GOLD";
+	public static final String SILVER = "SILVER";
+	public static final String PLATINUM = "PLATINUM";
+	public static final String SOLITAIRE = "SOLITAIRE";
+	public static final String TANISHQ = "Tanishq";
 }
