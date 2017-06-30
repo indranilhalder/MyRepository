@@ -599,6 +599,36 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderConfirmationEmailProcess.xml" />
 	</bean>
+	
+	
+	
+	<!-- pan card reject -->
+	<bean id="pancardRejectEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/pancardRejectEmailProcess.xml" />
+	</bean>
+	
+	
+	<bean id="generatePancardRejectEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="PancardRejectEmailTemplate" />
+	</bean>
+	
+	
+	
+	<!-- end -->
+	
+	<!-- pan card reject -->
+	
+	<bean id="pancardRejectEventListener" class="com.tisl.mpl.core.event.PancardRejectEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
+    <!-- end -->
+	
+	
 	<!-- TPR-815 -->
 	<bean id="paymentPendingEmailProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
@@ -787,6 +817,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="generateCustomerRegistrationEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="CustomerRegistrationEmailTemplate" />
 	</bean>
+	
+	
 	
 
 	<bean id="generateCustomerRegistrationInCsEmail" parent="abstractGenerateEmailAction">
