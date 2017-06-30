@@ -6,7 +6,7 @@
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
 
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $picture=media(code, $contentCV);
 $siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
 
@@ -17,7 +17,7 @@ $lang=en
 # CMS Paragraph Components
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
 
-;;TitleForTrackOrderPageComponent;"Track Order"
+;;TitleForTrackOrderPageComponent;"Track Orders"
 
 
 
