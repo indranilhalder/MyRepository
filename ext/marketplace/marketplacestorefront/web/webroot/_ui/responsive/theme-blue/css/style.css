@@ -70573,3 +70573,514 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     padding-left: 10px;
 }
 /*TISPRDT-1609 end*/
+
+/* TPR-6148 Coupon starts */
+.details4Coupon {
+    /* height: 15px; */
+    font-family: Montserrat;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+    font-weight: 400;
+    margin-top: 5px;
+    line-height: 1.5;
+}
+.copyCouponCode p,.copyCouponCodeMobile p{
+	height: 16px;
+  	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: #a5173c;
+  	text-transform: uppercase;
+  	display: inline-block;
+}
+.copyCouponCodeMobile p a{
+	color:#a5173c;
+}
+.copyCouponCode,.copyCouponCodeMobile{
+	display: inline-block;
+	cursor:pointer;
+}
+.copyCouponCode{
+	width: 40%;
+	text-align: right;
+}
+.copyCouponCodeMobile{
+	display: none;
+	margin-top: 30px;
+}
+.tipToolCopyMsg{
+    position: absolute;
+    height: 48px;
+    width: 301px;
+    background-color: #444444;
+    z-index: 1;
+    border-radius: 24px;
+    left: 16%;
+    opacity: 0.9;
+    text-align: center;
+    top: -20px;
+    display:none;
+}
+.tipToolCopyMsg.mobile{
+	display:block;
+	visibility:hidden;
+}
+.tipToolCopyMsg span{
+	position: relative;
+    top: calc(50% - 8px);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+}
+body .account .right-account.rewards .customer-service.steps h2{
+	padding-top: 0;
+	height: auto;
+    /* font-family: Montserrat; */
+    font-size: 28px;
+    line-height: 1.29;
+    text-align: left;
+    color: #000000;
+    margin-bottom: 16px;
+}
+.tipToolCopyMsg.mobile {
+    bottom: 0px;
+    /* position: fixed; */
+    position: relative;
+    left: 13%;
+    top: -54px;
+    /* bottom: 24px; */
+}
+/* TPR-6148 Coupon ends */
+
+/* TPR-6013 Invite Friends Start*/
+body .account .right-account>div>p{
+	color: #666666;
+	line-height: 1.33;
+    letter-spacing: 0.6px;
+    margin-bottom: 19px;
+    line-height: 1.4;		/* TPR-6148 Invite Friends */
+}
+body #account-invite .right-account>div form{
+	border-top: solid 1px #eeeeee;
+}
+body .account .right-account>div>h2{
+	margin-bottom: 0px;
+}
+body #account-invite .right-account>div.invites:before {
+    display: none;
+}
+body #account-invite .right-account>div input[type="text"]{
+	border: none;
+	font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    color: #666666;
+    padding-left: 0px;
+    height: auto;		/* TPR-6148 Invite Friends */
+    line-height: 1.4;	/* TPR-6148 Invite Friends */
+}
+body #account-invite .right-account>div form>span{
+	display: none;
+}
+body .account .right-account form label{
+	/* margin-top: 15px; */			/* Commented for TPR-6148 Invite Friends */
+	margin-bottom: 1px;
+	line-height: 1;
+    letter-spacing: 0.6px;
+}
+body .account .right-account form .invites-left label{
+	font-size: 16px;			/* TPR-6148 Invite Friends */
+  	line-height: 1;				/* TPR-6148 Invite Friends */
+  	letter-spacing: 0.8px;		/* TPR-6148 Invite Friends */
+  	margin-bottom: 6px;			/* TPR-6148 Invite Friends */
+}
+.invites-left .errorMessage{
+	margin-top: 6px;		/* TPR-6148 Invite Friends */
+	margin-bottom: 24px;	/* TPR-6148 Invite Friends */
+	color:#A9143C;			/* TPR-6148 Invite Friends */
+}
+
+body #account-invite .right-account>div form .mytextarea{
+	width: 100%;
+	border: none;
+	padding-left: 0px;
+	font-size: 12px;
+	letter-spacing: 0.6px;
+	color: #666666;
+	/* border-bottom: solid 1px #eeeeee; */
+	margin-bottom: 0px;
+}
+/* body .account .right-account button#inviteFriends.blue{
+	position: relative;
+    top: -189px;
+    float: right;
+} */
+body #account-invite .right-account>div.social-invites:before,
+body #account-invite .right-account>div span.or{
+	display: none;
+}
+body #account-invite .right-account>div.social-invites, 
+body #account-invite .right-account>div.personal-invites{
+	/* border-bottom: solid 1px #eeeeee !important; */
+	padding-top: 0px;
+	border: none;
+}
+body #account-invite .right-account>div.personal-invites{
+	padding-bottom: 39px;		/* TPR-6148 Invite Friends */
+	border-bottom: 1px solid #eeeeee;
+}
+body #account-invite .right-account>div.social-invites .social .links a:last-child:after {
+    padding: 0;
+    margin: 0;
+}
+body .account .right-account>div.social-invites>div.social-invites-left>h2{
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+  height: auto;			/* TPR-6148 Invite Friends */
+}
+body .account .right-account>div.social-invites>div.social-invites-left>p{
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+  line-height: 1.4;		/* TPR-6148 Invite Friends */
+}
+button#inviteFriends {
+    min-width: 179px;
+}
+body #account-invite .right-account>div.social-invites .social{
+	text-align: right;
+    padding: 0px;
+}
+body #account-invite .right-account>div.social-invites>div.social-invites-left{
+	float: left; 
+	padding-top: 30px;
+}
+body #account-invite .right-account>div.social-invites .social .links{
+	border-bottom: solid 1px #eeeeee;
+	 border-top: solid 1px #eeeeee; 
+	padding-bottom: 35px;
+	padding-top: 30px;
+	padding-bottom: 30px;			/* TPR-6148 Invite Friends */
+}
+body #account-invite .right-account>div.personal-invites>div.personal-invites-left>h2{
+   font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+  height: auto;			/* TPR-6148 Invite Friends */
+}
+body #account-invite .right-account>div.personal-invites>div.personal-invites-left>h2+p{
+	line-height: 1.4;		/* TPR-6148 Invite Friends */
+}
+/* body #account-invite .right-account>div.personal-invites>div.personal-invites-left>p{
+	display: none;
+} */
+body #account-invite .right-account>div.personal-invites>div.personal-invites-left input[type="text"]{
+	margin-top: 0px;
+	background-color: #fff;
+}
+body #account-invite .right-account>div.personal-invites:before{
+	display: none;
+}
+body #account-invite .right-account>div.social-invites{
+	padding-bottom: 30px;
+	border: none;
+	clear: both;
+}
+body #account-invite .right-account>div{
+	border: none;
+}
+body #account-invite .right-account>div form>div.invites-left{
+	/* float: left; */
+	display: table-cell;
+    width: 100%;			/* TPR-6147 Invite Friends */
+}
+ body #account-invite .right-account>div form>div.invites-right{
+    display: table-cell;
+    padding-left: 10px;
+	/*float: left;
+	padding-top: 17px;*/
+} 
+body #account-invite .right-account>div form .mytextarea#mytextarea{
+	height: 43px;
+	padding: 0;				/* TPR-6147 Invite Friends */
+}
+body .account .right-account>div.personal-invites>div.personal-invites-right button.copy-link-text{
+	 color: #a5173c;
+	 font-size: 12px;
+     line-height: 1.33;
+     letter-spacing: 0.6px;
+     padding-right: 0px;
+     text-align: right;
+     height: auto;			/* TPR-6147 Invite Friends */
+     line-height: 1.4;		/* TPR-6147 Invite Friends */
+}
+body #account-invite .right-account>div.personal-invites>div.personal-invites-left{
+	/* float: left; */
+	display: table-cell;
+    /* width: 74%; */			/* Commented for TPR-6147 Invite Friends */
+    width:100%;			/* TPR-6147 Invite Friends */
+}
+body #account-invite .right-account>div.personal-invites>div.personal-invites-right{
+	/* float: left; */
+	display: table-cell;
+	padding-left: 25px;
+}
+body #account-invite .right-account>div form{
+	/* padding-bottom: 20px; */			/* Commented for TPR-6148 Invite Friends */
+	padding-top: 30px;			/* TPR-6148 Invite Friends */
+	padding-bottom: 0;			/* TPR-6148 Invite Friends */
+}
+body .body-Content .account#account-invite .account-header{
+	display: none;
+}
+body #account-invite .right-account>div.invites{
+	padding-top: 0px;
+	padding-bottom: 48px;		/* TPR-6148 Invite Friends */
+}
+@media(max-width: 980px) and (min-width: 791px){
+	body #account-invite .right-account>div form .mytextarea#mytextarea{
+	   height: 80px;
+	}
+	body #account-invite .right-account>div form {
+    padding-bottom: 0px;
+    }
+}
+@media(max-width: 850px) and (min-width: 768px){
+	body #account-invite .right-account>div.social-invites>div.social-invites-left{
+	display: table-cell;
+	float: none;
+	border-top: solid 1px #eeeeee;
+	border-bottom: solid 1px #eeeeee;
+	width: 80%;
+	}
+    body #account-invite .right-account>div.social-invites .social{
+    display: table-cell; 
+    }
+	}
+	@media (min-width: 791px){
+	body .account#account-invite .right-account{
+	padding: 0px;
+	}
+	}
+ @media(max-width: 790px){
+    body #account-invite .right-account>div form>div.invites-right{
+    display: block;
+    padding-top: 30px;
+    padding-left: 0px;
+    }
+    body #account-invite .right-account>div form{
+    padding-bottom: 50px;
+    border-bottom: solid 1px #eeeeee;
+    padding-top: 30px;		/* TPR-6148 Invite Friends */
+    padding-bottom: 48px;	/* TPR-6148 Invite Friends */
+    }
+    body .account .right-account form .invites-left label{
+    	margin-top: 0;
+    }
+    body #account-invite .right-account>div.personal-invites>div.personal-invites-left{
+    display: block;
+    width: 100%;
+    }
+    body #account-invite .right-account>div.personal-invites>div.personal-invites-right{
+    display: block;
+    padding-left: 0px;
+    /* padding-top: 6px; */
+    margin-top: 30px;		/* TPR-6148 Invite Friends */
+    }
+    body .account .right-account>div.personal-invites>div.personal-invites-right button.copy-link-text{
+    padding-left: 0px;
+    text-align: left;
+    }
+     body #account-invite .right-account>div.social-invites>div.social-invites-left{
+    display: table-cell;
+    float: none;
+    width: 100%;
+    } 
+    body #account-invite .right-account>div.social-invites .social .links{
+    border-top: none;
+    padding-bottom: 48px;		/* TPR-6148 Invite Friends */
+    }
+    body #account-invite .right-account>div.invites{
+    padding-bottom: 0px;
+    padding: 0;				/* TPR-6148 Invite Friends */
+   } 
+   body #account-invite .right-account>div form>div.invites-left{
+   display: block;
+   width: 100%;
+   }
+ }
+@media (max-width: 790px){
+body #account-invite .right-account>div.invites>h2,
+body #account-invite .right-account>div.invites>p {
+    text-align: left;
+}
+body #account-invite .right-account>div.invites>p{
+	margin-bottom: 20px;		/* TPR-6148 Invite Friends */
+}
+body #account-invite .right-account>div.invites>h2{
+	margin-top: 16px;		
+}
+body .account .right-account form .invites-left label{
+	font-size: 16px;
+	letter-spacing: 0.8;
+}
+body .account .right-account button#inviteFriends.blue{
+	width: auto !important;
+	margin-top: 0px !important;
+}
+}
+@media (max-width: 420px){
+	body #account-invite .right-account>div form .mytextarea#mytextarea{
+	height: 60px;
+}
+
+	}
+/* TPR-6013 Invite Friends end*/
+
+/* TPR-6149 My Prferences start */
+
+body .account.preferences .right-account>div:first-of-type,body .account.preferences .right-account div.email-pref{
+	padding: 0;
+    border: none;
+}
+body .account.preferences .right-account>div:first-of-type h2{
+	margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref h2{
+	height: auto;
+    line-height: 1;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+body .account.preferences .right-account div.email-pref{
+	padding-top: 30px;
+	border-top:1px solid #eeeeee;
+}
+body.page-marketplacePreference .account.preferences .right-account div.email-pref form .emails label span,body.page-marketplacePreference .account.preferences .right-account div.email-pref form fieldset .freq label span,
+body.page-marketplacePreference .account.preferences .right-account div.email-pref form fieldset.feedback label span,
+body.page-marketplacePreference .account.preferences .right-account div.email-pref>p{
+	font-size: 12px;
+	color:#666666;
+	margin-bottom: 0;
+	line-height: 1.4;
+}
+body.page-marketplacePreference .account.preferences .right-account div.email-pref>p{
+	margin-bottom: 24px;
+}
+body .account.preferences .right-account div.email-pref form label:before{
+	top:0;
+	margin-right: 16px;
+}
+body .account.preferences .right-account div.email-pref form div label,body .account.preferences .right-account div.email-pref form fieldset .freq label{
+	width:100%;
+	margin-bottom: 17px;
+}
+body .account.preferences .right-account div.email-pref form div label{
+	opacity:1;
+}
+body .account.preferences .right-account form fieldset.frequent,body .account.preferences .right-account form fieldset.feedback{
+	margin-top: 55px;
+}
+body .account.preferences .right-account div.email-pref form fieldset p{
+	font-size: 16px;
+    letter-spacing: 0.8;
+    margin-bottom: 6px;
+}
+body .account.preferences .right-account div.email-pref form fieldset p.frequentDesc,body .account.preferences .right-account div.email-pref form fieldset.feedback>p,
+body .account.preferences .right-account div.email-pref form fieldset div {
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+}
+body .account.preferences .right-account div.email-pref form fieldset div{
+	margin-bottom: 24px;
+}
+body .account.preferences .right-account div.email-pref form fieldset .freq{
+	margin-top: 24px;
+	margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form label:before{
+	width: 15px;
+	height: 15px;
+	box-shadow: 0 0 0 1px #979797;
+}
+body .account.preferences .right-account div.email-pref form input:checked + label:before{
+	border:3px solid #ffffff;
+}
+body .account.preferences .right-account div.email-pref form div label:last-child {
+    margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback>p{
+	margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback label{
+	margin-top: 0;
+	margin-bottom: 16px;
+	opacity:1;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback label:last-child{
+	margin-bottom: 0;
+}
+body .account.preferences .right-account div.email-pref form fieldset.feedback{
+	padding-bottom: 0;
+}
+.button-set{
+	margin-top: 82px;
+}
+body .account.preferences .right-account div.email-pref form .button-set button{
+	min-width: 179px;
+ 	height: 42px;
+}
+body .account.preferences .right-account div.email-pref form .button-set a{
+	text-decoration: none;
+    color: #666666;
+    height: auto;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 14px 0;
+    margin-left: 48px;
+    text-transform: none;
+}
+@media(max-width:790px){
+	body .account.preferences .right-account>div:first-of-type h2{
+		margin-top: 16px;
+	}
+	body .account.preferences .right-account>div:first-of-type p{
+		line-height: 1.4;
+    	font-size: 12px;
+    	margin-bottom: 20px;
+	}
+	body .account.preferences .right-account div.email-pref h2{
+		margin-bottom: 2px;
+	}
+	.button-set{
+		margin-top: 55px;
+	}
+	body .account.preferences .right-account div.email-pref form .button-set a,body .account.preferences .right-account div.email-pref form .button-set button{
+		display: inline-block;
+	}
+}
+@media(max-width:650px){
+	body .account.preferences .right-account div.email-pref form .button-set a{
+		margin-left: 16px;
+	}
+}
+@media(max-width:400px){
+	body .account.preferences .right-account div.email-pref form .button-set a, body .account.preferences .right-account div.email-pref form .button-set button{
+		font-size: 10px;
+	}
+	body .account.preferences .right-account div.email-pref form .button-set button{
+		min-width: 120px;
+	}
+}
+/* TPR-6149 My Prferences end */
