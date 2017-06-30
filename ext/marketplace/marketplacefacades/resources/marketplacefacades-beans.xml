@@ -164,6 +164,8 @@
 		<property name="mrp" type="String"></property>
 		<!-- TPR-1886 | JEWELLERY START  -->
  		<property name="priceRangeJewellery" type="String"></property>
+ 		<!-- TPR-3752 | JEWELLERY PDP  -->
+ 		<property name="fineJewelleryDeatils" type="java.util.Map&lt;String,java.util.Map&lt;String,java.util.List&lt;String>>>"></property>
  		<!-- JEWELLERY END	 -->
 		<property name="seller"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.SellerInformationData>"></property>

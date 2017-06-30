@@ -1922,11 +1922,13 @@ public class ProductPageController extends MidPageController
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType())
-					|| FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
-
 			{
 				productDetailsHelper.groupGlassificationData(productData);
+			}
+			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				productDetailsHelper.groupGlassificationDataForFineDeatils(productData);
 			}
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
@@ -2175,8 +2177,8 @@ public class ProductPageController extends MidPageController
 											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
 									for (final String value : propertiesValues)
 									{
-										if (value.equalsIgnoreCase(featureData.getName())
-												&& !ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
+										if (value.equalsIgnoreCase(featureData.getName()))
+										//	&& !ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory()))
 										{
 											if (productFeatureMap.size() > 0)
 											{
@@ -2188,18 +2190,15 @@ public class ProductPageController extends MidPageController
 															.getSymbol() : "");
 											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
 										}
-										else if (value.equalsIgnoreCase(featureData.getCode().substring(
-												featureData.getCode().lastIndexOf(".") + 1)))
-										{
-
-											if (productFeatureMap.size() > 0)
-											{
-												productFeatureMap.clear();
-											}
-
-											productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
-											mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
-										}
+										/*
+										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
+										 * featureData.getCode().lastIndexOf(".") + 1))) {
+										 * 
+										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
+										 * 
+										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
+										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
+										 */
 									}
 								}
 								if (descValues != null && StringUtils.isNotBlank(descValues))
