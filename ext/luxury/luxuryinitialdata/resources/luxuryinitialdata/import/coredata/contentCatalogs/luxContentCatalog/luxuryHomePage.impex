@@ -123,14 +123,14 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;amazingBrands;text/png;amazingBrands.png;$jarResourceCms/preview-images/amazingBrands.png;;WeeklySpecialBannerImage-1;
 ;;freeShipping;text/png;freeShipping.png;$jarResourceCms/preview-images/freeShipping.png;;WeeklySpecialBannerImage-1;
 ;;customerService;text/png;customerService.png;$jarResourceCms/preview-images/customerService.png;;WeeklySpecialBannerImage-1;
-;;facebook;text/png;facebook-icon.png;$jarResourceCms/preview-images/facebook-icon.png;;WeeklySpecialBannerImage-1;
-;;twitter;text/png;twitter-icon.png;$jarResourceCms/preview-images/twitter-icon.png;;WeeklySpecialBannerImage-1;
-;;youtube;text/png;youtube-icon.png;$jarResourceCms/preview-images/youtube-icon.png;;WeeklySpecialBannerImage-1;
-;;instagram;text/png;instgrm-icon.png;$jarResourceCms/preview-images/instgrm-icon.png;;WeeklySpecialBannerImage-1;
-;;googleplus;text/png;googleplus-icon.png;$jarResourceCms/preview-images/googleplus-icon.png;;WeeklySpecialBannerImage-1;
-;;ping;text/png;ping-icon.png;$jarResourceCms/preview-images/ping-icon.png;;WeeklySpecialBannerImage-1;
+;;facebook;text/png;facebook.png;$jarResourceCms/preview-images/facebook.png;;WeeklySpecialBannerImage-1;
+;;twitter;text/png;twitter.png;$jarResourceCms/preview-images/twitter.png;;WeeklySpecialBannerImage-1;
+;;youtube;text/png;youtube.png;$jarResourceCms/preview-images/youtube.png;;WeeklySpecialBannerImage-1;
+;;instagram;text/png;instagram.png;$jarResourceCms/preview-images/instagram.png;;WeeklySpecialBannerImage-1;
 ;;googleplay;text/png;googleplay.png;$jarResourceCms/preview-images/googleplay.png;;WeeklySpecialBannerImage-1;
 ;;appstore;text/png;appstore.png;$jarResourceCms/preview-images/appstore.png;;WeeklySpecialBannerImage-1;
+
+
 
 
 INSERT_UPDATE LuxCMSMediaParagraphComponent ;$contentCV[unique=true];uid[unique=true];name;$picture[lang=en];content;url
@@ -175,8 +175,6 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://twitter.com/TATACLiQLuxury";twitter
 ;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://www.youtube.com/channel/UCqsHukm7vFthbcB_JAoMe8A";youtube
 ;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://www.instagram.com/TATACLiQLuxury/";instagram
-;;GooglePlusImageComponent;GooglePlus Image Component;GooglePlusImageComponent;"https://plus.google.com/+TataCLiQ/";googleplus
-;;PingImageComponent;Ping Image Component;PingImageComponent;"#";ping
 ;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay
 ;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore
 
@@ -185,16 +183,16 @@ INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];nam
 # CMS Paragraph Components
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;content[lang=$lang]
 ;;luxuryFooterNotification;Luxury Footer Notification;luxuryFooterNotification;;;;"<ul>
-					<li><span>100% Authentic and Genuine Brands</span></li>
-					<li><span>Tata Promise </span></li>
-					<li><span>Easy Returns And Exchanges</span></li>
+					<li><span>100% ORIGINAL </span>gaurantee for all products at luxury.com</li>
+					<li><span>Return within 30days </span>of placing your order</li>
+					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
 				</ul>"
-;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='#'>Know More</a></p></div>"
+;;Home-TopBannerContent;Home Top Banner Content;;;;;"<div class='header-promo text-center'><p>FREE SHIPPING + FREE RETURNS <a href='#'>KNOW MORE</a></p></div>"
 
 
 # CMS Footer Component
 INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV); footerBarContent(uid,$contentCV);
-;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;;KEEP IN TOUCH;FacebookImageComponent,GooglePlusImageComponent,YoutubeImageComponent,TwitterImageComponent,PingImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
+;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
 
 # CMS tabs components
 INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];name;visible;&componentRef;;;
