@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.PancardInformationModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -15,6 +16,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao;
 
@@ -132,6 +134,39 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getPanCardStatus(java.lang.String)
+	 */
+	@Override
+	public List<PancardInformationModel> getPanCardStatus(String orderId)
+	{
+		List<PancardInformationModel> panCardInfo = null;
+		final String query = "select {pan.pk}from {PancardInformation as pan} where {pan.orderid}="+orderId;
+		
+		try
+		{
+			panCardInfo = flexibleSearchService.<PancardInformationModel> search(query.toString()).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	
+		return panCardInfo;
 	}
 
 }

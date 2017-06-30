@@ -156,5 +156,7 @@ public interface MarketplaceCheckoutController extends
 	InvReserForDeliverySlotsResponseData deliverySlotsRequestDataCallToOms(InvReserForDeliverySlotsRequestData deliverySlotsRequestData, CartModel cartModel);
 	public Double getScheduleDeliveryCharges();
 	public SellerInformationModel getSellerInformationByUssid(String Ussid);
+
+	//public String getPanCardStatus(String code);
 	
 }
