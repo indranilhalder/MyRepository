@@ -557,6 +557,7 @@ TATA.CommonFunctions = {
     leftBarAccordian: function(){
         if($(window).width() >=768){
 			/*$('.facet:first').find('.allFacetValues').show();*/
+        	$(".facet").addClass("open");
             $(document).on('click', '.facetHead', function(e){
                 e.stopPropagation();
                 $(this).closest('.facet').toggleClass('open', function(){

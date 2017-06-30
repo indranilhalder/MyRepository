@@ -12,7 +12,7 @@
 <c:if test="${not empty lazyInterface}">
 	<c:set var="url" value="${url}/getFacetData"/>
 </c:if>
-<c:set var="facetClass" value="facet open"/>
+<c:set var="facetClass" value="facet"/>
 <c:if test="${facetData.name eq 'colour'}">
 	<c:set var="facetClass" value="facet half-width open"/>
 </c:if>
