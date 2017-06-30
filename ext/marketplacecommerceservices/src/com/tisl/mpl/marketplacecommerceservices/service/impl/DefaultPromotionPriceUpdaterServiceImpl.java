@@ -1170,11 +1170,16 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			{
 				for (final PromotionalPriceRowModel priceRow : priceRowModelList)
 				{
-					priceModifiedtsChange.add(priceRow.getPriceRow());
+					final PriceRowModel finalModel = priceRow.getPriceRow();
+					finalModel.setPromotionEndDate(new Date());
+					priceModifiedtsChange.add(finalModel);
 				}
 
 				modelService.removeAll(priceRowModelList);
 				modelService.saveAll(priceModifiedtsChange);
+
+
+
 			}
 		}
 
