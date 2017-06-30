@@ -220,6 +220,19 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	</bean>
 	
 	
+	<!--pan card reject  -->
+	
+	<bean id="pancardRejectEmailContext"
+		class="com.tisl.mpl.facades.process.email.context.PancardRejectEmailContext"
+		parent="abstractEmailContext" scope="prototype">
+		<property name="orderConverter" ref="orderConverter" />
+	</bean>
+	
+	<!--  end--> 
+	
+	
+	
+	
 	  <!--R2.3 Secondary Status Context class  -->
 	<bean id="orderSecondaryStatusEmailContext"
 		class="com.tisl.mpl.facades.process.email.context.OrderSecondaryStatusEmailContext"
