@@ -606,7 +606,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p>${entry.mplDeliveryMode.name} :</p> 
+														<p class="track-order-pickup">${entry.mplDeliveryMode.name}</p><span>: </span> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -3752,8 +3752,7 @@ body .account .right-account .order-history.order-details li.header>ul{
 body .account .right-account .order-history.order-details li.header>ul> li{
 	width: 100%;
 }
-body.page-order .body-Content,
-body .account .right-account .order-history.order-details li.item{
+body.page-order .body-Content{
 	padding-bottom:0;
 }
 body .account .right-account .order-history.order-details li.item .order{

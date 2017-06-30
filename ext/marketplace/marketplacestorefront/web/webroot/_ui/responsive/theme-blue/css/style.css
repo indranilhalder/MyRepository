@@ -72520,6 +72520,9 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
  	overflow: hidden;
  }
 }
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
+	font-size: 10px;
+}
 @media (max-width: 650px) {
 	body .right-account .order-details .deliveryTrack .dot-arrow {
     top: 52px;
@@ -72561,9 +72564,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
      margin-bottom: 10px;
  }
  /*PRDI-402 fix end*/
-body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
-	font-size: 10px;
-}
 /*STW heading start*/
 .best_seller.stw-list .best_seller_section.hide_clplist{
 	height: auto;
