@@ -14,136 +14,107 @@ TATA.CommonFunctions = {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
-    signInValidate: function(){
-        $('#loginForm').validate({
-            onfocusout: false,
+    signInValidate: function() {
+        $("#loginForm").validate({
+            onfocusout: !1,
             invalidHandler: function(form, validator) {
-                var errors = validator.numberOfInvalids();
-                if (errors) {
-                    validator.errorList[0].element.focus();
-                    if($("#loginForm .invalided-error").length > 0){
-                        $("#loginForm .invalided-error").html(validator.errorList[0].message);
-                    }else{
-                        $("#loginForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
-                    }
-                }
+            	var fieldName = $(validator.errorList[0].element).attr("placeholder");
+            	if(fieldName === "Enter Your Email Address"){
+            		fieldName = "Email";
+            	} 
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(fieldName + validator.errorList[0].message) : $("#loginForm").prepend('<div class="invalided-error">' + fieldName + validator.errorList[0].message + "</div>"));
             },
             rules: {
                 j_username: {
-                    required: true,
-                    email: true ,
+                    required: !0,
+                    email: !0,
                     maxlength: 120
                 },
-
                 j_password: {
-                    required: true,
+                    required: !0,
                     maxlength: 30
                 }
             },
             submitHandler: function(form) {
                 $.ajax({
-                    url:"/j_spring_security_check",
-                    type:"POST",
-                    returnType:"text/html",
+                    url: "/j_spring_security_check",
+                    type: "POST",
+                    returnType: "text/html",
                     data: $(form).serialize(),
                     success: function(data) {
-                        if(data==307){
-                            location.reload();
-                        }else{
-                            $("#loginForm .invalided-error").html("");
-                            if($("#loginForm .invalided-error").length > 0){
-                                $("#loginForm .invalided-error").html("Oops! Your email ID and password don't match");
-                            }else{
-                                $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>");
-                            }
-                            $("#j_password").val("");
-                        }
-                    },
+                        307 == data ? location.reload() : ($("#loginForm .invalided-error").html(""), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html("Oops! Your email ID and password don't match") : $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
+                        $("#j_password").val(""));
+                    }
                 });
             }
         });
     },
-
-    signUpValidate: function(){
-        $('#extRegisterForm').validate({
-            onfocusout: false,
+    signUpValidate: function() {
+        $("#extRegisterForm").validate({
+            onfocusout: !1,
             invalidHandler: function(form, validator) {
-                var errors = validator.numberOfInvalids();
-                if (errors) {
-                    validator.errorList[0].element.focus();
-                    if($("#extRegisterForm .invalided-error").length > 0){
-                        $("#extRegisterForm .invalided-error").html(validator.errorList[0].message);
-                    }else{
-                        $("#extRegisterForm").prepend('<div class="invalided-error">'+validator.errorList[0].message+'</div>');
-                    }
-                }
+            	var fieldName = $(validator.errorList[0].element).attr("placeholder");
+            	if(fieldName === "Enter Your Email Address"){
+            		fieldName = "Email";
+            	}            	 
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(fieldName + validator.errorList[0].message) : $("#extRegisterForm").prepend('<div class="invalided-error">' + fieldName + validator.errorList[0].message + "</div>"));
             },
             rules: {
                 firstName: {
-                    required: true,
+                    required: !0,
                     maxlength: 100
                 },
-
                 lastName: {
-                    required: true,
+                    required: !0,
                     maxlength: 30
                 },
                 mobileNumber: {
                     minlength: 10,
                     maxlength: 10,
-                    number: true
+                    number: !0
                 },
                 email: {
-                    required: true,
-                    email: true,
+                    required: !0,
+                    email: !0,
                     maxlength: 120
                 },
                 pwd: {
-                    required: true,
+                    required: !0,
                     maxlength: 30,
                     minlength: 8
                 },
                 checkPwd: {
-                    required: true,
+                    required: !0,
                     maxlength: 30,
                     equalTo: '[name="pwd"]'
                 }
             },
             submitHandler: function(form) {
                 $.ajax({
-                    url:"/login/register",
-                    type:"POST",
-                    returnType:"text/html",
+                    url: "/login/register",
+                    type: "POST",
+                    returnType: "text/html",
                     dataType: "html",
                     data: $(form).serialize(),
                     success: function(data) {
-                        var hasErrors=$(data).filter("input#hasErrorsInReg").val();
-                        if(hasErrors != "email"){
-                            location.reload();
-                            return false;
-                        }
-
-                        if($("#extRegisterForm .invalided-error").length > 0){
-							/*$("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");*/
-                            $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!");
-                        }else{
-                            //$("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
-
-                            $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
-                        }
+                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return location.reload(), 
+                        !1;
+                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!") : $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
                     }
                 });
             }
         });
     },
-
     forgotPasswordValidate: function() {
-        $("#forgottenPwdForm .invalided-error").html("");
-        $("#forgottenPwdForm .valid-message").html("");
+        $("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .valid-message").html(""), 
         $("#forgottenPwdForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+            	var fieldName = $(validator.errorList[0].element).attr("placeholder");
+            	if (fieldName === "Enter Your Email Address"){
+            		fieldName = "Email";
+            	}
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(fieldName + validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + fieldName + validator.errorList[0].message + "</div>"));
             },
             rules: {
                 email: {
