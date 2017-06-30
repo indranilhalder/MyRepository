@@ -53,7 +53,7 @@
 				<div class="body-Content"><jsp:doBody /></div>
 				
 				
-			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
+			<%-- <!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
 				<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 				<c:choose>		
 				    <c:when test ="${product.rootCategory==finejewellery}"> 
@@ -64,7 +64,7 @@
 						</div>
 					</c:when> 
 				</c:choose>
-			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
+			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE --> --%>
 				
 			</div>	
 			

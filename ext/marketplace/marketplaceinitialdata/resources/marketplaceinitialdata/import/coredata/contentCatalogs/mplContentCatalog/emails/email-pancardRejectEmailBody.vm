@@ -76,7 +76,7 @@
                                                 <tr>
                                                    <td align="right">
                                                       <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
-                                                      <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Delivered - Order  <span style="color: #aa1d3d;">${ctx.pOrderCode}</span></p>
+                                                      <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;"> Order No-  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
                                                    </td>
                                                 </tr>
                                              </tbody>
@@ -132,10 +132,30 @@
                                              <strong>Hi ${ctx.customerName},</strong>
                                              <br>
                                              <br>
-                                             It's done. Your order has been delivered and we hope you're happy with it. 
-                                          </div>
+                                             Your PAN Card details have been rejected and we are unable to process your order due to this. 
+                                             <br>
+                                           </div>
                                        </td>
                                     </tr>
+									
+                                    
+                                    <tr>
+                                       <td>
+                                         
+                                          <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                             <br>
+                                             We request you to visit  <a href="https://www.tatacliq.com/pancard/pancarddetailsupload/${ctx.orderReferenceNumber}/$(ctx.nameofperson)" target="_blank">Click here</a>
+                                             and provide your details again.
+
+                                             <br>
+                                             Your Order no.: ${ctx.orderReferenceNumber} will be processed on receiving the correct details.
+                                             <br>
+                                           </div>
+                                         
+                                       </td>
+                                    </tr>
+                                   
+                                   
                                     <tr>
                                        <td class="lesspad">
                                           <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
@@ -165,8 +185,8 @@
                                                          <br>
                                                          <br>
                                                          <br>
-                                                         <p style="margin:0px">
-                                                            <a href="${ctx.trackOrderUrl}?tcid=em:transactional:Orderdelivered:manageorder:22052017" class="btn" style="background-color:#aa1d3d; color:#ffffff;font-size;12px;font-family:Arial, Helvetica, sans-serif;padding:4px 10px; text-decoration:none;display:inherit;width:120px;text-align:center;border-bottom:2px solid #8e0f2d;text-decoration:none;">View / Manage Order</a>
+                                                         <p style="margin:0px;">
+                                                            <a href="${ctx.trackOrderUrl}?tcid=em:transactional:Orderconfirmation:manageorder:22052017" class="btn" style="background-color:#aa1d3d; color:#ffffff;font-size;12px;font-family:Arial, Helvetica, sans-serif;padding:4px 10px; text-decoration:none;display:inherit;width:120px;text-align:center;border-bottom:2px solid #8e0f2d;text-decoration:none;">View / Manage Order</a>
                                                          </p>
                                                       </div>
                                                    </td>
@@ -194,7 +214,7 @@
                                                    <td class="smFull" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #333333;">
                                                       Order Details	
                                                    </td>
-                                                   <td class="smFull orderdetail" align="right" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">Order placed on ${ctx.orderPlaceDate} | Order <span style="color:#aa1d3d;">${ctx.pOrderCode}</span></td>
+                                                   <td class="smFull orderdetail" align="right" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">Order placed on ${ctx.orderPlaceDate} | Order <span style="color:#aa1d3d;">${ctx.orderReferenceNumber}</span></td>
                                                 </tr>
                                              </tbody>
                                           </table>
@@ -214,9 +234,11 @@
                                        <td>
                                           <table width="100%" border="0" cellspacing="0" cellpadding="0" class="orderitemtable">
                                              <tbody>
+                                               
                                                 #set ($shippingCharge=0)
+                                                #foreach( $childorder in ${ctx.childOrders} )
                                                 #set ($srNo=1)
-                                                #foreach($entry in ${ctx.childEntries})
+                                                #foreach($entry in ${childorder.entries})
                                                 <tr>
                                                    <td width="12" class="dsnone">&nbsp;</td>
                                                    <td width="60">
@@ -252,8 +274,10 @@
                                                       <span style="display:block; height: 20px; line-height:0;font-size:0;"></span>
                                                    </td>
                                                 </tr>
+                                               
                                                 #set ($srNo=$srNo+1)
                                                 #set($shippingCharge=$shippingCharge+$entry.currDelCharge)
+                                                #end
                                                 #end
                                              </tbody>
                                           </table>
@@ -317,91 +341,7 @@
                                     </tr>
                                     
                                     
-                                    
-                                    
-                                 <tr>
-                                    <td align="left" class="content foocontnt inPad">
-                                       #if($ctx.count > 0)
-                                        <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-                                         Click on this link to read our return policy: <a href="https://www.tatacliq.com/faq-jewellery" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>. 
-                                        </div>
-                                       #end 
-                                    </td>
-                                 </tr>
-                                 <tr>
-                                    <td>
-                                    #if($ctx.count > 0)
-                                       <table width="100%">
-                                          <tr>
-                                             <td align="left" valign="top">&nbsp;</td>
-                                             <td align="left" valign="top">
-                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                   <tbody>
-                                                      <tr>
-                                                         <td align="center" valign="top" width="270">
-                                                            <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #d7d7d7;">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">Do ensure the Forward Seal mentioned on your invoice matches the one on your product.</td>
-                                                                  </tr>
-                                                                  <tr>
-                                                                     <td align="center" valign="middle" height="25" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#333333;">Your Forward Seal will look like this:</td>
-                                                                  </tr>
-                                                                  <tr>
-                                                                     <td>
-                                                                     <span style="display:block; width:20px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.ForwardSeal}</span>
-                                                                     </td>
-                                                                     
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                         </td>
-                                                         <td align="left" valign="top">&nbsp;</td>
-                                                         <td align="center" valign="top" width="270">
-                                                            <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #d7d7d7;">
-                                                               <tbody>
-                                                                  <tr>
-                                                                     <td align="center" valign="middle" height="45" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; font-weight:bold; color:#333333;">If you need to return this product, do use the reverse seal number provided in your package.</td>
-                                                                  </tr>
-                                                                  <tr>
-                                                                     <td align="center" valign="middle" height="25" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#333333;">Your Reverse Seal will look like this:</td>
-                                                                  </tr>
-                                                                  <tr>
-                                                                     <td>
-                                                                     <span style="display:block; width:20px; height: 25px; line-height:0;font-size:0;">${ctx.cmsSlotContents.ReverseSeal}</span>
-                                                                     </td>
-                                                                     
-                                                                  </tr>
-                                                               </tbody>
-                                                            </table>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                             </td>
-                                             <td align="left" valign="top">
-                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                   <tbody>
-                                                      <tr>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                             </td>
-                                             <td align="left" valign="top">&nbsp;</td>
-                                          </tr>
-                                       </table>
-                                      #end 
-                                    </td>
-                                 </tr>
-                                 
-                                    
-                                    
-                                    
-                                    <tr>
-                                       <td>
-                                          <span style="display:block; height: 25px; line-height:0;font-size:0;"></span>
-                                       </td>
-                                    </tr>
+                                   
                                     <tr class="dsnone">
                                        <td align="center">
                                           <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#f5f5f5;">
@@ -430,7 +370,7 @@
                                                                   <span style="width:26px;height:36px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderprocessed}</span>
                                                                </td>
                                                                <td width="9">&nbsp;</td>
-                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#000000;text-align:center;line-height:13px;">Order <br>Processed</td>
+                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center;line-height:13px;">Order <br>Processed</td>
                                                                <td width="31">&nbsp;</td>
                                                                <td>
                                                                   <span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
@@ -440,7 +380,7 @@
                                                                   <span style="width:46px;height:26px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderdelivered}</span>
                                                                </td>
                                                                <td width="9">&nbsp;</td>
-                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#000000;text-align:center; line-height:13px;">Order <br>Delivered</td>
+                                                               <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center; line-height:13px;">Order <br>Delivered</td>
                                                             </tr>
                                                          </tbody>
                                                       </table>
@@ -455,9 +395,6 @@
                                           </table>
                                        </td>
                                     </tr>
-                                    
-                                    
-                                    
                                     <tr class="dsnone">
                                        <td style="background-color:#aa1d3d" align="center">
                                           <table  border="0" cellspacing="0" cellpadding="0" align="center">
@@ -497,6 +434,8 @@
                                           </table>
                                        </td>
                                     </tr>
+                                    <!-- stage mobile -->
+                                    <!-- shipping mobile -->
                                     <!-- shipping mobile -->
                                     <!-- stage mobile -->
                                     <tr>
@@ -512,10 +451,10 @@
                                                    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
                                                    <td class="smFull">
                                                       #if($ctx.cmsSlotContents.appstore)
-                                                      <a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp;tcid=em:transactional:Orderdelivered:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+                                                      <a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp;tcid=em:transactional:Orderconfirmation:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
                                                       #end
                                                       #if($ctx.cmsSlotContents.googleplay)
-                                                      <a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Orderdelivered:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+                                                      <a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Orderconfirmation:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
                                                       #end
                                                    </td>
                                                    <td class="smFull dsnone">
@@ -542,7 +481,7 @@
                                     <tr>
                                        <td align="center" class="content foocontnt inPad">
                                           <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-                                             This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="https://www.tatacliq.com/contact?tcid=em:transactional:orderdelivered:customercare:22052017" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
+                                             This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="https://www.tatacliq.com/contact?tcid=em:transactional:orderconfirmation:customercare:22052017" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
                                              <br>
                                              You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
                                           </div>

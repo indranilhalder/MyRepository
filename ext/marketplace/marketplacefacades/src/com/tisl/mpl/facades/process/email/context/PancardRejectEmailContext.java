@@ -50,7 +50,7 @@ import com.tisl.mpl.shorturl.service.ShortUrlService;
 /**
  * Velocity context for a order notification email.
  */
-public class OrderNotificationEmailContext extends AbstractEmailContext<OrderProcessModel>
+public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcessModel>
 {
 	final List<AbstractOrderEntryModel> childEntries = new ArrayList<AbstractOrderEntryModel>();
 	private OrderData orderData;
@@ -82,7 +82,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
-	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
+	private static final Logger LOG = Logger.getLogger(PancardRejectEmailContext.class);
 	@Autowired
 	private ShortUrlService shortUrlService;
 

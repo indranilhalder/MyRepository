@@ -130,7 +130,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetail(com.tisl.mpl.data.NotificationData)
 	 */
@@ -190,7 +190,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#checkCustomerFacingEntry(com.tisl.mpl.core.model.
 	 * OrderStatusNotificationModel)
 	 */
@@ -203,7 +203,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getNotificationDetailForEmailID(java.lang.String)
 	 */
 	@Override
@@ -229,7 +229,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#markNotificationRead(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
@@ -258,7 +258,7 @@ public class NotificationFacadeImpl implements NotificationFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.NotificationFacade#getUnReadNotificationCount(java.util.List)
 	 */
 	@Override
@@ -331,4 +331,35 @@ public class NotificationFacadeImpl implements NotificationFacade
 	}
 
 
+
+
+	/**
+	 * This method sends opan card reject email tpr-3765
+	 *
+	 * @param orderModel
+	 */
+
+
+	@Override
+	public void sendPancardRejectNotification(final OrderModel orderModel)
+	{
+		//Email and sms for Payment_Successful
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderModel.getCode();
+		try
+		{
+			getNotificationService().triggerEmailAndSmsOnPancardReject(orderModel, trackOrderUrl);
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("Error while sending notifications from job>>>>>>", e);
+			throw new EtailNonBusinessExceptions(e);
+		}
+		catch (final Exception ex)
+		{
+			LOG.error("Error while sending notifications>>>>>>", ex);
+			throw new EtailNonBusinessExceptions(ex);
+		}
+	}
 }

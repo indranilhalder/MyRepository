@@ -2939,6 +2939,8 @@
 		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
 		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>
         <property name="selfCourierDocumentLink" type="String" />
+        <!-- TPR-4134 -->
+        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
 	</bean>
 	
 	<!-- Added for mobile inventory Reservation START   -->
@@ -3006,6 +3008,8 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
 			
 		<!--  R2.3 CRM to Commerce end-->
+		<!-- TPR-4134 -->
+		<property name="revSealJwlry" type="java.lang.String"/>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
@@ -3020,5 +3024,11 @@
 <property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
 </bean>
 
+		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+ 	        <property name="message" type="String"/>
+ 		    <property name="yes" type="java.util.List&lt;String>"/>
+ 			<property name="no" type="java.util.List&lt;String>"/>
+ 		</bean>
+ 
 </beans>
 

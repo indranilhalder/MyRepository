@@ -133,6 +133,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -235,7 +236,6 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 
 /**
@@ -1720,6 +1720,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
+		String ussidForJwlry = null;
+		final List<String> sellerName = new ArrayList<String>();
 
 
 		try
@@ -1744,12 +1746,27 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()  && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()
+								&& productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
-						}else{
-							productRichAttrOfQuickDrop=ModelAttributetConstants.NO;
 						}
+						else
+						{
+							productRichAttrOfQuickDrop = ModelAttributetConstants.NO;
+						}
+					}
+
+					//This is added for jewellery
+					if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussidForJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					}
+					else
+					{
+						ussidForJwlry = orderEntry.getSelectedUssid();
 					}
 
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -1757,7 +1774,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 					for (final SellerInformationModel sellerInformationModel : sellerInfo)
 					{
-						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						//if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussidForJwlry)) //Added for jewellery
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
 							if (sellerInformationModel.getRichAttribute() != null)
@@ -1770,7 +1788,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								}
 							}
 						}
+						sellerName.add(sellerInformationModel.getSellerName());
 					}
+
+					//TPR-4134 starts
+					if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType())
+							&& ((sellerName).contains((MarketplacecommerceservicesConstants.TANISHQ))))
+					{
+						model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+					}
+					//TPR-4134 ends
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
 
