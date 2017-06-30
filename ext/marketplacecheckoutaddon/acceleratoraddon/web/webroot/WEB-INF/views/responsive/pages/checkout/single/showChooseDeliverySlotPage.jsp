@@ -20,7 +20,7 @@
 
 <div class="delivery-slot-popup-wrapper">
 	<ycommerce:testId code="checkoutStepTwo">				
-		<form:form id="selectDeliveryMethodForm" action="" method="get" >
+		<form:form id="selectDeliverySlotForm" action="/checkout/single/deliverySlotCostForEd" method="post" commandName="deliverySlotForm">
 			<div class="delivery-slot-popup-container">
 				<!-- <div class="checkout-indent"> -->
 					<single-checkout:showShipmentItemsForDeliverySlot cartData="${cartData}"/>
@@ -29,16 +29,9 @@
 		</form:form>
 	</ycommerce:testId>
 	<div>
-		<button type="button" class="done_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Done</button>
+		<button type="button" class="done_delslot" onclick="ACC.singlePageCheckout.onSlotDeliveryDoneClick();">Done</button>
 	</div>
 	<div>
-		<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');ACC.singlePageCheckout.getReviewOrder();">Skip</a>
-	</div>
-	<!-- Below is for responsive -->
-	<div>
-		<button type="button" class="done_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');">Done</button>
-	</div>
-	<div>
-		<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePageChooseSlotDeliveryPopup').modal('hide');">Skip</a>
+		<a href="javascript:void(0);" class="cancel_delslot" onclick="ACC.singlePageCheckout.onSlotDeliveryCancelClick();">Cancel</a>
 	</div>
 </div>
