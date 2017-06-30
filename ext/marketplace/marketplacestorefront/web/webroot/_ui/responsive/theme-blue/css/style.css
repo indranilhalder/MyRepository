@@ -35547,10 +35547,10 @@ body.page-cartPage .MyBag-pincode input#defaultPinCodeIds:focus{
 	    width: 46%;
 	    bottom: 0;
 	}
-	.product-info .product-detail.FineJewellery, 
+	/* .product-info .product-detail.FineJewellery, 
 	.product-info .product-detail.FashionJewellery{
 		width: 49%;
-	}
+	} */
 
 }
 /* .MyBag-buttons .checkout-types{
@@ -47167,10 +47167,10 @@ float: right;
 .product-info .product-content {
 	padding: 0 30px 0 50px;
 }
-.product-info .product-content.FineJewellery,
+/* .product-info .product-content.FineJewellery,
 .product-info .product-content.FashionJewellery {
 	padding: 0;
-}
+} */
 .product-info .product-content .Wrap {
 	background: #fbfbfb none repeat scroll 0 0;
 	padding: 20px 8% 10px;
@@ -47966,11 +47966,11 @@ float: right;
 		min-height: inherit;
 	}
 	
-	.product-info .product-content.FineJewellery,
+	/* .product-info .product-content.FineJewellery,
 	.product-info .product-content.FashionJewellery{
 		width: 49%;
 		padding: 0;
-	}
+	} */
 
 	/*Products tabs*/
 	.product-info>div.tabs-block {
@@ -48142,8 +48142,8 @@ float: right;
 		padding: 0 8%;
 	}
 	.product-info .product-image-container.device,
-	.product-info .product-image-container.FineJewellery,
-	.product-info .product-image-container.FashionJewellery {
+	.product-info .product-image-container.FineJewellery.device,
+	.product-info .product-image-container.FashionJewellery.device {
 		width: 100%;
 	}
 	.product-info .product-image-container.device .owl-theme .owl-controls {
@@ -48418,8 +48418,8 @@ float: right;
 		font-size: 14px;
 	}
 	
-	.product-info.wrapper .product-image-container.FineJewellery,
-	.product-info.wrapper .product-image-container.FashionJewellery{
+	.product-info.wrapper .product-image-container.FineJewellery.device,
+	.product-info.wrapper .product-image-container.FashionJewellery.device{
 		width: 100%;
 	}
 	
@@ -58385,13 +58385,13 @@ padding:0px;
 	.product-info .product-content.FineJewellery, .product-info .product-content.FashionJewellery{
 		width: 100%;
 	}
-	.product-info .FineJewellery .Wrap, 
+	/* .product-info .FineJewellery .Wrap, 
 	.product-info .FashionJewellery .Wrap, 
 	.FineJewellery .certified-by, 
 	.FashionJewellery .certified-by{
 		margin-left: 8%;
 		margin-right: 8%;
-	}
+	} */
  .checkout-content.cart.checkout.wrapper.shipCartWrapper{
  		padding: 0 0 34px;
  	}
@@ -73667,3 +73667,43 @@ span#juspayErrorMsg{
      margin-top: 20px;
 	 }
 /* TISBBC-12 end */
+/* Jewellery start */
+.product-info .product-detail.FineJewellery .certified-by ul li{
+	position: relative;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq{
+	width: 50px;
+	height: 30px;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before, 
+.product-info .product-detail.FashionJewellery .certified-by ul li.jwlryCertiTanishq:before{
+	width: 50px;
+    height: 30px;
+    display: inline-block;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    background: url(../images/cerified_logo.png) no-repeat 0px 0px;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGS,
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGTA,
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiHRD{
+	display: none;
+}
+@media (max-width: 1024px){
+.product-info.wrapper .product-image-container.FineJewellery.device, 
+.product-info.wrapper .product-image-container.FashionJewellery.device{
+	display: block;
+    width: 57%;
+    margin: 0;
+	}
+}
+@media (max-width: 767px){
+.product-info.wrapper .product-image-container.FineJewellery.device,
+.product-info.wrapper .product-image-container.FashionJewellery.device {
+    width: 100%;
+}
+}
+/* Jewellery end */

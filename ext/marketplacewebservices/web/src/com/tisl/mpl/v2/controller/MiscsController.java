@@ -121,6 +121,7 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
+import com.tisl.mpl.facade.pancard.MplPancardFacade;
 import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
@@ -134,6 +135,7 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.pojo.PanCardResDTO;
 import com.tisl.mpl.populator.HttpRequestCustomerUpdatePopulator;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.service.HomescreenService;
@@ -263,7 +265,8 @@ public class MiscsController extends BaseController
 	@Resource(name = "exchangeGuideFacade")
 	private ExchangeGuideFacade exchangeGuideFacade;
 
-
+	@Resource(name = "mplPancardFacadeImpl")
+	private MplPancardFacade mplPancardFacade;
 
 
 	//	private static final String APPLICATION_TYPE = "application/json";
@@ -278,10 +281,10 @@ public class MiscsController extends BaseController
 	 * /*
 	 *
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 *                APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 *                "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	 *
-	 *                /**
+	 * /**
 	 *
 	 * @return the configurationService
 	 */
@@ -1810,5 +1813,23 @@ public class MiscsController extends BaseController
 
 
 		return reverseCheckdata;
+	}
+
+	/*
+	 * to receive pancard status from SP for jewellery
+	 * 
+	 * @param restrictionXML
+	 * 
+	 * @return void
+	 */
+	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public void pancardStatusFromSP(final InputStream panStatusXML) throws RequestParameterException, JAXBException
+	{
+		final JAXBContext jaxbContext = JAXBContext.newInstance(PanCardResDTO.class);
+		final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		final PanCardResDTO resDTO = (PanCardResDTO) jaxbUnmarshaller.unmarshal(panStatusXML);
+
+		mplPancardFacade.setPancardRes(resDTO);
 	}
 }
