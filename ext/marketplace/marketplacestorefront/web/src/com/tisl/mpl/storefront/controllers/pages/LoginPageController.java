@@ -312,7 +312,7 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
-			
+
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
 			if (null != cookie && null != cookie.getValue())
@@ -488,7 +488,10 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 				{
-					getRegisterCustomerFacade().register(data);
+					//TPR-6272 starts here
+					final int platformNumber = 1;
+					//TPR-6272 ends here
+					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially
 					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
 					form.setPwd(password);

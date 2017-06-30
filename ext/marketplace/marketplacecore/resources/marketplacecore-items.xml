@@ -134,6 +134,19 @@
 
 
 	<enumtypes>
+	                <!-- TPR-6272 starts here -->
+	                <enumtype generate="true" code="registrationPlatform" autocreate="true" dynamic="true">
+			              <description>
+				               This enumeration creates the registration platform.
+			              </description>
+						  <value code="Mkt_Desktop_Web" />
+			              <value code="Mkt_Mobile_Web" />
+			              <value code="Mkt_Mobile_App" />
+			              <value code="Lux_Desktop_Web" />
+			              <value code="Lux_Mobile_Web" />
+			              <value code="Lux_Mobile_App" />			              
+		            </enumtype>
+	                <!-- TPR-6272 ends here -->
 
 		<!-- TPR-628-Make changes to Banners rendering in MObile Viewports -->
 
@@ -3221,6 +3234,14 @@
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
+				    <!-- TPR-6272 starts here -->				   				    
+				    <attribute qualifier="customerRegistrationPlatform" autocreate="true"
+						type="registrationPlatform" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-6272 ends here -->
 					<attribute qualifier="isCustomerCreatedInCScockpit"
 						autocreate="true" type="java.lang.boolean" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -10421,7 +10442,7 @@
 		<typegroup name="NPSFeedbackGroup">
 			<itemtype code="NPSFeedbackQuestion" generate="true"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.NPSFeedbackQuestion">
-				<deployment table="MplNPSFeedbackQuestion" typecode="15810" />
+				<deployment table="MplNPSFeedbackQuestion" typecode="20000" />
 
 				<attributes>
 

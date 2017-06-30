@@ -239,7 +239,10 @@ public class RegisterPageController extends AbstractRegisterPageController
 			data.setAffiliateId(form.getAffiliateId());
 			try
 			{
-				getRegisterCustomerFacade().register(data);
+				//TPR-6272 starts here
+				final int platformNumber = 1;
+				//TPR-6272 ends here
+				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
 				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,

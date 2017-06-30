@@ -21,12 +21,14 @@ import de.hybris.platform.servicelayer.user.exceptions.PasswordEncoderNotFoundEx
 
 import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
+import com.tisl.mpl.core.enums.RegistrationPlatform;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.marketplacecommerceservices.event.MplRegisterEvent;
@@ -43,6 +45,9 @@ import com.tisl.mpl.service.MplCustomerWebService;
  */
 public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService implements ExtDefaultCustomerService
 {
+	//TPR-6272 starts here
+	private static final Logger LOG = Logger.getLogger(ExtDefaultCustomerServiceImpl.class);
+	//TPR-6272 ends here
 	private UserService userService;
 	@Autowired
 	private ExtendedUserService extUserService;
@@ -285,8 +290,8 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 	 * @description to register user
 	 */
 	@Override
-	public void registerUser(final CustomerModel customerModel, final String password, final String affiliateId)
-			throws DuplicateUidException
+	public void registerUser(final CustomerModel customerModel, final String password, final String affiliateId,
+			final int platformNumber) throws DuplicateUidException//TPR-6272 parameter platformNumber added
 	{
 		try
 		{
@@ -297,6 +302,47 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			{
 				getUserService().setPassword(customerModel, password, getPasswordEncoding());
 			}
+
+
+			//TPR-6272 starts here
+
+			if (platformNumber == 1)
+			{
+				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_DESKTOP_WEB).toString());
+				//customerModel.setCustomerRegistrationPlatform("Mkt-Desktop Web");
+			}
+			else if (platformNumber == 2)
+			{
+				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.MKT_MOBILE_WEB);
+				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile Web");
+			}
+			else if (platformNumber == 3)
+			{
+				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.MKT_MOBILE_APP);
+				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile App");
+			}
+			else if (platformNumber == 4)
+			{
+				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.LUX_DESKTOP_WEB);
+				//customerModel.setCustomerRegistrationPlatform("Lux-Desktop Web");
+			}
+			else if (platformNumber == 5)
+			{
+				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.LUX_MOBILE_WEB);
+				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile Web");
+			}
+			else if (platformNumber == 6)
+			{
+				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.LUX_MOBILE_APP);
+				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile App");
+			}
+			else
+			{
+				LOG.debug(" --------- The registration platform is not in scope ---------- ");
+			}
+			//customerModel.setCustomerRegistrationPlatform(" Mkt-Desktop/ Mkt-Mobile");//hardcoded for testing
+			//TPR-6272 ends here
+
 			internalSaveCustomer(customerModel);
 
 			//Commented this code as this is not required while sign in/sign up

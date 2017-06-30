@@ -97,7 +97,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	@Autowired
 	private ConfigurationService configurationService; //Added for UF-93
-	
+
 	/**
 	 * @return the resourceBreadcrumbBuilder
 	 */
@@ -424,7 +424,10 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 		{
 			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 			{
-				getRegisterCustomerFacade().register(data);
+				//TPR-6272 starts here
+				final int platformNumber = 1;
+				//TPR-6272 ends here
+				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber added
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 				final HttpSession session = request.getSession();
 				session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
@@ -497,7 +500,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#back(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */
@@ -509,7 +512,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#next(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */

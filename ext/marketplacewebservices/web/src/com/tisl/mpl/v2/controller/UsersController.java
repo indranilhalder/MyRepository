@@ -514,7 +514,10 @@ public class UsersController extends BaseCommerceController
 		{
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
-			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable);
+			//TPR-6272 starts here
+			final int platformNumber = 3;
+			//TPR-6272 ends here
+			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable, platformNumber);//TPR-6272 Parameter platformNumber added
 			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
 			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
