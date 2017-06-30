@@ -414,7 +414,7 @@ tr.d0 td {
 											<!-- TPR-970 changes--><%-- <span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span> --%>
 												<!-- UF-260 -->
 												<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
-												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span></span>
+												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span>(${entry.cartAdditionalDiscPerc.value}% Off)</span>
 												<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 										</c:when>
@@ -422,7 +422,7 @@ tr.d0 td {
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
 											<p class="add-disc">Additional Discount</p>
 											<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
-											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span></span>
+											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span>(${entry.cartAdditionalDiscPerc.value}% Off)</span>
 											<%-- <span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 									</c:otherwise>
