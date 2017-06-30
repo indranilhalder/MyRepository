@@ -12929,7 +12929,10 @@ TATA.CommonFunctions = {
         $("#loginForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(validator.errorList[0].message) : $("#loginForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+                var fieldName = $(validator.errorList[0].element).attr("placeholder");
+                "Enter Your Email Address" === fieldName && (fieldName = "Email");
+                var errorMsg = fieldName + " is mandatory";
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html(errorMsg) : $("#loginForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
                 j_username: {
@@ -12960,7 +12963,10 @@ TATA.CommonFunctions = {
         $("#extRegisterForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(validator.errorList[0].message) : $("#extRegisterForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+                var fieldName = $(validator.errorList[0].element).attr("placeholder");
+                "Enter Your Email Address" === fieldName && (fieldName = "Email");
+                var errorMsg = fieldName + " is mandatory";
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html(errorMsg) : $("#extRegisterForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
                 firstName: {
@@ -13013,7 +13019,10 @@ TATA.CommonFunctions = {
         $("#forgottenPwdForm").validate({
             onfocusout: !1,
             invalidHandler: function(form, validator) {
-                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(validator.errorList[0].message) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + validator.errorList[0].message + "</div>"));
+                var fieldName = $(validator.errorList[0].element).attr("placeholder");
+                "Enter Your Email Address" === fieldName && (fieldName = "Enter a valid email address");
+                var errorMsg = fieldName + "";
+                validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(errorMsg) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
                 email: {
@@ -13300,9 +13309,11 @@ TATA.CommonFunctions = {
         $("#main-nav > ul.mega-menu").addClass("footer-cloned-ul").clone().appendTo(".footer-popular-search"), 
         $(".footer-popular-search .footer-cloned-ul > li").append("<br/>"), $(".footer-popular-search .footer-cloned-ul > li").each(function() {
             $(this).find(".sub-menu").length ? $(this).show() : $(this).hide();
-        }), $(document).on("click", ".accordion h3", function() {
-            return $(this).toggleClass("active").next().stop().slideToggle(500), $(".accordion-content").not($(this).next()).stop().slideUp(500), 
-            !1;
+        });
+        var Acc1 = $(".accordion").find("h3");
+        $(document).on("click", ".accordion h3", function() {
+            return $(this).toggleClass("active").next().stop().slideToggle(500), Acc1.not($(this)).removeClass("active"), 
+            $(".accordion-content").not($(this).next()).stop().slideUp(500), !1;
         });
     },
     deliveryaddressform: function() {

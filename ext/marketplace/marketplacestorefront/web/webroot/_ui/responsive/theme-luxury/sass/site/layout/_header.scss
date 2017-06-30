@@ -490,7 +490,7 @@
 		}
 		.header-search-inner {
 			max-width: 600px;
-			margin: 0 auto;
+			margin: 0 auto;           
 			position: relative;
 			&:before {
 				position: absolute;
@@ -505,6 +505,9 @@
 			.ui-autocomplete{
 				list-style-type:none;
 				padding:0px;
+                left:0px!important;
+                border:0px!important;
+                
 				li{
 					padding:6px;
 					text-align:center;
@@ -834,7 +837,7 @@
 			}
 			div.invalided-error{
 				/*position: absolute;*/
-			    margin-top: 0px;
+			    margin-top: -22px;
 			    color: red;
 			    margin-left: 3px;
 			    margin-bottom: 5px;

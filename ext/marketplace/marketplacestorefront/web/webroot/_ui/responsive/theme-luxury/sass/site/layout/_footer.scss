@@ -400,8 +400,13 @@ footer{
 		.footer-inner-wrapper {
 			padding-bottom:0px;
 			.accordion{
-				border-bottom: 1px solid #eaeaec;
+				border-top: 1px solid #eaeaec;
 				padding-top: 15px;
+                border-bottom: 1px solid #eaeaec;
+                
+                h3{                   
+                    cursor: pointer;
+                }
 			}
 			.accordion-content{
 				display:none;
@@ -410,7 +415,7 @@ footer{
 			.accordion-title,h3{
 				position:relative;
 				margin-bottom:0;
-        padding-bottom:20px;
+                padding-bottom:20px;
 				.sp-minus::after{
 					content: "+";
 					height: 10px;
