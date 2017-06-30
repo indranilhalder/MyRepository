@@ -208,11 +208,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			//TISPRDT-1226
 			if (source.getCurrDelCharge() != null)
 			{
-				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
+				target.setShippingCharge(source.getCurrDelCharge().doubleValue());
 			}
 			else if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
 			{
-				target.setShippingCharge(source.getCurrDelCharge().doubleValue());
+				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
 			}
 
 			/*
