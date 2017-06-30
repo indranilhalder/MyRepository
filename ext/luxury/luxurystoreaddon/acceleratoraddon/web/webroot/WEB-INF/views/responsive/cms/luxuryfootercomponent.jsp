@@ -29,7 +29,6 @@
 					</c:forEach>
 				</ul>
 				<div class="get-in-touch">
-					<p>(OR)</p>
 					<p>${footerAppText}</p>
 					<h3>${footerSocialTitle}</h3>
 					<p class="soc-links">
