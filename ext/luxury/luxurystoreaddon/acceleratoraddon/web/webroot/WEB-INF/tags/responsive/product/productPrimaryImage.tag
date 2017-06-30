@@ -27,10 +27,7 @@
 	</c:otherwise>
 </c:choose>
 
-<c:if test="${fn:toLowerCase(product.luxIndicator)=='luxury' and not empty product.luxIndicator}">
-<%-- ${product.luxIndicator} --%>
- <img class="luxury_ribbon" src="//${mplStaticResourceHost}/_ui/responsive/common/images/Ribbon.png">
-</c:if>
+
 
 
 <%-- <c:choose>
