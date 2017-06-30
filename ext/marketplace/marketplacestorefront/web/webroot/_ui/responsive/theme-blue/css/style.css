@@ -72703,3 +72703,32 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
     min-height: 288px;
 }
 /*TISTE-163 fix end*/
+/*TISTE-181, TISTE-182 fix start*/
+.product-facet .facet.size .facet-list li.filter-Size, 
+.product-facet .facet.Size .facet-list li.filter-size, 
+.product-facet .facet.size .facet-list li.filter-size, 
+.product-facet .facet.Size .facet-list li.filter-Size{
+	min-height: 25px;
+    height: auto;
+} 
+@media (max-width: 790px){
+.listing-leftmenu .size .facet-list .filter-Size form, 
+.listing-leftmenu .Size .facet-list .filter-size form, 
+.listing-leftmenu .size .facet-list .filter-size form, 
+.listing-leftmenu .Size .facet-list .filter-Size form {
+    width: 100%;
+}
+.product-facet .facet .facet-list div.facet-text {
+    padding-right: 0px;
+    width: calc(100% - 25px) !important;
+}
+.product-facet .facet .facet-list li.filter-size span.facet-text{
+	display: inline !important;
+}
+}
+/*TISTE-181, TISTE-182 fix end*/
+@media(max-width: 767px){
+    .track-order-iframe{
+        padding-bottom: 20px;
+    }
+} 
