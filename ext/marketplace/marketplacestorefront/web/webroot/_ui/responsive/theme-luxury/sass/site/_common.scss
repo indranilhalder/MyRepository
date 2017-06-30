@@ -627,11 +627,13 @@ video::-webkit-media-controls {
 /*Modal popup*/
 
 /*signin and signup section*/
-.signin-box.modal{
+.signin-box.modal, #share-modal.modal{
     text-align: center;
-    padding: 0!important;
+    
        @include media-breakpoint-down(sm) {
             padding: auto!important;
+            left: auto;
+            right: auto;
         }
     
     &:before{

@@ -1,4 +1,11 @@
-
+#share-modal{
+    .modal-dialog{
+        width: 300px;
+        .soc-links{
+            margin: 10px 0px;
+        }
+    }
+}
 .checkout-content{
     background: transparent;
     margin-top: 20px;
