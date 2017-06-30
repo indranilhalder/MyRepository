@@ -13020,8 +13020,8 @@ TATA.CommonFunctions = {
             onfocusout: !1,
             invalidHandler: function(form, validator) {
                 var fieldName = $(validator.errorList[0].element).attr("placeholder");
-                "Enter Your Email Address" === fieldName && (fieldName = "Email");
-                var errorMsg = fieldName + " is mandatory";
+                "Enter Your Email Address" === fieldName && (fieldName = "Enter a valid email address");
+                var errorMsg = fieldName + "";
                 validator.numberOfInvalids() && (validator.errorList[0].element.focus(), $("#forgottenPwdForm .invalided-error").length > 0 ? $("#forgottenPwdForm .invalided-error").html(errorMsg) : $("#forgottenPwdForm").prepend('<div class="invalided-error">' + errorMsg + "</div>"));
             },
             rules: {
