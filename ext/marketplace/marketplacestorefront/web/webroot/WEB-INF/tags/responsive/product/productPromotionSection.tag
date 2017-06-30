@@ -107,7 +107,7 @@
 									</c:if>
 									<!-- end if check for channel web -->
 									<!-- added for TISTE-143, Block for channel mobile -->									
-									<%-- <c:if test="${channel eq 'Mobile'}">					
+									<c:if test="${channel eq 'Mobile'}">					
 							  			<!-- <input type="hidden" value="" id="promolist"/> -->		
 							  			<ul>
 											<li>
@@ -117,7 +117,7 @@
 												</div>
 											</li>
 									   </ul>
-            	                  </c:if> --%>            	                  
+            	                  </c:if>            	                  
 								</c:forEach>
 							</c:when>
 							<c:otherwise>
