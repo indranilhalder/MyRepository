@@ -1954,9 +1954,7 @@ removeExchangeFromCart : function (){
 		$("#make_nb_payment_up").css("display","none");
 		$("#make_emi_payment_up").css("display","none");
 		$("#paymentButtonId_up").css("display","none");
-		$("#make_mrupee_payment_up").css("display","none");
-		//Hiding SnackBar
-		ACC.singlePageCheckout.hideSnackBar();
+		$("#make_mrupee_payment_up").css("display","none");		
 	},
 	
 	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
@@ -2367,11 +2365,9 @@ removeExchangeFromCart : function (){
 	                		ACC.singlePageCheckout.proceedWithPaymentForResponsive(paymentMode,savedOrNew,radioId,callFromCvv);
 	                	}
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
-	                	{
-	                		//TODO Toast for slot delivery
+	                	{	                		
 	                		$("#singlePageChooseSlotDeliveryPopup #modalBody").attr("data-htmlPopulated","NO");
-	                		ACC.singlePageCheckout.showSnackBar();
-	                		
+	                		ACC.singlePageCheckout.showSnackBar();	                		
 	                	}
 	                }
 	                

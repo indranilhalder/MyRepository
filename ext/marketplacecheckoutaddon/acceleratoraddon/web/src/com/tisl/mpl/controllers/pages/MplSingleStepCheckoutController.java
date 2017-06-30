@@ -398,6 +398,45 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					LOG.debug("type of device=" + device.isTablet());
 				}
 			}
+			final CartModel cartModel = getCartService().getSessionCart();
+			if (!deviceType.equals("normal") || isResponsive)
+			{
+				final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+				for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+				{
+					//Start of UF-281
+					boolean isSaveRequired = false;
+					if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+					{
+						cartEntryModel.setEdScheduledDate("".trim());
+						cartEntryModel.setTimeSlotFrom("".trim());
+						cartEntryModel.setTimeSlotTo("".trim());
+					}
+					if (cartEntryModel.getScheduledDeliveryCharge() != null
+							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+					{
+						isSaveRequired = true;
+						if (cartModel.getTotalPriceWithConv() != null)
+						{
+							cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+									- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+						}
+						final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
+								- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+						cartModel.setDeliveryCost(finalDeliveryCost);
+						final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+								- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+						cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+						cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+					}
+					if (isSaveRequired)
+					{
+						modelService.save(cartModel);
+						modelService.refresh(cartModel);
+					}
+				}
+			}
+			//End of UF-281
 			LOG.debug("Device Type=" + deviceType);
 			final String isServicable = getSessionService().getAttribute("isCartPincodeServiceable");
 			if ((StringUtils.isEmpty(isServicable)) || (isServicable.equalsIgnoreCase("N")))
@@ -406,7 +445,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
-			final CartModel cartModel = getCartService().getSessionCart();
+
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 
@@ -1544,6 +1583,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		if (deliverySlotForm.getDeliverySlotEntry() != null && !deliverySlotForm.getDeliverySlotEntry().isEmpty())
 		{
 			final CartModel cartModel = getCartService().getSessionCart();
@@ -1640,7 +1681,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				formatDeliveryCost = df.format(finalDeliveryCost);
 			}
 		}//End of slot entry if
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress)
