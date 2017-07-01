@@ -13665,7 +13665,10 @@ TATA.CommonFunctions = {
             });
         },
         videoPlay: function() {
-            $(".pdp-social-links .play").on("click", function() {
+            var vids = $("video");
+            $.each(vids, function() {
+                this.controls = !1;
+            }), $(".pdp-social-links .play").on("click", function() {
                 $("body").addClass("pdp-video-active"), $("video").each(function() {
                     this.play();
                 });

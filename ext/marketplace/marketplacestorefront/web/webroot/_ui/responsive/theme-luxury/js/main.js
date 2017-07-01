@@ -1167,16 +1167,24 @@ TATA.Pages = {
 
         },
 
-        openPopup: function (url) {
-
+        openPopup: function (url) {            
+            
             $('#share-modal .soc-links').on('click', function(){
                 newwindow = window.open(url,'name','height=400,width=400');
                 if (window.focus) {newwindow.focus()}
-                return false;
+                return false;               
             });
         },
 
         videoPlay: function(){
+            
+            //For Firefox we have to handle it in JavaScript 
+            
+            var vids = $("video"); 
+            $.each(vids, function(){
+                this.controls = false; 
+            }); 
+            
             $('.pdp-social-links .play').on('click', function(){
                 $('body').addClass('pdp-video-active');
                 $('video').each(function ()
