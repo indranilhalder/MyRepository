@@ -391,7 +391,7 @@ public class ProductDetailsHelper
 
 	public void groupGlassificationDataForFineDeatils(final ProductData productData)
 	{
-		final LinkedHashMap<String, LinkedHashMap<String, List<String>>> featureDetails = new LinkedHashMap<String, LinkedHashMap<String, List<String>>>();
+		final LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		if (null != productData.getClassifications())
 		{
 			for (final ClassificationData classData : productData.getClassifications())
@@ -450,7 +450,7 @@ public class ProductDetailsHelper
 						}
 						else
 						{
-							featureMap = new HashMap<String, List<String>>();
+							featureMap = new LinkedHashMap<String, List<String>>();
 						}
 						for (final FeatureData feature : classDataName)
 						{
