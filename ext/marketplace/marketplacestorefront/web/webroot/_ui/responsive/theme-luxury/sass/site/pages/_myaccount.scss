@@ -285,20 +285,31 @@
 			.mpl-addressBook{
 				margin-bottom:10px;
 			}
-			.mpl-addressPopup{
+			.mpl-addressPopup{                
+                left: auto;
+                right: auto;
+                .content{
+                    border-bottom:0px;
+                    padding: 0px;
+                }
 				.addressItem{
 					width: auto;
 				    top: 20%;
 				    position: fixed;
-				    left: 50%;
+				    left:auto;
 				    .buttons{
 					    .closeColorBox{
-					    	background:#2d2d2d;
-					    	color:#fff;
+                            color: #2d2d2d;
+                            background-color: #fff;
+                            border-color: #eef0f5;
+                                &:hover{                                    
+                                    background-color: #e6e6e6;
+                                    border-color: #c7cede;
+                                }
 					    }
 					    .confirm-deletionButton{
 					    	color:#fff;
-					    	background:#a9143c;
+					    	background:#2d2d2d;
 					    }
 				    }
 				}
@@ -607,4 +618,9 @@
     border: 1px solid #d2d2d2;
     border-radius: 3px;
     box-shadow: none;
+}
+.page-address-book{
+    .overlay{
+        display: none;
+    }
 }
