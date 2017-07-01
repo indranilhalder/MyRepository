@@ -41,8 +41,8 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
-		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
-			<jsp:body>
+		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
+			<jsp:body> --%>
 				<script>
     				$(document).ready(function(){
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
@@ -1352,8 +1352,8 @@
 			</ul>
 				</div>
 				</div>				
-				</jsp:body>
-		</multiCheckout:checkoutSteps>	
+				<%-- </jsp:body>
+		</multiCheckout:checkoutSteps> --%>	
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 	</div>		
 </template:page>
