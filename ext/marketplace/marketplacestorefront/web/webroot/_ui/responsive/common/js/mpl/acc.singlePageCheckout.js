@@ -1839,6 +1839,7 @@ removeExchangeFromCart : function (){
  			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
  			$("#totalWithConvField").empty().text(result[1]);
  			$("#outstanding-amount-mobile").empty().text(result[1]);
+ 			$("#singlePageChooseSlotDeliveryPopup input[type=radio]:checked").attr("data-submitted","true");
         });
         
         xhrResponse.always(function() {
@@ -2494,6 +2495,9 @@ removeExchangeFromCart : function (){
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{	                		
 	                		$("#singlePageChooseSlotDeliveryPopup #modalBody").attr("data-htmlPopulated","NO");
+	                		$.each(data.dlvrySltAvlbleForUssid,function(key, value){
+	                			$("#slotMsgId_"+key).show();
+	                		});
 	                		ACC.singlePageCheckout.showSnackBar();	                		
 	                	}
 	                }
@@ -2592,6 +2596,7 @@ removeExchangeFromCart : function (){
 		else
 		{
 			$("#singlePageChooseSlotDeliveryPopup").modal('show');
+			$('#singlePageChooseSlotDeliveryPopup input[data-submitted="false"]').prop("checked",false)
 		}
 	},
 	//Method to open payment form in responsive

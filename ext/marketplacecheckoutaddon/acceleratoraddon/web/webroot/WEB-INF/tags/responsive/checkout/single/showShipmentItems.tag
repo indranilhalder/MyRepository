@@ -274,6 +274,7 @@
 															</c:choose>
 									
 														</c:forEach>
+														<span id="slotMsgId_${entry.selectedSellerInformation.ussid}" style="display:none">Select preferred delivery time</span>
 														<c:if test="${numberOfDelModesInEntry>1}">
 															<c:set var="hideChangeLink" value="false"/>
 														</c:if>

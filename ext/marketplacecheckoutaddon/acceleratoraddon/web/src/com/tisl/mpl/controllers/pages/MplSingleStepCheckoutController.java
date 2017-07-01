@@ -3010,6 +3010,21 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 			if (getSlotsAvailability(cartDataSupport))
 			{
+				final Map<String, Map<String, List<String>>> deliveryTimeSlotMap = getSessionService().getAttribute(
+						MarketplacecheckoutaddonConstants.DELIVERY_SLOTS_TO_SESSION);
+				if (null != deliveryTimeSlotMap)
+				{
+					final JSONObject dlvrySltAvlbleForUssid = new JSONObject();
+					for (final Map.Entry<String, Map<String, List<String>>> entry : deliveryTimeSlotMap.entrySet())
+					{
+						//System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+						if (null != entry.getValue())
+						{
+							dlvrySltAvlbleForUssid.put(entry.getKey(), "true");
+						}
+					}
+					jsonObj.put("dlvrySltAvlbleForUssid", dlvrySltAvlbleForUssid);
+				}
 				jsonObj.put("isScheduleServiceble", "true");
 				jsonObj.put("type", "response");
 			}

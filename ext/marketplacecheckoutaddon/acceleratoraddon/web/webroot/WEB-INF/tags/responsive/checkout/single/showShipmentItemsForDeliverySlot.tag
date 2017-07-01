@@ -206,7 +206,7 @@
 												<c:forEach items="${dateSlots.value}" var="timeSlots">
 												<c:set var="lineItemIndex" value="${lineItemIndex + 1}" scope="page"></c:set>
 													<span class="delslot_timeslot">	
-														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${lineItemIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" value="" onchange="updateFormInputElements(this,'${entry.entryNumber}');">
+														<input type="radio" class="" name="date${scheduleIndex}" id="date${scheduleIndex}${lineItemIndex}" style="display:block;" data-ussid="${entry.selectedUssid}" data-deliveryCost="${mplconfigModel}" data-deliverySlotDate="${dateSlots.key}"  data-deliverySlotTime="${timeSlots}" data-submitted="false" value="" onchange="updateFormInputElements(this,'${entry.entryNumber}');">
 														<label class="delslot_radio" for="date${scheduleIndex}${lineItemIndex}"></label>
 														<fmt:formatDate value="${parseddeliveryDate}" pattern="d  MMMM"/>
 														<span class="dateTime1">&nbsp;(${fn:replace(timeSlots, 'TO', '-')})</span>
