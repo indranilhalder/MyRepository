@@ -625,17 +625,16 @@ video::-webkit-media-controls {
 }
 
 /*Modal popup*/
-
+#share-modal.modal{
+    @include media-breakpoint-down(sm) {
+        padding: auto!important;
+        left: auto;
+        right: auto;
+    } 
+}
 /*signin and signup section*/
 .signin-box.modal, #share-modal.modal{
-    text-align: center;
-    
-       @include media-breakpoint-down(sm) {
-            padding: auto!important;
-            left: auto;
-            right: auto;
-        }
-    
+    text-align: center;    
     &:before{
         content: '';
         display: inline-block;
@@ -659,4 +658,7 @@ video::-webkit-media-controls {
 
 .smartbanner.smartbanner-ios{
     display: none;
+}
+#forgottenPwdForm .valid-message{
+    color: #3c763d;
 }
