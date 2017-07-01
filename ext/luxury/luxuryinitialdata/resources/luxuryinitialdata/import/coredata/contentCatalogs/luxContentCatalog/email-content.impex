@@ -3,7 +3,7 @@
 #
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
 $wideContent=CMSImageComponent,BannerComponent
 
 # Import config properties into impex macros
@@ -197,6 +197,15 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CustomerRegistrationInCsEmailTemplate'];validComponentTypes(code)
 ;SiteLogo;;;logo
@@ -775,9 +784,18 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;fb-CustomerRegistrationEmail;fb;;EmailfbRegSlot;true
 ;;AppDownloadUrl-CustomerRegistrationEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
 ;;tweet-CustomerRegistrationEmail;tweet;;EmailtweetSlot;true
+;;gplus-CustomerRegistrationEmail;gplus;;EmailgplusRegSlot1;true
 ;;youtube-CustomerRegistrationEmail;youtube;;EmailYouTubeSlot;true
 ;;insta-CustomerRegistrationEmail;insta;;EmailInstaSlot;true
 ;;Tip-CustomerRegistrationEmail;Tip;;EmailTipCUSlot;true
+;;tatatrust-CustomerRegistrationEmail;tatatrust;;EmailTatatrustSlot;true
+;;cliqnpic-CustomerRegistrationEmail;cliqnpic;;EmailcliqnpicSlot;true
+;;easyreturn-CustomerRegistrationEmail;easyreturn;;EmailEasyreturnSlot;true
+;;authenticbrands-CustomerRegistrationEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
+;;freeshipping-CustomerRegistrationEmail;freeshipping;;EmailFreeshippingSlot;true
+;;linegrey-CustomerRegistrationEmail;linegrey;;EmailLinegreySlot;true
+;;appstore-CustomerRegistrationEmail;appstore;;EmailAppleStoreSlot;true
+;;googleplay-CustomerRegistrationEmail;googleplay;;EmailAndroidStoreSlot;true
 
 
 ### Order Refund Email 

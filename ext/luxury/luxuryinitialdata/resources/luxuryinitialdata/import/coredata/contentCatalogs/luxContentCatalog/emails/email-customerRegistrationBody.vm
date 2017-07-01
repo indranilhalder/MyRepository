@@ -1,179 +1,221 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-      <title>Registration Through Call Center</title>
-      <style>
-         img.spacer-img {
-         opacity:0;
-         }
-         .emailPass td{
-         padding: 25px 0px 0px 3px;
-         }
-         tr > td > span > span > a{
-         pointer-events:none;
-         color: #4a4a4a !important;
-         text-decoration: none !important;
-         }
-         td span img{
-         width:100%;
-         }
-         .reg-border td{
-         border-bottom:solid 2px #000000;
-         padding-bottom: 10px;
-         padding-top: 10px;}
-         a{
-         color: #0000ee;}
-      </style>
+        <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width" />
+
+  <title>  Tata CliQ Luxury</title>
+
+</head>
+<body style="padding: 0; margin:0; font-family:Arial, Helvetica, sans-serif;">
+
+  <style type="text/css">
+    body{ padding: 0; margin:0; }
+    @media only screen and (max-width:600px) {
+        .maintable{ width: 300px }
+        .smFull{ width: 100%; display: inline-block; }
+        
+        .toplink{ font-weight: bold; display: inline-block; width: 90%; padding: 10px 5%; text-align: left;  }
+        .toplink a{ font-size:12px!important }
+        .logo{ font-weight: bold; display: inline-block; width: 100% }
+        .logo img{ width: 80px; height: auto }
+        .topLinks{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;letter-spacing: 1px}
+        .inPad{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;}
+        .topLinks a{font-size: 11px!important; vertical-align: middle;}
+        .topLinks span{font-size: 25px!important; vertical-align: middle; line-height: 10px}
+        .dsnone{ display: none!important }
+        .fwnormal{ font-weight: normal; }
+        .content{ line-height: 18px }
+        .lesspad img{ height: 20px }
+        .orderdetail{ text-align: left; }
+        .orderitemtable{ border-bottom: 1px solid #dadada }
+        .iprice{ text-align: left; font-weight: bold; }
+        .trackdiv{ padding: 0 0 15px; font-size: 12px!important  }
+        .followhead{ font-weight: bold; padding: 10px 0 5px; font-size: 12px!important }
+        .bordertop{padding-top:0; padding-bottom: 0 }
+        .bordertop td{border-top: 1px solid #dadada; width: 100%; display: inline-block; }
+        .socialLinks a{ display: inline-block; margin: 0 5px 0 0 }
+        .taleft{ text-align: left }
+        .btn{ font-size: 12px; width: 150px!important; padding: 7px 10px!important; letter-spacing: 0.5px }
+        .borderBot td{ width: 100%; display: inline-block;  }
+        .borderBot{  display: inline-block;width: 90%; padding: 0 5%; }
+        .foocontnt div{font-size: 12px!important  }
+        .dsBlock{ display: table-row !important;}
+        .borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
+    }  
+            </style>
    </head>
-   <body style="margin:0;">
-      <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="display: block; border:solid 1px #cccccc;table-layout:fixed;font-family:Arial, Helvetica, sans-serif;">
-         <tr>
-            <td align="left" valign="top"><span>${ctx.cmsSlotContents.SiteLogo}</span></td>
-         </tr>
-         <tr>
-            <td align="left" valign="top" style="display:inherit;">
-               <!--<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;">Looks Like We're Going To Be</h2>
-                  <h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 12px;margin-top:4px">Friends For A Long, Long Time</h2>-->
-               <table border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                     <td align="left" valign="top" style="padding-left: 16px;">
-                        <table border="0" cellspacing="0" cellpadding="0">
+     <body>
+           <table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px; margin-top: 50px;">
+            <tbody>
+                <tr>
+                     <td>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                      <tbody>
                            <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:20px; color:#606060;">
-                                 <table width="390" border="0" cellspacing="0" cellpadding="0">
-								 <tr>
-									<td>&nbsp;</td>
-								 </tr>
-                                    <tr>
-                                       <td align="left" valign="top" style="color:#000;font-weight:bold;"><font style="font-family:Arial, Helvetica, sans-serif; font-size:large; color:#000000; font-weight:bold;">Hi,</font></td>
-                                       <td align="left" valign="top" style="color:#000;font-weight:bold"></td>
-                                    </tr>
-                                 </table>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td height="25" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
-                              <td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
-                              <td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
-                           </tr>
-                           <tr>
-                              <td align="left" colspan="3" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000;"> 	 	 
-Thanks for signing up. With your Tata CLiQ Luxury account, you will have access to a world of authentic brands and a truly indulgent shopping experience.</td>
-                           </tr>
-                           <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:17px; color:#606060;">&nbsp;</td>
-                           </tr>
-                           <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:5px; color:#606060;">&nbsp;</td>
-                           </tr>
-                           <tr>
-                              <td align="left" colspan="3" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000;">Find the best clothes, bags, watches and electronics, handpicked for you.</td>
-                           </tr>
-                           <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#606060;">&nbsp;</td>
-                           </tr>
-                           <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:5px; color:#606060;">&nbsp;</td>
-                           </tr>
-                           <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:large; color:#000000;"><strong>Ready to shop? Here are your account details:</strong></td>
-                           </tr>
-                        </table>
-                     </td>
-                     <td align="left" valign="top">&nbsp;</td>
+                                 <td>
+                                  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                    <tbody>
+                                      
+                                      <tr>
+                                           #if($ctx.cmsSlotContents.SiteLogo)
+                                        <td class="logo" ><a href="https://www.e2eluxury.tataunistore.com/" target="_blank">${ctx.cmsSlotContents.SiteLogo}</a></td>
+                                        #end
+                                        <td align="right" class="toplink">
+                                            &nbsp;
+                                        </td>
+                                      </tr>
+                                                                         </tbody>
+                                  </table>
+                               </td>
+                               </tr>
+                                   </tbody>
+                    </table>
+                  </td>
                   </tr>
                   <tr>
-                     <td align="left" valign="top">
-                        <table class="emailPass" border="0" cellspacing="0" cellpadding="0">
-						<tr>
-                               <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif;font-size: 2px;color:#606060;padding: 0;" height="5">&nbsp;</td>
-                          </tr>
-                           <tr>
-							  <td width="129" height="27" style="padding: 0;"></td>
-                              <td align="left" valign="middle" bgcolor="#f5f5f5" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000;font-weight:normal;padding-left: 40px;padding-top:8px; padding-bottom:8px;">Username: </td>
-							  <td bgcolor="#f5f5f5" style="padding:0px;padding-top:8px; padding-bottom:8px;">&nbsp;</td>
-                              <td  align="left" valign="middle" bgcolor="#f5f5f5" style="font-family:Arial, Helvetica, sans-serif; font-size:medium; color:#000000; font-weight:normal;padding-right: 30px;padding-top:8px;padding-bottom:8px; padding-left:0px; "> <span><span>
-                                ${ctx.customerId}</span></span>
-                              </td>
-                           </tr>
-                        </table>
-                     </td>
-                     <td align="left" valign="top">&nbsp;</td>
-                  </tr>
-                  <tr>
-                     <td height="18">&nbsp;</td>
-                  </tr>
-            
-                
-				  <tr>
-		<td style="padding-left:16px; border-top: 1px solid black;
-    border-bottom: 1px solid black;" colspan="7" text="" align="left" bgcolor="#fbfbfb"><p style="margin-top: 10px;
-    margin-bottom: 10px;">
-		<font size="4" color="#000000"><strong>Happy Shopping! </strong></font><font size="4" color="#000000"><strong>
-        </strong></font></p></td>
-	</tr>
-	<tr>
-	<td height="22" align="left" valign="top">&nbsp;</td>
-	</tr>
-                  <tr>
-                     <td align="left" valign="top">
-                        <table border="0" cellspacing="0" cellpadding="0">
-                           <tr>
-                              <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e">
-                                 <table border="0" cellspacing="0" cellpadding="0">
-                                    <tr>
-                                       <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:small; color:#000000;">
-                                          <p style="padding-left: 16px;">This email can't receive replies. Get in touch with us by contacting Tata CLiQ Care <a href="tel:1800 208 8282">1800 208 8282</a>. You can also write to us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a>. For help with our luxury products, write to <a href="mailto:luxury@tatacliq.com">luxury@tatacliq.com. </a></p>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                    </tr>
-                                 </table>
-                              </td>
-                              <td align="left" valign="top">&nbsp;</td>
-                           </tr>
-                        </table>
-                     </td>
-                  </tr>
-                  <tr>
-                     <td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
-                     <td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
-                     <td height="18" align="left" valign="top" style="font-size:0;line-height:0">&nbsp;</td>
-                  </tr>
-                  <tr>
-                     <td align="left" valign="top" style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;">
-                        <table border="0" cellspacing="0" cellpadding="0">
-                           <tr>
-                              <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:small; color:#000000; width: 486px; padding-left: 16px;">&copy; 2016 Tata CLiQ | All Rights Reserved</td>
-                              <td align="left" valign="top">&nbsp;</td>
-                              <td align="right" valign="top">
-                                 <table width="70" border="0" cellspacing="0" cellpadding="0" align="right" style="float:right;  padding-top: 5px;">
-                                  	<tr>
-					<td style="text-align: right;"><a href="https://www.facebook.com/TataCLiQ/" target="_blank">${ctx.cmsSlotContents.fb}</a></td>
-					<td><a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a></td>
-					<td><a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a></td>
-					<td><a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a></td>
-			
-				</tr>
-                                 </table>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td align="left" valign="middle" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#606060;">&nbsp;</td>
-                              <td align="left" valign="top">&nbsp;</td>
-                              <td align="left" valign="top">&nbsp;</td>
-                           </tr>
-                        </table>
-                     </td>
-                     <td align="left" valign="top">&nbsp;</td>
-                  </tr>
-               </table>
-            </td>
-         </tr>
-      </table>
-   </body>
+                      <td>
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                       <tbody>
+                        <tr>
+                          
+                          <td>
+                           <!-- starts here-->
+                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                               <tbody>
+                                 <tr>
+                                      <td align="center" class="topLinks" style="border-bottom: 1px solid #aa1d3d;padding: 10px;">
+                                          <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
+                                            <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+                                            <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+                                            <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+                                            <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+                                            <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+                                            <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+                                       </td> 
+                                  </tr>                     
+                                  <tr>
+                                          <td class="inPad content" style=" margin-top: 10px;">
+                                          <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333; margin-top: 40px; margin-bottom: 20px;">
+                                          <strong>Hi,</strong>
+                                          <br>
+                                          <br>
+                                          Thanks for signing up! With your  Tata CLiQ Luxury account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier.
+                                          <br>
+                                          At Tata CLiQ Luxury, find the best apparel, watches, bags, shoes, electronics and luxury brands, hand-picked for you, every season.
+                                          <br>
+                                          <br>
+                                          Ready to shop? Here are your account details: 
+                                          <br>
+                                          <br>
+                                          Username: ${ctx.customerId} 
+                                          </div>
+                                      </td>
+                                  </tr>
+                                
+                                  <tr class="dsnone">
+                                      <td style="background-color:#aa1d3d" align="center">
+                                        <table  border="0" cellspacing="0" cellpadding="0" align="center">
+                                          <tbody>
+                                               <tr>
+                                               <td>${ctx.cmsSlotContents.tatatrust}</td>
+                                                 <td width="70" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                   
+                                               Tata Trust
+                                                 </td>
+                                                 <td>
+                                                   ${ctx.cmsSlotContents.cliqnpic}
+                                                 </td>
+                                                 <td width="90" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                    CLiQ and PIQ
+                                                 </td>
+                                                 <td>
+                                                   ${ctx.cmsSlotContents.easyreturn}
+                                                 </td>
+                                                 <td width="84" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                    Easy Returns
+                                                 </td>
+                                                 <td>
+                                                   ${ctx.cmsSlotContents.authenticbrands}
+                                                 </td>
+                                                 <td width="99" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                    Authentic Brands
+                                                 </td>
+                                                 <td>
+                                                   ${ctx.cmsSlotContents.freeshipping}
+                                                 </td>
+                                                 <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                                   Free Shipping
+                                                 </td>
+                                               </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                  </tr>
+                                  
+                                  <!-- shipping mobile -->
+                                  <!-- stage mobile -->
+                                  
+
+
+                                
+                                  <tr align="center">
+                                      <td>
+                                          
+                                          <table class="content inPad">
+                                              <tbody>
+                                                  <tr>
+                                                      <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
+                                                      <td class="smFull">
+                                                        #if($ctx.cmsSlotContents.appstore)
+                                                            <a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&mt=8&tcid=em:general:registration:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+                                                        #end
+                                                        #if($ctx.cmsSlotContents.googleplay)
+                                                            <a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&tcid=em:general:registration:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+                                                        #end
+                                                    </td>
+                                                      <td class="smFull dsnone">
+                                                        ${ctx.cmsSlotContents.linegrey}
+                                                    </td>
+                                                      <td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
+                                                      <td class="smFull socialLinks">
+                                                          #if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fb}</a> #end
+                                                          #if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a>#end
+                                                          #if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a>#end
+                                                        
+                                                          #if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+                                                          
+                                                        #if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a>#end
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                          </table> 
+                                          
+                                     </tr>
+                                <tr>
+                                      </td>
+                                      <td align="center" class="content foocontnt inPad">
+                                        <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+                                          This email can't receive replies. Get in touch with us by contacting <a href ="https://www.e2eluxury.tataunistore.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Luxury Care</a>
+                                          <br>
+                                          You can also write to us at <a href="mailto:hello@luxury.tatacliq.com.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@luxury.tatacliq.com.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@luxury.tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@luxury.tatacliq.com</a>
+                                        </div>
+                                      </td>
+                                  </tr>
+                               </tbody>
+                             </table>
+
+                         </td>
+                        </tr>
+                       </tbody>
+                     </table>
+                   </td>
+                    
+                </tr>
+            </tbody>
+        </table>
+ </body>
 </html>
 
-
+  
