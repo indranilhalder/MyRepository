@@ -461,12 +461,13 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 					//for delivery mode restriction check
 					flagForDeliveryModeRestrEval = getDefaultPromotionsManager().getDelModeRestrEvalForAPromo(restrictionList,
 							validProductUssidMap, order);
-
+					//for payment mode restriction check
 					final boolean flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
 
 					final boolean flagForPincodeRestriction = getDefaultPromotionsManager()
 							.checkPincodeSpecificRestriction(restrictionList, order);
+
 
 					if (flagForDeliveryModeRestrEval && flagForPincodeRestriction && flagForPaymentModeRestrEval) // delivery mode true and If Total no of valid Products exceeds Qualifying Count
 					{
@@ -628,4 +629,3 @@ public class BuyAGetPromotionOnShippingCharges extends GeneratedBuyAGetPromotion
 	}
 
 }
-

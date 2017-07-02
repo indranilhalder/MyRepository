@@ -268,7 +268,6 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 				if (cookie.getName().equals("keepAlive"))
 				{
 					LOG.info("Found the Keep Alive Cookie. Hence adding back to response with new expiry timeout");
-					LOG.info("Cookie domain :::" + cookie.getDomain());
 					cookie.setMaxAge(sessionTimeoutvalue);
 					cookie.setPath("/");
 
@@ -279,11 +278,12 @@ public class UserDetailsRestorationFilter extends OncePerRequestFilter
 					cookie.setDomain(domain);
 					response.addCookie(cookie);
 					request.getSession().setMaxInactiveInterval(sessionTimeoutvalue); // UF-93 Added to set the session to same interval as KeepAlive Cookie
-					LOG.error("UserDetailsRestorationFilterRemember.updateKeepAliveCookie() - RememberMe is : "
+					LOG.debug("UserDetailsRestorationFilterRemember.updateKeepAliveCookie() - RememberMe is : "
 							+ request.getSession().getAttribute("rememberMe") + " Keepalive : " + sessionTimeoutvalue / 60
 							+ "cookie.getName: " + cookie.getName() + "cookie.getMaxAge(): " + cookie.getMaxAge() + " cookie.getDomain"
 							+ cookie.getDomain() + "SessionId: " + request.getSession().getId() + " SessionTimeout : "
 							+ request.getSession().getMaxInactiveInterval() / 60 + "min");
+					LOG.info("Cookie domain :::" + cookie.getDomain());
 				}
 			}
 		}

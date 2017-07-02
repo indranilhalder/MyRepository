@@ -79,13 +79,17 @@ function quickviewGallery() {
 	$(document).ready(function(){
 		//UF-24 thumbnail image load
 		$('.main-image a img.picZoomer-pic').on('load', function(){
+			console.log("js image is loaded");
 			var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
-			console.log("mainImageHeight is " + mainImageHeight);
+			console.log("js mainImageHeight is " + mainImageHeight);
 			var thumbnailImageHeight = (mainImageHeight / 5);
 			$(".imageList ul li img").css("height", thumbnailImageHeight);
+			console.log("js thumbnailImageHeight is " + thumbnailImageHeight);
 		 	$("#previousImage").css("opacity","0.5");
 		 	$("#nextImage").css("opacity","1");
 		 	var listHeight = $(".imageList li").height();
+		 	console.log("js listHeight is " + listHeight);
+		 	console.log("js previousImage length is " + $("#previousImage").length);
 		 	if($("#previousImage").length){
 		 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
 		 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");

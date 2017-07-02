@@ -19,7 +19,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -174,8 +173,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 
 		if (null != productModel.getSellerInformationRelator())
 		{
-	       final List<SellerInformationModel> sellerList = new ArrayList<SellerInformationModel>(productModel.getSellerInformationRelator());
-	
+			final List<SellerInformationModel> sellerList = new ArrayList<SellerInformationModel>(
+					productModel.getSellerInformationRelator());
+
 			final List<SellerInformationData> sellerDataList = new ArrayList<SellerInformationData>();
 			for (final SellerInformationModel sellerInformationModel : sellerList)
 			{

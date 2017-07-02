@@ -276,6 +276,12 @@
  <!--  Changes End  TPR-5812 for Sprint  -->
 
 
+<c:if test="${param.frame ne null}">	
+<base target="_parent">
+</c:if>
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
+	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
+</c:if>
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>

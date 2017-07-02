@@ -562,4 +562,5 @@ public class MarketplacewebservicesConstants
 	public static final String MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE = "1";
 	public static final String EXCHANGEAPPLIED = "Exchange Applied";
 	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
+	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
 }

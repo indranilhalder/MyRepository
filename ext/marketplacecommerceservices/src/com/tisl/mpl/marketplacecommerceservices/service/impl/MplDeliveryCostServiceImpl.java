@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
@@ -56,7 +58,7 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService#getDeliveryModesAndCost(java.lang.String,
 	 * java.lang.String)
@@ -72,7 +74,7 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 	/**
 	 *
 	 * Added for CAR-266
-	 * 
+	 *
 	 * @param deliveryMode
 	 * @param currencyIsoCode
 	 * @param skuid
@@ -85,14 +87,16 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 				.getDeliveryModesAndCost(currencyIsoCode, skuid);
 		final List<MplZoneDeliveryModeValueModel> finalList = new ArrayList<MplZoneDeliveryModeValueModel>();
 
-		for (final MplZoneDeliveryModeValueModel oModel : dataList)
+		if (CollectionUtils.isNotEmpty(dataList))
 		{
-			if (deliveryMode.toString().contains(oModel.getDeliveryMode().getCode()))
+			for (final MplZoneDeliveryModeValueModel oModel : dataList)
 			{
-				finalList.add(oModel);
+				if (deliveryMode.toString().contains(oModel.getDeliveryMode().getCode()))
+				{
+					finalList.add(oModel);
+				}
 			}
 		}
-
 		return finalList;
 
 	}
