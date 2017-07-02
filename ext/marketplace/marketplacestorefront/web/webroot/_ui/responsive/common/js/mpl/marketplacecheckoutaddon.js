@@ -4739,9 +4739,9 @@ function applyPromotion(bankName,binValue,formSubmit)
 				$("#codAmount").text(response.totalPrice.formattedValue);
 				//TISTRT-1605 //TISBBC-35
 				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
-					$("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue);
+					$("#deliveryCostSpanId").html(response.deliveryCost.formattedValue);
 		 		}else{
-		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
@@ -5217,9 +5217,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			// TISST-13010
 	 			$("#cartPromotionApplied").css("display","block");
 	 			if(parseFloat(deliveryCost) > 0){
-	 				$("#deliveryCostSpanId > span.priceFormat").html(currency+deliveryCost);
+	 				$("#deliveryCostSpanId").html(currency+deliveryCost);
 		 		}else{
-		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;

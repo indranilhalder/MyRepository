@@ -1836,7 +1836,7 @@ removeExchangeFromCart : function (){
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
             var result = data.split("-");
- 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
+ 			$("#deliveryCostSpanId").empty().text(result[0]);
  			$("#totalWithConvField").empty().text(result[1]);
  			$("#outstanding-amount-mobile").empty().text(result[1]);
  			$("#singlePageChooseSlotDeliveryPopup input[type=radio]:checked").attr("data-submitted","true");
