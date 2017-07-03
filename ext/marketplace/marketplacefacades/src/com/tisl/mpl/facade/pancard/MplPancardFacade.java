@@ -8,6 +8,8 @@ import de.hybris.platform.core.model.order.OrderModel;
 
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tisl.mpl.pojo.PanCardResDTO;
@@ -49,5 +51,5 @@ public interface MplPancardFacade
 
 	public List<OrderModel> getOrderForCode(String orderreferancenumber);
 
-	public void setPancardRes(final PanCardResDTO resDTO);
+	public void setPancardRes(final PanCardResDTO resDTO) throws JAXBException;
 }

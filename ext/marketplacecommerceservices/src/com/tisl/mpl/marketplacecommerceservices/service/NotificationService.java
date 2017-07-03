@@ -76,9 +76,9 @@ public interface NotificationService
 	 * pan card email
 	 *
 	 * @param orderDetails
-	 * @param trackorderurl
+	 * 
 	 * @throws JAXBException
 	 */
-	void triggerEmailAndSmsOnPancardReject(OrderModel orderDetails, String trackorderurl) throws JAXBException;
+	void triggerEmailAndSmsOnPancardReject(OrderModel orderDetails) throws JAXBException;
 
 }
