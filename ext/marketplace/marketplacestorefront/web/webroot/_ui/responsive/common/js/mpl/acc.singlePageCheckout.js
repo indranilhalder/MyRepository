@@ -300,7 +300,7 @@ ACC.singlePageCheckout = {
 	//Function called when proceed button on delivery options page is clicked. 
 	//This function will fetch slot delivery page or will proceed to review order page
 	proceedOnDeliveryModeSelection:function(element){
-		var entryNumbersId=$("#entryNumbersId").val();
+		var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
 		var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
     	var cncSelected="false";
 		if(entryNumbersId=="")
@@ -1048,6 +1048,12 @@ ACC.singlePageCheckout = {
 					ACC.singlePageCheckout.getReviewOrder();
 				}
 			}
+			//Below is for responsive
+			if(ACC.singlePageCheckout.getIsResponsive())
+			{	
+				ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=true;
+				ACC.singlePageCheckout.resetPaymentModes();
+			}
 			
 			if(typeof(utag)!="undefined")
 			{
@@ -1454,6 +1460,7 @@ removeExchangeFromCart : function (){
 	        		{
 	        			$("#reviewOrder").html(data);
 	        		}
+	        		ACC.singlePageCheckout.getTealiumData();
 	        		//START:Code to show strike off price
 	        		$("#off-bag").show();
 
@@ -1829,15 +1836,68 @@ removeExchangeFromCart : function (){
         
         xhrResponse.done(function(data, textStatus, jqXHR) {
             var result = data.split("-");
- 			$("#deliveryCostSpanId > span.priceFormat").empty().text(result[0]);
+ 			$("#deliveryCostSpanId").empty().text(result[0]);
  			$("#totalWithConvField").empty().text(result[1]);
  			$("#outstanding-amount-mobile").empty().text(result[1]);
+ 			$("#singlePageChooseSlotDeliveryPopup input[type=radio]:checked").attr("data-submitted","true");
         });
         
         xhrResponse.always(function() {
         });
 	},	
-	
+	//UF-398
+	getTealiumData:function()
+	{
+	var url=ACC.config.encodedContextPath + "/checkout/single/updateTealiumData";
+	var data="";
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+
+	xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log(" Tealium data error:"+textStatus + ': ' + errorThrown);
+	});
+    
+    xhrResponse.done(function(data, textStatus, jqXHR) {
+    	if(jqXHR.responseJSON){
+			var updatedProduct= data.productIdList;
+		    var updatedQuantity = data.productQuantityList ;
+		    var updatedproductListPrice = data.productListPriceList;
+		    var updatedProductName = data.productNameList;
+		    var updatedUnitPrice = data.productUnitPriceList;
+		    var updatedCartTotal = data.cart_total;
+		    var updatedBrand = data.productBrandList;
+		    var updatedCategory =  data.productCategoryList;
+		    var updatedSubCategory = data.pageSubCategories;
+		    var updatedSubCategoryL3 = data.page_subcategory_name_L3;
+		    var updatedSubCategoryL4 = data.page_subcategory_name_L4;
+		    var updatedAdobeSku = data.adobe_product;
+		    var updatedCheckoutSeller = data.checkoutSellerIDs;
+			$("#product_id").val(updatedProduct);
+			$("#product_sku").val(updatedProduct);
+			$("#adobe_product").val(updatedAdobeSku);
+		    $("#product_name").val(updatedProductName);
+			$("#product_quantity").val(updatedQuantity);
+			$("#product_list_price").val(updatedproductListPrice);
+			$("#product_unit_price").val(updatedUnitPrice);
+			$("#cart_total").val(updatedCartTotal);
+			$("#product_brand").val(updatedBrand);
+			$("#page_subcategory_L1").val(updatedCategory);
+			$("#product_category").val(updatedCategory);
+			$("#page_subcategory_L2").val(updatedSubCategory);
+			$("#page_subcategory_name").val(updatedSubCategory);
+			$("#page_subcategory_l3").val(updatedSubCategoryL3);
+			$("#page_subcategory_name_l3").val(updatedSubCategoryL3);
+			$("#page_subcategory_l4").val(updatedSubCategoryL4);
+			$("#page_subcategory_name_l4").val(updatedSubCategoryL4);
+			$("#checkoutSellerIDs").val(updatedCheckoutSeller);
+			tealiumCallOnPageLoad();
+			
+    	}
+				
+	});
+    
+    xhrResponse.always(function(){        	
+	});
+  },	
 	
 //	mobileAccordion:function(){
 //		$("#address-change-link").on("click", function(){
@@ -1877,6 +1937,8 @@ removeExchangeFromCart : function (){
 //	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
 //	8.paymentModeSelected:	Used to track the selected payment mode for responsive
 //	9.prePaymentValidationDone:	Used to track cart validation before payment is made
+//	10.isCncSelected:	Used to track if CNC delivery mode has been selected
+//	11.isPickUpPersonDetailsSaved:	Used to track if CNC pickup person details have been saved
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	mobileValidationSteps:{
@@ -1888,7 +1950,9 @@ removeExchangeFromCart : function (){
 		isInventoryReserved:false,
 		isScheduleServiceble:false,
 		paymentModeSelected:"",
-		prePaymentValidationDone:false
+		prePaymentValidationDone:false,
+		isCncSelected:false,
+		isPickUpPersonDetailsSaved:false
 	},
 
 	resetValidationSteps:function(){
@@ -1901,6 +1965,8 @@ removeExchangeFromCart : function (){
 		ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble=false;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected="";
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
 	},
 	
 	resetPaymentModes:function()
@@ -1954,7 +2020,9 @@ removeExchangeFromCart : function (){
 		$("#make_nb_payment_up").css("display","none");
 		$("#make_emi_payment_up").css("display","none");
 		$("#paymentButtonId_up").css("display","none");
-		$("#make_mrupee_payment_up").css("display","none");		
+		$("#make_mrupee_payment_up").css("display","none");
+		//Hiding SnackBar
+		ACC.singlePageCheckout.hideSnackBar();
 	},
 	
 	//Used to get blank popup for pickup person form on clicking on cnc store for mobile
@@ -2160,10 +2228,10 @@ removeExchangeFromCart : function (){
 		        event_type: "change_link_clicked"
 		    })
 	      }
-		//$(".hideDelModeMobile").show();
-		$(".hideDelModeMobile").removeAttr('disabled');
-		$(".hideDelModeMobile").css("opacity","1");
-		$(".hideDelModeMobile").css("pointer-events","auto");
+		$(".hideDelModeMobile").show();
+//		$(".hideDelModeMobile").removeAttr('disabled');
+//		$(".hideDelModeMobile").css("opacity","1");
+//		$(".hideDelModeMobile").css("pointer-events","auto");
 		$(element).hide();
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
@@ -2299,11 +2367,71 @@ removeExchangeFromCart : function (){
 		
 		return false;
 	},
+	checkPickUpDetailsSavedForCnc:function()
+	{
+		var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
+		var isCncPresent=$("#selectDeliveryMethodFormMobile #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+    	var cncSelected="false";
+		if(entryNumbersId=="")
+		{
+			ACC.singlePageCheckout.resetPaymentModes();
+			return false;
+		}
+		else
+		{	
+			//validate here
+			var entryNumbers=entryNumbersId.split("#");
+			for(var i=0;i<entryNumbers.length-1;i++)
+			{
+				if(isCncPresent=="true")
+	        	{
+					if($("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+    				{
+        				cncSelected="true";		
+        				ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=true;
+        				if($("input[name='address"+entryNumbers[i]+"']:checked").length<=0)
+						{
+        					//If no stores are selected
+							$("."+entryNumbers[i]+"_select_store").show();
+							ACC.singlePageCheckout.scrollToDiv("cncStoreContainer"+entryNumbers[i],100);
+							//Removing payment mode selection incase of pickup location has not been selected
+							$("#cncStoreContainer"+entryNumbers[i]).on("click.cncStoreRadioValidationFailed,focus.cncStoreRadioValidationFailed,change.cncStoreRadioValidationFailed",function(){
+								ACC.singlePageCheckout.resetPaymentModes();
+								$("#cncStoreContainer"+entryNumbers[i]).off("click.cncStoreRadioValidationFailed,focus.cncStoreRadioValidationFailed,change.cncStoreRadioValidationFailed");
+							});
+							return false;
+						}
+        				else if($("input[name='address"+entryNumbers[i]+"']:checked").length>0 && !ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved)
+						{
+        					//If a stores is selected but pick up person details are not saved
+							ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
+							return false;
+						}
+    				}
+	        	}
+			}
+			if(cncSelected=="false")
+			{
+				ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
+			}
+		}
+		return true;
+	},
 	//function called when payment mode is selected in responsive.
 	onPaymentModeSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
+		
+		//Below we are checking that if CNC is present and if CNC pick up person details have been saved, If not we are not allowing the user to proceed with payment
+		if(!ACC.singlePageCheckout.checkPickUpDetailsSavedForCnc())
+		{
+			$("#singlePageMobile #singlePagePickupPersonPopup,.overlay,.content").on("click.pickupPersonDetailsNotSaved,focus.pickupPersonDetailsNotSaved",function(){
+				ACC.singlePageCheckout.resetPaymentModes();
+				$("#singlePageMobile #singlePagePickupPersonPopup,.overlay,.content").off("click.pickupPersonDetailsNotSaved,focus.pickupPersonDetailsNotSaved");
+			});
+			return false;
+		}
 		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			formValidationSuccess=ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
@@ -2367,6 +2495,9 @@ removeExchangeFromCart : function (){
 	                	if(ACC.singlePageCheckout.mobileValidationSteps.isScheduleServiceble)
 	                	{	                		
 	                		$("#singlePageChooseSlotDeliveryPopup #modalBody").attr("data-htmlPopulated","NO");
+	                		$.each(data.dlvrySltAvlbleForUssid,function(key, value){
+	                			$("#slotMsgId_"+key).show();
+	                		});
 	                		ACC.singlePageCheckout.showSnackBar();	                		
 	                	}
 	                }
@@ -2465,6 +2596,7 @@ removeExchangeFromCart : function (){
 		else
 		{
 			$("#singlePageChooseSlotDeliveryPopup").modal('show');
+			$('#singlePageChooseSlotDeliveryPopup input[data-submitted="false"]').prop("checked",false)
 		}
 	},
 	//Method to open payment form in responsive

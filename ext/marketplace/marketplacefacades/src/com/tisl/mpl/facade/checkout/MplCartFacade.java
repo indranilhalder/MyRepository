@@ -39,6 +39,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
+import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
@@ -628,8 +629,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return boolean
 	 */
 	//boolean UpdateCartOnMaxLimExceeds(CartModel cartModel);
-	Map<String, String> updateCartOnMaxLimExceeds(CartModel cartModel);
 
+	Map<String, MaxLimitData> updateCartOnMaxLimExceeds(CartModel cartModel);
 	//TPR-5346 ENDS
 
 	/**

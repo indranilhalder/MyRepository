@@ -1984,9 +1984,8 @@ public class CartsController extends BaseCommerceController
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, channel);
-				//TPR-6117
-				//				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-				//				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)

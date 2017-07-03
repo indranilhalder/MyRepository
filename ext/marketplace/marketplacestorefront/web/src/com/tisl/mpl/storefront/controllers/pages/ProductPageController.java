@@ -240,6 +240,8 @@ public class ProductPageController extends MidPageController
 	private static final String IA_USS_IDS = "iaUssIds";
 
 	private static final String REGEX = "[^\\w\\s]";
+	
+	private static final String NEW_LINE = "\n";//Sonar Fix
 
 
 
@@ -602,7 +604,7 @@ public class ProductPageController extends MidPageController
 			String line;
 			while ((line = bufferedReader.readLine()) != null)
 			{
-				content.append(line + "\n");
+				content.append(line + NEW_LINE);
 			}
 		}
 		catch (final IOException e)

@@ -116,6 +116,8 @@ import com.tisl.mpl.wsdto.BillingAddressWsDTO;
 import com.tisl.mpl.wsdto.CartDataDetailsWsDTO;
 import com.tisl.mpl.wsdto.CartOfferDetailsWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
+import com.tisl.mpl.wsdto.MaxLimitData;
+import com.tisl.mpl.wsdto.MaxLimitWsDto;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
 
@@ -604,31 +606,45 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 						//TPR-6117  start
 
-						if (productModel.getMaxOrderQuantity() == null || productModel.getMaxOrderQuantity().intValue() <= 0
-								|| productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy
-								|| pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						//						if (productModel.getMaxOrderQuantity() == null || productModel.getMaxOrderQuantity().intValue() <= 0
+						//								|| productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy
+						//								|| pr.getQuantity().longValue() >= maximum_configured_quantiy)
+						//						{
+						//							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+						//							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
+						//						}
+						if (productModel.getMaxOrderQuantity() == null && pr.getQuantity().longValue() >= maximum_configured_quantiy)
 						{
 							//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 						}
-						else if (null != productModel.getCode())
+						else if (null != productModel.getMaxOrderQuantity())
 						{
-							int productStock = 0;
-							final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
-
-
-							if (buyboxdata.getAvailable() != null)
+							if (productModel.getMaxOrderQuantity().intValue() <= 0
+									&& productModel.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
 							{
-								productStock = buyboxdata.getAvailable().intValue();
-
+								//maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
 							}
-							final long checkMaxLimList = mplCartFacade.checkMaxLimit(productModel.getCode(), cartModel);
-							maxQuantityAlreadyAdded = isMaxProductQuantityAlreadyAdded(productModel.getMaxOrderQuantity(),
-									productModel.getCode(), quant, productStock, USSID, checkMaxLimList);
-						}
-						if (maxQuantityAlreadyAdded)
-						{
-							throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9110);
+							else if (null != productModel.getCode())
+							{
+								int productStock = 0;
+								final BuyBoxData buyboxdata = buyBoxFacade.buyboxPrice(productCode);
+
+
+								if (buyboxdata.getAvailable() != null)
+								{
+									productStock = buyboxdata.getAvailable().intValue();
+
+								}
+								final long checkMaxLimList = mplCartFacade.checkMaxLimit(productModel.getCode(), cartModel);
+								maxQuantityAlreadyAdded = isMaxProductQuantityAlreadyAdded(productModel.getMaxOrderQuantity(),
+										productModel.getCode(), quant, productStock, USSID, checkMaxLimList);
+							}
+							if (maxQuantityAlreadyAdded)
+							{
+								throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9110);
+							}
 						}
 						//TPR-6117   End
 						//						if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
@@ -1699,15 +1715,6 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (null != obj)
 				{
 					gwlp.setPinCodeResponse(obj);
-					//					if (StringUtils.isNotEmpty(pincode) && exchangeService.isBackwardServiceble(pincode))
-					//					{
-					//						gwlp.setExchangeMessage("Exchange Applied");
-					//					}
-					//					else
-					//					{
-					//						gwlp.setExchangeMessage("Exchange Is Not Applicable For Pincode " + pincode);
-					//					}
-
 				}
 
 				/* Added in R2.3 TISRLUAT-812 start */
@@ -2041,14 +2048,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 			}
 
 			//TPR-6117 STARTS
-			//	boolean updateCartOnMaxLimExceeds = true;
-
-			final Map<String, String> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
-			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds))
+			final Map<String, MaxLimitData> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
+			MaxLimitWsDto maxLimitWsDto = null;
+			final ArrayList<MaxLimitWsDto> maxLimitWsDtoList = new ArrayList<MaxLimitWsDto>();
+			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
 			{
-				//								final String countMsg=MarketplacewebservicesConstants.PRECOUNTMSG + cartModel.gete.getProduct().getName() + MarketplacewebservicesConstants.MIDCOUNTMSG +
-				//										abstractOrderEntry.getProduct().getMaxOrderQuantity().toString() + MarketplacewebservicesConstants.LASTCOUNTMSG ;
-				cartDataDetails.setReachedMaxLimitforproduct(MarketplacewebservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT);
+
+				for (final Map.Entry<String, MaxLimitData> entry : updateCartOnMaxLimExceeds.entrySet())
+				{
+					maxLimitWsDto = new MaxLimitWsDto();
+					if (null != entry.getValue())
+					{
+						final MaxLimitData maxCount = entry.getValue();
+
+						maxLimitWsDto.setMaxQuantityAllowed(maxCount.getMaxQuantityAllowed());
+						maxLimitWsDto.setProductCode(maxCount.getProductCode());
+						maxLimitWsDto.setProductName(maxCount.getProductName());
+						maxLimitWsDto.setUserSelectedQty(maxCount.getUserSelectedQty());
+						maxLimitWsDto.setUssid(maxCount.getUssid());
+						maxLimitWsDtoList.add(maxLimitWsDto);
+					}
+				}
+				cartDataDetails.setReachedMaxLimitforproduct(maxLimitWsDtoList);
 			}
 			//TPR-6117 ENDS
 
@@ -2195,13 +2216,28 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				//TPR-6117 STARTS
 				//	boolean updateCartOnMaxLimExceeds = true;
 
-				//This method will update the cart  with respect to the max quantity configured for the product
-				final Map<String, String> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
-				if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds))
+				final Map<String, MaxLimitData> updateCartOnMaxLimExceeds = mplCartFacade.updateCartOnMaxLimExceeds(cartModel);
+				MaxLimitWsDto maxLimitWsDto = null;
+				final ArrayList<MaxLimitWsDto> maxLimitWsDtoList = new ArrayList<MaxLimitWsDto>();
+				if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
 				{
-					//								final String countMsg=MarketplacewebservicesConstants.PRECOUNTMSG + cartModel.gete.getProduct().getName() + MarketplacewebservicesConstants.MIDCOUNTMSG +
-					//										abstractOrderEntry.getProduct().getMaxOrderQuantity().toString() + MarketplacewebservicesConstants.LASTCOUNTMSG ;
-					cartDataDetails.setReachedMaxLimitforproduct(MarketplacewebservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT);
+
+					for (final Map.Entry<String, MaxLimitData> entry : updateCartOnMaxLimExceeds.entrySet())
+					{
+						maxLimitWsDto = new MaxLimitWsDto();
+						if (null != entry.getValue())
+						{
+							final MaxLimitData maxCount = entry.getValue();
+
+							maxLimitWsDto.setMaxQuantityAllowed(maxCount.getMaxQuantityAllowed());
+							maxLimitWsDto.setProductCode(maxCount.getProductCode());
+							maxLimitWsDto.setProductName(maxCount.getProductName());
+							maxLimitWsDto.setUserSelectedQty(maxCount.getUserSelectedQty());
+							maxLimitWsDto.setUssid(maxCount.getUssid());
+							maxLimitWsDtoList.add(maxLimitWsDto);
+						}
+					}
+					cartDataDetails.setReachedMaxLimitforproduct(maxLimitWsDtoList);
 				}
 				//TPR-6117 ENDS
 
@@ -2834,7 +2870,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					{
 						if (checkMaxLimList != 0 && checkMaxLimList >= maxProductQuantityAlreadyAdded.intValue())
 						{
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max quantity");
 							addToCartFlag = true;
 							break;
 
@@ -2842,32 +2878,32 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 						else
 						{
 							LOG.debug(
-									"Product already present in the cart so now we will check the qunatity present in the cart already");
+									"isMaxProductQuantityAlreadyAdded::Product already present in the cart so now we will check the qunatity present in the cart already");
 
 							if (entry.getQuantity().longValue() >= stock)
 							{
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max inventory");
 								addToCartFlag = true;
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > stock)
 							{
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached the max inventory");
 								addToCartFlag = true;
 								break;
 							}
 
 							if (entry.getQuantity().longValue() >= maxProductQuantityAlreadyAdded.intValue())
 							{
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached the max quantity");
 								addToCartFlag = true;
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > maxProductQuantityAlreadyAdded.intValue())
 							{
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached the max quantity");
 								addToCartFlag = true;
 								break;
 							}
@@ -2880,12 +2916,12 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 				if (qty > stock)
 				{
 					addToCartFlag = true;
-					LOG.debug("You are about to exceede the max inventory");
+					LOG.debug("isMaxProductQuantityAlreadyAdded(EmptyCartEntry)::You are about to exceede the max inventory");
 				}
 				if (qty > maxProductQuantityAlreadyAdded.intValue())
 				{
 					addToCartFlag = true;
-					LOG.debug("You are about to exceede the max quantity");
+					LOG.debug("isMaxProductQuantityAlreadyAdded(EmptyCartEntry)::You are about to exceede the max quantity");
 				}
 
 			}
@@ -3276,4 +3312,3 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 	}
 
 }
-

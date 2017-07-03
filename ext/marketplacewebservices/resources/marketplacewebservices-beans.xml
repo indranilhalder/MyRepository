@@ -844,7 +844,7 @@
 
 		<property name="cartGuid" type="String"></property>
 		<!-- TPR-6117 -->
-		<property name="reachedMaxLimitforproduct" type="String"></property>
+		<property name="reachedMaxLimitforproduct" type="java.util.List&lt;com.tisl.mpl.wsdto.MaxLimitWsDto>" />
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
@@ -1032,6 +1032,9 @@
         <property name="imageUrl" type="String" />
 	  	<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
+
+<!-- TPR-6117 -->
+			<property name="maxQuantityAllowed" type="String" />
 	</bean>
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
@@ -3018,7 +3021,6 @@
 		<property name="returnStoreDetailsList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
 	</bean>
-
 <!-- TPR 1083 Start -->
 
 <bean class="com.tisl.mpl.wsdto.ReversePincodeExchangeData">
@@ -3026,5 +3028,13 @@
 <property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
 </bean>
 
-</beans>
+<!--TPR-6117-->
+	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">
+		<property name="productCode" type="String" />
+		<property name="productName" type="String" />
+		<property name="ussid" type="String" />
+		<property name="maxQuantityAllowed" type="String" />
+		<property name="userSelectedQty" type="String" />
+	</bean>
 
+</beans>

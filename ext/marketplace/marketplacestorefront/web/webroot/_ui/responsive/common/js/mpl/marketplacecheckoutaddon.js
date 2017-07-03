@@ -4739,9 +4739,9 @@ function applyPromotion(bankName,binValue,formSubmit)
 				$("#codAmount").text(response.totalPrice.formattedValue);
 				//TISTRT-1605 //TISBBC-35
 				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
-					$("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue);
+					$("#deliveryCostSpanId").html(response.deliveryCost.formattedValue);
 		 		}else{
-		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
@@ -5217,9 +5217,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			// TISST-13010
 	 			$("#cartPromotionApplied").css("display","block");
 	 			if(parseFloat(deliveryCost) > 0){
-	 				$("#deliveryCostSpanId > span.priceFormat").html(currency+deliveryCost);
+	 				$("#deliveryCostSpanId").html(currency+deliveryCost);
 		 		}else{
-		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
@@ -5514,6 +5514,8 @@ function changeCTAButtonName(deliveryCode) {
 	// console.log(deliveryCode);
 	// TISPRO-625
 	var isExpressCheckoutSelected=$('#isExpressCheckoutSelected').val();
+	
+	var isDeliveryOptionPage=$('#isDeliveryOptionPage').val();
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Proceed To Store");
 		$("#deliveryMethodSubmitUp").text("Proceed To Store");
@@ -5523,8 +5525,15 @@ function changeCTAButtonName(deliveryCode) {
 		// $("#deliveryMethodSubmitUp").text("Choose Address");
 		if(isExpressCheckoutSelected=='true')
 		{
-			$("#deliveryMethodSubmit").text("Proceed to Payment");
-			$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			//INC144316212  
+			if(isDeliveryOptionPage == 'yes'){
+				$("#deliveryMethodSubmit").text("Proceed To Address");
+				$("#deliveryMethodSubmitUp").text("Proceed To Address");
+			} else {
+				$("#deliveryMethodSubmit").text("Proceed to Payment");
+				$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			}
+			
 		}
 		else
 		{
@@ -6061,57 +6070,68 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			$("#cartAmtOfferDisplay_"+entryNumber).hide();
 			$("#itemCartCentDisplay_"+entryNumber).hide();
 			$("#itemCartAmtDisplay_"+entryNumber).hide();
+			$(".add-disc").hide();
 			var isOfferPresent=false;
 			var basePrice=$("#basePrice_"+entryNumber).val();
 			if(basePrice!=""){
-				$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(basePrice);
 			}
 			else{
-				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue);
 			}
 			if(cartData[cart]['cartLevelDisc']!=null){
 				isOfferPresent=true;
+				$(".add-disc-pincode").show();
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			
 			if(cartData[cart]['cartLevelPercentage']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
+				$(".add-disc-pincode").show();
 				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
 				//UF-260
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				//$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 			//Start:Below code is for productPerDiscDisplay when cartLevelDisc is not null
 			if(cartData[cart]['productPerDiscDisplay']!=null )
 			{
 				if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productLevelDisc']){
+					$(".add-disc-pincode").show();
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					isOfferPresent=true;
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
 					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
 				}
 				//End:Above code is for productPerDiscDisplay when cartLevelDisc is not null
 				//Start:Below code is for productPerDiscDisplay when cartLevelDisc is null
 				if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
 					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
 				}
 				//End:Above code is for productPerDiscDisplay when cartLevelDisc is null
@@ -7105,6 +7125,7 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//UF-277 TISSTRT-1601
 	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
@@ -7126,6 +7147,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="firstName") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
@@ -7134,6 +7156,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="lastName") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
@@ -7142,6 +7165,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
@@ -7150,6 +7174,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
@@ -7195,11 +7220,13 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
+	//TISSTRT-1601 UF-277 regex
 	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
+	//TISSTRT-1601 UF-277
 	else if(!regex.test(addressLine)){
 		errorHandle.innerHTML = "Please enter a valid Address";
         return false;
@@ -7304,6 +7331,7 @@ function validateCityEmi() {
 function validateState() {
 	var name=$("#state").val();
 	var errorHandle=document.getElementById("stateError");
+	//TISSTRT-1601 UF-277
 	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
@@ -7320,6 +7348,7 @@ function validateState() {
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
 	var errorHandle=document.getElementById("stateErrorEmi");
+	//TISSTRT-1601 UF-277
 	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
@@ -7760,11 +7789,13 @@ $(document).ready(function(){
 	}
 	
 	$("li.price").each(function(){
-		if($(this).find(".off-bag").css("display") === "block"){
-			$(this).find("span.delSeat").addClass("delAction");
+		if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+			if($(this).find("span.delSeat.mop").length > 0){
+			$(this).find("span.delSeat:not(.mop)").addClass("delAction");
+			}
 		}
 		else{
-			$(this).find("span.delSeat").removeClass("delAction");
+			$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
 		}
 	});
 	

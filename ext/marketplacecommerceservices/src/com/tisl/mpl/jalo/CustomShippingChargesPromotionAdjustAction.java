@@ -44,7 +44,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see de.hybris.platform.promotions.jalo.AbstractPromotionAction#apply(de.hybris.platform.jalo.SessionContext)
 	 */
 	@Override
@@ -265,6 +265,7 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			final List<String> prevAssociatedItemList = orderEntry
 					.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
 							? (List<String>) orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+
 			if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
 			{
 				final Set associatedItemsSet = new HashSet(prevAssociatedItemList);
