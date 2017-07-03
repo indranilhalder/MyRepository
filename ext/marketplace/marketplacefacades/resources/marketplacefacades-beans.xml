@@ -386,6 +386,7 @@
 		<property name="gender" type="String" />
 		<property name="encodedPassword" type="String" />
 		<property name="emailId" type="String" />
+		<property name="salutation" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.CommPrefData">
@@ -583,6 +584,9 @@
 		<!-- UF-314 Start -->
 		<property name="priority" type="Integer" />
 		<!-- UF-314 End -->
+		<!-- UF-281 -->
+		<property name="isSelected" type="boolean" />
+		<property name="defaultSelectedDelMode" type="String" />
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.MarketplaceDeliveryModesData">
@@ -1055,14 +1059,6 @@
 		<property name="brandData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchBrandData>"></property>
 		<property name="sellerData" type="java.util.List&lt;com.tisl.mpl.facades.data.EnhancedSearchSellerData>"></property>
 	</bean>
-	
-
-
-
-
-
-
-
 
 	<!-- TPR-774 -->
 	<bean class="de.hybris.platform.commercefacades.order.data.OrderEntryData">		
@@ -1241,5 +1237,13 @@
 		<property name="price" type="String" />
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
-</beans>
 
+	<!--TPR-6117-->
+	<bean class="com.tisl.mpl.wsdto.MaxLimitData">
+		<property name="productCode" type="String" />
+		<property name="productName" type="String" />
+		<property name="ussid" type="String" />
+		<property name="maxQuantityAllowed" type="String" />
+		<property name="userSelectedQty" type="String" />
+	</bean>
+</beans>

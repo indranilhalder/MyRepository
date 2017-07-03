@@ -8,6 +8,7 @@ var filterValue = "";
 var filterName = "";
 var filterChecked = "";
 var countBrand=1;
+var countCustomPrice=0;	//TISPRDT-1645
 
 
 ACC.refinements = {
@@ -545,6 +546,12 @@ ACC.refinements = {
 				
 				//TISQAUATS-27 starts 
 				if ($('#customMinPriceMob').val() && $('#customMaxPriceMob').val()) {
+					//TISPRDT-1645 starts
+					if(countCustomPrice==0){
+						countCustomPrice=1;
+						$("#applyCustomPriceFilterMob").click();
+					}
+					//TISPRDT-1645 ends
 					var minPriceSearchTxt = $('#customMinPriceMob').val();
 					var maxPriceSearchTxt = $('#customMaxPriceMob').val();
 					var price = "₹" + minPriceSearchTxt + "-" + "₹" + maxPriceSearchTxt;
@@ -829,6 +836,37 @@ ACC.refinements = {
 		//$(document).on("click","#applyCustomPriceFilter",function(e){
 		$(document).on("click","#applyCustomPriceFilterMob",function(e){
 		//TISQAUATS-27 ends
+			//TISPRDT-1645 starts
+			var currentQryParam = $('.currentPriceQueryParams').val();
+			//alert("CQP :"+currentQryParam);
+			var filterMobileQuery = $(this).parents("form").find('input[name="q"]').val();
+			dummyForm = $(this).parents("form");
+			if(updatedsearchQuery=='' && filterMobileQuery!=''){
+				
+				updatedsearchQuery=filterMobileQuery;
+			}else if(filterMobileQuery=='' && updatedsearchQuery==''){
+				updatedsearchQuery=currentQryParam;
+			}
+			else{
+				var ownVal = $(this).parents("form").find('input[name="facetValue"]').val();
+				var ownIdentifier = $(this).parents("li").attr('class').replace(/^(\S*).*/, '$1').replace('filter-',"");
+				var newFilter = ':' + ownIdentifier + ':' + ownVal;
+				if(updatedsearchQuery.indexOf(newFilter) > -1)
+				{
+					updatedsearchQuery=updatedsearchQuery.replace(newFilter,"");
+				}
+				else{
+					updatedsearchQuery+=newFilter;
+				}
+			}
+			if (countCustomPrice==1){
+				return false;
+			}
+			//alert("USQ :"+updatedsearchQuery);
+			countCustomPrice=0;
+			//dummyForm = $(this).parents("form");
+			//TISPRDT-1645 ends
+			
 			// generating postAjaxURL
 			$(".filter-apply").click();
 		});

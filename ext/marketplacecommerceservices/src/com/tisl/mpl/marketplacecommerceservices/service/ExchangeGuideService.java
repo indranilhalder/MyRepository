@@ -100,4 +100,6 @@ public interface ExchangeGuideService
 
 	public void removeExchangefromCart(final CartModel cart);
 
+	public void changeGuidforCartMerge(final CartModel cartGuid);
+
 }

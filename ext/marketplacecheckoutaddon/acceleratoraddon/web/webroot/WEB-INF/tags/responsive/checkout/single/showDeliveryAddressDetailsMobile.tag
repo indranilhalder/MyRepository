@@ -181,6 +181,7 @@
 			if(ACC.singlePageCheckout.getIsResponsive())
 			{
 				ACC.singlePageCheckout.getMobileAddAddress();
+				$("#address-change-link").hide();
 			}
 		})
 		</script>
