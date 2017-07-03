@@ -1367,7 +1367,7 @@ TATA.Pages = {
                     console.log(data.responseText);
                 }
             });
-        }
+        }            
     },
         
     init: function () {

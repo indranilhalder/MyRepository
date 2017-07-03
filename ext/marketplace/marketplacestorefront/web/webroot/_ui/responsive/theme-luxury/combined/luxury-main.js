@@ -13012,7 +13012,7 @@ TATA.CommonFunctions = {
                     success: function(data) {
                         if ("email" != $(data).filter("input#hasErrorsInReg").val()) return location.reload(), 
                         !1;
-                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("You already have an account with this email ID. Please use it to sign in!") : $("#extRegisterForm").prepend('<div class="invalided-error">You already have an account with this email ID. Please use it to sign in!</div>');
+                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Please enter valid email address") : $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
                     }
                 });
             }
