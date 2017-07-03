@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtCommerceCartMergingStrategy;
@@ -49,6 +50,9 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 	private BaseSiteService baseSiteService;
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
+
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
 
 	@Resource(name = "commerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
@@ -161,7 +165,15 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 						newCartParameter.setUssid((null != entryFromCart.getSelectedUSSID()) ? entryFromCart.getSelectedUSSID() : "");
 						newCartParameter.setUnit(entryFromCart.getUnit());
 						newCartParameter.setCreateNewEntry(false);
+						if (fromCart.getExchangeAppliedCart() != null && fromCart.getExchangeAppliedCart().booleanValue()
+								&& StringUtils.isNotEmpty(entryFromCart.getExchangeId()))
+						{
+							newCartParameter.setExchangeParam(entryFromCart.getExchangeId());
+
+						}
+
 						//TPR-174
+
 						cartMerged = true;
 						//getModelService().save(toCart);
 						mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
@@ -200,6 +212,7 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 			if (CollectionUtils.isNotEmpty(entryNumberList))
 			{
 				changeQuantitieswithExchangeOffer(toCart, entryNumberList);
+				exchangeService.changeGuidforCartMerge(toCart);
 			}
 		}
 

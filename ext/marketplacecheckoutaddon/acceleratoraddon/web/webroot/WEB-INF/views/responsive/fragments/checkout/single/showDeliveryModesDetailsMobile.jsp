@@ -36,3 +36,13 @@
 			</div>
 		</div>
 	</form:form>
+	<script>
+		if($("#hideChangeLink").val()=="true")
+		{
+			$("#delivery-mode-change-link").hide();
+		}
+		$(".hideDelModeMobile").hide();
+		/* $(".hideDelModeMobile").attr('disabled', true);
+		$(".hideDelModeMobile").css("opacity","0.5");
+		$(".hideDelModeMobile").css("pointer-events","none"); */
+	</script>

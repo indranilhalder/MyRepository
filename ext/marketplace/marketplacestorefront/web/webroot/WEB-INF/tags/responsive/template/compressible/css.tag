@@ -14,7 +14,7 @@
 	<c:when test="${isMinificationEnabled}">
 		<compressible:mplmincss/>
 	</c:when>
-	<c:otherwise>  
+	<c:otherwise>
 		<compressible:mplcss/>
 	 </c:otherwise>
 </c:choose>

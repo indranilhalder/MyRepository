@@ -436,10 +436,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		final CartModel cartModel = getCart();
 		Double deliveryCost = Double.valueOf(0.0);
 		String fulfillmentType = "";
-		String tshipThresholdValue = configurationService.getConfiguration()
-				.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
-		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
-				: Integer.toString(0);
+		String tshipThresholdValue = configurationService.getConfiguration().getString(
+				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+				.toString(0);
 
 		if (cartModel != null)
 		{
@@ -448,8 +448,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
 				{
 					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
-					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService
-							.getDeliveryCost(deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
+							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
 					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
@@ -478,14 +478,20 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{
-							deliveryCost = Double.valueOf(
-									entry.getQualifyingCount().doubleValue() * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							// PRDI-378 starts here
+							/*
+							 * deliveryCost = Double.valueOf(entry.getQualifyingCount().doubleValue()
+							 * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							 */
 
+							deliveryCost = Double.valueOf((entry.getQuantity().doubleValue() - entry.getFreeCount().doubleValue())
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							// PRDI-378 ends here
 						}
 						else
 						{
-							deliveryCost = Double
-									.valueOf(entry.getQuantity().doubleValue() * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							deliveryCost = Double.valueOf(entry.getQuantity().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
 						}
 
 					}
@@ -528,10 +534,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 		{
 			final CartModel cartModel = getCart();
 
-			String tshipThresholdValue = configurationService.getConfiguration()
-					.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
-			tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
-					: Integer.toString(0);
+			String tshipThresholdValue = configurationService.getConfiguration().getString(
+					MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+			tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+					.toString(0);
 
 			if (cartModel != null)
 			{
@@ -540,8 +546,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					if (sellerArticleSKU.equals(entry.getSelectedUSSID()))
 					{
 						//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
-						final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService
-								.getDeliveryCost(deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+						final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
+								deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 						if (mplZoneDeliveryModeValueModel.getDeliveryFulfillModes() != null
 								&& mplZoneDeliveryModeValueModel.getDeliveryFulfillModes().getCode() != null
@@ -746,8 +752,8 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 				if (sellerArticleSKU.equals(entry.getSelectedUSSID()) && !entry.getGiveAway().booleanValue())
 				{
 					//Retrieve delivery modes and delivery charges for a USSID and saving them in cart entry.This will be taken forward to Order entry
-					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService
-							.getDeliveryCost(deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
+					final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplDeliveryCostService.getDeliveryCost(
+							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
 					//for fine jewellery
@@ -795,15 +801,15 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 *
-						 *
-						 *
+						 * 
+						 * 
+						 * 
 						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
 						 * which check configuration from HAC // if
 						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
 						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
-						 *
+						 * 
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
 					}
@@ -815,14 +821,20 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					{
 						if (entry.getIsBOGOapplied().booleanValue())
 						{
-							deliveryCost = Double.valueOf(
-									entry.getQualifyingCount().doubleValue() * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							// PRDI-378 starts here
+							/*
+							 * deliveryCost = Double.valueOf(entry.getQualifyingCount().doubleValue()
+							 * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							 */
 
+							deliveryCost = Double.valueOf((entry.getQuantity().doubleValue() - entry.getFreeCount().doubleValue())
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							// PRDI-378 ends here
 						}
 						else
 						{
-							deliveryCost = Double
-									.valueOf(entry.getQuantity().doubleValue() * mplZoneDeliveryModeValueModel.getValue().doubleValue());
+							deliveryCost = Double.valueOf(entry.getQuantity().doubleValue()
+									* mplZoneDeliveryModeValueModel.getValue().doubleValue());
 						}
 
 					}

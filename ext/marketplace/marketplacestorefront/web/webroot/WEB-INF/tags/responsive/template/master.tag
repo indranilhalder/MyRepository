@@ -270,9 +270,18 @@
 	<%-- <generatedVariables:generatedVariables/> --%>
 	
 	
-	
+	<!--Added for TPR-5812 for Sprint  -->
+ <script> window._izq = window._izq || []; window._izq.push(["init"]); </script>
+<script src="//cdn.izooto.com/scripts/36f017939018361628e2a7c832358fe2c77970eb.js"></script>
+ <!--  Changes End  TPR-5812 for Sprint  -->
 
 
+<c:if test="${param.frame ne null}">	
+<base target="_parent">
+</c:if>
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
+	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
+</c:if>
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>

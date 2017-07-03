@@ -130,7 +130,8 @@ tr.d0 td {
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
-		<div class="product-image-container ${product.rootCategory}">
+<%-- 		<div class="product-image-container ${product.rootCategory}"> --%>
+		<div class="product-image-container ${product.rootCategory}" id="pdp_gallery">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>

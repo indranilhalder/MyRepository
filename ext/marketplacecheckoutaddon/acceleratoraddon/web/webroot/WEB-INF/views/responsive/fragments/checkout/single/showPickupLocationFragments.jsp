@@ -26,7 +26,7 @@
 							</div>
 							<ul class="delivered scrollThis delivered${entryNumber} owl-carousel cnc_carousel" id="cnc_carousel">
 								<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
-									<li class="removeColor${entryNumber}">
+									<li class="removeColor${entryNumber}" id="storeLiId${entryNumber}${status.index}" style="cursor:pointer;">
 										<div class="cncStoreAddressSection"><!-- START:Address Section -->
 											<input class="radio_btn radio_btn${entryNumber}"
 											type="radio" name="address${entryNumber}"
@@ -164,12 +164,21 @@
 													}
 													
 												}); */
-												$("#address${entryNumber}${status.index}").click(function(){
+												$("#address${entryNumber}${status.index},#storeLiId${entryNumber}${status.index}").click(function(){
 													$(".removeColor${entryNumber} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
+													$("#address${entryNumber}${status.index}").prop("checked",true);
 													var name${status.index} = $(".name${entryNumber}${status.index}").text();
+													var storeName =  $(".displayName${entryNumber}${status.index}").text().trim();
 													openPopForAdddPosToCartEntry('${poses.ussId}',name${status.index});
 													$(".radio_sel${entryNumber}${status.index}").addClass("colorChange");
+													if(typeof(utag)!='undefined')
+													{
+														utag.link({
+															link_text  : storeName+'_store_seleted', 
+															event_type : storeName+'_store_seleted'
+														});
+													}
 												});
 											});
 										</script>
