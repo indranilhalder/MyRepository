@@ -79,7 +79,6 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.enums.TypeofReturn;
-import com.tisl.mpl.core.enums.WalletEnum;
 import com.tisl.mpl.core.event.OrderReturnToStoreEvent;
 import com.tisl.mpl.core.keygenerator.MplPrefixablePersistentKeyGenerator;
 import com.tisl.mpl.core.model.BankDetailsInfoToFICOHistoryModel;
@@ -2138,19 +2137,20 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 		}
 		else
 		{
-			//initiateRefund(subOrderModel, orderRequestRecord);
+			// Done for INC144317893
+			initiateRefund(subOrderModel, orderRequestRecord);
 
-			if (null != subOrderModel && subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
-			{
-				//Mrupee implementation
-
-				initiateRefundMrupee(subOrderModel, orderRequestRecord, "C");
-
-			}
-			else
-			{
-				initiateRefund(subOrderModel, orderRequestRecord);
-			}
+			//			if (null != subOrderModel && subOrderModel.getIsWallet().equals(WalletEnum.MRUPEE))
+			//			{
+			//				//Mrupee implementation
+			//
+			//				initiateRefundMrupee(subOrderModel, orderRequestRecord, "C");
+			//
+			//			}
+			//			else
+			//			{
+			//				initiateRefund(subOrderModel, orderRequestRecord);
+			//			}
 		}
 	}
 

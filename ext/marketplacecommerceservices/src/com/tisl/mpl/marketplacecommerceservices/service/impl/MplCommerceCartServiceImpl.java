@@ -591,8 +591,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 											&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 													.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
-										priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
-												* entry.getQualifyingCount().intValue()), cartData);
+										/*
+										 * priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
+										 * entry.getQualifyingCount().intValue()), cartData);
+										 */
+										//TISPRDT-1226
+										priceData = formPriceData(
+												Double.valueOf(deliveryModel.getValue().doubleValue()
+														* (entry.getQuantity().intValue() - entry.getFreeCount().intValue())), cartData);
 									}
 									else if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 											.getDeliveryFulfillModes().getCode(), sellerInformationData))
@@ -2518,13 +2524,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/**
-	 * 
+	 *
 	 * @Desc fetching reservation details
 	 *
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param pincode
 	 *
 	 * @throws EtailNonBusinessExceptions
@@ -2567,7 +2573,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
-									//  INC144316545 START 
+									//  INC144316545 START
 									if (null != salesApplication && salesApplication.equals(SalesApplication.MOBILE))
 									{
 										if (null != item.getFulfillmentType())
@@ -4425,7 +4431,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @author TECHOUTS
 	 * @param cartSoftReservationData
 	 * @param abstractOrderData
-	 * 
+	 *
 	 * @return void
 	 */
 	//commented for CAR:127

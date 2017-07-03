@@ -6098,57 +6098,68 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			$("#cartAmtOfferDisplay_"+entryNumber).hide();
 			$("#itemCartCentDisplay_"+entryNumber).hide();
 			$("#itemCartAmtDisplay_"+entryNumber).hide();
+			$(".add-disc").hide();
 			var isOfferPresent=false;
 			var basePrice=$("#basePrice_"+entryNumber).val();
 			if(basePrice!=""){
-				$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(basePrice);
 			}
 			else{
-				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue);
 			}
 			if(cartData[cart]['cartLevelDisc']!=null){
 				isOfferPresent=true;
+				$(".add-disc-pincode").show();
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			
 			if(cartData[cart]['cartLevelPercentage']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
+				$(".add-disc-pincode").show();
 				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
 				//UF-260
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				//$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 			//Start:Below code is for productPerDiscDisplay when cartLevelDisc is not null
 			if(cartData[cart]['productPerDiscDisplay']!=null )
 			{
 				if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productLevelDisc']){
+					$(".add-disc-pincode").show();
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					isOfferPresent=true;
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
 					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
 				}
 				//End:Above code is for productPerDiscDisplay when cartLevelDisc is not null
 				//Start:Below code is for productPerDiscDisplay when cartLevelDisc is null
 				if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
 					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
 				}
 				//End:Above code is for productPerDiscDisplay when cartLevelDisc is null
@@ -7783,11 +7794,13 @@ $(document).ready(function(){
 	}
 	
 	$("li.price").each(function(){
-		if($(this).find(".off-bag").css("display") === "block"){
-			$(this).find("span.delSeat").addClass("delAction");
+		if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+			if($(this).find("span.delSeat.mop").length > 0){
+			$(this).find("span.delSeat:not(.mop)").addClass("delAction");
+			}
 		}
 		else{
-			$(this).find("span.delSeat").removeClass("delAction");
+			$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
 		}
 	});
 	

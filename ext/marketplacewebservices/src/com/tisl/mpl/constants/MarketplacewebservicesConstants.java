@@ -580,4 +580,5 @@ public class MarketplacewebservicesConstants
 	public static final String DELIVERED_STATUS = "DELIVERED".intern();
 	public static final String ORDER_COLLECTED_STATUS = "ORDER_COLLECTED".intern();
 
+	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
 }
