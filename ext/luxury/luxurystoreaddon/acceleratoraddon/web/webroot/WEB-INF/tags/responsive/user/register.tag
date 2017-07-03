@@ -55,10 +55,10 @@
 	</div>
 	<div class="sign-up-action">
 		<div class="male-female-checkbox mb-20">
+		    <input id="female-off" class="toggle toggle-right get-gender-value" name="toggle" value="FEMALE" type="radio">
+			<label for="female-off" class="toggle-btn">Female</label>
 			<input id="male-on" class="toggle toggle-left get-gender-value" name="toggle" value="MALE" type="radio" checked="checked">
 			<label for="male-on" class="toggle-btn">Male</label>
-			<input id="female-off" class="toggle toggle-right get-gender-value" name="toggle" value="FEMALE" type="radio">
-			<label for="female-off" class="toggle-btn">Female</label>
 			<input name="gender" id="gender" type="hidden" value="MALE">
 		</div>
 		<ycommerce:testId code="register_Register_button">
