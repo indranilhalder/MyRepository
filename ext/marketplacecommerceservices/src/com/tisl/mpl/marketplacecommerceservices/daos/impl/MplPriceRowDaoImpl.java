@@ -39,6 +39,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	private static final String WHERE_CLASS = "WHERE ";
 	private static final String C_CLASS = "{c:";
 	private static final String AS_CLASS = " AS c} ";
+	private static final String MPL_USE_CATALOG = "mpl.use.catalog";//Sonar Fix
 
 	protected ConfigurationService getConfigurationService()
 	{
@@ -60,7 +61,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	public List<PriceRowModel> getPriceRowDetail(final CatalogVersionModel catalogVersionModel, final String articleSKUID)
 			throws EtailNonBusinessExceptions
 	{
-		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean("mpl.use.catalog");
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		String queryString;
 		if (USE_CATALOG)
 		{
@@ -114,7 +115,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	public List<PriceRowModel> getAllPriceRowDetail(final CatalogVersionModel catalogVersionModel,
 			final List<String> sellerArticleSKU)
 	{
-		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean("mpl.use.catalog");
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
 			String queryString;
@@ -159,7 +160,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	@Override
 	public List<PriceRowModel> getAllPriceRowDetail(final CatalogVersionModel catalogVersionModel, final String articleSKUIDList)
 	{
-		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean("mpl.use.catalog");
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
 			String queryString;
@@ -216,7 +217,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 			final String articleSKUIDList)
 	{
 		PriceRowModel priceRowModel = null;
-		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean("mpl.use.catalog");
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
 			String queryString;
@@ -262,7 +263,7 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	public PriceRowModel getMinimumPriceForProduct(final CatalogVersionModel catalogVersionModel, final ProductModel productModel)
 	{
 		PriceRowModel priceRowModel = null;
-		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean("mpl.use.catalog");
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
 			String queryString;

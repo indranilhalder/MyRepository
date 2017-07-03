@@ -366,4 +366,6 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 
 	//TPR-1083
 	public static final String REMOVEEXCHANGEFROMCART = "/removeExchangeFromCart";
+	//INC144316212
+	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
 }

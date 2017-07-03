@@ -11,7 +11,7 @@
 		return true;
 	} */
 	
-	function taCount(taObj,Cnt) { 
+	function taCount(taObj,Cnt) {
 		objCnt=createObject(Cnt);
 		objVal=taObj.value;
 		if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
@@ -32,7 +32,7 @@
 	 /**************End of character count********/
 	 
 	 myLen=document.getElementById("address.line1").value.length;
-		$("#myCounter").html((120 - myLen));
+		$("#addEditAddress").html((120 - myLen));
 	//TISST-13010
 	$(document).ready(function() {
 		showPromotionTag();

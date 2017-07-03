@@ -399,6 +399,24 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 										+ voucherCode);
 							}
 							/* TPR-1075 Changes End */
+							//TPR-4460 Changes
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_MOBILE))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_MOBILE
+										+ voucherCode);
+							}
+							else if (null != error
+									&& error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_RESTRICTION_WEB))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_WEB
+										+ voucherCode);
+							}
+							else if (null != error && error.equalsIgnoreCase(MarketplacecommerceservicesConstants.CHANNEL_CALLCENTER))
+							{
+								throw new VoucherOperationException(MarketplacecommerceservicesConstants.CHANNELRESTVIOLATION_CALLCENTRE
+										+ voucherCode);
+							}
 							else
 							{
 								throw new VoucherOperationException(MarketplacecommerceservicesConstants.VOUCHERINAPPLICABLE
@@ -1000,7 +1018,7 @@ public class MplCouponFacadeImpl implements MplCouponFacade
 
 			final DiscountModel discount = voucherList.get(0);
 
-			if (discount instanceof PromotionVoucherModel && discount != null)//null check added for discount as per IQA review //Sonar Fix
+			if (discount instanceof PromotionVoucherModel)//Redundant null check removed for Sonar Fix
 			{
 				final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
 				appliedVoucher = promotionVoucherModel;

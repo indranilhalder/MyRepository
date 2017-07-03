@@ -128,6 +128,7 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservRequestWsDTO;
+import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MplEDDInfoForUssIDWsDTO;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplEstimateDeliveryDateWsDTO;
@@ -170,8 +171,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	@Autowired
 	private MplDelistingService mplDelistingService;
 
-	@Autowired
-	private CatalogService catalogService;
+	//sonar fix
+	/*
+	 * @Autowired private CatalogService catalogService;
+	 */
 
 	private TimeService timeService;
 
@@ -234,46 +237,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	/*
 	 * @Desc fetching cartdata with selected ussid
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @param recentlyAddedFirst
 	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @return CartData
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
@@ -1041,6 +1007,53 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 		}
 	}
 
+	@Override
+	public void setCartSubTotalForReviewOrder(final CartModel cartModel) throws EtailNonBusinessExceptions
+	{
+		double subtotal = 0.0;
+		double totalPrice = 0.0;
+		Double discountValue = Double.valueOf(0.0);
+		final boolean cartSaveRequired = false; //TISPT 80
+		if (cartModel != null)
+		{
+			final List<AbstractOrderEntryModel> entries = cartModel.getEntries();
+			for (final AbstractOrderEntryModel entry : entries)
+			{
+				final double entryTotal = entry.getQuantity().doubleValue() * entry.getBasePrice().doubleValue();
+				subtotal += entryTotal;
+				//				//TISEE-581
+				//				if (entry.getPrevDelCharge().doubleValue() > 0 || entry.getCurrDelCharge().doubleValue() > 0)
+				//				{
+				//					cartSaveRequired = true;
+				//					entry.setPrevDelCharge(Double.valueOf(0));
+				//					entry.setCurrDelCharge(Double.valueOf(0));
+				//				}
+				//getModelService().save(entry); //TISPT 80
+			}
+			if (cartSaveRequired)
+			{
+				getModelService().saveAll(entries);
+			}
+
+			//final CartData cartData = mplExtendedCartConverter.convert(cartModel);
+
+			final CartData cartData = getMplExtendedPromoCartConverter().convert(cartModel); //TISPT-104
+
+
+			////TISST-13010
+			if (cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
+			{
+				discountValue = Double.valueOf(cartData.getTotalDiscounts().getValue().doubleValue());
+			}
+
+			totalPrice = subtotal - discountValue.doubleValue();
+
+			cartModel.setSubtotal(Double.valueOf(subtotal));
+			cartModel.setTotalPrice(Double.valueOf(totalPrice));
+			cartModel.setTotalPriceWithConv(Double.valueOf(totalPrice));
+			getModelService().save(cartModel);
+		}
+	}
 
 
 	@Override
@@ -1834,28 +1847,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						if (entry.getQuantity().longValue() >= stock)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-							LOG.debug("You are about to exceede the max inventory");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to be out of inventory");
 							break;
 						}
 
 						if (qty + entry.getQuantity().longValue() > stock)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.INVENTORY_WIIL_EXCEDE;
-							LOG.debug("You are about to exceede the max inventory");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to exceede the max inventory");
 							break;
 						}
 
 						if (entry.getQuantity().longValue() >= maximum_configured_quantiy)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.CROSSED_MAX_LIMIT;
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to exceede the max configured quantity");
 							break;
 						}
 
 						if (qty + entry.getQuantity().longValue() > maximum_configured_quantiy)
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT;
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxQuantityAlreadyAdded::You are about to reach the max quantity");
 							break;
 						}
 						break;
@@ -1867,12 +1880,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				if (qty > stock)
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-					LOG.debug("You are about to exceede the max inventory");
+					LOG.debug("isMaxQuantityAlreadyAdded::You are going out of inventory");
 				}
 				if (qty > maximum_configured_quantiy)
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT;
-					LOG.debug("You are about to exceede the max quantity");
+					LOG.debug("isMaxQuantityAlreadyAdded::You have reached max quantity");
 				}
 
 			}
@@ -1963,8 +1976,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 * 
-	 * 
+	 *
+	 *
 	 * @param requestType
 	 * 
 	 * 
@@ -3487,8 +3500,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#notifyEmailAndSmsOnInventoryFail(de.hybris.platform.core.model.order
 	 * .OrderModel)
@@ -3520,8 +3533,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.facade.checkout.MplCartFacade#getLuxCart()
 	 */
 	@Override
@@ -3550,8 +3563,8 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.checkout.MplCartFacade#getCartDataFromCartModel(de.hybris.platform.core.model.order.CartModel)
 	 */
@@ -4180,7 +4193,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						if (checkMaxLimList != 0 && checkMaxLimList >= maxProductQuantityAlreadyAdded.intValue())
 						{
 							addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-							LOG.debug("You are about to exceede the max quantity");
+							LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max quantity");
 							break;
 						}
 						else
@@ -4191,28 +4204,28 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							if (entry.getQuantity().longValue() >= stock)
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to be out of inventory");
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > stock)
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.INVENTORY_WIIL_EXCEDE;
-								LOG.debug("You are about to exceede the max inventory");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max inventory");
 								break;
 							}
 
 							if (entry.getQuantity().longValue() >= maxProductQuantityAlreadyAdded.intValue())
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to exceede the max configured quantity");
 								break;
 							}
 
 							if (qty + entry.getQuantity().longValue() > maxProductQuantityAlreadyAdded.intValue())
 							{
 								addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT_FOR_PRODUCT;
-								LOG.debug("You are about to exceede the max quantity");
+								LOG.debug("isMaxProductQuantityAlreadyAdded::You are about to reach the max quantity");
 								break;
 							}
 						}
@@ -4224,12 +4237,12 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				if (qty > stock)
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.OUT_OF_INVENTORY;
-					LOG.debug("You are about to exceede the max inventory");
+					LOG.debug("isMaxProductQuantityAlreadyAdded::You are going out of inventory");
 				}
 				if (qty > maxProductQuantityAlreadyAdded.intValue())
 				{
 					addToCartFlag = MarketplacecommerceservicesConstants.REACHED_MAX_LIMIT;
-					LOG.debug("You are about to exceede the max quantity");
+					LOG.debug("isMaxProductQuantityAlreadyAdded::You have reached max quantity");
 				}
 
 			}
@@ -4287,13 +4300,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	 */
 	@Override
 	//	public boolean UpdateCartOnMaxLimExceeds(CartModel cartModel)
-	public Map<String, String> updateCartOnMaxLimExceeds(final CartModel cartModel)
+	public Map<String, MaxLimitData> updateCartOnMaxLimExceeds(final CartModel cartModel)
 	{
 		// YTODO Auto-generated method stub
 		final Map<String, Long> productMap = new HashMap();
-
 		//boolean updateCartOnMaxLimExceeds = true;
-		final Map<String, String> hMap = new HashMap<String, String>();
+		//		final Map<String, String> hMap = new HashMap<String, String>();
+		MaxLimitData maxLimitData = null;
+		final Map<String, MaxLimitData> hMap = new HashMap<String, MaxLimitData>();
 		final int maximum_configured_quantiy = siteConfigService.getInt(
 				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
 
@@ -4320,11 +4334,20 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 
 							if (cartModification.getQuantity() == entry.getProduct().getMaxOrderQuantity().intValue())
 							{
+								maxLimitData = new MaxLimitData();
 								LOG.debug("updating from cart........");
 								//return false;
 								//cartModel = getCartService().getSessionCart();
 								//updateCartOnMaxLimExceeds = false;
-								hMap.put(entry.getProduct().getCode(), "true");
+								//	hMap.put(entry.getProduct().getCode(), "true");
+
+								maxLimitData.setMaxQuantityAllowed(entry.getProduct().getMaxOrderQuantity().toString());
+								maxLimitData.setProductCode(entry.getProduct().getCode());
+								maxLimitData.setProductName(entry.getProduct().getName());
+								maxLimitData.setUserSelectedQty(String.valueOf(cartModification.getQuantity()));
+								maxLimitData.setUssid(entry.getSelectedUSSID());
+
+								hMap.put(entry.getProduct().getCode(), maxLimitData);
 							}
 						}
 						catch (final CommerceCartModificationException ex)
@@ -4376,10 +4399,18 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 										if (cartModification.getQuantity() >= 0)
 
 										{
+											maxLimitData = new MaxLimitData();
 											LOG.debug("removing from cart........");
 											//updateCartOnMaxLimExceeds = false;
 											//return false;
-											hMap.put(entry.getProduct().getCode(), "true");
+											//hMap.put(entry.getProduct().getCode(), "true");
+											maxLimitData.setMaxQuantityAllowed(entry.getProduct().getMaxOrderQuantity().toString());
+											maxLimitData.setProductCode(entry.getProduct().getCode());
+											maxLimitData.setProductName(entry.getProduct().getName());
+											maxLimitData.setUserSelectedQty(String.valueOf(cartModification.getQuantity()));
+											maxLimitData.setUssid(entry.getSelectedUSSID());
+
+											hMap.put(entry.getProduct().getCode(), maxLimitData);
 										}
 									}
 								}
@@ -4445,9 +4476,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						for (final AbstractOrderEntryModel cartEntry : cartModel.getEntries())
 						{
 							// Checking if for any ussid delivery modes are present or not
-							if (cartEntry != null && cartEntry.getSelectedUSSID() != null && cartEntry.getMplDeliveryMode() != null
-									&& cartEntry.getMplDeliveryMode().getDeliveryMode() != null
-									&& cartEntry.getMplDeliveryMode().getDeliveryMode().getCode() != null && pinCodeEntry != null
+							if (cartEntry != null && cartEntry.getSelectedUSSID() != null && pinCodeEntry != null
 									&& cartEntry.getSelectedUSSID().equalsIgnoreCase(pinCodeEntry.getUssid())
 									&& pinCodeEntry.getIsServicable().equalsIgnoreCase(MarketplacecclientservicesConstants.N)
 									&& isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
@@ -4455,65 +4484,9 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 								isServicable = MarketplacecclientservicesConstants.N;
 								break;
 							}
-
-							if (cartEntry != null && cartEntry.getSelectedUSSID() != null && cartEntry.getMplDeliveryMode() != null
-									&& cartEntry.getMplDeliveryMode().getDeliveryMode() != null
-									&& cartEntry.getMplDeliveryMode().getDeliveryMode().getCode() != null && pinCodeEntry != null
-									&& pinCodeEntry.getValidDeliveryModes() != null
-									&& cartEntry.getSelectedUSSID().equalsIgnoreCase(pinCodeEntry.getUssid())
-									&& isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
-							{
-								final String selectedDeliveryMode = cartEntry.getMplDeliveryMode().getDeliveryMode().getCode();
-								boolean deliveryModeAvaiableInResponse = false;
-
-								// Checking if selected delivery mode is present in response
-								for (final DeliveryDetailsData deliveryDetailsData : pinCodeEntry.getValidDeliveryModes())
-								{
-									if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
-											.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD)) || (selectedDeliveryMode
-											.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
-
-									.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)))
-											|| ((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
-													.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
-									{
-										deliveryModeAvaiableInResponse = true;
-									}
-								}
-
-								if (deliveryModeAvaiableInResponse)
-								{
-									for (final DeliveryDetailsData deliveryDetailsData : pinCodeEntry.getValidDeliveryModes())
-									{
-										// Checking for selected delivery mode inventory is available
-
-										if (((selectedDeliveryMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.HOME_DELIVERY) && deliveryDetailsData
-												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
-
-												|| (selectedDeliveryMode
-														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EXPRESS_DELIVERY) && deliveryDetailsData
-
-												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED)) || ((selectedDeliveryMode
-												.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_COLLECT) && deliveryDetailsData
-												.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))))
-												&& StringUtils.isNotEmpty(deliveryDetailsData.getInventory())
-												&& cartEntry.getQuantity().longValue() > Long.parseLong(deliveryDetailsData.getInventory()))
-										{
-											isServicable = MarketplacecclientservicesConstants.N;
-											break;
-										}
-									}
-								}
-								else
-								{
-									isServicable = MarketplacecclientservicesConstants.N;
-									break;
-								}
-							}
 						}
 					}
 
-					//Need to check if this can be removed
 					Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 					deliveryModeDataMap = getDeliveryMode(cartData, responseDataList, cartModel);
 					final boolean isCOdEligible = addCartCodEligible(deliveryModeDataMap, responseDataList, cartModel, cartData);
@@ -4524,14 +4497,6 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					isServicable = MarketplacecclientservicesConstants.N;
 				}
-				//				if (null != responseDataList)
-				//				{
-				//					Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
-				//					deliveryModeDataMap = getDeliveryMode(cartData, responseDataList, cartModel);
-				//					final boolean isCOdEligible = addCartCodEligible(deliveryModeDataMap, responseDataList, cartModel, cartData);
-				//					LOG.info("isCOdEligible " + isCOdEligible);
-				//				}
-
 
 			}
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
@@ -4544,13 +4509,14 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				{
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION,
 							responseDataList);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseDataList);
 				}
 			}
 
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.N) || responseDataList == null)
 			{
-				sessionService.setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
-						MarketplacecommerceservicesConstants.TRUE_UPPER);
+				//				sessionService.setAttribute(MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID,
+				//						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			}
 

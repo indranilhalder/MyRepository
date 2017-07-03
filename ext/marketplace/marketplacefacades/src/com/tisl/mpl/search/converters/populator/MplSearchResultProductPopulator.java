@@ -380,7 +380,10 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				final String mrp = value[1];
 				final String price = value[2];
 				//CKD:PRDI-350
-				final Integer sellerStock = Integer.valueOf(value[3]);
+				Integer sellerStock=null;
+				if (null!=Integer.valueOf(value[3])){
+					sellerStock = Integer.valueOf(value[3]);
+				}
 				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
 						getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,
