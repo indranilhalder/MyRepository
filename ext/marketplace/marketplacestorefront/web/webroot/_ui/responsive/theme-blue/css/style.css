@@ -72765,3 +72765,14 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 	}
 }
 /*TISTE-222 fix end*/
+
+/*TISTE-225 fix start*/
+@media(min-width: 791px){
+	body.page-productGrid .product-listing.product-grid.lazy-grid, 
+	body.page-productGrid .product-listing.product-grid.lazy-grid-facet, 
+	body.page-productGrid .product-listing.product-grid.lazy-grid-normal{
+		padding-top: 9px !important;
+		clear: both;
+	}
+}
+/*TISTE-225 fix end*/

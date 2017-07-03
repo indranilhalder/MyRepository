@@ -3874,6 +3874,9 @@ body .account .right-account .order-history.order-details li.item{
 body .account .right-account .order-history.order-details li.item .message {
     margin-bottom: 10px !important;
 }
+body .account .right-account .order-history.order-details li.item .status{
+	padding-bottom: 100px;
+}
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
