@@ -243,9 +243,9 @@
 																
 																<li>${fn:escapeXml(address.firstName)}
 																	&nbsp;${fn:escapeXml(address.lastName)}</li>
-																<li>${fn:escapeXml(address.line1)},
-																	&nbsp;${fn:escapeXml(address.line2)},</li>
-																<li>${fn:escapeXml(address.line3)},</li>
+																<li>${fn:escapeXml(address.line1)},</li>
+																	<%-- &nbsp;${fn:escapeXml(address.line2)},</li>
+																<li>${fn:escapeXml(address.line3)},</li> --%>
 																<li>${fn:escapeXml(address.landmark)},</li>
 																<li>${fn:escapeXml(address.town)},
 																	&nbsp;${fn:escapeXml(address.state)},
