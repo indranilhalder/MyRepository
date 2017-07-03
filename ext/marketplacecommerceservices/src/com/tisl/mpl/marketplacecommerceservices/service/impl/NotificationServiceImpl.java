@@ -460,13 +460,18 @@ public class NotificationServiceImpl implements NotificationService
 	 * pan card email
 	 */
 	@Override
-	public void triggerEmailAndSmsOnPancardReject(final OrderModel orderDetails, final String trackorderurl) throws JAXBException
+	public void triggerEmailAndSmsOnPancardReject(final OrderModel orderDetails) throws JAXBException
 	{
+		//Email and sms for Payment_Successful
+		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+				+ orderDetails.getCode();
+
 		if (orderDetails.getStatus().equals(OrderStatus.PAYMENT_SUCCESSFUL))
 		{
 			final OrderProcessModel orderProcessModel = new OrderProcessModel();
 			orderProcessModel.setOrder(orderDetails);
-			orderProcessModel.setOrderTrackUrl(trackorderurl);
+			orderProcessModel.setOrderTrackUrl(trackOrderUrl);
 			final PancardRejectEvent pancardRejectEvent = new PancardRejectEvent(orderProcessModel);
 			try
 			{
