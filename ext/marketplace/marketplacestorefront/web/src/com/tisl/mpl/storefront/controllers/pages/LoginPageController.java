@@ -488,9 +488,20 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 				{
+
 					//TPR-6272 starts here
-					final int platformNumber = 1;
+					final String luxDetector = form.getIsFromLuxury();
+					int platformNumber;
+					if (StringUtils.equalsIgnoreCase(luxDetector, "true"))
+					{
+						platformNumber = 4;//for luxury desktop web
+					}
+					else
+					{
+						platformNumber = 1;//for mkt desktop web
+					}
 					//TPR-6272 ends here
+
 					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially
 					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
