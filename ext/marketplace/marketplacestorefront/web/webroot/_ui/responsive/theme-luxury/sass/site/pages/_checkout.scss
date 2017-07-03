@@ -727,57 +727,56 @@
   .product-block.addresses.new-form.account-section{
         padding: 0px;
   }
-.checkout-content .checkout-shipping .cancelBtnEdit {
-    padding: 8px 10px;
-    font-size: 18px;
-    line-height: 1.33333;
-    border-radius: 4px;
-    background-color: #2d2d2d;
-    color: #fff;
-    border: 0;
-}
-.checkout-content .checkout-shipping .cancelBtnEdit {
-    float: right;
-}
-.checkout-content .checkout-shipping .address-form h1{
- font-size: 18px;
-}
-.checkout-content .checkout-shipping .heading-form h3{
- font-size: 14px;
+.checkout-content{
+    .checkout-shipping{
+        .cancelBtnEdit {
+            padding: 8px 10px;
+            font-size: 18px;
+            line-height: 1.33333;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            color: #fff;
+            border: 0;
+        }
+        .cancelBtnEdit {
+        float: right;
+        }
+        .address-form h1{
+            font-size: 18px;
+        }
+        .heading-form h3{
+            font-size: 14px;
+        }
+    }
 }
 #cardDebit{
   display:none;
  } 
  .controls .card_exp_month, .controls .card_exp_year{
- width: 49%;
+    width: 49%;
     display: inline-block;
  }
-.creditDebitLabelRadio input{
- 
- display:none;
+.creditDebitLabelRadio input{ 
+    display:none;
 }
 .creditDebitLabelRadio label{
- width:150px;
- text-align:center;
- padding:10px;
- border:#000;
- border-radius:3px;
- border:1px solid #000;
- background:#fff;
+     width:150px;
+     text-align:center;
+     padding:10px;
+     border:#000;
+     border-radius:3px;
+     border:1px solid #000;
+     background:#fff;
 }
 .creditDebitLabelRadio input:checked + label{
- background:#000;
- color:#fff;
- 
+     background:#000;
+     color:#fff; 
 }
 .checkout-headline{
-    font-size: 24px;   
-    
+    font-size: 24px; 
 }
 .breadcrumbs.wrapper{
     padding: 0px;
-    
-    
 }
 #newCardCC .card-group  .controls.col-md-6,  
   #newCardCC .card-group .controls.col-md-4,  
@@ -839,105 +838,100 @@
 }
 
 #savedCard{
-     background: #fff;   
+    background: #fff;   
     border: 1px solid #ccc;
     border-radius: 10px;
-        padding: 20px;
-
+    padding: 20px;
+    #savedCreditCard{
+        .card.card-num{
+            display: inline-block;
+            width: 80%;
+        }
+        .cvv.right-align-form{
+            display: inline-block;
+            width: 19%;
+            
+            #cvv1{
+                width: 100%;
+            }
+        }
+    }
+    #card_form{
+        background: #f9f9f9;
+        padding: 25px;
+        border: 1px solid #dee2eb;
+        border-radius: 10px;
+    }
 }
-#savedCard #savedCreditCard .card.card-num{
-     display: inline-block;
-    width: 80%;
-
-}
-#savedCard #savedCreditCard .cvv.right-align-form{
-     display: inline-block;
-    width: 19%;
-
-}
-#savedCard #card_form{
-     background: #f9f9f9;
-    padding: 25px;
-    border: 1px solid #dee2eb;
-    border-radius: 10px;
-
-}
-#savedCard #savedCreditCard .cvv.right-align-form #cvv1{
-        width: 100%;
-
-}
-
 .card-flag, .card-button, .card-details{
     display: inline-block;
-        vertical-align: middle;
- 
+    vertical-align: middle; 
 }
-.card-tab .credit_tab{
- display: inline-block;   
-    padding: 10px;
-    border-radius: 3px;
-    border: 1px solid #000;
-    background: #fff;
-    cursor: pointer;
-       vertical-align: top;
-}
-.card-tab .active_tab.credit_tab{
- background: #000;
-    color: #fff;
-    cursor: pointer;
-}
-.card-tab .active_tab.credit_tab{
- background: #000;
-    color: #fff;
-    cursor: pointer;
-}
-.card-tab .new_card_tab.credit_tab{
-     margin-left: -5px;
+.card-tab{
+    .credit_tab{
+        display: inline-block;   
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid #000;
+        background: #fff;
+        cursor: pointer;
+        vertical-align: top;
+    }
+    .active_tab.credit_tab{
+        background: #000;
+        color: #fff;
+        cursor: pointer;
+    }
+    .new_card_tab.credit_tab{
+        margin-left: -5px;
+    }
 }
 .card.card-num .card-details{
      margin-left: 15px;
 }
 
 /*Order confirmation page*/
-
-.checkout-shipping-items.left-block-width h1{
+checkout-shipping-items.left-block-width{
+    h1{
      font-size: 24px;
- }
- .checkout-shipping-items.left-block-width .panel-defaultHeading{
-     font-size: 24px;
- }
- .checkout-shipping-items.left-block-width .form-control{
+    }
+    .panel-defaultHeading{
+        font-size: 24px;
+    }
+    .form-control{
          width: auto;
- }
- .right-block.shipping.right-block-width .subtotals.summary-info{
- 
-    
-    margin:0px;
-    
- 
- }
- .right-block.shipping.right-block-width .subtotals.summary-info h2{
-    border-bottom: 1px solid #ccc;
-    margin: 0px 0px;
-    padding: 15px 0px;
-    font-size: 18px;
-     text-align: center;
- }
- .right-block.shipping.right-block-width .subtotals.summary-info ul.totals{
+    }
+    .subtotals.summary-info{
+        margin:0px;
+    }
+} 
+.right-block.shipping.right-block-width{
+    .subtotals.summary-info h2{
+        border-bottom: 1px solid #ccc;
+        margin: 0px 0px;
+        padding: 15px 0px;
+        font-size: 18px;
+         text-align: center;
+    }
+    .subtotals.summary-info ul.totals{
         padding: 15px;
- }
- .checkout-paymentmethod #card, .checkout-paymentmethod  #cardDebit{
-     background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
- }
-.checkout-paymentmethod #savedCard{
-     background: transparent;
-    border: 0px;
-    border-radius: 0px;
-    padding: 0px;
+    }
+    
+}
+.checkout-paymentmethod{
+    #card, #cardDebit{
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    #savedCard{
+        background: transparent;
+        border: 0px;
+        border-radius: 0px;
+        padding: 0px;
         margin-bottom: 20px;
+    }
 }
 .payment-section .checkout-paymentmethod .card-group fieldset{
      background: transparent;
@@ -946,37 +940,45 @@
     border-radius: 0px;
  
 }
-.card-tab .active_tab.debit_tab {
-    background: #000;
-    color: #fff;
-    cursor: pointer;
+.card-tab{
+    .active_tab.debit_tab {
+        background: #000;
+        color: #fff;
+        cursor: pointer;
+    }
+    .debit_tab {
+        display: inline-block;
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid #000;
+        background: #fff;
+        cursor: pointer;
+        vertical-align: top;
+    }
+    .new_card_tab.debit_tab {
+        margin-left: -5px;
+    }
 }
-.card-tab .debit_tab {
-    display: inline-block;
-    padding: 10px;
-    border-radius: 3px;
-    border: 1px solid #000;
-    background: #fff;
-    cursor: pointer;
-    vertical-align: top;
-}
-.card-tab .new_card_tab.debit_tab {
-    margin-left: -5px;
-}
-#savedDebitCard .debit-card-group {
-    background: #f9f9f9;
-    padding: 25px;
-    border: 1px solid #dee2eb;
-    border-radius: 10px;
-}
-#savedCardDebit #savedDebitCard .card.card-num {
-    display: inline-block;
-    width: 80%;
-}
-#savedCardDebit #savedDebitCard .cvv.right-align-form {
-    display: inline-block;
-    width: 19%;
-}
-#savedCardDebit #savedDebitCard .cvv.right-align-form #cvv1 {
-    width: 100%;
+#savedCardDebit{
+    
+    .debit-card-group{
+        background: #f9f9f9;
+        padding: 25px;
+        border: 1px solid #dee2eb;
+        border-radius: 10px; 
+    }
+    
+    #savedDebitCard{
+        .card.card-num{
+            display: inline-block;
+            width: 80%;
+        }
+        .cvv.right-align-form{
+            display: inline-block;
+            width: 19%; 
+        }
+        .cvv.right-align-form #cvv1{
+            width: 100%;
+        }
+    }
 }
