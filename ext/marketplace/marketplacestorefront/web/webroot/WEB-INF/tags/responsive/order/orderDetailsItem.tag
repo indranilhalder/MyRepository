@@ -135,7 +135,22 @@
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
 					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
-					<li class="deliver"><c:choose>
+					<li class="deliver">
+					<c:choose>
+					<%-- PRDI-378 starts here --%>
+					<c:when
+						test="${entry.isBOGOapplied eq true}">
+						<%-- <del>
+															 <format:price priceData=0.0
+																displayFreeForZero="true" />
+														</del> --%>
+						<%-- <span> <format:price priceData=0.0 displayFreeForZero="true"/></span> --%>
+						<span>Free</span>
+					</c:when>
+					<%-- PRDI-378 ends here --%>
+					<c:otherwise>
+					
+					<c:choose>
 							<c:when test="${entry.currDelCharge.value=='0.0'}">
 								<%-- <spring:theme code="order.free"  /> --%>
 								<ycommerce:testId code="orderDetails_productTotalPrice_label">
@@ -164,6 +179,9 @@
 							</c:otherwise>
 
 						</c:choose>
+						</c:otherwise>
+				</c:choose>
+						
 						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
 					<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
 					</li>  

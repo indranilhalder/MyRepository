@@ -41,8 +41,8 @@
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
 	<div class="checkout-content checkout-payment cart checkout wrapper">
-		<multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
-			<jsp:body>
+		<%-- <multiCheckout:checkoutSteps checkoutSteps="${checkoutSteps}" progressBarId="${progressBarId}" isCart="${isCart}">
+			<jsp:body> --%>
 				<script>
     				$(document).ready(function(){
     					<%-- var updateItHereLink = "<%=request.getParameter("Id")%>";  --%>
@@ -387,7 +387,7 @@
 																	<span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 																	</c:otherwise>   
 														        </c:choose>		
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" onchange="savedCreditCardRadioChange(cc${status.index});"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
@@ -710,7 +710,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" onchange="savedDebitCardRadioChange(dc${status.index});"/>
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers"><span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</label>
 										                  				<p>${map.value.nameOnCard}</p>
 										                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
@@ -1358,8 +1358,8 @@
 			</ul>
 				</div>
 				</div>				
-				</jsp:body>
-		</multiCheckout:checkoutSteps>	
+				<%-- </jsp:body>
+		</multiCheckout:checkoutSteps> --%>	
 		<multiCheckout:checkoutOrderDetails cartData="${cartData}" showDeliveryAddress="true" showPaymentInfo="false" showTaxEstimate="false" showTax="true" isCart="${isCart}" orderData="${orderData}"/>
 	</div>		
 </template:page>

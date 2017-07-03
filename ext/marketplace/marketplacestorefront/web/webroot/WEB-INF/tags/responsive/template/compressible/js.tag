@@ -51,6 +51,10 @@ if(loginStatus){
 	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
 
 </c:if>
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
+	<script type="text/javascript" src="${commonResourcePath}/js/moment.min.js"></script>
+	<script type="text/javascript" src="${commonResourcePath}/js/pikaday.min.js"></script>
+</c:if>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>
 <c:choose>

@@ -713,6 +713,16 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
 				}
+				
+				//TPR-6117 exchange field added
+
+				for (final OrderEntryData entry : orderDetail.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+					{
+						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+					}
+				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
 				 * orderWsDTO.setFinalAmount(orderDetail.getTotalPriceWithTax().getValue().toString()); } if
@@ -722,6 +732,16 @@ public class OrdersController extends BaseCommerceController
 				 * null != orderDetail.getTotalPrice()) { discount = (orderDetail.getSubTotal().getValue().doubleValue() -
 				 * orderDetail.getTotalPrice().getValue() .doubleValue()); }
 				 */
+				
+				//TPR-6117 exchange field added
+
+				for (final OrderEntryData entry : orderDetail.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+					{
+						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+					}
+				}
 				if (orderDetail.getDeliveryCost() != null)
 				{
 					deliveryTotal = orderDetail.getDeliveryCost().getValue().doubleValue();

@@ -771,10 +771,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
 			if(cartEntry.getPrevDelCharge()>0)
 			{
-				cartDeliveryCost+=cartEntry.getPrevDelCharge();
+				cartDeliveryCost+=cartEntry.getPrevDelCharge()*cartEntry.getQuantity();//*cartEntry.getQuantity() added for PRDI-379 
 			}else{
 			       if(null != cartEntry.getMplDeliveryMode()){//Null check for TISSQAEE-441
-				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue()*cartEntry.getQuantity();//*cartEntry.getQuantity() added for PRDI-379 
 			          }	
 			}
 			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {
