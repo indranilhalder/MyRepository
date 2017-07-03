@@ -47637,8 +47637,11 @@ float: right;
 	.product-info.wrapper .product-image-container {
 		margin: 0;
 	}
-	.product-info .product-image-container {
-		display: none;
+	.product-info .product-image-container .productImageGallery.pdp-gallery.image-list ,
+	.product-info .product-image-container .main-image ,
+	.product-info .product-image-container #zoomModal ,
+	.product-info .product-image-container #productPromotionSection {
+		display: none; /*TISTE-223 fix*/
 	}
 	.product-info .product-image-container.device {
 		display: block;
