@@ -3236,7 +3236,7 @@
 				<attributes>
 				    <!-- TPR-6272 starts here -->				   				    
 				    <attribute qualifier="customerRegistrationPlatform" autocreate="true"
-						type="registrationPlatform" generate="true">
+						type="java.lang.String" generate="true">
 						<modifiers read="true" write="true" search="true"
 							optional="true" />
 						<persistence type="property" />
@@ -5605,6 +5605,15 @@
 			<itemtype code="AbstractOrderEntry" autocreate="false"
 				generate="false">
 				<attributes>
+				<!-- UF-260 starts here -->
+					<attribute qualifier="cartAdditionalDiscPerc" autocreate="true"
+						type="java.lang.Double">
+						<description>cartAdditional discount percentage Display</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- UF-260 ends here -->
 					<attribute qualifier="description" autocreate="true"
 						type="java.lang.String">
 						<description>Description of Product</description>

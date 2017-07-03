@@ -313,27 +313,27 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			}
 			else if (platformNumber == 2)
 			{
-				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.MKT_MOBILE_WEB);
+				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_WEB).toString());
 				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile Web");
 			}
 			else if (platformNumber == 3)
 			{
-				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.MKT_MOBILE_APP);
+				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_APP).toString());
 				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile App");
 			}
 			else if (platformNumber == 4)
 			{
-				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.LUX_DESKTOP_WEB);
+				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_DESKTOP_WEB).toString());
 				//customerModel.setCustomerRegistrationPlatform("Lux-Desktop Web");
 			}
 			else if (platformNumber == 5)
 			{
-				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.LUX_MOBILE_WEB);
+				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_WEB).toString());
 				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile Web");
 			}
 			else if (platformNumber == 6)
 			{
-				customerModel.setCustomerRegistrationPlatform(RegistrationPlatform.LUX_MOBILE_APP);
+				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_APP).toString());
 				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile App");
 			}
 			else
