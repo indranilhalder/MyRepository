@@ -334,6 +334,8 @@ header{
 				border: 1px solid #e3e3e3;
 				border-radius: $border-radius-small;
 				background: $white;
+                list-style: none;
+                
 				.item{
 					padding: 0px 100px 44.5px 106px;
 				    position: relative;
@@ -592,7 +594,7 @@ video::-webkit-media-controls {
     position: relative;
     .close{       
         font-size:24px;
-        top:15px;       
+        top:5px;       
     }
 }
 .alert-info {
