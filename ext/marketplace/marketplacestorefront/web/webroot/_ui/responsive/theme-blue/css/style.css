@@ -72519,6 +72519,11 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
  	margin-bottom: -75px;
  	overflow: hidden;
  }
+ /* TISTE-204 fix */
+body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header + .col-md-4.col-sm-6{
+ 	position: relative;
+ 	top: 75px;
+ }
 }
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
 	font-size: 10px;
@@ -72740,3 +72745,23 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 }
 } 
 /*TISTE-192 fix end*/
+
+/*TISTE-222 fix start*/
+@media(max-width: 790px){
+	body .account .right-account .order-history .navigation2 #ofPagination{
+		width: 110px;
+	}
+	body .account .right-account .order-history .pagination-bar.listing-menu.pagination-order-history.bottom{
+		width: auto;
+    	overflow: hidden;
+    	vertical-align: top;
+    	float: right;
+	}
+	body .account .right-account .order-history .bottom .pagination.mobile{
+		position: static;
+	}
+	body .account .right-account .order-history .navigation2{
+		overflow: hidden;
+	}
+}
+/*TISTE-222 fix end*/
