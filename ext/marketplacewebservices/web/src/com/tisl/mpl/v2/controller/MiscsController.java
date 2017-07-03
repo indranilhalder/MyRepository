@@ -1942,7 +1942,7 @@ public class MiscsController extends BaseController
 								}
 								if (isBuyAandBgetC == true)
 								{
-
+									LOG.debug("===Inside BuyAandBgetC check====");
 
 									/*
 									 * final List<AbstractOrderEntryModel> orderEntriesModel =
@@ -1953,32 +1953,39 @@ public class MiscsController extends BaseController
 									boolean deliverymodeValidator = true;
 									checkloop: for (final AbstractOrderEntryModel orderEntry1 : orderEntriesModel)
 									{
+										LOG.debug("===Inside checkloop check====");
 										checkList.add(orderEntry1.getTransactionID());
 										deliveryCheckFlag = true;
+
 										for (final ConsignmentEntryModel con : orderEntry1.getConsignmentEntries())
 										{
+											LOG.debug("===Inside ConsignmentEntryModel loop====");
+
 											LOG.debug("===========DeliveryMode:====****======"
-													+ con.getConsignment().getDeliveryMode().getCode());
-											if (con.getConsignment().getDeliveryMode().getCode()
+													+ orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode());
+											if (orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode()
 													.equalsIgnoreCase(MarketplacecommerceservicesConstants.CLICK_AND_COLLECT))
 											{
+												LOG.debug("===Inside click and collect check loop====");
 												deliverymodeValidator = false;
 											}
 
 											if (deliverymodeValidator)
 											{
-												if (!(con.getConsignment().getStatus().getCode())
+												if (!(orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode())
 														.equalsIgnoreCase(MarketplacewebservicesConstants.DELIVERED_STATUS.toString()))
 												{
+													LOG.debug("===Inside delivered loop====");
 													deliveryCheckFlag = false;
 													break checkloop;
 												}
 											}
 											else if (deliverymodeValidator == false)
 											{
-												if (!(con.getConsignment().getStatus().getCode())
+												if (!(orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode())
 														.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString()))
 												{
+													LOG.debug("===Inside order collected loop====");
 													deliveryCheckFlag = false;
 													break checkloop;
 												}
@@ -1987,6 +1994,7 @@ public class MiscsController extends BaseController
 									}
 									if (deliveryCheckFlag == false)
 									{
+										LOG.debug("===Inside deliveryCheckFlag loop====");
 										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
 										{
 											output = new OneTouchCancelReturnDTO();
@@ -2034,6 +2042,7 @@ public class MiscsController extends BaseController
 							}
 							else
 							{
+								LOG.debug("===Inside blank transaction id loop====");
 								output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 								output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
 								output.setRemarks(MarketplacewebservicesConstants.BLANK_TRANSACTION_ID);
