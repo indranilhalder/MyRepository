@@ -567,4 +567,5 @@ public class MarketplacewebservicesConstants
 	public static final String EXCHANGEAPPLIED = "Exchange Applied";
 	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
+	public static final String PRICE_DISCLAIMER_JEWELLERY = "Price and Weight are subjected to change on the basis of availability. Please check final Price and Weight before making a payment.";
 }

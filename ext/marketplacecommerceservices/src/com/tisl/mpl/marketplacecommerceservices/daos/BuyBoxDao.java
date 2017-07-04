@@ -68,6 +68,7 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String pdpproduct) throws EtailNonBusinessExceptions;
+
 	/**
 	 * @param sellerArticleSKUList
 	 * @return
@@ -80,6 +81,7 @@ public interface BuyBoxDao
 
 	// TISPRD-8944
 	List<BuyBoxModel> buyBoxPriceMobile(String ProductCode) throws EtailNonBusinessExceptions;
+
 	/**
 	 * TPR-5712 dao to get price for all the sellers
 	 *
@@ -87,8 +89,16 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
+
 	//for fine jewellery pdp
 	public ProductModel getProductDetailsByProductCode(final String productcode);
+
+
+	/**
+	 * @param ussID
+	 * @return
+	 */
+	public List<BuyBoxModel> buyboxPriceForJewelleryWithVariant(String ussID);
 
 
 }

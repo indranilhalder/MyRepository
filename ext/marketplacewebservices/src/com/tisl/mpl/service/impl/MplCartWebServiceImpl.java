@@ -1088,6 +1088,11 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 					LOG.debug("*************** Mobile webservice root category is empty ********************");
 				}
 
+				if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+				{
+					gwlp.setPriceDisclaimerTextJwlry(MarketplacewebservicesConstants.PRICE_DISCLAIMER_JEWELLERY);
+				}
+
 				final String catId = mplProductWebService.getCategoryCodeOfProduct(productData);
 				if (null != catId && !catId.isEmpty())
 				{
@@ -3095,7 +3100,7 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplCartWebService#addProductToCartwithExchange(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean, java.lang.String, java.lang.String)
 	 */
