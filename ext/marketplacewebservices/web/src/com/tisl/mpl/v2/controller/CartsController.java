@@ -344,8 +344,8 @@ public class CartsController extends BaseCommerceController
 			return cmd1;
 		}
 		final CartModificationData cmd = new CartModificationData();
-		cmd.setDeliveryModeChanged(Boolean
-				.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged()) || Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
+		cmd.setDeliveryModeChanged(Boolean.valueOf(Boolean.TRUE.equals(cmd1.getDeliveryModeChanged())
+				|| Boolean.TRUE.equals(cmd2.getDeliveryModeChanged())));
 		cmd.setEntry(cmd2.getEntry());
 		cmd.setQuantity(cmd2.getQuantity());
 		cmd.setQuantityAdded(cmd1.getQuantityAdded() + cmd2.getQuantityAdded());
@@ -397,9 +397,8 @@ public class CartsController extends BaseCommerceController
 		final OrderEntryData entryToBeModified = getCartEntry(currentCart, currentEntry.getProduct().getCode(), newPickupStore);
 		if (entryToBeModified != null && !entryToBeModified.equals(currentEntry))
 		{
-			throw new CartEntryException(
-					"Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
-							+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
+			throw new CartEntryException("Ambiguous cart entries! Entry number " + currentEntry.getEntryNumber()
+					+ " after change would be the same as entry " + entryToBeModified.getEntryNumber(),
 					CartEntryException.AMBIGIOUS_ENTRY, entryToBeModified.getEntryNumber().toString());
 		}
 	}
@@ -683,8 +682,7 @@ public class CartsController extends BaseCommerceController
 	 */
 	@RequestMapping(value = "/{cartId}/entries", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderEntryListWsDTO getCartEntries(
-			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
+	public OrderEntryListWsDTO getCartEntries(@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -719,8 +717,7 @@ public class CartsController extends BaseCommerceController
 			@RequestParam(required = true) final String code, @RequestParam(required = false, defaultValue = "1") final long qty,
 			@RequestParam(required = false) final String pickupStore,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException, WebserviceValidationException, ProductLowStockException,
-					StockSystemException
+			throws CommerceCartModificationException, WebserviceValidationException, ProductLowStockException, StockSystemException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -776,8 +773,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartModificationWsDTO addCartEntry(@PathVariable final String baseSiteId, @RequestBody final OrderEntryWsDTO entry,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException, WebserviceValidationException, ProductLowStockException,
-					StockSystemException
+			throws CommerceCartModificationException, WebserviceValidationException, ProductLowStockException, StockSystemException
 	{
 		if (entry.getQuantity() == null)
 		{
@@ -835,7 +831,7 @@ public class CartsController extends BaseCommerceController
 	public CartModificationWsDTO setCartEntry(@PathVariable final String baseSiteId, @PathVariable final long entryNumber,
 			@RequestParam(required = true) final Long qty, @RequestParam(required = false) final String pickupStore,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException
+			throws CommerceCartModificationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -918,7 +914,7 @@ public class CartsController extends BaseCommerceController
 	public CartModificationWsDTO setCartEntry(@PathVariable final String baseSiteId, @PathVariable final long entryNumber,
 			@RequestBody final OrderEntryWsDTO entry,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException
+			throws CommerceCartModificationException
 	{
 		final CartData cart = getSessionCart();
 		final OrderEntryData orderEntry = getCartEntryForNumber(cart, entryNumber);
@@ -965,7 +961,7 @@ public class CartsController extends BaseCommerceController
 	public CartModificationWsDTO updateCartEntry(@PathVariable final String baseSiteId, @PathVariable final long entryNumber,
 			@RequestParam(required = false) final Long qty, @RequestParam(required = false) final String pickupStore,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException
+			throws CommerceCartModificationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1021,7 +1017,7 @@ public class CartsController extends BaseCommerceController
 	public CartModificationWsDTO updateCartEntry(@PathVariable final String baseSiteId, @PathVariable final long entryNumber,
 			@RequestBody final OrderEntryWsDTO entry,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException
+			throws CommerceCartModificationException
 	{
 		final CartData cart = getSessionCart();
 		final OrderEntryData orderEntry = getCartEntryForNumber(cart, entryNumber);
@@ -1095,7 +1091,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public AddressWsDTO createAndSetAddress(final HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws WebserviceValidationException, NoCheckoutCartException
+			throws WebserviceValidationException, NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1130,7 +1126,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public AddressWsDTO createAndSetAddress(@RequestBody final AddressWsDTO address,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws WebserviceValidationException, NoCheckoutCartException
+			throws WebserviceValidationException, NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1310,8 +1306,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public PaymentDetailsWsDTO addPaymentDetails(final HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws WebserviceValidationException, InvalidPaymentInfoException, NoCheckoutCartException,
-					UnsupportedRequestException
+			throws WebserviceValidationException, InvalidPaymentInfoException, NoCheckoutCartException, UnsupportedRequestException
 	{
 		paymentProviderRequestSupportedStrategy.checkIfRequestSupported("addPaymentDetails");
 		final CCPaymentInfoData paymentInfoData = super.addPaymentDetailsInternal(request).getPaymentInfo();
@@ -1349,8 +1344,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public PaymentDetailsWsDTO addPaymentDetails(@RequestBody final PaymentDetailsWsDTO paymentDetails,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws WebserviceValidationException, InvalidPaymentInfoException, NoCheckoutCartException,
-					UnsupportedRequestException
+			throws WebserviceValidationException, InvalidPaymentInfoException, NoCheckoutCartException, UnsupportedRequestException
 	{
 		paymentProviderRequestSupportedStrategy.checkIfRequestSupported("addPaymentDetails");
 		validatePayment(paymentDetails);
@@ -1485,8 +1479,8 @@ public class CartsController extends BaseCommerceController
 	{ TRUSTED_CLIENT })
 	@RequestMapping(value = "/{cartId}/promotions/{promotionId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void removePromotion(@PathVariable final String promotionId)
-			throws CommercePromotionRestrictionException, NoCheckoutCartException
+	public void removePromotion(@PathVariable final String promotionId) throws CommercePromotionRestrictionException,
+			NoCheckoutCartException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1528,8 +1522,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId)
-			throws NoCheckoutCartException, VoucherOperationException
+	public void applyVoucherForCart(@RequestParam(required = true) final String voucherId) throws NoCheckoutCartException,
+			VoucherOperationException
 	{
 		super.applyVoucherForCartInternal(voucherId);
 	}
@@ -1544,8 +1538,8 @@ public class CartsController extends BaseCommerceController
 	{ ROLE_CLIENT, CUSTOMER, CUSTOMERMANAGER, TRUSTED_CLIENT, ROLE_GUEST })
 	@RequestMapping(value = "/{cartId}/vouchers/{voucherId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void releaseVoucherFromCart(@PathVariable final String voucherId)
-			throws NoCheckoutCartException, VoucherOperationException
+	public void releaseVoucherFromCart(@PathVariable final String voucherId) throws NoCheckoutCartException,
+			VoucherOperationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -1646,7 +1640,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public WebSerResponseWsDTO createCart(@PathVariable final String baseSiteId, @PathVariable final String userId,
 			@RequestParam(required = false) final String oldCartId, @RequestParam(required = false) String toMergeCartGuid)
-					throws RequestParameterException
+			throws RequestParameterException
 	{
 
 		final WebSerResponseWsDTO result = new WebSerResponseWsDTO();
@@ -1897,7 +1891,7 @@ public class CartsController extends BaseCommerceController
 			@RequestParam(required = true) final boolean addedToCartWl, @RequestParam(required = false) final String channel,
 			@RequestParam(required = false) final String l3code, @RequestParam(required = false) final String exchangeParam,
 			@RequestParam(required = false) final String brandParam, @RequestParam(required = false) final String pinParam)
-					throws InvalidCartException, CommerceCartModificationException
+			throws InvalidCartException, CommerceCartModificationException
 	{
 		WebSerResponseWsDTO result = new WebSerResponseWsDTO();
 		if (LOG.isDebugEnabled())
@@ -2189,7 +2183,7 @@ public class CartsController extends BaseCommerceController
 			@PathVariable final long entryNumber, @RequestParam(required = true) final Long quantity,
 			@RequestParam(required = false) final String pickupStore,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException
+			throws CommerceCartModificationException
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2222,9 +2216,9 @@ public class CartsController extends BaseCommerceController
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					cartDataDetails.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-					cartDataDetails.setError(
-							MarketplacecommerceservicesConstants.FIELD_QUANTITY + MarketplacecommerceservicesConstants.SINGLE_SPACE
-									+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
+					cartDataDetails.setError(MarketplacecommerceservicesConstants.FIELD_QUANTITY
+							+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+							+ MarketplacecommerceservicesConstants.FIELD_NOT_EMPTY_MSG);
 					return cartDataDetails;
 				}
 
@@ -2411,7 +2405,7 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public CartDataDetailsWsDTO cartCheckout(@PathVariable final String cartId, @RequestParam final String postalCode,
 			@RequestParam(required = false, defaultValue = DEFAULT_FIELD_SET) final String fields)
-					throws CommerceCartModificationException
+			throws CommerceCartModificationException
 	{
 		final CartDataDetailsWsDTO cartDetailsData = new CartDataDetailsWsDTO();
 		CartModel cartModel = null;
@@ -2925,8 +2919,8 @@ public class CartsController extends BaseCommerceController
 			{
 				if (null != element && null != element.getValue() && null != element.getKey())
 				{
-					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(), element.getKey(),
-							cart);
+					final Double deliveryCost = mplCustomAddressFacade.populateDeliveryMethodData(element.getValue(),
+							element.getKey(), cart);
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());
 
 					LOG.debug("CartsController : selectDeliveryMode  : Step 1 finalDeliveryCost after Delivery Mode Set "
@@ -3027,8 +3021,8 @@ public class CartsController extends BaseCommerceController
 				LOG.debug("checkPinCodeAtCart-------" + cart.getCode());
 			}
 
-			pinCodeResponse = mplCartWebService
-					.checkPinCodeAtCart(mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
+			pinCodeResponse = mplCartWebService.checkPinCodeAtCart(
+					mplCartFacade.getSessionCartWithEntryOrderingMobile(cart, true, false, false), cart, pincode);
 			if (null != pinCodeResponse)
 			{
 				response.setPinCodeResponseList(pinCodeResponse);
@@ -3357,8 +3351,8 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public ApplyCouponsDTO applyCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
-					throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
-					JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
 	{
 		ApplyCouponsDTO applycouponDto = new ApplyCouponsDTO();
 		CartModel cartModel = null;
@@ -3456,9 +3450,9 @@ public class CartsController extends BaseCommerceController
 	@ResponseBody
 	public ReleaseCouponsDTO releaseCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
-					throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
-					JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
-					JaloPriceFactoryException, CalculationException
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
+			JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
+			JaloPriceFactoryException, CalculationException
 	{
 		ReleaseCouponsDTO releaseCouponDto = new ReleaseCouponsDTO();
 		CartModel cartModel = null;
@@ -3866,9 +3860,10 @@ public class CartsController extends BaseCommerceController
 		{
 			if (null != orderEntryModel.getGiveAway() && !orderEntryModel.getGiveAway().booleanValue())
 			{
-				if (null != orderEntryModel.getMplDeliveryMode() && null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
-						&& MarketplacecommerceservicesConstants.CLICK_COLLECT
-								.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode().getDeliveryMode().getCode())))
+				if (null != orderEntryModel.getMplDeliveryMode()
+						&& null != orderEntryModel.getMplDeliveryMode().getDeliveryMode()
+						&& MarketplacecommerceservicesConstants.CLICK_COLLECT.equalsIgnoreCase((orderEntryModel.getMplDeliveryMode()
+								.getDeliveryMode().getCode())))
 				{
 					++cncDelModeCount;
 				}
@@ -3922,8 +3917,8 @@ public class CartsController extends BaseCommerceController
 			cartModel = mplPaymentWebFacade.findCartValues(cartId);
 			final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
-			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
-					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData, cartModel);
+			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
+					deliverySlotsRequestData, cartModel);
 
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))

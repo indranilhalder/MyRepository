@@ -452,7 +452,26 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 							deliveryCode, MarketplacecommerceservicesConstants.INR, sellerArticleSKU);
 
 					//TISEE-289
-					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					//final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					SellerInformationModel sellerInfoModel = null;
+					if (entry.getProduct().getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+								.getJewelleryInfoByUssid(sellerArticleSKU);
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry for JewelleryInformationModel for " + sellerArticleSKU);
+						}
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(sellerArticleSKU);
+					}
+
 					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
 							&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 					{
@@ -734,10 +753,10 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 
 		Double deliveryCost = Double.valueOf(0.0);
 		String fulfillmentType = "";
-		String tshipThresholdValue = configurationService.getConfiguration()
-				.getString(MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
-		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue
-				: Integer.toString(0);
+		String tshipThresholdValue = configurationService.getConfiguration().getString(
+				MarketplaceFacadesConstants.TSHIPTHRESHOLDVALUE);
+		tshipThresholdValue = (tshipThresholdValue != null && !tshipThresholdValue.isEmpty()) ? tshipThresholdValue : Integer
+				.toString(0);
 
 		List<PinCodeResponseData> pincoderesponseDataList = null;
 		pincoderesponseDataList = sessionService
@@ -762,7 +781,14 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 					{
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
 								.getJewelleryInfoByUssid(sellerArticleSKU);
-						sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry for JewelleryInformationModel for " + sellerArticleSKU);
+						}
 					}
 					else
 					{
@@ -801,15 +827,15 @@ public class MplCustomAddressFacadeImpl extends DefaultCheckoutFacade implements
 						/*
 						 * if (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue))
-						 * 
-						 * 
-						 * 
+						 *
+						 *
+						 *
 						 * // For Release 1 , TShip delivery cost will always be zero . Hence , commenting the below code
 						 * which check configuration from HAC // if
 						 * (fulfillmentType.equalsIgnoreCase(MarketplaceFacadesConstants.TSHIPCODE) // &&
 						 * entry.getTotalPrice().doubleValue() > Double.parseDouble(tshipThresholdValue)) // // { //
 						 * mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); // }
-						 * 
+						 *
 						 * { mplZoneDeliveryModeValueModel.setValue(Double.valueOf(0.0)); }
 						 */
 					}
