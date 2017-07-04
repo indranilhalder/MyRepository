@@ -13757,6 +13757,8 @@ TATA.CommonFunctions = {
             $(".edit").on("click", function(e) {
                 var addressId = $(this).attr("data-addressId");
                 TATA.Pages.MYACCOUNT.editLuxuryAddress(addressId);
+            }), $(".view-details").on("click", function(e) {
+                $(".saved-cards").find(".paymentItem").toggleClass("active");
             });
         },
         editLuxuryAddress: function(addressId) {
