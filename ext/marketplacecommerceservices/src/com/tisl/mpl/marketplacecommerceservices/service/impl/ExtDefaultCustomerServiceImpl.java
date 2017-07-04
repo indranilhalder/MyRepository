@@ -309,58 +309,47 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 			if (platformNumber == 1)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_DESKTOP_WEB).toString());
-				//customerModel.setCustomerRegistrationPlatform("Mkt-Desktop Web");
 			}
 			else if (platformNumber == 2)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_WEB).toString());
-				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile Web");
 			}
 			else if (platformNumber == 3)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_IOS_APP).toString());
-				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile App");
 			}
 			else if (platformNumber == 4)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_ANDROID_APP).toString());
-				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile App");
 			}
 			else if (platformNumber == 5)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_DESKTOP_WEB).toString());
-				//customerModel.setCustomerRegistrationPlatform("Lux-Desktop Web");
 			}
 			else if (platformNumber == 6)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_WEB).toString());
-				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile Web");
 			}
 			else if (platformNumber == 7)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_IOS_APP).toString());
-				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile App");
 			}
 			else if (platformNumber == 8)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_ANDROID_APP).toString());
-				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile App");
 			}
 			else if (platformNumber == 9)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_APP).toString());
-				//customerModel.setCustomerRegistrationPlatform("Mkt-Mobile App");
 			}
 			else if (platformNumber == 10)
 			{
 				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_APP).toString());
-				//customerModel.setCustomerRegistrationPlatform("Lux-Mobile App");
 			}
 			else
 			{
 				LOG.debug(" --------- The registration platform is not in scope ---------- ");
 			}
-			//customerModel.setCustomerRegistrationPlatform(" Mkt-Desktop/ Mkt-Mobile");//hardcoded for testing
 			//TPR-6272 ends here
 
 			internalSaveCustomer(customerModel);

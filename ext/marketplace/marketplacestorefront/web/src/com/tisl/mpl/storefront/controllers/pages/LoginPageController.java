@@ -490,11 +490,12 @@ public class LoginPageController extends AbstractLoginPageController
 				{
 
 					//TPR-6272 starts here
-					final String luxDetector = form.getIsFromLuxury();
+					final String luxDetector = form.getIsFromLuxury();//for luxury registration capture
 					int platformNumber;
-					if (StringUtils.equalsIgnoreCase(luxDetector, "true"))
+					if (luxDetector != null && StringUtils.isNotEmpty(luxDetector)
+							&& StringUtils.equalsIgnoreCase(luxDetector, "true"))
 					{
-						platformNumber = 4;//for luxury desktop web
+						platformNumber = 5;//for luxury desktop web
 					}
 					else
 					{
