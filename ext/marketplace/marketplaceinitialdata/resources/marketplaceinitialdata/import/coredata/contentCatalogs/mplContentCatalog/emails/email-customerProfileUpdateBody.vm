@@ -142,7 +142,7 @@
 		  	        		    		<strong>If you made this change,</strong>&nbsp;you can safely disregard this email.
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		<strong>If you didn't make this change,</strong>&nbsp;please&nbsp;secure your account.<a href="${ctx.secureResetPasswordUrl}" style="color:#AA133D;">Change Password</a>
+		  	        		    		If this isn't you, we recommend that you review your account details and change your password if anything seems out of place.
 		  	        		    		</div>
 		  	        		    	</td>
 		  	        		    </tr>
