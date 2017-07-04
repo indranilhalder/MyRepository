@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.daos;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.PancardInformationModel;
 
 import java.util.List;
 
@@ -41,6 +40,6 @@ public interface MplJewelleryDao
 	 * @param orderId
 	 * @return
 	 */
-	List<PancardInformationModel> getPanCardStatus(String orderId);
+	String getPanCardStatus(String orderLineId);
 
 }

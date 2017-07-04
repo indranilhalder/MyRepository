@@ -4,7 +4,6 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.PancardInformationModel;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public interface MplJewelleryService
 	 * @param code
 	 * @return
 	 */
-	public List<PancardInformationModel> getPanCardStatus(String orderId);
+	public String getPanCardStatus(String orderLineId);
 
 
 }

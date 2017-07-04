@@ -65,10 +65,11 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 	/* (non-Javadoc)
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getPanCardStatus(java.lang.String)
 	 */
+	//CKD:TPR-3809
 	@Override
-	public List<PancardInformationModel> getPanCardStatus(String orderId)
+	public String getPanCardStatus(final String orderLineId)
 	{
-		return mplJewelleryDao.getPanCardStatus(orderId);		
+		return mplJewelleryDao.getPanCardStatus(orderLineId);		
 	}
 
 }

@@ -54,7 +54,6 @@ import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.CODPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.JuspayPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
@@ -173,9 +172,6 @@ public class MarketplaceCheckoutControllerImpl extends
 	private MplPaymentService mplPaymentService;
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
-	
-	@Autowired
-	private MplJewelleryService mpljewelleryService;
 	
 	@Autowired
 	private MplFindDeliveryFulfillModeStrategy mplFindDeliveryFulfillModeStrategy;	
@@ -1094,10 +1090,4 @@ public class MarketplaceCheckoutControllerImpl extends
 		return ordStatus;
 	}
 
-	/*@Override
-	public String getPanCardStatus(String orderId) {
-		mpljewelleryService.getPanCardStatus( orderId);
-		return "verified";
-	}*/
-	
 }

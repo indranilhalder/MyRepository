@@ -28,6 +28,7 @@ import com.sun.xml.internal.ws.api.pipe.Engine;
 import com.tisl.mpl.cockpits.constants.MarketplaceCockpitsConstants;
 import com.tisl.mpl.cockpits.cscockpit.strategies.MplFindDeliveryFulfillModeStrategy;
 import com.tisl.mpl.cockpits.cscockpit.widgets.controllers.MarketplaceCheckoutController;
+import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.DeliveryFulfillModesEnum;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
@@ -183,6 +184,7 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		listheader.setWidth("40px");
 		row.appendChild(listheader);
 		
+		//CKD: TPR-3809
 		listheader = new Listheader(LabelUtils.getLabel(widget, "panCardStatus",
 				new Object[0]));
 		listheader.setWidth("80px");
@@ -369,12 +371,15 @@ public class MarketPlaceOrderDetailsOrderItemsWidgetRenderer extends
 		String qtyString = (qty != null) ? qty.toString() : "";
 		row.appendChild(new Listcell(qtyString));
 		
-		final TypedObject order = ((OrderController) widget.getWidgetController()).getCurrentOrder();
-		final OrderModel orderModel = (OrderModel) order.getObject();
-		List<PancardInformationModel> panCardStatuses = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(orderModel.getCode());
-		for (PancardInformationModel pancardInformationModel : panCardStatuses) {
-			row.appendChild(new Listcell(pancardInformationModel.getStatus()));
+		//CKD-TPR-3809
+		String panCardStatus = ((MplDefaultOrderController)widget.getWidgetController()).getPanCardStatus(entrymodel.getOrderLineId());
+		if (StringUtils.isNotBlank(panCardStatus)){
+			row.appendChild(new Listcell(panCardStatus));
 		}
+		else{
+			row.appendChild(new Listcell(MplConstants.NOT_AVAILABLE));
+		}
+
 	}
 
 	

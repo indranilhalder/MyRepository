@@ -157,6 +157,4 @@ public interface MarketplaceCheckoutController extends
 	public Double getScheduleDeliveryCharges();
 	public SellerInformationModel getSellerInformationByUssid(String Ussid);
 
-	//public String getPanCardStatus(String code);
-	
 }
