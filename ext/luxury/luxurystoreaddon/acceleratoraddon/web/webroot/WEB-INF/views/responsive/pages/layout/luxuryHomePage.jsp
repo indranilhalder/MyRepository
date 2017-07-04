@@ -16,9 +16,9 @@
 											class="span-24 section5 cms_disp-img_slot">
 											<cms:component component="${feature}" />
 										</cms:pageSlot>
-										<div class="banner-content">
+										<!-- <div class="banner-content">
 				<h2>shop men</h2>
-			</div></a>
+			</div> --></a>
 			</div>
 		
 
@@ -28,9 +28,9 @@
 											class="span-24 section5 cms_disp-img_slot">
 											<cms:component component="${feature}" />
 										</cms:pageSlot>
-										<div class="banner-content">
+										<!-- <div class="banner-content">
 				<h2>shop women</h2>
-			</div></a>
+			</div> --></a>
 	</div>
 </section>
 	<section class="seastion-sec mb-40">

@@ -37,11 +37,10 @@
 			</cms:pageSlot>
 		</section>
 
-	<section class="brand-slider-wrapper text-center">
 	<cms:pageSlot position="Gender-ShortlookBook" var="feature" class="span-24 section5 cms_disp-img_slot">
 				<cms:component component="${feature}" />
 	</cms:pageSlot>
-	</section>
+	
 	<cms:pageSlot position="Gender-ShowCase1" var="ShowCase1" element="div"
 		class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${ShowCase1}" />

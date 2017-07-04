@@ -272,7 +272,7 @@
 						left: 0;
 						right: 0;
 						top: 100%;
-						background: rgba(255, 255, 255, 0.87);
+						background: rgba(255, 255, 255, 0.95);
 						z-index: 1;
 						border-top: 1px solid $border;
 						text-align: left;
@@ -580,6 +580,7 @@
 		}
 		&.active {
 			max-height: 630px;
+			height:450px;
 			@include media-breakpoint-down(sm) {
 				//max-height: 100%;
 			}
@@ -588,7 +589,7 @@
 			width: 1290px;
 			left: -430px;
 			position: relative;
-			@include transition(all 0.3s ease-in-out);
+			/*@include transition(all 0.3s ease-in-out);*/
 			@include media-breakpoint-down(sm) {
 				left: -107%;
     			width: 99999px;
