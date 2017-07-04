@@ -1105,6 +1105,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final CartModel cartModel = getCartService().getSessionCart();
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
+			addressForm.setAddressType("Home");
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 
 			if (null != cartData)
@@ -4698,7 +4699,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4756,7 +4757,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
