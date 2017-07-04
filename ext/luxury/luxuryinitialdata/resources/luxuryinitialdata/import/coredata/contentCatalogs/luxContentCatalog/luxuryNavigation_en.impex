@@ -16,9 +16,11 @@ UPDATE CMSNavigationNode ; $contentCV[unique=true] ; uid[unique=true]           
 
 
 # CMS Navigation Nodes
-UPDATE CMSLinkComponent  ; $contentCV[unique=true] ; uid[unique=true]             ; linkName[lang=$lang]           
+UPDATE CMSLinkComponent  ; $contentCV[unique=true] ; uid[unique=true]             ; linkName[lang=$lang]
+					     ;                         ; MensGroomingCategoryLink     ; "MensGrooming"
+						 ;                         ; EditorsPicksCategoryLink     ; "EditorsPicks"
                          ;                         ; TopsLink                     ; "Tops"                  
-                         ;                         ; DressShoesLink           ; "Blazers&Vests"                  
+                         ;                         ; DressShoesLink               ; "Blazers&Vests"                  
                          ;                         ; BottomsLink                  ; "Bottoms"                  
                          ;                         ; OuterwearLink                ; "Outerwear "                 
                          ;                         ; ActivewearLink               ; "Activewear"                   
