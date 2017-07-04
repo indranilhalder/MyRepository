@@ -73,23 +73,24 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-//Sonar fix
-//import com.tisl.mpl.constants.MplConstants;
-import com.tisl.mpl.core.enums.ShowCaseLayout;
+import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ShowCaseLayout;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
+import com.tisl.mpl.data.ShopByBrandData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
+import com.tisl.mpl.facades.data.STWJsonRecomendationData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -102,6 +103,8 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+//Sonar fix
+//import com.tisl.mpl.constants.MplConstants;
 
 
 /**
