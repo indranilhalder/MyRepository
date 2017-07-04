@@ -73,7 +73,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-import com.tisl.mpl.core.constants.GeneratedMarketplaceCoreConstants.Enumerations.ShowCaseLayout;
+import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
@@ -705,7 +705,7 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final String showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
