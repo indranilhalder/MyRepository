@@ -35,4 +35,11 @@ public interface MplJewelleryDao
 	 */
 	List<String> getWeightVarientUssid(String ussid);
 
+
+	/**
+	 * @param orderId
+	 * @return
+	 */
+	String getPanCardStatus(String orderLineId);
+
 }
