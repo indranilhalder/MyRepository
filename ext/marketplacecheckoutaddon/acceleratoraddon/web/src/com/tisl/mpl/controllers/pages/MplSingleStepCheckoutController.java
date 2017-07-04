@@ -2447,18 +2447,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							catch (final ArrayIndexOutOfBoundsException exception)
 							{
 								LOG.error("Error in Store selection Page", exception);
-								return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								//return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+										+ "&type=redirect", UTF);
+								return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 							}
 							catch (final EtailBusinessExceptions e)
 							{
 								ExceptionUtil.etailBusinessExceptionHandler(e, null);
 								LOG.error("EtailBusinessExceptions Error in Store selection Page ", e);
-								return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								//return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+										+ "&type=redirect", UTF);
+								return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 							}
 							catch (final Exception e)
 							{
 								LOG.error("Error in Store selection Page ", e);
-								return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								//return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+										+ "&type=redirect", UTF);
+								return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 							}
 						}
 					}
@@ -4699,7 +4708,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4757,7 +4766,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody

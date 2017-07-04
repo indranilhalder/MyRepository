@@ -621,6 +621,7 @@ ACC.singlePageCheckout = {
         //calling tealium
         $("#checkoutPageName").val("Choose Your Delivery Options");
         tealiumCallOnPageLoad();
+        var disableHideAjaxLoader=false;
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type=="confirm")
@@ -639,6 +640,21 @@ ACC.singlePageCheckout = {
 	        	//selectDefaultDeliveryMethod();
 	        	$(".click-and-collect").addClass("click-collect");
 	        	$("#selectedAddressMessage").hide();
+	        	
+	        	//fetching cnc stores if only click n collect delivery mode is present
+	        	var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
+	    		var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+	        	var entryNumbers=entryNumbersId.split("#");
+	    		for(var i=0;i<entryNumbers.length-1;i++)
+	    		{
+				    if(isCncPresent && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+				    {
+					    var ussid=$('input[name="deliveryMethodEntry['+entryNumbers[i]+'].sellerArticleSKU"]').val();
+					    ACC.singlePageCheckout.fetchStores(entryNumbers[i],ussid,'click-and-collect','','');
+					    disableHideAjaxLoader=true;
+				    }
+	    		}
+			  //end of fetching cnc stores if only click n collect delivery mode is present
 	        	
 	        	ACC.singlePageCheckout.attachDeliveryModeChangeEvent();
 	        	
@@ -683,7 +699,10 @@ ACC.singlePageCheckout = {
 		});
         
         xhrResponse.always(function(){
-        	ACC.singlePageCheckout.hideAjaxLoader();
+        	if(!disableHideAjaxLoader)
+        	{
+        		ACC.singlePageCheckout.hideAjaxLoader();
+        	}
 		});
       if(typeof utag !="undefined")  {
 		utag.link({
