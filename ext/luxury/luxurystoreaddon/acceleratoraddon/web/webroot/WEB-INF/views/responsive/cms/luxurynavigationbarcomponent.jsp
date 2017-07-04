@@ -25,7 +25,7 @@
 							<ul>
 								<li>
 									<c:if test="${not empty child.links and fn:length(child.links) eq 1}">
-										<a href="#">${child.title}</a>
+										<cms:component component="${child.links[0]}" evaluateRestriction="true" />
 									</c:if>
 									<c:if test="${not empty child.links and fn:length(child.links) gt 1}">
 										<a href="#">${child.title}</a>
