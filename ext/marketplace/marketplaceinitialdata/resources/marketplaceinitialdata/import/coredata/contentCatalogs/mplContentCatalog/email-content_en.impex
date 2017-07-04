@@ -122,6 +122,7 @@ UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];
  ;;OrderOnHoldEmail;"customercare@tatacliq.com";"TataCLiQ Care"
  ;;OrderRejectRiskEmail;"customercare@tatacliq.com";"TataCLiQ Care"
  ;;OrderConfRiskEmail;"customercare@tatacliq.com";"TataCLiQ Care"
+ ;;PancardRejectEmail;"customercare@tatacliq.com";"TataCLiQ Care"
 
 #;;OutForDeliveryEmail;"customerservices@tataunistore.in";"Customer Services Team"
  ;;ShippingConfirmationEmail;"customercare@tatacliq.com";"TataCLiQ Care"

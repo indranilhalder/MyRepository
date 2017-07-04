@@ -48,10 +48,10 @@ public interface NotificationFacade
 
 	/**
 	 * pan card
-	 * 
+	 *
 	 * @param orderModel
 	 */
-	void sendPancardRejectNotification(OrderModel orderModel);
+	//void sendPancardRejectNotification(OrderModel orderModel);
 
 
 }
