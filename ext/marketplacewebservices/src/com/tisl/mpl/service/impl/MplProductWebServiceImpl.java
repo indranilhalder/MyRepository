@@ -4,6 +4,7 @@
 package com.tisl.mpl.service.impl;
 
 import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -148,6 +149,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+	@Resource
+	private SiteConfigService siteConfigService;
+	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	//sonar fix
 	/*
@@ -159,8 +163,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	 * @desc This service fetches all the details of A+ content based on product code
 	 */
 	@Override
-	public ProductAPlusWsData getAPluscontentForProductCode(String productCode) throws EtailNonBusinessExceptions,
-			CMSItemNotFoundException
+	public ProductAPlusWsData getAPluscontentForProductCode(String productCode)
+			throws EtailNonBusinessExceptions, CMSItemNotFoundException
 	{
 
 		if (null != productCode)
@@ -311,6 +315,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		List<ClassificationMobileWsData> specificationsList = null;
 		//	PromotionMobileData potenitalPromo = null;
+		final boolean specialMobileFlag = configurationService.getConfiguration()
+				.getBoolean(MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 
 		try
 		{
@@ -321,9 +327,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			productModel = productService.getProductForCode(productCode);
 			if (null != productModel)
 			{
-				productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
-						ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
-						ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL, ProductOption.SELLER));
+				productData = productFacade.getProductForOptions(productModel,
+						Arrays.asList(ProductOption.BASIC, ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY,
+								ProductOption.CATEGORIES, ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION,
+								ProductOption.VARIANT_FULL, ProductOption.SELLER));
 
 				//TISPT-396
 				/*
@@ -389,7 +396,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 
 						// Below codes are Channel specific promotion TISPRD-8944
-						if (buyBoxData.getSpecialPriceMobile() != null
+						if (specialMobileFlag && buyBoxData.getSpecialPriceMobile() != null
 								&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
 						{
 							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
@@ -401,8 +408,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							productDetailMobile.setDiscount(roundedOffValue.toString());
 
 						}
-						else if (buyBoxData.getSpecialPriceMobile() == null && buyBoxData.getSpecialPrice() != null
-								&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0)//backward compatible
+						else if (!specialMobileFlag && buyBoxData.getSpecialPrice() != null
+								&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0) //backward compatible
 						{
 							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
 									- buyBoxData.getSpecialPrice().getDoubleValue().doubleValue();
@@ -438,7 +445,21 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
 			}
+			//TPR-6117 STARTS
+			final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 
+
+			if (null != productModel.getMaxOrderQuantity() && productModel.getMaxOrderQuantity().intValue() > 0
+					&& productModel.getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+			{
+				productDetailMobile.setMaxQuantityAllowed(productModel.getMaxOrderQuantity().toString());
+			}
+			else
+			{
+				//final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				productDetailMobile.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+			}
+			//TPR-6117 END
 
 			//			Added for OfferDetail of  a product TPR-1299
 			if (null != productCode)
@@ -552,15 +573,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerName(buyBoxData.getSellerName());
 				}
 				//TISPRD-8944 Changes Start
-				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getFormattedValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
 				} //backward compatible
-				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
+				else if (!specialMobileFlag && null != buyBoxData && null == buyBoxData.getSpecialPriceMobile()
+						&& null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getFormattedValue()
+						&& null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
@@ -572,15 +594,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
 				}
 
-				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPriceMobile().getValue());
-				}//backward compatible
-				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getValue() && null != buyBoxData.getSpecialPrice().getValue()
+				} //backward compatible
+				else if (!specialMobileFlag && null != buyBoxData && null == buyBoxData.getSpecialPriceMobile()
+						&& null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getValue()
+						&& null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPrice().getValue());
@@ -827,8 +850,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					deliveryMode = new DeliveryModeData();
 					if (null != delivery.getCode())
 					{
-						LOG.debug("*************** Mobile web service eligible delivery modes code ****************"
-								+ delivery.getCode());
+						LOG.debug(
+								"*************** Mobile web service eligible delivery modes code ****************" + delivery.getCode());
 
 						deliveryMode.setCode(delivery.getCode());
 					}
@@ -902,18 +925,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		}
 
 		//Start Code change for INC_11931
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-				MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
+		if (StringUtils.isNotEmpty(
+				configurationService.getConfiguration().getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 		{
-			knowMoreSecLux = configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+			knowMoreSecLux = configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
 		}
 		//changes for INC144314533
-		if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-				MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
+		if (StringUtils.isNotEmpty(configurationService.getConfiguration()
+				.getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
 		{
-			knowMoreSecLuxLessThanZero = configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
+			knowMoreSecLuxLessThanZero = configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
 		}
 		//End Code change for INC_11931
 		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_FOURTH)))
@@ -944,18 +967,18 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 			//Start Code change for INC_11931
 
-			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
+			if (StringUtils.isNotEmpty(
+					configurationService.getConfiguration().getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX)))
 			{
-				knowMoreSecLux = configurationService.getConfiguration().getString(
-						MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
+				knowMoreSecLux = configurationService.getConfiguration()
+						.getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_FOR_LUX);
 			}
 			//changes for INC144314533
-			if (StringUtils.isNotEmpty(configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
+			if (StringUtils.isNotEmpty(configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO)))
 			{
-				knowMoreSecLuxLessThanZero = configurationService.getConfiguration().getString(
-						MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
+				knowMoreSecLuxLessThanZero = configurationService.getConfiguration()
+						.getString(MarketplacewebservicesConstants.KNOW_MORE_SECOND_LUX_LESS_THAN_ZERO);
 			}
 
 			//End Code change for INC_11931
@@ -982,8 +1005,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					knowMoreList.add(knowMoreItem);
 				}
 			}
-			else if (StringUtils.isNotEmpty(knowMoreSec) && StringUtils.isNotEmpty(returnWindow)
-					&& StringUtils.isNotEmpty(knowMoreTh))
+			else
+				if (StringUtils.isNotEmpty(knowMoreSec) && StringUtils.isNotEmpty(returnWindow) && StringUtils.isNotEmpty(knowMoreTh))
 			{
 				knowMoreItem = new KnowMoreDTO();
 				knowMoreItem.setKnowMoreItem(knowMoreSec + MarketplacecommerceservicesConstants.SPACE + returnWindow
@@ -1696,8 +1719,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
 						if (null != productData.getRootCategory())
 						{
-							final String properitsValue = configurationService.getConfiguration().getString(
-									MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+							final String properitsValue = configurationService.getConfiguration()
+									.getString(MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if (productData.getRootCategory().equalsIgnoreCase(MarketplacewebservicesConstants.CLOTHING))
@@ -1818,10 +1841,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	private String getCategoryOfProduct(final ProductData productData)
 	{
 		String productCategory = null;
-		final String salesCategory = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SALESCATEGORYTYPE);
-		final String luxSalesCategory = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE);
+		final String salesCategory = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.SALESCATEGORYTYPE);
+		final String luxSalesCategory = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE);
 		try
 		{
 			if (CollectionUtils.isNotEmpty(productData.getCategories()))
@@ -1854,11 +1877,11 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	public String getCategoryCodeOfProduct(final ProductData productData)
 	{
 		String productCategory = null;
-		final String salesCategory = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SALESCATEGORYTYPE);
+		final String salesCategory = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.SALESCATEGORYTYPE);
 
-		final String luxSalesCategory = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE);
+		final String luxSalesCategory = configurationService.getConfiguration()
+				.getString(MarketplacecommerceservicesConstants.LUX_SALESCATEGORYTYPE);
 		try
 		{
 			if (CollectionUtils.isNotEmpty(productData.getCategories()))
@@ -1991,8 +2014,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		String isEMIEligible = null;
 		try
 		{
-			final String emiCuttOffAmount = configurationService.getConfiguration().getString(
-					MarketplacewebservicesConstants.EMI_CUT_OFF_LIMIT);
+			final String emiCuttOffAmount = configurationService.getConfiguration()
+					.getString(MarketplacewebservicesConstants.EMI_CUT_OFF_LIMIT);
 			BigDecimal emiLimit = null;
 			if (null != emiCuttOffAmount)
 			{
@@ -2199,14 +2222,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						final Map<String, String> productFeatureMap = new HashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
-								productData, featureData.getCode());
+						final ProductFeatureModel productFeature = mplProductFacade
+								.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
 						if (null != productData.getRootCategory())
 						{
-							final String properitsValue = configurationService.getConfiguration().getString(
-									MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-							final String descValues = configurationService.getConfiguration().getString(
-									MarketplacewebservicesConstants.PDP_DESC_TAB + productData.getRootCategory());
+							final String properitsValue = configurationService.getConfiguration()
+									.getString(MarketplacewebservicesConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+							final String descValues = configurationService.getConfiguration()
+									.getString(MarketplacewebservicesConstants.PDP_DESC_TAB + productData.getRootCategory());
 							//apparel
 							final FeatureValueData featureValueData = featureValueList.get(0);
 							if ((MarketplacewebservicesConstants.CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
@@ -2250,7 +2273,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 											featureValues = featureValueData.getValue();
 											featureValues += productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
-													: "";
+															: "";
 											mapConfigurableAttribute.put(featureData.getName(), featureValues);
 										}
 									}
@@ -2415,8 +2438,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				}
 
 				if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getValue().toString()
-						&& null != buyBoxData.getSpecialPrice().getValue()
+						&& null != buyBoxData.getSpecialPrice().getValue().toString() && null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
