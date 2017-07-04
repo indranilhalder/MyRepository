@@ -32,18 +32,22 @@
 		});
 		
 		//$("#zoomModal").addClass("active");
-		$("div#zoom_gallery img").each(function() {
+		/* $("div#zoom_gallery img").each(function() {
 
 			if ($(this).attr('data-type') == "video") {
 				$(this).hide();
 			}
-		});
+		}); */
 		
 		if(opts.windowWidth < 1025) {
-			console.log(opts.windowWidth)
+			console.log(opts.windowWidth);
 			setTimeout(function(){
 				var mainImageHeight = $("#zoomId > img").height();
 				var thumbnailImageHeight = (mainImageHeight / 5);
+				var listHeight = thumbnailImageHeight + 13.6;
+				//PRDI-397
+				$("#zoomModal .imageList").css("height",(listHeight*imagePageLimit)+"px");
+				console.log("Zoom modal listHeight >>>>> " + listHeight);
 				$("#zoomModal .imageList ul li img").css("height", thumbnailImageHeight);
 			},1000)
 		}

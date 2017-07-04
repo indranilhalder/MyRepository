@@ -894,6 +894,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
 		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
+		   $("img.lazy").lazyload();
 	 }
 	
 	// INC144315462 and INC144315104 

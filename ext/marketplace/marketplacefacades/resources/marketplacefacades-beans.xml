@@ -1042,6 +1042,9 @@
 		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="totalMrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 starts here -->
+		<property name="cartAdditionalDiscPerc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 ends here -->
 	</bean>
 	<!-- TPR-774 -->
 	

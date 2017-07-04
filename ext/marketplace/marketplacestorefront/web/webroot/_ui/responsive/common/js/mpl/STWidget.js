@@ -47,8 +47,12 @@ var stwService = {
                         var header = stwRender.header(json);
                         var tabs = stwRender.tabs(json);
                         var carousel = stwRender.carousel(json);
+                      if(( carousel != undefined && carousel !="") && carousel!=null)
+                     // if(carousel)
+                       {
                         var stw_block = "<div class='best_seller stw-list'>" + header + tabs + "</div>" + carousel;
                         $("#stw_widget").html(stw_block);
+                      	}
                         stwRender.bindCarousel();
                         tabsLoaded = true;
                     }
@@ -78,15 +82,21 @@ var stwService = {
 
 var stwRender = {
 	    wigetLoaderOnIp: function(ip) {
-	        var flag = true;
-	        var lastIpPart = ip.split(".")[3];
+	    	var flag = true;
+	    	var lastIpPart;
+	    	if( ip.indexOf(',') != -1 ){
+	    		var splitIP=ip.split(",")[0];
+	    		lastIpPart = splitIP.split(".")[3];
+	    	   }
+	    	else{
+	    		 var lastIpPart = ip.split(".")[3];
+	    	    }
 	        if (typeof(lastIpPart) != 'undefined') {
 	            if (lastIpPart % 2 == 0) {
 	                delete productWidget[4]; // if even then load STW and delete HOT NOW
 	                return flag;
 	            } else {
 	                return !flag;
-
 	            }
 	        }
 	    },
@@ -125,8 +135,8 @@ var stwRender = {
     },
     carousel: function(STWJObject) {
     	if(STWJObject !=null && (STWJObject.STWElements !="" && STWJObject.STWElements !=null ))
-    	    	{
-    	
+    	//if(STWJObject.STWElements)
+    	{
         var stwWidgetProducts = "";
         stwWidgetProducts += '<div class="carousel-component">';
         stwWidgetProducts += '<div class="carousel js-owl-carousel js-owl-lazy-reference js-owl-carousel-reference stw-widget-owl">';
@@ -153,7 +163,7 @@ var stwRender = {
         }
     },
     bindCarousel: function() {
-        $(".stw-widget-owl").owlCarousel({
+    	$(".stw-widget-owl").owlCarousel({
             items: 5,
             loop: true,
             nav: true,
@@ -165,19 +175,23 @@ var stwRender = {
                 0: {
                     items: 1,
                     stagePadding: 50,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 1) ? false : true,
                 },
                 // breakpoint from 480 up
                 480: {
                     items: 2,
                     stagePadding: 50,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 2) ? false : true,
                 },
                 // breakpoint from 768 up
                 768: {
                     items: 3,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 3) ? false : true,
                 },
                 // breakpoint from 1080 up
                 1080: {
                     items: 5,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 5) ? false : true,
                 }
             }
         });
