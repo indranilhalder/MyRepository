@@ -217,10 +217,10 @@ tr.d0 td {
 										<c:when test="${not empty entry.productPerDiscDisplay}">
 											<c:choose>
 												<c:when test="${not empty entry.productLevelDisc}">
-													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span></span>
+													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}" class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span></span>
 												</c:when>
 												<c:otherwise>
-													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span></span>
+													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"  class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span></span>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
@@ -236,10 +236,10 @@ tr.d0 td {
 										<c:when test="${not empty entry.productPerDiscDisplay}">
 										<c:choose>
 												<c:when test="${not empty entry.productLevelDisc}">
-													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span></span>
+													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}" class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span></span>
 												</c:when>
 												<c:otherwise>
-													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span></span>
+													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}" class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span></span>
 												</c:otherwise>
 											</c:choose>
 										</c:when>
@@ -414,7 +414,7 @@ tr.d0 td {
 											<!-- TPR-970 changes--><%-- <span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span> --%>
 												<!-- UF-260 -->
 												<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
-												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span>(${entry.cartAdditionalDiscPerc.value}% Off)</span>
+												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span> (${entry.cartAdditionalDiscPerc.value}% Off)</span>
 												<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 										</c:when>
@@ -422,7 +422,7 @@ tr.d0 td {
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
 											<p class="add-disc">Additional Discount</p>
 											<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
-											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span>(${entry.cartAdditionalDiscPerc.value}% Off)</span>
+											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>Off</span> (${entry.cartAdditionalDiscPerc.value}% Off)</span>
 											<%-- <span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 									</c:otherwise>
@@ -434,7 +434,7 @@ tr.d0 td {
                             <%-- <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span><span class="priceFormat priceFormatOnUpdate">&nbsp;<span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span></span> --%>
 							
 							<p class="add-disc-pincode" style="display:none;">Additional Discount</p>
-							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span>(${entry.cartAdditionalDiscPerc.value}% Off)</span></span>
+							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span> (${entry.cartAdditionalDiscPerc.value}% Off)</span></span>
 							
 							
 							<!-- TPR-970 changes ends-->
