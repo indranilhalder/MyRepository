@@ -224,13 +224,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -257,7 +257,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -285,17 +285,17 @@ public class MiscsController extends BaseController
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
+	 * 
 	 * /**
-	 *
+	 * 
 	 * /*
-	 *
+	 * 
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
+	 * 
 	 * /**
-	 *
+	 * 
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -713,9 +713,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1423,7 +1423,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1436,11 +1436,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 *
+	 * 
 	 * } return deliveryModeData; } =======
-	 *
+	 * 
 	 * @param code
-	 *
+	 * 
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1949,19 +1949,22 @@ public class MiscsController extends BaseController
 									 * cancelReturnFacade.associatedEntries( subOrderModel, oneTouchCrmObj.getTransactionId());
 									 */
 
-
+									String consignmentStatusCheck = null;
 									boolean deliverymodeValidator = true;
 									checkloop: for (final AbstractOrderEntryModel orderEntry1 : orderEntriesModel)
 									{
 										LOG.debug("===Inside checkloop check====");
 										checkList.add(orderEntry1.getTransactionID());
 										deliveryCheckFlag = true;
-
+										consignmentStatusCheck = "";
 										for (final ConsignmentEntryModel con : orderEntry1.getConsignmentEntries())
 										{
 											LOG.debug("===Inside ConsignmentEntryModel loop===="
 													+ con.getConsignment().getStatus().getCode());
-
+											if (StringUtils.isNotEmpty(con.getConsignment().getStatus().getCode()))
+											{
+												consignmentStatusCheck = con.getConsignment().getStatus().getCode();
+											}
 											LOG.debug("===========DeliveryMode:====****======"
 													+ orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode());
 											if (orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode()
@@ -1998,16 +2001,30 @@ public class MiscsController extends BaseController
 										LOG.debug("===Inside deliveryCheckFlag loop====");
 										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
 										{
-											output = new OneTouchCancelReturnDTO();
-											output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
-											consignmentStatus = "All the products in promotion are not in delivered status";
-											output.setTransactionId(orderEntry2.getTransactionID());
-											output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
-											output.setServiceability(serviceabilty == true ? "S" : "F");
-											//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
-											output.setRemarks(serviceabilty == true ? consignmentStatus
-													: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
-											outputList.add(output);
+											if (consignmentStatusCheck.equalsIgnoreCase("RETURN_INITIATED"))
+											{
+												output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+												output.setTransactionId(orderEntry2.getTransactionID());
+												output.setServiceability(serviceabilty == true ? "S" : "F");
+												//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+												output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+												output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+														: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+												outputList.add(output);
+											}
+											else
+											{
+												output = new OneTouchCancelReturnDTO();
+												output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+												consignmentStatus = "All the products in promotion are not in delivered status";
+												output.setTransactionId(orderEntry2.getTransactionID());
+												output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+												output.setServiceability(serviceabilty == true ? "S" : "F");
+												//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+												output.setRemarks(serviceabilty == true ? consignmentStatus
+														: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+												outputList.add(output);
+											}
 										}
 										continue outer;
 									}
