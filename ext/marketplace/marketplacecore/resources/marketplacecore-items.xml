@@ -142,9 +142,13 @@
 						  <value code="Mkt_Desktop_Web" />
 			              <value code="Mkt_Mobile_Web" />
 			              <value code="Mkt_Mobile_App" />
+			              <value code="Mkt_iOS_App" />
+			              <value code="Mkt_Android_App" />
 			              <value code="Lux_Desktop_Web" />
 			              <value code="Lux_Mobile_Web" />
-			              <value code="Lux_Mobile_App" />			              
+			              <value code="Lux_Mobile_App" />
+			              <value code="Lux_iOS_App" />
+			              <value code="Lux_Android_App" />			              
 		            </enumtype>
 	                <!-- TPR-6272 ends here -->
 

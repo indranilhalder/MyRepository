@@ -502,8 +502,8 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/registration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto registerUser(@RequestParam final String emailId, @RequestParam final String password,
-			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+			@RequestParam(required = false) final boolean tataTreatsEnable, @RequestParam final int platformNumber)
+			throws RequestParameterException, WebserviceValidationException, MalformedURLException
 
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + emailId);
@@ -514,10 +514,9 @@ public class UsersController extends BaseCommerceController
 		{
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
-			//TPR-6272 starts here
-			final int platformNumber = 3;
-			//TPR-6272 ends here
-			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable, platformNumber);//TPR-6272 Parameter platformNumber added
+			/*
+			 * //TPR-6272 starts here final int platformNumber = 9; //TPR-6272 ends here
+			 */userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable, platformNumber);//TPR-6272 Parameter platformNumber added
 			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
 			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))
