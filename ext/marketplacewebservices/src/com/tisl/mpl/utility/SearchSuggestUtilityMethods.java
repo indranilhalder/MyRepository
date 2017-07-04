@@ -9,6 +9,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
@@ -171,7 +173,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -824,7 +826,27 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setSellingPrice(productData.getPrice());
 				}
 
-
+				//added for jewellery mobile web services:maxSellingPrice & minSellingPrice
+				if (null != productData.getProductCategoryType()
+						&& MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getProductCategoryType()))
+				{
+					PriceData pDataMax = new PriceData();
+					PriceData pDataMin = new PriceData();
+					final BuyBoxModel buyBoxData = productDetailsHelper.buyboxPriceForJewelleryWithVariant(productData.getUssID());
+					if (null != buyBoxData)
+					{
+						if (null != buyBoxData.getPLPMaxPrice())
+						{
+							pDataMax = productDetailsHelper.formPriceData(new Double(buyBoxData.getPLPMaxPrice().doubleValue()));
+						}
+						if (null != buyBoxData.getPLPMinPrice())
+						{
+							pDataMin = productDetailsHelper.formPriceData(new Double(buyBoxData.getPLPMinPrice().doubleValue()));
+						}
+					}
+					sellingItemDetail.setMaxSellingPrice(pDataMax);
+					sellingItemDetail.setMinSellingPrice(pDataMin);
+				}
 
 				if (null != productData.getInStockFlag())
 				{
