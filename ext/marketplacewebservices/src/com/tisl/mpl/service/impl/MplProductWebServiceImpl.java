@@ -1354,7 +1354,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		{
 			if (null != productCode)
 			{
-				allSellerList = buyBoxFacade.getsellersDetails(productCode);
+				//TPR-3809
+				//allSellerList = buyBoxFacade.getsellersDetails(productCode);
+				allSellerList = buyBoxFacade.getsellersDetails(productCode,null);
 			}
 			if (null != allSellerList && !allSellerList.isEmpty())
 			{
