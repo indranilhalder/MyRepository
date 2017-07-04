@@ -72779,3 +72779,18 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 	}
 }
 /*TISTE-225 fix end*/
+
+/*TISPRDT 1673 fix start*/
+.mop_span{
+	display: block;
+}
+.mop_span ~ li {
+    display: inline-block;
+}
+.mop_span ~ li + span.off-bag {
+    display: inline-block;
+     color: #000;
+     width: auto;
+}
+
+/*TISPRDT 1673 fix end*/
