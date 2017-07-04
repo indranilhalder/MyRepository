@@ -39,10 +39,10 @@
 			<spring:theme code="text.skipToNavigation" var="skipToNavigation" />
 			<a href="#skiptonavigation" class="skiptonavigation" data-role="none">${skipToNavigation}</a> --%>
 
-
+			<c:if test="${param.frame eq null}">
 			<header:header hideHeaderLinks="${hideHeaderLinks}"
-			showOnlySiteLogo="${showOnlySiteLogo}" />
-
+				showOnlySiteLogo="${showOnlySiteLogo}" />
+			</c:if>
 
 			<div class="mainContent-wrapper">
 	
@@ -53,7 +53,7 @@
 				<div class="body-Content"><jsp:doBody /></div>
 				
 				
-			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
+			<%-- <!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
 				<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
 				<c:choose>		
 				    <c:when test ="${product.rootCategory==finejewellery}"> 
@@ -64,10 +64,11 @@
 						</div>
 					</c:when> 
 				</c:choose>
-			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
+			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE --> --%>
 				
 			</div>	
 			
+			<c:if test="${param.frame eq null}">
 			<c:choose>
             <c:when test="${empty showOnlySiteLogo }">
 				<footer:footer />
@@ -83,18 +84,13 @@
 			<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
    			<cms:component component="${feature}"></cms:component>
    			</c:if>
-        </cms:pageSlot>
+        	</cms:pageSlot>
         </div>
         </footer>
  		</c:if>
 			</c:otherwise>
 			</c:choose>
-			
-			
-			
-			
-			
-			
+			</c:if>
 			</div>
 		</main> 
 

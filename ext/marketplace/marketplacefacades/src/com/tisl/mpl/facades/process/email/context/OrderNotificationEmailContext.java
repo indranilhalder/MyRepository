@@ -66,7 +66,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String CNCSTOREADDRESS = "storeAddress";
 	private static final String CUSTOMER_NAME = "customerName";
 	private static final String COD_CHARGES = "codCharge";
-
+	private static final String SUBTOTALFORJEWELLERY = "subTotalForJewellery";
 
 
 
@@ -104,6 +104,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
 		double subTotal = 0.0d;
 		double shippingCharge = 0.0d;
+		double totalFineJewelleryPrice = 0.0d;
 		//Changes for discount
 		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
@@ -113,6 +114,12 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			{
 				subTotal += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
 				shippingCharge += childOrderEntries.getCurrDelCharge().doubleValue();
+				final ProductModel prod = childOrderEntries.getProduct();
+				//added for jewellery
+				if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+				{
+					totalFineJewelleryPrice += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+				}
 			}
 
 		}
@@ -155,6 +162,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(SUBTOTAL, Double.valueOf(subTotal));
 		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
+		put(SUBTOTALFORJEWELLERY, Double.valueOf(totalFineJewelleryPrice));
 		//put(TOTALPRICE, totalPriceNew);
 		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(CONVENIENCECHARGE, convenienceChargesVal);

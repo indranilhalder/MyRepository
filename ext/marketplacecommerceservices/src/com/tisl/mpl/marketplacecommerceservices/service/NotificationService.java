@@ -71,4 +71,14 @@ public interface NotificationService
 	 * @return
 	 */
 	String triggerNpsEmail(AbstractOrderEntryModel value, OrderModel order);
+
+	/**
+	 * pan card email
+	 *
+	 * @param orderDetails
+	 * 
+	 * @throws JAXBException
+	 */
+	void triggerEmailAndSmsOnPancardReject(OrderModel orderDetails) throws JAXBException;
+
 }

@@ -76,10 +76,12 @@ function viewPaymentDebit(){
 		});
 		$("#make_dc_payment_up").show();
 	}
-	//TPR-665
-	utag.link({
-		"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_debit_card_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 
@@ -99,10 +101,12 @@ function viewPaymentNetbanking(){
 	else{
 		redirectToCheckoutLogin();	
 	}
-	//TPR-665
-	utag.link({
-		"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_net_banking_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 
@@ -128,10 +132,12 @@ function viewPaymentCOD(){
 	else{
 		redirectToCheckoutLogin();
 	}
-	//TPR-665
-	utag.link({
-		"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_cod_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 
@@ -151,11 +157,12 @@ function viewPaymentEMI(){
 	else{
 		redirectToCheckoutLogin();
 	}
-	
-	//TPR-665
-	utag.link({
-		"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
-	});
+	if(typeof utag !="undefined"){
+		//TPR-665
+		utag.link({
+			"link_text": "pay_emi_selected" , "event_type" : "payment_mode_selection"
+		});
+	}
 //});
 }
 // Mode button click function ends
@@ -619,8 +626,11 @@ function displayDCForm(){
 		$(".make_payment_top_savedCard").css("display","block");
 		$(".make_payment_top_newCard").css("display","none");
 		$(".newCard").css("display","table-cell");
-		$("input[name=creditCards]:radio").first().prop("checked", false);
-		$("input[name=debitCards]:radio").first().prop("checked", true);
+		if(!ACC.singlePageCheckout.getIsResponsive())
+		{//UF-282
+			$("input[name=creditCards]:radio").first().prop("checked", false);
+			$("input[name=debitCards]:radio").first().prop("checked", true);
+		}
 		$(".card_token").parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
 		$(".card_token").parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
 		$(".card_token").parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
@@ -1302,8 +1312,11 @@ function displayFormForCC(){
 			//$("#savedDebitCard, #newCard, .savedCard, .newCardPayment").css("display","none");
 			$(".make_payment_top_newCard").css("display","none");
 			$(".newCard").css("display","table-cell");
-			$("input[name=debitCards]:radio").first().prop("checked", false);
-			$("input[name=creditCards]:radio").first().prop("checked", true);
+			if(!ACC.singlePageCheckout.getIsResponsive())
+			{//UF-282
+				$("input[name=debitCards]:radio").first().prop("checked", false);
+				$("input[name=creditCards]:radio").first().prop("checked", true);
+			}
 			$("#card li.header ul").append($("#emi li.newCard"));
 			$("#card li.header ul").append($("#emi li.savedCard"));
 			var bankName=$('.card_bank').val();
@@ -1527,8 +1540,11 @@ $("#otpMobileNUMField").focus(function(){
 			$("#convChargeFieldId, #convChargeField").css("display","none");
 			document.getElementById("convChargeField").innerHTML=convCharge;
 			document.getElementById("totalWithConvField").innerHTML=totalPrice;
-			//INC144316021
-			document.getElementById("outstanding-amount").innerHTML=totalPrice;
+			if(document.getElementById("outstanding-amount")!=null)
+			{
+				//INC144316021
+				document.getElementById("outstanding-amount").innerHTML=totalPrice;
+			}
 			document.getElementById("outstanding-amount-mobile").innerHTML=totalPrice;
  			isCodSet = false;
  			if(paymentMode!=null){
@@ -1563,30 +1579,31 @@ $("#otpMobileNUMField").focus(function(){
  
 
  
- $("input[name=creditCards]:radio").each(function(){
-     var frm = $(this.form)
-     
- }).on('change', function(e){
-     var $this = $(this)
-     var cg = $this.parents("div.credit-card-group:first")
+// $("input[name=creditCards]:radio").each(function(){
+//     var frm = $(this.form)
+//     
+// }).on('change', function(e){
+function savedCreditCardRadioChange(radioId){
+  //var $this = $(this)
+    // var cg = $this.parents("div.credit-card-group:first")
 	     // TISBOX-1732
 	     $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display","none");
 	     $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
-		 $(e.currentTarget).removeClass("card_token_hide").addClass("card_token");
+		 $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
 		 $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 		 $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 		 $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 		 $('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 		 $('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	     $(e.currentTarget).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
-	     $(e.currentTarget).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
-	     $(e.currentTarget).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
-	     $(e.currentTarget).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	     $("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $("#"+radioId).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
@@ -1601,34 +1618,36 @@ $("#otpMobileNUMField").focus(function(){
 			}
 	     var bankName=$('.card_bank').val();
 	     setBankForSavedCard(bankName);
- });
+ //});
+}
  
  
  
-  $("input[name=debitCards]:radio").each(function(){
-	     var frm = $(this.form)
-	     
-	 }).on('change', function(e){
-	     var $this = $(this)
+//  $("input[name=debitCards]:radio").each(function(){
+//	     var frm = $(this.form)
+//	     
+//	 }).on('change', function(e){
+function savedDebitCardRadioChange(radioId){
+	     //var $this = $(this)
 	     // TISBOX-1732
 	     $(".card_cvvErrorSavedCard, card_cvvErrorSavedCard_hide, .card_ebsErrorSavedCard, .card_ebsErrorSavedCard_hide").css("display","none");
-	     var cg = $this.parents("div.debit-card-group:first")
+	     //var cg = $this.parents("div.debit-card-group:first")
 	     $("input[name=creditCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=debitCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $("input[name=emiCards]:radio.card_token").removeClass("card_token").addClass("card_token_hide");
 	     $(".card_token_hide").parent().parent().parent().find(".cvv").find(".security_code").removeClass("security_code").addClass("security_code_hide");
-	     $(e.currentTarget).removeClass("card_token_hide").addClass("card_token");
+	     $("#"+radioId).removeClass("card_token_hide").addClass("card_token");
 	     $(".card_bank").removeClass("card_bank").addClass("card_bank_hide");
 	     $(".card_brand").removeClass("card_brand").addClass("card_brand_hide");
 	     $('.card_is_domestic').removeClass("card_is_domestic").addClass("card_is_domestic_hide");
 	     $('.card_ebsErrorSavedCard').removeClass("card_ebsErrorSavedCard").addClass("card_ebsErrorSavedCard_hide");
 	     $('.card_cvvErrorSavedCard').removeClass("card_cvvErrorSavedCard").addClass("card_cvvErrorSavedCard_hide");
-	     $(e.currentTarget).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
-	     $(e.currentTarget).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
-	     $(e.currentTarget).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
-	     $(e.currentTarget).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
-	     $(e.currentTarget).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
+	     $("#"+radioId).parent().find('.card_bank_hide').removeClass("card_bank_hide").addClass("card_bank"); 
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find(".security_code_hide").removeClass("security_code_hide").addClass("security_code");
+	     $("#"+radioId).parent().find('.card_brand_hide').removeClass("card_brand_hide").addClass("card_brand");
+	     $("#"+radioId).parent().find('.card_is_domestic_hide').removeClass("card_is_domestic_hide").addClass("card_is_domestic");
+	     $("#"+radioId).parent().find('.card_ebsErrorSavedCard_hide').removeClass("card_ebsErrorSavedCard_hide").addClass("card_ebsErrorSavedCard");
+	     $("#"+radioId).parent().parent().parent().find(".cvv").find('.card_cvvErrorSavedCard_hide').removeClass("card_cvvErrorSavedCard_hide").addClass("card_cvvErrorSavedCard");
 	     $(".security_code_hide").val(null);
 	   // TISEE-5555
 	 	$('.security_code_hide').prop('disabled', true);
@@ -1649,7 +1668,8 @@ $("#otpMobileNUMField").focus(function(){
 	     else{
 				$("#maestroMessage").css("display","none");
 	     }
-	 });
+	 //});
+}
   
   
   //$(document).on("focus", "#savedEMICard .credit-card-group .cvvValdiation", function() {
@@ -4753,9 +4773,9 @@ function applyPromotion(bankName,binValue,formSubmit)
 				$("#codAmount").text(response.totalPrice.formattedValue);
 				//TISTRT-1605 //TISBBC-35
 				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
-					$("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue);
+					$("#deliveryCostSpanId").html(response.deliveryCost.formattedValue);
 		 		}else{
-		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
@@ -5236,9 +5256,9 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			// TISST-13010
 	 			$("#cartPromotionApplied").css("display","block");
 	 			if(parseFloat(deliveryCost) > 0){
-	 				document.getElementById("deliveryCostSpanId").innerHTML=currency+deliveryCost;
+	 				$("#deliveryCostSpanId").html(currency+deliveryCost);
 		 		}else{
-	 				document.getElementById("deliveryCostSpanId").innerHTML="Free";
+		 			$("#deliveryCostSpanId").html("Free");
 		 		}
 	 			
 	 			document.getElementById("totalWithConvField").innerHTML=currency+totalPrice;
@@ -5533,6 +5553,8 @@ function changeCTAButtonName(deliveryCode) {
 	// console.log(deliveryCode);
 	// TISPRO-625
 	var isExpressCheckoutSelected=$('#isExpressCheckoutSelected').val();
+	
+	var isDeliveryOptionPage=$('#isDeliveryOptionPage').val();
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Proceed To Store");
 		$("#deliveryMethodSubmitUp").text("Proceed To Store");
@@ -5542,8 +5564,15 @@ function changeCTAButtonName(deliveryCode) {
 		// $("#deliveryMethodSubmitUp").text("Choose Address");
 		if(isExpressCheckoutSelected=='true')
 		{
-			$("#deliveryMethodSubmit").text("Proceed to Payment");
-			$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			//INC144316212  
+			if(isDeliveryOptionPage == 'yes'){
+				$("#deliveryMethodSubmit").text("Proceed To Address");
+				$("#deliveryMethodSubmitUp").text("Proceed To Address");
+			} else {
+				$("#deliveryMethodSubmit").text("Proceed to Payment");
+				$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			}
+			
 		}
 		else
 		{
@@ -6080,57 +6109,68 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			$("#cartAmtOfferDisplay_"+entryNumber).hide();
 			$("#itemCartCentDisplay_"+entryNumber).hide();
 			$("#itemCartAmtDisplay_"+entryNumber).hide();
+			$(".add-disc").hide();
 			var isOfferPresent=false;
 			var basePrice=$("#basePrice_"+entryNumber).val();
 			if(basePrice!=""){
-				$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(basePrice);
 			}
 			else{
-				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue);
 			}
 			if(cartData[cart]['cartLevelDisc']!=null){
 				isOfferPresent=true;
+				$(".add-disc-pincode").show();
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			
 			if(cartData[cart]['cartLevelPercentage']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
+				$(".add-disc-pincode").show();
 				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
 				//UF-260
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-				$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				//$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 			//Start:Below code is for productPerDiscDisplay when cartLevelDisc is not null
 			if(cartData[cart]['productPerDiscDisplay']!=null )
 			{
 				if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productLevelDisc']){
+					$(".add-disc-pincode").show();
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					isOfferPresent=true;
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
 					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
 				}
 				//End:Above code is for productPerDiscDisplay when cartLevelDisc is not null
 				//Start:Below code is for productPerDiscDisplay when cartLevelDisc is null
 				if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
-					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
 				}
 				else{
 					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
 					$("#ItemAmtofferDisplay_"+entryNumber).show();
-					$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off</span>");
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
 					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
 				}
 				//End:Above code is for productPerDiscDisplay when cartLevelDisc is null
@@ -7124,6 +7164,7 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//UF-277 TISSTRT-1601
 	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
@@ -7145,6 +7186,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="firstName") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
@@ -7153,6 +7195,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="lastName") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
@@ -7161,6 +7204,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
@@ -7169,6 +7213,7 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
+	//TISSTRT-1601
 	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
@@ -7214,11 +7259,13 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
+	//TISSTRT-1601 UF-277 regex
 	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
+	//TISSTRT-1601 UF-277
 	else if(!regex.test(addressLine)){
 		errorHandle.innerHTML = "Please enter a valid Address";
         return false;
@@ -7323,6 +7370,7 @@ function validateCityEmi() {
 function validateState() {
 	var name=$("#state").val();
 	var errorHandle=document.getElementById("stateError");
+	//TISSTRT-1601 UF-277
 	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
@@ -7339,6 +7387,7 @@ function validateState() {
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
 	var errorHandle=document.getElementById("stateErrorEmi");
+	//TISSTRT-1601 UF-277
 	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
@@ -7550,8 +7599,11 @@ $("#couponSubmitButton").click(function(){
 	 			$("#no-click,.loaderDiv").remove(); //add for INC_11738
 
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
-	 			//INC144316021
-                document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			if(document.getElementById("outstanding-amount")!=null)
+	 			{
+	 				//INC144316021
+	 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+	 			}
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 	 			$("#codAmount").text(response.totalPrice.formattedValue);
 	 			if(response.redeemErrorMsg!=null){
@@ -7686,7 +7738,8 @@ $("#couponFieldId").focus(function(){
 });
 
 
-$(".remove-coupon-button").click(function(){
+//$(".remove-coupon-button").click(function(){
+function removeAppliedVoucher(){
 	var couponCode=$("#couponFieldId").val();
 	var guid=$("#guid").val();
 	$.ajax({
@@ -7696,8 +7749,11 @@ $(".remove-coupon-button").click(function(){
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
  			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
- 			//INC144316021
-            document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+ 			if(document.getElementById("outstanding-amount")!=null)
+ 			{
+ 				//INC144316021
+ 				document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
+ 			}
 			document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
  			$("#codAmount").text(response.totalPrice.formattedValue);
  			// alert(response.totalPrice.formattedValue);
@@ -7706,31 +7762,45 @@ $(".remove-coupon-button").click(function(){
  			}
  			if(couponApplied==true){
  				//TPR-4460 changes -- invalidChannelError id added
- 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
- 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
+// 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+// 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				// $("#couponFieldId").attr('disabled','enabled');
  				//TPR-4461 starts here
-				$('#couponPaymentRestrictionMessage').hide();
+//				$('#couponPaymentRestrictionMessage').hide();
 			    //TPR-4461 ends here
- 				$('#couponFieldId').attr('readonly', false);
- 				var selection = $("#voucherDisplaySelection").val();
- 				$("#couponFieldId").val(selection);
+// 				$('#couponFieldId').attr('readonly', false);
+// 				var selection = $("#voucherDisplaySelection").val();
+// 				$("#couponFieldId").val(selection);
  				// $("#couponFieldId").val("");
  				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
  				$('#couponMessage').show();
  				$('#couponMessage').delay(2000).fadeOut('slow');
  				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
  			
- 				$("#couponSubmitButton").prop('disabled', false);
- 				$("#couponSubmitButton").css("opacity","1");
+// 				$("#couponSubmitButton").prop('disabled', false);
+// 				$("#couponSubmitButton").css("opacity","1");
+ 				
+ 				resetAppliedCouponFormOnRemoval();
  		},
  		error : function(resp) {
  		}
  	});	 
-});
-
-
+//});
+}
+function resetAppliedCouponFormOnRemoval()
+{
+	$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+		" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
+	//TPR-4461 starts here
+	$('#couponPaymentRestrictionMessage').hide();
+	//TPR-4461 ends here
+	$('#couponFieldId').attr('readonly', false);
+	var selection = $("#voucherDisplaySelection").val();
+	$("#couponFieldId").val(selection);
+	$("#couponSubmitButton").prop('disabled', false);
+	$("#couponSubmitButton").css("opacity","1");
+}
 $(document).ready(function(){
 	$("#off-bag").show();
 	//console.log($("*[data-id=savedCCard]").is(":checked"));
@@ -7758,11 +7828,13 @@ $(document).ready(function(){
 	}
 	
 	$("li.price").each(function(){
-		if($(this).find(".off-bag").css("display") === "block"){
-			$(this).find("span.delSeat").addClass("delAction");
+		if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+			if($(this).find("span.delSeat.mop").length > 0){
+			$(this).find("span.delSeat:not(.mop)").addClass("delAction");
+			}
 		}
 		else{
-			$(this).find("span.delSeat").removeClass("delAction");
+			$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
 		}
 	});
 	
@@ -8187,7 +8259,7 @@ function selectWishlist(i,productCode, ussid)
 function addToWishlistFromCart() {
 	var productCode = $("#product").val();
 	var ussid = $("#ussid").val();
-	alert("Into addToWishlistFromCart>>>"+ussid);
+	//alert("Into addToWishlistFromCart>>>"+ussid);
 	var wishName =wishListList[$("#hidWishlist").val()] ;
 	var requiredUrl = ACC.config.encodedContextPath + "/cart"+"/addToWishListFromCart";
 	var dataString = 'wish=' + wishName + '&product=' + productCode+ '&ussid=' + ussid;

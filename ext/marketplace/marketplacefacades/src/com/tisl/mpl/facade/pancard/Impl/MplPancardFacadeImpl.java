@@ -4,13 +4,18 @@
 package com.tisl.mpl.facade.pancard.Impl;
 
 import de.hybris.platform.core.model.PancardInformationModel;
+import de.hybris.platform.core.model.order.OrderModel;
+
+import java.util.List;
 
 import javax.annotation.Resource;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tisl.mpl.facade.pancard.MplPancardFacade;
 import com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService;
+import com.tisl.mpl.pojo.PanCardResDTO;
 
 
 /**
@@ -42,11 +47,11 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#getPanCardOredrId(java.lang.String)
 	 */
 	@Override
-	public PancardInformationModel getPanCardOredrId(final String orderreferancenumber)
+	public List<PancardInformationModel> getPanCardOredrId(final String orderreferancenumber)
 	{
 		// YTODO Auto-generated method stub
 
@@ -56,7 +61,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#refreshPancardDetailsFacade(de.hybris.platform.core.model.
 	 * PancardInformationModel, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -71,7 +76,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#setPancardFileAndOrderId(java.lang.String, java.lang.String,
 	 * java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -99,6 +104,58 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 	}
 
 
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#setPanCardDetailsAndPIcall(java.lang.String, java.lang.String,
+	 * java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
+	 */
 
+	@Override
+	public void setPanCardDetailsAndPIcall(final String orderreferancenumber, final List<String> transactionidList,
+			final String customername, final String pancardnumber, final MultipartFile file)
+	{
+		mplPancardService.setPanCardDetailsAndPIcall(orderreferancenumber, transactionidList, customername, pancardnumber, file);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#refreshPanCardDetailsAndPIcall(de.hybris.platform.core.model.
+	 * PancardInformationModel, java.lang.String, org.springframework.web.multipart.MultipartFile)
+	 */
+	@Override
+	public void refreshPanCardDetailsAndPIcall(final List<PancardInformationModel> pModelList,
+			final PancardInformationModel pModel, final String pancardnumber, final MultipartFile file)
+	{
+		// YTODO Auto-generated method stub
+		mplPancardService.refreshPanCardDetailsAndPIcall(pModelList, pModel, pancardnumber, file);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#getOrderForCode(java.lang.String)
+	 */
+	@Override
+	public List<OrderModel> getOrderForCode(final String orderreferancenumber)
+	{
+		// YTODO Auto-generated method stub
+		return mplPancardService.getOrderForCode(orderreferancenumber);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#setPancardRes(com.tisl.mpl.pojo.PanCardResDTO)
+	 */
+	@Override
+	public void setPancardRes(final PanCardResDTO resDTO) throws JAXBException
+	{
+		// YTODO Auto-generated method stub
+		mplPancardService.setPancardRes(resDTO);
+	}
 
 }

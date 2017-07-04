@@ -133,6 +133,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -187,17 +188,15 @@ import com.tisl.mpl.facades.data.MplPreferencePopulationData;
 import com.tisl.mpl.facades.data.RescheduleDataList;
 import com.tisl.mpl.facades.data.ReturnItemAddressData;
 import com.tisl.mpl.facades.data.ScheduledDeliveryData;
+import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.payment.impl.MplPaymentFacadeImpl;
 import com.tisl.mpl.facades.product.data.CategoryData;
-import com.tisl.mpl.facades.product.data.DayData;
 import com.tisl.mpl.facades.product.data.GenderData;
-import com.tisl.mpl.facades.product.data.MonthData;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
 import com.tisl.mpl.facades.product.data.MyStyleProfileData;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
 import com.tisl.mpl.facades.product.data.StateData;
-import com.tisl.mpl.facades.product.data.YearData;
 import com.tisl.mpl.helper.MplEnumerationHelper;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
@@ -235,7 +234,6 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 
 
 /**
@@ -670,9 +668,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 		final Map<String, String> orderFormattedDateMap = new HashMap<String, String>();
 		final Map<String, List<OrderEntryData>> currentProductMap = new HashMap<>();
 		List<OrderEntryData> cancelProduct = new ArrayList<OrderEntryData>();
+		final Map<String, Map<String, AWBResponseData>> orderWithStatus = new HashMap<String, Map<String, AWBResponseData>>();
+		//TPR-6013
+		ConsignmentModel consignmentModel = null;
+		String consignmentStatus = ModelAttributetConstants.EMPTY;
+
 		LOG.debug("Step1-************************Order History");
 		try
 		{
+			//TPR-6013
+			final String cancelMessagePopOver = configurationService.getConfiguration()
+					.getString(MessageConstants.CANCEL_LOCAL_PROP).trim();
+			final String returnMessagePopOver = configurationService.getConfiguration()
+					.getString(MessageConstants.RETURN_LOCAL_PROP).trim();
 
 			final int pageSizeInoh = Integer.valueOf(configurationService.getConfiguration()
 					.getString(MessageConstants.ORDER_HISTORY_PAGESIZE).trim());
@@ -765,6 +773,78 @@ public class AccountPageController extends AbstractMplSearchPageController
 						cancelProduct = cancelReturnFacade.associatedEntriesData(orderModelService.getOrder(subOrder.getCode()),
 								orderEntryData.getOrderLineId());
 						currentProductMap.put(subOrder.getCode() + orderEntryData.getOrderLineId(), cancelProduct);
+
+						//TPR-6013
+						final OrderModel subOrderModel = orderModelService.getOrder(subOrder.getCode());
+						final Map<String, List<AWBResponseData>> statusTrackMap = getOrderDetailsFacade.getOrderStatusTrack(
+								orderEntryData, subOrder, subOrderModel);
+						List<AWBResponseData> response = null;
+						AWBResponseData approved = null, shipped = null, delivery = null, cancel = null, returns = null;
+						final Map<String, AWBResponseData> orderStatus = new HashMap<String, AWBResponseData>();
+
+
+						response = statusTrackMap.get("APPROVED");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							approved = response.get(0);
+						}
+
+						response = statusTrackMap.get("SHIPPING");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							shipped = response.get(0);
+						}
+						//TPR-6013
+						if (null != orderEntryData.getConsignment() && null != orderEntryData.getConsignment().getStatus())
+						{
+							consignmentStatus = orderEntryData.getConsignment().getStatus().getCode();
+							consignmentModel = mplOrderService.fetchConsignment(orderEntryData.getConsignment().getCode());
+
+							if (null != consignmentModel
+									&& null != consignmentModel.getInvoice()
+									&& null != consignmentModel.getInvoice().getInvoiceUrl()
+									&& (consignmentStatus.equalsIgnoreCase(ModelAttributetConstants.DELIVERED) || consignmentStatus
+											.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+							{
+								final SimpleDateFormat smdfDate = new SimpleDateFormat(
+										MarketplacecclientservicesConstants.DATE_FORMAT_AWB);
+								final AWBResponseData deliveryAWBData = new AWBResponseData();
+								final StatusRecordData statusRecordData = new StatusRecordData();
+								final List<StatusRecordData> listStatusRecordData = new ArrayList<StatusRecordData>();
+								LOG.info(">>>>>>>>>> consignmentModel.getDeliveryDate() " + consignmentModel.getDeliveryDate());
+								if (null != consignmentModel.getDeliveryDate())
+								{
+									statusRecordData.setDate(smdfDate.format(consignmentModel.getDeliveryDate()));
+								}
+								deliveryAWBData.setResponseCode(ModelAttributetConstants.DELIVERED);
+								listStatusRecordData.add(statusRecordData);
+								deliveryAWBData.setStatusRecords(listStatusRecordData);
+								delivery = deliveryAWBData;
+							}
+						}
+
+						response = statusTrackMap.get("CANCEL");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							cancel = response.get(0);
+						}
+
+						response = statusTrackMap.get("RETURN");
+
+						if (CollectionUtils.isNotEmpty(response))
+						{
+							returns = response.get(0);
+						}
+						orderStatus.put("APPROVED", approved);
+						orderStatus.put("SHIPPING", shipped);
+						orderStatus.put("DELIVERY", delivery);
+						orderStatus.put("CANCEL", cancel);
+						orderStatus.put("RETURN", returns);
+
+						orderWithStatus.put(orderEntryData.getOrderLineId(), orderStatus);
 					}
 					subOrderDetailsList.add(subOrder);
 				}
@@ -796,6 +876,11 @@ public class AccountPageController extends AbstractMplSearchPageController
 			// TISPRO-48 - added page index and page size attribute for pagination
 			model.addAttribute(ModelAttributetConstants.PAGE_INDEX, page);
 			model.addAttribute(ModelAttributetConstants.PAGE_SIZE, pageSize);
+			model.addAttribute(ModelAttributetConstants.ORDER_STATUS, orderWithStatus);
+
+			//TPR-6013
+			model.addAttribute(ModelAttributetConstants.RETURN_POPOVER, returnMessagePopOver);
+			model.addAttribute(ModelAttributetConstants.CANCEL_POPOVER, cancelMessagePopOver);
 
 			// LW-225,230
 			if (CollectionUtils.isEmpty(orderHistoryList))
@@ -1720,6 +1805,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
+		String ussidForJwlry = null;
+		final List<String> sellerName = new ArrayList<String>();
 
 
 		try
@@ -1744,12 +1831,27 @@ public class AccountPageController extends AbstractMplSearchPageController
 					if (null != productModel && productModel.getRichAttribute() != null)
 					{
 						productRichAttributeModel = (List<RichAttributeModel>) productModel.getRichAttribute();
-						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()  && productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
+						if (productRichAttributeModel != null && !productRichAttributeModel.isEmpty()
+								&& productRichAttributeModel.get(0).getReturnAtStoreEligible() != null)
 						{
 							productRichAttrOfQuickDrop = productRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
-						}else{
-							productRichAttrOfQuickDrop=ModelAttributetConstants.NO;
 						}
+						else
+						{
+							productRichAttrOfQuickDrop = ModelAttributetConstants.NO;
+						}
+					}
+
+					//This is added for jewellery
+					if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
+								.getSelectedUssid());
+						ussidForJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					}
+					else
+					{
+						ussidForJwlry = orderEntry.getSelectedUssid();
 					}
 
 					final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
@@ -1757,7 +1859,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 					for (final SellerInformationModel sellerInformationModel : sellerInfo)
 					{
-						if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						//if (sellerInformationModel.getSellerArticleSKU().equals(orderEntry.getSelectedUssid()))
+						if (sellerInformationModel.getSellerArticleSKU().equals(ussidForJwlry)) //Added for jewellery
 						{
 							List<RichAttributeModel> sellerRichAttributeModel = null;
 							if (sellerInformationModel.getRichAttribute() != null)
@@ -1770,7 +1873,16 @@ public class AccountPageController extends AbstractMplSearchPageController
 								}
 							}
 						}
+						sellerName.add(sellerInformationModel.getSellerName());
 					}
+
+					//TPR-4134 starts
+					if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType())
+							&& ((sellerName).contains((MarketplacecommerceservicesConstants.TANISHQ))))
+					{
+						model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+					}
+					//TPR-4134 ends
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_SELLER_LEVEL, sellerRichAttrOfQuickDrop);
 
@@ -2365,7 +2477,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			if (ticketTypeCode.equalsIgnoreCase("R"))
 			{
 				cancellationStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
-						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData, "");
 			}
 			else
 			{
@@ -2974,20 +3086,19 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 
-			final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
-			final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
-			final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
-			final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
+			//final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
+			//final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
+			//final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
+			//final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
 
-			model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
-			model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
-			model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
-			model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
+			//model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
+			//model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
+			//model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
+			//model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
 
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData
-
-			.getDisplayUid());
+					.getDisplayUid());
 
 			final MplCustomerProfileForm mplCustomerProfileForm = new MplCustomerProfileForm();
 			if (null != customerProfileData && null != customerProfileData.getDateOfBirth()
@@ -3126,6 +3237,25 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 			final String specificUrl = RequestMappingUrlConstants.LINK_MY_ACCOUNT + RequestMappingUrlConstants.LINK_UPDATE_PROFILE;
 			final String profileUpdateUrl = urlForEmailContext(request, specificUrl);
+			//TPR-6013
+			if (null != mplCustomerProfileForm && null != mplCustomerProfileForm.getDateOfBrithPicker()
+					&& mplCustomerProfileForm.getDateOfBrithPicker().contains(ModelAttributetConstants.DASH))
+			{
+				final String[] dob = mplCustomerProfileForm.getDateOfBrithPicker().split(ModelAttributetConstants.DASH);
+				mplCustomerProfileForm.setDateOfBirthYear(dob[0].trim());
+				mplCustomerProfileForm.setDateOfBirthMonth(dob[1].trim());
+				mplCustomerProfileForm.setDateOfBirthDay(dob[2].trim());
+			}
+			if (null != mplCustomerProfileForm && null != mplCustomerProfileForm.getAnniversaryDatePicker()
+					&& mplCustomerProfileForm.getAnniversaryDatePicker().contains(ModelAttributetConstants.DASH))
+			{
+				final String[] doa = mplCustomerProfileForm.getAnniversaryDatePicker().split(ModelAttributetConstants.DASH);
+				mplCustomerProfileForm.setDateOfAnniversaryYear(doa[0].trim());
+				mplCustomerProfileForm.setDateOfAnniversaryMonth(doa[1].trim());
+				mplCustomerProfileForm.setDateOfAnniversaryDay(doa[2].trim());
+
+
+			}
 
 			if (isDateValidatedDOB(mplCustomerProfileForm))
 			{

@@ -715,6 +715,7 @@
 	<property name="exchangeMessage" type="String"/>
 		<!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
+			<property name="priceDisclaimerTextJwlry" type="String" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -844,7 +845,7 @@
 
 		<property name="cartGuid" type="String"></property>
 		<!-- TPR-6117 -->
-		<property name="reachedMaxLimitforproduct" type="String"></property>
+		<property name="reachedMaxLimitforproduct" type="java.util.List&lt;com.tisl.mpl.wsdto.MaxLimitWsDto>" />
 
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.CartProductsDeliveryDetailsWsDTO">
@@ -1032,6 +1033,9 @@
         <property name="imageUrl" type="String" />
 	  	<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
+
+<!-- TPR-6117 -->
+			<property name="maxQuantityAllowed" type="String" />
 	</bean>
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
@@ -1395,6 +1399,8 @@
 		<property name="pickupPersonMobile" type="String" />
 		<property name="isPickupUpdatable" type="boolean" />
 		<property name="isCDA" type="boolean"/>	
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.ListPinCodeServiceData">
@@ -1427,6 +1433,8 @@
 		<property name="couponDiscount" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 	<bean class="com.tisl.mpl.wsdto.FreebieWsDTO">
 		<property name="name" type="String" />
@@ -1553,6 +1561,8 @@
 		<property name="totalDiscounts" type="String" />
 		<property name="pickupPersonName" type="String" />
 		<property name="pickupPersonMobile" type="String" />
+		<!-- TPR-1083 Start-->
+	<property name="exchangeId" type="String"/>
 	</bean>
 
 	<bean class="com.tisl.mpl.wsdto.PaymentMethodListWsDTO">
@@ -1919,6 +1929,14 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mrpPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+			
+		<!-- added for mobile web service changes for jewellery start-->
+		<property name="maxSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 		<property name="minSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 			<!-- added for mobile web service changes for jewellery end-->
+ 			
 		<property name="colour" type="String" />
 		<property name="colourCode" type="String" />
 		<property name="productTag"
@@ -2939,6 +2957,8 @@
 		<property name="deliveryAddress" type="de.hybris.platform.commercefacades.user.data.AddressData"/>
 		<property name="returnEntry" type="de.hybris.platform.commercewebservicescommons.dto.order.OrderEntryListWsDTO"/>
         <property name="selfCourierDocumentLink" type="String" />
+        <!-- TPR-4134 -->
+        <property name="reverseSealFrJwlry" type="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO"/>
 	</bean>
 	
 	<!-- Added for mobile inventory Reservation START   -->
@@ -3006,19 +3026,33 @@
 			type="java.util.List&lt;com.tisl.mpl.wsdto.ReturnReasonDTO>" />
 			
 		<!--  R2.3 CRM to Commerce end-->
+		<!-- TPR-4134 -->
+		<property name="revSealJwlry" type="java.lang.String"/>
 	</bean>
 	<!-- For Return Web Services Change Pincode QuickDrop Stores -->
 	<bean class="com.tisl.mpl.wsdto.QuickDropStoresList" extends="com.tisl.mpl.wsdto.ErrorDTO">
 		<property name="returnStoreDetailsList"
 			type="java.util.List&lt;de.hybris.platform.commercefacades.storelocator.data.PointOfServiceData>" />
 	</bean>
-
 <!-- TPR 1083 Start -->
 
 <bean class="com.tisl.mpl.wsdto.ReversePincodeExchangeData">
 <property name="pincodeResponse" type="boolean"/>
 <property name="priceMatrix" type="java.util.List&lt;com.tisl.mpl.facades.product.data.ExchangeGuideData>"/>
 </bean>
+		<bean class="com.tisl.mpl.wsdto.RevSealJwlryDataWsDTO">
+ 	        <property name="message" type="String"/>
+ 		    <property name="yes" type="java.util.List&lt;String>"/>
+ 			<property name="no" type="java.util.List&lt;String>"/>
+ 		</bean>
+ 
+<!--TPR-6117-->
+	<bean class="com.tisl.mpl.wsdto.MaxLimitWsDto">
+		<property name="productCode" type="String" />
+		<property name="productName" type="String" />
+		<property name="ussid" type="String" />
+		<property name="maxQuantityAllowed" type="String" />
+		<property name="userSelectedQty" type="String" />
+	</bean>
 
 </beans>
-

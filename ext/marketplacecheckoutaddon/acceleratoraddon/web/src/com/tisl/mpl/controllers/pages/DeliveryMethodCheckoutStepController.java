@@ -33,6 +33,7 @@ import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
 import de.hybris.platform.commercefacades.user.data.RegionData;
 import de.hybris.platform.commerceservices.order.CommerceCartService;
+import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.product.PincodeModel;
@@ -45,6 +46,7 @@ import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
+import de.hybris.platform.servicelayer.i18n.CommonI18NService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.storelocator.GPS;
@@ -134,11 +136,7 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
-
-
-
-
-
+import com.tisl.mpl.wsdto.MaxLimitData;
 
 
 @Controller
@@ -244,6 +242,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@Autowired
 	ProductService productService;
 
+	@Resource(name = "commonI18NService")
+	private CommonI18NService commonI18NService;
+
 	private static final Logger LOG = Logger.getLogger(DeliveryMethodCheckoutStepController.class);
 
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CHOOSEVALUE, method = RequestMethod.GET)
@@ -275,7 +276,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//TPR-5346 STARTS
 			//This method will update the cart with respect to the max quantity configured for the product
 			//final boolean updateCartOnMaxLimExceeds = getMplCartFacade().UpdateCartOnMaxLimExceeds(serviceCart);
-			final Map<String, String> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(serviceCart);
+			final Map<String, MaxLimitData> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(serviceCart);
 			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
 			{
 				//	redirectAttributes.addFlashAttribute("updateCartOnMaxLimExceeds", Boolean.valueOf(updateCartOnMaxLimExceeds));
@@ -374,6 +375,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWEDITADDRESS, Boolean.FALSE);
 				model.addAttribute(MarketplacecheckoutaddonConstants.SHOWADDADDRESS, Boolean.FALSE);
 				model.addAttribute("defaultPincode", defaultPinCodeId);
+
+				//INC144316212
+				final String isDeliveryOptionPage = "yes";
+				model.addAttribute(MarketplacecheckoutaddonConstants.IS_DELIVERY_OPTION_PAGE, isDeliveryOptionPage);
 
 				//TISPRO-625
 
@@ -692,12 +697,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-						/*
-						 * return MarketplacecommerceservicesConstants.REDIRECT +
-						 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
-						 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-						 */
-						/**** PRDI-36/INC144315559 *******/
+								/*
+								 * return MarketplacecommerceservicesConstants.REDIRECT +
+								 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
+								 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+								 */
+								/**** PRDI-36/INC144315559 *******/
 						model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSID,
 								cartUssidData.getDeliveryAddress().getId());
 
@@ -751,8 +756,10 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			this.prepareDataForPage(model);
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
-			model.addAttribute(WebConstants.BREADCRUMBS_KEY, getResourceBreadcrumbBuilder()
-					.getBreadcrumbs(MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
+			model.addAttribute(
+					WebConstants.BREADCRUMBS_KEY,
+					getResourceBreadcrumbBuilder().getBreadcrumbs(
+							MarketplacecheckoutaddonConstants.CHECKOUT_MULTI_DELIVERYMETHOD_BREADCRUMB));
 			model.addAttribute("metaRobots", "noindex,nofollow");
 			//GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartUssidData);
@@ -783,8 +790,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil
-					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+					MarketplacecommerceservicesConstants.E0000));
 			LOG.error("Exception  while selecting delivery mode ", e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 			returnPage = MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
@@ -850,8 +857,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			}
 			catch (final Exception e)
 			{
-				ExceptionUtil.etailNonBusinessExceptionHandler(
-						new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+				ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+						MarketplacecommerceservicesConstants.E0000));
 				getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 			}
 
@@ -1056,8 +1063,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					}
 					catch (final Exception e)
 					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(
-								new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+								MarketplacecommerceservicesConstants.E0000));
 						getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 					}
 					//for express checkout
@@ -1095,8 +1102,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						}
 						catch (final Exception e)
 						{
-							ExceptionUtil.etailNonBusinessExceptionHandler(
-									new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
+							ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+									MarketplacecommerceservicesConstants.E0000));
 							getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID,
 									"TRUE");
 						}
@@ -1122,8 +1129,9 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					catch (final ClientEtailNonBusinessExceptions e)
 					{
 						LOG.error("::::::Exception in calling OMS Pincode service:::::::::" + e.getErrorCode());
-						if (null != e.getErrorCode() && ("O0001".equalsIgnoreCase(e.getErrorCode())
-								|| "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007".equalsIgnoreCase(e.getErrorCode())))
+						if (null != e.getErrorCode()
+								&& ("O0001".equalsIgnoreCase(e.getErrorCode()) || "O0002".equalsIgnoreCase(e.getErrorCode()) || "O0007"
+										.equalsIgnoreCase(e.getErrorCode())))
 						{
 							//populates oms response to data object
 							productWithPOS = getProductWdPos(model, freebieParentQtyMap, storeLocationRequestDataList);
@@ -1170,8 +1178,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 * @param response
 	 * @return list of pos with product.
 	 */
-	private List<ProudctWithPointOfServicesData> getProductWdPos(final List<StoreLocationResponseData> response, final Model model,
-			final Map<String, Long> freebieParentQtyMap)
+	private List<ProudctWithPointOfServicesData> getProductWdPos(final List<StoreLocationResponseData> response,
+			final Model model, final Map<String, Long> freebieParentQtyMap)
 	{
 		if (LOG.isDebugEnabled())
 		{
@@ -2202,12 +2210,45 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		final CartModel cartModel = getCartService().getSessionCart();
 		final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 		{
 			if (null != cartEntryModel && null != cartEntryModel.getMplDeliveryMode())
 			{
 				if (cartEntryModel.getSelectedUSSID().equalsIgnoreCase(ussId))
 				{
+					//Start of UF-281
+					boolean isSaveRequired = false;
+					if (null != cartEntryModel.getEdScheduledDate() && StringUtils.isNotEmpty(cartEntryModel.getEdScheduledDate()))
+					{
+						cartEntryModel.setEdScheduledDate("".trim());
+						cartEntryModel.setTimeSlotFrom("".trim());
+						cartEntryModel.setTimeSlotTo("".trim());
+					}
+					if (cartEntryModel.getScheduledDeliveryCharge() != null
+							&& cartEntryModel.getScheduledDeliveryCharge().doubleValue() != 0.0)
+					{
+						isSaveRequired = true;
+						if (cartModel.getTotalPriceWithConv() != null)
+						{
+							cartModel.setTotalPriceWithConv(new Double(cartModel.getTotalPriceWithConv().doubleValue()
+									- Double.valueOf(cartEntryModel.getScheduledDeliveryCharge().doubleValue()).doubleValue()));
+						}
+						final Double finalDeliveryCost = Double.valueOf(cartModel.getDeliveryCost().doubleValue()
+								- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+						cartModel.setDeliveryCost(finalDeliveryCost);
+						final Double totalPriceAfterDeliveryCost = Double.valueOf(cartModel.getTotalPrice().doubleValue()
+								- cartEntryModel.getScheduledDeliveryCharge().doubleValue());
+						cartModel.setTotalPrice(totalPriceAfterDeliveryCost);
+						cartEntryModel.setScheduledDeliveryCharge(Double.valueOf(0));
+					}
+					if (isSaveRequired)
+					{
+						modelService.save(cartModel);
+						modelService.refresh(cartModel);
+					}
+					//End of UF-281
 					cartEntryModel.setEdScheduledDate(deliverySlotDate);
 					if (null != deliverySlotTime)
 					{
@@ -2249,7 +2290,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			formatDeliveryCost = df.format(finalDeliveryCost);
 		}
 
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 	// = "updateDeliverySlotCostForEd";
@@ -2261,6 +2303,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 		String totalPriceFormatted = MarketplacecommerceservicesConstants.EMPTY;
 		String formatDeliveryCost = MarketplacecommerceservicesConstants.EMPTY;
 		final CartModel cartModel = getCartService().getSessionCart();
+		final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+		final String currencySymbol = currency.getSymbol();
 		final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
 		for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
 		{
@@ -2308,7 +2352,8 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			formatDeliveryCost = df.format(finalDeliveryCost);
 		}
 
-		return formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + totalPriceFormatted;
+		return currencySymbol + formatDeliveryCost + MarketplacecommerceservicesConstants.HYPHEN + currencySymbol
+				+ totalPriceFormatted;
 	}
 
 
@@ -2738,7 +2783,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequireHardLogIn
 	public @ResponseBody String calculateDeliveryCost(
 			@PathVariable(MarketplacecheckoutaddonConstants.DELIVERYCOST) final String deliveryCost)
-			throws NoSuchAlgorithmException, CalculationException
+					throws NoSuchAlgorithmException, CalculationException
 	{
 
 		//LOG.info("deliveryCost " + deliveryCost);
@@ -2762,6 +2807,13 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//final CartData cartData = mplExtendedCartConverter.convert(cartModel); //TISPT-104
 
 			cartData = mplExtendedPromoCartConverter.convert(cartModel);
+			//TISSTRT-1647
+			final CurrencyModel currency = commonI18NService.getCurrency(MarketplacecommerceservicesConstants.INR);
+			final String currencySymbol = currency.getSymbol();
+			if (null != cartData && StringUtils.isEmpty(cartData.getCurrencySymbol()))
+			{
+				cartData.setCurrencySymbol(currencySymbol);
+			}
 
 			if (null != cartData && cartData.getTotalDiscounts() != null && cartData.getTotalDiscounts().getValue() != null)
 			{
@@ -3260,25 +3312,19 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 					Double deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 
 					//if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
-					if (!deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
+					if (deliveryCode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.CLICK_N_COLLECT))
 					{
-						//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-						//								deliveryEntry.getSellerArticleSKU());
+						//For TISBBC-43
+						getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode, deliveryEntry.getSellerArticleSKU(),
+								cartModel); //TISPT-400
+					}
+					else
+					{
+						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
+						//		deliveryEntry.getSellerArticleSKU());
 						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
 								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-
-
-						//deliveryCost = Double.valueOf(0.00D); // Code optimized as part of performance fix TISPT-104
 					}
-
-					// Blocked this particular code : As for CNC there will be no charge and hence DB Hit required
-					//					else
-					//					{
-					//						//deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-					//						//		deliveryEntry.getSellerArticleSKU());
-					//						deliveryCost = getMplCustomAddressFacade().populateDeliveryMethodData(deliveryCode,
-					//								deliveryEntry.getSellerArticleSKU(), cartModel); //TISPT-400
-					//					}
 
 
 					finalDeliveryCost = Double.valueOf(finalDeliveryCost.doubleValue() + deliveryCost.doubleValue());

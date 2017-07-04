@@ -22,7 +22,7 @@ public interface BuyBoxService
 {
 
 	List<BuyBoxModel> buyboxPrice(String productCode) throws EtailNonBusinessExceptions;
-	
+
 	//added for jewellery
 	List<BuyBoxModel> buyboxPriceForJewellery(String pcmUssid) throws EtailNonBusinessExceptions;
 
@@ -72,6 +72,7 @@ public interface BuyBoxService
 
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+
 	/**
 	 * @param sellerArticleSKUList
 	 * @return
@@ -91,10 +92,10 @@ public interface BuyBoxService
 	 */
 	//CKD:TPR-250
 	List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String sellerID) throws EtailNonBusinessExceptions;
-	
+
 	/**
-	 * TPR-5712
-	 * buybox price for all seller
+	 * TPR-5712 buybox price for all seller
+	 * 
 	 * @param productCode
 	 * @return
 	 * @throws EtailNonBusinessExceptions
@@ -104,7 +105,12 @@ public interface BuyBoxService
 
 	//TISPRD-8944
 	List<BuyBoxModel> buyboxPriceMobile(String productCode) throws EtailNonBusinessExceptions;
-	
+
+	/**
+	 * @param ussID
+	 */
+	public List<BuyBoxModel> buyboxPriceForJewelleryWithVariant(String ussID);
+
 	//CKD:TPR-3809
 	/**
 	 * @param selectedUSSID

@@ -884,6 +884,14 @@
 			<value code="cnc" /> <!-- CNC => only for click and collect -->
 			<value code="od" /> <!-- OD => only for home and express delivery -->
 		</enumtype>
+		
+		<enumtype generate="true" code="Salutation"
+			autocreate="true" dynamic="true">
+			<value code="Mr" /> <!-- ALL => comomn to all delivery -->
+			<value code="Ms" /> <!-- CNC => only for click and collect -->
+			<value code="Mrs" /> <!-- OD => only for home and express delivery -->
+		</enumtype>
+		
 		<!-- <enumtype code="ComponentTypeEnum" autocreate="true"
 			generate="true" dynamic="true">
 			<description>Component Type For Components</description>
@@ -12491,12 +12499,12 @@
 			        <modifiers optional="false" read="true" write="true"/>
 			        <persistence type="property"/>
 			    </attribute>
-			    
-			   <!--  <attribute qualifier="Ticket" autocreate="true" type="java.lang.String" generate="true">
-			        <description>ticket</description>
+			   <attribute qualifier="isMailTriggred" autocreate="true" type="java.lang.Boolean" generate="true">
+			        <description>check if mail is already triggred for rejected pan card</description>
+			        <defaultvalue>Boolean.FALSE</defaultvalue>
 			        <modifiers optional="false" read="true" write="true"/>
 			        <persistence type="property"/>
-			    </attribute> -->
+			    </attribute> 
 			    <attribute qualifier="Status" autocreate="true" type="java.lang.String" generate="true">
 			        <description>status</description>
 			        <modifiers optional="false" read="true" write="true"/>

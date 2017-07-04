@@ -130,7 +130,8 @@ tr.d0 td {
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
-		<div class="product-image-container ${product.rootCategory}">
+<%-- 		<div class="product-image-container ${product.rootCategory}"> --%>
+		<div class="product-image-container ${product.rootCategory}" id="pdp_gallery">
 			<cms:pageSlot position="ConfigureImagesCount" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>
@@ -241,16 +242,20 @@ tr.d0 td {
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}" />
 				<!-- </a> -->
-				<!-- //TPR-3752 Jewel Heading Added -->
+				<!-- //TPR-3752 Jewel Feature Attribute Added -->
 				<c:choose>
 					<c:when test="${product.rootCategory=='FineJewellery'}">
-						<input id="jwelPDP" type="hidden" value="${product.rootCategory}" />
 						<div class="product-desc">
-							<span class="key-label"> <c:forEach var="classification"
-									items="${mapConfigurableAttributes}">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			 </c:forEach>
+   						 			 <a href="" class="more-link">More</a>
+							  </c:if> 
 								</c:forEach>
-							</span> <a href="" id="jewelleryProdDetail" class="more-link">View
-								More</a>
+							</span> 
 						</div>
 					</c:when>
 				</c:choose>
@@ -389,7 +394,48 @@ tr.d0 td {
 			<product:sellerInfoDetailsSection/>
 			</div> --%>
 
-
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+            <c:if test="${product.rootCategory =='FineJewellery'}">
+             <div class="certified-by"> 
+              <h2>certified by</h2>
+              <ul>
+               <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
+               <li>30 day returns</li>
+               <li>tata guarantee</li> -->
+            <c:forEach var="certification" items="${certificationfeatureValueDataList}">
+              <c:if test="${certification.value=='AGL'}">
+                 <%-- <li class="jwlryCerti"><img src="${commonResourcePath}/images/Visa.png" alt="certified by"></li> --%>
+                 <li class="jwlryCertiAGL"></li>
+             </c:if>
+             <c:if test="${certification.value=='Tanishq'}">  
+                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
+                <li class="jwlryCertiTanishq"></li>
+             </c:if>
+             <c:if test="${certification.value=='AGS'}">
+                <%--  <img src="${commonResourcePath}/images/American_Express.png" alt="certified by"> --%>
+                <li class="jwlryCertiAGS"></li>
+            </c:if>
+             <c:if test="${certification.value=='AGTA'}">
+                 <%-- <img src="${commonResourcePath}/images/Maestro.png" alt="certified by"> --%>
+                 <li class="jwlryCertiAGTA"></li>         
+            </c:if>
+             <c:if test="${certification.value=='HRD'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiHRD"></li>  
+            </c:if>
+            </li>     
+           </c:forEach>
+         </ul>
+      </div>
+          <!-- <div class="certified-by">
+           <ul>
+            <li>30 day returns</li>
+            <li>tata guarantee</li>
+           
+           </ul>
+          </div> -->
+      </c:if>
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
 
 		</div>
 
@@ -452,7 +498,7 @@ tr.d0 td {
 				<li><product:socialSharing product="${product}" /></li>
 			</ul>
 			
-           <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
+           <%-- <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             <c:if test="${product.rootCategory =='FineJewellery'}">
              <div class="certified-by"> 
               <h2>certified by</h2>
@@ -489,15 +535,15 @@ tr.d0 td {
            </ul>
           </div>
       </c:if>
-            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE-->
+            <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE--> --%>
           
 		</div>
 
-		<%-- <div class="tabs-block">
+		 <div class="tabs-block">
 				<product:productPageTabs />
-			</div> --%>
+			</div>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
-		<c:set var="finejewellery">
+		<%-- <c:set var="finejewellery">
 			<spring:theme code='product.finejewellery' />
 		</c:set>
 		<c:choose>
@@ -506,7 +552,7 @@ tr.d0 td {
 					<product:productPageTabs />
 				</div>
 			</c:when>
-		</c:choose>
+		</c:choose> --%>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
 
 	</div>
@@ -528,15 +574,14 @@ tr.d0 td {
 		<spring:theme code='product.fashionAccessories' />
 	</c:set>
 
-
-	<c:choose>
-		<c:when
-			test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+		<c:if test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<product:productDetailsClassifications product="${product}" />
-		</c:when>
-		<c:otherwise>
-		</c:otherwise>
-	</c:choose>
+			</c:if>
+	<!-- Fine Jewellery Details Tree Section  -->
+		<c:if test="${product.rootCategory=='FineJewellery'}">
+			<product:productDetailsClassifications product="${product}" />
+			</c:if>
+		
 
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType" />

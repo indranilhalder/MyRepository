@@ -169,7 +169,9 @@
 		
 		<!-- for pancard changes -->
 		
-		<bean id="mplPancardTicketCRMserviceImpl" class="com.tisl.mpl.service.impl.MplPancardTicketCRMserviceImpl"/>
+		<!-- <bean id="mplPancardTicketCRMserviceImpl" class="com.tisl.mpl.service.impl.MplPancardTicketCRMserviceImpl"/> -->
+		
+		<bean id="mplPancardUploadserviceImpl" class="com.tisl.mpl.service.impl.MplPancardUploadserviceImpl"/>
 		
 		<bean id="googleShortUrlService"
 		class="com.tisl.mpl.shorturl.service.ShortUrlServiceGoogleImpl"/>
