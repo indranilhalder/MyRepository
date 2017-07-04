@@ -82,17 +82,14 @@ import com.tisl.mpl.core.model.MplBigPromoBannerComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseComponentModel;
 import com.tisl.mpl.core.model.MplShowcaseItemComponentModel;
 import com.tisl.mpl.data.NotificationData;
-import com.tisl.mpl.data.ShopByBrandData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
-import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
-import com.tisl.mpl.facades.data.STWJsonRecomendationData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -1548,7 +1545,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 

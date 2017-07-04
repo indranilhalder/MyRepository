@@ -5241,8 +5241,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 						else
 						{
 
-							LOG.debug(
-									"Product already present in the cart so now we will check the qunatity present in the cart already");
+							LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
 
 							if (entry.getQuantity().longValue() >= stock)
 							{
