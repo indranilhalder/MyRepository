@@ -2,7 +2,7 @@
 #
 $storePrefix=lux
 $contentCatalog=$storePrefixContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
 $emailResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
 
 # Language
@@ -99,45 +99,45 @@ UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript
 ;lux_Email_Payment_Timeout_Subject;"Payment Timeout Email Subject";$emailResource/email-paymentTimeoutSubject.vm
 # Email Pages
 UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
- ;;CustomerRegistrationEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;CustomerRegistrationInCsEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;DeliverySentEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;ForgottenPasswordEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;CustomerRegistrationEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;CustomerRegistrationInCsEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;DeliverySentEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;ForgottenPasswordEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
  ;;OrderCancelledEmail;"customerservices@tataunistore.in";"Customer Services Team"
  ;;OrderCollectionReminderEmail;"customerservices@tataunistore.in";"Customer Services Team"
- ;;OrderConfirmationEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;OrderConfirmationEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
  ;;OrderMoveToCsEmail;"customerservices@tataunistore.in";"Customer Services Team"
  ;;OrderPartiallyCanceledEmail;"customerservices@tataunistore.in";"Customer Services Team"
  ;;OrderPartiallyRefundedEmail;"customerservices@tataunistore.in";"Customer Services Team"
- ;;OrderRefundEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;OrderRefundEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
  ;;ReadyForPickupEmail;"customerservices@tataunistore.in";"Customer Services Team"
- ;;FriendsInviteEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;SendInvoiceEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;FriendsInviteEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;SendInvoiceEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
  ;;SendUpdateEmail;"customerservices@tataunistore.in";"Customer Services Team"
- ;;CustomerProfileUpdateEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;ChangePasswordEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;OrderOnHoldEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;OrderRejectRiskEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;OrderConfRiskEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;CustomerProfileUpdateEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;ChangePasswordEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;OrderOnHoldEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;OrderRejectRiskEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;OrderConfRiskEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
 
 #;;OutForDeliveryEmail;"customerservices@tataunistore.in";"Customer Services Team"
- ;;ShippingConfirmationEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;ShippingConfirmationEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
 
- ;;OrderDeliveryEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care" 
+ ;;OrderDeliveryEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care" 
   ###########PDP Email
- ;;PDPEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;PDPEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
  ######Payment Related Emails
- ;;InventoryReservationFailedEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;PaymentFailedEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;PaymentPendingEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
- ;;PaymentTimeoutEmail;"customercare@tatacliqluxury.com";"TataCLiQ Luxury Care"
+ ;;InventoryReservationFailedEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;PaymentFailedEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;PaymentPendingEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
+ ;;PaymentTimeoutEmail;"customercare@tatacliq.com";"TataCLiQ Luxury Care"
  ###### Tata Etail-Promotion Creation Mail #########
  UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];fromEmail[lang=$lang];fromName[lang=$lang]
 
  ###HighRiskNotificationEmail
- ;;HighRiskNotificationEmail;"customercare@tatacliqluxury.com";"MYCLIQ"
+ ;;HighRiskNotificationEmail;"customercare@tatacliq.com";"MYCLIQ"
  ###Email to notify market place user to take action when an order is put on HOLD
- ;;TakeActionOnHeldOrderEmail;"customercare@tatacliqluxury.com";"MYCLIQ"
+ ;;TakeActionOnHeldOrderEmail;"customercare@tatacliq.com";"MYCLIQ"
  
  ;;PromotionCreationMail;"customerservices@tataunistore.in";"Customer Services Team" 
 
