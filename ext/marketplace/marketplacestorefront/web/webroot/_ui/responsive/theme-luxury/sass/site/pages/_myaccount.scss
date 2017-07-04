@@ -50,7 +50,7 @@
     		.info{
     			padding:20px;
     			border-bottom:1px solid #d2d2d2;
-    			background:#f9f9f9;
+    			background:#fff;
 	    	}
 			.halfwidth{
 				width:50%;
@@ -112,6 +112,13 @@
 					height:30px;
 				}
 			}
+            
+            .info.card-list{
+                h2 {
+                    font-size: 14px;
+                    margin-top: 0;
+                }
+            }
 		}
 		.password{
 			padding:15px;
@@ -147,6 +154,217 @@
 			.saved-cards{
 				list-style-type:none;
 				padding:0px;
+                
+                .number{
+                    background: #f9f9f9;
+                    border: 1px solid #dce1eb;
+                    position: relative;
+                    padding: 25px;
+                    width: 100%;
+                    border-radius: 10px;
+                }
+                
+                .paymentItem{
+                    img {
+                        position: absolute;
+                        display: block;
+                        top: 40%;
+                        left: 20px;                    
+                        max-width: 50px;
+                        vertical-align: middle;
+                        
+                         @include media-breakpoint-down(sm) {  
+                             position: relative;
+                             top: 0%;
+                        left: 0px;
+                        }
+                    }
+                    .view-details{
+                        position: relative;
+                        float: right;
+                        top: 20px;
+                        right: 0;
+                        text-transform: uppercase;
+                        font-weight: 600;
+                        letter-spacing: 1.2px;
+                        margin-bottom: 5px;
+                        
+                        @include media-breakpoint-down(sm) {                            
+                            position: absolute;
+                            float: right;
+                            top: 25px;
+                            right: 10px;
+                        }
+                    } 
+                    h3{
+                        padding-left: 80px;
+                        font-weight: bold;
+                        font-size: 14px;
+                        line-height: 1.5;
+                        margin: 0px;
+                        @include media-breakpoint-down(sm) {  
+                             padding-left: 0px;
+                        }
+                    }
+                    p {
+                        font-size: 12px;
+                        line-height: 1.5;
+                        padding-left: 80px;
+                        color: #666;
+                        font-weight: 500;
+                        margin: 0px;
+                        
+                         @include media-breakpoint-down(sm) {  
+                             padding-left: 0px;
+                        }
+                    }                    
+                    
+                }
+                .paymentItem.active + .details{
+                    display: block;
+                }
+                .paymentItem.active{
+                    border-radius: 10px 10px 0px 0px;  
+                }
+                .delete-address-Popup{
+                    .content{
+                        width: 300px;
+                        height: auto;
+                        margin: auto;
+                        background: #fff;
+                        position: relative;
+                    }
+                }
+                .mpl-addressPopup.delete-address-Popup{
+                    top:25%;
+                    
+                    .overlay{
+                        display: none;
+                    }
+                    .number{
+                        background: transparent;
+                        border: 0px;
+                        position: relative;
+                        padding: 0px;
+                        width: 100%;
+                        border-radius: initial;
+                        
+                        h3, p{
+                            padding-left: 0px;
+                        } 
+                        img {
+                            position: relative;
+                            display: block;
+                            top: 0%;
+                            left: 0px;
+                            max-width: 50px;                           
+                        }
+                        
+                    }
+                    
+                    .address-deleteConfirmation{
+                        font-size: 12px;
+                        color: #ff1c47; 
+                    }
+                    .confirm-deletionButton {
+                        margin-top: 10px;
+                        background-color: #2d2d2d;
+                        color: #fff;
+                        text-transform: uppercase;
+                        height: 40px;
+                        line-height: 40px;
+                        padding: 0;
+                    }
+                    .closeColorBox {
+                        margin-top: 10px;
+                        background-color: #B9966B;
+                        opacity: .7;
+                        color: #000;
+                        height: 40px;
+                        line-height: 40px;
+                        padding: 0;
+                    }
+                    .close{
+                        display: block;
+                        position: absolute;
+                        width: 25px;
+                        height: 25px;
+                        top: 10px;
+                        right: 10px;
+                        left: auto;
+                        margin: 0;
+                        line-height: 1;
+                        min-width: 0;
+                        padding: 0;
+                        border: 0;
+                        background: 0;
+                        box-shadow: none;
+                        z-index: 5;
+                            &:before {
+                                content: "\00d7";
+                                color: #2d2d2d;
+                                font-family: "Montserrat";
+                                font-size: 24px;
+                                font-weight: 500;                        
+                                transition: font-weight .15s;
+                            }
+                    }                   
+                }
+                .details{
+                    max-height: 200px;
+                    width: 100%;
+                    display: none;
+                    border: 1px solid #dce1eb;
+                    border-radius: 0px 0px 10px 10px;
+                    
+                    ul{
+                        position: relative;
+                        padding: 20px 10px;
+                        
+                        >li, >li:first-child+li {
+                            width: 32.333%;
+                            display: inline-block;
+                            float: none;
+                             @include media-breakpoint-down(sm) {  
+                                 width: 100%;
+                                 float: none;
+                            }
+                        }
+                        h3{
+                            font-size: 14px;
+                            line-height: 1.5;
+                            margin: 0px;
+                        }
+                        p{
+                            font-size: 12px;
+                            line-height: 1.5;
+                            margin: 0px;
+                        }
+                        
+                        li a {
+                        text-decoration: underline;
+                        font-size: 12px;
+                        }
+                        a.delete {
+                            color: #ff1e48;                            
+                            top: 50%;
+                            margin-top: -5px;
+                            margin-right: 10px;
+                            font-weight: bold;
+                            text-transform: uppercase;
+                            letter-spacing: 1.2px;
+                            margin-bottom: 5px;
+                            float: right;
+                        }
+                        
+                        &.after {
+                            clear: both;
+                            content: "";
+                            display: table;
+                        }
+                    }
+                }
+                
 			}
 			.account-emptyOrderMessage{
 				text-align:center;
