@@ -83,6 +83,11 @@
                                                 comparableProductCode
                                                     .push(v.productCode);
                                                 tealiumCompare=comparableProductCode;
+                                                //TPR-6290
+                                                if(typeof _satellite !="undefined"){
+    	                       						_satellite.track('product_comparison');
+    	                       					}
+                                                dtmAddToCompare(v.productCode,v.categoryType);
                                             });
                                     // if (compareProductCount <
                                     // selected.length) {
@@ -244,6 +249,7 @@
 	                       					if(typeof utag !="undefined"){
 	                       						utag.link({ link_text : "add_to_compare_clicked" , event_type : "add_to_compare_clicked" });
 	                       					}
+	                       					
                                         }	
                                         else {
                                             $('#compareError')
@@ -347,6 +353,11 @@
 			if(typeof utag !="undefined"){
 				utag.link({ link_text : "compare_product_id_final" ,  compare_product_id_final : tealiumCompare });
 			}
+			//TPR-6290
+			if (typeof _satellite != "undefined") {
+				 _satellite.track('compare_now');
+			    }	
+			dtmAddToComparedList(tealiumCompare);
 			window.location.href = ACC.config.encodedContextPath + "/compare"
 		})
 		$(document).on('click','.closeLink',function(){

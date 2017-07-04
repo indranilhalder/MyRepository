@@ -79,6 +79,7 @@ $(document).ready(function(){
 		var product_category = $("#product_category").val();
 		var product_brand = $("#product_brand").val();
 		var product_discount = $("#product_discount").val();
+		var pincode = $('#pin').val();
 		digitalData.cpj = {
 			product : {
 				id : product_id,
@@ -90,10 +91,31 @@ $(document).ready(function(){
 			}
 		}
 		
+		//TPR-6333 | Track Geo-location of users
+		if(pincode != ''){
+			digitalData.geolocation = {
+					pin : {
+					code : pincode
+					}
+			}
+		}
 		if(Promo_Id != "" && Promo_Id !=""){
 		   digitalData.cpj.promo = {
 				id : Promo_Id
 		   }
+		}
+		
+	      if($("#out_of_stock").val() =='true' ){
+			  if(typeof _satellite !="undefined"){
+			   _satellite.track('out_of_stock');
+		      }
+			    digitalData.cpj = {
+					product : {
+						id     :  product_id ,
+				      category :  product_category
+				 }
+			  }
+			  
 		}
 		
 		digitalData.product = {
@@ -141,6 +163,7 @@ $(document).ready(function(){
 	
 	// Cart page
 	if(pageType =="cart"){
+		var pinCode = $('#pinId').val();
 		if(typeof _satellite !="undefined"){
 		    _satellite.track('cpj_cart_page');
 		}
@@ -148,6 +171,14 @@ $(document).ready(function(){
 			product : {
 				id : $("#product_id").val(),
 				category : getListValue("product_category")
+			}
+		}
+		//TPR-6333 | Track Geo-location of users
+		  if(pinCode != ''){
+			   digitalData.geolocation = {
+					pin : {
+					code : pinCode
+					}
 			}
 		}
 	}
@@ -283,7 +314,7 @@ $(document).ready(function(){
     }
    });
 	
-	//need help starts
+	// TPR-6366 | need help starts
 	$(document).on('click',"#up",function(){
 		if(typeof _satellite !="undefined"){
 		  _satellite.track('need_help');
@@ -667,3 +698,56 @@ function dtmSearchTags(){
 	});
 	// TPR-6287 | filter tacking end
 	
+	//TPR-6364 start | Track add and remove functionality from wishlist
+	function dtmAddToWishlist(pagetype){
+		if (typeof _satellite != "undefined") {
+			_satellite.track('add_to_wishlist');
+	    }
+		   digitalData.cpj = {
+			   product : {
+				      id  :  $("#product_id").val(),
+				 category :  $("#product_category").val()
+			}
+		}
+		     digitalData.page = {
+		    		wishList : {
+		    		    location : pagetype 
+		    		}
+		    }
+	}
+	
+	 function dtmRemoveFromWishlist(pagetype){
+		if (typeof _satellite != "undefined") {
+			_satellite.track('remove_from_wishlist');
+	    }
+		   digitalData.cpj = {
+			   product : {
+				      id  :  $("#product_id").val(),
+				 category :  $("#product_category").val()
+			}
+		}
+		     digitalData.page = {
+		    		  wishList : {
+		    		  location : pagetype 
+		    		}
+		    }
+	}
+	
+	 //TPR-6290 |Product Comparison Tracking
+    function dtmAddToComparedList(productList){
+    	 digitalData.product = {
+    		 comparison : {
+    			 array   : productList
+    		 }
+    	 }
+	 }
+    
+    function dtmAddToCompare(productId,category){
+    	digitalData.cpj = {
+    		product : {
+    				id  :  productId,
+    		 category   :  category	
+    	 }
+    	}
+    }
+    
