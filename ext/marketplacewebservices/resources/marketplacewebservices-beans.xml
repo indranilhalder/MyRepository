@@ -715,6 +715,7 @@
 	<property name="exchangeMessage" type="String"/>
 		<!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
+			<property name="priceDisclaimerTextJwlry" type="String" />
 	</bean>
 	<!-- -->
 	<bean class="com.tisl.mpl.wsdto.MobdeliveryModeWsDTO">
@@ -1928,6 +1929,14 @@
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
 		<property name="mrpPrice"
 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+			
+		<!-- added for mobile web service changes for jewellery start-->
+		<property name="maxSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 		<property name="minSellingPrice"
+ 			type="de.hybris.platform.commercefacades.product.data.PriceData" />
+ 			<!-- added for mobile web service changes for jewellery end-->
+ 			
 		<property name="colour" type="String" />
 		<property name="colourCode" type="String" />
 		<property name="productTag"
