@@ -998,7 +998,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 					final String brand = categoryService.getCategoryForCode(brandCode).getName().toLowerCase();
 					//brand.toLowerCase();
 					String brandName = "";
-<<<<<<< HEAD
+
 
 					if (brand.contains("&"))
 					{
