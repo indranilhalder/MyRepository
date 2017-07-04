@@ -798,8 +798,8 @@ ACC.singlePageCheckout = {
                 	$("#selectedDeliveryOptionsHighlight").html(str);
                 	
                 	// For Review Order Highlight Display
-                	//$("#selectedReviewOrderHighlight").html(data.CountItems + " Items, " + data.totalPrice);
-                	$("#selectedReviewOrderHighlight").html(data.CountItems + " Items, ");
+                	$("#selectedReviewOrderHighlight").html(data.CountItems + " Items, " + data.totalPrice);
+                	ACC.singlePageCheckout.countItemsForReviewOrder=data.CountItems;
                 	
                 	if(callFrom=="removeCartItem")
                 	{
@@ -1249,8 +1249,11 @@ ACC.singlePageCheckout = {
         	$("#reviewOrder").html(data);
         	
         	//Adding highlight code here to get the correct price
-        	var countItemsText=$("#selectedReviewOrderHighlight").html();
-        	$("#selectedReviewOrderHighlight").html(countItemsText+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
+        	if($("#reviewOrder #totPriceWithoutRupeeSymbol").text()!="")
+        	{
+        		var countItemsText=ACC.singlePageCheckout.countItemsForReviewOrder;
+        		$("#selectedReviewOrderHighlight").html(countItemsText+" Items, "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
+        	}
         	//added for tealium
   		  $("#checkoutPageName").val("Review Order");
   	       tealiumCallOnPageLoad();
@@ -1926,6 +1929,7 @@ removeExchangeFromCart : function (){
 	},
 	formValidationErrorCount:0,
 	isSlotDeliveryAndCncPresent:false,
+	countItemsForReviewOrder:"",
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive

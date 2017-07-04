@@ -52,7 +52,7 @@
 	    </div>
 	    <div class="checkout-accordion">
 	        <div class="checkout-accordion-heading">
-	        <div class="checkout-mobile-heading">Review Order</div>
+	        <!-- <div class="checkout-mobile-heading">Review Order</div> -->
 	            <div><h4><span>3</span> Review Order</h4></div>
 	            <div style="display:none" id="selectedReviewOrderDivId"><span id="selectedReviewOrderHighlight"></span><span>REVIEW ORDER</span></div>
 	        </div>
