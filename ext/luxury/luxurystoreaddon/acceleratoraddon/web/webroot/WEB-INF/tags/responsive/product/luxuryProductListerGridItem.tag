@@ -47,6 +47,14 @@
 <input type="hidden" id="loggedIn" value="true"/> 
 </sec:authorize>  
 </span> --%>
+<c:set var="ussidVal" value="${product.ussID}" />
+				   <c:forEach var="type" items="${product.ussidList}">
+								<c:if test="${msiteSellerId  eq type.key}"> 
+								<c:set var="ussidVal"
+									value="${type.value}" />
+                                </c:if>
+                   </c:forEach>
+                    
 
 
 <div class="product-grid">
@@ -70,7 +78,7 @@
 						</c:if>
 					</div>
 			</a>
-			<a href="javascript:;" class="add-to-wishlist" data-product="${product.url}"></a>
+			<a href="javascript:;" class="add-to-wishlist" data-product="${product.url}" data-ussid="${ussidVal}"></a>
 			<span class="plpWlcode" style="display: none;">${product.url}</span>
 			<div class="short-info">
 				<h5>${product.brand}</h5>
