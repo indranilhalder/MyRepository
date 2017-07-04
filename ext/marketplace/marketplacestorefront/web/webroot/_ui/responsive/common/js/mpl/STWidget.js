@@ -163,7 +163,7 @@ var stwRender = {
         }
     },
     bindCarousel: function() {
-        $(".stw-widget-owl").owlCarousel({
+    	$(".stw-widget-owl").owlCarousel({
             items: 5,
             loop: true,
             nav: true,
@@ -175,19 +175,23 @@ var stwRender = {
                 0: {
                     items: 1,
                     stagePadding: 50,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 1) ? false : true,
                 },
                 // breakpoint from 480 up
                 480: {
                     items: 2,
                     stagePadding: 50,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 2) ? false : true,
                 },
                 // breakpoint from 768 up
                 768: {
                     items: 3,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 3) ? false : true,
                 },
                 // breakpoint from 1080 up
                 1080: {
                     items: 5,
+                    loop: ($(".stw-widget-owl .stw_widget_list_elements").length <= 5) ? false : true,
                 }
             }
         });

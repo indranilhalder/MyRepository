@@ -67782,7 +67782,7 @@ header .content .bottom:not(.active) .bag:after{
 /*UF-14 change end*/
 /* STW changes start */
 #stw_widget {
-min-height:250px;
+/* min-height:250px; */ /*commented for PRDI-501*/
 position:relative;
 }
 #stw_widget .carousel-component{
