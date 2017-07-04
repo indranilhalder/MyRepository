@@ -24,15 +24,20 @@
 						<div class="col-md-3">
 							<ul>
 								<li>
-									<a href="#">${child.title}</a>
-									<span class="sub-menu-toggle"></span>
-									<ul class="sub-menu">
-										<c:forEach items="${child.links}"  var="childlink" varStatus="i">
-											<li>
-												<cms:component component="${childlink}" evaluateRestriction="true" />
-											</li>
-										</c:forEach>
-									</ul>
+									<c:if test="${not empty child.links and fn:length(child.links) eq 1}">
+										<a href="#">${child.title}</a>
+									</c:if>
+									<c:if test="${not empty child.links and fn:length(child.links) gt 1}">
+										<a href="#">${child.title}</a>
+										<span class="sub-menu-toggle"></span>
+										<ul class="sub-menu">
+											<c:forEach items="${child.links}"  var="childlink" varStatus="i">
+												<li>
+													<cms:component component="${childlink}" evaluateRestriction="true" />
+												</li>
+											</c:forEach>
+										</ul>
+									</c:if>
 								</li>
 							</ul>
 						</div>
