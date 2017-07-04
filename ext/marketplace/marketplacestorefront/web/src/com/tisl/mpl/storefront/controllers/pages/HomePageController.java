@@ -658,6 +658,7 @@ public class HomePageController extends AbstractPageController
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
 	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
@@ -704,7 +705,7 @@ public class HomePageController extends AbstractPageController
 	 * @param brandshowcase
 	 * @return
 	 */
-	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final ShowCaseLayout showcaseLayout)
+	private JSONObject getJSONForShowCaseItem(final MplShowcaseItemComponentModel showcaseItem, final String showcaseLayout)
 	{
 		final JSONObject showCaseItemJson = new JSONObject();
 		ProductData firstProduct = null;
@@ -1548,7 +1549,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 *
+					 * 
 					 * }
 					 */
 
