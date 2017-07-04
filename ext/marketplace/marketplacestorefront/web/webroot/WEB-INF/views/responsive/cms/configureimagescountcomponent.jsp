@@ -28,7 +28,6 @@ $(window).load(function() {
 	$("#nextImage").css("opacity","1");
 	/* var listHeight = $(".imageList li").height(); */ /*commented as part of PRDI-68*/
 	 var listHeight = thumbnailImageHeight + 13.6;		/*added as part of PRDI-68*/
-	 console.log("jsp listHeight11 >>>>> " + listHeight); 
 	if($("#previousImage").length){
 		/* $(".imageList").css("height",(listHeight*imagePageLimit)+"px"); */
 		/*start of PRDI-397*/
@@ -45,7 +44,6 @@ $(window).on("load resize", function() {
 		var thumbnailImageHeight = (mainImageHeight / 5);
 		var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
 		var listHeight = thumbnailImageHeight + 13.6;
-		console.log("jsp listHeight >>>>> " + listHeight);
 		if($("#previousImage").length){
 			/* $(".imageList").css("height",(listHeight*imagePageLimit)+"px"); */
 			/*start of PRDI-397*/
