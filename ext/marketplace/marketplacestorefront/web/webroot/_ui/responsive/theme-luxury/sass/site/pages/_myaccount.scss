@@ -149,6 +149,116 @@
 					margin-top:70px;
 				}
 			}
+            
+            #displayPaginationCountUp, .navigation2{
+                padding: 20px;
+            }
+            .pagination_ul{
+                padding: 20px;
+                
+                > li{
+                   border: 1px solid #e4e8f0; 
+                }
+                
+                li{
+                    list-style: none;
+                    .product-block{
+                        padding: 0px;
+                        
+                        li{
+                            list-style: none;
+                        }
+                        .header{
+                            position: initial;
+                            border: 0px;
+                            height: auto!important;
+                            
+                            ul{
+                                background: #f9f9f9;
+                                border: 1px solid #e4e8f0;
+                                padding: 0px;
+                                li{
+                                    display: inline-block;
+                                    border-right: 1px solid #e4e8f0;
+                                    padding: 5px;
+                                    width: 24%;
+                                    
+                                    @include media-breakpoint-down(sm) {
+                                        display: block;
+                                         width:100%;
+                                         border-bottom: 1px solid #e4e8f0;
+                                    }
+                                    span{
+                                        display: block;
+                                    }
+                                }
+                                li:last-child{                                   
+                                    border-right:0px;                                  
+                                }
+                            }
+                        }
+                        .item{                                                  
+                             padding: 20px;                           
+                            .image{
+                                display: inline-block;
+                                width: 35%;
+                                vertical-align: top;
+                                @include media-breakpoint-down(sm) {
+                                    display: inline;
+                                    width: 100%;                                   
+                                }
+                            }
+                            .details{
+                                display: inline-block;
+                                width: 63%;
+                                vertical-align: top;
+                                
+                                 @include media-breakpoint-down(sm) {
+                                    display: inline;
+                                    width: 100%;
+                                }
+                            }
+                            
+                        }
+                        
+                        .modal.cancellation-request{
+                            top:25%;
+                            
+                            .content{
+                                width: 330px;
+                                margin: auto;
+                                background: #fff;
+                                .cancellation-request-block{
+                                    ul{
+                                        padding: 0px;
+                                    }
+                                    .product{
+                                        .item-info{
+                                            span{
+                                                display: block;
+                                            }
+                                        } 
+                                        .product-name{
+                                            font-size: 18px;
+                                        }
+                                        .item-info{
+                                            font-size: 16px;
+                                        }
+                                    }
+                                }
+                            }
+                            .overlay{
+                                display: none;
+                            }
+                            .light-red.cancel-confirm{
+                                width: 100%;
+                            }
+                        }
+                        
+                    }
+                }
+                
+            }
 		}
 		.card-list{
 			.saved-cards{
