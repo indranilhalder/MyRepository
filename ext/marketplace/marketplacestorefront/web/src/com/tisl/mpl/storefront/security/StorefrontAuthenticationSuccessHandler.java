@@ -172,7 +172,19 @@ public class StorefrontAuthenticationSuccessHandler extends SavedRequestAwareAut
 
 		session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
 
-
+		final String requestUrl = request.getRequestURL().toString();
+		//For TPR-6334 : creating cookie object
+		final Cookie dtmLoginCookie;
+		if (requestUrl != null && requestUrl.contains(CHECKOUT_URL))
+		{
+			dtmLoginCookie = new Cookie(MessageConstants.DTM_SIGNIN_STATUS, "CheckoutLoginSuccess");
+		}
+		else
+		{
+			dtmLoginCookie = new Cookie(MessageConstants.DTM_SIGNIN_STATUS, "AccountLoginSuccess");
+		}
+		dtmLoginCookie.setPath(ModelAttributetConstants.SLASH);
+		response.addCookie(dtmLoginCookie);
 
 		/* Gigya code commented for non existence in Release1 */
 
