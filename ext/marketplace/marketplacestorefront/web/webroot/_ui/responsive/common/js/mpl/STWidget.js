@@ -36,6 +36,8 @@ var stwService = {
             },
             success: function(json) {
                 var vistingIp = stwRender.visitingIpAddress(json);
+	 if(typeof(vistingIp)!='undefined')
+                {	    
                 var isIpAvialable = stwRender.wigetLoaderOnIp(vistingIp);
                 if (($("#pageType").val() == "homepage") && (isIpAvialable == true)) {
                     var stw_block = null;
@@ -67,6 +69,7 @@ var stwService = {
                     }
                     stwRender.bindCarousel();
                 }
+	      }
             },
             fail: function() {
                 console.log('STW failed to load --' + error);
