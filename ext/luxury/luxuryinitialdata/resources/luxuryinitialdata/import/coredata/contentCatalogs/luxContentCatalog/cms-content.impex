@@ -51,8 +51,10 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
 ;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
 
-INSERT_UPDATE MiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;;
-;;MiniCart;Mini Cart;MiniCart;SUBTOTAL;3;;
+
+INSERT_UPDATE LuxuryMiniCartComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;totalDisplay(code);shownProductCount;;
+;;Luxury-MiniCart;Luxury Mini Cart;LuxuryMiniCart;SUBTOTAL;3;;
+
 
 INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;shownProductCount;;
 ;;MyWishList;My WishList;MyWishList;3;;
@@ -540,7 +542,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;FooterSlot;Footer;true;LuxuryFooterComponent
 ;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
 ;;WishListSlot;Wish List;true;MyWishList
-;;MiniCartSlot;Mini Cart;true;MiniCart
+;;MiniCartSlot;Mini Cart;true;Luxury-MiniCart
 ;;TabsSlot;Tabs;true;TabPanelContainer
 ;;BottomHeaderSlot;Bottom Header;true;breadcrumbComponent
 ;;VariantSelectorSlot;Variant Selector;true;VariantSelector
@@ -562,7 +564,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Brand-TopHeaderSlot;Brand TopHeader;true;Home-TopBannerContent
 ;;Brand-HeaderLinkSlot;Brand HeaderLinkSlot;true;
 ;;Brand-siteLogoSlot;Brand siteLogo;true;Brand-team;
-;;Brand-MiniCartSlot;Brand MiniCart;true;
+;;Brand-MiniCartSlot;Brand MiniCart;true;Luxury-MiniCart
 ;;Brand-HeroBannerSlot;Brand HeroBanner;true;Men-BannerVideo1
 ;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Brand-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
@@ -582,13 +584,13 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Gender-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
 ;;Gender-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Gender-siteLogoSlot;Gender siteLogo;true;
-;;Gender-MiniCartSlot;Gender MiniCart;true;
+;;Gender-MiniCartSlot;Gender MiniCart;true;Luxury-MiniCart
 ;;Gender-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Gender-FooterSlot;Gender Footer;true;LuxuryFooterComponent
 ;;Men-TopHeaderSlot;Gender TopHeader;true;
 ;;Men-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Men-siteLogoSlot;Gender siteLogo;true;
-;;Men-MiniCartSlot;Gender MiniCart;true;
+;;Men-MiniCartSlot;Gender MiniCart;true;Luxury-MiniCart
 ;;Men-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Men-FooterSlot;Gender Footer;true;
 ;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
@@ -611,7 +613,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Women-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
 ;;Women-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Women-siteLogoSlot;Gender siteLogo;true;
-;;Women-MiniCartSlot;Gender MiniCart;true;
+;;Women-MiniCartSlot;Gender MiniCart;true;Luxury-MiniCart
 ;;Women-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Women-FooterSlot;Gender Footer;true;
 ;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
@@ -638,7 +640,6 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;FooterSlot;Footer;true;LuxuryFooterComponent
 ;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
 ;;WishListSlot;Wish List;true;MyWishList
-;;MiniCartSlot;Mini Cart;true;MiniCart
 ;;PinCodeServiceSlot;Pin Code Service;true;PinCodeService
 ;;EmptyCartMiddleContent-cartPage;Middle Slot for Cart Page;true;EmptyCartParagraphComponent
 ;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;FreeDeliverySimpleBannerComponent,CartComponent

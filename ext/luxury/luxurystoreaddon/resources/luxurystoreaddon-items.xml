@@ -364,5 +364,13 @@
 			</attribute>
 		</attributes>
 	</itemtype>
+	
+	<itemtype code="LuxuryMiniCartComponent" 
+	autocreate="true" generate="true" extends="MiniCartComponent"  
+	jaloclass="com.tisl.lux.jalo.cms.components.LuxuryMiniCartComponent">
+			</itemtype>
+	
+	
+	
 	</itemtypes>
 </items>

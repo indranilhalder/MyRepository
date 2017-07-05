@@ -123,5 +123,12 @@
        <property name="typeCode" value="LuxuryPincodeServiceComponent" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
+   
+   <bean parent="addonCmsComponentRendererMapping">
+       <property name="typeCode" value="LuxuryMiniCartComponent" />
+       <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+   </bean>
+   
+   
  
 </beans>
