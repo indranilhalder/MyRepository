@@ -694,6 +694,7 @@ function addToWishlist(alreadyAddedWlName_pdp) {
 					});
 				/*TPR-656 Ends*/
 				
+					dtmAddToWishlist(pdp);  	/*TPR-6364*/
 					
 					//openPop(ussidValue);
 				//	$('#myModal').modal('hide');
@@ -1404,6 +1405,11 @@ $(function() {
 											if(typeof utag !="undefined"){
 											utag.link({error_type: error  });
                                             }
+											//TPR-6369 |Error tracking dtm
+							 				if (typeof _satellite != "undefined") {
+							 					_satellite.track('error_tracking');
+							 			    }
+							 				dtmErrorTracking("Pin Code Servicability Error",error);
 										}
 									});
 
@@ -1982,7 +1988,10 @@ function openPopForBankEMI() {
 				product_id : productIdArray
 			});
 			//TPR-6029-EMI link click#33--start
-			_satellite.track('cpj_pdp_emi');
+			if (typeof _satellite != "undefined") {
+				_satellite.track('cpj_pdp_emi');
+		    }
+			
 			//TPR-6029-EMI link click#33--end
 		},
 		error : function(xhr, status, error) {
@@ -3013,12 +3022,12 @@ function loadDefaultWishListName_SizeGuide() {
 				
 				/*TPR-646 Changes*/
 				utag.link({
-					"link_obj" : this,
 			        "link_text": 'remove_from_wishlist',
 			        "event_type": 'remove_from_wishlist',
 			        "product_sku_wishlist": "" + productCode
 			    });
 				
+				dtmRemoveFromWishlist(pdp);
 				//END MSD
 //				window.location.href = ACC.config.encodedContextPath + "/my-account/wishList";
 				//window.location.href = ACC.config.encodedContextPath + "/my-account/viewParticularWishlist?particularWishlist="+wishlistName;

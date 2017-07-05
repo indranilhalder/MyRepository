@@ -149,6 +149,7 @@ ACC.product = {
 					$("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
 					$("#addToCartFormQuickTitle").show().fadeOut(6000);
 					errorAddToBag("size_not_selected");
+					dtmErrorTracking("size_not_selected","errorname");
 				}
 				event.preventDefault();
 				return false;
@@ -504,6 +505,7 @@ sendAddToBag : function(formId, isBuyNow) {
 											+ "</font>");
 							$("#" + formId + "Title").show().fadeOut(5000);
 							errorAddToBag("bag_is_full");
+							dtmErrorTracking("bag_is_full","errorname");
 							utagError=true;
 						} else if (data == "outofinventory") {
 							$("#" + formId + "noInventory")
@@ -516,6 +518,7 @@ sendAddToBag : function(formId, isBuyNow) {
 							$("#" + formId + "noInventory").show().fadeOut(
 									6000);
 							errorAddToBag("out_of_stock");
+							dtmErrorTracking("out_of_stock","errorname");
 							utagError=true;
 							return false;
 						} else if (data == "willexceedeinventory") {
@@ -676,12 +679,14 @@ sendAddToBagQuick:function(formId){
 				$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 				$("#"+formId+"Title").show().fadeOut(5000);
 				errorAddToBag("bag_is_full");
+				dtmErrorTracking("bag_is_full","errorname");
 				utagError=true;
 			}
 			else if(data=="outofinventory"){
 				 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 				$("#addToCartFormnoInventory").show().fadeOut(6000);
 				errorAddToBag("out_of_stock");
+				dtmErrorTracking("bag_is_full","errorname");
 				utagError=true;
 		   	     return false;
 			}
@@ -810,12 +815,14 @@ sendAddToBagQuick:function(formId){
 					$("#"+formId+"Title").html("<font color='#ff1c47'>"+$('#bagfull').text()+"</font>");
 					$("#"+formId+"Title").show().fadeOut(5000);
 					errorAddToBag("bag_is_full");
+					dtmErrorTracking("bag_is_full","errorname");
 					utagError=true;
 				}
 				else if(data=="outofinventory"){
 					 //$("#"+formId+"noInventory").html("<font color='#ff1c47'>" + $('#addToCartFormnoInventory').text() + "</font>");
 					$("#addToCartFormnoInventory").show().fadeOut(6000);
 					errorAddToBag("out_of_stock");
+					dtmErrorTracking("out_of_stock","errorname");
 					utagError=true;
 			   	     return false;
 				}
