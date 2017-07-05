@@ -404,49 +404,81 @@ public class ProductDetailsHelper
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
 								.contains(classData.getName())))
 				{
-					final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
 					final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
 					if (classData.getName().equalsIgnoreCase("Stone Details"))
 					{
+						String StoneclassificationName = null;
 						for (final FeatureData feature : classDataName)
 						{
+							final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
 							final String featurename = feature.getName();
+							final Set keys = featureDetails.keySet();
+							final Iterator itr = keys.iterator();
 							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
 							final List<String> featureValueList = new ArrayList<String>();
 							for (final FeatureValueData featurevalue : featuredvalue)
 							{
 								if (featurename.equalsIgnoreCase("Stone"))
 								{
-									classificationName = featurevalue.getValue() + "Details";
+									StoneclassificationName = featurevalue.getValue() + " Details";
 								}
 								else
 								{
-									if (!featurename.equalsIgnoreCase("Total Count"))
+									if (!featurename.equalsIgnoreCase("Total Count") && keys.contains(StoneclassificationName))
 									{
+
 										final String featureV = featurevalue.getValue();
-										featureValueList.add(featureV);
-										featureMap.put(featurename, featureValueList);
+
+										while (itr.hasNext())
+										{
+											final String key = (String) itr.next();
+											if (key != null && key.equalsIgnoreCase(StoneclassificationName))
+											{
+												if (featureDetails.get(StoneclassificationName).keySet() != null
+														&& featureDetails.get(StoneclassificationName).keySet().contains(featurename))
+												{
+													for (final String featureMapKey : featureDetails.get(StoneclassificationName).keySet())
+													{
+														if (featureMapKey.equalsIgnoreCase(featurename))
+														{
+															featureDetails.get(StoneclassificationName).get(featureMapKey).add(featureV);
+														}
+													}
+												}
+												else
+												{
+													featureValueList.add(featureV);
+													featureMap.put(featurename, featureValueList);
+												}
+											}
+										}
 									}
 								}
 							}
-							final Set keys = featureDetails.keySet();
-							final Iterator itr = keys.iterator();
-							if (keys.contains(classificationName))
+							final Iterator fItr = keys.iterator();
+							if (keys.contains(StoneclassificationName))
 							{
-								while (itr.hasNext())
+								while (fItr.hasNext())
 								{
-									final String key = (String) itr.next();
-									if (key != null && key.equalsIgnoreCase(classificationName))
+									final String key = (String) fItr.next();
+									if (key != null && key.equalsIgnoreCase(StoneclassificationName))
 									{
-										featureDetails.get(classificationName).putAll(featureMap);
+										featureDetails.get(StoneclassificationName).putAll(featureMap);
 									}
+								}
+							}
+							else
+							{
+								if (StoneclassificationName != null)
+								{
+									featureDetails.put(StoneclassificationName, featureMap);
 								}
 							}
 						}
-
 					}
 					else
 					{
+						final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
 						classificationName = classData.getName();
 						for (final FeatureData feature : classDataName)
 						{
@@ -477,7 +509,24 @@ public class ProductDetailsHelper
 								}
 							}
 						}
-						featureDetails.put(classificationName, featureMap);
+						final Set keys = featureDetails.keySet();
+						final Iterator itr = keys.iterator();
+						if (keys.contains(classificationName))
+						{
+							while (itr.hasNext())
+							{
+								final String key = (String) itr.next();
+								if (key != null && key.equalsIgnoreCase(classificationName))
+								{
+									featureDetails.get(classificationName).putAll(featureMap);
+								}
+							}
+						}
+						else
+						{
+
+							featureDetails.put(classificationName, featureMap);
+						}
 					}
 
 				}
@@ -487,7 +536,6 @@ public class ProductDetailsHelper
 							&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
 									.contains(classData.getName())))
 					{
-
 						final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
 						if (classData.getName().equalsIgnoreCase("Stone Details"))
 						{
@@ -497,6 +545,7 @@ public class ProductDetailsHelper
 								final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
 								final String featurename = feature.getName();
 								final Set keys = featureDetails.keySet();
+								final Iterator itr = keys.iterator();
 								final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
 								final List<String> featureValueList = new ArrayList<String>();
 								for (final FeatureValueData featurevalue : featuredvalue)
@@ -512,40 +561,40 @@ public class ProductDetailsHelper
 
 											final String featureV = featurevalue.getValue();
 
-
-											final Set Fkeys = featureMap.keySet();
-											final Iterator Fitr = keys.iterator();
-											String Fkey = null;
-											if (Fkeys.contains(featurename))
+											while (itr.hasNext())
 											{
-												while (Fitr.hasNext())
+												final String key = (String) itr.next();
+												if (key != null && key.equalsIgnoreCase(StoneclassificationName))
 												{
-													Fkey = (String) Fitr.next();
-													if (Fkey != null && Fkey.equalsIgnoreCase(featurename))
+													if (featureDetails.get(StoneclassificationName).keySet() != null
+															&& featureDetails.get(StoneclassificationName).keySet().contains(featurename))
 													{
-														featureMap.get(featurename).add(featureV);
+														for (final String featureMapKey : featureDetails.get(StoneclassificationName).keySet())
+														{
+															if (featureMapKey.equalsIgnoreCase(featurename))
+															{
+																featureDetails.get(StoneclassificationName).get(featureMapKey).add(featureV);
+															}
+														}
 													}
-
+													else
+													{
+														featureValueList.add(featureV);
+														featureMap.put(featurename, featureValueList);
+													}
 												}
-											}
-											else
-											{
-												featureValueList.add(featureV);
-												featureMap.put(featurename, featureValueList);
 											}
 										}
 									}
 								}
-								//	final Set keys = featureDetails.keySet();
-								final Iterator itr = keys.iterator();
+								final Iterator fItr = keys.iterator();
 								if (keys.contains(StoneclassificationName))
 								{
-									while (itr.hasNext())
+									while (fItr.hasNext())
 									{
-										final String key = (String) itr.next();
+										final String key = (String) fItr.next();
 										if (key != null && key.equalsIgnoreCase(StoneclassificationName))
 										{
-
 											featureDetails.get(StoneclassificationName).putAll(featureMap);
 										}
 									}
@@ -554,13 +603,10 @@ public class ProductDetailsHelper
 								{
 									if (StoneclassificationName != null)
 									{
-										//	featureMap.clear();
 										featureDetails.put(StoneclassificationName, featureMap);
 									}
 								}
-
 							}
-
 						}
 						else
 						{
