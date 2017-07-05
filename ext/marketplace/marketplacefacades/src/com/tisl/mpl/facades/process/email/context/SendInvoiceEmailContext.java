@@ -28,7 +28,7 @@ import com.tisl.mpl.core.model.SendInvoiceProcessModel;
  */
 public class SendInvoiceEmailContext extends CustomerEmailContext
 {
-	List<AbstractOrderEntryModel> childEntries = new ArrayList<AbstractOrderEntryModel>();
+	ArrayList<AbstractOrderEntryModel> childEntries = new ArrayList<AbstractOrderEntryModel>();
 	List<OrderModel> childOrders = new ArrayList<OrderModel>();
 
 	private static final String CUSTOMER_EMAIL = "customerEmail";
@@ -143,7 +143,8 @@ public class SendInvoiceEmailContext extends CustomerEmailContext
 
 				put(ORDERPLACEDATE, orderPlaceDate);
 
-				childEntries = ((SendInvoiceProcessModel) storeFrontCustomerProcessModel).getAbstractOrderEntryList();
+				childEntries = (ArrayList<AbstractOrderEntryModel>) ((SendInvoiceProcessModel) storeFrontCustomerProcessModel)
+						.getAbstractOrderEntryList();
 
 
 				childOrders = ((SendInvoiceProcessModel) storeFrontCustomerProcessModel).getChildOrderList();
