@@ -1410,6 +1410,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				model.addAttribute(ModelAttributetConstants.BREADCRUMBS, breadcrumbs);
 
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
+
 			}
 		}
 		catch (final IllegalArgumentException e)
@@ -2985,7 +2988,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 			}
 		}
-		if (null != request.getParameterMap() && request.getParameterMap().containsKey(isLux))
+		if (null != request.getParameterMap() && request.getParameterMap().containsValue(isLux))
 		{
 			returnAction = returnAction + "?" + isLux + "=true";
 		}

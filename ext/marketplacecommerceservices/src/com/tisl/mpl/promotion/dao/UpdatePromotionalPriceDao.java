@@ -7,6 +7,7 @@ import de.hybris.platform.europe1.model.PriceRowModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.PromotionalPriceRowModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 
 
@@ -18,7 +19,7 @@ public interface UpdatePromotionalPriceDao
 {
 	List<PriceRowModel> fetchPricedData(List<String> product);
 
-	List<PriceRowModel> fetchPromoPriceData(String promoCode);
+	List<PromotionalPriceRowModel> fetchPromoPriceData(String promoCode);
 
 	/**
 	 * to fetch the cron details

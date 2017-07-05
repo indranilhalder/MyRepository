@@ -16,7 +16,9 @@
         <property qualifier="SimpleCMSComponent.deeplinkTypeId" />
         <property qualifier="SimpleCMSComponent.deeplinkTypeVal" />
         <property qualifier="SimpleCMSComponent.componentType" />
-		<property qualifier="SimpleBannerComponent.description" editor="wysiwyg"/>		
+		<property qualifier="SimpleBannerComponent.description" editor="wysiwyg"/>	
+		<!-- TPR-5168 -->
+		<property qualifier="SimpleBannerComponent.icid2"/>		
         <property qualifier="AbstractBannerComponent.media" editor="simpleMediaReferenceSelector">
 			<parameter>
 				<name>mimeTypes</name>

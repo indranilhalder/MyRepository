@@ -505,9 +505,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INVALIDDATE = "Please Enter valid date in formate dd/mm/yyyy";
 	public static final String OTPVALIDITY = "VALID";
 	public static final String OTPEXPIRY = "EXPIRED";
-	public static final String OTP_SENT = "OTP sent";
+	public static final String OTP_SENT = "Your OTP has been sent."; //UF-277
 	public static final String OTP_EXPIRY_MESSAGE = "Sorry! This OTP has expired.";
-	public static final String INVALID_OTP = "Are you sure that's the right OTP?";
+	public static final String INVALID_OTP = "The OTP entered is incorrect or invalid."; //UF-277
 	public static final String OTPERROR = "Please Enter valid OTP";
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
@@ -942,6 +942,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9700 = "B9700";
 
 	public static final String B9710 = "B9710";
+	public static final String B9110 = "B9110";
 	// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
@@ -2105,6 +2106,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 
 	public static final String SECONDPRODUCT = "secondProduct";
+
+	//TPR-5346
+
+	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "reachedMaxLimitforproduct";
+
+	public static final String PRECOUNTMSG = "Unfortunately, there is a restriction on the number of";
+	public static final String MIDCOUNTMSG = "you can order. Since you can purchase only ";
+	public static final String LASTCOUNTMSG = "we have modified your shopping bag to reflect this.";
 	public static final String FOUNDCOMPONENT = "Found Component>>>>with id :::";
 
 

@@ -46,10 +46,12 @@
 	<ul>
 
 		<li>
+		<!--TISBBC-26 message changed-->
 			<a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' +window.location.host+ $('#productUrl').text() + ' ' + $('#shareposttext').text(),'share_twitter')"></a>
 		</li>
 		<li>
-			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/','share_facebook')"></a> 
+		<!--TISBBC-26 message changed-->
+			<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location.host+ $('#productUrl').text() + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+window.location.host+ $('#productUrl').text() +' '+$('#shareposttext').text()+' &amp;redirect_uri=http://www.facebook.com/','share_facebook')"></a> 
 			<!-- <a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=145634995501895&amp;description='+$('#sharepretext').text()+' '+$('#shareposttext').text()+' &amp;redirect_uri=https://developers.facebook.com/tools/explorer')"></a>  -->				
 		</li>
 		<li>

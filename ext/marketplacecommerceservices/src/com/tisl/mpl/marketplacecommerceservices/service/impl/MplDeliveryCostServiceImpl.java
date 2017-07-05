@@ -5,9 +5,12 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplDeliveryCostDao;
@@ -55,7 +58,7 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService#getDeliveryModesAndCost(java.lang.String,
 	 * java.lang.String)
@@ -66,6 +69,36 @@ public class MplDeliveryCostServiceImpl implements MplDeliveryCostService
 		ServicesUtil.validateParameterNotNull(currencyIsoCode, "currencyIsoCode cannot be null");
 		ServicesUtil.validateParameterNotNull(sellerArticleSku, "sellerArticleSku cannot be null");
 		return getMplDeliveryCostDao().getDeliveryModesAndCost(currencyIsoCode, sellerArticleSku);
+	}
+
+	/**
+	 *
+	 * Added for CAR-266
+	 *
+	 * @param deliveryMode
+	 * @param currencyIsoCode
+	 * @param skuid
+	 */
+	@Override
+	public List<MplZoneDeliveryModeValueModel> getDeliveryCost(final StringBuilder deliveryMode, final String currencyIsoCode,
+			final String skuid)
+	{
+		final List<MplZoneDeliveryModeValueModel> dataList = getMplDeliveryCostDao()
+				.getDeliveryModesAndCost(currencyIsoCode, skuid);
+		final List<MplZoneDeliveryModeValueModel> finalList = new ArrayList<MplZoneDeliveryModeValueModel>();
+
+		if (CollectionUtils.isNotEmpty(dataList))
+		{
+			for (final MplZoneDeliveryModeValueModel oModel : dataList)
+			{
+				if (deliveryMode.toString().contains(oModel.getDeliveryMode().getCode()))
+				{
+					finalList.add(oModel);
+				}
+			}
+		}
+		return finalList;
+
 	}
 
 }

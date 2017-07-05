@@ -70,7 +70,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : This method is called when promotional products are removed from cart and cart is recalculated.
-	 * @param : ctx
+	 * @param :
+	 *           ctx
 	 * @return : true/false
 	 */
 	@Override
@@ -112,7 +113,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : OOB method
-	 * @param : ctx
+	 * @param :
+	 *           ctx
 	 * @return : double
 	 */
 	@Override
@@ -123,8 +125,10 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : OOB method
-	 * @param : ctx
-	 * @param : values
+	 * @param :
+	 *           ctx
+	 * @param :
+	 *           values
 	 */
 	@Override
 	protected void deepCloneAttributes(final SessionContext ctx, final Map values)
@@ -134,9 +138,12 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : Find Order Entry
-	 * @param : ctx
-	 * @param : order
-	 * @param : orderEntryNumber
+	 * @param :
+	 *           ctx
+	 * @param :
+	 *           order
+	 * @param :
+	 *           orderEntryNumber
 	 * @return : AbstractOrderEntry
 	 */
 	private AbstractOrderEntry findOrderEntry(final AbstractOrder order, final SessionContext ctx, final Integer orderEntryNumber)
@@ -167,7 +174,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 	/**
 	 * @Description : OOB method
-	 * @param : ctx
+	 * @param :
+	 *           ctx
 	 * @return : true/false
 	 */
 	@Override
@@ -191,16 +199,18 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 		{
 			//				validProductList = ctx.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) != null ? (Map<String, AbstractOrderEntry>) ctx
 			//						.getAttributes().get(MarketplacecommerceservicesConstants.VALIDPRODUCTLIST) : null;
-			cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null ? (String) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
-			productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null ? (String) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) : null;
-			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null ? (Map<String, Integer>) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
-			productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (Map<String, List<String>>) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
-			prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null ? (Map<String, Map<String, Double>>) ctx
-					.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) : null;
+			cartPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) != null
+					? (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.CARTPROMOCODE) : null;
+			productPromoCode = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) != null
+					? (String) ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODUCTPROMOCODE) : null;
+			qualifyingCountMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) != null
+					? (Map<String, Integer>) ctx.getAttributes().get(MarketplacecommerceservicesConstants.QUALIFYINGCOUNT) : null;
+			productAssociatedItemsMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
+					? (Map<String, List<String>>) ctx.getAttributes().get(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+			prodPrevCurrDelChargeMap = ctx.getAttributes().get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP) != null
+					? (Map<String, Map<String, Double>>) ctx.getAttributes()
+							.get(MarketplacecommerceservicesConstants.PRODPREVCURRDELCHARGEMAP)
+					: null;
 		}
 
 		try
@@ -213,8 +223,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 				associatedItemsList = productAssociatedItemsMap.get(validProdUSSID);
 			}
 
-			final int qualifyingCount = (null != qualifyingCountMap && !qualifyingCountMap.isEmpty()) ? (qualifyingCountMap
-					.get(validProdUSSID) != null ? qualifyingCountMap.get(validProdUSSID).intValue() : 0) : 0;
+			final int qualifyingCount = (null != qualifyingCountMap && !qualifyingCountMap.isEmpty())
+					? (qualifyingCountMap.get(validProdUSSID) != null ? qualifyingCountMap.get(validProdUSSID).intValue() : 0) : 0;
 
 			double prevDelCharge = 0.00D;
 			double currDelCharge = 0.00D;
@@ -235,8 +245,8 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 			if (null != orderEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)
 					&& !((String) orderEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE)).isEmpty())
 			{
-				totalProdLevelDisc = ((Double) orderEntry
-						.getProperty(ctx, MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue();
+				totalProdLevelDisc = ((Double) orderEntry.getProperty(ctx,
+						MarketplacecommerceservicesConstants.TOTALPRODUCTLEVELDISC)).doubleValue();
 				productPromoCode = (String) orderEntry.getProperty(ctx, MarketplacecommerceservicesConstants.PRODUCTPROMOCODE);
 			}
 
@@ -252,8 +262,10 @@ public class CustomShippingChargesPromotionAdjustAction extends GeneratedCustomS
 
 			final double netAmountAfterAllDisc = netSellingPrice - totalCartLevelDisc;
 
-			final List<String> prevAssociatedItemList = orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null ? (List<String>) orderEntry
-					.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+			final List<String> prevAssociatedItemList = orderEntry
+					.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) != null
+							? (List<String>) orderEntry.getProperty(MarketplacecommerceservicesConstants.ASSOCIATEDITEMS) : null;
+
 			if (prevAssociatedItemList != null && !prevAssociatedItemList.isEmpty())
 			{
 				final Set associatedItemsSet = new HashSet(prevAssociatedItemList);

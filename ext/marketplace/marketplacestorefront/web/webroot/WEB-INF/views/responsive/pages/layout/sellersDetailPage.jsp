@@ -320,7 +320,7 @@ display:none;
 		 var deliveryKey=firstToUpperCase('${delivery.key}');
 		 var start=$("#expressStartId").val();
 		 var end=$("#expressEndId").val();
-		 var deliveryValue="Delivered in"+start+"-"+end+"business days";
+		 var deliveryValue="Delivered in&nbsp;"+start+"-"+end+"&nbsp;business days";
 		 availableDeliveryATPForED=deliveryKey.concat("-").concat(deliveryValue);
  </script>
 </c:if> 
@@ -339,7 +339,7 @@ display:none;
 		 var deliveryKey=firstToUpperCase('${delivery.key}');
 		 var start=$("#clickStartId").val();
 		 var end=$("#clickEndId").val();
-		 var deliveryValue="Delivered in"+start+"-"+end+"business days";
+		 var deliveryValue="Delivered in&nbsp;"+start+"-"+end+"&nbsp;business days";
 		 availableDeliveryATPForCNC=deliveryKey.concat("-").concat(deliveryValue);
  </script>
 </c:if>

@@ -8,12 +8,17 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.order.data.AbstractOrderData;
 import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.commercefacades.order.data.OrderEntryData;
+import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
+import de.hybris.platform.commercefacades.product.data.PriceData;
+import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.AbstractOrderModel;
+import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.jalo.SessionContext;
 import de.hybris.platform.jalo.order.AbstractOrderEntry;
@@ -26,8 +31,10 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +56,7 @@ import org.springframework.ui.Model;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.MplPaymentInfoData;
+import com.tisl.mpl.data.MplPromoPriceData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.jalo.DefaultPromotionManager;
@@ -1617,6 +1625,83 @@ public class GenericUtilityMethods
 			salesApplication.add(SalesApplication.CALLCENTER);
 		}
 		return salesApplication;
+	}
+
+	/**
+	 * UF-260
+	 *
+	 * @param model
+	 * @param cartModel
+	 * @param priceData
+	 */
+	public static void getCartPriceDetails(final Model model, final AbstractOrderModel cartModel,
+			final MplPromoPriceData responseData)
+	{
+		final PriceDataFactory priceDataFactory = Registry.getApplicationContext().getBean("priceDataFactory",
+				PriceDataFactory.class);
+		Long cartTotalMrp = Long.valueOf(0);
+		double cartTotalNetSelPrice = 0.0D;
+		double couponDiscount = 0.0D;
+		double cartEntryNetSellPrice = 0.0D;
+		final DecimalFormat df = new DecimalFormat("#.##");
+		double totalDeliveryCharge = 0;
+
+		if (cartModel.getEntries() != null && !cartModel.getEntries().isEmpty())
+		{
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (!entry.getGiveAway().booleanValue())
+				{
+					final Long cartEntryMrp = Long.valueOf((entry.getMrp().longValue()) * (entry.getQuantity().longValue()));
+					cartTotalMrp = Long.valueOf(cartTotalMrp.longValue() + cartEntryMrp.longValue());
+
+					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
+					{
+						cartEntryNetSellPrice = Double.parseDouble(df.format(entry.getNetAmountAfterAllDisc().doubleValue()));
+					}
+					else
+					{
+						cartEntryNetSellPrice = Double.parseDouble(df.format((entry.getBasePrice().doubleValue())
+								* (entry.getQuantity().doubleValue())));
+					}
+					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
+
+					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
+
+					totalDeliveryCharge += (entry.getCurrDelCharge().doubleValue() + entry.getScheduledDeliveryCharge().doubleValue());
+
+				}
+			}
+		}
+		final BigDecimal cartTotalMrpValue = new BigDecimal(cartTotalMrp.longValue());
+		final PriceData cartTotalMrpVal = priceDataFactory.create(PriceDataType.BUY, cartTotalMrpValue,
+				MarketplacecommerceservicesConstants.INR);
+
+		//if (!(cartModel instanceof OrderModel) && (OrderStatus.PAYMENT_PENDING.equals(cartModel.getStatus())))
+		if (cartModel instanceof CartModel)
+		{
+			couponDiscount = 0.0D;
+		}
+
+		final BigDecimal totalDiscount = new BigDecimal(cartTotalMrp.longValue() - cartTotalNetSelPrice - couponDiscount);
+		final PriceData totalDiscountVal = priceDataFactory.create(PriceDataType.BUY, totalDiscount,
+				MarketplacecommerceservicesConstants.INR);
+		if (null != model)
+		{
+			model.addAttribute("cartTotalMrp", cartTotalMrpVal);
+			model.addAttribute("totalDiscount", totalDiscountVal);
+		}
+		if (null != responseData)
+		{
+			responseData.setTotalDiscntIncMrp(totalDiscountVal);
+			////TISSTRT-1605
+			if (totalDeliveryCharge > 0)
+			{
+				final PriceData totalDeliveryChargeVal = priceDataFactory.create(PriceDataType.BUY, new BigDecimal(
+						totalDeliveryCharge), MarketplacecommerceservicesConstants.INR);
+				responseData.setDeliveryCost(totalDeliveryChargeVal);
+			}
+		}
 	}
 
 	/**

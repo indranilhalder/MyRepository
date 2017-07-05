@@ -1337,9 +1337,7 @@ function updatePage(response, widgetMode) {
 			if (widgetMode === "hot" && site_page_type == "homepage") {
 				html += '</ul></div>';
 				/* IA Changes Start for store/mpl/en */
-				html += '</div></div><a href="http://'
-						+ window.location.host
-						+ '/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 42px;line-height: 42px;">Shop the Hot List</a>'; /* UF-249*/
+				html += '</div></div><a href="http://'+window.location.host+'/viewAllTrending" class="button hotShowHide" style="display: inline-block;font-size: 12px;height: 42px;line-height: 42px;">Shop the Hot List</a>';  /*UF-249*/
 			}
 			/* IA Changes End for store/mpl/en */
 			else {
@@ -1987,4 +1985,3 @@ function updatePage(response, widgetMode) {
 $(document).on('click', ".IAQuickView,.iaAddToCartButton", function(e) {
 	e.preventDefault();
 })
-

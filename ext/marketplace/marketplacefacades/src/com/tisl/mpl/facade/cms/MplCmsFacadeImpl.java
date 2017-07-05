@@ -404,8 +404,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 	 * @see com.tisl.mpl.facade.cms.MplCmsFacade#getLandingPageForCategory(java.lang.String)
 	 */
 	@Override
-	public PageData getCategoryLandingPageForMobile(final String categoryCode)
-			throws CMSItemNotFoundException, NullPointerException
+	public PageData getCategoryLandingPageForMobile(final String categoryCode) throws CMSItemNotFoundException,
+			NullPointerException
 	{
 		final CategoryModel category = getCategoryService().getCategoryForCode(categoryCode);
 		final ContentPageModel contentPage = getMplCMSPageService().getCategoryLandingPageForMobile(category, CMSChannel.MOBILE);
@@ -448,8 +448,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						final MobileBannerComponentModel mobileBannerComponent = (MobileBannerComponentModel) abstractCMSComponentModel;
 						final HomePageComponentData homePageData = new HomePageComponentData();
-						homePageData
-								.setImage(mobileBannerComponent.getMedia() != null ? mobileBannerComponent.getMedia().getURL() : null);
+						homePageData.setImage(mobileBannerComponent.getMedia() != null ? mobileBannerComponent.getMedia().getURL()
+								: null);
 						homePageData.setContentId(mobileBannerComponent.getUid());
 						if (mobileBannerComponent.getAssociatedCategory() != null
 								&& !mobileBannerComponent.getAssociatedCategory().isEmpty())
@@ -1406,6 +1406,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 							{
 								banner.setComponentType(bannerComponent.getComponentType().getCode());
 							}
+							//TPR-5168
+							if (bannerComponent.getIcid2() != null)
+							{
+								banner.setIcid2(bannerComponent.getIcid2());
+							}
 							banners.add(banner);
 						}
 						//homePageData.setBannerComponents(bannerComponents);
@@ -1454,6 +1459,11 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								if (cmsMediaPara.getDeeplinkType() != null)
 								{
 									banner.setTypeVal(cmsMediaPara.getDeeplinkTypeVal());
+								}
+								//TPR-5168
+								if (cmsMediaPara.getIcid2() != null)
+								{
+									banner.setIcid2(cmsMediaPara.getIcid2());
 								}
 								carouselBanners.add(banner);
 							}
@@ -1622,11 +1632,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final Date today = new Date();
 						if ((null != promotion.getStartDate() && null != promotion.getEndDate()
 								&& promotion.getStartDate().before(today) && promotion.getEndDate().after(today))
-								|| (null == promotion.getStartDate() && null != promotion.getEndDate()
-										&& promotion.getEndDate().after(today))
-								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today)
-										&& null == promotion.getEndDate())
-								|| null == promotion.getStartDate() && null == promotion.getEndDate())
+								|| (null == promotion.getStartDate() && null != promotion.getEndDate() && promotion.getEndDate().after(
+										today))
+								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today) && null == promotion
+										.getEndDate()) || null == promotion.getStartDate() && null == promotion.getEndDate())
 
 						{
 							promotionComponentData.setTitle(promotion.getName());
@@ -1791,8 +1800,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					{
 						collectionSectionData = new CollectionSectionData();
 						final MobileCollectionBannerComponentModel mobileCollectionComponent = (MobileCollectionBannerComponentModel) abstractCMSComponentModel;
-						final CollectionComponentData collectionData = getMobileCollectionComponentConverter()
-								.convert(mobileCollectionComponent);
+						final CollectionComponentData collectionData = getMobileCollectionComponentConverter().convert(
+								mobileCollectionComponent);
 						collectionSectionData.setComponents(collectionData);
 						collectionSectionData.setSequence(contentSlotForPage.getSequenceNumber());
 						collectionSectionDatas.add(collectionSectionData);
@@ -1805,11 +1814,13 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final LinkedCollectionsData previousCollectionData = new LinkedCollectionsData();
 						final LinkedCollectionsData nextCollectionData = new LinkedCollectionsData();
 						previousCollectionData.setName(mobileCollectionLinkComponent.getPreviousCollectionName());
-						previousCollectionData.setTargetCollection(mobileCollectionLinkComponent.getPreviousCollection() != null
-								? mobileCollectionLinkComponent.getPreviousCollection().getCollectionId() : null);
+						previousCollectionData
+								.setTargetCollection(mobileCollectionLinkComponent.getPreviousCollection() != null ? mobileCollectionLinkComponent
+										.getPreviousCollection().getCollectionId() : null);
 						nextCollectionData.setName(mobileCollectionLinkComponent.getNextCollectionName());
-						nextCollectionData.setTargetCollection(mobileCollectionLinkComponent.getNextCollection() != null
-								? mobileCollectionLinkComponent.getNextCollection().getCollectionId() : null);
+						nextCollectionData
+								.setTargetCollection(mobileCollectionLinkComponent.getNextCollection() != null ? mobileCollectionLinkComponent
+										.getNextCollection().getCollectionId() : null);
 						collectionPageData.setPreviousCollection(previousCollectionData);
 						collectionPageData.setNextCollection(nextCollectionData);
 
@@ -2022,11 +2033,10 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 						final Date today = new Date();
 						if ((null != promotion.getStartDate() && null != promotion.getEndDate()
 								&& promotion.getStartDate().before(today) && promotion.getEndDate().after(today))
-								|| (null == promotion.getStartDate() && null != promotion.getEndDate()
-										&& promotion.getEndDate().after(today))
-								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today)
-										&& null == promotion.getEndDate())
-								|| null == promotion.getStartDate() && null == promotion.getEndDate())
+								|| (null == promotion.getStartDate() && null != promotion.getEndDate() && promotion.getEndDate().after(
+										today))
+								|| (null != promotion.getStartDate() && promotion.getStartDate().before(today) && null == promotion
+										.getEndDate()) || null == promotion.getStartDate() && null == promotion.getEndDate())
 
 						{
 							promotionComponentData.setTitle(promotion.getName());
@@ -2305,8 +2315,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 					componentListForASlot.add(blpComponent);
 				}
 
-				LOG.debug(
-						"Adding component" + abstractCMSComponentModel.getUid() + "for section" + section + "for position" + position);
+				LOG.debug("Adding component" + abstractCMSComponentModel.getUid() + "for section" + section + "for position"
+						+ position);
 
 				blpComponent.setSectionid(section);
 				//	componentListForASlot.add(blpComponent);
@@ -3030,15 +3040,15 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 						else if (null != cmsNav.getLinks().get(0).getCategoryCode())
 						{
-							final CategoryModel categoryL1 = getCategoryService()
-									.getCategoryForCode(cmsNav.getLinks().get(0).getCategoryCode());
+							final CategoryModel categoryL1 = getCategoryService().getCategoryForCode(
+									cmsNav.getLinks().get(0).getCategoryCode());
 							cmsChildNavDto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL1));
 						}
 
 						else if (null != cmsNav.getLinks().get(0).getCategory())
 						{
-							cmsChildNavDto
-									.setDestination(defaultCategoryModelUrlResolver.resolve(cmsNav.getLinks().get(0).getCategory()));
+							cmsChildNavDto.setDestination(defaultCategoryModelUrlResolver
+									.resolve(cmsNav.getLinks().get(0).getCategory()));
 						}
 					}
 
@@ -3073,14 +3083,14 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 								}
 								else if (null != levelTwoComp.getLinks().get(0).getCategoryCode())
 								{
-									final CategoryModel categoryL2 = getCategoryService()
-											.getCategoryForCode(levelTwoComp.getLinks().get(0).getCategoryCode());
+									final CategoryModel categoryL2 = getCategoryService().getCategoryForCode(
+											levelTwoComp.getLinks().get(0).getCategoryCode());
 									level2Dto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL2));
 								}
 								else if (null != levelTwoComp.getLinks().get(0).getCategory())
 								{
-									level2Dto.setDestination(
-											defaultCategoryModelUrlResolver.resolve(levelTwoComp.getLinks().get(0).getCategory()));
+									level2Dto.setDestination(defaultCategoryModelUrlResolver.resolve(levelTwoComp.getLinks().get(0)
+											.getCategory()));
 								}
 
 							}
@@ -3156,8 +3166,8 @@ public class MplCmsFacadeImpl implements MplCmsFacade
 
 											else if (null != levelFourLink.getCategoryCode())
 											{
-												final CategoryModel categoryL4 = getCategoryService()
-														.getCategoryForCode(levelFourLink.getCategoryCode());
+												final CategoryModel categoryL4 = getCategoryService().getCategoryForCode(
+														levelFourLink.getCategoryCode());
 												level4Dto.setDestination(defaultCategoryModelUrlResolver.resolve(categoryL4));
 											}
 											else if (null != levelFourLink.getCategory())
