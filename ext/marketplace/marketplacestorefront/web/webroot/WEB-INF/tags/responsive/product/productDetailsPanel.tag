@@ -538,8 +538,7 @@ tr.d0 td {
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE--> --%>
           
 		</div>
-
-		 <div class="tabs-block">
+		 <div class="tabs-block ${product.rootCategory}">
 				<product:productPageTabs />
 			</div>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
@@ -554,7 +553,10 @@ tr.d0 td {
 			</c:when>
 		</c:choose> --%>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
-
+    <!-- Fine Jewellery Details Tree Section  -->
+		<c:if test="${product.rootCategory=='FineJewellery'}">
+			<product:productDetailsClassifications product="${product}" />
+			</c:if>
 	</div>
 	
 	
@@ -577,10 +579,7 @@ tr.d0 td {
 		<c:if test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<product:productDetailsClassifications product="${product}" />
 			</c:if>
-	<!-- Fine Jewellery Details Tree Section  -->
-		<c:if test="${product.rootCategory=='FineJewellery'}">
-			<product:productDetailsClassifications product="${product}" />
-			</c:if>
+	
 		
 
 	<!-- For Infinite Analytics Start -->
