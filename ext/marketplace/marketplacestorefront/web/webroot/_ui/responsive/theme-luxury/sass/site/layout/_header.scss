@@ -484,6 +484,21 @@
 				/*@include media-breakpoint-down(sm) {
 						display: none;
 				}*/
+                
+                .js-mini-cart-count{
+                    background: #B9966B;
+                    border-radius: 50%;
+                    font-size: 12px;
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    position: absolute;
+                    top: -5px;
+                    left: 8px;
+                    line-height: 19px;
+                    text-align: center;
+                    font-weight: bold;                   
+                }               
 			}
 			li.header-bag-link{
 				display:none;
