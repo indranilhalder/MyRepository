@@ -10257,9 +10257,12 @@ body .account .right-account .order-history .pagination li{
   max-height: 255px;
   overflow-y: auto;
 }
-.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
+/* .facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.size .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
+	max-height: none;
+} */
+.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form{
 	max-height: none;
 }
 @media ( max-width :650px) {
@@ -72776,6 +72779,9 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 	body.page-productGrid .product-listing.product-grid.lazy-grid-normal{
 		padding-top: 9px !important;
 		clear: both;
+	}
+	.product-listing{
+		clear: both; /*TISPRDT-1724 fix*/
 	}
 }
 /*TISTE-225 fix end*/
