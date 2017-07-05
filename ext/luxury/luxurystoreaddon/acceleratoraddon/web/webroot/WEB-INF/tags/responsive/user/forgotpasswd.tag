@@ -29,10 +29,10 @@
 			 </a>
 		</ycommerce:testId>			
 	</p>	
-	<p class="h4"><spring:theme code="luxury.header.flyout.signin.member"/>
+	<p class="h4">
 		<ycommerce:testId code="luxury_header_Register_link">
 			<a data-target-id="sign-in" class="header-login-target-link register_link" href="/luxurylogin/signin"> 
-				<spring:theme code="luxury.header.link.signin" />
+				<spring:theme code="luxury.header.flyout.signin.member"/><spring:theme code="luxury.header.link.signin" />
 			</a>
 		</ycommerce:testId>
 	</p>

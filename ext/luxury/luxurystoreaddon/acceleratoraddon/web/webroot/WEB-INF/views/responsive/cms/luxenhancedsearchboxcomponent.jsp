@@ -122,7 +122,7 @@
 		
 		 <input type="text" id="js-site-search-input" tabindex="1"
 				class="form-control js-site-search-input search-input" name="text" value=""
-				maxlength="250" placeholder='"Type or Talk"'
+				maxlength="250" placeholder='"Search TataCLiQ Luxury"'
 				data-options='{"autocompleteUrl" : "/search/autocomplete/luxury-SearchBox","minCharactersBeforeRequest" : "3","waitTimeBeforeRequest" : "500","displayProductImages" : false}'>
 		 
 		 <input type="hidden" id="spellingSearchterm" value="${spellingSearchterm}" />	

@@ -65,9 +65,10 @@
 			<button type="submit" class="btn btn-primary btn-block mb-20" id="luxury_register"><spring:theme code='${actionNameKey}' /></button>
 		</ycommerce:testId>
 	</div>
-	<p class="h4 text-center"><spring:theme code="luxury.header.flyout.signin.member"/>
+	<p class="h4 text-center">
 		<ycommerce:testId code="luxury_header_Signin_link">
 			 <a class="luxury-login header-login-target-link" href="/luxurylogin/signin" data-target-id="sign-in">
+			 <spring:theme code="luxury.header.flyout.signin.member"/>
 				<spring:theme code="luxury.header.link.signin" />
 			</a>
 		</ycommerce:testId>

@@ -62,10 +62,12 @@
 			<spring:theme code="login.link.forgottenPwd" />
 		</a>
 	</p>			
-	<p class="h4"><spring:theme code="luxury.header.flyout.signup.member"/>
+	<p class="h4">
 		<ycommerce:testId code="luxury_header_Register_link">
 			<a class="header-login-target-link register_link" data-target-id="sign-up" href="<c:url value="/luxurylogin/register?isSignInActive=N"/>">
+				<spring:theme code="luxury.header.flyout.signup.member"/>
 				<spring:theme code="luxury.header.link.register" />
+				
 			</a>
 		</ycommerce:testId>
 	</p>
