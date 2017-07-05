@@ -68,7 +68,15 @@ function navigateToPage(queryString,textString)
 
 <ycommerce:testId code="facetNav_title_${facetData.code}">
 <c:if test="${facetData.values.size()>0}">
-	<li class="facet js-facet ${fn:replace(facetData.name,' ','_')}">
+	<c:choose>
+		<c:when test="${fn:contains(facetData.name, 'Colour')}">
+			<c:set var="facetNameClass" value="${facetData.name}"></c:set>
+		</c:when>
+		<c:otherwise>
+			<c:set var="facetNameClass" value="${fn:replace(facetData.name,' ','_')}"></c:set>
+		</c:otherwise>
+	</c:choose>
+	<li class="facet js-facet ${facetNameClass}">
 		<div class="facet-name js-facet-name">
 		
 		<c:choose>
