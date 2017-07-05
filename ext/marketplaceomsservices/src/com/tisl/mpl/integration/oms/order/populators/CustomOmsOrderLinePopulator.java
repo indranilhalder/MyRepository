@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+
 import com.hybris.oms.domain.locationrole.LocationRole;
 import com.hybris.oms.domain.order.CouponDto;
 import com.hybris.oms.domain.order.OrderLine;
@@ -142,7 +143,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
 			{
-				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
+				//PT issue for One touch cancellation--fix
+				String orderStatus = null;
+				if (source.getOrder().getParentReference() != null)
+				{
+					orderStatus = source.getOrder().getParentReference().getStatus().getCode().toUpperCase();
+				}
+				else
+				{
+					orderStatus = source.getOrder().getStatus().getCode().toUpperCase();
+				}
+				target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(orderStatus));
+				//PT issue for One touch cancellation--fix
+				//target.setOrderLineStatus(MplCodeMasterUtility.getglobalCode(source.getOrder().getStatus().getCode().toUpperCase()));
 			}
 			else
 			{
