@@ -159,6 +159,29 @@ $(document).ready(function(){
 		    _satellite.track('cpj_search_pages');
 		}
 		dtmSearchTags();
+		//TPR-6367  | for null search
+	 var isVisible = $('.search-empty.no-results.wrapper:visible').is(':visible');
+	 var searchTerm = $('#search_keyword').val();
+	 var searchCategory = $('#searchCategory').val();
+	 var searchResults = $('#search_results').val();
+		  if(isVisible && typeof _satellite !="undefined" ){
+			       _satellite.track('null_search');
+			       digitalData.internal = {
+					 search : {
+						 term : searchTerm,
+						 category : searchCategory
+					 }
+			 }
+		}
+		//TPR-6367  | for normal  search
+		       digitalData.internal = {
+					 search : {
+						 term : searchTerm,
+						 category : searchCategory,
+						 results  : searchResults
+					 }
+			 }
+	
 	}
 	
 	// Cart page
@@ -751,3 +774,13 @@ function dtmSearchTags(){
     	}
     }
     
+  //TPR-6367  | for  search
+	$(document).on('click','#searchButton',function(){
+		if (typeof _satellite != "undefined") {
+			_satellite.track('internal_search');
+	    }
+		
+	})
+   
+    	
+    	
