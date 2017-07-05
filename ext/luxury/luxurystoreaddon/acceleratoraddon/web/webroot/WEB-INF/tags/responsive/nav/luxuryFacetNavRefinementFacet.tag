@@ -13,7 +13,7 @@
 	<c:set var="url" value="${url}/getFacetData"/>
 </c:if>
 <c:set var="facetClass" value="facet"/>
-<c:if test="${facetData.name eq 'colour'}">
+<c:if test="${facetData.code eq 'colour'}">
 	<c:set var="facetClass" value="facet half-width"/>
 </c:if>
 <ycommerce:testId code="facetNav_title_${facetData.code}">
@@ -39,7 +39,7 @@
 										<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 										<input type="hidden" name="isFacet" value="true"/>
 										<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''} data-colour="${facetValue.code}" value="${facetValue.code}" name="" id="${facetValue.code}"><label for="${facetValue.code}">${facetValue.name}</label>
-										<c:if test="${facetData.name ne 'colour'}">
+										<c:if test="${facetData.code ne 'colour'}">
 											<span class="avail-count">${facetValue.count}</span>
 										</c:if>
 									</form>
