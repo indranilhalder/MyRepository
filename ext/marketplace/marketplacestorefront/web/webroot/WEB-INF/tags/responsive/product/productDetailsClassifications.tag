@@ -42,7 +42,7 @@
 <c:choose>
 <c:when test="${product.rootCategory!='FashionJewellery' and product.rootCategory=='FineJewellery'}">		
        <div id="fineJewellery"></div>
-		<div class="accordin">      
+		<div class="accordin ${product.rootCategory}">      
 			<c:forEach items="${product.fineJewelleryDeatils}" var="classification" varStatus="outer">
 		    
 		    	<div class="item">

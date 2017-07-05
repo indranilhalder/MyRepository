@@ -4376,7 +4376,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		ProductData productData = null;
 		if (null != sellerInfoModel)
 		{
+		LOG.debug("sellerInfoModel PK=>"+sellerInfoModel.getPk());
 			productModel = sellerInfoModel.getProductSource();
+			LOG.debug("Product model in papulateClicknCollectRequesrData=>"+productModel);
 			productData = productFacade.getProductForOptions(productModel,
 					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 			storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());
