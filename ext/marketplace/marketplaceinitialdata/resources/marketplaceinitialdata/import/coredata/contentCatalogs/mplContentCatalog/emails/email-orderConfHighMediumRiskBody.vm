@@ -82,8 +82,8 @@
 				  	        		        </tr>
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
-			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:rmsonhold:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
-			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
+			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:rmsonhold:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px; text-decoration: none;">Your Orders</a></p>
+			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order On Hold - Order<span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
 			  	        		      	   </tbody>
@@ -293,26 +293,7 @@ Free
 		  	        		        <span style="display:block; height: 25px; line-height:0;font-size:0;"></span>
 		  	        		      </td>
 		  	        		    </tr>
-                                <tr class="dsnone">
-		  	        		    	<td align="center">
-		  	        		    	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="background:#f5f5f5;">
-		  	        		    	     <tbody>
-		  	        		    	       <tr>
-					  	        		      <td>
-													<span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-					  	        		   </tr>
-		  	        		    	     
-		  	        		    	       <tr>
-					  	        		      <td>
-					  	        		        <span style="display:block; height: 15px; line-height:0;font-size:0;"></span>
-					  	        		      </td>
-					  	        		   </tr>
-		  	        		    	     </tbody>
-		  	        		    	   </table>
-		  	        		    	 
-		  	        		    	</td>
-		  	        		    </tr>
+                                
 
 
 
@@ -397,14 +378,14 @@ Free
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fbNew}</a> #end
+		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.fbNew}</a> #end
 														
-						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.twitterNew}</a>#end
-						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.instaNew}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.twitterNew}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.instaNew}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtubeNew}</a>#end
+														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.youtubeNew}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>

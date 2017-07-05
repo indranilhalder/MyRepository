@@ -10257,9 +10257,12 @@ body .account .right-account .order-history .pagination li{
   max-height: 255px;
   overflow-y: auto;
 }
-.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
+/* .facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.size .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
+	max-height: none;
+} */
+.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form{
 	max-height: none;
 }
 @media ( max-width :650px) {
@@ -47637,8 +47640,11 @@ float: right;
 	.product-info.wrapper .product-image-container {
 		margin: 0;
 	}
-	.product-info .product-image-container {
-		display: none;
+	.product-info .product-image-container .productImageGallery.pdp-gallery.image-list ,
+	.product-info .product-image-container .main-image ,
+	.product-info .product-image-container #zoomModal ,
+	.product-info .product-image-container #productPromotionSection {
+		display: none; /*TISTE-223 fix*/
 	}
 	.product-info .product-image-container.device {
 		display: block;
@@ -67779,7 +67785,7 @@ header .content .bottom:not(.active) .bag:after{
 /*UF-14 change end*/
 /* STW changes start */
 #stw_widget {
-min-height:250px;
+/* min-height:250px; */ /*commented for PRDI-501*/
 position:relative;
 }
 #stw_widget .carousel-component{
@@ -72519,6 +72525,11 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
  	margin-bottom: -75px;
  	overflow: hidden;
  }
+ /* TISTE-204 fix */
+body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header + .col-md-4.col-sm-6{
+ 	position: relative;
+ 	top: 75px;
+ }
 }
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
 	font-size: 10px;
@@ -72703,3 +72714,89 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
     min-height: 288px;
 }
 /*TISTE-163 fix end*/
+/*TISTE-181, TISTE-182 fix start*/
+.product-facet .facet.size .facet-list li.filter-Size, 
+.product-facet .facet.Size .facet-list li.filter-size, 
+.product-facet .facet.size .facet-list li.filter-size, 
+.product-facet .facet.Size .facet-list li.filter-Size{
+	min-height: 25px;
+    height: auto;
+} 
+@media (max-width: 790px){
+.listing-leftmenu .size .facet-list .filter-Size form, 
+.listing-leftmenu .Size .facet-list .filter-size form, 
+.listing-leftmenu .size .facet-list .filter-size form, 
+.listing-leftmenu .Size .facet-list .filter-Size form {
+    width: 100%;
+}
+.product-facet .facet .facet-list div.facet-text {
+    padding-right: 0px;
+    width: calc(100% - 25px) !important;
+}
+.product-facet .facet .facet-list li.filter-size span.facet-text{
+	display: inline !important;
+}
+}
+/*TISTE-181, TISTE-182 fix end*/
+@media(max-width: 767px){
+    .track-order-iframe{
+        padding-bottom: 20px;
+    }
+} 
+
+/*TISTE-192 fix start*/
+@media (min-width: 791px){
+body .account .right-account .order-history.order-details li.item #pickNo{
+	padding-bottom: 10px;
+}
+} 
+/*TISTE-192 fix end*/
+
+/*TISTE-222 fix start*/
+@media(max-width: 790px){
+	body .account .right-account .order-history .navigation2 #ofPagination{
+		width: 110px;
+	}
+	body .account .right-account .order-history .pagination-bar.listing-menu.pagination-order-history.bottom{
+		width: auto;
+    	overflow: hidden;
+    	vertical-align: top;
+    	float: right;
+	}
+	body .account .right-account .order-history .bottom .pagination.mobile{
+		position: static;
+	}
+	body .account .right-account .order-history .navigation2{
+		overflow: hidden;
+	}
+}
+/*TISTE-222 fix end*/
+
+/*TISTE-225 fix start*/
+@media(min-width: 791px){
+	body.page-productGrid .product-listing.product-grid.lazy-grid, 
+	body.page-productGrid .product-listing.product-grid.lazy-grid-facet, 
+	body.page-productGrid .product-listing.product-grid.lazy-grid-normal{
+		padding-top: 9px !important;
+		clear: both;
+	}
+	.product-listing{
+		clear: both; /*TISPRDT-1724 fix*/
+	}
+}
+/*TISTE-225 fix end*/
+
+/*TISPRDT 1673 fix start*/
+.mop_span{
+	display: block;
+}
+.mop_span ~ li {
+    display: inline-block;
+}
+.mop_span ~ li + span.off-bag {
+    display: inline-block;
+     color: #000;
+     width: auto;
+}
+
+/*TISPRDT 1673 fix end*/

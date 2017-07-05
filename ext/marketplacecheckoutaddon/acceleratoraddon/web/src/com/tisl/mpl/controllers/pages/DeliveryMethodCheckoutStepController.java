@@ -133,6 +133,7 @@ import com.tisl.mpl.storefront.web.forms.AccountAddressForm;
 import com.tisl.mpl.storefront.web.forms.validator.MplAddressValidator;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.MaxLimitData;
 
 
 @Controller
@@ -269,7 +270,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 			//TPR-5346 STARTS
 			//This method will update the cart with respect to the max quantity configured for the product
 			//final boolean updateCartOnMaxLimExceeds = getMplCartFacade().UpdateCartOnMaxLimExceeds(serviceCart);
-			final Map<String, String> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(serviceCart);
+			final Map<String, MaxLimitData> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(serviceCart);
 			if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
 			{
 				//	redirectAttributes.addFlashAttribute("updateCartOnMaxLimExceeds", Boolean.valueOf(updateCartOnMaxLimExceeds));
@@ -663,12 +664,12 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 						LOG.debug("****************:" + MarketplacecommerceservicesConstants.REDIRECT
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL
 								+ MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL);
-						/*
-						 * return MarketplacecommerceservicesConstants.REDIRECT +
-						 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
-						 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
-						 */
-						/**** PRDI-36/INC144315559 *******/
+								/*
+								 * return MarketplacecommerceservicesConstants.REDIRECT +
+								 * MarketplacecheckoutaddonConstants.MPLDELIVERYMETHODURL +
+								 * MarketplacecheckoutaddonConstants.MPLDELIVERYSLOTSURL;
+								 */
+								/**** PRDI-36/INC144315559 *******/
 						model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSID,
 								cartUssidData.getDeliveryAddress().getId());
 
@@ -688,7 +689,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 
 			deliveryAddress = (deliveryAddress == null || deliveryAddress.isEmpty()) ? accountAddressFacade.getAddressBook()
 					: deliveryAddress;
-			//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
+					//			deliveryAddress = getMplCheckoutFacade().rePopulateDeliveryAddress(deliveryAddress);
 
 			//TISST-7473
 			/*
@@ -2709,7 +2710,7 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	@RequireHardLogIn
 	public @ResponseBody String calculateDeliveryCost(
 			@PathVariable(MarketplacecheckoutaddonConstants.DELIVERYCOST) final String deliveryCost)
-			throws NoSuchAlgorithmException, CalculationException
+					throws NoSuchAlgorithmException, CalculationException
 	{
 
 		//LOG.info("deliveryCost " + deliveryCost);

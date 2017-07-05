@@ -83,7 +83,7 @@
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
 			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:refundinitiate:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
-			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
+			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Refund Initiate - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
 			  	        		      	   </tbody>
@@ -189,7 +189,7 @@
 					  	        		 <tr>
 		  	        		      	   	 	<td width="12" class="dsnone">&nbsp;</td>
 		  	        		      	   	 	<td width="60">
-		  	        		      	   	 	  <img src="http:${entry.product.picture.url}" width="51" height="75" style="border:1px solid #cbcbcb;">
+		  	        		      	   	 	  <img src="http:${orderEntry.product.picture.url}" width="51" height="75" style="border:1px solid #cbcbcb;">
 		  	        		      	   	 	 </td>
 		  	        		      	   	 	 <td width="10">&nbsp;</td>
 		  	        		      	   	 	 <td style="vertical-align:top;">
@@ -198,24 +198,24 @@
 					  	        		      	   	 <tr>
 					  	        		      	   	 <td class="smFull">
 				  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;">
-				  	        		      	   	 	  $ctx.entry.quantity X  $ctx.entry.product.name
-				  	        		      	   	 	  #if($ctx.entry.product.size)
+				  	        		      	   	 	  $ctx.orderEntry.quantity X  $ctx.orderEntry.product.name
+				  	        		      	   	 	  #if($ctx.orderEntry.product.size)
 				  	        		      	   	 	  <br>
-				  	        		      	   	 	  <span style="color:#333333">Size: $ctx.entry.product.size</span>
+				  	        		      	   	 	  <span style="color:#333333">Size: $ctx.orderEntry.product.size</span>
 				  	        		      	   	 	  #end
 				  	        		      	   	 	  <br>
-				  	        		      	   	 	  <span style="color:#333333">Sold by: $ctx.entry.SellerInfo </span>
+				  	        		      	   	 	  <span style="color:#333333">Sold by: $ctx.orderEntry.SellerInfo </span>
 				  	        		      	   	 	  	
 				  	        		      	   	 	  </div>
 				  	        		      	   	 	 </td>
 				  	        		      	   	 	 <td class="smFull iprice" width="110" align="right" style="vertical-align:top;font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;font-weight:bold;">
 												
-				  	        		      	   	 	#if (((!$ctx.entry.cartPromoCode) || ("$ctx.entry.cartPromoCode" == "")) || ((! $ctx.entry.productPromoCode) || ("$ctx.entry.productPromoCode" == "")))
+				  	        		      	   	 	#if (((!$ctx.orderEntry.cartPromoCode) || ("$ctx.orderEntry.cartPromoCode" == "")) || ((! $ctx.orderEntry.productPromoCode) || ("$ctx.orderEntry.productPromoCode" == "")))
 													
-				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$ctx.entry.totalPrice)
+				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$ctx.orderEntry.totalPrice)
 													#else
 													
-				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$ctx.entry.netAmountAfterAllDisc)
+				  	        		      	   	 	&#x20b9; $ctx.numberTool.format("#0.00",$ctx.orderEntry.netAmountAfterAllDisc)
 													#end
 													</td>
 				  	        		      	   	 	</tr>
@@ -308,7 +308,7 @@ Free
                                                             <span style="width:45px;height:31px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderplaced}</span>
 					  	        		    	     	  </td>
 					  	        		    	     	  <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#000000;text-align:center;line-height:13px;">Order <br>Placed</td>
+					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;text-align:center; line-height:13px;">Return <br>Initiated</td>
 					  	        		    	     	  <td width="30">&nbsp;</td>
 					  	        		    	     	  <td>
 															<span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
@@ -318,7 +318,7 @@ Free
                                                             <span style="width:26px;height:36px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderprocessed}</span>
 					  	        		    	     	  </td>
 					  	        		    	     	  <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center;line-height:13px;">Order <br>Processed</td>
+					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;text-align:center; line-height:13px;">Product <br>Picked</td>
 					  	        		    	     	  <td width="31">&nbsp;</td>
 					  	        		    	     	  <td>
 															<span style="width:14px;height:28px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.arrow}</span>
@@ -328,7 +328,7 @@ Free
 															<span style="width:46px;height:26px;display:block;line-height:0;font-size:0;">${ctx.cmsSlotContents.orderdelivered}</span>
 															</td>
 					  	        		    	     	   <td width="9">&nbsp;</td>
-					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#909090;text-align:center; line-height:13px;">Order <br>Delivered</td>
+					  	        		    	     	  <td style="font-size:10px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color:#aa1d3d;text-align:center; line-height:13px;">Refund <br>Processed</td>
 					  	        		    	       </tr>
 					  	        		    	     </tbody>
 					  	        		    	   </table>
@@ -428,14 +428,14 @@ Free
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fbNew}</a> #end
+		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.fbNew}</a> #end
 														
-						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.twitterNew}</a>#end
-						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.instaNew}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.twitterNew}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.instaNew}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtubeNew}</a>#end
+														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.youtubeNew}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>

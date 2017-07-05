@@ -39,6 +39,7 @@
     	 				if($("#previousImage").length){
     	 					if($(window).width() < 1025){
     	 						var listHeight = thumbnailImageHeight + 13.6;
+    	 						console.log("tag listHeight >>>>> " + listHeight);
     	 						$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
     	 					}
     	 				}	

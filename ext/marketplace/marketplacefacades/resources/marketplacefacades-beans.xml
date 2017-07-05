@@ -1042,6 +1042,9 @@
 		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="totalMrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 starts here -->
+		<property name="cartAdditionalDiscPerc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 ends here -->
 	</bean>
 	<!-- TPR-774 -->
 	
@@ -1204,5 +1207,14 @@
 		<property name="storeName" type="String"></property>
 		<property name="storeAddress" type="String"></property>
 		<property name="date" type="String"></property>
+	</bean>
+	
+	<!--TPR-6117-->
+	<bean class="com.tisl.mpl.wsdto.MaxLimitData">
+		<property name="productCode" type="String" />
+		<property name="productName" type="String" />
+		<property name="ussid" type="String" />
+		<property name="maxQuantityAllowed" type="String" />
+		<property name="userSelectedQty" type="String" />
 	</bean>
 </beans>

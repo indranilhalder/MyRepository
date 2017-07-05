@@ -248,6 +248,7 @@ $(document).ready(function() {
     		//inital call to this function commented for starting the lazy load from page 2 UF-409
     		   //	getProductSetData();
     		initPageLoad = false;
+    		directPaginatedLoad = false;
     	}
     }
         $(window).on('scroll', function() {
@@ -255,8 +256,8 @@ $(document).ready(function() {
             	
             	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
             	if(productItemArrayLength > 16){
-		lazyPushInitalPage();
-		}
+            		lazyPushInitalPage();
+            	}
                 var hT = $('.lazy-reached').offset().top,
                     hH = $('.lazy-reached').outerHeight(),
                     wH = $(window).height(),
@@ -367,9 +368,9 @@ $(document).ready(function() {
 });
 //UF-409 -> added for ajax complete events to auto lazy load
 $( document ).ajaxComplete(function( event, xhr, settings ) {
-	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+	//if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
 		$("img.lazy").lazyload();
-	}
+	//}
 });
 function findGetParameter(parameterName) {
     var result = null,

@@ -82,7 +82,7 @@
 				  	        		        </tr>
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
-			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:rmsconfirm:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
+			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:rmsconfirm:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px; text-decoration: none;">Your Orders</a></p>
 			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
@@ -164,7 +164,7 @@
 		  	        		      	   	 	<td width="20">&nbsp;</td>
 		  	        		      	   	 	<td>
 		  	        		      	   	 	  <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		      	   	 	  	<strong>Your order will be send to:</strong>
+		  	        		      	   	 	  	<strong>Your order will be sent to:</strong>
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  
 		  	        		      	   	 	  	#if($ctx.deliveryAddress)
@@ -473,14 +473,14 @@ Free
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fbNew}</a> #end
+		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.fbNew}</a> #end
 														
-						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.twitterNew}</a>#end
-						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.instaNew}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.twitterNew)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.twitterNew}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.instaNew)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.instaNew}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtubeNew}</a>#end
+														#if($ctx.cmsSlotContents.youtubeNew)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.youtubeNew}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>

@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -288,8 +289,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 						&& quantity.intValue() == 1)
 				{
 
-					LOG.debug("******** Special price check for product list:" + productList + " *** percentage discount:"
-							+ isPercentage);
+					LOG.debug(
+							"******** Special price check for product list:" + productList + " *** percentage discount:" + isPercentage);
 					if (isPercentage)
 					{
 						updatePromotionalPrice(productList, null, price, startDate, endDate, true, priority, sellerList, brandList,
@@ -318,16 +319,16 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList, channel);
 					}
 				}
-				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
-						&& !isEnabled && quantity.intValue() == 1)
+				else if ((null != categoryList && !categoryList.isEmpty())
+						|| ((null != productList && !productList.isEmpty())) && !isEnabled && quantity.intValue() == 1)
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
 					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 					//							rejectBrandList, promoCode);
 					disablePromotionalPrice(promoCode);
 				}
-				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
-						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
+				else if ((null != categoryList && !categoryList.isEmpty())
+						|| ((null != productList && !productList.isEmpty())) && quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
 
 					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
@@ -550,8 +551,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 						&& quantity.intValue() == 1)
 				{
 
-					LOG.debug("******** Special price check for product list:" + productList + " *** percentage discount:"
-							+ isPercentage);
+					LOG.debug(
+							"******** Special price check for product list:" + productList + " *** percentage discount:" + isPercentage);
 
 					if (isPercentage)
 					{
@@ -581,16 +582,16 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								promoCode, rejectSellerList, rejectBrandList, maxDiscount, exproductList, channel);
 					}
 				}
-				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
-						&& !isEnabled && quantity.intValue() == 1)
+				else if ((null != categoryList && !categoryList.isEmpty())
+						|| ((null != productList && !productList.isEmpty())) && !isEnabled && quantity.intValue() == 1)
 				{
 					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
 					//					disablePromotionalPrice(productList, categoryList, isEnabled, priority, brandList, quantity, rejectSellerList,
 					//							rejectBrandList, promoCode);
 					disablePromotionalPrice(promoCode);
 				}
-				else if ((null != categoryList && !categoryList.isEmpty()) || ((null != productList && !productList.isEmpty()))
-						&& quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
+				else if ((null != categoryList && !categoryList.isEmpty())
+						|| ((null != productList && !productList.isEmpty())) && quantity.intValue() > 1) // If Qauntity is increased from 1 to Multiple //Fix for TISPRD-383
 				{
 
 					LOG.debug(MarketplacecommerceservicesConstants.SPECIALPRICEPROMOTION + productList + CATLIST + categoryList);
@@ -948,7 +949,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								pm.setPromotionValue(value);
 								pm.setPromotionIdentifier(promoCode);
 								pm.setMaxDiscount(maxDiscount);
-								pmList.addAll(price.getPromotionalPriceRow());
+								pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
 								pmList.add(pm);
 								price.setPromotionalPriceRow(pmList);
 								priceRowtobeSaved.add(price);
@@ -961,7 +962,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								pm.setPromotionValue(value);
 								pm.setPromotionIdentifier(promoCode);
 								pm.setMaxDiscount(maxDiscount);
-								pmList.addAll(price.getPromotionalPriceRow());
+								pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
 								pmList.add(pm);
 								price.setPromotionalPriceRow(pmList);
 								priceRowtobeSaved.add(price);
@@ -979,7 +980,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 							pm.setMaxDiscount(null);
 							pm.setPromotionChannel(null);
 							LOG.debug("Saving Price Row ");
-							pmList.addAll(price.getPromotionalPriceRow());
+							pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
 							pmList.add(pm);
 							price.setPromotionalPriceRow(pmList);
 							priceRowtobeSaved.add(price);
@@ -1014,7 +1015,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 									{
 										pm.setPromotionChannel("WebMobile");
 									}
-									pmList.addAll(price.getPromotionalPriceRow());
+									pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow(), pm.getPromotionChannel()));
 									pmList.add(pm);
 									price.setPromotionalPriceRow(pmList);
 									priceRowtobeSaved.add(price);
@@ -1039,7 +1040,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 									{
 										pm.setPromotionChannel("WebMobile");
 									}
-									pmList.addAll(price.getPromotionalPriceRow());
+									pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow(), pm.getPromotionChannel()));
 									pmList.add(pm);
 									price.setPromotionalPriceRow(pmList);
 									priceRowtobeSaved.add(price);
@@ -1048,7 +1049,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 							}
 							else if (!updateSpecialPrice && isEligibletoDisable)
 							{
-								LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
+								//LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
 								pm.setPromotionStartDate(null);
 								pm.setPromotionEndDate(null);
 								pm.setIsPercentage(null);
@@ -1057,7 +1058,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								pm.setMaxDiscount(null);
 								pm.setPromotionChannel(null);
 								LOG.debug("Saving Price Row ");
-								pmList.addAll(price.getPromotionalPriceRow());
+								pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
 								pmList.add(pm);
 								price.setPromotionalPriceRow(pmList);
 								priceRowtobeSaved.add(price);
@@ -1079,6 +1080,49 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		}
 
 	}
+
+
+
+
+	private List<PromotionalPriceRowModel> getPromoPriceRowList(final Collection<PromotionalPriceRowModel> promotionalPriceRow)
+	{
+		final List<PromotionalPriceRowModel> dataList = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(promotionalPriceRow))
+		{
+			for (final PromotionalPriceRowModel oModel : promotionalPriceRow)
+			{
+				if (StringUtils.isNotEmpty(oModel.getPromotionChannel()))
+				{
+					dataList.add(oModel);
+				}
+			}
+		}
+		return dataList;
+	}
+
+
+
+
+	private List<PromotionalPriceRowModel> getPromoPriceRowList(final Collection<PromotionalPriceRowModel> promotionalPriceRow,
+			final String promotionChannel)
+	{
+		final List<PromotionalPriceRowModel> dataList = new ArrayList<>();
+		if (CollectionUtils.isNotEmpty(promotionalPriceRow))
+		{
+			//List<PromotionalPriceRowModel> realDataList=new ArrayList<>(promotionalPriceRow);
+			for (final PromotionalPriceRowModel oModel : promotionalPriceRow)
+			{
+				if (!StringUtils.equalsIgnoreCase(oModel.getPromotionChannel(), promotionChannel))
+				{
+					dataList.add(oModel);
+				}
+			}
+		}
+
+		return dataList;
+	}
+
+
 
 
 	private List<String> getExcludedProductData(final List<ProductModel> exproductList)
@@ -1119,9 +1163,23 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			 */
 			final List<PromotionalPriceRowModel> priceRowModelList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
 
+			final Set<PriceRowModel> priceModifiedtsChange = new HashSet<>();
+
+
 			if (CollectionUtils.isNotEmpty(priceRowModelList))
 			{
+				for (final PromotionalPriceRowModel priceRow : priceRowModelList)
+				{
+					final PriceRowModel finalModel = priceRow.getPriceRow();
+					finalModel.setPromotionEndDate(new Date());
+					priceModifiedtsChange.add(finalModel);
+				}
+
 				modelService.removeAll(priceRowModelList);
+				modelService.saveAll(priceModifiedtsChange);
+
+
+
 			}
 		}
 
@@ -1179,7 +1237,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 		try
 		{
 
-			if (brands.isEmpty() && rejectBrandList.isEmpty())//no need to proceed if there is no brand restriction
+			if (brands.isEmpty() && rejectBrandList.isEmpty()) //no need to proceed if there is no brand restriction
 			{
 				return true;
 			}
@@ -1214,7 +1272,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			if (CollectionUtils.isNotEmpty(rejectBrandList) && CollectionUtils.isNotEmpty(brandList))
 			{
 				//	final String productBrand = brandList.get(0);
-				if (rejectBrandList.contains(brandCode))//Car-158 CHNAGES
+				if (rejectBrandList.contains(brandCode)) //Car-158 CHNAGES
 				{
 					allow = false;
 				}
@@ -1273,8 +1331,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	private boolean isPriceToUpdate(final PriceRowModel price, final List<String> sellers, final List<String> rejectSellerList)
 	{
 		boolean updateSpecialPrice = false;
-		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(price.getProduct()
-				.getSellerInformationRelator());
+		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(
+				price.getProduct().getSellerInformationRelator());
 
 		if (CollectionUtils.isNotEmpty(sellers))
 		{
@@ -1319,33 +1377,33 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * clearExistingData(promoCode); final List<String> product = new ArrayList<String>(); //List<String>
 	 * stagedProductList = new ArrayList<String>();//why? // final List<String> promoproductList = new
 	 * ArrayList<String>();//Car-153 final List<PriceRowModel> priceList = new ArrayList<PriceRowModel>();
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(products)) { for (final ProductModel itrProduct : products) { if
 	 * (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct, priority)) {
 	 * product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//Car-158 } } }
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(categories)) { //TISPRO-352 : Fix final List<ProductModel> productList =
 	 * fetchProductList(categories); if (CollectionUtils.isNotEmpty(productList)) { for (final ProductModel itrProduct :
 	 * productList) { if (getBrandsForProduct(itrProduct, brands, rejectBrandList) && validateProductData(itrProduct,
 	 * priority)) { product.add(itrProduct.getPk().toString()); //promoproductList.add(itrProduct.getCode());//CAR-158 }
 	 * } }
-	 * 
-	 * 
+	 *
+	 *
 	 * //Car-158 // final ConcurrentHashMap<List<String>, List<String>> categoryDetailsMap =
 	 * getEligibleProductList(brands, // rejectBrandList, priority, categories); // if
 	 * (MapUtils.isNotEmpty(categoryDetailsMap)) // { // for (final ConcurrentHashMap.Entry<List<String>, List<String>>
 	 * entry : categoryDetailsMap.entrySet()) // { // product.addAll(entry.getKey()); // //
 	 * promoproductList.addAll(entry.getValue());//Car-158 // LOG.debug("Key = " + entry.getKey() + ", Value = " +
 	 * entry.getValue()); // } // } }
-	 * 
-	 * 
+	 *
+	 *
 	 * LOG.debug("******** Special Price - Disable Promotion Applicable product List:" + product);
-	 * 
-	 * 
+	 *
+	 *
 	 * if (!product.isEmpty()) { //Car-158 // stagedProductList = getStagedProductDetails(promoproductList); // For
 	 * adding the staged catalog price Row for Product // if (CollectionUtils.isNotEmpty(stagedProductList)) // { //
 	 * product.addAll(stagedProductList); // }
-	 * 
+	 *
 	 * final List<PriceRowModel> priceRow = updatePromotionalPriceDao.fetchPricedData(product); for (final PriceRowModel
 	 * price : priceRow) { if (!isEnabled) { price.setPromotionStartDate(null); price.setPromotionEndDate(null);
 	 * price.setIsPercentage(null); price.setPromotionValue(null);
@@ -1354,11 +1412,11 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 * price.setPromotionStartDate(null); price.setPromotionEndDate(null); price.setIsPercentage(null);
 	 * price.setPromotionValue(null); price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
 	 * price.setMaxDiscount(null); } priceList.add(price); }
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(priceList)) { modelService.saveAll(priceList); //NEED CHANGE }
-	 * 
+	 *
 	 * } }
-	 * 
+	 *
 	 * catch (final EtailBusinessExceptions e) { throw e; } catch (final EtailNonBusinessExceptions e) { throw e; } catch
 	 * (final Exception e) { throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } }
 	 */
