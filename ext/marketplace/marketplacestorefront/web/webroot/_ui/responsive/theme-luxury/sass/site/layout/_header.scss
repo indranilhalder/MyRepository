@@ -58,9 +58,11 @@
 	}
     
     @include media-breakpoint-down(sm) {           
-         #createNewList{
-                display: none;
-            }
+        #createNewList{
+            display: none;
+        }
+        background-color: #f9f9f9;
+        
         .main-nav{
             
             .mob-menu{
@@ -125,6 +127,10 @@
 		left: 50%;
 		z-index: 1;
 		margin-left: -83px;
+        @include media-breakpoint-down(sm) {
+           background: transparent;
+          top: 15px;
+        }
 	}
 	.main-nav {
 		@include media-breakpoint-down(sm) {
@@ -890,7 +896,7 @@
 		display:none;
 	}
 	.sticky-nav .header,header {
-	    height: 68px !important;
+	    height: 68px !important;        
 	}
 }
 

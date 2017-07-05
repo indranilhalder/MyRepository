@@ -390,8 +390,7 @@ footer{
 
 @include media-breakpoint-down(sm) {
 	footer{
-		.footer-top{
-			display:none;
+		.footer-top{			
 			h1{
 				margin: 40px 0 0px;
 				font-size: 26px;
@@ -496,8 +495,21 @@ footer{
 				display:none;
 			}
 		}
-
-
+        .footer-bottom, .footer-popular-search{
+            background: #f9f9f9;
+        }
+        .footer-bottom{
+            border-top: 1px solid #eaeaec;
+            .footer-inner-wrapper{
+                padding: 0px;
+                .accordion{
+                    border: 0px;
+                } 
+                .app-info .app-link li {
+                    display: inline-block;
+                }
+            }            
+        }
 	}
 }
 /* Footer part End */
