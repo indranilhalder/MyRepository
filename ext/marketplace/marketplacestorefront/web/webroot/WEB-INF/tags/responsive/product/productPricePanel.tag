@@ -54,10 +54,10 @@
 	<%--for price breakup(TPR-3752) --%>
 
 	 <%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
-		<div id = "showPrice">
+		<!-- <div id = "showPrice">
 		 <p id = "show" class="pricebreakup-link"> </p>
 		</div>
-	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul>
+	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul> -->
 
 	 <%-- </c:if>  --%>
 	

@@ -2178,6 +2178,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PLATINUM = "PLATINUM";
 	public static final String SOLITAIRE = "SOLITAIRE";
 	public static final String TANISHQ = "Tanishq";
+	public static final String DIAMOND = "DIAMOND";
+	public static final String GEMSTONE = "GEMSTONE";
+	public static final String WASTAGETAX = "WASTAGE TAX";
+	public static final String MAKINGCHARGE = "MAKING CHARGE";
 	//TPR-4134 web service
 	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
 	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";

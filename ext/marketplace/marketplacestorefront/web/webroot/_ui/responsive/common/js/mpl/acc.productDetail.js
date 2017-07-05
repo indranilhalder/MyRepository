@@ -2963,12 +2963,12 @@ function loadDefaultWishListName_SizeGuide() {
 
 		});*/
 		
-		/*		price breakup in PDP of fashion jewellery
-		*/		
-				$("#show").click(function() {
-					$("#showPriceBreakup").slideToggle("fast");
-					$(".pricebreakup-link").toggleClass("expand-breakup");
-				});
+		//price breakup in PDP of fine jewellery starts
+		$("#show").click(function() {
+			$("#showPriceBreakup").slideToggle("fast");
+			$(".pricebreakup-link").toggleClass("expand-breakup");
+		});
+		//price breakup in PDP of fine jewellery starts
 		
 			/*UF-32*/
 		 $("a.otherSellersFont").click(function(){
@@ -3864,8 +3864,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					});
 
 				/* PRICE BREAKUP STARTS HERE */
-				
-							
 				if(data['displayconfigattr'] == "Yes"){
 					$("#showPrice").show();
 					var priceBreakUp= '<p>Price Breakup</p>'
@@ -3876,55 +3874,45 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#showPrice").hide();
 				}
 				
-				var priceBreakupForPDP = data['priceBreakup'];
-					$.each(priceBreakupForPDP,function(key,value) {	
-						var pricebreakuplist = "<li><div class='price-d'>"+ key +"<span>"+ value.formattedValue +"</span></div></li>";
-							$("#showPriceBreakup").append(pricebreakuplist);
+				try{
+					var priceBreakupList = data['priceBreakup'];
+					
+					if(null!=priceBreakupList && undefined!=priceBreakupList && !priceBreakupList==""){
+						var priceBreakup = JSON.parse(priceBreakupList);
+					}
+					if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
+						priceBreakup.forEach(function(entry) {
+							 var html1 = "<tr><td>"+entry.name+"</td>";
+							 var list;
+							 var weightRateList = entry.weightRateList;
+							 if(undefined!=weightRateList) {
+								 	weightRateList.forEach(function(entry1) {
+								 		if(undefined!=list){
+								 			list=list+"<br>"+entry1;
+								 		}else{
+								 			list = entry1;
+								 		}
+							});
+							var html2 = "<td>"+list+"</td>";
+							}else {
+								html2 = "<td>-</td>";
+							}
+							var html3 = "<td>"+entry.price.formattedValue+"</td></tr>";
+							var preFinalHtml = html1.concat(html2);
+							var finalHtml = preFinalHtml.concat(html3);
 							
-						
-				});
-				
+							 $("#showPriceBreakup").append(finalHtml);
+						});
+					}else {
+						console.log("priceBreakup is undefined*******");	
+						}
+				}		
+				catch(err) {
+					console.log("exception is:"+err);  
+				}
 				/* PRICE BREAKUP ENDS HERE */
 					
-					/* JewelleryDetail STARTS HERE */
-					try{
-					var jwelPDP = $("#jwelPDP").val();
-					if (jwelPDP == "FineJewellery"){
-						var jewelInfoKey = [], jewelInfoValue = [], jewelHeadingValue = [], jewelHeadingKey = [];
-						var j=0;
-						var jewelDetailslistForPDP = data['jewelDescription'];
-						$.each(jewelDetailslistForPDP,function(key,value) {	
-								jewelInfoKey[j] = key	;
-								jewelInfoValue[j] = value;
-								j++;
-					});
-					if (prop){
-						var property = prop.split(',');
-						var keyLOV = '' , valueLOV= '';
-						for (var i=0; i<property.length; i++){
-							var lovSplit = property[i].split("=");
-							valueLOV = lovSplit[lovSplit.length-1];
-							keyLOV = lovSplit[lovSplit.length-2];
-							jewelHeadingKey[i] = keyLOV;
-							jewelHeadingValue[i] = valueLOV;
-					}
-						for (var i=0; i<property.length; i++){
-							if (jewelHeadingValue[i] == "null"){
-								$(".key-label").append('<span>'+ jewelHeadingKey[i] +'</span>')
-								}
-							else if (jQuery.inArray(jewelHeadingValue[i], jewelInfoKey ) >= 0){
-								var index = jQuery.inArray(jewelHeadingValue[i], jewelInfoKey );
-								$(".key-label").append('<span>'+ jewelHeadingKey[i]+'(' + jewelInfoValue[index]+ ') </span>')
-								}
-							}
-						}
-					}
-				}
-				  catch(err) {
-					  
-					}
-				  
-				/* JewelleryDetail ENDS HERE */
+					
 			if (data['sellerArticleSKU'] != undefined) {
 				if (data['errMsg'] != "") {
 

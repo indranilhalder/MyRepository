@@ -241,16 +241,20 @@ tr.d0 td {
 				<h1 itemprop="name" class="product-name">${product.productTitle}</h1>
 				<meta itemprop="sku" content="${product_sku}" />
 				<!-- </a> -->
-				<!-- //TPR-3752 Jewel Heading Added -->
+				<!-- //TPR-3752 Jewel Feature Attribute Added -->
 				<c:choose>
 					<c:when test="${product.rootCategory=='FineJewellery'}">
-						<input id="jwelPDP" type="hidden" value="${product.rootCategory}" />
 						<div class="product-desc">
-							<span class="key-label"> <c:forEach var="classification"
-									items="${mapConfigurableAttributes}">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			 </c:forEach>
+   						 			 <a href="" class="more-link">More</a>
+							  </c:if> 
 								</c:forEach>
-							</span> <a href="" id="jewelleryProdDetail" class="more-link">View
-								More</a>
+							</span> 
 						</div>
 					</c:when>
 				</c:choose>
@@ -569,15 +573,14 @@ tr.d0 td {
 		<spring:theme code='product.fashionAccessories' />
 	</c:set>
 
-
-	<c:choose>
-		<c:when
-			test="${product.rootCategory==electronics  || product.rootCategory==watches}">
+		<c:if test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<product:productDetailsClassifications product="${product}" />
-		</c:when>
-		<c:otherwise>
-		</c:otherwise>
-	</c:choose>
+			</c:if>
+	<!-- Fine Jewellery Details Tree Section  -->
+		<c:if test="${product.rootCategory=='FineJewellery'}">
+			<product:productDetailsClassifications product="${product}" />
+			</c:if>
+		
 
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType" />
