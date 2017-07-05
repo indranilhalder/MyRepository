@@ -4,6 +4,7 @@
 package com.tisl.mpl.service.impl;
 
 import de.hybris.platform.acceleratorcms.model.components.SimpleBannerComponentModel;
+import de.hybris.platform.acceleratorservices.config.SiteConfigService;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
@@ -138,7 +139,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
-	private static final String CHANNEL = "Mobile";
 
 
 	private static final Logger LOG = Logger.getLogger(MplProductWebServiceImpl.class);
@@ -148,6 +148,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	@Resource(name = "cmsPageService")
 	private MplCmsPageService mplCmsPageService;
+	@Resource
+	private SiteConfigService siteConfigService;
+	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
 	//sonar fix
 	/*
@@ -311,6 +314,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final Map<String, Integer> stockAvailibilty = new TreeMap<String, Integer>();
 		List<ClassificationMobileWsData> specificationsList = null;
 		//	PromotionMobileData potenitalPromo = null;
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 
 		try
 		{
@@ -367,7 +372,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					//CKD:TPR-250:Start
 					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
 					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
-					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null, CHANNEL);
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null, channel);
 					//CKD:TPR-250:End
 					if (MapUtils.isNotEmpty(buydata))
 					{
@@ -389,7 +394,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 
 						// Below codes are Channel specific promotion TISPRD-8944
-						if (buyBoxData.getSpecialPriceMobile() != null
+						if (specialMobileFlag && buyBoxData.getSpecialPriceMobile() != null
 								&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
 						{
 							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
@@ -401,8 +406,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							productDetailMobile.setDiscount(roundedOffValue.toString());
 
 						}
-						else if (buyBoxData.getSpecialPriceMobile() == null && buyBoxData.getSpecialPrice() != null
-								&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0)//backward compatible
+						else if (!specialMobileFlag && buyBoxData.getSpecialPrice() != null
+								&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0) //backward compatible
 						{
 							final double savingPriceCal = buyBoxData.getMrp().getDoubleValue().doubleValue()
 									- buyBoxData.getSpecialPrice().getDoubleValue().doubleValue();
@@ -438,7 +443,21 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				productDetailMobile.setSellerAssociationstatus(MarketplacecommerceservicesConstants.N);
 			}
+			//TPR-6117 STARTS
+			final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 
+
+			if (null != productModel.getMaxOrderQuantity() && productModel.getMaxOrderQuantity().intValue() > 0
+					&& productModel.getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+			{
+				productDetailMobile.setMaxQuantityAllowed(productModel.getMaxOrderQuantity().toString());
+			}
+			else
+			{
+				//final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				productDetailMobile.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+			}
+			//TPR-6117 END
 
 			//			Added for OfferDetail of  a product TPR-1299
 			if (null != productCode)
@@ -552,14 +571,14 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerName(buyBoxData.getSellerName());
 				}
 				//TISPRD-8944 Changes Start
-				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getFormattedValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
 				} //backward compatible
-				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
+				else if (!specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPrice()
 						&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
@@ -572,14 +591,13 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
 				}
 
-				if (null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
-						&& null != buyBoxData.getSpecialPriceMobile().getValue()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPriceMobile().getValue());
-				}//backward compatible
-				else if (null != buyBoxData && null == buyBoxData.getSpecialPriceMobile() && null != buyBoxData.getSpecialPrice()
+				} //backward compatible
+				else if (!specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPrice()
 						&& null != buyBoxData.getSpecialPrice().getValue() && null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
@@ -2324,7 +2342,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 
 	@Override
-	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl)
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl,
+			final String channel)
 	{
 		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
 		//final MplProductWebServiceImpl mplProductWebServiceImpl = new MplProductWebServiceImpl();
@@ -2338,6 +2357,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		try
 		{
 			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+			final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+					MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 			productModel = productService.getProductForCode(productCode);
 			if (null != productModel)
 			{
@@ -2414,14 +2435,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setProductName(productData.getProductTitle());
 				}
 
-				if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getValue().toString()
-						&& null != buyBoxData.getSpecialPrice().getValue()
-						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				if (specialMobileFlag && buyBoxData.getSpecialPriceMobile() != null
+						&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
+				{
+					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
+				}
+				else if (!specialMobileFlag && buyBoxData.getSpecialPrice() != null
+						&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0) //backward compatible
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
 				}
-
 				if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue().toString()
 						&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
@@ -2464,6 +2487,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
 					{
 						productDetailMobile.setImageUrl(img.getUrl());
+						break;
 					}
 
 				}

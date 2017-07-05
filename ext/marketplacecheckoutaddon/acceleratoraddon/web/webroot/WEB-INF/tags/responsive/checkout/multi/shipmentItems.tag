@@ -298,14 +298,10 @@
 																			<%-- PRDI-378 FIX STARTS HERE --%>
 																			<c:choose>
 																			   <c:when test="${entry.isBOGOapplied}">	
-																			     <c:set var='bogoQualifyingCount'  value='${entry.qualifyingCount}' />
-																			     <c:set var='bogoActualCount'  value='${entry.qualifyingCount-entry.freeCount}' />	
-																			     <c:set var='factorCount'  value= '${bogoActualCount/bogoQualifyingCount}' />		
-																			     <c:set var='price'  value= '${delMode.deliveryCost.value*factorCount}' />	
-																			          <c:choose>
-																			              <c:when test="${price > 0}" >
+																			        <c:choose>
+																			              <c:when test="${delMode.deliveryCost.value > 0}" >
 																			                   <input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
-																			                   <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  ${cartData.currencySymbol}<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${price}" /></label>
+																			                   <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
 																			              </c:when>
 																			              <c:otherwise>
 																			                   <input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
@@ -326,14 +322,10 @@
 																			<%-- PRDI-378 FIX STARTS HERE --%>
 																			<c:choose>
 																			   <c:when test="${entry.isBOGOapplied}">	
-																			     <c:set var='bogoQualifyingCount'  value='${entry.qualifyingCount}' />
-																			     <c:set var='bogoActualCount'  value='${entry.qualifyingCount-entry.freeCount}' />	
-																			     <c:set var='factorCount'  value= '${bogoActualCount/bogoQualifyingCount}' />		
-																			     <c:set var='price'  value= '${delMode.deliveryCost.value*factorCount}' />	
-																			          <c:choose>
-																			              <c:when test="${price > 0}" >
+																			         <c:choose>
+																			              <c:when test="${delMode.deliveryCost.value > 0}" >
 																			                   <input type="radio" name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
-																			                    <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  ${cartData.currencySymbol}<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${price}" /></label>
+																			                    <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
 																			              </c:when>
 																			              <c:otherwise>
 																			                    <input type="radio" name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />

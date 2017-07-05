@@ -10257,9 +10257,12 @@ body .account .right-account .order-history .pagination li{
   max-height: 255px;
   overflow-y: auto;
 }
-.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
+/* .facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.size .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
+	max-height: none;
+} */
+.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form{
 	max-height: none;
 }
 @media ( max-width :650px) {
@@ -67782,7 +67785,7 @@ header .content .bottom:not(.active) .bag:after{
 /*UF-14 change end*/
 /* STW changes start */
 #stw_widget {
-min-height:250px;
+/* min-height:250px; */ /*commented for PRDI-501*/
 position:relative;
 }
 #stw_widget .carousel-component{
@@ -72777,5 +72780,23 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 		padding-top: 9px !important;
 		clear: both;
 	}
+	.product-listing{
+		clear: both; /*TISPRDT-1724 fix*/
+	}
 }
 /*TISTE-225 fix end*/
+
+/*TISPRDT 1673 fix start*/
+.mop_span{
+	display: block;
+}
+.mop_span ~ li {
+    display: inline-block;
+}
+.mop_span ~ li + span.off-bag {
+    display: inline-block;
+     color: #000;
+     width: auto;
+}
+
+/*TISPRDT 1673 fix end*/

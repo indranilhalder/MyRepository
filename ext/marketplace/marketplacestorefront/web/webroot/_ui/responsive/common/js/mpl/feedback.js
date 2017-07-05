@@ -2549,7 +2549,7 @@ function sizeSwatch() {
 				if ($(this).next().length != 0) {
 					if (($(this).offset().top < $(this).next().offset().top)) {
 						row++;
-						if (row > 2 && back) {
+						if (row > 7 && back) {
 							start = $(this).next().index();
 							$(".facet_mobile li.filter-size").slice(start, end_mobile).addClass("deactivate");
 							back = false;
@@ -2562,7 +2562,7 @@ function sizeSwatch() {
 				if ($(this).next().length != 0) {
 					if (($(this).offset().top < $(this).next().offset().top)) {
 						row++;
-						if (row > 2 && back) {
+						if (row > 7 && back) {
 							start = $(this).next().index();
 							$(".facet_desktop li.filter-size").slice(start, end_desktop).addClass("deactivate");
 							back = false;

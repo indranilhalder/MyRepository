@@ -929,9 +929,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
 					double delCost = 0.0d;
-					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D)
+					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D
+							&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
 					{
 						totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
+					}
+					else if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D
+							&& entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
+					{
+						totalDeliveryPrice += (entryModelList.getPrevDelCharge().doubleValue() / entryModelList.getQuantity()
+								.doubleValue())
+								* (entryModelList.getQuantity().doubleValue() - entryModelList.getFreeCount().doubleValue());
 					}
 					else
 					{
@@ -939,12 +947,26 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
 								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
 								entryModelList.getSelectedUSSID());
-						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue())
+						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
+								&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDT-1226
 						{
 							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(), valueModel.getDeliveryFulfillModes()
 									.getCode()))
 							{
 								delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
+								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
+							}
+
+							totalDeliveryPrice += delCost; // TISPRDT-1649
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+						}
+						else if (entryModelList.getIsBOGOapplied() != null && entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
+						{
+							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(), valueModel.getDeliveryFulfillModes()
+									.getCode()))
+							{
+								delCost = (valueModel.getValue().doubleValue() * (entryModelList.getQuantity().doubleValue() - entryModelList
+										.getFreeCount().doubleValue()));
 								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
 							}
 

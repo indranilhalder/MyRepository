@@ -73,8 +73,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-//Sonar fix
-//import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
@@ -105,6 +103,8 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+//Sonar fix
+//import com.tisl.mpl.constants.MplConstants;
 
 
 /**
@@ -658,6 +658,7 @@ public class HomePageController extends AbstractPageController
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
 	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
