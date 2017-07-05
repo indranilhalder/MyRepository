@@ -196,4 +196,24 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		return getMplSellerInformationDAO().getContentPageBySellerID(sellerId);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String,
+	 * de.hybris.platform.catalog.model.CatalogVersionModel)
+	 */
+	@Override
+	public SellerInformationModel getSellerDetail(final String selectedUSSID, final CatalogVersionModel onlineCatalog)
+	{
+		if (selectedUSSID != null)
+		{
+			return mplSellerInformationDAO.getSellerInforationDetails(selectedUSSID, onlineCatalog);
+		}
+		return null;
+	}
+
+
+
+
 }
