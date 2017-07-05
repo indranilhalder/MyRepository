@@ -7178,17 +7178,17 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
-	//TISSTRT-1601 UF-277 regex
-	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
+	//PRDI-546
+	var str = addressLine.trim();
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
-	//TISSTRT-1601 UF-277
-	else if(!regex.test(addressLine)){
-		errorHandle.innerHTML = "Please enter a valid Address";
-        return false;
+	else if(str==""){
+		errorHandle.innerHTML = "Please enter a valid Address.";
+       return false;
 	}
+	
 	errorHandle.innerHTML = "";
 	return true;
 }
