@@ -469,6 +469,35 @@
 				display: none !important;
 		}
 	}
+    .logged_in{
+        position: relative;        
+        
+        .sign-pop{
+            display: none;
+            position: absolute;            
+            width: 150px; 
+            padding-top: 10px;
+            
+            ul{
+                padding: 0px;
+                border: 1px solid #e3e3e3;
+                border-radius: 3px;
+                background: #fff; 
+                padding: 0px;
+                
+                li{
+                    list-style: none;
+                    border-bottom: 1px solid #e3e3e3;
+                    padding: 10px;                    
+                }
+            }
+        }
+        &:hover{
+           .sign-pop{
+               display: block;
+            }
+        }
+    }
 	.header-left {
 		left: 0;
 	}
@@ -892,7 +921,4 @@
     text-align: center;
     background-color: #000;
     border-radius: .25rem;
-}
-.account-userTitle.account-userTitle-custom{
-    font-size: 12px;
 }
