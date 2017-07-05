@@ -35,9 +35,8 @@ var stwService = {
                 );
             },
             success: function(json) {
-                var vistingIp = stwRender.visitingIpAddress(json);
-	 if(typeof(vistingIp)!='undefined')
-                {	    
+            	if(!$.isEmptyObject(json)){
+            		var vistingIp = stwRender.visitingIpAddress(json);
                 var isIpAvialable = stwRender.wigetLoaderOnIp(vistingIp);
                 if (($("#pageType").val() == "homepage") && (isIpAvialable == true)) {
                     var stw_block = null;
@@ -69,7 +68,9 @@ var stwService = {
                     }
                     stwRender.bindCarousel();
                 }
-	      }
+            	}else{
+            		console.log("STW disabled from back end.")
+            	}
             },
             fail: function() {
                 console.log('STW failed to load --' + error);
@@ -86,22 +87,18 @@ var stwService = {
 var stwRender = {
 	    wigetLoaderOnIp: function(ip) {
 	    	var flag = true;
-	    	var lastIpPart;
-	    	if( ip.indexOf(',') != -1 ){
-	    		var splitIP=ip.split(",")[0];
-	    		lastIpPart = splitIP.split(".")[3];
-	    	   }
-	    	else{
-	    		 var lastIpPart = ip.split(".")[3];
-	    	    }
-	        if (typeof(lastIpPart) != 'undefined') {
-	            if (lastIpPart % 2 == 0) {
-	                delete productWidget[4]; // if even then load STW and delete HOT NOW
-	                return flag;
-	            } else {
-	                return !flag;
-	            }
-	        }
+	    	
+	    	if(ip!="NA" && ip.split(".").length == 4){
+	    		var lastIpPart = ip.split(".")[3];
+	    		if (lastIpPart % 2 == 0) {
+	    			delete productWidget[4]; // if even then load STW and delete HOT NOW
+	                return true;
+	    		}else{
+	    			return false;
+	    		}
+	    	}else{
+	    		return false;
+	    	}
 	    },
 
     visitingIpAddress: function(STWJOBJECT) {
