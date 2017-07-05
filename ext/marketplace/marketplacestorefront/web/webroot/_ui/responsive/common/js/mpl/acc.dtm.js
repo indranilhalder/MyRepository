@@ -45,6 +45,7 @@ $(document).ready(function(){
 	var buyboxSellerid = $("#sellerSelId").val();
 	var buyboxSellerName = $("#sellerNameId").val();
 	var sellerList = $('#pdpSellerIDs').val();
+	
 	digitalData = {
 		page : {
 			pageInfo : {
@@ -224,13 +225,6 @@ $(document).ready(function(){
 				}
 		}
 	}
-	// checkout-login page
-	if(pageType =="checkout-login"){
-		if(typeof _satellite !="undefined"){
-		    _satellite.track('cpj_checkout_login');
-		}
-	}
-	
 	/*  Direct call rule starts here*/
 	
     // For icid
@@ -399,6 +393,40 @@ $(document).ready(function(){
     		}
     	}
     })
+    
+    //TPR-6334 | Login-logout start
+    var dtm_Login_status = $.cookie("dtmSigninStatus");
+	var dtm_Logout_status = $.cookie("dtmSignoutStatus");
+	if(typeof dtm_Login_status != "undefined"){
+		loginStatusCookieCheck("dtmSigninStatus",dtm_Login_status);
+    }
+	
+    if(typeof dtm_Logout_status != "undefined"){
+    	if(typeof _satellite !="undefined"){
+    		_satellite.track('logout_successful');
+      	}
+		deleteCookie("dtmSignoutStatus");
+    }
+    
+    if(pageType == 'login'){
+    	window.sessionStorage.setItem('isLoginPageVisited','yes');
+    }
+    
+    if(pageType != 'login' && pageType != 'checkout-login'){
+		if(typeof $.cookie("dtmRegistrationJourney") != "undefined"){
+    		deleteCookie("dtmRegistrationJourney=Started");
+    	}
+	}
+    // TPR-6338 | signup-start track
+    $(document).on('click','.logIn-hi .sign-in-dropdown .headeruserdetails , .logIn-hi .sign-in-dropdown .signin-dropdown-body .register_link',function(){
+    	if(typeof $.cookie("dtmRegistrationJourney") == "undefined"){
+    		if(typeof _satellite !="undefined"){
+    			_satellite.track('signup_start');
+    	  	}
+    		document.cookie = "dtmRegistrationJourney=Started; path=/;";
+    	}
+    })
+    //TPR-6334 | Login-logout end
 	
 });
 function differentiateSeller(){
@@ -721,6 +749,62 @@ function dtmSearchTags(){
 	});
 	// TPR-6287 | filter tacking end
 	
+	//for TPR-6334
+	function loginStatusCookieCheck(cookieName, cookieValue){
+    	var location = "header_login_popup";
+    	
+    	var user_login_type = $('#userLoginType').val().trim();
+    	if(user_login_type == "guest_user"){
+    		user_login_type = "email";
+    	}
+    	
+    	if(typeof _satellite !="undefined"){
+    		if(cookieValue == "AccountLoginSuccess"){
+    			_satellite.track('login_successful');
+    			if(window.sessionStorage.getItem('isLoginPageVisited') != null){
+    				location = "login_page";
+    				window.sessionStorage.removeItem('isLoginPageVisited');
+    	    	}
+        	}
+    		//For TPR-6362
+    		else if(cookieValue == "CheckoutLoginSuccess"){
+    			_satellite.track('cpj_checkout_login');
+    			location = "checkout_login_page";
+        	}
+    		else if(cookieValue == "RegistrationSuccess"){
+    			_satellite.track('signup_success');
+    			if(typeof $.cookie("dtmRegistrationJourney") != "undefined"){
+    				deleteCookie("dtmRegistrationJourney");
+    			}
+        	}
+    		else if(cookieValue == "LoginFailure"){
+    			_satellite.track('login_failed');
+        	}
+    	}
+    		
+		if(typeof digitalData.account != "undefined"){
+			if(typeof digitalData.account.login != "undefined"){
+				digitalData.account.login.type = user_login_type;
+				digitalData.account.login.location = location;
+			}
+			else{
+				digitalData.account.login = {
+					type : user_login_type,
+					location : location
+				}
+			}
+		}
+		else{
+			digitalData.account = {
+				login : {
+					type : user_login_type,
+					location : location
+				}
+			}
+		}
+    	deleteCookie(cookieName);
+	}
+
 	//TPR-6364 start | Track add and remove functionality from wishlist
 	function dtmAddToWishlist(pagetype){
 		if (typeof _satellite != "undefined") {
@@ -793,5 +877,3 @@ function dtmSearchTags(){
 		
 	}
    
-   	
-    	

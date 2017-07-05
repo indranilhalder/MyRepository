@@ -182,6 +182,10 @@ public final class MessageConstants
 	public static final String BOGO_CANCEL = "cancel.bogo.message".intern();
 	public static final String ORDER_HISTORY_PAGEBLEDATA_COUNT = "orderHistory.pagebleData.count";
 
+	// For TPR-6334,6338
+	public static final String DTM_SIGNIN_STATUS = "dtmSigninStatus";
+	public static final String DTM_SIGNOUT_STATUS = "dtmSignoutStatus";
+
 	//coupons
 	public static final String PAZE_SIZE_COUPONS = "mpl.account.coupon.pazesize";
 	//closed coupon
@@ -202,11 +206,11 @@ public final class MessageConstants
 	public static final String GOOGLEUSER = "google";
 	public static final String USER_LOGIN_TYPE = "userLoginType";
 	public static final String NPSFEEDBACK_SAVE_ERROR = "text.nps.feedback.failure";
-    public static final String SUCCESS = "success";
+	public static final String SUCCESS = "success";
 	public static final String PINCODE_NOT_SERVICEABLE = "Pincode not Serviceable";
-	public static final String   UPDATED="Updated";
-	public static final String VALIDATE_ERROR="Validation Error";
-	
+	public static final String UPDATED = "Updated";
+	public static final String VALIDATE_ERROR = "Validation Error";
+
 	//track order
 	public static final String ORDERID_EMAILID_MISMATCH_MESSAGE_KEY = "trackorder.orderid.email.mismatch.message";
 }
