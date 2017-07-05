@@ -781,6 +781,17 @@ function dtmSearchTags(){
 	    }
 		
 	})
+	
+	//TPR-6369 | Error Tracking
+	function dtmErrorTracking(errorType,errorName){
+		digitalData.page = {
+			error : {
+				type  : errorType,
+				name  : errorName
+			}
+		}
+		
+	}
    
-    	
+   	
     	

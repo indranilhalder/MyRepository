@@ -6339,6 +6339,11 @@ function checkIsServicable()
  	 					"error_type" : "pincode_check_error",
  	 				});
  	 			}
+ 	 			// TPR-6369 |Error tracking for  dtm
+ 	 			if (typeof _satellite != "undefined") {
+ 	 				_satellite.track('error_tracking');
+ 	 		    }
+ 	 			dtmErrorTracking("pincode_check_error","Issue in PincodeServiceability");
 	 		},
 
 			complete : function(resp){
@@ -7257,6 +7262,11 @@ $("#couponSubmitButton").click(function(){
 	 				if(typeof utag !="undefined"){
 		 				   utag.link({error_type : 'offer_error'});
 		 				}
+	 				//TPR-6369 |Error tracking dtm
+	 				if (typeof _satellite != "undefined") {
+	 					_satellite.track('error_tracking');
+	 			    }
+	 				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 			}
 	 			else{
 		 			if(response.couponRedeemed==true){
@@ -7293,6 +7303,11 @@ $("#couponSubmitButton").click(function(){
 	 			if(typeof utag !="undefined"){
 	 				   utag.link({error_type : 'offer_error'});
 	 				}
+	 			//TPR-6369 |Error tracking dtm
+ 				if (typeof _satellite != "undefined") {
+ 					_satellite.track('error_tracking');
+ 			    }
+ 				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 		}
 	 	});	 
 	}
@@ -8272,6 +8287,11 @@ function submitCODForm(){
 						$(".pay .spinner").remove();
 						$("#no-click,.spinner").remove();
 						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
+						//TPR-6369 |Error tracking dtm
+		 				if (typeof _satellite != "undefined") {
+		 					_satellite.track('error_tracking');
+		 			    }
+		 				dtmErrorTracking("Payment error","pay_cod_otp_error");
 					}
 				}
 			},
@@ -8280,7 +8300,11 @@ function submitCODForm(){
 				if(typeof utag !="undefined"){
 				utag.link({link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'});
 				}
-				
+				//TPR-6369 |Error tracking dtm
+ 				if (typeof _satellite != "undefined") {
+ 					_satellite.track('error_tracking');
+ 			    }
+ 				dtmErrorTracking("Payment error","pay_cod_otp_error");
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
 				$(".pay button,.cod_payment_button_top").css("opacity","1");
@@ -8298,7 +8322,12 @@ function submitCODForm(){
 function paymentErrorTrack(msg){
 	if(typeof utag !="undefined"){
 		utag.link({"error_type": msg});
-		}
+	}
+	    //TPR-6369 |Error tracking dtm
+		if (typeof _satellite != "undefined"){
+			_satellite.track('error_tracking');
+	      }
+		dtmErrorTracking("Payment error",msg);
 }
 
 
