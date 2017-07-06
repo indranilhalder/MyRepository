@@ -252,11 +252,11 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 			}
 			//TPR-1347---START
-			//if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
-			//		&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
-			//{
-			//	target.setParentTransactionID(source.getParentTransactionID());
-			//}
+			if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
+					&& CollectionUtils.isNotEmpty(source.getAssociatedItems()))
+			{
+				target.setParentTransactionID(source.getParentTransactionID());
+			}
 			//TPR-1347---END
 			if (richAttributeModel.get(0).getDeliveryFulfillModeByP1() != null
 					&& richAttributeModel.get(0).getDeliveryFulfillModeByP1().getCode() != null)
