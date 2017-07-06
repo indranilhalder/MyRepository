@@ -90,6 +90,7 @@
 			<property name="uiExperienceService" ref="uiExperienceService" />
 			<property name="baseSiteService" ref="baseSiteService" />
 			<property name="configurationService" ref="configurationService"></property>
+			<property name="sessionService" ref="sessionService"></property>
 			
 		</bean>
 		<bean
