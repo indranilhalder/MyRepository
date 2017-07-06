@@ -1105,6 +1105,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			final CartModel cartModel = getCartService().getSessionCart();
 			final AccountAddressForm addressForm = new AccountAddressForm();
 			addressForm.setCountryIso(MarketplacecheckoutaddonConstants.COUNTRYISO);
+			addressForm.setAddressType("Home");
 			final List<StateData> stateDataList = accountAddressFacade.getStates();
 
 			if (null != cartData)
@@ -2446,18 +2447,27 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							catch (final ArrayIndexOutOfBoundsException exception)
 							{
 								LOG.error("Error in Store selection Page", exception);
-								return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								//return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+										+ "&type=redirect", UTF);
+								return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 							}
 							catch (final EtailBusinessExceptions e)
 							{
 								ExceptionUtil.etailBusinessExceptionHandler(e, null);
 								LOG.error("EtailBusinessExceptions Error in Store selection Page ", e);
-								return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								//return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+										+ "&type=redirect", UTF);
+								return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 							}
 							catch (final Exception e)
 							{
 								LOG.error("Error in Store selection Page ", e);
-								return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								//return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
+								final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+										+ "&type=redirect", UTF);
+								return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 							}
 						}
 					}
@@ -4366,7 +4376,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		ProductData productData = null;
 		if (null != sellerInfoModel)
 		{
+		LOG.debug("sellerInfoModel PK=>"+sellerInfoModel.getPk());
 			productModel = sellerInfoModel.getProductSource();
+			LOG.debug("Product model in papulateClicknCollectRequesrData=>"+productModel);
 			productData = productFacade.getProductForOptions(productModel,
 					Arrays.asList(ProductOption.BASIC, ProductOption.SELLER, ProductOption.PRICE));
 			storeLocationRequestData.setSellerId(sellerInfoModel.getSellerID());

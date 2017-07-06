@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.zkoss.spring.SpringUtil;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -34,7 +35,7 @@ public class SellersNameColumn  extends AbstractSimpleCustomColumnConfiguration<
 			SellerInformationModel sellerInfo =null;
 			for(AbstractOrderEntryModel entry  : order.getEntries()){
 				//fine Jewellery changes starts
-				if(entry.getProduct().getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+				if(entry.getProduct().getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 				{
 					final List<JewelleryInformationModel> jewelleryInfo = getMplJewelleryService().getJewelleryInfoByUssid(entry.getSelectedUSSID());
 					final String ussid = jewelleryInfo.get(0).getPCMUSSID();

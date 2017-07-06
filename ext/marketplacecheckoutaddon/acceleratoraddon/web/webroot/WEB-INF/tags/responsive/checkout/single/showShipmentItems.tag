@@ -261,13 +261,13 @@
 																			
 																		<p>${delMode.description }</p></label></li>
 																		<c:set var="isCncPresentInSinglePageCart" value="true"></c:set>
-																		<c:if test="${delMode.isSelected eq true}">
+																		<%-- <c:if test="${delMode.isSelected eq true}">
 																			<script>
 																				$(document).ready(function(){
 																					ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');
 																				});
 																			</script>
-																		</c:if>
+																		</c:if> --%>
 																		<%-- <c:set var='delModeChecked'  value='true' />	 --%>		
 																	</c:when>
 																	<c:otherwise>

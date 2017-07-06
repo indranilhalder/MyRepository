@@ -111,4 +111,5 @@ public final class MplConstants
 	public static final String BRAND_HIERARCHY_ROOT_CATEGORY_CODE = "MBH";
 	//Sonar_fix
 	public static final String COMPONENT_GUID_FOUND = "Found Component>>>>with id :::";
+	public static final String NOT_AVAILABLE = "N/A";
 }

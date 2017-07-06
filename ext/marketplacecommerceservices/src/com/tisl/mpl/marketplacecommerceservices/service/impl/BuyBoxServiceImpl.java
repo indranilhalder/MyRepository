@@ -168,10 +168,14 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	}
 
 	@Override
-	public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode)
+	//CKD: TPR-3809
+	//public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode)
+	public Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(final String productCode, final String prodCatType)
 			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
-		final Set<Map<BuyBoxModel, RichAttributeModel>> resultMap = buyBoxDao.getsellersDetails(productCode);
+		//CKD: TPR-3809
+		//final Set<Map<BuyBoxModel, RichAttributeModel>> resultMap = buyBoxDao.getsellersDetails(productCode);
+		final Set<Map<BuyBoxModel, RichAttributeModel>> resultMap = buyBoxDao.getsellersDetails(productCode,prodCatType);
 		return resultMap;
 	}
 
@@ -315,5 +319,9 @@ public class BuyBoxServiceImpl implements BuyBoxService
 		return buyBoxDao.buyboxPriceForJewelleryWithVariant(ussID);
 	}
 
-
+	@Override
+	public String findPussid(final String selectedUSSID)
+	{
+		return buyBoxDao.findPussid(selectedUSSID);
+	}
 }

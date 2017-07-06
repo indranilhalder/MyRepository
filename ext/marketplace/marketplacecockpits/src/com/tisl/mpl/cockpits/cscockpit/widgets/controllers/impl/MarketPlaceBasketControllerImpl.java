@@ -406,7 +406,20 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 						// refer TIS-276 for details
 						
-						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						//CKD:TPR-3809
+						//cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						if(null!=cartEntry.getProduct().getProductCategoryType()&&cartEntry.getProduct().getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+							String pussid= buyBoxFacade.findPussid(cartEntry.getSelectedUSSID());
+							if(StringUtils.isNotEmpty(pussid)){
+								cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(pussid));
+							}else{
+								LOG.error("Unable to find parent USSID for cart:"+cart.getGuid()+" for USSID: " +cartEntry.getSelectedUSSID());
+							}
+							
+						}
+						else{
+							cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						}
 						//cartSoftReservationRequestData.setServiceableSlaves(cartEntry.getv\);
 						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
 						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);

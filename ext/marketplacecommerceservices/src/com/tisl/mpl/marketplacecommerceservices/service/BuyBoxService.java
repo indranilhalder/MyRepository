@@ -54,7 +54,9 @@ public interface BuyBoxService
 	RichAttributeModel getRichAttributeData(String ussid) throws EtailNonBusinessExceptions;
 
 	//get seller data
-	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	//CKD: TPR-3809
+	//Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode, String prodCatType) throws EtailNonBusinessExceptions;
 
 	//
 	List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
@@ -109,4 +111,10 @@ public interface BuyBoxService
 	 */
 	public List<BuyBoxModel> buyboxPriceForJewelleryWithVariant(String ussID);
 
+	//CKD:TPR-3809
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	public String findPussid(String selectedUSSID);
 }
