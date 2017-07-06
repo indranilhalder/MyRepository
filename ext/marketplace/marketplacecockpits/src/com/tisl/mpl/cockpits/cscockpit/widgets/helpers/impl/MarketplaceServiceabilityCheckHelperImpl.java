@@ -567,7 +567,14 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				{
 					for (final MarketplaceDeliveryModeData deliveryMode : seller.getDeliveryModes())
 					{
-						deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						//CKD:TPR-3809
+						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), ussid);
+						}
+						else{
+							deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
+						}
+						//deliveryModeData = fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid());
 						deliveryModeList.add(deliveryModeData);
 					}
 					data.setDeliveryModes(deliveryModeList);
@@ -654,7 +661,14 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 				}
 
 				data.setSellerId(seller.getSellerID());
+				//CKD:TPR-3809
+				if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+					data.setUssid(ussid);
+				}
+				else{
 				data.setUssid(seller.getUssid());
+				}
+				//data.setUssid(seller.getUssid());
 				data.setIsDeliveryDateRequired("N");
 				if(null != cartId) {
                 	data.setCartId(cartId);
