@@ -362,7 +362,7 @@
 					<ul class="product-block addresses new-form">
 						<li class="item"><form:form action="addNewAddress"
 								method="post" commandName="addressForm" name="addressForm"
-								onsubmit="return validateAccountAddress();">
+								onsubmit="return luxValidateAccountAddress();">
 								<!-- Static data for radio button -->
 									<%-- <div class="adresstype">
 										<input type="radio" class="toggle" name="addressRadioType"

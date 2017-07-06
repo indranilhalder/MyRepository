@@ -1024,7 +1024,7 @@ function editAddress(addressId) {
     
     
  // Validation of Account address page
-    function validateAccountAddress() {
+    function luxValidateAccountAddress() {
     	 //Trimming all the fields before validation
     	$("form#addressForm :input[type=text]").each(function(){
    		 var input = $(this);    
@@ -1153,8 +1153,8 @@ function editAddress(addressId) {
         if(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob)	
         {
         	addressForm.line1.value=addLine1;
-            addressForm.line2.value=addLine2;
-            addressForm.line3.value=addLine3;
+            /*addressForm.line2.value=addLine2;
+            addressForm.line3.value=addLine3;*/
         	 return true;
         }
         else{
