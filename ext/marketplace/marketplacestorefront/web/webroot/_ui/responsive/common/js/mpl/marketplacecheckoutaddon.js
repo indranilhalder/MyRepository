@@ -4826,6 +4826,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 							dataType:'json',
 							success : function(response) {
 								if(response.length>0){
+									//PRDI-478
+									$("#bankNameForEMI option").remove();
 									$("#bankNameForEMI, #listOfEMiBank").css("display","block");
 									$("#emiRangeError").css("display","none");
 									var bankList=document.getElementById("bankNameForEMI");
