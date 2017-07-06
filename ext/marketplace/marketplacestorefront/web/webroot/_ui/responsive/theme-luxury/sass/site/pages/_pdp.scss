@@ -760,7 +760,7 @@
         -moz-box-sizing: content-box;
         -webkit-box-sizing: content-box;
         box-sizing: content-box;
-    }
+    }    
 }
 .star-review{
     margin: 0px;
@@ -1084,4 +1084,10 @@ a:hover.tooltips {
 
     }
   
+}
+
+@include media-breakpoint-down(md)  { 
+	#commentsDiv{
+		width:auto !important;
+	}
 }

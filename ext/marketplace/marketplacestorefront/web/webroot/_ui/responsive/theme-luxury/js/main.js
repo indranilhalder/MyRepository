@@ -1180,7 +1180,7 @@ TATA.Pages = {
             
             //For Firefox we have to handle it in JavaScript 
             
-            var vids = $("video"); 
+            var vids = $(".lux-main-banner-slider video"); 
             $.each(vids, function(){
                 this.controls = false; 
             }); 

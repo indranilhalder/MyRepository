@@ -6,6 +6,7 @@
 	height: 39px;
 	p {
 		margin: 0;
+		color:#FFF;
 	}
 	a {
 		text-decoration: underline;
@@ -293,7 +294,7 @@
 						div > ul {
 							> li {
 								> a {
-									font-size: 1.3em;
+									font-size: 14px;
 									font-weight: 700;
 								}
 								> ul {
@@ -668,8 +669,8 @@
 		    //height: 100%;
 		}
 		&.active {
-			max-height: 630px;
-			height:450px;
+			max-height: 650px;
+			height:470px;
 			@include media-breakpoint-down(sm) {
 				//max-height: 100%;
 			}
@@ -708,7 +709,7 @@
 			}
 		}
 		&.active-sign-up {
-			height: 630px;
+			height: 650px;
 			@include media-breakpoint-down(sm) {
 				//height: 100%;
 			}
