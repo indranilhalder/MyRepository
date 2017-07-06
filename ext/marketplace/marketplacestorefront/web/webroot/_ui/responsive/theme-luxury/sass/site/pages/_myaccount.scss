@@ -614,8 +614,8 @@
 				margin-bottom:10px;
 			}
 			.mpl-addressPopup{                
-                left: auto;
-                right: auto;
+                /*left: auto;
+                right: auto;*/
                 .content{
                     border-bottom:0px;
                     padding: 0px;
@@ -950,5 +950,26 @@
 .page-address-book{
     .overlay{
         display: none;
+    }
+}
+.mpl-addressPopup.delete-address-Popup.modal.cancellation-request{
+    .addressItem{
+        width: auto;
+        top: 20%;
+        position: relative;
+        left: initial;
+        padding: 15px;
+        border-radius: 6px;
+        border: 0px;
+        background: transparent;
+        position: initial!important;
+        
+        ul{
+            font-size: 16px;
+            
+            p{
+                font-weight: bold;
+            }
+        }
     }
 }

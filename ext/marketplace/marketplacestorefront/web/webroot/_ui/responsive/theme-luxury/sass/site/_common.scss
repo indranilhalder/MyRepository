@@ -664,3 +664,10 @@ video::-webkit-media-controls {
 #forgottenPwdForm .valid-message{
     color: #3c763d;
 }
+.modal, .modal-open, .sr-only {
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}

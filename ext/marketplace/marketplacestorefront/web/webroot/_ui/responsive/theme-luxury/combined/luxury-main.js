@@ -230,12 +230,13 @@ function reloadOrderDetailPage() {
     window.location.href = ACC.config.encodedContextPath + "/my-account/order/?orderCode=" + ordercode;
 }
 
-function validateAccountAddress() {
+function luxValidateAccountAddress() {
     $("form#addressForm :input[type=text]").each(function() {
         $(this);
         $(this).val($(this).val().trim());
     });
-    var selectedValueState = document.getElementById("stateListBox").selectedIndex, regexCharSpace = /^[a-zA-Z]+$/, regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/, regexSpace = /\s/, equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/, flagFn = !0, flagLn = !0, flagAd1 = !0, flagPost = !0, flagCity = !0, flagState = !0, flagMob = !0, addLine1 = encodeURIComponent(addressForm.line1.value), addLine2 = encodeURIComponent(addressForm.line2.value), addLine3 = encodeURIComponent(addressForm.line3.value);
+    var selectedValueState = document.getElementById("stateListBox").selectedIndex, regexCharSpace = /^[a-zA-Z]+$/, regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/, regexSpace = /\s/, equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/, flagFn = !0, flagLn = !0, flagAd1 = !0, flagPost = !0, flagCity = !0, flagState = !0, flagMob = !0, addLine1 = encodeURIComponent(addressForm.line1.value);
+    encodeURIComponent(addressForm.line2.value), encodeURIComponent(addressForm.line3.value);
     return 0 == addressForm.addressRadioType[0].checked && 0 == addressForm.addressRadioType[1].checked && (document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>", 
     flagFn = !1), null == addressForm.firstName.value || "" == addressForm.firstName.value ? ($("#erraddressfn").css({
         display: "block"
@@ -286,7 +287,7 @@ function validateAccountAddress() {
         display: "block"
     }), document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>", 
     flagMob = !1), !!(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob) && (addressForm.line1.value = addLine1, 
-    addressForm.line2.value = addLine2, addressForm.line3.value = addLine3, !0);
+    !0);
 }
 
 function onSelectRadio() {
@@ -12832,7 +12833,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -13348,7 +13349,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
