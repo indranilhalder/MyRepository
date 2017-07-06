@@ -4826,6 +4826,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 							dataType:'json',
 							success : function(response) {
 								if(response.length>0){
+									//PRDI-478
+									$("#bankNameForEMI option").remove();
 									$("#bankNameForEMI, #listOfEMiBank").css("display","block");
 									$("#emiRangeError").css("display","none");
 									var bankList=document.getElementById("bankNameForEMI");
@@ -6055,7 +6057,7 @@ function populateCartDetailsafterPincodeCheck(responseData){
 				isOfferPresent=true;
 				$(".add-disc-pincode").show();
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat");
 			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			if(cartData[cart]['cartLevelPercentage']!=null && cartData[cart]['cartLevelDisc']!=null){
@@ -6064,7 +6066,7 @@ function populateCartDetailsafterPincodeCheck(responseData){
 				$(".add-disc-pincode").show();
 				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
 				//UF-260
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat");
 				//$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
@@ -6112,7 +6114,12 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			}
 			
 			//UF-260
-			cartTotalMrp = cartTotalMrp + cartData[cart]['totalMrp'].doubleValue;
+			
+			if(cartData[cart]['totalMrp']!=null)
+			{
+				cartTotalMrp += cartData[cart]['totalMrp'].doubleValue;
+			}
+			
 		}
 		if(cartValue!=null){
 		//UF-260 Commenting the line as Total MRP is to be shown.
