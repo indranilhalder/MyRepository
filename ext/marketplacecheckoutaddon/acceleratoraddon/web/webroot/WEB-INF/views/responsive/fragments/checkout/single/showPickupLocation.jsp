@@ -87,25 +87,25 @@
 	<span class="cnc_arrow"></span>
 		<div class="cnc_title_search">
 		<h1>
-			Select nearby store to pick up from (pincode ${defaultPincode}) <span>[?]</span>
+			Select nearby store to pick up from (pincode <span id="cncChangedPincode${entryNumber}">${defaultPincode}</span>) <span>[?]</span>
 		</h1>
 		<div class="cnc_search_wrapper">
-		<input class="cncStoreSearch" type="text" id="cncStoreSearch${entryNumber}" name="cncStoreSearch" placeholder="Search nearby store">
+		<input class="cncStoreSearch" type="text" id="cncStoreSearch${entryNumber}" name="cncStoreSearch" placeholder="Search nearby store" onkeypress="ACC.singlePageCheckout.searchOnEnterPress(event,'cncStoreSearch${entryNumber}','${entryNumber}')">
 		<button onclick="ACC.singlePageCheckout.searchCNCStores('cncStoreSearch${entryNumber}','${entryNumber}');" type="button"></button>
 		</div>
 		</div>
 		<div class="change_pincode_block block${entryNumber}">
-			<span class="change_txt txt${entryNumber}">Change Pincode?</span>
-			<div class="input${entryNumber} row" style="width: 111%">
-				<div class="col-md-8 col-sm-4 col-xs-4" style="padding:0px;">
-					<input style="width: 100%" type="text" name="changepin${entryNumber}" class="changepin${entryNumber}" maxlength="6" placeholder="Enter Pincode to Change.">
+			<span class="change_txt txt${entryNumber}">Change Pincode</span>
+			<div class="input${entryNumber} row" style="display:none;">
+				<span class="">
+						Want to pick from other area? 
+						Enter pincode below
+				</span>
+				<div class="" style="padding:0px;">
+					<input style="width: 100%" type="text" name="changepin${entryNumber}" class="changepin${entryNumber}" maxlength="6" placeholder="New Pincode">
+					<button type="button" class="submitPincode submitPincode${entryNumber}" style="" name="submitPincode${entryNumber}">Submit</button>
 				</div>
-				<div class="col-md-4 col-sm-2 col-xs-2">
-					<button type="button" class="submitPincode submitPincode${entryNumber}" style="height: 40px !important; background: #A9143C !important; border: none !important; color: #fff !important;" name="submitPincode${entryNumber}">Submit</button>
-				</div>
-			</div>
-			<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;">
-			
+				<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;"></div>
 			</div>
 		</div>
 		<%-- <div class="productCount">(for ${cnccount} out of ${delModeCount + cnccount}
@@ -133,7 +133,7 @@
 <script>
 $(document).ready(function() {
 	$(".txt${entryNumber}").click(function(){
-		$(".txt${entryNumber}").hide();
+		//$(".txt${entryNumber}").hide();
 		$(".input${entryNumber}").show();
 	});
 	
@@ -183,12 +183,11 @@ $(document).ready(function() {
 				$.ajax({
 			          url :  ACC.config.encodedContextPath +"/checkout/single/updatePincodeCheck",
 			          type: "GET",
-			          dataType : "json",
+			          dataType : "html",
 			    	  cache: false,
-			    	  contentType : "application/json; charset=utf-8",
 			          data : dataString${entryNumber},   
 			          success : function(data) {
-			        	 $("cncUlDiv${entryNumber}").html(data);
+			        	 $("#cncUlDiv${entryNumber}").html(data);
 			          },
 			          error : function(xhr, data, error) {
 			        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)

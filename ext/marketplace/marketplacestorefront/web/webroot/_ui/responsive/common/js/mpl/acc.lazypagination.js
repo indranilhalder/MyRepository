@@ -326,7 +326,7 @@ $(document).ready(function() {
 
         });
       //Added for PRDI-109  and INC144315439
-        $(document).on('click','.responsiveSort',function(){ 
+        $(document).on('change','.responsiveSort',function(){ 
       //  $('.responsiveSort').change(function(){
         	//sort($(this).find(':selected'),true);
         	// INC144315462 and INC144315104
@@ -443,7 +443,8 @@ function ajaxPLPLoad(ajaxUrl){
             
             $(ulProduct).find('li.product-item').each(function() {
                 productItemArray.push($(this))
-            });           	
+            });
+            ACC.quickview.bindToUiCarouselLink();
         },
         complete: function() {
             $('.lazyLoadPagination').remove();
@@ -456,7 +457,7 @@ function ajaxPLPLoad(ajaxUrl){
 			if($('#pageType').val() == "category" || $('#pageType').val() == "electronics"){
 				populateFirstFiveProductsPlp();
 			}
-            ACC.quickview.bindToUiCarouselLink();
+            //ACC.quickview.bindToUiCarouselLink();
         }
     });
 }

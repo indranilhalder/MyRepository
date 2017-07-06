@@ -37,43 +37,76 @@
 	 $(".product-classifications").fadeToggle();
 	 });
 	 });
-	 */
+	 		
 </script>
 <c:choose>
 <c:when test="${product.rootCategory!='FashionJewellery' and product.rootCategory=='FineJewellery'}">		
-		<%-- <div class="about-pro">
-		    <p>${product.articleDescription}</p>
-		</div> --%>
-		<div class="accordin">      
-			<c:forEach items="${product.classifications}" var="classification" varStatus="outer">
-		    	<div class="item">
-		        	<div class="title">
-		            	<a href="">${classification.name}</a>
-		            </div>
-			        <div class="detail" style="display: block;">
-			        	<ul>
-			            	<c:forEach items="${classification.features}" var="feature" varStatus="inner">
-			                	<li>${feature.name} 
-			                		<span>
-			                			<c:forEach items="${feature.featureValues}" var="value" varStatus="status">
-												${value.value}
-											<c:choose>
-												<c:when test="${feature.range}">
-													${not status.last ? '-' : feature.featureUnit.symbol}
-												</c:when>
-												<c:otherwise>
-													${feature.featureUnit.symbol}
-													${not status.last ? '<br/>' : ''}
-												</c:otherwise>
-											</c:choose>
-										</c:forEach>
-									</span>
-								</li>
-			               </c:forEach>
-						</ul>
-					</div>
-		         </div>
-			 </c:forEach>
+
+       <div id="fineJewellery"></div>
+		<div class="accordin ${product.rootCategory}">      
+			 <c:forEach items="${product.fineJewelleryDeatils}" var="classification" varStatus="outer">
+         <div class="item">
+            <div class="title">
+               <a href="">${classification.key}</a>
+            </div>
+            <div class="detail" style="display: block;">
+               <c:choose>
+                  <c:when test="${classification.key=='Product Details'}">
+                     <div class="title">PRODUCT CODE 
+                     <span id="jewelDetailsUssid" ></span>
+                     </div>
+                     <table>
+                        <c:forEach items="${classification.value}" var="feature" varStatus="inner">
+                           <tr>
+                              <td class="title">${feature.key}  </td>
+                              <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
+                                 <td >${featureValue}</td>
+                              </c:forEach>
+                           </tr>
+                        </c:forEach>
+                     </table>
+                  </c:when>
+                  <c:when test="${classification.key=='Diamond Details'}">
+                     <c:forEach items="${classification.value}" var="feature" varStatus="inner">
+                        <c:choose>
+                           <c:when test="${feature.key=='Total Count' or feature.key=='Total Weight' }">
+                                 <div class="t-d-d">${feature.key}
+                                  <span>
+                                 <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
+                                    <td >${featureValue}</td>
+                                 </c:forEach>
+                                 </span>
+                                 </div>
+                           </c:when>
+                           <c:otherwise>
+                              <table>
+                                 <tr>
+                                    <td class="title">${feature.key}  </td>
+                                    <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
+                                       <td >${featureValue}</td>
+                                    </c:forEach>
+                                 </tr>
+                              </table>
+                           </c:otherwise>
+                        </c:choose>
+                     </c:forEach>
+                  </c:when>
+                  <c:otherwise>
+                     <table>
+                        <c:forEach items="${classification.value}" var="feature" varStatus="inner">
+                           <tr>
+                              <td class="title">${feature.key}  </td>
+                              <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
+                                 <td >${featureValue}</td>
+                              </c:forEach>
+                           </tr>
+                        </c:forEach>
+                     </table>
+                  </c:otherwise>
+               </c:choose>
+            </div>
+         </div>
+      </c:forEach>
 		</div>
 		<div id = "showPrice">
 		 <p id = "show" class="pricebreakup-link"> </p>

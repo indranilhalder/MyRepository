@@ -48,7 +48,7 @@ import com.tisl.mpl.shorturl.service.ShortUrlService;
 
 
 /**
- * Velocity context for a order notification email.
+ * Velocity context for a pan card reject email.
  */
 public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcessModel>
 {

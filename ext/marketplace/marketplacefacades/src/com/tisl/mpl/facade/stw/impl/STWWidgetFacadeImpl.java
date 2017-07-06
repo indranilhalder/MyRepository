@@ -34,7 +34,7 @@ import com.tisl.mpl.service.STWWidgetService;
 public class STWWidgetFacadeImpl implements STWWidgetFacade
 {
 
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private static final Logger LOG = Logger.getLogger(STWWidgetFacadeImpl.class);//sonar fix
 	private static String ZERO = "0";
 
 	private STWWidgetService stwWidgetService;

@@ -86,27 +86,18 @@
     p:mapping="mpljewelleryprice"
     p:converter-ref="batchMplprice_jewellery_product_approvalConverter"/>
     
-     <!-- Transformer for Product Approval when price is given Import -->      
-    <bean id="batchJewelleryHomedeliveryConverterMapping"
-    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mpljewelleryprice"
-    p:converter-ref="batchJewelleryHomedeliveryConverter"/>
-    
-     <bean id="batchJewelleryExpressdeliveryConverterMapping"
-    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mpljewelleryprice"
-    p:converter-ref="batchJewelleryExpressdeliveryConverter"/>
-    
-     <bean id="batchJewelleryCAndCdeliveryConverterMapping"
-    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mpljewelleryprice"
-    p:converter-ref="batchJewelleryCAndCdeliveryConverter"/>
-    
+         
     <!-- Transformer for JewelleryPriceRow Import -->
      <bean id="batchJewelleryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="mpljewelleryprice"
     p:converter-ref="batchJewelleryConverter"/>	 
+    
+      <!-- Transformer for Product Approval when price is given Import -->      
+    <bean id="batchJewelleryHomedeliveryConverterMapping"
+    class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+    p:mapping="mpljewelleryprice"
+    p:converter-ref="batchJewelleryHomedeliveryConverter"/>
  	 
  	  <!-- Transformer for Association Import -->
      <bean id="batchMplAssociationConverterMapping"
@@ -124,7 +115,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Staged']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 					# Set product approval status to Approved only for those products that have prices.
 					$approved=approvalstatus(code)[default='approved']
@@ -146,7 +137,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Staged']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -171,7 +162,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -188,7 +179,10 @@
             </value>
         </property>
         <property name="impexRow">
-            <value>;{4};{+1};{+0}</value>
+            <value>;{4};{+1};{+0};home-delivery
+            		;{5};{+1};{+0};express-delivery
+            		;{6};{+1};{+0};click-and-collect
+            		</value>
         </property>
         <!-- <property name="rowFilter">
 			<bean class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexRowFilter">
@@ -198,67 +192,16 @@
 		</property> -->
          </bean>
          
-         <bean id="batchJewelleryExpressdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
-        <property name="header">
-            <value>#{defaultImpexProductHeader}
-            	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
-					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
-
-					# Set product approval status to Approved only for those products that have prices.
-					$approved=approvalstatus(code)[default='approved']
-
-					$inCurrency=INR
-					$value=value[default='0.0']
-                    $homedelivery=deliveryMode(code)[unique=true][default='express-delivery'] 
-                    $zone=zone(code)[default='in']
-                    $currency=currency(isocode)[default=$inCurrency]
-                    $minimum=minimum[default='0.0']
-                    $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
-				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true];productCode[unique=true];$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
-            </value>
-        </property>
-        <property name="impexRow">
-            <value>;{5};{+1};{+0}</value>
-        </property>
-       <!--  <property name="rowFilter">
-			<bean class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexRowFilter">
-				Row Filter to check Price Greater than 0 
-				<property name="expression" value="Double.valueOf(row[5]) > 0"/>
-			</bean>
-		</property> -->
-         </bean>
+        <!-- Converter for Product Approval when price is given Import --> 
+        
      
-      <bean id="batchJewelleryCAndCdeliveryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
-        <property name="header">
-            <value>#{defaultImpexProductHeader}
-            	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
-					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
-
-					# Set product approval status to Approved only for those products that have prices.
-					$approved=approvalstatus(code)[default='approved']
-
-					$inCurrency=INR
-					$value=value[default='0.0']
-                    $homedelivery=deliveryMode(code)[unique=true][default='click-and-collect'] 
-                    $zone=zone(code)[default='in']
-                    $currency=currency(isocode)[default=$inCurrency]
-                    $minimum=minimum[default='0.0']
-                    $deliveryFulfillModes=deliveryFulfillModes(Code)[default='sship']
-				INSERT_UPDATE MplZoneDeliveryModeValue;$value;sellerArticleSKU[unique=true];productCode[unique=true];$homedelivery;$zone;$currency;$minimum;$deliveryFulfillModes
-            </value>
-        </property>
-        <property name="impexRow">
-            <value>;{6};{+1};{+0}</value>
-        </property>
-         </bean>
+      
                
         <bean id="batchJewelleryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Staged']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -278,7 +221,7 @@
 				<value>#{defaultImpexProductHeader}
 					$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Staged]
 					$approved=approvalstatus(code)[default='approved']
 					INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
 				</value>
@@ -293,7 +236,7 @@
 			<value>#{defaultImpexProductHeader}
 				$productCatalog=mplProductCatalog
 				$productCatalogName=Marketplace Product Catalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Staged]
 				$approved=approvalstatus(code)[default='approved']
 				INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
 			</value>

@@ -20,13 +20,13 @@ import javax.xml.bind.annotation.XmlType;
 { "transactionId", "interfaceType", "pancardPath", "pancardStatus" })
 public class OrderLine
 {
-	@XmlElement(name = "transactionId")
+	@XmlElement(name = "TransactionID")
 	private String transactionId;
-	@XmlElement(name = "interfaceType")
+	@XmlElement(name = "InterfaceType")
 	private String interfaceType;
-	@XmlElement(name = "pancardPath")
+	@XmlElement(name = "PANCARDPATH")
 	private String pancardPath;
-	@XmlElement(name = "pancardStatus")
+	@XmlElement(name = "PANCARDSTATUS")
 	private String pancardStatus;
 
 	/**

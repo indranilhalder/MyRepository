@@ -516,15 +516,29 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		final ProductModel productModel = source.getProduct();
 		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
 
-		// TO-DO
 		for (final SellerInformationModel sellerInformationModel : sellerInfo)
 		{
 			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 			{
 				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
 						.getSelectedUSSID());
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+					{
+						final SellerInformationData sellerInfoData = new SellerInformationData();
+						sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+						sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+						sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+						target.setSelectedSellerInformation(sellerInfoData);
+						break;
+					}
+				}
+			}
 
-				if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+			else
+			{
+				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
 				{
 					final SellerInformationData sellerInfoData = new SellerInformationData();
 					sellerInfoData.setSellername(sellerInformationModel.getSellerName());

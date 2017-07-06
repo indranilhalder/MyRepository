@@ -1678,7 +1678,9 @@ public class CartsController extends BaseCommerceController
 
 				try
 				{
-					cartFacade.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
+					//TPR-1083 Online Exchange facilities to the customer for Large Appliances
+					//	cartFacade.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
+					mplCartWebService.restoreAnonymousCartAndMerge(oldCartId, toMergeCartGuid);
 					cart = getSessionCart();
 					if (null != cart && StringUtils.isNotEmpty(cart.getCode()))
 					{
@@ -1976,9 +1978,8 @@ public class CartsController extends BaseCommerceController
 					LOG.debug("************ get cart details mobile web service *********" + cartId);
 				}
 				cartDataDetails = mplCartWebService.getCartDetails(cartId, addressListDTO, pincode, channel);
-				//TPR-6117
-				//				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
-				//				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
+				cartDataDetails.setMaxAllowed(maximum_configured_quantiy);
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -2272,8 +2273,13 @@ public class CartsController extends BaseCommerceController
 							////////
 							gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
 
+							//TPR-1083
+							if (StringUtils.isNotEmpty(abstractOrderEntry.getExchangeId()))
+							{
+								gwlp.setMaxQuantityAllowed(MarketplacewebservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE);
+							}
 							//TPR-6117 STARTS
-							if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
+							else if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
 									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
 									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
 							{
@@ -2697,7 +2703,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 * 
+			 *
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */

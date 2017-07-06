@@ -166,74 +166,77 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 						}
 					}
 				}
-				for (final JewelleryInformationModel jInfo : jewelleryInfoList)
+				if (null != jPrice.getTotalDiamondValue())
 				{
-					if (null != jInfo.getPIMAttributeId())
+					for (final JewelleryInformationModel jInfo : jewelleryInfoList)
 					{
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry1"))
+						if (null != jInfo.getPIMAttributeId())
 						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType1())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry1"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType1().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType1())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType1().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
-						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry2"))
-						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType2())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry2"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType2().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType2())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType2().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
-						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry3"))
-						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType3())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry3"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType3().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType3())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType3().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
-						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry4"))
-						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType4())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry4"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType4().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType4())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType4().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
-						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry5"))
-						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType5())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry5"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType5().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType5())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType5().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
-						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry6"))
-						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType6())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry6"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType6().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType6())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType6().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
-						}
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry7"))
-						{
-							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType7())
+							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry7"))
 							{
-								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType7().toString();
-								diamondWeightRateList.add(key);
+								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType7())
+								{
+									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType7().toString();
+									diamondWeightRateList.add(key);
+								}
 							}
 						}
 					}
+					final PriceData diamondprice = createPriceSign(PriceDataType.BUY,
+							new BigDecimal(jPrice.getTotalDiamondValue().doubleValue()), commonI18NService.getCurrency(INR));
+					diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
+					diamondPriceData.setPrice(diamondprice);
+					diamondPriceData.setWeightRateList(diamondWeightRateList);
+					priceBreakupDataList.add(diamondPriceData);
 				}
-				final PriceData diamondprice = createPriceSign(PriceDataType.BUY,
-						new BigDecimal(jPrice.getTotalDiamondValue().doubleValue()), commonI18NService.getCurrency(INR));
-				diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
-				diamondPriceData.setPrice(diamondprice);
-				diamondPriceData.setWeightRateList(diamondWeightRateList);
-				priceBreakupDataList.add(diamondPriceData);
 
 				if (null != jPrice.getTotalStoneValue())
 				{

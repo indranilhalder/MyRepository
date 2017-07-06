@@ -39,6 +39,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
+import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
@@ -282,15 +283,15 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	/*
@@ -565,11 +566,11 @@ public interface MplCartFacade extends CartFacade
 
 
 	/* *
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @param mplSelectedEDDInfo
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
@@ -633,8 +634,8 @@ public interface MplCartFacade extends CartFacade
 	 * @return boolean
 	 */
 	//boolean UpdateCartOnMaxLimExceeds(CartModel cartModel);
-	Map<String, String> updateCartOnMaxLimExceeds(CartModel cartModel);
 
+	Map<String, MaxLimitData> updateCartOnMaxLimExceeds(CartModel cartModel);
 	//TPR-5346 ENDS
 
 	/**
@@ -663,4 +664,10 @@ public interface MplCartFacade extends CartFacade
 	 */
 	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData,
 			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+
+	/**
+	 * @param cartModel
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void setCartSubTotalForReviewOrder(CartModel cartModel) throws EtailNonBusinessExceptions;
 }

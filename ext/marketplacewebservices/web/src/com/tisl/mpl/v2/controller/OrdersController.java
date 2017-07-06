@@ -35,6 +35,7 @@ import de.hybris.platform.commercewebservicescommons.errors.exceptions.Webservic
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.strategies.CartLoaderStrategy;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -117,6 +118,7 @@ import com.tisl.mpl.facades.data.ScheduledDeliveryData;
 import com.tisl.mpl.facades.data.StatusRecordData;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.facades.product.data.SendInvoiceData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -142,6 +144,8 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
+
+
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
  * and are restricted to https channel.
@@ -228,17 +232,20 @@ public class OrdersController extends BaseCommerceController
 	private MplSellerInformationService mplSellerInformationService;
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
-	
+
 	@Autowired
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
-	
+
 	@Autowired
 	private MplDeliveryAddressComparator mplDeliveryAddressComparator;
 	@Autowired
 	private CancelReturnFacade cancelReturnFacade;
 	@Autowired
 	private DateUtilHelper dateUtilHelper;
-	
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 
 	/**
 	 * @return the mplSellerInformationService
@@ -713,6 +720,16 @@ public class OrdersController extends BaseCommerceController
 				{
 					orderWsDTO.setPickupPersonMobile(orderDetail.getPickupPhoneNumber());
 				}
+
+				//TPR-6117 exchange field added
+
+				for (final OrderEntryData entry : orderDetail.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+					{
+						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+					}
+				}
 				/*
 				 * if (orderDetail.getTotalPriceWithTax() != null) {
 				 * orderWsDTO.setFinalAmount(orderDetail.getTotalPriceWithTax().getValue().toString()); } if
@@ -722,6 +739,16 @@ public class OrdersController extends BaseCommerceController
 				 * null != orderDetail.getTotalPrice()) { discount = (orderDetail.getSubTotal().getValue().doubleValue() -
 				 * orderDetail.getTotalPrice().getValue() .doubleValue()); }
 				 */
+
+				//TPR-6117 exchange field added
+
+				for (final OrderEntryData entry : orderDetail.getEntries())
+				{
+					if (StringUtils.isNotEmpty(entry.getExchangeApplied()))
+					{
+						orderWsDTO.setExchangeId(entry.getExchangeApplied());
+					}
+				}
 				if (orderDetail.getDeliveryCost() != null)
 				{
 					deliveryTotal = orderDetail.getDeliveryCost().getValue().doubleValue();
@@ -824,16 +851,18 @@ public class OrdersController extends BaseCommerceController
 								orderProductDTO.setProductColour(product.getColour());
 							}
 							/* capacity */
-						  // R2.3 ChangesStart Bug ID TISRLUAT-1134 Start 17-03-2017
-							if(entry.getSelectedDeliverySlotDate()!=null)
+							// R2.3 ChangesStart Bug ID TISRLUAT-1134 Start 17-03-2017
+							if (entry.getSelectedDeliverySlotDate() != null)
 							{
 								orderProductDTO.setScheduleDeliveryDate(entry.getSelectedDeliverySlotDate());
-								if(StringUtils.isNotEmpty(entry.getTimeSlotFrom()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom())){
-										orderProductDTO.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+								if (StringUtils.isNotEmpty(entry.getTimeSlotFrom()) && StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
+								{
+									orderProductDTO.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ")
+											.concat(entry.getTimeSlotTo()));
 								}
 							}
-							//R2.3 Changes End 
-							
+							//R2.3 Changes End
+
 							ProductModel productModel = null;
 							if (null != entry.getProduct() && null != entry.getProduct().getCode())
 							{
@@ -864,7 +893,27 @@ public class OrdersController extends BaseCommerceController
 							String fulfillmentType = null;
 							if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 							{
-								sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+								//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+
+								if (productModel.getProductCategoryType().equalsIgnoreCase(
+										MarketplacecommerceservicesConstants.FINEJEWELLERY))
+								{
+									final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+											.getSelectedUssid());
+									if (CollectionUtils.isNotEmpty(jewelleryInfo))
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+												jewelleryInfo.get(0).getPCMUSSID());
+									}
+									else
+									{
+										LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+									}
+								}
+								else
+								{
+									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+								}
 							}
 							if (sellerInfoModel != null
 									&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
@@ -877,8 +926,10 @@ public class OrdersController extends BaseCommerceController
 								{
 									orderProductDTO.setFulfillment(fulfillmentType);
 								}
-								for ( AbstractOrderEntryModel orderEntry : orderModel.getEntries()) {
-									if(entry.getSelectedUssid().equalsIgnoreCase(entry.getSelectedUssid())){
+								for (final AbstractOrderEntryModel orderEntry : orderModel.getEntries())
+								{
+									if (entry.getSelectedUssid().equalsIgnoreCase(entry.getSelectedUssid()))
+									{
 										orderProductDTO.setFulfillment(orderEntry.getFulfillmentMode());
 									}
 								}
@@ -986,7 +1037,24 @@ public class OrdersController extends BaseCommerceController
 		SellerInformationModel sellerInfoModel = null;
 		if (StringUtils.isNotEmpty(product.getSelectedUssid()))
 		{
-			sellerInfoModel = getMplSellerInformationService().getSellerDetail(product.getSelectedUssid());
+			//sellerInfoModel = getMplSellerInformationService().getSellerDetail(product.getSelectedUssid());
+			if (product.getProduct().getRootCategory().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+			{
+				String ussid = "";
+				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(product
+						.getSelectedUssid());
+				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+				{
+					ussid = jewelleryInfo.get(0).getPCMUSSID();
+				}
+				LOG.debug("pcm ussid : " + ussid);
+				sellerInfoModel = getMplSellerInformationService().getSellerDetail(ussid);
+
+			}
+			else
+			{
+				sellerInfoModel = getMplSellerInformationService().getSellerDetail(product.getSelectedUssid());
+			}
 
 			if (null != sellerInfoModel && StringUtils.isNotEmpty(sellerInfoModel.getSellerID()))
 			{
@@ -1194,12 +1262,13 @@ public class OrdersController extends BaseCommerceController
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/users/{userId}/getSelectedOrder/{orderCode}", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderTrackingWsDTO getOrdertracking(final HttpServletRequest request, @PathVariable final String orderCode, @PathVariable final String userId)
+	public OrderTrackingWsDTO getOrdertracking(final HttpServletRequest request, @PathVariable final String orderCode,
+			@PathVariable final String userId)
 	{
 		OrderTrackingWsDTO orderTrackingWsDTO = new OrderTrackingWsDTO();
 		try
 		{
-			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request,orderCode);
+			orderTrackingWsDTO = getOrderDetailsFacade.getOrderDetailsWithTracking(request, orderCode);
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -1639,36 +1708,37 @@ public class OrdersController extends BaseCommerceController
 
 
 	}
-	
+
 	//R2.3 FLO1 Added new Controller Method Change Delivery Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST,consumes =
-		{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@RequestMapping(value = "/users/{userId}/changeDeliveryAddress/{orderCode}", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
 	public MplDeliveryAddressResponseWsDTO changeDeliveryAddress(@PathVariable final String orderCode,
-			@RequestBody AddressData newAddressData) throws WebserviceValidationException
+			@RequestBody final AddressData newAddressData) throws WebserviceValidationException
 	{
-		MplDeliveryAddressResponseWsDTO mplDeliveryAddressResponseWsDTO = new MplDeliveryAddressResponseWsDTO();
+		final MplDeliveryAddressResponseWsDTO mplDeliveryAddressResponseWsDTO = new MplDeliveryAddressResponseWsDTO();
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("MplDeliveryAddress change request: OrderCode=" + sanitize(orderCode));
 		}
 		try
 		{
-			OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
-			
+			final OrderData orderData = mplCheckoutFacade.getOrderDetailsForCode(orderCode);
+
 			//address
-			boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(), newAddressData);
-			boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
+			final boolean isAddressChanged = mplDeliveryAddressComparator.compareAddress(orderData.getDeliveryAddress(),
+					newAddressData);
+			final boolean isContactDetails = mplDeliveryAddressComparator.compareContactDetails(orderData.getDeliveryAddress(),
 					newAddressData);
 			if (isAddressChanged || isContactDetails)
 			{
-				//checking pincode changed  
+				//checking pincode changed
 				if (StringUtils.isNotEmpty(newAddressData.getPostalCode())
 						&& !newAddressData.getPostalCode().equalsIgnoreCase(orderData.getDeliveryAddress().getPostalCode()))
 				{
-					ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(orderCode,
+					final ScheduledDeliveryData scheduledDeliveryData = mplDeliveryAddressFacade.getScheduledDeliveryData(orderCode,
 							newAddressData);
 					if (scheduledDeliveryData != null)
 					{
@@ -1677,26 +1747,28 @@ public class OrdersController extends BaseCommerceController
 								.booleanValue());
 						if (scheduledDeliveryData.getIsPincodeServiceable().booleanValue())
 						{
-							List<MplSDInfoWsDTO> mplSDInfoWsDTO = mplDeliveryAddressFacade.getSDDatesMobile(scheduledDeliveryData
+							final List<MplSDInfoWsDTO> mplSDInfoWsDTO = mplDeliveryAddressFacade.getSDDatesMobile(scheduledDeliveryData
 									.getEntries());
 							mplDeliveryAddressResponseWsDTO.setEstimateDeliveryDateInfo(mplSDInfoWsDTO);
 						}
 					}
 					else
 					{
-						boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
+						final boolean isServiceable = mplDeliveryAddressFacade.pincodeServiceableCheck(newAddressData, orderCode);
 						mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(isServiceable);
 						mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
 					}
 				}
 				else
 				{
-					mplDeliveryAddressFacade.newOTPRequest(orderCode,true,newAddressData.getPhone());
+					mplDeliveryAddressFacade.newOTPRequest(orderCode, true, newAddressData.getPhone());
 					mplDeliveryAddressResponseWsDTO.setIsScheduled(false);
 					mplDeliveryAddressResponseWsDTO.setIsPincodeServiceable(true);
 				}
 				mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			}else{
+			}
+			else
+			{
 				mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ADDRESS_NOT_CHANGED);
 			}
 		}
@@ -1710,8 +1782,8 @@ public class OrdersController extends BaseCommerceController
 			if (null != e.getErrorCode())
 			{
 				mplDeliveryAddressResponseWsDTO.setErrorCode(e.getErrorCode());
-	 		}
-          mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+			mplDeliveryAddressResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -1738,17 +1810,18 @@ public class OrdersController extends BaseCommerceController
 	}
 
 
-	
+
 	//R2.3 FL01 :Changed Delivery Address Saved Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	@RequestMapping(value = "/users/{userId}/validateOTP/{orderCode}", method = RequestMethod.POST,consumes =
-		{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	@RequestMapping(value = "/users/{userId}/validateOTP/{orderCode}", method = RequestMethod.POST, consumes =
+	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public WebSerResponseWsDTO submitChangeDeliveryAddress(@PathVariable final String orderCode,@RequestBody final MplDeliveryAddressRequestWsDTO newAddressData) throws WebserviceValidationException
+	public WebSerResponseWsDTO submitChangeDeliveryAddress(@PathVariable final String orderCode,
+			@RequestBody final MplDeliveryAddressRequestWsDTO newAddressData) throws WebserviceValidationException
 	{
-		
-		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+
+		final WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
 		try
 		{
 			String validateOTPMesg = null;
@@ -1756,31 +1829,32 @@ public class OrdersController extends BaseCommerceController
 			if (newAddressData != null && StringUtils.isNotEmpty(newAddressData.getOtpNumber()) && StringUtils.isNotEmpty(orderCode))
 			{
 				final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
-				CustomerModel customerModel = (CustomerModel) orderModel.getUser();
+				final CustomerModel customerModel = (CustomerModel) orderModel.getUser();
 
 				LOG.debug("OTP Validation Request through Mobile App");
-				OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerModel.getUid(),
+				final OTPResponseData otpResponse = mplDeliveryAddressFacade.validateOTP(customerModel.getUid(),
 						newAddressData.getOtpNumber());
 				if (otpResponse.getOTPValid().booleanValue())
 				{
-					AddressData newAddress = newAddressData.getChangedAddress();
+					final AddressData newAddress = newAddressData.getChangedAddress();
 					List<TransactionSDDto> transactionSDDtoList = null;
-					RescheduleDataList reScheduleMobileData=null;
-					if(CollectionUtils.isNotEmpty(newAddressData.getRescheduleData())){
-						 reScheduleMobileData = new RescheduleDataList();
-						reScheduleMobileData.setRescheduleDataList(newAddressData.getRescheduleData());
-					}
-					RescheduleDataList reScheduleDataList=null;
+					RescheduleDataList reScheduleMobileData = null;
 					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData()))
 					{
-						 reScheduleDataList = new RescheduleDataList();
+						reScheduleMobileData = new RescheduleDataList();
+						reScheduleMobileData.setRescheduleDataList(newAddressData.getRescheduleData());
+					}
+					RescheduleDataList reScheduleDataList = null;
+					if (CollectionUtils.isNotEmpty(newAddressData.getRescheduleData()))
+					{
+						reScheduleDataList = new RescheduleDataList();
 						reScheduleDataList.setRescheduleDataList(newAddressData.getRescheduleData());
 						transactionSDDtoList = mplDeliveryAddressFacade.reScheduleddeliveryDate(orderModel, reScheduleDataList);
 					}
 
 					validateOTPMesg = mplDeliveryAddressFacade.submitChangeDeliveryAddress(customerModel.getUid(), orderCode,
-							newAddress, true, transactionSDDtoList,reScheduleDataList);
-				
+							newAddress, true, transactionSDDtoList, reScheduleDataList);
+
 				}
 				else
 				{
@@ -1829,31 +1903,32 @@ public class OrdersController extends BaseCommerceController
 		}
 		return webSerResponseWsDTO;
 	}
-	
-	
-   //R2.3 FLO1 New OTP Request
+
+
+	//R2.3 FLO1 New OTP Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/users/{userId}/newOTPRequest/{orderCode}/{mobileNumber}", method = RequestMethod.POST)
 	@ResponseBody
-	public WebSerResponseWsDTO newOTPRequest(@PathVariable final String orderCode,@PathVariable final String mobileNumber) throws WebserviceValidationException
+	public WebSerResponseWsDTO newOTPRequest(@PathVariable final String orderCode, @PathVariable final String mobileNumber)
+			throws WebserviceValidationException
 	{
 		if (LOG.isDebugEnabled())
 		{
 			LOG.debug("Change delivery address new OTP requst : OrderCode=" + sanitize(orderCode));
 		}
-		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		final WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
 		try
 		{
 			if (StringUtils.isNotEmpty(orderCode))
 			{
-				mplDeliveryAddressFacade.newOTPRequest(orderCode,true,mobileNumber);
-			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+				mplDeliveryAddressFacade.newOTPRequest(orderCode, true, mobileNumber);
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 			}
 			else
 			{
-			   webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE_FLAG);
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9521);
 			}
 
@@ -1883,64 +1958,72 @@ public class OrdersController extends BaseCommerceController
 		}
 		return webSerResponseWsDTO;
 	}
-	
-//R2.3 Changes Developed 27-02-2017 start
+
+	//R2.3 Changes Developed 27-02-2017 start
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/users/{userId}/submitSelfCourierRetrunInfo", method = RequestMethod.POST)
 	@ResponseBody
-	public WebSerResponseWsDTO uploadSelfCourierReturnInfo(@RequestParam("file")
-   final MultipartFile multipartFile,@RequestParam("amount")
-   final String amount, @RequestParam("orderId")
-   final String orderId, @RequestParam("lpname")
-   final String lpname, @RequestParam("transactionId")
-   final String transactionId,@RequestParam("awbNumber")
-   final String awbNumber)
-			throws WebserviceValidationException
+	public WebSerResponseWsDTO uploadSelfCourierReturnInfo(@RequestParam("file") final MultipartFile multipartFile,
+			@RequestParam("amount") final String amount, @RequestParam("orderId") final String orderId,
+			@RequestParam("lpname") final String lpname, @RequestParam("transactionId") final String transactionId,
+			@RequestParam("awbNumber") final String awbNumber) throws WebserviceValidationException
 	{
-		WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
-		if (multipartFile == null || StringUtils.isEmpty(amount) || StringUtils.isEmpty(orderId)
-				|| StringUtils.isEmpty(lpname) || StringUtils.isEmpty(transactionId) || StringUtils.isEmpty(awbNumber))
+		final WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		if (multipartFile == null || StringUtils.isEmpty(amount) || StringUtils.isEmpty(orderId) || StringUtils.isEmpty(lpname)
+				|| StringUtils.isEmpty(transactionId) || StringUtils.isEmpty(awbNumber))
 		{
 			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.FAILURE);
 			return webSerResponseWsDTO;
 		}
 		try
 		{
-		
-		      LOG.debug("***************:"+multipartFile.getOriginalFilename()); 
-		      String fileUploadLocation=null;
-		      String shipmentCharge=null;
-		      String finalUrlForDispatchProof=null;
-		      //TISRLUAT-50
-				Double configShippingCharge = 0.0d;
-		      if(null!=configurationService){
-		      	fileUploadLocation=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
-		      	shipmentCharge=configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.SHIPMENT_CHARGE_AMOUNT);
-		      	if(null !=shipmentCharge && !shipmentCharge.isEmpty()){
-		      		configShippingCharge=Double.parseDouble(shipmentCharge);
-		      	}
-		      	
-		      	 if(null!=fileUploadLocation && !fileUploadLocation.isEmpty()){
-		      		 try{  
-		      	        byte barr[]=multipartFile.getBytes();  
-		      	        finalUrlForDispatchProof = getPoDUploadPath(fileUploadLocation, transactionId, multipartFile.getOriginalFilename()); //PRDI-151
-		      	        BufferedOutputStream bout=new BufferedOutputStream(  
-		      	                 new FileOutputStream(finalUrlForDispatchProof));  
-		      	        bout.write(barr);  
-		      	        bout.flush();  
-		      	        bout.close();  
-		      	        LOG.info("Txn ID: " + transactionId +  " >> Uploaded Proof of dispatch: " + finalUrlForDispatchProof);   
-					}catch(Exception e){
-					  LOG.error("Failed to upload PoD. Txnid: " + transactionId + " -- Path: " + finalUrlForDispatchProof + " -- Exception: " + e);   
-					}  
-		      	 }else {
-					LOG.error("Failed to upload Proof of dispatch. POD File Upload location is not configured: " + MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
-				 }
-			   }
-		      
-			OrderModel orderModel = orderModelService.getParentOrder(orderId);
-			RTSAndRSSReturnInfoRequestData returnInfoRequestData = new RTSAndRSSReturnInfoRequestData();
+
+			LOG.debug("***************:" + multipartFile.getOriginalFilename());
+			String fileUploadLocation = null;
+			String shipmentCharge = null;
+			String finalUrlForDispatchProof = null;
+			//TISRLUAT-50
+			Double configShippingCharge = 0.0d;
+			if (null != configurationService)
+			{
+				fileUploadLocation = configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+				shipmentCharge = configurationService.getConfiguration().getString(
+						MarketplacecommerceservicesConstants.SHIPMENT_CHARGE_AMOUNT);
+				if (null != shipmentCharge && !shipmentCharge.isEmpty())
+				{
+					configShippingCharge = Double.parseDouble(shipmentCharge);
+				}
+
+				if (null != fileUploadLocation && !fileUploadLocation.isEmpty())
+				{
+					try
+					{
+						final byte barr[] = multipartFile.getBytes();
+						finalUrlForDispatchProof = getPoDUploadPath(fileUploadLocation, transactionId,
+								multipartFile.getOriginalFilename()); //PRDI-151
+						final BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(finalUrlForDispatchProof));
+						bout.write(barr);
+						bout.flush();
+						bout.close();
+						LOG.info("Txn ID: " + transactionId + " >> Uploaded Proof of dispatch: " + finalUrlForDispatchProof);
+					}
+					catch (final Exception e)
+					{
+						LOG.error("Failed to upload PoD. Txnid: " + transactionId + " -- Path: " + finalUrlForDispatchProof
+								+ " -- Exception: " + e);
+					}
+				}
+				else
+				{
+					LOG.error("Failed to upload Proof of dispatch. POD File Upload location is not configured: "
+							+ MarketplacecommerceservicesConstants.FILE_UPLOAD_PATH);
+				}
+			}
+
+			final OrderModel orderModel = orderModelService.getParentOrder(orderId);
+			final RTSAndRSSReturnInfoRequestData returnInfoRequestData = new RTSAndRSSReturnInfoRequestData();
 			returnInfoRequestData.setAWBNum(awbNumber);
 			returnInfoRequestData.setLPNameOther(lpname);
 
@@ -1952,7 +2035,7 @@ public class OrdersController extends BaseCommerceController
 			returnInfoRequestData.setTransactionId(transactionId);
 			if (amount != null && !amount.isEmpty())
 			{
-				Double enterdShppingCharge = Double.parseDouble(amount);
+				final Double enterdShppingCharge = Double.parseDouble(amount);
 				if (enterdShppingCharge.doubleValue() < configShippingCharge.doubleValue())
 				{
 					returnInfoRequestData.setShipmentCharge(amount);
@@ -1964,19 +2047,19 @@ public class OrdersController extends BaseCommerceController
 			}
 			returnInfoRequestData.setShipmentProofURL(finalUrlForDispatchProof); //PRDI-151
 			returnInfoRequestData.setReturnType(MarketplacecommerceservicesConstants.RSS);
- 
-			//TISPRDT-984. Adding Try catch to handle Exception. 
+
+			//TISPRDT-984. Adding Try catch to handle Exception.
 			try
 			{
 				cancelReturnFacade.retrunInfoCallToOMS(returnInfoRequestData);
 			}
-			catch (EtailNonBusinessExceptions e)
+			catch (final EtailNonBusinessExceptions e)
 			{
 				LOG.error("Exception occurred for retrunInfoCallToOMS. OrderID: + " + orderId + "; Error = " + e);
 				throw e;
 			}
 
-			CustomerModel customerModel = (CustomerModel) orderModel.getUser();
+			final CustomerModel customerModel = (CustomerModel) orderModel.getUser();
 
 			CODSelfShipData codSelfShipData = null;
 			try
@@ -1987,7 +2070,7 @@ public class OrdersController extends BaseCommerceController
 					codSelfShipData = cancelReturnFacade.getCustomerBankDetailsByCustomerId(customerModel.getUid());
 				}
 			}
-			catch (EtailNonBusinessExceptions e)
+			catch (final EtailNonBusinessExceptions e)
 			{
 				LOG.error("Exception occured for fecting CUstomer Bank details for customer ID :" + customerModel.getUid()
 						+ " Actual Stack trace " + e);
@@ -1996,7 +2079,7 @@ public class OrdersController extends BaseCommerceController
 			{
 				final OrderData subOrderDetails = mplCheckoutFacade.getOrderDetailsForCode(orderId);
 
-				CODSelfShipData finalCODSelfShipData = new CODSelfShipData();
+				final CODSelfShipData finalCODSelfShipData = new CODSelfShipData();
 				if (null != codSelfShipData)
 				{
 					finalCODSelfShipData.setTitle(codSelfShipData.getTitle());
@@ -2023,7 +2106,7 @@ public class OrdersController extends BaseCommerceController
 					finalCODSelfShipData.setOrderTag(MarketplacecommerceservicesConstants.ORDERTAG_TYPE_PREPAID);
 				}
 
-				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+				final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 				finalCODSelfShipData.setAmount(returnInfoRequestData.getShipmentCharge());
 				finalCODSelfShipData.setOrderRefNo(orderId);
 				finalCODSelfShipData
@@ -2034,9 +2117,9 @@ public class OrdersController extends BaseCommerceController
 				finalCODSelfShipData.setTransactionType(MarketplacecommerceservicesConstants.INTERFACE_TYPE);
 				if (orderModel.getChildOrders().size() > 0)
 				{
-					for (OrderModel chileOrders : orderModel.getChildOrders())
+					for (final OrderModel chileOrders : orderModel.getChildOrders())
 					{
-						for (AbstractOrderEntryModel entry : chileOrders.getEntries())
+						for (final AbstractOrderEntryModel entry : chileOrders.getEntries())
 						{
 							if (entry.getTransactionID().equalsIgnoreCase(transactionId))
 							{
@@ -2055,35 +2138,35 @@ public class OrdersController extends BaseCommerceController
 				//TISPRDT-984. Adding try catch.
 				try
 				{
-					CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
+					final CODSelfShipResponseData responseData = cancelReturnFacade.codPaymentInfoToFICO(finalCODSelfShipData);
 
 					if (responseData.getSuccess() == null
 							|| !responseData.getSuccess().equalsIgnoreCase(MarketplacecommerceservicesConstants.SUCCESS))
 					{
-						//saving bank details failed payment details in commerce 
+						//saving bank details failed payment details in commerce
 						//TISPRDT-984. Adding try catch.
 						try
 						{
 							cancelReturnFacade.saveCODReturnsBankDetails(finalCODSelfShipData);
 						}
-						catch (Exception excpetion)
+						catch (final Exception excpetion)
 						{
 							LOG.warn("Warning   for while saving Customer Bank details for customer ID : it mo" + customerModel.getUid()
 									+ "; Order ID = " + orderId + "; Error = " + excpetion);
 						}
 					}
 				}
-				catch (Exception exception)
+				catch (final Exception exception)
 				{
 					LOG.warn("Warning while sending COD Payment info to FICO. Customer ID :" + customerModel.getUid()
 							+ "; Order ID = " + orderId + ";Error = " + exception);
 				}
 
 				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS);
-			   // isRefundalbe disable 
+				// isRefundalbe disable
 				LOG.info("REtrun page controller TransactionId::::::::    " + transactionId);
 				cancelReturnFacade.saveRTSAndRSSFInfoflag(transactionId);
-				
+
 			}
 			catch (final EtailBusinessExceptions e)
 			{
@@ -2120,26 +2203,32 @@ public class OrdersController extends BaseCommerceController
 
 		return webSerResponseWsDTO;
 	}
-	
+
 	/**
-	 * PRDI-151
-	 * Return the full absolute POD Upload path. 
-	 * @param fileUploadLocation 	/orderdocs/dispatchproof - cannot be null or blank. 
-	 * @param transactionId 		Txn id. Cannot be null.
-	 * @param fileName 				Orginal file name. Cannot be null.
-	 * @return - Returns the final absolute upload path of the PoD. Including file name. 
+	 * PRDI-151 Return the full absolute POD Upload path.
+	 *
+	 * @param fileUploadLocation
+	 *           /orderdocs/dispatchproof - cannot be null or blank.
+	 * @param transactionId
+	 *           Txn id. Cannot be null.
+	 * @param fileName
+	 *           Orginal file name. Cannot be null.
+	 * @return - Returns the final absolute upload path of the PoD. Including file name.
 	 */
-	private String getPoDUploadPath(final String fileUploadLocation, final String transactionId, final String fileName){
+	private String getPoDUploadPath(final String fileUploadLocation, final String transactionId, final String fileName)
+	{
 		String date = null;
 		Path path = null;
-		StringBuffer buffer = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		final SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd");
-		String typeOfReturn = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.TYPE_OF_RETURN_FOR_RSS);
-		try{
+		final String typeOfReturn = configurationService.getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TYPE_OF_RETURN_FOR_RSS);
+		try
+		{
 			date = sdf.format(new Date());
 			path = Paths.get(fileUploadLocation + File.separator + date);
 			//if directory exists?
-			//"fileUploadLocation", transactionId and fileName cannot be null or blank. 
+			//"fileUploadLocation", transactionId and fileName cannot be null or blank.
 			if (!Files.exists(path))
 			{
 				try
@@ -2152,7 +2241,9 @@ public class OrdersController extends BaseCommerceController
 					LOG.error("Exception, while creating the Directory: " + path + " -- " + e);
 				}
 			}
-		}catch(final Exception ex){
+		}
+		catch (final Exception ex)
+		{
 			LOG.error("Exception, While calculating the upload path: " + ex);
 		}
 		return buffer.append(path).append(File.separator).append(typeOfReturn).append(transactionId).append(fileName).toString();

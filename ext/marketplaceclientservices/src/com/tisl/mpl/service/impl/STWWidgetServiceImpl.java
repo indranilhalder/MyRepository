@@ -24,7 +24,7 @@ import com.tisl.mpl.service.STWWidgetService;
  */
 public class STWWidgetServiceImpl implements STWWidgetService
 {
-	Logger LOG = Logger.getLogger(this.getClass().getName());
+	private static final Logger LOG = Logger.getLogger(STWWidgetServiceImpl.class);//sonar fix
 	private String use;
 	private String domain;
 	private String method;
@@ -35,6 +35,8 @@ public class STWWidgetServiceImpl implements STWWidgetService
 	private static final String AMPERSAND = "&";
 	private static final String QUESTION = "?";
 	private static final String SLASH = "/";
+	private static final String NEW_LINE="\n";
+	
 
 	SocketAddress addr = null;
 	Proxy proxy = null;
@@ -49,7 +51,7 @@ public class STWWidgetServiceImpl implements STWWidgetService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.STWWidgetService#callSTWService()
 	 */
 
@@ -223,10 +225,11 @@ public class STWWidgetServiceImpl implements STWWidgetService
 					String readLine;
 					while ((readLine = br.readLine()) != null)
 					{
-						sb.append(readLine + "\n");
+						sb.append(readLine + NEW_LINE);
 					}
 					br.close();
 					return sb.toString();
+				default://Sonar Fix	
 			}
 
 		}

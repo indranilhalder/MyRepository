@@ -33,5 +33,11 @@ public interface MplJewelleryService
 	 */
 	public List<String> getWeightVarientUssid(String ussid);
 
+	/**
+	 * @param code
+	 * @return
+	 */
+	public String getPanCardStatus(String orderLineId);
+
 
 }

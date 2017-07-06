@@ -83,6 +83,8 @@
 													<span class="name commercial" for="radio_${deliveryAddress.id}"> <spring:theme
 															code="checkout.multi.deliveryAddress.commercialAddress"
 															text="Commercial Addresses" />
+															<c:out
+															value="${countWork}"></c:out>
 													</span>
 	
 													<c:set var='countWork' value='${countWork+1}' />
@@ -252,9 +254,4 @@
 			<div class="new-address-form-mobile"></div>
 		</div>
 	</c:if>
-
-
-<script>
-$(".mobileNotDefaultDelAddress").hide();
-</script>
 </div>

@@ -46,7 +46,9 @@ public interface BuyBoxDao
 	RichAttributeModel getRichAttributeData(String ussid) throws EtailNonBusinessExceptions;
 
 	//get seller details
-	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	//CKD: TPR-3809
+	//Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode,String prodCatType) throws EtailNonBusinessExceptions;
 
 	public List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
 
@@ -68,6 +70,7 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String pdpproduct) throws EtailNonBusinessExceptions;
+
 	/**
 	 * @param sellerArticleSKUList
 	 * @return
@@ -80,6 +83,7 @@ public interface BuyBoxDao
 
 	// TISPRD-8944
 	List<BuyBoxModel> buyBoxPriceMobile(String ProductCode) throws EtailNonBusinessExceptions;
+
 	/**
 	 * TPR-5712 dao to get price for all the sellers
 	 *
@@ -87,8 +91,20 @@ public interface BuyBoxDao
 	 * @return
 	 */
 	public List<BuyBoxModel> buyBoxPriceForAllSeller(final String productCode);
+
 	//for fine jewellery pdp
 	public ProductModel getProductDetailsByProductCode(final String productcode);
 
+	/**
+	 * @param ussID
+	 * @return
+	 */
+	public List<BuyBoxModel> buyboxPriceForJewelleryWithVariant(String ussID);
+
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	String findPussid(String selectedUSSID);
 
 }

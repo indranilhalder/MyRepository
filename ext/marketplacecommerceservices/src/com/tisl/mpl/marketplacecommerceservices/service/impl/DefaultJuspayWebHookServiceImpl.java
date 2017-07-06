@@ -1724,11 +1724,12 @@ public class DefaultJuspayWebHookServiceImpl implements JuspayWebHookService
 	 * @param orderGuid
 	 * @return boolean
 	 */
-	private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions
+	//commented for SONAR FIX
+	/*private OrderModel getParentOrder(final String orderGuid) throws EtailNonBusinessExceptions
 	{
 		return getJuspayWebHookDao().fetchOrderOnGUID(orderGuid);
 
-	}
+	}*/
 	/**
 	 * To check whether there is a parent order status exists for the guid against which Payment took place
 	 *

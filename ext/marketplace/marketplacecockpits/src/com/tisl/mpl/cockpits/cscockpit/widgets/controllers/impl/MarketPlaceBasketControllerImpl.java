@@ -406,7 +406,20 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 	
 						// refer TIS-276 for details
 						
-						cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						//CKD:TPR-3809
+						//cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						if(null!=cartEntry.getProduct().getProductCategoryType()&&cartEntry.getProduct().getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)){
+							String pussid= buyBoxFacade.findPussid(cartEntry.getSelectedUSSID());
+							if(StringUtils.isNotEmpty(pussid)){
+								cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(pussid));
+							}else{
+								LOG.error("Unable to find parent USSID for cart:"+cart.getGuid()+" for USSID: " +cartEntry.getSelectedUSSID());
+							}
+							
+						}
+						else{
+							cartSoftReservationRequestData.setFulfillmentType(mplFindDeliveryFulfillModeStrategy.findDeliveryFulfillMode(cartEntry.getSelectedUSSID()));
+						}
 						//cartSoftReservationRequestData.setServiceableSlaves(cartEntry.getv\);
 						//	final List<PinCodeResponseData> pincoderesponseDataList = getSessionService().getAttribute(
 						//		MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
@@ -771,10 +784,10 @@ public class MarketPlaceBasketControllerImpl extends DefaultBasketController
 		for (AbstractOrderEntryModel cartEntry : cartModel.getEntries()) {
 			if(cartEntry.getPrevDelCharge()>0)
 			{
-				cartDeliveryCost+=cartEntry.getPrevDelCharge();
+				cartDeliveryCost+=cartEntry.getPrevDelCharge()*cartEntry.getQuantity();//*cartEntry.getQuantity() added for PRDI-379 
 			}else{
 			       if(null != cartEntry.getMplDeliveryMode()){//Null check for TISSQAEE-441
-				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue();
+				cartDeliveryCost+=cartEntry.getMplDeliveryMode().getValue()*cartEntry.getQuantity();//*cartEntry.getQuantity() added for PRDI-379 
 			          }	
 			}
 			if(null != cartEntry.getScheduledDeliveryCharge() && cartEntry.getScheduledDeliveryCharge()>0.0D) {

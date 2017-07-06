@@ -444,7 +444,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	{
 		final List<PincodeServiceData> requestData = new WeakArrayList<>();
 		PincodeServiceData data = null;
-		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		//CKD: TPR-3809
+		//final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode(),productModel.getProductCategoryType());
 		try
 		{
 			final List<BuyBoxModel> lst = buyBoxService.getBuyboxPricesForSearch(productModel.getCode());
@@ -676,7 +678,9 @@ public class MarketplaceServiceabilityCheckHelperImpl implements MarketplaceServ
 	@Override
 	public List<SellerInformationData> getSellerInformation(final ProductModel productModel)
 	{
-		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		//CKD: TPR-3809
+		//final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode());
+		final List<SellerInformationData> sellers = buyBoxFacade.getsellersDetails(productModel.getCode(),productModel.getProductCategoryType());
 		return sellers;
 
 	}

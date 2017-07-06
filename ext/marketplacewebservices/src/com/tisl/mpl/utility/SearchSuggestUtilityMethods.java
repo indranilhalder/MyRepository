@@ -9,6 +9,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
@@ -656,7 +658,8 @@ public class SearchSuggestUtilityMethods
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
 
-
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 		//ProductData productDataImage = null;
 
 		for (final ProductData productData : searchPageData.getResults())
@@ -683,20 +686,11 @@ public class SearchSuggestUtilityMethods
 				 */
 
 				//TPR-796
-				/*try
-				{
-					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
-					ExceptionUtil.getCustomizedExceptionTrace(e);
-					continue;
-				}*/
-
-				
-
-
+				/*
+				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
+				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
+				 */
 
 				//TPR-796
 				try
@@ -709,7 +703,6 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
-
 
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
@@ -824,13 +817,35 @@ public class SearchSuggestUtilityMethods
 					sellingItemDetail.setMrpPrice(productData.getProductMRP());
 				}
 				// Below codes are commented for channel specific promotion
-
-				/*
-				 * if (null != productData.getPrice()) { sellingItemDetail.setSellingPrice(productData.getPrice()); }
-				 */
-				if (null != productData.getMobileprice())
+				if (specialMobileFlag && null != productData.getMobileprice())
 				{
 					sellingItemDetail.setSellingPrice(productData.getMobileprice());
+				}
+				else if (!specialMobileFlag && null != productData.getPrice()) //backward compatible
+				{
+					sellingItemDetail.setSellingPrice(productData.getPrice());
+				}
+
+				//added for jewellery mobile web services:maxSellingPrice & minSellingPrice
+				if (null != productData.getProductCategoryType()
+						&& MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getProductCategoryType()))
+				{
+					PriceData pDataMax = new PriceData();
+					PriceData pDataMin = new PriceData();
+					final BuyBoxModel buyBoxData = productDetailsHelper.buyboxPriceForJewelleryWithVariant(productData.getUssID());
+					if (null != buyBoxData)
+					{
+						if (null != buyBoxData.getPLPMaxPrice())
+						{
+							pDataMax = productDetailsHelper.formPriceData(new Double(buyBoxData.getPLPMaxPrice().doubleValue()));
+						}
+						if (null != buyBoxData.getPLPMinPrice())
+						{
+							pDataMin = productDetailsHelper.formPriceData(new Double(buyBoxData.getPLPMinPrice().doubleValue()));
+						}
+					}
+					sellingItemDetail.setMaxSellingPrice(pDataMax);
+					sellingItemDetail.setMinSellingPrice(pDataMin);
 				}
 
 				if (null != productData.getInStockFlag())
@@ -1019,21 +1034,21 @@ public class SearchSuggestUtilityMethods
 					{
 						for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 						{
-							if (oldL1Filter.getCategoryCode()
-									.equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+							if (oldL1Filter.getCategoryCode().equals(
+									foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 							{
 								for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
 								{
-									if (oldL2DepartFilter.getCategoryCode()
-											.equals(foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
+									if (oldL2DepartFilter.getCategoryCode().equals(
+											foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
 									{
 										for (final DepartmentFilterWsDto oldL3DepartFilter : oldL2DepartFilter.getChildFilters())
 										{
-											if (oldL3DepartFilter.getCategoryCode()
-													.equals(foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
+											if (oldL3DepartFilter.getCategoryCode().equals(
+													foundDeparts[3].split(MarketplacecommerceservicesConstants.COLON)[0]))
 											{
-												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(
-														foundDeparts[4].split(":"));
+												final DepartmentFilterWsDto newDepartmentFilter = getDepartmentFilter(foundDeparts[4]
+														.split(":"));
 												if (oldL3DepartFilter.getChildFilters() != null
 														&& !oldL3DepartFilter.getChildFilters().isEmpty())
 												{
@@ -1059,8 +1074,9 @@ public class SearchSuggestUtilityMethods
 					final String[] foundDeparts = departmentFil.split(MarketplacecommerceservicesConstants.SPLITSTRING);
 					for (final DepartmentFilterWsDto oldL1Filter : departmentHierarchy.getFilters())
 					{
-						if (null != oldL1Filter.getCategoryCode() && oldL1Filter.getCategoryCode()
-								.equals(foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
+						if (null != oldL1Filter.getCategoryCode()
+								&& oldL1Filter.getCategoryCode().equals(
+										foundDeparts[1].split(MarketplacecommerceservicesConstants.COLON)[0]))
 						{
 							final DepartmentFilterWsDto l2DepartFilter = new DepartmentFilterWsDto();
 							final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
@@ -1131,8 +1147,8 @@ public class SearchSuggestUtilityMethods
 								l2List.add(l2DepartFilter);
 								oldL1Filter.setChildFilters(l2List);
 							}
-							traversedDepartments
-									.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L1));
+							traversedDepartments.addAll(concateDepartmentString(departmentFil,
+									MarketplacecommerceservicesConstants.DEPT_L1));
 						}
 					}
 
@@ -1146,8 +1162,8 @@ public class SearchSuggestUtilityMethods
 						{
 							for (final DepartmentFilterWsDto oldL2DepartFilter : oldL1Filter.getChildFilters())
 							{
-								if (oldL2DepartFilter.getCategoryCode()
-										.equals(foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
+								if (oldL2DepartFilter.getCategoryCode().equals(
+										foundDeparts[2].split(MarketplacecommerceservicesConstants.COLON)[0]))
 								{
 									final DepartmentFilterWsDto l3DepartFilter = new DepartmentFilterWsDto();
 									List<DepartmentFilterWsDto> l4List = new ArrayList<DepartmentFilterWsDto>();
@@ -1195,8 +1211,8 @@ public class SearchSuggestUtilityMethods
 											l3List.add(l3DepartFilter);
 											oldL2DepartFilter.setChildFilters(l3List);
 										}
-										traversedDepartments
-												.addAll(concateDepartmentString(departmentFil, MarketplacecommerceservicesConstants.DEPT_L2));
+										traversedDepartments.addAll(concateDepartmentString(departmentFil,
+												MarketplacecommerceservicesConstants.DEPT_L2));
 
 									}
 								}
@@ -1450,8 +1466,8 @@ public class SearchSuggestUtilityMethods
 							facetValueWsDTO.setCount(Long.valueOf(values.getCount()));
 
 							//If facet name is "Include out of stock"  value will be false
-							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode())
-									&& values.getCode().equalsIgnoreCase("false")))
+							if (!(null != values.getCode() && StringUtils.isNotEmpty(values.getCode()) && values.getCode()
+									.equalsIgnoreCase("false")))
 							{
 								facetValueWsDTOList.add(facetValueWsDTO);
 							}

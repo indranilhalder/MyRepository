@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.pancard.MplPancardDao;
+import com.tisl.mpl.marketplacecommerceservices.service.NotificationService;
 import com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService;
 import com.tisl.mpl.pojo.OrderLineResData;
 import com.tisl.mpl.pojo.PanCardResDTO;
@@ -56,6 +57,9 @@ public class MplPancardServiceImpl implements MplPancardService
 	@Resource(name = "mplPancardUploadserviceImpl")
 	private MplPancardUploadService mplPancardUploadserviceImpl;
 
+	@Resource(name = "notificationService")
+	private NotificationService notificationService;
+
 
 	/**
 	 * @return the mplPancardDao
@@ -76,7 +80,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getPanCardOrderId(java.lang.String)
 	 */
@@ -170,7 +174,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPancardDetailsService(de.hybris
 	 * .platform.core.model.PancardInformationModel, org.springframework.web.multipart.MultipartFile)
@@ -238,7 +242,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getCrmStatusForPancardDetailsFacade
 	 * (de.hybris.platform.core.model.PancardInformationModel)
@@ -264,7 +268,7 @@ public class MplPancardServiceImpl implements MplPancardService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPanCardDetailsAndPIcall(java.lang
 	 * .String, java.lang.String, java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
@@ -350,7 +354,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPanCardDetailsAndPIcall(de.
 	 * hybris.platform.core.model.PancardInformationModel, java.lang.String,
@@ -424,7 +428,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getOrderForCode(java.lang.String)
 	 */
 	@Override
@@ -436,18 +440,20 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPancardRes(com.tisl.mpl.pojo.
 	 * PanCardResDTO)
 	 */
 	@Override
-	public void setPancardRes(final PanCardResDTO resDTO)
+	public void setPancardRes(final PanCardResDTO resDTO) throws JAXBException
 	{
 		// YTODO Auto-generated method stub
 		final List<PancardInformationModel> pModel = getPanCardOrderId(resDTO.getOrderId());
 		final List<PancardInformationModel> pModelR = new ArrayList();
 		boolean isMailSent = false;
 		String pancardStatus = null;
+
+		final List<OrderModel> oModel = getOrderForCode(resDTO.getOrderId());
 
 		if (null != pModel)
 		{
@@ -480,8 +486,18 @@ public class MplPancardServiceImpl implements MplPancardService
 						}
 						else
 						{
-							//trigger mail
-							isMailSent = true;
+							//trigger mail for pancard reject
+							try
+							{
+								notificationService.triggerEmailAndSmsOnPancardReject(oModel.get(0));
+								isMailSent = true;
+							}
+							catch (final Exception e1)
+							{ // YTODO
+							  // Auto-generated catch block
+								LOG.error("Exception during sending mail >> " + e1.getMessage());
+							}
+
 							break;
 						}
 					}

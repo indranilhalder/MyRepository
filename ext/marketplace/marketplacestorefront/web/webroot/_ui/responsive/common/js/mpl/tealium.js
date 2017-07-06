@@ -566,7 +566,7 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 			 productCode= $('#productCode').val();
 			 productCodeArray.push(productCode);
 		}
-
+if(typeof(utag) != "undefined"){
 	utag.link({
 
 		link_text: triggerPoint ,
@@ -574,6 +574,7 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 		product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
 		product_id :  productCodeArray
 	});
+}
 }
 
 
