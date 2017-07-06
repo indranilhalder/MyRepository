@@ -2001,7 +2001,10 @@ public class MiscsController extends BaseController
 										LOG.debug("===Inside deliveryCheckFlag loop====");
 										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
 										{
-											if (consignmentStatusCheck.equalsIgnoreCase("RETURN_INITIATED"))
+										output = new OneTouchCancelReturnDTO();
+										for (final ConsignmentEntryModel con : orderEntry2.getConsignmentEntries())
+											{
+											if ((con.getConsignment().getStatus().getCode()).equalsIgnoreCase("RETURN_INITIATED"))
 											{
 												output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 												output.setTransactionId(orderEntry2.getTransactionID());
@@ -2014,7 +2017,7 @@ public class MiscsController extends BaseController
 											}
 											else
 											{
-												output = new OneTouchCancelReturnDTO();
+												//output = new OneTouchCancelReturnDTO();
 												output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 												consignmentStatus = "All the products in promotion are not in delivered status";
 												output.setTransactionId(orderEntry2.getTransactionID());
@@ -2024,6 +2027,7 @@ public class MiscsController extends BaseController
 												output.setRemarks(serviceabilty == true ? consignmentStatus
 														: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 												outputList.add(output);
+											}
 											}
 										}
 										continue outer;
