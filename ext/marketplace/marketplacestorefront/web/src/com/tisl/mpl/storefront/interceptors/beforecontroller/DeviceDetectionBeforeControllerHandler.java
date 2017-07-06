@@ -13,11 +13,14 @@
  */
 package com.tisl.mpl.storefront.interceptors.beforecontroller;
 
+import de.hybris.platform.acceleratorfacades.device.DeviceDetectionFacade;
 import de.hybris.platform.acceleratorservices.uiexperience.UiExperienceService;
 import de.hybris.platform.commerceservices.enums.UiExperienceLevel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
+import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.site.BaseSiteService;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,14 +35,16 @@ import com.tisl.mpl.storefront.interceptors.BeforeControllerHandler;
  */
 public class DeviceDetectionBeforeControllerHandler implements BeforeControllerHandler
 {
-	//@Resource(name = "deviceDetectionFacade")
-	//private DeviceDetectionFacade deviceDetectionFacade;
+	@Resource(name = "deviceDetectionFacade")
+	private DeviceDetectionFacade deviceDetectionFacade;
 
 	private UiExperienceService uiExperienceService;
 
 	private BaseSiteService baseSiteService;
 
 	private ConfigurationService configurationService;
+
+	private SessionService sessionService;
 
 	@Override
 	public boolean beforeController(final HttpServletRequest request, final HttpServletResponse response,
@@ -54,11 +59,13 @@ public class DeviceDetectionBeforeControllerHandler implements BeforeControllerH
 		if (getBaseSiteService().getCurrentBaseSite().getUid()
 				.equals(configurationService.getConfiguration().getProperty("luxury.site.id")))
 		{
+			// Detect the device information for the current request
+			deviceDetectionFacade.initializeRequest(request);
 			getUiExperienceService().setDetectedUiExperienceLevel(UiExperienceLevel.RESPONSIVE);
 		}
 
-		// Detect the device information for the current request
-		//deviceDetectionFacade.initializeRequest(request);
+
+
 		return true;
 	}
 
@@ -105,5 +112,22 @@ public class DeviceDetectionBeforeControllerHandler implements BeforeControllerH
 	public void setConfigurationService(final ConfigurationService configurationService)
 	{
 		this.configurationService = configurationService;
+	}
+
+	/**
+	 * @return the sessionService
+	 */
+	public SessionService getSessionService()
+	{
+		return sessionService;
+	}
+
+	/**
+	 * @param sessionService
+	 *           the sessionService to set
+	 */
+	public void setSessionService(final SessionService sessionService)
+	{
+		this.sessionService = sessionService;
 	}
 }

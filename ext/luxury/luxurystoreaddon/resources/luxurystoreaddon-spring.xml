@@ -76,6 +76,16 @@
 		<property name="configurationService" ref="configurationService" />
 		<property name="timeService" ref="timeService" />
 		</bean>
+		
+		
+	<bean id="luxuryCmsUiExperienceRestrictionEvaluator" parent="cmsUiExperienceRestrictionEvaluator" class="com.tisl.lux.evaluator.LuxuryCMSUiExperienceRestrictionEvaluator" >
+		<property name="sessionService" ref="sessionService"/>
+	</bean>
+	
+	<bean id="cmsUiExperienceRestrictionEvaluatorMapping" class="de.hybris.platform.cms2.servicelayer.services.evaluator.CMSRestrictionEvaluatorMapping" >
+		<property name="restrictionTypeCode" value="CMSUiExperienceRestriction" />
+		<property name="restrictionEvaluator" ref="luxuryCmsUiExperienceRestrictionEvaluator" />
+	</bean>
 	
 <!-- Logic for resolving view resolver for addon prefix supporting multi site -->
 	
