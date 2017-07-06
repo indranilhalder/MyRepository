@@ -8,6 +8,8 @@ import de.hybris.platform.acceleratorcms.model.restrictions.CMSUiExperienceRestr
 import de.hybris.platform.cms2.servicelayer.data.RestrictionData;
 import de.hybris.platform.servicelayer.session.SessionService;
 
+import org.apache.log4j.Logger;
+
 
 /**
  * @author Madhavan
@@ -16,6 +18,7 @@ import de.hybris.platform.servicelayer.session.SessionService;
 public class LuxuryCMSUiExperienceRestrictionEvaluator extends CMSUiExperienceRestrictionEvaluator
 {
 
+	private static final Logger LOG = Logger.getLogger(LuxuryCMSUiExperienceRestrictionEvaluator.class.getName());
 	private SessionService sessionService;
 
 	/**
@@ -37,7 +40,7 @@ public class LuxuryCMSUiExperienceRestrictionEvaluator extends CMSUiExperienceRe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.acceleratorcms.evaluator.CMSUiExperienceRestrictionEvaluator#evaluate(de.hybris.platform.
 	 * acceleratorcms.model.restrictions.CMSUiExperienceRestrictionModel,
 	 * de.hybris.platform.cms2.servicelayer.data.RestrictionData)
@@ -45,12 +48,15 @@ public class LuxuryCMSUiExperienceRestrictionEvaluator extends CMSUiExperienceRe
 	@Override
 	public boolean evaluate(final CMSUiExperienceRestrictionModel restriction, final RestrictionData context)
 	{
+		LOG.error("Inside LuxuryCMSUiExperienceRestrictionEvaluator");
+		LOG.error("Detected UI " + getSessionService().getAttribute("detectedUI"));
+		LOG.error("restriction.getUiExperience() " + restriction.getUiExperience());
 		if (null != getSessionService().getAttribute("detectedUI"))
 		{
+			LOG.error("Returning - " + getSessionService().getAttribute("detectedUI").equals(restriction.getUiExperience()));
 			return getSessionService().getAttribute("detectedUI").equals(restriction.getUiExperience());
 		}
 
 		return super.evaluate(restriction, context);
 	}
-
 }

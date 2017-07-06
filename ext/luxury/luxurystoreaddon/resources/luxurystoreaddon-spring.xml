@@ -87,6 +87,15 @@
 		<property name="restrictionEvaluator" ref="luxuryCmsUiExperienceRestrictionEvaluator" />
 	</bean>
 	
+	<alias name="luxuryDeviceDetectionFacade" alias="deviceDetectionFacade"/>
+	<bean id="luxuryDeviceDetectionFacade" class="com.tisl.lux.device.impl.LuxuryDeviceDetectionFacade" parent="defaultDeviceDetectionFacade">
+		<property name="sessionService" ref="sessionService"/>
+		<property name="uiExperienceService" ref="uiExperienceService"/>
+		<property name="requestDeviceDataConverter" ref="defaultSpringMobileRequestDeviceDataConverter"/>
+		<property name="deviceDataUiExperienceDataConverter" ref="deviceDataUiExperienceDataConverter"/>
+		<property name="siteConfigService" ref="siteConfigService"/>
+	</bean>
+	
 <!-- Logic for resolving view resolver for addon prefix supporting multi site -->
 	
 	<util:map id="addonReplacePrefixMap" >
