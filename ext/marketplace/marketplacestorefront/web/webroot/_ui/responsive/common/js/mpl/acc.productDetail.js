@@ -4154,6 +4154,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 
 					$("#ussid").val(data['sellerArticleSKU']);
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
+					//Added for Fine Jewellery Details Section
+					$("#jewelDetailsUssid").html(data['sellerArticleSKU']);
 
 					var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];
