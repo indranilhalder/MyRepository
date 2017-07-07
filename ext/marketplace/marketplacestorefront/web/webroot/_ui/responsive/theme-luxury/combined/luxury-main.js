@@ -12930,7 +12930,7 @@ TATA.CommonFunctions = {
         var errorMsg = errorItem.message;
         if (errorMsg.indexOf("required") > 0) {
             var fieldName = $(errorItem.element).attr("placeholder");
-            "Enter Your Email Address" === fieldName && (fieldName = "Email Address"), errorMsg = fieldName + " is manadatory";
+            "Enter Your Email Address" === fieldName && (fieldName = "Email Address"), errorMsg = fieldName + " is required";
         }
         return errorMsg;
     },

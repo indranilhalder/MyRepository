@@ -21,7 +21,7 @@ TATA.CommonFunctions = {
         	if(fieldName === "Enter Your Email Address"){
         		fieldName = "Email Address";
         	}
-        	errorMsg = fieldName + " is manadatory";
+        	errorMsg = fieldName + " is required";
     	}
     	return errorMsg;
     },
