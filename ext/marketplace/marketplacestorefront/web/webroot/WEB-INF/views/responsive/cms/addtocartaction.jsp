@@ -48,7 +48,7 @@ $(document).ready(function(){
 		if ($(window).width() < 768) {
 			setTimeout(function(){
 				$('#addToCartFormTitle').fadeOut(2000);		
-			},2000);
+			 },2000);
 			//UF-390
 			$('html, body').animate({
 	              scrollTop: $('.product-info .product-image-container.device').height()

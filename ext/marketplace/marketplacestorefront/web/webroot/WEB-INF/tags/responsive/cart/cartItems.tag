@@ -274,7 +274,9 @@ tr.d0 td {
 												 <format:price priceData="${strikeoffprice}" displayFreeForZero="true" />
 											</span>
 												 <c:if test="${not empty entry.productPerDiscDisplay}">
-												 <span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span>
+												 	<span class="off-bag">(
+													<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+													<spring:theme code="off.item.percentage"/>)</span>
 												 </c:if>
 											
 											<c:choose>
@@ -298,7 +300,9 @@ tr.d0 td {
 													<!-- TPR-970 changes-->		<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
 													</span></li>
 													<c:if test="${not empty entry.productPerDiscDisplay}">
-													<span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span>
+													<span class="off-bag">(
+													<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+													<spring:theme code="off.item.percentage"/>)</span>
 													</c:if>
 		 											
     											</c:when>    
@@ -331,13 +335,17 @@ tr.d0 td {
 																<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
 																</span>
 																<c:if test="${not empty entry.productPerDiscDisplay}">
-																<span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span>
+																<span class="off-bag">(
+																<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+																<spring:theme code="off.item.percentage"/>)</span>
 																</c:if>
     													</c:when>    
     												<c:otherwise>
        													<span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
        													<c:if test="${not empty entry.productPerDiscDisplay}">
-														<span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span>
+														<span class="off-bag">(
+														<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+														<spring:theme code="off.item.percentage"/>)</span>
 														</c:if>
    												 	</c:otherwise>
 													</c:choose>
@@ -353,7 +361,9 @@ tr.d0 td {
 																	<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${mrpPrice.value}" displayFreeForZero="true" />
 																	</span></li>
 																	<c:if test="${not empty entry.productPerDiscDisplay}">
-																	<span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span>
+																	<span class="off-bag">(
+																	<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+																	<spring:theme code="off.item.percentage"/>)</span>
 																	</c:if>
 																	</c:when>
 																	<c:otherwise>
@@ -361,10 +371,11 @@ tr.d0 td {
 																		<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" />
 																		</span></li>
 																		<c:if test="${not empty entry.productPerDiscDisplay}">
-																		<span class="off-bag">(${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/>)</span>
+																		<span class="off-bag">(
+																		<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+																		<spring:theme code="off.item.percentage"/>)</span>
 																		</c:if>
-																		
-																			</c:if>
+																		</c:if>
 																		</c:otherwise>
 																	</c:choose>
 																	</c:when>
@@ -419,7 +430,9 @@ tr.d0 td {
 											<!-- TPR-970 changes--><%-- <span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span> --%>
 												<!-- UF-260 -->
 												<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
-												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/></span> (${entry.cartAdditionalDiscPerc.value}% )&nbspOff</span>
+												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>
+												</span>&nbsp(<fmt:formatNumber pattern="#.##" value="${entry.cartAdditionalDiscPerc.value}" />% )&nbspOff</span>
+												
 												<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 										</c:when>
@@ -427,7 +440,9 @@ tr.d0 td {
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
 											<p class="add-disc">Additional Discount</p>
 											<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
-											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/></span> (${entry.cartAdditionalDiscPerc.value})&nbspOff</span>
+											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>
+											</span>&nbsp(<fmt:formatNumber pattern="#.##" value="${entry.cartAdditionalDiscPerc.value}" />
+											% )&nbspOff</span>
 											<%-- <span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 									</c:otherwise>
@@ -440,7 +455,8 @@ tr.d0 td {
 							
 							<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
 							<p class="add-disc-pincode" style="display:none;">Additional Discount</p>
-							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span> (${entry.cartAdditionalDiscPerc.value}%)&nbspOff</span></span>
+							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}">
+							</span>&nbsp(<fmt:formatNumber pattern="#.##" value="${entry.cartAdditionalDiscPerc.value}" />% )&nbspOff</span></span>
 							</c:if>
 							
 							<!-- TPR-970 changes ends-->

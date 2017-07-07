@@ -7106,8 +7106,9 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
-	//UF-277 TISSTRT-1601
-	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var strname = name.trim();
+	//UF-277 TISSTRT-1601   //TISPRDT-1825
+	//var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
         return false;
@@ -7128,8 +7129,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="firstName") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="firstName") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
@@ -7137,8 +7138,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="lastName") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="lastName") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
@@ -7146,8 +7147,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="firstNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
@@ -7155,8 +7156,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="lastNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
@@ -7277,14 +7278,21 @@ $("#pincode").focus(function(){
 
 function validateCity() {
 	var name=$("#city").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("cityError");
-	//var regex = new RegExp(/^[a-zA-Z ]+$/);
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a City.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid City.";
+        return false;
+	}
+	//TISPRDT-1825
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid City.";
         return false;
 	}
@@ -7294,14 +7302,21 @@ function validateCity() {
 
 function validateCityEmi() {
 	var name=$("#cityEmi").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("cityErrorEmi");
-	//var regex = new RegExp(/^[a-zA-Z ]+$/);
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a City.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid City.";
+        return false;
+	}
+	//TISPRDT-1825
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid City.";
         return false;
 	}
@@ -7311,14 +7326,20 @@ function validateCityEmi() {
 
 function validateState() {
 	var name=$("#state").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("stateError");
-	//TISSTRT-1601 UF-277
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//TISSTRT-1601 UF-277  //TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid State.";
+        return false;
+	}
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid State.";
         return false;
 	}
@@ -7328,14 +7349,20 @@ function validateState() {
 
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("stateErrorEmi");
-	//TISSTRT-1601 UF-277
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z\ ]+$/);
+	//TISSTRT-1601 UF-277  //TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid State.";
+        return false;
+	}
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid State.";
         return false;
 	}

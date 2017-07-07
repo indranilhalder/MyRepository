@@ -410,7 +410,7 @@ display:none;
     <div class="main-image">
 	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
-    <a href="${productUrl}"> <product:productPrimaryImage
+    <a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
 				product="${product}" format="product" />
 		</a>
 <!-- 		<div class="zoom" style="z-index:10000;">
