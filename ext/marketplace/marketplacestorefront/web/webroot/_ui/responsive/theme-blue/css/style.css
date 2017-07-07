@@ -72792,13 +72792,16 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 }
 .mop_span ~ li {
     display: inline-block;
+    margin-top: 5px;
 }
 .mop_span ~ li + span.off-bag {
     display: inline-block;
      color: #000;
      width: auto;
 }
-
+.mop_span > span.delSeat{
+	margin-bottom: 0px;
+}
 /* TISPRDT- 1791*/
 @media (max-width: 420px){
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
