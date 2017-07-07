@@ -1086,7 +1086,7 @@ a:hover.tooltips {
   
 }
 
-@include media-breakpoint-down(md)  { 
+@include media-breakpoint-down(sm)  { 
 	#commentsDiv{
 		width:auto !important;
 	}

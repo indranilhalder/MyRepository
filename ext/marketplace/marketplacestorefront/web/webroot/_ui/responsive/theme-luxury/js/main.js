@@ -645,6 +645,25 @@ TATA.CommonFunctions = {
             });
         });
     },
+    swipeLookBook: function() {
+		$(window).resize(function(){
+		      if($(window).width() < 768) {
+		    	  $('.mob-slicker').slick({
+				slide: 'li',
+				arrows: false,    		
+				responsive: [{	
+		  	      	breakpoint: 767,
+		  	      	settings: {
+			  	        slidesToShow: 2.5,
+			  	        slidesToScroll: 1
+		  	      	}	
+		  	    }]
+			});
+		  } else {
+		    $('.mob-slicker').unslick();
+		  }
+		});    	
+    },
 
     init: function () {
 
@@ -663,6 +682,7 @@ TATA.CommonFunctions = {
         _self.wishlistInit();
         _self.leftBarAccordian();
         _self.deliveryaddressform();
+        _self.swipeLookBook();
 
     }
 

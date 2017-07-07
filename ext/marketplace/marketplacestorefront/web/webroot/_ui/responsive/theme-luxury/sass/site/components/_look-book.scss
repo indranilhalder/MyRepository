@@ -30,6 +30,22 @@
 		width:50%;
 		float:left;
 	}
+	@include media-breakpoint-down(sm){
+		.colmn.lookbook-mob-slider{
+			clear:both;
+			.list-unstyled{
+				overflow: hidden;
+			    position: relative;
+			    li{
+			    	margin: 0 20px;
+				    width: 120px;
+				    line-height: 130px;
+				    text-align: center;
+				    height: 130px;
+			    }
+			}
+		}
+	}
 }
 .lux-main-banner-slider{
 	margin-bottom:40px;
@@ -213,7 +229,7 @@
 }
 .shop-by-catagory{
 	.slick-track{
-		margin:0 auto;
+		margin:0 auto 0 20%;
 	}
 }
 

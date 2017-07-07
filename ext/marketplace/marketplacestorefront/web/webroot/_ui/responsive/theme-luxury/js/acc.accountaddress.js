@@ -626,7 +626,7 @@ function editAddress(addressId) {
 					.test(document.getElementById("profilefirstName").value)) {
 				$("#errfn").css({
 					"display" : "block",
-					"margin-top" : "0px"
+					"margin-top" : "10px"
 				});
 				document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
 				proceed = false;
@@ -637,7 +637,7 @@ function editAddress(addressId) {
 					.test(document.getElementById("profilelastName").value)) {
 				$("#errln").css({
 					"display" : "block",
-					"margin-top" : "0px"
+					"margin-top" : "10px"
 				});
 
 				document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
@@ -649,7 +649,7 @@ function editAddress(addressId) {
 					.test(document.getElementById("profileEmailID").value)) {
 				$("#errEmail").css({
 					"display" : "block",
-					"margin-top" : "0px"
+					"margin-top" : "10px"
 				});
 				document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid Email ID</font>";
 				proceed = false;
@@ -659,7 +659,7 @@ function editAddress(addressId) {
 			//changes for TISSTRT-1160
 			$("#errEmail").css({
 				"display" : "block",
-				"margin-top" : "0px"
+				"margin-top" : "10px"
 			});
 			document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter an Email ID</font>";
 			proceed = false;
@@ -673,7 +673,7 @@ function editAddress(addressId) {
 					|| regexSpace.test(document.getElementById("profileMobileNumber").value)) {
 				$("#errMob").css({
 					"display" : "block",
-					"padding-top" : "0px"
+					"padding-top" : "10px"
 				});
 				document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>";
 				proceed = false;

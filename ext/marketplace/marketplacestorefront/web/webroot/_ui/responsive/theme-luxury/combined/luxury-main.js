@@ -67,23 +67,23 @@ function validateForm() {
     var regexCharSpace = /^[a-zA-Z]+$/, regexSpace = /\s/, regexDate = /^(?=\d{2}([-.,\/])\d{2}\1\d{4}$)(?:0[1-9]|1\d|[2][0-8]|29(?!.02.(?!(?!(?:[02468][1-35-79]|[13579][0-13-57-9])00)\d{2}(?:[02468][048]|[13579][26])))|30(?!.02)|31(?=.(?:0[13578]|10|12))).(?:0[1-9]|1[012]).\d{4}$/, emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, proceed = !0;
     "" != document.getElementById("profilefirstName").value && (regexCharSpace.test(document.getElementById("profilefirstName").value) || ($("#errfn").css({
         display: "block",
-        "margin-top": "0px"
+        "margin-top": "10px"
     }), document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>", 
     proceed = !1)), "" != document.getElementById("profilelastName").value && (regexCharSpace.test(document.getElementById("profilelastName").value) || ($("#errln").css({
         display: "block",
-        "margin-top": "0px"
+        "margin-top": "10px"
     }), document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>", 
     proceed = !1)), "" != document.getElementById("profileEmailID").value ? emailRegex.test(document.getElementById("profileEmailID").value) || ($("#errEmail").css({
         display: "block",
-        "margin-top": "0px"
+        "margin-top": "10px"
     }), document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid Email ID</font>", 
     proceed = !1) : ($("#errEmail").css({
         display: "block",
-        "margin-top": "0px"
+        "margin-top": "10px"
     }), document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter an Email ID</font>", 
     proceed = !1), "" != document.getElementById("profileMobileNumber").value && (document.getElementById("profileMobileNumber").value.length > 10 || document.getElementById("profileMobileNumber").value.length < 10 || isNaN(document.getElementById("profileMobileNumber").value) || regexSpace.test(document.getElementById("profileMobileNumber").value)) && ($("#errMob").css({
         display: "block",
-        "padding-top": "0px"
+        "padding-top": "10px"
     }), document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>", 
     proceed = !1);
     var selectValueDOB = document.getElementById("dateOfBirth").selectedIndex, selectValueMOB = document.getElementById("monthOfBirth").selectedIndex, selectValueYOB = document.getElementById("yearOfBirth").selectedIndex, ValueDOB = document.getElementById("dateOfBirth").value, ValueMOB = document.getElementById("monthOfBirth").value, ValueYOB = document.getElementById("yearOfBirth").value, selectValueDOA = document.getElementById("dateOfAnniversary").selectedIndex, selectValueMOA = document.getElementById("monthOfAnniversary").selectedIndex, selectValueYOA = document.getElementById("yearOfAnniversary").selectedIndex, ValueDOA = document.getElementById("dateOfAnniversary").value, ValueMOA = document.getElementById("monthOfAnniversary").value, ValueYOA = document.getElementById("yearOfAnniversary").value, tempFinalDOB = ValueDOB + "/" + ValueMOB + "/" + ValueYOB, tempFinalDOA = ValueDOA + "/" + ValueMOA + "/" + ValueYOA, tempFinalDateDOB = new Date(ValueMOB + "/" + ValueDOB + "/" + ValueYOB), tempFinalDateDOA = new Date(ValueMOA + "/" + ValueDOA + "/" + ValueYOA), dateOfBirthIntVal = parseInt(ValueYOB + ValueMOB + ValueDOB), dateOfAnnIntVal = parseInt(ValueYOA + ValueMOA + ValueDOA), today = new Date(), dd = today.getDate(), mm = today.getMonth() + 1, yyyy = today.getFullYear();
@@ -12833,7 +12833,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -12983,7 +12983,7 @@ TATA.CommonFunctions = {
                     maxlength: 30
                 },
                 mobileNumber: {
-                	number: true,
+                    number: !0,
                     minlength: 10,
                     maxlength: 10
                 },
@@ -13003,12 +13003,11 @@ TATA.CommonFunctions = {
                     equalTo: '[name="pwd"]'
                 }
             },
-            messages:{
-            	mobileNumber: {
-            		minlength:"Please enter at least 10 numbers.",
-            		maxlength:"Please enter no more than 10 numbers.",
-            	},
-            	
+            messages: {
+                mobileNumber: {
+                    minlength: "Please enter at least 10 numbers.",
+                    maxlength: "Please enter no more than 10 numbers."
+                }
             },
             submitHandler: function(form) {
                 $.ajax({
@@ -13340,11 +13339,27 @@ TATA.CommonFunctions = {
             });
         });
     },
+    swipeLookBook: function() {
+        $(window).resize(function() {
+            $(window).width() < 768 ? $(".mob-slicker").slick({
+                slide: "li",
+                arrows: !1,
+                responsive: [ {
+                    breakpoint: 767,
+                    settings: {
+                        slidesToShow: 2.5,
+                        slidesToScroll: 1
+                    }
+                } ]
+            }) : $(".mob-slicker").unslick();
+        });
+    },
     init: function() {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
-        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.deliveryaddressform();
+        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.deliveryaddressform(), 
+        _self.swipeLookBook();
     }
 }, TATA.Pages = {
     PLP: {
@@ -13356,7 +13371,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },

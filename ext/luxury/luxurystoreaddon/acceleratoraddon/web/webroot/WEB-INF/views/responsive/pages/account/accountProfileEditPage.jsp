@@ -78,6 +78,7 @@
 					<fieldset>
 						<form:form action="update-parsonal-detail" method="post" commandName="mplCustomerProfileForm" name="mplCustomerProfileForm" onSubmit="return validateForm();" class="clarfix">
 							 <input type="hidden" name="isLux" value="${param.isLux}"/>
+							 <div class="row">
 							 <div class="half halfwidth">
 									<%-- <label><spring:theme code="text.mplCustomerProfileForm.firstName" text="First Name" /></label> --%>
 										<form:input path="firstName" id="profilefirstName"
@@ -94,7 +95,8 @@
 											onkeyup="kpressln()" maxlength="40" placeholder="Last Name"/>
 										<div class="errorMessage"><div id="errln"></div></div>
 									</div>
-				
+							</div>
+							<div class="row">
 							<div class="half halfwidth account-profileEmail"><%-- <formElement:formInputBox idKey="profile.email" labelKey="profile.email" path="emailId" inputCSS="form-control" mandatory="false"/> --%>
 									<%-- <label><spring:theme code="text.mplCustomerProfileForm.emailId" text="E-mail Address*" /></label> --%>
 										<form:input path="emailId" id="profileEmailID"
@@ -128,7 +130,7 @@
 								</div>
 									
 							</div>
-							
+							</div>
 							
 							
 							     	 <div class="select gender  le-radio clearfix">

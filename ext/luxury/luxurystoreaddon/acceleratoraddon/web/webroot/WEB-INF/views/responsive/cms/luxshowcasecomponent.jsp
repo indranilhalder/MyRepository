@@ -18,8 +18,8 @@
 			<a href="${Image.urlLink}"><img src="${Image.media.url}" alt="${Image.name}"></a>
 			</c:forEach>
 		</div>
-		<div class="colmn">
-			<ul class="list-unstyled clearfix">
+		<div class="colmn lookbook-mob-slider">
+			<ul class="list-unstyled clearfix mob-slicker">
 				<c:forEach items="${ShowCase.productImages}" var="Image" varStatus="status">
 				<li><a href="${Image.urlLink}"><img src="${Image.media.url}" alt=""></a></li>
 				</c:forEach>
