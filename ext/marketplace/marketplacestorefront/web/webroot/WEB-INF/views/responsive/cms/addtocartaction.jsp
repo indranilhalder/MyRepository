@@ -46,9 +46,9 @@ $(document).ready(function(){
    		$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
 		if ($(window).width() < 768) {
-			//setTimeout(function(){
+			setTimeout(function(){
 				$('#addToCartFormTitle').fadeOut(2000);		
-			/* },2000); */
+			 },2000);
 			//UF-390
 			$('html, body').animate({
 	              scrollTop: $('.product-info .product-image-container.device').height()
