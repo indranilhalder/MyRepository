@@ -115,7 +115,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 					# Set product approval status to Approved only for those products that have prices.
 					$approved=approvalstatus(code)[default='approved']
@@ -137,7 +137,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -201,7 +201,7 @@
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Staged']
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default='$productCatalog:Online']
 					$taxGroup=Europe1PriceFactory_PTG(code)[default=jp-vat-full]
 
 					# Set product approval status to Approved only for those products that have prices.
@@ -221,7 +221,7 @@
 				<value>#{defaultImpexProductHeader}
 					$productCatalog=mplProductCatalog
 					$productCatalogName=Marketplace Product Catalog
-					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Staged]
+					$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 					$approved=approvalstatus(code)[default='approved']
 					INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
 				</value>
@@ -236,7 +236,7 @@
 			<value>#{defaultImpexProductHeader}
 				$productCatalog=mplProductCatalog
 				$productCatalogName=Marketplace Product Catalog
-				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Staged]
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 				$approved=approvalstatus(code)[default='approved']
 				INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
 			</value>

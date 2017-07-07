@@ -3,10 +3,11 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service;
 
-import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 
-import java.util.LinkedHashMap;
+import java.util.List;
+
+import com.tisl.mpl.data.PriceBreakupData;
 
 
 /**
@@ -16,7 +17,7 @@ import java.util.LinkedHashMap;
 public interface PriceBreakupService
 {
 	//
-	public LinkedHashMap<String, PriceData> getPricebreakup(final String ussid);
+	public List<PriceBreakupData> getPricebreakup(final String ussid);
 
 	//Added for 3782
 	/**
