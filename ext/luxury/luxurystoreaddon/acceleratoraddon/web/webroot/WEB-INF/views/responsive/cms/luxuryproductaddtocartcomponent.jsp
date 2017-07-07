@@ -98,10 +98,10 @@
 		
 			<div id="addtocart-popup" style="display:none">
 			<span class="tick-icon"><i class="fa fa-check fa-4" aria-hidden="true"></i></span>
-			<h3 class="mt-40 mb-40">Added product to bag</h3>
+			<h3 class="mt-40 mb-40">Added to Bag</h3>
 			<ul>
 				<li><a href="/cart" class="mb-10 btn btn-gloden btn-lg btn-block lux-cart-btn">VIEW BAG <span></span></a></li>
-				<li><a href="javascript:;" class="mb-10 btn btn-default btn-lg btn-block lux-keepshop-btn">KEEP SHOPPING</a></li>
+				<li><a href="javascript:;" class="mb-10 btn btn-default btn-lg btn-block lux-keepshop-btn">CONTINUE SHOPPING</a></li>
 				<li><a href="/cart" class="btn btn-primary btn-lg btn-block">BUY NOW</a></li> 
 			</ul>
 		</div>
