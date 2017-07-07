@@ -1688,6 +1688,22 @@ public class HomePageController extends AbstractPageController
 		return request.getRemoteAddr();
 	}
 
+	private static String getVisitorIp(final HttpServletRequest request)
+	{
+		final String REMOTE_IP = request.getHeader("REMOTE_ADDR");
+		final String HTTP_FORWARDED_FOR = request.getHeader("HTTP_FORWARDED_FOR");
+		final String NO_IP = "NA";
+		if (REMOTE_IP != null && REMOTE_IP.length() != 0 && !"unknown".equalsIgnoreCase(REMOTE_IP))
+		{
+			return REMOTE_IP;
+		}
+		else if (HTTP_FORWARDED_FOR != null && HTTP_FORWARDED_FOR.length() != 0 && !"unknown".equalsIgnoreCase(HTTP_FORWARDED_FOR))
+		{
+			return HTTP_FORWARDED_FOR;
+		}
+		return NO_IP;
+	}
+
 	/**
 	 * UF-258 This is a Sales Traffic Widget with upstream data from the Dew Server
 	 */
@@ -1709,7 +1725,7 @@ public class HomePageController extends AbstractPageController
 			STWJObject.put("STWHeading", stwWidgetHeading);
 			STWJObject.put("STWElements", stwRecData);
 			STWJObject.put("STWCategories", stwCategories);
-			STWJObject.put("visiterIP", getVisitorIpAddress(request));
+			STWJObject.put("visiterIP", getVisitorIp(request));
 		}
 		return STWJObject;
 	}

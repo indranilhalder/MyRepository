@@ -214,7 +214,8 @@ function navigateToPage(queryString,textString)
 											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
 											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
 											   <c:choose>
-											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <%-- PRDI-547 fix --%>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5  && fn:containsIgnoreCase(catCode, 'MBH')=='false'}">
 											   <a class="brandFacetRequire" href="${urls}${fn:toLowerCase(brandCode)}">
 											   ${facetValue.name}</a>	
 											   </c:when >
@@ -462,7 +463,8 @@ function navigateToPage(queryString,textString)
 											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
 											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
 											   <c:choose>
-											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <%-- PRDI-547 fix --%>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5  && fn:containsIgnoreCase(catCode, 'MBH')=='false'}">
 											   <a class="brandFacetRequire" href="${urls}${fn:toLowerCase(brandCode)}">
 											   ${facetValue.name}</a>	
 											   </c:when >
