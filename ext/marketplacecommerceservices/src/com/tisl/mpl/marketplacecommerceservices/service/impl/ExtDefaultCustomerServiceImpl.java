@@ -12,6 +12,7 @@ import de.hybris.platform.commerceservices.enums.CustomerType;
 import de.hybris.platform.commerceservices.event.RegisterEvent;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.AmbiguousIdentifierException;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.interceptor.InterceptorException;
@@ -28,7 +29,6 @@ import org.springframework.util.Assert;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
-import com.tisl.mpl.core.enums.RegistrationPlatform;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ExtRegisterData;
 import com.tisl.mpl.marketplacecommerceservices.event.MplRegisterEvent;
@@ -47,6 +47,8 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 {
 	//TPR-6272 starts here
 	private static final Logger LOG = Logger.getLogger(ExtDefaultCustomerServiceImpl.class);
+	@Autowired
+	private ConfigurationService configurationService;
 	//TPR-6272 ends here
 	private UserService userService;
 	@Autowired
@@ -305,46 +307,67 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 
 
 			//TPR-6272 starts here
+			/* final String shopByDeptid = configurationService.getConfiguration().getString( "registration.platform"). */
 
 			if (platformNumber == 1)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_DESKTOP_WEB).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktdesktopweb"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_DESKTOP_WEB).toString());
 			}
 			else if (platformNumber == 2)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_WEB).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileweb"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_WEB).toString());
 			}
 			else if (platformNumber == 3)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_IOS_APP).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktiosapp"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_IOS_APP).toString());
 			}
 			else if (platformNumber == 4)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_ANDROID_APP).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktandroidapp"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_ANDROID_APP).toString());
 			}
 			else if (platformNumber == 5)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_DESKTOP_WEB).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.luxdesktopweb"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_DESKTOP_WEB).toString());
 			}
 			else if (platformNumber == 6)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_WEB).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.luxmobileweb"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_WEB).toString());
 			}
 			else if (platformNumber == 7)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_IOS_APP).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.luxiosapp"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_IOS_APP).toString());
 			}
 			else if (platformNumber == 8)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_ANDROID_APP).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.luxandroidapp"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_ANDROID_APP).toString());
 			}
 			else if (platformNumber == 9)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_APP).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileapp"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.MKT_MOBILE_APP).toString());
 			}
 			else if (platformNumber == 10)
 			{
-				customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_APP).toString());
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.luxmobileapp"));
+				//customerModel.setCustomerRegistrationPlatform((RegistrationPlatform.LUX_MOBILE_APP).toString());
 			}
 			else
 			{
