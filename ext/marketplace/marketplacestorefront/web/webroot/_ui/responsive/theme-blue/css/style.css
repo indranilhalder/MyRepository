@@ -68391,9 +68391,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .addNewAddress .formaddress h3 {
     text-transform: none;
 }
-body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
+/*body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	background: #eee;
-}
+}*/
 .checkout-accordion.checkout-selected .checkout-accordion-heading{
 	padding: 5px 16px;
     font-size: 12px;
@@ -68740,9 +68740,15 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     box-shadow: none;
 }
 #singlePagePickupPersonPopup h2.panel-defaultHeading{
-	font-weight: normal;
-    text-transform: capitalize;
-    font-size: 16px;
+  width: 224px;
+  height: 18px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.29;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: #000000;
 }
 #singlePagePickupPersonPopup #savePickupPersondDetails{
 	margin: 0px auto;
@@ -69526,6 +69532,9 @@ background:#f8f8f8;
 		margin-top: -12px;
 	}
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper{
+		display: none;
+	}
+	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_pincode_search_wrapper{
 		display: none;
 	}
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search {
