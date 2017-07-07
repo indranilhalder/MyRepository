@@ -199,11 +199,13 @@ display: none;}
 		
 		<div class="row">
 		<div class="col-md-6 col-sm-6 col-xs-6 padd">
-		<input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/>
+		<!-- <input type="radio" name="addressType" id="new-address-option-1" value="Home"  checked="checked"/> -->
+		<form:radiobutton path="addressType" id="new-address-option-1" value="Home"/>
 		<label class="residential" for="new-address-option-1"><spring:theme code="text.addressBook.Residentialaddress" text="Residential Address" /></label>
 		</div>
 		<div class="col-md-6 col-sm-6 col-xs-6 padd">
-		<input type="radio" id="new-address-option-2" value="Work" name="addressType" />
+		<!-- <input type="radio" id="new-address-option-2" value="Work" name="addressType" /> -->
+		<form:radiobutton path="addressType" id="new-address-option-2" value="Work"/>
 		<label class="commercial" for="new-address-option-2"><spring:theme code="text.addressBook.commercialaddress" text="Commercial Address" /></label>
 		</div></div>
 		<fieldset>
