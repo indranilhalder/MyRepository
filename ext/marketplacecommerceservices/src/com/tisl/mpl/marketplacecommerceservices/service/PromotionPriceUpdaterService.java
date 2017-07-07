@@ -31,4 +31,10 @@ public interface PromotionPriceUpdaterService
 	 */
 	void saveCronData(final CronJobModel cronModel);
 
+	/**
+	 * @Description : This method removes redundant Promotional Price Rows from DB
+	 *
+	 */
+	void purgeRedundantData();
+
 }

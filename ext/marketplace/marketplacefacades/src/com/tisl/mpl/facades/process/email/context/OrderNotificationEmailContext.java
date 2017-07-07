@@ -24,11 +24,13 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,6 +80,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String WEBSITE_URL = "websiteUrl";
 	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
+	private static final String DELIVERYDATE = "deliveryDate";
 	@Autowired
 	private MplAccountAddressFacade accountAddressFacade;
 	private static final Logger LOG = Logger.getLogger(OrderNotificationEmailContext.class);
@@ -103,6 +106,10 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		//Changes for discount
 		//final Double subTotal = Double.valueOf(orderSubTotalPrice);
 		final List<OrderModel> childOrders = orderProcessModel.getOrder().getChildOrders();
+		Date deliveryDate = null;
+
+
+
 
 
 		final OrderModel p_order = orderProcessModel.getOrder();
@@ -129,6 +136,17 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				{
 					subTotal += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
 					shippingCharge += childOrderEntries.getCurrDelCharge().doubleValue();
+
+					//childOrderEntries.getConsignmentEntries()
+
+					for (final ConsignmentEntryModel con : childOrderEntries.getConsignmentEntries())
+					{
+						if ((con.getConsignment().getStatus().getCode()).equalsIgnoreCase("DELIVERED"))
+						{
+							deliveryDate = con.getConsignment().getDeliveryDate();
+						}
+
+					}
 				}
 
 			}
@@ -150,6 +168,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 		put(CHILDORDERS, childOrders);
 		put(PARENTORDER, p_order);
 		put(SUBTOTAL, Double.valueOf(subTotal));
+		put(DELIVERYDATE, deliveryDate);
 		//put(SUBTOTAL, subTotalNew);
 		put(TOTALPRICE, totalPrice);
 		//put(TOTALPRICE, totalPriceNew);

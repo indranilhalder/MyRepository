@@ -288,7 +288,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -591,7 +591,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setWinningSellerMOP(buyBoxData.getPrice().getFormattedValue().toString());
 				}
 
-				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile().getValue()
+				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
