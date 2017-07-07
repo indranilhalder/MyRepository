@@ -68897,6 +68897,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     padding: 0 25px 0 15px;
     background-image: url(../images/select-arrow-new.png);
     background-position: calc(100% - 12px) 53%;
+    cursor: auto;
 }
 #reviewOrder.cart.wrapper .product-block li.item > ul > li.delivery ul{
 	margin-bottom:0;
@@ -69707,6 +69708,10 @@ background:#f8f8f8;
 #singlePageDesktop #reviewOrder select.update-entry-quantity-input{
 	cursor:auto;
 } 
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading>div+div {
+    display: none ! important;
+}
+#singlePageDesktop
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
