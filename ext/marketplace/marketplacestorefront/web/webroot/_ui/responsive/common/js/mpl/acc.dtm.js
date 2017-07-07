@@ -19,7 +19,7 @@ $(document).ready(function(){
 	if(pageName.includes("BrandStore")){
 		brandPagetype = "brand";
 	}
-	
+	var tealiumOrderFlag = $('#tealiumOrderFlag').val();
 	var Promo_Id ="";
 	if($("#product_applied_promotion_title").val() && $("#product_applied_promotion_code").val() !=undefined)
 	{
@@ -427,7 +427,10 @@ $(document).ready(function(){
     	}
     })
     //TPR-6334 | Login-logout end
-	
+	//TPR-6369 |error tracking for unsuccessful order placed
+    if(tealiumOrderFlag !='undefined' && tealiumOrderFlag == 'true'){
+    	dtmErrorTracking("Order not placed: Unsuccesful error","errorName");
+    }
 });
 function differentiateSeller(){
 	var sellerList = $('#pdpSellerIDs').val();
@@ -868,6 +871,9 @@ function dtmSearchTags(){
 	
 	//TPR-6369 | Error Tracking
 	function dtmErrorTracking(errorType,errorName){
+		if (typeof _satellite != "undefined") {
+			_satellite.track('error_tracking');
+	    }
 		digitalData.page = {
 			error : {
 				type  : errorType,

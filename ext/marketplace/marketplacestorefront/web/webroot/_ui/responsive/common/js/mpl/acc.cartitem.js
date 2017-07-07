@@ -44,8 +44,9 @@ ACC.cartitem = {
 						removeLocation : location
 				  }
 			  }
+			  if(typeof _satellite !="undefined"){
 			  _satellite.track('cpj_cart_removal');
-			  
+			  }
 					// for MSD	
 					var x = $(this).closest("li.item").prev();
 		//	        console.log(x);

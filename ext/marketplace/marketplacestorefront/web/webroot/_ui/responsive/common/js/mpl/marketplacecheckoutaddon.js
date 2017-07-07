@@ -6340,9 +6340,6 @@ function checkIsServicable()
  	 				});
  	 			}
  	 			// TPR-6369 |Error tracking for  dtm
- 	 			if (typeof _satellite != "undefined") {
- 	 				_satellite.track('error_tracking');
- 	 		    }
  	 			dtmErrorTracking("pincode_check_error","Issue in PincodeServiceability");
 	 		},
 
@@ -7053,7 +7050,9 @@ function updateCart(formId){
 	});
 	}
 	//TPR-6029
+	if(typeof _satellite != "undefined"){
 	_satellite.track('cpj_cart_quantity_change');
+	}
 }
 
 
@@ -7304,9 +7303,6 @@ $("#couponSubmitButton").click(function(){
 	 				   utag.link({error_type : 'offer_error'});
 	 				}
 	 			//TPR-6369 |Error tracking dtm
- 				if (typeof _satellite != "undefined") {
- 					_satellite.track('error_tracking');
- 			    }
  				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 		}
 	 	});	 
@@ -8288,9 +8284,6 @@ function submitCODForm(){
 						$("#no-click,.spinner").remove();
 						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
 						//TPR-6369 |Error tracking dtm
-		 				if (typeof _satellite != "undefined") {
-		 					_satellite.track('error_tracking');
-		 			    }
 		 				dtmErrorTracking("Payment error","pay_cod_otp_error");
 					}
 				}
@@ -8301,9 +8294,6 @@ function submitCODForm(){
 				utag.link({link_text: 'pay_cod_otp_error' , event_type : 'payment_mode_cod'});
 				}
 				//TPR-6369 |Error tracking dtm
- 				if (typeof _satellite != "undefined") {
- 					_satellite.track('error_tracking');
- 			    }
  				dtmErrorTracking("Payment error","pay_cod_otp_error");
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
@@ -8324,9 +8314,6 @@ function paymentErrorTrack(msg){
 		utag.link({"error_type": msg});
 	}
 	    //TPR-6369 |Error tracking dtm
-		if (typeof _satellite != "undefined"){
-			_satellite.track('error_tracking');
-	      }
 		dtmErrorTracking("Payment error",msg);
 }
 

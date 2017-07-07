@@ -1406,9 +1406,7 @@ $(function() {
 											utag.link({error_type: error  });
                                             }
 											//TPR-6369 |Error tracking dtm
-							 				if (typeof _satellite != "undefined") {
-							 					_satellite.track('error_tracking');
-							 			    }
+							 				
 							 				dtmErrorTracking("Pin Code Servicability Error",error);
 										}
 									});

@@ -350,6 +350,7 @@ function editAddress(addressId) {
         					if(typeof utag !="undefined"){
         					   utag.link({error_type : 'cancel_confirmation_error'});
         					}
+        					dtmErrorTracking("Order cannot be cancelled","errorname");
         				}
         				
         				//$("#cancelOrder"+orderCode).modal('hide');
@@ -366,6 +367,7 @@ function editAddress(addressId) {
         				if(typeof utag !="undefined"){
         				   utag.link({error_type : 'cancel_confirmation_error'});
         				}
+        				dtmErrorTracking("Order cannot be cancelled","errorname");
         				$("body .spinner,body #no-click").remove();
         			}
         		});
