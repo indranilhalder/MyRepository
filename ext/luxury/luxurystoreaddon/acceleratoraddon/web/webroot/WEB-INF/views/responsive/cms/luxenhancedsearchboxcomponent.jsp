@@ -124,7 +124,7 @@
 				class="form-control js-site-search-input search-input" name="text" value=""
 				maxlength="250" placeholder='"Search TataCLiQ Luxury"'
 				data-options='{"autocompleteUrl" : "/search/autocomplete/luxury-SearchBox","minCharactersBeforeRequest" : "3","waitTimeBeforeRequest" : "500","displayProductImages" : false}'>
-		 
+		 <a href="#" onclick="document.getElementById('search_form').submit();"> submit </a>
 		 <input type="hidden" id="spellingSearchterm" value="${spellingSearchterm}" />	
 	</form>
 </div>
