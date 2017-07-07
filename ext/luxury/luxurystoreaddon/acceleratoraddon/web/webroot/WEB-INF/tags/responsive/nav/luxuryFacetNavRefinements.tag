@@ -31,32 +31,33 @@
 			<c:set var="facetValuesForStock" value="${facet.values}" />
 			<c:set var="facetStockSize" value="${fn:length(facetValuesForStock)}" />
 			<c:if test="${facet.code != 'inStockFlag' || facetStockSize !='1'}">	
-				<c:choose>
+  								<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+				<%-- <c:choose>
 					<c:when test="${(fn:length(searchCategory) > 5 || fn:length(categoryCode) > 5 && !fn:contains(categoryCode, 'mbh'))}">
-						<%-- <nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
-				   		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/> --%>
+						<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+				   		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 				   	</c:when>
 			   		<c:otherwise>
 			   		
-			   			 <%-- <c:if test="${facet.genericFilter}">
+			   			 <c:if test="${facet.genericFilter}">
 					 		<nav:facetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
-						</c:if>  --%>
-						<%-- <c:if test="${facet.genericFilter}">
+						</c:if> 
+						<c:if test="${facet.genericFilter}">
 					 		<nav:facetNavRefinementFacetMobile facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
-						</c:if> --%> 
+						</c:if> 
 						<c:choose>
 						<c:when test="${not empty lookId}">
 							<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
 						</c:when>
 						<c:otherwise>
-							<%-- Changes Performance Start --%>
+							Changes Performance Start
  							<c:if test="${facet.genericFilter}">
-  								<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
+ 								<nav:luxuryFacetNavRefinementFacet facetData="${facet}" pageFacetData="" removeQueryUrlForPriceValue="${removeQueryUrlForPriceValue}"/>
  							</c:if>
 						</c:otherwise>
 					 </c:choose>
 			   		</c:otherwise>
-				 </c:choose> 
+				 </c:choose> --%> 
 			  </c:if>
 		</c:otherwise>
 	</c:choose>
