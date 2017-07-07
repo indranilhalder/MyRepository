@@ -41,6 +41,7 @@
 </script>
 <c:choose>
 <c:when test="${product.rootCategory!='FashionJewellery' and product.rootCategory=='FineJewellery'}">		
+
        <div id="fineJewellery"></div>
 		<div class="accordin ${product.rootCategory}">      
 			 <c:forEach items="${product.fineJewelleryDeatils}" var="classification" varStatus="outer">
@@ -107,6 +108,11 @@
          </div>
       </c:forEach>
 		</div>
+		<div id = "showPrice">
+		 <p id = "show" class="pricebreakup-link"> </p>
+		</div>
+		
+	    <table id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></table> 
 	</c:when>
 <c:when test="${product.rootCategory=='Watches'}">
 <c:if test="${not empty product.classifications}">

@@ -3,9 +3,9 @@
  */
 package com.tisl.mpl.facade.product;
 
-import de.hybris.platform.commercefacades.product.data.PriceData;
+import java.util.List;
 
-import java.util.LinkedHashMap;
+import com.tisl.mpl.data.PriceBreakupData;
 
 
 /**
@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 public interface PriceBreakupFacade
 {
 	//
-	public LinkedHashMap<String, PriceData> getPricebreakup(final String ussid);
+	public List<PriceBreakupData> getPricebreakup(final String ussid);
 
 	//Added for 3782
 
