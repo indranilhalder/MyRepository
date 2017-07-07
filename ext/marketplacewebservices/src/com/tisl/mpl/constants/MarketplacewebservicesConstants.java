@@ -581,4 +581,7 @@ public class MarketplacewebservicesConstants
 	public static final String ORDER_COLLECTED_STATUS = "ORDER_COLLECTED".intern();
 
 	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
+
+	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+	public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
 }
