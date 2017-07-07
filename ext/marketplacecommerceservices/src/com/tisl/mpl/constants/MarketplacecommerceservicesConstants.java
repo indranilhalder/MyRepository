@@ -2161,6 +2161,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CLICK_AND_COLLECT = "click-and-collect";
 
 	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
-	public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
+	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
 
 }

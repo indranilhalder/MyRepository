@@ -3082,7 +3082,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
 					{
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
 					}
 
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
@@ -3268,7 +3269,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					if (StringUtils.isNotEmpty(paymentMode)
 							&& paymentMode.equalsIgnoreCase(MarketplacecheckoutaddonConstants.NETBANKINGMODE))
 					{
-						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
+						getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKFROMBIN, bankName);
+						//getSessionService().setAttribute(MarketplacecheckoutaddonConstants.BANKNAMEFORNETBANKING, bankName);
 					}
 
 					final Map<String, MplZoneDeliveryModeValueModel> freebieModelMap = new HashMap<String, MplZoneDeliveryModeValueModel>();
@@ -4740,7 +4742,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
