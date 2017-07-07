@@ -20,37 +20,6 @@
 					$(document).ready(function() {
 						showPromotionTag();
 					});
-					/* var timeoutID;
-					function setup() {
-					    this.addEventListener("mousemove", resetTimer, false);
-					    this.addEventListener("mousedown", resetTimer, false);
-					    this.addEventListener("keypress", resetTimer, false);
-					    this.addEventListener("DOMMouseScroll", resetTimer, false);
-					    this.addEventListener("mousewheel", resetTimer, false);
-					    this.addEventListener("touchmove", resetTimer, false);
-					    this.addEventListener("MSPointerMove", resetTimer, false);
-					    startTimer();
-					}
-					setup();
-
-					function startTimer() {
-					    // wait 2 seconds before calling goInactive
-					    timeoutID = window.setTimeout(goInactive, '${timeout}');
-					}
-
-					function resetTimer(e) {
-					    window.clearTimeout(timeoutID);
-
-					    goActive();
-					}
-
-					function goInactive() {
-					  // window.location = '${request.contextPath}/cart';
-					}
-
-					function goActive() {
-					      startTimer();
-					} */
 					</script>
 	<script type="text/javascript">
 
@@ -94,7 +63,7 @@
 		<button onclick="ACC.singlePageCheckout.searchCNCStores('cncStoreSearch${entryNumber}','${entryNumber}');" type="button"></button>
 		</div>
 		</div>
-		<div class="change_pincode_block block${entryNumber}">
+		<div class="cnc_pincode_search_wrapper change_pincode_block block${entryNumber}">
 			<span class="change_txt txt${entryNumber}">Change Pincode</span>
 			<div class="input${entryNumber} row" style="display:none;">
 				<span class="">
@@ -188,6 +157,88 @@ $(document).ready(function() {
 			          data : dataString${entryNumber},   
 			          success : function(data) {
 			        	 $("#cncUlDiv${entryNumber}").html(data);
+			        	 var cnc_arrow_left, cnc_top;
+			            	if($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").length > 0){
+			            	cnc_arrow_left = parseInt($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").offset().left) + 40;
+			            	//cnc_top = parseInt($('#cncStoreContainer'+entryNumber).offset().top) - parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().top) - 8;
+			            	}
+			            	$('#cncStoreContainer${entryNumber}').find(".cnc_arrow").css("left",cnc_arrow_left+"px");
+			            	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
+			            	//CNC Carousel
+			            	if($(".cnc_item .removeColor1").length == 2){
+			        			$("#cnc_carousel").addClass("two_address");
+			        		}
+			        		if($(".cnc_item .removeColor1").length == 1){
+			        			$("#cnc_carousel").addClass("one_address");
+			        		}
+			            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+			        				'initialize.owl.carousel initialize.owl.carousel ' +
+			        				'to.owl.carousel changed.owl.carousel',
+			        				function(event) {
+			        			var items     = event.item.count;     // Number of items
+			        			var item      = event.item.index;     // Position of the current item
+			        			
+			        			if($(window).width() > 1263){
+									var page_no = parseInt(items/3);
+									if(items%3 > 0){
+										page_no = parseInt(items/3) + 1;
+									}
+									var current_page = parseInt(item/3) + 1;
+									if(item%3 > 0){
+										current_page = parseInt(item/3) + 2;
+									}
+									}
+									else{
+										var page_no = parseInt(items/2);
+										if(items%2 > 0){
+											page_no = parseInt(items/2) + 1;
+										}
+										var current_page = parseInt(item/2) + 1;
+										if(item%2 > 0){
+											current_page = parseInt(item/2) + 2;
+										}
+									}
+			        			$(".page_count_cnc").html("<span>"+current_page + " / " + page_no+"</span>");
+			        		});
+			        		$(".cnc_carousel").owlCarousel({
+			        			items:3,
+			        			loop: false,
+			        			dots:false,
+			        			margin: 60,
+			        			navText:[],
+			        			slideBy: 3,
+			        			responsive : {
+			            			// breakpoint from 0 up
+			            			0 : {
+			            				items:1,
+			            				stagePadding: 36,
+			            				slideBy: 1,
+			            				margin: 0,
+			            				nav: ($(".cnc_item .removeColor1").length <= 1)?false:true,
+			            			},
+			            			// breakpoint from 768 up
+			            			768 : {
+			            				items:2,
+			            				slideBy: 2,
+			            				nav: ($(".cnc_item .removeColor1").length <= 2)?false:true,
+			            			},
+			            			// breakpoint from 1280 up
+			            			1280 : {
+			            				items:3,
+			            				nav: ($(".cnc_item .removeColor1").length <= 3)?false:true,
+			            			}			
+			            		},
+			            		onRefresh: function () {
+			            			$(".cnc_carousel").find('div.owl-item').height('');
+			                    },
+			                    onRefreshed: function () {
+			                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
+			                    }
+			        		});
+			            	
+			        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
+			        			event.stopPropagation();
+			        		});
 			          },
 			          error : function(xhr, data, error) {
 			        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
