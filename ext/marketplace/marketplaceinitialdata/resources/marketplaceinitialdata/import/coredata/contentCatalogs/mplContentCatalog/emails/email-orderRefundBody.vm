@@ -45,7 +45,7 @@
 		.borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
 	}
 </style> 
-		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px;">
 			<tbody>
 			    <tr>
 			      <td>
@@ -116,20 +116,18 @@
 					  	        </tr>
 		  	        		    <tr>
 		  	        		    	<td align="center" class="topLinks">
-		  	        		    		<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
+		  	        		    		<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </span>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </span>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </span>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </span>
 			  	        		      	
 		  	        		    	</td> 
 		  	        		    </tr>
 		  	        		     <tr >
-		  	        		      <td style="border-bottom:1px solid #aa1d3d;">
-		  	        		        <span style="display:block; height: 5px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
+		  	        		      <td style="border-bottom:1px solid #aa1d3d;"></td>
 		  	        		    </tr>
 		  	        		    <tr class="dsnone">
 		  	        		      <td>
@@ -240,17 +238,17 @@
 		  	        		    		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		  	        		    		  <tbody>
 		  	        		    		  	<tr>
-			  	        		    		    <td class="smFull dsnone" width="300">&nbsp;</td>
+			  	        		    		    <td class="smFull dsnone" width="100">&nbsp;</td>
 			  	        		    		    <td class="smFull">
 			  	        		    		    	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
 	  	        		    		 				 <tbody>
 	  	        		    		 				 	<tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.deliveryCharge == 0)
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.deliveryCharge == 0)
 Free
 #else
 &#x20b9; $ctx.numberTool.format("#0.00",$ctx.deliveryCharge)
@@ -258,7 +256,7 @@ Free
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.convenienceChargesVal == 0)
 Free
 #else
 &#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
@@ -273,7 +271,7 @@ Free
 								  	        		   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
+						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
 			 			  	        		    	   </tr>
 	  	        		    		 				 </tbody>
 	  	        		    		 				</table> 
@@ -417,10 +415,10 @@ Free
 		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
 		  	        		    					<td class="smFull">
 														#if($ctx.cmsSlotContents.appstore)
-															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp?tcid=em:transactional:refundinitiate:android:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp?tcid=em:transactional:refundinitiate:android:22052017" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.appstore}</a> 
 														#end
 														#if($ctx.cmsSlotContents.googleplay)
-															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Orderconfirmation:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Orderconfirmation:android:22052017" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.googleplay}</a> 
 														#end
 													</td>
 		  	        		    					<td class="smFull dsnone">
