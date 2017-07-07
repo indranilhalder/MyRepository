@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewelleryPriceRowModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -63,6 +64,41 @@ public class PriceBreakupDaoImpl implements PriceBreakupDao
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
+
 	//
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.PriceBreakupDao#getJewelInfo(java.lang.String)
+	 */
+	@Override
+	public List<JewelleryInformationModel> getJewelInfo(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			final String queryString = "select {jp." + JewelleryInformationModel.PK + "} from {"
+					+ JewelleryInformationModel._TYPECODE + " as jp} where {jp." + JewelleryInformationModel.USSID + "}" + "=?ussid";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+
+			query.addQueryParameter("ussid", ussid);
+
+			return flexibleSearchService.<JewelleryInformationModel> search(query).getResult();
+
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
 
 }

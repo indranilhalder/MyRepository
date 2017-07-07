@@ -579,8 +579,8 @@ tr.d0 td {
 		<c:if test="${product.rootCategory==electronics  || product.rootCategory==watches}">
 			<product:productDetailsClassifications product="${product}" />
 			</c:if>
-	
-		
+
+
 
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType" />
