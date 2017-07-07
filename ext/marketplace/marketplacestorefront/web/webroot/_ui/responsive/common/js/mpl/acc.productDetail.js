@@ -3035,12 +3035,12 @@ function loadDefaultWishListName_SizeGuide() {
 
 		});*/
 		
-		/*		price breakup in PDP of fashion jewellery
-		*/		
-				$("#show").click(function() {
-					$("#showPriceBreakup").slideToggle("fast");
-					$(".pricebreakup-link").toggleClass("expand-breakup");
-				});
+		//price breakup in PDP of fine jewellery starts
+		$("#show").click(function() {
+			$("#showPriceBreakup").slideToggle("fast");
+			$(".pricebreakup-link").toggleClass("expand-breakup");
+		});
+		//price breakup in PDP of fine jewellery starts
 		
 			/*UF-32*/
 		 $("a.otherSellersFont").click(function(){
@@ -3918,11 +3918,10 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					});
 
 				/* PRICE BREAKUP STARTS HERE */
-				
-							
 				if(data['displayconfigattr'] == "Yes"){
 					$("#showPrice").show();
 					var priceBreakUp= '<p>Price Breakup</p>'
+					$('#show').empty();
 					$("#show").append( priceBreakUp);
 				}else if(data['displayconfigattr'] == "No"){
 					$("#showPrice").hide();				
@@ -3930,14 +3929,43 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#showPrice").hide();
 				}
 				
-				var priceBreakupForPDP = data['priceBreakup'];
-					$.each(priceBreakupForPDP,function(key,value) {	
-						var pricebreakuplist = "<li><div class='price-d'>"+ key +"<span>"+ value.formattedValue +"</span></div></li>";
-							$("#showPriceBreakup").append(pricebreakuplist);
+				try{
+					$('#showPriceBreakup').empty();
+					var priceBreakupList = data['priceBreakup'];
+					
+					if(null!=priceBreakupList && undefined!=priceBreakupList && !priceBreakupList==""){
+						var priceBreakup = JSON.parse(priceBreakupList);
+					}
+					if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
+						priceBreakup.forEach(function(entry) {
+							 var html1 = "<tr><td>"+entry.name+"</td>";
+							 var list;
+							 var weightRateList = entry.weightRateList;
+							 if(undefined!=weightRateList) {
+								 	weightRateList.forEach(function(entry1) {
+								 		if(undefined!=list){
+								 			list=list+"<br>"+entry1;
+								 		}else{
+								 			list = entry1;
+								 		}
+							});
+							var html2 = "<td>"+list+"</td>";
+							}else {
+								html2 = "<td>-</td>";
+							}
+							var html3 = "<td>"+entry.price.formattedValue+"</td></tr>";
+							var preFinalHtml = html1.concat(html2);
+							var finalHtml = preFinalHtml.concat(html3);
 							
-						
-				});
-				
+							 $("#showPriceBreakup").append(finalHtml);
+						});
+					}else {
+						console.log("priceBreakup is undefined*******");	
+						}
+				}		
+				catch(err) {
+					console.log("exception is:"+err);  
+				}
 				/* PRICE BREAKUP ENDS HERE */
 					
 					/* JewelleryDetail STARTS HERE */
@@ -4154,6 +4182,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 
 					$("#ussid").val(data['sellerArticleSKU']);
 					$("#sellerSkuId").val(data['sellerArticleSKU']);
+					//Added for Fine Jewellery Details Section
+					$("#jewelDetailsUssid").html(data['sellerArticleSKU']);
 
 					var spPrice = data['specialPrice'];
 					var mrpPrice = data['mrp'];

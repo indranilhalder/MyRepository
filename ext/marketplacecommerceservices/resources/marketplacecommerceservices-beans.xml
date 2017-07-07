@@ -848,4 +848,10 @@
  		<property name="layout" type="com.tisl.mpl.core.enums.LayoutStructure" />
  	</bean>
 	<!-- TPR-1072 END -->
+	<!-- //PRICE BREAKUP STARTS:TPR-3752- -->
+	<bean class="com.tisl.mpl.data.PriceBreakupData">
+	<property name="name" type="String" />
+	<property name="weightRateList" type="java.util.List&lt;String>" />
+	<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
 </beans>

@@ -1646,9 +1646,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws VoucherOperationException
 	 * @throws EtailNonBusinessExceptions
 	 * @throws UnsupportedEncodingException
+	 * @throws CMSItemNotFoundException
 	 */
 	private void prepareModelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
-			EtailNonBusinessExceptions, UnsupportedEncodingException
+			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
 	{
 		final CartModel serviceCart = cartModel;
 		mplCouponFacade.releaseVoucherInCheckout(serviceCart);
@@ -1663,9 +1664,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 * @throws VoucherOperationException
 	 * @throws EtailNonBusinessExceptions
 	 * @throws UnsupportedEncodingException
+	 * @throws CMSItemNotFoundException
 	 */
 	private void prepModelForDelModeWdoutRemDlMod(final Model model, final CartModel cartModel) throws VoucherOperationException,
-			EtailNonBusinessExceptions, UnsupportedEncodingException
+			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
 	{
 		final CartModel serviceCart = cartModel;
 		mplCouponFacade.releaseVoucherInCheckout(serviceCart);
@@ -3184,7 +3186,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return isScheduleServiceble;
 	}
 
+
 	/**
+	 * used for reseting values inserted for SD
+	 *
 	 * @param cartEntryList
 	 */
 	private void resetSlotEntries(final List<AbstractOrderEntryModel> cartEntryList)
@@ -3214,6 +3219,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		}
 	}
 
+	/**
+	 * @param model
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.SLOTDELIVERYRESPONSIVE, method = RequestMethod.GET)
 	public String selectDeliverySlotResponsive(final Model model) throws UnsupportedEncodingException
 	{
