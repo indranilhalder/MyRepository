@@ -221,7 +221,17 @@
 	</bean>
 
 	<!-- AddProductCategoryInterceptor End -->
+<!-- HasVariantProductForFineJewellery for Fine Jewellery Start -->
+   <bean id="addHasVariantForFineJewelleryInterceptor" class="com.tisl.mpl.interceptor.AddHasVariantForFineJewelleryInterceptor">
+	</bean>
 
+     <bean id="addHasVariantForFineJewelleryInterceptorMapping"
+		class="de.hybris.platform.servicelayer.interceptor.impl.InterceptorMapping">
+		<property name="interceptor" ref="addHasVariantForFineJewelleryInterceptor" />
+		<property name="typeCode" value="SellerInformation" />
+		
+	</bean>
+<!-- HasVariantProductForFineJewellery for Fine Jewellery End -->
 
 	<!-- AddProductCategoryInterceptor Start -->
 	<bean id="addProductColorHexCodeInterceptor"

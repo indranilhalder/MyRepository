@@ -215,8 +215,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -488,45 +488,13 @@ public class ProductDetailsHelper
 							for (final FeatureValueData featurevalue : featuredvalue)
 							{
 								final String featureV = featurevalue.getValue();
-								final Set keys = featureMap.keySet();
-								final Iterator itr = keys.iterator();
-								String key = null;
-								if (keys.contains(featurename))
-								{
-									while (itr.hasNext())
-									{
-										key = (String) itr.next();
-										if (key != null && key.equalsIgnoreCase(featurename))
-										{
-											featureMap.get(featurename).add(featureV);
-										}
-									}
-								}
-								else
-								{
-									featureValueList.add(featureV);
-									featureMap.put(featurename, featureValueList);
-								}
-							}
-						}
-						final Set keys = featureDetails.keySet();
-						final Iterator itr = keys.iterator();
-						if (keys.contains(classificationName))
-						{
-							while (itr.hasNext())
-							{
-								final String key = (String) itr.next();
-								if (key != null && key.equalsIgnoreCase(classificationName))
-								{
-									featureDetails.get(classificationName).putAll(featureMap);
-								}
-							}
-						}
-						else
-						{
+								featureValueList.add(featureV);
+								featureMap.put(featurename, featureValueList);
 
-							featureDetails.put(classificationName, featureMap);
+							}
 						}
+						featureDetails.put(classificationName, featureMap);
+
 					}
 
 				}
@@ -1273,15 +1241,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
