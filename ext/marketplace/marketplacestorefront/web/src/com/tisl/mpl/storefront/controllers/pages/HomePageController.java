@@ -1549,7 +1549,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1692,7 +1692,7 @@ public class HomePageController extends AbstractPageController
 	{
 		final String REMOTE_IP = request.getHeader("REMOTE_ADDR");
 		final String HTTP_FORWARDED_FOR = request.getHeader("HTTP_FORWARDED_FOR");
-		final String NO_IP = "NA";
+
 		if (REMOTE_IP != null && REMOTE_IP.length() != 0 && !"unknown".equalsIgnoreCase(REMOTE_IP))
 		{
 			return REMOTE_IP;
@@ -1701,7 +1701,10 @@ public class HomePageController extends AbstractPageController
 		{
 			return HTTP_FORWARDED_FOR;
 		}
-		return NO_IP;
+		else
+		{
+			return request.getRemoteAddr();
+		}
 	}
 
 	/**
