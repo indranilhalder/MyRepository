@@ -199,11 +199,7 @@
 												<li class="order-number"><span><spring:theme
 															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 
-												<li class="links"><a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
-															code="text.orderHistory.view.order" /></a> <a
-													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"><spring:theme
-															code="text.orderHistory.track.order" /></a></li>
+												
 											</ul>
 										</li>
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
@@ -401,12 +397,20 @@
 
 																<%-- 	<c:set var="bogoCheck" value="${entry.associatedItems ne null ? 'true': 'false'}"></c:set> --%>
 
-																<a href="" data-toggle="modal"
+																<a href=""  class="btn btn-primary btn-sm"
+																 data-toggle="modal"
 																	data-target="#cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}"
 																	data-mylist="<spring:theme code="text.help" />"
 																	data-dismiss="modal"
 																	onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 																		text="Cancel Order" /></a>
+																<a
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"  class="btn btn-primary btn-sm"
+													><spring:theme
+															code="text.orderHistory.view.order" /></a> <a
+													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"  class="btn btn-primary btn-sm"
+													><spring:theme
+															code="text.orderHistory.track.order" /></a>
 															</c:if>
 
 														</c:if>
