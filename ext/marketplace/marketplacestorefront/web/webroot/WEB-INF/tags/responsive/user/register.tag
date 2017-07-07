@@ -43,8 +43,8 @@
 	<form:hidden path="affiliateId" class="add_edit_delivery_address_id" />
 	
     <%--TPR-6272 starts here--%>
-	<c:set var="isLuxVal" value="${not empty param.isLux?param.isLux:false}"/>
-    <form:hidden path="isFromLuxury" value="${isLuxVal}" />
+	<%-- <c:set var="isLuxVal" value="${not empty param.isLux?param.isLux:false}"/>
+    <form:hidden path="isFromLuxury" value="${isLuxVal}" /> --%>
     <%--TPR-6272 ends here--%>
 	
 <%-- 	<formElement:formCheckbox idKey="check_MyRewards"

@@ -135,7 +135,7 @@
 
 	<enumtypes>
 	                <!-- TPR-6272 starts here -->
-	                <enumtype generate="true" code="registrationPlatform" autocreate="true" dynamic="true">
+	                <!-- <enumtype generate="true" code="registrationPlatform" autocreate="true" dynamic="true">
 			              <description>
 				               This enumeration creates the registration platform.
 			              </description>
@@ -149,7 +149,7 @@
 			              <value code="Lux_Mobile_App" />
 			              <value code="Lux_iOS_App" />
 			              <value code="Lux_Android_App" />			              
-		            </enumtype>
+		            </enumtype> -->
 	                <!-- TPR-6272 ends here -->
 
 		<!-- TPR-628-Make changes to Banners rendering in MObile Viewports -->

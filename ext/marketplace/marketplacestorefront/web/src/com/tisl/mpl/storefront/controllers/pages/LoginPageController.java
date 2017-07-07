@@ -490,18 +490,17 @@ public class LoginPageController extends AbstractLoginPageController
 				{
 
 					//TPR-6272 starts here
-					final String luxDetector = form.getIsFromLuxury();//for luxury registration capture
-					int platformNumber;
-					if (luxDetector != null && StringUtils.isNotEmpty(luxDetector)
-							&& StringUtils.equalsIgnoreCase(luxDetector, "true"))
-					{
-						platformNumber = 5;//for luxury desktop web
-					}
-					else
-					{
-						platformNumber = 1;//for mkt desktop web
-					}
+					//final String luxDetector = form.getIsFromLuxury();//for luxury registration capture
+					/*
+					 * int platformNumber; if (luxDetector != null && StringUtils.isNotEmpty(luxDetector) &&
+					 * StringUtils.equalsIgnoreCase(luxDetector, "true")) { platformNumber = 5;//for luxury desktop web }
+					 * else { platformNumber = 1;//for mkt desktop web } //TPR-6272 ends here
+					 */
+					//TPR-6272 starts here
+					final int platformNumber = 1;//for mkt desktop web
 					//TPR-6272 ends here
+
+
 
 					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially
