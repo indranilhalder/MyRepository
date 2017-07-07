@@ -72799,4 +72799,21 @@ body .account .right-account .order-history.order-details li.item #pickNo{
      width: auto;
 }
 
+/* TISPRDT- 1791*/
+@media (max-width: 420px){
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    font-size: 9px;
+    color: #ccc;
+    padding: 0 4px !important;
+} 
+}
+
 /*TISPRDT 1673 fix end*/
+@media (max-width: 790px){
+	.product-facet .facet.size .facet-list li.filter-Size,
+	.product-facet .facet.Size .facet-list li.filter-size,
+	.product-facet .facet.size .facet-list li.filter-size,
+	.product-facet .facet.Size .facet-list li.filter-Size{
+		margin: 5px 0;
+	}
+}
