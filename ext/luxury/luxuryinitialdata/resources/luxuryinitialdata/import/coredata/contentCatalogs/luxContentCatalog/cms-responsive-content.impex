@@ -482,6 +482,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-AccountCouponDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-AccountCouponDetailsPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-AccountCouponDetailsPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountCouponDetailsPage;WishList;;WishListSlot;true
 ;;Footer-AccountCouponDetailsPage;Footer;;FooterSlot;true
 ;;HeaderLinks-AccountCouponDetailsPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-AccountCouponDetailsPage;SearchBox;;SearchBoxSlot;true
@@ -497,6 +498,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-AccountOverviewPageTemplate;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-AccountOverviewPageTemplate;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-AccountOverviewPageTemplate;MiniCart;;MiniCartSlot;true
+;;WishList-AccountOverviewPageTemplate;WishList;;WishListSlot;true
 ;;Footer-AccountOverviewPageTemplate;Footer;;FooterSlot;true
 ;;HeaderLinks-AccountOverviewPageTemplate;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-AccountOverviewPageTemplate;SearchBox;;SearchBoxSlot;true
@@ -532,6 +534,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-AccountAddressBookPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-AccountAddressBookPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-AccountAddressBookPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountAddressBookPage;WishList;;WishListSlot;true
 ;;Footer-AccountAddressBookPage;Footer;;FooterSlot;true
 ;;HeaderLinks-AccountAddressBookPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-AccountAddressBookPage;SearchBox;;SearchBoxSlot;true
@@ -554,6 +557,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-AccountPaymentDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-AccountPaymentDetailsPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-AccountPaymentDetailsPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountPaymentDetailsPage;WishList;;WishListSlot;true
 ;;Footer-AccountPaymentDetailsPage;Footer;;FooterSlot;true
 ;;HeaderLinks-AccountPaymentDetailsPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-AccountPaymentDetailsPage;SearchBox;;SearchBoxSlot;true
@@ -565,6 +569,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-AccountOrderDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-AccountOrderDetailsPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-AccountOrderDetailsPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountOrderDetailsPage;WishList;;WishListSlot;true
 ;;Footer-AccountOrderDetailsPage;Footer;;FooterSlot;true
 ;;HeaderLinks-AccountOrderDetailsPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-AccountOrderDetailsPage;SearchBox;;SearchBoxSlot;true
@@ -632,6 +637,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-AccountUpdateProfilePage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-AccountUpdateProfilePage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-AccountUpdateProfilePage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountUpdateProfilePage;WishList;;WishListSlot;true
 ;;Footer-AccountUpdateProfilePage;Footer;;FooterSlot;true
 ;;HeaderLinks-AccountUpdateProfilePage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-AccountUpdateProfilePage;SearchBox;;SearchBoxSlot;true

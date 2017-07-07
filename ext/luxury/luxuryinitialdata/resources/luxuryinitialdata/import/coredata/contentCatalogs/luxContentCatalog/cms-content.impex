@@ -155,12 +155,10 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;amazingBrands;text/png;amazingBrands.png;$siteResource/images/theme/luxuary_brands_icon.png;;WeeklySpecialBannerImage-1;
 ;;freeShipping;text/png;freeShipping.png;$siteResource/images/theme/free-shippinmg-icon.png;;WeeklySpecialBannerImage-1;
 ;;customerService;text/png;customerService.png;$siteResource/images/theme/customer-service.png;;WeeklySpecialBannerImage-1;
-;;facebook;text/png;facebook-icon.png;$jarResourceCms/preview-images/facebook-icon.png;;WeeklySpecialBannerImage-1;
-;;twitter;text/png;twitter-icon.png;$jarResourceCms/preview-images/twitter-icon.png;;WeeklySpecialBannerImage-1;
-;;youtube;text/png;youtube-icon.png;$jarResourceCms/preview-images/youtube-icon.png;;WeeklySpecialBannerImage-1;
-;;instagram;text/png;instgrm-icon.png;$jarResourceCms/preview-images/instgrm-icon.png;;WeeklySpecialBannerImage-1;
-;;googleplus;text/png;googleplus-icon.png;$jarResourceCms/preview-images/googleplus-icon.png;;WeeklySpecialBannerImage-1;
-;;ping;text/png;ping-icon.png;$jarResourceCms/preview-images/ping-icon.png;;WeeklySpecialBannerImage-1;
+;;facebook;text/png;facebook.png;$jarResourceCms/preview-images/facebook.png;;WeeklySpecialBannerImage-1;
+;;twitter;text/png;twitter.png;$jarResourceCms/preview-images/twitter.png;;WeeklySpecialBannerImage-1;
+;;youtube;text/png;youtube.png;$jarResourceCms/preview-images/youtube.png;;WeeklySpecialBannerImage-1;
+;;instagram;text/png;instagram.png;$jarResourceCms/preview-images/instagram.png;;WeeklySpecialBannerImage-1;
 ;;googleplay;text/png;googleplay.png;$jarResourceCms/preview-images/googleplay.png;;WeeklySpecialBannerImage-1;
 ;;appstore;text/png;appstore.png;$jarResourceCms/preview-images/appstore.png;;WeeklySpecialBannerImage-1;
 ;;tulSiteLogo;text/png;logo.png;$jarResourceCms/preview-images/logo.png;;;
@@ -390,12 +388,10 @@ INSERT_UPDATE ShopOnLuxury;$contentCV[unique=true];uid[unique=true];shopOnLuxury
 
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;SiteLogoComponent;Site logo ;SiteLogoComponent;"/";tulSiteLogo
-;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com/TATACLiQLuxury/";facebook
-;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://twitter.com/TATACLiQLuxury";twitter
-;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://www.youtube.com/channel/UCqsHukm7vFthbcB_JAoMe8A";youtube
-;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://www.instagram.com/TATACLiQLuxury/";instagram
-;;GoogleplusImageComponent;Googleplus Image Component;GoogleplusImageComponent;"https://plus.google.com/+TataCLiQ";googleplus
-;;PingImageComponent;Ping Image Component;PingImageComponent;"#";ping
+;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook
+;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter
+;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube
+;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://instagram.com";instagram
 ;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay
 ;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore
 ;;FreeDeliverySimpleBannerComponent;Free Delivery Simple Banner Component;FreeDeliverySimpleBannerComponent;;;;
@@ -410,9 +406,9 @@ INSERT_UPDATE CMSTabParagraphComponent;$contentCV[unique=true];uid[unique=true];
 
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content[lang=$lang]
 ;;luxuryFooterNotification;Luxury Footer Notification;luxuryFooterNotification;"<ul>
-					<li><span>Authentic and <br> Genuine Brands</br> </span></li>
-					<li><span>Tata Promise </span></li>
-					<li><span>Easy Returns And <br> Exchanges</br> </span></li>
+					<li><span>100% ORIGINAL </span>gaurantee for all products at luxury.com</li>
+					<li><span>Return within 30days </span>of placing your order</li>
+					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
 				</ul>"
 ;;Home-TopBannerContent;Home Top Banner Content;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='#'>Know More</a></p></div>"
 ;;Brand-shopByFav;Brand-shopByFav;;"<section class='look-book clearfix'><h3 class='section-title'>Shop by Category</h3><p class='mb-40 section-content'>Shop your favourites</p><div class='look-book-link'><ul class='list-unstyled clearfix'><li><a href='#'>Polos &amp; T-shirts</a></li><li><a href='#'>Casual Shirts</a></li><li><a href='#'>Jeans</a></li><li><a href='#'>Casual Trousers</a></li><li><a href='#'>Formal Shirts</a></li><li><a href='#'>Formal Trousers</a></li><li><a href='#'>Sweatshirts &amp; Sweaters</a></li><li><a href='#'>Casual Jackets &amp; Blazers Underwear</a></li><li><a href='#'>Underwear</a></li></ul></div></section>";
@@ -439,7 +435,7 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 
 # CMS Footer Component
 INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV); footerBarContent(uid,$contentCV);
-;;LuxuryFooterComponent;9;OnlineShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;;KEEP IN TOUCH;FacebookImageComponent,GoogleplusImageComponent,YoutubeImageComponent,TwitterImageComponent,PingImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
+;;LuxuryFooterComponent;9;StagedShoppingNavNode,UsefulLinksNavNode;EXPERIENCE LUXURY APP ON MOBILE;Give a missed call to 1800-419-3500 and get links to download Luxury app;KEEP IN TOUCH;FacebookImageComponent,TwitterImageComponent,YoutubeImageComponent,InstagramImageComponent;AndroidAppIconComponent,AppleAppIconComponent;luxuryFooterNotification;
 
 
 # CMS tabs components
@@ -798,6 +794,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-CartPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-CartPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-CartPage;MiniCart;;MiniCartSlot;true
+;;WishList-CartPage;WishList;;WishListSlot;true
 ;;Footer-CartPage;Footer;;FooterSlot;true
 ;;HeaderLinks-CartPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-CartPage;SearchBox;;SearchBoxSlot;true
@@ -1035,6 +1032,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-LuxuryContentPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-LuxuryContentPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-LuxuryContentPage;MiniCart;;MiniCartSlot;true
+;;WishList-LuxuryContentPageTemplate;WishList;;WishListSlot;true
 ;;Footer-LuxuryContentPage;Footer;;FooterSlot;true
 ;;HeaderLinks-LuxuryContentPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-LuxuryContentPage;SearchBox;;SearchBoxSlot;true

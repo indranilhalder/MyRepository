@@ -17,6 +17,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;HomepageLink-CartPage;HomepageNavLink;;HomepageNavLinkSlot;true
 ;;NavigationBar-CartPage;NavigationBar;;NavigationBarSlot;true
 ;;MiniCart-CartPage;MiniCart;;MiniCartSlot;true
+;;WishList-CartPage;WishList;;WishListSlot;true
 ;;Footer-CartPage;Footer;;FooterSlot;true
 ;;HeaderLinks-CartPage;HeaderLinks;;HeaderLinksSlot;true
 ;;SearchBox-CartPage;SearchBox;;SearchBoxSlot;true
