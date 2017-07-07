@@ -87,8 +87,20 @@ var stwService = {
 var stwRender = {
 	    wigetLoaderOnIp: function(ip) {
 	    	var flag = true;
-	    	
-	    	if(ip!="NA" && ip.split(".").length == 4){
+	    	//check if more than one ip is coming
+	    	if(ip.indexOf(",") != -1){
+	    		var ips = ip.split(",");
+	    		var lastIp = ips[ips.length-1];
+	    		if(lastIp.split(".").length == 4){
+	    			var lastIpPart = lastIp.split(".")[3];
+	    			if (lastIpPart % 2 == 0) {
+		    			delete productWidget[4]; // if even then load STW and delete HOT NOW
+		                return true;
+		    		}else{
+		    			return false;
+		    		}
+	    		}
+	    	}else if(ip.split(".").length == 4){
 	    		var lastIpPart = ip.split(".")[3];
 	    		if (lastIpPart % 2 == 0) {
 	    			delete productWidget[4]; // if even then load STW and delete HOT NOW
