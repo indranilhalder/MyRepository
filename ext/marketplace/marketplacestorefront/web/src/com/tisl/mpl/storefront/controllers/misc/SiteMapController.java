@@ -154,8 +154,11 @@ public class SiteMapController extends AbstractPageController
 						{
 							for (final NavigationBarComponentModel navigationBar : navigationBars)
 							{
-								final CategoryModel department = navigationBar.getLink().getCategory();
-								departments.add(department);
+								if (navigationBar.getLink() != null && navigationBar.getLink().getCategory() != null)
+								{
+									final CategoryModel department = navigationBar.getLink().getCategory();
+									departments.add(department);
+								}
 							}
 						}
 						else
@@ -280,6 +283,7 @@ public class SiteMapController extends AbstractPageController
 								}
 								catch (final Exception exception)
 								{
+									exception.printStackTrace();
 									ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
 								}
 							}
