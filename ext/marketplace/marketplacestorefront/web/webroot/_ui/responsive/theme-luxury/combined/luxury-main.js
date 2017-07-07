@@ -13341,7 +13341,7 @@ TATA.CommonFunctions = {
     },
     swipeLookBook: function() {
         $(window).resize(function() {
-            $(window).width() < 768 ? $(".mob-slicker").slick({
+            $(window).width() < 768 && $(".mob-slicker").slick({
                 slide: "li",
                 arrows: !1,
                 responsive: [ {
@@ -13351,7 +13351,7 @@ TATA.CommonFunctions = {
                         slidesToScroll: 1
                     }
                 } ]
-            }) : $(".mob-slicker").unslick();
+            });
         });
     },
     init: function() {

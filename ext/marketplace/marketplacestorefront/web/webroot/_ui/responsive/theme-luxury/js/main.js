@@ -646,7 +646,7 @@ TATA.CommonFunctions = {
         });
     },
     swipeLookBook: function() {
-		$(window).resize(function(){
+		$(window).resize(function(){		
 		      if($(window).width() < 768) {
 		    	  $('.mob-slicker').slick({
 				slide: 'li',
@@ -659,8 +659,6 @@ TATA.CommonFunctions = {
 		  	      	}	
 		  	    }]
 			});
-		  } else {
-		    $('.mob-slicker').unslick();
 		  }
 		});    	
     },
