@@ -157,6 +157,7 @@ $(document).ready(function() {
 			          data : dataString${entryNumber},   
 			          success : function(data) {
 			        	 $("#cncUlDiv${entryNumber}").html(data);
+			        	 $("#cncChangedPincode${entryNumber}").html($(".changepin${entryNumber}").val());
 			        	 var cnc_arrow_left, cnc_top;
 			            	if($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").length > 0){
 			            	cnc_arrow_left = parseInt($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").offset().left) + 40;
