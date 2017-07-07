@@ -87,27 +87,20 @@
 		<!-- START OF TOP COMPONENT -->
 		<div class="checkout-success-body thanks">
 			<div class="wrapper">
-				<div><img src="${themeResourcePath}/images/thankyou.png"></div>     
-    <%-- <h3 class="checkout-success-body-headline">
-     <spring:theme code="checkout.orderConfirmation.thankYouForOrder" />
-    </h3> --%>
-    <h3>We have received your order.</h3>
-    <h2>
-     <p>
-      ${orderStatusMsg}
-     </p>
-    </h2>
-    <p>
-     <strong><spring:theme
-       code="text.account.order.orderNumber" text="Order Number: #{0}"
-       arguments="${orderData.code}" /></strong>
-    </p>
-    <div class="btn-design mb-40 mt-40">
-      <div class="left  mb-10"><button class="btn btn-default btn-lg">Track Order</button></div>
-      <div class="right mb-10"><button class="btn btn-primary btn-lg">Continue Shopping</button></div>     
-     
-    </div>
-    <p>
+				<h3 class="checkout-success-body-headline">
+					<spring:theme code="checkout.orderConfirmation.thankYouForOrder" />
+				</h3>
+				<p>
+					<p>
+						${orderStatusMsg}
+					</p>
+				</p>
+				<p>
+					<strong><spring:theme
+							code="text.account.order.orderNumber" text="Order Number: #{0}"
+							arguments="${orderData.code}" /></strong>
+				</p>
+				<p>
 				      <!--R2.3 TISRLUAT-1062 Start 07-03-2017 -->
 					<%-- <strong>
 					<fmt:formatDate value="${orderData.created}" pattern="MMMM " var="month" />
@@ -153,13 +146,13 @@
 			</div>
 		</div>
 		<!-- END OF TOP COMPONENT -->
-		<%-- <div class="wrapper">
+		<div class="wrapper">
 
 			<!-- START OF RIGHT BLOCK COMPONENT -->
 			<div class="right-block billing">
 				<div class="orderTotalsThankyou top block">
 					<div class="span-16">
-						<order:receivedPromotions order="${orderData}" />
+						<%-- <order:receivedPromotions order="${orderData}" /> --%>
 					</div>
 					<div class="span-8 right last">
 						<order:orderTotalsItem order="${orderData}"
@@ -185,16 +178,16 @@
 			<div class="orderBoxes clearfix addressThankyou">
                  	<c:set var="sellerOrder"  value="${orderData}" />
 					<order:deliveryAddressItem order="${sellerOrder}" />					
-						<p>"${totalCount}" ITEMS SHIPPING TO THE ADDRESS</p>
-						<order:deliveryMethodItem order="${orderData}"/>
+					<%-- 	<p>"${totalCount}" ITEMS SHIPPING TO THE ADDRESS</p> --%>
+					<%-- 	<order:deliveryMethodItem order="${orderData}"/> --%>
 
 				</div>
 					<ul class="product-block orderDetailsThankyou">
 				<li class="header">
 			<ul>
 				<li id="header2"><spring:theme code="text.productDetails" text="Product Information"/></li>
-				<li id="header4"><spring:theme code="text.quantity" text="Quantity"/></li>
-				<li id="header5"><spring:theme code="text.itemPrice" text="Item Price"/></li>
+				<%-- <li id="header4"><spring:theme code="text.quantity" text="Quantity"/></li>
+				<li id="header5"><spring:theme code="text.itemPrice" text="Item Price"/></li> --%>
 				<li class="shipping"><spring:theme code="text.deliveryMethod" text="Shipping Method:"/></li>
 				<li id="header6" class="price"><spring:theme code="text.total" text="Price"/></li>
 			</ul>
@@ -203,9 +196,9 @@
 			 <c:forEach items="${orderData.sellerOrderList}" var="sellerOrder">  
 			 
 			
-					<p style="font-weight:500;font-size:16px;"><spring:theme
+					<%-- <p style="font-weight:500;font-size:16px;"><spring:theme
 							code="text.account.order.orderNumber" text="Order number is {0}"
-							arguments="${sellerOrder.code}" /></p>
+							arguments="${sellerOrder.code}" /></p> --%>
 				
 				
 			
@@ -221,9 +214,9 @@
 							orderGroup="${orderGroup}"   parentOrder="${orderData}"/>
 					</c:forEach>
 
-					<div>
+					<%-- <div>
 			    <button class="btn btn-default continueShoppingButton" data-continue-shopping-url="${continueShoppingUrl}"><spring:theme code="checkout.orderConfirmation.continueShopping"/></button>
-            </div>
+            </div> --%>
          </c:forEach> 
 				</ul>
 
@@ -235,7 +228,7 @@
 				
 			</div>
 			<!-- END OF RIGHT BLOCK COMPONENT -->
-		</div> --%>
+		</div>
 	</div>
 
 
