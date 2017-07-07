@@ -12983,9 +12983,9 @@ TATA.CommonFunctions = {
                     maxlength: 30
                 },
                 mobileNumber: {
+                	number: true,
                     minlength: 10,
-                    maxlength: 10,
-                    number: !0
+                    maxlength: 10
                 },
                 email: {
                     required: !0,
@@ -13002,6 +13002,13 @@ TATA.CommonFunctions = {
                     maxlength: 30,
                     equalTo: '[name="pwd"]'
                 }
+            },
+            messages:{
+            	mobileNumber: {
+            		minlength:"Please enter at least 10 numbers.",
+            		maxlength:"Please enter no more than 10 numbers.",
+            	},
+            	
             },
             submitHandler: function(form) {
                 $.ajax({
