@@ -576,7 +576,7 @@ $(document).ready(function(){
 			    }); 
 	/*----END of  PDP tabs -----*/
 
-	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----
 			 
 			 
 			 $(".FineJewellery .nav.pdp, .FashionJewellery .nav.pdp").owlCarousel({
@@ -611,7 +611,7 @@ $(document).ready(function(){
 					 }
 				});
 			 
-	/*----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+	----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
 			 
 	/*----Start of  PDP tabs for Jewellery -----*/
 			 
@@ -3816,3 +3816,14 @@ $(window).on("load resize click",function(){
 	},500);
 });
 /* end change of PRDI-92 */
+$(".accordin").smk_Accordion({
+    closeAble: true,
+    closeOther: false,
+    slideSpeed: 750,
+});
+/*$(".accordin").on("click", function(){
+	$(this).parent().find(".accordin.FineJewellery .item div.title").slideToggle();
+	$(this).parent().toggleClass("accordion-open");
+	$(this).parent().siblings().find(".accordin.FineJewellery .item div.title").slideUp();
+	$(this).parent().siblings().removeClass("accordion-open");
+});*/

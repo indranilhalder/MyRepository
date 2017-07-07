@@ -47,7 +47,7 @@
 			 <c:forEach items="${product.fineJewelleryDeatils}" var="classification" varStatus="outer">
          <div class="item">
             <div class="title">
-               <a href="">${classification.key}</a>
+               <p>${classification.key}</p>
             </div>
             <div class="detail" style="display: block;">
                <c:choose>
