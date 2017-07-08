@@ -584,8 +584,7 @@ footer{
     box-shadow: none;
 }
 
-.alert {
-    text-align: left;
+.alert {    
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
@@ -593,6 +592,18 @@ footer{
     text-align: center;
     height: auto!important;
     position: relative;
+    margin-top: 10px;
+    text-align: left;
+    
+    @include media-breakpoint-down(sm) {
+        padding: 5px;
+    }
+    
+    span{
+        margin: 0px!important;
+            width: 95%;
+        display: block;
+    }
     .close{       
         font-size:24px;
         top:5px;       
@@ -603,6 +614,7 @@ footer{
     background-color: #2d2d2d;
     border-color: #2d2d2d;
     color: #fff;
+    text-align: left;
     
     .close{
         color: inherit;
@@ -612,6 +624,7 @@ footer{
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
+    text-align: left;
     
     .close{
         color: inherit;
@@ -621,6 +634,7 @@ footer{
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1;
+    text-align: left;
     
     .close{
         color: inherit;
@@ -671,4 +685,7 @@ footer{
     top: 0;
     left: 0;
     right: 0;
+}
+#manageMyList .overlay, #deleteConfirmation .overlay{
+    display: none;
 }
