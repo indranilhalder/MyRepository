@@ -55,7 +55,7 @@
 			.halfwidth{
 				width:50%;
 				float:left;
-				min-height:65px;
+				min-height:63px;
 			}
 			.fullwidth{
 				width:100%;
@@ -79,6 +79,7 @@
 			    width: 90%;
 			    border: 1px solid #d2d2d2;
 			    border-radius: 3px;
+			    margin-bottom : 20px;
 			}
             
             #landmark{
@@ -818,6 +819,11 @@
 		display:none;
 	}
 	.account{
+		.luxury-mobile-myaccount{
+			option{
+				font-size:0.7rem;
+			}
+		}
 		.wrapper{
 			margin-top:20px;
 		}

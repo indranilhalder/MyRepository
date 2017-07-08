@@ -15,6 +15,8 @@
 		margin-bottom: 20px;
 	}
 	@include media-breakpoint-up(md) {
+	
+		
 		.pdp-left {
 			width: percentage(560/1120);
 			margin-bottom: 0;
@@ -72,6 +74,9 @@
          @include media-breakpoint-down(sm) {
               width: 49%;
         }
+    }
+    h1.product-name {
+    	font-size : 16px;
     }
     .size-feature .size-guide{
         display: inline-block;
@@ -156,7 +161,7 @@
 		}
 		.size-guide{
 			font-size: 13px;
-			font-style: italic;
+			//font-style: italic;
 			float: right;
 		}
 	}
@@ -961,6 +966,14 @@
 			width:100%;
 		}
 	}
+	
+	.pdp-view .pdp-social-links {
+	    clear: both;
+	    border-bottom: 1px solid #333;
+	    border-top: 1px solid #333;
+	    padding-top: 15px;
+	    padding-bottom: 5px;
+    }
 }
 
 /*Tool tip css */

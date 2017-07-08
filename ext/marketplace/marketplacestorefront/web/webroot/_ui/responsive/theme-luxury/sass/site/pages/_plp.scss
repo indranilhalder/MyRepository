@@ -216,7 +216,8 @@
 				.product-image{
 					padding-bottom:30px;
 					text-align:center;
-					min-height:300px;
+					//min-height:300px;
+					height:380px;
 					img{
 						-webkit-transition: -webkit-transform 500ms ease;
 						transition: -webkit-transform 500ms ease;
@@ -450,6 +451,10 @@
 
 
 @include media-breakpoint-down(sm) {
+	.pdp #addtocart-popup {
+		width: 250px;
+		transform: translateX(30%);
+	}
 	.plp-banner-wrapper,.breadcrumb,.grid-wrapper,.sort-wrapper{
 		display:none;
 	}
@@ -532,7 +537,8 @@
 					margin-bottom:0px;
 					padding-top:20px;
 					.product-image{
-						min-height:200px;
+						//min-height:200px;
+						height: 210px;
 					}
 					.short-info{
 						min-height:80px;
