@@ -969,8 +969,8 @@
 	
 	.pdp-view .pdp-social-links {
 	    clear: both;
-	    border-bottom: 1px solid #333;
-	    border-top: 1px solid #333;
+	    border-bottom: 1px solid $border;
+	    border-top: 1px solid $border;
 	    padding-top: 15px;
 	    padding-bottom: 5px;
     }
@@ -1103,4 +1103,6 @@ a:hover.tooltips {
 	#commentsDiv{
 		width:auto !important;
 	}
+	.pdp-view .pdp-img img {border : 0}
+	
 }
