@@ -1673,9 +1673,10 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				{
 					for (final ProductPromotionModel promotion : promotionData)
 					{
-						if (promotion instanceof BuyAPercentageDiscountModel
+						if (StringUtils.isEmpty(promotion.getImmutableKey()) && promotion instanceof BuyAPercentageDiscountModel
 								&& null != ((BuyAPercentageDiscountModel) promotion).getQuantity()
-								&& ((BuyAPercentageDiscountModel) promotion).getQuantity().intValue() == 1)
+								&& ((BuyAPercentageDiscountModel) promotion).getQuantity().intValue() == 1
+								&& promotion.getEndDate().after(new Date()))
 						{
 							if (maxPriority < promotion.getPriority().intValue() && BooleanUtils.isTrue(promotion.getEnabled()))
 							{

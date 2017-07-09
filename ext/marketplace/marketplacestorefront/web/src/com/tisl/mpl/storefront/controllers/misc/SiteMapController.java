@@ -159,6 +159,10 @@ public class SiteMapController extends AbstractPageController
 									final CategoryModel department = navigationBar.getLink().getCategory();
 									departments.add(department);
 								}
+								else
+								{
+								LOG.debug("navigationBar Link or Category Missing");
+								}
 							}
 						}
 						else
@@ -283,7 +287,7 @@ public class SiteMapController extends AbstractPageController
 								}
 								catch (final Exception exception)
 								{
-									exception.printStackTrace();
+									
 									ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
 								}
 							}
