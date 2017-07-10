@@ -65,7 +65,7 @@
 		</div>
 		<div class="cnc_pincode_search_wrapper change_pincode_block block${entryNumber}">
 			<span class="change_txt txt${entryNumber}">Change Pincode</span>
-			<div class="input${entryNumber} row" style="display:none;">
+			<div class="input${entryNumber} row enter-pincode-block" style="display:none;">
 				<span class="">
 						Want to pick from other area? 
 						Enter pincode below
@@ -101,10 +101,22 @@
 </div>
 <script>
 $(document).ready(function() {
-	$(".txt${entryNumber}").click(function(){
+/* $(".txt${entryNumber}").click(function(){
 		//$(".txt${entryNumber}").hide();
 		$(".input${entryNumber}").show();
+	});  */
+	$(".enter-pincode-block").hide();
+	$(".txt${entryNumber}").click(function(e){
+		e.stopPropagation();
+		$(".enter-pincode-block").slideToggle();
 	});
+	$(".txt${entryNumber}").click(function(e){
+		e.stopPropagation();
+	});
+	$(document).click(function(e){
+		$(".enter-pincode-block").slideUp();
+	}); 
+	
 	
 	 $(".changepin${entryNumber}").keyup(function(){
 	    	$(".pincodeValidation").hide();
@@ -157,6 +169,7 @@ $(document).ready(function() {
 			          data : dataString${entryNumber},   
 			          success : function(data) {
 			        	 $("#cncUlDiv${entryNumber}").html(data);
+			        	 $("#cncChangedPincode${entryNumber}").html($(".changepin${entryNumber}").val());
 			        	 var cnc_arrow_left, cnc_top;
 			            	if($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").length > 0){
 			            	cnc_arrow_left = parseInt($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").offset().left) + 40;

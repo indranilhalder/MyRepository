@@ -24,10 +24,12 @@
 						</h5></span>
 				</div>
 				<div class="nameFullSubPanel">
-					<label for="pickupPersonName">Name</label>
+				<div class="form-group">
+					<label class="control-label for="pickupPersonName">Name</label>
 					<input type="text" id="pickupPersonName" name="pickupPersonName"
-						maxlength="30" class="inputname" placeholder="Enter Full Name*"
+						maxlength="30" class="inputname form-control" placeholder="Enter Full Name*"
 						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonNameOnKeyUp()"/>
+				</div>
 					<div class="error_txt pickupPersonNameError"></div>
 				</div>
 				<!-- <div class="nameBlankSubPanel">
