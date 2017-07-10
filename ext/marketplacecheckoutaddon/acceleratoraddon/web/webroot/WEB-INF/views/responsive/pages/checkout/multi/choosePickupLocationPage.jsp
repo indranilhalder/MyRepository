@@ -233,6 +233,8 @@
 					},
 					error : function(xhr, status, error) {
 						console.log(error);	
+						//TPR-6369 |Error tracking dtm
+		 				dtmErrorTracking("Add pick up person details Error","errorname");
 					}
 				});
 			}

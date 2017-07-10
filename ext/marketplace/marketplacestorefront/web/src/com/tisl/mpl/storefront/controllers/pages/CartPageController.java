@@ -348,7 +348,7 @@ public class CartPageController extends AbstractPageController
 
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
-				//TPR-6371| DTM Track promotions
+				//TPR-6371| DTM Track promotions start
 				List<PromotionResultData> productPromoList = new ArrayList<PromotionResultData>();
 				List<PromotionResultData> orderPromoList = new ArrayList<PromotionResultData>();
 				String promoTitle = "";
@@ -382,7 +382,7 @@ public class CartPageController extends AbstractPageController
 
 				}
 				model.addAttribute("promolist", promolist);
-
+				//TPR-6371| DTM Track promotions end
 
 			}
 			else if (isLux)

@@ -7262,9 +7262,6 @@ $("#couponSubmitButton").click(function(){
 		 				   utag.link({error_type : 'offer_error'});
 		 				}
 	 				//TPR-6369 |Error tracking dtm
-	 				if (typeof _satellite != "undefined") {
-	 					_satellite.track('error_tracking');
-	 			    }
 	 				dtmErrorTracking(" Coupon not applied Error","errorname");
 	 			}
 	 			else{
