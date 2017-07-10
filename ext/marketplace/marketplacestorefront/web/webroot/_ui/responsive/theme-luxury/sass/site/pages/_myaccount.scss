@@ -222,11 +222,13 @@
                             
                         }
                         
+                        
                         .modal.cancellation-request{
                             top:25%;
+                            width: 330px;
+                            margin: auto;
                             
-                            .content{
-                                width: 330px;
+                            .content{                                
                                 margin: auto;
                                 background: #fff;
                                 .cancellation-request-block{
@@ -245,6 +247,20 @@
                                         .item-info{
                                             font-size: 16px;
                                         }
+                                        .item{
+                                            padding: 0px;
+                                        }
+                                    }
+                                    .return-container{
+                                        .questions{
+                                            select{
+                                                margin-bottom: 10px;
+                                                width: 100%;
+                                            }
+                                        }
+                                    }
+                                    .item{
+                                        padding: 0px;
                                     }
                                 }
                             }
