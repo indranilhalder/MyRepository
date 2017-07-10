@@ -33,7 +33,7 @@
 		<div class="wrapper wrapper-clearfix">
 
 			<!-- START OF LEFT SECTION -->
-			<div class="wishlist-nav">
+			<div class="wishlist-nav col-sm-12 col-md-4">
 				<!-- START OF SEARCH LIST ITEM STATIC COMPONENT -->
 				<h1><spring:theme code="header.link.myWishList" /></h1>
 				<%-- <form action="">
@@ -120,7 +120,7 @@
 
 
 			<!-- START OF RIGHT SECTION -->
-			<div class="wishlist-content">
+			<div class="wishlist-content col-sm-12 col-md-8 ">
 
 				<input id="showWishlist" type="hidden" value="${showWishlist}"></input>
 				<input id="renderingMethod" type="hidden" value="${renderingMethod}"></input>
