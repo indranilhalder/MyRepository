@@ -1089,4 +1089,5 @@ public class MarketplaceCheckoutControllerImpl extends
 		JaloSession.getCurrentSession().setAttribute("txnId", txnId);
 		return ordStatus;
 	}
+
 }

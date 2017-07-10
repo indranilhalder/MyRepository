@@ -3,12 +3,11 @@
  */
 package com.tisl.mpl.facade.product.impl;
 
-import de.hybris.platform.commercefacades.product.data.PriceData;
-
-import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.tisl.mpl.data.PriceBreakupData;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
 
@@ -31,13 +30,13 @@ public class MplPriceBreakupFacadeImpl implements PriceBreakupFacade
 	private PriceBreakupService priceBreakupService;
 
 	@Override
-	public LinkedHashMap<String, PriceData> getPricebreakup(final String ussid)
+	public List<PriceBreakupData> getPricebreakup(final String ussid)
 	{
 		//List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
 
-		final LinkedHashMap<String, PriceData> PriceMap = priceBreakupService.getPricebreakup(ussid);
+		// LinkedHashMap<String, PriceData> PriceMap = priceBreakupService.getPricebreakup(ussid);
 
-		return PriceMap;
+		return priceBreakupService.getPricebreakup(ussid);
 	}
 
 	//ADDED FOR 3782

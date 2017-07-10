@@ -13,6 +13,7 @@ import de.hybris.platform.commerceservices.customer.CustomerAccountService;
 import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.commercewebservicescommons.dto.store.PointOfServiceWsDTO;
 import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -60,6 +61,7 @@ import com.tisl.mpl.facades.account.register.impl.DefaultMplOrderFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.data.AWBResponseData;
 import com.tisl.mpl.facades.data.StatusRecordData;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
@@ -120,6 +122,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	private DefaultMplOrderFacade defaultmplOrderFacade;
 	@Autowired
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
 
 	/**
 	 * @description method is called to fetch the details of a particular orders for the user
@@ -234,8 +239,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 							if (null != entry.getDeliveryPointOfService())
 							{
-								orderproductdto.setStoreDetails(
-										mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+								orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+										PointOfServiceWsDTO.class, "DEFAULT"));
 							}
 							final ProductData product = entry.getProduct();
 							ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
@@ -353,26 +358,48 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								/*
 								 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 								 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-								 *
+								 * 
 								 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-								 *
+								 * 
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-								 *
+								 * 
 								 * }
 								 */
 
 
 								SellerInformationModel sellerInfoModel = null;
+								String ussid = "";
 								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 								{
-									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									if (((MarketplacecommerceservicesConstants.FINEJEWELLERY)).equalsIgnoreCase(productModel
+											.getProductCategoryType()))
+									{
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUssid());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+													jewelleryInfo.get(0).getPCMUSSID());
+											ussid = jewelleryInfo.get(0).getUSSID();
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+										ussid = sellerInfoModel.getUSSID();
+									}
 								}
-								if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-												.getDeliveryFulfillModes() != null)
+								if (sellerInfoModel != null
+										&& sellerInfoModel.getRichAttribute() != null
+										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 								{
 									/* Fulfillment type */
 									final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -382,8 +409,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										orderproductdto.setFulfillment(fulfillmentType);
 									}
 									//Seller info
-									if (sellerInfoModel.getUSSID() != null
-											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									/*
+									 * if (sellerInfoModel.getUSSID() != null &&
+									 * sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									 */
+									if (sellerInfoModel.getUSSID() != null && entry.getSelectedUssid().equalsIgnoreCase(ussid))
 									{
 										if (null != sellerInfoModel.getSellerID())
 										{
@@ -421,8 +451,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											{
 												consignmentStatus = subOrder.getStatus().getCode();
 												final Date sysDate = new Date();
-												final int cancelWindow = GenericUtilityMethods
-														.noOfDaysCalculatorBetweenDates(subOrder.getCreated(), sysDate);
+												final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+														subOrder.getCreated(), sysDate);
 												final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
 												if (cancelWindow < actualCancelWindow
 														&& checkOrderStatus(subOrder.getStatus().getCode(),
@@ -443,8 +473,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											{
 												consignmentStatus = entry.getConsignment().getStatus().getCode();
 												final Date sysDate = new Date();
-												final int cancelWindow = GenericUtilityMethods
-														.noOfDaysCalculatorBetweenDates(subOrder.getCreated(), sysDate);
+												final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+														subOrder.getCreated(), sysDate);
 												final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
 												if (cancelWindow < actualCancelWindow
 														&& checkOrderStatus(consignmentStatus,
@@ -474,7 +504,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -488,10 +518,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												if (null != consignmentModel)
 												{
 													final Date sDate = new Date();
-													final int returnWindow = GenericUtilityMethods
-															.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(), sDate);
+													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+															consignmentModel.getDeliveryDate(), sDate);
 													final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-													if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
+													if (!entry.isGiveAway()
+															&& !entry.isIsBOGOapplied()
+															&& returnWindow < actualReturnWindow
 															&& !checkOrderStatus(consignmentStatus,
 																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
 															&& consignmentStatus
@@ -564,8 +596,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								if (entry.getConsignment().getStatus() != null
 										&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
 												|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-												|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB)
-												|| entry.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+												|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+												.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
 								{
 									orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
 								}
@@ -645,8 +677,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 						if (null != entry.getDeliveryPointOfService())
 						{
-							orderproductdto.setStoreDetails(
-									mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+							orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+									PointOfServiceWsDTO.class, "DEFAULT"));
 						}
 						final ProductData product = entry.getProduct();
 						ordershipmentdetailstdtos = new ArrayList<Ordershipmentdetailstdto>();
@@ -764,14 +796,14 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							/*
 							 * if (null != orderDetails.getSellerOrderList()) { for (final OrderData childOrder :
 							 * orderDetails.getSellerOrderList()) { if (null != childOrder.getCode()) {
-							 *
+							 * 
 							 * orderproductdto.setSellerorderno(childOrder.getCode()); } }
-							 *
+							 * 
 							 * if (null != orderproductdto.getUSSID()) {
-							 *
+							 * 
 							 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 							 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
-							 *
+							 * 
 							 * }
 							 */
 
@@ -781,9 +813,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							{
 								sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 							}
-							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-											.getDeliveryFulfillModes() != null)
+							if (sellerInfoModel != null
+									&& sellerInfoModel.getRichAttribute() != null
+									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 							{
 								/* Fulfillment type */
 								final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -832,8 +864,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										{
 											consignmentStatus = orderDetails.getStatus().getCode();
 											final Date sysDate = new Date();
-											final int cancelWindow = GenericUtilityMethods
-													.noOfDaysCalculatorBetweenDates(orderDetails.getCreated(), sysDate);
+											final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+													orderDetails.getCreated(), sysDate);
 											final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
 											if (cancelWindow < actualCancelWindow
 													&& checkOrderStatus(orderDetails.getStatus().getCode(),
@@ -854,13 +886,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										{
 											consignmentStatus = entry.getConsignment().getStatus().getCode();
 											final Date sysDate = new Date();
-											final int cancelWindow = GenericUtilityMethods
-													.noOfDaysCalculatorBetweenDates(orderDetails.getCreated(), sysDate);
+											final int cancelWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+													orderDetails.getCreated(), sysDate);
 											final int actualCancelWindow = Integer.parseInt(rm.getCancellationWindow());
 											if (cancelWindow < actualCancelWindow
 													&& checkOrderStatus(consignmentStatus, MarketplacecommerceservicesConstants.CANCEL_STATUS)
-															.booleanValue()
-													&& !entry.isGiveAway() && !entry.isIsBOGOapplied())
+															.booleanValue() && !entry.isGiveAway() && !entry.isIsBOGOapplied())
 
 											{
 												orderproductdto.setCancel(Boolean.TRUE);
@@ -885,7 +916,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										/*
 										 * if (null != sellerEntry.getReplacement()) {
 										 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-										 *
+										 * 
 										 * }
 										 */
 										//for return
@@ -899,10 +930,12 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											if (null != consignmentModel)
 											{
 												final Date sDate = new Date();
-												final int returnWindow = GenericUtilityMethods
-														.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(), sDate);
+												final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+														consignmentModel.getDeliveryDate(), sDate);
 												final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-												if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
+												if (!entry.isGiveAway()
+														&& !entry.isIsBOGOapplied()
+														&& returnWindow < actualReturnWindow
 														&& !checkOrderStatus(consignmentStatus,
 																MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
 														&& consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED))
@@ -974,8 +1007,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							if (entry.getConsignment().getStatus() != null
 									&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
 											|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-											|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB)
-											|| entry.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+											|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+											.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
 							{
 								orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
 							}
@@ -1273,18 +1306,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * subOrder, final ConsignmentData consignment) { final AWBResponseData trackingData = new AWBResponseData();
 	 * List<StatusRecordData> statusRecords = new ArrayList<>(); StatusRecordData statusRecord = new StatusRecordData();
 	 * try {
-	 *
+	 * 
 	 * final SimpleDateFormat smdfDate = new SimpleDateFormat(MarketplacecclientservicesConstants.DATE_FORMAT_AWB); final
 	 * SimpleDateFormat smdfTime = new SimpleDateFormat(MarketplacecclientservicesConstants.TIME_FORMAT_AWB);
-	 *
+	 * 
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue());
 	 * trackingData.setIsSelected(orderStatusCode.getDisplay().booleanValue());
-	 *
+	 * 
 	 * trackingData.setShipmentStatus(orderStatusCode.getResponseStatus());
 	 * trackingData.setResponseCode(orderStatusCode.getStatusCode());
 	 * trackingData.setIsEnabled(orderStatusCode.getEnable().booleanValue()); statusRecords = new ArrayList<>();
 	 * statusRecord = new StatusRecordData();
-	 *
+	 * 
 	 * if (null != consignment) { statusRecord.setDate(smdfDate.format(consignment.getStatusDate()));
 	 * statusRecord.setTime(smdfTime.format(consignment.getStatusDate())); } else {
 	 * statusRecord.setDate(smdfDate.format(subOrder.getCreated()));
@@ -1292,19 +1325,19 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 	 * statusRecord.setStatusDescription(orderStatusCode.getStatusMessage()); statusRecords.add(statusRecord);
 	 * trackingData.setStatusRecords(statusRecords); } catch (final Exception e) { throw new
 	 * EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); }
-	 *
+	 * 
 	 * return trackingData; }
 	 */
 
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
@@ -1392,8 +1425,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
 								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbCancelMap.size() >= 1)
 								{
@@ -1413,8 +1446,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
 								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbReturnMap.size() >= 1)
 								{
@@ -1617,11 +1650,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 		OrderData orderDetail = null;
 		OrderModel orderModel = null;
 		OrderModel subOrderModel = null;
-		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY,
-				formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
+		String isGiveAway = "N", formattedProductDate = MarketplacecommerceservicesConstants.EMPTY, formattedActualProductDate = MarketplacecommerceservicesConstants.EMPTY;
 		ConsignmentModel consignmentModel = null;
 		List<OrderData> subOrderList = null;
 		SellerInformationModel sellerInfoModel = null;
+		String ussid = "";
 		try
 		{
 			//TPR-815
@@ -1678,7 +1711,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 				//not required
 				//orderTrackingWsDTO.setCancelflag(MarketplacecommerceservicesConstants.YES);
-				if (null != orderDetail.getDeliveryAddress() && StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getLastName())
+				if (null != orderDetail.getDeliveryAddress()
+						&& StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getLastName())
 						&& StringUtils.isNotEmpty(orderDetail.getDeliveryAddress().getFirstName()))
 				{
 					final String name = orderDetail.getDeliveryAddress().getFirstName().concat(" ")
@@ -1768,8 +1802,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 								if (null != entry.getDeliveryPointOfService())
 								{
-									orderproductdto.setStoreDetails(
-											mplDataMapper.map(entry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+									orderproductdto.setStoreDetails(mplDataMapper.map(entry.getDeliveryPointOfService(),
+											PointOfServiceWsDTO.class, "DEFAULT"));
 								}
 
 								if (StringUtils.isNotEmpty(entry.getAmountAfterAllDisc().toString()))
@@ -1827,10 +1861,10 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								//Delivery date is the final delivery date
 								/*
 								 * if (null != entry.getMplDeliveryMode()) {
-								 *
+								 * 
 								 * if (null != entry.getMplDeliveryMode().getDescription() &&
 								 * StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDescription())) {
-								 *
+								 * 
 								 * orderproductdto.setDeliveryDate(entry.getMplDeliveryMode().getDescription()); } }
 								 */
 
@@ -1865,7 +1899,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 								/*
 								 * if (null != orderproductdto.getUSSID()) {
-								 *
+								 * 
 								 * orderproductdto.setSerialno(orderproductdto.getUSSID()); } else {
 								 * orderproductdto.setSerialno(MarketplacecommerceservicesConstants.NA); }
 								 */
@@ -1873,11 +1907,32 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								//}
 								if (StringUtils.isNotEmpty(entry.getSelectedUssid()))
 								{
-									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									//sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+									if (((MarketplacecommerceservicesConstants.FINEJEWELLERY)).equalsIgnoreCase(productModel
+											.getProductCategoryType()))
+									{
+										final List<JewelleryInformationModel> jewelleryInfo = jewelleryService
+												.getJewelleryInfoByUssid(entry.getSelectedUssid());
+										if (CollectionUtils.isNotEmpty(jewelleryInfo))
+										{
+											sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+													jewelleryInfo.get(0).getPCMUSSID());
+											ussid = jewelleryInfo.get(0).getUSSID();
+										}
+										else
+										{
+											LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+										}
+									}
+									else
+									{
+										sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+										ussid = sellerInfoModel.getUSSID();
+									}
 								}
-								if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-												.getDeliveryFulfillModes() != null)
+								if (sellerInfoModel != null
+										&& sellerInfoModel.getRichAttribute() != null
+										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 								{
 									/* Fulfillment type */
 									final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -1887,8 +1942,11 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										orderproductdto.setFulfillment(fulfillmentType);
 									}
 									//Seller info
-									if (sellerInfoModel.getUSSID() != null
-											&& sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									/*
+									 * if (sellerInfoModel.getUSSID() != null &&
+									 * sellerInfoModel.getUSSID().equalsIgnoreCase(entry.getSelectedUssid()))
+									 */
+									if (sellerInfoModel.getUSSID() != null && entry.getSelectedUssid().equalsIgnoreCase(ussid))
 									{
 										if (null != sellerInfoModel.getSellerID())
 										{
@@ -1938,7 +1996,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * MarketplacecommerceservicesConstants.CANCEL_ORDER_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied()) {
 												 * orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1966,9 +2024,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												 * actualCancelWindow && checkOrderStatus(consignmentStatus,
 												 * MarketplacecommerceservicesConstants.CANCEL_STATUS).booleanValue() &&
 												 * !entry.isGiveAway() && !entry.isIsBOGOapplied())
-												 *
+												 * 
 												 * { orderproductdto.setCancel(Boolean.TRUE);
-												 *
+												 * 
 												 * } else { orderproductdto.setCancel(Boolean.FALSE); } } else {
 												 * orderproductdto.setCancel(Boolean.FALSE); }
 												 */
@@ -1996,7 +2054,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 											/*
 											 * if (null != sellerEntry.getReplacement()) {
 											 * orderproductdto.setReplacement(sellerEntry.getReplacement());
-											 *
+											 * 
 											 * }
 											 */
 											//for return
@@ -2008,16 +2066,17 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 												if (null != consignmentModel && rm.getReturnWindow() != null)
 												{
 													final Date sDate = new Date();
-													final int returnWindow = GenericUtilityMethods
-															.noOfDaysCalculatorBetweenDates(consignmentModel.getDeliveryDate(), sDate);
+													final int returnWindow = GenericUtilityMethods.noOfDaysCalculatorBetweenDates(
+															consignmentModel.getDeliveryDate(), sDate);
 													final int actualReturnWindow = Integer.parseInt(rm.getReturnWindow());
-													if (!entry.isGiveAway() && !entry.isIsBOGOapplied() && returnWindow < actualReturnWindow
+													if (!entry.isGiveAway()
+															&& !entry.isIsBOGOapplied()
+															&& returnWindow < actualReturnWindow
 															&& !checkOrderStatus(consignmentStatus,
 																	MarketplacecommerceservicesConstants.VALID_RETURN).booleanValue()
 															&& (consignmentStatus
-																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED)
-																	|| consignmentStatus
-																			.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.DELIVERED) || consignmentStatus
+																	.equalsIgnoreCase(MarketplacecommerceservicesConstants.ORDER_COLLECTED)))
 
 													{
 														//orderproductdto.setReturnPolicy(sellerEntry.getReturnPolicy());
@@ -2086,22 +2145,22 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								 * orderproductdto.setLogisticName(consignmentModel.getCarrier()); } if (null !=
 								 * consignmentModel.getReturnCarrier()) {
 								 * orderproductdto.setReverseLogisticName(consignmentModel.getReturnCarrier()); }
-								 *
+								 * 
 								 * }
 								 */
 								//End
 								final Map<String, List<AWBResponseData>> returnMap = getOrderStatusTrack(entry, subOrder, subOrderModel);
 								orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
 								//setting current product status Display
-								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED)
-										|| consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+								if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
 										&& returnMap.get(MarketplaceFacadesConstants.CANCEL) != null
 										&& returnMap.get(MarketplaceFacadesConstants.CANCEL).size() > 0)
 								{
 									orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.CANCEL);
 								}
-								else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED)
-										|| consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+								else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
 										&& returnMap.get(MarketplaceFacadesConstants.RETURN) != null
 										&& returnMap.get(MarketplaceFacadesConstants.RETURN).size() > 0)
 								{
@@ -2153,16 +2212,16 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 										if (StringUtils.isNotEmpty(entry.getTimeSlotTo())
 												&& StringUtils.isNotEmpty(entry.getTimeSlotFrom()))
 										{
-											orderproductdto.setScheduleDeliveryTime(
-													entry.getTimeSlotFrom().concat(" to ").concat(entry.getTimeSlotTo()));
+											orderproductdto.setScheduleDeliveryTime(entry.getTimeSlotFrom().concat(" to ")
+													.concat(entry.getTimeSlotTo()));
 										}
 
 									}
 								}
 
 								//R2.3 Changes-Start
-								orderproductdto.setSelfCourierDocumentLink(
-										getSelfCourierDocumentUrl(request, subOrder.getCode(), entry.getTransactionId()));
+								orderproductdto.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request, subOrder.getCode(),
+										entry.getTransactionId()));
 								final String returnType = getAwbPopupLink(entry, subOrder.getCode());
 								if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
 										&& !entry.isIsRefundable())
@@ -2181,8 +2240,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									if (entry.getConsignment().getStatus() != null
 											&& (entry.getConsignment().getStatus().equals(ConsignmentStatus.HOTC)
 													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.OUT_FOR_DELIVERY)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB)
-													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
+													|| entry.getConsignment().getStatus().equals(ConsignmentStatus.REACHED_NEAREST_HUB) || entry
+													.getConsignment().getStatus().equals(ConsignmentStatus.DELIVERED)))
 									{
 										orderproductdto.setIsInvoiceAvailable(Boolean.TRUE);
 									}
@@ -2269,8 +2328,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 							if (null != orderEntry.getDeliveryPointOfService())
 							{
-								orderproductdto.setStoreDetails(
-										mplDataMapper.map(orderEntry.getDeliveryPointOfService(), PointOfServiceWsDTO.class, "DEFAULT"));
+								orderproductdto.setStoreDetails(mplDataMapper.map(orderEntry.getDeliveryPointOfService(),
+										PointOfServiceWsDTO.class, "DEFAULT"));
 							}
 							//changes
 							if (null != orderEntry.getAmountAfterAllDisc()
@@ -2352,9 +2411,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 							{
 								sellerInfoModel = getMplSellerInformationService().getSellerDetail(orderEntry.getSelectedUssid());
 							}
-							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-											.getDeliveryFulfillModes() != null)
+							if (sellerInfoModel != null
+									&& sellerInfoModel.getRichAttribute() != null
+									&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 							{
 								/* Fulfillment type */
 								final String fulfillmentType = ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -2431,19 +2490,18 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 									}
 								}
 							}
-							final Map<String, List<AWBResponseData>> returnMap = getOrderStatusTrack(orderEntry, orderDetail,
-									orderModel);
+							final Map<String, List<AWBResponseData>> returnMap = getOrderStatusTrack(orderEntry, orderDetail, orderModel);
 							orderproductdto.setStatusDisplayMsg(setStatusDisplayMessage(returnMap, consignmentModel));
 							//setting current product status Display
-							if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED)
-									|| consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+							if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
 									&& returnMap.get(MarketplaceFacadesConstants.CANCEL) != null
 									&& returnMap.get(MarketplaceFacadesConstants.CANCEL).size() > 0)
 							{
 								orderproductdto.setStatusDisplay(MarketplaceFacadesConstants.CANCEL);
 							}
-							else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED)
-									|| consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
+							else if ((consignmentStatus.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_INITIATED) || consignmentStatus
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.REFUND_IN_PROGRESS))
 									&& returnMap.get(MarketplaceFacadesConstants.RETURN) != null
 									&& returnMap.get(MarketplaceFacadesConstants.RETURN).size() > 0)
 							{
@@ -2472,8 +2530,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 							orderproductdtos.add(orderproductdto);
 							//R2.3 Changes-Start
-							orderproductdto.setSelfCourierDocumentLink(
-									getSelfCourierDocumentUrl(request, orderDetail.getCode(), orderEntry.getTransactionId()));
+							orderproductdto.setSelfCourierDocumentLink(getSelfCourierDocumentUrl(request, orderDetail.getCode(),
+									orderEntry.getTransactionId()));
 							final String returnType = getAwbPopupLink(orderEntry, orderDetail.getCode());
 							if (MarketplacecommerceservicesConstants.SELF_COURIER.equalsIgnoreCase(returnType)
 									&& !orderEntry.isIsRefundable())
@@ -2592,7 +2650,7 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 
 	/*
 	 * @param orderCode
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
@@ -2664,8 +2722,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.CANCEL)
 								&& !isStatusAlradyExists(awbCancelMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbCancelMap.size() >= 1)
 								{
@@ -2685,8 +2743,8 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 						if (null != trackModel && trackModel.getStage().equalsIgnoreCase(MarketplaceFacadesConstants.RETURN)
 								&& !isStatusAlradyExists(awbReturnMap, trackModel) && trackModel.getDisplay().booleanValue())
 						{
-							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode())
-									|| trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
+							if ((trackModel.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_INITIATED.getCode()) || trackModel
+									.getStatusCode().equalsIgnoreCase(ConsignmentStatus.REFUND_IN_PROGRESS.getCode())))
 							{
 								if (awbReturnMap.size() >= 1)
 								{
@@ -3016,9 +3074,9 @@ public class DefaultGetOrderDetailsFacadeImpl implements GetOrderDetailsFacade
 								{
 									sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
 								}
-								if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null
-										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
-												.getDeliveryFulfillModes() != null)
+								if (sellerInfoModel != null
+										&& sellerInfoModel.getRichAttribute() != null
+										&& ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0).getDeliveryFulfillModes() != null)
 								{
 
 									//Seller info

@@ -114,7 +114,9 @@ public class DefaultBuyBoxFacadeTest
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
 		final BuyBoxData buyboxData = new BuyBoxData();
 		final String productCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product code
-		assertFalse(buyBoxService.getsellersDetails(productCode).isEmpty());
+		//TPR-3809
+		final String productCatCode = MarketplacecommerceservicesConstants.EMPTY;//TODO : Please enter product category code
+		assertFalse(buyBoxService.getsellersDetails(productCode,productCatCode).isEmpty());
 		final BuyBoxModel buyBox = new BuyBoxModel();
 		final RichAttributeModel rich = new RichAttributeModel();
 		final Map<BuyBoxModel, RichAttributeModel> resultMap = new HashMap<BuyBoxModel, RichAttributeModel>();
@@ -165,7 +167,9 @@ public class DefaultBuyBoxFacadeTest
 		assertNotNull(rich.getReplacementWindow());
 		assertFalse(rich.getReplacementWindow().isEmpty());
 		SellerInformationDataList.add(sellerData);
-		assertEquals(SellerInformationDataList, facadeImpl.getsellersDetails(productCode));
+		//TPR-3809
+		//assertEquals(SellerInformationDataList, facadeImpl.getsellersDetails(productCode));
+		assertEquals(SellerInformationDataList, facadeImpl.getsellersDetails(productCode,productCatCode));
 	}
 
 	@Test
