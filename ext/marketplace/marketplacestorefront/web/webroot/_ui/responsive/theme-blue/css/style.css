@@ -68147,6 +68147,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage {
     margin-bottom: 0px;
 }
+#singlePageMobile div#selectedAddressMessageMobile > span.alert-danger,
 #singlePageAddressPopup .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger ,
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger {
     width: 100%;
@@ -69767,7 +69768,9 @@ background:#f8f8f8;
 .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading>div+div {
     display: none ! important;
 }
-
+#reviewOrder.cart.wrapper .product-block li.header ul li {
+    font-size: 12px;
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
