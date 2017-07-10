@@ -37,6 +37,7 @@ import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
+import de.hybris.platform.commercefacades.product.data.PromotionResultData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
@@ -347,6 +348,42 @@ public class CartPageController extends AbstractPageController
 
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
+				//TPR-6371| DTM Track promotions
+				List<PromotionResultData> productPromoList = new ArrayList<PromotionResultData>();
+				List<PromotionResultData> orderPromoList = new ArrayList<PromotionResultData>();
+				String promoTitle = "";
+				String promoCode = "";
+				String promo_id_product = "";
+				String promo_id_cart = "";
+				final List<String> promolist = new ArrayList<String>();
+				productPromoList = cartData.getAppliedOrderPromotions();
+				orderPromoList = cartData.getAppliedProductPromotions();
+
+				if (CollectionUtils.isNotEmpty(productPromoList))
+				{
+					if (productPromoList.get(0).getPromotionData() != null)
+					{
+						promoTitle = productPromoList.get(0).getPromotionData().getTitle();
+						promoCode = productPromoList.get(0).getPromotionData().getCode();
+						promo_id_product = promoTitle + ":" + promoCode;
+						promolist.add(promo_id_product);
+					}
+
+				}
+				if (CollectionUtils.isNotEmpty(orderPromoList))
+				{
+					if (orderPromoList.get(0).getPromotionData() != null)
+					{
+						promoTitle = orderPromoList.get(0).getPromotionData().getTitle();
+						promoCode = orderPromoList.get(0).getPromotionData().getCode();
+						promo_id_cart = promoTitle + ":" + promoCode;
+						promolist.add(promo_id_cart);
+					}
+
+				}
+				model.addAttribute("promolist", promolist);
+
+
 			}
 			else if (isLux)
 			{
@@ -429,7 +466,7 @@ public class CartPageController extends AbstractPageController
 	 * private void setExpressCheckout(final CartModel serviceCart) {
 	 * serviceCart.setIsExpressCheckoutSelected(Boolean.FALSE); if (serviceCart.getDeliveryAddress() != null) {
 	 * serviceCart.setDeliveryAddress(null); modelService.save(serviceCart); }
-	 * 
+	 *
 	 * }
 	 */
 
@@ -710,7 +747,7 @@ public class CartPageController extends AbstractPageController
 	/*
 	 * @description This controller method is used to allow the site to force the visitor through a specified checkout
 	 * flow. If you only have a static configured checkout flow then you can remove this method.
-	 * 
+	 *
 	 * @param model ,redirectModel
 	 */
 
@@ -1554,7 +1591,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -1611,7 +1648,7 @@ public class CartPageController extends AbstractPageController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

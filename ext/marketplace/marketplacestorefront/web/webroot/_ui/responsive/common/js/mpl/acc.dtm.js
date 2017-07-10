@@ -205,6 +205,12 @@ $(document).ready(function(){
 					}
 			}
 		}
+		//TPR-6371 | track promotions
+		if($('#promolist').val() != "") {
+			   digitalData.cpj.promo = {
+					id : $('#promolist').val()
+			   }
+			}
 	}
 	
 	// Checkout pages
