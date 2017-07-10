@@ -667,7 +667,7 @@
 																			Cancellation:</label> <span id="reasonDesc"></span>
 																	</div>
 																</div>
-																<div class="buttons">
+																<div class="buttons mt-20">
 																	<button class="light-red blue" id="returnReject"
 																		onclick="reloadOrderPage()">Close</button>
 

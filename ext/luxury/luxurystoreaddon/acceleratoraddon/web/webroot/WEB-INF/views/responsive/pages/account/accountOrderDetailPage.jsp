@@ -933,7 +933,7 @@
 																<span id="reasonDesc"></span>
 															</div>
 														</div>
-														<div class="buttons">
+														<div class="buttons mt-20">
 															<button type="button" class="light-red blue"
 																id="returnReject" onclick="reloadOrderDetailPage()">Close</button>
 

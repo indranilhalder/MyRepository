@@ -1005,6 +1005,23 @@
 .right-account .gender {
 	clear : both;
 }	
+
+.page-orders{
+    .product-block{
+        .account.active{
+            top: 20%;
+            .content{
+                width: 300px;
+                background: #fff;
+                margin: auto;
+                top: 20%;
+                z-index: 1;
+                position: relative;
+                font-size: 14px;
+            }
+        }
+    }
+}
 /*.mega-menu .sub-menu:before {
     background-color: #fff;
     position: absolute;
