@@ -310,7 +310,7 @@ $(document).ready(function(){
 		if(typeof _satellite !="undefined"){
 	      _satellite.track('header_link_clicks');
 		}
-	var header_link = $(this).find('a').eq(0).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"").trim();
+	   header_link = $(this).find('a').eq(0).text().toLowerCase().replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"").trim();
 	}
 	digitalData = {
 			header : {
@@ -322,21 +322,35 @@ $(document).ready(function(){
 	});
 	
 	/*On Size selection | PDP #29*/ 
-   $(document).on('click',".variant-select > li", function(){
-	var product_size = $(this).find('a').html();
-	if(typeof _satellite !="undefined"){
-	   _satellite.track('cpj_pdp_product_size');
-	}
-	if(typeof digitalData.cpj.product != "undefined"){
-		digitalData.cpj.product.size = product_size;
-	}
-	else{
-		digitalData.cpj.product = {
-			size : product_size
+	   $(document).on('click',".variant-select > li", function(){
+		var product_size = $(this).find('a').html();
+		if(typeof _satellite !="undefined"){
+		   _satellite.track('cpj_pdp_product_size');
 		}
-    }
-   });
-	
+		if(typeof digitalData.cpj.product != "undefined"){
+			digitalData.cpj.product.size = product_size;
+		}
+		else{
+			digitalData.cpj.product = {
+				size : product_size
+			}
+	    }
+	   });
+	 // TPR-6029 |quick view  size|serp#39
+	   $(document).on('click',"#quickViewVariant > li", function(){
+	   	var product_size = $(this).find('a').html();
+	   	if(typeof _satellite != "undefined"){
+	   	_satellite.track('cpj_qw_product_size');
+	   	}
+	   	if(typeof digitalData.cpj.product != "undefined"){
+			digitalData.cpj.product.size = product_size;
+		}
+		else{
+			digitalData.cpj.product = {
+				size : product_size
+			}
+	    }
+	   });
 	// TPR-6366 | need help starts
 	$(document).on('click',"#up",function(){
 		if(typeof _satellite !="undefined"){
@@ -399,6 +413,21 @@ $(document).ready(function(){
     		}
     	}
     })
+    /*TPR-6029 | colour selection on quickview #40*/
+    $(document).on('click',".color-swatch > li", function(){
+     	var product_color = $(this).find('img').attr('title').toLowerCase().replace(/ +$/, "").replace(/  +/g, ' ').replace(/ /g,"_").replace(/['"]/g,"");
+     	if(typeof _satellite != "undefined"){
+     	   	_satellite.track('cpj_qw_product_color');
+     	 }
+     	if(typeof digitalData.cpj.product != "undefined"){
+    		digitalData.cpj.product.color = product_color;
+    	}
+    	else{
+    		digitalData.cpj.product = {	
+    			color : product_color
+    		}
+    	}
+     });
     
     //TPR-6334 | Login-logout start
     var dtm_Login_status = $.cookie("dtmSigninStatus");

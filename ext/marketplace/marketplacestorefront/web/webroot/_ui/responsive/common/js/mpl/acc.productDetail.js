@@ -1986,10 +1986,9 @@ function openPopForBankEMI() {
 				product_id : productIdArray
 			});
 			//TPR-6029-EMI link click#33--start
-			if (typeof _satellite != "undefined") {
-				_satellite.track('cpj_pdp_emi');
-		    }
-			
+			if(typeof _satellite != "undefined"){
+			_satellite.track('cpj_pdp_emi');
+			}
 			//TPR-6029-EMI link click#33--end
 		},
 		error : function(xhr, status, error) {
