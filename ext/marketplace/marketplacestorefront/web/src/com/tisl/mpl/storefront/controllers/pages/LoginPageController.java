@@ -496,11 +496,38 @@ public class LoginPageController extends AbstractLoginPageController
 					 * StringUtils.equalsIgnoreCase(luxDetector, "true")) { platformNumber = 5;//for luxury desktop web }
 					 * else { platformNumber = 1;//for mkt desktop web } //TPR-6272 ends here
 					 */
+
+
 					//TPR-6272 starts here
-					final int platformNumber = 1;//for mkt desktop web
+					int platformNumber = 0;
+					final String userAgent = request.getHeader(
+							configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+					if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
+					{
+						if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
+								|| userAgent.contains(configurationService.getConfiguration()
+										.getString("useragent.responsive.blackberry"))
+								|| userAgent
+										.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+						{
+							platformNumber = 5;//for web responsive
+						}
+						else
+						{
+							platformNumber = 1;//for mkt desktop web
+						}
+					}
+					else
+					{
+						platformNumber = 1;//for mkt desktop web
+					}
 					//TPR-6272 ends here
-
-
 
 					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially

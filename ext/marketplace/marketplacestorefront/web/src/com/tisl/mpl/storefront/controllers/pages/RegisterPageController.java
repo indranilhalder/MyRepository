@@ -24,6 +24,7 @@ import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 
 import java.util.Collections;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
@@ -75,6 +77,11 @@ public class RegisterPageController extends AbstractRegisterPageController
 	@Resource(name = ModelAttributetConstants.SIMPLE_BREADCRUMB_BUILDER)
 	private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;
 
+	//TPR-6272 starts here
+	@Autowired
+	private ConfigurationService configurationService;
+
+	//TPR-6272 ends here
 	/**
 	 * @return the registerCustomerFacade
 	 */
@@ -240,7 +247,32 @@ public class RegisterPageController extends AbstractRegisterPageController
 			try
 			{
 				//TPR-6272 starts here
-				final int platformNumber = 1;
+				int platformNumber = 0;
+				final String userAgent = request.getHeader(
+						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
+				{
+					if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.blackberry"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+					{
+						platformNumber = 5;//for web responsive
+					}
+					else
+					{
+						platformNumber = 1;//for mkt desktop web
+					}
+				}
+				else
+				{
+					platformNumber = 1;//for mkt desktop web
+				}
 				//TPR-6272 ends here
 				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
