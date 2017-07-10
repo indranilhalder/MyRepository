@@ -307,7 +307,6 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 
 
 			//TPR-6272 starts here
-
 			if (platformNumber == 1)
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
@@ -323,9 +322,19 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
 						"registration.platform.mktandroidapp"));
 			}
+			else if (platformNumber == 4)
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileapp"));//for backward compatibility
+			}
+			else if (platformNumber == 5)
+			{
+				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
+						"registration.platform.mktmobileweb"));
+			}
 			else
 			{
-				LOG.debug(" --------- The registration platform is not in scope ---------- ");
+				LOG.debug(" --------- The registration platform is not in scope/not required to be stored ---------- ");
 			}
 			//TPR-6272 ends here
 
