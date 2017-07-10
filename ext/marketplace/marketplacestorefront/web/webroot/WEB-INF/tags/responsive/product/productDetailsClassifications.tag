@@ -42,7 +42,6 @@
 <c:choose>
 <c:when test="${product.rootCategory!='FashionJewellery' and product.rootCategory=='FineJewellery'}">		
 
-       <div id="fineJewellery"></div>
 		<div class="accordin ${product.rootCategory}">      
 			 <c:forEach items="${product.fineJewelleryDeatils}" var="classification" varStatus="outer">
          <div class="item">
@@ -107,12 +106,15 @@
             </div>
          </div>
       </c:forEach>
+     	<div id = "showPrice"  class="item">
+		 <p id = "show" class="title"> </p>
+		 <div class="detail acc_content" style="display: block;">
+		  <table id="showPriceBreakup"  style="display:none"></table> 
 		</div>
-		<div id = "showPrice">
-		 <p id = "show" class="pricebreakup-link"> </p>
 		</div>
-		
-	    <table id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></table> 
+		</div>
+				
+	    
 	</c:when>
 <c:when test="${product.rootCategory=='Watches'}">
 <c:if test="${not empty product.classifications}">
