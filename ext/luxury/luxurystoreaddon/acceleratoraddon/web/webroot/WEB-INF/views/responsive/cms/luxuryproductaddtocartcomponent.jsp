@@ -100,6 +100,22 @@
 			<span class="tick-icon"><i class="fa fa-check fa-4" aria-hidden="true"></i></span>
 			<h3 class="mt-40 mb-40">Added to Bag</h3>
 			<ul>
+				<li>
+				<div class="row">
+					<div class="itemsImage col-xs-5 col-sm-3">
+								<product:productPrimaryImage product="${product}" format="product" />
+					</div>
+					
+					<div class="itemsDescription col-xs-7 col-sm-9 product">
+					<ul>
+						<li><h3><strong>${product.brand.brandname}</strong></h3></li>
+						<li>${product.productTitle}</li>
+						<li>${product.colour} - ${product.size}</li>
+						<li>${product.productMRP.currencyIso}${product_list_price}</li>
+					</ul>								
+				 </div>
+			</div>
+            </li>
 				<li><a href="/cart" class="mb-10 btn btn-gloden btn-lg btn-block lux-cart-btn">VIEW BAG <span></span></a></li>
 				<li><a href="javascript:;" class="mb-10 btn btn-default btn-lg btn-block lux-keepshop-btn">CONTINUE SHOPPING</a></li>
 				<li><a href="/cart" class="btn btn-primary btn-lg btn-block">BUY NOW</a></li> 
