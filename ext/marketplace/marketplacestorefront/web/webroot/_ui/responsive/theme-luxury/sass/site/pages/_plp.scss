@@ -559,22 +559,30 @@
 					} 
 				}
 				.product-grid:nth-child(odd){
-					border-right:1px solid #cecece;
-					border-bottom:1px solid #cecece;
+					/*border-right:1px solid #cecece;
+					border-bottom:1px solid #cecece;*/
 				}
 				.product-grid:nth-child(even){
-					border-bottom:1px solid #cecece;
+					/*border-bottom:1px solid #cecece;*/
 				}
 			}
 		}
 	}
 	.plp-wrapper{
+		padding:0 !important;
 		.leftbar.active{
 			left:0px;
 		}
 		.plpsinglecolumn{
 			.product-grid{
 				width:100% !important;
+				border-bottom:1px solid #cecece;
+				&:first-child{
+					border-top:1px solid #cecece;
+				}
+				&:nth-child(2){
+					border-top:none;
+				}
 			}
 		}
 		.leftbar{
