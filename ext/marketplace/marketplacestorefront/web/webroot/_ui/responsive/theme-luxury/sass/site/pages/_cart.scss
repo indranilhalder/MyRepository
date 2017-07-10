@@ -615,4 +615,13 @@
         margin-top: -1px;
     }   
 }
- 
+ .page-cartPage .header-promo.only-in-cart {
+ 	display:none;
+ }
+ @include media-breakpoint-down(sm) {
+	.page-cartPage .header-promo.only-in-cart {
+	    display: block;
+	    margin-top: 8px;
+	    font-size: 14px;
+	}
+}
