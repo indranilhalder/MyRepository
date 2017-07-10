@@ -4412,6 +4412,13 @@ function populateProductPageTabs(jsonData)
 			$(selector).html(populateProductWarrantyTab(jsonData));
 		}
 	}
+	if(typeof(jsonData['fineJewelleryDeatils']) != "undefined")
+	{
+		$(".accordin").html(populateClassificationForJewellery(jsonData));
+	}
+	else {
+		$(".accordin").html("");
+	}
 }
 function attachOnScrollEventForPdpOnSizeSelect()
 {
@@ -4445,3 +4452,60 @@ function getProductCodeFromPdpUrl(url)
 }
 
 //End of UF-60 changes
+//Size Select For jewellery
+function populateClassificationForJewellery(jsonData)
+{
+	var classification = jsonData['fineJewelleryDeatils'];
+	var ussid = $("#ussid").val();
+	var htmlCode="";
+	$.each(classification, function(key,value){
+		htmlCode=htmlCode+'<div class="item accordion_in">';
+		htmlCode=htmlCode+'<div class="title acc_head">' + '<div class="acc_icon_expand"></div>';
+		htmlCode=htmlCode+'<p>' + key + '</p></div>';
+		htmlCode=htmlCode+'<div class="detail acc_content" style="display: none;">';
+		if(key == 'Product Details'){
+			htmlCode=htmlCode+'<div class="title">'+ 'PRODUCT CODE' + '<span id="jewelDetailsUssid" >' + ussid + '</span></div>';
+			htmlCode=htmlCode+'<table><tbody>';
+			$.each(value, function(innerKey,innerValue){
+				htmlCode=htmlCode+'<tr><td class="title">' + innerKey + '</td>';
+				$.each(innerValue, function(innerKey1,innerValue1){
+					htmlCode=htmlCode+'<td>' + innerValue1 + '</td>';
+				});
+				htmlCode=htmlCode+'</tr>';
+			});
+			htmlCode=htmlCode+'</tbody></table>';
+		}
+		else if(key == 'Diamond Details'){
+			$.each(value, function(innerKey,innerValue){
+				if(innerKey == 'Total Count' || innerKey == 'Total Weight'){
+					htmlCode=htmlCode+'<div class="t-d-d">' + innerKey + '<span>';
+					$.each(innerValue, function(innerKey1,innerValue1){
+						htmlCode=htmlCode+'<td>' + innerValue1 + '</td>';
+					});
+					htmlCode=htmlCode+'</span></div>';
+				}
+				else {
+					htmlCode=htmlCode+'<table><tbody><tr><td class="title">' + innerKey + '</td>';
+					$.each(innerValue, function(innerKey1,innerValue1){
+						htmlCode=htmlCode+'<td>' + innerValue1 + '</td>';
+					});
+					htmlCode=htmlCode+'</tr>';
+					htmlCode=htmlCode+'</tbody></table>';
+				}
+			});
+		}
+		else {
+			htmlCode=htmlCode+'<table><tbody>';
+			$.each(value, function(innerKey,innerValue){
+				htmlCode=htmlCode+'<tr><td class="title">' + innerKey + '</td>';
+				$.each(innerValue, function(innerKey1,innerValue1){
+					htmlCode=htmlCode+'<td>' + innerValue1 + '</td>';
+				});
+				htmlCode=htmlCode+'</tr>';
+			});
+			htmlCode=htmlCode+'</tbody></table>';
+		}
+		htmlCode=htmlCode+'</div>'+'</div>';
+	});
+	return htmlCode;
+}
