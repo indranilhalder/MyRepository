@@ -121,23 +121,26 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 
 
 		final String[] startEndArray = startendDates.trim().split(",");
-		startDate = startEndArray[0];
-		endDate = startEndArray[1];
+		this.startDate = startEndArray[0];
+		this.endDate = startEndArray[1];
 		final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		LOG.info(" inside sockent Start Date " + startDate + "******* End Date " + endDate);
 		final SShipTxnInfo reportRequest = new SShipTxnInfo();
 		try
 		{
 
-			fromDate = dateFormat.parse(startDate);
-			toDate = dateFormat.parse(endDate);
+			fromDate = dateFormat.parse(this.startDate);
+			toDate = dateFormat.parse(this.endDate);
 			reportRequest.setFromDate(fromDate);
 			reportRequest.setToDate(toDate);
 		}
 		catch (final ParseException e)
 		{
 
-			e.printStackTrace();
+			if(LOG.isErrorEnabled())
+			{
+				LOG.error("Error occured while parsing dates"+e.getMessage());
+			}
 		}
 		displayDeliveredVsPromisedData(reportRequest);
 	}
@@ -156,16 +159,44 @@ public class DeliveryDateAgainstPromisedDateController extends DefaultWidgetCont
 			}
 			++count;
 			shipTxnInfo.setSellerId(txtSellerId.getValue().trim());
-			shipTxnInfo.setFromDate(fromDate);
-			shipTxnInfo.setToDate(toDate);
+			try
+			{
+
+				fromDate = dateFormat.parse(this.startDate);
+				toDate = dateFormat.parse(this.endDate);
+				shipTxnInfo.setFromDate(fromDate);
+				shipTxnInfo.setToDate(toDate);
+			}
+			catch (final ParseException e)
+			{
+
+				if(LOG.isErrorEnabled())
+				{
+					LOG.error("Error occured while parsing dates"+e.getMessage());
+				}
+			}
 		}
 		if (txtSlaveId != null && StringUtils.isNotEmpty(txtSlaveId.getValue()))
 		{
 			LOG.info("txt slave id" + txtSlaveId.getValue());
 			++count;
 			shipTxnInfo.setSlaveId(txtSlaveId.getValue().trim());
-			shipTxnInfo.setFromDate(fromDate);
-			shipTxnInfo.setToDate(toDate);
+			try
+			{
+
+				fromDate = dateFormat.parse(this.startDate);
+				toDate = dateFormat.parse(this.endDate);
+				shipTxnInfo.setFromDate(fromDate);
+				shipTxnInfo.setToDate(toDate);
+			}
+			catch (final ParseException e)
+			{
+
+				if(LOG.isErrorEnabled())
+				{
+					LOG.error("Error occured while parsing dates"+e.getMessage());
+				}
+			}
 		}
 		if (txtTransactionId != null && StringUtils.isNotEmpty(txtTransactionId.getValue()))
 		{
