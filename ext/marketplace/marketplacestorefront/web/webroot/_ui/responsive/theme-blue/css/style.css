@@ -68756,15 +68756,13 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 #singlePagePickupPersonPopup .retail-detail
 {
-    width: 351px;
-    height: 32px;
     font-family: Montserrat;
     font-size: 12px;
     line-height: 1.33;
     letter-spacing: 0.6px;
     text-align: left;
     color: #666666;
-    margin-bottom: 30px;
+   /*  margin-bottom: 30px; */
 }
 #singlePagePickupPersonPopup .name-label{
 	  height: 16px;
@@ -68792,6 +68790,10 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	  border: solid 1px #eeeeee;
 	  margin: 20px auto;
 	  display: inline-block;
+}
+.#singlePagePickupPersonPopup .cancel_delslot{
+	  color: #666666;
+	  letter-spacing: 0.6px;
 }
 #singlePagePickupPersonPopup #savePickupPersondDetails{
 	margin: 20px auto;
