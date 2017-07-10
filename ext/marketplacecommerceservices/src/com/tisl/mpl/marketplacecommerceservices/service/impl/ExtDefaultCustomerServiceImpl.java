@@ -307,6 +307,7 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 
 
 			//TPR-6272 starts here
+			LOG.debug("The platform number is " + platformNumber);
 			if (platformNumber == 1)
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(

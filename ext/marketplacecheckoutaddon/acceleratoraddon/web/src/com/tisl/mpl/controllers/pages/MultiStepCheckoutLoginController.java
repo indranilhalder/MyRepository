@@ -451,6 +451,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 				{
 					platformNumber = 1;//for mkt desktop web
 				}
+				LOG.debug("The platform number is " + platformNumber);
 				//TPR-6272 ends here
 				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber added
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
@@ -525,7 +526,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#back(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */
@@ -537,7 +538,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#next(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */

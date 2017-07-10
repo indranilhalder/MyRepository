@@ -527,6 +527,7 @@ public class LoginPageController extends AbstractLoginPageController
 					{
 						platformNumber = 1;//for mkt desktop web
 					}
+					LOG.debug("The platform number is " + platformNumber);
 					//TPR-6272 ends here
 
 					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed

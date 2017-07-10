@@ -517,6 +517,7 @@ public class UsersController extends BaseCommerceController
 			final String emailIdLwCase = emailId.toLowerCase();
 
 			//TPR-6272 starts here
+			LOG.debug("The platform number is " + platformNumber);
 			int platformDecider;
 			if (StringUtils.isNotEmpty(platformNumber) && platformNumber != null)
 			{
@@ -526,6 +527,7 @@ public class UsersController extends BaseCommerceController
 			{
 				platformDecider = 4;//for backward compatiblity mobile app
 			}
+			LOG.debug("The platform number is " + platformDecider);
 			//TPR-6272 ends here
 
 			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable, platformDecider);//TPR-6272 Parameter platformNumber added

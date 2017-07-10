@@ -273,6 +273,7 @@ public class RegisterPageController extends AbstractRegisterPageController
 				{
 					platformNumber = 1;//for mkt desktop web
 				}
+				LOG.debug("The platform number is " + platformNumber);
 				//TPR-6272 ends here
 				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
