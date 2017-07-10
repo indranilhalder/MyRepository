@@ -120,7 +120,7 @@ display: none;
 									</div>
 									
 									<c:choose>
-										<c:when test="${isExpressCheckoutSelected}"> test ${isExpressCheckoutSelected}
+										<c:when test="${isExpressCheckoutSelected}">
 												<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
 														class="checkout-next">
 														<spring:theme
