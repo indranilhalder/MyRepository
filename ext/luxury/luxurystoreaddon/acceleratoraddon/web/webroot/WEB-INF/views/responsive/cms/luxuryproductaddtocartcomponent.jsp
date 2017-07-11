@@ -117,7 +117,7 @@
 			</div>
             </li>
 				<li><a href="/cart" class="mb-10 btn btn-gloden btn-lg btn-block lux-cart-btn">VIEW BAG <span></span></a></li>
-				<li><a href="javascript:;" class="mb-10 btn btn-default btn-lg btn-block lux-keepshop-btn">CONTINUE SHOPPING</a></li>
+				<li><a href="/" class="mb-10 btn btn-default btn-lg btn-block lux-keepshop-btn">CONTINUE SHOPPING</a></li>
 				<li><a href="/cart" class="btn btn-primary btn-lg btn-block">BUY NOW</a></li> 
 			</ul>
 		</div>
