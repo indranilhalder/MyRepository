@@ -2524,13 +2524,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/**
-	 *
+	 * 
 	 * @Desc fetching reservation details
 	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param pincode
 	 *
 	 * @throws EtailNonBusinessExceptions
@@ -2573,7 +2573,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								entry.setFulfillmentType(item.getFulfillmentType());
 								try
 								{
-									//  INC144316545 START
+									//  INC144316545 START 
 									if (null != salesApplication && salesApplication.equals(SalesApplication.MOBILE))
 									{
 										if (null != item.getFulfillmentType())
@@ -4431,7 +4431,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @author TECHOUTS
 	 * @param cartSoftReservationData
 	 * @param abstractOrderData
-	 *
+	 * 
 	 * @return void
 	 */
 	//commented for CAR:127
