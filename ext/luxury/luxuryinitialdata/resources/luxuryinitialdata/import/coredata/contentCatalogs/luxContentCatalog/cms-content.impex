@@ -1044,6 +1044,81 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-LuxuryContentPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountCouponDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountCouponDetailsPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountCouponDetailsPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountCouponDetailsPage;WishList;;WishListSlot;true
+;;Footer-AccountCouponDetailsPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountCouponDetailsPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountCouponDetailsPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountCouponDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountCouponDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountOverviewPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountOverviewPageTemplate;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountOverviewPageTemplate;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountOverviewPageTemplate;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountOverviewPageTemplate;MiniCart;;MiniCartSlot;true
+;;WishList-AccountOverviewPageTemplate;WishList;;WishListSlot;true
+;;Footer-AccountOverviewPageTemplate;Footer;;FooterSlot;true
+;;HeaderLinks-AccountOverviewPageTemplate;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountOverviewPageTemplate;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountOverviewPageTemplate;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountOverviewPageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountAddressBookPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountAddressBookPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountAddressBookPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountAddressBookPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountAddressBookPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountAddressBookPage;WishList;;WishListSlot;true
+;;Footer-AccountAddressBookPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountAddressBookPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountAddressBookPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountAddressBookPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountAddressBookPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountPaymentDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountPaymentDetailsPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountPaymentDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountPaymentDetailsPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountPaymentDetailsPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountPaymentDetailsPage;WishList;;WishListSlot;true
+;;Footer-AccountPaymentDetailsPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountPaymentDetailsPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountPaymentDetailsPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountPaymentDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountPaymentDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountOrderDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountOrderDetailsPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountOrderDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountOrderDetailsPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountOrderDetailsPage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountOrderDetailsPage;WishList;;WishListSlot;true
+;;Footer-AccountOrderDetailsPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountOrderDetailsPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountOrderDetailsPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountOrderDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountOrderDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateProfilePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountUpdateProfilePage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountUpdateProfilePage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountUpdateProfilePage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountUpdateProfilePage;MiniCart;;MiniCartSlot;true
+;;WishList-AccountUpdateProfilePage;WishList;;WishListSlot;true
+;;Footer-AccountUpdateProfilePage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountUpdateProfilePage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountUpdateProfilePage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountUpdateProfilePage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountUpdateProfilePage;BottomHeaderSlot;;BottomHeaderSlot;true
+
 
 
 
