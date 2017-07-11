@@ -13,7 +13,8 @@ $category=category(code, $productCV)
 $product=product(code, $productCV)
 $picture=media(code, $contentCV)
 $luxuryStoreAddonPrefix=addon:/luxurystoreaddon
-
+$medias=medias(code, $contentCV);
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
 
 # Import modulegen config properties into impex macros
 UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
@@ -145,6 +146,33 @@ INSERT_UPDATE LuxuryNavigationBarCollectionComponent;$contentCV[unique=true];uid
 ;;NavBarComponent;Luxury Navigation Bar Collection Component;NewArrivalsBarComponent,WomenBarComponent,MenBarComponent,LifestyleBarComponent,BeautyBarComponent,DesignersBarComponent,OnSaleBarComponent;
 
 
+
+INSERT_UPDATE LuxuryMedia;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];internalURL;mediaType(code)[default='Image'];altText;mediaFormat(qualifier);urlLink;
+;;look-1Col1;text/png;look1.png;$jarResourceCms/preview-images/look1.png;;;;;desktop;/;
+;;look-2Col1;text/png;look3.png;$jarResourceCms/preview-images/look3.png;;;;;desktop;/;
+;;look-1Col2;text/png;look2.png;$jarResourceCms/preview-images/look2.png;;;;;desktop;/;
+;;look-2Col2;text/png;look4.png;$jarResourceCms/preview-images/look4.png;;;;;desktop;/;
+;;look-1Col1mobile;text/png;look1.png;$jarResourceCms/preview-images/look1.png;;;;;mobile;/;
+;;look-2Col1mobile;text/png;look3.png;$jarResourceCms/preview-images/look3.png;;;;;mobile;/;
+;;look-1Col2mobile;text/png;look2.png;$jarResourceCms/preview-images/look2.png;;;;;mobile;/;
+;;look-2Col2mobile;text/png;look4.png;$jarResourceCms/preview-images/look4.png;;;;;mobile;/;
+;;bag-look-1col1;text/png;look11.png;$jarResourceCms/preview-images/look11.png;;;;;desktop;/;
+;;bag-look-1col1mobile;text/png;look11.png;$jarResourceCms/preview-images/look11.png;;;;;mobile;/;
+;;bag-look-1col21;text/png;img-look3.png;$jarResourceCms/preview-images/img-look3.png;;;;;desktop;/;
+;;bag-look-1col22;text/png;img-look4.png;$jarResourceCms/preview-images/img-look4.png;;;;;desktop;/;
+;;bag-look-2col1;text/png;look12.png;$jarResourceCms/preview-images/look12.png;;;;;desktop;/;
+;;bag-look-1col21mobile;text/png;img-look3.png;$jarResourceCms/preview-images/img-look3.png;;;;;mobile;/;
+;;bag-look-1col22mobile;text/png;img-look4.png;$jarResourceCms/preview-images/img-look4.png;;;;;mobile;/;
+;;bag-look-2col1mobile;text/png;look12.png;$jarResourceCms/preview-images/look12.png;;;;;mobile;/;
+;;mobile-Red-Poster;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;;;desktop;/;
+;;pickit-up-poster;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;;;desktop;/;
+;;mobile-Red-Postermobile;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;;;mobile;/;
+;;pickit-up-postermobile;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;;;mobile;/;
+
+
+
+
+
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];internalURL;mediaType(code)[default='Image'];altText;
 ;;shopMen;text/png;ShopMen.png;$jarResourceCms/preview-images/ShopMen.png;;/men-landing
 ;;shopWomen;text/png;womenshop.png;$jarResourceCms/preview-images/womenshop.png;;
@@ -212,6 +240,24 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 
 INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
 ;;Brand-shopbycategory	;Brand-shopbycategory;Shop by Category;BagsImageCoursel1,PantsImageCoursel1,ClothingImageCoursel1,FootwearImageCoursel1,GroomingImageCoursel1
+
+INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=true]
+;look-1Col1-container;look-1Col1,look-1Col1mobile
+;look-2Col1-container;look-2Col1,look-2Col1mobile
+;look-1Col2-container;look-1Col2,look-1Col2mobile
+;look-2Col2-container;look-2Col2,look-2Col2mobile
+;bag-look-1col1-container;bag-look-1col1,bag-look-1col1mobile
+;bag-look-1col21-container;bag-look-1col21,bag-look-1col21mobile
+;bag-look-1col22-container;bag-look-1col22,bag-look-1col22mobile
+;bag-look-2col1-container;bag-look-2col1,bag-look-2col1mobile
+;mobile-Red-Poster-container;mobile-Red-Poster,mobile-Red-Postermobile
+;pickit-up-poster-container;pickit-up-poster,pickit-up-postermobile
+
+
+INSERT_UPDATE LuxuryLookBookComponent;$contentCV[unique=true];uid[unique=true];layoutCode;title;description;TextArea;FirstCol(qualifier, $contentCV);SecondCol(qualifier, $contentCV);shopNowLink;shopNowName
+;;Bag-shopLookBook;layout1;;;;look-1Col1-container,look-2Col1-container;look-1Col2-container,look-2Col2-container;;;
+;;LookBook-Bag;layout2;;;;bag-look-1col1-container;bag-look-1col21-container,bag-look-1col22-container,bag-look-2col1-container;;;
+;;mobile-shortBanner;shortbanner-layout1;;;;mobile-Red-Poster-container;pickit-up-poster-container;;;
 
 
 INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
@@ -443,7 +489,7 @@ INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wra
 
 
 # CMS tabs components
-;
+
 
 INSERT_UPDATE LuxurySimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang];
 ;;Men-BannerVideo1;Men Video Banner;;/;Brand_landingVideo;
@@ -501,7 +547,7 @@ INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;
 
 # CMS AddToCart Action
 INSERT_UPDATE AddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
-;;AddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;AddToCartAction
+;;AddToCartAction;/cart/add;Product Add To Cart Action;;AddToCartAction
 
 # CMS ProductAddToCart Components
 INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
@@ -510,6 +556,8 @@ INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true]
 
 INSERT_UPDATE AccountNavigationComponent;$contentCV[unique=true];uid[unique=true];name;navigationNode(&nodeRef);styleClass;&componentRef
 ;;FooterLeftNavigationCustomerComponent; Footer Left Navigation Customer Component;NPPageCustomerServiceNavNode;;FooterLeftNavigationCustomerComponent
+
+
 
 
 INSERT_UPDATE NeedHelpComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;ContactNumber;;
@@ -522,6 +570,9 @@ INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title
 INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(uid,$contentCV);
 ;;PLP-Banner-100001SHW0001;PLP Banner Rotating for 100001SHW0001;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;
 ;;PLP-Banner-100009K0001K11;PLP Banner Rotating for 100009K0001K11;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;
+
+INSERT_UPDATE LuxuryVideoComponent;$contentCV[unique=true];uid[unique=true];name;videoUrl;videoTitle;videoDescription;previewImageUrl;
+;;Brandlanding-video;Brandlanding-video;https://s3.ap-south-1.amazonaws.com/tatacliq-luxury/home-videos/brooks-brothers_brand-video.mp4;;;https://assets.tatacliq.com/medias/sys_master/images/10961356259358.jpg;
 
 
 
@@ -569,7 +620,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Brand-HeaderLinkSlot;Brand HeaderLinkSlot;true;
 ;;Brand-siteLogoSlot;Brand siteLogo;true;Brand-team;
 ;;Brand-MiniCartSlot;Brand MiniCart;true;Luxury-MiniCart
-;;Brand-HeroBannerSlot;Brand HeroBanner;true;Men-BannerVideo1
+;;Brand-HeroBannerSlot;Brand HeroBanner;true;Brandlanding-video
 ;;Brand-BannerDescriptionSlot;Brand BannerDescription;true;
 ;;Brand-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Brand-ShowCase1Slot;Brand ShowCase1;true;Bag-ShowCase
@@ -599,19 +650,19 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-FooterSlot;Gender Footer;true;
 ;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
 ;;Men-BannerDescriptionSlot;Brand BannerDescription;true;
-;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;LookBook-Bag
 ;;Men-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
 ;;Men-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
-;;Men-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
+;;Men-ProductCurosel1Slot;Brand ProductCurosel1;true;Bag-shopLookBook
 ;;Men-ProductCurosel2Slot;Brand ProductCurosel2;true;CoachBrand-ProductCarouselComponent
 ;;Men-MoreStoriesbanner1DescriptionSlot;Brand MoreStoriesbanner1Description;true;
-;;Men-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;look1ShowCol1,look1ShowCol2
+;;Men-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;Bag-shopLookBook
 ;;Men-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col2;true;look2ShowCol1,look2ShowCol2
 ;;Men-MoreStoriesbanner2Col1Slot;Brand MoreStoriesbanner2Col1;true;bagShow-look1col1
 ;;Men-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
 ;;Men-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
 ;;Men-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
-;;Men-ShortlookBookSlot;Gender ShortlookBook;true;mobile-lookBook
+;;Men-ShortlookBookSlot;Gender ShortlookBook;true;mobile-shortBanner
 ;;Men-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
 ;;Men-WeeklyBanner1Slot;Gender WeeklyBanner1;true;HomePageWeaklySpecialBanner
 ;;Women-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent

@@ -54,12 +54,6 @@
 	</section>
 
 
-	<section class="luxgender-carousel shop-by-catagory text-center">
-		<cms:pageSlot position="Gender-ProductCurosel1" var="feature" element="div"
-					  class="span-24 section5 cms_disp-img_slot">
-			<cms:component component="${feature}" />
-		</cms:pageSlot>
-	</section>
 
 	<section class="luxgender-carousel shop-by-catagory text-center">
 		<cms:pageSlot position="Gender-ProductCurosel1" var="ProductCurosel1" element="div"
