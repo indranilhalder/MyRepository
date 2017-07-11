@@ -585,14 +585,14 @@ display:none;
     <%--for price breakup(TPR-3752) --%>
 
 	
-	
-	<div id = "showPricequick">
+	<!-- Price Breakup removed From Quickview -->
+	<!-- <div id = "showPricequick">
 	
 	<p id = "showquick" class="pricebreakup-link">Price Breakup</p>
 	
 	</div>
 	<ul id="showPriceBreakupquick" class="price-breakuplist clearfix" style="display:none"></ul>
-
+ -->
 	<%-- </c:if> --%>
 	
 	<%--for price breakup(TPR-3752) --%>
