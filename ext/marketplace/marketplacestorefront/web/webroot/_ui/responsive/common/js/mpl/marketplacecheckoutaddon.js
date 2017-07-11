@@ -185,7 +185,7 @@ function refresh(){
 	$("#is_emi").val("false");
 	$("#emi_bank").val("");
 	$("#emi_tenure").val("");
-	$("#COD, #emi, #netbanking, #card,#cardEmi, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display","none");
+	$("#COD, #emi, #netbanking, #card,#cardEmi, #paymentFormButton, #submitPaymentFormButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display","none");
 	$("#netbankingError,.newCard, #emiRangeError, #juspayconnErrorDiv").css("display","none");
 	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError, #codErrorMessage").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
@@ -424,8 +424,10 @@ function displayCODForm()
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success : function(response) {
+			console.log(response);
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
+			console.log(codEligible);
 			$("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
@@ -480,10 +482,13 @@ function displayCODForm()
 						data: { 'paymentMode' : paymentMode , 'guid' : guid },
 						cache: false,
 						success : function(response) {
+							console.log(response);
 							if(response==null){
 								$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
 							}
 							else{
+								$("#paymentButtonId #submitPaymentFormCODButton").css("display","block");
+								$("#OTPGenerationErrorMessage").css("display","none");
 								$("#sendOTPNumber, #convCharge").css("display","block");
 								var totalPrice=response.totalPrice.formattedValue;
 								var convCharge=response.convCharge.formattedValue;

@@ -32,10 +32,10 @@
 		type="text" id="mobilePrefix" name="mobilePrefix" value="+91"
 		disabled="disabled" /><input type="text" id="otpMobileNUMField"
 		name="otpNUM" value="${cellNo}" maxlength="10" /> --%>
-	<div id="mobileNoError" class="error-message">
+	<%-- <div id="mobileNoError" class="error-message">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoErrorMessage" />
-	</div>
+	</div> --%>
 	<%-- <p class="process">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.mobileNoMessage" />
@@ -78,6 +78,12 @@
 </div>
 <div class="g-recaptcha" data-sitekey="${grecaptchaKey}"></div>
 <div id="captchaError"></div>
+
+<button type="button" class="make_payment payment-button btn-lg btn-primary" id="paymentButtonId">		
+									<div id="submitPaymentFormCODButton">	
+										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
+									</div>
+								</button> 
 <script type="text/javascript" >
  $(document).ready(function (){
 	$.ajax({

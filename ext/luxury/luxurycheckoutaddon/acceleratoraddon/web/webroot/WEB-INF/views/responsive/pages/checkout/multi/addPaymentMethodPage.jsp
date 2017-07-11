@@ -1182,11 +1182,7 @@
 										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
 									</div>
 								</button> --%>
-							 	<button type="button" class="make_payment button btn-block payment-button confirm" id="paymentButtonId" style="display:block;">		
-									<div id="submitPaymentFormCODButton"  style="display:block;">	
-										<spring:theme code="checkout.multi.paymentMethod.codContinue" />
-									</div>
-								</button> 
+							 	
 								<%-- <p class="payment-redirect"><spring:theme code="text.secure.payment.gateway"/></p> --%>
 									
 							</div>
