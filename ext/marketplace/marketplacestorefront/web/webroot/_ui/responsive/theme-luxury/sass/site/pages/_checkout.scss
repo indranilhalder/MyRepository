@@ -870,6 +870,14 @@
     display: inline-block;
     vertical-align: middle; 
 }
+.card-flag{
+    @include media-breakpoint-down(sm) {
+        .card_image{
+            width: 35px;
+            display: block;
+        }
+    }
+}
 .card-tab{
     .credit_tab{
         display: inline-block;   
@@ -1001,6 +1009,10 @@ checkout-shipping-items.left-block-width{
         .card-details{
             display: inline-block;
             width: 60%;
+            
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
         }
     }
     .cvv.right-align-form{
@@ -1011,5 +1023,19 @@ checkout-shipping-items.left-block-width{
             input{
                 width:100%;
             }
+        @include media-breakpoint-down(sm) {
+            width: 100%;           
+            float: none;
+        }
+    }
+}
+.card-group{
+    @include media-breakpoint-down(sm) {
+        .full{
+            margin: 5px 0px;
+        }
+        #country{
+            width: 100%;
+        }
     }
 }

@@ -38,7 +38,7 @@ display: none;
 	</div> -->
 	
 	
-	<div class="checkout-content cart checkout delivery">
+	<div class="checkout-content cart checkout delivery row">
 	<!-- store url fix -->
 	<script type="text/javascript" src="/_ui/responsive/common/js/jquery-2.1.1.min.js"></script>
 	 <div class="main"><div class="col-md-8">

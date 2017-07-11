@@ -612,8 +612,15 @@
     }
     #pinCodeButtonIds {
         padding: 7px 9px 7px 9px;
-        margin-top: -1px;
-    }   
+        margin-top: -1px;           
+    }  
+    
+    button.CheckAvailability{
+        border-radius: 4px;
+        background-color: #2d2d2d;
+        color: #fff;
+        border: 0px;
+    }
 }
  .page-cartPage .header-promo.only-in-cart {
  	display:none;

@@ -40,7 +40,7 @@
 	<div class="checkout-headline" id="checkout-headline">
 		<spring:theme code="checkout.multi.secure.checkout"/>
 	</div>
-	<div class="checkout-content checkout-payment cart checkout wrapper">
+	<div class="checkout-content checkout-payment cart checkout wrapper row">
 	  <div class="col-md-8">
 	  <div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
    <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
