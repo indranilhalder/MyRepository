@@ -65,7 +65,7 @@
 	        data-calltoactionurl="">
 	        <a class="gp"></a>
 	        </button> --%>
-			<a class="gp" onclick="return TATA.Pages.PDP.openPopup('https://plusone.google.com/_/+1/confirm?url=https://www.dev.tataunistore.com&amp;clientid=888304528479-qdh1rp8r9o5fvh3dlabr7ebdbr02se6e.apps.googleusercontent.com&amp;prefilltext=helooo&amp;calltoactionurl=https://www.google.com')"></a>
+			<a class="gp" onclick="return TATA.Pages.PDP.openPopup('https://plusone.google.com/_/+1/confirm?url='+window.location.host+ $('#productUrl').text()+'&amp;clientid=888304528479-qdh1rp8r9o5fvh3dlabr7ebdbr02se6e.apps.googleusercontent.com&amp;prefilltext=helooo&amp;calltoactionurl=https://www.google.com')"></a>
 			<!-- <a href="" class="gp" onclick="return openPopup('https://plusone.google.com/_/+1/confirm?url=' + window.location)"></a> -->
 		</li>	
 		<%-- <li><a class="mail" data-target="#popUpModal" data-url="${SHARED_PATH}"></a>
