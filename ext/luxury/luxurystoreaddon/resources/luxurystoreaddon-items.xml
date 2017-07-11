@@ -13,6 +13,8 @@
 	<collectiontypes>
 		<collectiontype code="luxBannersCollection" elementtype="BannerComponent"
 			autocreate="true" generate="false" />
+		<collectiontype code="luxuryResponsiveBannersComponent" elementtype="MediaContainer"
+			autocreate="true" generate="false" />
 		<collectiontype code="ShopOnLuxuryElementCollection"
 			elementtype="ShopOnLuxuryElement" autocreate="true" generate="true"
 			type="list" />
@@ -129,6 +131,8 @@
 
 			</attributes>
 		</itemtype>
+
+
 
 		<itemtype code="ShopOnLuxuryElement" extends="SimpleCMSComponent"
 			jaloclass="com.tisl.lux.jalo.cms.components.ShopOnLuxuryElement"
@@ -369,8 +373,187 @@
 	autocreate="true" generate="true" extends="MiniCartComponent"  
 	jaloclass="com.tisl.lux.jalo.cms.components.LuxuryMiniCartComponent">
 			</itemtype>
-	
-	
-	
+		<!-- Video Component added -->
+		<itemtype code="LuxuryVideoComponent" generate="true" autocreate="true"
+				  extends="SimpleCMSComponent" jaloclass="com.tisl.lux.jalo.LuxuryVideoComponent">
+			<attributes>
+
+				<attribute type="java.lang.String" qualifier="videoUrl">
+					<modifiers read="true" write="true" search="true"
+							   unique="true" optional="true" />
+					<description>URL of the video</description>
+					<persistence type="property" />
+				</attribute>
+
+				<attribute type="Media" qualifier="video">
+					<modifiers read="true" write="true" search="true"
+							   unique="true" optional="true" />
+					<description>Video</description>
+					<persistence type="property" />
+				</attribute>
+
+				<attribute type="java.lang.String" qualifier="videoTitle">
+					<modifiers read="true" write="true" search="true"
+							   unique="true" optional="true" />
+					<description>Video Title</description>
+					<persistence type="property" />
+				</attribute>
+
+
+				<attribute type="java.lang.String" qualifier="videoDescription">
+					<modifiers read="true" write="true" search="true"
+							   unique="true" optional="true" />
+					<description>Video Description</description>
+					<persistence type="property" />
+				</attribute>
+				<!--Attributed added for luxuary page -->
+
+				<attribute type="java.lang.String" qualifier="previewImageUrl">
+					<modifiers read="true" write="true" search="true"
+							   unique="true" optional="true" />
+					<description>Preview URL of the video's first frame</description>
+					<persistence type="property" />
+				</attribute>
+
+				<attribute type="java.lang.String" qualifier="videoSectionHeading">
+					<modifiers read="true" write="true" search="true"
+							   unique="true" optional="true" />
+					<description>Section heading of the video to be shown on Luxury Homepage</description>
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+
+		<!--<itemtype code="LuxuryShortBannerComponent" autocreate="true"
+				  generate="true" extends="SimpleCMSComponent"
+				  jaloclass="com.tisl.lux.jalo.cms.components.LuxuryLookBookComponent">
+			<attributes>
+				<attribute type="java.lang.String" qualifier="LayoutCode"
+						   autocreate="true" generate="true">
+					<description>Layout Code</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						   autocreate="true" generate="true">
+					<description>title</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="description"
+						   autocreate="true" generate="true">
+					<description>description</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="luxuryResponsiveBannersComponent" qualifier="FirstCol"
+						   autocreate="true" generate="true">
+					<description>FirstCol Images</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="false" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="luxuryResponsiveBannersComponent" qualifier="SecondCol"
+						   autocreate="true" generate="true">
+					<description>SecondCol Images</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="false" />
+					<persistence type='property' />
+				</attribute>
+
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						   autocreate="true" generate="true">
+					<description>shop Now Name</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						   autocreate="true" generate="true">
+					<description>shop Now link</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+			</attributes>
+		</itemtype>
+-->	<itemtype code="LuxuryLookBookComponent" autocreate="true"
+				  generate="true" extends="SimpleCMSComponent"
+				  jaloclass="com.tisl.lux.jalo.cms.components.LuxuryLookBookComponent">
+			<attributes>
+				<attribute type="java.lang.String" qualifier="layoutCode"
+						   autocreate="true" generate="true">
+					<description>Layout Code</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="title"
+						   autocreate="true" generate="true">
+					<description>title</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="description"
+						   autocreate="true" generate="true">
+					<description>description</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="CMSParagraphComponent" qualifier="textArea"
+						   autocreate="true" generate="true">
+					<description>Footer Bar Content</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="luxuryResponsiveBannersComponent" qualifier="firstCol"
+						   autocreate="true" generate="true">
+					<description>FirstCol Images</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="false" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="luxuryResponsiveBannersComponent" qualifier="secondCol"
+						   autocreate="true" generate="true">
+					<description>SecondCol Images</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="false" />
+					<persistence type='property' />
+				</attribute>
+
+				<attribute type="java.lang.String" qualifier="shopNowName"
+						   autocreate="true" generate="true">
+					<description>shop Now Name</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="shopNowLink"
+						   autocreate="true" generate="true">
+					<description>shop Now link</description>
+					<modifiers read="true" write="true" search="true"
+							   optional="true" />
+					<persistence type='property' />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+
+		<itemtype code="LuxuryMedia" extends="Media" autocreate="true"
+				  generate="true">
+			<attributes>
+				<attribute qualifier="urlLink" type="java.lang.String">
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
 	</itemtypes>
 </items>

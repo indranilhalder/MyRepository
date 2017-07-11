@@ -123,12 +123,24 @@
        <property name="typeCode" value="LuxuryPincodeServiceComponent" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
-   
-   <bean parent="addonCmsComponentRendererMapping">
+
+    <bean parent="addonCmsComponentRendererMapping">
        <property name="typeCode" value="LuxuryMiniCartComponent" />
        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
    </bean>
-   
-   
- 
+    <bean parent="addonCmsComponentRendererMapping">
+        <property name="typeCode" value="LuxuryVideoComponent" />
+        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+    </bean>
+
+    <bean parent="addonCmsComponentRendererMapping">
+        <property name="typeCode" value="LuxuryLookBookComponent" />
+        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+    </bean>
+
+    <bean parent="addonCmsComponentRendererMapping">
+        <property name="typeCode" value="LuxuryMedia" />
+        <property name="renderer" ref="genericAddOnCMSComponentRenderer" />
+    </bean>
+
 </beans>
