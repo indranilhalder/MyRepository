@@ -229,8 +229,24 @@
 }
 .shop-by-catagory{
 	.slick-track{
-		margin:0 auto 0 20%;
+		margin:auto;
 	}
+    
+    @include media-breakpoint-down(sm) {
+        
+        .shop-by-catagory-slider{
+            li{
+                margin: 21px;
+                
+                a{
+                    img{
+                        border-radius: 50%;
+                        border: 1px solid #ccc 
+                    }
+                }
+            }
+        }
+    }
 }
 
 .page-luxuryWomenlandingPage,.page-luxuryMenlandingPage,.page-luxuryBrandLandingPage{

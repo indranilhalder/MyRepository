@@ -14,6 +14,7 @@ TATA.CommonFunctions = {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
+    
     getCorrectErrorMessage: function(errorItem){
     	var errorMsg = errorItem.message;
     	if(errorMsg.indexOf("required") > 0){
@@ -25,6 +26,7 @@ TATA.CommonFunctions = {
     	}
     	return errorMsg;
     },
+    
     signInValidate: function() {
         $("#loginForm").validate({
             onfocusout: !1,
@@ -57,6 +59,7 @@ TATA.CommonFunctions = {
             }
         });
     },
+    
     signUpValidate: function() {
         $("#extRegisterForm").validate({
             onfocusout: !1,
@@ -116,7 +119,8 @@ TATA.CommonFunctions = {
                 });
             }
         });
-    },
+    }, 
+    
     forgotPasswordValidate: function() {
         $("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .valid-message").html(""), 
         $("#forgottenPwdForm").validate({
@@ -169,6 +173,7 @@ TATA.CommonFunctions = {
             }
         });
     },
+    
     loadRegisterForm: function(element){
         const luxRegister = element.attr("href");
         $.ajax({
@@ -181,6 +186,7 @@ TATA.CommonFunctions = {
             }
         });
     },
+    
     loadForgotPasswordForm: function(element){
         const pwsRequest = element.attr("href");
         $.ajax({
@@ -327,9 +333,6 @@ TATA.CommonFunctions = {
             return false;
         });
     },
-
-
-
 
     ShopByCatagorySlider: function() {
         $('.shop-by-catagory-slider').slick({
