@@ -294,6 +294,10 @@ footer{
 				span{
 					background-color: $white;
 					margin-right: 10px;
+                    
+                    @include media-breakpoint-down(sm) {
+                            background-color: transparent;
+                    }
 				}
 
 			/*&:after{

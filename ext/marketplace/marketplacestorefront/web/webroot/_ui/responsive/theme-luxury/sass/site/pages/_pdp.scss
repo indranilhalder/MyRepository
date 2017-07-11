@@ -72,7 +72,7 @@
         display: inline-block; 
         width: 65%;
          @include media-breakpoint-down(sm) {
-              width: 49%;
+              width: 51%;
         }
     }
     h1.product-name {
@@ -112,6 +112,7 @@
 		
 		ul{
 			float: left;
+            width: 100%;
 		}
 		
 		li {

@@ -14,6 +14,7 @@ TATA.CommonFunctions = {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     },
+    
     getCorrectErrorMessage: function(errorItem){
     	var errorMsg = errorItem.message;
     	if(errorMsg.indexOf("required") > 0){
@@ -25,6 +26,7 @@ TATA.CommonFunctions = {
     	}
     	return errorMsg;
     },
+    
     signInValidate: function() {
         $("#loginForm").validate({
             onfocusout: !1,
@@ -57,6 +59,7 @@ TATA.CommonFunctions = {
             }
         });
     },
+    
     signUpValidate: function() {
         $("#extRegisterForm").validate({
             onfocusout: !1,
@@ -111,12 +114,13 @@ TATA.CommonFunctions = {
                     success: function(data) {
                         if ("email" != $(data).filter("input#hasErrorsInReg").val()) return location.reload(), 
                         !1;
-                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Please enter valid email address") : $("#extRegisterForm").prepend('<div class="invalided-error">Please enter valid email address</div>');
+                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Email ID already registered with us. Please Login or use other Email ID.") : $("#extRegisterForm").prepend('<div class="invalided-error">Email ID already registered with us. Please Login or use other Email ID.</div>');
                     }
                 });
             }
         });
-    },
+    }, 
+    
     forgotPasswordValidate: function() {
         $("#forgottenPwdForm .invalided-error").html(""), $("#forgottenPwdForm .valid-message").html(""), 
         $("#forgottenPwdForm").validate({
@@ -169,6 +173,7 @@ TATA.CommonFunctions = {
             }
         });
     },
+    
     loadRegisterForm: function(element){
         const luxRegister = element.attr("href");
         $.ajax({
@@ -181,6 +186,7 @@ TATA.CommonFunctions = {
             }
         });
     },
+    
     loadForgotPasswordForm: function(element){
         const pwsRequest = element.attr("href");
         $.ajax({
@@ -327,9 +333,6 @@ TATA.CommonFunctions = {
             return false;
         });
     },
-
-
-
 
     ShopByCatagorySlider: function() {
         $('.shop-by-catagory-slider').slick({
