@@ -522,14 +522,21 @@ display:none;
     
     <!-- //TPR-3752 Jewel Heading Added -->
 			<c:choose>
-  				<c:when test="${product.rootCategory=='FineJewellery'}">
-  				<input id="jwelQuick" type="hidden" value="${product.rootCategory}"/>
-					<p class="key-labelquick">
-	  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
-						</c:forEach>
-	  			    </p>
-  				</c:when>
-  			</c:choose>
+					<c:when test="${product.rootCategory=='FineJewellery'}">
+						<div class="product-desc">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			 </c:forEach>
+   						 			 <a href="" class="more-link">More</a>
+							  </c:if> 
+								</c:forEach>
+							</span> 
+						</div>
+					</c:when>
+				</c:choose>
     
     
     <div class="price">
