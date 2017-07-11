@@ -3938,7 +3938,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					}
 					if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
 						priceBreakup.forEach(function(entry) {
-							 var html1 = "<tr><td>"+entry.name+"</td>";
+							 var html1 = '<tr><td class="title">'+entry.name+'</td>';
 							 var list;
 							 var weightRateList = entry.weightRateList;
 							 if(undefined!=weightRateList) {
