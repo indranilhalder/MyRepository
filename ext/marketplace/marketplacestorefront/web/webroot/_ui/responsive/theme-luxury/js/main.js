@@ -13,7 +13,7 @@ TATA.CommonFunctions = {
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
-    },
+    },    
     
     getCorrectErrorMessage: function(errorItem){
     	var errorMsg = errorItem.message;
@@ -335,27 +335,17 @@ TATA.CommonFunctions = {
     },
 
     ShopByCatagorySlider: function() {
-        $('.shop-by-catagory-slider').slick({
-            slidesToScroll: 6,
-            slidesToShow: 6,
-            variableWidth: false,
-            infinite: false,
-            arrows: false,
-            swipe: false,
-            dots: true,
-            responsive: [
-                {
-                    breakpoint: 768,
-                    settings: {
-                        slidesToScroll: 1,
-                        slidesToShow: 1,
-                        infinite: true,
-                        swipe: true,
-                        variableWidth: true
-                    }
-                }
-            ]
-        });
+        if($(window).width() >=768){
+            $('.shop-by-catagory-slider').slick({
+                slidesToScroll: 6,
+                slidesToShow: 6,
+                variableWidth: false,
+                infinite: false,
+                arrows: false,
+                swipe: false,
+                dots: true
+            });
+        }
     },
 
     fillHeartForItemsInWishlist: function(){
@@ -557,7 +547,6 @@ TATA.CommonFunctions = {
         }
     },
 
-
     WindowScroll: function() {
 
         var winWidth = $(window).width();
@@ -574,7 +563,6 @@ TATA.CommonFunctions = {
         }
 
     },
-
 
     Header: {
         MobileMenu: function() {
@@ -629,7 +617,8 @@ TATA.CommonFunctions = {
             $(".accordion-content").not($(this).next()).stop().slideUp(500);
             return false;
         });
-    },
+    }, 
+    
     deliveryaddressform: function() {
 
         $("#address-form").click(function(){
@@ -648,6 +637,7 @@ TATA.CommonFunctions = {
             });
         });
     },
+    
     swipeLookBook: function() {
 		$(window).resize(function(){		
 		      if($(window).width() < 768) {
@@ -665,7 +655,7 @@ TATA.CommonFunctions = {
 		  }
 		});    	
     },
-
+    
     init: function () {
 
         var _self = TATA.CommonFunctions;
@@ -683,11 +673,11 @@ TATA.CommonFunctions = {
         _self.wishlistInit();
         _self.leftBarAccordian();
         _self.deliveryaddressform();
-        _self.swipeLookBook();
-
+        _self.swipeLookBook();      
     }
 
 };
+
 
 TATA.Pages = {
 

@@ -95,8 +95,9 @@
 			<!----- RIGHT Navigation STARTS --------->
 			<div class="right-account">
 			<div class="updatePassword-wrapper">
-				<div class="account-section updatePassword">
-					<h1><spring:theme code="updatePwd.title"/></h1>
+				<div class="account-section updatePassword info">					
+				<h2><spring:theme code="updatePwd.title"/></h2>
+					
 					
 							<p>Please use this form to update your account password.</p>
 						<%-- <form:form action="update-password" method="post" commandName="updatePasswordForm" autocomplete="off" class="updatePasswordForm">
@@ -114,9 +115,9 @@
 						</form:form> --%>
 						
 						<form:form id="frmUpdatePassword" action="update-password" method="post" commandName="updatePasswordForm" autocomplete="off">
-					
+					   <div class="row">
 						
-						<div class="full span password-input halfwidth">
+						<div class="full span password-input halfwidth col-md-6">
 									<label><spring:theme code="text.mplCustomerProfileForm.CurrPwd" text="Current Password*" /></label>
 										<input type="password" path="currentPassword" id="currentPassword"
 										onkeypress="kpresscp()"	 maxlength="140" /> 
@@ -127,15 +128,16 @@
 									</div>  
 						
 						
-						 <div class="half password-input halfwidth">
+						 <div class="half password-input halfwidth col-md-6">
 									<label><spring:theme code="text.mplCustomerProfileForm.NewPwd" text="New Password*" /></label>
 										 <input type="password" path="newPassword" id="newPassword"
 										onkeypress="kpressnp()"	 maxlength="140" /> 
 										<%-- <form:password path="newPassword" onkeyup="kpressnp()"  placeholder="New Password"/> --%>
 									<div class="errorMessage"><div id="errNewpwd"></div></div>
 									</div>  
-						
-			        	  <div class="half password-input halfwidth">
+						</div>
+						<div class="row">
+			        	  <div class="half password-input halfwidth col-md-6">
 									<label><spring:theme code="text.mplCustomerProfileForm.CnfNewPwd" text="Confirm New Password*" /></label>
 										 <input type="password"  path="checkNewPassword" id="checkNewPassword"
 										onkeypress="kpresscnp()" maxlength="140" /> 
@@ -143,16 +145,17 @@
 									<div class="errorMessage"><div id="errCnfNewpwd"></div></div>
 									</div>  
 						
-						
+						</div>
 							<%-- <div class="half password-input">
 								<formElement:formPasswordBox idKey="profile.checkNewPassword" labelKey="profile.checkNewPassword" path="checkNewPassword" inputCSS="form-control password" mandatory="true"/>
 							</div>  --%>
-							
-							<div>
+							<div  class="row">
+							<div class="col-md-6 mt-10">
 								<button type=button class="blue" onClick="return validatePassword();"><spring:theme code="cart.modal.save.changes" text="Save Changes"/></button>
 								</div>
-								<div>
+								<div class="col-md-6  mt-10">
 								<button type="button" class="btn-block red" onclick="window.location='${updateProfileUrl}'">Cancel</button>
+							</div>
 							</div>
 							
 							
