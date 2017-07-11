@@ -708,7 +708,7 @@
 		    position: fixed;
 		    left: 0;
 		    top: 68px;
-		    overflow-y: auto;
+		    //overflow-y: auto;
 		    //height: 100%;
 		}
 		&.active {
@@ -754,7 +754,7 @@
 		&.active-sign-up {
 			height: 650px;
 			@include media-breakpoint-down(sm) {
-				//height: 100%;
+				height: calc(100vh - 88px);
 			}
 			.header-account-inner{
 				left: -860px;
@@ -801,6 +801,10 @@
 			}
 		}
 		.header-signup {
+			@include media-breakpoint-down(sm) {
+				overflow-y: auto;
+				height: calc(100vh - 88px);
+			}
 			.form-control {
 				height: 38px;
 				border: 0px;
