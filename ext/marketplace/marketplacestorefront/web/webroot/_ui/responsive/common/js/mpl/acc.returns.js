@@ -2,6 +2,7 @@
 			$(".secondTataCliq .accContents .errorText").remove();
 			var checkStatus = $(".firstTataCliq select").val();
 			console.log(checkStatus);
+			$("#returnReason").find(":selected").text();
 			if(checkStatus == "NA" ) {
 				//alert("Please Select a reason for Why are you returning this product?");
 				if($(".firstTataCliq .accContents .errorText").length <= 0) {
@@ -21,6 +22,11 @@
 				$(".secondTataCliq .reasonType .slectionReplace, .secondTataCliq .errorTextSelection").hide();
 				$(".secondTataCliq .reasonType .slectionRefund").show();
 			}
+			var dtmReturnReason = $("#returnReason").find(":selected").text();
+			var dtmReturnProduct = $("#dtmPrdtReturnCode").val();
+			var dtmReturnProductCat = $("#dtmPrdtReturnCat").val();
+			dtmOrderReturn(dtmReturnReason,dtmReturnProduct,dtmReturnProductCat);
+			
 			
 		}
 		

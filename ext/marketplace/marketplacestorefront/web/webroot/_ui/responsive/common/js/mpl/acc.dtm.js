@@ -936,3 +936,23 @@ function dtmSearchTags(){
 				}
 		}
 	}
+	  //TPR-6288 | My account Order Return
+	function dtmOrderReturn(dtmReturnReason,dtmReturnProduct,dtmReturnProductCat){
+		if (typeof _satellite != "undefined") {
+			_satellite.track('order_returns');
+			
+	    }
+		digitalData.cpj = {
+	    		product : {
+	    				id  :  dtmReturnProduct,
+	    		 category   :  dtmReturnProductCat	
+	    	 }
+	    	}
+		digitalData.order = {
+				return : {
+				reason : dtmReturnReason
+				}
+		}
+	}
+
+	
