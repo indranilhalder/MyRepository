@@ -5,6 +5,9 @@ function registerUserGigya(eventObject)
 	var encodedTimestamp=encodeURIComponent(eventObject.timestamp);
 	var  encodedSignature=encodeURIComponent(eventObject.signature);
 // console.log("SOCIAL LOGIN REFERER:-"+ window.location.href)
+	   $('.signin-box ').addClass('loader');
+	    spinner: $("<img src='" + ACC.config.commonResourcePath + "/images/spinner.gif' />");
+	    
 		 $.ajax({
 				url : ACC.config.encodedContextPath + "/oauth2callback/socialLogin/",
 				data : {
@@ -32,6 +35,7 @@ function registerUserGigya(eventObject)
 							if(data.indexOf(ACC.config.encodedContextPath) > -1)
 							{
 								window.open(data,"_self");
+								
 							}
 							else
 							{
@@ -47,6 +51,7 @@ function registerUserGigya(eventObject)
 							}
 							
 						}	
+					$('body').addClass('loader');
 				},
 				error : function(resp) {
 					console.log("Error Occured Login Page" + resp);					

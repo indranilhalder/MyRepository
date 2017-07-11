@@ -410,7 +410,7 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 					<li><span>Return within 30days </span>of placing your order</li>
 					<li><span>Get free delivery </span>for every order above Rs. 1,999</li>
 				</ul>"
-;;Home-TopBannerContent;Home Top Banner Content;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='#'>Know More</a></p></div>"
+;;Home-TopBannerContent;Home Top Banner Content;;"<div class='header-promo text-center'><p>Free Shipping + free retunrs <a href='/shipping'>Know More</a></p></div>"
 ;;Brand-shopByFav;Brand-shopByFav;;"<section class='look-book clearfix'><h3 class='section-title'>Shop by Category</h3><p class='mb-40 section-content'>Shop your favourites</p><div class='look-book-link'><ul class='list-unstyled clearfix'><li><a href='#'>Polos &amp; T-shirts</a></li><li><a href='#'>Casual Shirts</a></li><li><a href='#'>Jeans</a></li><li><a href='#'>Casual Trousers</a></li><li><a href='#'>Formal Shirts</a></li><li><a href='#'>Formal Trousers</a></li><li><a href='#'>Sweatshirts &amp; Sweaters</a></li><li><a href='#'>Casual Jackets &amp; Blazers Underwear</a></li><li><a href='#'>Underwear</a></li></ul></div></section>";
 ;;EmptyCartParagraphComponent;Empty Cart Paragraph Component;EmptyCartParagraphComponent;;
 

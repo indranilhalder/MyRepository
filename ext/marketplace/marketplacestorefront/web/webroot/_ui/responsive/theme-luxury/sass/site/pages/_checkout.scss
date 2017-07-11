@@ -618,7 +618,10 @@
  }
   .addressList_wrapper .address-list .addresslist-right{
         width: 94%;
-    display: inline-block;
+    	display: inline-block;
+    	@include media-breakpoint-down(sm) {
+    		padding-left: 4%;
+    	}
  }
  
 .addressList_wrapper .address-list .addresslist-right .edit a{
