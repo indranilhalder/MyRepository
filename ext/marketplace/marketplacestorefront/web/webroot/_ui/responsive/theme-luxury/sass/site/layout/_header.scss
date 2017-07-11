@@ -284,7 +284,9 @@
 						border-top: 1px solid $border;
 						text-align: left;
 						padding: 20px 100px;
-						.sub-menu-inner {
+						margin-left: calc(50% - 50vw);
+    					margin-right: calc(50% - 50vw);
+    				.sub-menu-inner {
 							max-width: 1050px;
 							margin: 0 auto;
 						}
