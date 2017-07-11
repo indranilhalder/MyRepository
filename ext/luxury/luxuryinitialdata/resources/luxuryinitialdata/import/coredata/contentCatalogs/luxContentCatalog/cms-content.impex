@@ -47,6 +47,10 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;termsOfUse;Terms of Use Page;LuxuryContentPageTemplate;/termsOfUse
 ;;trackorders;Track Orders;LuxuryContentPageTemplate;/trackorders
 ;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
+;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/lifestyle
+;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
+;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/womenlanding
+
 
 INSERT_UPDATE ProductPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
 ;;productDetails;Luxury Product Details;LuxuryProductDetailsPageTemplate;true;
