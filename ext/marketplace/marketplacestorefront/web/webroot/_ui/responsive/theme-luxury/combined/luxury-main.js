@@ -13161,24 +13161,14 @@ TATA.CommonFunctions = {
         });
     },
     ShopByCatagorySlider: function() {
-        $(".shop-by-catagory-slider").slick({
+        $(window).width() >= 768 && $(".shop-by-catagory-slider").slick({
             slidesToScroll: 6,
             slidesToShow: 6,
             variableWidth: !1,
             infinite: !1,
             arrows: !1,
             swipe: !1,
-            dots: !0,
-            responsive: [ {
-                breakpoint: 768,
-                settings: {
-                    slidesToScroll: 1,
-                    slidesToShow: 1,
-                    infinite: !0,
-                    swipe: !0,
-                    variableWidth: !0
-                }
-            } ]
+            dots: !0
         });
     },
     fillHeartForItemsInWishlist: function() {
