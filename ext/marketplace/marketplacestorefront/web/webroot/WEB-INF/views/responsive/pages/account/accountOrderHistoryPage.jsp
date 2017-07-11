@@ -218,6 +218,7 @@
 														<h2 class="product-name">
 															<a href="${productUrl}">${entry.product.name}</a>
 														</h2>
+														
 														<div class="attributes">
 
 															<p>
@@ -470,6 +471,8 @@
 																				<h2 class="product-name">
 																					<a href="${productUrl}">${entryCancel.product.name}</a>
 																				</h2>
+																				<input type="hidden" id ="dtmPrdtCat" value ="${entryCancel.product.rootCategory}"/>
+																				<input type="hidden" id ="dtmPrdtCode" value ="${entryCancel.product.code}"/>
 																				
 																				<p class="item-info">
 																					<span><b><c:if test="${entryCancel.quantity > 1}"><spring:theme code="text.orderHistory.quantity"/>

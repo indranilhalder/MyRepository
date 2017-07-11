@@ -917,4 +917,22 @@ function dtmSearchTags(){
 		}
 		
 	}
-   
+   //TPR-6288 | My account Order cancel
+	function dtmOrderCancelSuccess(productId,category,reasonCancel){
+		if (typeof _satellite != "undefined") {
+			_satellite.track('order_cancellation');
+			
+	    }
+		digitalData.cpj = {
+	    		product : {
+	    				id  :  productId,
+	    		 category   :  category	
+	    	 }
+	    	}
+		
+		digitalData.order = {
+				cancellation : {
+					reason  : reasonCancel
+				}
+		}
+	}

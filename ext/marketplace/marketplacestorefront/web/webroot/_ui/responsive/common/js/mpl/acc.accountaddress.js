@@ -289,7 +289,9 @@ function editAddress(addressId) {
     		var transactionId=$("#"+formId+" .transactionIdClass").val();
     		var ticketTypeCode=$("#"+formId+" .ticketTypeCodeClass").val();
     		var entryNumber=$("#entryNumber").val();
-    		
+    		//tpr-TPR-6288|dtm order cancel
+    		var dtmPrdtCat=$("#dtmPrdtCat").val();
+    		var dtmPrdtCode=$("#dtmPrdtCode").val();
     		var nowValue = $("#cancellationreasonSelectBox_"+transactionId+" option:selected").val();
     		var reasonCode=Rejectionselectedvalue;
     		//TPR-4752 | for order cancellation reason
@@ -341,6 +343,8 @@ function editAddress(addressId) {
    			 					   'cancel_order_reason' : reasonCancel
    			 				   });
    			 				}
+         					//TPR-6288
+         					dtmOrderCancelSuccess(dtmPrdtCode,dtmPrdtCat,reasonCancel);
         				}
         				else{
         					$(".cancellation-request-block #resultTitle").text("Failure!");
