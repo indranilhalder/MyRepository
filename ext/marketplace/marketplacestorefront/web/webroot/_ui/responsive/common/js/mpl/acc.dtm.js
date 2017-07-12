@@ -954,5 +954,23 @@ function dtmSearchTags(){
 				}
 		}
 	}
-
 	
+     //TPR-6372 | Track widgets powered by recommendation
+	$(document).on("click",".trending .owl-stage .owl-item",function(){
+		var name = $('#ia_products_hot').find('span:first').text();
+		var partner  = "IA";
+		var location = $('#pageType').val();
+		var widgetName = name+":"+partner+":"+location ;
+		
+		if (typeof _satellite != "undefined") {
+			_satellite.track('widget_tracking');
+			
+	    }
+		
+		digitalData.page = {
+				widget : {
+					name : widgetName
+				}
+		}
+		
+	})
