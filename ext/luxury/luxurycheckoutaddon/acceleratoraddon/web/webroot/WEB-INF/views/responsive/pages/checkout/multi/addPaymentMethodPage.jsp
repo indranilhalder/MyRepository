@@ -183,13 +183,13 @@
 				
 				<!-- TISCR-305 starts -->					
 					<%-- <button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_saved_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button> --%>
-					<button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<%-- <button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_cc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_dc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<%-- <button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_saved_dc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button> --%>
+					<button type="button" class="button btn-block payment-button make_payment_top_newCard proceed-button" id="make_saved_dc_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
 					<button type="button" class="button btn-block payment-button make_payment_top_nb proceed-button" id="make_nb_payment_up" onclick="submitNBForm()"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
-					<%-- <button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button> --%>
-					<%-- <button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button> --%>
-					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button>
+					<button type="button" class="button btn-block payment-button make_payment_top_savedCard proceed-button" id="make_emi_payment_up"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.paymentButton"/></button>
+					<button type="button" class="positive right cod-otp-button_top" onclick="mobileBlacklist()" ><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sendOTP" text="Verify Number" /></button>
+					<button type="button" class="button positive right cod_payment_button_top proceed-button" onclick="submitForm()" id="paymentButtonId_up"><spring:theme code="checkout.multi.paymentMethod.codContinue" /></button> --%>
 					<h1 class="payment-options"><spring:theme code="text.payment.options"/></h1>
 						<p class="cart-items">You have an outstanding amount of &nbsp;&nbsp;<span class="prices"  id="outstanding-amount">
 					<ycommerce:testId code="cart_totalPrice_label"><format:price priceData="${cartData.totalPrice}"/> <!-- TISPRDT-693 -->
@@ -363,14 +363,14 @@
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
-						                    	   <div class="row mt-20">
+						                    	   <%-- <div class="row mt-20">
 						                        	<div class="full account-only col-md-12">
-					 									<%-- <label><spring:theme code="text.cardtype"/> *</label> --%>
+					 									<label><spring:theme code="text.cardtype"/> *</label>
 					 										<select>
 					  											<option><spring:theme code="text.select"/></option>
 					  										</select>
 													</div>
-													</div>
+													</div> --%>
 													<div class="row mt-20">
 							                            <div class="controls full col-md-6">
 							                            <!-- Static section start -->
@@ -709,14 +709,14 @@
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
-						                    	   <div class="row mt-20">
+						                    	   <%-- <div class="row mt-20">
 							                        	<div class="full account-only col-md-12">
 						 									<label><spring:theme code="text.cardtype"/> *</label>
 						 										<select>
 						  											<option><spring:theme code="text.select"/></option>
 						  										</select>
 														</div>
-													</div>
+													</div> --%>
 													<div class="row mt-20">
 							                            <div class="controls full col-md-6">
 							                            	<%-- <label class="control-label"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.cardNo"/></label> --%>
