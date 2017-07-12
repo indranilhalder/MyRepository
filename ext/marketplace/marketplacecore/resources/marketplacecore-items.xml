@@ -2179,6 +2179,17 @@
 							optional="false" removable="false" initial="true" private="false"
 							partof="false" unique="true" />
 					</attribute>
+					<attribute type="java.lang.String" qualifier="siteId"
+					      autocreate="true" generate="true">
+					      <persistence type='property'>
+					       <columntype database='oracle'>
+					        <value>VARCHAR2(10)</value>
+					       </columntype>
+					      </persistence>
+					      <modifiers read="true" write="true" search="true"
+					       optional="false" removable="false" initial="true" private="false"
+					       partof="false" unique="true" />
+					</attribute>
 					<!-- PDP changes start -->
 					<attribute type="java.lang.Double" qualifier="specialPrice"
 						autocreate="true" generate="true">
