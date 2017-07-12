@@ -136,8 +136,8 @@ $(document).ready(function() {
 	
 	
 	
-	<div class="wrapper-block">
-		<div class="sureheader">
+	<div class="wrapper-block pan-card-block">
+		<%-- <div class="sureheader">
 			<div class="sure-head clearfix">
 				<div class="logo-left">
 					<img class="logo1" src="${commonResourcePath}/images/logo_camel.png" alt="SureThing">
@@ -147,25 +147,26 @@ $(document).ready(function() {
 					<img src="${commonResourcePath}/images/tataclicq-logo.png" alt="TATA CLiQ">
 				</div>				
 			</div>
-		</div>
+		</div> --%>
 		<section>
 			<div class="pan-detail-sec">
 				<h2 class="pan-heading">PAN Card Details</h2>
-				<p class="lead-text">Your order is just one step away !</p>
+				<p class="lead-text">Your order is just one step away!</p>
 				<div class="form-section">
 					<form:form method="POST" action="/pancard/pancardupload" enctype="multipart/form-data" id="uploadPanDetails" >
 						<input type="hidden" name="orderreferancenumber" value="${orderreferancenumber}" />
         				<input type="hidden" name="Customer_name" value="${customername}">
         				 <input type="hidden" name="transactionid" value="${transactionid}">
-						<div class="panfield-wrapper clearfix">
-							<div class="pan-label">Order ID</div>
+						<div class="panfield-wrapper clearfix orderId-left">
+							<div class="pan-label">Order ID:</div>
 							<div class="pan-label-value disable-color">${orderreferancenumber}</div>
 						</div>
-						<div class="panfield-wrapper clearfix">
-							<div class="pan-label">Name</div>
+						<div class="panfield-wrapper clearfix orderName-right">
+							<div class="pan-label">Name:</div>
 							<div class="pan-label-value disable-color">${customername}</div>
 						</div>
-						<div class="panfield-wrapper clearfix">
+						<div class="pan-card-fields">
+						<div class="panfield-wrapper clearfix pan-num">
 							<div class="pan-label">PAN Card Number * <br>
 								<span class="pancard-img-msg">Please provide the PAN Card Number of the person whose name appears on the invoice</span>
 							</div>
@@ -174,14 +175,14 @@ $(document).ready(function() {
 								<!-- <span class="pancard-msg">Please enter correct pancard number.</span>  -->
 							</div>
 						</div>
-						<div class="panfield-wrapper clearfix">
+						<div class="panfield-wrapper clearfix pan-img">
 							<div class="pan-label">Upload a copy of the PAN Card * <br>
 								<span class="pancard-img-msg">Please upload a copy of the PAN Card</span>
 							</div>
 							<div class="pan-label-value fileupload">
 								<input  type="file" name="file" id="pancard_Img"> 
 								<span id="val"></span>
-								<span id="labelBrowseBtn" class="label-browse">Browse</span>
+								<span id="labelBrowseBtn" class="label-browse">Choose File</span>
 							</div>
 						</div>
 						<div class="panfield-wrapper btn-wrapper clearfix">
@@ -189,6 +190,7 @@ $(document).ready(function() {
 								<a href="javascript:;" class="pan-submit-btn" title="SUBMIT" id="btn_PanDetails" >SUBMIT</a>
 								<a href="javascript:;" class="pan-cancel-btn" title="CANCEL">CANCEL</a>
 							</div>
+						</div>
 						</div>
 					</form:form>
 				</div>

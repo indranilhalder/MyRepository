@@ -891,7 +891,7 @@ a.morelink, .more-link {
 	font-size:18px;
 	font-family: 'Montserrat', sans-serif;
 }
-.sureheader{
+/*.sureheader{
 	background-color:#aa133e;
 	box-shadow:-1px 2px 7px #ccc;
 	-webkit-box-shadow:-1px 2px 7px #ccc;
@@ -918,7 +918,7 @@ a.morelink, .more-link {
 	margin-top: 36px;
 	margin-left: 50px;
 }
-.pan-detail-sec {
+ .pan-detail-sec {
 	padding: 50px 30px;
 }
 .pan-heading{
@@ -1040,7 +1040,7 @@ div.fileupload{
 }
 .pancard-msg, .pancard-img-msg{
 	display: none;
-}
+} */
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
@@ -75664,12 +75664,15 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 48%;
 }
 .accordin.FineJewellery .item .title p,
-.accordin.FashionJewellery .item .title p
+.accordin.FashionJewellery .item .title p,
+.accordin.FineJewellery .item .title span,
+.accordin.FashionJewellery .item .title span
 {
 	font-size: 12px;
     line-height: 1.33;
     letter-spacing: 0.6px;
     color: #000000;
+    padding: 0;
 }
 .accordin.FineJewellery .item div.title,
 .accordin.FashionJewellery .item div.title{
@@ -75808,12 +75811,12 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	background: none;
 }
 .accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
+.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content
 {
 	display: block !important;
 }
 .accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
+.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
 {
 	display: none !important;
 }
@@ -76008,3 +76011,158 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 	}
 } 
 /*TISPRDT-1670 fix end*/
+
+
+/*pan card verification start*/
+.pan-card-block{
+	max-width: 100%;
+    background-color: #f2f2f2;
+    padding: 66px 0 100px;
+}
+.pan-card-block > section{
+	max-width: 556px;
+	margin: 0px auto;
+}
+.pan-card-block > section .pan-detail-sec{
+	padding: 0;
+}
+.pan-card-block > section .pan-detail-sec h2.pan-heading{
+	text-align: center;
+  	font-size: 28px;
+  	line-height: 1.29;
+}
+.pan-card-block > section .pan-detail-sec p.lead-text{
+	text-align: center;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+}
+.pan-card-block > section .pan-detail-sec div.form-section{
+	border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
+  border: solid 1px #dddddd;
+  margin-top: 28px;
+  padding: 29px 25px 52px 30px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left{
+	width: auto;
+	float: left;
+	font-size: 12px;
+    letter-spacing: 0.6px;
+    padding-bottom: 17px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right{
+	width: auto;
+	float: right;
+	text-align: right;
+	font-size: 12px;
+    letter-spacing: 0.6px;
+    padding-bottom: 17px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right + .pan-card-fields{
+	clear: both;
+	border-top: solid 1px #eeeeee;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right + .pan-card-fields > div{
+	max-width: 273px;
+	margin: 0px auto;
+	padding-top: 48px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left .pan-label, 
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right .pan-label{
+	color: #666666;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left > div, 
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right > div{
+	padding: 5px 0;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label, 
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label{
+	font-size: 14px;
+  letter-spacing: 0.6px;
+  color: #000000;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label{
+	margin-bottom: 8px;
+	}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label span.pancard-img-msg,
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label span.pancard-img-msg{
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+  display: block;
+  margin-top: 4px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label-value{
+  margin-top: 8px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label-value input{
+  width: 100%;
+  height: 42px;
+  border: solid 1px #bbbbbb;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img div.fileupload{
+	background-color: #fff;
+	position:relative;
+	border: 1px solid #bbbbbb;
+	height: 42px;
+}
+.panfield-wrapper input[type='file'] {
+	opacity:0;
+	padding: 0;
+    border: 0;
+}
+#val {
+	width: 166px;
+	position: absolute;
+	top: 7px;
+	left: 0;
+	font-size:12px;
+	line-height: 25px;
+	text-indent: 10px;
+	pointer-events: none;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#labelBrowseBtn {
+	cursor: pointer;
+	display: block;
+	width: 107px;
+	background-color: #000;
+	height:100%;
+	color: #fff;
+	position: absolute;
+	right:0;
+	top: 0;
+	font-size: 12px;
+  line-height: 40px;
+  letter-spacing: 0.6px;
+	text-align: center;
+	-webkit-transition: 500ms all;
+	-moz-transition: 500ms all;
+	transition: 500ms all;
+}
+.panfield-wrapper.btn-wrapper a{
+	width: 100%;
+	height: 48px;
+	margin-bottom: 15px;
+	display: block;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  text-align: center;
+  padding: 17px 0;
+}
+.panfield-wrapper.btn-wrapper a.pan-submit-btn{
+	background-color: #a5173c;
+	color: #fff;
+}
+.panfield-wrapper.btn-wrapper a.pan-cancel-btn{
+	border: 1px solid #a5173c;
+	color: #a5173c;
+}
+/*pan card verification end*/
