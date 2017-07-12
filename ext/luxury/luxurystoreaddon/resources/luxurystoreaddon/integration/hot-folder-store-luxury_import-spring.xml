@@ -406,8 +406,8 @@
  	     $productCatalog=luxProductCatalog
 				$classificationCatalog=pcmClassification
 				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
-               #INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion;@standardSize[translator=com.tisl.lux.core.translator.LuxuryStandardSizeTranslator, default='stdSizeColorPlaceholder']
-               INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion
+               INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion;@standardSize[translator=com.tisl.lux.core.translator.LuxuryStandardSizeTranslator, default='stdSizeColorPlaceholder']
+               #INSERT_UPDATE Brand;name[unique=true];description;productSource(code,$catalogVersion)[unique=true];brandCode;$catalogVersion
             </value>
         </property>
         <property name="impexRow">
