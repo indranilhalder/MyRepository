@@ -14,7 +14,7 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
 <div class="checkout-content cart checkout wrapper">
-
+<c:if test="${storesAvailable eq true}">
 	<script>
 					//TISST-13010
 					$(document).ready(function() {
@@ -98,7 +98,12 @@
 	<div>
 		<input type="hidden" name="CSRFToken" value="${CSRFToken}">
 	</div>
+</c:if>
+<c:if test="${storesAvailable eq false}">
+	<span><spring:theme code="checkout.single.nostores.select.another"/></span>
+</c:if>
 </div>
+<c:if test="${storesAvailable eq true}">
 <script>
 $(document).ready(function() {
 /* $(".txt${entryNumber}").click(function(){
@@ -251,3 +256,4 @@ function checkMobileNumberSpace(number) {
 	return /\s/g.test(number);
 }
 </script>
+</c:if>

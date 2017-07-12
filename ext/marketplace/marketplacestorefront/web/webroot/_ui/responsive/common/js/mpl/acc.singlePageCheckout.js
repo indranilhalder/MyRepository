@@ -872,74 +872,77 @@ ACC.singlePageCheckout = {
             } else {
             	$('#cncStoreContainer'+entryNumber).css("display","block");
             	$('#cncStoreContainer'+entryNumber).html(data);
-            	var cnc_arrow_left, cnc_top;
-            	if($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").length > 0){
-            	cnc_arrow_left = parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().left) + 40;
-            	//cnc_top = parseInt($('#cncStoreContainer'+entryNumber).offset().top) - parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().top) - 8;
-            	}
-            	$('#cncStoreContainer'+entryNumber).find(".cnc_arrow").css("left",cnc_arrow_left+"px");
-            	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
-            	//CNC Carousel
-            	if($(".cnc_item .removeColor1").length == 2){
-        			$("#cnc_carousel").addClass("two_address");
-        		}
-        		if($(".cnc_item .removeColor1").length == 1){
-        			$("#cnc_carousel").addClass("one_address");
-        		}
-            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
-        				'initialize.owl.carousel initialize.owl.carousel ' +
-        				'changed.owl.carousel',
-        				function(event) {
-        			var items     = event.item.count;     // Number of items
-        			var item      = event.item.index;     // Position of the current item
-        			//Below method will display correct page number.
-        			ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count_cnc");
-        		});
-        		$(".cnc_carousel").owlCarousel({
-        			items:3,
-        			loop: false,
-        			dots:true,
-        			margin: 60,
-        			navText:[],
-        			slideBy: 3,
-        			responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 36,
-            				slideBy: 1,
-            				margin: 0,
-            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:2,
-            				slideBy: 2,
-            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
-            			},
-            			// breakpoint from 1280 up
-            			1280 : {
-            				items:3,
-            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
-            			}			
-            		},
-            		onRefresh: function () {
-            			$(".cnc_carousel").find('div.owl-item').height('');
-                    },
-                    onRefreshed: function () {
-                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
-                    }
-        		});
-            	
-        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
-        			event.stopPropagation();
-        		});
-        		
-        		//After remove from cart in review order page, Pre select store name using the code below
-        		if(callFrom=="removeCartItem")
-        		{
-        		    $("#cncStoreContainer"+entryNumber).find("[data-storeName='"+storeName+"']").prop('checked', true);
-        		}
+            	if($('#cncStoreContainer'+entryNumber+' .checkout-shipping-items').length>0)
+            	{
+            		var cnc_arrow_left, cnc_top;
+	            	if($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").length > 0){
+	            	cnc_arrow_left = parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().left) + 40;
+	            	//cnc_top = parseInt($('#cncStoreContainer'+entryNumber).offset().top) - parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().top) - 8;
+	            	}
+	            	$('#cncStoreContainer'+entryNumber).find(".cnc_arrow").css("left",cnc_arrow_left+"px");
+	            	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
+	            	//CNC Carousel
+	            	if($(".cnc_item .removeColor1").length == 2){
+	        			$("#cnc_carousel").addClass("two_address");
+	        		}
+	        		if($(".cnc_item .removeColor1").length == 1){
+	        			$("#cnc_carousel").addClass("one_address");
+	        		}
+	            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+	        				'initialize.owl.carousel initialize.owl.carousel ' +
+	        				'changed.owl.carousel',
+	        				function(event) {
+	        			var items     = event.item.count;     // Number of items
+	        			var item      = event.item.index;     // Position of the current item
+	        			//Below method will display correct page number.
+	        			ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count_cnc");
+	        		});
+	        		$(".cnc_carousel").owlCarousel({
+	        			items:3,
+	        			loop: false,
+	        			dots:true,
+	        			margin: 60,
+	        			navText:[],
+	        			slideBy: 3,
+	        			responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 36,
+	            				slideBy: 1,
+	            				margin: 0,
+	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
+	            			},
+	            			// breakpoint from 768 up
+	            			768 : {
+	            				items:2,
+	            				slideBy: 2,
+	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
+	            			},
+	            			// breakpoint from 1280 up
+	            			1280 : {
+	            				items:3,
+	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
+	            			}			
+	            		},
+	            		onRefresh: function () {
+	            			$(".cnc_carousel").find('div.owl-item').height('');
+	                    },
+	                    onRefreshed: function () {
+	                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
+	                    }
+	        		});
+	            	
+	        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
+	        			event.stopPropagation();
+	        		});
+	        		
+	        		//After remove from cart in review order page, Pre select store name using the code below
+	        		if(callFrom=="removeCartItem")
+	        		{
+	        		    $("#cncStoreContainer"+entryNumber).find("[data-storeName='"+storeName+"']").prop('checked', true);
+	        		}
+            	}//End of if
             }
 		}); 
         
@@ -980,7 +983,6 @@ ACC.singlePageCheckout = {
 				//User will be taken to first page on search success
 				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
 				var cnc_count = $(".showStoreAddress").length;	//Used in case of search stores
-				//Below method will display correct page number.
 				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
 			}else if(searchText=="")
 			{
@@ -988,6 +990,11 @@ ACC.singlePageCheckout = {
 				$allListElements.closest("li").removeClass("showStoreAddress");
 				//$allListElements.closest("li").parent("div").addClass("owl-item");
 				$allListElements.closest("li").parent("div.owl-item").show();
+				
+				//User will be taken to first page on search complete
+				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
+				var cnc_count = $("#cncUlDiv"+entryNumber+" .cnc_item .removeColor"+entryNumber).length;	//Used in case of search stores
+				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
 			}
 			
 			if( typeof utag !="undefined" && searchText!=""){

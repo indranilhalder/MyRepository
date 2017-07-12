@@ -2274,7 +2274,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				final Map<String, Long> freebieParentQtyMap = new HashMap<String, Long>();
 
 				final List<StoreLocationRequestData> storeLocationRequestDataList = new ArrayList<StoreLocationRequestData>();
-				Boolean selectPickupDetails = Boolean.FALSE;
+				final Boolean selectPickupDetails = Boolean.FALSE;
 				//count cnc products in cart entries
 				int count = 0;
 				//count other modes in cart entries
@@ -2376,29 +2376,29 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							//populates oms response to data object
 							productWithPOS = getProductWdPos(response, model, freebieParentQtyMap);
 						}
-						if (null != entryNumber && null != sellerArticleSKU && null != deliveryCode)
-						{
-							//if cart contains cnc and home/express delivery modes
-							//count++;
-							//INC144313695
-							//final HttpSession session = request.getSession();
-							//deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
-							String pickupPersonName = null;
-							String pickupPersonMobile = null;
-
-							if (cartModel != null)
-							{
-								pickupPersonName = cartModel.getPickupPersonName();
-								pickupPersonMobile = cartModel.getPickupPersonMobile();
-							}
-							if ((pickupPersonName == null) && (pickupPersonMobile == null))
-							{
-								selectPickupDetails = Boolean.TRUE;
-								model.addAttribute("selectPickupDetails", selectPickupDetails);
-								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method"
-										+ MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL;
-							}
-						}
+						//						if (null != entryNumber && null != sellerArticleSKU && null != deliveryCode)
+						//						{
+						//							//if cart contains cnc and home/express delivery modes
+						//							//count++;
+						//							//INC144313695
+						//							//final HttpSession session = request.getSession();
+						//							//deliveryMethodForm = (DeliveryMethodForm) session.getAttribute("deliveryMethodForm");
+						//							String pickupPersonName = null;
+						//							String pickupPersonMobile = null;
+						//
+						//							if (cartModel != null)
+						//							{
+						//								pickupPersonName = cartModel.getPickupPersonName();
+						//								pickupPersonMobile = cartModel.getPickupPersonMobile();
+						//							}
+						//							if ((pickupPersonName == null) && (pickupPersonMobile == null))
+						//							{
+						//								selectPickupDetails = Boolean.TRUE;
+						//								model.addAttribute("selectPickupDetails", selectPickupDetails);
+						//								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method"
+						//										+ MarketplacecheckoutaddonConstants.MPLDELIVERYCHECKURL;
+						//							}
+						//						}
 					}
 					catch (final ClientEtailNonBusinessExceptions e)
 					{
@@ -2412,24 +2412,34 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						}
 					}
 
-					//populate logged in user details as pickup details
-					final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
-					final StringBuffer pickupPerson = new StringBuffer();
+					if (CollectionUtils.isNotEmpty(productWithPOS)
+							&& CollectionUtils.isNotEmpty(productWithPOS.get(0).getPointOfServices())
+							&& productWithPOS.get(0).getPointOfServices().size() > 0)
+					{
+						//populate logged in user details as pickup details
+						final CustomerModel customer = (CustomerModel) userService.getCurrentUser();
+						final StringBuffer pickupPerson = new StringBuffer();
 
-					pickupPerson.append((null != customer.getFirstName()) ? customer.getFirstName() : "").append(" ")
-							.append((null != customer.getLastName()) ? customer.getLastName() : "");
+						pickupPerson.append((null != customer.getFirstName()) ? customer.getFirstName() : "").append(" ")
+								.append((null != customer.getLastName()) ? customer.getLastName() : "");
 
-					final String pickupPersonName = pickupPerson.toString();
-					final String pickUpPersonMobile = (null != customer.getMobileNumber()) ? customer.getMobileNumber() : "";
+						final String pickupPersonName = pickupPerson.toString();
+						final String pickUpPersonMobile = (null != customer.getMobileNumber()) ? customer.getMobileNumber() : "";
 
-					model.addAttribute("entryNumber", entryNumber);
-					model.addAttribute("pickupPersonName", pickupPersonName.trim());
-					model.addAttribute("pickUpPersonMobile", pickUpPersonMobile);
-					model.addAttribute("delModeCount", Integer.valueOf(delModeCount));
-					model.addAttribute("cnccount", Integer.valueOf(count));
-					model.addAttribute("expCheckout", Integer.valueOf(expCheckout));
-					model.addAttribute("defaultPincode", defaultPincode);
-					model.addAttribute("pwpos", productWithPOS);
+						model.addAttribute("entryNumber", entryNumber);
+						model.addAttribute("pickupPersonName", pickupPersonName.trim());
+						model.addAttribute("pickUpPersonMobile", pickUpPersonMobile);
+						model.addAttribute("delModeCount", Integer.valueOf(delModeCount));
+						model.addAttribute("cnccount", Integer.valueOf(count));
+						model.addAttribute("expCheckout", Integer.valueOf(expCheckout));
+						model.addAttribute("defaultPincode", defaultPincode);
+						model.addAttribute("pwpos", productWithPOS);
+						model.addAttribute("storesAvailable", Boolean.TRUE);
+					}
+					else
+					{
+						model.addAttribute("storesAvailable", Boolean.FALSE);
+					}
 					model.addAttribute("CSRFToken", CSRFTokenManager.getTokenForSession(request.getSession()));
 
 				}
@@ -4602,7 +4612,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4660,7 +4670,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
