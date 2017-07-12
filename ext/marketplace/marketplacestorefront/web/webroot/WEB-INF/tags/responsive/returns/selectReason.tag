@@ -7,7 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!-- Accordtion Panel 1 For Select Reason For Return -->
-	
+				<p class="return-title">Return</p>
 				<div class="accordtionTataCliq activeTataCliq  firstTataCliq col-md-12">
 					<div class="accHeading"><spring:theme code="text.order.return.selectreason"></spring:theme></div>
 					<div class="accContents selectReason col-md-12">
@@ -16,7 +16,7 @@
 						<div class="col-md-5 col-sm-5 col-xs-12">
 							<div class="row">
 							<c:forEach items="${returnProductMap[eachSubOrderEntry.transactionId]}" var="entryReturn" >
-								<div class="col-md-5 col-sm-5 col-xs-5">
+								<div class="col-md-5 col-sm-5 col-xs-5 return-img">
 									<div class="image_holder">
 											<product:productPrimaryImage
 													product="${entryReturn.product}" format="thumbnail" />
@@ -24,21 +24,59 @@
 								</div>
 							
 								
-								<div class="col-md-7 productDetails col-sm-7 col-xs-7">
-										<span class="productName">${entryReturn.product.name}</span><br/>
-										<span><spring:theme code="text.order.returns.quantitylable"/> ${entryReturn.quantity}</span><br/>
+								<div class="col-md-7 productDetails col-sm-7 col-xs-7 return-prod-desc">
+										<span class="productName">${entryReturn.brandName}</span>
+										<span class="productName">${entryReturn.product.name}</span>
+										<%-- <span><spring:theme code="text.order.returns.quantitylable"/> ${entryReturn.quantity}</span><br/> --%>
 												<c:if test="${not empty entryReturn.product.size}">
-				 									<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span><br/>
+				 									<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
 												</c:if>
 												<c:if test="${not empty entryReturn.product.colour}">
-													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span><br/>
+													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span>
 												</c:if>
-												<c:forEach items="${entryReturn.product.seller}" var="seller">
+												<%-- <c:forEach items="${entryReturn.product.seller}" var="seller">
 													<c:if test="${ussid eq seller.ussid}">
 														<c:set var="sellerId" value="${seller.sellerID}" />
 													</c:if>
 												</c:forEach>
-												<span>Seller ID: ${sellerId} </span><br/>
+												<span>Seller ID: ${sellerId} </span><br/> --%>
+												<div class="attributes">
+
+															<p>
+																<span><spring:theme code="text.orderHistory.price" />&nbsp;</span>
+																<ycommerce:testId
+																	code="orderDetails_productTotalPrice_label">
+																	<format:price priceData="${entryReturn.amountAfterAllDisc}"
+																		displayFreeForZero="true" />
+																</ycommerce:testId>
+															</p>
+															<p>
+																<%-- <spring:theme text="Delivery Charges:" /> --%>
+
+																<span><spring:theme code="text.account.order.delivery2" text="Scheduled Delivery and Shipping Charges:"/>&nbsp;</span>
+															<c:choose>
+																<c:when test="${entryReturn.currDelCharge.value=='0.0'}">
+																	<%-- <spring:theme code="order.free"  /> --%>
+																	
+															      <c:choose>
+																	<c:when test="${not empty entryReturn.scheduledDeliveryCharge}">
+																	    ${entryReturn.scheduledDeliveryCharge}
+																	</c:when>
+																	<c:otherwise>
+																	<ycommerce:testId
+																		code="orderDetails_productTotalPrice_label">
+																		<format:price priceData="${entryReturn.currDelCharge}"
+																			displayFreeForZero="true" />
+																	</ycommerce:testId>
+																    </c:otherwise>
+																</c:choose>
+																</c:when>
+																<c:otherwise>
+																	<format:price priceData="${entryReturn.currDelCharge}" />
+																</c:otherwise>
+															</c:choose>
+															</p>
+														</div>
 												<span class="otherAttributes"><spring:message code="seller.order.code"> </spring:message>&nbsp;${subOrder.code} </span>
 								</div>
 								<p style="clear:both"></p>
@@ -81,7 +119,3 @@
 					</div>
 				</div>
 			
-
-						</div>
-					</div>
-				</div>	
