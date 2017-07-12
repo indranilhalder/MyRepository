@@ -967,7 +967,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForSizeGuide);
 			query.addQueryParameter("productSizeGuide", productCode);
 			query.addQueryParameter("sellerid", sellerID);
-			return flexibleSearchService.<BuyBoxModel> searchUnique(query);
+			return flexibleSearchService.<BuyBoxModel> search(query).getResult().get(0);
 		}
 		catch (final FlexibleSearchException e)
 		{

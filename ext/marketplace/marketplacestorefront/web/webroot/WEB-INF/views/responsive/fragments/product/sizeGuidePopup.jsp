@@ -101,7 +101,7 @@ var productCodeSG = '${product.code}';
 						</li>
 					</ul>
 						<c:choose>
-					    <c:when test="${product.rootCategory=='Clothing'}">
+					    <%-- <c:when test="${product.rootCategory=='Clothing'}">
                  <div class="sizes apparelSizes">
                     <table>
 					<tr>
@@ -126,7 +126,7 @@ var productCodeSG = '${product.code}';
 
 					</td>
 
-						 <%--<c:forEach items="${sizeguideData}" var="sizeGuide" >
+						 <c:forEach items="${sizeguideData}" var="sizeGuide" >
 							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>	
 							<td>	
 							<ul>
@@ -147,7 +147,7 @@ var productCodeSG = '${product.code}';
 									</c:if>
 								  </ul>
 						</td>	
-						</c:forEach> --%>
+						</c:forEach>
 						
 						<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="innerLoop">
 						<td>
@@ -195,7 +195,7 @@ var productCodeSG = '${product.code}';
 				</tr>	
 			</table> 
 		</div>
-						</c:when>
+						</c:when> --%>
 						 <c:when test="${product.rootCategory=='Footwear'}">
 								<c:forEach items="${sizeguideData}" var="sizeGuide" >
 							    <%--  <c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set> --%>
@@ -363,6 +363,99 @@ var productCodeSG = '${product.code}';
 							</li>
 							</c:forEach>
 						 </c:when>
+						 <c:otherwise>
+                 <div class="sizes apparelSizes">
+                    <table>
+					<tr>
+					<td>
+								<ul>								
+								<li style="font-weight: bold"><spring:theme code="product.variants.size"/><br/></li>							
+								
+								<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="sizeGuideIndex" end="0">
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="sizeIndex" >
+										<c:if test="${sizeIndex.index eq 0}">
+											<c:set var="imageURL" value="${sizeGuideValue.imageURL}"></c:set>
+										</c:if>
+
+
+									</c:forEach>
+								</c:forEach>
+								<c:forEach items="${sizeguideHeader}" var="sizeGuide" >
+										<li>${sizeGuide}</li>
+									</c:forEach>	
+
+							</ul>
+
+					</td>
+
+						 <%--<c:forEach items="${sizeguideData}" var="sizeGuide" >
+							<c:set var="count" value="${4 - fn:length(sizeGuide.value) }"></c:set>	
+							<td>	
+							<ul>
+									<li  style="font-weight: bold">${sizeGuide.key}</li>
+							
+									<c:forEach items="${sizeGuide.value}" var="sizeGuideValue">
+										<li>${sizeGuideValue.dimensionSize} - ${sizeGuideValue.dimensionValue}
+											<c:choose>
+											<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
+											<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
+											</c:choose>
+										</li>
+									</c:forEach>
+									<c:if test="${count gt 1 }">
+									<c:forEach begin="0" end="${count-1}">
+										<li></li>
+									</c:forEach>
+									</c:if>
+								  </ul>
+						</td>	
+						</c:forEach> --%>
+						<c:forEach items="${sizeguideData}" var="sizeGuide" varStatus="innerLoop">
+						<td>
+							<ul>
+								<li style="font-weight: bold">${sizeGuide.key}</li>
+								
+								<c:set var="outerCounter" value="0" />
+								<c:forEach items="${sizeGuide.value}" var="sizeGuideValue" varStatus="endInnerloop">
+									<c:set var="counter" value="0" />
+									<c:set var="count" value="0" />
+									<c:forEach items="${sizeguideHeader}" var="sizeGuideHeader" varStatus="finaInnerloop">
+										<c:if test="${counter == 0}">
+											<c:choose>
+												<c:when test="${sizeGuideHeader eq sizeGuideValue.dimensionSize}">
+													
+													<c:set var="counter" value="1" />
+													<c:set var="outerCounter" value="${outerCounter+1}" />
+													<li>${sizeGuideValue.dimensionValue}
+														<c:choose>
+														<c:when test="${fn:containsIgnoreCase(sizeGuideValue.dimensionUnit , 'inch')}">"</c:when> 
+														<c:otherwise>${sizeGuideValue.dimensionUnit}</c:otherwise>
+														</c:choose>
+													</li>
+												</c:when>
+												
+												<c:otherwise>
+													
+													<c:if test="${count ge outerCounter}">
+													<li>&nbsp;</li>
+													<c:set var="outerCounter" value="${outerCounter+1}" />
+													</c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										<c:set var="count" value="${count+1}" />
+									</c:forEach>
+								</c:forEach>
+
+								
+
+							</ul>
+						</td>
+					</c:forEach>
+				</tr>	
+			</table> 
+		</div>				 
+						 </c:otherwise>
 						</c:choose>
 			</div>
 			 <c:if test="${product.rootCategory=='Footwear'}">
@@ -378,13 +471,16 @@ var productCodeSG = '${product.code}';
 
 			<div class="img">
 				<c:choose>
-					<c:when test="${product.rootCategory=='Clothing'}">
+					<%-- <c:when test="${product.rootCategory=='Clothing'}">
 						<img src="${imageURL}" alt="sizeGuideImage" />
-					</c:when>
+					</c:when> --%>
 					<c:when test="${product.rootCategory=='Footwear' || product.rootCategory=='Accessories'}">
 						<%-- <img src="${commonResourcePath}/images/foot_size.jpg" alt="sizeGuideImage" style="max-width:65%;" /> --%>
 						<img src="${imageURL}" alt="sizeGuideImage" style="max-width:65%;" />
 					</c:when>
+					<c:otherwise>
+						<img src="${imageURL}" alt="sizeGuideImage" />
+					</c:otherwise>
 				</c:choose>
 			</div>
 
