@@ -334,6 +334,7 @@ ACC.singlePageCheckout = {
         		{
                 	if(isCncPresent=="true" && cncSelected=="true")
                 	{
+                		ACC.singlePageCheckout.hidePickupDetailsErrors();
                 		$("#singlePagePickupPersonPopup").modal('show');
                 	}
                 	else
@@ -346,6 +347,7 @@ ACC.singlePageCheckout = {
             	ACC.singlePageCheckout.getSelectedDeliveryModes("");
             	if(isCncPresent=="true" && cncSelected=="true")
             	{
+            		ACC.singlePageCheckout.hidePickupDetailsErrors();
             		$("#singlePagePickupPersonPopup").modal('show');
             		//Code to delay slot delivery till the user saves pickup person details
             		ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=true;
@@ -715,7 +717,6 @@ ACC.singlePageCheckout = {
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
-    		ACC.singlePageCheckout.hidePickupDetailsErrors();
     		if(htmlPopulated=="NO")
         	{
     			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
@@ -1022,12 +1023,14 @@ ACC.singlePageCheckout = {
 		{
 			$('#selectDeliveryMethodFormMobile input[name="deliveryMethodEntry['+entryNumber+'].selectedStore"]').val(storeName);
 			$("#selectDeliveryMethodFormMobile #address"+entryNumber+""+index).prop("checked",true);
+			$("#selectDeliveryMethodFormMobile ."+entryNumber+"_select_store").hide();
 			ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
 		}
 		else
 		{
 			$('#selectDeliveryMethodForm input[name="deliveryMethodEntry['+entryNumber+'].selectedStore"]').val(storeName);
 			$("#selectDeliveryMethodForm #address"+entryNumber+""+index).prop("checked",true);
+			$("#selectDeliveryMethodForm ."+entryNumber+"_select_store").hide();
 		}
 		if(typeof(utag)!='undefined')
 		{
@@ -2078,7 +2081,6 @@ ACC.singlePageCheckout = {
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
-    		ACC.singlePageCheckout.hidePickupDetailsErrors();
     		if(htmlPopulated=="NO")
         	{
     			ACC.singlePageCheckout.showAjaxLoader();
@@ -2102,6 +2104,7 @@ ACC.singlePageCheckout = {
         	}
     		else
     		{
+    			ACC.singlePageCheckout.hidePickupDetailsErrors();
         		$("#singlePagePickupPersonPopup").modal('show');
     		}
     	}
