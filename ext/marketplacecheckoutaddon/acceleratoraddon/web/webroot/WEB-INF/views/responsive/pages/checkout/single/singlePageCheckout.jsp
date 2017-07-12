@@ -23,6 +23,11 @@
 <%@ taglib prefix="single-checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/single"%>
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<style>
+body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
+	background: #eee;
+}
+</style>
 <cart:tealiumCartParameters/>
 <c:if test="${deviceType ne 'mobile'}">
 <div id="singlePageDesktop">
@@ -126,9 +131,9 @@
 	</div>
 </div>
 <div class="modal fade" id="singlePagePickupPersonPopup">
-	<div class="content" style="padding: 40px;max-width: 650px;">
+	<div class="content" style="padding:36px 26px 36px 36px; overflow-y: hidden; max-width: 30%;border-radius: 8px;">
 		<span id="modalBody" data-htmlPopulated="NO"></span>
-		<!-- <button class="close" data-dismiss="modal"></button> -->
+		<button class="close" data-dismiss="modal"></button>
 	</div>
 	<div class="overlay" data-dismiss="modal">
 	</div>
@@ -160,7 +165,6 @@
 	</div>	
 
 <style>
-
 
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #mobileSnackbar {

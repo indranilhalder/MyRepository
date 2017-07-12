@@ -44956,6 +44956,9 @@ transform-origin:0 0;
 		margin-left: 15px;
     	margin-top: 3px;
 	}
+	#singlePagePickupPersonPopup .pickupPersonMobileError {
+		margin-left: 0px;
+	}
 	
 	.pickupPersonNameError {
 		margin-top: 3px;
@@ -69108,6 +69111,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage {
     margin-bottom: 0px;
 }
+#singlePageMobile div#selectedAddressMessageMobile > span.alert-danger,
 #singlePageAddressPopup .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger ,
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger {
     width: 100%;
@@ -69355,9 +69359,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .addNewAddress .formaddress h3 {
     text-transform: none;
 }
-body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
+/*body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	background: #eee;
-}
+}*/
 .checkout-accordion.checkout-selected .checkout-accordion-heading{
 	padding: 5px 16px;
     font-size: 12px;
@@ -69704,16 +69708,66 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     box-shadow: none;
 }
 #singlePagePickupPersonPopup h2.panel-defaultHeading{
-	font-weight: normal;
-    text-transform: capitalize;
-    font-size: 16px;
+  width: 224px;
+  height: 18px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.29;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: #000000;
+  text-transform: capitalize;
+}
+#singlePagePickupPersonPopup .retail-detail
+{
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+   /*  margin-bottom: 30px; */
+}
+#singlePagePickupPersonPopup .name-label{
+	  height: 16px;
+	  font-size: 12px;
+	  line-height: 1.33;
+	  letter-spacing: 0.6px;
+	  text-align: left;
+	  color: #666666;
+}
+#singlePagePickupPersonPopup .form-group{
+	  text-align: left;
+	  margin-bottom: 24px;
+}
+#singlePagePickupPersonPopup input{
+	  width: 100%;
+	  font-size: 12px;
+	  line-height: 1.33;
+	  letter-spacing: 0.6px;
+	  text-align: left;
+	  color: #666666;
+}
+#singlePagePickupPersonPopup .line {
+	  width: 100%;
+	  height: 2px;
+	  border: solid 1px #eeeeee;
+	  margin: 20px auto;
+	  display: inline-block;
+}
+.#singlePagePickupPersonPopup .cancel_delslot{
+	  color: #666666;
+	  letter-spacing: 0.6px;
 }
 #singlePagePickupPersonPopup #savePickupPersondDetails{
-	margin: 0px auto;
+	margin: 20px auto;
     font-size: 12px;
     line-height: 1;
     font-weight: normal;
-    margin-top: 20px;
+}
+#singlePagePickupPersonPopup #savePickupPersondDetails .content{
+	max-width: 413px;	
 }
 #reviewOrder.cart.wrapper .product-block li.item>ul>li:first-child div.product-img{
 	width: 88px;
@@ -69855,6 +69909,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     padding: 0 25px 0 15px;
     background-image: url(../images/select-arrow-new.png);
     background-position: calc(100% - 12px) 53%;
+    cursor: auto;
 }
 #reviewOrder.cart.wrapper .product-block li.item > ul > li.delivery ul{
 	margin-bottom:0;
@@ -70301,6 +70356,15 @@ background:#f8f8f8;
 	}
  }
  @media(max-width: 767px){
+ #singlePagePickupPersonPopup .content{
+	max-width: 381px;	
+}
+#singlePagePickupPersonPopup .retail-detail{
+	border: 1px solid transparent;
+}
+#singlePagePickupPersonPopup .panel.panel-default.pickuppersonWidth .panel.panel-body{
+	border: 1px solid transparent;
+}
  #singlePageDesktop{
  display: none;
  }
@@ -70492,6 +70556,9 @@ background:#f8f8f8;
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper{
 		display: none;
 	}
+	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_pincode_search_wrapper{
+		display: none;
+	}
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search {
     padding: 0 19px;
     margin: 16px 0 8px;
@@ -70658,6 +70725,15 @@ background:#f8f8f8;
 .cnc_carousel.owl-carousel.two_address#cnc_carousel .owl-stage .owl-item:last-child{
 	margin-right: 0 !important;
 }
+}
+#singlePageDesktop #reviewOrder select.update-entry-quantity-input{
+	cursor:auto;
+} 
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading>div+div {
+    display: none ! important;
+}
+#reviewOrder.cart.wrapper .product-block li.header ul li {
+    font-size: 12px;
 }
 /*UF-281 UF-282 single page checkout css ends*/
 
@@ -76102,7 +76178,6 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 } 
 /*TISPRDT-1670 fix end*/
 
-
 /*pan card verification start*/
 .pan-card-block{
 	max-width: 100%;
@@ -76256,3 +76331,4 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 	color: #a5173c;
 }
 /*pan card verification end*/
+

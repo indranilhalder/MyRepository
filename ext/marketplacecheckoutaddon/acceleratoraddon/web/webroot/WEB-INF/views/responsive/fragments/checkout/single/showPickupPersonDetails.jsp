@@ -13,7 +13,7 @@
 		<div class="retail-detail">Please provide us with your name and
 			phone number so we can assist you quickly and easily</div>
 		<div class="panel panel-body">
-			<div class="pickupDetails error_txt">
+			<div class="pickupDetails error_txt" style="display:none;">
 				<spring:theme
 					code="checkout.multi.cnc.pickup.details.validation.msg" />
 			</div>
@@ -24,10 +24,13 @@
 						</h5></span>
 				</div>
 				<div class="nameFullSubPanel">
+				<div class="form-group">
+					<label class="control-label" for="pickupPersonName">Name</label>
 					<input type="text" id="pickupPersonName" name="pickupPersonName"
-						maxlength="30" class="inputname" placeholder="Enter Full Name*"
+						maxlength="30" class="inputname form-control" placeholder="Enter Full Name*"
 						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonNameOnKeyUp()"/>
 					<div class="error_txt pickupPersonNameError"></div>
+						</div>
 				</div>
 				<!-- <div class="nameBlankSubPanel">
 					<input type="text" name="pickupPersonName" maxlength="30"
@@ -35,18 +38,23 @@
 					<div class="error_txt pickupPersonNameError"></div>
 				</div> -->
 				<div class="mobileSubPanel">
+				<div class="form-group">
+					<label class="control-label" for="pickupPersonMobile">Mobile Number</label>
 					<input type="text" id="pickupPersonMobile" class="inputmobile"
 						maxlength="10" placeholder="Enter Mobile Number*"
 						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonMobileOnKeyUp()"/><br />
 					<div class="error_txt pickupPersonMobileError"></div>
+					</div>
 				</div>
+				<div class="line"></div>
 				<div class="submitSubPanel">
 					<button type="button" class="savenewid"
 						id="savePickupPersondDetails" onclick="ACC.singlePageCheckout.savePickupPersonDetails(this);">
-						<spring:theme code="checkout.multi.cnc.pickup.details.submit" />
+						<spring:theme code="checkout.single.cnc.pickup.details.submit" />
 					</button>
-					<!-- <div id="pickupPersonSubmit"></div>
-					<div class="error_txt pickupPersonSubmitError"></div> -->
+					<div>
+						<a href="javascript:void(0);" class="cancel_delslot" onclick="$('#singlePagePickupPersonPopup').modal('hide');">Cancel</a>
+					</div>
 				</div>
 				<div id="pickUpDetailsMsg" style="padding-top: 10px; display: none;">
 					<spring:theme code="checkout.multi.cnc.pickup.details.below.msg" />
