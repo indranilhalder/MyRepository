@@ -2159,4 +2159,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//UF-281
+	public static final String B1002 = "B1002";
 }

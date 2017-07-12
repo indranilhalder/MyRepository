@@ -715,6 +715,7 @@ ACC.singlePageCheckout = {
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
+    		ACC.singlePageCheckout.hidePickupDetailsErrors();
     		if(htmlPopulated=="NO")
         	{
     			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
@@ -1013,6 +1014,29 @@ ACC.singlePageCheckout = {
 	    	ACC.singlePageCheckout.searchCNCStores(element,entryNumber);
 	        // Enter pressed
 	    }
+	},
+	//Function to select a cnc store on carousel item click
+	selectStore:function(storeName,entryNumber,index)
+	{
+		if(ACC.singlePageCheckout.getIsResponsive())
+		{
+			$('#selectDeliveryMethodFormMobile input[name="deliveryMethodEntry['+entryNumber+'].selectedStore"]').val(storeName);
+			$("#selectDeliveryMethodFormMobile #address"+entryNumber+""+index).prop("checked",true);
+			ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
+		}
+		else
+		{
+			$('#selectDeliveryMethodForm input[name="deliveryMethodEntry['+entryNumber+'].selectedStore"]').val(storeName);
+			$("#selectDeliveryMethodForm #address"+entryNumber+""+index).prop("checked",true);
+		}
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : storeName+'_store_seleted', 
+				event_type : storeName+'_store_seleted'
+			});
+		}
+		
 	},
 	//Function to validate and submit pick up person form
 	savePickupPersonDetails: function(element)
@@ -2054,6 +2078,7 @@ ACC.singlePageCheckout = {
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
+    		ACC.singlePageCheckout.hidePickupDetailsErrors();
     		if(htmlPopulated=="NO")
         	{
     			ACC.singlePageCheckout.showAjaxLoader();

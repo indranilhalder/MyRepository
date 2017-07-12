@@ -23,7 +23,7 @@
 					</script>
 	<script type="text/javascript">
 
-	function openPopForAdddPosToCartEntry(ussId,posName){
+/* 	function openPopForAdddPosToCartEntry(ussId,posName){
 		//var productCode = $("#product").val();
 		//alert(ussId+"@@@"+posName);
 		$(".continue_btn, .continue_btn_a").css("pointer-events", "none");
@@ -50,7 +50,7 @@
 			}
 		});
 	}
-	
+ */	
 </script>
 	<div class="checkout-shipping-items  left-block left-block-width">
 	<span class="cnc_arrow"></span>
