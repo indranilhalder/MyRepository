@@ -241,9 +241,6 @@ public interface ControllerConstants
 				String MiscRobotsPage = "pages/misc/miscRobotsPage";
 				String MiscSiteMapPage = "pages/misc/miscSiteMapPage";
 				String MiscIndividualSiteMapPage = "pages/misc/miscIndividualSiteMapPage";
-				//Added for TPR-5812
-				String manifest = "pages/misc/manifest";
-				String serviceWorker = "pages/misc/service-worker";
 			}
 
 			interface Guest
