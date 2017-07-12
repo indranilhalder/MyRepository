@@ -70,28 +70,8 @@ ACC.singlePageCheckout = {
 		                function(event) {
 							var items     = event.item.count;     // Number of items
 							var item      = event.item.index;     // Position of the current item
-							
-							if($(window).width() > 1263){
-								var page_no = parseInt(items/3);
-								if(items%3 > 0){
-									page_no = parseInt(items/3) + 1;
-								}
-								var current_page = parseInt(item/3) + 1;
-								if(item%3 > 0){
-									current_page = parseInt(item/3) + 2;
-								}
-								}
-								else{
-									var page_no = parseInt(items/2);
-									if(items%2 > 0){
-										page_no = parseInt(items/2) + 1;
-									}
-									var current_page = parseInt(item/2) + 1;
-									if(item%2 > 0){
-										current_page = parseInt(item/2) + 2;
-									}
-								}
-							$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
+							//Below method will display correct page number.
+							ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count");
 		                });
 		              $("#address_carousel").owlCarousel({
 		                items:3,
@@ -847,6 +827,30 @@ ACC.singlePageCheckout = {
 			cache: cache
 		});
 	},
+	//Function to display page number for carousel
+	carouselPageNumberDisplay:function(items,item,displayClassName){
+		if($(window).width() > 1263){
+			var page_no = parseInt(items/3);
+			if(items%3 > 0){
+				page_no = parseInt(items/3) + 1;
+			}
+			var current_page = parseInt(item/3) + 1;
+			if(item%3 > 0){
+				current_page = parseInt(item/3) + 2;
+			}
+			}
+			else{
+				var page_no = parseInt(items/2);
+				if(items%2 > 0){
+					page_no = parseInt(items/2) + 1;
+				}
+				var current_page = parseInt(item/2) + 1;
+				if(item%2 > 0){
+					current_page = parseInt(item/2) + 2;
+				}
+			}
+		$("."+displayClassName).html("<span>"+current_page + " / " + page_no+"</span>");
+	},
 	//Function used to fetch stores for web and responsive. This is called when a user clicks on CNC delivery mode.
 	fetchStores:function(entryNumber,sellerArticleSKU,deliveryCode,callFrom,storeName)
 	{
@@ -884,37 +888,17 @@ ACC.singlePageCheckout = {
         		}
             	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
         				'initialize.owl.carousel initialize.owl.carousel ' +
-        				'to.owl.carousel changed.owl.carousel',
+        				'changed.owl.carousel',
         				function(event) {
         			var items     = event.item.count;     // Number of items
         			var item      = event.item.index;     // Position of the current item
-        			
-        			if($(window).width() > 1263){
-						var page_no = parseInt(items/3);
-						if(items%3 > 0){
-							page_no = parseInt(items/3) + 1;
-						}
-						var current_page = parseInt(item/3) + 1;
-						if(item%3 > 0){
-							current_page = parseInt(item/3) + 2;
-						}
-						}
-						else{
-							var page_no = parseInt(items/2);
-							if(items%2 > 0){
-								page_no = parseInt(items/2) + 1;
-							}
-							var current_page = parseInt(item/2) + 1;
-							if(item%2 > 0){
-								current_page = parseInt(item/2) + 2;
-							}
-						}
-        			$(".page_count_cnc").html("<span>"+current_page + " / " + page_no+"</span>");
+        			//Below method will display correct page number.
+        			ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count_cnc");
         		});
         		$(".cnc_carousel").owlCarousel({
         			items:3,
         			loop: false,
-        			dots:false,
+        			dots:true,
         			margin: 60,
         			navText:[],
         			slideBy: 3,
@@ -988,15 +972,21 @@ ACC.singlePageCheckout = {
 			{				
 				$allListElements.closest("li").hide();
 				$allListElements.closest("li").parent("div.owl-item").hide();
-				$allListElements.closest("li").parent("div.owl-item").removeClass("owl-item");
-				$(".showStoreAddress").parent("div").addClass("owl-item");
+				//$allListElements.closest("li").parent("div.owl-item").removeClass("owl-item");
+				//$(".showStoreAddress").parent("div").addClass("owl-item");
 				$(".showStoreAddress").parent("div").show();
 				$(".showStoreAddress").show();
+				
+				//User will be taken to first page on search success
+				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
+				var cnc_count = $(".showStoreAddress").length;	//Used in case of search stores
+				//Below method will display correct page number.
+				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
 			}else if(searchText=="")
 			{
 				$allListElements.closest("li").show();
 				$allListElements.closest("li").removeClass("showStoreAddress");
-				$allListElements.closest("li").parent("div").addClass("owl-item");
+				//$allListElements.closest("li").parent("div").addClass("owl-item");
 				$allListElements.closest("li").parent("div.owl-item").show();
 			}
 			
@@ -1007,8 +997,6 @@ ACC.singlePageCheckout = {
 					search_keyword : searchText
 				});
 			}
-			
-		
 	},
 	//Function to perform serach on enter key press
 	searchOnEnterPress:function(e,element,entryNumber)

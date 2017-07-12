@@ -186,32 +186,12 @@ $(document).ready(function() {
 			        		}
 			            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
 			        				'initialize.owl.carousel initialize.owl.carousel ' +
-			        				'to.owl.carousel changed.owl.carousel',
+			        				'changed.owl.carousel',
 			        				function(event) {
 			        			var items     = event.item.count;     // Number of items
 			        			var item      = event.item.index;     // Position of the current item
-			        			
-			        			if($(window).width() > 1263){
-									var page_no = parseInt(items/3);
-									if(items%3 > 0){
-										page_no = parseInt(items/3) + 1;
-									}
-									var current_page = parseInt(item/3) + 1;
-									if(item%3 > 0){
-										current_page = parseInt(item/3) + 2;
-									}
-									}
-									else{
-										var page_no = parseInt(items/2);
-										if(items%2 > 0){
-											page_no = parseInt(items/2) + 1;
-										}
-										var current_page = parseInt(item/2) + 1;
-										if(item%2 > 0){
-											current_page = parseInt(item/2) + 2;
-										}
-									}
-			        			$(".page_count_cnc").html("<span>"+current_page + " / " + page_no+"</span>");
+			        			//Below method will display correct page number.
+			        			ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count_cnc");
 			        		});
 			        		$(".cnc_carousel").owlCarousel({
 			        			items:3,
