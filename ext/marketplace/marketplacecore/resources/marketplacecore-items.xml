@@ -5980,6 +5980,22 @@
 						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-5787 starts here -->
+					<attribute qualifier="isDeleted" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to indicate that the wishlist has been deleted</description>
+						<modifiers read="true" write="true" optional="false" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="deletedDate"
+						type="java.util.Date">
+						<description>To store the date when wishlist item has been deleted</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<!-- TPR-5787 ends here -->
 				</attributes>
 			</itemtype>
 
