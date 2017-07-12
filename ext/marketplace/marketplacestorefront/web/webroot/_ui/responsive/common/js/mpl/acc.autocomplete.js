@@ -155,7 +155,7 @@ ACC.autocomplete = {
 									autoSearchData.push({
 										value: suggestedString,
 										searchterm:term,
-										url: ACC.config.encodedContextPath + "/search?text=" + suggestedString +"&best_search_keyword="+term,
+										url: ACC.config.encodedContextPath + "/search?q=" + suggestedString +"&best_search_keyword="+term,
 										type: "autoSuggestion"
 									});
 									
@@ -205,7 +205,7 @@ ACC.autocomplete = {
 							    autoSearchData.push({
 								value: suggestedString,
 								searchterm:term,
-								url: ACC.config.encodedContextPath + "/search?text=" + suggestedString,
+								url: ACC.config.encodedContextPath + "/search?q=" + suggestedString,
 								type: "autoSuggestion"
 							});
 							
@@ -270,7 +270,7 @@ ACC.autocomplete = {
 						autoSearchData.push({
 							value: obj.term,
 							searchterm:term,
-							url: ACC.config.encodedContextPath + "/search?text=" + obj.term +"&best_search_keyword="+term,
+							url: ACC.config.encodedContextPath + "/search?q=" + obj.term +"&best_search_keyword="+term,
 							type: "autoSuggestion"
 						});
 						
