@@ -101,5 +101,74 @@ var buyboxskuId='';
 	</c:if>
 	<!--CKD:TPR-250:End -->
 </ul>
-
+<%-- UF-377 starts --%>
+<div class="product-specification-accordion smk_accordion acc_with_icon">
+	<c:if test="${fn:contains(validTabs, 'stylenote')}">
+		<div class="choose-address accordion_in acc_active">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.styleNotes" /></h2>
+			</div>
+			<div class="acc_content" style="display:block">
+				<product:productStyleNotesTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'details')}">
+		<div class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.details" /></h2>
+			</div>
+			<div class="acc_content">
+				<product:productDetailsTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'description')}">
+		<div class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.description" /></h2>
+			</div>
+			<div class="acc_content">
+				<product:productDescriptionTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'warranty')}">
+		<div class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.warranty" /></h2>
+			</div>
+			<div class="acc_content">
+				<product:productWarrantyTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'knowmore')}">
+		<div class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.knowmore" /></h2>
+			</div>
+			<div class="acc_content">
+				<product:productTataPromiseTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'brandInfo')}">
+		<div class="choose-address accordion_in">
+			<div class="acc_head">
+				<div class="acc_icon_expand"></div>
+				<h2><spring:theme code="product.product.brandInfo" /></h2>
+			</div>
+			<div class="acc_content">
+				<product:brandInfoTab product="${product}" />
+			</div>
+		</div>
+	</c:if>
+</div>
+<%-- UF-377 ends --%>
  <div id="servicableUssid"></div>
