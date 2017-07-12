@@ -8,29 +8,40 @@
 <%@ taglib prefix="layouts" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/layouts" %>
 
 
+
+
 <c:choose>
-    <c:when test="${LayoutCode eq 'layout1'}">
+    <c:when test="${layoutCode eq 'layout1'}">
         <layouts:lookbooklayout1/>
     </c:when>
-    <c:when test="${LayoutCode eq 'layout2'}">
+    <c:when test="${layoutCode eq 'layout2'}">
         <layouts:lookbooklayout2/>
     </c:when>
-    <c:when test="${LayoutCode eq 'layout3'}">
+    <c:when test="${layoutCode eq 'layout3'}">
         <layouts:lookbooklayout3/>
     </c:when>
-    <c:when test="${LayoutCode eq 'layout4'}">
+    <c:when test="${layoutCode eq 'layout4'}">
         <layouts:lookbooklayout4/>
     </c:when>
-    <c:when test="${LayoutCode eq 'shortbanner-layout1'}">
+    <c:when test="${layoutCode eq 'layout5'}">
+        <layouts:lookbooklayout5/>
+    </c:when>
+    <c:when test="${layoutCode eq 'layout6'}">
+        <layouts:lookbooklayout6/>
+    </c:when>
+    <c:when test="${layoutCode eq 'layout7'}">
+        <layouts:lookbooklayout7/>
+    </c:when>
+    <c:when test="${layoutCode eq 'shortbanner-layout1'}">
         <layouts:shortbannerlayout1/>
     </c:when>
-    <c:when test="${LayoutCode eq 'shortbanner-layout2'}">
+    <c:when test="${layoutCode eq 'shortbanner-layout2'}">
         <layouts:shortbannerlayout2/>
     </c:when>
-    <c:when test="${LayoutCode eq 'shortbanner-layout3'}">
+    <c:when test="${layoutCode eq 'shortbanner-layout3'}">
         <layouts:shortbannerlayout3/>
     </c:when>
-    <c:when test="${LayoutCode eq 'shortbanner-layout4'}">
+    <c:when test="${layoutCode eq 'shortbanner-layout4'}">
         <layouts:shortbannerlayout4/>
     </c:when>
 </c:choose>
