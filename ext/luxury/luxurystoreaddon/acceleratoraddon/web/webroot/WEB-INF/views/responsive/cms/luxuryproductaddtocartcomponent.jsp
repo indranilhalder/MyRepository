@@ -101,7 +101,7 @@
 			<h3 class="mt-40 mb-40">Added to Bag</h3>
 			<ul>
 				<li>
-				<div class="row">
+				<div class="hidden-lg row">
 					<div class="itemsImage col-xs-5 col-sm-3">
 								<product:productPrimaryImage product="${product}" format="product" />
 					</div>
