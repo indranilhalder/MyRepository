@@ -620,6 +620,7 @@
         width: 94%;
     	display: inline-block;
     	@include media-breakpoint-down(sm) {
+            width: 90%;
     		padding-left: 4%;
     	}
  }

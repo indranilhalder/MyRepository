@@ -236,7 +236,6 @@ function luxValidateAccountAddress() {
         $(this).val($(this).val().trim());
     });
     var selectedValueState = document.getElementById("stateListBox").selectedIndex, regexCharSpace = /^[a-zA-Z]+$/, regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/, regexSpace = /\s/, equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/, flagFn = !0, flagLn = !0, flagAd1 = !0, flagPost = !0, flagCity = !0, flagState = !0, flagMob = !0, addLine1 = encodeURIComponent(addressForm.line1.value);
-    encodeURIComponent(addressForm.line2.value), encodeURIComponent(addressForm.line3.value);
     return 0 == addressForm.addressRadioType[0].checked && 0 == addressForm.addressRadioType[1].checked && (document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>", 
     flagFn = !1), null == addressForm.firstName.value || "" == addressForm.firstName.value ? ($("#erraddressfn").css({
         display: "block"

@@ -114,6 +114,12 @@
 	/* EOF look book carousel */
 	/* look book 4 column */ 
 	.look-book-img {
+        .lookbook-pd-5{
+            padding:0 5px;
+        }
+        .lookbook-pd-0{
+            padding:0 0px;
+        }
 		.colmn {
 			&:nth-child(1) {
 				padding-right: 5px;
@@ -124,13 +130,76 @@
 		}
 		li {
 			float:left;
-			margin-bottom: 10px;
+			margin-bottom: 5px;
 			
 			& + li {
-				margin-bottom: 10px;				
+				margin-bottom: 5px;				
 			}
 		}
-	}
+	}    
+   .show-lookbok-desktop{
+        display: block;
+        @include media-breakpoint-down(sm) {
+            display: none;
+        }
+    }
+    .show-lookbok-mobile{
+        display: none;
+        @include media-breakpoint-down(sm) {
+            display: block;
+        }
+    }
+    &.layout-2{
+        .split-lookbook-2{
+            li:first-child{
+                width: 50%;
+                float: left;
+            }
+            li:nth-child(2){
+                width: 50%;
+                float: right;
+            }
+        }
+    }
+    &.layout-3{
+        ul{
+            @include media-breakpoint-down(sm) {
+                margin: 0;  
+            }
+        }
+        .split-lookbook-2{
+            li:first-child{
+                width: 50%;
+                float: left;
+            }
+            li:nth-child(2){
+                width: 50%;
+                float: right;
+            }
+        }
+         .split-lookbook-3{
+            li:nth-child(2){
+                width: 50%;
+                float: left;
+            }
+            li:last-child{
+                width: 50%;
+                float: right;
+            }
+        }
+    }
+    .layout-width-75{
+        float: left;
+        width: 75%;
+    }
+    .layout-width-50{
+        float: left;
+        width: 50%;
+    }
+    .layout-width-25{
+        float: left;
+        width: 25%;
+    }
 	/* EOF look book 4 column */
 	/* look book link */
 	.look-book-link{
