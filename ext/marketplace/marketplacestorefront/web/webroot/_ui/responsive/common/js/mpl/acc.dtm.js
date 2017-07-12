@@ -962,7 +962,7 @@ function dtmSearchTags(){
 		var location = $('#pageType').val();
 		var widgetName = name+":"+partner+":"+location ;
 		
-		if (typeof _satellite != "undefined") {
+		if(typeof _satellite != "undefined") {
 			_satellite.track('widget_tracking');
 			
 	    }
@@ -974,3 +974,28 @@ function dtmSearchTags(){
 		}
 		
 	})
+	
+	//TPR-6308 | Product Recommendation
+  $(document).on('click','.iaAddToCartButton.ia_both',function(){
+	   if(typeof _satellite != "undefined") {  
+	          if($('#pageType').val() == "product" ){
+		           _satellite.track('cpj_pdp_product_reco_cart_add');
+	            }
+	  
+	          if($('#pageType').val() == "cart" ){
+	         _satellite.track('cpj_cart_product_reco_cart_add');
+	           }
+	 }
+  });
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
