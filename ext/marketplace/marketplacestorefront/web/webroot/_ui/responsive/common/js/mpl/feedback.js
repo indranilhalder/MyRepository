@@ -3715,3 +3715,13 @@ $(".deliveryTrack.status.suman").each(function(){
 	});
 	});
 /* TPR-6013 ends*/
+
+/* UF-377 starts */
+if ($(".product-specification-accordion").length) {
+    $(".product-specification-accordion").smk_Accordion({
+        closeAble: true,
+        closeOther: true,
+        slideSpeed: 750,
+    })
+}
+/* UF-377 ends */
