@@ -7,6 +7,8 @@ import de.hybris.platform.core.model.JewelleryInformationModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.BuyBoxModel;
+
 
 /**
  * @author TCS
@@ -41,5 +43,12 @@ public interface MplJewelleryDao
 	 * @return
 	 */
 	String getPanCardStatus(String orderLineId);
+
+
+	/**
+	 * @param ussid
+	 * @return
+	 */
+	List<BuyBoxModel> getAllWeightVariant(String ussid);
 
 }

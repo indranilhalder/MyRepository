@@ -70,28 +70,8 @@ ACC.singlePageCheckout = {
 		                function(event) {
 							var items     = event.item.count;     // Number of items
 							var item      = event.item.index;     // Position of the current item
-							
-							if($(window).width() > 1263){
-								var page_no = parseInt(items/3);
-								if(items%3 > 0){
-									page_no = parseInt(items/3) + 1;
-								}
-								var current_page = parseInt(item/3) + 1;
-								if(item%3 > 0){
-									current_page = parseInt(item/3) + 2;
-								}
-								}
-								else{
-									var page_no = parseInt(items/2);
-									if(items%2 > 0){
-										page_no = parseInt(items/2) + 1;
-									}
-									var current_page = parseInt(item/2) + 1;
-									if(item%2 > 0){
-										current_page = parseInt(item/2) + 2;
-									}
-								}
-							$(".page_count").html("<span>"+current_page + " / " + page_no+"</span>");
+							//Below method will display correct page number.
+							ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count");
 		                });
 		              $("#address_carousel").owlCarousel({
 		                items:3,
@@ -729,7 +709,7 @@ ACC.singlePageCheckout = {
 			})
 		}
 	},
-	
+	//Function to get pick up persson form from server, Once fetched it will not be fetched again[For web].
 	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){		
     	var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();
     	if(isCncPresent=="true")
@@ -755,7 +735,7 @@ ACC.singlePageCheckout = {
     	}
 	},
 	
-	
+	//Function to get address selected, To be highlighted when address accordion is closed.
 	getSelectedAddress:function(){
 		var url=ACC.config.encodedContextPath + "/checkout/single/deliveryAddress";
 		var data="";
@@ -779,7 +759,7 @@ ACC.singlePageCheckout = {
             }
 		});
 	},
-	
+	//Function to get selected delivery modes, To be highlighted when delivery mode accordion is closed.
 	getSelectedDeliveryModes:function(callFrom){
 		var url=ACC.config.encodedContextPath + "/checkout/single/deliveryModesSelected";
 		var data="";
@@ -838,7 +818,7 @@ ACC.singlePageCheckout = {
             }
 		});
 	},
-	
+	//Generic method used to initiate ajax call
 	ajaxRequest:function(url,method,data,cache){
 		return $.ajax({
 			url: url,
@@ -847,7 +827,31 @@ ACC.singlePageCheckout = {
 			cache: cache
 		});
 	},
-	
+	//Function to display page number for carousel
+	carouselPageNumberDisplay:function(items,item,displayClassName){
+		if($(window).width() > 1263){
+			var page_no = parseInt(items/3);
+			if(items%3 > 0){
+				page_no = parseInt(items/3) + 1;
+			}
+			var current_page = parseInt(item/3) + 1;
+			if(item%3 > 0){
+				current_page = parseInt(item/3) + 2;
+			}
+			}
+			else{
+				var page_no = parseInt(items/2);
+				if(items%2 > 0){
+					page_no = parseInt(items/2) + 1;
+				}
+				var current_page = parseInt(item/2) + 1;
+				if(item%2 > 0){
+					current_page = parseInt(item/2) + 2;
+				}
+			}
+		$("."+displayClassName).html("<span>"+current_page + " / " + page_no+"</span>");
+	},
+	//Function used to fetch stores for web and responsive. This is called when a user clicks on CNC delivery mode.
 	fetchStores:function(entryNumber,sellerArticleSKU,deliveryCode,callFrom,storeName)
 	{
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -868,94 +872,77 @@ ACC.singlePageCheckout = {
             } else {
             	$('#cncStoreContainer'+entryNumber).css("display","block");
             	$('#cncStoreContainer'+entryNumber).html(data);
-            	var cnc_arrow_left, cnc_top;
-            	if($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").length > 0){
-            	cnc_arrow_left = parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().left) + 40;
-            	//cnc_top = parseInt($('#cncStoreContainer'+entryNumber).offset().top) - parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().top) - 8;
-            	}
-            	$('#cncStoreContainer'+entryNumber).find(".cnc_arrow").css("left",cnc_arrow_left+"px");
-            	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
-            	//CNC Carousel
-            	if($(".cnc_item .removeColor1").length == 2){
-        			$("#cnc_carousel").addClass("two_address");
-        		}
-        		if($(".cnc_item .removeColor1").length == 1){
-        			$("#cnc_carousel").addClass("one_address");
-        		}
-            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
-        				'initialize.owl.carousel initialize.owl.carousel ' +
-        				'to.owl.carousel changed.owl.carousel',
-        				function(event) {
-        			var items     = event.item.count;     // Number of items
-        			var item      = event.item.index;     // Position of the current item
-        			
-        			if($(window).width() > 1263){
-						var page_no = parseInt(items/3);
-						if(items%3 > 0){
-							page_no = parseInt(items/3) + 1;
-						}
-						var current_page = parseInt(item/3) + 1;
-						if(item%3 > 0){
-							current_page = parseInt(item/3) + 2;
-						}
-						}
-						else{
-							var page_no = parseInt(items/2);
-							if(items%2 > 0){
-								page_no = parseInt(items/2) + 1;
-							}
-							var current_page = parseInt(item/2) + 1;
-							if(item%2 > 0){
-								current_page = parseInt(item/2) + 2;
-							}
-						}
-        			$(".page_count_cnc").html("<span>"+current_page + " / " + page_no+"</span>");
-        		});
-        		$(".cnc_carousel").owlCarousel({
-        			items:3,
-        			loop: false,
-        			dots:false,
-        			margin: 60,
-        			navText:[],
-        			slideBy: 3,
-        			responsive : {
-            			// breakpoint from 0 up
-            			0 : {
-            				items:1,
-            				stagePadding: 36,
-            				slideBy: 1,
-            				margin: 0,
-            				nav: ($(".cnc_item .removeColor1").length <= 1)?false:true,
-            			},
-            			// breakpoint from 768 up
-            			768 : {
-            				items:2,
-            				slideBy: 2,
-            				nav: ($(".cnc_item .removeColor1").length <= 2)?false:true,
-            			},
-            			// breakpoint from 1280 up
-            			1280 : {
-            				items:3,
-            				nav: ($(".cnc_item .removeColor1").length <= 3)?false:true,
-            			}			
-            		},
-            		onRefresh: function () {
-            			$(".cnc_carousel").find('div.owl-item').height('');
-                    },
-                    onRefreshed: function () {
-                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
-                    }
-        		});
-            	
-        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
-        			event.stopPropagation();
-        		});
-        		
-        		//After remove from cart in review order page, Pre select store name using the code below
-        		if(callFrom=="removeCartItem")
-        		{
-        		    $("#cncStoreContainer"+entryNumber).find("[data-storeName='"+storeName+"']").prop('checked', true);
-        		}
+            	if($('#cncStoreContainer'+entryNumber+' .checkout-shipping-items').length>0)
+            	{
+            		var cnc_arrow_left, cnc_top;
+	            	if($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").length > 0){
+	            	cnc_arrow_left = parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().left) + 40;
+	            	//cnc_top = parseInt($('#cncStoreContainer'+entryNumber).offset().top) - parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().top) - 8;
+	            	}
+	            	$('#cncStoreContainer'+entryNumber).find(".cnc_arrow").css("left",cnc_arrow_left+"px");
+	            	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
+	            	//CNC Carousel
+	            	if($(".cnc_item .removeColor1").length == 2){
+	        			$("#cnc_carousel").addClass("two_address");
+	        		}
+	        		if($(".cnc_item .removeColor1").length == 1){
+	        			$("#cnc_carousel").addClass("one_address");
+	        		}
+	            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+	        				'initialize.owl.carousel initialize.owl.carousel ' +
+	        				'changed.owl.carousel',
+	        				function(event) {
+	        			var items     = event.item.count;     // Number of items
+	        			var item      = event.item.index;     // Position of the current item
+	        			//Below method will display correct page number.
+	        			ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count_cnc");
+	        		});
+	        		$(".cnc_carousel").owlCarousel({
+	        			items:3,
+	        			loop: false,
+	        			dots:true,
+	        			margin: 60,
+	        			navText:[],
+	        			slideBy: 3,
+	        			responsive : {
+	            			// breakpoint from 0 up
+	            			0 : {
+	            				items:1,
+	            				stagePadding: 36,
+	            				slideBy: 1,
+	            				margin: 0,
+	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
+	            			},
+	            			// breakpoint from 768 up
+	            			768 : {
+	            				items:2,
+	            				slideBy: 2,
+	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
+	            			},
+	            			// breakpoint from 1280 up
+	            			1280 : {
+	            				items:3,
+	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
+	            			}			
+	            		},
+	            		onRefresh: function () {
+	            			$(".cnc_carousel").find('div.owl-item').height('');
+	                    },
+	                    onRefreshed: function () {
+	                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
+	                    }
+	        		});
+	            	
+	        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
+	        			event.stopPropagation();
+	        		});
+	        		
+	        		//After remove from cart in review order page, Pre select store name using the code below
+	        		if(callFrom=="removeCartItem")
+	        		{
+	        		    $("#cncStoreContainer"+entryNumber).find("[data-storeName='"+storeName+"']").prop('checked', true);
+	        		}
+            	}//End of if
             }
 		}); 
         
@@ -963,6 +950,7 @@ ACC.singlePageCheckout = {
         	ACC.singlePageCheckout.hideAjaxLoader();
 		});
 	},
+	//Function called to search CNC stores. If no stores are matching, All the stores will be shown to the user. If one or more stores are matching, the matching stores will be displayed and rest will be hidden.
 	searchCNCStores: function(element,entryNumber){
 		var container="div#cncStoreContainer"+entryNumber;
 		var allItemselector=container+' .cncStoreAddressSection';		
@@ -987,16 +975,26 @@ ACC.singlePageCheckout = {
 			{				
 				$allListElements.closest("li").hide();
 				$allListElements.closest("li").parent("div.owl-item").hide();
-				$allListElements.closest("li").parent("div.owl-item").removeClass("owl-item");
-				$(".showStoreAddress").parent("div").addClass("owl-item");
+				//$allListElements.closest("li").parent("div.owl-item").removeClass("owl-item");
+				//$(".showStoreAddress").parent("div").addClass("owl-item");
 				$(".showStoreAddress").parent("div").show();
 				$(".showStoreAddress").show();
+				
+				//User will be taken to first page on search success
+				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
+				var cnc_count = $(".showStoreAddress").length;	//Used in case of search stores
+				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
 			}else if(searchText=="")
 			{
 				$allListElements.closest("li").show();
 				$allListElements.closest("li").removeClass("showStoreAddress");
-				$allListElements.closest("li").parent("div").addClass("owl-item");
+				//$allListElements.closest("li").parent("div").addClass("owl-item");
 				$allListElements.closest("li").parent("div.owl-item").show();
+				
+				//User will be taken to first page on search complete
+				$(".cnc_carousel").trigger('to.owl.carousel',[0]);
+				var cnc_count = $("#cncUlDiv"+entryNumber+" .cnc_item .removeColor"+entryNumber).length;	//Used in case of search stores
+				ACC.singlePageCheckout.carouselPageNumberDisplay(cnc_count,0,"page_count_cnc");
 			}
 			
 			if( typeof utag !="undefined" && searchText!=""){
@@ -1006,9 +1004,8 @@ ACC.singlePageCheckout = {
 					search_keyword : searchText
 				});
 			}
-			
-		
 	},
+	//Function to perform serach on enter key press
 	searchOnEnterPress:function(e,element,entryNumber)
 	{
 		var code = e.keyCode || e.which;
@@ -1017,6 +1014,7 @@ ACC.singlePageCheckout = {
 	        // Enter pressed
 	    }
 	},
+	//Function to validate and submit pick up person form
 	savePickupPersonDetails: function(element)
 	{
 		ACC.singlePageCheckout.hidePickupDetailsErrors();
@@ -1032,7 +1030,7 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.submitPickupPersionDetails();
 		}
 	},
-	
+	//Function to submit pick up person form to the server
 	submitPickupPersionDetails:function() {
 		ACC.singlePageCheckout.showAjaxLoader();
 		var pickupPersonName = $("#pickupPersonName").val();
@@ -1088,17 +1086,17 @@ ACC.singlePageCheckout = {
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
 	},
-	
+	//Validation method
 	validatePickupPersonNameOnKeyUp:function(){
 		ACC.singlePageCheckout.hidePickupDetailsErrors();
 		ACC.singlePageCheckout.validatePickupPersonName();
 	},
-	
+	//Validation method
 	validatePickupPersonMobileOnKeyUp:function(){
 		ACC.singlePageCheckout.hidePickupDetailsErrors();
 		ACC.singlePageCheckout.validatePickupPersonMobile();
 	},
-	
+	//Validation method
 	validatePickupPersonName:function(){
 		var pickupPersonName = $("#pickupPersonName").val();
 		var statusName = ACC.singlePageCheckout.allLetter(pickupPersonName);
@@ -1122,7 +1120,7 @@ ACC.singlePageCheckout = {
 			return true;
 		}
 	},
-	
+	//Validation method
 	validatePickupPersonMobile:function(){
 		var pickupPersonMobile = $("#pickupPersonMobile").val();
 		var isString = isNaN(pickupPersonMobile);
@@ -1159,7 +1157,7 @@ ACC.singlePageCheckout = {
 		$(".pickupPersonNameError").hide();
 		$(".pickupDetails").hide();
 	},
-	
+	//Generic function to display modals
 	modalPopup: function(elementId,data){
 
 		var selector="#"+elementId+" #modalBody"
@@ -1167,7 +1165,7 @@ ACC.singlePageCheckout = {
 		$("#"+elementId).modal('show');
 		$(".new-address-form-mobile").html('');
 	},
-	
+	//Generic function to showAccordion
 	showAccordion: function(showElementId){
 		$.each($("#singlePageAccordion .checkout-accordion"),function(){
 			if($(this).hasClass("accordion-open"))
@@ -1180,7 +1178,7 @@ ACC.singlePageCheckout = {
     	//$(showElementId).closest(".checkout-accordion").find(".checkout-accordion-body").slideDown();
     	$(showElementId).closest(".checkout-accordion").prevAll(".checkout-accordion").addClass("checkout-selected");
 	},
-
+	//Validation method
 	allLetter:function (inputtxt) { 
         var letters = new RegExp(/^(\w+\s?)*\s*$/);
         var number = new RegExp(/\d/g);
@@ -1200,11 +1198,11 @@ ACC.singlePageCheckout = {
             return false;
         }
     },
-    
+    //Validation method
     checkMobileNumberSpace:function(number) {			
 		return /\s/g.test(number);
 	},
-	
+	//Validation method
 	checkWhiteSpace:function(text) {
         var letters = new RegExp(/^(\w+\s?)*\s*$/);
         var number = new RegExp(/\d/g);
@@ -1246,6 +1244,7 @@ ACC.singlePageCheckout = {
 	            return false;
 	        }
     },
+    //Function to fetch review order page from server
     getReviewOrder:function(){
     	ACC.singlePageCheckout.showAjaxLoader();
 		var url=ACC.config.encodedContextPath + "/checkout/single/reviewOrder";
@@ -1309,6 +1308,7 @@ ACC.singlePageCheckout = {
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
     },
+    //Generic function to process error messages
 	processError: function(showElementId,jsonResponse){
 		if(jsonResponse.type=="error")
 		{
@@ -1326,6 +1326,7 @@ ACC.singlePageCheckout = {
 			window.location.href=ACC.config.encodedContextPath+jsonResponse.url;
 		}
 	},
+	//Function to process confirm box for exchange
 	processConfirm: function(showElementId,jsonResponse,addressId,selectedPincode,isNew,element){
 		if(jsonResponse.type=="confirm")
 		{
@@ -1408,7 +1409,8 @@ ACC.singlePageCheckout = {
 		
 	}
 	},
-removeExchangeFromCart : function (){
+	//Function to remove exchange from cart for responsive
+	removeExchangeFromCart : function (){
 		
 
     	ACC.singlePageCheckout.showAjaxLoader();
@@ -1431,7 +1433,7 @@ removeExchangeFromCart : function (){
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
 	},
-	
+	//Function to removeCart entry number for reviewOrder page[For Web]
 	removeCartItem : function(element,clickFrom) {			
 		ACC.singlePageCheckout.showAjaxLoader();
 		var productId ="";
@@ -1526,10 +1528,6 @@ removeExchangeFromCart : function (){
 			});
 	        
 	        xhrResponse.always(function(){
-//	        	if(clickFrom=="addItemToWl")
-//        		{
-//	        		forceUpdateHeader();
-//        		}
 	        	ACC.singlePageCheckout.hideAjaxLoader();
 	        });
 	},
@@ -1567,6 +1565,7 @@ removeExchangeFromCart : function (){
         });
         
 	},
+	//Function to add entry item to wishlist from review order page[For Web]
 	addToWishlistForReviewCart:function(ussid,productCode,alreadyAddedWlName)
 	{
 			var wishName = "";
@@ -1640,7 +1639,7 @@ removeExchangeFromCart : function (){
 	        });			
 			//$('a.wishlist#wishlist').popover('hide');
 	},
-	
+	//Function to call pre-payment validation  method
 	validateCartForPayment:function()
 	{
 		var url = ACC.config.encodedContextPath + "/checkout/single/validatePayment";
@@ -1648,6 +1647,7 @@ removeExchangeFromCart : function (){
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 		return xhrResponse;
 	},
+	//Function called from onPaymentModeSelection() function for responsive
 	proceedWithPaymentForResponsive:function(paymentMode,savedOrNew,radioId,callFromCvv){
 		ACC.singlePageCheckout.showAjaxLoader();
 		//function call to validate payment before proceeding
@@ -1732,7 +1732,7 @@ removeExchangeFromCart : function (){
         	ACC.singlePageCheckout.hideAjaxLoader();
         });
 	},
-	
+	//Function called when proceed button of review order page is clicked.
 	proceedToPayment:function(element){
 		ACC.singlePageCheckout.showAjaxLoader();
 		//function call to validate payment before proceeding
@@ -1811,7 +1811,7 @@ removeExchangeFromCart : function (){
 		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
 		return xhrResponse;
 	},
-	
+	//Generic function to show ajax loader
 	showAjaxLoader:function(){
 		var staticHost = $('#staticHost').val();
 		if($("#no-click,.loaderDiv").length==0)
@@ -1823,7 +1823,7 @@ removeExchangeFromCart : function (){
 			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		}
 	},
-	
+	//Generic function to hide ajax loader
 	hideAjaxLoader:function(){
 		$("#no-click,.loaderDiv").remove();
 	},
@@ -1845,7 +1845,7 @@ removeExchangeFromCart : function (){
 				}
 			});
 	},
-	
+	//Function to submit slot delivery selection form to server
 	submitSlotDeliverySelection:function()
 	{
 		var url=$("#selectDeliverySlotForm").prop("action");
@@ -2018,7 +2018,7 @@ removeExchangeFromCart : function (){
 		//Hiding SnackBar
 		ACC.singlePageCheckout.hideSnackBar();
 	},
-	
+	//Function used to reset payment modes when a saved card is clicked after clicking a payment mode[For responsive]
 	resetPaymentModesOnSavedCardSelection:function(paymentMode)
 	{
 		$("li.paymentModeMobile").removeClass("active");
@@ -2083,7 +2083,7 @@ removeExchangeFromCart : function (){
 	},
 	
 	
-	
+	//Function used to fetch add address form for responsive
 	getMobileAddAddress:function(){
 		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
 		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
@@ -2129,7 +2129,7 @@ removeExchangeFromCart : function (){
 		}        
 		return false;	
 	},
-	
+	//Function used to check pincode serviceability for responsive
 	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
 	{
 		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
@@ -2217,7 +2217,7 @@ removeExchangeFromCart : function (){
 		}
 		
 	},
-	
+	//Function called when change link of address is clicked for responsive
 	changeAddress:function(element){
 		//$("#address-change-link").on("click", function(){
 			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
@@ -2231,7 +2231,7 @@ removeExchangeFromCart : function (){
 		      }
 	    //});
 	},
-	
+	//Function called when change link of delivery mode is clicked for responsive
 	changeDeliveryMode:function(element){
 //		var entryNumbersId=$("#entryNumbersId").val();
 //		var entryNumbers=entryNumbersId.split("#");
@@ -2272,7 +2272,7 @@ removeExchangeFromCart : function (){
 	        scrollTop: $("#"+id).offset().top-offset},
 	        'slow');
 	},
-	
+	//Function called when ever a user enters pincode for responsive, When the character length becomes 6 a pincode serviceability call is fired.
 	attachOnPincodeKeyUpEvent:function()
 	{	
 		$('.address_postcode').on('keyup',function(){
@@ -2296,7 +2296,7 @@ removeExchangeFromCart : function (){
 				
 		});
 	},
-	
+	//Function used to save a new address and set it as delievry address[for responsive]. Called from onPaymentModeSelection() method
 	saveAndSetNewDeliveryAddress:function()
 	{
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
@@ -2348,7 +2348,7 @@ removeExchangeFromCart : function (){
 		}
 		return false;
 	},
-	
+	//Function used to set an existing address as a delievry address[for responsive]. Called from onPaymentModeSelection() method
 	setDeliveryAddress:function()
 	{
 		$("#radio_mobile_"+ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId).prop("checked", true);
@@ -2390,6 +2390,7 @@ removeExchangeFromCart : function (){
 		
 		return false;
 	},
+	//Function used to validate if pickup person details are provided and are saved.
 	checkPickUpDetailsSavedForCnc:function()
 	{
 		var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
@@ -2566,6 +2567,7 @@ removeExchangeFromCart : function (){
 		});
 		
 	},
+	//Function called when done button on slot delivery jsp is clicked.
 	onSlotDeliveryDoneClick:function(){
 		ACC.singlePageCheckout.submitSlotDeliverySelection();
 		$('#singlePageChooseSlotDeliveryPopup').modal('hide');
@@ -2575,6 +2577,7 @@ removeExchangeFromCart : function (){
 		}
 		
 	},
+	//Function called when cancel button on slot delivery jsp is clicked.
 	onSlotDeliveryCancelClick:function(){
 		$('#singlePageChooseSlotDeliveryPopup').modal('hide');
 		if(!ACC.singlePageCheckout.getIsResponsive())
@@ -2650,14 +2653,16 @@ removeExchangeFromCart : function (){
 			viewPaymentMRupee();
 		}
 	},
+	//Function called when a saved card is selected.
 	paymentOnSavedCardSelection:function(paymentMode,savedOrNew,radioId,callFromCvv)
 	{
+		//Call can be intiated either from saved card radio button selection or on focus on cvv text box
 		$("#paymentMode").val(paymentMode);
 		if(paymentMode=="Credit Card")
 		{
 			if($("#"+radioId).is(":checked") && callFromCvv=='true')
 			{
-				//Do Nothing
+				//Do Nothing if radio button is already checked and user clicks on cvv text box
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
@@ -2669,7 +2674,7 @@ removeExchangeFromCart : function (){
 		{
 			if($("#"+radioId).is(":checked") && callFromCvv=='true')
 			{
-				//Do Nothing
+				//Do Nothing if radio button is already checked and user clicks on cvv text box
 			}
 			else{
 				$("#"+radioId).prop("checked",true);
@@ -2687,6 +2692,7 @@ $(document).ready(function(){
 	{
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
+			//Reload the page if a user resizes the device and viewport width changes from desktop to responsive
 			var onSizeChangeIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 			if(onLoadIsResponsive!=onSizeChangeIsResponsive && !ACC.singlePageCheckout.getIsResponsive())
 			{
@@ -2700,6 +2706,7 @@ $(document).ready(function(){
 		var deviceType=$("#deviceType").html();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
+			//Reload the page if a user directly accesses the site in a small sized desktop browser
 			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
 		}
 		
@@ -2710,18 +2717,22 @@ $(document).ready(function(){
 			var defaultAddressPresent=$("#defaultAddressPresent").html();
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
+				//Calling pincode serviceability on page load for responsive cases.
 				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
 			}
+			//Hiding change link if no dafault address is present
 			if(defaultAddressPresent=="false")
 			{
 				$("#chooseDeliveryAddressMobileDiv").find(".mobileNotDefaultDelAddress").show();
 				//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
 				$("#chooseDeliveryAddressMobile .change-mobile").hide();
 			}
+			//For responsive site we are removing payment page laoded for web view inorder to keep unique id's in the view
 			$("#makePaymentDiv").html("");
 		}
 		else
 		{
+			//For web site we are removing payment page laoded for responsive view inorder to keep unique id's in the view
 			$("#makePaymentDivMobile").html("");
 		}
 	}

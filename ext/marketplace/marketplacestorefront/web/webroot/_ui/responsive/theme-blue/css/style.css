@@ -891,7 +891,7 @@ a.morelink, .more-link {
 	font-size:18px;
 	font-family: 'Montserrat', sans-serif;
 }
-.sureheader{
+/*.sureheader{
 	background-color:#aa133e;
 	box-shadow:-1px 2px 7px #ccc;
 	-webkit-box-shadow:-1px 2px 7px #ccc;
@@ -918,7 +918,7 @@ a.morelink, .more-link {
 	margin-top: 36px;
 	margin-left: 50px;
 }
-.pan-detail-sec {
+ .pan-detail-sec {
 	padding: 50px 30px;
 }
 .pan-heading{
@@ -1040,7 +1040,7 @@ div.fileupload{
 }
 .pancard-msg, .pancard-img-msg{
 	display: none;
-}
+} */
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
@@ -44956,6 +44956,9 @@ transform-origin:0 0;
 		margin-left: 15px;
     	margin-top: 3px;
 	}
+	#singlePagePickupPersonPopup .pickupPersonMobileError {
+		margin-left: 0px;
+	}
 	
 	.pickupPersonNameError {
 		margin-top: 3px;
@@ -69108,6 +69111,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage {
     margin-bottom: 0px;
 }
+#singlePageMobile div#selectedAddressMessageMobile > span.alert-danger,
 #singlePageAddressPopup .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger ,
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger {
     width: 100%;
@@ -69355,9 +69359,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .addNewAddress .formaddress h3 {
     text-transform: none;
 }
-body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
+/*body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	background: #eee;
-}
+}*/
 .checkout-accordion.checkout-selected .checkout-accordion-heading{
 	padding: 5px 16px;
     font-size: 12px;
@@ -69704,16 +69708,66 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     box-shadow: none;
 }
 #singlePagePickupPersonPopup h2.panel-defaultHeading{
-	font-weight: normal;
-    text-transform: capitalize;
-    font-size: 16px;
+  width: 224px;
+  height: 18px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.29;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: #000000;
+  text-transform: capitalize;
+}
+#singlePagePickupPersonPopup .retail-detail
+{
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+   /*  margin-bottom: 30px; */
+}
+#singlePagePickupPersonPopup .name-label{
+	  height: 16px;
+	  font-size: 12px;
+	  line-height: 1.33;
+	  letter-spacing: 0.6px;
+	  text-align: left;
+	  color: #666666;
+}
+#singlePagePickupPersonPopup .form-group{
+	  text-align: left;
+	  margin-bottom: 24px;
+}
+#singlePagePickupPersonPopup input{
+	  width: 100%;
+	  font-size: 12px;
+	  line-height: 1.33;
+	  letter-spacing: 0.6px;
+	  text-align: left;
+	  color: #666666;
+}
+#singlePagePickupPersonPopup .line {
+	  width: 100%;
+	  height: 2px;
+	  border: solid 1px #eeeeee;
+	  margin: 20px auto;
+	  display: inline-block;
+}
+.#singlePagePickupPersonPopup .cancel_delslot{
+	  color: #666666;
+	  letter-spacing: 0.6px;
 }
 #singlePagePickupPersonPopup #savePickupPersondDetails{
-	margin: 0px auto;
+	margin: 20px auto;
     font-size: 12px;
     line-height: 1;
     font-weight: normal;
-    margin-top: 20px;
+}
+#singlePagePickupPersonPopup #savePickupPersondDetails .content{
+	max-width: 413px;	
 }
 #reviewOrder.cart.wrapper .product-block li.item>ul>li:first-child div.product-img{
 	width: 88px;
@@ -69855,6 +69909,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     padding: 0 25px 0 15px;
     background-image: url(../images/select-arrow-new.png);
     background-position: calc(100% - 12px) 53%;
+    cursor: auto;
 }
 #reviewOrder.cart.wrapper .product-block li.item > ul > li.delivery ul{
 	margin-bottom:0;
@@ -70301,6 +70356,15 @@ background:#f8f8f8;
 	}
  }
  @media(max-width: 767px){
+ #singlePagePickupPersonPopup .content{
+	max-width: 381px;	
+}
+#singlePagePickupPersonPopup .retail-detail{
+	border: 1px solid transparent;
+}
+#singlePagePickupPersonPopup .panel.panel-default.pickuppersonWidth .panel.panel-body{
+	border: 1px solid transparent;
+}
  #singlePageDesktop{
  display: none;
  }
@@ -70492,6 +70556,9 @@ background:#f8f8f8;
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper{
 		display: none;
 	}
+	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_pincode_search_wrapper{
+		display: none;
+	}
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search {
     padding: 0 19px;
     margin: 16px 0 8px;
@@ -70658,6 +70725,15 @@ background:#f8f8f8;
 .cnc_carousel.owl-carousel.two_address#cnc_carousel .owl-stage .owl-item:last-child{
 	margin-right: 0 !important;
 }
+}
+#singlePageDesktop #reviewOrder select.update-entry-quantity-input{
+	cursor:auto;
+} 
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading>div+div {
+    display: none ! important;
+}
+#reviewOrder.cart.wrapper .product-block li.header ul li {
+    font-size: 12px;
 }
 /*UF-281 UF-282 single page checkout css ends*/
 
@@ -75664,12 +75740,15 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 48%;
 }
 .accordin.FineJewellery .item .title p,
-.accordin.FashionJewellery .item .title p
+.accordin.FashionJewellery .item .title p,
+.accordin.FineJewellery .item .title span,
+.accordin.FashionJewellery .item .title span
 {
 	font-size: 12px;
     line-height: 1.33;
     letter-spacing: 0.6px;
     color: #000000;
+    padding: 0;
 }
 .accordin.FineJewellery .item div.title,
 .accordin.FashionJewellery .item div.title{
@@ -75708,6 +75787,13 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     font-weight: normal;
     width: 20%; 
     display: table-cell;
+}
+table#showPriceBreakup{
+	display: table !important;
+}
+.accordin.FineJewellery .item .detail table#showPriceBreakup tr td.title, 
+.accordin.FashionJewellery .item .detail table#showPriceBreakup tr td.title{
+	width: auto;
 }
 .accordin.FineJewellery .item .detail table tr td,
 .accordin.FashionJewellery .item .detail table tr td{
@@ -75808,12 +75894,12 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	background: none;
 }
 .accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
+.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content
 {
 	display: block !important;
 }
 .accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
+.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
 {
 	display: none !important;
 }
@@ -75889,6 +75975,7 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
   font-size: 16px;
   line-height: 1;
   letter-spacing: 0.6px;
+  font-weight: normal;
 }
 .accordtionTataCliq .accContents .reverseSealJwlry .radioButton{
 	display: none !important;
@@ -75909,45 +75996,127 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	line-height: 1.64;
 	letter-spacing: 0.6px;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in .popover-content .revSealText #revSealHelpText{
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .popover-content .revSealText #revSealHelpText{
 	border: none;
 	line-height: 1.5;
 	letter-spacing: 0.6px;
 	font-size: 12px;
     padding: 16px 0 0;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in .popover-content{
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .popover-content{
 padding: 0px 16px 16px;
 height: 183px;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in .popover-content .revSealImage img{
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .popover-content .revSealImage img{
 height: 135px;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in{
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
 margin-left: 304px;
 left: 0 !important;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in .arrow{
-left: 30px;
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow{
+left: 60px !important;
 }
 .accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason{
 	width: 47%;
 }
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry ~ .button_holder button{
+	width: 181px;
+	height: 42px;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  font-weight: normal;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 *{
+	font-size: 12px;
+  	line-height: 1.5;
+  	letter-spacing: 0.6px;
+  	color: #666666;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 span.priceFormat{
+	display: inline !important;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 div.attributes{
+	margin-top: 15px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 > span{
+	margin-bottom: 3px !important;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 div.attributes > p > span{
+	display: inline !important;
+}
+body.page-returnSubmit p.return-title{
+	font-size: 28px;
+  	line-height: 1.29;
+  	color: #000000;
+  	margin-bottom: 17px;
+}
+body.page-returnSubmit .accordtionTataCliq .accHeading{
+    background: #fff;
+    font-size: 16px;
+  	line-height: 1;
+  	letter-spacing: 0.6px;
+  	color: #000000;
+    cursor: pointer;
+    padding: 30.5px 0px;
+}
+body.page-returnSubmit .accordtionTataCliq{
+	border: 0;
+	border-top: solid 1px #eeeeee;
+	margin-top: 0;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin{
+	border-bottom: solid 1px #eeeeee;
+}
+body.page-returnSubmit .col-md-5.col-sm-5.col-xs-5.return-img{
+	width: 93px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7.return-prod-desc{
+	width: calc(100% - 93px);
+}
+body.page-returnSubmit .account .wrapper{
+	padding: 0 31px;
+	margin-bottom: 0;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
+ 		position: static;
+ 		margin-bottom: 79px;
+ 	}
+ 	.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason{
+ 		border: solid 1px #bbbbbb;
+ 		font-size: 12px;
+  		line-height: 1.5;
+  		letter-spacing: 0.6px;
+ 	}
+ 	@media (min-width: 791px){
+	body.page-returnSubmit .body-Content {
+     padding-bottom: 50px !important; 
+	}
+}
 @media(max-width: 767px){
-	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in{
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
 		margin-left: 265px;
 	}
-	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in .arrow{
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow{
 		left: 68px;
 	}
 }
 @media(max-width: 450px){
-	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in{
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
 		margin-left: 210px;
 	}
-	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover.fade.bottom.in .arrow {
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow {
     left: 123px;
 }
+}
+@media(max-width: 790px){
+	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
+		display: table;
+	}
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
+		margin-left: 0;
+	}
 }
 /*TPR-4134 starts*/
 /* Jewellery end */
@@ -76008,3 +76177,158 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 	}
 } 
 /*TISPRDT-1670 fix end*/
+
+/*pan card verification start*/
+.pan-card-block{
+	max-width: 100%;
+    background-color: #f2f2f2;
+    padding: 66px 0 100px;
+}
+.pan-card-block > section{
+	max-width: 556px;
+	margin: 0px auto;
+}
+.pan-card-block > section .pan-detail-sec{
+	padding: 0;
+}
+.pan-card-block > section .pan-detail-sec h2.pan-heading{
+	text-align: center;
+  	font-size: 28px;
+  	line-height: 1.29;
+}
+.pan-card-block > section .pan-detail-sec p.lead-text{
+	text-align: center;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+}
+.pan-card-block > section .pan-detail-sec div.form-section{
+	border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
+  border: solid 1px #dddddd;
+  margin-top: 28px;
+  padding: 29px 25px 52px 30px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left{
+	width: auto;
+	float: left;
+	font-size: 12px;
+    letter-spacing: 0.6px;
+    padding-bottom: 17px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right{
+	width: auto;
+	float: right;
+	text-align: right;
+	font-size: 12px;
+    letter-spacing: 0.6px;
+    padding-bottom: 17px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right + .pan-card-fields{
+	clear: both;
+	border-top: solid 1px #eeeeee;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right + .pan-card-fields > div{
+	max-width: 273px;
+	margin: 0px auto;
+	padding-top: 48px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left .pan-label, 
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right .pan-label{
+	color: #666666;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left > div, 
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right > div{
+	padding: 5px 0;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label, 
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label{
+	font-size: 14px;
+  letter-spacing: 0.6px;
+  color: #000000;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label{
+	margin-bottom: 8px;
+	}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label span.pancard-img-msg,
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label span.pancard-img-msg{
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+  display: block;
+  margin-top: 4px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label-value{
+  margin-top: 8px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label-value input{
+  width: 100%;
+  height: 42px;
+  border: solid 1px #bbbbbb;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img div.fileupload{
+	background-color: #fff;
+	position:relative;
+	border: 1px solid #bbbbbb;
+	height: 42px;
+}
+.panfield-wrapper input[type='file'] {
+	opacity:0;
+	padding: 0;
+    border: 0;
+}
+#val {
+	width: 166px;
+	position: absolute;
+	top: 7px;
+	left: 0;
+	font-size:12px;
+	line-height: 25px;
+	text-indent: 10px;
+	pointer-events: none;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#labelBrowseBtn {
+	cursor: pointer;
+	display: block;
+	width: 107px;
+	background-color: #000;
+	height:100%;
+	color: #fff;
+	position: absolute;
+	right:0;
+	top: 0;
+	font-size: 12px;
+  line-height: 40px;
+  letter-spacing: 0.6px;
+	text-align: center;
+	-webkit-transition: 500ms all;
+	-moz-transition: 500ms all;
+	transition: 500ms all;
+}
+.panfield-wrapper.btn-wrapper a{
+	width: 100%;
+	height: 48px;
+	margin-bottom: 15px;
+	display: block;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  text-align: center;
+  padding: 17px 0;
+}
+.panfield-wrapper.btn-wrapper a.pan-submit-btn{
+	background-color: #a5173c;
+	color: #fff;
+}
+.panfield-wrapper.btn-wrapper a.pan-cancel-btn{
+	border: 1px solid #a5173c;
+	color: #a5173c;
+}
+/*pan card verification end*/
+

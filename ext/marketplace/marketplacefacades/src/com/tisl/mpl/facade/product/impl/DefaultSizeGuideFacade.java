@@ -93,31 +93,32 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 				{
 					//convertor is added
 					sizeGuideData = getSizeGuideConverter().convert(sizeGuideModel);
-					if (categoryType.equalsIgnoreCase(CLOTHING))
-					{
-						addToMap(sizeGuideDatas, sizeGuideModel.getDimension(), sizeGuideData);
-					}
-					else if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
+					if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
 					{
 						sizeGuideDataListForFootwear.add(sizeGuideData);
+					}
+					else
+					{
+						addToMap(sizeGuideDatas, sizeGuideModel.getDimension(), sizeGuideData);
 					}
 				}
 			}
 			/* sorting the Size guide map based on dimension */
-			if (categoryType.equalsIgnoreCase(CLOTHING))
-			{
 
+			if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
+			{
+				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
+				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
+			}
+			else
+			{
 				for (final String key : sizeGuideDatas.keySet())
 				{
 					sizeDataValues = sizeGuideDatas.get(key);
 					Collections.sort(sizeDataValues, sizeGuideComparator);
 					sizeGuideSortedDatas.put(key, sizeDataValues);
 				}
-			}
-			else if (categoryType.equalsIgnoreCase(FOOTWEAR) || categoryType.equalsIgnoreCase(ACCESSORIES))
-			{
-				Collections.sort(sizeGuideDataListForFootwear, sizeGuideComparator);
-				sizeGuideSortedDatas.put(productCode, sizeGuideDataListForFootwear);
+
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
