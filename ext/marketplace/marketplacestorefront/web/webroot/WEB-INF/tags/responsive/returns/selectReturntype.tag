@@ -101,28 +101,29 @@
 									<b><spring:theme code="text.order.returns.accountholdername"/></b> <br/>
 									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"  maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" />
 								</div>
-								<div class="col-md-3 col-sm-4">
+								<!-- Commmented as per new design -->
+								<%-- <div class="col-md-3 col-sm-4">
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
 									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
 										    <form:option value="N">NEFT</form:option>
-<%-- 											<form:option value="R">RTGS</form:option> --%>
-<%-- 											<form:option value="C">CHEQUE</form:option> --%>
-<%-- 											<form:option value="B">Bank Transfer</form:option>						 --%>
+											<form:option value="R">RTGS</form:option>
+											<form:option value="C">CHEQUE</form:option>
+											<form:option value="B">Bank Transfer</form:option>						
 									</form:select>
 								</div>
 								<div class="col-md-2 col-sm-2">
 									<b><spring:theme code="text.order.returns.title"/></b> <br/>
 									<form:select name="size" class="refundMode" path="title" value="${customerBankDetails.title}">
-										   <%--  <form:option  value="mr" >MR</form:option>
+										    <form:option  value="mr" >MR</form:option>
 											<form:option value="Mrs">MRs</form:option>
-											<form:option value="Company">Company</form:option>	 --%>		
+											<form:option value="Company">Company</form:option>			
 											
 											<form:option  value="0001" >Ms.</form:option>
 											<form:option value="0002">Mr.</form:option>
 											<form:option value="0003">Company</form:option>	
 											<form:option value="0004">Mr. and Mrs.</form:option>		
 									</form:select>
-								</div>
+								</div> --%>
 							</div>
 							<div class="col-md-12 col-sm-12">
 								<div class="col-md-4 col-sm-4 bankname">

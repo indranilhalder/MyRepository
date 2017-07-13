@@ -7775,7 +7775,7 @@ public class UsersController extends BaseCommerceController
 				//TPR-4134
 				if (null != returnData.getRevSealJwlry())
 				{
-					returnInfoData.setReverseSealForJwllry(returnData.getRevSealJwlry());
+					returnInfoData.setReverseSealLostflag(returnData.getRevSealJwlry());
 				}
 				if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
 				{

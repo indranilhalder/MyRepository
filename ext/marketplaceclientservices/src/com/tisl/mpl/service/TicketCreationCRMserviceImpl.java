@@ -185,9 +185,9 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 					//R2.3 start
 
 					//TPR-4134
-					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReverseSealForJwllry()))
+					if (StringUtils.isNotEmpty(sendTicketLineItemData.getReverseSealLostflag()))
 					{
-						ticketLineObj.setReverseSealForJwllry(sendTicketLineItemData.getReverseSealForJwllry());
+						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
 					}
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 				}
@@ -342,9 +342,9 @@ public class TicketCreationCRMserviceImpl implements TicketCreationCRMservice
 						ticketLineObj.setReturnReasonCode(sendTicketLineItemData.getReturnReasonCode());
 					}
 					//TPR-4134
-					if (null != sendTicketLineItemData.getReverseSealForJwllry())
+					if (null != sendTicketLineItemData.getReverseSealLostflag())
 					{
-						ticketLineObj.setReverseSealForJwllry(sendTicketLineItemData.getReverseSealForJwllry());
+						ticketLineObj.setReverseSealLostflag(sendTicketLineItemData.getReverseSealLostflag());
 					}
 					ticketlineItemsXMLDataList.add(ticketLineObj);
 				}
