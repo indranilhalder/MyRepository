@@ -13343,12 +13343,32 @@ TATA.CommonFunctions = {
             });
         });
     },
+    removeProdouct: function() {
+        $(".lux-remove-entry-button").on("click", function() {
+            [].push($(this).closest("li.item").prev().find("input[name='productCodeMSD']").val());
+            var productCodeMSD, salesHierarchyCategoryMSD, basePriceForMSD, rootCategoryMSD, subPriceForMSD, x = $(this).closest("li.item").prev(), entryNumber1 = (x.find("input").each(function(index) {
+                "0" == index ? salesHierarchyCategoryMSD = $(this).attr("value") : "1" == index ? rootCategoryMSD = $(this).attr("value") : "2" == index ? productCodeMSD = $(this).attr("value") : "3" == index ? basePriceForMSD = $(this).attr("value") : "4" == index && (subPriceForMSD = $(this).attr("value"));
+            }), $(this).attr("id").split("_")), entryNumber = entryNumber1[1];
+            $("#updateCartForm" + entryNumber[1]), entryNumber1[2];
+            localStorage.setItem("remove_index", entryNumber), $.ajax({
+                url: ACC.config.encodedContextPath + "/cart/removeFromMinicart?entryNumber=" + entryNumber,
+                type: "GET",
+                cache: !1,
+                success: function(response) {
+                    window.location.reload();
+                },
+                error: function(resp) {
+                    console.log(resp);
+                }
+            });
+        });
+    },
     init: function() {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
         _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.deliveryaddressform(), 
-        _self.swipeLookBook();
+        _self.swipeLookBook(), _self.removeProdouct();
     }
 }, TATA.Pages = {
     PLP: {
