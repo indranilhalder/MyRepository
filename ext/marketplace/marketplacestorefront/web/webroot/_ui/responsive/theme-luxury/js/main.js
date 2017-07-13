@@ -375,7 +375,7 @@ TATA.CommonFunctions = {
 
     wishlistInit: function(){
         TATA.CommonFunctions.luxuryForceUpdateHeader();
-        $(document).on("click",".add-to-wishlist",function(){
+        $(document).on("click, touchstart",".add-to-wishlist",function(){
             if ($(this).hasClass("added")){
                 TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
             } else {
@@ -1074,7 +1074,7 @@ TATA.Pages = {
     PDP:  {
 
         wishlistInit: function(){
-            $(document).on("click",".add-to-wl-pdp",function(){
+            $(document).on("click touchstart",".add-to-wl-pdp",function(){
                 if(!luxuryHeaderLoggedinStatus) {
                     $(".luxury-login").trigger("click");
                     return false;

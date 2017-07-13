@@ -13183,7 +13183,7 @@ TATA.CommonFunctions = {
         }), $("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1 && $(".add-to-wl-pdp").addClass("added");
     },
     wishlistInit: function() {
-        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click", ".add-to-wishlist", function() {
+        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click, touchstart", ".add-to-wishlist", function() {
             $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
         });
         var wishlistHover;
@@ -13568,7 +13568,7 @@ TATA.CommonFunctions = {
     },
     PDP: {
         wishlistInit: function() {
-            $(document).on("click", ".add-to-wl-pdp", function() {
+            $(document).on("click touchstart", ".add-to-wl-pdp", function() {
                 if (!luxuryHeaderLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
                 var dataString = TATA.Pages.PDP.getDataString();
                 if ($(this).hasClass("added")) TATA.Pages.PDP.removeFromWishlist(dataString); else {
