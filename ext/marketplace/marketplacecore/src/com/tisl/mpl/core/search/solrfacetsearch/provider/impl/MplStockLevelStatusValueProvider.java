@@ -26,17 +26,18 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
  * @author tcs
  *
  */
-public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider
-		implements FieldValueProvider, Serializable
+public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValueProvider implements FieldValueProvider,
+		Serializable
 {
 
 	private FieldNameProvider fieldNameProvider;
 
 	private BuyBoxService buyBoxService;
+	private static final String PRODUCT_CATEGORY_TYPE = "FineJewellery";
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch.
 	 * config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -53,8 +54,16 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 		{
 			if (model instanceof PcmProductVariantModel)
 			{
-				productType = "variant";
 				final PcmProductVariantModel product = (PcmProductVariantModel) model;
+				//productType will set jewelleryVariant for Jewellery otherwise variant
+				if (product.getProductCategoryType().equalsIgnoreCase(PRODUCT_CATEGORY_TYPE))
+				{
+					productType = "jewelleryVariant";
+				}
+				else
+				{
+					productType = "variant";
+				}
 				productCode = product.getCode();
 				return getFieldValues(productCode, productType, indexedProperty);
 			}
@@ -69,8 +78,8 @@ public class MplStockLevelStatusValueProvider extends AbstractPropertyFieldValue
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 
 	}

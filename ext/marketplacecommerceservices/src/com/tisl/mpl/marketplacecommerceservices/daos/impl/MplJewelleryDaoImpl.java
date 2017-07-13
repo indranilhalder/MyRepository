@@ -11,7 +11,6 @@ import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -139,7 +138,44 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	}
 
-	/* (non-Javadoc)
+	@Override
+	public List<BuyBoxModel> getAllWeightVariant(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			final String classAttrquery = "select {pk} from {Buybox as bb} where {bb.PUSSID} IN({{select distinct {b.PUSSID} from {Buybox as b} where {b.sellerArticleSKU}= ?mainUssid}})";
+			final FlexibleSearchQuery weightVariantQuery = new FlexibleSearchQuery(classAttrquery);
+			//	final List resultClassList = new ArrayList();
+			//	resultClassList.add(String.class);
+			//		weightVariantQuery.setResultClassList(resultClassList);
+			weightVariantQuery.addQueryParameter("mainUssid", ussid);
+
+			return flexibleSearchService.<BuyBoxModel> search(weightVariantQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getPanCardStatus(java.lang.String)
 	 */
 	//CKD:TPR-3809
@@ -148,12 +184,13 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 	{
 		List<PancardInformationModel> panCardInfo = null;
 		String status = null;
-		final String query = "select {pan.pk} from {PancardInformation as pan} where {pan.transactionid}="+orderLineId;
-		
+		final String query = "select {pan.pk} from {PancardInformation as pan} where {pan.transactionid}=" + orderLineId;
+
 		try
 		{
 			panCardInfo = flexibleSearchService.<PancardInformationModel> search(query.toString()).getResult();
-			if (CollectionUtils.isNotEmpty(panCardInfo)){
+			if (CollectionUtils.isNotEmpty(panCardInfo))
+			{
 				status = panCardInfo.get(0).getStatus();
 			}
 		}
@@ -173,7 +210,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-	
+
 		return status;
 	}
 
