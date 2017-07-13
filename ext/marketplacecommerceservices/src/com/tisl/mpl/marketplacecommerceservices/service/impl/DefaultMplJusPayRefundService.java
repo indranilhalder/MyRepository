@@ -901,6 +901,13 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
+				Double currDelCharges = Double.valueOf(0.0D);
+				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()) {
+						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
+								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+				}else {
+					currDelCharges = orderEntry.getCurrDelCharge();
+				}
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
 						: NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 START
@@ -908,7 +915,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 						.getScheduledDeliveryCharge().doubleValue() : NumberUtils.DOUBLE_ZERO.doubleValue();
 				// Added in R2.3 END
 
-				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost
+				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + currDelCharges.doubleValue()
 						+ scheduleDeliveryCost;
 
 				orderEntry.setRefundedDeliveryChargeAmt(Double.valueOf(deliveryCost));
@@ -964,8 +971,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
 			if (orderEntry != null)
 			{
+				Double currDelCharges = Double.valueOf(0.0D);
+				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()) {
+						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
+								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+				}else {
+					currDelCharges = orderEntry.getCurrDelCharge();
+				}
 				final double refundedAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue()
-						+ orderEntry.getCurrDelCharge().doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
+						+ currDelCharges.doubleValue() + orderEntry.getScheduledDeliveryCharge().doubleValue();
 
 
 				final double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge().doubleValue()
