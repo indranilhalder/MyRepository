@@ -96,7 +96,7 @@
 
 
 					<ul class="product-block order-details">
-						<li class="header">
+						<li class="top-header">
 
 							<ul>
 								<li><span><spring:theme
@@ -364,9 +364,9 @@
 									<!-- R2.3: START -->
 									<div class="col-md-4 col-sm-6">
 										<div class="editIconCSS">
-										<c:if test="${addressChangeEligible eq true}">
+										<%-- <c:if test="${addressChangeEligible eq true}"> --%>
 									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
-									   </c:if>
+									 <%--   </c:if> --%>
 										</div>
 									</div>
 								
