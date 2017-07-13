@@ -68882,7 +68882,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 #reviewOrder.cart.wrapper .product-block li.item ul .item-edit-details li:nth-child(2) {
     margin-left: 0;
     margin-right: 0;
-    width: 70px;
+    width: 35px; /* TRT-1646 */
 }
 #reviewOrder.cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist {
     margin-left: 25px;
