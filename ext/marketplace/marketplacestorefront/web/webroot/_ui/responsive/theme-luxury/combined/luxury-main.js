@@ -12958,6 +12958,8 @@ TATA.CommonFunctions = {
                     returnType: "text/html",
                     data: $(form).serialize(),
                     success: function(data) {
+                        if (307 == data && isDuringCheckout) return isDuringCheckout = !1, window.location.href = "/checkout/multi/delivery-method/choose", 
+                        !0;
                         307 == data ? location.reload() : ($("#loginForm .invalided-error").html(""), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html("Oops! Your email ID and password don't match") : $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
                         $("#j_password").val(""));
                     }
@@ -13016,9 +13018,9 @@ TATA.CommonFunctions = {
                     dataType: "html",
                     data: $(form).serialize(),
                     success: function(data) {
-                        if ("email" != $(data).filter("input#hasErrorsInReg").val()) return location.reload(), 
-                        !1;
-                        $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Email ID already registered with us. Please Login or use other Email ID.") : $("#extRegisterForm").prepend('<div class="invalided-error">Email ID already registered with us. Please Login or use other Email ID.</div>');
+                        return "email" != $(data).filter("input#hasErrorsInReg").val() && isDuringCheckout ? (isDuringCheckout = !1, 
+                        window.location.href = "/checkout/multi/delivery-method/choose", !0) : "email" != $(data).filter("input#hasErrorsInReg").val() ? (location.reload(), 
+                        !1) : void ($("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Email ID already registered with us. Please Login or use other Email ID.") : $("#extRegisterForm").prepend('<div class="invalided-error">Email ID already registered with us. Please Login or use other Email ID.</div>'));
                     }
                 });
             }
@@ -13095,7 +13097,7 @@ TATA.CommonFunctions = {
         $(".toggle-link").on("click", function(e) {
             e.preventDefault(), e.stopPropagation();
             var elem = $(this), Target = $(this).data("target-id");
-            if (!elem.hasClass("luxury-login")) return $(".toggle-skip").not(Target).removeClass("active"), 
+            if (!elem.hasClass("luxury-login")) return isDuringCheckout = !1, $(".toggle-skip").not(Target).removeClass("active"), 
             $(Target).toggleClass("active"), $(Target).hasClass("header-search") && $("#js-site-search-input").focus(), 
             !1;
             TATA.CommonFunctions.loadSignInForm(elem), $("#mypopUpModal").modal(), $(".modal-backdrop").on("click", function() {
@@ -13835,12 +13837,12 @@ TATA.CommonFunctions = {
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init(), _self.MYACCOUNT.init();
     }
 }, $(document).ready(function() {
-    TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
+    isDuringCheckout = !1, TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
     $(".header-login-target-link").on("click", function() {
         var targetID = $(this).data("target-id");
         $("#header-account").removeClass("active-sign-in active-sign-up active-forget-password").addClass("active-" + targetID);
     }), "true" === TATA.CommonFunctions.getUrlParameterByName("showPopup") && ($(".luxury-login").trigger("click"), 
-    window.location.href.indexOf("/cart") > 0 ? window.history.pushState({}, null, "/cart") : window.history.pushState({}, null, "/"));
+    window.location.href.indexOf("/cart") > 0 ? (isDuringCheckout = !0, window.history.pushState({}, null, "/cart")) : window.history.pushState({}, null, "/"));
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
 }), $(document).ready(function() {
