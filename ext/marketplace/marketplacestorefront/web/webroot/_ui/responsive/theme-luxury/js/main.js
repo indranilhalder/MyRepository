@@ -52,6 +52,12 @@ TATA.CommonFunctions = {
                     returnType: "text/html",
                     data: $(form).serialize(),
                     success: function(data) {
+                        if(data == 307 && isDuringCheckout){
+                            isDuringCheckout = false;
+                            window.location.href = "/checkout/multi/delivery-method/choose";
+                            return true;
+                        }
+
                         307 == data ? location.reload() : ($("#loginForm .invalided-error").html(""), $("#loginForm .invalided-error").length > 0 ? $("#loginForm .invalided-error").html("Oops! Your email ID and password don't match") : $("#loginForm").prepend("<div class='invalided-error'>Oops! Your email ID and password don't match</div>"), 
                         $("#j_password").val(""));
                     }
@@ -112,6 +118,11 @@ TATA.CommonFunctions = {
                     dataType: "html",
                     data: $(form).serialize(),
                     success: function(data) {
+                        if("email" != $(data).filter("input#hasErrorsInReg").val() && isDuringCheckout){
+                            isDuringCheckout = false;
+                            window.location.href = "/checkout/multi/delivery-method/choose";
+                            return true;
+                        }
                         if ("email" != $(data).filter("input#hasErrorsInReg").val()) return location.reload(), 
                         !1;
                         $("#extRegisterForm .invalided-error").length > 0 ? $("#extRegisterForm .invalided-error").html("Email ID already registered with us. Please Login or use other Email ID.") : $("#extRegisterForm").prepend('<div class="invalided-error">Email ID already registered with us. Please Login or use other Email ID.</div>');
@@ -226,6 +237,7 @@ TATA.CommonFunctions = {
                     $('#mypopUpModal').modal('hide');
                 });
             } else {
+                isDuringCheckout = false;
                 $('.toggle-skip').not(Target).removeClass('active');
                 $(Target).toggleClass('active');
                 if( $(Target).hasClass("header-search")) {
@@ -1468,6 +1480,7 @@ TATA.Pages = {
 
 $(document).ready(function () {
     var luxuryluxuryHeaderLoggedinStatus = false;
+    isDuringCheckout = false;
     TATA.CommonFunctions.init();
     TATA.Pages.init();
     $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt();
@@ -1478,6 +1491,7 @@ $(document).ready(function () {
     if(TATA.CommonFunctions.getUrlParameterByName("showPopup") === "true"){
         $(".luxury-login").trigger("click");
         if(window.location.href.indexOf("/cart") > 0){
+            isDuringCheckout = true;
             window.history.pushState({}, null, '/cart');
         }else{
             window.history.pushState({}, null, '/');
