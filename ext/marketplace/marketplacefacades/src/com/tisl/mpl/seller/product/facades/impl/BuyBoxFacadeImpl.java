@@ -547,7 +547,32 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
-				final int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+				int sellerSize = -20;
+				int count = 0;
+				String pussidCheck = "pussidCheck";
+
+				for (final BuyBoxModel buyBox : buyboxModelList)
+				{
+					//****other seller count for fine jewellery
+					if (null != buyBox.getPUSSID())
+					{
+						if (!pussidCheck.contains(buyBox.getPUSSID()))
+						{
+							pussidCheck = pussidCheck.concat(buyBox.getPUSSID());
+							count++;
+						}
+					}
+				}
+				if (count > 0)
+				{
+					sellerSize = count - 1 - oosSellersCount;
+				}
+				//****other sellers count for product other than fine jewellery
+				else
+				{
+					sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+				}
+
 				final Integer noofsellers = Integer.valueOf(sellerSize);
 
 				//TPR-250:Start
