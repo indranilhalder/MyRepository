@@ -68,8 +68,16 @@ import de.hybris.platform.storelocator.location.Location;
 import de.hybris.platform.storelocator.location.impl.LocationDTO;
 import de.hybris.platform.storelocator.location.impl.LocationDtoWrapper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +99,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +125,7 @@ import com.granule.json.JSONObject;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplConstants.USER;
+import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.VideoComponentModel;
 import com.tisl.mpl.data.EMITermRateData;
@@ -228,6 +238,8 @@ public class ProductPageController extends MidPageController
 	private static final String IA_USS_IDS = "iaUssIds";
 
 	private static final String REGEX = "[^\\w\\s]";
+	
+	private static final String NEW_LINE = "\n";//Sonar Fix
 
 
 
@@ -344,6 +356,18 @@ public class ProductPageController extends MidPageController
 		this.mplProductFacade = mplProductFacade;
 	}
 
+	@Autowired
+	private ConfigurationService configService;
+
+	/**
+	 * @return the configService
+	 */
+	@Autowired
+	public ConfigurationService getConfigService()
+	{
+		return configService;
+	}
+
 	/**
 	 *
 	 * @param productCode
@@ -366,10 +390,15 @@ public class ProductPageController extends MidPageController
 	{
 		//final was written here
 		String returnStatement = null;
+
+		final String userAgent = request.getHeader("user-agent");
+		final String siteurl=request.getRequestURL().toString();	//UF-277
+		model.addAttribute("siteurl",siteurl);	//UF-277
 		//	final Boolean isProductPage = true;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
 		//CKD:TPR-250:End
+
 		try
 		{
 			if (null != productCode)
@@ -379,7 +408,28 @@ public class ProductPageController extends MidPageController
 
 			LOG.debug("**************************************opening pdp for*************" + productCode);
 
+			//Changes for UF-238
+			if (!StringUtils.isEmpty(userAgent) && userAgent.toLowerCase().contains("googlebot"))
+			{
+
+				final String aPlusContent = crawlerDetect(productCode, model, request);
+				if (aPlusContent != null)
+				{
+					model.addAttribute("aplusHTML", aPlusContent);
+				}
+				else
+				{
+					model.addAttribute("aplusHTML", "");
+				}
+			}
+			else
+			{
+				model.addAttribute("aplusHTML", "");
+			}
+
+
 			// TPR- 4389 STARTS FROM HERE
+
 			final ProductModel productModel = productService.getProductForCode(productCode);
 			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
 					productModel.getProductCategoryType(), productCode);
@@ -515,6 +565,68 @@ public class ProductPageController extends MidPageController
 
 
 		return returnStatement;
+	}
+
+	//Changes for UF-238
+	@SuppressWarnings("unused")
+	private String crawlerDetect(final String productCode, final Model model, final HttpServletRequest request)
+	{
+
+		String ApluscontentResponse = null;
+		final StringBuilder content = new StringBuilder();
+		BufferedReader bufferedReader = null;
+
+		try
+		{
+			final String proxyPort = configService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.RATING_PROXY_PORT);
+			final String proxySet = configService.getConfiguration().getString(
+					MarketplacecclientservicesConstants.RATING_PROXY_ENABLED);
+			final String proxyHost = configService.getConfiguration().getString(MarketplacecclientservicesConstants.RATING_PROXY);
+			final int proxyPortInt = Integer.parseInt(proxyPort);
+			final SocketAddress addr = new InetSocketAddress(proxyHost, proxyPortInt);
+			final Proxy proxy = new Proxy(Proxy.Type.HTTP, addr);
+			final String domain = request.getRequestURL().toString();
+
+			//URL Object
+			final URL aplushtml = new URL(domain + "/p-fetchPageContents?productCode=" + productCode);
+
+			//URL Connection object
+			final HttpURLConnection pdpConnection = (HttpURLConnection) aplushtml.openConnection();
+			pdpConnection.connect();
+			bufferedReader = new BufferedReader(new InputStreamReader(pdpConnection.getInputStream()));
+
+			String line;
+			while ((line = bufferedReader.readLine()) != null)
+			{
+				content.append(line + NEW_LINE);
+			}
+		}
+		catch (final IOException e)
+		{
+			System.err.println("An IOException was caught :" + e.getMessage());
+		}
+		finally
+		{
+
+			try
+			{
+
+				if (null != content.toString())
+				{
+					ApluscontentResponse = StringEscapeUtils.unescapeHtml(content.toString());
+					LOG.debug("Click to call web service return " + ApluscontentResponse);
+				}
+				bufferedReader.close();
+			}
+			catch (final Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+
+		}
+		return ApluscontentResponse;
 	}
 
 	/**
@@ -956,7 +1068,9 @@ public class ProductPageController extends MidPageController
 								- buyboxdata.getSpecialPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -966,7 +1080,9 @@ public class ProductPageController extends MidPageController
 						final double savingPriceCal = buyboxdata.getMrp().getDoubleValue() - buyboxdata.getPrice().getDoubleValue();
 						final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue()) * 100;
 						//Critical Sonar Fix
-						final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						//fix for INC144314955
+						//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+						final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 						final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 						buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 					}
@@ -1208,6 +1324,7 @@ public class ProductPageController extends MidPageController
 					}
 					catch (final Exception e)
 					{
+						ExceptionUtil.getCustomizedExceptionTrace(e);
 						LOG.debug("configurableRadius values is empty please add radius property in properties file ");
 					}
 				}
@@ -1303,7 +1420,8 @@ public class ProductPageController extends MidPageController
 
 			/* deliverychange */
 			final Map<String, Map<String, Integer>> deliveryModeATMap = productDetailsHelper.getDeliveryModeATMap(deliveryInfoList);
-			updatePageTitle(productData, model);
+			//commented for UF-33
+			//updatePageTitle(productData, model);
 			model.addAttribute(ControllerConstants.Views.Fragments.Product.DELIVERY_MODE_MAP, deliveryModeATMap);
 			final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
@@ -1738,13 +1856,15 @@ public class ProductPageController extends MidPageController
 		getRequestContextData(request).setProduct(productModel);
 		try
 		{
+
 			final ProductData productData = productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC,
 					ProductOption.SUMMARY, ProductOption.DESCRIPTION, ProductOption.GALLERY, ProductOption.CATEGORIES,
 					ProductOption.PROMOTIONS, ProductOption.CLASSIFICATION, ProductOption.VARIANT_FULL));
 			//CKD:TPR-250:Start
 			prepareBrandInfoData(model, productData);
 			//CKD:TPR-250:End
-			updatePageTitle(productData, model);
+			//commented for UF-33
+			//updatePageTitle(productData, model);
 			final StringBuilder allVariants = new StringBuilder();
 			//		sortVariantOptionData(productData);
 			storeCmsPageInModel(model, getPageForProduct(productModel));
@@ -1799,6 +1919,12 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.SHARED_PATH, sharePath);
 			final List<Breadcrumb> breadcrumbs = productBreadcrumbBuilder.getBreadcrumbs(productModel);
 			model.addAttribute(WebConstants.BREADCRUMBS_KEY, breadcrumbs);
+
+			//UF-160
+			final boolean isLargeApplnc = checkIfLargeAppliance(breadcrumbs);
+			model.addAttribute(ModelAttributetConstants.IS_LARGE_APPLIANCE, isLargeApplnc);
+			//UF-160 ends
+
 			//For Gigya
 			model.addAttribute(ModelAttributetConstants.GIGYA_API_KEY, gigyaAPIKey);
 			model.addAttribute(ModelAttributetConstants.IS_GIGYA_ENABLED, isGigyaEnabled);
@@ -1912,7 +2038,7 @@ public class ProductPageController extends MidPageController
 		}
 	}
 
-	//TODO
+
 	protected void setUpMetaData(final Model model, final String metaDescription, final String metaTitle,
 			final String productCode, final String metaKeywords)
 	{
@@ -1927,6 +2053,8 @@ public class ProductPageController extends MidPageController
 		metadata.add(createMetaElement("productCode", productCode));
 		model.addAttribute(ModelAttributetConstants.METATAGS, metadata);
 		model.addAttribute(ModelAttributetConstants.PMETATTITLE, metaTitle); //TISPRD-4977
+		//Added for UF-33
+		model.addAttribute(CMS_PAGE_TITLE, metaTitle);
 	}
 
 
@@ -1956,8 +2084,9 @@ public class ProductPageController extends MidPageController
 					{
 						final Map<String, String> productFeatureMap = new LinkedHashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
-						final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
-								productData, featureData.getCode());
+						//CKD:CAR-289
+						/*final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+								productData, featureData.getCode());*/
 						if (null != productData.getRootCategory())
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
@@ -1981,6 +2110,9 @@ public class ProductPageController extends MidPageController
 								if (null != properitsValue && featureValueData.getValue() != null
 										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
 								{
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+											productData, featureData.getCode());
 									productFeatureMap.put(featureValueData.getValue(),
 											productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
@@ -1996,6 +2128,9 @@ public class ProductPageController extends MidPageController
 								final String[] propertiesValues = properitsValue.split(",");
 								if (propertiesValues != null && propertiesValues.length > 0)
 								{
+									//CKD:CAR-289
+									final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
+											productData, featureData.getCode());
 									for (final String value : propertiesValues)
 									{
 										if (value.equalsIgnoreCase(featureData.getName()))
@@ -2252,9 +2387,10 @@ public class ProductPageController extends MidPageController
 				}
 				productCode = productCode.toUpperCase();
 			}
+
 			//CKD:TPR-250:Start : passing microsite seller Id
 			//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode);
-			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode, sellerId);
+			final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(productCode, sellerId, "Web");
 			//CKD:TPR-250:End
 			//changes for tpr-1375,getting entire list of buybox data
 			if (buydata != null)
@@ -2435,11 +2571,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2459,76 +2595,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2774,7 +2910,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getSpecialPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
@@ -2785,7 +2923,9 @@ public class ProductPageController extends MidPageController
 						- buyboxdata.getPrice().getDoubleValue().doubleValue();
 				final double savingPriceCalPer = (savingPriceCal / buyboxdata.getMrp().getDoubleValue().doubleValue()) * 100;
 				//Critical Sonar Fix
-				final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				//fix for INC144314955
+				//final double roundedOffValuebefore = Math.round(savingPriceCalPer * 100.0) / 100.0;
+				final double roundedOffValuebefore = Math.floor((savingPriceCalPer * 100.0) / 100.0);
 				final BigDecimal roundedOffValue = new BigDecimal((int) roundedOffValuebefore);
 				buyboxJson.put(ControllerConstants.Views.Fragments.Product.SAVINGONPRODUCT, roundedOffValue);
 			}
@@ -3173,7 +3313,12 @@ public class ProductPageController extends MidPageController
 				sellerList.add(seller.getSellerID());
 			}
 			mplAjaxProductData.setPdpSellerIDs(sellerList);
-
+			//UF-33 starts//  //TISSTRT-1587//
+			final String metaTitle = productData.getSeoMetaTitle();
+			final Map<String, String> seoMap = new HashMap<String, String>();
+			seoMap.put("metaTitle", metaTitle);
+			mplAjaxProductData.setMapConfigurableAttribute(seoMap);
+			//UF-33 ends//
 			//			final String msdRESTURL = configurationService.getConfiguration().getString("msd.rest.url");
 			//			mplAjaxProductData.setMsdRESTURL(msdRESTURL);
 			model.addAttribute(ModelAttributetConstants.PRODUCT, productData);
@@ -3267,3 +3412,34 @@ public class ProductPageController extends MidPageController
 		return false;
 	}
 }
+
+	/**
+	 * This is used to check if the product is a Large Appliance for UF-160
+	 *
+	 * @param breadcrumbs
+	 */
+	private boolean checkIfLargeAppliance(final List<Breadcrumb> breadcrumbs)
+	{
+		boolean isLargeAppliance = false;
+		final String largeApplncCatCode = configurationService.getConfiguration().getString("categories.largeAppliance.code");
+		if (StringUtils.isNotEmpty(largeApplncCatCode))
+		{
+			final List<String> catCodeList = Arrays.asList(largeApplncCatCode.split(","));
+
+			for (final Breadcrumb br : breadcrumbs)
+			{
+				final String catCode = br.getCategoryCode();
+				if (catCodeList.contains(catCode))
+				{
+					isLargeAppliance = true;
+					break;
+				}
+			}
+		}
+		return isLargeAppliance;
+
+	}
+
+
+}
+

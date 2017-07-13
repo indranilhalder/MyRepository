@@ -88,13 +88,30 @@ display: none;
 				</script>
 				<ycommerce:testId code="checkoutStepTwo">
 				
-				<form:form id="selectDeliveryMethodForm"
+				<!-- INC144315801 starts-->
+				<%-- <form:form id="selectDeliveryMethodForm"
 							action="${request.contextPath}/checkout/multi/delivery-method/check"
-							method="post" commandName="deliveryMethodForm">
+							method="post" commandName="deliveryMethodForm"> --%>
+				<form:form id="selectDeliveryMethodForm"
+							action="${request.contextPath}/checkout/multi/delivery-method/check" commandName="deliveryMethodForm">
+				<!-- INC144315801 ends-->			
 				<!-- TISCR-305 starts -->
 				<!-- TISPRO-625 starts -->
 				<input type="hidden" id="isExpressCheckoutSelected"
 								value="${isExpressCheckoutSelected}" />
+				<!-- Change for INC144316212 -->
+				<input type="hidden" id="isDeliveryOptionPage"
+								value="${isDeliveryOptionPage}" />
+					<c:choose>
+					<c:when test="${isDeliveryOptionPage eq 'yes'}">
+					<button class="button proceed-button" id="deliveryMethodSubmitUp"
+										type="submit" class="checkout-next">
+										<spring:theme code="checkout.multi.deliveryMethod.continue"
+											text="Next" />
+									</button>
+					</c:when>
+					
+					<c:otherwise>	
 					<c:choose>
 						<c:when test="${isExpressCheckoutSelected}">
 								<button class="button proceed-button" id="deliveryMethodSubmitUp" type="submit"
@@ -111,6 +128,8 @@ display: none;
 											text="Next" />
 									</button>
 						</c:otherwise>
+					</c:choose>
+					</c:otherwise>
 					</c:choose>
 				<!-- TISPRO-625 ends -->
 				<!-- TISCR-305 ends -->
@@ -228,21 +247,31 @@ display: none;
 																
         <div class="address-list ${showItem}" id="${singleAddress}">
         	<c:choose>
-			<c:when test="${deliveryAddress.defaultAddress}">
-          <input type="radio" class="radio1" name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" checked="checked" />
-          <label for="radio_${deliveryAddress.id}"></label>
-           </c:when>
-           <c:otherwise>
-           	<input type="radio" class="radio1"
-																		name="selectedAddressCode"
-																		value="${deliveryAddress.id}"
-																		id="radio_${deliveryAddress.id}" />
-          	<label for="radio_${deliveryAddress.id}"></label>
-           </c:otherwise>
-           
-           </c:choose>
+	        	<c:when test="${empty deliveryAddressID}">
+	        		<c:choose>
+						<c:when test="${deliveryAddress.defaultAddress}">
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" checked="checked" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:otherwise>
+					</c:choose>
+	        	</c:when>
+	        	<c:otherwise>
+		        	<c:choose>
+						<c:when test="${deliveryAddress.id eq deliveryAddressID}">
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" checked="checked" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:when>
+						<c:otherwise>
+							<input type="radio" class="radio1" name="selectedAddressCode" value="${deliveryAddress.id}" id="radio_${deliveryAddress.id}" />
+							<label for="radio_${deliveryAddress.id}"></label>
+						</c:otherwise>
+					</c:choose>
+	        	</c:otherwise>
+	        </c:choose>
            
           
           <p class="address"> 
@@ -535,7 +564,8 @@ display: none;
 									
 						<!--  If no address is present -->
 						<c:if test="${empty deliveryAddresses}"> 
-						<div id="emptyAddress" style="color:red;display:none;">Please select a delivery address</div>		
+						<!--  TISSTRT-1598 UF-277 -->
+						<div id="emptyAddress" style="color:red;display:none;">We don't have a saved address. Add a new address now.</div>		
 										<form id="selectAddressForm"
 									action="${request.contextPath}/checkout/multi/delivery-method/select-address"
 									method="get">
@@ -1086,23 +1116,35 @@ display: none;
 				<multi-checkout:orderTotals cartData="${cartData}"
 					showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 				<c:if test="${showDeliveryMethod eq true}">
-		<c:choose>
-			<c:when test="${isExpressCheckoutSelected}">
+				<!-- chnages for INC144316212 -->
+				<c:choose>
+					<c:when test="${isDeliveryOptionPage eq 'yes'}">
 					<button class="button" id="deliveryMethodSubmit"
-					type="submit" class="checkout-next">
-					<spring:theme
-						code="checkout.multi.deliveryMethod.expresscheckout.continue"
-						text="Next" />
-				</button>
-			</c:when>
-			<c:otherwise>
-						<button class="button" id="deliveryMethodSubmit"
 					type="submit" class="checkout-next">
 					<spring:theme code="checkout.multi.deliveryMethod.continue"
 						text="Next" />
 				</button>
-			</c:otherwise>
-		</c:choose>
+					</c:when>
+					<c:otherwise>
+					<c:choose>
+					<c:when test="${isExpressCheckoutSelected}">
+							<button class="button" id="deliveryMethodSubmit"
+							type="submit" class="checkout-next">
+							<spring:theme
+								code="checkout.multi.deliveryMethod.expresscheckout.continue"
+								text="Next" />
+						</button>
+					</c:when>
+					<c:otherwise>
+								<button class="button" id="deliveryMethodSubmit"
+							type="submit" class="checkout-next">
+							<spring:theme code="checkout.multi.deliveryMethod.continue"
+								text="Next" />
+						</button>
+					</c:otherwise>
+				</c:choose>
+				</c:otherwise>
+				</c:choose>
 		</c:if>
 		</div>
 		

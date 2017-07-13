@@ -19,6 +19,12 @@ package com.tisl.mpl.constants;
  */
 public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplacecheckoutaddonConstants
 {
+	//TPR-4461 starts here
+	//public static final String VOUCHERPAYMENTMODERESTRICTIONMESSAGE = "Sorry,Your Voucher is not applicable for the current payment mode you selected";
+	public static final String BINBANKCHECK = "/binBankCheck/{bin:.*}";
+	public static final String REDIRECTTOCOUPON = "redirect_with_coupon";
+	//TPR-4461 ends here
+
 	public static final String EXTENSIONNAME = "marketplacecheckoutaddon";
 	public static final String MPLPAYMENTURL = "/checkout/multi/payment-method";
 	public final static String PAYMENT_METHOD = "payment-method";
@@ -180,6 +186,8 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String TIMEOUT = "timeout";
 	//TPR-429
 	public static final String CHECKOUT_SELLER_IDS = "checkoutSellerIDs";
+	//PRDI-36/INC144315559
+	public static final String DELIVERYADDRESSID = "deliveryAddressID";
 
 	// Request Mapping URL
 
@@ -328,13 +336,15 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public static final String RETURNTOPAYMENTPAGE = "/checkout/multi/payment-method/pay";
 	public static final String REFNUMBER = "refNumber".intern();
-    public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
-	
+	public static final String DELIVERY_SLOTCOST_FOR_ED = "deliverySlotCostForEd";
+
 	public static final String UPDATE_DELIVERY_SLOTCOST_FOR_ED = "updateDeliverySlotCostForEd";
 	public static final String MPLDELIVERYSLOTSURL = "/deliverySlotsUrl";
-	
+
 	public static final String DELIVERY_SLOTS_TO_SESSION = "deliverySlotstoSession";
 
 	//INC144315475
 	public static final String CARTTOORDERCONVERT = "cartToOrderConvert";
+	//INC144316212
+	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
 }

@@ -134,17 +134,27 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 					//CR Changes : TPR-715
 					double orderSubtotalAfterDiscounts = 0.0D;
 					ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.FALSE);
-					ctx.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
-					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+					//ctx.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
+
+					//					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+					//					{
+					//						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
+					//						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
+					//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
+					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+					//					}
+					//					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+					//					{
+					//						validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
+					//						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
+					//						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
+					//						setSellersubTotalValue(orderSubtotalAfterDiscounts);
+					//					}
+
+					if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
+							|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
 					{
 						validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
-						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
-						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
-						setSellersubTotalValue(orderSubtotalAfterDiscounts);
-					}
-					else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
-					{
-						validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
 						ctx.setAttribute(MarketplacecommerceservicesConstants.VALIDATE_SELLER, Boolean.TRUE);
 						orderSubtotalAfterDiscounts = getSellerSpecificSubtotal(ctx, validProductUssidMap);
 						setSellersubTotalValue(orderSubtotalAfterDiscounts);
@@ -154,6 +164,7 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 						orderSubtotalAfterDiscounts = getSubtotalAfterDiscount(ctx, order);
 					}
 
+					ctx.setAttribute(MarketplacecommerceservicesConstants.CART_SELLER_PRODUCTS, validProductUssidMap);
 					//CR Changes : TPR-715
 
 					//TPR-969 - Code to identify count of products present in cart
@@ -426,16 +437,22 @@ public class CartOrderThresholdDiscountPromotion extends GeneratedCartOrderThres
 			}
 
 			Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-			if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+
+			//			if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList))
+			//			{
+			//				validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
+			//			}
+			//			else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
+			//			{
+			//				validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
+			//
+			//			}
+
+			if (getDefaultPromotionsManager().isSellerRestrExists(restrictionList)
+					|| getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
 			{
 				validProductUssidMap = getMplPromotionHelper().getCartSellerEligibleProducts(ctx, order, restrictionList);
 			}
-			else if (getDefaultPromotionsManager().isExSellerRestrExists(restrictionList))
-			{
-				validProductUssidMap = getMplPromotionHelper().getCartSellerInEligibleProducts(ctx, order, restrictionList);
-			}
-
-
 
 
 			if (threshold != null)

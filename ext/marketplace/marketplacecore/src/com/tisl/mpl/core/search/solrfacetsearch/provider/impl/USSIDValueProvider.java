@@ -88,12 +88,14 @@ public class USSIDValueProvider extends AbstractPropertyFieldValueProvider imple
 			sellerArticleSku = buyBoxWinnerModel.getSellerArticleSKU();
 			for (final BuyBoxModel buyBox : buyBoxModelList)
 			{
-				if (buyBox.getAvailable().intValue() > 0)
-				{
-					//sellerArticleSku = buyBox.getSellerArticleSKU();
-					priceVal = getBuyBoxPrice(buyBox);
-					ussids.add(buyBox.getSellerArticleSKU() + ":" + buyBox.getMrp() + ":" + priceVal.toString());
-				}
+					//CKD:PRDI-350
+					/*if (buyBox.getAvailable().intValue() > 0)
+					{*/
+						//sellerArticleSku = buyBox.getSellerArticleSKU();
+						priceVal = getBuyBoxPrice(buyBox);
+						//ussids.add(buyBox.getSellerArticleSKU() + ":" + buyBox.getMrp() + ":" + priceVal.toString());
+						ussids.add(buyBox.getSellerArticleSKU() + ":" + buyBox.getMrp() + ":" + priceVal.toString()+ ":" +buyBox.getAvailable());
+					//}
 			}
 			if (CollectionUtils.isNotEmpty(ussids) && buyBoxWinnerModel.getAvailable().intValue() <= 0)
 			{

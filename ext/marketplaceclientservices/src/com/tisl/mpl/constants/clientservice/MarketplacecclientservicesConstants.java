@@ -38,6 +38,7 @@ public class MarketplacecclientservicesConstants
 	public static final String SMS_SERVICE_USERNAME = "marketplace.sms.service.username";
 	public static final String SMS_SERVICE_PASSWORD = "marketplace.sms.service.password";
 	public static final String OMS_INVENTORY_RESERV_URL = "oms.inventoryreservation.url";
+	public static final String OMS_ORDER_CREATE_URL = "oms.order.createOrder.url";
 	public static final String M = "M";
 	public static final String F = "F";
 	public static final String U = "U";
@@ -145,7 +146,8 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID = "pincodeVerificationFailed";
 	public static final String OMS_PINCODE_REQUEST_TYPE_GET = "GET";
 	public static final String OMS_PINCODE_REQUEST_TYPE_POST = "POST";
-	public static final String DATE_FORMAT_AWB = "E dd MMM";
+	//public static final String DATE_FORMAT_AWB = "E dd MMM";TPR-6013
+	public static final String DATE_FORMAT_AWB = "dd MMM YYYY";
 	public static final String TIME_FORMAT_AWB = "hh:mm a";
 
 	public static final String DELIVERY_MODE_ENTER_STEP_ERROR_ID = "deliveryModeEnterStepError";
@@ -222,6 +224,10 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT = "oms.inventory.softreserv.read.timeout";
 	public static final String OMS_SEND_ORDER_CON_TIMEOUT = "oms.send.order.connection.timeout";
 	public static final String OMS_SEND_ORDER_READ_TIMEOUT = "oms.send.order.read.timeout";
+	//CAR 295
+	public static final String CRM_SEND_ORDER_CON_TIMEOUT = "crm.send.order.connection.timeout";
+	public static final String CRM_SEND_ORDER_READ_TIMEOUT = "crm.send.order.read.timeout";
+
 	public static final String OMS_HTTP_ERROR_CODE = "oms.http.error.code";
 	public static final String DELIVERY_DATE_FORMATTER = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
@@ -261,7 +267,9 @@ public class MarketplacecclientservicesConstants
 
 	public static final String YES = "YES".intern();
 	public static final String NO = "NO".intern();
-	public static final String OMSTIMEOUT = "5000";	public static final String LUXURYPREFIX = "lux";
+
+	public static final String OMSTIMEOUT = "5000";
+	public static final String LUXURYPREFIX = "lux";
 	public static final String LUXURY_RATING_SECRETKEY = "luxury.gigya.secretkey".intern();
 	public static final String LUXURY_RATING_APIKEY = "luxury.gigya.apikey".intern();
 }

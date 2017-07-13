@@ -112,9 +112,6 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 			final List<EnumerationValue> listOfChannel = (List<EnumerationValue>) getProperty(ctx,
 					MarketplacecommerceservicesConstants.CHANNEL);
 			checkChannelFlag = getDefaultPromotionsManager().checkChannelData(listOfChannel, cart);
-			final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(restrictionList,
-					cart);
-
 
 			//checkChannelFlag = getMplPromotionHelper().checkChannel(listOfChannel); // Verifying the Channel : Web/Web Mobile/ CockPit
 			//changes Start for omni cart fix @atmaram
@@ -122,8 +119,7 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 
 			//changes end for omni cart fix @atmaram
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag
-					&& flagForPincodeRestriction)
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag)
 			{
 				final List<Product> allowedProductList = new ArrayList<Product>(rsr.getAllowedProducts());
 
@@ -532,8 +528,10 @@ public class CustomProductBOGOFPromotion extends GeneratedCustomProductBOGOFProm
 					//for payment mode restriction check
 					flagForPaymentModeRestrEval = getDefaultPromotionsManager().getPaymentModeRestrEval(restrictionList,
 							paramSessionContext);
+					final boolean flagForPincodeRestriction = getDefaultPromotionsManager().checkPincodeSpecificRestriction(
+							restrictionList, order);
 
-					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval)
+					if (flagForDeliveryModeRestrEval && flagForPaymentModeRestrEval && flagForPincodeRestriction)
 					{
 						//paramPromotionEvaluationContext.startLoggingConsumed(this);
 						final Comparator comparator = PromotionEvaluationContext.createPriceComparator(paramSessionContext); // Comparing price

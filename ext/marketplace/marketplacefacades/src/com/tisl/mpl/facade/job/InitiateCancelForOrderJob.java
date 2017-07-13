@@ -365,7 +365,8 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 			{
 				customer = (CustomerModel) orderModel.getUser();
 			}
-			if (customer != null && null != customer.getDefaultShipmentAddress())
+			//INC144315982
+			if (customer != null)
 			{
 				customerData = new CustomerData();
 				//TISUAT-4850
@@ -376,6 +377,11 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 				else
 				{
 					customerData.setEmail(MarketplacecommerceservicesConstants.NA);
+				}
+				//INC144315982
+				if (customer.getUid() != null)
+				{
+					customerData.setUid(customer.getUid());
 				}
 				customerData.setRegistrationDate(customer.getCreationtime());
 				orderData.setCustomerData(customerData);
@@ -409,6 +415,11 @@ public class InitiateCancelForOrderJob extends AbstractJobPerformable<CronJobMod
 					else
 					{
 						customerData.setEmail(MarketplacecommerceservicesConstants.NA);
+					}
+					//INC144315982
+					if (customer.getUid() != null)
+					{
+						customerData.setUid(customer.getUid());
 					}
 					customerData.setRegistrationDate(customer.getCreationtime());
 					sellerOrderData.setCustomerData(customerData);

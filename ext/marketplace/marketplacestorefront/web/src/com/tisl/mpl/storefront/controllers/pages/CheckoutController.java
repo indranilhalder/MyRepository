@@ -311,6 +311,10 @@ public class CheckoutController extends AbstractCheckoutController
 			SessionOverrideCheckoutFlowFacade.resetSessionOverrides();
 			GenericUtilityMethods.populateTealiumDataForCartCheckout(model, orderDetails);
 			GenericUtilityMethods.populateCheckoutSellersOrderConfirmation(model, orderModel, orderDetails);
+
+			//UF-260
+			GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
+
 			// for MSD
 			final String msdjsURL = configurationService.getConfiguration().getString("msd.js.url");
 			final Boolean isMSDEnabled = Boolean.valueOf(configurationService.getConfiguration().getString("msd.enabled"));
@@ -457,12 +461,10 @@ public class CheckoutController extends AbstractCheckoutController
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
 	 *
-
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
 	 *
-
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 

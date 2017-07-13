@@ -23,7 +23,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public interface CheckoutStepController
 {
 	/**
-	 *Swapping the parameter order might break the validation aspect from working.
+	 * Swapping the parameter order might break the validation aspect from working.
+	 *
 	 * @param model
 	 * @param redirectAttributes
 	 * @return returns the result for entering the checkout step
@@ -43,7 +44,7 @@ public interface CheckoutStepController
 	/**
 	 *
 	 * @param redirectAttributes
-	 * @return  checkoutstep link for navigating next
+	 * @return checkoutstep link for navigating next
 	 */
 	String next(final RedirectAttributes redirectAttributes);
 }

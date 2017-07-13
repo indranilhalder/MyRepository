@@ -36,7 +36,8 @@
 		</li>
 		</c:if>
 		
-		
+
+		<!-- UF-249 -->
 		<c:if test="${ empty notificationCount and isSignedInUser eq 'no'}">
 		
 		<li class="track trackOrder">
