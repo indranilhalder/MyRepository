@@ -453,7 +453,7 @@
 			<ul id="deliveryradioul" class="checkout-table product-block classRadio">
 						
 						<c:forEach items="${pwpos}" var="poses" varStatus="status1">
-							<li class="header item${status1.index}">
+							<li class="headers item${status1.index}">
 							<ul class="headline">
 								<li class="header2 headerWidth"><spring:theme code="text.product.information"/></li>
 								<li class="store header5"><spring:theme code="checkout.multi.cnc.store.closeto"/>

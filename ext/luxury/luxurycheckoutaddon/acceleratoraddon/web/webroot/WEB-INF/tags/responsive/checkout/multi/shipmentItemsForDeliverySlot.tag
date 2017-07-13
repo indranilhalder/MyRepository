@@ -277,7 +277,7 @@ li.deliverySlotRadio .reset{margin: 3px 0px !important;    height: 30px !importa
 		<span></span>
 		
 		<ul id="deliveryradioul" class="checkout-table product-block">
-				<li class="header">
+				<li class="headers">
 					<ul class="headline">
 					
 						<li class="delivery" id="header4"><spring:theme code="text.delivery.modes"/></li>
