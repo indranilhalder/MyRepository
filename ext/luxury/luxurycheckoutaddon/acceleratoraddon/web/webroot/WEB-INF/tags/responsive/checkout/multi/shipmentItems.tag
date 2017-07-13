@@ -36,7 +36,7 @@
 			<h3> <a href="${request.contextPath}/cart"><spring:theme code="checkout.multi.deliveryMethod.backToBag" text="Back to My Bag"></spring:theme> </a> </h3>
 		</div> --%>
 		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
-				<li class="header">
+				<li class="headers">
 					<ul class="headline mybag-item-head">
 					
 						<li id="header2" class="Product"><spring:theme code="text.product.delivery.product"/></li>
