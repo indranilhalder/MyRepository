@@ -281,7 +281,7 @@ function editAddress(addressId) {
 //    		Rejectionselectedvalue=$(".questions #cancellationreasonSelectBox option:selected").val();
 //		});
     	$(".cancel-confirm,.cancel-confirm-detail").click(function(){
-    		
+    		event.preventDefault();
     		var formId=$(this).parents(".return-form").attr("id");
     		
     		var orderCode=$("#"+formId+" .subOrderCodeClass").val();
