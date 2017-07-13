@@ -1326,9 +1326,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 					sendTicketRequestData.setRefundType(refundType);
 					//TPR-4134
-					if (null != returnInfoData.getReverseSealForJwllry())
+					if (null != returnInfoData.getReverseSealLostflag())
 					{
-						sendTicketLineItemData.setReverseSealForJwllry(returnInfoData.getReverseSealForJwllry());
+						sendTicketLineItemData.setReverseSealLostflag(returnInfoData.getReverseSealLostflag());
 					}
 
 
@@ -1555,7 +1555,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					//TPR-4134
 					if (StringUtils.isNotEmpty(revSealForJwlry))
 					{
-						sendTicketLineItemData.setReverseSealForJwllry(revSealForJwlry);
+						sendTicketLineItemData.setReverseSealLostflag(revSealForJwlry);
 
 					}
 					boolean returnLogisticsCheck = true; //Start

@@ -473,7 +473,7 @@ public class ReturnPageController extends AbstractMplSearchPageController
 				// TPR-4134
 				if (null != returnForm.getReverseSeal())
 				{
-					returnData.setReverseSealForJwllry(returnForm.getReverseSeal());
+					returnData.setReverseSealLostflag(returnForm.getReverseSeal());
 				}
 				returnAddrData.setAddressLane1(returnForm.getAddrLine1());
 				returnAddrData.setAddressLane2(returnForm.getAddrLine2());
