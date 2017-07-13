@@ -1,6 +1,5 @@
 .brand-slider-wrapper {
 	max-width: 1092px;
-    margin: 0 auto 70px;
 	.slick-slide img {
 		display: inline-block;
 	}
@@ -43,5 +42,7 @@
 		}
 		
 	}
-	
+    &:not(:empty){
+        margin: 0 auto 70px;
+    }
 }

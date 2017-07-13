@@ -13128,7 +13128,10 @@ TATA.CommonFunctions = {
         });
     },
     MainBanner: function() {
-        $(".main-banner").slick({
+        var $seastionSec = $(".seastion-sec .cms_disp-img_slot");
+        $seastionSec.html($.trim($seastionSec.html()));
+        var $brandSliderWrapper = $(".brand-slider-wrapper");
+        $brandSliderWrapper.html($.trim($brandSliderWrapper.html())), $(".main-banner").slick({
             arrows: !1,
             dots: !0
         });

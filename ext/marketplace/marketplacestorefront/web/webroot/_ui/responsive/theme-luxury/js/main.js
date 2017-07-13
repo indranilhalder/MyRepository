@@ -285,6 +285,11 @@ TATA.CommonFunctions = {
     },
 
     MainBanner: function() {
+    	var $seastionSec = $('.seastion-sec .cms_disp-img_slot');
+    	$seastionSec.html($.trim($seastionSec.html()));    	
+    	
+    	var $brandSliderWrapper = $('.brand-slider-wrapper');
+    	$brandSliderWrapper.html($.trim($brandSliderWrapper.html()));
 
         $('.main-banner').slick({
             arrows: false,
