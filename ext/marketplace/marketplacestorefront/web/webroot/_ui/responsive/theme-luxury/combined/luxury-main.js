@@ -13778,10 +13778,17 @@ TATA.CommonFunctions = {
                 $(this).hide(), $("#pin").show(), $("#pdpPincodeCheck").show();
             });
         },
+        writeReview: function() {
+            $("body").on("click", ".gig-rating-writeYourReview", function() {
+                $(".accordion-title").removeClass("active"), $(".accordion-content").hide(), $(".review-accordion").addClass("active"), 
+                $(".review-accordion-content").show();
+            });
+        },
         init: function() {
             var _self = TATA.Pages.PDP;
             _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI(), 
-            _self.luxury_overlay_close(), _self.wishlistInit(), _self.luxuryDeliveryOptions();
+            _self.luxury_overlay_close(), _self.wishlistInit(), _self.luxuryDeliveryOptions(), 
+            _self.writeReview();
         }
     },
     MYACCOUNT: {
@@ -13836,8 +13843,7 @@ TATA.CommonFunctions = {
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
 }), $(document).ready(function() {
-    $("#juspayconnErrorDiv").css("display", "none"), $("select#menuPageSelect").val(""), 
-    $("#currentPassword").val("");
+    $("select#menuPageSelect").val(""), $("#currentPassword").val("");
     var pageName = $("#pageName").val(), pageNameDropdown = $("#pageNameDropdown").val();
     "overViews" == pageName ? $("#lnOverView a").addClass("active") : "mplPref" == pageName ? $("#lnMplPref a").addClass("active") : "addressBook" == pageName ? $("#lnAddress a").addClass("active") : "orderDetail" == pageName ? $("#lnOrder a").addClass("active") : "orderHistory" == pageName ? $("#lnOrder a").addClass("active") : "savedCards" == pageName ? $("#lnSavedCards a").addClass("active") : "personalInfo" == pageName ? $("#lnUpdateProfile a").addClass("active") : "invite" == pageName ? $("#lnInvite a").addClass("active") : "coupons" == pageName ? $("#lnCoupons a").addClass("active") : "review" == pageName && $("#lnReview a").addClass("active"), 
     "overViews" == pageNameDropdown ? $("#menuPageSelect option").eq(0).attr("selected", "selected") : "mplPref" == pageNameDropdown ? $("#menuPageSelect option").eq(1).attr("selected", "selected") : "personalInfo" == pageNameDropdown ? $("#menuPageSelect option").eq(2).attr("selected", "selected") : "orderHistory" == pageNameDropdown ? $("#menuPageSelect option").eq(3).attr("selected", "selected") : "savedCards" == pageNameDropdown ? $("#menuPageSelect option").eq(4).attr("selected", "selected") : "addressBook" == pageNameDropdown ? $("#menuPageSelect option").eq(5).attr("selected", "selected") : "review" == pageNameDropdown ? $("#menuPageSelect option").eq(6).attr("selected", "selected") : "coupons" == pageNameDropdown ? $("#menuPageSelect option").eq(8).attr("selected", "selected") : "invite" == pageNameDropdown && $("#menuPageSelect option").eq(9).attr("selected", "selected");

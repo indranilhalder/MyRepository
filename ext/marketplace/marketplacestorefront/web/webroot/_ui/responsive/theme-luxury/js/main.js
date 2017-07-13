@@ -1400,10 +1400,19 @@ TATA.Pages = {
                 $('#pdpPincodeCheck').show();
             });
         },
+        
+        writeReview:function() {
+        	$('body').on('click', '.gig-rating-writeYourReview', function () {
+        		$('.accordion-title').removeClass('active');
+        		$('.accordion-content').hide();
+        		$('.review-accordion').addClass('active');
+        		$('.review-accordion-content').show();        		
+        	});
+        },
         // PDP Page initiate
         init: function () {
             var _self = TATA.Pages.PDP;
-
+            
             _self.Slider();
             _self.Zoomer();
             _self.openPopup();
@@ -1412,6 +1421,7 @@ TATA.Pages = {
             _self.luxury_overlay_close();
             _self.wishlistInit();
             _self.luxuryDeliveryOptions();
+            _self.writeReview();
         }
     },
 
