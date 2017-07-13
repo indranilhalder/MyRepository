@@ -115,6 +115,9 @@ $(document).ready(function() {
 		e.stopPropagation();
 		$(".enter-pincode-block").slideToggle();
 	});
+	$(".enter-pincode-block").click(function(e){
+		e.stopPropagation();
+	});
 	$(".txt${entryNumber}").click(function(e){
 		e.stopPropagation();
 	});

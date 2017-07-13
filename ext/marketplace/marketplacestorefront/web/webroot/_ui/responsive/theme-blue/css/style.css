@@ -68512,7 +68512,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     box-shadow: none;
     height: 140px;
     position: absolute;
-    z-index: 999;
+    z-index: 98;
     background: #fff;
     border-radius: 4px;
   	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
