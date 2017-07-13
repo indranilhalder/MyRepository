@@ -11,6 +11,7 @@ $(document).ready(function(){
 });
  
  $(document).ready(function(){
+	 $('#juspayconnErrorDiv').css("display","none");
 	 /*To highlight the active link*/
 	 //TISPRO-554
 	 	$("select#menuPageSelect").val('');
