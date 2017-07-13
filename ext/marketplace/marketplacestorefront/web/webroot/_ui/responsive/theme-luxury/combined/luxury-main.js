@@ -13128,7 +13128,10 @@ TATA.CommonFunctions = {
         });
     },
     MainBanner: function() {
-        $(".main-banner").slick({
+        var $seastionSec = $(".seastion-sec .cms_disp-img_slot");
+        $seastionSec.html($.trim($seastionSec.html()));
+        var $brandSliderWrapper = $(".brand-slider-wrapper");
+        $brandSliderWrapper.html($.trim($brandSliderWrapper.html())), $(".main-banner").slick({
             arrows: !1,
             dots: !0
         });
@@ -13180,7 +13183,7 @@ TATA.CommonFunctions = {
         }), $("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1 && $(".add-to-wl-pdp").addClass("added");
     },
     wishlistInit: function() {
-        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click", ".add-to-wishlist", function() {
+        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click, touchstart", ".add-to-wishlist", function() {
             $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
         });
         var wishlistHover;
@@ -13565,7 +13568,7 @@ TATA.CommonFunctions = {
     },
     PDP: {
         wishlistInit: function() {
-            $(document).on("click", ".add-to-wl-pdp", function() {
+            $(document).on("click touchstart", ".add-to-wl-pdp", function() {
                 if (!luxuryHeaderLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
                 var dataString = TATA.Pages.PDP.getDataString();
                 if ($(this).hasClass("added")) TATA.Pages.PDP.removeFromWishlist(dataString); else {
@@ -13778,10 +13781,17 @@ TATA.CommonFunctions = {
                 $(this).hide(), $("#pin").show(), $("#pdpPincodeCheck").show();
             });
         },
+        writeReview: function() {
+            $("body").on("click", ".gig-rating-writeYourReview", function() {
+                $(".accordion-title").removeClass("active"), $(".accordion-content").hide(), $(".review-accordion").addClass("active"), 
+                $(".review-accordion-content").show();
+            });
+        },
         init: function() {
             var _self = TATA.Pages.PDP;
             _self.Slider(), _self.Zoomer(), _self.openPopup(), _self.videoPlay(), _self.BankEMI(), 
-            _self.luxury_overlay_close(), _self.wishlistInit(), _self.luxuryDeliveryOptions();
+            _self.luxury_overlay_close(), _self.wishlistInit(), _self.luxuryDeliveryOptions(), 
+            _self.writeReview();
         }
     },
     MYACCOUNT: {

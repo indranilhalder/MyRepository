@@ -67,5 +67,8 @@
 				}
 			}
 		}
+        .cms_disp-img_slot:not(:empty){
+            margin-bottom: 40px;
+        }
 	}
 }

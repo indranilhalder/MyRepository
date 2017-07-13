@@ -47,10 +47,10 @@ var buyboxskuId='';
 		</div>
 	</c:if>
 	
-	<div class="accordion-title">	
+	<div class="accordion-title review-accordion">	
 			<h4>Rating & Reviews</h4><i class="accordion-icon"></i>
 	</div>					
-	<div class="accordion-content full-box">	
+	<div class="accordion-content full-box review-accordion-content">	
 		<div id='commentsDiv'></div>
 	</div>
 	

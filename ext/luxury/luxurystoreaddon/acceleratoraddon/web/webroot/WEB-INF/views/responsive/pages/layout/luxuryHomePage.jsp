@@ -33,7 +33,7 @@
 			</div> --></a>
 	</div>
 </section>
-	<section class="seastion-sec mb-40">
+	<section class="seastion-sec">
 	<ul class="clearfix list-unstyled">
 		<li>
 			<cms:pageSlot position="LeftContentSlot" var="feature" element="div" class="span-24 section5 cms_disp-img_slot">

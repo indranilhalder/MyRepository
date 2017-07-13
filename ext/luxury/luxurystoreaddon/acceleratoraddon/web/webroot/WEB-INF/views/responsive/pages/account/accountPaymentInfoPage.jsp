@@ -63,7 +63,7 @@
 			<div class="right-account">
 				<div class="info card-list">
 					<h2>
-						<spring:theme code="text.account.SavedCards" text="Saved Cards" /><span><spring:theme code="text.account.SavedCards.details" text="Add, delete and manage your credit/debit card details here." /></span>
+						<%-- <spring:theme code="text.account.SavedCards" text="Saved Cards" /><span> --%><spring:theme code="lux.text.account.SavedCards.details" text="Add, delete and manage your credit/debit card details here." /></span>
 					</h2>
 					
 					<ul class="saved-cards">
@@ -86,7 +86,7 @@
 												test="${fn:escapeXml(creditCard.value.cardIssuer) eq 'AMEX'}">
 												<img src="${commonResourcePath}/images/American_Express.png">
 											</c:if>
-											<a href="#nogo" class="view-details">View Card Details</a>
+											<a href="#nogo" class="view-details">View Details</a>
 
 											<h3>${fn:escapeXml(creditCard.value.cardIssuer)}</h3>
 											<c:if test="${not empty creditCard.value.cardType}">
@@ -217,7 +217,7 @@
 														src="${commonResourcePath}/images/Maestro.png">
 												</c:otherwise>
 											</c:choose>		
-											<a href="#nogo" class="view-details">View Card Details</a>
+											<a href="#nogo" class="view-details">View Details</a>
 							
 											<h3>${fn:escapeXml(debitCard.value.cardIssuer)}</h3>
 											<c:if test="${not empty debitCard.value.cardType}">

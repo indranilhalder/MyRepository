@@ -297,6 +297,11 @@ TATA.CommonFunctions = {
     },
 
     MainBanner: function() {
+    	var $seastionSec = $('.seastion-sec .cms_disp-img_slot');
+    	$seastionSec.html($.trim($seastionSec.html()));    	
+    	
+    	var $brandSliderWrapper = $('.brand-slider-wrapper');
+    	$brandSliderWrapper.html($.trim($brandSliderWrapper.html()));
 
         $('.main-banner').slick({
             arrows: false,
@@ -382,7 +387,7 @@ TATA.CommonFunctions = {
 
     wishlistInit: function(){
         TATA.CommonFunctions.luxuryForceUpdateHeader();
-        $(document).on("click",".add-to-wishlist",function(){
+        $(document).on("click, touchstart",".add-to-wishlist",function(){
             if ($(this).hasClass("added")){
                 TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
             } else {
@@ -1081,7 +1086,7 @@ TATA.Pages = {
     PDP:  {
 
         wishlistInit: function(){
-            $(document).on("click",".add-to-wl-pdp",function(){
+            $(document).on("click touchstart",".add-to-wl-pdp",function(){
                 if(!luxuryHeaderLoggedinStatus) {
                     $(".luxury-login").trigger("click");
                     return false;
@@ -1412,10 +1417,19 @@ TATA.Pages = {
                 $('#pdpPincodeCheck').show();
             });
         },
+        
+        writeReview:function() {
+        	$('body').on('click', '.gig-rating-writeYourReview', function () {
+        		$('.accordion-title').removeClass('active');
+        		$('.accordion-content').hide();
+        		$('.review-accordion').addClass('active');
+        		$('.review-accordion-content').show();        		
+        	});
+        },
         // PDP Page initiate
         init: function () {
             var _self = TATA.Pages.PDP;
-
+            
             _self.Slider();
             _self.Zoomer();
             _self.openPopup();
@@ -1424,6 +1438,7 @@ TATA.Pages = {
             _self.luxury_overlay_close();
             _self.wishlistInit();
             _self.luxuryDeliveryOptions();
+            _self.writeReview();
         }
     },
 
