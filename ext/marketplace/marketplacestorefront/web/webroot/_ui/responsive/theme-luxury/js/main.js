@@ -656,6 +656,67 @@ TATA.CommonFunctions = {
 		});    	
     },
     
+    removeProdouct:function(){
+    	$(".lux-remove-entry-button").on("click",function() {
+    		  var productRemoved = $(this).closest("li.item").prev().find("input[name='productCodeMSD']").val(); 
+    		  var productArray = [];
+    		  productArray.push(productRemoved);
+    				var x = $(this).closest("li.item").prev();
+    		        var productCodeMSD;
+    		        var salesHierarchyCategoryMSD;
+    		        var basePriceForMSD;
+    		        var rootCategoryMSD;
+    		        var subPriceForMSD;
+    		        
+    		        var y = x.find("input").each(function(index ){
+    		        	if(index == '0')
+    		        		{
+    		        		salesHierarchyCategoryMSD = $(this).attr("value");
+    		        		}
+    		        	else if(index == '1')
+    		        		{
+    		        		rootCategoryMSD = $(this).attr("value");
+    		        		}
+    		        	
+    		        	else if(index == '2')
+    	       		{
+    		        		productCodeMSD = $(this).attr("value");
+    	       		}
+    		        	
+    		        	else if(index == '3')
+    	       		{
+    		        		basePriceForMSD = $(this).attr("value");
+    	       		}
+    		        	
+    		        	else if(index == '4')
+    	       		{
+    		        		subPriceForMSD = $(this).attr("value");
+    	       		}
+    		        	
+    		        });
+    				var entryNumber1 = $(this).attr('id').split("_");
+    				var entryNumber = entryNumber1[1];
+    				var form = $('#updateCartForm' + entryNumber[1]);
+    				var entryUssid = entryNumber1[2];
+    				localStorage.setItem("remove_index", entryNumber); //add for TISPRD-9417
+    				$.ajax({
+    	              
+    					url : ACC.config.encodedContextPath
+    							+ "/cart/removeFromMinicart?entryNumber="
+    							+ entryNumber,
+    					type : 'GET',
+    					cache : false,
+    					success : function(response) {
+    						window.location.reload();
+    					},
+    					error : function(resp) {
+    						console.log(resp);
+
+    					}
+    				});
+    			});
+    },
+    
     init: function () {
 
         var _self = TATA.CommonFunctions;
@@ -673,7 +734,8 @@ TATA.CommonFunctions = {
         _self.wishlistInit();
         _self.leftBarAccordian();
         _self.deliveryaddressform();
-        _self.swipeLookBook();      
+        _self.swipeLookBook();  
+        _self.removeProdouct();
     }
 
 };
