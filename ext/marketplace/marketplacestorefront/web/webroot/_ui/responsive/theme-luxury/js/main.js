@@ -1494,6 +1494,9 @@ TATA.Pages = {
 };
 
 $(document).ready(function () {
+	  $(document).on("click", ".gig-rating-button", function(){
+	    	$(".ratingsAndReview").trigger("click");
+		});
     var luxuryluxuryHeaderLoggedinStatus = false;
     isDuringCheckout = false;
     TATA.CommonFunctions.init();
