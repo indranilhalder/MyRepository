@@ -1989,6 +1989,7 @@ ACC.singlePageCheckout = {
 //	9.prePaymentValidationDone:	Used to track cart validation before payment is made
 //	10.isCncSelected:	Used to track if CNC delivery mode has been selected
 //	11.isPickUpPersonDetailsSaved:	Used to track if CNC pickup person details have been saved
+//	12.isPincodeServiceable:	Used to track if pincode is serviceable or not
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	mobileValidationSteps:{
@@ -2002,7 +2003,8 @@ ACC.singlePageCheckout = {
 		paymentModeSelected:"",
 		prePaymentValidationDone:false,
 		isCncSelected:false,
-		isPickUpPersonDetailsSaved:false
+		isPickUpPersonDetailsSaved:false,
+		isPincodeServiceable:false
 	},
 
 	resetValidationSteps:function(){
@@ -2017,6 +2019,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2160,7 +2163,7 @@ ACC.singlePageCheckout = {
 	//Function used to check pincode serviceability for responsive
 	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
 	{
-		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable || ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{
 			ACC.singlePageCheckout.resetValidationSteps();
     		ACC.singlePageCheckout.resetPaymentModes();
@@ -2204,7 +2207,7 @@ ACC.singlePageCheckout = {
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
-		                	
+		                	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 		                }
 		                //For Confirm Box TPR-1083
 		                else if(response.type=="confirm")
@@ -2225,7 +2228,7 @@ ACC.singlePageCheckout = {
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
-		            	
+		            	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=true;
 //		            	var entryNumbersId=$("#entryNumbersId").val();		            	
 //		            	var entryNumbers=entryNumbersId.split("#");
 //		            	for(var i=0;i<entryNumbers.length-1;i++)
@@ -2474,6 +2477,12 @@ ACC.singlePageCheckout = {
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
+		//Below we are checking if pincode is serviceabile
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
+		{
+			ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+			return false;
+		}
 		
 		//Below we are checking that if CNC is present and if CNC pick up person details have been saved, If not we are not allowing the user to proceed with payment
 		if(!ACC.singlePageCheckout.checkPickUpDetailsSavedForCnc())
