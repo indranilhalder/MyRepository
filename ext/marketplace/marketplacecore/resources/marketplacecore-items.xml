@@ -594,6 +594,7 @@
 			<value code="NEW" />
 			<value code="PENDING_VBV" />
 			<value code="REFUND_DELIVERY_CHARGES" />
+			<value code="REFUND_EXPRESS_DELIVERY_CHARGES" />
 			<value code="REFUND_SCHEDULE_DELIVERY_CHARGES" />
 			<value code="MANUAL_REFUND" />
 			<value code="ED_MANUAL_REFUND" />
@@ -733,6 +734,7 @@
 		<enumtype code="JuspayRefundType" generate="true" autocreate="true">
 			<value code="CANCELLED" />
 			<value code="REFUND_DELIVERY_CHARGE" />
+			<value code="REFUND_EXPRESS_DELIVERY_CHARGE" />
 			<value code="REFUND_Schedule_DELIVERY_CHARGE" />
 			<value code="RETURN" />
 			<value code="CANCELLED_FOR_RISK" />
@@ -5793,6 +5795,19 @@
 							optional="true" initial="true" unique="true" />
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- Addded to store HD Delivery Charges START --> 
+					
+					<attribute qualifier="hdDeliveryCharge" autocreate="true"
+						type="java.lang.Double">
+						<defaultvalue>Double.valueOf(0.00D)</defaultvalue>
+						<description>Delivery charge after promotion</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- Addded to store HD Delivery Charges END --> 
 					<attribute qualifier="imeiDetail" autocreate="true" type="ImeiDetail">
 						<modifiers read="true" write="true" removable="true"
 							optional="true" initial="true" />
@@ -5809,6 +5824,20 @@
 							optional="true" />
 						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
 					</attribute>
+					
+					<attribute autocreate="true" qualifier="refundedEdChargeAmt"
+						type="java.lang.Double">
+						<persistence type="property" qualifier="refundedEdChargeAmt">
+							<columntype>
+								<value>java.math.BigDecimal</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<defaultvalue>Double.valueOf(0.0d)</defaultvalue>
+					</attribute>
+					
+					
 					<attribute qualifier="expectedDeliveryDate" autocreate="true"
 						type="java.util.Date">
 						<description>Expected Delivery date</description>
