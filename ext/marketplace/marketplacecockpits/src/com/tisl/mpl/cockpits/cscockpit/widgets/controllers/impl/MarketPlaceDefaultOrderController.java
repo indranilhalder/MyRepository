@@ -594,32 +594,60 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 	@Override
 	public TypedObject createRefundDeliveryChargesRequest(
 			OrderModel orderModel,
-			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap) {
+			Map<AbstractOrderEntryModel, RefundDeliveryData> refundMap,boolean isEdToHdRefund) {
 		PaymentTransactionModel paymentTransactionModel = null;
 		Double totalRefundDeliveryCharges = Double.valueOf(0);
 		if (MapUtils.isNotEmpty(refundMap)) {
 		final String uniqueRequestId = mplJusPayRefundService.getRefundUniqueRequestId();
-			
+		PaymentTransactionType paymentTransactionType = null ; 
+		JuspayRefundType juspayRefundType= null;
+		if(isEdToHdRefund) {
+			paymentTransactionType = PaymentTransactionType.REFUND_EXPRESS_DELIVERY_CHARGES;
+			juspayRefundType = JuspayRefundType.REFUND_EXPRESS_DELIVERY_CHARGE;
+		}else {
+			paymentTransactionType = PaymentTransactionType.REFUND_DELIVERY_CHARGES;
+			juspayRefundType = JuspayRefundType.REFUND_DELIVERY_CHARGE;
+		}
 			try {
-				for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
-						.entrySet()) {
-					totalRefundDeliveryCharges = totalRefundDeliveryCharges
-							+ refundEntry.getKey().getCurrDelCharge();
+				if(isEdToHdRefund) {
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						double currDeliveryCharges = refundEntry.getKey().getCurrDelCharge()!=0 ? refundEntry.getKey().getCurrDelCharge():refundEntry.getKey().getRefundedDeliveryChargeAmt();
+						double hdDeliveryCharges = refundEntry.getKey().getHdDeliveryCharge() != null ? refundEntry.getKey()
+								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+						totalRefundDeliveryCharges = totalRefundDeliveryCharges
+								+ (currDeliveryCharges - hdDeliveryCharges);
+						refundEntry.getKey().setRefundedEdChargeAmt(currDeliveryCharges - hdDeliveryCharges);
+						modelService.save(refundEntry.getKey());
+					}
+				}else {
+					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
+							.entrySet()) {
+						if(null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()){
+							double hdDeliveryCharges = refundEntry.getKey().getHdDeliveryCharge() != null ? refundEntry.getKey()
+									.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+							totalRefundDeliveryCharges = totalRefundDeliveryCharges
+									+ hdDeliveryCharges;
+						}else {
+							totalRefundDeliveryCharges = totalRefundDeliveryCharges
+									+ refundEntry.getKey().getCurrDelCharge();
+						}
+						
+						refundEntry.getKey().setRefundedDeliveryChargeAmt(
+								refundEntry.getKey().getCurrDelCharge());
+						refundEntry.getKey().setCurrDelCharge(Double.valueOf(0));
+						modelService.save(refundEntry.getKey());
 
-					refundEntry.getKey().setRefundedDeliveryChargeAmt(
-							refundEntry.getKey().getCurrDelCharge());
-					refundEntry.getKey().setCurrDelCharge(Double.valueOf(0));
-					modelService.save(refundEntry.getKey());
-
+					}
 				}
 //				Mrupee implementation 
 				// Done for INC144317893
 
 //				if((null !=orderModel.getIsWallet() &&  WalletEnum.NONWALLET.toString().equalsIgnoreCase(orderModel.getIsWallet().getCode()))||null ==orderModel.getIsWallet())
-//				{
+//				{				
 				paymentTransactionModel = mplJusPayRefundService.doRefund(
 						orderModel, totalRefundDeliveryCharges,
-						PaymentTransactionType.REFUND_DELIVERY_CHARGES,uniqueRequestId);
+						paymentTransactionType,uniqueRequestId);
 				if (null != paymentTransactionModel) {
 					mplJusPayRefundService.attachPaymentTransactionModel(
 							orderModel, paymentTransactionModel);
@@ -649,13 +677,24 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					for (Map.Entry<AbstractOrderEntryModel, RefundDeliveryData> refundEntry : refundMap
 							.entrySet()) {
 						 AbstractOrderEntryModel entry = refundEntry.getKey();
-						 Double refundedDeliveryCharges = entry.getRefundedDeliveryChargeAmt();
-						boolean isEDToHD = false;
-						if(null != refundEntry.getKey() && null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()) {
-							isEDToHD= true;
-						}
-						 if(null != entry) {
+						 Double refundedDeliveryCharges = 0.0D;
+						 if(isEdToHdRefund) {
+							 refundedDeliveryCharges = entry.getRefundedEdChargeAmt();
+						 }else if(null != entry.getIsEDtoHD() && entry.getIsEDtoHD()){
+							 refundedDeliveryCharges=	 entry.getHdDeliveryCharge() != null ?entry
+										.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+						 }else {
+							 refundedDeliveryCharges =  entry.getRefundedDeliveryChargeAmt();
+						 }
+//						boolean isEDToHD = false;
+//						if(null != refundEntry.getKey() && null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD()) {
+//							isEDToHD= true;
+//						}
+						 if(null != entry && !isEdToHdRefund) {
 							 entry.setDelChargesJuspayRequestId(uniqueRequestId);
+							 modelService.save(entry);
+						 }else {
+							 entry.setEdChargesJuspayRequestId(uniqueRequestId);
 							 modelService.save(entry);
 						 }
 						 if ("PENDING".equalsIgnoreCase(paymentTransactionModel
@@ -671,7 +710,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 								refundTransactionMappingModel
 										.setCreationtime(new Date());
 								refundTransactionMappingModel
-										.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
+										.setRefundType(juspayRefundType);
 								refundTransactionMappingModel
 										.setRefundAmount(refundedDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 								getModelService().save(refundTransactionMappingModel);
@@ -685,8 +724,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 							 
 							 // sending current order status, as oms is not accepting null value and no status update is required
 						mplJusPayRefundService.makeRefundOMSCall(refundEntry
-								.getKey(), paymentTransactionModel, refundEntry
-								.getKey().getRefundedDeliveryChargeAmt(), newStatus,isEDToHD?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);															// required.
+								.getKey(), paymentTransactionModel, refundedDeliveryCharges, newStatus,isEdToHdRefund?MarketplacecommerceservicesConstants.REFUND_CATEGORY_E:null);															// required.
 					}
 					/*made changes in r2.3 end  */
 				} 
@@ -699,14 +737,23 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 						if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
 							 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
 						 }
-						mplJusPayRefundService.makeRefundOMSCall(refundEntry.getKey(),paymentTransactionModel,refundEntry.getKey().getRefundedDeliveryChargeAmt(),newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
+						Double refundedDeliveryCharges = 0.0D;
+						 if(isEdToHdRefund) {
+							 refundedDeliveryCharges = refundEntry.getKey().getRefundedEdChargeAmt();
+						 }else if(null != refundEntry.getKey().getIsEDtoHD() && refundEntry.getKey().getIsEDtoHD() ){
+								 refundedDeliveryCharges =   refundEntry.getKey().getHdDeliveryCharge() != null ?refundEntry.getKey()
+											.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+						 }else {
+							 refundedDeliveryCharges =  refundEntry.getKey().getRefundedDeliveryChargeAmt();
+						 }
+						mplJusPayRefundService.makeRefundOMSCall(refundEntry.getKey(),paymentTransactionModel,refundedDeliveryCharges,newStatus,MarketplacecommerceservicesConstants.REFUND_CATEGORY_S);
 
 
 						}
 					
 					paymentTransactionModel = mplJusPayRefundService
 							.createPaymentTransactionModel(orderModel, "FAILURE", totalRefundDeliveryCharges,
-									PaymentTransactionType.REFUND_DELIVERY_CHARGES, "NO Response FROM PG", uniqueRequestId);
+									paymentTransactionType, "NO Response FROM PG", uniqueRequestId);
 					mplJusPayRefundService.attachPaymentTransactionModel(orderModel, paymentTransactionModel);
 				}
 				
@@ -783,15 +830,24 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 					 if(null != refundEntry.getKey() && null != refundEntry.getKey().getConsignmentEntries()); {
 						 newStatus = refundEntry.getKey().getConsignmentEntries().iterator().next().getConsignment().getStatus();;
 					 }
-					mplJusPayRefundService.makeRefundOMSCall(entry,paymentTransactionModel,entry.getRefundedDeliveryChargeAmt(),newStatus,null);
+					 Double refundedDeliveryCharges = 0.0D;
+					 if(isEdToHdRefund) {
+						 refundedDeliveryCharges = entry.getRefundedEdChargeAmt();
+					 }else if(null != entry.getIsEDtoHD() && entry.getIsEDtoHD()){
+							 refundedDeliveryCharges =  refundEntry.getKey().getHdDeliveryCharge() != null ?refundEntry.getKey()
+										.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+					 }else {
+						 refundedDeliveryCharges =  entry.getRefundedDeliveryChargeAmt();
+					 }
+					mplJusPayRefundService.makeRefundOMSCall(entry,paymentTransactionModel,refundedDeliveryCharges,newStatus,null);
 
 					// Making RTM entry to be picked up by webhook job	
 					RefundTransactionMappingModel refundTransactionMappingModel = getModelService().create(RefundTransactionMappingModel.class);
 					refundTransactionMappingModel.setRefundedOrderEntry(entry);
 					refundTransactionMappingModel.setJuspayRefundId(uniqueRequestId);
 					refundTransactionMappingModel.setCreationtime(new Date());
-					refundTransactionMappingModel.setRefundType(JuspayRefundType.REFUND_DELIVERY_CHARGE);
-					refundTransactionMappingModel.setRefundAmount(entry.getRefundedDeliveryChargeAmt());//TISPRO-216 : Refund amount Set in RTM
+					refundTransactionMappingModel.setRefundType(juspayRefundType);
+					refundTransactionMappingModel.setRefundAmount(refundedDeliveryCharges);//TISPRO-216 : Refund amount Set in RTM
 					getModelService().save(refundTransactionMappingModel);
 				}
 				// Done for INC144317893
@@ -800,7 +856,7 @@ public class MarketPlaceDefaultOrderController extends DefaultOrderController
 				paymentTransactionModel = mplJusPayRefundService
 						.createPaymentTransactionModel(orderModel, "FAILURE",
 								totalRefundDeliveryCharges,
-								PaymentTransactionType.REFUND_DELIVERY_CHARGES,
+								paymentTransactionType,
 								"FAILURE", uniqueRequestId);
 				mplJusPayRefundService.attachPaymentTransactionModel(
 						orderModel, paymentTransactionModel);
