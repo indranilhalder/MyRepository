@@ -4286,11 +4286,16 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 	}
 
 	//TPR-5346 ENDS
+	/*
+	 * This method does pincode serviceability check for one page[web/responsive]. sessionPincode attribute is not set in
+	 * session if the pincode is not serviceable.
+	 */
 	@Override
 	public String singlePagecheckPincode(final String selectedPincode, final String sessionPincode)
 			throws EtailNonBusinessExceptions, CMSItemNotFoundException
 	{
-
+		//Below if will always execute if pincode was not serviceable the last time this method was called
+		//Only serviceable pincode will be stored in session below.
 		if (selectedPincode != null && sessionPincode != null && !selectedPincode.equalsIgnoreCase(sessionPincode))
 		{
 			String isServicable = MarketplacecclientservicesConstants.Y;
@@ -4315,6 +4320,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 									&& isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 							{
 								isServicable = MarketplacecclientservicesConstants.N;
+								getSessionService().setAttribute("isCheckoutPincodeServiceable", MarketplacecclientservicesConstants.N);
 								break;
 							}
 						}
@@ -4329,14 +4335,15 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				else
 				{
 					isServicable = MarketplacecclientservicesConstants.N;
+					getSessionService().setAttribute("isCheckoutPincodeServiceable", MarketplacecclientservicesConstants.N);
 				}
 
 			}
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.Y))
 			{
-				if (sessionService.getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE) != null)
+				if (getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE) != null)
 				{
-					sessionService.setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
 				if (null != responseDataList)
 				{
@@ -4344,6 +4351,7 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 							responseDataList);
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE_RES, responseDataList);
 				}
+				getSessionService().setAttribute("isCheckoutPincodeServiceable", MarketplacecclientservicesConstants.Y);
 			}
 
 			if (isServicable.equalsIgnoreCase(MarketplacecclientservicesConstants.N) || responseDataList == null)
@@ -4353,6 +4361,11 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 				return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 			}
 
+		}
+		else
+		{
+			//Below session attribute is used only for responsive.
+			getSessionService().setAttribute("isCheckoutPincodeServiceable", MarketplacecclientservicesConstants.Y);
 		}
 		return "";
 

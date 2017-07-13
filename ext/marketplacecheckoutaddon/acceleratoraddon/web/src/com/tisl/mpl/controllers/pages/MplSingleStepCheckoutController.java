@@ -409,6 +409,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						MarketplacecommerceservicesConstants.TRUE_UPPER);
 				return MarketplacecheckoutaddonConstants.REDIRECT + MarketplacecheckoutaddonConstants.CART;
 			}
+			//This session attribute is required for responsive one page
+			getSessionService().setAttribute("isCheckoutPincodeServiceable", isServicable);
 
 			storeCmsPageInModel(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(MULTI_CHECKOUT_SUMMARY_CMS_PAGE_LABEL));
@@ -435,6 +437,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			model.addAttribute(MarketplacecheckoutaddonConstants.DELIVERYADDRESSES, deliveryAddress);
 			model.addAttribute(MarketplacecheckoutaddonConstants.METAROBOTS, MarketplacecheckoutaddonConstants.NOINDEX_NOFOLLOW);
 			timeOutSet(model);
+
 
 			if (!isAjax)
 			{
@@ -1173,6 +1176,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				jsonObj.put("type", "redirect");
 				return jsonObj;
 			}
+			final String isCheckoutPincodeServiceable = getSessionService().getAttribute("isCheckoutPincodeServiceable");
+			if (isCheckoutPincodeServiceable.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+			{
+				jsonObj.put("msg", MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE);
+				jsonObj.put("type", "error");
+				return jsonObj;
+			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
 			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
@@ -1339,6 +1349,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				jsonObj.put("url", MarketplacecheckoutaddonConstants.CART);
 				jsonObj.put("type", "redirect");
+				return jsonObj;
+			}
+			final String isCheckoutPincodeServiceable = getSessionService().getAttribute("isCheckoutPincodeServiceable");
+			if (isCheckoutPincodeServiceable.equalsIgnoreCase(MarketplacecommerceservicesConstants.N))
+			{
+				jsonObj.put("msg", MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE);
+				jsonObj.put("type", "error");
 				return jsonObj;
 			}
 			final String errorMsg = mplAddressValidator.validate(addressForm);
