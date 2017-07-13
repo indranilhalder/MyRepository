@@ -31,7 +31,19 @@
     	  
     	 }); */
         
-      
+    	 /*start of PRDI-397*/     
+    	     	 $(window).on("load", function() {
+    	     		 	var mainImageHeight = $("#zoomId > img").height();
+    	 				var thumbnailImageHeight = (mainImageHeight / 5);
+    	 				$("#zoomModal .imageList ul li img").css("height", thumbnailImageHeight);
+    	 				if($("#previousImage").length){
+    	 					if($(window).width() < 1025){
+    	 						var listHeight = thumbnailImageHeight + 13.6;
+    	 						console.log("tag listHeight >>>>> " + listHeight);
+    	 						$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+    	 					}
+    	 				}	
+    	     	});
         
     </script>
     

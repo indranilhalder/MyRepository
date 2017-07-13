@@ -22,7 +22,7 @@ public interface MplProductWebService
 {
 	public ProductDetailMobileWsData getProductdetailsForProductCode(String productCode, String baseUrl, String channel);
 
-	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl);
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, String baseUrl, String channel);
 
 	public String getCategoryCodeOfProduct(final ProductData productData);
 
