@@ -14,43 +14,12 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
 <div class="checkout-content cart checkout wrapper">
-
+<c:if test="${storesAvailable eq true}">
 	<script>
 					//TISST-13010
 					$(document).ready(function() {
 						showPromotionTag();
 					});
-					/* var timeoutID;
-					function setup() {
-					    this.addEventListener("mousemove", resetTimer, false);
-					    this.addEventListener("mousedown", resetTimer, false);
-					    this.addEventListener("keypress", resetTimer, false);
-					    this.addEventListener("DOMMouseScroll", resetTimer, false);
-					    this.addEventListener("mousewheel", resetTimer, false);
-					    this.addEventListener("touchmove", resetTimer, false);
-					    this.addEventListener("MSPointerMove", resetTimer, false);
-					    startTimer();
-					}
-					setup();
-
-					function startTimer() {
-					    // wait 2 seconds before calling goInactive
-					    timeoutID = window.setTimeout(goInactive, '${timeout}');
-					}
-
-					function resetTimer(e) {
-					    window.clearTimeout(timeoutID);
-
-					    goActive();
-					}
-
-					function goInactive() {
-					  // window.location = '${request.contextPath}/cart';
-					}
-
-					function goActive() {
-					      startTimer();
-					} */
 					</script>
 	<script type="text/javascript">
 
@@ -94,9 +63,9 @@
 		<button onclick="ACC.singlePageCheckout.searchCNCStores('cncStoreSearch${entryNumber}','${entryNumber}');" type="button"></button>
 		</div>
 		</div>
-		<div class="change_pincode_block block${entryNumber}">
+		<div class="cnc_pincode_search_wrapper change_pincode_block block${entryNumber}">
 			<span class="change_txt txt${entryNumber}">Change Pincode</span>
-			<div class="input${entryNumber} row" style="display:none;">
+			<div class="input${entryNumber} row enter-pincode-block" style="display:none;">
 				<span class="">
 						Want to pick from other area? 
 						Enter pincode below
@@ -129,13 +98,30 @@
 	<div>
 		<input type="hidden" name="CSRFToken" value="${CSRFToken}">
 	</div>
+</c:if>
+<c:if test="${storesAvailable eq false}">
+	<span><spring:theme code="checkout.single.nostores.select.another"/></span>
+</c:if>
 </div>
+<c:if test="${storesAvailable eq true}">
 <script>
 $(document).ready(function() {
-	$(".txt${entryNumber}").click(function(){
+/* $(".txt${entryNumber}").click(function(){
 		//$(".txt${entryNumber}").hide();
 		$(".input${entryNumber}").show();
+	});  */
+	$(".enter-pincode-block").hide();
+	$(".txt${entryNumber}").click(function(e){
+		e.stopPropagation();
+		$(".enter-pincode-block").slideToggle();
 	});
+	$(".txt${entryNumber}").click(function(e){
+		e.stopPropagation();
+	});
+	$(document).click(function(e){
+		$(".enter-pincode-block").slideUp();
+	}); 
+	
 	
 	 $(".changepin${entryNumber}").keyup(function(){
 	    	$(".pincodeValidation").hide();
@@ -188,6 +174,69 @@ $(document).ready(function() {
 			          data : dataString${entryNumber},   
 			          success : function(data) {
 			        	 $("#cncUlDiv${entryNumber}").html(data);
+			        	 $("#cncChangedPincode${entryNumber}").html($(".changepin${entryNumber}").val());
+			        	 var cnc_arrow_left, cnc_top;
+			            	if($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").length > 0){
+			            	cnc_arrow_left = parseInt($('#cncStoreContainer${entryNumber}').parent().prev().find("li.click-and-collect").offset().left) + 40;
+			            	//cnc_top = parseInt($('#cncStoreContainer'+entryNumber).offset().top) - parseInt($('#cncStoreContainer'+entryNumber).parent().prev().find("li.click-and-collect").offset().top) - 8;
+			            	}
+			            	$('#cncStoreContainer${entryNumber}').find(".cnc_arrow").css("left",cnc_arrow_left+"px");
+			            	//$('#cncStoreContainer'+entryNumber).parent().css("margin-top","-"+cnc_top+"px");
+			            	//CNC Carousel
+			            	if($(".cnc_item .removeColor1").length == 2){
+			        			$("#cnc_carousel").addClass("two_address");
+			        		}
+			        		if($(".cnc_item .removeColor1").length == 1){
+			        			$("#cnc_carousel").addClass("one_address");
+			        		}
+			            	$(".cnc_carousel").on('initialize.owl.carousel initialized.owl.carousel ' +
+			        				'initialize.owl.carousel initialize.owl.carousel ' +
+			        				'changed.owl.carousel',
+			        				function(event) {
+			        			var items     = event.item.count;     // Number of items
+			        			var item      = event.item.index;     // Position of the current item
+			        			//Below method will display correct page number.
+			        			ACC.singlePageCheckout.carouselPageNumberDisplay(items,item,"page_count_cnc");
+			        		});
+			        		$(".cnc_carousel").owlCarousel({
+			        			items:3,
+			        			loop: false,
+			        			dots:false,
+			        			margin: 60,
+			        			navText:[],
+			        			slideBy: 3,
+			        			responsive : {
+			            			// breakpoint from 0 up
+			            			0 : {
+			            				items:1,
+			            				stagePadding: 36,
+			            				slideBy: 1,
+			            				margin: 0,
+			            				nav: ($(".cnc_item .removeColor${entryNumber}").length <= 1)?false:true,
+			            			},
+			            			// breakpoint from 768 up
+			            			768 : {
+			            				items:2,
+			            				slideBy: 2,
+			            				nav: ($(".cnc_item .removeColor${entryNumber}").length <= 2)?false:true,
+			            			},
+			            			// breakpoint from 1280 up
+			            			1280 : {
+			            				items:3,
+			            				nav: ($(".cnc_item .removeColor${entryNumber}").length <= 3)?false:true,
+			            			}			
+			            		},
+			            		onRefresh: function () {
+			            			$(".cnc_carousel").find('div.owl-item').height('');
+			                    },
+			                    onRefreshed: function () {
+			                    	$(".cnc_carousel").find('div.owl-item').height($(".cnc_carousel").height());
+			                    }
+			        		});
+			            	
+			        		$( '.cnc_carousel input.radio_btn' ).on( 'click change', function(event) {
+			        			event.stopPropagation();
+			        		});
 			          },
 			          error : function(xhr, data, error) {
 			        	  console.log("Error in processing Ajax. Error Message : " +error+" Data : " +data)
@@ -207,3 +256,4 @@ function checkMobileNumberSpace(number) {
 	return /\s/g.test(number);
 }
 </script>
+</c:if>
