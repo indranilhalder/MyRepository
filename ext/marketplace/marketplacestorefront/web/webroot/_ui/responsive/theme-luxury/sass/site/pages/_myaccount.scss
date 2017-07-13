@@ -1052,3 +1052,11 @@
 #juspayconnErrorDiv{
     display: none;
 }
+
+#changeAddressPopup{
+    display: none;
+    position: fixed;
+    top: 0;
+    right:0;
+    left:0;
+}
