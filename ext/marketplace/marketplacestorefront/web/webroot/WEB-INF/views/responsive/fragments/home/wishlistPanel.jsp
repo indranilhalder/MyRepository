@@ -19,11 +19,15 @@
 					href="<c:url value="/my-account/viewParticularWishlist?particularWishlist=${wishlist.name}" />">${wishlist.name}
 						<c:set var="size" value="0"></c:set>
 						<c:forEach items="${wishlist.getEntries()}" var="wishlistEntry">
+						    <%-- TPR-5787 check starts here --%>
+						    <c:if test="${wishlistEntry.isDeleted eq false} ">
 							<c:if test="${not empty wishlistEntry.product}">
 								<c:set var="size" value="${size +1}"></c:set>
 							</c:if>
 							<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>
-						</c:forEach>
+						    </c:if>
+						    <%-- TPR-5787 check ends here--%>
+					        </c:forEach>
 						<span> <c:if test="${size> 1}">${size}&nbsp;<spring:theme
 									code="text.items" />
 							</c:if></span> <span> <c:if test="${size <= 1}">${size}&nbsp;<spring:theme
