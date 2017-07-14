@@ -6,6 +6,7 @@ package com.tisl.mpl.facade.pancard.Impl;
 import de.hybris.platform.core.model.PancardInformationModel;
 import de.hybris.platform.core.model.order.OrderModel;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -47,7 +48,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#getPanCardOredrId(java.lang.String)
 	 */
 	@Override
@@ -61,7 +62,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#refreshPancardDetailsFacade(de.hybris.platform.core.model.
 	 * PancardInformationModel, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -76,7 +77,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#setPancardFileAndOrderId(java.lang.String, java.lang.String,
 	 * java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -90,7 +91,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.facade.pancard.MplPancardFacade#getCrmStatusForPancardDetailsFacade(de.hybris.platform.core.model
 	 * .PancardInformationModel)
@@ -107,7 +108,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#setPanCardDetailsAndPIcall(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -115,6 +116,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 	@Override
 	public void setPanCardDetailsAndPIcall(final String orderreferancenumber, final List<String> transactionidList,
 			final String customername, final String pancardnumber, final MultipartFile file)
+			throws IllegalStateException, IOException, JAXBException
 	{
 		mplPancardService.setPanCardDetailsAndPIcall(orderreferancenumber, transactionidList, customername, pancardnumber, file);
 
@@ -122,13 +124,14 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#refreshPanCardDetailsAndPIcall(de.hybris.platform.core.model.
 	 * PancardInformationModel, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
 	@Override
 	public void refreshPanCardDetailsAndPIcall(final List<PancardInformationModel> pModelList,
 			final PancardInformationModel pModel, final String pancardnumber, final MultipartFile file)
+			throws IllegalStateException, IOException, JAXBException
 	{
 		// YTODO Auto-generated method stub
 		mplPancardService.refreshPanCardDetailsAndPIcall(pModelList, pModel, pancardnumber, file);
@@ -136,7 +139,7 @@ public class MplPancardFacadeImpl implements MplPancardFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.pancard.MplPancardFacade#getOrderForCode(java.lang.String)
 	 */
 	@Override
