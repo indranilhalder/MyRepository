@@ -173,6 +173,13 @@
                         
                         li{
                             list-style: none;
+                            
+                            @include media-breakpoint-down(sm) {
+                                .btn-sm{
+                                    width: 100%;
+                                    margin: 2px 0px;
+                                }
+                            }                            
                         }
                         .header{
                             position: initial;
