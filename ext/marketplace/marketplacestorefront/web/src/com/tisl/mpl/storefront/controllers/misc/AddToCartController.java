@@ -145,6 +145,7 @@ public class AddToCartController extends AbstractController
 			{
 				maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
 
+				//TISJEWST-10
 				if (StringUtils.isNotEmpty(product.getProductCategoryType())
 						&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(product.getProductCategoryType())
 						&& stock > 1)
