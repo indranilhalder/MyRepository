@@ -703,12 +703,12 @@ a.morelink, .more-link {
     float: left;
     width: 100%;
 }
-.certified-by h2 {
+/* .certified-by h2 {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
     margin-top: 20px;
-}
+} */
 .certified-by li {
     font-weight: bold;
     font-size: 14px;
@@ -47451,12 +47451,12 @@ float: right;
 .product-info .size span {
 	border-right: 2px solid #9b9b9b;
 }
-.product-info .FineJewellery .size span,
+/* .product-info .FineJewellery .size span,
 .product-info .FashionJewellery .size span,
 .quickview .FineJewellery .sizetext,
 .quickview .FashionJewellery .sizetext{
 	border-right: none;
-}
+} */
 
 /* .product-info .FineJewellery .size .size-guide,
 .product-info .FashionJewellery .size .size-guide{
@@ -76088,7 +76088,31 @@ body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
  		font-size: 12px;
   		line-height: 1.5;
   		letter-spacing: 0.6px;
+  		padding-right: 22px;
+  		background: url('../images/plp-select-arrow.png') no-repeat 97% 13px #fff;
+  		background-size: 10px;
  	}
+ 	span.price-breakup{
+ 	font-size: 12px;
+  	line-height: 1.5;
+  	letter-spacing: 0.7px;
+  	color: #a5173c;
+  	cursor: pointer;
+ 	}
+ 	.certified-by h2 {
+    font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	margin-top: 30px;
+}
+p.disclaimer-txt{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: rgba(0, 0, 0, 0.4);
+  	font-style: normal;
+  	margin-bottom: 25px;
+  }
  	@media (min-width: 791px){
 	body.page-returnSubmit .body-Content {
      padding-bottom: 50px !important; 

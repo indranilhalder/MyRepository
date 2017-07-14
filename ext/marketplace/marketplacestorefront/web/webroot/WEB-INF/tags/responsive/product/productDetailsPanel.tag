@@ -397,7 +397,7 @@ tr.d0 td {
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             <c:if test="${product.rootCategory =='FineJewellery'}">
              <div class="certified-by"> 
-              <h2>certified by</h2>
+              <h2>Certified by:</h2>
               <ul>
                <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
                <li>30 day returns</li>

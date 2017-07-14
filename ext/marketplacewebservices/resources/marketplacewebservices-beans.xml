@@ -1033,10 +1033,17 @@
         <property name="imageUrl" type="String" />
 	  	<!-- Added for luxury products -->
 		<property name="luxIndicator" type="String" />
-
+		<!-- Mobile Service for Jewellery -->
+		<property name="priceBreakUpDetailsMap" type="java.util.List&lt;com.tisl.mpl.wsdto.PriceBreakUpDto>" />
+		<property name="certificationMapFrJwlry" type="java.util.List&lt;String>" />
+		<property name="priceDisclaimerTextPDP" type="String" />
+		<property name="showPriceBrkUpPDP" type="String" />
+		<!-- <property name="fineJewelleryClassification" type="java.util.Map&lt;String,java.util.Map&lt;String,java.util.List&lt;String>>>"></property> -->
+		<property name="fineJewelleryClassificationList" type="java.util.Map&lt;String,com.tisl.mpl.wsdto.FineJwlryClassificationListDTO>" />
 <!-- TPR-6117 -->
 			<property name="maxQuantityAllowed" type="String" />
 	</bean>
+	
 	<!-- Added for OfferDetail of a product TPR-TPR-1299 -->
 	<bean class="com.tisl.mpl.wsdto.ProductOfferMsgDTO">
 		<property name="messageDetails" type="String" />
@@ -3055,4 +3062,15 @@
 		<property name="userSelectedQty" type="String" />
 	</bean>
 
+	<bean class="com.tisl.mpl.wsdto.PriceBreakUpDto">
+		<property name="name" type="String" />
+		<property name="weightRateList" type="java.util.List&lt;String>" />
+ 		<property name="price" type="de.hybris.platform.commercefacades.product.data.PriceData" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListDTO">
+		<property name="classificationListJwlry" type="java.util.Map&lt;String,com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO>" />
+	</bean>
+	<bean class="com.tisl.mpl.wsdto.FineJwlryClassificationListValueDTO">
+		<property name="classificationListValueJwlry" type="java.util.List&lt;String>" />
+	</bean>
 </beans>
