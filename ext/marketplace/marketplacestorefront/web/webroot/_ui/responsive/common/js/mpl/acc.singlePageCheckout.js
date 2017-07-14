@@ -2282,11 +2282,11 @@ ACC.singlePageCheckout = {
 		        event_type: "change_link_clicked"
 		    })
 	      }
-		$(".hideDelModeMobile").show();
+		$(".hideDelModeMobile").show();//Show hidden delivery modes
 //		$(".hideDelModeMobile").removeAttr('disabled');
 //		$(".hideDelModeMobile").css("opacity","1");
 //		$(".hideDelModeMobile").css("pointer-events","auto");
-		$(element).hide();
+		$(element).hide();			//Hide change link
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
 	attachEventToResetFlagsOnDelModeChange:function()
