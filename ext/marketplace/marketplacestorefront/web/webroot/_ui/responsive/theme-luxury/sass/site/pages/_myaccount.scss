@@ -70,7 +70,7 @@
 			    color: #fff;
 			    border: 0px;
 			    padding: 10px 20px;
-			    width: 100%;
+			    width:auto;
 			    border-radius: 3px;
                 text-align: center;
                 display: block;
@@ -85,8 +85,7 @@
 			    border: 1px solid #d2d2d2;
 			    border-radius: 3px;
 			    margin-bottom : 20px;
-			}
-            
+			}           
             #landmark{
                width: 100%;  
             }
@@ -124,6 +123,16 @@
                     font-size: 14px;
                     margin-top: 0;
                 }
+            }
+            
+            #addressForm{             
+                .half{
+                    margin-bottom: 20px;
+                }                    
+                input, select, textarea{
+                    margin-bottom: 0px;
+                }                
+                
             }
 		}
 		.password{
