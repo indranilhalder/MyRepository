@@ -1804,6 +1804,10 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 			final int maximum_configured_quantiy = siteConfigService.getInt(
 
 			MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+			
+			//TISJEWST-10
+			final int maximum_configured_quantiy_jewellery = siteConfigService.getInt(
+					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 
 			if (cartData != null && cartData.getEntries() != null && !cartData.getEntries().isEmpty())
 			{
@@ -1820,6 +1824,19 @@ public class MplCartFacadeImpl extends DefaultCartFacade implements MplCartFacad
 					if (productCode.equals(productData.getCode()) && ussid.equals(entry.getSelectedUssid()))
 					{
 						LOG.debug("Product already present in the cart so now we will check the qunatity present in the cart already");
+						
+						//TISJEWST-10
+						if (StringUtils.isNotEmpty(productData.getRootCategory())
+								&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getRootCategory())
+								&& stock > 1)
+						{
+							if (qty + entry.getQuantity().longValue() >= maximum_configured_quantiy_jewellery)
+							{
+								addToCartFlag = MarketplacecommerceservicesConstants.MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY;
+								LOG.debug("You can add Only one Product for Fine Jewellery");
+								break;
+							}
+						}
 
 						if (StringUtils.isNotBlank(entry.getExchangeApplied()))
 						{
