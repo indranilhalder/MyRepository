@@ -79,11 +79,11 @@
 
 
 			<div class="right-account">
-				<p class="nav-orderHistory">
+				<%-- <p class="nav-orderHistory">
 					<a href="<c:url value="/my-account/orders"/>" class="order-history"><spring:theme
 							code="text.account.orderHistorylink" text="Back to Order History" />
 					</a>
-				</p>
+				</p> --%>
 				<div class="order-history order-details">
 					<!-- Heading for saved Cards -->
 					<div class="navigation">
@@ -96,13 +96,24 @@
 
 
 					<ul class="product-block order-details">
-						<li class="top-header">
+						<li class="track-order-list">
 
-							<ul>
+							<ul class="list-top-title">
 								<li><span><spring:theme
 											code="text.orderHistory.order.placed" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
+								<li><span>Order Number: </span> ${subOrder.code}</li>
+								<li class="recipient"><span><spring:theme
+									code="text.orderHistory.recipient" /></span> <c:choose>
+								<c:when test="${subOrder.deliveryAddress != null}">
+										${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName}
+								</c:when>
+								<c:otherwise>
+										${subOrder.mplPaymentInfo.cardAccountHolderName}
+										</c:otherwise>
+									</c:choose></li>
+								
 								<li><span>Total: </span> 
 								<!-- TISSIT-1773 -->
 								<%-- <format:price	priceData="${subOrder.totalPrice}" /> --%>
@@ -117,24 +128,13 @@
 													priceData="${subOrder.totalPriceWithConvCharge}" /></span>
 										</c:otherwise>
 								</c:choose>
-								
-								
 								</li>
-								<li class="recipient"><span><spring:theme
-											code="text.orderHistory.recipient" /></span> <c:choose>
-										<c:when test="${subOrder.deliveryAddress != null}">
-												${subOrder.deliveryAddress.firstName}&nbsp;${subOrder.deliveryAddress.lastName}
-										</c:when>
-										<c:otherwise>
-												${subOrder.mplPaymentInfo.cardAccountHolderName}
-												</c:otherwise>
-									</c:choose></li>
-								<li><span>Order Reference Number: </span> ${subOrder.code}</li>
+								
+								
 							</ul>
-
-
-							<div class="totals" id="anchor">
-								<h2>Total:</h2>
+						</li>
+							<li class="totals" id="anchor">
+								<!-- <h2>Total:</h2> -->
 								<ul>
 									<li><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
@@ -187,7 +187,80 @@
 											</c:choose></li>
 								</ul>
 
-							</div>
+							</li>
+							
+							
+						
+
+	                            <c:set var="button" value="true" />
+								<c:set var="entryCount" value="0"></c:set>
+								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
+									varStatus="status">
+									<c:forEach items="${sellerOrder.entries}" var="entry"
+										varStatus="entryStatus">
+										<c:set var="entryCount" value="${entryCount +1 }"></c:set>
+										
+										<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
+									         <c:set var="HD_ED_Count" value="${HD_ED_Count +1 }" />
+									         <c:set var="flag" value="true" />
+								        </c:if>
+									</c:forEach>
+								</c:forEach>
+									 
+								<c:if test="${flag || paymentError}">
+								<li class="item delivered first" id="shipping-track-order">
+						    	<div class="item-header">
+								<c:if test="${entryCount > 1 }">
+
+								<h2>${HD_ED_Count} Product(s)-ShippingAddress:</h2>
+								</c:if>
+								<c:if test="${entryCount  <= 1 }">
+									<h2>
+										<%-- ${entryCount}&nbsp; --%>
+										Shipping Address:
+									</h2>
+								</c:if>
+								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
+								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
+								<div class="">
+								<address>
+									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
+									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
+									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
+									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
+									<c:if test="${not empty subOrderLine2}">
+									<span data-tribhuvan="addressLine2">${fn:escapeXml(subOrder.deliveryAddress.line2)}</span>,
+									</c:if>
+									<c:if test="${not empty subOrderLine3}">
+												&nbsp;<span data-tribhuvan="addressLine3">${fn:escapeXml(subOrder.deliveryAddress.line3)}</span>,
+											</c:if>
+									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
+									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
+									</c:if>
+									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
+									<c:if test="${not empty subOrder.deliveryAddress.state}">
+												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
+											</c:if>
+									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
+									<br>
+									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
+								</address>
+								</div>
+								</div>
+									<!-- R2.3: START -->
+									<div class="col-md-4 col-sm-6">
+										<div class="editIconCSS">
+										<c:if test="${addressChangeEligible eq true}">
+									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
+									   </c:if>
+										</div>
+									</div>
+								
+							<p style="clear:both"></p>
+							<div class="itemBorder">&nbsp;</div> 
+							<!-- R2.3: END -->
+							</li>
+							</c:if>
 							<c:choose>
 								<c:when test="${(subOrder.status eq 'PAYMENT_PENDING' || subOrder.status eq 'PAYMENT_TIMEOUT' || subOrder.status eq 'PAYMENT_FAILED') && empty subOrder.mplPaymentInfo}">
 									
@@ -215,7 +288,7 @@
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
 								</c:if>
 								<!--  TISBOX-1182 -->
-								<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
+								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%>
 								<c:if
 									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
 									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
@@ -303,77 +376,6 @@
 							</div>
 								</c:otherwise>
 							</c:choose>
-							
-						</li>
-
-	                            <c:set var="button" value="true" />
-								<c:set var="entryCount" value="0"></c:set>
-								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
-									varStatus="status">
-									<c:forEach items="${sellerOrder.entries}" var="entry"
-										varStatus="entryStatus">
-										<c:set var="entryCount" value="${entryCount +1 }"></c:set>
-										
-										<c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
-									         <c:set var="HD_ED_Count" value="${HD_ED_Count +1 }" />
-									         <c:set var="flag" value="true" />
-								        </c:if>
-									</c:forEach>
-								</c:forEach>
-									
-								<c:if test="${flag || paymentError}">
-								<li class="item delivered first" id="shipping-track-order">
-						    	<div class="item-header">
-								<c:if test="${entryCount > 1 }">
-
-								<h2>${HD_ED_Count} Product(s)-ShippingAddress:</h2>
-								</c:if>
-								<c:if test="${entryCount  <= 1 }">
-									<h2>
-										<%-- ${entryCount}&nbsp; --%>
-										Shipping Address:
-									</h2>
-								</c:if>
-								<c:set var="subOrderLine2" value="${fn:trim(subOrder.deliveryAddress.line2)}"/>
-								<c:set var="subOrderLine3" value="${fn:trim(subOrder.deliveryAddress.line3)}"/>
-								<div class="col-md-8 col-sm-6">
-								<address>
-									<span data-tribhuvan="addressType" style="display:none; ">${fn:escapeXml(subOrder.deliveryAddress.addressType)}</span>
-									<span data-tribhuvan="firstName">${fn:escapeXml(subOrder.deliveryAddress.firstName)}</span>&nbsp;
-									<span data-tribhuvan="lastName">${fn:escapeXml(subOrder.deliveryAddress.lastName)}</span><br>
-									<span data-tribhuvan="addressLine1">${fn:escapeXml(subOrder.deliveryAddress.line1)}</span>,&nbsp;
-									<c:if test="${not empty subOrderLine2}">
-									<span data-tribhuvan="addressLine2">${fn:escapeXml(subOrder.deliveryAddress.line2)}</span>,
-									</c:if>
-									<c:if test="${not empty subOrderLine3}">
-												&nbsp;<span data-tribhuvan="addressLine3">${fn:escapeXml(subOrder.deliveryAddress.line3)}</span>,
-											</c:if>
-									 <c:if test="${not empty subOrder.deliveryAddress.landmark}">
-									   <span data-tribhuvan="landmark"> ${fn:escapeXml(subOrder.deliveryAddress.landmark)}</span>,
-									</c:if>
-									<br><span data-tribhuvan="city"> ${fn:escapeXml(subOrder.deliveryAddress.town)}</span>,&nbsp;
-									<c:if test="${not empty subOrder.deliveryAddress.state}">
-												<span data-tribhuvan="state">${fn:escapeXml(subOrder.deliveryAddress.state)}</span>,&nbsp;
-											</c:if>
-									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
-									<br>
-									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span> <br>
-								</address>
-								</div>
-								</div>
-									<!-- R2.3: START -->
-									<div class="col-md-4 col-sm-6">
-										<div class="editIconCSS">
-										<%-- <c:if test="${addressChangeEligible eq true}"> --%>
-									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
-									 <%--   </c:if> --%>
-										</div>
-									</div>
-								
-							<p style="clear:both"></p>
-							<div class="itemBorder">&nbsp;</div> 
-							<!-- R2.3: END -->
-							</c:if>
 							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
 							
 							<!-- TRP-1081 -->
@@ -1158,6 +1160,7 @@
 														class="progress progtrckr-done processingStatus processing"
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
+														<span class="start"></span>
 														<c:set value="${0}" var="dotCount" /> 
 														
 														<c:forEach items="${processingStatus}" var="productStatus" varStatus="loop">
@@ -1225,7 +1228,7 @@
 													<c:set var="displayMsgVar" value="" />
 													<li class="progress progtrckr-done cancelStatus processing"
 														orderlineid="${entry.orderLineId}"
-														ordercode="${subOrder.code}"><c:set value="${0}"
+														ordercode="${subOrder.code}"><span class="start"></span><c:set value="${0}"
 															var="dotCount" /> <c:forEach items="${cancelStatus}"
 															var="productStatus" varStatus="loop">
 
@@ -1753,7 +1756,7 @@
 														</c:if>
 													
 									</div>
-									<br> <br>
+									
 									<c:url value="${entry.product.url}" var="productUrl" />
 									<c:set var="orderEntrySellerSKU"
 										value="${entry.mplDeliveryMode.sellerArticleSKU}" />
