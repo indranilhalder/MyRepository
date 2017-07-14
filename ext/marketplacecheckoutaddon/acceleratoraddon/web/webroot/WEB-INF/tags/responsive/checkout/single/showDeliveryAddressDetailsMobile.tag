@@ -19,6 +19,8 @@
 		showPromotionTag();
 	});
 </script>
+<!-- Div to display ajax failure messages -->
+<div id="selectedAddressMessageMobile" style=""></div>
 <div class="checkout-shipping checkTab">
 
 	<c:if test="${not empty deliveryAddresses}">	
@@ -27,8 +29,6 @@
 			action="/checkout/single/select-address-responsive"
 			method="get">
 			<!-- change here for modified checkout page starts -->
-						<!-- Div to display ajax failure messages -->
-						<div id="selectedAddressMessageMobile" style=""></div>
 
 						<span id="emptyAddressMobile" style="display:none">Please select a delivery method to proceed.</span>
 

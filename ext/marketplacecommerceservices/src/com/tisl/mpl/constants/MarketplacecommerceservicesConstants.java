@@ -1,16 +1,3 @@
-/*
-
- *
- * Copyright (c) 2000-2013 hybris AG
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of hybris
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the
- * license agreement you entered into with hybris.
- *
- *
- */
 package com.tisl.mpl.constants;
 
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
@@ -2169,6 +2156,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//UF-281
+	public static final String B1002 = "B1002";
+
 
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
