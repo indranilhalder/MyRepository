@@ -257,6 +257,7 @@ INSERT_UPDATE MediaContainer;qualifier[unique=true];$medias;$contentCV[unique=tr
 INSERT_UPDATE LuxuryLookBookComponent;$contentCV[unique=true];uid[unique=true];layoutCode;title;description;TextArea;FirstCol(qualifier, $contentCV);SecondCol(qualifier, $contentCV);shopNowLink;shopNowName
 ;;Bag-shopLookBook;layout1;;;;look-1Col1-container,look-2Col1-container;look-1Col2-container,look-2Col2-container;;;
 ;;LookBook-Bag;layout2;;;;bag-look-1col1-container;bag-look-1col21-container,bag-look-1col22-container,bag-look-2col1-container;;;
+;;LookBook-Bag2;layout3;;;;bag-look-2col1-container,bag-look-1col21-container,bag-look-1col22-container;bag-look-1col21-container,bag-look-1col22-container,bag-look-2col1-container;;;
 ;;mobile-shortBanner;shortbanner-layout1;;;;mobile-Red-Poster-container;pickit-up-poster-container;;;
 
 
@@ -673,7 +674,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Women-FooterSlot;Gender Footer;true;
 ;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
 ;;Women-BannerDescriptionSlot;Brand BannerDescription;true;
-;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;LookBook-Bag2
 ;;Women-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
 ;;Women-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
 ;;Women-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
@@ -810,7 +811,6 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 ;;CenterLeftContentSlotForCartPage;CenterLeftContentSlot;;CenterLeftContentSlot-cartPage
 ;;CenterRightContentSlotForCartPage;CenterRightContentSlot;;CenterRightContentSlot-cartPage
 ;;BottomContentSlotForCartPage;BottomContentSlot;;BottomContentSlot-cartPage
-;;WishListCartSlotforCartPage;WishListCartSlot;;WishListCartSlot-cartPage
 
 ########### Luxury PLP Page  ##########################
 #INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true];contentSlot(uid,$contentCV)[unique=true];
@@ -887,7 +887,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
 ;SearchBox;;;searchbox
-;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;minicart
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;Luxury-MiniCart
 ;NavigationBar;;;navigation
 ;Section1;;JspIncludeComponent,CMSParagraphComponent,AccountNavigationComponent,BrandCollectionComponent,SimpleBannerComponent,SimpleResponsiveBannerComponent,BannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
 ;Section2A;;CMSParagraphComponent,AccountNavigationComponent,JspIncludeComponent;
@@ -926,7 +926,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
 ;SearchBox;;;searchbox
-;MiniCart;;;minicart
+;MiniCart;;;Luxury-MiniCart
 ;NavigationBar;;;navigation
 ;TopBannerMen;;;wide
 ;TopBannerWomen;;;wide

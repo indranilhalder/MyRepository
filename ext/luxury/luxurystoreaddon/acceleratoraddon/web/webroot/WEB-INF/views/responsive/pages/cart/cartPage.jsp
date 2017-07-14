@@ -41,10 +41,10 @@
 					<div class="col-xs-12 <c:out value="${not empty cartData.entries ? 'col-md-8 col-sm-8' : 'col-md-12 col-sm-12'}" />">
 
 						<div class="cartItems cart wrapper">
-							
+
 							<!-- UF-62 -->
 							<c:if test="${not empty cartData.entries}">
-							    <h3 class="grayTxt"><spring:theme code="mpl.myBag" />(<label id="mybagcnt"></label> item) <span>Items in your cart are not reserved and can sell out.</span></h3>
+								<h3 class="grayTxt"><spring:theme code="mpl.myBag" />(<label id="mybagcnt"></label> item) <span>Items in your cart are not reserved and can sell out.</span></h3>
 								<cms:pageSlot position="CenterLeftContentSlot" var="feature" >
 									<cms:component component="${feature}"/>
 								</cms:pageSlot>
@@ -67,7 +67,7 @@
 									</cms:pageSlot>
 									<div class="emptyCart">
 										<img src="${themeResourcePath}/images/empty-cardicon.png">
-								   		<h2>Your Shopping cart is empty</h2>
+										<h2>Your Shopping cart is empty</h2>
 										<p>Add products to it.</p>
 										<a href="/menlanding" class="btn btn-primary btn-lg">Shop Men</a></class>
 										<a href="/womenlanding" class="btn btn-primary btn-lg">Shop Women</a></class>
@@ -76,11 +76,11 @@
 								</div>
 							</c:if>
 						</div>
-						<%--<c:if test="${not empty cartData.entries}">
-							<!-- For Infinite Analytics Start -->
-							<div class="trending"  id="ia_products"></div>
-							<!-- For Infinite Analytics End -->
-						</c:if>--%>
+							<%--<c:if test="${not empty cartData.entries}">
+                                <!-- For Infinite Analytics Start -->
+                                <div class="trending"  id="ia_products"></div>
+                                <!-- For Infinite Analytics End -->
+                            </c:if>--%>
 
 					</div>
 					<c:url value="/cart/checkout" var="checkoutUrl" scope="session"/>
@@ -102,11 +102,13 @@
 							</div>
 							<div class="cartBottomCheck">
 								<div id="changePinDiv">
-									<p><spring:theme code="product.pincode.input" /></p>
-									<p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode" /></p>
+									<p></p>
+									<p id="cartPinCodeAvailableBtm" class="cartPins"><spring:theme code="product.pincode.input" /></p>
 									<!-- TPR_1055 EQA -->
 									<p id="AvailableMessageBtm" style="display:none"></p>
-									<p id="unserviceablepincodeBtm" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+										<%--
+                                                                            <p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
+                                        --%>
 									<p id="error-IdBtm" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
 									<p id="emptyIdBtm" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 									<c:choose>

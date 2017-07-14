@@ -115,7 +115,7 @@
                     </div> --%>
 			<div id="changePinDiv">
 					<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
-				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode" /></p>
+				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode.input" /></p>
 				<!-- TPR_1055 EQA -->
 				<p id="AvailableMessage" style="display:none" class="availablePins"></p>
 					<%-- <p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
