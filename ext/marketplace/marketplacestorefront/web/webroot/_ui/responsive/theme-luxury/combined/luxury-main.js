@@ -13037,12 +13037,228 @@ TATA.CommonFunctions = {
             });
         });
     },
+    checkPincodeServiceability: function(buttonType, el) {
+        var selectedPincode = $("#defaultPinCodeIds").val(), regPostcode = /^([1-9])([0-9]){5}$/;
+        $(".deliveryUlClass").remove();
+        var utagCheckPincodeStatus = "";
+        if ("" === selectedPincode) return $("#error-Id").hide(), $("#error-IdBtm").hide(), 
+        $("#error-Id_tooltip").hide(), $("#error-Id_tooltip_btm").hide(), $("#emptyId").css({
+            color: "#ff1c47",
+            display: "block"
+        }), $("#emptyIdBtm").css({
+            color: "#ff1c47",
+            display: "block"
+        }), $("#emptyId_tooltip").show(), $("#emptyId_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+        $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#cartPinCodeAvailable").hide(), 
+        $("#cartPinCodeAvailableBtm").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+        document.getElementById("pinCodeButtonIds").className = "ChangePincode", $("#unserviceablepincode").hide(), 
+        $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+        $("#unserviceablepincode_tooltip_btm").hide(), $(".cartItemBlankPincode").show(), 
+        document.getElementById("pinCodeButtonIds").className = "CheckAvailability", $("#AvailableMessage").hide(), 
+        $("#AvailableMessageBtm").hide(), $(".pincodeServiceError").hide(), $(".delivery ul.success_msg").hide(), 
+        $("#pinCodeDispalyDiv .spinner").remove(), $("#no-click,.spinner").remove(), $("body,html").animate({
+            scrollTop: $("#emptyId").offset().top - 5e3
+        }), !1;
+        if (1 != regPostcode.test(selectedPincode)) return $("#defaultPinCodeIds").css("color", "red"), 
+        $("#error-Id").show(), $("#error-IdBtm").show(), $("#error-Id_tooltip").show(), 
+        $("#error-Id_tooltip_btm").show(), $("#cartPinCodeAvailable").hide(), $("#cartPinCodeAvailableBtm").hide(), 
+        $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+        $("#unserviceablepincode_tooltip_btm").hide(), $("#AvailableMessage").hide(), $("#AvailableMessageBtm").hide(), 
+        $(".pincodeServiceError").hide(), $(".delivery ul.success_msg").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+        $(".cartItemBlankPincode").show(), $("#emptyId").hide(), $("#emptyIdBtm").hide(), 
+        $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), $("#error-Id").css({
+            color: "red",
+            display: "block"
+        }), $("#error-IdBtm").css({
+            color: "red",
+            display: "block"
+        }), $("#error-Id_tooltip").show(), $("#error-Id_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+        $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#pinCodeDispalyDiv .spinner").remove(), 
+        $("#no-click,.spinner").remove(), !1;
+        if ("ChangePincode" == document.getElementById("pinCodeButtonIds").className && "pinCodeButtonIds" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
+        $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+        $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
+        $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
+        $("#AvailableMessageBtm").hide(), $(".cartItemBlankPincode").show(), document.getElementById("pinCodeButtonIds").className = "CheckAvailability", 
+        $("#defaultPinCodeIds").focus(), $("#defaultPinCodeIdsBtm").focus(), $("#pinCodeDispalyDiv .spinner").remove(), 
+        $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), 
+        $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+        $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
+        !1;
+        if ("ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && "pinCodeButtonIdsBtm" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
+        $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+        $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
+        $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
+        $("#AvailableMessageBtm").hide(), $(".cartItemBlankPincode").show(), document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability", 
+        $("#defaultPinCodeIds").focus(), $("#defaultPinCodeIdsBtm").focus(), $("#pinCodeDispalyDiv .spinner").remove(), 
+        $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), 
+        $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+        $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
+        !1;
+        if ("" !== selectedPincode) {
+            var cartGuidParamValue = getParameterByName("cartGuid");
+            void 0 !== cartGuidParamValue ? $(location).attr("href", ACC.config.encodedContextPath + "/cart?cartGuid=" + cartGuidParamValue + "&pincode=" + selectedPincode) : $(location).attr("href", ACC.config.encodedContextPath + "/cart?pincode=" + selectedPincode);
+        } else {
+            document.getElementById("pinCodeButtonIds").className = "CheckPincode", document.getElementById("pinCodeButtonIdsBtm").className = "CheckPincode", 
+            $("#defaultPinCodeIds").css("color", "black"), $("#error-Id").hide(), $("#defaultPinCodeIdsBtm").css("color", "black"), 
+            $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), $("#error-Id_tooltip_btm").hide(), 
+            $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide();
+            var staticHost = $("#staticHost").val();
+            $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+            $("body").append('<img src="' + staticHost + '/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">'), 
+            $("#emptyId_tooltip_btm").hide(), $.ajax({
+                url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
+                type: "GET",
+                cache: !1,
+                success: function(response) {
+                    $("#pincodeforcart").html("&nbsp;(" + selectedPincode + ")");
+                    var responeStr = response.pincodeData.split("|");
+                    populateCartDetailsafterPincodeCheck(responeStr[1]), "N" == responeStr[0] ? (utagCheckPincodeStatus = "cart_pincode_check_failure", 
+                    $("#AvailableMessage").hide(), $("#cartPinCodeAvailable").hide(), $("#unserviceablepincode").show(), 
+                    $("#AvailableMessageBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#unserviceablepincodeBtm").show(), 
+                    $(".pincodeServiceError").show(), populatePincodeDeliveryMode(response, buttonType), 
+                    reloadpage(selectedPincode, buttonType), $("#isPincodeServicableId").val("N")) : (utagCheckPincodeStatus = "cart_pincode_check_success", 
+                    $(".pincodeServiceError").hide(), $("#unserviceablepincode").hide(), $("#cartPinCodeAvailable").hide(), 
+                    $("#unserviceablepincodeBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#AvailableMessage").html("Available delivery options for the pincode " + selectedPincode + " are"), 
+                    $("#AvailableMessage").show(), $("#AvailableMessageBtm").show(), populatePincodeDeliveryMode(response, buttonType), 
+                    reloadpage(selectedPincode, buttonType)), $("#defaultPinDiv").show(), $("#defaultPinCodeIdsq").val(selectedPincode), 
+                    $("#pinCodeDispalyDiv .spinner").remove(), $("#no-click,.spinner").remove(), $("#defaultPinCodeIds").blur(), 
+                    "" == $("#defaultPinCodeIds").val() ? ($("#cartPinCodeAvailable").show(), document.getElementById("pinCodeButtonIds").className = "CheckAvailability") : ($("#cartPinCodeAvailable").hide(), 
+                    $("#cartPinCodeAvailableBtm").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+                    document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode");
+                },
+                error: function(resp) {
+                    utagCheckPincodeStatus = "cart_pincode_check_failure", console.log(resp), $("#isPincodeServicableId").val("N"), 
+                    reloadpage(selectedPincode, buttonType);
+                    var errorDetails = JSON.stringify(resp);
+                    console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+                    console.log("Some issue occured in checkPincodeServiceability"), $("#pinCodeDispalyDiv .spinner").remove(), 
+                    $("#no-click,.spinner").remove();
+                },
+                complete: function(resp) {
+                    "cart_pincode_check_failure" == utagCheckPincodeStatus ? "undefined" != typeof utag && utag.link({
+                        link_text: utagCheckPincodeStatus,
+                        event_type: utagCheckPincodeStatus,
+                        cart_pin_non_servicable: selectedPincode
+                    }) : "undefined" != typeof utag && utag.link({
+                        link_text: "cart_pincode_check_success",
+                        event_type: "cart_pincode_check_success",
+                        cart_pin_servicable: selectedPincode
+                    });
+                }
+            });
+        }
+    },
+    getParameterByName: function(name) {
+        if (name = new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)").exec(location.search)) return decodeURIComponent(name[1]);
+    },
+    checkIsServicable: function() {
+        var selectedPincode = $("#defaultPinCodeIds").val();
+        null != selectedPincode && void 0 != selectedPincode && "" != selectedPincode && $.ajax({
+            url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
+            type: "GET",
+            cache: !1,
+            success: function(response) {
+                populatePincodeDeliveryMode(response, "pageOnLoad");
+            },
+            error: function(resp) {
+                console.log(resp);
+                var errorDetails = JSON.stringify(resp);
+                console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+                console.log("Some issue occured in checkPincodeServiceability"), $("#isPincodeServicableId").val("N");
+            }
+        });
+    },
+    populatePincodeDeliveryMode: function(response, buttonType) {
+        var checkoutLinkURlId = $("#checkoutLinkURlId").val(), values = response.pincodeData.split("|"), isServicable = values[0], selectedPincode = values[1], deliveryModeJsonMap = values[2];
+        if ($(".pincodeServiceError").hide(), "null" == deliveryModeJsonMap) {
+            $("#unsevisablePin").show(), $("#checkout-enabled").css("pointer-events", "none"), 
+            $("#checkout-enabled").css("cursor", "not-allowed"), $("#checkout-enabled").css("opacity", "0.5"), 
+            $("#checkout-down-enabled").css("pointer-events", "none"), $("#checkout-down-enabled").css("cursor", "not-allowed"), 
+            $("#checkout-down-enabled").css("opacity", "0.5"), $("#expressCheckoutButtonId").css("pointer-events", "none"), 
+            $("#expressCheckoutButtonId").css("cursor", "default"), $("#expressCheckoutButtonId").css("opacity", "0.5");
+            var pincodeEntered = $("#defaultPinCodeIds").val(), pincodeServiceError = "This item is not serviceable for pincode " + pincodeEntered + "!";
+            $(".desktop li:nth-child(3) ul").hide(), $(".pincodeServiceError").text(pincodeServiceError), 
+            $(".success_msg").hide(), $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").show(), 
+            $(".deliveryUlClass").remove();
+        } else {
+            $("#unsevisablePin").hide(), $(".pincodeServiceError").hide(), $("#checkout-enabled").css("pointer-events", "all"), 
+            $("#checkout-enabled").css("cursor", "cursor"), $("#checkout-enabled").css("opacity", "1"), 
+            $("#checkout-down-enabled").css("pointer-events", "all"), $("#checkout-down-enabled").css("cursor", "cursor"), 
+            $("#checkout-down-enabled").css("opacity", "1"), $("#expressCheckoutButtonId").css("pointer-events", "all"), 
+            $("#expressCheckoutButtonId").css("cursor", "cursor"), $("#expressCheckoutButtonId").css("opacity", "1");
+            var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap), isStockAvailable = (Object.keys(deliveryModeJsonObj).length, 
+            "Y");
+            "N" == deliveryModeJsonMap && console.log("This is NO");
+        }
+        for (var key in deliveryModeJsonObj) {
+            var ussId = deliveryModeJsonObj[key].ussid;
+            if ($("#" + ussId + "_qtyul").remove(), "N" === deliveryModeJsonObj[key].isServicable) {
+                $("#" + ussId).remove();
+                var newUi = document.createElement("ul");
+                newUi.setAttribute("id", ussId), newUi.setAttribute("class", "deliveryUlClass");
+                var newSpan = document.createElement("span"), text = document.createTextNode("This item is not serviceable for pincode " + selectedPincode + "!");
+                newSpan.appendChild(text), newUi.appendChild(newSpan), $("#" + ussId + "_li").append(newUi), 
+                $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").hide();
+            } else {
+                $("#" + ussId).remove();
+                var newUi = document.createElement("ul");
+                newUi.setAttribute("id", ussId), newUi.setAttribute("class", "success_msg");
+                var jsonObj = deliveryModeJsonObj[key].validDeliveryModes, inventory = deliveryModeJsonObj[key].stockCount, quantityValue = $("#quantity_" + ussId).val(), stockAvailable = !1;
+                for (var count in jsonObj) inventory = jsonObj[count].inventory, parseFloat(quantityValue) <= parseFloat(inventory) && (stockAvailable = !0);
+                if (0 == stockAvailable) {
+                    var newUl = document.createElement("ul");
+                    newUl.setAttribute("id", ussId + "_qtyul"), newUl.setAttribute("class", "less-stock");
+                    var newLi = document.createElement("li"), text = document.createTextNode("Oops! We only have " + inventory + " in stock! For pincode : " + selectedPincode);
+                    newLi.appendChild(text), newUl.appendChild(newLi), $("#" + ussId + "_qty").append(newUl), 
+                    isStockAvailable = "N";
+                }
+                var newLi = document.createElement("li");
+                newLi.setAttribute("class", "methodHome");
+                var text = document.createTextNode("Home Delivery");
+                newLi.appendChild(text);
+                var newLi1 = document.createElement("li");
+                newLi1.setAttribute("class", "methodExpress");
+                var text = document.createTextNode("Express Delivery");
+                newLi1.appendChild(text);
+                var newLi2 = document.createElement("li");
+                newLi2.setAttribute("class", "methodClick");
+                var text = document.createTextNode("Click and Collect");
+                newLi2.appendChild(text);
+                var isHd = !1, isEd = !1, isCnc = !1;
+                for (var count in jsonObj) {
+                    var inventory = 0, deliveryType = jsonObj[count].type;
+                    inventory = jsonObj[count].inventory, "HD" === deliveryType ? isHd = !0 : "ED" === deliveryType ? isEd = !0 : "CNC" === deliveryType && (isCnc = !0);
+                }
+                isHd ? newLi.setAttribute("class", "methodHome") : newLi.setAttribute("class", "methodHome lowOpacity"), 
+                isEd ? newLi1.setAttribute("class", "methodExpress") : newLi1.setAttribute("class", "methodExpress lowOpacity"), 
+                isCnc ? newLi2.setAttribute("class", "methodClick") : newLi2.setAttribute("class", "methodClick lowOpacity"), 
+                newUi.appendChild(newLi), newUi.appendChild(newLi1), newUi.appendChild(newLi2), 
+                $("#" + ussId + "_li").append(newUi), $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").hide();
+            }
+        }
+        if ($("#defaultPinCodeIds").val(selectedPincode), "Y" === isServicable && "Y" === isStockAvailable) {
+            $("#isPincodeServicableId").val("Y"), $("#checkout-id #checkout-enabled").removeClass("checkout-disabled"), 
+            $("#checkout-id-down #checkout-down-enabled").removeClass("checkout-disabled"), 
+            $("#expresscheckoutid #expressCheckoutButtonId").removeClass("express-checkout-disabled");
+            if (-1 != document.referrer.indexOf("checkout") && 0 != $(".global-alerts").length) {
+                var errortext = $(".global-alerts,alert-danger, alert-dismissable").text();
+                null != errortext && "undefined" != errortext && "" != errortext && $(".global-alerts").remove();
+            }
+            if ("typeCheckout" == buttonType && redirectToCheckout(checkoutLinkURlId), "typeExpressCheckout" == buttonType) {
+                var expressCheckoutAddresId = $("#expressCheckoutAddressSelector").val();
+                $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/express?expressCheckoutAddressSelector=" + expressCheckoutAddresId);
+            }
+        } else $("#isPincodeServicableId").val("N"), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+        $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#expresscheckoutid #expressCheckoutButtonId").addClass("express-checkout-disabled");
+    },
     init: function() {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
         _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.deliveryaddressform(), 
-        _self.swipeLookBook(), _self.removeProdouct();
+        _self.swipeLookBook(), _self.removeProdouct(), _self.checkPincodeServiceability(), 
+        _self.checkIsServicable(), _self.populatePincodeDeliveryMode();
     }
 }, TATA.Pages = {
     PLP: {
@@ -13239,7 +13455,9 @@ TATA.CommonFunctions = {
     },
     PDP: {
         wishlistInit: function() {
-            $(document).on("click touchstart", ".add-to-wl-pdp", function() {
+            $(document).on("click touchstart", "#OutOfStockAddToWishList", function() {
+                $(".add-to-wl-pdp").hasClass("added") || $(".add-to-wl-pdp").trigger("click");
+            }), $(document).on("click touchstart", ".add-to-wl-pdp", function() {
                 if (!luxuryHeaderLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
                 var dataString = TATA.Pages.PDP.getDataString();
                 if ($(this).hasClass("added")) TATA.Pages.PDP.removeFromWishlist(dataString); else {
