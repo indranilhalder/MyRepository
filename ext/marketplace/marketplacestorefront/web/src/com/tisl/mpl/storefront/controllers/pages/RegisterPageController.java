@@ -255,23 +255,21 @@ public class RegisterPageController extends AbstractRegisterPageController
 				final String userAgent = request.getHeader(
 						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
 
-
 				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
 				{
-
 					final String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
 
-					final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
-
-
-					final Iterator it = mobileDeviceArray.iterator();
-
-					while (it.hasNext())
+					if (StringUtils.isNotEmpty(mobileDevices) && mobileDevices != null)
 					{
-						if (userAgent.contains(it.next().toString()))
+						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
+						final Iterator it = mobileDeviceArray.iterator();
+						while (it.hasNext())
 						{
-							isExist = true;
-							break;
+							if (userAgent.contains(it.next().toString()))
+							{
+								isExist = true;
+								break;
+							}
 						}
 					}
 					if (isExist)
@@ -289,7 +287,6 @@ public class RegisterPageController extends AbstractRegisterPageController
 				}
 				LOG.debug("The platform number is " + platformNumber);
 				//TPR-6272 ends here
-
 				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
