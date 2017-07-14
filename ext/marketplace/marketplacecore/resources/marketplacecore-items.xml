@@ -5728,15 +5728,6 @@
 			<itemtype code="AbstractOrderEntry" autocreate="false"
 				generate="false">
 				<attributes>
-				<!-- UF-260 starts here -->
-					<attribute qualifier="cartAdditionalDiscPerc" autocreate="true"
-						type="java.lang.Double">
-						<description>cartAdditional discount percentage Display</description>
-						<modifiers read="true" write="true" removable="true"
-							optional="true" initial="true" unique="true" />
-						<persistence type="property" />
-					</attribute>
-					<!-- UF-260 ends here -->
 					<attribute qualifier="description" autocreate="true"
 						type="java.lang.String">
 						<description>Description of Product</description>
