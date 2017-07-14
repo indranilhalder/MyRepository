@@ -10471,7 +10471,7 @@
 		<typegroup name="NPSFeedbackGroup">
 			<itemtype code="NPSFeedbackQuestion" generate="true"
 				autocreate="true" jaloclass="com.tisl.mpl.core.jalo.NPSFeedbackQuestion">
-				<deployment table="MplNPSFeedbackQuestion" typecode="20000" />
+				<deployment table="MplNPSFeedbackQuestion" typecode="15810" />
 
 				<attributes>
 
