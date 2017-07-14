@@ -624,6 +624,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
         <property name="categoryManager" ref="solrFirstVariantCategoryManager"/>
         <property name="priceDataFactory" ref="priceDataFactory"/>
         <property name="imageFormatMapping" ref="mplImageFormatMapping"/>
+        <property name="commonUtils" ref="commonUtils"/>
         
     </bean>
 	

@@ -23,6 +23,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.lux.facade.CommonUtils;
+
 
 /**
  * This class populates data into product data from solr search results
@@ -34,9 +36,31 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 {
 
 
-
+	private CommonUtils commonUtils;
+	
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
+
+	
+	
+	
+	/**
+	 * @return the commonUtils
+	 */
+	public CommonUtils getCommonUtils()
+	{
+		return commonUtils;
+	}
+
+
+
+	/**
+	 * @param commonUtils the commonUtils to set
+	 */
+	public void setCommonUtils(CommonUtils commonUtils)
+	{
+		this.commonUtils = commonUtils;
+	}
 
 	//private static final String DELIMETER = ":";
 	//private static final String STOCK = "STOCK";
@@ -289,15 +313,16 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 		//TPR-796
-		if (getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
+		if (commonUtils.isLuxurySite()||getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
 		{
 			addImageData(source, "luxurySearchPage", result);
+			addImageData(source, "luxuryModel", result);
+			addImageData(source, "luxurySecondary", result);
 		}
 		else
 		{
 			addImageData(source, "searchPage", result);
-			addImageData(source, "luxuryModel", result);
-			addImageData(source, "luxurySecondary", result);
+			
 		}
 		addImageData(source, "product", result);
 
