@@ -587,7 +587,7 @@ tr.d0 td {
 	<div id="productContentDivId"></div>
 	<c:choose>
 		<c:when
-			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
+			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories || product.rootCategory==finejewellery || product.rootCategory==fashionjewellery}">
 			<!-- Added for TISPRO-271 -->
 			<div class="trending" id="ia_products_complements"></div>
 			<div class="trending" id="ia_products"></div>
@@ -606,7 +606,7 @@ tr.d0 td {
 	<br /> <br />
 	<c:choose>
 		<c:when
-			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories|| product.rootCategory==finejewellery}">
+			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories|| product.rootCategory==finejewellery || product.rootCategory==fashionjewellery}">
 			<div class="view-similar-items" id="view-similar-items"></div>
 		</c:when>
 		<c:otherwise>
