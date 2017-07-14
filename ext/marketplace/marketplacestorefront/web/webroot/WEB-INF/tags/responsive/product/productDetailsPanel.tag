@@ -252,7 +252,7 @@ tr.d0 td {
    						 		<c:forEach var="classValue" items="${classification.value }">
    						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
    						 			 </c:forEach>
-   						 			 <a href="" class="more-link">More</a>
+   						 			 <span class="more-link">More</span>
 							  </c:if> 
 								</c:forEach>
 							</span> 

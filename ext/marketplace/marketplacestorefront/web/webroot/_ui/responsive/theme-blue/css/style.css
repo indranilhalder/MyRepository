@@ -76099,6 +76099,9 @@ body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
   	color: #a5173c;
   	cursor: pointer;
  	}
+ 	span.more-link{
+ 	cursor: pointer;
+ 	}
  	.certified-by h2 {
     font-size: 12px;
   	line-height: 1.33;
