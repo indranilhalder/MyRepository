@@ -81,11 +81,11 @@ public class MplShopByLookProductCarouselComponentController extends
 				 */
 				try
 				{
-					if (productFacade.getProductForOptions(productModel, PRODUCT_OPTIONS) != null)
+					ProductData productData = productFacade.getProductForOptions(productModel, PRODUCT_OPTIONS);
+					if (productData != null)
 					{
-						productPriceList.put(productModel.getCode(),
-								getProductPrice(productFacade.getProductForOptions(productModel, PRODUCT_OPTIONS)));
-						productDatas.add(productFacade.getProductForOptions(productModel, PRODUCT_OPTIONS));
+						productPriceList.put(productData.getCode(),getProductPrice(productData));
+						productDatas.add(productData);
 					}
 				}
 				catch (final Exception exception)

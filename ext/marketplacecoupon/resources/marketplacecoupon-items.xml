@@ -24,6 +24,14 @@
 	   
 		<collectiontype code="SellerDataCollection" elementtype="SellerMaster" 
 			autocreate="true" generate="false" />
+		<!-- added for TPR-4461 PaymentModeAndBankSpecificRestriction starts here -->
+			<collectiontype code="PaymentModeDataCollection" elementtype="PaymentMode"
+			autocreate="true" generate="false" type="list" />
+			<collectiontype code="PaymentTypeDataCollection" elementtype="PaymentType"
+			autocreate="true" generate="false" type="list" />
+		<collectiontype code="BankDataCollection" elementtype="Bank" 
+			autocreate="true" generate="false" type="list" />
+			<!-- added for TPR-4461 ends here -->
 
 
 	   <!--  <collectiontype code="DeliveryModeDataCollection" elementtype="DeliveryMode"
@@ -82,6 +90,41 @@
 			</attributes>
 		</itemtype>
 		<!-- TPR-715 Seller Restriction for Voucher ends -->
+		
+		
+		<!-- added for TPR-4461 PaymentModeAndBankSpecificRestriction starts here -->
+		<itemtype generate="true" code="PaymentModeRestriction"
+			jaloclass="com.tisl.mpl.jalo.PaymentModeRestriction" extends="Restriction"
+			autocreate="true">
+
+			<attributes>
+				<attribute autocreate="true" qualifier="paymentModes"
+					type="PaymentModeDataCollection">
+					<description>List of Payment Modes</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="paymentTypeData"
+					type="PaymentTypeDataCollection">
+					<description>List of Payment Modes</description>
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="banks"
+					type="BankDataCollection">
+					<description>List of Banks</description>
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+
+		</itemtype> 
+		<!-- added for TPR-4461 ends here-->
+		
+		
 		
 		<!-- Restriction : Commented as functionality out of scope of R2.1   Uncomment when in scope -->
 		<!-- Tata Etail-DeliveryModeRestriction -->

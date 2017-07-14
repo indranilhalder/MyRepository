@@ -1411,4 +1411,3 @@
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
 	});
 	</script>			
-				

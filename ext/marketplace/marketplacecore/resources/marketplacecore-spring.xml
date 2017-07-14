@@ -68,6 +68,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
 
+	<!-- TPR-4683 -->
+	<import	resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_instant_import-spring.xml" />
 		
 <!-- TPR-1316 -->	
 	<import
@@ -1462,7 +1464,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="mplCategorySource" parent="abstractCategorySource">
 		<property name="rootCategory" value="MSH1,LSH1" />
 	</bean>
-	
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH1" />
@@ -1869,6 +1870,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
  		autowire="byName" >
  	</bean>
+
   <!--   mrupee changes -->
      <bean id="mplThirdPartyWalletCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.payment.cronjob.MplThirdPartyWalletCronJob" autowire="byName">
     </bean>
@@ -1916,5 +1918,22 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="start" value="100000001" />
 		<property name="numeric" value="false" />
 	</bean>
+
+    <!-- TISPRD-8944 -->
+	<bean id="mplMobilePriceValueProvider"
+	class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePriceValueProvider"
+	parent="abstractPropertyFieldValueProvider">
+	<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	<property name="mplPriceRowService" ref="mplPriceRowService" />
+	<property name="priceService" ref="priceService" />
+	<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- End TISPRD-8944 -->
+    
+    <!-- Change for CAR-271 -->
+    <bean id="customPromotionService" class="de.hybris.platform.promotions.jalo.CustomPromotion" >
+    
+	</bean>
+    
 			
 </beans>

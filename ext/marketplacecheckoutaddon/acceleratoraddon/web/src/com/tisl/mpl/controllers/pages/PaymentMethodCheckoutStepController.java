@@ -33,6 +33,7 @@ import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.order.price.DiscountModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.jalo.order.price.JaloPriceFactoryException;
@@ -47,6 +48,10 @@ import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.voucher.VoucherService;
+import de.hybris.platform.voucher.model.PromotionVoucherModel;
+import de.hybris.platform.voucher.model.RestrictionModel;
+import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -60,6 +65,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.Resource;
@@ -121,6 +127,9 @@ import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
+import com.tisl.mpl.model.BankModel;
+import com.tisl.mpl.model.PaymentModeRestrictionModel;
+import com.tisl.mpl.model.PaymentTypeModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.storefront.constants.MessageConstants;
 import com.tisl.mpl.storefront.constants.ModelAttributetConstants;
@@ -140,6 +149,32 @@ import com.tisl.mpl.util.GenericUtilityMethods;
 public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepController
 {
 	private static final Logger LOG = Logger.getLogger(PaymentMethodCheckoutStepController.class);
+
+
+
+	//Added for TPR-4461 (GETTING THE BANK OF THE USER'S PAYMENT MODE) starts here
+	public static String bankNameUserPaymentMode;
+
+
+	/**
+	 * @return the bankNameUserPaymentMode
+	 */
+	public static String getBankNameUserPaymentMode()
+	{
+		return bankNameUserPaymentMode;
+	}
+
+
+	/**
+	 * @param bankNameUserPaymentMode
+	 *           the bankNameUserPaymentMode to set
+	 */
+	public static void setBankNameUserPaymentMode(final String bankNameUserPaymentMode)
+	{
+		PaymentMethodCheckoutStepController.bankNameUserPaymentMode = bankNameUserPaymentMode;
+	}
+
+	//TPR-4461 ends here
 
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
@@ -189,6 +224,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	@Resource(name = "frontEndErrorHelper")
 	private FrontEndErrorHelper frontEndErrorHelper;
+
+	//Added for TPR-4461 starts here
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+	//Added for TPR-4461 ends here
 
 	//@Autowired
 	//private MplCouponFacade mplCouponFacade;
@@ -417,6 +457,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
+
 			}
 			//TPR-629 --- based on orderModel
 			else
@@ -442,6 +485,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				model.addAttribute(MarketplacecheckoutaddonConstants.CARTTOORDERCONVERT, Boolean.TRUE); //INC144315475
 
 				GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, orderModel, null);
 			}
 
 			//creating new Payment Form
@@ -684,6 +729,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		//final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 		List<EMITermRateData> emiTermRate = new ArrayList<EMITermRateData>();
+
+		/////////////////TPR-4461///////////////////
+
+		//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
+		//	(null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank)) ? selectedEMIBank : null);//selected EMI BANK setting for voucher payment mode and bank specific restriction
+		if (null != selectedEMIBank && StringUtils.isNotEmpty(selectedEMIBank))
+		{
+			setBankNameUserPaymentMode(selectedEMIBank);
+		}
+		/////////////////TPR-4461///////////////////
+
 		//if (null != cartData && null != cartData.getTotalPrice())
 		//{
 		//final Double totalAmount = Double.valueOf((cartData.getTotalPrice().getValue().doubleValue()));
@@ -1594,6 +1650,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		//mRupee configuration ends
 
 
+
+		//		for (final OrderEntryData cartEntryData : cartData.getEntries())
+		//		{
+		//			final CartModel cartModel = getCartService().getSessionCart();
+		//			final List<AbstractOrderEntryModel> cartEntryList = cartModel.getEntries();
+		//			for (final AbstractOrderEntryModel cartEntryModel : cartEntryList)
+		//			{
 		if (null != cartData)
 		{
 			if (null != cartData.getEntries())
@@ -1627,7 +1690,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				//TISSTRT-1501 starts
 			}
+
+			//			if (null != cartEntryData && cartEntryData.getScheduledDeliveryCharge() != null)
+			//			{
+			//				if (cartEntryData.getScheduledDeliveryCharge().doubleValue() > 0)
+			//				{
+			//					// final CartModel cartModel = getCartService().getSessionCart();
+			//					final MplBUCConfigurationsModel configModel = mplConfigFacade.getDeliveryCharges();
+			//					cartData
+			//							.setDeliverySlotCharge(mplCheckoutFacade.createPrice(cartModel, Double.valueOf(configModel.getSdCharge())));
+			//				}
+			//			}
+
 		}
+		//			}
 		//TISSTRT-1501 ends
 		model.addAttribute(MarketplacecheckoutaddonConstants.JUSPAYJSNAME,
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.JUSPAYJSNAMEVALUE));
@@ -1637,7 +1713,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				getConfigurationService().getConfiguration().getString(MarketplacecheckoutaddonConstants.TNCLINKVALUE));
 
 	}
-
 
 	//COde commented as not used
 	//	/**
@@ -2023,7 +2098,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			final Long codUpperLimit = getBaseStoreService().getCurrentBaseStore().getCodUpperLimit();
 			final Long codLowerLimit = getBaseStoreService().getCurrentBaseStore().getCodLowerLimit();
 
-
 			if (null == orderModel)
 			{
 				//Existing code for cart
@@ -2114,7 +2188,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					//						}
 					//					}
 
-
 					//INC144316663
 
 					//final boolean isCodLimitFailed = (cart.getTotalPrice().longValue() <= codUpperLimit.longValue()) ? false : true;
@@ -2124,12 +2197,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (isCodEligible)
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
 						addDataForCODToModel(model, cart); //moved to single code for reuse
 					}
 					else
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					}
 				}
 				else
@@ -2280,12 +2355,14 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 					if (isCodEligible)
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.NOT_BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_ELIGIBLE.toString());
 						addDataForCODToModel(model, orderModel);
 					}
 					else
 					{
-						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.BLACKLISTED.toString());
+						//For UF-277 message changed
+						model.addAttribute(MarketplacecheckoutaddonConstants.CODELIGIBLE, CodCheckMessage.ITEMS_NOT_ELIGIBLE.toString());
 					}
 				}
 				else
@@ -2428,7 +2505,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 				savedCreditCards = (Map<Date, SavedCardData>) storedSavedCards.getFirst();
 				savedDebitCards = (Map<Date, SavedCardData>) storedSavedCards.getSecond();
-
 				LOG.debug("Credit Card" + savedCreditCards);
 				LOG.debug("Debit Card" + savedDebitCards);
 				LOG.debug("*********************************************************************");
@@ -2553,8 +2629,6 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 		setupMplMessages(model);
 	}
-
-
 
 
 	/**
@@ -2975,6 +3049,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		OrderModel orderModel = null;
 		MplPromoPriceData responseData = new MplPromoPriceData();
 		String jsonResponse = MarketplacecommerceservicesConstants.EMPTY;
+		CartData cartData = null;
+		OrderData orderData = null;
 		try
 		{
 			if (StringUtils.isNotEmpty(guid))
@@ -3034,7 +3110,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 						}
 					}
 
-					final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
+					cartData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 					responseData = getMplPaymentFacade().applyPromotions(cartData, null, cart, null, responseData);
 					//					if (cart != null && cart.getEntries() != null && MapUtils.isNotEmpty(freebieModelMap))
 					//					{
@@ -3150,11 +3226,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 
 					//TISST-7955
-					final CartData promotedCartData = getMplCustomAddressFacade().getCheckoutCart();
 					final Map<String, String> ussidPricemap = new HashMap<String, String>();
-					if (promotedCartData != null)
+					if (cartData != null)
 					{
-						for (final OrderEntryData entryData : promotedCartData.getEntries())
+						for (final OrderEntryData entryData : cartData.getEntries())
 						{
 							ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(),
 									entryData.getTotalPrice().getFormattedValue());
@@ -3162,6 +3237,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 					final ObjectMapper objectMapper = new ObjectMapper();
 					jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+					//UF-260
+					GenericUtilityMethods.getCartPriceDetails(null, cart, responseData);
 				}
 
 			}
@@ -3209,7 +3287,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 					}
 				}
 
-				final OrderData orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
+				orderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				responseData = getMplPaymentFacade().applyPromotions(null, orderData, null, orderModel, responseData);
 
 				getMplPaymentFacade().populateDelvPOSForFreebie(orderModel, freebieModelMap, freebieParentQtyMap);
@@ -3262,11 +3340,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 
 				//TISST-7955
-				final OrderData promotedOrderData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				final Map<String, String> ussidPricemap = new HashMap<String, String>();
-				if (promotedOrderData != null)
+				if (orderData != null)
 				{
-					for (final OrderEntryData entryData : promotedOrderData.getEntries())
+					for (final OrderEntryData entryData : orderData.getEntries())
 					{
 						ussidPricemap.put(entryData.getSelectedUssid() + "_" + entryData.isGiveAway(),
 								entryData.getTotalPrice().getFormattedValue());
@@ -3274,6 +3351,9 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				}
 				final ObjectMapper objectMapper = new ObjectMapper();
 				jsonResponse = objectMapper.writeValueAsString(ussidPricemap);
+
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(null, orderModel, responseData);
 			}
 			//}
 		}
@@ -3340,6 +3420,11 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//binData = getBinFacade().binCheck(binNumber);
 				//Added For TPR-1035
 				binData = getBinFacade().binCheck(binNumber, cardType, mplCustomerID, true);
+				//Added for TPR-4461 starts here for voucher
+				LOG.debug("Inside bincheck::::::The bank name to be set while selecting the card for payment is "
+						+ binData.getBankName());
+				setBankNameUserPaymentMode(binData.getBankName());
+				//TPR-4461 ends here
 			}
 
 		}
@@ -3452,11 +3537,20 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.CREATEJUSPAYORDER, method = RequestMethod.GET)
 	@RequireHardLogIn
-	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String addressLine1,
-			final String addressLine2, final String addressLine3, final String country, final String state, final String city,
-			final String pincode, final String cardSaved, final String sameAsShipping, final String guid) //Parameter guid added for TPR-629
+	public @ResponseBody String createJuspayOrder(final String firstName, final String lastName, final String netBankName,
+			final String addressLine1, final String addressLine2, final String addressLine3, final String country,
+			final String state, final String city, final String pincode, final String cardSaved, final String sameAsShipping,
+			final String guid) //Parameter guid added for TPR-629 //parameter netBankName added for TPR-4461
 			throws EtailNonBusinessExceptions
 	{
+		//TPR-4461 parameter netBankName added starts here added only for getting bank name for netbanking/saved credit card/saved debit card
+		LOG.debug("The bank name for netbanking is" + netBankName);
+		if (StringUtils.isNotEmpty(netBankName) && netBankName != null)
+		{
+			setBankNameUserPaymentMode(netBankName);//Card's Bank List
+		}
+
+		//TPR-4461 parameter netBankName added ends here added only for netbanking bankname
 		String orderId = null;
 		try
 		{
@@ -3510,6 +3604,87 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for catModel
 				final CartModel cart = getCartService().getSessionCart();
+
+				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+						.getAppliedVouchers(cart));
+
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					VoucherModel appliedVoucher = null;
+
+					final DiscountModel discount = voucherList.get(0);
+
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					{
+						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+						appliedVoucher = promotionVoucherModel;
+
+						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+						for (final RestrictionModel restriction : restrictions)
+						{
+							if (restriction instanceof PaymentModeRestrictionModel)
+							{
+								boolean willApply = false;
+
+								final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
+
+								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+										.getPaymentTypeData(); //Voucher Payment mode
+								final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
+								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-1  : the banklist set in voucher is: "
+										+ bankLists);
+
+								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+
+								LOG.debug("Inside createjuspay order method ::cart model:: TISSTRT-1526-2  : the bank selected while paying through card is: "
+										+ banknameforUserPaymentMode);
+
+								if (CollectionUtils.isNotEmpty(paymentTypeList))
+								{
+									if (StringUtils.isNotEmpty(paymentModeCard))
+									{
+										for (final PaymentTypeModel paymentType : paymentTypeList)
+										{
+											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											{
+												if (CollectionUtils.isEmpty(bankLists))
+												{
+													willApply = true;
+												}
+												else
+												{
+													LOG.debug("Inside createjuspay order method ::cart model::before sending for bin validation:: TISSTRT-1526-3  : the parameters passed for bank validation are: "
+															+ " banklist set in voucher: "
+															+ bankLists
+															+ " card bank: "
+															+ banknameforUserPaymentMode);
+													willApply = getMplPaymentFacade().validateBank(bankLists, banknameforUserPaymentMode);
+												}
+												break;
+
+											}
+
+										}
+									}
+									else
+									{
+										willApply = true;
+									}
+								}
+
+								if (willApply == false)
+								{
+									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								}
+							}
+
+						}
+					}
+				}
+				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
+
 				//added for CAR:127
 				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 				//added for CAR:127
@@ -3653,6 +3828,78 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			}
 			else
 			{
+				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+						orderModel));
+
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					VoucherModel appliedVoucher = null;
+
+					final DiscountModel discount = voucherList.get(0);
+
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					{
+						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+						appliedVoucher = promotionVoucherModel;
+
+						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+						for (final RestrictionModel restriction : restrictions)
+						{
+							if (restriction instanceof PaymentModeRestrictionModel)
+							{
+								boolean willApply = false;
+
+								final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
+
+								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+										.getPaymentTypeData(); //Voucher Payment mode
+								final List<BankModel> bankLists = ((PaymentModeRestrictionModel) restriction).getBanks(); //Voucher Bank Restriction List
+								final String banknameforUserPaymentMode = getBankNameUserPaymentMode(); // Bank of User's Payment Mode
+
+
+
+								if (CollectionUtils.isNotEmpty(paymentTypeList))
+								{
+									if (StringUtils.isNotEmpty(paymentModeCard))
+									{
+										for (final PaymentTypeModel paymentType : paymentTypeList)
+										{
+											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											{
+												if (CollectionUtils.isEmpty(bankLists))
+												{
+													willApply = true;
+												}
+												else
+												{
+													willApply = getMplPaymentFacade().validateBank(bankLists, banknameforUserPaymentMode);
+
+												}
+												break;
+											}
+
+
+										}
+									}
+									else
+									{
+										willApply = true;
+									}
+								}
+
+
+								if (willApply == false)
+								{
+									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								}
+							}
+
+						}
+					}
+				}
+				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
 				//added for CAR:127
 				oData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				//added for CAR:127
@@ -3786,6 +4033,17 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	public @ResponseBody Map<Date, SavedCardData> getEMIBankCards(final String bankName) throws InvalidCartException
 	{
 		LOG.info("Bank selected is:::::" + bankName);
+
+		/////////////////TPR-4461///////////////////
+
+		//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
+		//	(null != bankName && StringUtils.isNotEmpty(bankName)) ? bankName : null);//selected EMI BANK setting for voucher payment mode and bank specific restriction
+		if (null != bankName && StringUtils.isNotEmpty(bankName))
+		{
+			setBankNameUserPaymentMode(bankName);
+		}
+		/////////////////TPR-4461///////////////////
+
 		final CustomerModel customer = (CustomerModel) getUserService().getCurrentUser();
 		final Map<Date, SavedCardData> listStoredEMICards = getMplPaymentFacade().listStoredEMICards(customer, bankName);
 		return listStoredEMICards;
@@ -4566,6 +4824,69 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
+
+				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
+						.getAppliedVouchers(cart));
+
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					VoucherModel appliedVoucher = null;
+
+					final DiscountModel discount = voucherList.get(0);
+
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					{
+						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+						appliedVoucher = promotionVoucherModel;
+
+						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+						for (final RestrictionModel restriction : restrictions)
+						{
+							if (restriction instanceof PaymentModeRestrictionModel)
+							{
+								boolean willApply = false;
+
+
+								final String paymentModeCard = cart.getModeOfPayment();//Card Payment Mode
+
+
+								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+										.getPaymentTypeData(); //Voucher Payment mode
+
+
+								if (CollectionUtils.isNotEmpty(paymentTypeList))
+								{
+									if (StringUtils.isNotEmpty(paymentModeCard))
+									{
+										for (final PaymentTypeModel paymentType : paymentTypeList)
+										{
+											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											{
+												willApply = true;
+												break;
+											}
+
+										}
+									}
+									else
+									{
+										willApply = true;
+									}
+								}
+
+								if (willApply == false)
+								{
+									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								}
+							}
+
+						}
+					}
+				}
+				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
+
 				//added for CAR:127
 				final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 				//added for CAR:127
@@ -4643,6 +4964,64 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//Code implemented for Order TPR-629
 			else
 			{
+				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+						orderModel));
+
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					VoucherModel appliedVoucher = null;
+
+					final DiscountModel discount = voucherList.get(0);
+
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					{
+						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+						appliedVoucher = promotionVoucherModel;
+
+						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+						for (final RestrictionModel restriction : restrictions)
+						{
+							if (restriction instanceof PaymentModeRestrictionModel)
+							{
+								boolean willApply = false;
+
+								final String paymentModeCard = orderModel.getModeOfOrderPayment();//Card Payment Mode
+
+								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+										.getPaymentTypeData(); //Voucher Payment mode
+
+								if (CollectionUtils.isNotEmpty(paymentTypeList))
+								{
+									if (StringUtils.isNotEmpty(paymentModeCard))
+									{
+										for (final PaymentTypeModel paymentType : paymentTypeList)
+										{
+											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											{
+												willApply = true;
+												break;
+											}
+
+										}
+									}
+									else
+									{
+										willApply = true;
+									}
+								}
+
+								if (willApply == false)
+								{
+									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								}
+							}
+
+						}
+					}
+				}
+				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
 				//TPR-815
 				if (!getMplCheckoutFacade().isPromotionValid(orderModel))
 				{
@@ -4742,6 +5121,70 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				if (getCartService().hasSessionCart())
 				{
 					final CartModel cart = getCartService().getSessionCart();
+
+					//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
+					final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+							cart));
+
+					if (CollectionUtils.isNotEmpty(voucherList))
+					{
+						VoucherModel appliedVoucher = null;
+
+						final DiscountModel discount = voucherList.get(0);
+
+						if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+						{
+							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+							appliedVoucher = promotionVoucherModel;
+
+							final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+							for (final RestrictionModel restriction : restrictions)
+							{
+								if (restriction instanceof PaymentModeRestrictionModel)
+								{
+									boolean willApply = false;
+
+
+									final String paymentModeCard = cart.getModeOfPayment();//Customer's selected Payment Mode
+
+
+									final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+											.getPaymentTypeData(); //Voucher Payment mode
+
+
+									if (CollectionUtils.isNotEmpty(paymentTypeList))
+									{
+										if (StringUtils.isNotEmpty(paymentModeCard))
+										{
+											for (final PaymentTypeModel paymentType : paymentTypeList)
+											{
+												if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+												{
+													willApply = true;
+													break;
+												}
+
+											}
+										}
+										else
+										{
+											willApply = true;
+										}
+									}
+
+									if (willApply == false)
+									{
+										return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+									}
+								}
+
+							}
+						}
+					}
+					//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
+
+
 					//added for CAR:127
 					final CartData cData = getMplCartFacade().getCartDataFromCartModel(cart, false);
 					//added for CAR:127
@@ -4869,6 +5312,64 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			else
 			{
+				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
+				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService().getAppliedVouchers(
+						orderModel));
+
+				if (CollectionUtils.isNotEmpty(voucherList))
+				{
+					VoucherModel appliedVoucher = null;
+
+					final DiscountModel discount = voucherList.get(0);
+
+					if (discount != null && discount instanceof PromotionVoucherModel)//null check added for discount as per IQA review
+					{
+						final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
+						appliedVoucher = promotionVoucherModel;
+
+						final Set<RestrictionModel> restrictions = appliedVoucher.getRestrictions();
+						for (final RestrictionModel restriction : restrictions)
+						{
+							if (restriction instanceof PaymentModeRestrictionModel)
+							{
+								boolean willApply = false;
+
+								final String paymentModeCard = orderModel.getModeOfOrderPayment();////Customer's selected Payment Mode
+
+								final List<PaymentTypeModel> paymentTypeList = ((PaymentModeRestrictionModel) restriction)
+										.getPaymentTypeData(); //Voucher Payment mode
+
+								if (CollectionUtils.isNotEmpty(paymentTypeList))
+								{
+									if (StringUtils.isNotEmpty(paymentModeCard))
+									{
+										for (final PaymentTypeModel paymentType : paymentTypeList)
+										{
+											if (StringUtils.equalsIgnoreCase(paymentType.getMode(), paymentModeCard))
+											{
+												willApply = true;
+												break;
+											}
+
+										}
+									}
+									else
+									{
+										willApply = true;
+									}
+								}
+
+								if (willApply == false)
+								{
+									return MarketplacecheckoutaddonConstants.REDIRECTTOCOUPON;
+								}
+							}
+
+						}
+					}
+				}
+				//TPR-4461 Ends here for payment mode and bank restriction validation for Voucher
+
 				//added for CAR:127
 				oData = getMplCheckoutFacade().getOrderDetailsForCode(orderModel);
 				//added for CAR:127
@@ -5098,5 +5599,29 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 		return null;
 
 	}
+
+
+	//TPR-4461 starts here
+
+	/**
+	 * @return the voucherService
+	 */
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+	//TPR-4461 ends here
+
 
 }

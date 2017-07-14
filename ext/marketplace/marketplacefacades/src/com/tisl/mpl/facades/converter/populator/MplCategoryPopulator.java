@@ -47,6 +47,7 @@ public class MplCategoryPopulator extends CategoryPopulator
 	 */
 	private void populateSuperCategories(final Collection<CategoryModel> allSupercategories, final CategoryData target)
 	{
+		//TPR-4831
 		//target.setSuperCategories(Converters.convertAll(allSupercategories, getMplSubSuperCategoryConverter()));
 		final TreeMap<Integer, CategoryModel> treeMap = new TreeMap<Integer, CategoryModel>();
 		for (final CategoryModel superCategory : allSupercategories)

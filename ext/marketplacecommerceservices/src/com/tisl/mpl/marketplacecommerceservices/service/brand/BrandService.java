@@ -8,6 +8,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import java.util.List;
 import java.util.Map;
 
+import com.tisl.mpl.core.model.PriorityBrandsModel;
 import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 
 
@@ -38,4 +39,5 @@ public interface BrandService
 
 
 	List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury);
+	public List<PriorityBrandsModel> priorityBrands(final String categoryCode);
 }

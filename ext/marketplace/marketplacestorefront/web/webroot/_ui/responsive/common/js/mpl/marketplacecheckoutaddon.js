@@ -167,6 +167,7 @@ function refresh(){
 	$(".pay button, #make_cc_payment_up, #make_saved_cc_payment_up, .cod_payment_button_top , .make_mrupee_payment_up").css("opacity","1");
 	$(".pay .spinner").remove();
 	$("#no-click,.spinner").remove();
+
 	// $(".checkout-content.checkout-payment
 	// .left-block").css("margin-top","0px");
 	
@@ -266,7 +267,7 @@ function displayNetbankingForm(){
 		error : function(resp) {
 			$(".nbButton").css("display","none");
 			$(".nbAjaxError").css("display","block");
-			$("#no-click,.spinner").remove();
+			$("#no-click,.loaderDiv").remove();
 			$(".make_payment").removeAttr('disabled');
 		}
 	});
@@ -439,6 +440,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_TSHIP")
@@ -450,6 +453,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="ITEMS_NOT_ELIGIBLE")
@@ -461,6 +466,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else if(codEligible=="NOT_PINCODE_SERVICEABLE")
@@ -472,6 +479,8 @@ function displayCODForm()
 				$("#otpSentMessage").css("display","none");
 				// $("#no-click").remove();
 				$(".terms.cod").remove();
+				$("#paymentButtonId").css("display","none");//INC144315258 
+				$('#paymentFormButton').attr('style', 'display: none !important');//INC144315258 
 				applyPromotion(null,"none","none");
 			}
 			else{
@@ -525,13 +534,13 @@ function displayCODForm()
 							$("#paymentDetails").css("display","block");
 							$("#otpSentMessage").css("display","none");
 							$("#codErrorMessage").css("display","block");
-							$("#no-click,.spinner").remove();
+							$("#no-click,.loaderDiv").remove();
 						}
 					});
 				}
 				else{
 					$("#convChargeFieldId, #convChargeField").css("display","block");
-					$("#no-click,.spinner").remove();
+					$("#no-click,.loaderDiv").remove();
 				}
 			}
 		},
@@ -542,7 +551,7 @@ function displayCODForm()
 			$("#paymentDetails").css("display","block");
 			$("#otpSentMessage").css("display","none");
 			$("#codErrorMessage").css("display","block");
-			$("#no-click,.spinner").remove();
+			$("#no-click,.loaderDiv").remove();
 			// $(".make_payment").removeAttr('disabled');
 		}
 	});
@@ -756,7 +765,7 @@ function submitForm(){
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 							$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-							$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+							$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 							/*TPR-3446 COD After OTP Entered ends*/
 							$("#silentOrderPostForm").submit();
 						}
@@ -771,8 +780,8 @@ function submitForm(){
 						alert("Error validating OTP. Please select another payment mode and proceed");
 						$(".pay button,.cod_payment_button_top").prop("disabled",false);
 						$(".pay button,.cod_payment_button_top").css("opacity","1");
-						$(".pay .spinner").remove();
-						$("#no-click,.spinner").remove();
+						$(".pay .loaderDiv").remove();
+						$("#no-click,.loaderDiv").remove();
 						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
 					}
 				}
@@ -786,8 +795,8 @@ function submitForm(){
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
 				$(".pay button,.cod_payment_button_top").css("opacity","1");
-				$(".pay .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$(".pay .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 				paymentErrorTrack("pay_cod_otp_error");
 			}
 		});
@@ -1328,11 +1337,11 @@ function mobileBlacklist(){
 	/*TPR-3446 COD starts*/
 	//$("#sendOTPButton").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right: 10%;bottom: 0px; height: 30px;">');
 	$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 	/*TPR-3446 COD ends*/
 	
 	if($("#sendOTPButton #resendOTPMessage").css("display") == 'block') {
-		$("#sendOTPButton .spinner").css("bottom","33px")
+		$("#sendOTPButton .loaderDiv").css("bottom","33px")
 	}
 	var number=$("#otpMobileNUMField").val();
 	//alert(number);
@@ -1351,13 +1360,13 @@ function mobileBlacklist(){
 			else{
 				$("#enterOTP, #paymentFormButton, #resendOTPMessage").css("display","none");
 				$("#customerBlackListMessage").css("display","block");
-				$("#sendOTPButton .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$("#sendOTPButton .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 			}
 		},
 		error : function(resp) {
-			$("#sendOTPButton .spinner").remove();
-			$("#no-click,.spinner").remove();
+			$("#sendOTPButton .loaderDiv").remove();
+			$("#no-click,.loaderDiv").remove();
 		}
 	});
 	}
@@ -1416,12 +1425,12 @@ function generateOTP(){
 				
 			}
 			
-			$("#sendOTPButton .spinner").remove();
-			$("#no-click,.spinner").remove();
+			$("#sendOTPButton .loaderDiv").remove();
+			$("#no-click,.loaderDiv").remove();
 		},
 		error : function(resp) {
-			$("#sendOTPButton .spinner").remove();
-			$("#no-click,.spinner").remove();
+			$("#sendOTPButton .loaderDiv").remove();
+			$("#no-click,.loaderDiv").remove();
 			alert("OTP cannot be generated at this time due to technical errors. Please select another payment mode and proceed");
 		}
 	});
@@ -1671,7 +1680,7 @@ $("#otpMobileNUMField").focus(function(){
   
   
  
- 
+ //Parameter added for TPR-4461 netBankName FOR getting bank name of saved credit card
   function createJuspayOrderForSavedCard(){
 	  	var staticHost=$('#staticHost').val();
 		$(".pay button, #make_saved_cc_payment_up").prop("disabled",true);
@@ -1684,13 +1693,16 @@ $("#otpMobileNUMField").focus(function(){
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		var staticHost = $('#staticHost').val();
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		
 		/*TPR-3446 new ends*/
 	  // TISPRO-153
 		sendTealiumData();
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
+		
+		var netBankName=bankNameSelected;//Added for TPR-4461
+		
 		var guid=$("#guid").val();
         //TISPRO-313	
 		//if($(".redirect").val()=="false"){
@@ -1698,7 +1710,7 @@ $("#otpMobileNUMField").focus(function(){
 		//}
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping , 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1712,7 +1724,19 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
-				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+									    
+				}
+				//TPR-4461 ENDS HERE
+			    else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
 //					}
@@ -1722,8 +1746,8 @@ $("#otpMobileNUMField").focus(function(){
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
-					$("#no-click,.spinner").remove();
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}
 				else if(response=='redirect_with_details'){
@@ -1778,12 +1802,13 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
-				$(".pay .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$(".pay .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 			}
 		});		
 	}
   
+  //Parameter netBankName added for TPR-4461 FOR getting bank name for saved debit card
   function createJuspayOrderForSavedDebitCard(){
 	  
 	  	var staticHost=$('#staticHost').val();
@@ -1796,13 +1821,15 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay .spinner").css("left",(($(".pay.saved-card-button").width()+$(".pay.saved-card-button button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		/*TPR-3446 new ends*/
 		// TISPRO-153		
 		sendTealiumData();
 
 		var firstName=lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
 		var cardSaved=sameAsShipping=false;
+		
+		var netBankName=bankNameSelected;//Added for TPR-4461
       //TISPRO-313	
 		//if($(".redirect").val()=="false"){
 			//Juspay.startSecondFactor();
@@ -1811,7 +1838,7 @@ $("#otpMobileNUMField").focus(function(){
 		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'sameAsShipping' : sameAsShipping, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			async: false,
@@ -1826,6 +1853,17 @@ $("#otpMobileNUMField").focus(function(){
 				}else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1836,8 +1874,8 @@ $("#otpMobileNUMField").focus(function(){
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_saved_dc_payment_up").prop("disabled",false);
 					$(".pay button, #make_saved_dc_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
-					$("#no-click,.spinner").remove();
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{
 
@@ -1885,8 +1923,8 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
-				$(".pay .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$(".pay .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 			}
 		});		
 	}
@@ -1905,8 +1943,8 @@ $("#otpMobileNUMField").focus(function(){
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
-		console.log(1);
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
+		//console.log(1);
 		/*TPR-3446 credit card ends*/
 		
 		// TISPRO-153
@@ -1963,6 +2001,17 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){	
 //					if($(".redirect").val()=="false"){
 //						Juspay.stopSecondFactor();
@@ -1973,8 +2022,8 @@ $("#otpMobileNUMField").focus(function(){
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_cc_payment_up").prop("disabled",false);
 					$(".pay button, #make_cc_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
-					$("#no-click,.spinner").remove();
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{	
 					//TISSTRT-1391
@@ -1997,7 +2046,7 @@ $("#otpMobileNUMField").focus(function(){
 					 }, 1000);
 			
 				}
-				$("#no-click,.spinner").remove();
+				$("#no-click,.loaderDiv").remove();
 			},
 			error : function(resp) {
 				if($(".redirect").val()=="false"){
@@ -2005,12 +2054,57 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				$(".pay button, #make_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_cc_payment_up").css("opacity","1");
-				$(".pay .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$(".pay .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 				paymentErrorTrack("juspay_unavailable");
 			}
 		});		
 	}
+  
+  
+  //TPR-4461 explicit link for coupon release for PAYMENT MODE AND BANK SPECIFIC RESTRICTION for Coupon starts here
+  function explicit_coupon_release_function(){
+	    var couponCode=$("#couponFieldId").val();
+		var guid=$("#guid").val();
+		$.ajax({
+	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
+	 		type: "POST",
+	 		cache: false,
+	 		data: { 'couponCode' : couponCode , 'guid' : guid},
+	 		success : function(response) {
+	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
+	 			$("#codAmount").text(response.totalPrice.formattedValue);
+	 			// alert(response.totalPrice.formattedValue);
+	 			if(response.couponReleased==true){
+	 				couponApplied=true;
+	 			}
+	 			if(couponApplied==true){
+	 				$("#couponApplied, #priceCouponError, #emptyCouponError, #appliedCouponError, #invalidCouponError," +
+	 						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError").css("display","none");
+	 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
+	 				// $("#couponFieldId").attr('disabled','enabled');
+	 				//TPR-4461 starts here
+						$('#couponPaymentRestrictionMessage').hide();
+					//TPR-4461 ends here
+	 				
+	 				$('#couponFieldId').attr('readonly', false);
+	 				var selection = $("#voucherDisplaySelection").val();
+	 				$("#couponFieldId").val(selection);
+	 				// $("#couponFieldId").val("");
+	 				$("#couponMessage").html("Coupon <b>"+couponCode+"</b> has been removed");
+	 				$('#couponMessage').show();
+	 				$('#couponMessage').delay(2000).fadeOut('slow');
+	 				setTimeout(function(){ $("#couponMessage").html(""); }, 2500); 			}
+	 			
+	 				$("#couponSubmitButton").prop('disabled', false);
+	 				$("#couponSubmitButton").css("opacity","1");
+	 		},
+	 		error : function(resp) {
+	 		}
+	 	});  
+ }
+ //TPR-4461 explicit link for coupon release for PAYMENT MODE AND BANK SPECIFIC RESTRICTION for Coupon ends here
+  
   
   function createJuspayOrderForNewCardEmi(){
 	    var staticHost=$('#staticHost').val();  
@@ -2024,7 +2118,7 @@ $("#otpMobileNUMField").focus(function(){
 		$(".pay .spinner").css("left",(($(".pay.newCardPayment").width()+$(".pay.newCardPayment button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		/*TPR-3446 new ends*/
 		// TISPRO-153
 		sendTealiumData();
@@ -2072,6 +2166,18 @@ $("#otpMobileNUMField").focus(function(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay button, #make_emi_payment_up").prop("disabled",false);
+					$(".pay button, #make_emi_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+									    
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 					/*TPR-4776*/
 					paymentErrorTrack("juspay_unavailable");
@@ -2079,8 +2185,8 @@ $("#otpMobileNUMField").focus(function(){
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, #make_emi_payment_up").prop("disabled",false);
 					$(".pay button, #make_emi_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
-					$("#no-click,.spinner").remove();
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}else{		
 					 //TISPRO-313
@@ -2103,8 +2209,8 @@ $("#otpMobileNUMField").focus(function(){
 				}
 				$(".pay button, #make_cc_payment_up").prop("disabled",false);
 				$(".pay button, #make_cc_payment_up").css("opacity","1");
-				$(".pay .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$(".pay .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 				paymentErrorTrack("juspay_unavailable");
 			}
 		});		
@@ -2636,16 +2742,19 @@ $("#otpMobileNUMField").focus(function(){
  function taCount(taObj,Cnt) { 
 	 						 
  	objCnt=createObject(Cnt);
- 	console.log("inside objcnt");
+ 	//console.log("inside objcnt");
  	objVal=taObj.value;
- 	console.log("inside objVal");
+ 	//console.log("inside objVal");
  	if (objVal.length>maxL) objVal=objVal.substring(0,maxL);
  	if (objCnt) {
  		if(bName == "Netscape"){	
  			objCnt.textContent=maxL-objVal.length;
- 			console.log("inside textcontent");}
- 		else{objCnt.innerText=maxL-objVal.length;
- 		console.log("inside innerText");}
+ 			//console.log("inside textcontent");
+ 		}
+ 		else{
+ 			objCnt.innerText=maxL-objVal.length;
+ 			//console.log("inside innerText");
+ 		}
  	}
  
  	return true;
@@ -3050,14 +3159,14 @@ function validateName() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -3085,14 +3194,14 @@ function validateNameDc() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -3120,14 +3229,14 @@ function validateNameEmi() {
 			errorHandle.innerHTML = "  Please enter a valid name. ";
 			return false;
 		}else if (name.length < 3) {
-			errorHandle.innerHTML = "   Name must be longer. ";
+			errorHandle.innerHTML = "   Please enter a valid name. ";
 			return false; 
 		} else {
 			for ( var index = 0; index < name.length; index++){
 				if (name.toUpperCase().charAt(index) < 'A'
 						|| name.toUpperCase().charAt(index) > 'Z'){
 					if (name.charAt(index) != ' ') {
-						errorHandle.innerHTML = "   Only alphabets and spaces allowed. ";
+						errorHandle.innerHTML = "   Please enter a valid name. ";
 						return false;
 					}
 				}		
@@ -3174,7 +3283,7 @@ function validateCVV() {
 	{
 		var number = handle[0].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -3188,7 +3297,7 @@ function validateCVV() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -3212,7 +3321,7 @@ function validateCVVDc() {
 	{
 		var number = handle[1].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -3226,7 +3335,7 @@ function validateCVVDc() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -3250,7 +3359,7 @@ function validateCVVEmi() {
 	{
 		var number = handle[2].value;
 		if (number == "") {
-			errorHandle.innerHTML = "Please enter CVV.";
+			errorHandle.innerHTML = "Please enter a valid CVV number.";
 			return false;
 		} else {
 			var count = 0;
@@ -3264,7 +3373,7 @@ function validateCVVEmi() {
 				for ( var index = 0; index < number.length; index++)
 					if (number.charAt(index) < '0'
 							|| number.charAt(index) > '9' || number.length < 3) {
-						errorHandle.innerHTML = "Please enter CVV.";
+						errorHandle.innerHTML = "Please enter a valid CVV number.";
 						return false;
 					}
 			}
@@ -3496,7 +3605,7 @@ function validateCardNo(formSubmit) {
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
 						}
 					}
-					else if(document.getElementById("paymentMode").value=='Credit Card'){
+					/*else if(document.getElementById("paymentMode").value=='Credit Card'){
 						if(response.cardType=="" || response.cardType==null || response.cardType=="CREDIT" || response.cardType=="CC" || response.cardType=="Credit")
 						{
 							binStatus=true;
@@ -3514,7 +3623,14 @@ function validateCardNo(formSubmit) {
 							}
 							errorHandle.innerHTML = "Please enter a valid Credit Card number";
 						}
+					}*/
+					else{
+						binStatus=true;
+						applyPromotion(null,binStatus,formSubmit);
+						errorHandle.innerHTML = "";
+						return true;
 					}
+					
 				}
 			}
 		},
@@ -4198,7 +4314,7 @@ $('#cardNo').keyup(function(){
 	       cardType = creditCardTypeFromNumber($(this).val());
 	   }
 	   else if($(this).val().length < 2){
-		   console.log('bbb');
+		  // console.log('bbb');
 		   document.getElementById("cardType").value="";
 		   $('ul.accepted-cards li').removeClass('active-card');
 	   }
@@ -4287,7 +4403,7 @@ function validatePin() {
 		return false;
 	}
 	else if(!regex.test(number)) {
-		errorHandle.innerHTML = "Please enter valid Pincode.";
+		errorHandle.innerHTML = "Please enter a valid Pincode.";
 		return false;
 	}
 	errorHandle.innerHTML = "";
@@ -4303,7 +4419,7 @@ function validatePinEmi() {
 		return false;
 	}
 	else if(!regex.test(number)) {
-		errorHandle.innerHTML = "Please enter valid Pincode.";
+		errorHandle.innerHTML = "Please enter a valid Pincode.";
 		return false;
 	}
 	errorHandle.innerHTML = "";
@@ -4595,7 +4711,12 @@ function applyPromotion(bankName,binValue,formSubmit)
 				document.getElementById("outstanding-amount-mobile").innerHTML=response.totalPrice.formattedValue;
 				$("#cartPromotionApplied").css("display","none");
 				$("#codAmount").text(response.totalPrice.formattedValue);
-
+				//TISTRT-1605 //TISBBC-35
+				if(null!= response.deliveryCost && undefined!= response.deliveryCost && undefined!=response.deliveryCost.value && null!=response.deliveryCost.value && parseFloat(response.deliveryCost.value) > 0){
+					$("#deliveryCostSpanId > span.priceFormat").html(response.deliveryCost.formattedValue);
+		 		}else{
+		 			$("#deliveryCostSpanId > span.priceFormat").html("Free");
+		 		}
 				// Coupon
 				if(null!=response.voucherDiscount && null!=response.voucherDiscount.couponDiscount)
 				{
@@ -4654,9 +4775,14 @@ function applyPromotion(bankName,binValue,formSubmit)
 					}
 					
 					// TISEE-352
-					if(response.totalDiscount.value != 0){
+					/*if(response.totalDiscount.value != 0){
 						$("#promotionApplied").css("display","block");
 						document.getElementById("promotion").innerHTML=response.totalDiscount.formattedValue;				
+					}*/
+					//UF-260
+					if(response.totalDiscntIncMrp.value != 0){
+						$("#promotionApplied").css("display","block");
+						document.getElementById("promotion").innerHTML=response.totalDiscntIncMrp.formattedValue;
 					}
 					
 					// TISST-7955
@@ -4668,7 +4794,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 						$("#"+ussid+"_productPriceId").html(ussidPrice);
 					}
 				}
-				$("#no-click,.spinner").remove();
+				$("#no-click,.loaderDiv").remove();
 				$(".make_payment, #make_saved_cc_payment_up, #make_cc_payment_up, #make_nb_payment_up, #paymentButtonId_up").removeAttr('disabled');
 				//TISPT-29
 				if(paymentMode=='EMI' || paymentMode=='Credit Card' || paymentMode=='Debit card' || paymentMode=='Netbanking')
@@ -4687,7 +4813,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 				{
 					document.getElementById("juspayErrorMsg").innerHTML="Existing Promotion has expired";
 					$("#juspayconnErrorDiv").css("display","block");
-					$("#no-click,.spinner").remove();
+					$("#no-click,.loaderDiv").remove();
 				}
 				else if(paymentMode=='EMI')
 				{
@@ -4829,9 +4955,9 @@ function applyPromotion(bankName,binValue,formSubmit)
 		//}
 		},
 		error : function(resp) {
-			$("#no-click,.spinner").remove();
+			$("#no-click,.loaderDiv").remove();
 			$(".make_payment").removeAttr('disabled');
-			$("#no-click1,.spinner1").remove();
+			$("#no-click1,.loaderDiv1").remove();
 		}
 	});
 }
@@ -4840,9 +4966,18 @@ function applyPromotion(bankName,binValue,formSubmit)
 function submitNBForm(){
 	$("#netbankingIssueError").css("display","none");
 	var selectedValue=$('input[class=NBBankCode]:checked').val();
+	//TPR-4461 set for setting the bank name for NetBanking starts here
+	//var selectedHiddenValue=$('input[name=NBBankName]').val();
+	var selectedHiddenValue=$('input[class=NBBankCode]:checked').parent().find('input[type="hidden"]').val();
+	//alert("This is radio bankname" + selectedHiddenValue);
+	//TPR-4461 set for setting the bank name for NetBanking ends here
 	if(selectedValue==undefined)
 	{
 		selectedValue=$('select[id="bankCodeSelection"]').val();
+		//TPR-4461 set for setting the bank name for NetBanking starts here
+		selectedHiddenValue=$('select[id=bankCodeSelection] option:selected').text();
+		//alert(" this is dropdown bankname" + selectedHiddenValue );
+		//TPR-4461 set for setting the bank name for NetBanking ends here
 	}
 	if(selectedValue=="select")
 	{
@@ -4859,19 +4994,25 @@ function submitNBForm(){
 		$(".pay .spinner").css("left",(($(".pay.top-padding").width()+$(".pay.top-padding button").width())/2)+10);
 		$("body").append("<div id='no-click' style='opacity:0.00; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 		
-		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;">');
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		
 		/*TPR-3446 net banking ends*/
 		
 		$("#netbankingError").css("display","none");
 		var firstName=selectedValue;
 		var lastName=addressLine1=addressLine2=addressLine3=country=state=city=pincode=null;
+		
+		//TPR-4461 set for setting the bank name for NetBanking starts here
+		var netBankName=selectedHiddenValue;
+		//TPR-4461 set for setting the bank name for NetBanking ends here.bank name for netbanking is sent to create juspay order method of payment method checkout step controller 'netBankName' : netBankName
+		
+		
 		var cardSaved=false;
 		var guid=$("#guid").val();
 		$.ajax({
 			url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createJuspayOrder",
-			data: { 'firstName' : firstName , 'lastName' : lastName , 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
+			data: { 'firstName' : firstName , 'lastName' : lastName , 'netBankName' : netBankName, 'addressLine1' : addressLine1, 'addressLine2' : addressLine2 , 'addressLine3' : addressLine3, 'country' : country , 'state' : state, 'city' : city , 'pincode' : pincode, 'cardSaved' : cardSaved, 'guid' : guid},
 			type: "GET",
 			cache: false,
 			success : function(response) {
@@ -4885,14 +5026,24 @@ function submitNBForm(){
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
-
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay button, .make_payment_top_nb").prop("disabled",false);
+					$(".pay button, .make_payment_top_nb").css("opacity","1");	
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.spinner").remove();
+				}
+				//TPR-4461 ENDS HERE
 				else if(response=="" || response==null || response=="JUSPAY_CONN_ERROR"){
 					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The system is down, please try again";
 					$("#juspayconnErrorDiv").css("display","block");
 					$(".pay button, .make_payment_top_nb").prop("disabled",false);
 					$(".pay button, .make_payment_top_nb").css("opacity","1");
-					$(".pay .spinner").remove();
-					$("#no-click,.spinner").remove();
+					$(".pay .loaderDiv").remove();
+					$("#no-click,.loaderDiv").remove();
 				}
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TIS 404
@@ -4920,8 +5071,8 @@ function submitNBForm(){
 									$("#juspayconnErrorDiv").css("display","block");
 									$(".pay button, .make_payment_top_nb").prop("disabled",false);
 									$(".pay button, .make_payment_top_nb").css("opacity","1");
-									$(".pay .spinner").remove();
-									$("#no-click,.spinner").remove();
+									$(".pay .loaderDiv").remove();
+									$("#no-click,.loaderDiv").remove();
 								}
 
 								else{
@@ -4981,8 +5132,8 @@ function submitNBForm(){
 							$("#netbankingIssueError").css("display","block");
 							$(".pay button, .make_payment_top_nb").prop("disabled",false);
 							$(".pay button, .make_payment_top_nb").css("opacity","1");
-							$(".pay .spinner").remove();
-							$("#no-click,.spinner").remove();
+							$(".pay .loaderDiv").remove();
+							$("#no-click,.loaderDiv").remove();
 							paymentErrorTrack("juspay_unavailable");
 						}
 					});		
@@ -5056,7 +5207,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 //	 			TISPRD-1666 - console replaced with alert and resp print
 	 			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
 
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
@@ -5090,9 +5241,9 @@ $(document).ready(function(){
 $(".edit_address").click(function(){
 	//var address_id = $(this).parents().find(".edit").next(".editnewAddresPage").attr("id");
 	var address_id = $(this).attr('id');
-	console.log(address_id);
+	//console.log(address_id);
 	var address_id_new = address_id.split('_');
-	console.log(address_id_new[1]);
+	//console.log(address_id_new[1]);
 	//$(this).parents().find(".address, label").toggle();
 	$.ajax({
  		url: ACC.config.encodedContextPath + $(this).attr("href"),
@@ -5114,9 +5265,9 @@ $(".edit_address").click(function(){
  			$("#"+address_id_new[1]).slideDown();
  			//TISRLEE-2328 Author Tribhuvan
  			 loadPincodeData("edit").done(function() {
-     			console.log("addressform line 394");
+     			//console.log("addressform line 394");
      		 var value = $(".address_landmarkOtherDiv").attr("data-value");
-     		 console.log("addressform line 396 "+value);
+     		 //console.log("addressform line 396 "+value);
      		 otherLandMarkTri(value,"defult");
      		});
  		},
@@ -5142,7 +5293,7 @@ $(".regular-radio").click(function(){
  				$(".address-list input[type='radio']+label").removeClass("radio-checked");
  				
  				radio.attr('checked', 'checked');
- 				console.log(radio_label);
+ 				//console.log(radio_label);
  				radio_label.addClass('radio-checked');
  				//radio_label.css('background-color',' #999999');
  			}else{
@@ -5331,6 +5482,8 @@ function changeCTAButtonName(deliveryCode) {
 	// console.log(deliveryCode);
 	// TISPRO-625
 	var isExpressCheckoutSelected=$('#isExpressCheckoutSelected').val();
+	
+	var isDeliveryOptionPage=$('#isDeliveryOptionPage').val();
 	if(deliveryCode == "click-and-collect") {
 		$("#deliveryMethodSubmit").text("Proceed To Store");
 		$("#deliveryMethodSubmitUp").text("Proceed To Store");
@@ -5340,8 +5493,15 @@ function changeCTAButtonName(deliveryCode) {
 		// $("#deliveryMethodSubmitUp").text("Choose Address");
 		if(isExpressCheckoutSelected=='true')
 		{
-			$("#deliveryMethodSubmit").text("Proceed to Payment");
-			$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			//INC144316212  
+			if(isDeliveryOptionPage == 'yes'){
+				$("#deliveryMethodSubmit").text("Proceed To Address");
+				$("#deliveryMethodSubmitUp").text("Proceed To Address");
+			} else {
+				$("#deliveryMethodSubmit").text("Proceed to Payment");
+				$("#deliveryMethodSubmitUp").text("Proceed to Payment");
+			}
+			
 		}
 		else
 		{
@@ -5365,11 +5525,52 @@ $(document).ready(function(){
 	    if(event.keyCode == 13){
 	        $("#pinCodeButtonIds").click();
 	    }
+	    //Added for UF-252-II start
+	    else if(event.keyCode == 8 || event.keyCode == 46){
+	    	if ($.trim(this.value) == "") {
+	    		$('#checkout-enabled').addClass("checkout-disabled");
+	            $('#checkout-down-enabled').addClass("checkout-disabled");
+	            $( "#emptyId_tooltip").show();
+	    		$("#emptyId_tooltip_btm").show();
+	    		$(".cartItemBlankPincode").show();
+	    		$(".delivery ul.success_msg").hide();
+	    		$(".pincodeServiceError").hide();
+	    		$("#unserviceablepincode").hide();
+	    		$("#unserviceablepincodeBtm").hide();
+	    		$("#unserviceablepincode_tooltip").hide();
+	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		//TISSTRT-1550
+	    		$("#defaultPinCodeIdsBtm").val("");
+	    		
+	        }
+	    }
+	    //Added for UF-252-II ends
+	    
 	});
 	$("#defaultPinCodeIdsBtm").keyup(function(event){		
 	    if(event.keyCode == 13){		
 	        $("#pinCodeButtonIdsBtm").click();		
-	    }		
+	    }
+	  //Added for UF-252-II starts
+	    else if(event.keyCode == 8 || event.keyCode == 46){
+	    	if ($.trim(this.value) == "") {
+	    		$('#checkout-enabled').addClass("checkout-disabled");
+	            $('#checkout-down-enabled').addClass("checkout-disabled");
+	            $( "#emptyId_tooltip").show();
+	    		$("#emptyId_tooltip_btm").show();
+	    		$(".cartItemBlankPincode").show();
+	    		$(".delivery ul.success_msg").hide();
+	    		$(".pincodeServiceError").hide();
+	    		$("#unserviceablepincode").hide();
+	    		$("#unserviceablepincodeBtm").hide();
+	    		$("#unserviceablepincode_tooltip").hide();
+	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		//TISSTRT-1550
+	    		$("#defaultPinCodeIds").val("");
+	        }
+	    }
+	    //Added for UF-252-II ends
+	    
 	});//UF-69
 
 	$("#popUpExpAddress input.address_radio[data-index='0']").attr("checked","checked");	
@@ -5409,6 +5610,11 @@ function checkServiceabilityRequired(buttonType,el){
 			);
 		}*/
 	}
+	//TISPRDT-680
+	if(selectedPin == null || selectedPin.length === 0)
+	{	
+	   $('#defaultPinCodeIdsBtm').val("");
+	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
 	}
@@ -5422,6 +5628,7 @@ function checkServiceabilityRequired(buttonType,el){
 function checkPincodeServiceability(buttonType,el)
 {
 
+	
 	/*spinner commented starts*/
 	//$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	/*spinner commented ends*/
@@ -5432,6 +5639,12 @@ function checkPincodeServiceability(buttonType,el)
 	
 	/*TPR-3446 new ends*/
 	var selectedPincode=$('#defaultPinCodeIds').val();
+	
+	//added for UF-252 Start
+	if ($(el).attr('id') == 'pinCodeButtonIdsBtm') {
+		selectedPincode=$('#defaultPinCodeIdsBtm').val();
+	}
+	//added for UF-252 Ends
 	var regPostcode = /^([1-9])([0-9]){5}$/;
 	$(".deliveryUlClass").remove();//TPR-1341
 	var utagCheckPincodeStatus="";
@@ -5456,9 +5669,9 @@ function checkPincodeServiceability(buttonType,el)
 		 $("#cartPinCodeAvailable").hide();
 		 $("#cartPinCodeAvailableBtm").hide();// TPR-1055//UF-68
 		//$("#pinCodeButtonIds").text("Change Pincode");
-		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
+		 $("#pinCodeButtonIds").attr("class","ChangePincode"); //UF-71
 		 //$("#pinCodeButtonIds").text("Change Pincode");
-		 document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
+		 $("#pinCodeButtonIdsBtm").attr("class","ChangePincode"); //UF-71
 		// setTimeout(function(){
 		 $("#unserviceablepincode").hide();// tpr-1341
 		 $("#unserviceablepincodeBtm").hide();// tpr-1341//UF-68
@@ -5471,8 +5684,8 @@ function checkPincodeServiceability(buttonType,el)
 		 $("#AvailableMessageBtm").hide();
 		 $(".pincodeServiceError").hide();
 		 $(".delivery ul.success_msg").hide();
-		$("#pinCodeDispalyDiv .spinner").remove();
-		$("#no-click,.spinner").remove();
+		$("#pinCodeDispalyDiv .loaderDiv").remove();
+		$("#no-click,.loaderDiv").remove();
 		// },500);
 		$("body,html").animate({ scrollTop: $('#emptyId').offset().top - 5000 }); //added for INC_11152
 		return false;
@@ -5516,8 +5729,8 @@ function checkPincodeServiceability(buttonType,el)
 		$('#checkout-id #checkout-enabled').addClass('checkout-disabled');
 		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); //UF-69
 		// setTimeout(function(){
-		$("#pinCodeDispalyDiv .spinner").remove();
-		$("#no-click,.spinner").remove();
+		$("#pinCodeDispalyDiv .loaderDiv").remove();
+		$("#no-click,.loaderDiv").remove();
 		// },500);
         return false;  
     }
@@ -5528,7 +5741,9 @@ function checkPincodeServiceability(buttonType,el)
 		
 
 	//else if($("#pinCodeButtonIds").text() == 'Change Pincode'&& $(el).attr("id") =="pinCodeButtonIds"){
-	else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
+	//TISSTRT-1550
+	//else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
+	else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds" && regPostcode.test(selectedPincode) != true)//UF-71
 	{		
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
@@ -5543,8 +5758,8 @@ function checkPincodeServiceability(buttonType,el)
 		//$("#pinCodeButtonIds").text("Check");
 		 document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
 		 $('#defaultPinCodeIds').focus();
-		 $('#defaultPinCodeIdsBtm').focus();//UF-68
-		$("#pinCodeDispalyDiv .spinner").remove();
+		 //$('#defaultPinCodeIdsBtm').focus();//UF-68//UF-70 Commenting this line as it takes the focus to bottom of the page
+		$("#pinCodeDispalyDiv .loaderDiv").remove();
 		$("#emptyId").hide();
 		$("#emptyIdBtm").hide();//UF-68
 		$("#emptyId_tooltip").hide();
@@ -5553,12 +5768,14 @@ function checkPincodeServiceability(buttonType,el)
 		$("#error-IdBtm").hide();//UF-68
 		$("#error-Id_tooltip").hide();
 		$( "#error-Id_tooltip_btm").hide();
-		$("#no-click,.spinner").remove();
+		$("#no-click,.loaderDiv").remove();
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
 		// TPR-1055 ends
 	}
-	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
+	//TISSTRT-1550
+	//else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
+	else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm" && regPostcode.test(selectedPincode) != true)//UF-71
 	{	
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();//UF-68
@@ -5575,7 +5792,7 @@ function checkPincodeServiceability(buttonType,el)
 		 document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";	//UF-71
 		 $('#defaultPinCodeIds').focus();
 		 $('#defaultPinCodeIdsBtm').focus();//UF-68
-		$("#pinCodeDispalyDiv .spinner").remove();
+		$("#pinCodeDispalyDiv .loaderDiv").remove();
 		$("#emptyId").hide();
 		$("#emptyIdBtm").hide();//UF-68
 		$("#emptyId_tooltip").hide();
@@ -5584,12 +5801,13 @@ function checkPincodeServiceability(buttonType,el)
 		$("#error-IdBtm").hide();//UF-68
 		$("#error-Id_tooltip").hide();
 		$( "#error-Id_tooltip_btm").hide();
-		$("#no-click,.spinner").remove();
+		$("#no-click,.loaderDiv").remove();
 		$(".delivery ul.success_msg").hide();//TPR-1341
 		return false; 
 		// TPR-1055 ends
-	} //CAR-246
-	else if(selectedPincode!==""){
+	} //CAR-246//UF-70
+	else if(selectedPincode!=="" && $("#isPincodeRestrictedPromoPresentId").val()=="true"){
+		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
 		// TPR-5666 | cartGuid Append in url during pincode servicability check
 		var cartGuidParamValue = getParameterByName("cartGuid");
 		if(typeof cartGuidParamValue != "undefined"){
@@ -5618,7 +5836,7 @@ function checkPincodeServiceability(buttonType,el)
 
 		var staticHost = $('#staticHost').val();
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 
 		$("#emptyId_tooltip_btm").hide();
 	$.ajax({
@@ -5631,8 +5849,16 @@ function checkPincodeServiceability(buttonType,el)
  			//"sprint merger issue
  			var responeStr=response['pincodeData'].split("|");
  			//TPR-970 changes
- 			populateCartDetailsafterPincodeCheck(responeStr[1]);
+ 			populateCartDetailsafterPincodeCheck(response);
  			//TPR-970 changes
+ 			//Start:UF-70
+ 			var location=window.location.href;
+ 			if(location.includes("pincode="))
+			{
+ 				var originalUrl=ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode
+ 				changeBrowserUrl(originalUrl);
+			}
+ 			//End:UF-70
  			if(responeStr[0]=="N")
  			{
  				utagCheckPincodeStatus = "cart_pincode_check_failure";
@@ -5657,8 +5883,12 @@ function checkPincodeServiceability(buttonType,el)
  				$("#unserviceablepincodeBtm").show();//UF-68
  				 $(".pincodeServiceError").show();
  				populatePincodeDeliveryMode(response,buttonType);
-					reloadpage(selectedPincode,buttonType);
+					//reloadpage(selectedPincode,buttonType); commenting the code
  	 			$("#isPincodeServicableId").val('N');
+ 	 			//Added for UF-252 Start
+ 	 			$("#unserviceablepincode_tooltip").show(); 
+ 	 			$("#unserviceablepincode_tooltip_btm").show();
+ 	 		    //Added for UF-252 end
  	 			// reloadpage(selectedPincode,buttonType);
  			} 
  			else
@@ -5684,8 +5914,14 @@ function checkPincodeServiceability(buttonType,el)
 	 			$("#AvailableMessage").show();
 	 			$("#AvailableMessageBtm").show();//UF-68
  					populatePincodeDeliveryMode(response,buttonType);
- 					reloadpage(selectedPincode,buttonType);
- 			}
+
+ 					//reloadpage(selectedPincode,buttonType); commenting the code
+ 					//Added for UF-252 Start
+ 					$("#unserviceablepincode_tooltip").hide(); 
+ 	 	 			$("#unserviceablepincode_tooltip_btm").hide(); 
+ 	 	 			//Added for UF-252 End
+ 				}
+
  			
  			// TISPRM-33
 	 			$("#defaultPinDiv").show();
@@ -5694,8 +5930,8 @@ function checkPincodeServiceability(buttonType,el)
  	 			$('#defaultPinCodeIdsq').val(selectedPincode);
  	 			// setTimeout(function(){
  	 		
- 	 				$("#pinCodeDispalyDiv .spinner").remove();
- 	 				$("#no-click,.spinner").remove();
+ 	 				$("#pinCodeDispalyDiv .loaderDiv").remove();
+ 	 				$("#no-click,.loaderDiv").remove();
  	 			// },500);
  	 				// TPR-1055
  	 				$('#defaultPinCodeIds').blur();
@@ -5729,19 +5965,19 @@ function checkPincodeServiceability(buttonType,el)
  			}*/
  			//TISTI-255
  			//alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
- 			console.log(resp);
+ 			//console.log(resp);
  			$("#isPincodeServicableId").val('N');
  			reloadpage(selectedPincode,buttonType);
  			
 // TISPRD-1666 - console replaced with alert and resp print
  			var errorDetails=JSON.stringify(resp);
- 			console.log("errorDetails 1>> "+errorDetails);
+ 			//console.log("errorDetails 1>> "+errorDetails);
  			
  			handleExceptionOnServerSide(errorDetails);
- 			console.log('Some issue occured in checkPincodeServiceability');
+ 			//console.log('Some issue occured in checkPincodeServiceability');
  			// setTimeout(function(){
- 	 			$("#pinCodeDispalyDiv .spinner").remove();
- 	 			$("#no-click,.spinner").remove();
+ 	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
+ 	 			$("#no-click,.loaderDiv").remove();
  	 		// },500);
  		},
  		complete : function(resp){
@@ -5780,12 +6016,13 @@ function getParameterByName(name){
 		return decodeURIComponent(name[1]);
    } 
 }
-
 //TPR-970 changes starts
 function populateCartDetailsafterPincodeCheck(responseData){
 	if(null!=responseData['cartData']||""!=responseData['cartData']){
 		var cartValue=responseData['cartData'];
 		var cartData=responseData['cartEntries'];
+		//UF-260
+		var cartTotalMrp = 0.00;
 		for(var cart in cartData){
 			var entryNumber=parseInt(cartData[cart]['entryNumber']);
 			$("#off-cartLevelDiscAmt_"+entryNumber).html("");
@@ -5798,65 +6035,95 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			$("#cartAmtOfferDisplay_"+entryNumber).hide();
 			$("#itemCartCentDisplay_"+entryNumber).hide();
 			$("#itemCartAmtDisplay_"+entryNumber).hide();
+			$(".add-disc").hide();
 			var isOfferPresent=false;
 			var basePrice=$("#basePrice_"+entryNumber).val();
 			if(basePrice!=""){
-				$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(basePrice).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(basePrice);
 			}
 			else{
-				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				//$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("delAction");
+				$("#totalPrice_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue);
 			}
 			if(cartData[cart]['cartLevelDisc']!=null){
 				isOfferPresent=true;
+				$(".add-disc-pincode").show();
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off Bag</span>");
-			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			
 			if(cartData[cart]['cartLevelPercentage']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
-			    $("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
+				$(".add-disc-pincode").show();
+				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
+				//UF-260
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				//$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
+			//Start:Below code is for productPerDiscDisplay when cartLevelDisc is not null
+			if(cartData[cart]['productPerDiscDisplay']!=null )
+			{
+				if(cartData[cart]['cartLevelDisc']!=null&&cartData[cart]['productLevelDisc']){
+					$(".add-disc-pincode").show();
+					$("#totalPrice_"+entryNumber).addClass("delAction");
+					isOfferPresent=true;
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+				}
+				else{
+					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
+					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
+				}
+				//End:Above code is for productPerDiscDisplay when cartLevelDisc is not null
+				//Start:Below code is for productPerDiscDisplay when cartLevelDisc is null
+				if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
+					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					/*$("#off-bag-itemDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");*/
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>"); 
+					$("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
+				}
+				else{
+					isOfferPresent=true;
+					$("#totalPrice_"+entryNumber).addClass("delAction");
+					$("#ItemAmtofferDisplay_"+entryNumber).show();
+					$("#off-bag-ItemLevelDisc_"+entryNumber).html("("+cartData[cart]['productPerDiscDisplay'].value.toFixed(1)+"%").addClass("priceFormat").append("<span>Off)</span>");
+					 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
+				}
+				//End:Above code is for productPerDiscDisplay when cartLevelDisc is null
+				//End:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
 			}
-			else{
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartValue['totalPrice'].formattedValue).addClass("priceFormat");
-			}
-			if(cartData[cart]['productPerDiscDisplay']!=null && cartData[cart]['productLevelDisc']){
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-itemDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['netSellingPrice'].formattedValue).addClass("priceFormat");
-			}
-			else{
-				isOfferPresent=true;
-				$("#ItemAmtofferDisplay_"+entryNumber).show();
-				$("#off-bag-ItemLevelDisc_"+entryNumber).html(cartData[cart]['productPerDiscDisplay'].value+"%").addClass("priceFormat").append("<span>Off Item</span>");
-				 $("#off-bag-ItemLevelDiscAmt_"+entryNumber).html(cartData[cart]['totalPrice'].formattedValue).addClass("priceFormat");
-			}
-			
 			if(isOfferPresent==false){
 				$("#totalPrice_"+entryNumber).removeClass("delAction");
 			}
+			
+			//UF-260
+			cartTotalMrp = cartTotalMrp + cartData[cart]['totalMrp'].doubleValue;
 		}
 		if(cartValue!=null){
-		$("#subtotal_Value").show();
-		$("#subtotal").hide();
+		//UF-260 Commenting the line as Total MRP is to be shown.
+		//$("#subtotal_Value").show();
+		//$("#subtotal").hide();
 		$("#subtotalValue").html(cartValue['subTotal'].formattedValue).addClass("priceFormat");
 		$("#discount").show();
 		$("discount .amt").html("");
-		if(null!=cartValue['totalDiscounts']&&cartValue['totalDiscounts'].value>0){
+		//UF-260
+		if((null!=cartValue['totalDiscounts']&&cartValue['totalDiscounts'].value>0) || (null!=cartValue['totalDiscounts'] && cartTotalMrp > cartValue['totalPrice'].value)){
+		var discountIncMrp = cartTotalMrp - cartValue['totalPrice'].doubleValue;
 		$("#discount").show();
-		$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue);
+		//$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue);
+		//$("#discount .amt").html(cartValue['totalDiscounts'].formattedValue+" "+"("+cartValue['discountPercentage']+"%)");
+		//UF-260
+		$("#discount .amt").html(cartValue.currencySymbol+discountIncMrp.toFixed(2));
 		}
 		else{
 			$("#discount").hide();
@@ -5877,10 +6144,14 @@ function populateCartDetailsafterPincodeCheck(responseData){
 
 //TPR-1055
 $("#defaultPinCodeIds").click(function(){
+	//Commented for UF-252 Start
+	//TISSTRT-1550 starts
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincodeBtm").hide();//UF-68
 	$("#unserviceablepincode_tooltip").hide();
-	 $("#unserviceablepincode_tooltip_btm").hide();
+	$("#unserviceablepincode_tooltip_btm").hide();
+	//TISSTRT-1550 ends
+	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	$("#cartPinCodeAvailableBtm").show();//UF-68
@@ -5892,10 +6163,12 @@ $("#defaultPinCodeIds").click(function(){
 	 $("#emptyIdBtm").hide();//UF-68
 	 $("#emptyId_tooltip").hide();
 	 $("#emptyId_tooltip_btm").hide();
-	 $(".pincodeServiceError").hide();
+	//Commented for UF-252 Start
+	 //$(".pincodeServiceError").hide();
 	 //TPR-1341
-	 $(".cartItemBlankPincode").show();
-	 $(".delivery ul.success_msg").hide();
+	 /*$(".cartItemBlankPincode").show();
+	 $(".delivery ul.success_msg").hide();*/
+	//Commented for UF-252 End
 	//if($("#pinCodeButtonIds").text() == 'Change Pincode'){
 		//$("#pinCodeButtonIds").text("Check");
 	 if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode'){	//UF-71
@@ -5907,10 +6180,14 @@ $("#defaultPinCodeIds").click(function(){
 });
 //UF-69
 $("#defaultPinCodeIdsBtm").click(function(){
+	//Commented for UF-252 Start
+	//TISSTRT-1550 starts
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincodeBtm").hide();//UF-68
 	$("#unserviceablepincode_tooltip").hide();
-	 $("#unserviceablepincode_tooltip_btm").hide();
+	$("#unserviceablepincode_tooltip_btm").hide();
+	//TISSTRT-1550 ends
+	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
 	$("#cartPinCodeAvailable").show();
 	$("#cartPinCodeAvailableBtm").show();//UF-68
@@ -5922,10 +6199,12 @@ $("#defaultPinCodeIdsBtm").click(function(){
 	 $("#emptyIdBtm").hide();//UF-68
 	 $("#emptyId_tooltip").hide();
 	 $("#emptyId_tooltip_btm").hide();
-	 $(".pincodeServiceError").hide();
-	 //TPR-1341
+	//Commented for UF-252 Start
+	// $(".pincodeServiceError").hide();
+	/* //TPR-1341
 	 $(".cartItemBlankPincode").show();
-	 $(".delivery ul.success_msg").hide();
+	 $(".delivery ul.success_msg").hide();*/
+	 //Commented for UF-252 End
 	/*if($("#pinCodeButtonIdsBtm").text() == 'Change Pincode'){
 		$("#pinCodeButtonIdsBtm").text("Check Availability");*/
 	 if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'){	//UF-71
@@ -5969,11 +6248,11 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$('#unsevisablePin').show();
 		
 		$("#checkout-enabled").css("pointer-events","none");
-		$("#checkout-enabled").css("cursor","not-allowed");
+		//$("#checkout-enabled").css("cursor","not-allowed");
 		$("#checkout-enabled").css("opacity","0.5");
 		/*UF-69*/
 		$("#checkout-down-enabled").css("pointer-events","none");
-		$("#checkout-down-enabled").css("cursor","not-allowed");
+		//$("#checkout-down-enabled").css("cursor","not-allowed");
 		$("#checkout-down-enabled").css("opacity","0.5");
 		$("#expressCheckoutButtonId").css("pointer-events","none");
 		$("#expressCheckoutButtonId").css("cursor","default");
@@ -5998,6 +6277,7 @@ function populatePincodeDeliveryMode(response,buttonType){
 		$("#checkout-enabled").css("pointer-events","all");
 		$("#checkout-enabled").css("cursor","cursor");
 		$("#checkout-enabled").css("opacity","1");
+		$("#checkout-enabled").css("cursor","pointer");
 		/*UF-69*/
 		$("#checkout-down-enabled").css("pointer-events","all");
 		$("#checkout-down-enabled").css("cursor","cursor");
@@ -6150,7 +6430,6 @@ function populatePincodeDeliveryMode(response,buttonType){
 	$("#defaultPinCodeIds").val(selectedPincode);	
 	
 	
-	
 	if(isServicable==='Y' && isStockAvailable==='Y')
 	{
 		
@@ -6231,20 +6510,31 @@ function redirectToCheckout(checkoutUrl)
 	}
 	return false;
 }
-
+//UF-70
+$(document).ready(function(){
+	if($('#pageType').val()=='cart')
+	{
+		checkIsServicable();
+	}
+});
 function checkIsServicable()
 {
 	// TPR-1055
 	var selectedPincode=$("#defaultPinCodeIds").val();
+	
+	
+	
 	var utagCheckPincodeStatus="";
 	// $("#defaultPinCodeIds").prop('disabled', true);
 	//$("#pinCodeButtonIds").text("Check");// tpr-1334
-	document.getElementById("pinCodeButtonIds").className = "CheckAvailability"; 	//UF-71
-	document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability";//UF-71
+	$("#pinCodeButtonIds").attr('class','CheckAvailability'); 	//UF-71
+	$("#pinCodeButtonIdsBtm").attr('class','CheckAvailability');//UF-71
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincodeBtm").hide();
 	$("#unserviceablepincode_tooltip").hide();
 	 $("#unserviceablepincode_tooltip_btm").hide();
+	 
+	
 	// TPR-1055 ends
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
@@ -6272,8 +6562,8 @@ function checkIsServicable()
  				 $("#unserviceablepincode_tooltip_btm").show();
  				 $(".pincodeServiceError").show();
  				//$("#pinCodeButtonIds").text("Change Pincode");
- 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
- 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+ 				$("#pinCodeButtonIds").attr("class","ChangePincode"); //UF-71
+ 				$("#pinCodeButtonIdsBtm").attr("class", "ChangePincode");//UF-71
  				//pincodeServicabilityFailure(selectedPincode);
  				utagCheckPincodeStatus = false;
 	 			}
@@ -6281,15 +6571,15 @@ function checkIsServicable()
 	 				$(".deliveryUlClass").remove();//TPR-1341
 	 				$(".pincodeServiceError").hide();
 	 				$("#unserviceablepincode").hide();
-	 				$("#unserviceablepincodeBtm").show();//UF-68
+	 				$("#unserviceablepincodeBtm").hide();//UF-68
 	 				$("#unserviceablepincode_tooltip").hide();
 	 				$("#unserviceablepincode_tooltip_btm").hide();
 	 				$("#cartPinCodeAvailable").hide();
 	 				$("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
 	 				$("#AvailableMessage").show();
 	 				//$("#pinCodeButtonIds").text("Change Pincode");
-	 				document.getElementById("pinCodeButtonIds").className = "ChangePincode"; //UF-71
-	 				document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode";//UF-71
+	 				$("#pinCodeButtonIds").attr("class", "ChangePincode"); //UF-71
+	 				$("#pinCodeButtonIdsBtm").attr("class","ChangePincode");//UF-71
 	 				//pincodeServicabilitySuccess(selectedPincode);
 	 				utagCheckPincodeStatus = true;
 	 			}
@@ -6304,12 +6594,12 @@ function checkIsServicable()
 	 			// TISPRD-1666 - console replaced with alert and resp print
 	 			// alert("Some issues are there with Checkout at this time.
 				// Please try later or contact our helpdesk");
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
-	 			console.log('Some issue occured in checkPincodeServiceability');
+	 			//console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 			// TISPRM-65
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
@@ -6336,6 +6626,16 @@ function checkIsServicable()
 	 		
 
 	 	});
+	}
+    //Added for UF-252-I Start
+	else if (selectedPincode==null || selectedPincode == undefined || selectedPincode ==""){
+			
+		$( "#emptyId_tooltip").show();
+		$("#emptyId_tooltip_btm").show();
+	 	$('#checkout-id #checkout-enabled').addClass('checkout-disabled'); 
+		$('#checkout-id-down #checkout-down-enabled').addClass('checkout-disabled'); 
+	//Added for UF-252-I end
+		
 	}
 	
 }
@@ -6391,14 +6691,15 @@ function checkSignInValidation(path){
 	$("#signinEmailIdDiv").hide();
 	if(emailId == null || emailId == ""){
 		$("#signinEmailIdDiv").show();
-		$("#signinEmailIdDiv").html("Please enter all mandatory fields");	
-
+		$("#signinEmailIdDiv").html("Please fill in all mandatory fields.");	
+		//UF-277
 		validationResult=false;
 	}
 	else if(!emailPattern.test(emailId)){
 		$("#signinEmailIdDiv").show();
 		// TISPRO-479 Change the text message
-		$("#signinEmailIdDiv").html("Please enter a valid email id");
+		//UF-277
+		$("#signinEmailIdDiv").html("Please enter a valid email ID");
 		validationResult=false;
 	}
 	else if(password==null || password=="" || password.length==0){
@@ -6537,7 +6838,8 @@ function checkSignUpValidation(path){
 		validationResult=false;	
 	}else if(!emailPattern.test(emailId)){
 		$("#signupEmailIdDiv").show();
-		$("#signupEmailIdDiv").html("Please enter a valid email id");
+		$("#signupEmailIdDiv").html("Please enter a valid email ID");
+		//UF-277
 		validationResult=false;	
 	}else{
 		$("#signupEmailIdDiv").hide();
@@ -6569,7 +6871,8 @@ function checkSignUpValidation(path){
 	
 	if(validationResult && password!=rePassword){
 		$("#signupPasswordDiv").show();
-		$("#signupPasswordDiv").html("The passwords don’t match. Try again?");
+		// UF-277
+		$("#signupPasswordDiv").html("The passwords don’t match. Try again, please.");
 		validationResult=false;
 	}  else if(validationResult){
 		$("#signupPasswordDiv").hide();
@@ -6623,12 +6926,12 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			/*$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	 			$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 	 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	 			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 	 			/*TPR-3446 new ends*/
 	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			// setTimeout(function(){
-	 			$("#pinCodeDispalyDiv .spinner").remove();
-	 			$("#no-click,.spinner").remove();
+	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
+	 			$("#no-click,.loaderDiv").remove();
 	 			// },500);
 		 		// $("#changePinDiv").hide();
 		 		// $("#defaultPinDiv").show();
@@ -6639,7 +6942,7 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			// alert("Some issues are there with Checkout at this time.
 				// Please try later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
@@ -6649,13 +6952,13 @@ function checkExpressCheckoutPincodeService(buttonType){
 	 			/*$("#pinCodeDispalyDiv").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: absolute; right:0;bottom:0; left:0; top:0; margin:auto; height: 30px;">');
 	 			$("body").append("<div id='no-click' style='opacity:0.6; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 	 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-	 			$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+	 			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 	 			/*TPR-3446 new ends*/
 	 			
 	 			$("#defaultPinCodeIdsq").val($("#defaultPinCodeIds").val());
 	 			// setTimeout(function(){
-	 			$("#pinCodeDispalyDiv .spinner").remove();
-	 			$("#no-click,.spinner").remove();
+	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
+	 			$("#no-click,.loaderDiv").remove();
 	 			// },500);
 		 		// $("#changePinDiv").hide();
 		 		// $("#defaultPinDiv").show();
@@ -6784,12 +7087,14 @@ $(".card_exp_year").blur(function(){
 		validateExpYY();
 	}
 });
-$(".security_code").blur(function(){
+/*start change of INC144315894*/
+/*$(".security_code").blur(function(){
 	if(this.value!="")
 	{
 		validateCVV();
 	}
-});
+});*/
+/*end change of INC144315894*/
 $("#cardNo").keyup(function() {
     if (!this.value) {
     	document.getElementById("cardNoError").innerHTML="";
@@ -6864,6 +7169,8 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//UF-277 TISSTRT-1601
+	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
         return false;
@@ -6880,8 +7187,40 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a Last name.";
         return false;
 	}
-	else if (!regex.test(name)) {
-		errorHandle.innerHTML = "Only alphabets and spaces allowed.";
+	else if (!regex.test(name) && identifier=="firstName") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	//TISSTRT-1601
+	else if (!regexnew.test(name) && identifier=="firstName") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	else if (!regex.test(name) && identifier=="lastName") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	//TISSTRT-1601
+	else if (!regexnew.test(name) && identifier=="lastName") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	else if (!regex.test(name) && identifier=="firstNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	//TISSTRT-1601
+	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid first name.";
+        return false;
+    }
+	else if (!regex.test(name) && identifier=="lastNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
+        return false;
+    }
+	//TISSTRT-1601
+	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
+		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
 	else if (name.length < 1 && identifier=="firstName") {
@@ -6925,8 +7264,15 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
+	//TISSTRT-1601 UF-277 regex
+	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
+        return false;
+	}
+	//TISSTRT-1601 UF-277
+	else if(!regex.test(addressLine)){
+		errorHandle.innerHTML = "Please enter a valid Address";
         return false;
 	}
 	errorHandle.innerHTML = "";
@@ -7029,7 +7375,8 @@ function validateCityEmi() {
 function validateState() {
 	var name=$("#state").val();
 	var errorHandle=document.getElementById("stateError");
-	var regex = new RegExp(/^[a-zA-Z\. ]+$/);
+	//TISSTRT-1601 UF-277
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
@@ -7045,7 +7392,8 @@ function validateState() {
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
 	var errorHandle=document.getElementById("stateErrorEmi");
-	var regex = new RegExp(/^[a-zA-Z\. ]+$/);
+	//TISSTRT-1601 UF-277
+	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
@@ -7160,7 +7508,7 @@ function expressbutton()
 	 			// alert("Some issues are there with Checkout at this time.
 				// Please try later or contact our helpdesk");
 	 			$("#isPincodeServicableId").val('N');
-	 			console.log(resp);
+	 			//console.log(resp);
 	 			var errorDetails=JSON.stringify(resp);
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			handleExceptionOnServerSide(errorDetails);
@@ -7201,7 +7549,7 @@ function hideError(){
 
 function clearDisable()
 {
-	$("#no-click,.spinner").remove();
+	$("#no-click,.loaderDiv").remove();
 	$(".make_payment").removeAttr('disabled');
 
 }
@@ -7243,16 +7591,18 @@ $("#couponSubmitButton").click(function(){
 		
 		/*start changes for INC_11738*/
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		/*end changes for INC_11738*/
 		$.ajax({
 	 		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/redeem",
-	 		type: "GET",
+	 		type: "POST",
 	 		cache: false,
 	 		data: { 'couponCode' : couponCode , 'paymentMode' : paymentMode , 'bankNameSelected' : bankNameSelected , 'guid' : guid},
 	 		success : function(response) {
-	 			console.log(response.redeemErrorMsg);
-	 			$("#no-click,.spinner").remove(); //add for INC_11738
+	 			
+	 			//console.log(response.redeemErrorMsg);
+	 			$("#no-click,.loaderDiv").remove(); //add for INC_11738
+
 	 			document.getElementById("totalWithConvField").innerHTML=response.totalPrice.formattedValue;
 	 			//INC144316021
                 document.getElementById("outstanding-amount").innerHTML=response.totalPrice.formattedValue;
@@ -7327,6 +7677,13 @@ $("#couponSubmitButton").click(function(){
 		 			if(couponApplied==true){
 		 				if(response.couponDiscount.doubleValue>0)
 			 			{
+		 					//TPR-4461 starts here
+		 					if(response.couponMessageInfo != null)
+		 					{
+		 					$('#couponPaymentRestrictionMessage').html("<b>"+response.couponMessageInfo+"<b>");
+		 					$('#couponPaymentRestrictionMessage').show();
+		 					}
+		 					//TPR-4461 ends here
 			 				$("#couponApplied").css("display","block");
 			 				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
 			 				//$("#couponFieldId").attr('disabled','disabled');
@@ -7350,7 +7707,7 @@ $("#couponSubmitButton").click(function(){
 	 		error : function(resp) {
 	 			$("#couponSubmitButton").prop('disabled', false);
 	 			$("#couponSubmitButton").css("opacity","1");
-	 			$("#no-click,.spinner").remove(); //changes for INC_11738
+	 			$("#no-click,.loaderDiv").remove(); //changes for INC_11738
 	 			/*TPR-4746*/
 	 			if(typeof utag !="undefined"){
 	 				   utag.link({error_type : 'offer_error'});
@@ -7388,7 +7745,7 @@ $(".remove-coupon-button").click(function(){
 	var guid=$("#guid").val();
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/coupon/release",
- 		type: "GET",
+ 		type: "POST",
  		cache: false,
  		data: { 'couponCode' : couponCode , 'guid' : guid},
  		success : function(response) {
@@ -7407,6 +7764,9 @@ $(".remove-coupon-button").click(function(){
  						" #expiredCouponError, #issueCouponError, #freebieCouponError, #userInvalidCouponError, #firstPurchaseOfferError, #invalidChannelError").css("display","none");
  				document.getElementById("couponValue").innerHTML=response.couponDiscount.formattedValue;
  				// $("#couponFieldId").attr('disabled','enabled');
+ 				//TPR-4461 starts here
+				$('#couponPaymentRestrictionMessage').hide();
+			    //TPR-4461 ends here
  				$('#couponFieldId').attr('readonly', false);
  				var selection = $("#voucherDisplaySelection").val();
  				$("#couponFieldId").val(selection);
@@ -7427,7 +7787,7 @@ $(".remove-coupon-button").click(function(){
 
 $(document).ready(function(){
 	$("#off-bag").show();
-	console.log($("*[data-id=savedCCard]").is(":checked"));
+	//console.log($("*[data-id=savedCCard]").is(":checked"));
 	if($('#couponFieldId').prop('readonly') == false)
 	{
 		var selection = $("#voucherDisplaySelection").val();
@@ -7452,11 +7812,13 @@ $(document).ready(function(){
 	}
 	
 	$("li.price").each(function(){
-		if($(this).find(".off-bag").css("display") === "block"){
-			$(this).find("span.delSeat").addClass("delAction");
+		if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+			if($(this).find("span.delSeat.mop").length > 0){
+			$(this).find("span.delSeat:not(.mop)").addClass("delAction");
+			}
 		}
 		else{
-			$(this).find("span.delSeat").removeClass("delAction");
+			$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
 		}
 	});
 	
@@ -8007,10 +8369,13 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//TPR-1055
 	$("#defaultPinCodeIds").click(function(){
 		$(this).css("color","black"); //TPR-1470
+		//TISSTRT-1550 starts
+		$("#defaultPinCodeIdsBtm").css("color","black");
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();
 		$("#unserviceablepincode_tooltip").hide();
-		 $("#unserviceablepincode_tooltip_btm").hide();
+		$("#unserviceablepincode_tooltip_btm").hide();
+		//TISSTRT-1550 ends
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
@@ -8020,10 +8385,10 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 		 $("#emptyId").hide();
 		 $("#emptyId_tooltip").hide();
 		 $("#emptyId_tooltip_btm").hide();
-		 $(".pincodeServiceError").hide();
+		 //$(".pincodeServiceError").hide();
 		 //TPR-1341
-		 $(".cartItemBlankPincode").show();
-		 $(".delivery ul.success_msg").hide();
+		 /*$(".cartItemBlankPincode").show();
+		 $(".delivery ul.success_msg").hide();*/
 		//if($("#pinCodeButtonIds").text() == 'Change Pincode'){
 			//$("#pinCodeButtonIds").text("Check");
 		 if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode'){	//UF-71
@@ -8036,15 +8401,21 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 	//UF-69 STARTS
 	$("#defaultPinCodeIdsBtm").click(function(){
 		$(this).css("color","black"); //TPR-1470
+		//TISSTRT-1550 starts
+		$("#defaultPinCodeIds").css("color","black");
+		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();
+		$("#unserviceablepincode_tooltip").hide();
+		$("#unserviceablepincode_tooltip_btm").hide();
+		//TISSTRT-1550 ends
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
 		 $("#emptyId").hide();
-		 $(".pincodeServiceError").hide();
-		 //TPR-1341
+	//	 $(".pincodeServiceError").hide();
+		/* //TPR-1341
 		 $(".cartItemBlankPincode").show();
-		 $(".delivery ul.success_msg").hide();
+		 $(".delivery ul.success_msg").hide();*/
 		/*if($("#pinCodeButtonIdsBtm").text() == 'Change Pincode'){
 			$("#pinCodeButtonIdsBtm").text("Check Availability");*/
 		 if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode'){
@@ -8068,8 +8439,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 		else{
 			var staticHost=$('#staticHost').val();
 			$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-			$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
-			
+			$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 			$(".pay button, #make_mrupee_payment").prop("disabled",true);
 			$(".pay button, #make_mrupee_payment").css("opacity","0.5");
 			
@@ -8077,7 +8447,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 			var guid=$("#guid").val();
 			var walletName = $("#radioButton_MRupee").val();
 			var dataString = 'walletName=' + walletName +'&cartGuid=' + guid ;
-			console.log("Calling createWalletOrder");
+			//console.log("Calling createWalletOrder");
 			$.ajax({
 				url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/createWalletorder",
 				type: "GET",
@@ -8094,11 +8464,23 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					else if(response=="" || response==null){
 						console.log("Response for mRupee is null");
 					}
+					//TPR-4461 STARTS HERE
+					else if(response=='redirect_with_coupon'){
+						document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+						$("#juspayconnErrorDiv").css("display","block");
+						$("body,html").animate({ scrollTop: 0 });
+						$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
+						$(".pay button, #make_mrupee_payment_up").css("opacity","1");
+						$(".pay .loaderDiv").remove();
+						$("#no-click,.spinner").remove();
+										    
+					}
+					//TPR-4461 ENDS HERE
 					else{	
 						window.sessionStorage.removeItem("header");
 						setTimeout(function(){ 			 
 							 var values=response.split("|"); 
-							 console.log("Response for mRupee is " + response);
+							 //console.log("Response for mRupee is " + response);
 							 	// To do later
 								  $("#REFNO").val(values[0]);
 								  $("#CHECKSUM").val(values[1]);
@@ -8110,7 +8492,7 @@ $("#make_mrupee_payment , #make_mrupee_payment_up").click(function(){
 					}
 					$(".pay button, #make_mrupee_payment_up").prop("disabled",false);
 					$(".pay button, #make_mrupee_payment_up").css("opacity","1");
-					$(".pay .spinner").remove();
+					$(".pay .loaderDiv").remove();
 					$("#no-click,.spinner").remove();
 				},
 				error:function(response){
@@ -8159,8 +8541,7 @@ function submitWalletForm(values) {
 	if(checkNull){
 		var staticHost=$('#staticHost').val();
 		$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
-		
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		$(".pay button, #make_mrupee_payment").prop("disabled",true);
 		$(".pay button, #make_mrupee_payment").css("opacity","0.5");
 		$("#tpWallt_payment_form").submit() ;
@@ -8267,6 +8648,20 @@ function submitCODForm(){
 				else if(response=='redirect_to_payment'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid); //TPR-629
 				}
+				//TPR-4461 STARTS HERE
+				else if(response=='redirect_with_coupon'){
+					// $(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/pay?value="+guid);
+					document.getElementById("juspayErrorMsg").innerHTML="Sorry! The coupon cannot be used for this purchase. You can either change your payment method/bank or <a href='javascript:explicit_coupon_release_function();'><b><u>save your coupon</u></b></a> for your next purchase.";
+					$("#juspayconnErrorDiv").css("display","block");
+					$("body,html").animate({ scrollTop: 0 });
+					$(".pay .payment-button,.cod_payment_button_top").prop("disabled",false);
+					$(".pay .payment-button,.cod_payment_button_top").css("opacity","1");
+					//$(".pay button, #make_cc_payment_up").prop("disabled",false);
+					//$(".pay button, #make_cc_payment_up").css("opacity","1");
+					// alert("Sorry!!! Voucher is not applicable for the payment mode/bank you have selected.Click OK to be back to the payment page and proceed further.");
+				    
+				}
+				//TPR-4461 ENDS HERE
 				else{
 					$("#emptyOTPMessage").css("display","none");
 					if(response!=null)
@@ -8315,7 +8710,7 @@ function submitCODForm(){
 							$(".pay .spinner").css("left",(($(".pay#paymentFormButton").width()+$(".pay#paymentFormButton .payment-button").width())/2)+10);
 							$("body").append("<div id='no-click' style='opacity:0.65; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");*/
 							$("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-							$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">');
+							$("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 							/*TPR-3446 COD After OTP Entered ends*/
 							$("#silentOrderPostForm").submit();
 						}
@@ -8330,8 +8725,8 @@ function submitCODForm(){
 						alert("Error validating OTP. Please select another payment mode and proceed");
 						$(".pay button,.cod_payment_button_top").prop("disabled",false);
 						$(".pay button,.cod_payment_button_top").css("opacity","1");
-						$(".pay .spinner").remove();
-						$("#no-click,.spinner").remove();
+						$(".pay .loaderDiv").remove();
+						$("#no-click,.loaderDiv").remove();
 						$('#paymentButtonId').prop('disabled', false); // TISPRD-958
 					}
 				}
@@ -8345,8 +8740,8 @@ function submitCODForm(){
 				alert("Error validating OTP. Please select another payment mode and proceed");
 				$(".pay button,.cod_payment_button_top").prop("disabled",false);
 				$(".pay button,.cod_payment_button_top").css("opacity","1");
-				$(".pay .spinner").remove();
-				$("#no-click,.spinner").remove();
+				$(".pay .loaderDiv").remove();
+				$("#no-click,.loaderDiv").remove();
 				
 			}
 		});
@@ -8368,7 +8763,7 @@ $("button[name='pinCodeButtonId']").click(function(){
 	$("input[name='defaultPinCodeIds']").val(pincode).css("color","rgb(255, 28, 71)");
 	
 	//$(".emptyPins").show();
-	checkPincodeServiceability('typeSubmit',this);
+	//checkPincodeServiceability('typeSubmit',this);
 	});
 
 /*UF-68 UF-69*/

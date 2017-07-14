@@ -25,7 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
-
 import com.hybris.oms.domain.locationrole.LocationRole;
 import com.hybris.oms.domain.order.CouponDto;
 import com.hybris.oms.domain.order.OrderLine;
@@ -206,14 +205,21 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				LOG.debug("CustomOmsOrderLinePopulator : there is no coupon for the order ");
 			}
 
-			if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
-			{
-				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
-			}
-			else if (source.getCurrDelCharge() != null)
+			//TISPRDT-1226
+			if (source.getCurrDelCharge() != null)
 			{
 				target.setShippingCharge(source.getCurrDelCharge().doubleValue());
 			}
+			else if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0)
+			{
+				target.setShippingCharge(source.getPrevDelCharge().doubleValue());
+			}
+
+			/*
+			 * if (source.getPrevDelCharge() != null && source.getPrevDelCharge().doubleValue() > 0) {
+			 * target.setShippingCharge(source.getPrevDelCharge().doubleValue()); } else if (source.getCurrDelCharge() !=
+			 * null) { target.setShippingCharge(source.getCurrDelCharge().doubleValue()); }
+			 */
 			if (source.getOrder().getPaymentInfo() instanceof CODPaymentInfoModel)
 			{
 				target.setIsCOD(true);

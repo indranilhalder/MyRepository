@@ -17,7 +17,7 @@
 			
 					<c:choose>
 					<c:when test="${not empty product.potentialPromotions}"> 
-								<input type="hidden" value='${product.potentialPromotions}' id="promolist"/>
+								<%-- <input type="hidden" value='${product.potentialPromotions}' id="promolist"/> --%>
 			<%-- 	<c:if test="${not empty product.potentialPromotions}"> --%>
 					<%-- <c:choose>
 				<c:when test="${not empty product.potentialPromotions[0].couldFireMessages}">
@@ -106,6 +106,18 @@
 									 </li>
 									</c:if>
 									<!-- end if check for channel web -->
+									<!-- added for TISTE-143, Block for channel mobile -->									
+									<c:if test="${channel eq 'Mobile'}">					
+							  			<!-- <input type="hidden" value="" id="promolist"/> -->		
+							  			<ul>
+											<li>
+												 <div class="offer-modal-heading">OFFER</div>
+												 <div class="offer-outer-wrapper">
+												 <div class="pdp-promoDesc pdp-promo right offer-block" style="float: none; margin: 0px auto;"></div>
+												</div>
+											</li>
+									   </ul>
+            	                  </c:if>            	                  
 								</c:forEach>
 							</c:when>
 							<c:otherwise>

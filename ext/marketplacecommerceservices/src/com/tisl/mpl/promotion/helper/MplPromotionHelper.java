@@ -655,44 +655,44 @@ public class MplPromotionHelper
 	 * @param restrictionList
 	 * @return validProductUssidMap
 	 */
-	public Map<String, AbstractOrderEntry> getCartSellerInEligibleProducts(final SessionContext arg0, final AbstractOrder order,
-			final List<AbstractPromotionRestriction> restrictionList)
-	{
-		//CR Changes
-		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
-
-		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
-
-		//		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
-		//		{
-		boolean isFreebie = false;
-		boolean isofValidSeller = false;
-		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
-
-		for (final AbstractOrderEntry entry : entries)
-		{
-			isFreebie = validateEntryForFreebie(entry);
-			if (!isFreebie)
-			{
-				isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
-				if (!isofValidSeller)
-				{
-					try
-					{
-						selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
-					}
-					catch (JaloInvalidParameterException | JaloSecurityException e)
-					{
-						LOG.error(e);
-					}
-					validProductUssidMap.put(selectedUSSID, entry);
-				}
-			}
-		}
-		//}
-
-		return validProductUssidMap;
-	}
+	//	public Map<String, AbstractOrderEntry> getCartSellerInEligibleProducts(final SessionContext arg0, final AbstractOrder order,
+	//			final List<AbstractPromotionRestriction> restrictionList)
+	//	{
+	//		//CR Changes
+	//		final Map<String, AbstractOrderEntry> validProductUssidMap = new ConcurrentHashMap<String, AbstractOrderEntry>();
+	//
+	//		final List<AbstractOrderEntry> entries = (null != order) ? order.getEntries() : new ArrayList<AbstractOrderEntry>();
+	//
+	//		//		if (null != order && CollectionUtils.isNotEmpty(order.getEntries()))
+	//		//		{
+	//		boolean isFreebie = false;
+	//		boolean isofValidSeller = false;
+	//		String selectedUSSID = MarketplacecommerceservicesConstants.EMPTYSPACE;
+	//
+	//		for (final AbstractOrderEntry entry : entries)
+	//		{
+	//			isFreebie = validateEntryForFreebie(entry);
+	//			if (!isFreebie)
+	//			{
+	//				isofValidSeller = getDefaultPromotionsManager().isProductExcludedForSeller(arg0, restrictionList, entry);
+	//				if (!isofValidSeller)
+	//				{
+	//					try
+	//					{
+	//						selectedUSSID = (String) entry.getAttribute(arg0, MarketplacecommerceservicesConstants.SELECTEDUSSID);
+	//					}
+	//					catch (JaloInvalidParameterException | JaloSecurityException e)
+	//					{
+	//						LOG.error(e);
+	//					}
+	//					validProductUssidMap.put(selectedUSSID, entry);
+	//				}
+	//			}
+	//		}
+	//		//}
+	//
+	//		return validProductUssidMap;
+	//	}
 
 	/**
 	 * Return Product Data based on Seller Data for Cart Shipping Promotion

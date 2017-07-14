@@ -43,18 +43,26 @@ public class MplWebhookReportDaoImpl implements MplWebhookReportDao
 	@Override
 	public List<MplPaymentAuditModel> getSpecificAuditEntries(final Date startDate, final Date endDate)
 	{
-		final String queryString = //
-		"SELECT {p:" + MplPaymentAuditModel.PK
-				+ "} "//
-				+ "FROM {" + MplPaymentAuditModel._TYPECODE + " AS p} where " + "{p." + MplPaymentAuditModel.CREATIONTIME
-				+ "} BETWEEN ?startDate and ?endDate  ";
-
+		String queryString = //
+		"SELECT {p:" + MplPaymentAuditModel.PK + "} "//
+				+ "FROM {" + MplPaymentAuditModel._TYPECODE + " AS p} where " + "{p." + MplPaymentAuditModel.CREATIONTIME + "} ";
+		if (startDate != null)
+		{
+			queryString = queryString + "BETWEEN ?startDate and ?endDate  ";
+		}
+		else
+		{
+			queryString = queryString + " <> ?endDate  ";
+		}
 		LOG.debug("Fetching Audit Entries within Range");
 		LOG.debug("STARTDATE" + startDate);
 		LOG.debug("ENDDATE" + endDate);
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-		query.addQueryParameter("startDate", startDate);
+		if (startDate != null)
+		{
+			query.addQueryParameter("startDate", startDate);
+		}
 		query.addQueryParameter("endDate", endDate);
 		return getFlexibleSearchService().<MplPaymentAuditModel> search(query).getResult();
 	}

@@ -389,6 +389,12 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 				//					continue;
 				//				}
 
+				//excluded seller check
+				//				if (getDefaultPromotionsManager().isProductExcludedForSeller(ctx, restrictionList, entry))
+				//				{
+				//					continue;
+				//				}
+
 				//checking product is a valid product for promotion
 				if (CollectionUtils.isNotEmpty(allowedProductList) && allowedProductList.contains(product))
 				{
@@ -699,5 +705,3 @@ public class BuyAAboveXGetPercentageOrAmountOff extends GeneratedBuyAAboveXGetPe
 
 
 }
-
-

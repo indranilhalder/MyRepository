@@ -30,7 +30,7 @@
 	position :absolute;
 	float:right;
 	right:10px;
-	top:10%;		/* TISSQAEE-335 */
+	top:10%;		/* TISSQAEE-335 */		/*INC144315966 */
 	padding-bottom:5px;
 	text-align: right;		/* TISSQAEE-335 */
 	width: 50%;		/* TISSQAEE-335 */
