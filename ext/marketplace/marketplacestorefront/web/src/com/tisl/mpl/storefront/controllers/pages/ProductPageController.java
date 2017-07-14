@@ -2786,8 +2786,7 @@ public class ProductPageController extends MidPageController
 		{
 			//TPR-3809
 			//sellerInformationDataList = buyBoxFacade.getsellersDetails(productCode);
-			sellerInformationDataList = buyBoxFacade.getsellersDetails(productCode, null);
-
+			sellerInformationDataList = buyBoxFacade.getsellersDetails(productCode, productModel.getProductCategoryType());
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
