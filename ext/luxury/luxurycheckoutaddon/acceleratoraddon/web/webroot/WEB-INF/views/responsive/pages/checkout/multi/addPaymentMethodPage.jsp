@@ -283,16 +283,18 @@
 														        </div>
 														        </div>
 														        
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"  style="visibility: hidden;"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers"></label>
 									                 	 		
 									                 	 		<div class="card-details">
-									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</div>
+									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}
+									                 	 			<p>${map.value.nameOnCard}</p>
+									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
+									                 	 			
+									                 	 			</div>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
 									                 	 			
-									                  				<p>${map.value.nameOnCard}</p>
-									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
-
+									                  				
 									                  			<input type="hidden" name="creditCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 									                  			<input type="hidden" name="creditCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
 									                  			<input type="hidden" name="creditIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
