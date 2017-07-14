@@ -34,7 +34,7 @@
 
 					</li>
 				</c:if>
-				<li id="promotionApplied" >
+				<li id="promotionApplied"  class="hide">
 					<span><spring:theme code="basket.page.totals.savings"/></span>
 					<!-- <span id="promotion" style="float: right"> -->
 					<format:price priceData="${cartData.totalDiscounts}"/>
