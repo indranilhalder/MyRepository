@@ -331,7 +331,7 @@
 											</li>
 									<div class="terms">
 									<p class="redirect">You will be redirected to secure payment gateway.</p>
-									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="${tncLink}"/>" target="_blank" class="conditions"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
+									<p onclick="teliumTrack()"><spring:theme code="checkout.multi.paymentMethod.selectMode.tnc.pretext" /><a href="<c:url value="/termsAndConditions"/>" target="_blank" class="conditions"><spring:theme code="lux.checkout.multi.paymentMethod.selectMode.tnc" /></a><p>
 									</div>
 								</c:if> 
 								<!-- END SAVED CREDIT CARD -->
@@ -1411,3 +1411,4 @@
 		$("#make_saved_dc_payment").removeClass("saved_card_disabled");
 	});
 	</script>			
+				
