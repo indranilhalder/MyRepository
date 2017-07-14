@@ -312,7 +312,7 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				model.addAttribute(ModelAttributetConstants.IS_SIGN_IN_ACTIVE, ModelAttributetConstants.Y_CAPS_VAL);
 			}
-			
+
 			/** Added for UF-93 to show the last logged in user in log in field for the remembered Users **/
 			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
 			if (null != cookie && null != cookie.getValue())
@@ -488,7 +488,49 @@ public class LoginPageController extends AbstractLoginPageController
 			{
 				if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 				{
-					getRegisterCustomerFacade().register(data);
+
+					//TPR-6272 starts here
+					//final String luxDetector = form.getIsFromLuxury();//for luxury registration capture
+					/*
+					 * int platformNumber; if (luxDetector != null && StringUtils.isNotEmpty(luxDetector) &&
+					 * StringUtils.equalsIgnoreCase(luxDetector, "true")) { platformNumber = 5;//for luxury desktop web }
+					 * else { platformNumber = 1;//for mkt desktop web } //TPR-6272 ends here
+					 */
+
+
+					//TPR-6272 starts here
+					int platformNumber = 0;
+					final String userAgent = request.getHeader(
+							configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+					if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
+					{
+						if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
+								|| userAgent.contains(configurationService.getConfiguration()
+										.getString("useragent.responsive.blackberry"))
+								|| userAgent
+										.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
+								|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+						{
+							platformNumber = 5;//for web responsive
+						}
+						else
+						{
+							platformNumber = 1;//for mkt desktop web
+						}
+					}
+					else
+					{
+						platformNumber = 1;//for mkt desktop web
+					}
+					LOG.debug("The platform number is " + platformNumber);
+					//TPR-6272 ends here
+
+					getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 					// To avoid multiple time decoding of password containing '%' specially
 					final String password = java.net.URLEncoder.encode(form.getPwd(), "UTF-8");
 					form.setPwd(password);

@@ -502,8 +502,9 @@ public class UsersController extends BaseCommerceController
 	@RequestMapping(value = "/registration", method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
 	public MplUserResultWsDto registerUser(@RequestParam final String emailId, @RequestParam final String password,
-			@RequestParam(required = false) final boolean tataTreatsEnable) throws RequestParameterException,
-			WebserviceValidationException, MalformedURLException
+			@RequestParam(required = false) final boolean tataTreatsEnable,
+			@RequestParam(required = false) final String platformNumber) throws RequestParameterException,
+			WebserviceValidationException, MalformedURLException//parameter platformNumber added for TPR-6272
 
 	{
 		LOG.debug("****************** User Registration mobile web service ***********" + emailId);
@@ -514,7 +515,22 @@ public class UsersController extends BaseCommerceController
 		{
 			/* TPR-1140 Case-sensitive nature resulting in duplicate customer e-mails IDs */
 			final String emailIdLwCase = emailId.toLowerCase();
-			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable);
+
+			//TPR-6272 starts here
+			LOG.debug("The platform number is " + platformNumber);
+			int platformDecider;
+			if (StringUtils.isNotEmpty(platformNumber) && platformNumber != null)
+			{
+				platformDecider = Integer.parseInt(platformNumber);
+			}
+			else
+			{
+				platformDecider = 4;//for backward compatiblity mobile app
+			}
+			LOG.debug("The platform number is " + platformDecider);
+			//TPR-6272 ends here
+
+			userResult = mobileUserService.registerNewMplUser(emailIdLwCase, password, tataTreatsEnable, platformDecider);//TPR-6272 Parameter platformNumber added
 			final CustomerModel customerModel = mplPaymentWebFacade.getCustomer(emailIdLwCase);
 			gigyaWsDto = gigyaFacade.gigyaLoginHelper(customerModel, isNewusers);
 			if (StringUtils.isNotEmpty(gigyaWsDto.getSessionSecret()))

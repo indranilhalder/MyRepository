@@ -25,6 +25,8 @@ import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -70,6 +72,8 @@ public class DefaultWishlistFacade implements WishlistFacade
 	@Autowired
 	private OrderFacade orderFacade;
 
+
+
 	/**
 	 * @description get size of entries in default wishlist
 	 * @return integer
@@ -97,18 +101,21 @@ public class DefaultWishlistFacade implements WishlistFacade
 		try
 		{
 			final Wishlist2Model wishlist2Model = getWishlistForName(wishlistName);
-			Wishlist2EntryModel wishlist2EntryModel = null;
 			for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
 			{
 				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode)
 						&& entryModel.getUssid().equals(ussid))
 				{
-					wishlist2EntryModel = entryModel;
+					//TPR-5787 starts here
+					final Date date = new Date();
+					entryModel.setIsDeleted(Boolean.TRUE);
+					entryModel.setDeletedDate(new Timestamp(date.getTime()));
+					modelService.save(entryModel);
 					break;
+					//TPR-5787 ends here
 				}
 			}
-
-			wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);//commented for TPR-5787
 			return wishlist2Model;
 		}
 		catch (final Exception ex)
@@ -129,19 +136,20 @@ public class DefaultWishlistFacade implements WishlistFacade
 		try
 		{
 			final Wishlist2Model wishlist2Model = getWishlistForName(wishlistName);
-			Wishlist2EntryModel wishlist2EntryModel = null;
 			for (final Wishlist2EntryModel entryModel : wishlist2Model.getEntries())
 			{
 				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode))
 				{
-					wishlist2EntryModel = entryModel;
-					wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
-
-					//break;
+					//TPR-5787 starts here
+					final Date date = new Date();
+					entryModel.setIsDeleted(Boolean.TRUE);
+					entryModel.setDeletedDate(new Timestamp(date.getTime()));
+					modelService.save(entryModel);
+					break;
+					//TPR-5787 ends here
 				}
 			}
-
-			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
+			//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);//commented for TPR-5787
 			return wishlist2Model;
 		}
 		catch (final Exception ex)
@@ -221,22 +229,18 @@ public class DefaultWishlistFacade implements WishlistFacade
 	public boolean addProductToWishlist(final Wishlist2Model wishlist, final String productCode, final String ussid,
 			final boolean selectedSize)
 	{
+		//TPR-5787 starts here
 		boolean add = true;
 		try
 		{
-			LOG.debug("addProductToWishlist: *****productCode: " + productCode + " **** ussid: " + ussid + " *** selectedSize: "
-					+ selectedSize);
-			final List<Wishlist2EntryModel> entries = wishlist.getEntries();
+			LOG.debug("addProductToWishlist in Mobile : *****productCode: " + productCode + " **** ussid: " + ussid
+					+ " *** selectedSize: " + selectedSize);
+			List<Wishlist2EntryModel> wishlist2Entry = null;
+
+			wishlist2Entry = mplWishlistService.findWishlistEntryByProductAndUssid(ussid);
+
 			ProductModel product = null;
-			for (final Wishlist2EntryModel wlEntry : entries)
-			{
-				product = wlEntry.getProduct();
-				if ((null != product) && (productCode.equals(product.getCode())) && (ussid.equals(wlEntry.getUssid())))
-				{
-					add = false;
-				}
-			}
-			if (add)
+			if (CollectionUtils.isEmpty(wishlist2Entry))
 			{
 				product = productService.getProductForCode(productCode);
 				final String comment = MplConstants.MPL_WISHLIST_COMMENT;
@@ -246,12 +250,28 @@ public class DefaultWishlistFacade implements WishlistFacade
 							ussid, selectedSize);
 				}
 			}
+			else
+			{
+
+				final Wishlist2EntryModel wishlist2UpdateEntry = wishlist2Entry.get(0);
+				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
+				{
+					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
+					modelService.save(wishlist2UpdateEntry);
+
+				}
+				else
+				{
+					add = false;
+				}
+			}
 		}
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 		return add;
+		//TPR-5787 ends here
 	}
 
 	//CAR Project performance issue fixed
@@ -286,7 +306,18 @@ public class DefaultWishlistFacade implements WishlistFacade
 			}
 			else
 			{
-				add = false;
+				//TPR-5787 starts here
+				final Wishlist2EntryModel wishlist2UpdateEntry = wishlist2Entry.get(0);
+				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
+				{
+					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
+					modelService.save(wishlist2UpdateEntry);
+				}
+				else
+				{
+					add = false;
+				}
+				//TPR-5787 ends here
 			}
 		}
 		catch (final Exception ex)
@@ -366,7 +397,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getBuyBoxPrice(java.lang.String,
 	 * de.hybris.platform.commercefacades.product.data.ProductData)
 	 */
@@ -404,7 +435,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#removeProductFromWL(java.lang.String)
 	 */
 	@Override
@@ -515,7 +546,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getSingleWishlist(de.hybris.platform.core.model.user.UserModel)
 	 */
 	@Override

@@ -15,8 +15,8 @@ import com.tisl.mpl.wsdto.MplUserResultWsDto;
  */
 public interface MplMobileUserService
 {
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable,
+			final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions;//TPR-6272 parameter platformNumber added
 
 	public MplUserResultWsDto loginUser(final String login, final String password) throws EtailNonBusinessExceptions,
 			EtailBusinessExceptions;

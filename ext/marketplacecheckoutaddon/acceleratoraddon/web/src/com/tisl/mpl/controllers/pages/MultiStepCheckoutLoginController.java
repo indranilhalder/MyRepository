@@ -97,7 +97,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	@Autowired
 	private ConfigurationService configurationService; //Added for UF-93
-	
+
 	/**
 	 * @return the resourceBreadcrumbBuilder
 	 */
@@ -424,7 +424,36 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 		{
 			if (getRegisterCustomerFacade().checkUniquenessOfEmail(data))
 			{
-				getRegisterCustomerFacade().register(data);
+				//TPR-6272 starts here
+				int platformNumber = 0;
+				final String userAgent = request.getHeader(
+						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
+				{
+					if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.blackberry"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+					{
+						platformNumber = 5;//for web responsive
+					}
+					else
+					{
+						platformNumber = 1;//for mkt desktop web
+					}
+				}
+				else
+				{
+					platformNumber = 1;//for mkt desktop web
+				}
+				LOG.debug("The platform number is " + platformNumber);
+				//TPR-6272 ends here
+				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber added
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 				final HttpSession session = request.getSession();
 				session.setAttribute(LOGIN_SUCCESS, Boolean.TRUE);
@@ -497,7 +526,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#back(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */
@@ -509,7 +538,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#next(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */

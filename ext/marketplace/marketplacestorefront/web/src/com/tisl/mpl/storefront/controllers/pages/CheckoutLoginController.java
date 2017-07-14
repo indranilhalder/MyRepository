@@ -28,6 +28,7 @@ import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commerceservices.customer.DuplicateUidException;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.util.Collections;
 
@@ -36,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
@@ -71,6 +74,12 @@ public class CheckoutLoginController extends AbstractLoginPageController
 {
 	private final String BZ_ERROR_CMS_PAGE = "businessErrorFound";
 	private final String NBZ_ERROR_CMS_PAGE = "nonBusinessErrorFound";
+
+
+	//TPR-6272 starts here
+	@Autowired
+	private ConfigurationService configurationService;
+	//TPR-6272 ends here
 
 	@Resource(name = "checkoutFlowFacade")
 	private CheckoutFlowFacade checkoutFlowFacade;
@@ -462,7 +471,36 @@ public class CheckoutLoginController extends AbstractLoginPageController
 			data.setAffiliateId(form.getAffiliateId());
 			try
 			{
-				getRegisterCustomerFacade().register(data);
+				//TPR-6272 starts here
+				int platformNumber = 0;
+				final String userAgent = request.getHeader(
+						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
+				{
+					if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.blackberry"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
+							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+					{
+						platformNumber = 5;//for web responsive
+					}
+					else
+					{
+						platformNumber = 1;//for mkt desktop web
+					}
+				}
+				else
+				{
+					platformNumber = 1;//for mkt desktop web
+				}
+				LOG.debug("The platform number is " + platformNumber);
+				//TPR-6272 ends here
+				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber added
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
 				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.CONF_MESSAGES_HOLDER,

@@ -96,8 +96,8 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 	 */
 	@SuppressWarnings("javadoc")
 	@Override
-	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable)
-			throws EtailBusinessExceptions, EtailNonBusinessExceptions
+	public MplUserResultWsDto registerNewMplUser(final String login, final String password, final boolean tataTreatsEnable,
+			final int platformNumber) throws EtailBusinessExceptions, EtailNonBusinessExceptions//TPR-6272 parameter platformNumber added
 	{
 		MplUserResultWsDto result = new MplUserResultWsDto();
 		boolean successFlag = false;
@@ -117,7 +117,7 @@ public class MplMobileUserServiceImpl implements MplMobileUserService
 			//Register the user, call facade
 			if (registerCustomerFacade.checkUniquenessOfEmail(registration))
 			{
-				registerCustomerFacade.register(registration);
+				registerCustomerFacade.register(registration, platformNumber);//TPR-6272 parameter platformNumber passed
 				//Set success flag
 				successFlag = true;
 				LOG.debug("************** User registered via mobile web service *************" + login);

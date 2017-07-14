@@ -134,6 +134,23 @@
 
 
 	<enumtypes>
+	                <!-- TPR-6272 starts here -->
+	                <!-- <enumtype generate="true" code="registrationPlatform" autocreate="true" dynamic="true">
+			              <description>
+				               This enumeration creates the registration platform.
+			              </description>
+						  <value code="Mkt_Desktop_Web" />
+			              <value code="Mkt_Mobile_Web" />
+			              <value code="Mkt_Mobile_App" />
+			              <value code="Mkt_iOS_App" />
+			              <value code="Mkt_Android_App" />
+			              <value code="Lux_Desktop_Web" />
+			              <value code="Lux_Mobile_Web" />
+			              <value code="Lux_Mobile_App" />
+			              <value code="Lux_iOS_App" />
+			              <value code="Lux_Android_App" />			              
+		            </enumtype> -->
+	                <!-- TPR-6272 ends here -->
 
 		<!-- TPR-628-Make changes to Banners rendering in MObile Viewports -->
 
@@ -3221,6 +3238,14 @@
 			</itemtype>
 			<itemtype code="Customer" generate="false" autocreate="false">
 				<attributes>
+				    <!-- TPR-6272 starts here -->				   				    
+				    <attribute qualifier="customerRegistrationPlatform" autocreate="true"
+						type="java.lang.String" generate="true">
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-6272 ends here -->
 					<attribute qualifier="isCustomerCreatedInCScockpit"
 						autocreate="true" type="java.lang.boolean" generate="true">
 						<modifiers read="true" write="true" search="true"
@@ -5584,6 +5609,15 @@
 			<itemtype code="AbstractOrderEntry" autocreate="false"
 				generate="false">
 				<attributes>
+				<!-- UF-260 starts here -->
+					<attribute qualifier="cartAdditionalDiscPerc" autocreate="true"
+						type="java.lang.Double">
+						<description>cartAdditional discount percentage Display</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- UF-260 ends here -->
 					<attribute qualifier="description" autocreate="true"
 						type="java.lang.String">
 						<description>Description of Product</description>
@@ -5946,6 +5980,22 @@
 						<defaultvalue>Boolean.FALSE</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					<!-- TPR-5787 starts here -->
+					<attribute qualifier="isDeleted" autocreate="true"
+						type="java.lang.Boolean">
+						<description>Flag to indicate that the wishlist has been deleted</description>
+						<modifiers read="true" write="true" optional="false" />
+						<defaultvalue>Boolean.FALSE</defaultvalue>
+						<persistence type="property" />
+					</attribute>
+					<attribute autocreate="true" qualifier="deletedDate"
+						type="java.util.Date">
+						<description>To store the date when wishlist item has been deleted</description>
+						<persistence type="property" />
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<!-- TPR-5787 ends here -->
 				</attributes>
 			</itemtype>
 
