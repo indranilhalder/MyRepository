@@ -29,7 +29,10 @@ import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -382,6 +385,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		boolean isExist = false; //TPR-6272
 		if (bindingResult.hasErrors())
 		{
 			model.addAttribute(form);
@@ -428,19 +432,29 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 				int platformNumber = 0;
 				final String userAgent = request.getHeader(
 						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+
+
 				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
 				{
-					if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.blackberry"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+
+					final String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+					final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
+
+
+					final Iterator it = mobileDeviceArray.iterator();
+
+					while (it.hasNext())
 					{
-						platformNumber = 5;//for web responsive
+						if (userAgent.contains(it.next().toString()))
+						{
+							isExist = true;
+							break;
+						}
+					}
+					if (isExist)
+					{
+						platformNumber = 5;//for mobile responsive
 					}
 					else
 					{

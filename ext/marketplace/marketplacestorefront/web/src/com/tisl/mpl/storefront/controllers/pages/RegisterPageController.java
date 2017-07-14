@@ -27,7 +27,10 @@ import de.hybris.platform.commerceservices.customer.DuplicateUidException;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -229,6 +232,7 @@ public class RegisterPageController extends AbstractRegisterPageController
 			final Model model, final HttpServletRequest request, final HttpServletResponse response,
 			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
 	{
+		boolean isExist = false; //TPR-6272
 		try
 		{
 			if (bindingResult.hasErrors())
@@ -250,19 +254,29 @@ public class RegisterPageController extends AbstractRegisterPageController
 				int platformNumber = 0;
 				final String userAgent = request.getHeader(
 						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+
+
 				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
 				{
-					if (userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.iphone"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.android"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.webos"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipad"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.ipod"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.blackberry"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.operamini"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.galaxy"))
-							|| userAgent.contains(configurationService.getConfiguration().getString("useragent.responsive.nexus")))
+
+					final String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+					final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
+
+
+					final Iterator it = mobileDeviceArray.iterator();
+
+					while (it.hasNext())
 					{
-						platformNumber = 5;//for web responsive
+						if (userAgent.contains(it.next().toString()))
+						{
+							isExist = true;
+							break;
+						}
+					}
+					if (isExist)
+					{
+						platformNumber = 5;//for mobile responsive
 					}
 					else
 					{
@@ -275,6 +289,7 @@ public class RegisterPageController extends AbstractRegisterPageController
 				}
 				LOG.debug("The platform number is " + platformNumber);
 				//TPR-6272 ends here
+
 				getRegisterCustomerFacade().register(data, platformNumber);//TPR-6272 parameter platformNumber passed
 				getAutoLoginStrategy().login(form.getEmail().toLowerCase(), form.getPwd(), request, response);
 
