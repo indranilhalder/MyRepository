@@ -113,7 +113,7 @@ tr.d0 td {
 			<div class="pdp-img-nav">
 				<c:forEach items="${galleryImages}" var="container">
 					<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-						<div><img src="${container.thumbnail.url}" data-zoom-image="${container.superZoom.url}"></div>
+						<div><img src="${container.thumbnail.url}" data-zoom-image="${container.luxurySuperZoom.url}"></div>
 					</c:if>
 					<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
 						<c:set var="videoAvailable" value="true"/>
@@ -129,9 +129,9 @@ tr.d0 td {
 							<c:forEach items="${galleryImages}" var="container">
 								<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
 										<c:set var="isImgAdded" value="true"/>
-									<div><img src="${container.superZoom.url}" data-zoom-image="${container.superZoom.url}" class="zoomer"></div>
+									<div><img src="${container.luxurySuperZoom.url}" data-zoom-image="${container.luxurySuperZoom.url}" class="zoomer"></div>
 								</c:if>
-								<c:if test="${empty container.superZoom && isImgAdded ne 'true'}">
+								<c:if test="${empty container.luxurySuperZoom && isImgAdded ne 'true'}">
 									<theme:luxuryImage imgClass="${imgClass}" code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
 								</c:if>
 							</c:forEach>
