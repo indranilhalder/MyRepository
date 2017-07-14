@@ -19,6 +19,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -278,7 +279,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 	 * java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
 	@Override
-	public String generateXmlForPanCard(final List<PancardInformationModel> pModelList, final String orderreferancenumber,
+	public String generateXmlForPanCard(final List<PancardInformationModel> pModelList, final String orderReferanceNumber,
 			final List<String> transactionidList, final String panCardImagePath) throws JAXBException
 	{
 		// YTODO Auto-generated method stub
@@ -291,8 +292,14 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 			for (final PancardInformationModel pModel : pModelList)
 			{
 				orderLine.setInterfaceType(MarketplacecclientservicesConstants.PANCARD);
-				orderLine.setPancardPath(panCardImagePath);
-				orderLine.setTransactionId(pModel.getTransactionId());
+				if (StringUtils.isNotEmpty(panCardImagePath))
+				{
+					orderLine.setPancardPath(panCardImagePath);
+				}
+				if (StringUtils.isNotEmpty(pModel.getTransactionId()))
+				{
+					orderLine.setTransactionId(pModel.getTransactionId());
+				}
 				if (StringUtils.isNotEmpty(pModel.getStatus()))
 				{
 					if (MarketplacecclientservicesConstants.REJECTED.equalsIgnoreCase(pModel.getStatus())
@@ -310,13 +317,22 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 		}
 		else
 		{
-			for (final String transId : transactionidList)
+			if (CollectionUtils.isNotEmpty(transactionidList))
 			{
-				orderLine.setInterfaceType(MarketplacecclientservicesConstants.PANCARD);
-				orderLine.setTransactionId(transId);
-				orderLine.setPancardPath(panCardImagePath);
-				orderLine.setPancardStatus(MarketplacecclientservicesConstants.PENDING_FOR_VERIFICATION);
-				orderLineList.add(orderLine);
+				for (final String transId : transactionidList)
+				{
+					orderLine.setInterfaceType(MarketplacecclientservicesConstants.PANCARD);
+					if (StringUtils.isNotEmpty(transId))
+					{
+						orderLine.setTransactionId(transId);
+					}
+					if (StringUtils.isNotEmpty(panCardImagePath))
+					{
+						orderLine.setPancardPath(panCardImagePath);
+					}
+					orderLine.setPancardStatus(MarketplacecclientservicesConstants.PENDING_FOR_VERIFICATION);
+					orderLineList.add(orderLine);
+				}
 			}
 		}
 		//		orderLine.setInterfaceType(MarketplacecclientservicesConstants.PANCARD);
@@ -325,7 +341,10 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 		//		orderLine.setPancardStatus(MarketplacecclientservicesConstants.PENDING_FOR_VERIFICATION);
 		//orderLineList.add(orderLine);
 
-		lpAwbUpdate.setOrderId(orderreferancenumber);
+		if (StringUtils.isNotEmpty(orderReferanceNumber))
+		{
+			lpAwbUpdate.setOrderId(orderReferanceNumber);
+		}
 		lpAwbUpdate.setOrderLine(orderLineList);
 
 		final String response = getResponseFromPIforPanCard(lpAwbUpdate);
