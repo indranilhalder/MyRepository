@@ -1,159 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-        <meta charset="utf-8">
+<head>
+  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width" />
 
-  <title>  Tata CliQ Luxury</title>
+  <title>Tata CliQ</title>
 
 </head>
 <body style="padding: 0; margin:0; font-family:Arial, Helvetica, sans-serif;">
 
   <style type="text/css">
-    body{ padding: 0; margin:0; }
-    @media only screen and (max-width:600px) {
-        .maintable{ width: 300px }
-        .smFull{ width: 100%; display: inline-block; }
-        
-        .toplink{ font-weight: bold; display: inline-block; width: 90%; padding: 10px 5%; text-align: left;  }
-        .toplink a{ font-size:12px!important }
-        .logo{ font-weight: bold; display: inline-block; width: 100% }
-        .logo img{ width: 80px; height: auto }
-        .topLinks{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;letter-spacing: 1px}
-        .inPad{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;}
-        .topLinks a{font-size: 11px!important; vertical-align: middle;}
-        .topLinks span{font-size: 25px!important; vertical-align: middle; line-height: 10px}
-        .dsnone{ display: none!important }
-        .fwnormal{ font-weight: normal; }
-        .content{ line-height: 18px }
-        .lesspad img{ height: 20px }
-        .orderdetail{ text-align: left; }
-        .orderitemtable{ border-bottom: 1px solid #dadada }
-        .iprice{ text-align: left; font-weight: bold; }
-        .trackdiv{ padding: 0 0 15px; font-size: 12px!important  }
-        .followhead{ font-weight: bold; padding: 10px 0 5px; font-size: 12px!important }
-        .bordertop{padding-top:0; padding-bottom: 0 }
-        .bordertop td{border-top: 1px solid #dadada; width: 100%; display: inline-block; }
-        .socialLinks a{ display: inline-block; margin: 0 5px 0 0 }
-        .taleft{ text-align: left }
-        .btn{ font-size: 12px; width: 150px!important; padding: 7px 10px!important; letter-spacing: 0.5px }
-        .borderBot td{ width: 100%; display: inline-block;  }
-        .borderBot{  display: inline-block;width: 90%; padding: 0 5%; }
-        .foocontnt div{font-size: 12px!important  }
-        .dsBlock{ display: table-row !important;}
-        .borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
-    }  
-            </style>
-   </head>
-     <body>
-           <table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px; margin-top: 50px;">
-            <tbody>
-                <tr>
-                     <td>
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                      <tbody>
-                           <tr>
-                                 <td>
-                                  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                    <tbody>
-                                      
-                                      <tr>
-                                           #if($ctx.cmsSlotContents.SiteLogo)
-                                        <td class="logo" ><a href="https://www.e2eluxury.tataunistore.com/" target="_blank">${ctx.cmsSlotContents.SiteLogo}</a></td>
-                                        #end
-                                        <td align="right" class="toplink">
-                                            &nbsp;
-                                        </td>
-                                      </tr>
-                                                                         </tbody>
-                                  </table>
-                               </td>
-                               </tr>
-                                   </tbody>
-                    </table>
-                  </td>
-                  </tr>
-                  <tr>
-                      <td>
-                      <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                       <tbody>
-                        <tr>
-                          
+	body{ padding: 0; margin:0;background-color:#ffffff; }
+	@media only screen and (max-width:600px) {
+		.maintable{ width: 300px;min-width: 300px!important; }
+		.smFull{ width: 100%; display: inline-block; }
+		
+		.toplink{ font-weight: bold; display: inline-block; width: 90%; padding: 10px 5%; text-align: left;  }
+		.toplink a{ font-size:12px!important }
+		.logo{ font-weight: bold; display: inline-block; width: 100% }
+		.logo img{ width: 200px; height: auto }
+		.topLinks{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;letter-spacing: 1px}
+		.inPad{display: inline-block; width: 90%; padding: 10px 5%; text-align: left;}
+		.topLinks a{font-size: 11px!important; vertical-align: middle;}
+		.topLinks span{font-size: 25px!important; vertical-align: middle; line-height: 10px}
+		.dsnone{ display: none!important }
+		.fwnormal{ font-weight: normal; }
+		.content{ line-height: 18px }
+		.lesspad img{ height: 20px }
+		.orderdetail{ text-align: left; }
+		.orderitemtable{ border-bottom: 1px solid #dadada }
+		.iprice{ text-align: left; font-weight: bold; }
+		.trackdiv{ padding: 0 0 15px; font-size: 12px!important  }
+		.followhead{ font-weight: bold; padding: 10px 0 5px; font-size: 12px!important }
+		.bordertop{padding-top:0; padding-bottom: 0 }
+		.bordertop td{border-top: 1px solid #dadada; width: 100%; display: inline-block; }
+		.socialLinks a{ display: inline-block; margin: 0 5px 0 0 }
+		.taleft{ text-align: left }
+		.btn{ font-size: 12px; width: 150px!important; padding: 7px 10px!important; letter-spacing: 0.5px }
+		.borderBot td{ width: 100%; display: inline-block;  }
+		.borderBot{  display: inline-block;width: 90%; padding: 0 5%; }
+		.foocontnt div{font-size: 12px!important  }
+		.dsBlock{ display: table-row !important;}
+		.borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
+	}
+</style>
+<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="min-width: 600px;">
+			<tbody>
+			    <tr>
+		      <td width="10" class="dsnone">&nbsp;</td>
+		      <td bgcolor="#ffffff">   	
+<!-- main content-->
+
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tbody>
+			    <tr>
+			      <td>
+			        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+			          <tbody>
+			            <tr>
+			  	        	<td>
+			  	        		<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+			  	        		  <tbody>
+			  	        		    <!-- <tr>
+			  	        		      <td >
+			  	        		        <img src="images/placeh.gif" height="10" style="display:block;line-height:0;font-size:0;">
+			  	        		      </td>
+		  	        		        </tr>
+		  	        		        -->
+			  	        		    <tr>
+			  	        		      <td class="logo" ><a href="#">${ctx.cmsSlotContents.SiteLogo}</td>
+			  	        		      <td align="right" class="toplink">
+			  	        		      	 &nbsp;
+			  	        		      </td>
+			  	        		    </tr>
+			  	        		  </tbody>
+			  	        		</table>
+			  	        	</td>
+			  	        	
+			  	        </tr>
+			          </tbody>
+			        </table>
+			      </td>
+			    </tr>
+				<tr>
+					<td>
+					  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+					   <tbody>
+					    <tr>
+					      
                           <td>
-                           <!-- starts here-->
-                             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                               <tbody>
-                                 <tr>
-                                      <td align="center" class="topLinks" style="border-bottom: 1px solid #aa1d3d;padding: 10px;">
-                                          <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
-                                            <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-                                            <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
-                                            <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-                                            <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
-                                            <span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-                                            <span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
-                                       </td> 
-                                  </tr>                     
-                                  <tr>
-                                          <td class="inPad content" style=" margin-top: 10px;">
-                                          <div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333; margin-top: 40px; margin-bottom: 20px;">
-                                          <strong>Hi,</strong>
-                                          <br>
-                                          <br>
-                                          Thanks for signing up! With your  Tata CLiQ Luxury account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier.
-                                          <br>
-                                          At Tata CLiQ Luxury, find the best apparel, watches, bags, shoes, electronics and luxury brands, hand-picked for you, every season.
-                                          <br>
-                                          <br>
-                                          Ready to shop? Here are your account details: 
-                                          <br>
-                                          <br>
-                                          Username: ${ctx.customerId} 
-                                          </div>
-                                      </td>
-                                  </tr>
-                                
-                                  <tr class="dsnone">
-                                      <td style="background-color:#aa1d3d" align="center">
+					  	 <!-- starts here-->
+					  	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+					  	     <tbody>
+					  	       <!-- <tr class="dsnone">
+					  	         <td>
+					  	       	   <img src="images/placeh.gif" height="20" style="display:block;line-height:0;font-size:0;">
+					  	          </td>
+					  	        </tr>
+					  	        -->
+		  	        		    <tr>
+		  	        		    	<td align="center" class="topLinks" style="border-bottom: 1px solid #aa1d3d;padding: 10px;>
+		  	        		    		<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration: none "> FASHION </a>
+			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
+			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+			  	        		      	
+		  	        		    	</td> 
+		  	        		    </tr>
+		  	        		     <!--
+		  	        		     <tr >
+		  	        		      <td style="border-bottom:1px solid #aa1d3d;">
+		  	        		        <img src="images/placeh.gif" height="5" style="display:block;line-height:0;font-size:0;">
+		  	        		      </td>
+		  	        		    </tr>
+		  	        		    <tr class="dsnone">
+		  	        		      <td>
+		  	        		        <img src="images/placeh.gif" height="15" style="display:block;line-height:0;font-size:0;">
+		  	        		      </td>
+		  	        		    </tr>
+		  	        		    -->
+		  	        		  <tr>
+		  	        		    	<td class="inPad content">
+		  	        		    		<div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
+		  	        		    		<strong>Hi &lt;Fname&gt;,</strong>
+		  	        		    		<br>
+		  	        		    		<br>
+		  	        		    		We've created your Tata CLiQ Luxury account for you! With your Tata CLiQ Luxury account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier. 
+		  	        		    		<br>
+		  	        		    		<br>
+		  	        		    		At Tata CLiQ, find the best apparel, watches, bags, shoes, electronics and luxury brands, hand-picked for you, every season. 
+		  	        		    		<br>
+		  	        		    		<br>
+		  	        		    		Ready to shop? Here are your account details:
+		  	        		    		<br>
+		  	        		    		<br>
+		  	        		    		Username:  ${ctx.customerId};
+		  	        		    		
+		  	        		    		</div>
+
+		  	        		    	</td>
+		  	        		    </tr>
+		  	        		  <!--  <tr>
+		  	        		      <td class="lesspad">
+		  	        		        <img src="images/placeh.gif" height="20" style="display:block;line-height:0;font-size:0;">
+		  	        		      </td>
+		  	        		    </tr>
+		  	        		    -->
+
+		  	        		    <tr class="dsnone">
+		  	        		    	<td style="background-color:#aa1d3d" align="center">
                                         <table  border="0" cellspacing="0" cellpadding="0" align="center">
                                           <tbody>
-                                               <tr>
-                                               <td>${ctx.cmsSlotContents.tatatrust}</td>
-                                                 <td width="70" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                                   
-                                               Tata Trust
-                                                 </td>
-                                                 <td>
-                                                   ${ctx.cmsSlotContents.cliqnpic}
-                                                 </td>
-                                                 <td width="90" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                                    CLiQ and PIQ
-                                                 </td>
-                                                 <td>
-                                                   ${ctx.cmsSlotContents.easyreturn}
-                                                 </td>
-                                                 <td width="84" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                                    Easy Returns
-                                                 </td>
-                                                 <td>
-                                                   ${ctx.cmsSlotContents.authenticbrands}
-                                                 </td>
-                                                 <td width="99" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                                    Authentic Brands
-                                                 </td>
-                                                 <td>
-                                                   ${ctx.cmsSlotContents.freeshipping}
-                                                 </td>
-                                                 <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
-                                                   Free Shipping
-                                                 </td>
-                                               </tr>
+                                          	 <tr>
+                                          	 <td>${ctx.cmsSlotContents.tatatrust}</td>
+                                          	   <td width="70" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                          	     
+                                          	 Tata Trust
+                                          	   </td>
+                                          	   <td>
+                                          	    ${ctx.cmsSlotContents.cliqnpic}
+                                          	   </td>
+                                          	   <td width="90" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                          	      CLiQ and PIQ
+                                          	   </td>
+                                          	   <td>
+                                          	   ${ctx.cmsSlotContents.easyreturn}
+                                          	   </td>
+                                          	   <td width="84" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                          	      Easy Returns
+                                          	   </td>
+                                          	   <td>
+                                          	    ${ctx.cmsSlotContents.authenticbrands}
+                                          	   </td>
+                                          	   <td width="99" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                          	      Authentic Brands
+                                          	   </td>
+                                          	   <td>
+                                          	     ${ctx.cmsSlotContents.freeshipping}
+                                          	   </td>
+                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+                                          	     Free Shipping
+                                          	   </td>
+                                          	 </tr>
                                           </tbody>
                                         </table>
-                                      </td>
-                                  </tr>
-                                  
+		  	        		    	</td>
+		  	        		    </tr>
+		  	        		   
+		  	        		    <tr style="display: none" class="dsBlock">
+		  	        		    	<td style="background-color:#aa1d3d" align="center">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+                                          <tbody>
+                                               <!-- <tr>
+						  	        		      <td >
+						  	        		        <img src="images/placeh.gif" height="15" style="display:block;line-height:0;font-size:0;">
+						  	        		      </td>
+						  	        		   </tr>
+						  	        		   -->
+	                                          <tr>
+	                                             <td width="30">&nbsp;</td>
+	                                             <td>
+	                                             	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+	                                             	  <tbody>
+	                                             	    <tr>
+	                                             	    	<td width="27">
+			                                          	     ${ctx.cmsSlotContents.tatatrust}
+			                                          	   </td>
+			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">Tata Trust
+			                                          	   </td>
+	                                             	    </tr>
+	                                             	    <!--<tr>
+								  	        		      <td >
+								  	        		        <img src="images/placeh.gif" height="2" style="display:block;line-height:0;font-size:0;">
+								  	        		      </td>
+								  	        		    </tr>
+								  	        		    -->
+	                                             	    <tr>
+	                                             	    	<td width="27">
+				                                          	      ${ctx.cmsSlotContents.easyreturn}
+				                                          	 </td>
+				                                          	 <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+				                                          	      Easy Returns
+				                                          	</td>
+	                                             	    </tr>
+	                                             	    <!--<tr>
+								  	        		      <td >
+								  	        		        <img src="images/placeh.gif" height="2" style="display:block;line-height:0;font-size:0;">
+								  	        		      </td>
+								  	        		    </tr>
+	                                             	    <tr>
+	                                             	       <td width="27">
+			                                          	    ${ctx.cmsSlotContents.freeshipping}
+			                                          	   </td>
+			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+			                                          	     Free Shipping
+			                                          	   </td>
+	                                             	    </tr>
+	                                             	  </tbody>
+	                                             	</table>
+	                                             </td>
+	                                             <td width="10">&nbsp;</td>
+	                                             <td style="vertical-align:top;">
+	                                               <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+	                                             	  <tbody>
+	                                             	    <tr>
+			                                             	<td width="27">
+		                                          	           ${ctx.cmsSlotContents.authenticbrands}
+			                                          	   </td>
+			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+			                                          	      CLiQ and PIQ
+			                                          	   </td>
+			                                          	  </tr>
+			                                          	  <!--<tr>
+								  	        		      <td >
+								  	        		        <img src="images/placeh.gif" height="2" style="display:block;line-height:0;font-size:0;">
+								  	        		      </td>
+								  	        		    </tr>
+								  	        		    -->
+			                                          	  <tr>
+			                                          	  	<td width="27">
+			                                          	     ${ctx.cmsSlotContents.authenticbrands}
+			                                          	   </td>
+			                                          	   <td style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #ffffff;">
+			                                          	      Authentic Brands
+			                                          	   </td>
+			                                          	  </tr>
+			                                          	 </tbody>
+			                                         </table>
+	                                             </td>
+	                                              <td width="10">&nbsp;</td>
+	                                          </tr>
+	                                        <!--  <tr>
+						  	        		      <td >
+						  	        		        <img src="images/placeh.gif" height="15" style="display:block;line-height:0;font-size:0;">
+						  	        		      </td>
+						  	        		   </tr>-->
+                                          </tbody>
+                                        </table>
+		  	        		    	</td>
+		  	        		    </tr>
                                   <!-- shipping mobile -->
                                   <!-- stage mobile -->
                                   
