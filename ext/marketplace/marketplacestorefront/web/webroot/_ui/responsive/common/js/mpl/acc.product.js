@@ -526,6 +526,11 @@ sendAddToBag : function(formId, isBuyNow) {
 							$("span.js-mini-cart-count,span.js-mini-cart-count-hover,span.responsive-bag-count").text(data.substring(4));
 
 						}
+						//TISJEWST-10
+						else if(values[0]=="maxqtyaddedforfinejewellery"){
+							$("#" + formId + "Title").html("<br/><font color='#ff1c47'>You can only order upto"+" "+values[1]+ " "+"pieces of this item.</font>");
+							$("#" + formId + "Title").show().fadeOut(5000);
+						}
 						else if(data=="maxqtyexchange")
 						{
 							$("#"+formId+"Title").html("<br/><font color='#ff1c47'>"+$('#exchangeRestriction').html()+"</font>");

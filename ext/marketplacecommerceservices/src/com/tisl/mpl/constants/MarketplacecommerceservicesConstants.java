@@ -755,6 +755,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OUT_OF_INVENTORY = "outofinventory";
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
 	public static final String MAX_QUANTITY_ADDED_FOR_EXCHANGE = "maxqtyexchange";
+	//TISJEWST-10
+	public static final String MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY = "maxqtyaddedforfinejewellery";
 
 	//For SellerPriority Report
 	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified Swllwe ID, Modified Seller Name, Modified Start Date, Modified End Date, Modified Active Flag";
