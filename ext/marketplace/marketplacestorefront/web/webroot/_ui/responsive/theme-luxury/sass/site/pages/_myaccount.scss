@@ -74,6 +74,10 @@
 			    border-radius: 3px;
                 text-align: center;
                 display: block;
+                
+                 @include media-breakpoint-down(sm) {
+                     width:100%;
+                }
 			}
 			label{
 				width:100%;

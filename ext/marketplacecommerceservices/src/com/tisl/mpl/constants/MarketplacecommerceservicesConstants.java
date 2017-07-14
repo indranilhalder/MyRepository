@@ -35,6 +35,15 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 { "PMD", "deprecation" })
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
+	//TPR-4461 starts here
+	//public static final String RESTRICTIONBANK = "restrictionbank".intern();
+	//public static final String RESTRICTIONPAYMENTMODE = "restrictionpaymentmode".intern();
+	//public final static String BANKFROMBINFORPROMOTION = "bankForPromotion".intern();
+	//public static final String PAYMENTMODECOUPON = "paymentmodecoupon".intern();
+	// TPR-4464 ends here
+	//TPR-4461 STARTS HERE
+	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
+	
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
 	public static final String EMPTYSPACE = "";
@@ -497,9 +506,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INVALIDDATE = "Please Enter valid date in formate dd/mm/yyyy";
 	public static final String OTPVALIDITY = "VALID";
 	public static final String OTPEXPIRY = "EXPIRED";
-	public static final String OTP_SENT = "OTP sent";
+	public static final String OTP_SENT = "Your OTP has been sent."; //UF-277
 	public static final String OTP_EXPIRY_MESSAGE = "Sorry! This OTP has expired.";
-	public static final String INVALID_OTP = "Are you sure that's the right OTP?";
+	public static final String INVALID_OTP = "The OTP entered is incorrect or invalid."; //UF-277
 	public static final String OTPERROR = "Please Enter valid OTP";
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
@@ -553,7 +562,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_MESSAGE = "Test from TatauniStore";
 	public static final String SMS_MESSAGE_COD_OTP = "Peek-a-boo {0}! One-time password for your COD order is {1}. Please feel free to call us at {2} in case of any queries.";
 	public static final String SMS_MESSAGE_C2C_OTP = "Hi, one time password for your request is {0}. Please enter this to submit the request. Thanks!";
-	public static final String SMS_MESSAGE_PAYMENT_PENDING = "HmmmÂ… There seems to be a spot of bother. Please hold on.";
+	public static final String SMS_MESSAGE_PAYMENT_PENDING = "Hmmm There seems to be a spot of bother. Please hold on.";
 	public static final String SMS_MESSAGE_PAYMENT_FAILED = "Uh oh. Looks like your order was declined for some reason. Please try again.";
 	public static final String SMS_MESSAGE_PAYMENT_TIMEOUT = "Oh no! Your order couldn't go through due to techincal issues. Please try again.";
 	public static final String SMS_MESSAGE_INVENTORY_RESERVATION_FAILED = "Uh oh! Looks like what you wanted isn't available right now, but it could come back soon. Please try again later";
@@ -587,7 +596,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While weӬl keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
@@ -868,6 +877,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9074 = "B9074";
 	public static final String B9075 = "B9075";
 	public static final String B9076 = "B9076";
+	public static final String B9078 = "B9078"; // TPR-4461
+	public static final String B9079 = "B9079"; // TPR-4461
 
 	public static final String E9040 = "E9040";
 	public static final String E9041 = "E9041";
@@ -932,6 +943,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9700 = "B9700";
 
 	public static final String B9710 = "B9710";
+	public static final String B9110 = "B9110";
 	// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
@@ -2090,6 +2102,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
 	public static final String SECONDPRODUCT = "secondProduct";
+	
+	//TPR-5346
+	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "reachedMaxLimitforproduct";
+	public static final String PRECOUNTMSG = "Unfortunately, there is a restriction on the number of";
+	public static final String MIDCOUNTMSG = "you can order. Since you can purchase only ";
+	public static final String LASTCOUNTMSG = "we have modified your shopping bag to reflect this.";
+	public static final String FOUNDCOMPONENT = "Found Component>>>>with id :::";
 
 
 	public static final String AGENT_ID = "agentId";
@@ -2128,3 +2147,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
 }
+
+

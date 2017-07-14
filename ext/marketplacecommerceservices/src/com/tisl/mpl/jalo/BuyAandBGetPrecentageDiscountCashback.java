@@ -533,10 +533,10 @@ public class BuyAandBGetPrecentageDiscountCashback extends GeneratedBuyAandBGetP
 				//				if (GenericUtilityMethods.isProductExcluded(product, excludedProductList)
 				//						|| GenericUtilityMethods.isProductExcludedForManufacture(product, excludeManufactureList)
 				//						|| getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
-				if (getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
-				{
-					continue;
-				}
+				//				if (getDefaultPromotionsManager().isProductExcludedForSeller(paramSessionContext, restrictionList, entry))
+				//				{
+				//					continue;
+				//				}
 
 				if (CollectionUtils.isNotEmpty(primaryProductList) && primaryProductList.contains(product))//
 				{

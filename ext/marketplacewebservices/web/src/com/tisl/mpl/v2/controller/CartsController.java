@@ -80,6 +80,7 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.site.BaseSiteService;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.util.localization.Localization;
+import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 
 import java.math.BigDecimal;
@@ -122,6 +123,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
+import com.tisl.mpl.coupon.facade.MplCouponFacade;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.exceptions.InvalidPaymentInfoException;
@@ -232,7 +234,7 @@ public class CartsController extends BaseCommerceController
 	private UserService userService;
 	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
-	
+
 	@Resource
 	private CommerceCartService commerceCartService;
 	@Resource
@@ -258,6 +260,29 @@ public class CartsController extends BaseCommerceController
 	@Resource(name = "addToCartHelper")
 	private AddToCartHelper addToCartHelper;
 
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+
+	@Resource(name = "mplCouponFacade")
+	private MplCouponFacade mplCouponFacade;
+
+	/**
+	 * @return the mplCouponFacade
+	 */
+	public MplCouponFacade getMplCouponFacade()
+	{
+		return mplCouponFacade;
+	}
+
+	/**
+	 * @param mplCouponFacade
+	 *           the mplCouponFacade to set
+	 */
+	public void setMplCouponFacade(final MplCouponFacade mplCouponFacade)
+	{
+		this.mplCouponFacade = mplCouponFacade;
+	}
+
 
 	//	@Autowired
 	//	private CartService cartService;
@@ -268,6 +293,24 @@ public class CartsController extends BaseCommerceController
 
 	@Autowired
 	private Converter<CartModel, CartData> mplExtendedCartConverter;
+
+	/**
+	 * @return the voucherService
+	 */
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+
 
 	//private static final String DEPRECATION = "deprecation";
 	private static final String APPLICATION_TYPE = "application/json";
@@ -2182,12 +2225,21 @@ public class CartsController extends BaseCommerceController
 					validate(pickupStore, PICK_UP_STORE, pointOfServiceValidator);
 				}
 
+				//TPR-6117
+				final boolean checkMaxLimList = mplCartFacade.checkMaxLimitUpdate(entryNumber, quantity.longValue());
+				if (!checkMaxLimList)
+				{
+					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9110);
+				}
+				//TPR-6117
+
 				updateCartEntryInternal(baseSiteId, cartData, orderEntry, quantity, pickupStore, fields, false, cartModel);
 				//final CartModel newCartModel = mplCartFacade.removeDeliveryMode(cartModel);
 				final List<AbstractOrderEntryModel> abstractOrderEntryList = cartModel.getEntries();
 				final List<GetWishListProductWsDTO> gwlpList = new ArrayList<GetWishListProductWsDTO>();
 				List<GetWishListProductWsDTO> gwlpFreeItemList = new ArrayList<GetWishListProductWsDTO>();
 				GetWishListProductWsDTO gwlp = null;
+				final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 				for (final AbstractOrderEntryModel abstractOrderEntry : abstractOrderEntryList)
 				{
 					if (null != abstractOrderEntry)
@@ -2199,7 +2251,6 @@ public class CartsController extends BaseCommerceController
 							/////////// TISSAM-14
 							for (final AbstractOrderEntryModel pr : cartModel.getEntries())
 							{
-								final int maximum_configured_quantiy = siteConfigService.getInt(MAXIMUM_CONFIGURED_QUANTIY, 0);
 								if (pr.getQuantity().longValue() >= maximum_configured_quantiy)
 								{
 									throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9065);
@@ -2214,6 +2265,21 @@ public class CartsController extends BaseCommerceController
 							}
 							////////
 							gwlp.setQtySelectedByUser(abstractOrderEntry.getQuantity().toString());
+
+							//TPR-6117 STARTS
+							if (abstractOrderEntry.getProduct().getMaxOrderQuantity() != null
+									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() > 0
+									&& abstractOrderEntry.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+							{
+								gwlp.setMaxQuantityAllowed(abstractOrderEntry.getProduct().getMaxOrderQuantity().toString());
+							}
+							else
+							{
+								gwlp.setMaxQuantityAllowed(String.valueOf(maximum_configured_quantiy));
+							}
+
+							//TPR-6117 Ends
+
 						}
 						gwlpList.add(gwlp);
 					}
@@ -2531,8 +2597,8 @@ public class CartsController extends BaseCommerceController
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
 	@RequestMapping(value = "/{cartId}/softReservation", method = RequestMethod.POST)
 	@ResponseBody
-	public ReservationListWsDTO getCartReservation(@PathVariable final String cartId, @RequestParam final String pincode,@RequestBody final InventoryReservListRequestWsDTO item,
-			@RequestParam final String type)
+	public ReservationListWsDTO getCartReservation(@PathVariable final String cartId, @RequestParam final String pincode,
+			@RequestBody final InventoryReservListRequestWsDTO item, @RequestParam final String type)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
 		CartModel cart = null;
@@ -2547,8 +2613,8 @@ public class CartsController extends BaseCommerceController
 				//added for CAR:127
 				final CartData caData = mplCartFacade.getCartDataFromCartModel(cart, false);
 				//commented for CAR:127
-				//reservationList = mplCommerceCartService.getReservation(cart, pincode, type);			
-				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart,item,SalesApplication.MOBILE);
+				//reservationList = mplCommerceCartService.getReservation(cart, pincode, type);
+				reservationList = mplCommerceCartService.getReservation(caData, pincode, type, cart, item, SalesApplication.MOBILE);
 				LOG.debug("******************* Soft reservation Mobile web service response received from OMS ******************"
 						+ cartId);
 			}
@@ -2606,7 +2672,7 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/softReservationForPayment", method = RequestMethod.POST)
 	@ResponseBody
 	public ReservationListWsDTO getCartReservationForPayment(@RequestParam final String cartGuid,
-			@RequestParam final String pincode,@RequestBody final InventoryReservListRequestWsDTO item)
+			@RequestParam final String pincode, @RequestBody final InventoryReservListRequestWsDTO item)
 	{
 		ReservationListWsDTO reservationList = new ReservationListWsDTO();
 		CartModel cart = null;
@@ -2673,7 +2739,8 @@ public class CartsController extends BaseCommerceController
 					 * MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING);
 					 */
 					reservationList = mplCommerceCartService.getReservation(caData, pincode,
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart,item,SalesApplication.MOBILE);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, cart, item,
+							SalesApplication.MOBILE);
 				}
 				else
 				{
@@ -2719,7 +2786,8 @@ public class CartsController extends BaseCommerceController
 					//added for CAR:127
 					orderData = mplCheckoutFacade.getOrderDetailsForCode(orderModel);
 					reservationList = mplCommerceCartService.getReservation(orderData, pincode,
-							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel,item,SalesApplication.MOBILE);
+							MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_TYPE_PAYMENTPENDING, orderModel, item,
+							SalesApplication.MOBILE);
 				}
 				else
 				{
@@ -3266,9 +3334,10 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/applyCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value =
+	{ "/applyCoupons", "/{cartId}/applyCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ApplyCouponsDTO applyCoupons(@PathVariable final String cartId, @RequestParam final String couponCode,
+	public ApplyCouponsDTO applyCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
 					throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 					JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException
@@ -3289,10 +3358,11 @@ public class CartsController extends BaseCommerceController
 			//Redeem coupon for cartModel
 			if (orderModel == null)
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartGuid);
 				if (cartModel == null)
 				{
-					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 				}
 				else
@@ -3303,6 +3373,7 @@ public class CartsController extends BaseCommerceController
 					applycouponDto
 							.setTotal(String.valueOf(getMplCheckoutFacade().createPrice(cartModel, cartModel.getTotalPriceWithConv())
 									.getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+					applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(cartModel));
 				}
 			}
 			else
@@ -3310,6 +3381,7 @@ public class CartsController extends BaseCommerceController
 				applycouponDto = mplCouponWebFacade.applyVoucher(couponCode, null, orderModel, paymentMode);
 				applycouponDto.setTotal(String.valueOf(getMplCheckoutFacade()
 						.createPrice(orderModel, orderModel.getTotalPriceWithConv()).getValue().setScale(2, BigDecimal.ROUND_HALF_UP)));
+				applycouponDto.setCouponMessage(getMplCouponFacade().getCouponMessageInfo(orderModel));
 			}
 		}
 		catch (final EtailNonBusinessExceptions e)
@@ -3361,9 +3433,10 @@ public class CartsController extends BaseCommerceController
 	 */
 	@Secured(
 	{ CUSTOMER, TRUSTED_CLIENT, CUSTOMERMANAGER })
-	@RequestMapping(value = "/{cartId}/releaseCoupons", method = RequestMethod.POST, produces = APPLICATION_TYPE)
+	@RequestMapping(value =
+	{ "/releaseCoupons", "/{cartId}/releaseCoupons" }, method = RequestMethod.POST, produces = APPLICATION_TYPE)
 	@ResponseBody
-	public ReleaseCouponsDTO releaseCoupons(@PathVariable final String cartId, @RequestParam final String couponCode,
+	public ReleaseCouponsDTO releaseCoupons(@RequestParam final String couponCode,
 			@RequestParam(required = false) final String cartGuid, @RequestParam(required = false) final String paymentMode)
 					throws RequestParameterException, WebserviceValidationException, MalformedURLException, NumberFormatException,
 					JaloInvalidParameterException, VoucherOperationException, CalculationException, JaloSecurityException,
@@ -3382,10 +3455,11 @@ public class CartsController extends BaseCommerceController
 			//Release coupon for cartModel
 			if (null == orderModel)
 			{
-				cartModel = mplPaymentWebFacade.findCartValues(cartId);
+				cartModel = mplPaymentWebFacade.findCartAnonymousValues(cartGuid);
+				//cartModel = mplPaymentWebFacade.findCartValues(cartGuid);
 				if (cartModel == null)
 				{
-					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartId);
+					LOG.debug(MarketplacecommerceservicesConstants.INVALID_CART_ID + cartGuid);
 					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 				}
 				else
@@ -3606,8 +3680,8 @@ public class CartsController extends BaseCommerceController
 		CartDataDetailsWsDTO cartDataDetails = new CartDataDetailsWsDTO();
 		try
 		{
-			//call service to retrieve POSModel for given slaveId 
-			 // changed name to slaveId in R2.3 TISRLUAT-803
+			//call service to retrieve POSModel for given slaveId
+			// changed name to slaveId in R2.3 TISRLUAT-803
 			final PointOfServiceModel posModel = mplSlaveMasterFacade.checkPOSForSlave(slaveId);
 			if (null != posModel)
 			{
@@ -3808,15 +3882,15 @@ public class CartsController extends BaseCommerceController
 		modelService.save(cartModel);
 	}
 
-	
-	
+
+
 	//R2.3 FL06 new API getEDD
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{cartId}/getEDD", method = RequestMethod.POST, consumes =
 	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public MplEDDInfoWsDTO getAvailableDeliverySlots(@PathVariable final String cartId)throws WebserviceValidationException
+	public MplEDDInfoWsDTO getAvailableDeliverySlots(@PathVariable final String cartId) throws WebserviceValidationException
 	{
 		MplEDDInfoWsDTO mplEDDInfoWsDTO = new MplEDDInfoWsDTO();
 		try
@@ -3828,10 +3902,10 @@ public class CartsController extends BaseCommerceController
 			}
 			CartModel cartModel = null;
 			cartModel = mplPaymentWebFacade.findCartValues(cartId);
-			InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
+			final InvReserForDeliverySlotsRequestData deliverySlotsRequestData = new InvReserForDeliverySlotsRequestData();
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
-			InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
-					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData,cartModel);
+			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade
+					.convertDeliverySlotsDatatoWsdto(deliverySlotsRequestData, cartModel);
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{
@@ -3840,7 +3914,7 @@ public class CartsController extends BaseCommerceController
 					mplEDDInfoWsDTO = mplCartFacade.getEDDInfo(cartModel,
 							deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData());
 				}
-				catch (ParseException parseException)
+				catch (final ParseException parseException)
 				{
 					LOG.error("CartsController WEB Extension" + parseException.getMessage());
 				}
@@ -3892,25 +3966,30 @@ public class CartsController extends BaseCommerceController
 	@RequestMapping(value = "/{cartId}/selectedEDD", method = RequestMethod.POST, consumes =
 	{ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseBody
-	public WebSerResponseWsDTO setSelectedDeliverySlots(@PathVariable final String cartId,@RequestBody MplSelectedEDDInfoWsDTO mplSelectedEDDInfoWsDTO)throws WebserviceValidationException
+	public WebSerResponseWsDTO setSelectedDeliverySlots(@PathVariable final String cartId,
+			@RequestBody final MplSelectedEDDInfoWsDTO mplSelectedEDDInfoWsDTO) throws WebserviceValidationException
 	{
-		WebSerResponseWsDTO webSerResponseWsDTO=new WebSerResponseWsDTO();
-		if(CollectionUtils.isEmpty(mplSelectedEDDInfoWsDTO.getSelectedEDDInfo()) || StringUtils.isEmpty(cartId)){
+		final WebSerResponseWsDTO webSerResponseWsDTO = new WebSerResponseWsDTO();
+		if (CollectionUtils.isEmpty(mplSelectedEDDInfoWsDTO.getSelectedEDDInfo()) || StringUtils.isEmpty(cartId))
+		{
 			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 			return webSerResponseWsDTO;
 		}
-	
+
 		try
 		{
-			 CartModel cartModel = null;
-			 cartModel = mplPaymentWebFacade.findCartValues(cartId);
-			 boolean isSaved=mplCartFacade.addSelectedEDD(cartModel, mplSelectedEDDInfoWsDTO.getSelectedEDDInfo());
-			 if(isSaved){
-				 webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-			 }else{
-				 webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			 }
-			
+			CartModel cartModel = null;
+			cartModel = mplPaymentWebFacade.findCartValues(cartId);
+			final boolean isSaved = mplCartFacade.addSelectedEDD(cartModel, mplSelectedEDDInfoWsDTO.getSelectedEDDInfo());
+			if (isSaved)
+			{
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
+			}
+			else
+			{
+				webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3945,11 +4024,11 @@ public class CartsController extends BaseCommerceController
 			}
 			webSerResponseWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
-		
+
 		return webSerResponseWsDTO;
 	}
-	
-	
+
+
 	/**
 	 * @return the baseSiteService
 	 */

@@ -15,7 +15,7 @@
 	src="${commonResourcePath}/js/mpl/acc.newWishlist.js"></script> --%>
 
 
-
+<sec:authorize ifNotGranted="ROLE_ANONYMOUS">				<!-- UF-249 -->
 
 <li class="wishlist"><a
 	href="<c:url value="/my-account/wishList"/>"
@@ -68,5 +68,6 @@
 	<div class="overlay" data-dismiss="modal"></div>
 </div>
 
+</sec:authorize>			<!-- UF-249 -->
 
 

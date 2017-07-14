@@ -688,7 +688,8 @@ public class MarketplaceCustomerEditDetailsWidgetRenderer extends
 			final String changedFirstName = firstNameFieldTextBox.getValue();
 			final String changedLastName = lastNameFieldTextBox.getValue();
 			final String changedNickName = nickNameFieldTextBox.getValue();
-			final String changedEmail = emailFieldTextBox.getValue();
+			// SR144310416 - Added toLowerCase
+			final String changedEmail = emailFieldTextBox.getValue().toLowerCase();
 			final String changedMobile = mobileNumberFieldTextBox.getValue();
 
 			final Date changedDateOfBirth = dobDateBox.getValue();

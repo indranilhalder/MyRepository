@@ -87,10 +87,9 @@ public class BinFacadeImpl implements BinFacade
 					binData.setIsValid((StringUtils.isNotEmpty(bin.getIssuingCountry()) && bin.getIssuingCountry().equalsIgnoreCase(
 							"India")) ? true : false);
 				}
-				else
-				{
-					binData.setIsValid(false);
-				}
+				/*
+				 * else { binData.setIsValid(false); }
+				 */
 			}
 			else
 			{
@@ -99,12 +98,20 @@ public class BinFacadeImpl implements BinFacade
 					binData.setBankName(bin.getBankName());
 					binData.setCardType(bin.getCardType());
 				}
-				binData.setIsValid(true);
+				//binData.setIsValid(true);
 			}
 
 			//Setting Bank Name in Session for Promotions : Code Change for TISPRO-175
 			getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN,
 					(null != bin && StringUtils.isNotEmpty(bin.getBankName())) ? bin.getBankName() : null);
+
+
+			/////////////////TPR-4464///////////////////
+
+			//getSessionService().setAttribute(MarketplacecommerceservicesConstants.BANKFROMBINFORPROMOTION,
+			//	(null != bin && StringUtils.isNotEmpty(bin.getBankName())) ? bin.getBankName() : null);//Card's Bank List
+
+			/////////////////TPR-4464///////////////////
 
 
 			LOG.debug("From session=====Bank:::::::"
@@ -130,6 +137,8 @@ public class BinFacadeImpl implements BinFacade
 			LOG.error(e.getMessage());
 			throw new EtailNonBusinessExceptions(e);
 		}
+		// TPR-5347
+		binData.setIsValid(true);
 		return binData;
 
 	}

@@ -28,6 +28,11 @@ public class MplCustomerProfileForm
 	private String dateOfAnniversaryMonth;
 	private String dateOfAnniversaryYear;
 
+	//TPR-6013
+	private String dateOfBrithPicker;
+	private String anniversaryDatePicker;
+	private String salutaion;
+
 	/**
 	 * @return the titleCode
 	 */
@@ -300,6 +305,54 @@ public class MplCustomerProfileForm
 		this.dateOfAnniversaryYear = dateOfAnniversaryYear;
 	}
 
+	/**
+	 * @return the dateOfBrithPicker
+	 */
+	public String getDateOfBrithPicker()
+	{
+		return dateOfBrithPicker;
+	}
 
+	/**
+	 * @param dateOfBrithPicker
+	 *           the dateOfBrithPicker to set
+	 */
+	public void setDateOfBrithPicker(final String dateOfBrithPicker)
+	{
+		this.dateOfBrithPicker = dateOfBrithPicker;
+	}
 
+	/**
+	 * @return the anniversaryDatePicker
+	 */
+	public String getAnniversaryDatePicker()
+	{
+		return anniversaryDatePicker;
+	}
+
+	/**
+	 * @param anniversaryDatePicker
+	 *           the anniversaryDatePicker to set
+	 */
+	public void setAnniversaryDatePicker(final String anniversaryDatePicker)
+	{
+		this.anniversaryDatePicker = anniversaryDatePicker;
+	}
+
+	/**
+	 * @return the salutaion
+	 */
+	public String getSalutaion()
+	{
+		return salutaion;
+	}
+
+	/**
+	 * @param salutaion
+	 *           the salutaion to set
+	 */
+	public void setSalutaion(final String salutaion)
+	{
+		this.salutaion = salutaion;
+	}
 }

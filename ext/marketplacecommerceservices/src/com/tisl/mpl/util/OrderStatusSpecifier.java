@@ -54,12 +54,18 @@ public class OrderStatusSpecifier
 				flag = addOrderHistory(quantity, order, orderStatus, subOrderEntryList, subOrder, flag);
 
 			}
+			LOG.debug("Sub ORder status changed " + flag);
 		}
 		//TPR-1081
 		else if (CollectionUtils.isEmpty(subOrderList)
 				&& (orderStatus.equals(OrderStatus.PAYMENT_PENDING) || orderStatus.equals(OrderStatus.PAYMENT_FAILED) || orderStatus
 						.equals(OrderStatus.PAYMENT_TIMEOUT)))
 		{
+			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
+		}
+		else
+		{
+			//setting the ORDEr Status if its not matched with status
 			flag = addOrderHistory(1, order, orderStatus, order.getEntries(), order, flag);
 		}
 		//if (flag || orderStatus.equals(OrderStatus.PAYMENT_PENDING)) //flag == true

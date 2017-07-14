@@ -122,6 +122,7 @@
 		<property name="cookieSecure" value="false"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('default.session.timeout')}"/>
 		<property name="useDefaultPath" value="false"/>
+		<property name="useDefaultDomain" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>
 		<property name="httpOnly" value="true"/>
 	</bean>
@@ -149,11 +150,10 @@
 		<property name="lastUserLoggedInCookieGenerator" ref="lastUserLoggedInCookieGenerator" />  <!-- Added for UF-93 -->	
 		<property name="userService" ref="extendedUserService" />
 	</bean>
-	
 	<!-- UF-93 -->
 	<bean id="lastUserLoggedInCookieGenerator" class="com.tisl.mpl.storefront.security.cookie.LastUserLoggedInCookieGenerator" >
 		<property name="cookieName" value="LastUserLogedIn"/>
-		<property name="cookieSecure" value="false"/>
+		<property name="cookieSecure" value="true"/>
 		<property name="cookieMaxAge" value="#{configurationService.configuration.getProperty('lastuserloggedIn.cookie.age')}"/>
 		<property name="useDefaultPath" value="false"/>
 		<property name="cookieDomain" value="#{configurationService.configuration.getProperty('shared.cookies.domain')}"/>

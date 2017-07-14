@@ -52,7 +52,10 @@ tr.d0 td {
 
  function nextImage()
  {
- 	var item_height = $(".product-info .imageListCarousel li").height();
+	 $(".quick-view-popup .imageListCarousel li img").each(function(){
+		$(this).show();
+	 });
+	var item_height = $(".product-info .imageListCarousel li").height();
  	var item_count = $(".product-info .imageListCarousel li").length;
  	var top = parseInt($(".product-info .imageListCarousel").css("top"));
 	if(!(top % item_height)){
@@ -134,28 +137,33 @@ tr.d0 td {
 		
 	});
 	
-	 	$("#previousImage").css("opacity","0.5");
-	 	$("#nextImage").css("opacity","1");
-	 	var listHeight = $(".imageList li").height();
-	 	if($("#previousImage").length){
-	 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
-	 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
-	 	}
-	 	$(".imageListCarousel").show();
-	
-		$(".black-arrow").change(function() {
-			 
-			$("#qty1").val($(".black-arrow :selected").val());
-		});
-		$(".zoomContainer").remove();
-		$('.picZoomer-pic').removeData('zoom-image');
-		$("img.picZoomer-pic").attr('data-zoom-image',$(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")); 
-		$('.quickview .picZoomer-pic').elevateZoom({
-	    zoomType: "window",
-	    cursor: "crosshair",
-	    zoomWindowFadeIn: 500,
-	    zoomWindowFadeOut: 750
-	       });
+		/* $('.main-image a img.picZoomer-pic').on('load', function(){
+			$("#previousImage").css("opacity","0.5");
+		 	$("#nextImage").css("opacity","1");
+		 	var listHeight = $(".imageList li").height();
+		 	if($("#previousImage").length){
+		 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+		 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+		 	}
+		 	$(".imageListCarousel").show();
+		}).each(function() {
+	  	  	if(this.complete) $(this).load();
+	  	}); */	
+		
+			$(".black-arrow").change(function() {
+				 
+				$("#qty1").val($(".black-arrow :selected").val());
+			});
+			$(".zoomContainer").remove();
+			$('.picZoomer-pic').removeData('zoom-image');
+			$("img.picZoomer-pic").attr('data-zoom-image',$(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")); 
+			$('.quickview .picZoomer-pic').elevateZoom({
+		    	zoomType: "window",
+		    	cursor: "crosshair",
+		    	zoomWindowFadeIn: 500,
+		    	zoomWindowFadeOut: 750
+		       });
+		
 		
 	 });
 	 $("#cboxClose").click(function(){
@@ -261,7 +269,46 @@ tr.d0 td {
  		//alert(":-:"+avgrating);
  	 
  		
- }	  
+ }
+ /* $('.main-image a img.picZoomer-pic').on('load', function(){
+	 	console.log("jsp image is loaded");
+	 	var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+		console.log("jsp mainImageHeight is " + mainImageHeight);
+		var thumbnailImageHeight = (mainImageHeight / 5);
+		console.log("jsp thumbnailImageHeight is " + thumbnailImageHeight);
+	if (thumbnailImageHeight > 0) {	
+	 $(".imageList ul li img").css("height", thumbnailImageHeight);
+ } 
+		$("#previousImage").css("opacity","0.5");
+	 	$("#nextImage").css("opacity","1");
+	 	var listHeight = $(".imageList li").height();
+	 	console.log("jsp listHeight is " + listHeight);
+	 	console.log("jsp previousImage length is " + $("#previousImage").length);
+	 	if($("#previousImage").length && listHeight > 0){
+	 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+	 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
+	 	}
+	 	$(".imageListCarousel").show();
+	}).each(function () {
+	    if (this.complete) {
+	        $(this).trigger("load");
+	    }
+	}); */
+	$(window).load(function() {	
+		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
+		var thumbnailImageHeight = (mainImageHeight / 5);
+		var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
+		$(".imageList ul li img").css("height", thumbnailImageHeight);
+		$("#previousImage").css("opacity","0.5");
+		$("#nextImage").css("opacity","1");
+		/* var listHeight = $(".imageList li").height(); */ /*commented as part of PRDI-68*/
+		 var listHeight = thumbnailImageHeight + 13.6;		/*added as part of PRDI-68*/
+		if($("#previousImage").length){
+			$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+			$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
+		}
+		$(".imageListCarousel").show();
+	});
  </script>
  <style type="text/css">
 tr.d0 td {
@@ -334,17 +381,17 @@ display:none;
 		<img src="${commonResourcePath}/images/thin_top_arrow_333.png"/><%-- <spring:theme code="product.othersellers.previous" /> --%>
 	</button>
 </c:if>
-	<div class="imageList" style="overflow: hidden;">
-		<ul class="jcarousel-skin imageListCarousel" style="display:none; position: relative; top: 0; width: 100%;"> 
+	<div class="imageList" style="overflow: hidden;${(thumbNailImageLength > imgCount)?"height:480px":""}">
+		<ul class="jcarousel-skin imageListCarousel" style="display:block; position: relative; top: 0; width: 100%;"> 
 			<c:forEach items="${galleryImages}" var="container" varStatus="varStatus" begin="0" end="${thumbNailImageLength}">
 				<li id="addiImage${varStatus.index}" class="thumbailItem${varStatus.index +1}"> <!-- For TPR-4712 -->
 					<span class="thumb ${(varStatus.index==0)? "active":""}">
 						<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+							<img src="${container.thumbnail.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" style="${(varStatus.index < imgCount)? "":"display:none;"}" />	
 						</c:if>
 						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
 							<%-- <img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}" /> --%>
-							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" style="${(varStatus.index < imgCount)? "":"display:none;"}" />
 					    </c:if>
 					</span>
 				</li>

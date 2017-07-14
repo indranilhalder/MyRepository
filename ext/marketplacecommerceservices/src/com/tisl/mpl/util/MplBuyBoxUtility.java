@@ -41,7 +41,9 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
  */
 public class MplBuyBoxUtility
 {
-	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class);
+
+	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); //comment out for TISPRD-8944 
+
 
 	//---------------Solve for Issue TISPRD-58---------------------//
 	private static final String COLORAPPAREL = "colorapparel";
@@ -522,4 +524,34 @@ public class MplBuyBoxUtility
 		this.classificationService = classificationService;
 	}
 
+	/**
+	 * @param productModel
+	 * @return
+	 */
+	public Double getBuyBoxSellingMobilePrice(final ProductModel productModel)
+	{
+		// YTODO Auto-generated method stub
+
+		final BuyBoxModel buyBoxWinnerModel = getBuyBoxPrice(productModel);
+		Double mobileprice = Double.valueOf(0);
+		if (buyBoxWinnerModel != null)
+		{
+			mobileprice = buyBoxWinnerModel.getPrice();
+
+
+
+			if (null != buyBoxWinnerModel.getSpecialPriceMobile() && buyBoxWinnerModel.getSpecialPriceMobile().intValue() > 0)
+			{
+				mobileprice = buyBoxWinnerModel.getSpecialPriceMobile();
+			}
+		}
+		else
+		{
+			mobileprice = productModel.getMrp();
+
+		}
+		LOG.debug("Inside MplBuyBoxUtility price value is" + mobileprice);
+		return mobileprice;
+
+	}
 }

@@ -37,7 +37,8 @@ import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherInvalidationModel;
-import de.hybris.platform.voucher.model.VoucherModel;
+//Sonar fix
+//import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -79,12 +80,14 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
+//SONAR FIX
+//import com.tisl.mpl.marketplacecommerceservices.service.MplVoucherService;
 import com.tisl.mpl.marketplacecommerceservices.service.NotifyPaymentGroupMailService;
 import com.tisl.mpl.marketplacecommerceservices.service.RMSVerificationNotificationService;
 import com.tisl.mpl.model.CustomProductBOGOFPromotionModel;
 import com.tisl.mpl.model.EtailLimitedStockRestrictionModel;
 import com.tisl.mpl.model.SellerInformationModel;
+import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.util.OrderStatusSpecifier;
 
 
@@ -101,40 +104,34 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final Logger LOG = Logger.getLogger(MplDefaultPlaceOrderCommerceHooks.class);
 	private CloneAbstractOrderStrategy cloneAbstractOrderStrategy;
 
-	@Autowired
+	@Resource
 	private MplSellerInformationService mplSellerInformationService;
 
-	@Autowired
+	@Resource
 	private AbstractOrderEntryTypeService abstractOrderEntryTypeService;
-	@Autowired
+	@Resource
 	private OrderService orderService;
-	@Autowired
+	@Resource
 	private ModelService modelService;
 	//@Autowired
 	//private EventService eventService;
-	@Autowired
+	@Resource
 	private MplOrderDao mplOrderDao;
 
-	@Autowired
+	@Resource
 	private ConfigurationService configurationService;
 
-	@Autowired
+	@Resource
 	private MplCommerceCartService mplCommerceCartService;
 
 
 	//	@Autowired
 	//	private MplFraudModelService mplFraudModelService;
 
-
-
-
-	@Autowired
+	@Resource
 	private CategoryService categoryService;
 
-
-
-
-	@Autowired
+	@Resource
 	private OrderStatusSpecifier orderStatusSpecifier;
 
 	@Autowired
@@ -149,9 +146,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	@Resource(name = "voucherService")
 	private VoucherService voucherService;
 
-	@Autowired
+	@Resource
 	private MplOrderService mplOrderService;
-	@Autowired
+	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService deliveryCostService;
 
 	//	@Autowired
@@ -168,15 +165,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 	private static final String middlecharacters = "-";
 	private static final String PARENT = "Parent";
 
-	@Resource(name = "mplVoucherService")
-	private MplVoucherService mplVoucherService;
+	//	@Resource(name = "mplVoucherService")
+	//	private MplVoucherService mplVoucherService;//Sonar Fix
+	@Resource(name = "discountUtility")
+	private DiscountUtility discountUtility;
 
 	/*
 	 * (non-Javadoc)
-
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -279,22 +278,26 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * //Set order-id final String sequenceGeneratorApplicable = getConfigurationService().getConfiguration()
 				 * .getString(MarketplacecclientservicesConstants.GENERATE_ORDER_SEQUENCE).trim(); //private method for
 				 * seting Sub-order Total-TISEE-3986 if (StringUtils.isNotEmpty(sequenceGeneratorApplicable) &&
-				 * sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE)) {
-				 * LOG.debug("Order Sequence Generation True"); final String orderIdSequence =
+				 * sequenceGeneratorApplicable.equalsIgnoreCase(MarketplacecclientservicesConstants.TRUE)) { LOG.debug(
+				 * "Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 *
-
-				 *
+				 * 
+				 * 
+				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
+
 				orderModel.setType("Parent");
 				if (orderModel.getPaymentInfo() instanceof CODPaymentInfoModel
 						|| orderModel.getPaymentInfo() instanceof JusPayPaymentInfoModel)
 				{
-					LOG.debug("Payment Info for cod or juspay");
-					getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
+					LOG.debug("Payment Info and Status saving COD");
+					orderModel.setModeOfOrderPayment(MarketplacecommerceservicesConstants.COD);
+					getModelService().save(orderModel);
+					//Multiple times status change not required TISSTRT-1562
+					//getOrderStatusSpecifier().setOrderStatus(orderModel, OrderStatus.PAYMENT_SUCCESSFUL);
 				}
 				else
 				{
@@ -319,16 +322,12 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				//				}
 				if (CollectionUtils.isNotEmpty(voucherList))
 				{
-					VoucherModel appliedVoucher = null;
-
 					try
 					{
 						final DiscountModel discount = voucherList.get(0);
-
 						if (discount instanceof PromotionVoucherModel)
 						{
 							final PromotionVoucherModel promotionVoucherModel = (PromotionVoucherModel) discount;
-							appliedVoucher = promotionVoucherModel;
 							final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService()
 									.createVoucherInvalidation(promotionVoucherModel,
 											null != promotionVoucherModel.getVoucherCode() ? promotionVoucherModel.getVoucherCode() : "",
@@ -358,59 +357,11 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 							//							getModelService().save(voucherInvalidationModel);
 						}
 					}
+
 					catch (final Exception e)
 					{
-						final ArrayList<DiscountModel> parentOrderVoucherList = new ArrayList<DiscountModel>(getVoucherService()
-								.getAppliedVouchers(orderModel));
-
-						final VoucherInvalidationModel voucherInvalidation = mplVoucherService.findVoucherInvalidation(appliedVoucher,
-								orderModel.getUser(), orderModel);
-
-						if (CollectionUtils.isEmpty(parentOrderVoucherList) && voucherInvalidation != null) //voucher is NOT attached with order but invalidation exists
-						{
-							LOG.error(
-									"Initially the voucher was applied in "
-											+ orderModel.getCode()
-											+ " , now due to exception it has been removed internally. Hence removing the invalidation. The exception is: ",
-									e);
-
-							getModelService().remove(voucherInvalidation);
-							//getModelService().refresh(voucherInvalidation);
-
-						}
-						else if (CollectionUtils.isNotEmpty(parentOrderVoucherList) && voucherInvalidation == null) //voucher is attached with order but invalidation does not exist
-						{
-							final DiscountModel orderVoucherDisc = parentOrderVoucherList.get(0);
-
-							if (orderVoucherDisc instanceof PromotionVoucherModel)
-							{
-								final PromotionVoucherModel promotionVoucher = (PromotionVoucherModel) orderVoucherDisc;
-								try
-								{
-									LOG.info("Trying to create invalidation again...");
-									//trying to create invalidation again
-									final VoucherInvalidationModel voucherInvalidationModel = getVoucherModelService()
-											.createVoucherInvalidation(promotionVoucher,
-													null != promotionVoucher.getVoucherCode() ? promotionVoucher.getVoucherCode() : "",
-													orderModel);
-									if (StringUtils.isNotEmpty(promotionVoucher.getCode()))
-									{
-										voucherInvalidationModel.setSavedAmount(promotionVoucher.getValue());
-									}
-									getModelService().save(voucherInvalidationModel);
-								}
-								catch (final Exception ex)
-								{
-									LOG.error("Error while creating invalidation when voucher is attached with order for id: "
-											+ orderModel.getCode() + ", hence releasing the voucher from order", ex);
-									//releasing voucher from order if exception occurs
-									getVoucherService().releaseVoucher(promotionVoucher.getVoucherCode(), orderModel);
-									orderModel.setGlobalDiscountValuesInternal(null);
-									getModelService().save(orderModel);
-									getModelService().refresh(orderModel);
-								}
-							}
-						}
+						discountUtility.releaseVoucherAndInvalidation(orderModel);
+						throw e;
 					}
 				}
 			}
@@ -587,9 +538,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -603,10 +554,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -659,7 +610,8 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			}
 			else
 			{
-				throw new InvalidCartException("Exception while creating Suborder for Parent Order:-  " + orderModel.getCode());
+				throw new InvalidCartException("Exception while creating Suborder for Parent Order:-  Suborder not created"
+						+ orderModel.getCode());
 			}
 
 			//Commented as ordercode creation is handled earlier for TPR-629
@@ -732,13 +684,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -839,13 +791,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -936,8 +888,16 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 					if (null != entryModelList.getPrevDelCharge() && entryModelList.getPrevDelCharge().doubleValue() > 0D)
 					{
-						totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
-								- entryModelList.getCurrDelCharge().doubleValue();
+						//						totalDeliveryDiscount += entryModelList.getPrevDelCharge().doubleValue()
+						//								- entryModelList.getCurrDelCharge().doubleValue();
+
+						// For TISPRDT-1649
+
+						final double deliveryValue = entryModelList.getCurrDelCharge().doubleValue()
+								- entryModelList.getPrevDelCharge().doubleValue();
+
+						totalDeliveryDiscount += (deliveryValue) < 0 ? (-1) * (deliveryValue) : (deliveryValue);
+
 						LOG.debug("totalDeliveryDiscount:" + totalDeliveryDiscount);
 					}
 					else
@@ -975,9 +935,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					sellerOrderList.setTotalDiscounts(Double.valueOf(totalCartLevelDiscount + totalCouponDiscount));
 
 					double delCost = 0.0d;
-					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D)
+					if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D
+							&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
 					{
 						totalDeliveryPrice += entryModelList.getPrevDelCharge().doubleValue();
+					}
+					else if (entryModelList.getPrevDelCharge() != null && entryModelList.getPrevDelCharge().doubleValue() > 0D
+							&& entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
+					{
+						totalDeliveryPrice += (entryModelList.getPrevDelCharge().doubleValue() / entryModelList.getQuantity()
+								.doubleValue())
+								* (entryModelList.getQuantity().doubleValue() - entryModelList.getFreeCount().doubleValue());
 					}
 					else
 					{
@@ -985,17 +953,38 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
 								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
 								entryModelList.getSelectedUSSID());
-						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue())
+						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
+								&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDT-1226
 						{
-							delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
-							totalDeliveryPrice = delCost;
+							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(), valueModel.getDeliveryFulfillModes()
+									.getCode()))
+							{
+								delCost = (valueModel.getValue().doubleValue() * entryModelList.getQuantity().intValue());
+								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
+							}
+
+							totalDeliveryPrice += delCost; // TISPRDT-1649
+							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
+						}
+						else if (entryModelList.getIsBOGOapplied() != null && entryModelList.getIsBOGOapplied().booleanValue())//TISPRDRT-1226
+						{
+							if (StringUtils.equalsIgnoreCase(entryModelList.getFulfillmentMode(), valueModel.getDeliveryFulfillModes()
+									.getCode()))
+							{
+								delCost = (valueModel.getValue().doubleValue() * (entryModelList.getQuantity().doubleValue() - entryModelList
+										.getFreeCount().doubleValue()));
+								LOG.debug("Delivery Cost ( FulFillment Mode Match)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + delCost);
+							}
+
+							totalDeliveryPrice += delCost; // TISPRDT-1649
 							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
 						}
 						else
 						{
 							delCost = 0.0d;
 							entryModelList.setCurrDelCharge(Double.valueOf(delCost));
-							totalDeliveryPrice = delCost;
+							totalDeliveryPrice += delCost; //TISPRDT-1649
+
 							LOG.warn("skipping deliveryCost for freebee [" + entryModelList.getSelectedUSSID() + "] due to freebee ");
 						}
 						modelService.save(entryModelList);
@@ -1435,14 +1424,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param orderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1964,7 +1953,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 						subOrderEntryList.add(abstractOrderEntryModel);
 						sellerEntryMap.put(sellerEntry.getSellerID(), subOrderEntryList);
 					}
-				}// OrderIssues:- else part added
+				} // OrderIssues:- else part added
 				else
 				{
 					LOG.error("Seller ID Missing for USSID:- " + abstractOrderEntryModel.getSelectedUSSID());
@@ -1999,7 +1988,7 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		LOG.debug("Sub Order Clone:- Suborder ID:- " + null != clonedSubOrder.getCode() ? clonedSubOrder.getCode()
 				: "Sub Order code is empty");
 		//save once only
-		clonedSubOrder.setType("SubOrder");
+		clonedSubOrder.setType(MarketplacecommerceservicesConstants.SUBORDER);
 		clonedSubOrder.setParentReference(orderModel);
 		getModelService().save(clonedSubOrder);
 

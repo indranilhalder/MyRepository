@@ -1,3 +1,36 @@
+.cartItems.cart{
+    .product-block{
+        .item{
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+        }
+    }
+    .delivery{
+        .success_msg{
+            li{
+                display: inline-block;
+                margin-right: 10px;
+                
+                &:after{
+                    content: "\f00c";
+                    font: normal normal normal 14px/1 FontAwesome;
+                    padding-left: 10px;
+                }
+            }
+            .lowOpacity {
+                opacity: .5;
+                &:after{
+                    content: "\f00d";
+                    font: normal normal normal 14px/1 FontAwesome;
+                    padding-left: 10px;
+                }
+                
+            }  
+        }
+    } 
+}
+
 .cartSection {
 	/*Common Styles Start*/
     margin: 20px 0px;
@@ -480,6 +513,9 @@
 	/*Cart items Style End*/	
 	
 	/*Cart Content Section Style End*/
+    
+    
+    
 }
 /*Order Summary Style Start*/
 .orderSummary {

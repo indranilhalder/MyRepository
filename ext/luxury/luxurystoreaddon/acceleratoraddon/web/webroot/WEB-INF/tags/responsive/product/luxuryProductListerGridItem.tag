@@ -62,7 +62,7 @@
 		<div class="product-item text-left">
 			<a href="${product.url}" title="${product.name}">
 				<div class="product-image">
-					<product:luxuryProductSearchPrimaryImage product="${product}" format="searchPage"/>
+					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxurySearchPage"/>
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxuryModel"/>
 					<product:luxuryProductSearchPrimaryImage product="${product}" format="luxurySecondary"/>
 				</div>

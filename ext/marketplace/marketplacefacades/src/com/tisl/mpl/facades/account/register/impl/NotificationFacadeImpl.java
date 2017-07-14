@@ -4,6 +4,7 @@
 package com.tisl.mpl.facades.account.register.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -246,10 +247,12 @@ public class NotificationFacadeImpl implements NotificationFacade
 			final String shopperStatus) throws EtailNonBusinessExceptions
 	{
 
-		final UserModel user = extendedUserService.getUserForOriginalUid(emailId);
+		//final UserModel user = extendedUserService.getUserForOriginalUid(emailId);
+		final CustomerModel user = extendedUserService.getUserForOriginalUid(emailId);
 		if (user != null)
 		{
-			markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
+			//markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
+			markNotificationRead(user.getOriginalUid(), orderNo, consignmentNo, shopperStatus);
 		}
 	}
 

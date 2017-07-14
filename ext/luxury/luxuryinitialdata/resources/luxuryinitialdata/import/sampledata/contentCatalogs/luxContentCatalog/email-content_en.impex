@@ -29,10 +29,10 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 ;;/images/theme/applestore.png;Luxury_Freeshipping.png;$siteResource/images/theme/applestore.png;;
 ;;/images/theme/androidstore.png;Luxury_Freeshipping.png;$siteResource/images/theme/androidstore.png;;
 ;;/images/theme/linegrey.png;Luxury_Linegrey.png;$siteResource/images/theme/linegrey.png;;
-;;/images/theme/Luxury_Fb.jpg;Luxury_Fb.jpg;$siteResource/images/theme/fb1.jpg;;
+;;/images/theme/Luxury_Fb.jpg;Luxury_Fb.jpg;$siteResource/images/theme/facebook.png;;
 ;;/images/theme/gplus.png;gplus.jpg;$siteResource/images/theme/gplus.png;;
 ;;/images/theme/Luxury_youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
-;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/tweet.jpg;;
+;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
 ;;/images/theme/Luxury_Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
 ;;/images/theme/applestore.png;applestore.png;$siteResource/images/theme/applestore.png;;
 ;;/images/theme/androidstore.png;androidstore.png;$siteResource/images/theme/androidstore.png;;
@@ -81,10 +81,10 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 ;;/images/theme/Luxury_logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
 ;;/images/theme/tip.jpg;Luxury_Tip.jpg;$siteResource/images/theme/tip.jpg;;
 ;;/images/theme/smileyimg.jpg;smileyimg.jpg;$siteResource/images/theme/smileyimg.jpg;;
-;;/images/theme/Fb1.jpg;Fb1.jpg;$siteResource/images/theme/fb.jpg;;
+;;/images/theme/Fb1.jpg;Fb1.jpg;$siteResource/images/theme/facebook.png;;
 ;;/images/theme/gplus1.png;gplus.jpg;$siteResource/images/theme/gplus.png;;
 ;;/images/theme/youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
-;;/images/theme/tweeter.jpg;Luxury_youtube.png;$siteResource/images/theme/tweet.jpg;;
+;;/images/theme/tweeter.jpg;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
 ;;/images/theme/Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
 ;;/images/theme/tip.jpg;Luxury_Tip.jpg;$siteResource/images/theme/tip.jpg;;
 ;;/images/theme/Luxury_App.jpg;/Luxury_App.jpg;$siteResource/images/theme/Luxury_App.jpg;;

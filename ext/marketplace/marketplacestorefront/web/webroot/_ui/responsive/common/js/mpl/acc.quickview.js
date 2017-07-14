@@ -79,13 +79,17 @@ function quickviewGallery() {
 	$(document).ready(function(){
 		//UF-24 thumbnail image load
 		$('.main-image a img.picZoomer-pic').on('load', function(){
+			console.log("js image is loaded");
 			var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
-			console.log("mainImageHeight is " + mainImageHeight);
+			console.log("js mainImageHeight is " + mainImageHeight);
 			var thumbnailImageHeight = (mainImageHeight / 5);
 			$(".imageList ul li img").css("height", thumbnailImageHeight);
+			console.log("js thumbnailImageHeight is " + thumbnailImageHeight);
 		 	$("#previousImage").css("opacity","0.5");
 		 	$("#nextImage").css("opacity","1");
 		 	var listHeight = $(".imageList li").height();
+		 	console.log("js listHeight is " + listHeight);
+		 	console.log("js previousImage length is " + $("#previousImage").length);
 		 	if($("#previousImage").length){
 		 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
 		 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
@@ -129,7 +133,7 @@ function quickviewGallery() {
 
 function removedisabled()
 {
-	    $("#buyNowButton").removeAttr('disabled');
+	    $(".js-add-to-cart-qv").removeAttr('disabled');
 	    $("#addToCartButtonQuick").removeAttr('disabled');
 }
 
@@ -227,7 +231,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					/*TPR-1772 functionality change for non-saleable products*/
 					/*$("#buyNowButtonQuick-wrong").show();*/
 					/*$('#buyNowButton').hide();*/
-					$("#buyNowButton").attr("disabled","disabled");
+					$(".js-add-to-cart-qv").attr("disabled","disabled");
 					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
 					$("#dListedErrorMsg").show();				
@@ -240,7 +244,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					/*TPR-1772 functionality change for non-saleable products*/
 					/*$("#buyNowButtonQuick-wrong").show();*/
 					/*$('#buyNowButton').hide();*/
-					$("#buyNowButton").attr("disabled","disabled");
+					$(".js-add-to-cart-qv").attr("disabled","disabled");
 					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
 					$("#dListedErrorMsg").show();				
@@ -258,7 +262,17 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				
 				$("#ussid_quick").val(data['sellerArticleSKU']);
 				stock = data['availablestock'];
-				$("#stock").val(stock);					
+				//INC144316286
+				//$("#stock").val(stock);				
+				if($('#pageType').val() == 'wishlist' || $('#pageType').val() == 'product') 
+				{ 
+					$("#addToCartFormQuick").closest('[id]').find('#stock').val(stock); 
+				} 
+				else { 
+					$("#stock").val(stock);
+				} 
+				
+				
 				var allStockZero = data['allOOStock'];
 				sellerId = data['sellerId'];
 				$("#sellerSelId").val(sellerId); 
@@ -269,23 +283,23 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
 				if (isOOSQuick() && data['othersSellersCount']>0) {
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
+					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 				}else if (isOOSQuick() && data['othersSellersCount']==0){
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
+					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0) { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
+					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 					//}					
 				}
 				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0){
 					//if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
-						$('#buyNowButton').hide();
+						$('.js-add-to-cart-qv').hide();
 						$("#outOfStockIdQuick").show();
 					//}					
 				}
@@ -299,7 +313,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					});
 					
 					$("#addToCartButtonQuick").show();
-					$('#buyNowButton').show();
+					$('.js-add-to-cart-qv').show();
 					$("#outOfStockIdQuick").hide();
 					}				
 				if(oosMicro==true){ //TPR-250 change

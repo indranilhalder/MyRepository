@@ -624,6 +624,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
         <property name="categoryManager" ref="solrFirstVariantCategoryManager"/>
         <property name="priceDataFactory" ref="priceDataFactory"/>
         <property name="imageFormatMapping" ref="mplImageFormatMapping"/>
+        <property name="commonUtils" ref="commonUtils"/>
         
     </bean>
 	
@@ -667,8 +668,9 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="mplDefaultCommerceCartCalculationStrategy" ref="mplDefaultCommerceCartCalculationStrategy" />
 		<!-- CAR:127 -->
 		<property name="orderConverter" ref="orderConverter"></property>
-
-	
+		<!-- UF-70 -->
+		<property name="promotionsService" ref="promotionsService"/>
+		<property name="timeService" ref="timeService"/>
 	</bean>
 	
 	<!-- <bean id="mplDefaultCheckoutFacade"
@@ -1839,10 +1841,20 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="customProductConverter" ref="customAjaxProductConverter"/>
 	</bean>
 
-   <bean id="deliveryAddressFacade"
-		class="com.tis.mpl.facade.changedelivery.impl.MplDeliveryAddressFacadeImpl"/>
+	
+	<!-- UF-258 -->
+	
+	<bean id="STWFacade" class="com.tisl.mpl.facade.stw.impl.STWWidgetFacadeImpl">
+		<property name="stwWidgetService" ref="STWService"></property>
+		<property name="buyBoxService" ref="buyBoxService"></property>
+	</bean>
+
+
+
+   <bean id="deliveryAddressFacade" class="com.tis.mpl.facade.changedelivery.impl.MplDeliveryAddressFacadeImpl"/>
 		
-		<!-- 	R2.3 FL04 changes	 -->
+	<!-- 	R2.3 FL04 changes	 -->		
+	
 		
 			
 	<bean id="mplStatePopulator" class="com.tisl.mpl.facades.populators.MplStatePopulator"/>
