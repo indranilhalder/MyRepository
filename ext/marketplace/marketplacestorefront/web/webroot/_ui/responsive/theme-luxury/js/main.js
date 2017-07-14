@@ -1086,6 +1086,11 @@ TATA.Pages = {
     PDP:  {
 
         wishlistInit: function(){
+            $(document).on("click touchstart","#OutOfStockAddToWishList",function(){
+                if(!$(".add-to-wl-pdp").hasClass("added")){
+                    $(".add-to-wl-pdp").trigger("click");
+                }
+            });
             $(document).on("click touchstart",".add-to-wl-pdp",function(){
                 if(!luxuryHeaderLoggedinStatus) {
                     $(".luxury-login").trigger("click");
