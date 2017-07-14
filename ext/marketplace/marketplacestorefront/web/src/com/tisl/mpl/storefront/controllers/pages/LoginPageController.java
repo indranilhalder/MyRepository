@@ -535,30 +535,26 @@ public class LoginPageController extends AbstractLoginPageController
 					 * StringUtils.equalsIgnoreCase(luxDetector, "true")) { platformNumber = 5;//for luxury desktop web }
 					 * else { platformNumber = 1;//for mkt desktop web } //TPR-6272 ends here
 					 */
-
-
 					//TPR-6272 starts here
 					int platformNumber = 0;
 					final String userAgent = request.getHeader(
 							configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
 
-
 					if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
 					{
-
 						final String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
 
-						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
-
-
-						final Iterator it = mobileDeviceArray.iterator();
-
-						while (it.hasNext())
+						if (StringUtils.isNotEmpty(mobileDevices) && mobileDevices != null)
 						{
-							if (userAgent.contains(it.next().toString()))
+							final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
+							final Iterator it = mobileDeviceArray.iterator();
+							while (it.hasNext())
 							{
-								isExist = true;
-								break;
+								if (userAgent.contains(it.next().toString()))
+								{
+									isExist = true;
+									break;
+								}
 							}
 						}
 						if (isExist)

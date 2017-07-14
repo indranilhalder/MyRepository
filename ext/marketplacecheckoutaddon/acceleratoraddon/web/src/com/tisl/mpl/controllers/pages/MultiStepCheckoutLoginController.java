@@ -449,23 +449,21 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 				final String userAgent = request.getHeader(
 						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
 
-
 				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
 				{
-
 					final String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
 
-					final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
-
-
-					final Iterator it = mobileDeviceArray.iterator();
-
-					while (it.hasNext())
+					if (StringUtils.isNotEmpty(mobileDevices) && mobileDevices != null)
 					{
-						if (userAgent.contains(it.next().toString()))
+						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
+						final Iterator it = mobileDeviceArray.iterator();
+						while (it.hasNext())
 						{
-							isExist = true;
-							break;
+							if (userAgent.contains(it.next().toString()))
+							{
+								isExist = true;
+								break;
+							}
 						}
 					}
 					if (isExist)
@@ -556,7 +554,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#back(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */
@@ -568,7 +566,7 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#next(org.springframework.web.servlet.mvc.support.
 	 * RedirectAttributes)
 	 */
