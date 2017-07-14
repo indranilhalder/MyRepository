@@ -9,6 +9,7 @@ import de.hybris.platform.jalo.JaloInvalidParameterException;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.store.services.BaseStoreService;
+import de.hybris.platform.voucher.VoucherService;
 
 import java.util.Map;
 
@@ -50,6 +51,11 @@ public class MplCouponController
 	private SessionService sessionService;
 	@Resource(name = "mplPaymentFacade")
 	private MplPaymentFacade mplPaymentFacade;
+	//Added for TPR-4461 starts here
+	@Resource(name = "voucherService")
+	private VoucherService voucherService;
+
+	//Added for TPR-4461 ends here
 
 
 	/**
@@ -62,7 +68,8 @@ public class MplCouponController
 	 * @throws JaloInvalidParameterException
 	 * @throws NumberFormatException
 	 */
-	@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.GET)
+	//@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecouponConstants.COUPONREDEEM, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData redeemCoupon(final String couponCode, final String paymentMode,
 			final String bankNameSelected, final String guid) //Added guid to handle orderModel for TPR-629
@@ -82,6 +89,7 @@ public class MplCouponController
 
 		final boolean redeem = true;
 		boolean couponRedStatus = false;
+		String couponMessageInformation = null;//Added for TPR-4461
 
 		//Redeem coupon for cartModel
 		if (orderModel == null)
@@ -115,6 +123,15 @@ public class MplCouponController
 
 				//Calculate and set data attributes
 				data = getMplCouponFacade().calculateValues(null, cartModel, couponRedStatus, redeem);
+
+				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON starts here
+				couponMessageInformation = getMplCouponFacade().getCouponMessageInfo(cartModel);
+				if (StringUtils.isNotEmpty(couponMessageInformation))
+				{
+					data.setCouponMessageInfo(couponMessageInformation);
+				}
+				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
+
 
 				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
 						MarketplacecheckoutaddonConstants.PAYMENTMODE);
@@ -209,6 +226,15 @@ public class MplCouponController
 				//Calculate and set data attributes
 				data = getMplCouponFacade().calculateValues(orderModel, null, couponRedStatus, redeem);
 
+				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON starts here
+				couponMessageInformation = getMplCouponFacade().getCouponMessageInfo(orderModel);
+				if (StringUtils.isNotEmpty(couponMessageInformation) && couponMessageInformation != null)
+				{
+					data.setCouponMessageInfo(couponMessageInformation);
+				}
+				//TPR-4461 MESSAGE FOR PAYMENT MODE RESTRICTION FOR COUPON ends here
+
+
 				final Map<String, Double> paymentInfo = getSessionService().getAttribute(
 						MarketplacecheckoutaddonConstants.PAYMENTMODE);
 
@@ -299,7 +325,8 @@ public class MplCouponController
 	 * @throws EtailNonBusinessExceptions
 	 *
 	 */
-	@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.GET)
+	//@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.GET)
+	@RequestMapping(value = MarketplacecouponConstants.COUPONRELEASE, method = RequestMethod.POST)
 	@RequireHardLogIn
 	public @ResponseBody VoucherDiscountData releaseCoupon(final String couponCode, final String guid) //Added guid to handle orderModel for TPR-629
 	{
@@ -515,7 +542,28 @@ public class MplCouponController
 		this.mplPaymentFacade = mplPaymentFacade;
 	}
 
+	//TPR-4461 starts here
 
+	/**
+	 * @return the voucherService
+	 */
+	public VoucherService getVoucherService()
+	{
+		return voucherService;
+	}
+
+
+
+	/**
+	 * @param voucherService
+	 *           the voucherService to set
+	 */
+	public void setVoucherService(final VoucherService voucherService)
+	{
+		this.voucherService = voucherService;
+	}
+
+	//TPR-4461 ends here
 
 
 }

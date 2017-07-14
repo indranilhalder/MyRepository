@@ -4,8 +4,10 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.catalog.model.CatalogVersionModel;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.europe1.model.PriceRowModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
@@ -17,6 +19,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPriceRowDao;
 
@@ -36,32 +39,56 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	private static final String WHERE_CLASS = "WHERE ";
 	private static final String C_CLASS = "{c:";
 	private static final String AS_CLASS = " AS c} ";
+	private static final String MPL_USE_CATALOG = "mpl.use.catalog";//Sonar Fix
+
+	protected ConfigurationService getConfigurationService()
+	{
+		return Registry.getApplicationContext().getBean(MarketplacecommerceservicesConstants.CONFIGURATION_SER,
+				ConfigurationService.class);
+	}
+
+
 
 
 	/*
 	 * @Javadoc Method to Retrieve Pricerow based on articleSKUID
-	 * 
+	 *
 	 * @param->articleSKUID,catalogVersionModel
-	 * 
+	 *
 	 * @return->listOfPrice
 	 */
 	@Override
 	public List<PriceRowModel> getPriceRowDetail(final CatalogVersionModel catalogVersionModel, final String articleSKUID)
 			throws EtailNonBusinessExceptions
 	{
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
+		String queryString;
+		if (USE_CATALOG)
+		{
+			queryString = //
+			SELECT_CLASS + PriceRowModel.PK
+					+ "}" //
+					+ FROM_CLASS + PriceRowModel._TYPECODE
+					+ AS_CLASS//
+					+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "}=?articleSKUID AND " + C_CLASS
+					+ PriceRowModel.CATALOGVERSION + "}=?catalogVersion";
+		}
 
+		else
+		{
+			queryString = //
+			SELECT_CLASS + PriceRowModel.PK + "}" //
+					+ FROM_CLASS + PriceRowModel._TYPECODE + AS_CLASS//
+					+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "}=?articleSKUID ";
+		}
 
-		final String queryString = //
-		SELECT_CLASS + PriceRowModel.PK
-				+ "}" //
-				+ FROM_CLASS + PriceRowModel._TYPECODE
-				+ AS_CLASS//
-				+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "}=?articleSKUID AND " + C_CLASS
-				+ PriceRowModel.CATALOGVERSION + "}=?catalogVersion";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(articleSKUID, articleSKUID);
-		query.addQueryParameter(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+		if (USE_CATALOG)
+		{
+			query.addQueryParameter(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+		}
 
 
 		final List<PriceRowModel> listOfPrice = flexibleSearchService.<PriceRowModel> search(query).getResult();
@@ -72,15 +99,15 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 
 	/*
 	 * <<<<<<< Updated upstream
-	 * 
+	 *
 	 * @Javadoc Method Method to Retrieve Pricerow based on multiple articleSKUID
-	 * 
+	 *
 	 * @param articleSKUIDList,catalogVersionModel
-	 * 
+	 *
 	 * @return PriceRowModel ======= (Javadoc) Method to Retrieve Pricerow based on multiple articleSKUID
-	 * 
+	 *
 	 * @param->articleSKUIDList,catalogVersionModel
-	 * 
+	 *
 	 * @return->listOfPrice >>>>>>> Stashed changes
 	 */
 
@@ -88,22 +115,36 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	public List<PriceRowModel> getAllPriceRowDetail(final CatalogVersionModel catalogVersionModel,
 			final List<String> sellerArticleSKU)
 	{
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
-			final String queryString = //
-			SELECT_CLASS + PriceRowModel.PK
-					+ "} " //
-					+ FROM_CLASS + PriceRowModel._TYPECODE
-					+ AS_CLASS//
-					+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "} in (?sellerArticleSKU)  AND " + C_CLASS
-					+ PriceRowModel.CATALOGVERSION + "}=?catalogVersion";
+			String queryString;
+			if (USE_CATALOG)
+			{
+				queryString = //
+				SELECT_CLASS + PriceRowModel.PK
+						+ "} " //
+						+ FROM_CLASS + PriceRowModel._TYPECODE
+						+ AS_CLASS//
+						+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "} in (?sellerArticleSKU)  AND " + C_CLASS
+						+ PriceRowModel.CATALOGVERSION + "}=?catalogVersion";
+			}
+			else
+			{
+				queryString = //
+				SELECT_CLASS + PriceRowModel.PK + "} " //
+						+ FROM_CLASS + PriceRowModel._TYPECODE + AS_CLASS//
+						+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "} in (?sellerArticleSKU)";
+			}
 
 			LOG.info("Query:" + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(PriceRowModel.SELLERARTICLESKU, sellerArticleSKU);
-			query.addQueryParameter(PriceRowModel.CATALOGVERSION, catalogVersionModel);
-
+			if (USE_CATALOG)
+			{
+				query.addQueryParameter(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+			}
 
 			final List<PriceRowModel> listOfPrice = flexibleSearchService.<PriceRowModel> search(query).getResult();
 			return listOfPrice;
@@ -119,22 +160,36 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	@Override
 	public List<PriceRowModel> getAllPriceRowDetail(final CatalogVersionModel catalogVersionModel, final String articleSKUIDList)
 	{
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
-			final String queryString = //
-			SELECT_CLASS + PriceRowModel.PK
-					+ "} " //
-					+ FROM_CLASS + PriceRowModel._TYPECODE
-					+ AS_CLASS//
-					+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "} in (" + articleSKUIDList + ")  AND " + C_CLASS
-					+ PriceRowModel.CATALOGVERSION + "}=?catalogVersion";
+			String queryString;
+			if (USE_CATALOG)
+			{
+				queryString = //
+				SELECT_CLASS + PriceRowModel.PK
+						+ "} " //
+						+ FROM_CLASS + PriceRowModel._TYPECODE
+						+ AS_CLASS//
+						+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "} in (" + articleSKUIDList + ")  AND " + C_CLASS
+						+ PriceRowModel.CATALOGVERSION + "}=?catalogVersion";
+			}
 
+			else
+			{
+				queryString = //
+				SELECT_CLASS + PriceRowModel.PK + "} " //
+						+ FROM_CLASS + PriceRowModel._TYPECODE + AS_CLASS//
+						+ WHERE_CLASS + C_CLASS + PriceRowModel.SELLERARTICLESKU + "} in (" + articleSKUIDList + ")";
+			}
 			LOG.info("Query:" + queryString);
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter(PriceRowModel.SELLERARTICLESKU, articleSKUIDList);
-			query.addQueryParameter(PriceRowModel.CATALOGVERSION, catalogVersionModel);
-
+			if (USE_CATALOG)
+			{
+				query.addQueryParameter(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+			}
 
 			final List<PriceRowModel> listOfPrice = flexibleSearchService.<PriceRowModel> search(query).getResult();
 			return listOfPrice;
@@ -149,11 +204,11 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 
 	/*
 	 * <<<<<<< Updated upstream Method to retrieve PriceRow based on articleSKUID with checking stock level =======
-	 * 
+	 *
 	 * @Javadoc Method to retrieve PriceRow based on articleSKUID with checking stock level >>>>>>> Stashed changes
-	 * 
+	 *
 	 * @param articleSKUIDList,catalogVersionModel
-	 * 
+	 *
 	 * @return PriceRowModel
 	 */
 
@@ -162,12 +217,25 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 			final String articleSKUIDList)
 	{
 		PriceRowModel priceRowModel = null;
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
-			final String queryString = "SELECT {pm:pk} FROM {Pricerow AS pm JOIN Stocklevel AS sl ON {sl.SELLERARTICLESKU}={pm.SELLERARTICLESKU}} WHERE  {pm.SELLERARTICLESKU}=?sellerArticleSKU AND {sl.available}>'0' AND {pm.CATALOGVERSION}=?CATALOGVERSION ";
+			String queryString;
+			if (USE_CATALOG)
+			{
+				queryString = "SELECT {pm:pk} FROM {Pricerow AS pm JOIN Stocklevel AS sl ON {sl.SELLERARTICLESKU}={pm.SELLERARTICLESKU}} WHERE  {pm.SELLERARTICLESKU}=?sellerArticleSKU AND {sl.available}>'0' AND {pm.CATALOGVERSION}=?CATALOGVERSION ";
+			}
+
+			else
+			{
+				queryString = "SELECT {pm:pk} FROM {Pricerow AS pm JOIN Stocklevel AS sl ON {sl.SELLERARTICLESKU}={pm.SELLERARTICLESKU}} WHERE  {pm.SELLERARTICLESKU}=?sellerArticleSKU AND {sl.available}>'0' ";
+			}
 			final Map<String, Object> params = new HashMap<String, Object>(2);
 			params.put(PriceRowModel.SELLERARTICLESKU, articleSKUIDList);
-			params.put(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+			if (USE_CATALOG)
+			{
+				params.put(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+			}
 			final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(queryString, params);
 			if (searchRes != null && searchRes.getCount() > 0)
 			{
@@ -185,9 +253,9 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 
 	/*
 	 * @Javadoc Method to retrieve least Price of product
-	 * 
+	 *
 	 * @param Productmodel, CatalogVersionModel
-	 * 
+	 *
 	 * @return PriceRowModel
 	 */
 
@@ -195,19 +263,33 @@ public class MplPriceRowDaoImpl implements MplPriceRowDao
 	public PriceRowModel getMinimumPriceForProduct(final CatalogVersionModel catalogVersionModel, final ProductModel productModel)
 	{
 		PriceRowModel priceRowModel = null;
+		final boolean USE_CATALOG = getConfigurationService().getConfiguration().getBoolean(MPL_USE_CATALOG);
 		try
 		{
-			final String queryString = //
-			SELECT_CLASS + PriceRowModel.PK
-					+ "}" //
-					+ FROM_CLASS + PriceRowModel._TYPECODE
-					+ AS_CLASS//
-					+ WHERE_CLASS + C_CLASS + PriceRowModel.PRODUCT + "}=?productPk AND " + C_CLASS + PriceRowModel.CATALOGVERSION
-					+ "}=?catalogVersion order by {price} asc";
-
+			String queryString;
+			if (USE_CATALOG)
+			{
+				queryString = //
+				SELECT_CLASS + PriceRowModel.PK
+						+ "}" //
+						+ FROM_CLASS + PriceRowModel._TYPECODE
+						+ AS_CLASS//
+						+ WHERE_CLASS + C_CLASS + PriceRowModel.PRODUCT + "}=?productPk AND " + C_CLASS + PriceRowModel.CATALOGVERSION
+						+ "}=?catalogVersion order by {price} asc";
+			}
+			else
+			{
+				queryString = //
+				SELECT_CLASS + PriceRowModel.PK + "}" //
+						+ FROM_CLASS + PriceRowModel._TYPECODE + AS_CLASS//
+						+ WHERE_CLASS + C_CLASS + PriceRowModel.PRODUCT + "}=?productPk order by {price} asc";
+			}
 			final Map<String, Object> params = new HashMap<String, Object>(2);
 			params.put("productPk", productModel.getPk());
-			params.put(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+			if (USE_CATALOG)
+			{
+				params.put(PriceRowModel.CATALOGVERSION, catalogVersionModel);
+			}
 			final SearchResult<PriceRowModel> searchRes = flexibleSearchService.search(queryString, params);
 			if (searchRes != null && searchRes.getCount() > 0)
 			{

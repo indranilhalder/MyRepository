@@ -11,8 +11,13 @@ import de.hybris.platform.servicelayer.interceptor.PrepareInterceptor;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.util.localization.Localization;
 
+import java.util.Collection;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
+
+import com.tisl.mpl.core.model.PromotionalPriceRowModel;
 
 
 public class PriceRowUpdateInterceptor implements PrepareInterceptor
@@ -49,46 +54,63 @@ public class PriceRowUpdateInterceptor implements PrepareInterceptor
 		if (object instanceof PriceRowModel)
 		{
 			final PriceRowModel priceRow = (PriceRowModel) object;
+			final Collection<PromotionalPriceRowModel> promoPriceRow = priceRow.getPromotionalPriceRow(); //channel specific promotion changes
+
 			double specialPrice = 0.0D;
 			double discount = 0.0D;
-
-			//final Date sysdate = new Date();
-			if (priceRow.getPromotionStartDate() != null && priceRow.getPromotionEndDate() != null
-			//&& sysdate.after(priceRow.getPromotionStartDate()) && sysdate.before(priceRow.getPromotionEndDate())
-			)
+			if (CollectionUtils.isNotEmpty(promoPriceRow))
 			{
-				if (priceRow.getIsPercentage() != null && !priceRow.getIsPercentage().booleanValue())
+			for (final PromotionalPriceRowModel promoPrice : promoPriceRow) //channel specific promotion changes loop needed here
+			{
+				//final Date sysdate = new Date();
+				if (promoPrice.getPromotionStartDate() != null && promoPrice.getPromotionEndDate() != null
+				//&& sysdate.after(priceRow.getPromotionStartDate()) && sysdate.before(priceRow.getPromotionEndDate())
+				)
 				{
-					priceRow.setSpecialPrice(Double.valueOf(priceRow.getPrice().doubleValue()
-							- priceRow.getPromotionValue().doubleValue()));
-				}
-				else
-				{
-					discount = (priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100;
-
-					if (null != priceRow.getMaxDiscount() && priceRow.getMaxDiscount().doubleValue() > 0.0
-							&& discount > priceRow.getMaxDiscount().doubleValue())
+					if (promoPrice.getIsPercentage() != null && !promoPrice.getIsPercentage().booleanValue())
 					{
-						specialPrice = priceRow.getPrice().doubleValue() - priceRow.getMaxDiscount().doubleValue();
-						LOG.debug("Special Price > Max Discount : Special Price:" + specialPrice);
-						priceRow.setSpecialPrice(Double.valueOf(specialPrice));
+						promoPrice.setSpecialPrice(
+								Double.valueOf(priceRow.getPrice().doubleValue() - promoPrice.getPromotionValue().doubleValue()));
 					}
 					else
 					{
-						specialPrice = priceRow.getPrice().doubleValue()
-								- ((priceRow.getPrice().doubleValue() * priceRow.getPromotionValue().doubleValue()) / 100);
-						LOG.debug("Special Price < Max Discount : Special Price: " + specialPrice);
-						priceRow.setSpecialPrice(Double.valueOf(specialPrice));
+						discount = (priceRow.getPrice().doubleValue() * promoPrice.getPromotionValue().doubleValue()) / 100;
+
+						if (null != promoPrice.getMaxDiscount() && promoPrice.getMaxDiscount().doubleValue() > 0.0
+								&& discount > promoPrice.getMaxDiscount().doubleValue())
+						{
+							specialPrice = priceRow.getPrice().doubleValue() - promoPrice.getMaxDiscount().doubleValue();
+							LOG.debug("Special Price > Max Discount : Special Price:" + specialPrice);
+							promoPrice.setSpecialPrice(Double.valueOf(specialPrice));
+						}
+						else if (promoPrice.getPromotionChannel() != null)
+						{
+							specialPrice = priceRow.getPrice().doubleValue()
+									- ((priceRow.getPrice().doubleValue() * promoPrice.getPromotionValue().doubleValue()) / 100);
+							LOG.debug("Special Price < Max Discount : Special Price: " + specialPrice);
+							promoPrice.setSpecialPrice(Double.valueOf(specialPrice));
+						}
+						else
+						{
+							specialPrice = priceRow.getPrice().doubleValue()
+									- ((priceRow.getPrice().doubleValue() * promoPrice.getPromotionValue().doubleValue()) / 100);
+							LOG.debug("Special Price < Max Discount : Special Price: " + specialPrice);
+							promoPrice.setSpecialPrice(Double.valueOf(specialPrice));
+						}
 					}
 
 				}
-
+				if (promoPrice.getPromotionStartDate() == null && promoPrice.getPromotionEndDate() == null)
+				{
+					promoPrice.setSpecialPrice(null);
+				}
 			}
-			if (priceRow.getPromotionStartDate() == null && priceRow.getPromotionEndDate() == null)
+			}
+
+			if (CollectionUtils.isNotEmpty(promoPriceRow))
 			{
-				priceRow.setSpecialPrice(null);
+				modelService.saveAll(promoPriceRow);
 			}
 		}
-
 	}
 }

@@ -219,6 +219,13 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
+		final Double mobilePriceValue = this.<Double> getValue(source, "mobileprice");
+		if (mobilePriceValue != null)
+		{
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(mobilePriceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
+			target.setMobileprice(priceData);
+		}
 
 		// Pull the special price value for the current currency
 		final Double mrpPriceValue = this.<Double> getValue(source, "mrpPriceValue");
@@ -335,6 +342,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		final Map<String, PriceData> mrpMap = new HashMap<String, PriceData>();
 		final Map<String, PriceData> saveMap = new HashMap<String, PriceData>();
 		final List<String> ussidList = (List<String>) getValue(source, "ussID");
+		//CKD:PRDI-350:Start
+		final Map<String, Integer> availabilityMap = new HashMap<String, Integer>();
 		if (CollectionUtils.isNotEmpty(ussidList) && ussidList.get(0).contains(":"))
 		{
 			final String[] value = ussidList.get(0).split(DELIMETER);
@@ -361,6 +370,12 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				final String ussidVal = value[0];
 				final String mrp = value[1];
 				final String price = value[2];
+				//CKD:PRDI-350
+				Integer sellerStock = null;
+				if (value.length > 3 && null != value[3] && StringUtils.isNotEmpty(value[3].trim()))
+				{
+					sellerStock = Integer.valueOf(value[3]);
+				}   
 				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),
 						getCommonI18NService().getCurrentCurrency());//SONAR FIX
 				final PriceData mopVal = getPriceDataFactory().create(PriceDataType.BUY,
@@ -370,12 +385,16 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				priceMap.put(ussid.substring(0, 6), mrpVal);
 				mrpMap.put(ussid.substring(0, 6), mopVal);
 				saveMap.put(ussid.substring(0, 6), savVal);
+				//CKD:PRDI-350
+				availabilityMap.put(ussid.substring(0, 6), sellerStock);
 			}
 		}
 		target.setUssidList(ussidMap);
 		target.setMrpMap(mrpMap);
 		target.setPriceMap(priceMap);
 		target.setSavingsMap(saveMap);
+		//CKD:PRDI-350
+		target.setAvailabilityMap(availabilityMap);
 	}
 
 	/**

@@ -266,10 +266,10 @@
 																<li>${fn:escapeXml(address.region.name)}</li>
 																<li>91&nbsp;${fn:escapeXml(address.phone)}</li>
 															</ul>
-
+															<!-- TISSTRT-1593 UF-277 -->
 															<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
-																	text="Are you sure you want to delete this address?" />
+																	text="Are sure you want to delete this address?" />
 															</p>
 
 															<div class="buttons">

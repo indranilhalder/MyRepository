@@ -155,24 +155,27 @@ ACC.carousel = {
 			var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
 			var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
 			//$(".home-rotatingImage").owlCarousel({
-				$("#rotatingImageTimeout").owlCarousel({
+			$("#rotatingImageTimeout").owlCarousel({
 				items:1,
 				nav:false,
 				dots:dots,
 				loop: loop,
 		        autoplay: true,
-		        autoHeight : true,
+		        //autoHeight : true, //UF-365
 		        autoplayTimeout: timeout
 		    });
-			//UF-291 starts here
-			if ($(window).width() >= 720) {	
+			//UF-291 starts here ---- UF-365 starts here 
+			if ($(window).width() > 773) {
 				$("#rotatingImageTimeout img").each(function() {
 				    if ($(this).attr("data-src")) {
 						$(this).attr("src",$(this).attr("data-src"));
 						$(this).removeAttr("data-src");
+						$(this).load(function(){
+							$(this).css("display", "block");
+						});
 					}	
 				});
-			}	
+			}
 			//UF-291 ends here
 		}
 			//Mobile View
@@ -188,15 +191,18 @@ ACC.carousel = {
 					dots:dots,
 					loop: loop,
 			        autoplay: true,
-			        autoHeight : true,
+			        //autoHeight : true, //UF-365
 			        autoplayTimeout: timeout
 			    });
-				//UF-291 starts here
-				if ($(window).width() < 720) {	
+				//UF-291 starts here ---- UF-365 starts here
+				if ($(window).width() <= 773) {	
 					$("#rotatingImageTimeoutMobile img").each(function() {
 					    if ($(this).attr("data-src")) {
 							$(this).attr("src",$(this).attr("data-src"));
 							$(this).removeAttr("data-src");
+							$(this).load(function(){
+								$(this).css("display", "block");
+							});
 						}	
 					});
 				}

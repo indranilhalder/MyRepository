@@ -43,8 +43,17 @@ $(document).ready(function(){
    	 //Changes for pdp CR
    	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
   		/* alert("please select size !"+isShowSize); */
-   		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+   		$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
+		if ($(window).width() < 768) {
+			setTimeout(function(){
+				$('#addToCartFormTitle').fadeOut(2000);		
+			 },2000);
+			//UF-390
+			$('html, body').animate({
+	              scrollTop: $('.product-info .product-image-container.device').height()
+	        }, 1000);
+		}	
 		//For pdp analytics changes
 		utag.link({"error_type":"size_not_selected"});
  	    return false;
@@ -98,6 +107,11 @@ $(document).ready(function(){
 <span id="addtobagerror" style="display:none"><spring:theme code="product.wishlist.outOfStock"/></span>
 <span id="bagtofull" style="display:none"><spring:theme code="product.addtocart.aboutfull"/></span>
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
+
+<%--TPR-5346 --%>
+ <span id="bagfullproduct" style="display:none"><spring:theme code="product.bag.maxlimit"/></span>
+ <%--TPR-5346 --%>
+
 <form:form method="post" name="addToCartFormId" id="addToCartForm" class="add_to_cart_form"
 	action="#">
 	<%-- <c:if test="${product.purchasable}"> --%>
@@ -144,6 +158,8 @@ $(document).ready(function(){
 		<input type="button" id="add_to_wishlist" onClick="addToWishlist();" id="wishlist" class="wishlist" data-toggle="popover" value="<spring:theme code="text.add.to.wishlist"/>"/>
 	</span>
 	<span id="selectSizeId" style="display: none;color:#ff1c47"><spring:theme code="variant.pleaseselectsize"/></span>
+	<!-- UF-160 -->
+	<span id="addToCartLargeAppliance" style="display: none;color:#ff1c47"><spring:theme code="product.addToCart.largeAppliance.error"/></span>
 	<span id="addToCartButtonId">
 		<span id="addToCartFormTitleSuccess"></span>
 		<button style="display: none;"

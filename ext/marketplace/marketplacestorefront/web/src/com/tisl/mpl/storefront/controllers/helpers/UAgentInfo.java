@@ -20,13 +20,13 @@ public class UAgentInfo
 	private boolean initCompleted = false;
 	private boolean isWebkit = false; //Stores the result of DetectWebkit()
 	private boolean isMobilePhone = false; //Stores the result of DetectMobileQuick()
-	private boolean iphone = false; //Stores the result of DetectIphone()
+	private boolean iphone = false; //Stores the result of DetectIphone()                        //SONAR FIX
 	private boolean isAndroid = false; //Stores the result of DetectAndroid()
 	private boolean isAndroidPhone = false; //Stores the result of DetectAndroidPhone()
-	private boolean tierTablet = false; //Stores the result of DetectTierTablet()
-	private boolean tierIphone = false; //Stores the result of DetectTierIphone()
-	private boolean tierRichCss = false; //Stores the result of DetectTierRichCss()
-	private boolean tierGenericMobile = false; //Stores the result of DetectTierOtherPhones()
+	private boolean tierTablet = false; //Stores the result of DetectTierTablet()                //SONAR FIX
+	private boolean tierIphone = false; //Stores the result of DetectTierIphone()                //SONAR FIX
+	private boolean tierRichCss = false; //Stores the result of DetectTierRichCss()              //SONAR FIX
+	private boolean tierGenericMobile = false; //Stores the result of DetectTierOtherPhones()    //SONAR FIX
 
 	// Initialize some initial smartphone string variables.
 	private static final String engineWebKit = "webkit";
@@ -161,6 +161,7 @@ public class UAgentInfo
 	 *
 	 * @return isIphone
 	 */
+
 	//Sonar Issue Fix For Kidswear: getIsIphone()--> IsIphone()
 	public boolean isIphone()
 	{
@@ -172,6 +173,7 @@ public class UAgentInfo
 	 *
 	 * @return isTierTablet
 	 */
+
 	//Sonar Issue Fix For Kidswear: getIsTierTablet()--> IsTierTablet()
 	public boolean isTierTablet()
 	{
@@ -183,6 +185,7 @@ public class UAgentInfo
 	 *
 	 * @return isTierIphone
 	 */
+
 	//Sonar Issue Fix For Kidswear: getIsTierIphone()--> IsTierIphone()
 	public boolean isTierIphone()
 	{
@@ -194,6 +197,7 @@ public class UAgentInfo
 	 *
 	 * @return isTierRichCss
 	 */
+
 	//Sonar Issue Fix For Kidswear: getIsTierRichCss()--> IsTierRichCss()
 	public boolean isTierRichCss()
 	{
@@ -205,6 +209,7 @@ public class UAgentInfo
 	 *
 	 * @return isTierGenericMobile
 	 */
+
 	//Sonar Issue Fix For Kidswear: getIsTierGenericMobile()--> IsTierGenericMobile()
 	public boolean isTierGenericMobile()
 	{

@@ -192,10 +192,16 @@ public class SearchSuggestUtilityMethods
 		{
 			wsDto.setMrpPrice(productData.getProductMRP());
 		}
-		if (null != productData.getPrice())
+		//Below codes are commented for channel specific promotion
+
+		/*
+		 * if (null != productData.getPrice()) { wsDto.setSellingPrice(productData.getPrice()); }
+		 */
+		if (null != productData.getMobileprice())
 		{
-			wsDto.setSellingPrice(productData.getPrice());
+			wsDto.setSellingPrice(productData.getMobileprice());
 		}
+
 		if (null != productData.getLeastSizeProduct())
 		{
 			wsDto.setLeastSizeProduct(productData.getLeastSizeProduct());
@@ -650,7 +656,8 @@ public class SearchSuggestUtilityMethods
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
 
-
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 		//ProductData productDataImage = null;
 
 		for (final ProductData productData : searchPageData.getResults())
@@ -672,25 +679,16 @@ public class SearchSuggestUtilityMethods
 				/*
 				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
-				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
-				 * LOG.error("SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
+				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) { LOG.error(
+				 * "SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
 				 */
 
 				//TPR-796
-				/*try
-				{
-					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
-					ExceptionUtil.getCustomizedExceptionTrace(e);
-					continue;
-				}*/
-
-				
-
-
+				/*
+				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
+				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
+				 */
 
 				//TPR-796
 				try
@@ -703,7 +701,6 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
-
 
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
@@ -817,10 +814,18 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setMrpPrice(productData.getProductMRP());
 				}
-				if (null != productData.getPrice())
+				// Below codes are commented for channel specific promotion
+				if (specialMobileFlag && null != productData.getMobileprice())
+				{
+					sellingItemDetail.setSellingPrice(productData.getMobileprice());
+				}
+				else if (!specialMobileFlag && null != productData.getPrice()) //backward compatible
 				{
 					sellingItemDetail.setSellingPrice(productData.getPrice());
 				}
+
+
+
 				if (null != productData.getInStockFlag())
 				{
 					sellingItemDetail.setInStockFlag(productData.getInStockFlag());

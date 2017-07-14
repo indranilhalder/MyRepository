@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.enumeration.EnumerationValueModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
@@ -201,7 +202,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAUDITonEBS(final String ebsStatusReview)
 	{
-		final String queryString = "select {a.pk} from {JuspayEBSResponse as e}, {MplPaymentAudit as a}, {EBSResponseStatus as r}"
+		final String queryString = "select {a.pk} from {JuspayEBSResponseData as e}, {MplPaymentAudit as a}, {EBSResponseStatus as r}"
 				+ "where {e.audit}={a.pk} and {e.ebsRiskStatus}={r.pk} and {r.code}=?status and {a.isExpired}=?expiredData";
 
 		LOG.debug("status" + ebsStatusReview);
@@ -215,6 +216,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	 * @Decsription : Fetch Order Details Based on GUID
 	 * @param: guid
 	 */
+
 	@Override
 	public OrderModel fetchOrderOnGUID(final String guid)
 	{
@@ -235,6 +237,44 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 			orderModel = orderModelList.get(0);
 		}
 		return orderModel;
+	}
+
+	/**
+	 * @Decsription : Fetch Order Status Details Based on GUID
+	 * @param: guid
+	 */
+	@Override
+	public String fetchStatusOnGUID(final String guid)
+	{
+
+		EnumerationValueModel status = null;
+
+		final String queryString = //
+		"SELECT {ev:"
+				+ EnumerationValueModel.PK
+				+ "} "//
+				+ MarketplacecommerceservicesConstants.QUERYFROM + OrderModel._TYPECODE + " AS om },{"
+				+ EnumerationValueModel._TYPECODE + " AS ev} where " + "{om." + OrderModel.GUID + "} = ?code and " + "{om."
+				+ OrderModel.TYPE + "} = ?type and {om." + OrderModel.STATUS + "} = {ev." + EnumerationValueModel.PK + "}";
+				
+
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, guid);
+		query.addQueryParameter("type", "Parent");
+
+		final List<EnumerationValueModel> statusList = getFlexibleSearchService().<EnumerationValueModel> search(query).getResult();
+		if (!CollectionUtils.isEmpty(statusList))
+		{
+			status = statusList.get(0);
+		}
+		if(status!=null){
+			LOG.debug("Order Status for guid:" + guid + " is " + status.getCode());
+
+			return status.getCode();
+		}
+		else{
+			return null;
+		}
 	}
 
 	/**
@@ -263,7 +303,7 @@ public class DefaultJuspayWebHookDaoImpl implements JuspayWebHookDao
 	@Override
 	public List<MplPaymentAuditModel> fetchAuditForEmptyRisk(final String ebsRiskPercentage)
 	{
-		final String queryString = "select {a.pk} from {JuspayEBSResponse as e}, {MplPaymentAudit as a}"
+		final String queryString = "select {a.pk} from {JuspayEBSResponseData as e}, {MplPaymentAudit as a}"
 				+ "where {e.audit}={a.pk} and {e.ebsRiskPercentage}=?ebsRiskPercentage and {a.isExpired}=?expiredData";
 
 		LOG.debug("ebsRiskPercentage" + ebsRiskPercentage);

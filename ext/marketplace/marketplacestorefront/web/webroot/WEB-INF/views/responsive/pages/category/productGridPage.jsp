@@ -93,8 +93,20 @@
 	</div>
 	</c:if>
 	<!-- TPR-4471 Ends -->
-	
+	<!-- commented for TPR-1283 -->
+<%-- <div class="list_title"><h1>${dropDownText}</h1></div> --%>
+<!--TPR-1283 CHANGES Starts-->
+<input type="hidden" value="${flag}" id="flagVal"/>
+<input type="hidden" value="${cateName}" id="catName"/>
+<c:choose>
+<c:when test="${flag==true}">
+<div class="list_title"><h1>${modified_header}</h1></div>
+</c:when>
+<c:otherwise>
 <div class="list_title"><h1>${dropDownText}</h1></div>
+</c:otherwise>
+</c:choose>
+<!--TPR-1283 CHANGES Ends-->
 <div class="listing wrapper">
 	<div class="search-result">
 			<h2>&nbsp;</h2>

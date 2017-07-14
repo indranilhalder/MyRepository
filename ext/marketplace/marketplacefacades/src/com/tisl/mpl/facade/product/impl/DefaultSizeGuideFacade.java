@@ -196,24 +196,34 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 						if (StringUtils.isNotEmpty(sizeGuideValue.getDimensionSize()))
 						{
 							sizeGuideWsDataValue.setDimensionSize(sizeGuideValue.getDimensionSize());
+
 						}
 						if (StringUtils.isNotEmpty(sizeGuideValue.getAge()))
+
 						{
 							sizeGuideWsDataValue.setAge(sizeGuideValue.getAge());
+
 						}
 						if (StringUtils.isNotEmpty(sizeGuideValue.getEuroSize()))
 						{
 							sizeGuideWsDataValue.setEuroSize(sizeGuideValue.getEuroSize());
+
 						}
 						if (StringUtils.isNotEmpty(sizeGuideValue.getUsSize()))
+
 						{
 							sizeGuideWsDataValue.setUsSize(sizeGuideValue.getUsSize());
+
 						}
 						if (productData.getRootCategory().equalsIgnoreCase(FOOTWEAR)
 								&& StringUtils.isNotEmpty(sizeGuideValue.getDimension()))
 						{
 							sizeGuideWsDataValue.setFootlength(sizeGuideValue.getDimension());
 						}
+
+
+
+
 						/**
 						 * Add for Accessories Belt Product START By SAP START::::
 						 */
@@ -347,6 +357,7 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * 
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */

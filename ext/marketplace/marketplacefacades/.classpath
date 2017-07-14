@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/platform"/>
+ 	<classpathentry kind="src" path="/platform"/>
 	<classpathentry exported="true" kind="src" path="/acceleratorfacades"/>
 	<classpathentry exported="true" kind="src" path="/marketplacecore"/>
 	<classpathentry exported="true" kind="lib" path="resources"/>

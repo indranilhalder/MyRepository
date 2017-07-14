@@ -1,9 +1,0 @@
-*.log
-.settings
-.pmd
-.externalToolBuilders
-.springBeans
-*.number
-classes
-eclipsebin
-gensrc

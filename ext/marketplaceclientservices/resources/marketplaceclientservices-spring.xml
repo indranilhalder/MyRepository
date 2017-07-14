@@ -54,79 +54,103 @@
 
 	<bean id="sendEmailService" class="com.tisl.mpl.email.MplSendEmailService" />
 	<bean id="sendSMSService" class="com.tisl.mpl.sms.MplSendSMSService" />
-	<bean id="sendTicketService" class="com.tisl.mpl.ticket.SendTicketService" />	
-	
+	<bean id="sendTicketService" class="com.tisl.mpl.ticket.SendTicketService" />
+
 	<!-- Integration Pin code and Delivery mode OMS -->
-	<bean id="pinCodeDeliveryModeService" class="com.tisl.mpl.service.PinCodeDeliveryModeServiceImpl" scope="tenant">
-	  <!-- <property name="pinCodeDeliveryModeConverter" ref="pinCodeDeliveryModeConverter" /> -->
-	</bean>	
-	
-	<!-- <bean id="pinCodeDeliveryModeConverter" parent="abstractPopulatingConverter"
+	<bean id="pinCodeDeliveryModeService" class="com.tisl.mpl.service.PinCodeDeliveryModeServiceImpl"
 		scope="tenant">
-		<lookup-method name="createTarget" bean="pincodeServiceabilityCheck" />
-		<property name="populators">
-			<list>
-				<ref bean="pinCodeDeliveryModeServicePopulator" />
-			</list>
-		</property>
+		<!-- <property name="pinCodeDeliveryModeConverter" ref="pinCodeDeliveryModeConverter" 
+			/> -->
 	</bean>
-	
-	<bean id="pinCodeDeliveryModeServicePopulator" class="com.tisl.mpl.populators.PinCodeDeliveryModeServicePopulator" scope="tenant">
-	</bean>     -->
-    <!-- Prototype Beans for Data POJOs -->
-	<!-- <bean name="pincodeServiceabilityCheck" class="com.hybris.oms.api.comm.dto.PincodeServiceabilityCheck" scope="prototype" /> -->
-	<!-- Integration Pin code and Delivery mode, OMS Service Call ENDS-->	
-	
+
+	<!-- <bean id="pinCodeDeliveryModeConverter" parent="abstractPopulatingConverter" 
+		scope="tenant"> <lookup-method name="createTarget" bean="pincodeServiceabilityCheck" 
+		/> <property name="populators"> <list> <ref bean="pinCodeDeliveryModeServicePopulator" 
+		/> </list> </property> </bean> <bean id="pinCodeDeliveryModeServicePopulator" 
+		class="com.tisl.mpl.populators.PinCodeDeliveryModeServicePopulator" scope="tenant"> 
+		</bean> -->
+	<!-- Prototype Beans for Data POJOs -->
+	<!-- <bean name="pincodeServiceabilityCheck" class="com.hybris.oms.api.comm.dto.PincodeServiceabilityCheck" 
+		scope="prototype" /> -->
+	<!-- Integration Pin code and Delivery mode, OMS Service Call ENDS -->
+
 	<!-- Customer Create -->
 	<bean id="mplCustomerWebService" class="com.tisl.mpl.service.MplCustomerWebServiceImpl" />
-<!-- Rating and Review changes -->
 	<!-- Rating and Review changes -->
-	<bean id="GigyaService" class="com.tisl.mpl.service.impl.GigyaServiceImpl" >
-<property name="apikey" value="#{configurationService.configuration.getProperty('gigya.apikey')}" />
-<property name="secretkey" value="#{configurationService.configuration.getProperty('gigya.secretkey')}" />
-<property name="use" value="#{configurationService.configuration.getProperty('gigya.use')}" />
-<property name="domain" value="#{configurationService.configuration.getProperty('gigya.domain')}" />
-<property name="proxyPort" value="#{configurationService.configuration.getProperty('proxy.port')}" />
-<property name="proxyEnabled" value="#{configurationService.configuration.getProperty('proxy.enabled')}" />
-<property name="proxyAddress" value="#{configurationService.configuration.getProperty('proxy.address')}" />
-</bean>
+	<!-- Rating and Review changes -->
+	<bean id="GigyaService" class="com.tisl.mpl.service.impl.GigyaServiceImpl">
+		<property name="apikey"
+			value="#{configurationService.configuration.getProperty('gigya.apikey')}" />
+		<property name="secretkey"
+			value="#{configurationService.configuration.getProperty('gigya.secretkey')}" />
+		<property name="use"
+			value="#{configurationService.configuration.getProperty('gigya.use')}" />
+		<property name="domain"
+			value="#{configurationService.configuration.getProperty('gigya.domain')}" />
+		<property name="proxyPort"
+			value="#{configurationService.configuration.getProperty('proxy.port')}" />
+		<property name="proxyEnabled"
+			value="#{configurationService.configuration.getProperty('proxy.enabled')}" />
+		<property name="proxyAddress"
+			value="#{configurationService.configuration.getProperty('proxy.address')}" />
+	</bean>
 
 	<!-- Order Create  -->
-	<!-- <bean id="OrderWebService"
-			class="com.tisl.mpl.service.OrderWebServiceImpl"/> -->
+	<alias name="orderWebService" alias="orderWebService"/>
+	<bean id="orderWebService" class="com.tisl.mpl.service.OrderWebServiceImpl"/>
 	<!-- Order Create  -->
 	<!-- Inventory Reservation reservation at Checkout -->
-	<bean id="inventoryReservationService"
-			class="com.tisl.mpl.service.InventoryReservationServiceImpl"/>
-	<!-- Inventory Reservation reservation at Checkout -->	
-	<bean id="merchantMasterWebService"
-			class="com.tisl.mpl.service.MerchantMasterWebServiceImpl"/>
+	<bean id="inventoryReservationService" class="com.tisl.mpl.service.InventoryReservationServiceImpl" />
+	<!-- Inventory Reservation reservation at Checkout -->
+	<bean id="merchantMasterWebService" class="com.tisl.mpl.service.MerchantMasterWebServiceImpl" />
 	<!-- AWBStatusRequest/Response -->
-	<bean id="mplAwbStatusService"
-			class="com.tisl.mpl.service.MplAwbStatusServiceImpl"/>					
-	<!-- AWBStatusRequest/Response Ends Here-->
-	<bean id="mplClientAccountAddressDao"
-			class="com.tisl.mpl.daos.MplClientAccountAddressDaoImpl"/>
-	<bean id="mplClientAccountAddressService"
-	class="com.tisl.mpl.service.MplClientAccountAddressServiceImpl"/>
+	<bean id="mplAwbStatusService" class="com.tisl.mpl.service.MplAwbStatusServiceImpl" />
+	<!-- AWBStatusRequest/Response Ends Here -->
+	<bean id="mplClientAccountAddressDao" class="com.tisl.mpl.daos.MplClientAccountAddressDaoImpl" />
+	<bean id="mplClientAccountAddressService" class="com.tisl.mpl.service.MplClientAccountAddressServiceImpl" />
 	<!-- Ticket Create -->
-	<bean id="ticketCreate"
-			class="com.tisl.mpl.service.TicketCreationCRMserviceImpl"/>
+	<bean id="ticketCreate" class="com.tisl.mpl.service.TicketCreationCRMserviceImpl" />
 	<!-- Refund Info -->
-	<bean id="mplRefundStatusService"
-			class="com.tisl.mpl.service.MplRefundStatusServiceImpl"/>	
-	<bean id="mplOrderCancelClientService"
-		class="com.tisl.mpl.service.MplOrderCancelClientServiceImpl"/>	
-		<!-- SNS Mobile Push Notification -->		
-			<bean id="mplSNSMobilePushService"
-			class="com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl"/>
-			<bean id="snsClientWrapper"
-			class="com.tisl.mpl.sns.push.tools.MplAmazonSNSClientWrapper"/>
-			
-			<bean id="mplSNSMobilePushDao"
-			class="com.tisl.mpl.sns.push.dao.impl.MplSNSMobilePushDaoImpl"/>	
+	<bean id="mplRefundStatusService" class="com.tisl.mpl.service.MplRefundStatusServiceImpl" />
+	<bean id="mplOrderCancelClientService" class="com.tisl.mpl.service.MplOrderCancelClientServiceImpl" />
+	<!-- SNS Mobile Push Notification -->
+	<bean id="mplSNSMobilePushService"
+		class="com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl" />
+	<bean id="snsClientWrapper" class="com.tisl.mpl.sns.push.tools.MplAmazonSNSClientWrapper" />
+
+	<bean id="mplSNSMobilePushDao" class="com.tisl.mpl.sns.push.dao.impl.MplSNSMobilePushDaoImpl" />
 	<!-- SNS Mobile Push Notification -->
 	<!-- payment info reversal -->
+
+<!-- 	<bean id="paymentInfoRevWebService" class="com.tisl.mpl.service.PaymentInfoRevWebServiceImpl" />
+	<bean id="paymentInfoCancelService" class="com.tisl.mpl.service.PaymentInfoCancelReversalImpl" /> -->
+
+	<!-- <bean id="ordercreation" class="com.tisl.mpl.service.MplSendOrderFromCommerceToCRMImpl" /> -->
+
+<!-- 	<bean id="cancellableService" class="com.tisl.mpl.service.CancellableServiceImpl" />
+	<bean id="returnLogistics" class="com.tisl.mpl.service.ReturnLogisticsServiceImpl" />
+	<bean id="mplClickToCallService" class="com.tisl.mpl.service.MplClickToCallWebServiceImpl" />
+	<bean id="gigyaCommentService" class="com.tisl.mpl.service.MplGigyaReviewCommentServiceImpl" />
+	<bean id="mplGigyaReviewCommentDao"
+		class="com.tisl.mpl.review.daos.impl.MplGigyaReviewCommentDaoImpl" /> -->
+		
+	<!-- UF-258 -->
+	<bean id="STWService" class="com.tisl.mpl.service.impl.STWWidgetServiceImpl">
+		<property name="use"
+			value="#{configurationService.configuration.getProperty('stw.use')}" />
+		<property name="domain"
+			value="#{configurationService.configuration.getProperty('stw.domain')}" />
+			<property name="method"
+			value="#{configurationService.configuration.getProperty('stw.recomendation.method')}" />
+		<property name="proxyPort"
+			value="#{configurationService.configuration.getProperty('proxy.port')}" />
+		<property name="proxyEnabled"
+			value="#{configurationService.configuration.getProperty('proxy.enabled')}" />
+		<property name="proxyAddress"
+			value="#{configurationService.configuration.getProperty('proxy.address')}" />
+	</bean>
+
+
 	<bean id="paymentInfoRevWebService"
 			class="com.tisl.mpl.service.PaymentInfoRevWebServiceImpl"/>
 	<bean id="paymentInfoCancelService"
@@ -149,5 +173,6 @@
 		<bean id="shortUrlReportDaoImpl"
 		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
 		
+
 </beans>
 

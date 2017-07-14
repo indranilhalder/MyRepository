@@ -195,7 +195,23 @@ public class MultiStepCheckoutLoginController extends MplAbstractCheckoutStepCon
 			model.addAttribute("isSignInActive", "Y");
 
 			model.addAttribute("pageName", pageName);
-			/** Added for UF-93 to show the last logged in user in log in field **/
+			/** Added for UF-93 to show the RememberMe checkBox **/
+			final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled");
+			model.addAttribute("rememberMeEnabled", rememberMeEnabled);
+			//						if ("Y".equalsIgnoreCase(rememberMeEnabled))
+			//						{
+			//							final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+			//							if (null != cookie && null != cookie.getValue())
+			//							{
+			//								final String encodedCookieValue = cookie.getValue();
+			//
+			//								final String decodedCookieValue = new String(Base64.decodeBase64(encodedCookieValue.getBytes())); // No need of encodedCookieValue null check as cookie.value is check earlier.
+			//								model.addAttribute("lastLoggedInUser", decodedCookieValue);
+			//
+			//								LOG.error("Last user set into model: " + model.asMap().get("lastLoggedInUser"));
+			//							}
+			//						}
+			/** End UF-93 **/
 			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
 			if (null != cookie && null != cookie.getValue())
 			{

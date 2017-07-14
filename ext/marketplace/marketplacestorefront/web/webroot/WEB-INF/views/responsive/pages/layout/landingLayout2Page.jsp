@@ -10,6 +10,15 @@
 <%@ taglib prefix="component" tagdir="/WEB-INF/tags/shared/component"%>
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags"%>
 
+<!-- TPR-1072 START -->
+<c:if test="${not empty googlebot}">
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/atozBrandPanel.jsp"%></div>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/shopByBrandImagesPanel.jsp"%></div>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/fragments/home/footerPanel.jsp"%></div>
+<div style="display:none;"><%@include file="/WEB-INF/views/responsive/cms/navigationbarcollectioncomponent.jsp"%></div>
+</c:if>
+<!-- TPR-1072 END -->
+
 <template:page pageTitle="${pageTitle}">
 	<div class="no-space homepage-banner">
 		<cms:pageSlot position="Section1" var="feature">
@@ -38,6 +47,12 @@
 	<div id="stayQued" class="qued"></div>
 	<div id="newAndExclusive" class=""></div>
 	</div>
+	<!-- For Infinite Analytics Start -->
+	<!-- <div class="brands" id="ia_brands_favorites"></div> -->
+	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
+	<div class="feature-collections" id="ia_collections"></div> -->
+	
+	<div id="stw_widget"></div>
 	<div class="trending" id="ia_products_hot"></div>
 	<div id="showcase" class="showcase feature-collections"></div>
 	

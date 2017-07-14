@@ -4,6 +4,7 @@
 package com.tisl.mpl.promotion.dao.impl;
 
 import de.hybris.platform.europe1.model.PriceRowModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
@@ -14,10 +15,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.PromotionalPriceRowModel;
 import com.tisl.mpl.model.MplConfigurationModel;
 import com.tisl.mpl.promotion.dao.UpdatePromotionalPriceDao;
 
@@ -122,10 +125,9 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	public MplConfigurationModel getCronDetails(final String code)
 	{
 		final String queryString = //
-		"SELECT {cm:" + MplConfigurationModel.PK
-				+ "} "//
-				+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
-				+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
+				"SELECT {cm:" + MplConfigurationModel.PK + "} "//
+						+ MarketplacecommerceservicesConstants.QUERYFROM + MplConfigurationModel._TYPECODE + " AS cm } where" + "{cm."
+						+ MplConfigurationModel.MPLCONFIGCODE + "} = ?code";
 
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.CODE, code);
@@ -138,18 +140,52 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 	 * @param promoCode
 	 */
 	@Override
-	public List<PriceRowModel> fetchPromoPriceData(final String promoCode)
+	public List<PromotionalPriceRowModel> fetchPromoPriceData(final String promoCode)
 	{
-		List<PriceRowModel> priceRowList = null;
+		List<PromotionalPriceRowModel> priceRowList = null;
 		if (StringUtils.isNotEmpty(promoCode))
 		{
-			final String queryString = "SELECT {pk} FROM {PriceRow} WHERE  {promotionIdentifier} = ?promoCode";
+			final String queryString = "SELECT {pk} FROM {Promotionalpricerow} WHERE  {promotionIdentifier} = ?promoCode";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("promoCode", promoCode);
-			priceRowList = flexibleSearchService.<PriceRowModel> search(query).getResult();
+			priceRowList = flexibleSearchService.<PromotionalPriceRowModel> search(query).getResult();
 		}
 		return priceRowList;
+	}
+
+	/**
+	 * The Method removes redundant data from DB
+	 *
+	 * @return priceRowList
+	 */
+	public List<PromotionalPriceRowModel> getRedundantData()
+	{
+		List<PromotionalPriceRowModel> priceRowList = null;
+
+		try
+		{
+			final String queryString = "SELECT {pk} FROM {Promotionalpricerow} WHERE  {priceRow} IS NULL";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			priceRowList = flexibleSearchService.<PromotionalPriceRowModel> search(query).getResult();
+
+			if (CollectionUtils.isNotEmpty(priceRowList))
+			{
+				return priceRowList;
+			}
+		}
+		catch (final ModelNotFoundException exception)
+		{
+			LOG.error("Error in method" + "getRedundantData DAO Call");
+			LOG.error("No Data Found" + exception);
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error in method" + "getRedundantData DAO Call");
+			LOG.error("No Data Found" + exception);
+		}
+		return null;
 	}
 
 
