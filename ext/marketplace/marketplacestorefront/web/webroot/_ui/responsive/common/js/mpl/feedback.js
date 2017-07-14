@@ -3717,11 +3717,26 @@ $(".deliveryTrack.status.suman").each(function(){
 /* TPR-6013 ends*/
 
 /* UF-377 starts */
-if ($(".product-specification-accordion").length) {
-    $(".product-specification-accordion").smk_Accordion({
-        closeAble: true,
-        closeOther: true,
-        slideSpeed: 750,
-    })
-}
+$(document).ready(function(){
+	if ($(".product-specification-accordion").length) {
+	    $(".product-specification-accordion").smk_Accordion({
+	        closeAble: true,
+	        closeOther: true,
+	        slideSpeed: 750,
+	    });
+	}
+});
+$(window).on("load resize", function(){
+	if ($(window).width() >= 773) {
+		$(".product-specification-accordion").hide();
+		$(".nav.pdp.productNav").show();
+		$(".tabs.pdp.productTabs").show();
+	}
+	else{
+		$(".nav.pdp.productNav").hide();
+		$(".tabs.pdp.productTabs").hide();
+		$(".product-specification-accordion").show();
+	}
+	
+});
 /* UF-377 ends */

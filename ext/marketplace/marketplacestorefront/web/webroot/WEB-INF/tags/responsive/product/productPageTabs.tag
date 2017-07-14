@@ -109,7 +109,7 @@ var buyboxskuId='';
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.styleNotes" /></h2>
 			</div>
-			<div class="acc_content" style="display:block">
+			<div class="acc_content" id="stylenoteAccordion" style="display:block">
 				<product:productStyleNotesTab product="${product}" />
 			</div>
 		</div>
@@ -120,7 +120,7 @@ var buyboxskuId='';
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.details" /></h2>
 			</div>
-			<div class="acc_content">
+			<div class="acc_content" id="detailsAccordion">
 				<product:productDetailsTab product="${product}" />
 			</div>
 		</div>
@@ -131,7 +131,7 @@ var buyboxskuId='';
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.description" /></h2>
 			</div>
-			<div class="acc_content">
+			<div class="acc_content" id="descriptionAccordion">
 				<product:productDescriptionTab product="${product}" />
 			</div>
 		</div>
@@ -142,7 +142,7 @@ var buyboxskuId='';
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.warranty" /></h2>
 			</div>
-			<div class="acc_content">
+			<div class="acc_content" id="warrantyAccordion">
 				<product:productWarrantyTab product="${product}" />
 			</div>
 		</div>
@@ -153,7 +153,7 @@ var buyboxskuId='';
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.knowmore" /></h2>
 			</div>
-			<div class="acc_content">
+			<div class="acc_content" id="knowmoreAccordion">
 				<product:productTataPromiseTab product="${product}" />
 			</div>
 		</div>
@@ -164,7 +164,7 @@ var buyboxskuId='';
 				<div class="acc_icon_expand"></div>
 				<h2><spring:theme code="product.product.brandInfo" /></h2>
 			</div>
-			<div class="acc_content">
+			<div class="acc_content" id="brandInfoAccordion">
 				<product:brandInfoTab product="${product}" />
 			</div>
 		</div>
