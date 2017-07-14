@@ -25,27 +25,8 @@
 </script>
 	<!-- UF-281 changes -->
 	<div class="checkout-shipping-items">
-		<%-- <div class="checkout-headers">
-		<h1 class="title-name">
-			<spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption"></spring:theme></br>
-		</h1>
-		<p class="desk-view"><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.showPincode" text="Showing delivery options for pincode"></spring:theme><span>${defaultPinCode}</span></p>
-		</div> --%>
-		<%-- <span><spring:theme code="checkout.multi.deliveryMethod.chooseDeliveryOption.forPincode" text="for PINCODE "></spring:theme>&nbsp;${defaultPinCode}</span> TISUAT-4587--%>
 		<span style="display:none"></span>
-		<%-- <div class="checkout-shipping-items-header">	
-			<h3> <a href="${request.contextPath}/cart"><spring:theme code="checkout.multi.deliveryMethod.backToBag" text="Back to My Bag"></spring:theme> </a> </h3>
-		</div> --%>
 		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
-				<%-- <li class="header">
-					<ul class="headline mybag-item-head">
-					
-						<li id="header2" class="Product"><spring:theme code="text.product.delivery.product"/></li>
-						<li id="header2" class="Price"><spring:theme code="text.product.delivery.price"/></li>
-						<li id="header2" class="qty"><spring:theme code="text.product.delivery.quantity"/></li>
-						<li class="delivery dev" id="header4"><spring:theme code="text.product.delivery.deliveryoption"/></li>
-					</ul>
-				</li> --%>
 						<c:set var="entryNumbersId" value=""/>
 						<c:set var="hideChangeLink" value="true"/>
 						<c:forEach items="${cartData.entries}" var="entry">
@@ -241,6 +222,7 @@
 															<c:if test="${count==1}">
 																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].sellerArticleSKU" value="${delMode.sellerArticleSKU}" />
 																<form:input id="radio_${entry.entryNumber}" type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].deliveryCode" value="${delMode.defaultSelectedDelMode}" />
+																<form:input type="hidden" path="deliveryMethodEntry[${entry.entryNumber}].selectedStore" value="" />
 															</c:if>
 														   <c:set var='count'  value='${count+1}' />
 

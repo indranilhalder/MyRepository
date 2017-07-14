@@ -69476,7 +69476,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     box-shadow: none;
     height: 140px;
     position: absolute;
-    z-index: 999;
+    z-index: 98;
     background: #fff;
     border-radius: 4px;
   	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
@@ -69846,7 +69846,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 #reviewOrder.cart.wrapper .product-block li.item ul .item-edit-details li:nth-child(2) {
     margin-left: 0;
     margin-right: 0;
-    width: 70px;
+    width: 35px; /* TRT-1646 */
 }
 #reviewOrder.cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist {
     margin-left: 25px;
