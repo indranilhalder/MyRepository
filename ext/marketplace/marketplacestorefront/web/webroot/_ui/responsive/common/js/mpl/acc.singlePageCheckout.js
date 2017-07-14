@@ -334,6 +334,7 @@ ACC.singlePageCheckout = {
         		{
                 	if(isCncPresent=="true" && cncSelected=="true")
                 	{
+                		ACC.singlePageCheckout.hidePickupDetailsErrors();
                 		$("#singlePagePickupPersonPopup").modal('show');
                 	}
                 	else
@@ -346,6 +347,7 @@ ACC.singlePageCheckout = {
             	ACC.singlePageCheckout.getSelectedDeliveryModes("");
             	if(isCncPresent=="true" && cncSelected=="true")
             	{
+            		ACC.singlePageCheckout.hidePickupDetailsErrors();
             		$("#singlePagePickupPersonPopup").modal('show');
             		//Code to delay slot delivery till the user saves pickup person details
             		ACC.singlePageCheckout.isSlotDeliveryAndCncPresent=true;
@@ -1013,6 +1015,31 @@ ACC.singlePageCheckout = {
 	    	ACC.singlePageCheckout.searchCNCStores(element,entryNumber);
 	        // Enter pressed
 	    }
+	},
+	//Function to select a cnc store on carousel item click
+	selectStore:function(storeName,entryNumber,index)
+	{
+		if(ACC.singlePageCheckout.getIsResponsive())
+		{
+			$('#selectDeliveryMethodFormMobile input[name="deliveryMethodEntry['+entryNumber+'].selectedStore"]').val(storeName);
+			$("#selectDeliveryMethodFormMobile #address"+entryNumber+""+index).prop("checked",true);
+			$("#selectDeliveryMethodFormMobile ."+entryNumber+"_select_store").hide();
+			ACC.singlePageCheckout.getPickUpPersonPopUpMobile();
+		}
+		else
+		{
+			$('#selectDeliveryMethodForm input[name="deliveryMethodEntry['+entryNumber+'].selectedStore"]').val(storeName);
+			$("#selectDeliveryMethodForm #address"+entryNumber+""+index).prop("checked",true);
+			$("#selectDeliveryMethodForm ."+entryNumber+"_select_store").hide();
+		}
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : storeName+'_store_seleted', 
+				event_type : storeName+'_store_seleted'
+			});
+		}
+		
 	},
 	//Function to validate and submit pick up person form
 	savePickupPersonDetails: function(element)
@@ -1962,6 +1989,7 @@ ACC.singlePageCheckout = {
 //	9.prePaymentValidationDone:	Used to track cart validation before payment is made
 //	10.isCncSelected:	Used to track if CNC delivery mode has been selected
 //	11.isPickUpPersonDetailsSaved:	Used to track if CNC pickup person details have been saved
+//	12.isPincodeServiceable:	Used to track if pincode is serviceable or not
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	mobileValidationSteps:{
@@ -1975,7 +2003,8 @@ ACC.singlePageCheckout = {
 		paymentModeSelected:"",
 		prePaymentValidationDone:false,
 		isCncSelected:false,
-		isPickUpPersonDetailsSaved:false
+		isPickUpPersonDetailsSaved:false,
+		isPincodeServiceable:false
 	},
 
 	resetValidationSteps:function(){
@@ -1990,6 +2019,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
+		ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2077,6 +2107,7 @@ ACC.singlePageCheckout = {
         	}
     		else
     		{
+    			ACC.singlePageCheckout.hidePickupDetailsErrors();
         		$("#singlePagePickupPersonPopup").modal('show');
     		}
     	}
@@ -2132,7 +2163,7 @@ ACC.singlePageCheckout = {
 	//Function used to check pincode serviceability for responsive
 	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
 	{
-		if(ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable || ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
 		{
 			ACC.singlePageCheckout.resetValidationSteps();
     		ACC.singlePageCheckout.resetPaymentModes();
@@ -2176,7 +2207,7 @@ ACC.singlePageCheckout = {
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
-		                	
+		                	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 		                }
 		                //For Confirm Box TPR-1083
 		                else if(response.type=="confirm")
@@ -2197,7 +2228,7 @@ ACC.singlePageCheckout = {
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
 		            	$("#choosedeliveryModeMobile").html(response);
-		            	
+		            	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=true;
 //		            	var entryNumbersId=$("#entryNumbersId").val();		            	
 //		            	var entryNumbers=entryNumbersId.split("#");
 //		            	for(var i=0;i<entryNumbers.length-1;i++)
@@ -2251,11 +2282,11 @@ ACC.singlePageCheckout = {
 		        event_type: "change_link_clicked"
 		    })
 	      }
-		$(".hideDelModeMobile").show();
+		$(".hideDelModeMobile").show();//Show hidden delivery modes
 //		$(".hideDelModeMobile").removeAttr('disabled');
 //		$(".hideDelModeMobile").css("opacity","1");
 //		$(".hideDelModeMobile").css("pointer-events","auto");
-		$(element).hide();
+		$(element).hide();			//Hide change link
 	},
 	//Method to reset validation flags and payment mode form on delivery mode change after payment mode is selected(For responsive)
 	attachEventToResetFlagsOnDelModeChange:function()
@@ -2446,6 +2477,12 @@ ACC.singlePageCheckout = {
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
+		//Below we are checking if pincode is serviceabile
+		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
+		{
+			ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+			return false;
+		}
 		
 		//Below we are checking that if CNC is present and if CNC pick up person details have been saved, If not we are not allowing the user to proceed with payment
 		if(!ACC.singlePageCheckout.checkPickUpDetailsSavedForCnc())

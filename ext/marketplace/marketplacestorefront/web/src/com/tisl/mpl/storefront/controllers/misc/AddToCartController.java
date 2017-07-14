@@ -97,7 +97,7 @@ public class AddToCartController extends AbstractController
 			 * "storing new wishlist data after login in session"); final List<WishlistData> wishlistDatas = new
 			 * ArrayList<>(); sessionService.setAttribute(ModelAttributetConstants.WISHLISTDATA, wishlistDatas); }
 			 * LOG.info("wishlsit name : " + wishlistName); LOG.info("product code:" + code);
-			 * 
+			 *
 			 * final WishlistData wishlistData = new WishlistData(); wishlistData.setParticularWishlistName(wishlistName);
 			 * wishlistData.setProductCode(code); final Collection<WishlistData> wishlistDatas =
 			 * sessionService.getAttribute(ModelAttributetConstants.WISHLISTDATA); final Iterator<WishlistData> iterator =
@@ -133,14 +133,28 @@ public class AddToCartController extends AbstractController
 
 			final int maximum_configured_quantiy = siteConfigService.getInt(
 
-			MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+					MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
 
 			final ProductModel product = productService.getProductForCode(code);
+
+			final int maximum_configured_quantiy_jewellery = siteConfigService
+					.getInt(MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY, 0);
 
 			if (product.getMaxOrderQuantity() == null || product.getMaxOrderQuantity().intValue() <= 0
 					|| product.getMaxOrderQuantity().intValue() >= maximum_configured_quantiy)
 			{
 				maxQuantityAlreadyAdded = mplCartFacade.isMaxQuantityAlreadyAdded(code, qty, stock, ussid);
+
+				//TISJEWST-10
+				if (StringUtils.isNotEmpty(product.getProductCategoryType())
+						&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(product.getProductCategoryType())
+						&& stock > 1)
+				{
+					if (StringUtils.isNotEmpty(maxQuantityAlreadyAdded))
+					{
+						maxQuantityAlreadyAdded = maxQuantityAlreadyAdded + "|" + maximum_configured_quantiy_jewellery;
+					}
+				}
 			}
 			else
 			{
@@ -167,8 +181,8 @@ public class AddToCartController extends AbstractController
 				//Exchange Cart Flow
 				else
 				{
-					cartModification = mplCartFacade.addToCartwithExchange(code, qty, ussid, l3 + "|" + exchangeParam + "|" + brand
-							+ "|" + pincode);
+					cartModification = mplCartFacade.addToCartwithExchange(code, qty, ussid,
+							l3 + "|" + exchangeParam + "|" + brand + "|" + pincode);
 
 				}
 				/*
@@ -215,7 +229,7 @@ public class AddToCartController extends AbstractController
 	 * MarketplacecommerceservicesConstants.QUANTITY_INVALID_BINDING_MESSAGE_KEY); } else {
 	 * model.addAttribute(MarketplacecommerceservicesConstants.ERROR_MSG_TYPE, error.getDefaultMessage()); } } return
 	 * ControllerConstants.Views.Fragments.Cart.AddToCartPopup; }
-	 * 
+	 *
 	 * protected boolean isTypeMismatchError(final ObjectError error) { return
 	 * error.getCode().equals(MarketplacecommerceservicesConstants.TYPE_MISMATCH_ERROR_CODE); }
 	 */
