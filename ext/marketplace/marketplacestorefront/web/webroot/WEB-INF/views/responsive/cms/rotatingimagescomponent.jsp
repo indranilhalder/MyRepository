@@ -205,12 +205,12 @@ var homePageBannerTimeout='${timeout}';
 								<c:choose>
 									<c:when test="${status.index eq 0}">
 										 <div class="image">
-											<img src="${banner.bannerImage.url}">
+											<img src="${banner.bannerImage.url}" />
 										</div>
 									</c:when>
 									<c:otherwise>
 										<div class="image">
-											<img data-src="${banner.bannerImage.url}">
+											<img data-src="${banner.bannerImage.url}" style="display:none;" />
 										</div>
 									</c:otherwise>	
 								</c:choose>
@@ -239,7 +239,7 @@ var homePageBannerTimeout='${timeout}';
 									</c:when>
 									<c:otherwise>
 										<div class="image">
-											<img data-src="${banner.bannerImage.url}">
+											<img data-src="${banner.bannerImage.url}" style="display:none;" />
 										</div>
 									</c:otherwise>	
 								</c:choose>
@@ -275,7 +275,7 @@ var homePageBannerTimeout='${timeout}';
 										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:when>
 									<c:otherwise>
-										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="display:none;" />
 									</c:otherwise>	
 								</c:choose>
 								</a>
@@ -293,7 +293,7 @@ var homePageBannerTimeout='${timeout}';
 										 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 									</c:when>
 									<c:otherwise>
-										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+										 <img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="display:none;" />
 									</c:otherwise>	
 								</c:choose>
 							</a>
@@ -325,7 +325,7 @@ var homePageBannerTimeout='${timeout}';
 								</c:when>
 								<c:otherwise>
 									<div class="image">
-										<img data-src="${banner.bannerImage.url}">
+										<img data-src="${banner.bannerImage.url}" style="display:none;" />
 									</div>
 								</c:otherwise>	
 								</c:choose>
@@ -349,12 +349,12 @@ var homePageBannerTimeout='${timeout}';
 								<c:choose>
 								<c:when test="${status.index eq 0}">
 									 <div class="image">
-										<img src="${banner.bannerImage.url}">
+										<img src="${banner.bannerImage.url}" />
 									</div>
 								</c:when>
 								<c:otherwise>
 									<div class="image">
-										<img data-src="${banner.bannerImage.url}">
+										<img data-src="${banner.bannerImage.url}" style="display:none;" />
 									</div>
 								</c:otherwise>	
 								</c:choose>
@@ -389,7 +389,7 @@ var homePageBannerTimeout='${timeout}';
 									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:when>
 								<c:otherwise>
-									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" style="display:none;" />
 								</c:otherwise>	
 								</c:choose>
 								</a>
@@ -402,7 +402,7 @@ var homePageBannerTimeout='${timeout}';
 									 <img src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
 								</c:when>
 								<c:otherwise>
-									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" />
+									<img data-src="${banner.media.url}" alt="${not empty banner.headline ? banner.headline : banner.media.altText}" title="${not empty banner.headline ? banner.headline : banner.media.altText}" style="display:none;" />
 								</c:otherwise>	
 								</c:choose>
 							</a>
