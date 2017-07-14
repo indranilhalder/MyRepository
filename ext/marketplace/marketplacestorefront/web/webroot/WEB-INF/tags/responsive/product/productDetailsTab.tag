@@ -26,10 +26,20 @@
    						 		 </c:forEach> --%>
 								<!--TISPRD-9399 START-->
    								<c:choose>
-  									<c:when test="${'Accessories' eq product.rootCategory && (fn:containsIgnoreCase(classification.key, 'Feature1')||fn:containsIgnoreCase(classification.key, 'Feature2')||fn:containsIgnoreCase(classification.key, 'Feature3'))}">
+  									<c:when test="${'Accessories' eq product.rootCategory && (fn:containsIgnoreCase(classification.key, 'Features'))}">
   										<li>
+  										${classification.key} - 
+  								<c:set var="count" value="0" scope="page" />
    						 		<c:forEach var="classValue" items="${classification.value }">
-   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}</li>
+   						 		<c:if test="${count>0}">
+   						 		<spring:theme code="text.product.feature.comma"/>
+   						 		</c:if>
+   						 			${classValue.key}
+   						 			<c:if test = "${not empty classValue.value}">
+       								  &nbsp;&nbsp;${classValue.value}</li>
+     							   </c:if>
+   						 			 
+   						 			<c:set var="count" value="${count + 1}" scope="page"/>
    						 		 </c:forEach>
   									</c:when>
   									<c:otherwise>

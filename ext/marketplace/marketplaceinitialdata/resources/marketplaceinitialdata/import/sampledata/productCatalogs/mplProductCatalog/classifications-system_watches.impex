@@ -5,7 +5,7 @@ $productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
 $classificationCatalog=pcmClassification
 $productCatalog=mplProductCatalog		
-$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 $classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
 $classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]	
 $class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]	
@@ -48,7 +48,9 @@ INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];$classSyst
 ;specialfeatureswatches;Special Features;pcmClassification:1
 ;calendartypewatches;Calendar Type;pcmClassification:1
 ;casematerialwatches;Case Material;pcmClassification:1
-;sporttypewatches;Sport Type;pcmClassification:1
+#;sporttypewatches;Sport Type;pcmClassification:1
+;sporttypewatches;Sports Watch(Best Suited For);pcmClassification:1
+
 ;pocketwatchtypewatches;Pocket Watch Type;pcmClassification:1
 ;crowntypewatches;Crown Type;pcmClassification:1
 ;needleswatches;Needles;pcmClassification:1
@@ -355,7 +357,7 @@ INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[defau
 # Links ClassificationClasses to Categories
 # Macros / Replacement Parameter definitions
 $productCatalog=mplProductCatalog
-$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
 $classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
 $class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
 $supercategories=source(code, $classCatalogVersion)[unique=true]

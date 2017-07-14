@@ -869,5 +869,11 @@ public final class ModelAttributetConstants
 	public static final String TITLE_TEXT2 = " Online at Tata CLiQ ";
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
-
+	// TPR-3878 START
+	public static final String SPECIAL_FEATURES_LIST = "specialFeatures";
+	public static final String MOVEMENT = "Movement";
+	public static final String FUNCTIONALITY = "functionality";
+	public static final String SPECIAL_FEATURES = "special Features";
+	public static final String FEATURES = "features";
+	// TPR-3878 END 
 }
