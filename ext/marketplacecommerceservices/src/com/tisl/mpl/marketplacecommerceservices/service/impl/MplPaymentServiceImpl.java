@@ -643,6 +643,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				// SprintPaymentFixes Multiple Payment Transaction with success status one with 0.0 and another with proper amount
 				//SONAR FIX updated
+
 				if (null != abstractOrderModel.getTotalPriceWithConv()
 						&& abstractOrderModel.getTotalPriceWithConv().doubleValue() > 0.0)
 				{
@@ -694,6 +695,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 			LOG.error("Exception while setPaymentTransactionForCOD ", ex);
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.B9214);
 		}
+
 	}
 
 	/**
@@ -3169,16 +3171,40 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	{
 		final AddressModel billingAddress = getModelService().create(AddressModel.class);
 
-		//setting mandatory fields
-		billingAddress.setOwner(cart.getUser());
-		billingAddress.setShippingAddress(Boolean.FALSE);
-		billingAddress.setUnloadingAddress(Boolean.FALSE);
-		billingAddress.setBillingAddress(Boolean.TRUE);
-		billingAddress.setContactAddress(Boolean.FALSE);
-		billingAddress.setVisibleInAddressBook(Boolean.FALSE);
-		billingAddress.setDuplicate(Boolean.FALSE);
-		billingAddress.setStreetname("DUMMY_STREET_NAME");
-		billingAddress.setStreetnumber("DUMMY_STREET_NO");
+		//INC144315579: cloning deliveryAddress to billingAddress
+		if (null != cart.getDeliveryAddress())
+		{
+			final AddressModel deliveryAddress = cart.getDeliveryAddress();
+			billingAddress.setOwner(cart.getUser());
+			billingAddress.setShippingAddress(Boolean.FALSE);
+			billingAddress.setUnloadingAddress(Boolean.FALSE);
+			billingAddress.setBillingAddress(Boolean.TRUE);
+			billingAddress.setContactAddress(Boolean.FALSE);
+			billingAddress.setVisibleInAddressBook(Boolean.FALSE);
+			billingAddress.setDuplicate(Boolean.FALSE);
+			billingAddress.setFirstname(deliveryAddress.getFirstname());
+			billingAddress.setLastname(deliveryAddress.getLastname());
+			billingAddress.setLine1(deliveryAddress.getLine1());
+			billingAddress.setLine2(deliveryAddress.getLine2());
+			billingAddress.setAddressLine3(deliveryAddress.getAddressLine3());
+			billingAddress.setTown(deliveryAddress.getTown());
+			billingAddress.setPostalcode(deliveryAddress.getPostalcode());
+			billingAddress.setDistrict(deliveryAddress.getDistrict());
+			billingAddress.setCountry(deliveryAddress.getCountry());
+		}
+		else
+		{
+			//setting mandatory fields
+			billingAddress.setOwner(cart.getUser());
+			billingAddress.setShippingAddress(Boolean.FALSE);
+			billingAddress.setUnloadingAddress(Boolean.FALSE);
+			billingAddress.setBillingAddress(Boolean.TRUE);
+			billingAddress.setContactAddress(Boolean.FALSE);
+			billingAddress.setVisibleInAddressBook(Boolean.FALSE);
+			billingAddress.setDuplicate(Boolean.FALSE);
+			billingAddress.setStreetname("DUMMY_STREET_NAME");
+			billingAddress.setStreetnumber("DUMMY_STREET_NO");
+		}
 
 		return billingAddress;
 	}
@@ -3198,11 +3224,11 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @description : fetching bank model for a bank name TISPRO-179\
-	 *
+	 * 
 	 * @param : bankName
-	 *
+	 * 
 	 * @return : BankModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3214,9 +3240,9 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @Description : Fetching bank name for net banking-- TISPT-169
-	 *
+	 * 
 	 * @return List<BankforNetbankingModel>
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3593,7 +3619,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see * SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for non-COD from OMS Submit Order Job de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -3743,7 +3769,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * @desc getPaymentModeFrompayInfo
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- ModeOfpayment set same as in Payment Info
 	 */
 	@Override
@@ -3784,7 +3810,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for pre paid from OMS Submit Order Job
 	 */
@@ -3848,7 +3874,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @desc SprintPaymentFixes:- This method is setting paymentTransactionModel and the paymentTransactionEntryModel
 	 * against the cart for COD from OMS Submit Order Job
 	 */

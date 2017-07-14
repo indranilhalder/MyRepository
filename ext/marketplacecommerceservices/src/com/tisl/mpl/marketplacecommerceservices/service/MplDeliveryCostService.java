@@ -17,4 +17,7 @@ public interface MplDeliveryCostService
 	MplZoneDeliveryModeValueModel getDeliveryCost(String deliveryCode, String currencyIsoCode, String sellerArticleSku);
 
 	List<MplZoneDeliveryModeValueModel> getDeliveryModesAndCost(String currencyIsoCode, String sellerArticleSku);
+
+	//Added for CAR-266
+	List<MplZoneDeliveryModeValueModel> getDeliveryCost(StringBuilder deliveryMode, String currencyIsoCode, String skuid);
 }

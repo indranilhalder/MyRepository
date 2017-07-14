@@ -1382,7 +1382,8 @@ public class ProductsController extends BaseController
 	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
 	public ProductInfoWSDTO getProductInfo(@RequestParam(required = true) final String productCodes,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,
+			@RequestParam(required = false) final String channel)
 	{
 		final List<String> productCodeList = new ArrayList<String>();
 		ProductDetailMobileWsData productWSData = null;
@@ -1431,7 +1432,7 @@ public class ProductsController extends BaseController
 			{
 				try
 				{
-					productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
+					productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl, channel);
 				}
 				catch (final Exception e)
 				{

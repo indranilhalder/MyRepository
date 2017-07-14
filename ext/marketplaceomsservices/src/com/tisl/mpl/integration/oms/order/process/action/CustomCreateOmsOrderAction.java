@@ -52,6 +52,12 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		{
 			crmResult = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
 		}
+		//INC144313741 Saving CRMSubmitResult before OMS call
+		if (crmResult != null && crmResult.getResult() != null)
+		{
+			order.setCrmSubmitStatus(crmResult.getResult().toString());
+		}
+		getModelService().save(order);
 
 		if (order.getOmsSubmitStatus() == null || !order.getOmsSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
 		{
@@ -66,10 +72,6 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		if (omsResult != null && omsResult.getResult() != null)
 		{
 			order.setOmsSubmitStatus(omsResult.getResult().toString());
-		}
-		if (crmResult != null && crmResult.getResult() != null)
-		{
-			order.setCrmSubmitStatus(crmResult.getResult().toString());
 		}
 		getModelService().save(order);
 		if (crmResult.getResult().equals(OrderPlacementResult.Status.SUCCESS)

@@ -4,6 +4,7 @@
 package com.tisl.mpl.storefront.controllers.pages;
 
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 //import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.user.UserService;
 
@@ -37,9 +38,8 @@ public class LoginHiHeaderController
 	@Autowired
 	private UserService userService;
 
-	//Sonar Issue Fixed For Kidswear: commented configurationService
-	//@Autowired
-	//private ConfigurationService configurationService; //Added for UF-93
+	@Autowired
+	private ConfigurationService configurationService; //Added for UF-93
 
 	//Sonar Issue Fixed For Kidswear: commented LOG
 	//private static final Logger LOG = Logger.getLogger(LoginHiHeaderController.class);
@@ -49,7 +49,24 @@ public class LoginHiHeaderController
 	{
 		final CustomerModel currentCustomer = (CustomerModel) userService.getCurrentUser();
 		model.addAttribute("userName", currentCustomer.getFirstName());
-		/** Added for UF-93 to show the last logged in user in log in field **/
+		/** Added for UF-93 to show the RememberMe checkBox **/
+		final String rememberMeEnabled = configurationService.getConfiguration().getString("rememberMe.enabled");
+		model.addAttribute("rememberMeEnabled", rememberMeEnabled);
+		//
+		//		if ("Y".equalsIgnoreCase(rememberMeEnabled))
+		//		{
+		//			final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
+		//			if (null != cookie && null != cookie.getValue())
+		//			{
+		//				final String encodedCookieValue = cookie.getValue();
+		//
+		//				final String decodedCookieValue = new String(Base64.decodeBase64(encodedCookieValue.getBytes())); // No need of encodedCookieValue null check as cookie.value is check earlier.
+		//				model.addAttribute("lastLoggedInUser", decodedCookieValue);
+		//
+		//				LOG.error("LoginHiHeaderController: Last user set into model: " + model.asMap().get("lastLoggedInUser"));
+		//			}
+		//		}
+		/** End UF-93 **/
 		final Cookie cookie = GenericUtilityMethods.getCookieByName(request, "LastUserLogedIn");
 		if (null != cookie && null != cookie.getValue())
 		{
@@ -61,6 +78,7 @@ public class LoginHiHeaderController
 			//LOG.error("LoginHiHeaderController: Last user set into model: " + model.asMap().get("lastLoggedInUser"));
 		}
 		/** End UF-93 **/
+
 		if (!userService.isAnonymousUser(currentCustomer))
 		{
 			return ControllerConstants.Views.Fragments.Home.MyAccountPanel;

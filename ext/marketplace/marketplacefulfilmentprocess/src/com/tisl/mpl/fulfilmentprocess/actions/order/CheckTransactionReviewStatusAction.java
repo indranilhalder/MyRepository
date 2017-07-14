@@ -13,7 +13,8 @@
  */
 package com.tisl.mpl.fulfilmentprocess.actions.order;
 
-import de.hybris.platform.commerceservices.enums.SalesApplication;
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -52,6 +53,7 @@ import com.tisl.mpl.constants.clientservice.MarketplacecclientservicesConstants;
 import com.tisl.mpl.core.enums.JuspayRefundType;
 import com.tisl.mpl.core.model.OrderStatusNotificationModel;
 import com.tisl.mpl.core.model.RefundTransactionMappingModel;
+import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.fulfilmentprocess.constants.MarketplaceFulfilmentProcessConstants;
 import com.tisl.mpl.integration.oms.order.service.impl.CustomOmsOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
@@ -117,13 +119,14 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	}
 
 	@Override
-	public final String execute(final OrderProcessModel process) throws RetryLaterException, JAXBException
+	public final String execute(final OrderProcessModel process) throws RetryLaterException, JAXBException,
+			EtailNonBusinessExceptions
 	{
 		LOG.debug("===========================Inside CheckTransactionReviewStatusAction======================");
 		return executeAction(process).toString();
 	}
 
-	protected Transition executeAction(final OrderProcessModel process) throws JAXBException
+	protected Transition executeAction(final OrderProcessModel process) throws JAXBException, EtailNonBusinessExceptions
 	{
 		Transition result = Transition.WAIT;
 
@@ -205,7 +208,8 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 	 * @return Transition
 	 * @throws JAXBException
 	 */
-	protected Transition checkOrderStatus(final OrderModel orderModel, final OrderProcessModel process) throws JAXBException
+	protected Transition checkOrderStatus(final OrderModel orderModel, final OrderProcessModel process) throws JAXBException,
+			EtailNonBusinessExceptions
 	{
 		//added for CAR:127
 		//final OrderData orderData = getOrderConverter().convert(orderModel);
@@ -244,10 +248,17 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 * mplCommerceCartService.isInventoryReserved(orderModel,
 				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 				 */
-				mplCommerceCartService.isInventoryReserved(null,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
-						null, SalesApplication.WEB);
-
+				try
+				{
+					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					mplCommerceCartService.isInventoryReserved(null,
+							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
+							null, orderModel.getSalesApplication());
+				}
+				catch (final Exception e)
+				{
+					LOG.error(MarketplaceFulfilmentProcessConstants.PAYMENT_FAILED, e);
+				}
 				//Creating cancel order ticket
 				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
 				if (ticketstatus)
@@ -275,21 +286,17 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 * mplCommerceCartService.isInventoryReserved(orderModel,
 				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode);
 				 */
-				mplCommerceCartService.isInventoryReserved(null,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
-						null, SalesApplication.WEB);
 
+				//Initiating refund
+				final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
 				//Creating cancel order ticket
 				final boolean ticketstatus = mplCancelOrderTicketImpl.createCancelTicket(orderModel);
 				if (ticketstatus)
 				{
 					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.CANCELLATION_INITIATED);
 				}
-
-				//Initiating refund
-				final PaymentTransactionModel paymentTransactionModel = initiateRefund(orderModel);
-
 				//Refund model mapping for initiated refund
+				//Refund code executed first to avoid refund failure during oms inventory call
 				if (null != paymentTransactionModel && StringUtils.isNotEmpty(paymentTransactionModel.getCode()))
 				{
 					final String status = paymentTransactionModel.getStatus();
@@ -311,6 +318,19 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				{
 					orderStatusSpecifier.setOrderStatus(orderModel, OrderStatus.REFUND_INITIATED);
 				}
+
+				try
+				{
+					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					mplCommerceCartService.isInventoryReserved(null,
+							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERDEALLOCATE, defaultPinCode, orderModel,
+							null, orderModel.getSalesApplication());
+				}
+				catch (final Exception e)
+				{
+					LOG.error(MarketplaceFulfilmentProcessConstants.RMS_VERIFICATION_FAILED, e);
+				}
+
 			}
 			return Transition.NOK;
 		}
@@ -326,10 +346,17 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 * mplCommerceCartService.isInventoryReserved(orderModel,
 				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode);
 				 */
-				mplCommerceCartService.isInventoryReserved(null,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode, orderModel, null,
-						SalesApplication.WEB);
-
+				try
+				{
+					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					mplCommerceCartService.isInventoryReserved(null,
+							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_ORDERHELD, defaultPinCode, orderModel, null,
+							orderModel.getSalesApplication());
+				}
+				catch (final Exception e)
+				{
+					LOG.error(MarketplaceFulfilmentProcessConstants.RMS_VERIFICATION_PENDING, e);
+				}
 				//Order Creation in CRM for held orders
 				orderCreationInCRM(orderModel);
 				process.setState(ProcessState.WAITING);
@@ -352,9 +379,18 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 				 * mplCommerceCartService.isInventoryReserved(orderModel,
 				 * MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode);
 				 */
-				mplCommerceCartService.isInventoryReserved(null,
-						MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode, orderModel, null,
-						SalesApplication.WEB);
+				try
+				{
+					//Setting the version of sessioncatalog
+					getCatalogVersionService().setSessionCatalogVersion("mplProductCatalog", "Online");
+					mplCommerceCartService.isInventoryReserved(null,
+							MarketplaceFulfilmentProcessConstants.OMS_INVENTORY_RESV_TYPE_PAYMENT, defaultPinCode, orderModel, null,
+							orderModel.getSalesApplication());
+				}
+				catch (final Exception e)
+				{
+					LOG.error(MarketplaceFulfilmentProcessConstants.PAYMENT_PENDING, e);
+				}
 			}
 			return Transition.NOK;
 
@@ -656,6 +692,10 @@ public class CheckTransactionReviewStatusAction extends AbstractAction<OrderProc
 		this.orderStatusSpecifier = orderStatusSpecifier;
 	}
 
+	protected CatalogVersionService getCatalogVersionService()
+	{
+		return Registry.getApplicationContext().getBean("catalogVersionService", CatalogVersionService.class);
+	}
 	/*
 	 * protected Converter<OrderModel, OrderData> getOrderConverter() { return orderConverter; }
 	 *

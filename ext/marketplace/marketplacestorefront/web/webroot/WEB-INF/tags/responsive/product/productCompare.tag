@@ -226,18 +226,25 @@
 		});
 		
 		var screenwidth=$(window).width();
-		var items=4;
-		if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == "0px"){
-			var items=2;
-		}
-		$('#number-items').html(items);
+		 var items=4;
+		//Start INC144315014
+		   if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == undefined){
+			   if(screenwidth <= 790){
+					var items=2;
+			   }
+		} 
+		$('#number-items').html(items); 
 		$(window).resize(function(){
 			var items=4;
-			if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == "0px"){
-				var items=2;
+			
+			if($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("right") == undefined){ 
+				if(screenwidth <= 790){
+					var items=2;
+				}
 			}
 			$('#number-items').html(items);
-			});
+		//End INC144315014
+		});
 	});
 </script>
 <div id="compareSection" class="compareSection">

@@ -339,7 +339,7 @@ function donotShowAll()
 
 		updateProductStock(stockLevel,sizeMatched, serpSizeList,minPriceSize,product);
 		//updtae sale price
-		if(productPromotion!=""){
+		if(typeof(productPromotion)!='undefined' && productPromotion!=""){//PRDI-34 issue fix
 		findOnSaleBasedOnMinPrice(productPromotion, list , serpSizeList,product);
 		}
 
