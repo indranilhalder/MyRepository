@@ -524,6 +524,12 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
+			if (getCartService().hasSessionCart())
+			{
+				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
+						+ "&type=redirect", UTF);
+				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			}
 			//TISST-13012
 			final CartModel cart = getCartService().getSessionCart();
 			final boolean cartItemDelistedStatus = mplCartFacade.isCartEntryDelisted(cart);
@@ -3523,6 +3529,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				jsonObj.put("type", "redirect");
 				return jsonObj;
 			}
+			final CartModel cartModel = getCartService().getSessionCart();
 			final CartData cartData = getMplCustomAddressFacade().getCheckoutCart();
 			ValidationResults validationResult = null;
 
@@ -3571,27 +3578,32 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				//cartModel.setIsExpressCheckoutSelected(Boolean.valueOf(true));
 				//getModelService().save(cartModel);
-
+				boolean deliveryPosPresent = false;
+				final String pickupPersonName = cartData.getPickupPersonName();
+				final String pickupPersonMobile = cartData.getPickupPersonMobile();
 				for (final OrderEntryData orderEntry : cartData.getEntries())
 				{
 					if (null != orderEntry.getDeliveryPointOfService())
 					{
-						final String pickupPersonName = cartData.getPickupPersonName();
-						final String pickupPersonMobile = cartData.getPickupPersonMobile();
-						if ((pickupPersonName == null) || (pickupPersonMobile == null))
-						{
-							//						selectPickupDetails = true;
-							//						model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
-							//						return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
-
-							jsonObj.put("url", "/checkout/single");
-							jsonObj.put("type", "redirect");
-							return jsonObj;
-						}
+						deliveryPosPresent = true;
+						break;
 					}
 				}
+				if (deliveryPosPresent && (StringUtils.isEmpty(pickupPersonName)) || (StringUtils.isEmpty(pickupPersonMobile)))
+				{
+					jsonObj.put("url", "/checkout/single");
+					jsonObj.put("type", "redirect");
+					return jsonObj;
+				}
+				if (!deliveryPosPresent && (StringUtils.isNotEmpty(pickupPersonName) || StringUtils.isNotEmpty(pickupPersonMobile)))
+				{
+					cartModel.setPickupPersonName(null);
+					cartModel.setPickupPersonMobile(null);
+					modelService.save(cartModel);
+					modelService.refresh(cartModel);
+				}
 			}
-			final CartModel cartModel = getCartService().getSessionCart();
+
 			//Moved to single method in facade TPR-629
 			getMplPaymentFacade().populateDeliveryPointOfServ(cartModel);
 
@@ -4616,7 +4628,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4674,7 +4686,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
