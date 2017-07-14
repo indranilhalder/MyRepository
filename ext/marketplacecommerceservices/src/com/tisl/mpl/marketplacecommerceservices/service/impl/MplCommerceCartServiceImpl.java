@@ -4531,19 +4531,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final String ListingId)
 	{
 		// YTODO Auto-generated method stub
-		final List<String> jewelleryUssid = jewelleryService.getWeightVarientUssid(ussid);
-		for (final String jewelInfoUssid : jewelleryUssid)
+		final List<BuyBoxModel> jewelleryUssid = jewelleryService.getAllWeightVariant(ussid);
+		if (CollectionUtils.isNotEmpty(jewelleryUssid))
 		{
-			if (null != ussid && !ussid.equalsIgnoreCase(jewelInfoUssid))
+			final List<BuyBoxModel> jewelleryUssidModifieableList = new ArrayList(jewelleryUssid);
+			jewelleryUssidModifieableList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+			for (final BuyBoxModel jewelInfoUssid : jewelleryUssidModifieableList)
 			{
-				final CartSoftReservationData jewellery = new CartSoftReservationData();
-				jewellery.setDeliveryMode(deliveryModeGlobalCode);
-				jewellery.setFulfillmentType(fulfillmentType.toUpperCase());
-				jewellery.setJewellery(true);
-				jewellery.setListingId(ListingId);
-				jewellery.setUSSID(jewelInfoUssid);
-				jewellery.setQuantity(Integer.valueOf(1));
-				cartSoftReservationDataList.add(jewellery);
+				if (null != ussid && !jewelInfoUssid.getSellerArticleSKU().equals(ussid))
+				{
+					final CartSoftReservationData jewellery = new CartSoftReservationData();
+					jewellery.setDeliveryMode(deliveryModeGlobalCode);
+					jewellery.setFulfillmentType(fulfillmentType.toUpperCase());
+					jewellery.setJewellery(true);
+					jewellery.setListingId(ListingId);
+					jewellery.setUSSID(jewelInfoUssid.getSellerArticleSKU());
+					jewellery.setQuantity(Integer.valueOf(1));
+					cartSoftReservationDataList.add(jewellery);
+				}
 			}
 		}
 

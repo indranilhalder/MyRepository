@@ -44,16 +44,4 @@ public class RobotsController extends AbstractController
 		return ControllerConstants.Views.Pages.Misc.MiscRobotsPage;
 	}
 
-	//Added for TPR-5812
-	@RequestMapping(value = "/manifest.json", method = RequestMethod.GET)
-	public String getManifest()
-	{
-		return ControllerConstants.Views.Pages.Misc.manifest;
-	}
-
-	@RequestMapping(value = "/service-worker.js", method = RequestMethod.GET)
-	public String getserviceWorker()
-	{
-		return ControllerConstants.Views.Pages.Misc.serviceWorker;
-	}
 }

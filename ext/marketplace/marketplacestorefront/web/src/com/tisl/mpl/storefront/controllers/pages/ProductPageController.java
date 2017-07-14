@@ -920,7 +920,6 @@ public class ProductPageController extends MidPageController
 			final List<Breadcrumb> breadcrumbList = productBreadcrumbBuilder.getBreadcrumbs(productModel);
 			populateProductData(productData, model);
 			sizeguideList = sizeGuideFacade.getProductSizeguide(productCode, productData.getRootCategory());
-
 			final List<String> headerMap = getHeaderdata(sizeguideList, productData.getRootCategory());
 			if (null != productData.getBrand())
 			{
@@ -949,11 +948,9 @@ public class ProductPageController extends MidPageController
 					model.addAttribute(ModelAttributetConstants.SIZE_CHART_HEADER_CAT, null);
 				}
 			}
-			else if (CLOTHING.equalsIgnoreCase(productData.getRootCategory()))
+			else
 			{
 				model.addAttribute(ModelAttributetConstants.PRODUCT_SIZE_GUIDE, sizeguideList);
-
-
 				//TISPRO-208
 				if (CollectionUtils.isNotEmpty(breadcrumbList))
 				{
@@ -1154,20 +1151,8 @@ public class ProductPageController extends MidPageController
 
 			for (final String key : sizeguideList.keySet())
 			{
-				if (categoryType.equalsIgnoreCase(CLOTHING))
-				{
-					for (final SizeGuideData data : sizeguideList.get(key))
-					{
 
-						if (null == headerMap.get(data.getDimensionSize()))
-						{
-							headerMap.put(data.getDimensionSize(), data.getDimensionSize());
-						}
-
-					}
-
-				}
-				else if (categoryType.equalsIgnoreCase(FOOTWEAR))
+				if (categoryType.equalsIgnoreCase(FOOTWEAR))
 				{
 					for (final SizeGuideData data : sizeguideList.get(key))
 					{
@@ -1284,6 +1269,21 @@ public class ProductPageController extends MidPageController
 							}
 						}
 					}
+				}
+				else
+				{
+
+					for (final SizeGuideData data : sizeguideList.get(key))
+					{
+
+						if (null == headerMap.get(data.getDimensionSize()))
+						{
+							headerMap.put(data.getDimensionSize(), data.getDimensionSize());
+						}
+
+					}
+
+
 				}
 			}
 
@@ -2787,7 +2787,6 @@ public class ProductPageController extends MidPageController
 			//TPR-3809
 			//sellerInformationDataList = buyBoxFacade.getsellersDetails(productCode);
 			sellerInformationDataList = buyBoxFacade.getsellersDetails(productCode, productModel.getProductCategoryType());
-
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -2973,7 +2972,6 @@ public class ProductPageController extends MidPageController
 		LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
 
 		final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
-
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, gson.toJson(PriceMap));
 
 		buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR, displayConfigurableAttributeForPriceBreakup);
@@ -3529,6 +3527,7 @@ public class ProductPageController extends MidPageController
 		String returnStatement = null;
 		final Gson gson = new Gson();
 		MplAjaxProductData mplAjaxProductData = null;
+		LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		try
 		{
 			if (null != productCode)
@@ -3548,6 +3547,13 @@ public class ProductPageController extends MidPageController
 			mplAjaxProductData.setMapConfigurableAttributes((Map<String, Map>) model.asMap().get(
 					ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES));
 			mplAjaxProductData.setWarranty((List<String>) model.asMap().get(ModelAttributetConstants.WARRANTY));
+			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				productDetailsHelper.groupGlassificationDataForFineDeatils(productData);
+				featureDetails = (LinkedHashMap<String, Map<String, List<String>>>) productData.getFineJewelleryDeatils();
+				mplAjaxProductData.setFineJewelleryDeatils(featureDetails);
+
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{

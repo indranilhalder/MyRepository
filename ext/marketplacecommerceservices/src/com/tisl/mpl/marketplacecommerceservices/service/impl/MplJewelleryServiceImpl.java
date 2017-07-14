@@ -4,12 +4,12 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
-import de.hybris.platform.core.model.PancardInformationModel;
 
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 
@@ -62,14 +62,23 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 		return mplJewelleryDao.getWeightVarientUssid(ussid);
 	}
 
-	/* (non-Javadoc)
+	@Override
+	public List<BuyBoxModel> getAllWeightVariant(final String ussid)
+	{
+		// YTODO Auto-generated method stub
+		return mplJewelleryDao.getAllWeightVariant(ussid);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getPanCardStatus(java.lang.String)
 	 */
 	//CKD:TPR-3809
 	@Override
 	public String getPanCardStatus(final String orderLineId)
 	{
-		return mplJewelleryDao.getPanCardStatus(orderLineId);		
+		return mplJewelleryDao.getPanCardStatus(orderLineId);
 	}
 
 }

@@ -37,7 +37,14 @@
 	</p>
 	<p class="savings pdp-savings" id="savingsOnProductId" style="display:none">															
 		  <span></span>
-	</p>	
+	</p>
+	<%--for price breakup(TPR-3752) --%>
+
+	  <c:if test="${product.rootCategory=='FineJewellery' }">	
+	               <span class="price-breakup">Price Breakup</span>
+	</c:if>
+	
+	<%--for price breakup(TPR-3752) --%>	
 	<br>
 
 	<!-- TPR-3780 STARTS HERE -->
@@ -49,20 +56,6 @@
 	     
 		                					
 	<!-- TPR-3780 ENDS HERE -->	
-	
-	
-	<%--for price breakup(TPR-3752) --%>
-
-	 <%-- <c:if test="${product.rootCategory=='FineJewellery' }"> --%>
-		<!-- <div id = "showPrice">
-		 <p id = "show" class="pricebreakup-link"> </p>
-		</div>
-	<ul id="showPriceBreakup" class="price-breakuplist clearfix" style="display:none"></ul> -->
-
-	 <%-- </c:if>  --%>
-	
-	<%--for price breakup(TPR-3752) --%>
-	
 	
 	<!--- START: INSERTED for MSD --->
 	<input type="hidden" id="price-for-mad" value=""/>		

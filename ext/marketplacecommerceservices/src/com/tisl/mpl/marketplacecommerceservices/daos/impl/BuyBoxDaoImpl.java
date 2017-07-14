@@ -512,6 +512,17 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 								+ " 	}})}})" + "AND {bb.available} >=0"); // INC144316749  AND {bb.available} >=0 is added to exclude negative stock while taking sum
 			}
+			//Sum of stock available for Weight Variant of Jewellery as color variant is absent in jewellery
+			if (productType.equalsIgnoreCase("jewelleryVariant"))
+			{
+				inventoryQuery
+						.append("( {bb.delisted}  IS NULL or {bb.delisted} =0 ) AND {bb.product} IN ({{ select distinct{pprod.code} from {PcmProductVariant As pprod} where {pprod.baseProduct} IN (	{{"
+
+								+ " 	select distinct{p.baseProduct} from {PcmProductVariant as p} where {p.code} = ?product"
+
+								+ " 	}})}})");
+			}
+
 
 			final FlexibleSearchQuery instockQuery = new FlexibleSearchQuery(inventoryQuery.toString());
 			final List resultClassList = new ArrayList();
@@ -778,7 +789,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			 * " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } " +
 			 * " where {cat.version}='Online' and {b.product} = ?productCode and( {b.delisted}  IS NULL or {b.delisted}=0 )  and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc"
 			 * ;
+<<<<<<< HEAD
 			 *
+=======
+			 * 
+>>>>>>> refs/remotes/origin/JOE
 			 * LOG.debug(QUERY_CLASS + queryString); }
 			 */
 
@@ -976,7 +991,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryStringForSizeGuide);
 			query.addQueryParameter("productSizeGuide", productCode);
 			query.addQueryParameter("sellerid", sellerID);
-			return flexibleSearchService.<BuyBoxModel> searchUnique(query);
+			return flexibleSearchService.<BuyBoxModel> search(query).getResult().get(0);
 		}
 		catch (final FlexibleSearchException e)
 		{
