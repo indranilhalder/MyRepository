@@ -6,7 +6,7 @@ ${stringMessage}
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ page trimDirectiveWhitespaces="true"%>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template"%>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/addons/luxurystoreaddon/responsive/template"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="sec"
@@ -24,7 +24,7 @@ ${stringMessage}
 					<div class="modal-body">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
-							<span aria-hidden="true">×</span>
+							<span aria-hidden="true">ï¿½</span>
 						</button>
 						<h4>
 							<spring:theme
