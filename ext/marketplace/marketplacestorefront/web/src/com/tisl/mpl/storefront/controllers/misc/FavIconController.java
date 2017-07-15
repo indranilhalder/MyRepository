@@ -13,18 +13,19 @@
  */
 package com.tisl.mpl.storefront.controllers.misc;
 
+import de.hybris.platform.acceleratorstorefrontcommons.controllers.AbstractController;
 import de.hybris.platform.servicelayer.i18n.I18NService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.context.ThemeSource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ThemeResolver;
-import org.springframework.web.servlet.mvc.AbstractController;
 
 
 /**
