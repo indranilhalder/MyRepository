@@ -37,9 +37,8 @@
 				<li id="promotionApplied"  class="hide">
 					<span><spring:theme code="basket.page.totals.savings"/></span>
 					<span id="promotion" style="float: right">
-					<format:price priceData="${cartData.totalDiscounts}"/>
 					</span>
-
+					<format:price priceData="${cartData.totalDiscounts}"/>
 				</li>
 
 				<c:if test="${not empty cartData.deliveryCost}">
@@ -81,7 +80,8 @@
 					<span id="couponValue" class="text-right"> </span>
 					<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 				</li>
-
+						<span id="edtotalWithConvField" style="float: right" class="hide"><format:price priceData="${cartData.deliverySlotCharge}"/></span>
+						
 					<%--  <c:if test="${not empty cartData.deliverySlotCharge}">
                      <li class="total" id="edtotal">
                          <div id="edtotalPriceConvChargeId">
@@ -91,7 +91,7 @@
                          </div>
                      </li>
                      </c:if>  --%>
-
+						<span id="totalWithConvField" style="float: right" class="hide">
 				<%-- <li class="total" id="total">
 					<div id="totalPriceConvChargeId">
 						<span><spring:theme code="basket.page.totals.total"/> </span>
