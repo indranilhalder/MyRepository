@@ -12966,7 +12966,7 @@ TATA.CommonFunctions = {
         },
         HeaderMinicart: function() {
             $("header .mini-bag").hide(), $("header .mini-cart-link,header #myWishlistHeader").html(""), 
-            $("header .bag").hover(function() {
+            $(window).width() >= 768 && $("header .bag").hover(function() {
                 $(this).find(".mini-bag").show();
             }, function() {
                 $(this).find(".mini-bag").hide();
@@ -13508,7 +13508,12 @@ TATA.CommonFunctions = {
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init(), _self.MYACCOUNT.init();
     }
 }, $(document).ready(function() {
-    $(document).on("click", ".gig-rating-button", function() {
+    $(".checkout-paymentmethod .payment-tab").removeClass("active"), $("#card").css("display", "none"), 
+    $(".credit_tab").on("click", function() {
+        $(".new_card_tab.credit_tab").hasClass("active_tab") && $(".newCardPaymentCC").show();
+    }), $("#sameAsShipping").on("click", function() {
+        $("#sameAsShipping").is(":checked") ? $(".payment-billing-form").hide() : $(".payment-billing-form").show();
+    }), $(document).on("click", ".gig-rating-button", function() {
         $(".ratingsAndReview").trigger("click");
     });
     isDuringCheckout = !1, TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
