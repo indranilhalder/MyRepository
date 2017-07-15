@@ -474,32 +474,33 @@
 								                           		<span class="error-message" id="lastNameError"></span>
 							                           		</div>
 						                           		</div>
-						                           		 <div class="row mb-20">
+						                           		<%-- <div class="row mb-20">
 							                           		<div class="full  col-md-12">
 								                           		<label><spring:theme code="text.addressline1"/></label>
 								                           		<input type="text" id="address1" maxlength="40" required="required" class="form-control">
 								                           		<span class="error-message" id="address1Error"></span>
 							                           		</div>
+						                           		</div> --%>
+						                           		<div class="full">
+						                           			<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+							                           		<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
+							                           		<textarea class="full-address" id="address1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" required="required"></textarea>
+							                           			Remaining characters :
+							                           			<span id='myCounter'></span>
+							                           		<span class="error-message" id="address1Error"></span>
 						                           		</div>
-						                           		<div class="row mb-20 ">
+						                           		<div class="row mb-20 hide">
 							                           		<div class="full col-md-12">
 								                           		<label><spring:theme code="text.addressline2"/></label>
 								                           		<input type="text" id="address2" maxlength="40" class="form-control">
 								                           		<span class="error-message" id="address2Error"></span>
 							                           		</div>
 						                           		</div>
-						                           		<div class="row mb-20">
+						                           		<div class="row mb-20 hide">
 							                           		<div class="full col-md-12">
 								                           		<label><spring:theme code="text.landmark"/> </label>
 								                           		<input type="text" id="address3" maxlength="40" class="form-control">
 								                           		<span class="error-message" id="address3Error"></span>
-							                           		</div>
-						                           		</div>
-						                           		<div class="row mb-20">
-							                           		<div class="full col-md-12">
-								                           		<label><spring:theme code="text.city"/></label>
-								                           		<input type="text" id="city" required="required" maxlength="40" class="form-control">
-								                           		<span class="error-message" id="cityError"></span>
 							                           		</div>
 						                           		</div>
 						                           		<div class="row mb-20">

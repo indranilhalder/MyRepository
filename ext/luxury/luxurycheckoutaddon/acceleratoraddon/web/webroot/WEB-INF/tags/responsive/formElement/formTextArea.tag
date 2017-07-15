@@ -20,7 +20,9 @@
 		</c:if> <span class="skip"><form:errors path="${path}" /></span>
 	</label>
 	
-	<form:textarea cssClass="${areaCSS}" id="${idKey}" path="${path}" />
+	    <form:textarea cssClass="${areaCSS} form-control" id="${idKey}" path="${path}"  onKeyUp="return taCount(this,'myCounter')" maxlength="120" 
+    rows="2" cols="60"  placeholder="Full Address*"/>
+										<span>Remaining characters :</span><span id='myCounter'>120</span>
 
 
 </template:errorSpanField>
