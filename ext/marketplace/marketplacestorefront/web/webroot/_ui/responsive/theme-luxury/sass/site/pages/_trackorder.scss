@@ -194,7 +194,8 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     width: 100%;
 }
 
-body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.inactive:before{
+body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.inactive:before,
+{
 	background-color: #e3e3e3;
     box-shadow: 0 0 0 3px #e3e3e3;
    	z-index: 2;
@@ -225,12 +226,22 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 	padding: 0 5px !important;
 }
 
-.order-placed-arrow p{
+.order-placed-arrow p,
+.processing-stage-arrow1 p{
 	font-weight: bold;
     padding-bottom: 5px;
     font-size: 12px;
 }
 
-.order-placed-arrow ul li{
+.order-placed-arrow ul li,
+.processing-stage-arrow1 ul li{
 	font-size: 12px;
 }
+
+ #newCardCC,.newCardPaymentCC,.payment-billing-form,.payment-section #netbanking{
+ 	display:none;
+ }
+ 
+ #COD{
+ 	list-style: none;
+ }
