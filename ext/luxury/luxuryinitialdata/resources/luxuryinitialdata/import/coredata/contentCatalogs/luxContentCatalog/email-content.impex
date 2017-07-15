@@ -246,6 +246,14 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;ForgotPwdsmileyimg;;$wideContent;
 ;ForgotPwdfb;;$wideContent;
 ;ForgotPwdgplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];validComponentTypes(code)
 ;SiteLogoNew;;;logo
@@ -924,6 +932,14 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;tweet-ForgottenPasswordEmail;tweet;;EmailtweetSlot;true
 ;;youtube-ForgottenPasswordEmail;youtube;;EmailYouTubeSlot;true
 ;;insta-ForgottenPasswordEmail;insta;;EmailInstaSlot;true
+;;tatatrust-ForgottenPasswordEmail;tatatrust;;EmailTatatrustSlot;true
+;;cliqnpic-ForgottenPasswordEmail;cliqnpic;;EmailcliqnpicSlot;true
+;;easyreturn-ForgottenPasswordEmail;easyreturn;;EmailEasyreturnSlot;true
+;;authenticbrands-ForgottenPasswordEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
+;;freeshipping-ForgottenPasswordEmail;freeshipping;;EmailFreeshippingSlot;true
+;;linegrey-ForgottenPasswordEmail;linegrey;;EmailLinegreySlot;true
+;;appstore-ForgottenPasswordEmail;appstore;;EmailAppleStoreSlot;true
+;;googleplay-ForgottenPasswordEmail;googleplay;;EmailAndroidStoreSlot;true
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
