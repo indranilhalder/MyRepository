@@ -2,6 +2,7 @@
 <%@ attribute name="product" required="true"
 	type="de.hybris.platform.commercefacades.product.data.ProductData"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ attribute name="index" required="false" type="java.lang.Integer"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
@@ -81,7 +82,15 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 
 
+<%-- UF-407 : TODO: step 1: put the lazyreached when initail page no is 1 and no XMLHttpRequest --%>
+<c:choose>
+<c:when test="${index eq 23 and not lazyInterface}">
+<li class="product-item lazy-reached">
+</c:when>
+<c:otherwise>
 <li class="product-item">
+</c:otherwise>
+</c:choose>
 <span class="serpProduct">
 <input type ="hidden"  id="productCode" value="${product.code}"/>
 <input type ="hidden"  id="categoryType" value="${product.productCategoryType}"/>

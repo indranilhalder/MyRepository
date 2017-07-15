@@ -19,13 +19,21 @@ $(window).load(function() {
 	var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 	var thumbnailImageHeight = (mainImageHeight / 5);
 	var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
-	$(".imageList ul li img").css("height", thumbnailImageHeight);
+	/* $(".imageList ul li img").css("height", thumbnailImageHeight); */
+	/*start of PRDI-397*/
+ 	if ($(window).width() > 1025) {
+ 		$(".imageList ul li img").css("height", thumbnailImageHeight);
+ 	}
 	$("#previousImage").css("opacity","0.5");
 	$("#nextImage").css("opacity","1");
 	/* var listHeight = $(".imageList li").height(); */ /*commented as part of PRDI-68*/
 	 var listHeight = thumbnailImageHeight + 13.6;		/*added as part of PRDI-68*/
 	if($("#previousImage").length){
-		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+		/* $(".imageList").css("height",(listHeight*imagePageLimit)+"px"); */
+		/*start of PRDI-397*/
+ 		/* if ($(window).width() > 1025) {
+ 			$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+ 		} */
 		$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
 	}
 	$(".imageListCarousel").show();
@@ -37,7 +45,11 @@ $(window).on("load resize", function() {
 		var buttonHeight = $(".productImageGallery #previousImage").outerHeight();
 		var listHeight = thumbnailImageHeight + 13.6;
 		if($("#previousImage").length){
-			$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+			/* $(".imageList").css("height",(listHeight*imagePageLimit)+"px"); */
+			/*start of PRDI-397*/
+ 			if ($(window).width() > 1025) {
+ 				$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
+ 			}
 			$(".productImageGallery").css("max-height",(mainImageHeight - buttonHeight)+"px");
 		}
 });

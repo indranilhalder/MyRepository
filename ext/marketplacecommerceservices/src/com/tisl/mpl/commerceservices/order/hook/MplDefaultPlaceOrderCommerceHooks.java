@@ -21,6 +21,7 @@ import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
@@ -1997,8 +1998,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//save once only
 		clonedSubOrder.setType(MarketplacecommerceservicesConstants.SUBORDER);
 		clonedSubOrder.setParentReference(orderModel);
+		//For child order payment transaction save issue
+		final List<PaymentTransactionModel> paymentTransactionList = clonedSubOrder.getPaymentTransactions();
+		clonedSubOrder.setPaymentTransactions(null);
 		getModelService().save(clonedSubOrder);
+		for (final PaymentTransactionModel paymentTransaction : paymentTransactionList)
+		{
+			paymentTransaction.setOrder(clonedSubOrder);
+		}
 
+		getModelService().saveAll(paymentTransactionList);
+		clonedSubOrder.setPaymentTransactions(paymentTransactionList);
 		LOG.debug("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
 		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{
