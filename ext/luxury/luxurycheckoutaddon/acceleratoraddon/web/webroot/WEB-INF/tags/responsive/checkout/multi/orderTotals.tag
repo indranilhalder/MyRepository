@@ -92,14 +92,14 @@
                      </li>
                      </c:if>  --%>
 
-				<li class="total" id="total">
+				<%-- <li class="total" id="total">
 					<div id="totalPriceConvChargeId">
 						<span><spring:theme code="basket.page.totals.total"/> </span>
 						<span id="totalWithConvField" style="float: right">
 							<format:price priceData="${cartData.totalPrice}"/>
 						</span>
 					</div>
-				</li>
+				</li> --%>
 
 				<c:if test="${cartData.net && cartData.totalTax.value > 0 && showTax}">
 					<li class="tax">
