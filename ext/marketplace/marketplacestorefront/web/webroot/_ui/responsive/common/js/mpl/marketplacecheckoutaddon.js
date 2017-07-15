@@ -5688,13 +5688,33 @@ function checkServiceabilityRequired(buttonType,el){
 	}
 	if(sessionPin != selectedPin){
 		checkPincodeServiceability(buttonType,el);
+		removeExchangeFromCart(selectedPin);
 	}
 	else{
-		
+		removeExchangeFromCart(selectedPin);
 		redirectToCheckout(checkoutLinkURlId);
 	}
 }
 
+function removeExchangeFromCart (selectedPin){
+	
+
+	ACC.singlePageCheckout.showAjaxLoader();
+	var url=ACC.config.encodedContextPath + "/cart/removeExchangeFromCart";
+	var data="pincode="+selectedPin ;
+	var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);
+    
+    xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+		console.log("ERROR:"+textStatus + ': ' + errorThrown);
+	});
+    
+    
+    xhrResponse.done(function(data, textStatus, jqXHR) {
+    	if (jqXHR.responseJSON) {
+    		//do something
+        }});
+    
+}
 
 function checkPincodeServiceability(buttonType,el)
 {
