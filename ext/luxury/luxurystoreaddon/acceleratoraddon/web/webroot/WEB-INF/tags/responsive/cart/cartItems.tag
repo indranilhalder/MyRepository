@@ -1350,9 +1350,7 @@
 				<span><spring:theme code="mpl.gift.Yourself" /></span>
 			</h2>
 		</div>
-		<ul class="product-block wishlist" id="giftYourselfProducts">
-
-		</ul>
+	
 
 
 		<storepickup:pickupStorePopup />
