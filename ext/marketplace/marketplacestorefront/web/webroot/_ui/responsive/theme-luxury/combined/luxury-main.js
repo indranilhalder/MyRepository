@@ -12853,6 +12853,11 @@ TATA.CommonFunctions = {
             $(this).siblings(".add-to-wishlist").addClass("added"));
         }), $("#ia_product_code").length > 0 && wlCode.indexOf($("#ia_product_code").val()) > -1 && $(".add-to-wl-pdp").addClass("added");
     },
+    deleteWishlist: function() {
+        $(".delete_wishlist").click(function() {
+            $("#manageMyList").modal("hide"), $("#deleteConfirmation .deleteWlConfirmationNo").css("display", "inline-block");
+        });
+    },
     wishlistInit: function() {
         TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click, touchstart", ".add-to-wishlist", function() {
             $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
@@ -13041,8 +13046,8 @@ TATA.CommonFunctions = {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
-        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.leftBarAccordian(), _self.deliveryaddressform(), 
-        _self.swipeLookBook(), _self.removeProdouct();
+        _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.deleteWishlist(), _self.leftBarAccordian(), 
+        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct();
     }
 }, TATA.Pages = {
     PLP: {

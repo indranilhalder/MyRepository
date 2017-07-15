@@ -384,6 +384,13 @@ TATA.CommonFunctions = {
             $(".add-to-wl-pdp").addClass("added");
         }
     },
+    
+    deleteWishlist : function(){
+    	$('.delete_wishlist').click(function(){
+    		$('#manageMyList').modal('hide');
+    		$('#deleteConfirmation .deleteWlConfirmationNo').css('display','inline-block');
+    	});
+    },
 
     wishlistInit: function(){
         TATA.CommonFunctions.luxuryForceUpdateHeader();
@@ -752,6 +759,7 @@ TATA.CommonFunctions = {
         _self.Accordion();
         _self.ShopByCatagorySlider();
         _self.wishlistInit();
+        _self.deleteWishlist();
         _self.leftBarAccordian();
         _self.deliveryaddressform();
         _self.swipeLookBook();  

@@ -135,3 +135,19 @@
  .checkout-success-body.thanks{
     text-align:center;
  }
+
+#deleteConfirmation {
+    .modal-dialog{
+        top: 50% !important;
+        transform: translateY(-50%);
+    }
+    .deleteWlConfirmationNo{
+        position: static;
+        background-color: #2d2d2d;
+        opacity: 1;
+        color: #FFF;
+        text-align: center;
+    }
+    
+}
+
