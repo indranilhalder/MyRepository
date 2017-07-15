@@ -17,28 +17,28 @@
 			<ul class="totals">
 				<li class="subtotal">
 					<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
-					<!-- <span class="amt"> -->
+					<span class="amt">
 					<ycommerce:testId code="Order_Totals_Subtotal">
 						<format:price priceData="${cartData.subTotal}"/>
 					</ycommerce:testId>
-					<!-- </span> -->
+					</span>
 				</li>
 
 
 				<c:if test="${cartData.totalDiscounts.value > 0}">
 					<li id="cartPromotionApplied">
 						<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
-						<!-- <span id="cartPromotion" style="float: right">   -->
+						<span id="cartPromotion" style="float: right">
 						<format:price priceData="${cartData.totalDiscounts}"/>
-						<!-- </span> -->
+						</span>
 
 					</li>
 				</c:if>
 				<li id="promotionApplied"  class="hide">
 					<span><spring:theme code="basket.page.totals.savings"/></span>
-					<!-- <span id="promotion" style="float: right"> -->
+					<span id="promotion" style="float: right">
 					<format:price priceData="${cartData.totalDiscounts}"/>
-					<!-- </span> -->
+					</span>
 
 				</li>
 
