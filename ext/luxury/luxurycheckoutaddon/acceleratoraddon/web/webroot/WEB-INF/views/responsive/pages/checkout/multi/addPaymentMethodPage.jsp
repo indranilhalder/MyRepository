@@ -44,7 +44,7 @@
 	  <div class="col-md-8">
 	  <div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
    <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
-       <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+       <div class="step-2"><a href="/checkout/multi/delivery-method/select" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
       <div class="step-3"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
     </div>
 	   <div class="payment-section">
@@ -207,7 +207,7 @@
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
-				<div class="checkout-indent payments tab-view">
+				<div class="checkout-indent payments tab-views">
 					<ul class="checkout-paymentmethod nav">
 						<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -215,7 +215,7 @@
 											<c:when test="${map.key eq 'Credit Card'}">
 												<input type="hidden" id="CreditCard" value="${map.value}" />
 	
-												<li class="active payment-tab">
+												<li class="payment-tab">
 													<span id="viewPaymentCredit" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
@@ -358,10 +358,10 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<div class="radio creditDebitLabelRadio">
+				                  		<!-- <div class="radio creditDebitLabelRadio">
 										 <input type="radio" data-id="newCCard" id="creditLabel"/>
 										 <label for="creditLabel" class="numbers creditLabel" data-id="newCCard"><span>New Card</span></label>
-								   		</div>
+								   		</div> -->
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
@@ -461,7 +461,7 @@
 										    	<c:if test="${flag eq true}">
 					                            	<div class="le-checkbox mt-20 mb-10"><input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label></div>
 					                           	</c:if>   	
-					                           		<fieldset>
+					                           		<fieldset class="payment-billing-form">
 					                           		   <div class="row mb-20 mt-20">
 							                           		<div class="half col-md-6">
 								                           		<label><spring:theme code="text.first.name"/></label>
@@ -703,10 +703,10 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<div class="radio creditDebitLabelRadio">
+				                  		<!-- <div class="radio creditDebitLabelRadio">
 										 <input type="radio" data-id="newDCard" id="debitLabel"/>
 										 <label for="debitLabel" data-id="newDCard" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
-								   		</div>
+								   		</div> -->
 				                  		<!-- <p>NEW CARD</p> -->
 										<div class="card-group">
 											<div class="form-group">
@@ -1201,7 +1201,7 @@
 					</ul>
 					<input type="hidden" id="paymentMode" name="paymentMode"/>
 					 <ul class="tabs">
-					<%--<c:forEach var="map" items="${paymentModes}">
+					<%-- <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 											<c:when test="${map.key eq 'Credit Card'}">
@@ -1214,12 +1214,12 @@
 												</c:when>
 											</c:choose>
 										</c:if>
-									</c:forEach>
+									</c:forEach> --%>
 					<!-- div for Cards -->
 						
 
 				<!-- Card ends -->
-						<c:forEach var="map" items="${paymentModes}">
+						<%-- <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 		    								<c:when test="${map.key eq 'Debit Card'}">
@@ -1233,7 +1233,7 @@
 												</c:when>
 											</c:choose>
 										</c:if>
-									</c:forEach>
+									</c:forEach> 
 				
 					<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -1377,6 +1377,7 @@
 		$(this).parents("#card").find("#newCardCC").hide();
 		$(this).parents("#card").find("#newCardCC").next("li").hide();
 		$(this).parents("#card").find(".terms").last().hide();
+		 
 	});
 	$(".new_card_tab.credit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1390,6 +1391,13 @@
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
 	});
+	$('#viewPaymentDebit').click(function(){
+		$(".saved_card_tab.debit_tab").trigger('click');
+	});
+	$("#viewPaymentCredit,#viewPaymentNetbanking,#viewPaymentEMI").click(function(){
+		$("#cardDebit").hide();
+	});
+	
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".new_card_tab.debit_tab").removeClass("active_tab");
