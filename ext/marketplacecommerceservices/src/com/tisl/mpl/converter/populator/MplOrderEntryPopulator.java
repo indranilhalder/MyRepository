@@ -146,6 +146,9 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addSellerInformation(source, target);
 			populateSellerInfo(source, target);
 			addDeliverySlots(source, target);
+			//TPR-1083 Start
+			addExchange(source, target);
+			//TPR-1083 End
 
 		}
 		target.setIsRefundable(source.isIsRefundable());
@@ -549,6 +552,24 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+	private void addExchange(final AbstractOrderEntryModel source, final OrderEntryData target)
+	{
+		if (StringUtils.isNotEmpty(source.getExchangeId()))
+		{
+			target.setExchangeApplied(source.getExchangeId());
+		}
+		else
+		{
+			target.setExchangeApplied("");
+		}
+
+
 	}
 
 	/**
