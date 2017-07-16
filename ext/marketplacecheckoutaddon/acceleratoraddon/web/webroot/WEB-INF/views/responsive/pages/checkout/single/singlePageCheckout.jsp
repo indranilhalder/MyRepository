@@ -120,6 +120,11 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%>
 		</div>
 	</div>
+	<!-- The actual snackbar -->
+<div id="mobileSnackbar">
+<h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
+<span id="selectSnackbar">SELECT</span>
+</div>
 </div>
 </c:if>
 <div class="modal fade" id="singlePageAddressPopup">
@@ -146,11 +151,11 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
-<!-- The actual snackbar -->
-<div id="mobileSnackbar">
+<!-- <!-- The actual snackbar -->
+<!-- <div id="mobileSnackbar">
 <h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
 <span id="selectSnackbar">SELECT</span>
-</div>
+</div> --> -->
 <div id="confirmOverlay" style="display:none">
     <div id="confirmBox" style="display:none">
 
@@ -169,18 +174,19 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #mobileSnackbar {
     visibility: hidden; /* Hidden by default. Visible on click */
-    min-width: 250px; /* Set a default minimum width */
+    width: 100%; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */
     background-color: #333; /* Black background color */
     color: #fff; /* White text color */
-    text-align: center; /* Centered text */
+    text-align: left; /* Centered text */
     border-radius: 2px; /* Rounded borders */
-    padding: 16px; /* Padding */
+    padding: 10px 14px 14px 8px; /* Padding */
     position: fixed; /* Sit on top of the screen */
     z-index: 1; /* Add a z-index if needed */
-    left: 50%; /* Center the snackbar */
-    bottom: 30px; /* 30px from the bottom */
+    right: 0; /* Center the snackbar */
+    bottom: 46px; /* 30px from the bottom */
 }
+
 
 /* Show the snackbar when clicking on a button (class added with JavaScript) */
 #mobileSnackbar.show {
@@ -301,6 +307,19 @@ However, delay the fade out process for 2.5 seconds */
 #confirmBox .gray span{			background-position:-395px 0;}
 #confirmBox .gray:hover{		background-position:-200px bottom;}
 #confirmBox .gray:hover span{	background-position:-395px bottom;}
+
+span#selectSnackbar {
+    float: right;
+    line-height: 2.7;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+#mobileSnackbar h1 {
+    float: left;
+    display: inline-block;
+    width: 73%;
+    line-height: 1.4;
+}
 
 </style>
 <script>
