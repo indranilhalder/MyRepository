@@ -72704,6 +72704,14 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 		display: none;
 	}
 } 
+@media (max-width: 790px){
+	.product-facet .facet.size .facet-list li.filter-Size,
+	.product-facet .facet.Size .facet-list li.filter-size,
+	.product-facet .facet.size .facet-list li.filter-size,
+	.product-facet .facet.Size .facet-list li.filter-Size{
+		margin: 5px 0;
+	}
+}
 /*TISPRDT-1670 fix end*/
 
 /*TISTE-163 fix start*/
@@ -72812,11 +72820,49 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 }
 
 /*TISPRDT 1673 fix end*/
-@media (max-width: 790px){
-	.product-facet .facet.size .facet-list li.filter-Size,
-	.product-facet .facet.Size .facet-list li.filter-size,
-	.product-facet .facet.size .facet-list li.filter-size,
-	.product-facet .facet.Size .facet-list li.filter-Size{
-		margin: 5px 0;
-	}
+
+/*TPR-5733 start*/
+footer #footerLink{
+	clear: both;
+	padding: 40px 0px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+    margin-left: 30px;
+    margin-right: 30px;
 }
+footer #footerLink div.column ul li{
+	display: inline-block;
+	color: #878787;
+	padding: 7px 0;
+}
+footer #footerLink div.column ul li a{
+	color: #878787;
+}
+footer #footerLink div.column ul li:first-child {
+    padding-top: 10px;
+    text-transform: capitalize;
+}
+footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a{
+    color: #000;
+}
+footer #footerLink div.column ul li:after {
+    content: '/';
+    padding: 0 2px;
+}
+footer #footerLink div.column ul li:first-child:after {
+    content: ':';
+    font-weight: bold;
+}
+footer #footerLink div.column ul li:last-child:after {
+    display: none;
+}
+@media(max-width: 790px){
+	footer #footerLink{
+    border-top: none;
+    padding: 30px 26px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+}
+/*TPR-5733 end*/

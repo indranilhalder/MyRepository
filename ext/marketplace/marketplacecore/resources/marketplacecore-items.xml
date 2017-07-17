@@ -11232,5 +11232,41 @@
 			</itemtype>
 		</typegroup>
 		<!-- End CAR-274 -->
-	</itemtypes>
+		<!-- START TPR-5733 -->
+			<typegroup name="MPL_FOOTER"> 
+			   <itemtype code="MplFooterLink" autocreate="true" generate="true">
+				<description>Added New Links For Tag Cloud</description>
+				<deployment table="MplFooterLink" typecode="19870" />
+				<attributes>
+				<attribute qualifier="footerLinkRow" type="java.lang.Integer">
+				    <modifiers optional="false" unique="false" write="true" read="true"/>
+				   <persistence type="property" />
+				<description>Attribute contains the row id</description>
+			  </attribute>
+			  <attribute qualifier="footerLinkColumn" type="java.lang.Integer">
+				    <modifiers optional="false" unique="false" write="true" read="true"/>
+				    <persistence type="property" />
+				    <description>Attribute contains the column id</description>
+			 </attribute>
+			<attribute qualifier="footerLinkName" type="java.lang.String">
+			      <modifiers optional="false" unique="false" write="true" read="true"/>
+			      <persistence type="property" />
+			      <description>Attribute contains name of the links</description>
+		  </attribute>
+		  <attribute qualifier="footerLinkURL" type="java.lang.String">
+			     <modifiers optional="false" unique="false" write="true" read="true"/>
+			     <persistence type="property" />
+			     <description>Attribute contains the required URL</description>
+		  </attribute>
+		</attributes>
+		<indexes>
+			<index name="INDX_ROW_COLUMN" unique="true">
+				<key attribute="footerLinkRow" />
+				<key attribute="footerLinkColumn" />
+			</index>
+		</indexes>
+	 </itemtype>
+    </typegroup>
+		<!-- END TPR-5733 -->
+  </itemtypes>
 </items>

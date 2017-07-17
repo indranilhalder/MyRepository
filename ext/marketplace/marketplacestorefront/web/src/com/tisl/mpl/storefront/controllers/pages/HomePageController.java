@@ -57,6 +57,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -88,6 +89,7 @@ import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
 import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.cms.data.FooterLinkData;
 import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
 import com.tisl.mpl.facades.data.STWJsonRecomendationData;
@@ -1651,6 +1653,17 @@ public class HomePageController extends AbstractPageController
 			model.addAttribute("wrapAfter", fData.getWrapAfter());
 			//			//Need help section
 			model.addAttribute("contactNumber", fData.getContactNumber());
+
+			// For TPR-5733
+			final Map<Integer, Map<Integer, FooterLinkData>> mplFooterLinkRowList = mplCmsFacade.getFooterLinkData();
+			if (MapUtils.isNotEmpty(mplFooterLinkRowList))
+			{
+				model.addAttribute(ModelAttributetConstants.FOOTER_LINK_LIST, mplFooterLinkRowList);
+			}
+			else
+			{
+				LOG.debug("##########################   Returned empty list for footer link ####################################");
+			}
 
 		}
 
