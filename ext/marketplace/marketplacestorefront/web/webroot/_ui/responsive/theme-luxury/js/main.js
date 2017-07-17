@@ -391,10 +391,10 @@ TATA.CommonFunctions = {
     		$('#deleteConfirmation .deleteWlConfirmationNo').css('display','inline-block');
     	});
     },
-
+    
     wishlistInit: function(){
         TATA.CommonFunctions.luxuryForceUpdateHeader();
-        $(document).on("click, touchstart",".add-to-wishlist",function(){
+        $(document).on("click touchstart",".add-to-wishlist",function(){
             if ($(this).hasClass("added")){
                 TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
             } else {
@@ -1512,7 +1512,6 @@ TATA.Pages = {
         _self.MYACCOUNT.init();
     },
 };
-
 
 function checkPincodeServiceability(buttonType,el)
 {

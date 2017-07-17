@@ -137,5 +137,5 @@ var buyboxskuId='';
 	<!-- INC144313814 fix end -->
 </ul>
 </section>
-<label class="js-add-to-cart btn btn-default btn-lg btn-block visible-xs" for="addToCartButton">Add to Bag</label>
+<!-- <label class="js-add-to-cart btn btn-default btn-lg btn-block visible-xs" for="addToCartButton">Add to Bag</label> -->
  <div id="servicableUssid"></div>

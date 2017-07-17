@@ -64,10 +64,11 @@ grunt.initConfig({
                     'js/lib/jquery.elevatezoom.js',
 					'js/lib/bootstrap.min.js',
 				    'js/lib/jquery.validate.min.js',
-				    'js/main.js'
+				    'js/main.js',
+                    'js/acc.accountaddress.js'
 				    /*'js/login.js',
-				    'js/tulvalidation.js',
-				    'js/acc.accountaddress.js'*/
+				    'js/tulvalidation.js',*/
+				   
 				
 				].map(absolutePath), 
 					dest: 'combined/luxury-main.js'

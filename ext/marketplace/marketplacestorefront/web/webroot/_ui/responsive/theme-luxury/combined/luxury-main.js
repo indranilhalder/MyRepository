@@ -1,3 +1,553 @@
+function checkPincodeServiceability(buttonType, el) {
+    var selectedPincode = $("#defaultPinCodeIds").val(), regPostcode = /^([1-9])([0-9]){5}$/;
+    $(".deliveryUlClass").remove();
+    var utagCheckPincodeStatus = "";
+    if ("" === selectedPincode) return $("#error-Id").hide(), $("#error-IdBtm").hide(), 
+    $("#error-Id_tooltip").hide(), $("#error-Id_tooltip_btm").hide(), $("#emptyId").css({
+        color: "#ff1c47",
+        display: "block"
+    }), $("#emptyIdBtm").css({
+        color: "#ff1c47",
+        display: "block"
+    }), $("#emptyId_tooltip").show(), $("#emptyId_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#cartPinCodeAvailable").hide(), 
+    $("#cartPinCodeAvailableBtm").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+    document.getElementById("pinCodeButtonIds").className = "ChangePincode", $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $(".cartItemBlankPincode").show(), 
+    document.getElementById("pinCodeButtonIds").className = "CheckAvailability", $("#AvailableMessage").hide(), 
+    $("#AvailableMessageBtm").hide(), $(".pincodeServiceError").hide(), $(".delivery ul.success_msg").hide(), 
+    $("#pinCodeDispalyDiv .spinner").remove(), $("#no-click,.spinner").remove(), $("body,html").animate({
+        scrollTop: $("#emptyId").offset().top - 5e3
+    }), !1;
+    if (1 != regPostcode.test(selectedPincode)) return $("#defaultPinCodeIds").css("color", "red"), 
+    $("#error-Id").show(), $("#error-IdBtm").show(), $("#error-Id_tooltip").show(), 
+    $("#error-Id_tooltip_btm").show(), $("#cartPinCodeAvailable").hide(), $("#cartPinCodeAvailableBtm").hide(), 
+    $("#unserviceablepincode").hide(), $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $("#AvailableMessage").hide(), $("#AvailableMessageBtm").hide(), 
+    $(".pincodeServiceError").hide(), $(".delivery ul.success_msg").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+    $(".cartItemBlankPincode").show(), $("#emptyId").hide(), $("#emptyIdBtm").hide(), 
+    $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), $("#error-Id").css({
+        color: "red",
+        display: "block"
+    }), $("#error-IdBtm").css({
+        color: "red",
+        display: "block"
+    }), $("#error-Id_tooltip").show(), $("#error-Id_tooltip_btm").show(), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#pinCodeDispalyDiv .spinner").remove(), 
+    $("#no-click,.spinner").remove(), !1;
+    if ("ChangePincode" == document.getElementById("pinCodeButtonIds").className && "pinCodeButtonIds" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
+    $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
+    $("#AvailableMessageBtm").hide(), $(".cartItemBlankPincode").show(), document.getElementById("pinCodeButtonIds").className = "CheckAvailability", 
+    $("#defaultPinCodeIds").focus(), $("#defaultPinCodeIdsBtm").focus(), $("#pinCodeDispalyDiv .spinner").remove(), 
+    $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), 
+    $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+    $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
+    !1;
+    if ("ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && "pinCodeButtonIdsBtm" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
+    $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
+    $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
+    $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
+    $("#AvailableMessageBtm").hide(), $(".cartItemBlankPincode").show(), document.getElementById("pinCodeButtonIdsBtm").className = "CheckAvailability", 
+    $("#defaultPinCodeIds").focus(), $("#defaultPinCodeIdsBtm").focus(), $("#pinCodeDispalyDiv .spinner").remove(), 
+    $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide(), $("#emptyId_tooltip_btm").hide(), 
+    $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
+    $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
+    !1;
+    if ("" !== selectedPincode) {
+        var cartGuidParamValue = getParameterByName("cartGuid");
+        void 0 !== cartGuidParamValue ? $(location).attr("href", ACC.config.encodedContextPath + "/cart?cartGuid=" + cartGuidParamValue + "&pincode=" + selectedPincode) : $(location).attr("href", ACC.config.encodedContextPath + "/cart?pincode=" + selectedPincode);
+    } else {
+        document.getElementById("pinCodeButtonIds").className = "CheckPincode", document.getElementById("pinCodeButtonIdsBtm").className = "CheckPincode", 
+        $("#defaultPinCodeIds").css("color", "black"), $("#error-Id").hide(), $("#defaultPinCodeIdsBtm").css("color", "black"), 
+        $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), $("#error-Id_tooltip_btm").hide(), 
+        $("#emptyId").hide(), $("#emptyIdBtm").hide(), $("#emptyId_tooltip").hide();
+        var staticHost = $("#staticHost").val();
+        $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        $("body").append('<img src="' + staticHost + '/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 45%;top:45%; height: 30px;z-index: 10000">'), 
+        $("#emptyId_tooltip_btm").hide(), $.ajax({
+            url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
+            type: "GET",
+            cache: !1,
+            success: function(response) {
+                $("#pincodeforcart").html("&nbsp;(" + selectedPincode + ")");
+                var responeStr = response.pincodeData.split("|");
+                populateCartDetailsafterPincodeCheck(responeStr[1]), "N" == responeStr[0] ? (utagCheckPincodeStatus = "cart_pincode_check_failure", 
+                $("#AvailableMessage").hide(), $("#cartPinCodeAvailable").hide(), $("#unserviceablepincode").show(), 
+                $("#AvailableMessageBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#unserviceablepincodeBtm").show(), 
+                $(".pincodeServiceError").show(), populatePincodeDeliveryMode(response, buttonType), 
+                reloadpage(selectedPincode, buttonType), $("#isPincodeServicableId").val("N")) : (utagCheckPincodeStatus = "cart_pincode_check_success", 
+                $(".pincodeServiceError").hide(), $("#unserviceablepincode").hide(), $("#cartPinCodeAvailable").hide(), 
+                $("#unserviceablepincodeBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#AvailableMessage").html("Available delivery options for the pincode " + selectedPincode + " are"), 
+                $("#AvailableMessage").show(), $("#AvailableMessageBtm").show(), populatePincodeDeliveryMode(response, buttonType), 
+                reloadpage(selectedPincode, buttonType)), $("#defaultPinDiv").show(), $("#defaultPinCodeIdsq").val(selectedPincode), 
+                $("#pinCodeDispalyDiv .spinner").remove(), $("#no-click,.spinner").remove(), $("#defaultPinCodeIds").blur(), 
+                "" == $("#defaultPinCodeIds").val() ? ($("#cartPinCodeAvailable").show(), document.getElementById("pinCodeButtonIds").className = "CheckAvailability") : ($("#cartPinCodeAvailable").hide(), 
+                $("#cartPinCodeAvailableBtm").hide(), document.getElementById("pinCodeButtonIds").className = "ChangePincode", 
+                document.getElementById("pinCodeButtonIdsBtm").className = "ChangePincode");
+            },
+            error: function(resp) {
+                utagCheckPincodeStatus = "cart_pincode_check_failure", console.log(resp), $("#isPincodeServicableId").val("N"), 
+                reloadpage(selectedPincode, buttonType);
+                var errorDetails = JSON.stringify(resp);
+                console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+                console.log("Some issue occured in checkPincodeServiceability"), $("#pinCodeDispalyDiv .spinner").remove(), 
+                $("#no-click,.spinner").remove();
+            },
+            complete: function(resp) {
+                "cart_pincode_check_failure" == utagCheckPincodeStatus ? "undefined" != typeof utag && utag.link({
+                    link_text: utagCheckPincodeStatus,
+                    event_type: utagCheckPincodeStatus,
+                    cart_pin_non_servicable: selectedPincode
+                }) : "undefined" != typeof utag && utag.link({
+                    link_text: "cart_pincode_check_success",
+                    event_type: "cart_pincode_check_success",
+                    cart_pin_servicable: selectedPincode
+                });
+            }
+        });
+    }
+}
+
+function getParameterByName(name) {
+    if (name = new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)").exec(location.search)) return decodeURIComponent(name[1]);
+}
+
+function checkIsServicable() {
+    var selectedPincode = $("#defaultPinCodeIds").val();
+    null != selectedPincode && void 0 != selectedPincode && "" != selectedPincode && $.ajax({
+        url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
+        type: "GET",
+        cache: !1,
+        success: function(response) {
+            populatePincodeDeliveryMode(response, "pageOnLoad");
+        },
+        error: function(resp) {
+            console.log(resp);
+            var errorDetails = JSON.stringify(resp);
+            console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
+            console.log("Some issue occured in checkPincodeServiceability"), $("#isPincodeServicableId").val("N");
+        }
+    });
+}
+
+function populatePincodeDeliveryMode(response, buttonType) {
+    var checkoutLinkURlId = $("#checkoutLinkURlId").val(), values = response.pincodeData.split("|"), isServicable = values[0], selectedPincode = values[1], deliveryModeJsonMap = values[2];
+    if ($(".pincodeServiceError").hide(), "null" == deliveryModeJsonMap) {
+        $(".unservicePins").show(), $("#checkout-enabled").css("pointer-events", "none"), 
+        $("#checkout-enabled").css("cursor", "not-allowed"), $("#checkout-enabled").css("opacity", "0.5"), 
+        $("#checkout-down-enabled").css("pointer-events", "none"), $("#checkout-down-enabled").css("cursor", "not-allowed"), 
+        $("#checkout-down-enabled").css("opacity", "0.5"), $("#expressCheckoutButtonId").css("pointer-events", "none"), 
+        $("#expressCheckoutButtonId").css("cursor", "default"), $("#expressCheckoutButtonId").css("opacity", "0.5");
+        var pincodeEntered = $("#defaultPinCodeIds").val(), pincodeServiceError = "This item is not serviceable for pincode " + pincodeEntered + "!";
+        $(".desktop li:nth-child(3) ul").hide(), $(".pincodeServiceError").text(pincodeServiceError), 
+        $(".success_msg").hide(), $(".cartItemBlankPincode").hide(), $(".deliveryUlClass").remove();
+    } else {
+        $("#unsevisablePin").hide(), $(".pincodeServiceError").hide(), $("#checkout-enabled").css("pointer-events", "all"), 
+        $("#checkout-enabled").css("cursor", "cursor"), $("#checkout-enabled").css("opacity", "1"), 
+        $(".delivery").show(), $("#checkout-down-enabled").css("pointer-events", "all"), 
+        $("#checkout-down-enabled").css("cursor", "cursor"), $("#checkout-down-enabled").css("opacity", "1"), 
+        $("#expressCheckoutButtonId").css("pointer-events", "all"), $("#expressCheckoutButtonId").css("cursor", "cursor"), 
+        $("#expressCheckoutButtonId").css("opacity", "1");
+        var deliveryModeJsonObj = JSON.parse(deliveryModeJsonMap), isStockAvailable = (Object.keys(deliveryModeJsonObj).length, 
+        "Y");
+        "N" == deliveryModeJsonMap && console.log("This is NO");
+    }
+    for (var key in deliveryModeJsonObj) {
+        var ussId = deliveryModeJsonObj[key].ussid;
+        if ($("#" + ussId + "_qtyul").remove(), "N" === deliveryModeJsonObj[key].isServicable) {
+            $("#" + ussId).remove();
+            var newUi = document.createElement("ul");
+            newUi.setAttribute("id", ussId), newUi.setAttribute("class", "deliveryUlClass");
+            var newSpan = document.createElement("span"), text = document.createTextNode("This item is not serviceable for pincode " + selectedPincode + "!");
+            newSpan.appendChild(text), newUi.appendChild(newSpan), $("#" + ussId + "_li").append(newUi), 
+            $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").hide();
+        } else {
+            $("#" + ussId).remove();
+            var newUi = document.createElement("ul");
+            newUi.setAttribute("id", ussId), newUi.setAttribute("class", "success_msg");
+            var jsonObj = deliveryModeJsonObj[key].validDeliveryModes, inventory = deliveryModeJsonObj[key].stockCount, quantityValue = $("#quantity_" + ussId).val(), stockAvailable = !1;
+            for (var count in jsonObj) inventory = jsonObj[count].inventory, parseFloat(quantityValue) <= parseFloat(inventory) && (stockAvailable = !0);
+            if (0 == stockAvailable) {
+                var newUl = document.createElement("ul");
+                newUl.setAttribute("id", ussId + "_qtyul"), newUl.setAttribute("class", "less-stock");
+                var newLi = document.createElement("li"), text = document.createTextNode("Oops! We only have " + inventory + " in stock! For pincode : " + selectedPincode);
+                newLi.appendChild(text), newUl.appendChild(newLi), $("#" + ussId + "_qty").append(newUl), 
+                isStockAvailable = "N";
+            }
+            var newLi = document.createElement("li");
+            newLi.setAttribute("class", "methodHome");
+            var text = document.createTextNode("Home Delivery");
+            newLi.appendChild(text);
+            var newLi1 = document.createElement("li");
+            newLi1.setAttribute("class", "methodExpress");
+            var text = document.createTextNode("Express Delivery");
+            newLi1.appendChild(text);
+            var newLi2 = document.createElement("li");
+            newLi2.setAttribute("class", "methodClick");
+            var text = document.createTextNode("Click and Collect");
+            newLi2.appendChild(text);
+            var isHd = !1, isEd = !1, isCnc = !1;
+            for (var count in jsonObj) {
+                var inventory = 0, deliveryType = jsonObj[count].type;
+                inventory = jsonObj[count].inventory, "HD" === deliveryType ? isHd = !0 : "ED" === deliveryType ? isEd = !0 : "CNC" === deliveryType && (isCnc = !0);
+            }
+            isHd ? newLi.setAttribute("class", "methodHome") : newLi.setAttribute("class", "methodHome lowOpacity"), 
+            isEd ? newLi1.setAttribute("class", "methodExpress") : newLi1.setAttribute("class", "methodExpress lowOpacity"), 
+            isCnc ? newLi2.setAttribute("class", "methodClick") : newLi2.setAttribute("class", "methodClick lowOpacity"), 
+            newUi.appendChild(newLi), newUi.appendChild(newLi1), newUi.appendChild(newLi2), 
+            $("#" + ussId + "_li").append(newUi), $(".cartItemBlankPincode").hide(), $(".pincodeServiceError").hide();
+        }
+    }
+    if ($("#defaultPinCodeIds").val(selectedPincode), "Y" === isServicable && "Y" === isStockAvailable) {
+        $("#isPincodeServicableId").val("Y"), $("#checkout-id #checkout-enabled").removeClass("checkout-disabled"), 
+        $("#checkout-id-down #checkout-down-enabled").removeClass("checkout-disabled"), 
+        $("#expresscheckoutid #expressCheckoutButtonId").removeClass("express-checkout-disabled");
+        if (-1 != document.referrer.indexOf("checkout") && 0 != $(".global-alerts").length) {
+            var errortext = $(".global-alerts,alert-danger, alert-dismissable").text();
+            null != errortext && "undefined" != errortext && "" != errortext && $(".global-alerts").remove();
+        }
+        if ("typeCheckout" == buttonType && redirectToCheckout(checkoutLinkURlId), "typeExpressCheckout" == buttonType) {
+            var expressCheckoutAddresId = $("#expressCheckoutAddressSelector").val();
+            $(location).attr("href", ACC.config.encodedContextPath + "/checkout/multi/express?expressCheckoutAddressSelector=" + expressCheckoutAddresId);
+        }
+    } else $("#isPincodeServicableId").val("N"), $("#checkout-id #checkout-enabled").addClass("checkout-disabled"), 
+    $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#expresscheckoutid #expressCheckoutButtonId").addClass("express-checkout-disabled");
+}
+
+function editAddress(addressId) {
+    var requiredUrl = ACC.config.encodedContextPath + "/my-account/populateAddressDetail", dataString = "&addressId=" + addressId;
+    $.ajax({
+        url: requiredUrl,
+        type: "GET",
+        data: dataString,
+        dataType: "json",
+        cache: !1,
+        contentType: "application/json; charset=utf-8",
+        success: function(data) {
+            $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
+            $("#line1").val(data.line1), $("#line2").val(data.line2), $("#line3").val(data.line3), 
+            $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
+            loadPincodeData("edit").done(function() {
+                otherLandMarkTri(data.landmark, "defult");
+            }), $("#townCity").val(data.townCity), $("#mobileNo").val(data.mobileNo), $("#stateListBox").val(data.state), 
+            "Home" == data.addressType && (document.getElementById("new-address-option-1").checked = !0), 
+            "Work" == data.addressType && (document.getElementById("new-address-option-2").checked = !0), 
+            $("#headerAdd").css("display", "none"), $("#headerEdit").css("display", "block"), 
+            $("#addNewAddress").css("display", "none"), $("#edit").css("display", "block");
+        },
+        error: function(data) {
+            console.log(data.responseText);
+        }
+    });
+}
+
+function reasonSelectChange() {
+    $("#blankReturnReasonError").hide();
+}
+
+function refreshModal(bogoCheck, transactionId) {
+    $("#cancellationreasonSelectBox_" + transactionId + " option#defaultReason").attr("selected", "selected"), 
+    "true" == bogoCheck && alert("All the related products in the promotion will get cancelled");
+}
+
+function openReturnPage(bogoCheck, transactionId) {
+    "true" == bogoCheck && alert("All  related products in the promotion will get returned");
+}
+
+function setDropDownValue(transactionId) {
+    $("#blankReasonError").hide(), Rejectionselectedvalue = $("#cancellationreasonSelectBox_" + transactionId + " option:selected").val();
+}
+
+function changeUrl(url) {
+    if (null != sessionStorage.getItem("luxuryLoginPage") && "true" == sessionStorage.getItem("luxuryLoginPage") && (url += "?isLux=true"), 
+    void 0 !== history.pushState) {
+        var obj = {
+            Url: url
+        };
+        history.pushState(obj, obj.Title, obj.Url);
+    } else alert("ERROR!!!");
+}
+
+function kpressfemail() {
+    document.getElementById("errfemail").innerHTML = "";
+}
+
+function validateEmailInvite(email) {
+    var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return !!emailRegex.test(email) && (emailRegex.test(email) ? !(email.length > 140) || (document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Please enter valid length for email id </font>", 
+    !1) : void 0);
+}
+
+function validateForm() {
+    $("#errdoaDay,#errdobDay").empty();
+    var regexCharSpace = /^[a-zA-Z]+$/, regexSpace = /\s/, regexDate = /^(?=\d{2}([-.,\/])\d{2}\1\d{4}$)(?:0[1-9]|1\d|[2][0-8]|29(?!.02.(?!(?!(?:[02468][1-35-79]|[13579][0-13-57-9])00)\d{2}(?:[02468][048]|[13579][26])))|30(?!.02)|31(?=.(?:0[13578]|10|12))).(?:0[1-9]|1[012]).\d{4}$/, emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, proceed = !0;
+    "" != document.getElementById("profilefirstName").value && (regexCharSpace.test(document.getElementById("profilefirstName").value) || ($("#errfn").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>", 
+    proceed = !1)), "" != document.getElementById("profilelastName").value && (regexCharSpace.test(document.getElementById("profilelastName").value) || ($("#errln").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>", 
+    proceed = !1)), "" != document.getElementById("profileEmailID").value ? emailRegex.test(document.getElementById("profileEmailID").value) || ($("#errEmail").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter a valid Email ID</font>", 
+    proceed = !1) : ($("#errEmail").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errEmail").innerHTML = "<font color='#ff1c47' size='2'>Please enter an Email ID</font>", 
+    proceed = !1), "" != document.getElementById("profileMobileNumber").value && (document.getElementById("profileMobileNumber").value.length > 10 || document.getElementById("profileMobileNumber").value.length < 10 || isNaN(document.getElementById("profileMobileNumber").value) || regexSpace.test(document.getElementById("profileMobileNumber").value)) && ($("#errMob").css({
+        display: "block",
+        "padding-top": "10px"
+    }), document.getElementById("errMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>", 
+    proceed = !1);
+    var selectValueDOB = document.getElementById("dateOfBirth").selectedIndex, selectValueMOB = document.getElementById("monthOfBirth").selectedIndex, selectValueYOB = document.getElementById("yearOfBirth").selectedIndex, ValueDOB = document.getElementById("dateOfBirth").value, ValueMOB = document.getElementById("monthOfBirth").value, ValueYOB = document.getElementById("yearOfBirth").value, selectValueDOA = document.getElementById("dateOfAnniversary").selectedIndex, selectValueMOA = document.getElementById("monthOfAnniversary").selectedIndex, selectValueYOA = document.getElementById("yearOfAnniversary").selectedIndex, ValueDOA = document.getElementById("dateOfAnniversary").value, ValueMOA = document.getElementById("monthOfAnniversary").value, ValueYOA = document.getElementById("yearOfAnniversary").value, tempFinalDOB = ValueDOB + "/" + ValueMOB + "/" + ValueYOB, tempFinalDOA = ValueDOA + "/" + ValueMOA + "/" + ValueYOA, tempFinalDateDOB = new Date(ValueMOB + "/" + ValueDOB + "/" + ValueYOB), tempFinalDateDOA = new Date(ValueMOA + "/" + ValueDOA + "/" + ValueYOA), dateOfBirthIntVal = parseInt(ValueYOB + ValueMOB + ValueDOB), dateOfAnnIntVal = parseInt(ValueYOA + ValueMOA + ValueDOA), today = new Date(), dd = today.getDate(), mm = today.getMonth() + 1, yyyy = today.getFullYear();
+    dd < 10 && (dd = "0" + dd), mm < 10 && (mm = "0" + mm);
+    var todaydateFormat = new Date(mm + "/" + dd + "/" + yyyy), sysDateIntVal = parseInt(yyyy + "" + mm + dd);
+    return (selectValueDOB > 0 || selectValueMOB > 0 || selectValueYOB > 0) && (isNaN(ValueDOB) || isNaN(ValueMOB) || isNaN(ValueYOB) ? ($("#errdobDay").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdobDay").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Date </font>", 
+    proceed = !1) : dateOfBirthIntVal > sysDateIntVal ? ($("#errdobDay").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdobDay").innerHTML = "<font color='#ff1c47' size='2'>Date of Birth cannot be Future Date</font>", 
+    proceed = !1) : regexDate.test(tempFinalDOB) ? regexDate.test(tempFinalDOB) && (document.getElementById("errdobDay").innerHTML = "<font display='none' size='2'></font>") : ($("#errdobDay").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdobDay").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Date </font>", 
+    proceed = !1)), (selectValueDOA > 0 || selectValueMOA > 0 || selectValueYOA > 0) && (isNaN(ValueDOA) || isNaN(ValueMOA) || isNaN(ValueYOA) ? ($("#errdoaDay").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdoaDay").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Date </font>", 
+    proceed = !1) : tempFinalDateDOA > todaydateFormat ? (document.getElementById("errdoaDay").innerHTML = "<font color='#ff1c47' size='2'>Date of Anniversary cannot be Future Date</font>", 
+    proceed = !1) : dateOfAnnIntVal > sysDateIntVal ? ($("#errdoaDay").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdoaDay").innerHTML = "<font color='#ff1c47' size='2'>Date of Anniversary cannot be Future Date</font>", 
+    proceed = !1) : regexDate.test(tempFinalDOA) ? regexDate.test(tempFinalDOA) && (tempFinalDOB == tempFinalDOA ? ($("#errdata").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdata").innerHTML = "<font color='#ff1c47' size='2'>Date of birth and Anniversary date cannot be same.</font>", 
+    proceed = !1) : tempFinalDateDOB > tempFinalDateDOA && ($("#errdata").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdata").innerHTML = "<font color='#ff1c47' size='2'>Date of Birth cannot be after Anniversary Date.</font>", 
+    proceed = !1)) : ($("#errdoaDay").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errdoaDay").innerHTML = "<font color='#ff1c47' size='2'>Please Enter Valid Date </font>", 
+    proceed = !1)), proceed;
+}
+
+function kpressfn() {
+    document.getElementById("errfn").innerHTML = "";
+}
+
+function kpressln() {
+    document.getElementById("errln").innerHTML = "";
+}
+
+function kpressmob() {
+    document.getElementById("errMob").innerHTML = "";
+}
+
+function kpressemail() {
+    document.getElementById("errEmail").innerHTML = "";
+}
+
+function selectBoxChange() {
+    document.getElementById("errdobDay").innerHTML = "", document.getElementById("errdoaDay").innerHTML = "", 
+    document.getElementById("errdata").innerHTML = "";
+}
+
+function validateNickName() {
+    var regexCharSpace = /^[a-zA-Z ]*$/;
+    if ("" != document.getElementById("profilenickName").value && !regexCharSpace.test(document.getElementById("profilenickName").value)) return $("#errfn").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errnn").innerHTML = "<font color='#ff1c47' size='2'>Nick name should contain alphabates and space only</font>", 
+    !1;
+}
+
+function kpressnn() {
+    document.getElementById("errnn").innerHTML = "";
+}
+
+function validatePassword() {
+    var flag = !0;
+    if (null != document.getElementById("currentPassword").value && "" != document.getElementById("currentPassword").value || ($("#errCurpwd").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errCurpwd").innerHTML = "<font color='#ff1c47' size='2'>Please enter Current Password</font>", 
+    flag = !1), null != document.getElementById("newPassword").value && "" != document.getElementById("newPassword").value || ($("#errNewpwd").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Please choose a New Password</font>", 
+    flag = !1), null == document.getElementById("checkNewPassword").value || "" == document.getElementById("checkNewPassword").value) $("#errCnfNewpwd").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Please Confirm New Password</font>", 
+    flag = !1; else if (document.getElementById("newPassword").value.length < 8) $("#errNewpwd").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Your password should be minimum 8 characters</font>", 
+    flag = !1; else if (document.getElementById("newPassword").value != document.getElementById("checkNewPassword").value) $("#errCnfNewpwd").css({
+        display: "block",
+        "margin-top": "10px"
+    }), document.getElementById("errCnfNewpwd").innerHTML = "<font color='#ff1c47' size='2'>Oops! The passwords don't match.</font>", 
+    flag = !1; else {
+        var currentPassword = $("#currentPassword").val(), newPassword = $("#newPassword").val();
+        newEncodedPassword = encodeURIComponent(newPassword), $("#newPassword").val(newEncodedPassword);
+        var checkNewPassword = $("#checkNewPassword").val();
+        checkNewPassword = encodeURIComponent(checkNewPassword), $("#checkNewPassword").val(checkNewPassword);
+        var dataString = encodeURIComponent(currentPassword);
+        $("#currentPassword").val(dataString);
+        var requiredUrl = ACC.config.encodedContextPath + "/my-account/checkCurrentPassword";
+        jQuery.ajax({
+            type: "POST",
+            url: requiredUrl,
+            data: {
+                currentPassword: dataString
+            },
+            success: function(data) {
+                "invalidPassword" == data ? (document.getElementById("errCurpwd").innerHTML = "<font color='#ff1c47' size='2'>Oops! This password is incorrect.</font>", 
+                flag = !1) : "validPassword" == data && (currentPassword == newPassword ? (document.getElementById("errCurpwd").innerHTML = "<font color='#ff1c47' size='2'>Current and New Password cannot be same</font>", 
+                flag = !1) : (document.getElementById("errCurpwd").innerHTML = "", document.getElementById("errNewpwd").innerHTML = "", 
+                document.getElementById("errCnfNewpwd").innerHTML = "", chk = 0, $("#frmUpdatePassword").submit()));
+            },
+            error: function() {
+                globalErrorPopup("Something went wrong. Please try after sometime");
+            }
+        });
+    }
+    return flag;
+}
+
+function kpresscp() {
+    document.getElementById("errCurpwd").innerHTML = "";
+}
+
+function kpressnp() {
+    document.getElementById("errNewpwd").innerHTML = "";
+}
+
+function kpresscnp() {
+    document.getElementById("errCnfNewpwd").innerHTML = "";
+}
+
+function reloadOrderPage() {
+    window.location.href = ACC.config.encodedContextPath + "/my-account/orders";
+}
+
+function reloadOrderDetailPage() {
+    var ordercode = $("#newCode").val();
+    window.location.href = ACC.config.encodedContextPath + "/my-account/order/?orderCode=" + ordercode;
+}
+
+function luxValidateAccountAddress() {
+    $("form#addressForm :input[type=text]").each(function() {
+        $(this);
+        $(this).val($(this).val().trim());
+    });
+    var selectedValueState = document.getElementById("stateListBox").selectedIndex, regexCharSpace = /^[a-zA-Z]+$/, regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/, regexSpace = /\s/, equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/, flagFn = !0, flagLn = !0, flagAd1 = !0, flagPost = !0, flagCity = !0, flagState = !0, flagMob = !0, addLine1 = encodeURIComponent(addressForm.line1.value);
+    return 0 == addressForm.addressRadioType[0].checked && 0 == addressForm.addressRadioType[1].checked && (document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>", 
+    flagFn = !1), null == addressForm.firstName.value || "" == addressForm.firstName.value ? ($("#erraddressfn").css({
+        display: "block"
+    }), document.getElementById("erraddressfn").innerHTML = "<font color='#ff1c47' size='2'>Please enter first name</font>", 
+    flagFn = !1) : regexCharSpace.test(document.getElementById("firstName").value) || ($("#errddressfn").css({
+        display: "block"
+    }), document.getElementById("erraddressfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>", 
+    flagFn = !1), null == addressForm.lastName.value || "" == addressForm.lastName.value ? ($("#errddressln").css({
+        display: "block"
+    }), document.getElementById("erraddressln").innerHTML = "<font color='#ff1c47' size='2'>Please enter last name</font>", 
+    flagLn = !1) : regexCharSpace.test(document.getElementById("lastName").value) || ($("#errddressln").css({
+        display: "block"
+    }), document.getElementById("erraddressln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>", 
+    flagLn = !1), null != addressForm.line1.value && "" != addressForm.line1.value || ($("#errddressline1").css({
+        display: "block"
+    }), document.getElementById("erraddressline1").innerHTML = "<font color='#ff1c47' size='2'>Please enter address line 1</font>", 
+    flagAd1 = !1), null == addressForm.postcode.value || "" == addressForm.postcode.value ? ($("#errddressPost").css({
+        display: "block"
+    }), document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Please enter post code</font>", 
+    flagPost = !1) : addressForm.postcode.value.length > 6 || addressForm.postcode.value.length < 6 || isNaN(addressForm.postcode.value) || regexSpace.test(addressForm.postcode.value) ? ($("#errddressPost").css({
+        display: "block"
+    }), document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>", 
+    flagPost = !1) : "000000" == addressForm.postcode.value ? ($("#errddressPost").css({
+        display: "block"
+    }), document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>", 
+    flagPost = !1) : addressForm.postcode.value.startsWith("0") && ($("#errddressPost").css({
+        display: "block"
+    }), document.getElementById("erraddressPost").innerHTML = "<font color='#ff1c47' size='2'>Post code should contain 6 digit numeric characters only</font>", 
+    flagPost = !1), null == addressForm.townCity.value || "" == addressForm.townCity.value ? ($("#errddressCity").css({
+        display: "block"
+    }), document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>Please enter city</font>", 
+    flagCity = !1) : regexCharWithSpace.test(document.getElementById("townCity").value) || ($("#errddressCity").css({
+        display: "block"
+    }), document.getElementById("erraddressCity").innerHTML = "<font color='#ff1c47' size='2'>City should contain alphabets only</font>", 
+    flagCity = !1), 0 == selectedValueState && ($("#errddressState").css({
+        display: "block"
+    }), document.getElementById("erraddressState").innerHTML = "<font color='#ff1c47' size='2'>Please select state</font>", 
+    flagState = !1), null == addressForm.mobileNo.value || "" == addressForm.mobileNo.value ? ($("#errddressMob").css({
+        display: "block"
+    }), document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Please enter mobile number</font>", 
+    flagMob = !1) : addressForm.mobileNo.value.length > 10 || addressForm.mobileNo.value.length < 10 || isNaN(addressForm.mobileNo.value) ? ($("#errddressMob").css({
+        display: "block"
+    }), document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>", 
+    flagMob = !1) : regexSpace.test(addressForm.mobileNo.value) ? ($("#errddressMob").css({
+        display: "block"
+    }), document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>", 
+    flagMob = !1) : equalNoCheck.test(addressForm.mobileNo.value) && ($("#errddressMob").css({
+        display: "block"
+    }), document.getElementById("erraddressMob").innerHTML = "<font color='#ff1c47' size='2'>Mobile number should contain 10 digit numbers only</font>", 
+    flagMob = !1), !!(flagFn && flagLn && flagAd1 && flagPost && flagCity && flagState && flagMob) && (addressForm.line1.value = addLine1, 
+    !0);
+}
+
+function onSelectRadio() {
+    document.getElementById("errtype").innerHTML = "";
+}
+
+function kpressaddressfn() {
+    document.getElementById("erraddressfn").innerHTML = "";
+}
+
+function kpressaddressln() {
+    document.getElementById("erraddressln").innerHTML = "";
+}
+
+function kpressaddressln1() {
+    document.getElementById("erraddressline1").innerHTML = "";
+}
+
+function kpressaddressln2() {
+    document.getElementById("erraddressline2").innerHTML = "";
+}
+
+function kpressaddressln3() {
+    document.getElementById("erraddressline3").innerHTML = "";
+}
+
+function kpressaddresspost() {
+    document.getElementById("erraddressPost").innerHTML = "";
+}
+
+function kpressaddresscity() {
+    document.getElementById("erraddressCity").innerHTML = "";
+}
+
+function kpressaddressmob() {
+    document.getElementById("erraddressMob").innerHTML = "";
+}
+
+function onAddressSelectValidate() {
+    document.getElementById("erraddressState").innerHTML = "";
+}
+
 if (function(a, b) {
     "object" == typeof module && "object" == typeof module.exports ? module.exports = a.document ? b(a, !0) : function(a) {
         if (!a.document) throw new Error("jQuery requires a window with a document");
@@ -12859,7 +13409,7 @@ TATA.CommonFunctions = {
         });
     },
     wishlistInit: function() {
-        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click, touchstart", ".add-to-wishlist", function() {
+        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click touchstart", ".add-to-wishlist", function() {
             $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
         });
         var wishlistHover;
@@ -13460,9 +14010,9 @@ TATA.CommonFunctions = {
             });
         },
         writeReview: function() {
-            $("body").on("click", ".gig-rating-writeYourReview", function() {
-                $(".accordion-title").removeClass("active"), $(".accordion-content").hide(), $(".review-accordion").addClass("active"), 
-                $(".review-accordion-content").show();
+            $("body").on("click touchstart", ".gig-rating-writeYourReview", function(e) {
+                e.preventDefault(), $(".accordion-title").removeClass("active"), $(".accordion-content").hide(), 
+                $(".review-accordion").addClass("active"), $(".review-accordion-content").show();
             });
         },
         init: function() {
@@ -13513,8 +14063,8 @@ TATA.CommonFunctions = {
         _self.PLP.init(), _self.PDP.init(), _self.LANDING.init(), _self.MYACCOUNT.init();
     }
 }, $(document).ready(function() {
-    $(".checkout-paymentmethod .payment-tab").removeClass("active"), $("#card").css("display", "none"), 
-    $(".credit_tab").on("click", function() {
+    checkIsServicable(), $(".checkout-paymentmethod .payment-tab").removeClass("active"), 
+    $("#card").css("display", "none"), $(".credit_tab").on("click", function() {
         $(".new_card_tab.credit_tab").hasClass("active_tab") && $(".newCardPaymentCC").show();
     }), $("#sameAsShipping").on("click", function() {
         $("#sameAsShipping").is(":checked") ? $(".payment-billing-form").hide() : $(".payment-billing-form").show();
@@ -13529,4 +14079,182 @@ TATA.CommonFunctions = {
     window.location.href.indexOf("/cart") > 0 ? (isDuringCheckout = !0, window.history.pushState({}, null, "/cart")) : window.history.pushState({}, null, "/"));
 }), $(window).scroll(function() {
     TATA.CommonFunctions.WindowScroll();
+}), $(document).ready(function() {
+    null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
+}), $(document).ready(function() {
+    $("select#menuPageSelect").val(""), $("#currentPassword").val("");
+    var pageName = $("#pageName").val(), pageNameDropdown = $("#pageNameDropdown").val();
+    "overViews" == pageName ? $("#lnOverView a").addClass("active") : "mplPref" == pageName ? $("#lnMplPref a").addClass("active") : "addressBook" == pageName ? $("#lnAddress a").addClass("active") : "orderDetail" == pageName ? $("#lnOrder a").addClass("active") : "orderHistory" == pageName ? $("#lnOrder a").addClass("active") : "savedCards" == pageName ? $("#lnSavedCards a").addClass("active") : "personalInfo" == pageName ? $("#lnUpdateProfile a").addClass("active") : "invite" == pageName ? $("#lnInvite a").addClass("active") : "coupons" == pageName ? $("#lnCoupons a").addClass("active") : "review" == pageName && $("#lnReview a").addClass("active"), 
+    "overViews" == pageNameDropdown ? $("#menuPageSelect option").eq(0).attr("selected", "selected") : "mplPref" == pageNameDropdown ? $("#menuPageSelect option").eq(1).attr("selected", "selected") : "personalInfo" == pageNameDropdown ? $("#menuPageSelect option").eq(2).attr("selected", "selected") : "orderHistory" == pageNameDropdown ? $("#menuPageSelect option").eq(3).attr("selected", "selected") : "savedCards" == pageNameDropdown ? $("#menuPageSelect option").eq(4).attr("selected", "selected") : "addressBook" == pageNameDropdown ? $("#menuPageSelect option").eq(5).attr("selected", "selected") : "review" == pageNameDropdown ? $("#menuPageSelect option").eq(6).attr("selected", "selected") : "coupons" == pageNameDropdown ? $("#menuPageSelect option").eq(8).attr("selected", "selected") : "invite" == pageNameDropdown && $("#menuPageSelect option").eq(9).attr("selected", "selected");
+    var sPageURL = window.location.search.substring(1);
+    if (sPageURL.indexOf("&pageAnchor=") > 0) {
+        "trackOrder" == sPageURL.split("&")[1].split("=")[1] && ("none" == $("header div.bottom .marketplace.linear-logo").css("display") ? $("html, body").animate({
+            scrollTop: $("#shipping-track-order").offset().top - 150
+        }, 500) : $("html, body").animate({
+            scrollTop: $("#shipping-track-order").offset().top - 10
+        }, 500));
+    }
+}), $(document).ready(function() {
+    $("#addNewAddress").css("display", "block"), $("#firstName").val(""), $("#lastName").val(""), 
+    $("#headerAdd").css("display", "block"), $("#headerEdit").css("display", "none"), 
+    $("#edit").css("display", "none"), $("#edit").click(function() {
+        document.getElementById("addressForm").action = "editAddress", document.getElementById("addressForm").commandName = "addressForm";
+    }), $("#checkBox1").click(function() {
+        $(this).is(":checked") ? ($(this).parent().css("color", "#000"), $(this).parent().find("label").css("color", "#a9143c")) : ($(this).parent().css("color", "#a9a9a9"), 
+        $(this).parent().find("label").css("color", "#a9a9a9"));
+    }), $("#new-address-option-1").prop("checked", !0);
+}), $(".submit-request").click(function() {
+    return null != $("#reasonSelectBox").val() || ($("#blankReturnReasonError").show(), 
+    !1);
+}), $("#returnReject").click(function() {
+    window.location = ACC.config.encodedContextPath + "/my-account/orders";
+});
+
+var Rejectionselectedvalue = null;
+
+$(document).ready(function() {
+    $(".cancel-confirm,.cancel-confirm-detail").click(function() {
+        var formId = $(this).parents(".return-form").attr("id"), orderCode = $("#" + formId + " .subOrderCodeClass").val(), ussid = $("#" + formId + " .ussidClass").val(), transactionId = $("#" + formId + " .transactionIdClass").val(), ticketTypeCode = $("#" + formId + " .ticketTypeCodeClass").val(), nowValue = ($("#entryNumber").val(), 
+        $("#cancellationreasonSelectBox_" + transactionId + " option:selected").val()), reasonCode = Rejectionselectedvalue, reasonCancel = $("#cancellationreasonSelectBox_" + transactionId + " option:selected").text().toLowerCase().replace(/  +/g, " ").replace(/ /g, "_").replace(/['"]/g, "");
+        return null == reasonCode ? ($("#blankReasonError").show(), !1) : nowValue != Rejectionselectedvalue ? ($("#blankReasonError").show(), 
+        !1) : ($.ajax({
+            url: ACC.config.encodedContextPath + "/my-account/cancelSuccess",
+            type: "GET",
+            beforeSend: function() {
+                var staticHost = $("#staticHost").val();
+                $("body").append("<div id='no-click' style='opacity:0.40; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div><img src='" + staticHost + "/_ui/responsive/common/images/spinner.gif' class='spinner' style=' z-index: 10001;position: fixed;top: 50%;left:50%;height: 30px;'>");
+            },
+            data: {
+                orderCode: orderCode,
+                transactionId: transactionId,
+                reasonCode: reasonCode,
+                ticketTypeCode: ticketTypeCode,
+                ussid: ussid
+            },
+            cache: !1,
+            success: function(response) {
+                splitData = response.split("|");
+                var result = splitData[0], bogoreason = splitData[1], reasonDesc = splitData[2];
+                "success" == result ? ($(".cancellation-request-block #resultTitle").text("Say goodbye!"), 
+                $(".cancellation-request-block #resultDesc").text("You've managed to cancel your order sucessfully. More power to you."), 
+                $(".reason").css("display", "block"), $(".reason #reasonTitle").text("Reason for Cancellation:"), 
+                $(".reason #reasonDesc").text(reasonDesc), $("body .spinner,body #no-click").remove(), 
+                "undefined" != typeof utag && utag.link({
+                    event_type: "cancel_confirmation_clicked",
+                    cancel_order_reason: reasonCancel
+                })) : ($(".cancellation-request-block #resultTitle").text("Failure!"), $(".cancellation-request-block #resultDesc").text(bogoreason), 
+                $(".reason").css("display", "none"), $("body .spinner,body #no-click").remove(), 
+                "undefined" != typeof utag && utag.link({
+                    error_type: "cancel_confirmation_error"
+                })), $("#cancelOrder" + orderCode).hide(), $("#cancelSuccess" + orderCode + ussid).show();
+            },
+            complete: function() {
+                $("body .spinner,body #no-click").remove();
+            },
+            error: function(resp) {
+                alert("Error"), "undefined" != typeof utag && utag.link({
+                    error_type: "cancel_confirmation_error"
+                }), $("body .spinner,body #no-click").remove();
+            }
+        }), void event.preventDefault());
+    });
+}), $(document).ready(function() {
+    var loc = window.location;
+    loc.pathname.substring(loc.pathname.lastIndexOf("/") + 1, loc.pathname.length), 
+    ACC.config.encodedContextPath, ACC.config.encodedContextPath;
+    $("#isUnsubcribed").val(!1), $("input[name='interest']").click(function() {
+        "radioInterest0" == $("input:radio:checked").attr("id") ? $("#isUnsubcribed").val(!1) : $("#isUnsubcribed").val(!0);
+    }), $("input[name='frequency']").click(function() {
+        $("#isUnsubcribed").val(!1);
+    }), $("input[name='categoryData']").click(function() {
+        $("#isUnsubcribed").val(!1);
+    }), $("input[name='brandData']").click(function() {
+        $("#isUnsubcribed").val(!1);
+    }), $("input[name='feedbackArea']").click(function() {
+        $("#isUnsubcribed").val(!1);
+    }), $("#radioInterest0").is(":checked") && $("#isUnsubcribed").val(!1), $("#saveMarketPrefButton").click(function() {
+        var isUnsubcribed = $("#isUnsubcribed").val(), favoriteCategories = [], favoriteBrands = [], feedbackArea = [], myInterest = "", emailFrequency = "";
+        $("input[name='interest']:checked").each(function() {
+            myInterest = this.value;
+        }), $("input[name='frequency']:checked").each(function() {
+            emailFrequency = this.value;
+        }), $.each($("input[name='categoryData']:checked"), function() {
+            favoriteCategories.push($(this).val());
+        }), $.each($("input[name='brandData']:checked"), function() {
+            favoriteBrands.push($(this).val());
+        }), $.each($("input[name='feedbackArea']:checked"), function() {
+            feedbackArea.push($(this).val());
+        });
+        var dataString = "interest=" + myInterest + "&categoryData=" + JSON.stringify(favoriteCategories) + "&brandData=" + JSON.stringify(favoriteBrands) + "&frequency=" + emailFrequency + "&feedBackArea=" + JSON.stringify(feedbackArea) + "&isUnsubscibed=" + isUnsubcribed, requiredUrl = ACC.config.encodedContextPath + "/my-account/saveMplPreferences";
+        jQuery.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: requiredUrl,
+            data: dataString,
+            success: function(data) {
+                "success" != data && "unsubscribed" != data || (window.location.href = ACC.config.encodedContextPath + "/my-account/marketplace-preference?param=" + data);
+            },
+            error: function() {
+                alert("Something is not right! Please try after sometime");
+            }
+        });
+    }), $("#unsubcribe-link").click(function() {
+        $("#radioInterest1").prop("checked", !0), $("#isUnsubcribed").val(!0), $("#radioInterest1").is(":checked") && ($("#radioInterest1").click(), 
+        $.each($("input[name='categoryData']:checked"), function() {
+            $(this).prop("checked", !1);
+        }), $.each($("input[name='brandData']:checked"), function() {
+            $(this).prop("checked", !1);
+        }), $.each($("input[name='feedbackArea']:checked"), function() {
+            $(this).prop("checked", !1);
+        }), $("input[name='frequency']:checked").each(function() {
+            $(this).prop("checked", !1);
+        }));
+    });
+}), $(document).ready(function() {
+    $("#inviteFriends").click(function() {
+        var proceed = !1, friends_email_List = [], email = $("#friendsEmail").val();
+        if (email.length > 0) {
+            if (email.indexOf(",") >= 0) {
+                splitData = email.split(","), splitLen = splitData.length;
+                for (var i = 0; i < splitLen; i++) validateEmailInvite(splitData[i]) ? (proceed = !0, 
+                friends_email_List.push(splitData[i])) : proceed = !1;
+            } else validateEmailInvite(email) ? (proceed = !0, friends_email_List.push(email)) : proceed = !1;
+            if (proceed) {
+                var textMessage = $("#mytextarea").val(), dataString = "friends_email_List=" + JSON.stringify(friends_email_List) + "&textMessage=" + textMessage, requiredUrl = ACC.config.encodedContextPath + "/my-account/inviteFriends";
+                jQuery.ajax({
+                    type: "GET",
+                    contentType: "JSON",
+                    url: requiredUrl,
+                    data: dataString,
+                    success: function(data) {
+                        "success" == data && ($("#friendsEmail").val(""), document.getElementById("errfemail").innerHTML = "<font color='green' size='2'>Invite is sent successfully</font>", 
+                        "undefined" != typeof utag && utag.link({
+                            link_text: "invite_your_friends_completed",
+                            event_type: "invite_your_friends_completed"
+                        })), "error_email_sending" == data && (document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Error in email sending</font>", 
+                        "undefined" != typeof utag && utag.link({
+                            error_type: "invite_friends_error"
+                        })), "already_registered_email" == data && (document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>One or more entered email id is/are already registered</font>", 
+                        "undefined" != typeof utag && utag.link({
+                            error_type: "invite_friends_error"
+                        })), "customer_email" == data && (document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>One or more email is/are same as user's email id</font>", 
+                        "undefined" != typeof utag && utag.link({
+                            error_type: "invite_friends_error"
+                        }));
+                    },
+                    error: function() {
+                        alert("Something is not right! Please try after sometime"), "undefined" != typeof utag && utag.link({
+                            error_type: "invite_friends_error"
+                        });
+                    }
+                });
+            } else document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Please enter one or more valid email id(s) (for multiple - Separated with commas (,))</font>", 
+            "undefined" != typeof utag && utag.link({
+                error_type: "invite_friends_error"
+            });
+        } else document.getElementById("errfemail").innerHTML = "<font color='#ff1c47' size='2'>Please enter one or more email id(s)</font>", 
+        "undefined" != typeof utag && utag.link({
+            error_type: "invite_friends_error"
+        });
+    });
 });
