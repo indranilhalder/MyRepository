@@ -3835,3 +3835,9 @@ $("span.price-breakup").click(function() {
 	  $("#showPrice").find(".detail.acc_content").slideDown();
 });
 /*price breakup scroll end*/
+/*Feature for FineJewellery scroll start*/
+$("span.more-link").click(function() {
+	  $("body,html").animate({ scrollTop: $("#tabs_styleNotes").offset().top - 150 }, "slow");
+	  $("#tabs_styleNotes").addClass("active");
+});
+/*Feature for FineJewellery scroll end*/
