@@ -14,7 +14,7 @@
 					<c:set var="customerBankDetails" value="${customerBankDetails}"> </c:set>
 					<div class="accContents reasonType col-md-12">
 						<div class="col-md-4">
-							<b>Return Type :</b> <br/>
+							<!-- <b>Return Type :</b> <br/> -->
 							<div class="selectReason selectRefund col-md-12">
 								<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
 							<!-- 	<input class="radioButton" onclick="changeRadioColor('refund')" type="radio" value="refund" name="return" checked /> -->
@@ -22,12 +22,14 @@
 								</div>
 								<div class="col-md-10 col-sm-10 col-xs-10">
 									<b><spring:theme code="text.order.returns.returnandrefund"/></b> <br/>
-									<div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div>
+									<%-- <div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div> --%>
 									<c:choose>
 									<c:when test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
+									<div class="returnPayment">Cheque/NEFT</div>
 									<span><spring:theme code="text.order.returns.codpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}"/></span>
 									</c:when>
 									<c:otherwise>
+									<div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div>
 									<span><spring:theme code="text.order.returns.cardpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}" /> </span>
 									</c:otherwise>
 
@@ -77,6 +79,10 @@
 						<div class="col-md-8 slectionRefund">
 							<b class="bankDetailsText"></b>
 							<spring:theme code="text.order.returns.choosebankdetails"/>
+							<div class="suggestionText">
+									<span><spring:theme code="text.order.returns.safetyinformationlable1"/></span>
+									<span><spring:theme code="text.order.returns.safetyinformationlable2"/></span>
+								</div>
 							<div class="col-md-12 col-sm-12 col-xs12">
 								<div class="col-md-4 col-sm-4 accountnumber">
 
@@ -90,10 +96,6 @@
 									<!-- Start INC144316970- SPACE in between bank details in COD_SELFSHIP -->
 									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/[^0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"/>
 								    <!-- End INC144316970- SPACE in between bank details in COD_SELFSHIP -->
-								</div>
-								<div class="col-md-4 col-sm-4 suggestionText">
-									<span><spring:theme code="text.order.returns.safetyinformationlable1"/></span><br/>
-									<span><spring:theme code="text.order.returns.safetyinformationlable2"/></span>
 								</div>
 							</div>
 							<div class="col-md-12 col-sm-12">
@@ -131,10 +133,10 @@
 									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" value="${customerBankDetails.bankName}" />
 								</div>
 								<div class="col-md-4 col-sm-4 ifsccode">
-									<b><spring:theme code="text.order.returns.ifsccode"/></b> <br/>
+									<b><spring:theme code="text.order.returns.ifsccode"/></b> <a href="#nogo" class="ifscPopOver"><spring:theme code="text.order.returns.reverseSeal.popUp"></spring:theme></a> <br/>
 									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}"/>
 								</div>
-								<div class="col-md-4 col-sm-4 suggestionText">
+								<div class="col-md-4 col-sm-4 suggestionText" style="display : none;" id="ifscPopOverHelp">
 									<span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/>
 								</div>
 							</div>

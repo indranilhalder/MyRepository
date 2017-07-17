@@ -4623,6 +4623,23 @@ function populateClassificationForJewellery(jsonData)
 		htmlCode=htmlCode+'</div>';
 	}
 	$(".accordin").html(htmlCode);
+	
+	var mapConfig = jsonData['mapConfigurableAttributes'];
+	var jwlryTitle = "";
+	$.each(mapConfig, function(key,value){
+		if(key == "Feature"){
+			$.each(value, function(innerKey,innerValue){
+				jwlryTitle = jwlryTitle + innerKey;
+			});
+		}
+	});
+	$(".product-detail .product-desc .key-label p#jwlryTitle").text(jwlryTitle);
+	var pTag = document.createElement("p");
+	pTag.innerHTML=jwlryTitle;
+	$( ".tab-details ul .product-desc .key-label" ).prepend(pTag);
+	if(jwlryTitle == ""){
+		$(".product-detail .product-desc .key-label .more-link").css("display","none");
+	}
 }
 
 //TPR-1083 Start
