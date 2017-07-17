@@ -119,7 +119,7 @@
 						
 						<div class="full span password-input halfwidth col-md-6">
 									<label><spring:theme code="text.mplCustomerProfileForm.CurrPwd" text="Current Password*" /></label>
-										<input type="password" path="currentPassword" id="currentPassword"
+										<form:input type="password" path="currentPassword" id="currentPassword"
 										onkeypress="kpresscp()"	 maxlength="140" /> 
 										
 										<%-- <form:password path="currentPassword" onkeyup="kpresscp()" placeholder="Current Password"/> --%>
@@ -130,7 +130,7 @@
 						
 						 <div class="half password-input halfwidth col-md-6">
 									<label><spring:theme code="text.mplCustomerProfileForm.NewPwd" text="New Password*" /></label>
-										 <input type="password" path="newPassword" id="newPassword"
+										 <form:input type="password" path="newPassword" id="newPassword"
 										onkeypress="kpressnp()"	 maxlength="140" /> 
 										<%-- <form:password path="newPassword" onkeyup="kpressnp()"  placeholder="New Password"/> --%>
 									<div class="errorMessage"><div id="errNewpwd"></div></div>
@@ -139,7 +139,7 @@
 						<div class="row">
 			        	  <div class="half password-input halfwidth col-md-6">
 									<label><spring:theme code="text.mplCustomerProfileForm.CnfNewPwd" text="Confirm New Password*" /></label>
-										 <input type="password"  path="checkNewPassword" id="checkNewPassword"
+										<form:input type="password"  path="checkNewPassword" id="checkNewPassword"
 										onkeypress="kpresscnp()" maxlength="140" /> 
 										<%-- <form:password path="checkNewPassword" onkeyup="kpresscnp()" placeholder="New Password"/> --%>
 									<div class="errorMessage"><div id="errCnfNewpwd"></div></div>
