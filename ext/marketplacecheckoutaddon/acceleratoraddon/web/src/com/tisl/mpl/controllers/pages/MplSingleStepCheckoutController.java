@@ -524,7 +524,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						+ "&type=redirect", UTF);
 				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 			}
-			if (getCartService().hasSessionCart())
+			if (!getCartService().hasSessionCart())
 			{
 				final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 						+ "&type=redirect", UTF);
@@ -3589,7 +3589,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						break;
 					}
 				}
-				if (deliveryPosPresent && (StringUtils.isEmpty(pickupPersonName)) || (StringUtils.isEmpty(pickupPersonMobile)))
+				if (deliveryPosPresent && (StringUtils.isEmpty(pickupPersonName) || StringUtils.isEmpty(pickupPersonMobile)))
 				{
 					jsonObj.put("url", "/checkout/single");
 					jsonObj.put("type", "redirect");
