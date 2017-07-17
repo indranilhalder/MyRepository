@@ -248,7 +248,7 @@
 								</div>
 								</div>
 									<!-- R2.3: START -->
-									<div class="col-md-4 col-sm-6">
+									<div class="">
 										<div class="editIconCSS">
 										<c:if test="${addressChangeEligible eq true}">
 									       <a href="#" id="changeAddressLink">Edit / Change Address </a>
@@ -1235,7 +1235,7 @@
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
-																	<span class="dot trackOrder_${productStatus.colorCode}" index="${loop.index}">
+																	<span class="dot inactive trackOrder_${productStatus.colorCode}" index="${loop.index}">
 																		<img
 																		src="${commonResourcePath}/images/thin_top_arrow_222.png"
 																		class="dot-arrow">

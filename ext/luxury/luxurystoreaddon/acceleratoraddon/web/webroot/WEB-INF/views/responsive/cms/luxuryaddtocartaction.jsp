@@ -43,10 +43,12 @@ $(document).ready(function(){
    	 //Changes for pdp CR
    	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
   		/* alert("please select size !"+isShowSize); */
-   		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-		$("#addToCartFormTitle").show();
+   		//$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+		//$("#addToCartFormTitle").show();
 		//For pdp analytics changes
-		utag.link({"error_type":"size_not_selected"});
+		//utag.link({"error_type":"size_not_selected"});
+		$("#sizeGuideAction").val('#addToCartButton')
+		$(".size-guide").click();
  	    return false;
    	 }
 
@@ -100,6 +102,7 @@ $(document).ready(function(){
 <span id="bagfull" style="display:none"><spring:theme code="product.bag"/></span>
 <form:form method="post" name="addToCartFormId" id="addToCartForm" class="add_to_cart_form"
 	action="#">
+	<input type="hidden" id="sizeGuideAction"/>
 	<%-- <c:if test="${product.purchasable}"> --%>
 	<input type="hidden" maxlength="3" size="1" id="qty" name="qty"
 		class="qty js-qty-selector-input" value="1" />

@@ -511,6 +511,7 @@ sendAddToBag : function(formId, isBuyNow) {
 										$('#addtocart-popup .lux-cart-btn span').html('('+cartcount+')');
 									}); 
 									$('#addtocart-popup,.luxury-over-lay').show(); 
+									$("#no-click,.loaderDiv").remove();
 								} else {
 									ACC.product.showTransientCart(ussid);
 									ACC.product.scrollForTransientCart();
