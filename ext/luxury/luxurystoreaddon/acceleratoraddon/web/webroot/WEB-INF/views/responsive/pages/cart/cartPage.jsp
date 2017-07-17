@@ -100,6 +100,10 @@
 								<multi-checkout:orderTotals isCart="true" cartData="${cartData}"
 															showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 							</div>
+							<div class="checkoutBtn text-center mt-20">
+								<a href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
+									<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
+							</div>
 							<div class="cartBottomCheck">
 								<div id="changePinDiv">
 									<p></p>
@@ -126,10 +130,7 @@
 									<p id="emptyIdBtm" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
 								</div>
 							</div>
-							<div class="checkoutBtn text-center mt-20">
-								<a href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
-								<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
-							</div>
+						
 						</div>
 					</c:if>
 
