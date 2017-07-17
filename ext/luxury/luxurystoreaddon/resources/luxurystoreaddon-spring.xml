@@ -105,6 +105,7 @@
 		<entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"/>
 		<entry key="pages/cart/cartPage" value="addon:/luxurystoreaddon/pages/cart/cartPage"/>
 		<entry key="pages/search/facetResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
+		<entry key="pages/category/productGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
 		<entry key="pages/search/searchGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
 		<entry key="pages/search/searchEmptyPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchEmptyPage"/>
 		<entry key="fragments/cart/cartPopup" value="addon:/luxurystoreaddon/fragments/cart/cartPopup"/>
