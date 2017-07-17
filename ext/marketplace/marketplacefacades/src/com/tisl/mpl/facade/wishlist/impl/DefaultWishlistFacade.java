@@ -257,6 +257,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
 				{
 					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
+					wishlist2UpdateEntry.setDeletedDate(null);
 					modelService.save(wishlist2UpdateEntry);
 
 				}
@@ -311,6 +312,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
 				{
 					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
+					wishlist2UpdateEntry.setDeletedDate(null);
 					modelService.save(wishlist2UpdateEntry);
 				}
 				else
