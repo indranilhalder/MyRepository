@@ -248,7 +248,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;ForgotPwdgplus;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];validComponentTypes(code)
-;SiteLogoNew;;;logo
+;SiteLogo;;;logo
 ;TopContent;;$wideContent;
 ;BottomContent;;$wideContent;
 ;OrderReferenceNumberOne;;$wideContent;
@@ -271,14 +271,6 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
-;tatatrust;;$wideContent;
-;cliqnpic;;$wideContent;
-;easyreturn;;$wideContent;
-;authenticbrands;;$wideContent;
-;freeshipping;;$wideContent;
-;linegrey;;$wideContent;
-;appstore;;$wideContent;
-;googleplay;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderCancelledEmailTemplate'];validComponentTypes(code)
 ;SiteLogo;;;logo
@@ -927,7 +919,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-OrderConfirmationEmail;SiteLogoNew;;EmailSiteLogoConfSlot;true
+;;SiteLogo-OrderConfirmationEmail;SiteLogo;;EmailSiteLogoConfSlot;true
 ;;TopContent-OrderConfirmationEmail;TopContent;;EmailTopConfSlot;true
 ;;BottomContent-OrderConfirmationEmail;BottomContent;;EmailBottomConfSlot;true
 ;;OrderReferenceNumberOne-OrderConfirmationEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
@@ -943,15 +935,6 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;tweet-OrderConfirmationEmail;tweet;;EmailtweetSlot;true
 ;;youtube-OrderConfirmationEmail;youtube;;EmailYouTubeSlot;true
 ;;insta-OrderConfirmationEmail;insta;;EmailInstaSlot;true
-;;tatatrust-OrderConfirmationEmail;tatatrust;;EmailTatatrustSlot;true
-;;cliqnpic-OrderConfirmationEmail;cliqnpic;;EmailcliqnpicSlot;true
-;;easyreturn-OrderConfirmationEmail;easyreturn;;EmailEasyreturnSlot;true
-;;authenticbrands-OrderConfirmationEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
-;;freeshipping-OrderConfirmationEmail;freeshipping;;EmailFreeshippingSlot;true
-;;linegrey-OrderConfirmationEmail;linegrey;;EmailLinegreySlot;true
-;;appstore-OrderConfirmationEmail;appstore;;EmailAppleStoreSlot;true
-;;googleplay-OrderConfirmationEmail;googleplay;;EmailAndroidStoreSlot;true
-;;gplus-OrderConfirmationEmail;gplus;;EmailgplusRegSlot1;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;SiteLogo-OrderDeliveryEmail;SiteLogo;;EmailSiteLogoDlvrySlot;true
