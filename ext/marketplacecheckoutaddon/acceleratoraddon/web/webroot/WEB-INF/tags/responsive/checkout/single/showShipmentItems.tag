@@ -57,7 +57,7 @@
 													   
 											<div class="delivery-details">		   
 											<div class="details product" >
-											<p class="delivery_title">Select your preferred delivery option</p>
+											<p class="delivery_title"><spring:theme code="checkout.single.deliveryMode.selectMode"/></p>
 												<p class="product_name"><span class="desk_prod">for "</span><%-- <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3> --%>
 												<ycommerce:testId code="cart_product_name">
 													<%-- <a href="${productUrl}"><div class="name product-name">${entry.product.name}</div></a> --%>
@@ -263,7 +263,7 @@
 															</c:choose>
 									
 														</c:forEach>
-														<span id="slotMsgId_${entry.selectedSellerInformation.ussid}" class="preferred-delivery-type" style="display:none">Select preferred delivery time</span>
+														<span id="slotMsgId_${entry.selectedSellerInformation.ussid}" class="preferred-delivery-type" style="display:none"><spring:theme code="checkout.single.deliveryMode.selectSlotDeliveryTime"/></span>
 														<c:if test="${numberOfDelModesInEntry>1}">
 															<c:set var="hideChangeLink" value="false"/>
 														</c:if>
