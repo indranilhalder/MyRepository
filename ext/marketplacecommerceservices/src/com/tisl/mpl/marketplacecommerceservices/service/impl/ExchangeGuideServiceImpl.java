@@ -348,11 +348,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 			exMod.setCouponValue(exTrax.getExchangeValue().getCouponValue());
 			exMod.setIsWorking(exTrax.getExchangeValue().isIsWorking());
 			exMod.setL4categoryCode(exTrax.getExchangeValue().getL4categoryCode());
-			exMod.setOrderID(exTrax.getCartguid());
+			exMod.setOrderID("NA");
 			exMod.setPincode(exTrax.getPincode());
 			exMod.setProductId(exTrax.getProductId());
-			exMod.setSellerOrderID(exTrax.getCartguid());
-			exMod.setTransactiondId(exTrax.getCartguid());
+			exMod.setSellerOrderID("NA");
+			exMod.setTransactiondId("NA");
 			exMod.setUssid(exTrax.getUssid());
 			if (StringUtils.isNotEmpty(reason))
 			{

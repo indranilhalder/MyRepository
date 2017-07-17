@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 
@@ -89,8 +90,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		}
 		catch (final Exception e) /* added part of value provider go through */
 		{
-			throw new FieldValueProviderException(
-					"Cannot evaluate " + indexedProperty.getName() + " using " + super.getClass().getName() + "exception" + e, e);
+			throw new FieldValueProviderException("Cannot evaluate " + indexedProperty.getName() + " using "
+					+ super.getClass().getName() + "exception" + e, e);
 		}
 
 	}
@@ -105,8 +106,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		if ((baseSiteModel != null) && (baseSiteModel.getStores() != null) && (!(baseSiteModel.getStores().isEmpty()))
 				&& (getCommerceStockService().isStockSystemEnabled(baseSiteModel.getStores().get(0))))
 		{
-			fieldValues
-					.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0), indexedProperty));
+			fieldValues.addAll(createFieldValue(productCode, productType, indexConfig.getBaseSite().getStores().get(0),
+					indexedProperty));
 		}
 		else
 		{
@@ -115,8 +116,8 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 		return fieldValues;
 	}
 
-	protected List<FieldValue> createFieldValue(final String productCode, final String productType, final BaseStoreModel baseStore,
-			final IndexedProperty indexedProperty)
+	protected List<FieldValue> createFieldValue(final String productCode, final String productType,
+			final BaseStoreModel baseStore, final IndexedProperty indexedProperty)
 	{
 		final List fieldValues = new ArrayList();
 		if (baseStore != null)
@@ -164,20 +165,23 @@ public class MplProductInStockFlagValueProvider extends ProductInStockFlagValueP
 	protected StockLevelStatus getBuyBoxStockLevelStatus(final String productCode, final String productType)
 	{
 		//INC144317659
-		final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
-		//final int stockValue = buyBoxService.getBuyboxPricesForSearch(productCode).get(0).getAvailable().intValue();
-
-
+		//final Integer availableStock = buyBoxService.getBuyboxInventoryForSearch(productCode, productType);
+		//		final int stockValue = buyBoxService.getBuyboxPricesForSearch(productCode).get(0).getAvailable().intValue();
+		final List<BuyBoxModel> stockValueList = buyBoxService.getBuyboxPricesForSearch(productCode);
 		StockLevelStatus stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
+		if (!stockValueList.isEmpty())
+		{
+			final int stockValue = stockValueList.get(0).getAvailable().intValue();
+			if (stockValue > 0)
+			{
+				stockLevelStatus = StockLevelStatus.INSTOCK;
+			}
+			else
+			{
+				stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
+			}
+		}
 
-		if (availableStock > 0)
-		{
-			stockLevelStatus = StockLevelStatus.INSTOCK;
-		}
-		else
-		{
-			stockLevelStatus = StockLevelStatus.OUTOFSTOCK;
-		}
 		return stockLevelStatus;
 	}
 
