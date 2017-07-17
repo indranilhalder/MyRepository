@@ -3,6 +3,7 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.search.flexiblesearch.PagedFlexibleSearchService;
 import de.hybris.platform.commerceservices.search.flexiblesearch.data.SortQueryData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
@@ -419,6 +420,96 @@ public class DefaultMplOrderDao implements MplOrderDao
 			LOG.error("Error while searching  AbstractOrderEntryModel model by transactionId  " + transactionId);
 		}
 		return null;
+
+	}
+	//TPR-5225
+	@Override
+	public List<OrderModel> getOrderByMobile(final String mobileNo)
+	{
+		try
+		{
+			//final String query = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first 3 rows only";
+			final String query = "select {o:pk} from {Order As o} WHERE {o.type}=?type order by {o.creationtime} desc fetch first 3 rows only";
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			//flexiQuery.addQueryParameter("mobileNo", mobileNo);
+
+			flexiQuery.addQueryParameter("type", "SubOrder");
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
+			return listOfData;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching orderModel by mobileNo  " + e);
+
+		}
+		return null;
+	}
+
+	@Override
+	public String getL4CategoryId(final String productCode)
+	{
+		String l4CategoryId = null;
+		try
+		{
+			final String query = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode";
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+			flexiQuery.addQueryParameter("productCode", productCode);
+			final List<CategoryModel> l4List = flexibleSearchService.<CategoryModel> search(flexiQuery).getResult();
+			if (null != l4List && l4List.size() > 0)
+			{
+				l4CategoryId = l4List.get(0).getCode();
+			}
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("l4 category id is " + l4CategoryId);
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching l4 category" + e);
+
+		}
+		return l4CategoryId;
+	}
+
+	@Override
+	public OrderModel fetchOrderByTransaction(final String transactionId)
+	{
+		try
+		{
+			final String query = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type";
+			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
+
+			flexiQuery.addQueryParameter("transactionId", transactionId);
+			flexiQuery.addQueryParameter("type", "SubOrder");
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error while fetching orderModel transactionId  " + e);
+
+		}
+		return null;
+	}
+
+
+	@Override
+	public OrderModel getOrderByParentOrder(final String orderRefNo)
+	{
+		try
+		{
+			final String queryString = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo";
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
+			fQuery.addQueryParameter("type", "Parent");
+			fQuery.addQueryParameter("orderRefNo", orderRefNo);
+			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(fQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
 
 	}
 
