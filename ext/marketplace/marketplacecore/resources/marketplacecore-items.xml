@@ -11236,7 +11236,7 @@
 			<typegroup name="MPL_FOOTER"> 
 			   <itemtype code="MplFooterLink" autocreate="true" generate="true">
 				<description>Added New Links For Tag Cloud</description>
-				<deployment table="MplFooterLink" typecode="19870" />
+				<deployment table="MplFooterLink" typecode="21101" />
 				<attributes>
 				<attribute qualifier="footerLinkRow" type="java.lang.Integer">
 				    <modifiers optional="false" unique="false" write="true" read="true"/>
