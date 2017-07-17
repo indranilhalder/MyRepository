@@ -870,4 +870,7 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
+	
+	/* TPR-5733 */
+	public static final String FOOTER_LINK_LIST = "footerLinkList";
 }
