@@ -144,7 +144,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
 			addSellerInformation(source, target);
-			populateSellerInfo(source, target);
+			//populateSellerInfo(source, target);
 			addDeliverySlots(source, target);
 			//TPR-1083 Start
 			addExchange(source, target);
@@ -196,7 +196,20 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		{
 			for (final SellerInformationData seller : target.getProduct().getSeller())
 			{
-				if (null != source.getSelectedUSSID() && null != seller.getUssid()
+				if (target.getProduct().getRootCategory().equalsIgnoreCase(FINEJEWELLERY))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+							.getSelectedUSSID());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						if (StringUtils.isNotEmpty(seller.getUssid()) && seller.getUssid().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+						{
+							target.setSelectedSellerInformation(seller);
+							break;
+						}
+					}
+				}
+				else if (StringUtils.isNotEmpty(source.getSelectedUSSID()) && StringUtils.isNotEmpty(seller.getUssid())
 						&& seller.getUssid().equalsIgnoreCase(source.getSelectedUSSID()))
 				{
 					target.setSelectedSellerInformation(seller);
