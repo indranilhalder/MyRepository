@@ -428,10 +428,10 @@ public class DefaultMplOrderDao implements MplOrderDao
 	{
 		try
 		{
-			//final String query = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first 3 rows only";
-			final String query = "select {o:pk} from {Order As o} WHERE {o.type}=?type order by {o.creationtime} desc fetch first 3 rows only";
+			final String query = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first 3 rows only";
+			//final String query = "select {o:pk} from {Order As o} WHERE {o.type}=?type order by {o.creationtime} desc fetch first 3 rows only";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
-			//flexiQuery.addQueryParameter("mobileNo", mobileNo);
+			flexiQuery.addQueryParameter("mobileNo", mobileNo);
 
 			flexiQuery.addQueryParameter("type", "SubOrder");
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();

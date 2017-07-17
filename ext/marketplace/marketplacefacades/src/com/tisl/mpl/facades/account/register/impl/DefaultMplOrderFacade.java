@@ -394,7 +394,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -445,9 +445,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 * 
+	 *
 	 * @return Map<String, Map<String, String>>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -484,11 +484,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Boolean>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -522,11 +522,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 * 
+	 *
 	 * @param : orderEntryData
-	 * 
+	 *
 	 * @return OrderEntryData
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -861,7 +861,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1246,6 +1246,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 				}
 			}
+			else
+			{
+				orderInfoWsDTO.setError("Mobile number is not present in Commerce System");
+			}
 		}
 		catch (final Exception e)
 		{
@@ -1292,14 +1296,14 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								}
 								if (StringUtils.isNotEmpty(entry.getTotalSalePrice().toString()))
 								{
-									//customerOrderInfoWsDTO.setApportionedPrice(entry.getTotalSalePrice());
+									customerOrderInfoWsDTO.setApportionedPrice(entry.getTotalSalePrice().toString());
 								}
 								else
 								{
-									//customerOrderInfoWsDTO.setApportionedPrice
+									customerOrderInfoWsDTO.setApportionedPrice("NULL");
 								}
 								customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
-										: "NULL");
+										.toString().toUpperCase() : "NULL");
 								customerOrderInfoWsDTO
 										.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
 												.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
@@ -1479,6 +1483,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					}
 				}
 			}
+			else
+			{
+				orderInfoWsDTO.setError("TransactionId is not present in Commerce System");
+			}
 		}
 		catch (final Exception e)
 		{
@@ -1502,12 +1510,12 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			{
 				if (StringUtils.isNotEmpty(orderModel.getTotalPriceWithConv().toString()))
 				{
-					//orderInfoWsDTO.setOrderTotal(orderModel.getTotalPriceWithConv());
+					orderInfoWsDTO.setOrderTotal(orderModel.getTotalPriceWithConv().toString());
 				}
-				//				else
-				//				{
-				//					orderInfoWsDTO.setOrderTotal("NULL");
-				//				}
+				else
+				{
+					orderInfoWsDTO.setOrderTotal("NULL");
+				}
 				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getFirstname())
 						&& (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getLastname())))
 				{
@@ -1550,7 +1558,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
 								if (StringUtils.isNotEmpty(entry.getTotalPrice().toString()))
 								{
-									//customerOrderInfoWsDTO.setApportionedPrice((entry.getTotalSalePrice()));
+									customerOrderInfoWsDTO.setApportionedPrice((entry.getTotalSalePrice().toString()));
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setApportionedPrice("NULL");
 								}
 								if (StringUtils.isNotEmpty(entry.getSellerInfo()))
 								{
@@ -1635,6 +1647,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 						}
 					}
 				}
+			}
+			else
+			{
+				orderInfoWsDTO.setError("Order Reference Number is not present in Commerce System");
 			}
 		}
 		catch (final Exception e)
