@@ -70744,6 +70744,13 @@ background:#f8f8f8;
     text-align: left;
     color: #a5173c;
 }
+.preferred-delivery-type{
+	font-size: 11px;
+    line-height: 1.36;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #a5173c;
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */

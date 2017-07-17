@@ -601,8 +601,14 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         //calling tealium
-        $("#checkoutPageName").val("Choose Your Delivery Options");
-        tealiumCallOnPageLoad();
+        //$("#checkoutPageName").val("Choose Your Delivery Options");
+        if(typeof utag_data !="undefined"){
+        	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
+        	utag_data.page_name = checkoutDeliveryPage;
+        	$("#pageName").val(checkoutDeliveryPage);
+        	 
+        }
+        //tealiumCallOnPageLoad();
         var disableHideAjaxLoader=false;
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
@@ -1300,8 +1306,14 @@ ACC.singlePageCheckout = {
         		$("#selectedReviewOrderHighlight").html(countItemsText+" Items, "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
         	}
         	//added for tealium
-  		  $("#checkoutPageName").val("Review Order");
-  	       tealiumCallOnPageLoad();
+  		  //$("#checkoutPageName").val("Review Order");
+        	if(typeof utag_data !="undefined"){
+            	var checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
+            	utag_data.page_name = checkoutDeliveryPage;
+            	$("#pageName").val(checkoutDeliveryPage);
+            	 
+            }
+  	      // tealiumCallOnPageLoad();
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
@@ -1768,8 +1780,14 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
 		//tealium page name addition
-		$("#checkoutPageName").val("Payment Options");
-		  tealiumCallOnPageLoad();
+		//$("#checkoutPageName").val("Payment Options");
+		if(typeof utag_data !="undefined"){
+        	var checkoutDeliveryPage = "Multi Checkout Summary Page:Payment Options";
+        	utag_data.page_name = checkoutDeliveryPage;
+        	$("#pageName").val(checkoutDeliveryPage);
+        	 
+        }
+		  //tealiumCallOnPageLoad();
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
@@ -1938,7 +1956,27 @@ ACC.singlePageCheckout = {
 			$("#page_subcategory_l4").val(updatedSubCategoryL4);
 			$("#page_subcategory_name_l4").val(updatedSubCategoryL4);
 			$("#checkoutSellerIDs").val(updatedCheckoutSeller);
-			tealiumCallOnPageLoad();
+			if(typeof utag_data !="undefined"){
+	        	utag_data.product_id = updatedProduct;
+	        	utag_data.product_sku = updatedProduct;
+	        	utag_data.adobe_product = updatedAdobeSku;
+	        	utag_data.product_name = updatedProductName;
+	        	utag_data.product_quantity = updatedQuantity;
+	        	utag_data.product_list_price = updatedproductListPrice;
+	        	utag_data.product_unit_price = updatedUnitPrice;
+	        	utag_data.cart_total = updatedCartTotal;
+	        	utag_data.product_brand = updatedBrand;
+	        	utag_data.page_subcategory_L1 = updatedCategory;
+	        	utag_data.product_category = updatedCategory;
+	        	utag_data.page_subcategory_L2 = updatedSubCategory;
+	        	utag_data.page_subcategory_name = updatedSubCategory;
+	        	utag_data.page_subcategory_l3 = updatedSubCategoryL3;
+	        	utag_data.page_subcategory_name_l3 = updatedSubCategoryL3;
+	        	utag_data.page_subcategory_l4 = updatedSubCategoryL4;
+	        	utag_data.page_subcategory_name_l4 = updatedSubCategoryL4;
+	        	utag_data.checkoutSellerIDs = updatedCheckoutSeller;
+	        	
+	        }
 			
     	}
 				
