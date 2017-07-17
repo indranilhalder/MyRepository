@@ -202,17 +202,39 @@ ACC.productDetail = {
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
-				  var productcode= $(this).attr('data-productcode');
+				  var productcode= $(this).attr('data-productcode1');
 				//   console.log(productcode);
 				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 						  $(this).removeData('bs.modal');
 						});
 
-				   // load the url and show modal on success
-				   $("#popUpModal .modal-content").load(target, function() { 
-					   	   $("#popUpModal").modal("show");
-						  // buyboxDetailsForSizeGuide(productcode);
-				    });
+				   
+				   var isLuxury = $("#isLuxury").val();
+				   if(isLuxury) {
+					   var action = $("#sizeGuideAction").val();
+					   if(typeof action != 'undefined' && action !== null && action !== '') {
+						   $(".page-variant [data-productcode='"+ productcode +"']").click();
+						   $("#popUpModal").modal("hide");
+						   
+						   setTimeout(function() {
+							   $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
+							   $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'); //UF-263
+							   $(action).click();
+							},3000)
+					   } else {
+						   $(".page-variant [data-productcode='"+ productcode +"']").click();
+						   $("#popUpModal").modal("hide");
+					   }
+					   
+					  
+					   
+					   
+				   } else {
+					   $("#popUpModal .modal-content").load(target, function() {
+						   $("#popUpModal").modal("show");
+						   // buyboxDetailsForSizeGuide(productcode);
+					   });
+				   }
 				  
 			});
 		
@@ -2974,10 +2996,18 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
-			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-			$("#addToCartFormTitle").show();
-			//For pdp analytics changes
-			utag.link({"error_type":"size_not_selected"});
+			
+			var isLuxury = $("#isLuxury").val();
+			if(isLuxury) {
+				$("#sizeGuideAction").val('#buyNow .js-add-to-cart');
+				$(".size-guide").click();
+			} else {
+				$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+				$("#addToCartFormTitle").show();
+				//For pdp analytics changes
+				utag.link({"error_type":"size_not_selected"});
+			}
+			
 	 	    return false;
 	 }
 		//UF-160

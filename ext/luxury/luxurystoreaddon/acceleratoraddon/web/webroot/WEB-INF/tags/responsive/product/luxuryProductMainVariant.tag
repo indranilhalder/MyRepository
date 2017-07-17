@@ -103,7 +103,7 @@ var productSizeVar = '${productSize}';
 						     	<img src="${commonResourcePath}/images/multi.jpg" height="74" width="50" title="${variantOption.colour}" />
 								</c:when>
 								<c:when test="${empty variantOption.image}">
-						     	<span  style="background-color: ${color};box-shadow: 1px 1px 3px #ccc; width:50px; height:73px"></span>
+						     	<span  style="background-color: ${color};box-shadow: 1px 1px 3px #ccc; width:50px; height:73px" title="${variantOption.colour}"></span>
 						     	
 						     	<span class="toolInner" title="${variantOption.colour}"> Color : ${variantOption.colour} </span>
 								</c:when>							
@@ -257,7 +257,7 @@ share mobile -->
 		</a>
 		
 		<!-- Added for PDP Size ChartChange -->
-		<ul id="variant" class="variant-select list-unstyled">
+		<ul id="variant" class="variant-select list-unstyled page-variant">
 			<%-- <c:choose>
 		<select id="variant" class="variant-select">
 			<c:choose>
