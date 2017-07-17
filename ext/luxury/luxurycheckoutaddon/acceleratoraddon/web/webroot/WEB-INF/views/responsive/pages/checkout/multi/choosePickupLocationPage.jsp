@@ -1171,10 +1171,10 @@
 					</a>
 					</c:otherwise>
 				</c:choose>
-				<div class="checkout-order-summary orderSummary">
+<%-- 				<div class="checkout-order-summary orderSummary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
-				</div>
+				</div> --%>
 			</div></div>
 			<div>
 				<input type="hidden" name="CSRFToken"

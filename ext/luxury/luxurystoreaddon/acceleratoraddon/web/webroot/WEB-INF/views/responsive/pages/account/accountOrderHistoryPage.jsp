@@ -404,16 +404,16 @@
 																	data-dismiss="modal"
 																	onClick="refreshModal('${bogoCheck}',${entry.transactionId})"><spring:theme
 																		text="Cancel Order" /></a>
-																<a
+															</c:if>
+
+														</c:if>
+														<a
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"  class="btn btn-primary btn-sm"
 													><spring:theme
 															code="text.orderHistory.view.order" /></a> <a
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"  class="btn btn-primary btn-sm"
 													><spring:theme
 															code="text.orderHistory.track.order" /></a>
-															</c:if>
-
-														</c:if>
 
 														<!--Chairman Demo Changes: New Static Content Sheet: Checkout> Order Cancellation -->
 														<!-- TISCR-410 -->  
