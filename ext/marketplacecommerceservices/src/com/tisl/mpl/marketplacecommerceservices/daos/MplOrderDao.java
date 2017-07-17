@@ -92,12 +92,25 @@ public interface MplOrderDao
 	 * @throws EtailNonBusinessExceptions
 	 */
 	List<OrderModel> getOrderForGuid(CartModel cartModel) throws EtailNonBusinessExceptions;
+
 	/**
-	 * To get Short Url for order 
+	 * To get Short Url for order
+	 *
 	 * @param orderCode
 	 * @return
 	 */
 	public String getShortUrl(String orderCode);
 
 	public AbstractOrderEntryModel getEntryModel(String transactionId);
+
+	//TPR-5225
+	public List<OrderModel> getOrderByMobile(final String mobileNo);
+
+	public OrderModel getOrderByParentOrder(String orderRefNo);
+
+	//TPR-5225
+	public String getL4CategoryId(String productCode);
+
+	//TPR-4841
+	public OrderModel fetchOrderByTransaction(final String transactionId);
 }

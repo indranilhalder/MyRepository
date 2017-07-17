@@ -21,6 +21,10 @@ import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
+import de.hybris.platform.payment.model.PaymentTransactionEntryModel;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.returns.model.ReturnEntryModel;
+import de.hybris.platform.returns.model.ReturnRequestModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
@@ -29,12 +33,14 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.store.services.BaseStoreService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -71,6 +77,8 @@ import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.service.TicketCreationCRMservice;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.CustomerOrderInfoWsDTO;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.TicketMasterXMLData;
 
 
@@ -386,7 +394,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -437,9 +445,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -476,11 +484,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -514,11 +522,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -853,7 +861,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1143,24 +1151,499 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	 * @return OrderModel
 	 */
 	@Override
-	public OrderModel getOrderWithMobileNo(final String mobileNo)
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo)
 	{
-		final OrderModel orderModel = null;
-		/*
-		 * select unique {a.code},{b.cellphone},{a.creationtime},{a.type} from {order as a},{address as b} where
-		 * {b.cellphone} ='9830930189' and {a.user}={b.owner} and ({a.creationtime} > sysdate -60) and {a.type}='SubOrder'
-		 * order by {a.creationtime} asc
-		 */
+		List<OrderModel> orderModel = null;
+
+		orderModel = mplOrderService.fetchOrderByMobile(mobileNo);
+		//		select {a.code} from {order as a},{address as b} where
+		//		{b.cellphone} ='9830930189' and ({a.creationtime} > sysdate -180) and {a.user}={b.owner} and {a.type}='SubOrder'
+		//		order by {a.creationtime} asc fetch first 3 rows only
 
 		return orderModel;
 	}
 
+	@Override
+	public String getL4CategoryIdForProduct(final String productCode)
+	{
+		String pCode = null;
+		pCode = mplOrderService.getL4CategoryIdOfProduct(productCode);
+
+		return pCode;
+	}
+
 	//TPR-5225 ends here
+	@Override
+	public OrderModel fetchOrderInfoByTransactionId(final String transactionId)
+	{
+		OrderModel orderModel = null;
+		orderModel = mplOrderService.fetchOrderByTransactionId(transactionId);
+
+		return orderModel;
+
+	}
+
+	@Override
+	public OrderModel getOrderByParentOrderNo(final String orderRefNo)
+	{
+		OrderModel orderModel = null;
+		orderModel = mplOrderService.getOrderByParentOrderId(orderRefNo);
+
+		return orderModel;
+	}
 
 
+	@Override
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(final List<OrderModel> orderModels)
+	{
+		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 
+		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
 
+		try
+		{
+			if (orderModels != null)
+			{
+				List<AbstractOrderEntryModel> subOrderModel = new ArrayList<AbstractOrderEntryModel>();
+				for (final OrderModel parentOrder : orderModels)
+				{
+					subOrderModel = parentOrder.getEntries();
+					if (subOrderModel != null)
+					{
+						for (final AbstractOrderEntryModel entry : subOrderModel)
+						{
+							final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+							if (StringUtils.isNotEmpty(entry.getTransactionID()))
+							{
+								customerOrderInfoWsDTO.setTransactionId(entry.getTransactionID());
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setTransactionId("NULL");
+							}
+							if (StringUtils.isNotEmpty(entry.getProduct().getName()))
+							{
+								customerOrderInfoWsDTO.setProductName(entry.getProduct().getName());
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setProductName("NULL");
+							}
+							if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
+							{
+								customerOrderInfoWsDTO.setL4CategoryId(mplOrderService.getL4CategoryIdOfProduct(entry.getProduct()
+										.getCode()));
 
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setL4CategoryId("NULL");
+							}
+							custdto.add(customerOrderInfoWsDTO);
+							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+						}
+					}
+
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured" + e.getMessage());
+
+		}
+		return orderInfoWsDTO;
+	}
+
+	@Override
+	public OrderInfoWsDTO storeOrderInfoByTransactionId(final OrderModel orderModel, final String transactionId)
+	{
+		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
+		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		try
+		{
+			if (orderModel != null)
+			{
+				List<AbstractOrderEntryModel> subOrderModel = new ArrayList<AbstractOrderEntryModel>();
+				subOrderModel = orderModel.getEntries();
+				if (subOrderModel != null)
+				{
+					for (final AbstractOrderEntryModel entry : subOrderModel)
+					{
+						final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+						if (StringUtils.isNotEmpty(entry.getTransactionID()))
+						{
+							if (entry.getTransactionID().equalsIgnoreCase(transactionId))
+							{
+								customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
+										: "NULL");
+
+								customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo() : "NULL");
+
+								if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
+								{
+									customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setEdd("NULL");
+								}
+								if (StringUtils.isNotEmpty(entry.getTotalSalePrice().toString()))
+								{
+									//customerOrderInfoWsDTO.setApportionedPrice(entry.getTotalSalePrice());
+								}
+								else
+								{
+									//customerOrderInfoWsDTO.setApportionedPrice
+								}
+								customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
+										: "NULL");
+								customerOrderInfoWsDTO
+										.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
+												.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
+								//customerOrderInfoWsDTO.setOrderStatus(entry.getOrder().getStatus().getCode());
+
+								if (orderModel.getPaymentTransactions() != null)
+								{
+									final List<PaymentTransactionModel> paymlists = orderModel.getPaymentTransactions();
+									final PaymentTransactionModel paytm = paymlists.get(paymlists.size() - 1);
+
+									final List<PaymentTransactionEntryModel> paytmentry = paytm.getEntries();
+
+									final PaymentTransactionEntryModel pt = paytmentry.get(paytmentry.size() - 1);
+
+									customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getType().getCode() ? pt.getType()
+											.getCode() : "NULL");//Transaction status details
+
+									customerOrderInfoWsDTO.setTransactionStatus(null != pt.getTransactionStatus() ? pt
+											.getTransactionStatus() : "NULL");//Transaction Status
+
+									if (null != pt.getModifiedtime())
+									{
+										customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
+									}
+								}
+								customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus()
+										.getCode() : "NULL");//Order Status
+
+								if (StringUtils.isNotEmpty(orderModel.getModifiedtime().toString()))
+								{
+									customerOrderInfoWsDTO.setOrderTimestamp(formatter.format(orderModel.getModifiedtime()));//Order timestamp
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setOrderTimestamp("NULL");
+								}
+								final Iterator it = entry.getConsignmentEntries().iterator();
+								while (it.hasNext())
+								{
+
+									final ConsignmentEntryModel consg = (ConsignmentEntryModel) it.next();
+
+									//	customerOrderInfoWsDTO.setTransactionStatus(consg.getConsignment().getStatus().getCode());//Transaction status
+									if (StringUtils.isNotEmpty(consg.getConsignment().getModifiedtime().toString()))
+									{
+										customerOrderInfoWsDTO.setConsignmentTimestamp(formatter.format(consg.getConsignment()
+												.getModifiedtime()));//Consignment Timestamp
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setConsignmentTimestamp("NULL");
+									}
+									if (StringUtils.isNotEmpty(consg.getConsignment().getCarrier()))
+									{
+										customerOrderInfoWsDTO.setCarrierName(consg.getConsignment().getCarrier());//Carrier Name
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setCarrierName("NULL");
+									}
+									//(consg.getConsignment().getDeliveryMode().getCode());//Delivery Mode
+									//????????Shipping Status (Shipment delivered/in Transit etc) & Timestamp
+								}
+								//orderModel.getPaymentStatus().getCode();
+								if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
+								{
+									customerOrderInfoWsDTO.setPaymentMode(orderModel.getModeOfOrderPayment());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setPaymentMode("NULL");
+								}
+								final ConsignmentModel cng = orderModel.getConsignments().iterator().next();
+
+								if (null != cng.getDeliveryDate())
+								{
+									customerOrderInfoWsDTO.setDeliveryTrackingDate(formatter.format(cng.getDeliveryDate()));//Delivery tracking date
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setDeliveryTrackingDate("NULL");
+								}
+								if (StringUtils.isNotEmpty(cng.getTrackingID()))
+								{
+									customerOrderInfoWsDTO.setAwbNumber(cng.getTrackingID());//AWB number
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setAwbNumber("NULL");
+								}
+
+								{
+									customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
+											: "NULL");//Return carrier
+								}
+
+								{
+									customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum()
+											: "NULL");//Return AWB number
+								}
+								if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
+								{
+									if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+									{
+										customerOrderInfoWsDTO.setPaymentType("POSTPAID");
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setPaymentType("PREPAID");
+									}
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setPaymentType("NULL");
+								}
+								final Iterator it1 = orderModel.getReturnRequests().iterator();
+								while (it1.hasNext())
+								{
+									final ReturnRequestModel rq = (ReturnRequestModel) it1.next();
+
+									final Iterator it2 = rq.getReturnEntries().iterator();
+
+									while (it2.hasNext())
+									{
+										final ReturnEntryModel rte = (ReturnEntryModel) it2.next();
+
+										if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase("transactionId-passed"))
+										{
+											if (StringUtils.isNotEmpty(rte.getStatus().toString()))
+											{
+												customerOrderInfoWsDTO.setReturnRequestStatus(rte.getStatus().toString());//Return request status
+											}
+											else
+											{
+												customerOrderInfoWsDTO.setReturnRequestStatus("NULL");
+											}
+											if (StringUtils.isNotEmpty(rte.getCreationtime().toString()))
+											{
+												customerOrderInfoWsDTO.setReturnRequestTimestamp(formatter.format((rte.getCreationtime())));//Return timeStamp
+											}
+											else
+											{
+												customerOrderInfoWsDTO.setReturnRequestTimestamp("NULL");
+											}
+											break;
+										}
+
+									}
+									if (StringUtils.isNotEmpty(rq.getRejectionReason()))
+									{
+										customerOrderInfoWsDTO.setQcRejectionReason(rq.getRejectionReason());//QC rejection reason
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setQcRejectionReason("NULL");
+									}
+									if (StringUtils.isNotEmpty(rq.getTypeofreturn().toString()))
+									{
+										customerOrderInfoWsDTO.setReturnType(rq.getTypeofreturn().toString());//Type of Return
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setReturnType("NULL");
+									}
+
+								}
+								custdto.add(customerOrderInfoWsDTO);
+								orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+								break;
+							}
+						}
+
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured" + e.getMessage());
+
+		}
+		return orderInfoWsDTO;
+	}
+
+	@Override
+	public OrderInfoWsDTO storeOrderInfoByOrderNo(final OrderModel orderModel)
+	{
+
+		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
+		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		try
+		{
+			if (orderModel != null)
+			{
+				if (StringUtils.isNotEmpty(orderModel.getTotalPriceWithConv().toString()))
+				{
+					//orderInfoWsDTO.setOrderTotal(orderModel.getTotalPriceWithConv());
+				}
+				//				else
+				//				{
+				//					orderInfoWsDTO.setOrderTotal("NULL");
+				//				}
+				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getFirstname())
+						&& (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getLastname())))
+				{
+					orderInfoWsDTO.setCustName(orderModel.getDeliveryAddress().getFirstname() + " "
+							+ orderModel.getDeliveryAddress().getLastname());
+				}
+				else
+				{
+					orderInfoWsDTO.setCustName("NULL");
+				}
+				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getCellphone()))
+				{
+					orderInfoWsDTO.setCustMobileNo(orderModel.getDeliveryAddress().getCellphone());
+				}
+				else
+				{
+					orderInfoWsDTO.setCustMobileNo("NULL");
+				}
+				if (StringUtils.isNotEmpty(orderModel.getCreationtime().toString()))
+				{
+					orderInfoWsDTO.setOrderDate(formatter.format(orderModel.getCreationtime()));
+				}
+				else
+				{
+					orderInfoWsDTO.setOrderDate("NULL");
+				}
+				List<OrderModel> subOrderModel = new ArrayList<OrderModel>();
+
+				List<AbstractOrderEntryModel> orderEntryModel = new ArrayList<AbstractOrderEntryModel>();
+				subOrderModel = orderModel.getChildOrders();
+				if (subOrderModel != null)
+				{
+					for (final OrderModel subOrder : subOrderModel)
+					{
+						orderEntryModel = subOrder.getEntries();
+						if (orderEntryModel != null)
+						{
+							for (final AbstractOrderEntryModel entry : orderEntryModel)
+							{
+								final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+								if (StringUtils.isNotEmpty(entry.getTotalPrice().toString()))
+								{
+									//customerOrderInfoWsDTO.setApportionedPrice((entry.getTotalSalePrice()));
+								}
+								if (StringUtils.isNotEmpty(entry.getSellerInfo()))
+								{
+									customerOrderInfoWsDTO.setSellerName(entry.getSellerInfo());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setSellerName("NULL");
+								}
+								if (StringUtils.isNotEmpty(entry.getFulfillmentType()))
+
+								{
+									customerOrderInfoWsDTO.setShippingType(entry.getFulfillmentType().toString().toUpperCase());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setShippingType("NULL");
+								}
+								if (StringUtils.isNotEmpty(entry.getTransactionID()))
+								{
+									customerOrderInfoWsDTO.setTransactionId(entry.getTransactionID());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setTransactionId("NULL");
+								}
+								if (StringUtils.isNotEmpty(entry.getProduct().getName()))
+								{
+									customerOrderInfoWsDTO.setProductName(entry.getProduct().getName());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setProductName("NULL");
+								}
+								if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
+								{
+									customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setEdd("NULL");
+								}
+								if (StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
+								{
+									customerOrderInfoWsDTO.setShippingMode(entry.getMplDeliveryMode().getDeliveryMode().getCode());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setShippingMode("NULL");
+								}
+								if (StringUtils.isNotEmpty(subOrder.getModeOfOrderPayment()))
+								{
+									if (subOrder.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+									{
+										customerOrderInfoWsDTO.setPaymentType("POSTPAID");
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setPaymentType("PREPAID");
+									}
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setPaymentType("NULL");
+								}
+								if (CollectionUtils.isNotEmpty(entry.getConsignmentEntries()))
+								{
+									final Iterator it = entry.getConsignmentEntries().iterator();
+									while (it.hasNext())
+									{
+										final ConsignmentEntryModel consg = (ConsignmentEntryModel) it.next();
+										customerOrderInfoWsDTO.setOrderStatus(consg.getConsignment().getStatus().getCode());//Transaction status
+									}
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setOrderStatus(entry.getOrder().getStatus().getCode());
+								}
+								custdto.add(customerOrderInfoWsDTO);
+								orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured" + e.getMessage());
+			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+		}
+		return orderInfoWsDTO;
+	}
 
 	/**
 	 * This method returns the order model based on orderNumber, without customer check

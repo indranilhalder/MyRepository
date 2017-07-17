@@ -20,6 +20,7 @@ import com.tisl.mpl.core.model.CancellationReasonModel;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.product.data.ReturnReasonData;
 import com.tisl.mpl.facades.product.data.ReturnReasonDetails;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 
 
 /**
@@ -172,10 +173,24 @@ public interface MplOrderFacade
 	 * @param orderCode
 	 * @return OrderModel
 	 */
-	OrderModel getOrderWithMobileNo(final String mobileNo);
+	List<OrderModel> getOrderWithMobileNo(final String mobileNo);
+
+	public String getL4CategoryIdForProduct(final String productCode);
 
 	//TPR-5225 ends here
 
+	//TPR-4840
+	public OrderModel getOrderByParentOrderNo(final String orderRefNo);
+
+	//TPR-4840
+	public OrderInfoWsDTO storeOrderInfoByOrderNo(OrderModel orderModel);
+
+	public OrderInfoWsDTO storeOrderInfoByTransactionId(OrderModel orderModel, String transactionId);
+
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(List<OrderModel> orderModels);
+
+	//TPR-4841
+	public OrderModel fetchOrderInfoByTransactionId(final String transactionId);
 
 
 	/**

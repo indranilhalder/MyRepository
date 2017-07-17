@@ -2980,7 +2980,24 @@
 		<property name="apportionedPrice" type="String" />
 		<property name="orderStatus" type="String" />
 		<property name="paymentType" type="String" />
+		<property name="deliveryTrackingDate" type="String" />
 		<property name="paymentMode" type="String" />
+		<property name="l4CategoryId" type="String" />
+		<property name="transactionTimestamp" type="String" />
+		<property name="orderTimestamp" type="String" />
+		<property name="transactionStatus" type="String" />
+		<property name="transactionStatusDetails" type="String" />
+		<property name="consignmentTimestamp" type="String" />
+		<property name="carrierName" type="String" />
+		<property name="awbNumber" type="String" />
+		<property name="qcRejectionReason" type="String" />
+		<property name="returnCarrier" type="String" />
+		<property name="returnAwbNumber" type="String" />
+		<property name="returnType" type="String" />
+		<property name="returnRequestStatus" type="String" />
+		<property name="returnRequestTimestamp" type="String" />
+		
+		
 		
 		
 	</bean>

@@ -380,8 +380,35 @@ public class DefaultMplOrderService implements MplOrderService
 	 * get AbstractOrderEntryModel based on transactionId
 	 */
 	@Override
-	public AbstractOrderEntryModel getEntryModel(String transactionId){
+	public AbstractOrderEntryModel getEntryModel(final String transactionId)
+	{
 		return mplOrderDao.getEntryModel(transactionId);
 	}
-	
+
+	//TPR-4840
+	@Override
+	public OrderModel getOrderByParentOrderId(final String orderRefNo)
+	{
+		return mplOrderDao.getOrderByParentOrder(orderRefNo);
+	}
+
+	//TPR-5225
+	@Override
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo)
+	{
+		return mplOrderDao.getOrderByMobile(mobileNo);
+	}
+
+	//TPR-5225
+	@Override
+	public String getL4CategoryIdOfProduct(final String productCode)
+	{
+		return mplOrderDao.getL4CategoryId(productCode);
+	}
+
+	@Override
+	public OrderModel fetchOrderByTransactionId(final String transactionId)
+	{
+		return mplOrderDao.fetchOrderByTransaction(transactionId);
+	}
 }
