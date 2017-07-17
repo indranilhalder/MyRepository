@@ -605,7 +605,7 @@ ACC.singlePageCheckout = {
         if(typeof utag_data !="undefined"){
         	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
         	utag_data.page_name = checkoutDeliveryPage;
-        	$("#pageName").val(checkoutDeliveryPage);
+        	//$("#pageName").val(checkoutDeliveryPage);
         	 
         }
         //tealiumCallOnPageLoad();
@@ -2812,3 +2812,8 @@ $(document).ready(function(){
 		}
 	}
 });
+
+
+$('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery-modes li input:radio').click(function(){
+	alert("Hiii");
+	});
