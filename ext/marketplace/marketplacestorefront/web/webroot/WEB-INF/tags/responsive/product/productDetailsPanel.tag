@@ -250,7 +250,7 @@ tr.d0 td {
 							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
 							 <c:if test="${not empty classification.value }">
    						 		<c:forEach var="classValue" items="${classification.value }">
-   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			<p id="jwlryTitle">${classValue.key} ${classValue.value}</p>
    						 			 </c:forEach>
    						 			 <span class="more-link">More</span>
 							  </c:if> 
