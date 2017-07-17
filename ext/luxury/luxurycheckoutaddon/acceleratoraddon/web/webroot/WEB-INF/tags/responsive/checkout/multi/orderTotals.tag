@@ -17,29 +17,28 @@
 			<ul class="totals">
 				<li class="subtotal">
 					<span class="subTotalSpan"><spring:theme code="basket.page.totals.subtotal"/> </span>
-					<!-- <span class="amt"> -->
+					<span class="amt">
 					<ycommerce:testId code="Order_Totals_Subtotal">
 						<format:price priceData="${cartData.subTotal}"/>
 					</ycommerce:testId>
-					<!-- </span> -->
+					</span>
 				</li>
 
 
 				<c:if test="${cartData.totalDiscounts.value > 0}">
 					<li id="cartPromotionApplied">
 						<span class="cartpromotionSpan"><spring:theme code="basket.page.totals.savings"/></span>
-						<!-- <span id="cartPromotion" style="float: right">   -->
+						<span id="cartPromotion" style="float: right">
 						<format:price priceData="${cartData.totalDiscounts}"/>
-						<!-- </span> -->
+						</span>
 
 					</li>
 				</c:if>
 				<li id="promotionApplied"  class="hide">
 					<span><spring:theme code="basket.page.totals.savings"/></span>
-					<!-- <span id="promotion" style="float: right"> -->
+					<span id="promotion" style="float: right">
+					</span>
 					<format:price priceData="${cartData.totalDiscounts}"/>
-					<!-- </span> -->
-
 				</li>
 
 				<c:if test="${not empty cartData.deliveryCost}">
@@ -81,7 +80,8 @@
 					<span id="couponValue" class="text-right"> </span>
 					<input type="hidden" id="couponRelContent" value="<spring:theme code="coupon.release.content"/>">
 				</li>
-
+						<span id="edtotalWithConvField" style="float: right" class="hide"><format:price priceData="${cartData.deliverySlotCharge}"/></span>
+						
 					<%--  <c:if test="${not empty cartData.deliverySlotCharge}">
                      <li class="total" id="edtotal">
                          <div id="edtotalPriceConvChargeId">
@@ -91,15 +91,15 @@
                          </div>
                      </li>
                      </c:if>  --%>
-
-				<li class="total" id="total">
+						<span id="totalWithConvField" style="float: right" class="hide">
+				<%-- <li class="total" id="total">
 					<div id="totalPriceConvChargeId">
 						<span><spring:theme code="basket.page.totals.total"/> </span>
 						<span id="totalWithConvField" style="float: right">
 							<format:price priceData="${cartData.totalPrice}"/>
 						</span>
 					</div>
-				</li>
+				</li> --%>
 
 				<c:if test="${cartData.net && cartData.totalTax.value > 0 && showTax}">
 					<li class="tax">

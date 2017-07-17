@@ -44,7 +44,7 @@
 	  <div class="col-md-8">
 	  <div class="payment progress-barcheck ${progressBarClass}  ${paymentPage}">
    <div class="step-1"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Delivery Method<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
-       <div class="step-2"><a href="/checkout/multi/delivery-method/choose" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
+       <div class="step-2"><a href="/checkout/multi/delivery-method/select" class="step-head js-checkout-step ">Delivery Address<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
       <div class="step-3"><a href="/checkout/multi/checkoutlogin/login" class="step-head js-checkout-step">Payment<i class="arrow"></i></a><span class="paymentStepDone"></span></div>
     </div>
 	   <div class="payment-section">
@@ -207,7 +207,7 @@
 				<!-- TISCR-305 ends -->	
 				<div class="left-block choose-payment">
 
-				<div class="checkout-indent payments tab-view">
+				<div class="checkout-indent payments tab-views">
 					<ul class="checkout-paymentmethod nav">
 						<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -215,7 +215,7 @@
 											<c:when test="${map.key eq 'Credit Card'}">
 												<input type="hidden" id="CreditCard" value="${map.value}" />
 	
-												<li class="active payment-tab">
+												<li class="payment-tab">
 													<span id="viewPaymentCredit" >
 														<spring:theme code="checkout.multi.paymentMethod.selectMode.CC" />
 													</span>
@@ -283,16 +283,18 @@
 														        </div>
 														        </div>
 														        
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}" />
+										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"  style="visibility: hidden;"/>
 									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers"></label>
 									                 	 		
 									                 	 		<div class="card-details">
-									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}</div>
+									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}
+									                 	 			<p>${map.value.nameOnCard}</p>
+									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
+									                 	 			
+									                 	 			</div>
 									                 	 			<!-- <span class="saved">Saved card</span> -->
 									                 	 			
-									                  				<p>${map.value.nameOnCard}</p>
-									                  				<p><spring:theme code="text.expires.on"/> ${map.value.expiryMonth}/${map.value.expiryYear}</p>
-
+									                  				
 									                  			<input type="hidden" name="creditCardsBank" class="card_bank" value="${map.value.cardIssuer}" />
 									                  			<input type="hidden" name="creditCardsBrand" class="card_brand" value="${map.value.cardBrand}" />
 									                  			<input type="hidden" name="creditIsDomestic" class="card_is_domestic" value="${map.value.isDomestic}" />
@@ -356,10 +358,10 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<div class="radio creditDebitLabelRadio">
+				                  		<!-- <div class="radio creditDebitLabelRadio">
 										 <input type="radio" data-id="newCCard" id="creditLabel"/>
 										 <label for="creditLabel" class="numbers creditLabel" data-id="newCCard"><span>New Card</span></label>
-								   		</div>
+								   		</div> -->
 										<div class="card-group">
 											<div class="form-group">
 						                    	<fieldset>
@@ -459,7 +461,7 @@
 										    	<c:if test="${flag eq true}">
 					                            	<div class="le-checkbox mt-20 mb-10"><input type="checkbox" id="sameAsShipping" name="billing-shipping" checked="checked" /><label for="sameAsShipping"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.sameAsShipping"/></label></div>
 					                           	</c:if>   	
-					                           		<fieldset>
+					                           		<fieldset class="payment-billing-form">
 					                           		   <div class="row mb-20 mt-20">
 							                           		<div class="half col-md-6">
 								                           		<label><spring:theme code="text.first.name"/></label>
@@ -472,32 +474,33 @@
 								                           		<span class="error-message" id="lastNameError"></span>
 							                           		</div>
 						                           		</div>
-						                           		 <div class="row mb-20">
+						                           		<%-- <div class="row mb-20">
 							                           		<div class="full  col-md-12">
 								                           		<label><spring:theme code="text.addressline1"/></label>
 								                           		<input type="text" id="address1" maxlength="40" required="required" class="form-control">
 								                           		<span class="error-message" id="address1Error"></span>
 							                           		</div>
+						                           		</div> --%>
+						                           		<div class="full">
+						                           			<label><spring:theme code="text.addressBook.addressline1"/></label> <!-- TPR-4387 -->
+							                           		<!-- <input type="text" id="address1" maxlength="40" required="required"> -->
+							                           		<textarea class="full-address" id="address1" maxlength="120" onKeyUp="return taCount(this,'myCounter')" required="required"></textarea>
+							                           			Remaining characters :
+							                           			<span id='myCounter'></span>
+							                           		<span class="error-message" id="address1Error"></span>
 						                           		</div>
-						                           		<div class="row mb-20 ">
+						                           		<div class="row mb-20 hide">
 							                           		<div class="full col-md-12">
 								                           		<label><spring:theme code="text.addressline2"/></label>
 								                           		<input type="text" id="address2" maxlength="40" class="form-control">
 								                           		<span class="error-message" id="address2Error"></span>
 							                           		</div>
 						                           		</div>
-						                           		<div class="row mb-20">
+						                           		<div class="row mb-20 hide">
 							                           		<div class="full col-md-12">
 								                           		<label><spring:theme code="text.landmark"/> </label>
 								                           		<input type="text" id="address3" maxlength="40" class="form-control">
 								                           		<span class="error-message" id="address3Error"></span>
-							                           		</div>
-						                           		</div>
-						                           		<div class="row mb-20">
-							                           		<div class="full col-md-12">
-								                           		<label><spring:theme code="text.city"/></label>
-								                           		<input type="text" id="city" required="required" maxlength="40" class="form-control">
-								                           		<span class="error-message" id="cityError"></span>
 							                           		</div>
 						                           		</div>
 						                           		<div class="row mb-20">
@@ -701,10 +704,10 @@
 				                  		<input type="hidden" class="emi_tenure" id="emi_tenure" />
 				                  		<input type="hidden" class="emi_bank" id="emi_bank"> -->
 				                  		<input type="hidden" id="ebsDownCheck" value="${ebsDownCheck}"/>
-				                  		<div class="radio creditDebitLabelRadio">
+				                  		<!-- <div class="radio creditDebitLabelRadio">
 										 <input type="radio" data-id="newDCard" id="debitLabel"/>
 										 <label for="debitLabel" data-id="newDCard" class="numbers debitLabel" data-id="newDCard"><span>New Card</span></label>
-								   		</div>
+								   		</div> -->
 				                  		<!-- <p>NEW CARD</p> -->
 										<div class="card-group">
 											<div class="form-group">
@@ -1139,37 +1142,37 @@
 									
 									
 									<!-- COD error messages -->
-									<div id="codErrorMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
+									<div id="codErrorMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
 									</div>
 									
-									<div id="codMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
-									</div>
-									
-									
-								 	<div id="customerBlackListMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.customerBlackListMessage"/>
+									<div id="codMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
 									</div>
 									
 									
-									<div id="otpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpValidationSuccessfulMessage"/>
+								 	<div id="customerBlackListMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.customerBlackListMessage"/>
 									</div>
 									
 									
-									<div id="wrongOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
+									<div id="otpValidationMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpValidationSuccessfulMessage"/>
+									</div>
+									
+									
+									<div id="wrongOtpValidationMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
 									</div>
 									
 									<%-- <div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
 									</div> --%>
 									
-									<div id="expiredOtpValidationMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
+									<div id="expiredOtpValidationMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
 									</div>
 									
-									<div id="fulfillmentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
+									<div id="fulfillmentMessage" class="error-message payment-notification hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
 									</div>
 									
-									<div id="codItemEligibilityMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
+									<div id="codItemEligibilityMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
 									</div>
 									
-									<div id="emptyOTPMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>
+									<div id="emptyOTPMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>
 									</div>
 									
 									<!-- COD error messages ends -->
@@ -1198,8 +1201,8 @@
 				<!-- End of COD -->	
 					</ul>
 					<input type="hidden" id="paymentMode" name="paymentMode"/>
-					<ul class="tabs">
-					<c:forEach var="map" items="${paymentModes}">
+					 <ul class="tabs">
+					<%-- <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 											<c:when test="${map.key eq 'Credit Card'}">
@@ -1212,12 +1215,12 @@
 												</c:when>
 											</c:choose>
 										</c:if>
-									</c:forEach>
+									</c:forEach> --%>
 					<!-- div for Cards -->
 						
 
 				<!-- Card ends -->
-						<c:forEach var="map" items="${paymentModes}">
+						<%-- <c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
 										<c:choose>
 		    								<c:when test="${map.key eq 'Debit Card'}">
@@ -1231,7 +1234,7 @@
 												</c:when>
 											</c:choose>
 										</c:if>
-									</c:forEach>
+									</c:forEach> 
 				
 					<c:forEach var="map" items="${paymentModes}">
 									<c:if test="${map.value eq true}">
@@ -1280,7 +1283,7 @@
 													</c:when>
 											</c:choose>
 										</c:if>
-									</c:forEach>
+									</c:forEach> --%>
 
 						<ycommerce:testId code="paymentDetailsForm">
 								
@@ -1375,6 +1378,7 @@
 		$(this).parents("#card").find("#newCardCC").hide();
 		$(this).parents("#card").find("#newCardCC").next("li").hide();
 		$(this).parents("#card").find(".terms").last().hide();
+		 
 	});
 	$(".new_card_tab.credit_tab").click(function(){
 		$(this).addClass("active_tab");
@@ -1388,6 +1392,13 @@
 		$(".card_cvvErrorSavedCard_popup").css("display","none");
 		$("#make_saved_cc_payment").removeClass("saved_card_disabled");
 	});
+	$('#viewPaymentDebit').click(function(){
+		$(".saved_card_tab.debit_tab").trigger('click');
+	});
+	$("#viewPaymentCredit,#viewPaymentNetbanking,#viewPaymentEMI").click(function(){
+		$("#cardDebit").hide();
+	});
+	
 	$(".saved_card_tab.debit_tab").click(function(){
 		$(this).addClass("active_tab");
 		$(".new_card_tab.debit_tab").removeClass("active_tab");

@@ -482,6 +482,35 @@
             list-style: none;
             margin: 10px 0px;
         }
+        
+        #couponApplied{
+            .remove-coupon-button{
+                min-width: 12px;
+                width: 15px;
+                height: 25px !important;
+                background-color: transparent;
+                margin-right: 5px;
+                padding: 0;
+                display: inline;
+                float: left;
+                border: 0px;
+                
+                &:before{                   
+                    font-family: 'FontAwesome';
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-weight: 100;
+                    content: "\f056";
+                    color: #a9143c;
+                    font-size: 14px;
+                    display: inline-block;
+                    position: relative;
+                    top: -6px;
+                    border: 0px;                  
+                   
+                }
+            }
+        }
         /*.subTotalSpan, .amt, #promotionApplied span, .shipping span , #convChargeFieldId span{
             width: 49%;
             display: inline-block;

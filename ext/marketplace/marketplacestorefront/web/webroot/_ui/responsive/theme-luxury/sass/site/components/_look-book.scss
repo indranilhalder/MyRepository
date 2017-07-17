@@ -80,6 +80,26 @@
 	max-width: 910px;
 	margin: 0 auto 60px;
 	text-align: center;
+    &.layout-2{
+        max-width: 930px;
+    }
+    &.layout-3{
+        max-width: 930px;
+    }
+    &.shortbanner-layout1{
+        max-width: 1127px;
+        .layout-width-25{
+            li{
+                float: right;
+            }
+        }
+    }
+    &.shortbanner-layout2{
+        max-width: 1127px;
+    }
+    &.shortbanner-layout3{
+        max-width: 1127px;
+    }
 	.slick-slide {
 		img {
 			display: inline-block;

@@ -370,7 +370,7 @@
 							</c:if>
 						</c:forEach>
 						<ycommerce:testId code="cart_product_removeProduct">
-							<a class="lightGrayTxt normalSizeMediumTxt remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}">
+							<a class="lightGrayTxt normalSizeMediumTxt lux-remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}">
 								<i class="fa fa-trash"></i> <spring:theme code="cart.remove"/>
 							</a>
 							<form:form name="addToCartForm" method="post" action="#" class="mybag-undo-form">
@@ -1350,9 +1350,7 @@
 				<span><spring:theme code="mpl.gift.Yourself" /></span>
 			</h2>
 		</div>
-		<ul class="product-block wishlist" id="giftYourselfProducts">
-
-		</ul>
+	
 
 
 		<storepickup:pickupStorePopup />

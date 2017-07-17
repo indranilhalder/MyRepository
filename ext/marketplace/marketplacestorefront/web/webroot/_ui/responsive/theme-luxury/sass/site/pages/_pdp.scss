@@ -6,6 +6,33 @@
 	padding-left: 15px;
 	padding-right: 15px;
     
+    .product-detail.pdp-right{
+         @include media-breakpoint-down(sm) {
+             .Cta{
+                    position: fixed;
+                    bottom: 0px;
+                    left: 0px;
+                    right: 0px;
+                    z-index: 2;
+                 
+                 #buyNow{
+                     padding: 0px;
+                     
+                     button{
+                         border-radius: initial;
+                     }
+                 }
+                 #addToCartButton{
+                     padding: 0px;
+                     
+                     button{
+                         border-radius: initial;
+                     }
+                 }
+             }
+        }
+        
+    }
     
     .strike-price, .saving-price, .savings, .our-price{
         font-size: 18px;
@@ -1105,6 +1132,6 @@ a:hover.tooltips {
 		width:auto !important;
 	}
 	.pdp-view .pdp-img img {border : 0}
-    #addToCartButton {display : none !important;}
+    /*#addToCartButton {display : none !important;}*/
 	
 }
