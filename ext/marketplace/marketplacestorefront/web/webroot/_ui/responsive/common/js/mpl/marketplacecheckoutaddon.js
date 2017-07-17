@@ -5173,7 +5173,6 @@ function submitNBForm(){
 
 function calculateDeliveryCost(radioId,deliveryCode)
 {
-	
 	if(radioId=="" || radioId==undefined || deliveryCode=="" || deliveryCode==undefined )
 	{
 		var radioSelected=$('#deliveryradioul input:radio');	
@@ -5246,7 +5245,15 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 			handleExceptionOnServerSide(errorDetails);
 
 	 		}
-	 	});	 
+	 	});	
+	 
+	 //UF-428 fix
+		if(typeof utag !="undefined"){
+	         utag.link({
+		  	link_text: "deliver_mode_"+deliveryCode,
+		  	event_type : deliveryCode+"_delivery_selected"
+		  });
+		}
 }
 
 //TPR-1214
@@ -5468,6 +5475,7 @@ function selectDefaultDeliveryMethod() {
 
 
 $('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery ul li input:radio').click(function(){
+
 	/*TPR-685 starts*/
 		 var length = $(this).find("li").length; 
 		
