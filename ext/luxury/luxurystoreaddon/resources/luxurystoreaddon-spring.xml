@@ -105,6 +105,7 @@
 		<entry key="addon:/marketplacecheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage" value="addon:/luxurycheckoutaddon/pages/checkout/multi/mplCheckOutLoginPage"/>
 		<entry key="pages/cart/cartPage" value="addon:/luxurystoreaddon/pages/cart/cartPage"/>
 		<entry key="pages/search/facetResultPanel" value="addon:/luxurystoreaddon/pages/search/luxuryFacetResultPanel"/>
+		<entry key="pages/category/productGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
 		<entry key="pages/search/searchGridPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchResultsPage"/>
 		<entry key="pages/search/searchEmptyPage" value="addon:/luxurystoreaddon/pages/search/luxurySearchEmptyPage"/>
 		<entry key="fragments/cart/cartPopup" value="addon:/luxurystoreaddon/fragments/cart/cartPopup"/>
@@ -147,6 +148,9 @@
 		<entry key="pages/account/accountPaymentInfoPage" value="addon:/luxurystoreaddon/pages/account/accountPaymentInfoPage"/>
 		<entry key="pages/account/myInterest" value="addon:/luxurystoreaddon/pages/account/myInterest"/>
 		<entry key="pages/account/reviewPage" value="addon:/luxurystoreaddon/pages/account/reviewPage"/>
+		<entry key="pages/account/returnRequest" value="addon:/luxurystoreaddon/pages/account/returnRequest"/>
+		<entry key="pages/account/returnSubmit" value="addon:/luxurystoreaddon/pages/account/returnSubmit"/>
+		<entry key="pages/account/returnSuccess" value="addon:/luxurystoreaddon/pages/account/returnSuccess"/>
 		<entry key="pages/checkout/checkoutConfirmationPage" value="addon:/luxurystoreaddon/pages/checkout/checkoutConfirmationPage"/>
 		
 	</util:map>

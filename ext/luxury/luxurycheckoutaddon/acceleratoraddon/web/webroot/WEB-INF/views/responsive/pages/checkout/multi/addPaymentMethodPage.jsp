@@ -1367,6 +1367,9 @@
 	if($("#savedCard").length > 0)
 	{
 		$("#card").find(".terms").last().hide();
+		$('#newCardCC').hide();
+	}else{
+		$('#newCardCC').show();
 	}
 	
 	$(".saved_card_tab.credit_tab").click(function(){
@@ -1395,7 +1398,7 @@
 	$('#viewPaymentDebit').click(function(){
 		$(".saved_card_tab.debit_tab").trigger('click');
 	});
-	$("#viewPaymentCredit,#viewPaymentNetbanking,#viewPaymentEMI").click(function(){
+	$("#viewPaymentCredit,#viewPaymentNetbanking,#viewPaymentEMI,#viewPaymentCOD").click(function(){
 		$("#cardDebit").hide();
 	});
 	

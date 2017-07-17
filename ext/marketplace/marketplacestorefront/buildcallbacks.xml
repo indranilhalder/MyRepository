@@ -81,6 +81,7 @@
 	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui" name="mpstorefront.webroot.ui" />
 	<property location="${ext.marketplacestorefront.path}/web/webroot/_ui/compiler.jar" name="google.closure.jar" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js/minified" name="mpstorefront.minjs.dir" />
+	<property location="${mpstorefront.webroot.ui}/responsive/theme-luxury/combined" name="lxstorefront.minjs.dir" />
 	<property location="${mpstorefront.webroot.ui}/responsive/common/js" name="mpstorefront.js.dir" />
 	<property location="**.js" name="alljs.file.expression" />
 
@@ -308,6 +309,16 @@
 						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
 						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
 						<arg line="--js_output_file ${mpstorefront.minjs.dir}/tmpmain.min.js" />
+					</java>
+					<echo message="Minifying JS for Luxury..." />
+					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
+						<arg line="--compilation_level SIMPLE" />
+						<arg line="--language_in ECMASCRIPT5" />
+						<arg line="--warning_level QUIET" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl-primary/tisl.home.js" />
+						<arg line="--js ${mpstorefront.js.dir}/mpl/**.js" />
+						<arg line="--js !${mpstorefront.js.dir}/mpl/acc.accountaddress.js"/>
+						<arg line="--js_output_file ${lxstorefront.minjs.dir}/luxury-tmpmain.min.js" />
 					</java>
 					<java jar="${google.closure.jar}" dir="${mpstorefront.webroot.ui}" fork="true">
 						<arg line="--compilation_level SIMPLE" />

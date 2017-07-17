@@ -232,6 +232,9 @@ import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
 import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+import com.tisl.mpl.facades.product.data.DayData;
+import com.tisl.mpl.facades.product.data.MonthData;
+import com.tisl.mpl.facades.product.data.YearData;
 
 /**
  * Controller for home page
@@ -3038,15 +3041,15 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<GenderData> genderList = mplCustomerProfileFacade.getGenders();
 			model.addAttribute(ModelAttributetConstants.GENDER_DATA, genderList);
 
-			//final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
-			//final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
-			//final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
-			//final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
+			final List<DayData> dayList = mplCustomerProfileFacade.getDayList();
+			final List<MonthData> monthList = mplCustomerProfileFacade.getMonthList();
+			final List<YearData> yearList = mplCustomerProfileFacade.getYearList();
+			final List<YearData> yearAnniversaryList = mplCustomerProfileFacade.getYearAnniversaryList();
 
-			//model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
-			//model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
-			//model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
-			//model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
+			model.addAttribute(ModelAttributetConstants.DAYLIST, dayList);
+			model.addAttribute(ModelAttributetConstants.MONTHLIST, monthList);
+			model.addAttribute(ModelAttributetConstants.YEARLIST, yearList);
+			model.addAttribute(ModelAttributetConstants.YEARANNIVERSARYLIST, yearAnniversaryList);
 
 			final CustomerData customerData = customerFacade.getCurrentCustomer();
 			final MplCustomerProfileData customerProfileData = mplCustomerProfileFacade.getCustomerProfileDetail(customerData

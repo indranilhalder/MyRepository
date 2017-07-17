@@ -391,10 +391,10 @@ TATA.CommonFunctions = {
     		$('#deleteConfirmation .deleteWlConfirmationNo').css('display','inline-block');
     	});
     },
-
+    
     wishlistInit: function(){
         TATA.CommonFunctions.luxuryForceUpdateHeader();
-        $(document).on("click, touchstart",".add-to-wishlist",function(){
+        $(document).on("click touchstart",".add-to-wishlist",function(){
             if ($(this).hasClass("added")){
                 TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
             } else {
@@ -1438,7 +1438,8 @@ TATA.Pages = {
         },
         
         writeReview:function() {
-        	$('body').on('click', '.gig-rating-writeYourReview', function () {
+        	 $("body").on("click touchstart", ".gig-rating-writeYourReview", function(e) {
+             	e.preventDefault();
         		$('.accordion-title').removeClass('active');
         		$('.accordion-content').hide();
         		$('.review-accordion').addClass('active');
@@ -1511,7 +1512,6 @@ TATA.Pages = {
         _self.MYACCOUNT.init();
     },
 };
-
 
 function checkPincodeServiceability(buttonType,el)
 {

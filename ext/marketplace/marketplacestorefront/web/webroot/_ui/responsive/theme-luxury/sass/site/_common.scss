@@ -338,11 +338,13 @@ header{
 				border-radius: $border-radius-small;
 				background: $white;
                 list-style: none;
+                max-height: 373px;
+                overflow-y: scroll;
                 
 				.item{
 					padding: 0px 100px 44.5px 106px;
 				    position: relative;
-				    height: 175px;
+				    height: 110px;
 				    border-bottom: solid 1px #eee;
 				    
 				    ul{
@@ -375,6 +377,8 @@ header{
 							}
 							.removeFromCart{
 								color: #92002e;
+                                display: block;
+                                width: 65px;
 							}
 						}
 				    }
