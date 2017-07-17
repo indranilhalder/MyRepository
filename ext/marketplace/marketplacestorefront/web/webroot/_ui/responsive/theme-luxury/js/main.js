@@ -1438,7 +1438,8 @@ TATA.Pages = {
         },
         
         writeReview:function() {
-        	$('body').on('click', '.gig-rating-writeYourReview', function () {
+        	 $("body").on("click touchstart", ".gig-rating-writeYourReview", function(e) {
+             	e.preventDefault();
         		$('.accordion-title').removeClass('active');
         		$('.accordion-content').hide();
         		$('.review-accordion').addClass('active');
