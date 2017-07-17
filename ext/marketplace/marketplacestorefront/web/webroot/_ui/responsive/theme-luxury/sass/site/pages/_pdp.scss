@@ -1,5 +1,11 @@
 /*PDP Section start*/
-
+ @include media-breakpoint-down(sm) {
+    .page-productDetails{
+        footer{
+            margin-bottom: 50px;
+        }
+    }
+}
 .pdp-view {
 	max-width: 1150px;
 	margin: 20px auto 0;
@@ -15,18 +21,33 @@
                     right: 0px;
                     z-index: 2;
                  
+                 .buy-btn-holder{
+                     background: #fff;
+                 }
+                 
                  #buyNow{
-                     padding: 0px;
+                        padding-left: 0;
+                        padding-right: 0;
+                        width: 49%;
+                        display: inline-block;
                      
                      button{
                          border-radius: initial;
                      }
                  }
+                 .addtocart-component{
+                     width: 50%;
+                     display: inline-block;
+                    padding-left: 0!important;
+                    padding-right: 0!important;
+                 }
                  #addToCartButton{
-                     padding: 0px;
+                    padding-left: 0;
+                    padding-right: 0;
                      
                      button{
                          border-radius: initial;
+                             border-radius: 0px;
                      }
                  }
              }
