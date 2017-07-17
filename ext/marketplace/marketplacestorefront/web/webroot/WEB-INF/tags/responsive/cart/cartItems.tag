@@ -164,6 +164,14 @@ tr.d0 td {
 
 
 						<ul class="item-edit-details">
+						<c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange" style="display:none">
+<%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
 							<c:if test="${entry.updateable}">
 								<c:forEach items="${entry.product.seller}" var="seller">
 									<c:if test="${seller.ussid eq entry.selectedUssid }">

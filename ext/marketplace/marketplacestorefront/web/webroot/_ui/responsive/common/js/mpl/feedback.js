@@ -3827,3 +3827,17 @@ $(".accordin").smk_Accordion({
 	$(this).parent().siblings().find(".accordin.FineJewellery .item div.title").slideUp();
 	$(this).parent().siblings().removeClass("accordion-open");
 });*/
+
+/*price breakup scroll start*/
+$("span.price-breakup").click(function() {
+	  $("body,html").animate({ scrollTop: $("#showPrice").offset().top - 150 }, "slow");
+	  $("#showPrice").addClass("acc_active");
+	  $("#showPrice").find(".detail.acc_content").slideDown();
+});
+/*price breakup scroll end*/
+/*Feature for FineJewellery scroll start*/
+$("span.more-link").click(function() {
+	  $("body,html").animate({ scrollTop: $("#tabs_styleNotes").offset().top - 150 }, "slow");
+	  $("#tabs_styleNotes").addClass("active");
+});
+/*Feature for FineJewellery scroll end*/

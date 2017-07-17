@@ -89,11 +89,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -203,11 +203,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a pcmUssid.
-	 *
+	 * 
 	 * @param pcmUssid
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -378,11 +378,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -401,17 +401,17 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 			//priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND ( {bb.delisted}  IS NULL OR {bb.delisted} =0)  and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     ORDER BY {bb.product} ASC, {bb.weightage} DESC";
 
+
 			if (StringUtils.isNotEmpty(sellerId))
 			{
 				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND "
-						+ "(sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     "
-						+ "ORDER BY {bb.product} ASC, {bb.weightage} DESC";
+						+ "(sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     " + "ORDER BY {bb.weightage} DESC";
 			}
 			else
 			{
 				priceQueryString = "SELECT {bb.PK} FROM {BuyBox AS bb} where {bb.product}= ?product AND "
-						+ "( {bb.delisted}  IS NULL OR {bb.delisted} =0)  and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})     "
-						+ "ORDER BY {bb.product} ASC, {bb.weightage} DESC";
+						+ "( {bb.delisted}  IS NULL OR {bb.delisted} =0)  AND   {bb:available} > 0 and (sysdate between {bb.sellerstartdate} and {bb.sellerenddate})   AND {bb:price} > 0   "
+						+ "ORDER BY {bb.weightage} DESC";
 			}
 
 
@@ -479,11 +479,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the inventory for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -558,11 +558,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for invalidating pk of the buybox sellers in the cache.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -613,9 +613,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given product code if all the seller has stock zero
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -691,7 +691,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getRichAttributeData(java.lang.String)
 	 */
 	@Override
@@ -748,7 +748,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		String sellerArticleSKU = "sellerArticleSKU";
 		if (StringUtils.isNotEmpty(prodCatType) && prodCatType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 		{
-			sellerArticleSKU = "pussid";
+			sellerArticleSKU = BuyBoxModel.PUSSID;
 		}
 		//CKD: TPR-3809 :End
 		final Set<Map<BuyBoxModel, RichAttributeModel>> buyboxdataset = new LinkedHashSet<Map<BuyBoxModel, RichAttributeModel>>();
@@ -788,9 +788,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			 * " JOIN CatalogVersion as cat ON {cat.pk}={seller.catalogversion} " +
 			 * " JOIN RichAttribute as rich  ON {seller.pk}={rich.sellerInfo} } " +
 			 * " where {cat.version}='Online' and {b.product} = ?productCode and( {b.delisted}  IS NULL or {b.delisted}=0 )  and (sysdate between {b.sellerstartdate} and {b.sellerenddate})     order by {b.weightage} desc,{b.available} desc"
-			 * ;
+			 * ; <<<<<<< HEAD
 			 * 
-			 * LOG.debug(QUERY_CLASS + queryString); }
+			 * =======
+			 * 
+			 * >>>>>>> refs/remotes/origin/JOE LOG.debug(QUERY_CLASS + queryString); }
 			 */
 
 
@@ -807,13 +809,33 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 			}
 			else
 			{
+				String pussidCheck = "a";
 				for (final List<Object> row : result.getResult())
 				{
-					final Map<BuyBoxModel, RichAttributeModel> resultMap = new HashMap<BuyBoxModel, RichAttributeModel>();
 					final BuyBoxModel buyBox = (BuyBoxModel) row.get(0);
 					final RichAttributeModel rich = (RichAttributeModel) row.get(1);
-					resultMap.put(buyBox, rich);
-					buyboxdataset.add(resultMap);
+					if (StringUtils.isNotEmpty(prodCatType)
+							&& prodCatType.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+					{
+						if (null != buyBox.getPUSSID() && !pussidCheck.contains(buyBox.getPUSSID()))
+						{
+							pussidCheck = pussidCheck.concat(buyBox.getPUSSID());
+							final Map<BuyBoxModel, RichAttributeModel> resultMap = new HashMap<BuyBoxModel, RichAttributeModel>();
+							resultMap.put(buyBox, rich);
+							buyboxdataset.add(resultMap);
+						}
+						else
+						{
+							LOG.debug("Skipping other variant for USSID" + buyBox.getSellerArticleSKU());
+						}
+					}
+					else
+					{
+						final Map<BuyBoxModel, RichAttributeModel> resultMap = new HashMap<BuyBoxModel, RichAttributeModel>();
+						resultMap.put(buyBox, rich);
+						buyboxdataset.add(resultMap);
+					}
+
 				}
 			}
 		}
@@ -844,9 +866,9 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the buybox price for given ussid if all the seller has stock zero
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return List<BuyBoxModel>
 	 */
 	@Override
@@ -872,7 +894,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#priceForUssid(java.lang.String)
 	 */
 	@Override
@@ -906,11 +928,11 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * This method is responsible for get the price for a buybox wining seller against a product code.
-	 *
+	 * 
 	 * @param productCode
-	 *
+	 * 
 	 * @return flexibleSearchService.<BuyBoxModel> search(query).getResult()
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -1026,7 +1048,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * Get Buybox data in respect of ussid (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyBoxDataForUssids(java.util.List)
 	 */
 	//TPR-3736
@@ -1225,7 +1247,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#getBuyboxSellerPricesForSearch(java.util.List)
 	 */
 	//JEWELLERY
@@ -1313,7 +1335,7 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao#buyboxPriceForJewelleryWithVariant(java.lang.String)
 	 */
 	@Override

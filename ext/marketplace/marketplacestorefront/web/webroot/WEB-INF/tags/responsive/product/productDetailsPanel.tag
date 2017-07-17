@@ -250,9 +250,9 @@ tr.d0 td {
 							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
 							 <c:if test="${not empty classification.value }">
    						 		<c:forEach var="classValue" items="${classification.value }">
-   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			<p id="jwlryTitle">${classValue.key} ${classValue.value}</p>
    						 			 </c:forEach>
-   						 			 <a href="" class="more-link">More</a>
+   						 			 <span class="more-link">More</span>
 							  </c:if> 
 								</c:forEach>
 							</span> 
@@ -397,7 +397,7 @@ tr.d0 td {
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
             <c:if test="${product.rootCategory =='FineJewellery'}">
              <div class="certified-by"> 
-              <h2>certified by</h2>
+              <h2>Certified by:</h2>
               <ul>
                <!-- <li><img src="images/certified-by.jpg" alt="certified by"></li>
                <li>30 day returns</li>
@@ -587,7 +587,7 @@ tr.d0 td {
 	<div id="productContentDivId"></div>
 	<c:choose>
 		<c:when
-			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">
+			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories || product.rootCategory==finejewellery || product.rootCategory==fashionjewellery}">
 			<!-- Added for TISPRO-271 -->
 			<div class="trending" id="ia_products_complements"></div>
 			<div class="trending" id="ia_products"></div>
@@ -606,7 +606,7 @@ tr.d0 td {
 	<br /> <br />
 	<c:choose>
 		<c:when
-			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories|| product.rootCategory==finejewellery}">
+			test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories|| product.rootCategory==finejewellery || product.rootCategory==fashionjewellery}">
 			<div class="view-similar-items" id="view-similar-items"></div>
 		</c:when>
 		<c:otherwise>

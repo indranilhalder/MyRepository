@@ -41,7 +41,7 @@
 	<%--for price breakup(TPR-3752) --%>
 
 	  <c:if test="${product.rootCategory=='FineJewellery' }">	
-	               <span>Price Breakup</span>
+	               <span class="price-breakup">Price Breakup</span>
 	</c:if>
 	
 	<%--for price breakup(TPR-3752) --%>	
@@ -49,7 +49,7 @@
 
 	<!-- TPR-3780 STARTS HERE -->
 	<c:if test="${product.rootCategory=='FineJewellery' }">										
-	    <p class="disclaimer-txt more">
+	    <p class="disclaimer-txt">
 	    	<spring:theme code="cart.price.disclaimer"/>
 	    </p>
 	</c:if>	

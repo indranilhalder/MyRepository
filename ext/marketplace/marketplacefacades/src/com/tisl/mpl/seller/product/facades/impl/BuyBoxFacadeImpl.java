@@ -547,7 +547,32 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
-				final int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+				int sellerSize = -20;
+				int count = 0;
+				String pussidCheck = "pussidCheck";
+
+				for (final BuyBoxModel buyBox : buyboxModelList)
+				{
+					//****other seller count for fine jewellery
+					if (null != buyBox.getPUSSID())
+					{
+						if (!pussidCheck.contains(buyBox.getPUSSID()))
+						{
+							pussidCheck = pussidCheck.concat(buyBox.getPUSSID());
+							count++;
+						}
+					}
+				}
+				if (count > 0)
+				{
+					sellerSize = count - 1 - oosSellersCount;
+				}
+				//****other sellers count for product other than fine jewellery
+				else
+				{
+					sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+				}
+
 				final Integer noofsellers = Integer.valueOf(sellerSize);
 
 				//TPR-250:Start
@@ -563,11 +588,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//				else
 
 				//				{
-
-
-
-
-
 
 				buyboxData.setNumberofsellers(noofsellers);
 
@@ -718,14 +738,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	@Override
 	//CKD: TPR-3809
 	//public List<SellerInformationData> getsellersDetails(final String productCode) throws EtailNonBusinessExceptions,
-	public List<SellerInformationData> getsellersDetails(final String productCode,final String prodCatType) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public List<SellerInformationData> getsellersDetails(final String productCode, final String prodCatType)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		final List<SellerInformationData> SellerInformationDataList = new ArrayList<SellerInformationData>();
-		
+
 		//CKD: TPR-3809
 		//for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode))
-		for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode,prodCatType))
+		for (final Map<BuyBoxModel, RichAttributeModel> resultMap : buyBoxService.getsellersDetails(productCode, prodCatType))
 		{
 			for (final Map.Entry<BuyBoxModel, RichAttributeModel> entry : resultMap.entrySet())
 			{
@@ -1036,10 +1056,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1151,42 +1171,41 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
+
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
 
+		//for fine jewellery other seller count
+		int count = 0;
+		String pussidCheck = "pussidCheck";
+		int sellerSize = -20;
+		if (StringUtils.isNotEmpty(productcategory) && productcategory.equalsIgnoreCase(FINEJEWELLERY))
+		{
+			for (final BuyBoxModel bModel : buyboxModelList)
+			{
+				if (null != bModel.getPUSSID() && !pussidCheck.contains(bModel.getPUSSID()))
+				{
+					pussidCheck = pussidCheck.concat(bModel.getPUSSID());
+					count++;
+				}
+			}
+			sellerSize = count - 1 - oosSellersCount;
+		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//other sellers count
-		int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+		//other sellers count for category other than fine jewellery
+		else
+		{
+			sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+		}
 		if (isMicroSellerOOS)
 		{
 			sellerSize = sellerSize + 1;
 		}
 		if (sellerSize < 0)
 		{
-
 			buyboxData.setNumberofsellers(Integer.valueOf(0));
-
 		}
 		else
 		{
-
-
 			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
 		}
 		//CKD:TPR-250:End
@@ -1260,7 +1279,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736
@@ -1329,7 +1348,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		return bBoxSellerIdFound;
 	}
-	
+
 	@Override
 	public String findPussid(final String selectedUSSID)
 	{

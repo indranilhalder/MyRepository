@@ -456,8 +456,31 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				if (entry != null && entry.getSelectedUssid() != null)
 				{
-					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
-							.getSelectedUssid());
+					/*
+					 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
+					 * .getSelectedUssid());
+					 */
+					SellerInformationModel sellerInfoModel = null;
+					if ((null != entry.getProduct())
+							&& (entry.getProduct().getRootCategory()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+								.getSelectedUssid());
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+						}
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+					}
+
 					if (sellerInfoModel != null
 							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -605,7 +628,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								}
 
 								final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-										deliveryMode, MarketplacecommerceservicesConstants.INR, pincodeRes.getUssid());
+										deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
 
 								if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModel.getDeliveryMode() != null)
 								{
@@ -869,14 +892,18 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 
 			final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
+			final String selectedUssid = entry.getSelectedUssid();
 			deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
 
 			for (final PinCodeResponseData pincodeRes : omsDeliveryResponse)
 			{
-				if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
-						&& pincodeRes.getIsServicable() != null
-						&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
-						&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+				//				if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
+				//						&& pincodeRes.getIsServicable() != null
+				//						&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
+				//						&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+				if (StringUtils.isNotEmpty(selectedUssid) && pincodeRes.getUssid() != null && pincodeRes.getIsServicable() != null
+						&& selectedUssid.equalsIgnoreCase(pincodeRes.getUssid()) && pincodeRes.getIsServicable().equalsIgnoreCase("Y")
+						&& !entry.isGiveAway())
 				{
 
 					for (final DeliveryDetailsData deliveryData : pincodeRes.getValidDeliveryModes())
@@ -904,7 +931,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							//}
 
 							final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-									deliveryMode, MarketplacecommerceservicesConstants.INR, pincodeRes.getUssid());
+									deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
 
 							if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModel.getDeliveryMode() != null)
 							{
@@ -938,7 +965,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					deliveryModeData.setCode(marketplaceDeliveryModeData.getCode());
 					deliveryModeData.setDescription(marketplaceDeliveryModeData.getDescription());
 					deliveryModeData.setName(marketplaceDeliveryModeData.getName());
-					deliveryModeData.setSellerArticleSKU(entry.getSelectedSellerInformation().getUssid());
+					deliveryModeData.setSellerArticleSKU(entry.getSelectedUssid());
 					deliveryModeData.setDeliveryCost(marketplaceDeliveryModeData.getDeliveryCost());
 					deliveryModeDataList.add(deliveryModeData);
 				}
@@ -6205,14 +6232,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
 				final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
+				final String selectedUssid = entry.getSelectedUssid();
 				//deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
 
 				for (final PinCodeResponseData pincodeRes : omsDeliveryResponse)
 				{
-					if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
-							&& pincodeRes.getIsServicable() != null
-							&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
+					//					if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
+					//							&& pincodeRes.getIsServicable() != null
+					//							&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
+					//							&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+					if (StringUtils.isNotEmpty(selectedUssid) && pincodeRes.getUssid() != null && pincodeRes.getIsServicable() != null
+							&& selectedUssid.equalsIgnoreCase(pincodeRes.getUssid())
 							&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+
 					{
 
 						for (final DeliveryDetailsData deliveryData : pincodeRes.getValidDeliveryModes())
@@ -6244,7 +6276,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								{
 
 									final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-											deliveryMode, MarketplacecommerceservicesConstants.INR, pincodeRes.getUssid());
+											deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
 
 									if (deliveryModel != null && deliveryModel.getValue() != null
 											&& deliveryModel.getDeliveryMode() != null)
