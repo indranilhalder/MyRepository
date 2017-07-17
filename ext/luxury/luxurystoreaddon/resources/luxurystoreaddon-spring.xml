@@ -148,6 +148,9 @@
 		<entry key="pages/account/accountPaymentInfoPage" value="addon:/luxurystoreaddon/pages/account/accountPaymentInfoPage"/>
 		<entry key="pages/account/myInterest" value="addon:/luxurystoreaddon/pages/account/myInterest"/>
 		<entry key="pages/account/reviewPage" value="addon:/luxurystoreaddon/pages/account/reviewPage"/>
+		<entry key="pages/account/returnRequest" value="addon:/luxurystoreaddon/pages/account/returnRequest"/>
+		<entry key="pages/account/returnSubmit" value="addon:/luxurystoreaddon/pages/account/returnSubmit"/>
+		<entry key="pages/account/returnSuccess" value="addon:/luxurystoreaddon/pages/account/returnSuccess"/>
 		<entry key="pages/checkout/checkoutConfirmationPage" value="addon:/luxurystoreaddon/pages/checkout/checkoutConfirmationPage"/>
 		
 	</util:map>
