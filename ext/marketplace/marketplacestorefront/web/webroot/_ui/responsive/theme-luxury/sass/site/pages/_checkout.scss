@@ -505,10 +505,23 @@
                     font-size: 14px;
                     display: inline-block;
                     position: relative;
-                    top: -6px;
+                    top: -3px;
                     border: 0px;                  
                    
                 }
+            }
+            .couponSpan{
+                width: 68%;
+                display: inline-block;                
+            }
+            .popover{
+                position: absolute!important;
+                left: 15px!important;
+                border: 1px solid #ccc;
+                background: #fff;
+                padding: 2px;
+                top:-5px!important;
+                display: none!important;
             }
         }
         /*.subTotalSpan, .amt, #promotionApplied span, .shipping span , #convChargeFieldId span{
@@ -1066,6 +1079,17 @@ checkout-shipping-items.left-block-width{
         }
         #country{
             width: 100%;
+        }
+    }
+}
+
+.page-multiStepCheckoutSummaryPage{
+    .checkout.delivery{
+        .right-block.shipping{
+            visibility:visible!important;            
+            .subtotals{
+                display: block!important;
+            }
         }
     }
 }
