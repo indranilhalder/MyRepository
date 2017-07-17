@@ -23,6 +23,15 @@
 	    width: 100%;
 	    border-bottom: 1px solid #e4e8f0;
  	}
+ 	body .account .right-account .order-history.order-details .status>ul.nav>li{
+ 		font-size:12px;
+ 	}
+ 	#changeAddressLink{
+ 		margin-bottom: 40px;
+    	display: block;
+    	line-height:1px !important;
+    	margin-right: -20px;
+ 	}
  }
  .product-block.order-details .list-top-title li:last-child{
  	border-right:0;
@@ -50,10 +59,11 @@
 
 .item-fulfillment{
 	clear:both;
-	margin-top: 89px;
+	margin-top: 125px;
     float: none;
     border-top: 1px solid #dce1eb;
     padding: 10px 10px 0;
+    margin-bottom: 10px;
 }
 
 .item.delivered{
@@ -72,10 +82,12 @@
 .order .image{
 	width:30%;
 	float:left;
+	padding-left: 10px;
 }
 .order .details{
 	width:70%;
 	float:left;
+	padding-left:20px;
 }
 
 .order .actions{
@@ -153,7 +165,8 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     top: -2px;
 }
 
-body .account .right-account .order-history.order-details .status .message.trackOrdermessage_00cbe9{
+body .account .right-account .order-history.order-details .status .message.trackOrdermessage_00cbe9,
+body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47{
 	color: #a9143c;
     z-index: 100;
     top: 55px !important;
@@ -166,6 +179,10 @@ body .account .right-account .order-history.order-details .status .message.track
     text-align: center;
 }
 
+body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47{
+	display: none;
+}
+
 body .right-account .order-details .deliveryTrack .dot-arrow{
 	position: absolute;
     top: 27px;
@@ -175,6 +192,8 @@ body .right-account .order-details .deliveryTrack .dot-arrow{
     left: 0;
     right: 0;
     margin: auto;
+    top:23px;
+    
 }
 
 body .account .right-account .order-history.order-details .status>ul>li.progress span.end:before{
@@ -192,6 +211,10 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     bottom: 50%;
     right: -100%;
     width: 100%;
+}
+
+body .account .right-account .order-history.order-details .status>ul>li.progress.cancelStatus span.end:after{
+	right:0;
 }
 
 body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.inactive:before,
@@ -227,14 +250,16 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 }
 
 .order-placed-arrow p,
-.processing-stage-arrow1 p{
+.processing-stage-arrow1 p,
+.cancellation.message p{
 	font-weight: bold;
     padding-bottom: 5px;
     font-size: 12px;
 }
 
 .order-placed-arrow ul li,
-.processing-stage-arrow1 ul li{
+.processing-stage-arrow1 ul li,
+.cancellation.message ul li{
 	font-size: 12px;
 }
 
