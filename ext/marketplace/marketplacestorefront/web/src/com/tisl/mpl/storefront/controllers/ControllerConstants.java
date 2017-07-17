@@ -311,7 +311,7 @@ public interface ControllerConstants
 				String MiniCartErrorPanel = "fragments/cart/miniCartErrorPanel";
 				String CartPopup = "fragments/cart/cartPopup";
 				String GiftList = "fragments/cart/cartGiftList";
-
+				public static final String pincode = "pincode";
 			}
 
 			interface Account

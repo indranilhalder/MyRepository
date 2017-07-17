@@ -2723,7 +2723,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		catch (final EtailBusinessExceptions e)
 		{
 			ExceptionUtil.etailBusinessExceptionHandler(e, null);
-			LOG.error("EtailBusinessExceptions  while  selecting delivery mode ", e);
+			LOG.error("EtailBusinessExceptions  while  selecting delivery mode:" + e.getErrorCode(), e);
 			getSessionService().setAttribute(MarketplacecclientservicesConstants.DELIVERY_MODE_ENTER_STEP_ERROR_ID, "TRUE");
 			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecheckoutaddonConstants.CART
 					+ "&type=redirect", UTF);
@@ -3615,7 +3615,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 						break;
 					}
 				}
-				if (deliveryPosPresent && (StringUtils.isEmpty(pickupPersonName)) || (StringUtils.isEmpty(pickupPersonMobile)))
+				if (deliveryPosPresent && (StringUtils.isEmpty(pickupPersonName) || StringUtils.isEmpty(pickupPersonMobile)))
 				{
 					jsonObj.put("url", "/checkout/single");
 					jsonObj.put("type", "redirect");
@@ -4654,7 +4654,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4712,7 +4712,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
