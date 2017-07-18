@@ -6452,15 +6452,24 @@ function populatePincodeDeliveryMode(response,buttonType){
 		}
 		var newLi = document.createElement("li");
 		newLi.setAttribute("class", "methodHome");
-		var text = document.createTextNode("Home Delivery");
+		//UF-306 starts here
+		//var text = document.createTextNode("Home Delivery");
+		var text = document.createTextNode("Standard Shipping");
+		//UF-306 ends here
 		newLi.appendChild(text);
 		var newLi1 = document.createElement("li");
 		newLi1.setAttribute("class", "methodExpress");
-		var text = document.createTextNode("Express Delivery");
+		//UF-306 starts here
+		//var text = document.createTextNode("Express Delivery");
+		var text = document.createTextNode("Express Shipping");
+		//UF-306 ends here
 		newLi1.appendChild(text);
 		var newLi2 = document.createElement("li");
 		newLi2.setAttribute("class", "methodClick");
-		var text = document.createTextNode("Click and Collect");
+		//UF-306 starts here
+		//var text = document.createTextNode("Click and Collect");
+		var text = document.createTextNode("CLiQ AND PiQ");
+		//UF-306 ends here
 		newLi2.appendChild(text);
 		
 		var isHd = false;

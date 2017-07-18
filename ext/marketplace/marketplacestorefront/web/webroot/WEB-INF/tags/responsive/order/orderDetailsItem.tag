@@ -134,7 +134,20 @@
 			</li>
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
-					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
+					 <!-- UF-306 starts -->
+					 <%-- <li class="deliver-type">${entry.mplDeliveryMode.name}</li> --%>
+					 <c:choose>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.home.delivery"/></li>
+				   		</c:when>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.express.delivery"/></li>
+				   		</c:when>
+				   		<c:otherwise>
+				   			<li class="deliver-type"><spring:theme code="text.clickandcollect.delivery"/></li>
+				   		</c:otherwise>
+				   	</c:choose>
+				   	<!-- UF-306 ends -->	
 					<li class="deliver">
 					<c:choose>
 					<%-- PRDI-378 starts here --%>
