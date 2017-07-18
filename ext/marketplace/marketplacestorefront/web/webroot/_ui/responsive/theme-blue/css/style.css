@@ -22967,7 +22967,7 @@ body .account .right-account .cancellation-request-block form.return-form  .prod
 }
 
 .brush-strokes-sprite {
-    background-image: url(../images/brush-strokes.png);
+    /* background-image: url(../images/brush-strokes.png); */
     background-repeat: no-repeat;
     display: block;
 }
