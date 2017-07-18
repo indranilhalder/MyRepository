@@ -785,11 +785,11 @@ ACC.singlePageCheckout = {
                 	var str ="";
                 	if(data.hd>0)
                 	{
-                		str+="Home Delivery ("+data.hd+" item),"
+                		str+="Standard Shipping ("+data.hd+" item),"
                 	}
                 	if(data.ed>0)
                 	{
-                		str+="Express Delivery ("+data.ed+" item),"
+                		str+="Express Shipping ("+data.ed+" item),"
                 	}
                 	if(data.cnc>0)
                 	{

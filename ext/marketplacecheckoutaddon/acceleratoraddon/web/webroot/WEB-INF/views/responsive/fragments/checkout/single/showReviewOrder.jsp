@@ -472,7 +472,8 @@
 					<c:choose>
 						<c:when test="${deliveryModeDataVal.code == 'click-and-collect'}">
 							<p class="cartItemBlankPincode">						
-								${deliveryModeDataVal.name}
+								<%-- ${deliveryModeDataVal.name} --%>
+								<spring:theme code="text.clickandcollect.delivery" />
 							</p>
 							<p>${deliveryModeDataVal.description }</p>
 							<p>Store Address:</p>
@@ -495,10 +496,20 @@
 									<c:set var="deliveryCost" value="Free" />
 								</c:otherwise>
 							</c:choose>
-							<p class="cartItemBlankPincode">						
-								${deliveryModeDataVal.name} (${deliveryCost})
-							</p>
-							<p>${deliveryModeDataVal.description }</p>
+							<c:choose>
+								<c:when test="${deliveryModeDataVal.code == 'home-delivery'}">
+									<p class="cartItemBlankPincode">						
+										<spring:theme code="text.home.delivery" /> (${deliveryCost})
+									</p>
+									<p>${deliveryModeDataVal.description }</p>
+								</c:when>
+								<c:otherwise>
+									<p class="cartItemBlankPincode">						
+										<spring:theme code="text.express.shipping" /> (${deliveryCost})
+									</p>
+									<p>${deliveryModeDataVal.description }</p>
+								</c:otherwise>
+							</c:choose>
 						</c:otherwise>
 					</c:choose>				
 					<ul id="${entry.selectedUssid}">
