@@ -12,6 +12,14 @@
 	padding-left: 15px;
 	padding-right: 15px;
     
+    .Cta{
+        .buy-btn-holder{
+            #buyNow{
+                padding-left: 0px;
+            }
+        }
+    }
+    
     .product-detail.pdp-right{
          @include media-breakpoint-down(sm) {
              .Cta{
@@ -966,6 +974,10 @@
 			margin-top:15px;
 			display:inline-block;
 			width:100%;
+           
+            p{
+               padding: 10px;  
+            }
 			h3{
 				border-bottom: 1px solid #ddd; 
 				padding: 15px 20px;

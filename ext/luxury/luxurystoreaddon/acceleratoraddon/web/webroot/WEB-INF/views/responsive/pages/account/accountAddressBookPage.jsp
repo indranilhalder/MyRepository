@@ -474,10 +474,10 @@
 
 										
 											<div class="dupDisplay">
-												<label>State *</label>
+												<!-- <label>State *</label> -->
 												<div class="stateInput"></div>
 													<div class="help-block has-error" id="stateError"
-												style="display: none;"></div>
+												style="display: none;" placeholder="State*"></div>
 												</div>
 
 									</div>
