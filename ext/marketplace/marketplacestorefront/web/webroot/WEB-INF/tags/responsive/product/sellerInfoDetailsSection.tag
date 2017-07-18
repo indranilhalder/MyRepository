@@ -38,7 +38,7 @@
 						name="skuIdForCod" value="" />	
 
 				
-					<button type="submit" name="submit" id="submit">
+					<button type="submit" name="submit" id="submit" class="otherSellersFont">
 					<%-- <button type="submit" name="submit" id="submit"
 						class="otherSellersFont">
 						<p id="otherSellerInfoId" class="other-sellers" style="display: none"><a>

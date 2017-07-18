@@ -776,9 +776,6 @@ a.morelink, .more-link {
 	padding-right: 20px;
 	width: 100%;
 } */
-.tabs-block .wrapper{
-	padding: 0;
-}
 .tabs-block .FineJewellery .nav>li, 
 .tabs-block .FashionJewellery .nav>li,
 .tabs-block .FineJewellery .nav>li#tabs_styleNotes,
@@ -48460,11 +48457,11 @@ float: right;
 	.tabs.pdp p, .tabs.pdp ul li {
 		font-size: 12px;
 	}
-	/* .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
+	 .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
 		display: block;
 		margin: 0 auto;
 		width: 92%;
-	} */
+	} 
 	.tab-details li {    float: none;    padding:  0;    width: 100%;}
 	/*More Stuff Like This slider*/
 	.page-productDetails .trending:nth-child(2n+1) {
@@ -62925,9 +62922,9 @@ body.page-productGrid .facet-list.filter-opt ~ .left-block{
 	.certified-by ul li{
 		width: 33.33%;
 	}	
-	.product-info .product-content .delivery-block li.do{
+	/* .product-info .product-content .delivery-block li.do{
 		padding-bottom: 0;
-	}
+	} */
 	.about-pro{
 		width: 52%;
 		float: left;
@@ -76239,6 +76236,9 @@ p.disclaimer-txt{
   .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4.reenteraccountnumber b{		
 	 	width: 300px;		
 	}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in .arrow{
+	left: 70%;
+}
 @media(min-width: 1024px){
 	body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4{
 	width: 38%;
@@ -76256,6 +76256,12 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 }		
 .accordtionTataCliq .accContents .col-md-8.slectionRefund b{		
 	margin-top: 20px;		
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.ifsccode .ifscPopOver{
+	padding-top: 18px;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in{
+	    margin-top: 26px;
 }		
 }		
  	@media (min-width: 791px){
@@ -76287,14 +76293,17 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{
 		padding-left: 0px;
 		}
+		.col-md-8.slectionRefund ~ .button_holder button{
+		width: 170px;
+		}
 }
 @media(max-width: 480px){		
 	.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
 	padding-left: 15px;		
 	}
 	.col-md-8.slectionRefund ~ .button_holder button{
-		width: 150px;
-		}		
+	 	width: 150px;
+	}
 	}
 @media(max-width: 450px){
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
@@ -76303,6 +76312,14 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow {
     left: 123px;
 }
+.col-md-8.slectionRefund ~ .button_holder button {
+    width: 150px;
+}
+}
+@media(max-width: 420px){
+	.col-md-8.slectionRefund ~ .button_holder button {
+    	width: 100px;
+}	
 }
 @media(max-width: 790px){
 	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
