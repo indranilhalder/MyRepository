@@ -36,7 +36,6 @@ import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
-import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -527,45 +526,46 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 				orderEntry.getOrder().getCurrency());
 	}
 
-	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
-	{
-		final ProductModel productModel = source.getProduct();
-		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
-
-		for (final SellerInformationModel sellerInformationModel : sellerInfo)
-		{
-			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
-			{
-				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
-						.getSelectedUSSID());
-				if (CollectionUtils.isNotEmpty(jewelleryInfo))
-				{
-					if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
-					{
-						final SellerInformationData sellerInfoData = new SellerInformationData();
-						sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-						sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-						sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-						target.setSelectedSellerInformation(sellerInfoData);
-						break;
-					}
-				}
-			}
-
-			else
-			{
-				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
-				{
-					final SellerInformationData sellerInfoData = new SellerInformationData();
-					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-					target.setSelectedSellerInformation(sellerInfoData);
-					break;
-				}
-			}
-		}
-	}
+	/* SONAR FIX JEWELLERY */
+	//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+	//	{
+	//		final ProductModel productModel = source.getProduct();
+	//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+	//
+	//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+	//		{
+	//			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+	//			{
+	//				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+	//						.getSelectedUSSID());
+	//				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+	//				{
+	//					if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+	//					{
+	//						final SellerInformationData sellerInfoData = new SellerInformationData();
+	//						sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+	//						sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+	//						sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+	//						target.setSelectedSellerInformation(sellerInfoData);
+	//						break;
+	//					}
+	//				}
+	//			}
+	//
+	//			else
+	//			{
+	//				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
+	//				{
+	//					final SellerInformationData sellerInfoData = new SellerInformationData();
+	//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+	//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+	//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+	//					target.setSelectedSellerInformation(sellerInfoData);
+	//					break;
+	//				}
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * @param source

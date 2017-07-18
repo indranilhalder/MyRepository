@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtCommerceCartMergingStrategy;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
@@ -53,9 +52,9 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 
 	@Resource(name = "exchangeGuideService")
 	private ExchangeGuideService exchangeService;
-
-	@Resource(name = "commerceCartService")
-	private MplCommerceCartService mplCommerceCartService;
+	//SONAR FIX JEWELLERY
+	//	@Resource(name = "commerceCartService")
+	//	private MplCommerceCartService mplCommerceCartService;
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;

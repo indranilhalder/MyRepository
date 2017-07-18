@@ -238,7 +238,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 			queryString.append("SELECT {exchange." + ExchangeTransactionModel.PK + "} " + "FROM {"
 					+ ExchangeTransactionModel._TYPECODE + " AS exchange }" + " where {exchange.exchangeid} in (");
 			queryString.append(exIdString);
-			queryString.append(")");
+			queryString.append(')');//SONAR FIX JEWELLERY
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
 

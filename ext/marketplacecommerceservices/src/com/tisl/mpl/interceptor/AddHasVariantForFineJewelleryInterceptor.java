@@ -41,7 +41,8 @@ public class AddHasVariantForFineJewelleryInterceptor implements PrepareIntercep
 			final SellerInformationModel sellerInfo = (SellerInformationModel) model;
 			String listingId = null;
 			String categoryId = null;
-			final Boolean isHasVariant = Boolean.valueOf(true);
+			//	final Boolean isHasVariant = Boolean.valueOf(true);//SONAR FIX JEWELLERY
+			final Boolean isHasVariant = Boolean.TRUE;
 			if (sellerInfo.getProductSource() != null)
 			{
 				listingId = sellerInfo.getProductSource().getCode();

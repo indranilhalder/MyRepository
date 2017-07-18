@@ -54,7 +54,7 @@ public class MplleadVariantWeightServiceImpl implements MplleadVariantWeightServ
 
 
 
-	private static final Integer LISTINGID = Integer.valueOf("0");
+	//	private static final Integer LISTINGID = Integer.valueOf("0");//SONAR FIX JEWELLERY
 	private static final Integer USSID = Integer.valueOf("1");
 
 
@@ -65,7 +65,8 @@ public class MplleadVariantWeightServiceImpl implements MplleadVariantWeightServ
 		{
 			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(line.get(USSID));
 
-			sellerInfoModel.setHasVariant(Boolean.valueOf(true));
+			//	sellerInfoModel.setHasVariant(Boolean.valueOf(true)); SONAR FIX JEWELLERY
+			sellerInfoModel.setHasVariant(Boolean.TRUE);
 			modelService.save(sellerInfoModel);
 		}
 		catch (final Exception ex)

@@ -48,7 +48,8 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 	/**
 	 *
 	 */
-	private static final String CLOTHING = "Clothing";
+	/* SONAR FIX JEWELLERY */
+	//private static final String CLOTHING = "Clothing";
 
 	/**
 	 * Added FashionAccessories START ::::
@@ -358,8 +359,8 @@ public class DefaultSizeGuideFacade implements SizeGuideFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see com.tisl.mpl.facade.product.SizeGuideFacade#getWSProductSizeguide(java.lang.String)
 	 */
 
