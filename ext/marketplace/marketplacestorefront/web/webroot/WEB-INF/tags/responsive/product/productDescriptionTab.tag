@@ -49,12 +49,12 @@
            </c:if>
            
            
-           <c:if test = "${not empty Movement}">
+           <c:if test = "${not empty movementList}">
           <div class="tabs_warranty">
              <ul> 
               <li>
   					<spring:theme code="text.product.feature.movement"/> 
-                    <c:forEach items="${Movement}" var="movement">
+                    <c:forEach items="${movementList}" var="movement">
   					    ${movement}
   			        </c:forEach>
   			 </li>

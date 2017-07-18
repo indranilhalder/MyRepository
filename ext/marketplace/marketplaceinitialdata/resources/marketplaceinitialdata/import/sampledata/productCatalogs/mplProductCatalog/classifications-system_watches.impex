@@ -5,7 +5,7 @@ $productCatalog=mplProductCatalog
 $productCatalogName=Marketplace Product Catalog
 $classificationCatalog=pcmClassification
 $productCatalog=mplProductCatalog		
-$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 $classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
 $classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]	
 $class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]	
@@ -357,7 +357,7 @@ INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[defau
 # Links ClassificationClasses to Categories
 # Macros / Replacement Parameter definitions
 $productCatalog=mplProductCatalog
-$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 $classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
 $class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
 $supercategories=source(code, $classCatalogVersion)[unique=true]

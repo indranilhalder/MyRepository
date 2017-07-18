@@ -2119,7 +2119,9 @@ public class ProductPageController extends MidPageController
 							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 							{
-								final String[] propertiesValues = properitsValue.split(",");
+								if(null != properitsValue) {
+									propertiesValues = properitsValue.split(",");
+								}
 								if (propertiesValues != null && propertiesValues.length > 0)
 								{
 									//CKD:CAR-289
@@ -2136,12 +2138,12 @@ public class ProductPageController extends MidPageController
 											// TPR-3878  START 
 											if(value.equalsIgnoreCase(FEATURE1) || value.equalsIgnoreCase(FEATURE2) || value.equalsIgnoreCase(FEATURE3)) {
 												mapFeaturesList.put(featureValueData.getValue(),
-														productFeature != null && productFeature.getUnit() != null
+														productFeature != null && productFeature.getUnit() != null && productFeature.getUnit().getSymbol() != null
 														&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
 														.getSymbol() : "");
 											}else { 
 												productFeatureMap.put(featureValueData.getValue(),
-														productFeature != null && productFeature.getUnit() != null
+														productFeature != null && productFeature.getUnit() != null && productFeature.getUnit().getSymbol() != null
 																&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
 																.getSymbol() : "");
 												mapConfigurableAttributes.put(featureData.getName(), productFeatureMap);
@@ -2167,22 +2169,23 @@ public class ProductPageController extends MidPageController
 									}
 
 								}
-
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-								{
-									warrentyList.add(featureValueData.getValue());
-								}
-								/*TPR-1996 START */
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
-								{
-									specialFeaturesList.add(featureValueData.getValue());
-								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
-								{
-									movementList.add(featureValueData.getValue());
-								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
-								{
-									functionalityList.add(featureValueData.getValue());
-								}
+                        if(null != featureData.getName()) {
+                        	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+   								{
+   									warrentyList.add(featureValueData.getValue());
+   								}
+   								/*TPR-1996 START */
+   								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
+   								{
+   									specialFeaturesList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
+   								{
+   									movementList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
+   								{
+   									functionalityList.add(featureValueData.getValue());
+   								}
+                        }
 								
 								/*TPR-1996 END */
 								
@@ -2195,22 +2198,24 @@ public class ProductPageController extends MidPageController
 
 									mapConfigurableAttribute.put(featureData.getName(), featureValueData.getValue());
 								}
-
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
-								{
-									warrentyList.add(featureValueData.getValue());
-								}
-								/*TPR-1996 START */
-								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
-								{
-									specialFeaturesList.add(featureValueData.getValue());
-								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
-								{
-									movementList.add(featureValueData.getValue());
-								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
-								{
-									functionalityList.add(featureValueData.getValue());
-								}
+                        if(null != featureData.getName()) {
+                        	if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.WARRANTY.toLowerCase()))
+   								{
+   									warrentyList.add(featureValueData.getValue());
+   								}
+   								/*TPR-1996 START */
+   								if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.SPECIAL_FEATURES.toLowerCase()))
+   								{
+   									specialFeaturesList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.MOVEMENT.toLowerCase()))
+   								{
+   									movementList.add(featureValueData.getValue());
+   								}else if (featureData.getName().toLowerCase().contains(ModelAttributetConstants.FUNCTIONALITY.toLowerCase()))
+   								{
+   									functionalityList.add(featureValueData.getValue());
+   								}
+                        }
+								
 								/*TPR-1996 END */
 							}
 
@@ -2219,7 +2224,7 @@ public class ProductPageController extends MidPageController
 				}
 			 // TPR-3878  START 
 			//Values for the Attributes "Feature 1", "Feature 2" and "Feature 3" should be concatenated with comma as a separator and Label "Features"
-				if(!mapFeaturesList.isEmpty()) {
+				if(CollectionUtils.isNotEmpty(mapFeaturesList)) {
 					mapConfigurableAttributes.put(ModelAttributetConstants.FEATURES, mapFeaturesList);
 				}
 			// TPR-3878  END 
@@ -2236,17 +2241,22 @@ public class ProductPageController extends MidPageController
 			{
 				final String properitsValue = configurationService.getConfiguration().getString(
 						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-				final String[] propertiesValues = properitsValue.split(",");
+				if(null != properitsValue) {
+					propertiesValues = properitsValue.split(",");
+				}
+				
 			//	final Map<String, Map<String, String>> mapConfigurableAttributes = new LinkedHashMap<String, Map<String, String>>();
 			
 			//	TPR-1999  START
 			// Inserting Values into mapWatchesConfigurableAttributes According to the order mentioned in Property "classification.attributes.Watches"
 			// The same order will be displayed storeFront
-				for (final String value : propertiesValues)
-				{
-					if (mapConfigurableAttributes.keySet().contains(value))
+				if(null != properitsValue && null != mapConfigurableAttributes && CollectionUtils.isNotEmpty(mapConfigurableAttributes)) {
+					for (final String value : propertiesValues)
 					{
-						mapWatchesConfigurableAttributes.put(value,mapConfigurableAttributes.get(value));
+						if (mapConfigurableAttributes.keySet().contains(value))
+						{
+							mapWatchesConfigurableAttributes.put(value,mapConfigurableAttributes.get(value));
+						}
 					}
 				}
 			//	model.addAttribute(ModelAttributetConstants.MAP_CONFIGURABLE_ATTRIBUTES, mapConfigurableAttributes);
@@ -2270,7 +2280,7 @@ public class ProductPageController extends MidPageController
 			model.addAttribute(ModelAttributetConstants.WARRANTY, warrentyList);
 			/*TPR-1996 START */
 			model.addAttribute(ModelAttributetConstants.SPECIAL_FEATURES_LIST, specialFeaturesList);
-			model.addAttribute(ModelAttributetConstants.MOVEMENT, movementList);
+			model.addAttribute(ModelAttributetConstants.MOVEMENT_LIST, movementList);
 			model.addAttribute(ModelAttributetConstants.FUNCTIONALITY, functionalityList);
 			/*TPR-1996 END */
 		}
