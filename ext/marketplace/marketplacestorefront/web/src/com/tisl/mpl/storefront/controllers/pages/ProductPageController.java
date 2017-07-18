@@ -2119,6 +2119,7 @@ public class ProductPageController extends MidPageController
 							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 							{
+								final String[] propertiesValues = null;
 								if(null != properitsValue) {
 									propertiesValues = properitsValue.split(",");
 								}
@@ -2136,7 +2137,7 @@ public class ProductPageController extends MidPageController
 												productFeatureMap.clear();
 											}
 											// TPR-3878  START 
-											if(value.equalsIgnoreCase(FEATURE1) || value.equalsIgnoreCase(FEATURE2) || value.equalsIgnoreCase(FEATURE3)) {
+											if(FEATURE1.equalsIgnoreCase(value) || FEATURE2.equalsIgnoreCase(value) || FEATURE3.equalsIgnoreCase(value)) {
 												mapFeaturesList.put(featureValueData.getValue(),
 														productFeature != null && productFeature.getUnit() != null && productFeature.getUnit().getSymbol() != null
 														&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit()
@@ -2241,6 +2242,7 @@ public class ProductPageController extends MidPageController
 			{
 				final String properitsValue = configurationService.getConfiguration().getString(
 						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
+				final String[] propertiesValues = null;
 				if(null != properitsValue) {
 					propertiesValues = properitsValue.split(",");
 				}
