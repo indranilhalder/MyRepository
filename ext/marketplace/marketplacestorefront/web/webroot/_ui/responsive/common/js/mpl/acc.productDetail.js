@@ -1609,6 +1609,8 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
+				var isLuxury = $("#isLuxury").val();
+				var pinCodeAvailable = $("#pinCodeAvailable").val();
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
