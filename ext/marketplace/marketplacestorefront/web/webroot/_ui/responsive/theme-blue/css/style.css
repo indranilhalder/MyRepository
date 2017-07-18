@@ -62925,9 +62925,9 @@ body.page-productGrid .facet-list.filter-opt ~ .left-block{
 	.certified-by ul li{
 		width: 33.33%;
 	}	
-	.product-info .product-content .delivery-block li.do{
+	/* .product-info .product-content .delivery-block li.do{
 		padding-bottom: 0;
-	}
+	} */
 	.about-pro{
 		width: 52%;
 		float: left;
