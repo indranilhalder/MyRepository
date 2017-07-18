@@ -394,7 +394,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -445,9 +445,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -484,11 +484,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -522,11 +522,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -861,7 +861,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1254,6 +1254,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured" + e.getMessage());
+			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			e.printStackTrace();
 
 		}
 		return orderInfoWsDTO;
@@ -1264,6 +1266,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
+		ConsignmentModel cng = null;
 
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		try
@@ -1326,7 +1329,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 									if (null != pt.getModifiedtime())
 									{
-										customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));
+										customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));//Transaction Timestamp
 									}
 									else
 									{
@@ -1351,15 +1354,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									final ConsignmentEntryModel consg = (ConsignmentEntryModel) it.next();
 
 									//	customerOrderInfoWsDTO.setTransactionStatus(consg.getConsignment().getStatus().getCode());//Transaction status
-									if (StringUtils.isNotEmpty(consg.getConsignment().getModifiedtime().toString()))
-									{
-										customerOrderInfoWsDTO.setConsignmentTimestamp(formatter.format(consg.getConsignment()
-												.getModifiedtime()));//Consignment Timestamp
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setConsignmentTimestamp("NULL");
-									}
+									//									if (StringUtils.isNotEmpty(consg.getConsignment().getModifiedtime().toString()))
+									//									{
+									//										customerOrderInfoWsDTO.setConsignmentTimestamp(formatter.format(consg.getConsignment()
+									//												.getModifiedtime()));//Consignment Timestamp
+									//									}
+									//									else
+									//									{
+									//										customerOrderInfoWsDTO.setConsignmentTimestamp("NULL");
+									//									}
 									if (StringUtils.isNotEmpty(consg.getConsignment().getCarrier()))
 									{
 										customerOrderInfoWsDTO.setCarrierName(consg.getConsignment().getCarrier());//Carrier Name
@@ -1380,33 +1383,37 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								{
 									customerOrderInfoWsDTO.setPaymentMode("NULL");
 								}
-								final ConsignmentModel cng = orderModel.getConsignments().iterator().next();
+								final Iterator itr = orderModel.getConsignments().iterator();
+								while (itr.hasNext())
+								{
+									cng = (ConsignmentModel) itr.next();
 
-								if (null != cng.getDeliveryDate())
-								{
-									customerOrderInfoWsDTO.setDeliveryTrackingDate(formatter.format(cng.getDeliveryDate()));//Delivery tracking date
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setDeliveryTrackingDate("NULL");
-								}
-								if (StringUtils.isNotEmpty(cng.getTrackingID()))
-								{
-									customerOrderInfoWsDTO.setAwbNumber(cng.getTrackingID());//AWB number
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setAwbNumber("NULL");
-								}
+									if (null != cng.getDeliveryDate())
+									{
+										customerOrderInfoWsDTO.setDeliveryTrackingDate(formatter.format(cng.getDeliveryDate()));//Delivery tracking date
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setDeliveryTrackingDate("NULL");
+									}
+									if (StringUtils.isNotEmpty(cng.getTrackingID()))
+									{
+										customerOrderInfoWsDTO.setAwbNumber(cng.getTrackingID());//AWB number
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setAwbNumber("NULL");
+									}
 
-								{
-									customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
-											: "NULL");//Return carrier
-								}
+									{
+										customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
+												: "NULL");//Return carrier
+									}
 
-								{
-									customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum()
-											: "NULL");//Return AWB number
+									{
+										customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum()
+												: "NULL");//Return AWB number
+									}
 								}
 								if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
 								{
@@ -1491,7 +1498,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured" + e.getMessage());
-
+			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			e.printStackTrace();
 		}
 		return orderInfoWsDTO;
 	}
@@ -1656,6 +1664,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		catch (final Exception e)
 		{
 			LOG.error("Exception occured" + e.getMessage());
+			e.printStackTrace();
 			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderInfoWsDTO;
