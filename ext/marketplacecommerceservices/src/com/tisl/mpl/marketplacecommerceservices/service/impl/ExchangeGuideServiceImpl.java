@@ -3,12 +3,9 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.classification.ClassificationService;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.product.ProductService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.keygenerator.impl.PersistentKeyGenerator;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -16,18 +13,14 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.core.model.ExchangeCouponValueModel;
 import com.tisl.mpl.core.model.ExchangeModel;
 import com.tisl.mpl.core.model.ExchangeTransactionModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao;
-import com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao;
 import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 
 
@@ -37,14 +30,15 @@ import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
  */
 public class ExchangeGuideServiceImpl implements ExchangeGuideService
 {
-	@Resource
-	private ProductService productService;
-
-	@Resource
-	private ClassificationService classificationService;
-
-	@Resource(name = "sizeGuideDao")
-	private SizeGuideDao sizeGuideDao;
+	//SONAR FIX JEWELLERY
+	//	@Resource
+	//	private ProductService productService;
+	//SONAR  FIX JEWELLERY
+	//	@Resource
+	//	private ClassificationService classificationService;
+	//SONAR  FIX JEWELLERY
+	//	@Resource(name = "sizeGuideDao")
+	//	private SizeGuideDao sizeGuideDao;
 
 	@Autowired
 	private PersistentKeyGenerator temporaryExchangeId;
@@ -91,9 +85,11 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 
 	private ExchangeGuideDao exchangeGuideDao;
 
-	private static final Logger LOG = Logger.getLogger(ExchangeGuideServiceImpl.class);
-	@Autowired
-	private ConfigurationService configurationService;
+	//SONAR  FIX JEWELLERY
+	//private static final Logger LOG = Logger.getLogger(ExchangeGuideServiceImpl.class);
+	//SONAR  FIX JEWELLERY
+	//	@Autowired
+	//	private ConfigurationService configurationService;
 
 	/*
 	 * @Javadoc
@@ -273,7 +269,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 		String exReqId = "";
 		for (final OrderModel child : order.getChildOrders())
 		{
-			boolean changeInChild = false;
+			//	boolean changeInChild = false; SONAR FIX JEWELLERY
 			final List<AbstractOrderEntryModel> entryDetails = child.getEntries();
 			for (final AbstractOrderEntryModel entry : entryDetails)
 			{
@@ -302,7 +298,7 @@ public class ExchangeGuideServiceImpl implements ExchangeGuideService
 						exModList.add(exMod);
 						exTraxRemovList.add(exTrax);
 						entry.setExchangeId(exReqId);
-						changeInChild = true;
+						//	changeInChild = true; SONAR FIX JEWELLERY
 						childOrderEntryList.add(entry);
 					}
 				}

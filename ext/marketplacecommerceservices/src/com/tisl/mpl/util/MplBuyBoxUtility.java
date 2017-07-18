@@ -42,7 +42,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 public class MplBuyBoxUtility
 {
 
-	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); //comment out for TISPRD-8944 
+	private static final Logger LOG = Logger.getLogger(MplBuyBoxUtility.class); //comment out for TISPRD-8944
 
 
 	//---------------Solve for Issue TISPRD-58---------------------//
@@ -76,8 +76,8 @@ public class MplBuyBoxUtility
 			// TPR-1886 | Fetch price logic for Jewellery
 			if (productModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY))
 			{
-				if ((buyBoxWinnerModel.getPLPMaxPrice() != null || buyBoxWinnerModel.getPLPMaxPrice().doubleValue() > 0)
-						&& (buyBoxWinnerModel.getPLPMinPrice() != null || buyBoxWinnerModel.getPLPMinPrice().doubleValue() > 0))
+				if ((buyBoxWinnerModel.getPLPMaxPrice() != null && buyBoxWinnerModel.getPLPMaxPrice().doubleValue() > 0)
+						&& (buyBoxWinnerModel.getPLPMinPrice() != null && buyBoxWinnerModel.getPLPMinPrice().doubleValue() > 0))//SONAR FIX JEWELLERY
 				{
 					final double maxPrice = buyBoxWinnerModel.getPLPMaxPrice().doubleValue();
 					final double minPrice = buyBoxWinnerModel.getPLPMinPrice().doubleValue();
@@ -592,9 +592,12 @@ public class MplBuyBoxUtility
 		return mobileprice;
 
 	}
-	 
-	/* @param sellerArticleSKUList
+
+	/*
+	 * @param sellerArticleSKUList
+	 *
 	 * @param currency
+	 *
 	 * @return priceRange
 	 */
 
@@ -618,11 +621,13 @@ public class MplBuyBoxUtility
 		{
 			if (min.doubleValue() == max.doubleValue())
 			{
-				priceRange = currency + String.valueOf(min);
+				//priceRange = currency + String.valueOf(min);//SONAR FIX JEWELLERY
+				priceRange = currency + min;
 			}
 			else
 			{
-				priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);
+				//	priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);//SONAR FIX JEWELLERY
+				priceRange = currency + min + HYPHEN + currency + max;
 			}
 		}
 		return priceRange;
