@@ -71084,3 +71084,66 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	}
 }
 /* TPR-6149 My Prferences end */
+
+/*UF-377 start*/
+.product-specification-accordion.smk_accordion.acc_with_icon{
+	display: none;
+}
+@media(max-width: 767px){
+.product-specification-accordion.smk_accordion.acc_with_icon{
+	display: block;
+	padding: 0;
+}
+.product-info>div.tabs-block{
+	padding-left: 0;
+	padding-right: 0;
+}
+.tabs-block .nav-wrapper, .tabs.pdp.productTabs{
+	display: none;
+}
+.product-specification-accordion.smk_accordion .accordion_in{
+	background: none;
+	border: 0;
+    border-top: solid 1px #9b9b9b;
+}
+.product-specification-accordion.smk_accordion .accordion_in:last-of-type{
+    border-bottom: solid 1px #9b9b9b;
+}
+.product-specification-accordion.smk_accordion .accordion_in .acc_head{
+	position: relative;
+	height: 39px;
+    padding-top: 12px;
+    padding-left: 16px;
+    padding-right: 17px;
+}
+.product-specification-accordion.smk_accordion .accordion_in .acc_head h2{
+	font-size: 14px;
+  	color: #31363d;
+}
+.product-specification-accordion.smk_accordion .accordion_in .acc_head:after{
+	content: "+";
+	position: absolute;
+    right: 17px;
+    top: 9px;
+    font-size: 35px;
+    line-height: 18px;
+}
+.product-specification-accordion.smk_accordion .accordion_in.acc_active .acc_head:after{
+	content: "-";
+	font-size: 50px;
+}
+.product-specification-accordion.smk_accordion .accordion_in .acc_content{
+	width: 100%;
+    margin: 0;
+    background-color: #f5f5f5;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 10px;
+    padding-bottom: 12px;
+    font-size: 12px;
+  	line-height: 1.67;
+  	text-align: justify;
+  	color: #31363d;
+}
+}
+/*UF-377 end*/
