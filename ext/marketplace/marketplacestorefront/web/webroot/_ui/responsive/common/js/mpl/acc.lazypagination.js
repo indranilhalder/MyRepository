@@ -175,7 +175,12 @@ function getProductSetDataCustomSku() {
 	              		var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
 	                      if (query) {
 	                          ajaxUrl = ajaxUrl + query;
-	                          nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                        //  nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                          if(query == "?q="){
+	                        		nextPaginatedAjaxUrl = nextPaginatedAjaxUrl ;
+	                        	}else{
+	                        		nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                        	}
 	                      }
 	                      window.history.replaceState({}, "", nextPaginatedAjaxUrl);
 	              	}

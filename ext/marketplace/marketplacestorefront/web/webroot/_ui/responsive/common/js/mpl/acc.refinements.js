@@ -1238,7 +1238,8 @@ function isCustomSku(requiredUrl){
 //UF-15
 function lazyPaginationFacet(response){
 	res = response;
-	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list');
+	// Added for UF-359
+	var ulProduct = $(response).find('ul.product-listing.product-grid,ul.product-list,ul.product-listing.product-grid.custom-sku');
 	//Add to bag and quick view ui fixes starts here
 	$(".product-tile .image .item.quickview").each(function(){
     	if($(this).find(".addtocart-component").length == 1){
@@ -1251,7 +1252,8 @@ function lazyPaginationFacet(response){
         productItemArray.push($(this));
     });
     console.log(""+productItemArray);
-	$("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list", response));
+    // Added for UF-359
+    $("#productGrid").html($.strRemove("ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.custom-sku", response));
 	initPageLoad = true;
     innerLazyLoad({isSerp:true});
     
