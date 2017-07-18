@@ -76236,6 +76236,20 @@ p.disclaimer-txt{
   	font-style: normal;
   	margin-bottom: 25px;
   }
+  .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4.reenteraccountnumber b{		
+	 	width: 300px;		
+	}
+@media(min-width: 1024px){
+	body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4{
+	width: 38%;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4 .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{
+	width: 90%;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-8.slectionRefund{
+	width: 62%;
+}
+}
 @media(max-width: 1024px){		
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{		
 	    width: 16.66666667%;		
@@ -76244,11 +76258,6 @@ p.disclaimer-txt{
 	margin-top: 20px;		
 }		
 }		
-@media(max-width: 850px){		
-	.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4.reenteraccountnumber b{		
-	 	width: 300px;		
-	}		
-}
  	@media (min-width: 791px){
 	body.page-returnSubmit .body-Content {
      padding-bottom: 50px !important; 
@@ -76268,10 +76277,24 @@ p.disclaimer-txt{
 	    padding-left: 10px;		
 }
 }
+@media(max-width: 640px){
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4{
+		padding-left: 0px !important;
+	}
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-3.col-sm-4{
+		padding-left: 0px;
+		}
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{
+		padding-left: 0px;
+		}
+}
 @media(max-width: 480px){		
 	.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
 	padding-left: 15px;		
-}		
+	}
+	.col-md-8.slectionRefund ~ .button_holder button{
+		width: 150px;
+		}		
 	}
 @media(max-width: 450px){
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
