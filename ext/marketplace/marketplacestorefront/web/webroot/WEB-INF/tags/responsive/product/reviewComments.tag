@@ -21,7 +21,7 @@
 <c:when test ="${product.rootCategory!=finejewellery && product.rootCategory!='FashionJewellery'}">
 <div id="ReviewSecion" class="reviews">
 
-	<div class="header">
+	<%-- <div class="header">
 	      <h3>Your Rating</h3>
 	</div>
 	<div class="overview">
@@ -29,7 +29,7 @@
 	<ul class="nav">
 	<div class="wrapper" id="go">
 		<li class="commenttab active">
-			<label id="customer" for="tab-1">Customer Reviews(${product.ratingCount})</label>
+			<label id="customer" for="tab-1">Customer Reviews(${product.ratingCount})</label> --%>
 
 <div class="header">
       <h3>Ratings and Reviews</h3>		<!-- UF-57 -->
@@ -49,7 +49,7 @@
 <div class="half">
 
 
-	<ul class="rating-list">
+	<%-- <ul class="rating-list">
 		<li class="header">Rating Snapshot</li> 
 		<li>
 			<div class="rate-details three-block">
@@ -70,7 +70,7 @@
 	<ul class="tabs">
 	<li class="active">
 	<div class="wrapper">
-	<div class="half">
+	<div class="half"> --%>
 	
 	
 		<ul class="rating-list">

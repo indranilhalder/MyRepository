@@ -776,9 +776,6 @@ a.morelink, .more-link {
 	padding-right: 20px;
 	width: 100%;
 } */
-.tabs-block .wrapper{
-	padding: 0;
-}
 .tabs-block .FineJewellery .nav>li, 
 .tabs-block .FashionJewellery .nav>li,
 .tabs-block .FineJewellery .nav>li#tabs_styleNotes,
@@ -48460,11 +48457,11 @@ float: right;
 	.tabs.pdp p, .tabs.pdp ul li {
 		font-size: 12px;
 	}
-	/* .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
+	 .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
 		display: block;
 		margin: 0 auto;
 		width: 92%;
-	} */
+	} 
 	.tab-details li {    float: none;    padding:  0;    width: 100%;}
 	/*More Stuff Like This slider*/
 	.page-productDetails .trending:nth-child(2n+1) {
