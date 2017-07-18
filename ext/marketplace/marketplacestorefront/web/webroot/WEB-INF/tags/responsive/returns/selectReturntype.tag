@@ -26,7 +26,7 @@
 									<c:choose>
 									<c:when test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
 									<div class="returnPayment">Cheque/NEFT</div>
-									<span><spring:theme code="text.order.returns.codpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}"/></span>
+									<span class="returnPaymentMessage"><spring:theme code="text.order.returns.codpaymentmessage" arguments="${subOrder.mplPaymentInfo.paymentOption}"/></span>
 									</c:when>
 									<c:otherwise>
 									<div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div>
@@ -78,7 +78,7 @@
 						<c:when test="${subOrder.mplPaymentInfo.paymentOption eq 'COD'}">
 						<div class="col-md-8 slectionRefund">
 							<b class="bankDetailsText"></b>
-							<spring:theme code="text.order.returns.choosebankdetails"/>
+							<b class="choosebankdetailsText"><spring:theme code="text.order.returns.choosebankdetails"/></b>
 							<div class="suggestionText">
 									<span><spring:theme code="text.order.returns.safetyinformationlable1"/></span>
 									<span><spring:theme code="text.order.returns.safetyinformationlable2"/></span>
