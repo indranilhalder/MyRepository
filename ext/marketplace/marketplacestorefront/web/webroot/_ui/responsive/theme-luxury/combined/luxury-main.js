@@ -217,6 +217,43 @@ function populatePincodeDeliveryMode(response, buttonType) {
     $("#checkout-id-down #checkout-down-enabled").addClass("checkout-disabled"), $("#expresscheckoutid #expressCheckoutButtonId").addClass("express-checkout-disabled");
 }
 
+function openPopFromCart(entry, productCode, ussid) {
+    var requiredUrl = ACC.config.encodedContextPath + "/p-viewWishlistsInPDP", dataString = "productCode=" + productCode + "&ussid=" + ussid;
+    $("#entryNo").val(entry);
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            null == data ? ($("#wishListNonLoggedInId").show(), $("#wishListDetailsId").hide()) : "" == data || data == [] ? loadDefaultWishLstForCart(productCode, ussid) : LoadWishListsFromCart(data, productCode, ussid);
+        },
+        error: function(xhr, status, error) {
+            $("#wishListNonLoggedInId").show(), $("#wishListDetailsId").hide();
+        }
+    });
+}
+
+function LoadWishListsFromCart(data, productCode, ussid) {
+    var wishListContent = "", wishName = "";
+    $this = this, $("#wishListNonLoggedInId").hide(), $("#wishListDetailsId").show();
+    for (var i in data) {
+        var index = -1, checkExistingUssidInWishList = !1, wishList = data[i];
+        wishName = wishList.particularWishlistName, wishListList[i] = wishName;
+        var entries = wishList.ussidEntries;
+        for (var j in entries) {
+            if (entries[j] == ussid) {
+                checkExistingUssidInWishList = !0;
+                break;
+            }
+        }
+        checkExistingUssidInWishList ? (index++, wishListContent = wishListContent + "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist(" + i + ")' disabled><label for='radio_" + i + "'>" + wishName + "</label></td></tr>") : (index++, 
+        wishListContent = wishListContent + "<tr><td><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist(" + i + ")'><label for='radio_" + i + "'>" + wishName + "</label></td></tr>");
+    }
+    $("#wishlistTbodyId").html(wishListContent), $("#selectedProductCode").attr("value", productCode), 
+    $("#proUssid").attr("value", ussid);
+}
+
 function editAddress(addressId) {
     var requiredUrl = ACC.config.encodedContextPath + "/my-account/populateAddressDetail", dataString = "&addressId=" + addressId;
     $.ajax({
@@ -13521,11 +13558,13 @@ TATA.CommonFunctions = {
         },
         HeaderMinicart: function() {
             $("header .mini-bag").hide(), $("header .mini-cart-link,header #myWishlistHeader").html(""), 
-            $(window).width() >= 768 && $("header .bag").hover(function() {
+            $(window).width() >= 768 && ($("header .bag").hover(function() {
                 $(this).find(".mini-bag").show();
             }, function() {
                 $(this).find(".mini-bag").hide();
-            });
+            }), $(".cart .js-add-to-cart_wl").on("click", function() {
+                $("header .bag").find(".mini-bag").show();
+            }));
         },
         init: function() {
             this.MobileMenu(), this.HeaderMinicart();

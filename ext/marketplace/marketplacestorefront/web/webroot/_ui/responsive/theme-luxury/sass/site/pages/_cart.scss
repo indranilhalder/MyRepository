@@ -51,7 +51,7 @@
                 }
             }
             
-           /* .popover.bottom>.arrow {
+            .popover.bottom>.arrow {
                 left: 50%;
                 margin-left: -11px;
                 border-top-width: 0;
@@ -66,7 +66,7 @@
                     border-top-width: 0;
                     border-bottom-color: #fff;
                 }
-            }*/
+            }
         }
         
     }
@@ -715,12 +715,20 @@
         margin-top: -1px;           
     }  
     
-    button.CheckAvailability{
+    button.CheckAvailability, button.ChangePincode{
         border-radius: 4px;
         background-color: #2d2d2d;
         color: #fff;
         border: 0px;
     }
+    #unserviceablepincode{
+        color: red;
+        margin-top: 10px;
+    }
+    #AvailableMessage{
+        color: green;
+    }
+    
 }
  .page-cartPage .header-promo.only-in-cart {
  	display:none;
@@ -735,4 +743,15 @@
 
 .popover.bottom{
 	position:static !important;
+}
+
+.page-cartPage{
+    .cart.wrapper .product-block li.item>ul li.delivery {
+        right: initial;
+        display: block;
+        padding: 0px;
+    }
+    .cart.wrapper .product-block li.item>ul>li.delivery ul.success_msg, .confirmation .product-block li.item>ul>li.delivery ul.success_msg{
+        margin-bottom: 0;       
+    }
 }

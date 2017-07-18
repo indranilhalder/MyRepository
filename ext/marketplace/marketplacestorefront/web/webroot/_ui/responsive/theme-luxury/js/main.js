@@ -610,6 +610,10 @@ TATA.CommonFunctions = {
                 function () {
                     $(this).find('.mini-bag').hide();
                 });
+                
+                $(".cart .js-add-to-cart_wl").on('click', function(){
+                    $("header .bag").find('.mini-bag').show();
+                });
             }
                 
         },
@@ -2145,7 +2149,95 @@ function populatePincodeDeliveryMode(response,buttonType){
     }
 }
 
+function openPopFromCart(entry,productCode,ussid) {
+ 
+ // var productCode = $("#product").val();
+ var requiredUrl = ACC.config.encodedContextPath + "/p"+"-viewWishlistsInPDP";
+ var dataString = 'productCode=' + productCode+ '&ussid=' + ussid;//modified for ussid
 
+ var entryNo = $("#entryNo").val(entry);
+  $.ajax({
+  contentType : "application/json; charset=utf-8",
+  url : requiredUrl,
+  data : dataString,
+  dataType : "json",
+  success : function(data) {
+   if(data==null)
+   {
+    $("#wishListNonLoggedInId").show();
+    $("#wishListDetailsId").hide();
+   }
+   else if (data == "" || data == []) {
+    loadDefaultWishLstForCart(productCode,ussid);
+   }
+   else
+   {
+    LoadWishListsFromCart(data, productCode,ussid); 
+   } 
+   
+  },
+  error : function(xhr, status, error) {
+   $("#wishListNonLoggedInId").show();
+   $("#wishListDetailsId").hide();
+  }
+ });
+}
+
+function LoadWishListsFromCart(data, productCode,ussid) {
+    
+ // modified for ussid
+ 
+ //var ussid = $("#ussid").val()
+ 
+ var wishListContent = "";
+ var wishName = "";
+ $this = this;
+ $("#wishListNonLoggedInId").hide();
+ $("#wishListDetailsId").show();
+
+ for ( var i in data) {
+  var index = -1;
+  var checkExistingUssidInWishList = false;
+  var wishList = data[i];
+  wishName = wishList['particularWishlistName'];
+  wishListList[i] = wishName;
+  var entries = wishList['ussidEntries'];
+  for ( var j in entries) {
+   var entry = entries[j];
+   if (entry == ussid) {
+    
+    checkExistingUssidInWishList = true;
+    break;
+
+   }
+  }
+  if (checkExistingUssidInWishList) {
+   index++;
+            
+   wishListContent = wishListContent
+     + "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_"
+     + i
+     + "' style='display: none' onclick='selectWishlist("
+     + i + ")' disabled><label for='radio_"
+     + i + "'>"+wishName+"</label></td></tr>";
+  } else {
+   index++;
+    
+   wishListContent = wishListContent
+     + "<tr><td><input type='radio' name='wishlistradio' id='radio_"
+     + i
+     + "' style='display: none' onclick='selectWishlist("
+     + i + ")'><label for='radio_"
+     + i + "'>"+wishName+"</label></td></tr>";
+  }
+
+ }
+
+ $("#wishlistTbodyId").html(wishListContent);
+ $('#selectedProductCode').attr('value',productCode);
+ $('#proUssid').attr('value',ussid);
+
+}
 
 
 
