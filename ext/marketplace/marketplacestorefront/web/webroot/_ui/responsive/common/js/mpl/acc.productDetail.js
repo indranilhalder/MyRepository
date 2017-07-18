@@ -3065,7 +3065,12 @@ function loadDefaultWishListName_SizeGuide() {
 				$("#add_to_wishlist").attr("disabled",true);
 				$('.add_to_cart_form .out_of_stock #add_to_wishlist').addClass("wishDisabled");
 			}
-			
+			else if(data == false)//TPR-5787
+			{
+				$('.product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon').removeClass("added");
+				$("#add_to_wishlist").attr("disabled",false);
+				$('.add_to_cart_form .out_of_stock #add_to_wishlist').removeClass("wishDisabled");
+			}
 			},
 			error : function(xhr, status, error) {
 				$("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
@@ -3668,7 +3673,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						
 						
 						//Calling to check if the product already exists in the wishlist,If so fill/unfill heart icon
-						getLastModifiedWishlistForPLP(responseProductCode);
+						//getLastModifiedWishlistForPLP(responseProductCode);//CALL FROM BUYBOX..TPR-5787
 						
 						//Prepare data for buybox call
 						var variantCodes = $("#product_allVariantsListingId").val();
