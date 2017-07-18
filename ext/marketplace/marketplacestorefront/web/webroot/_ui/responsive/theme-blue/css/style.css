@@ -76239,6 +76239,9 @@ p.disclaimer-txt{
   .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4.reenteraccountnumber b{		
 	 	width: 300px;		
 	}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in .arrow{
+	left: 70%;
+}
 @media(min-width: 1024px){
 	body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4{
 	width: 38%;
@@ -76256,6 +76259,12 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 }		
 .accordtionTataCliq .accContents .col-md-8.slectionRefund b{		
 	margin-top: 20px;		
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.ifsccode .ifscPopOver{
+	padding-top: 18px;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in{
+	    margin-top: 26px;
 }		
 }		
  	@media (min-width: 791px){
@@ -76287,14 +76296,17 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{
 		padding-left: 0px;
 		}
+		.col-md-8.slectionRefund ~ .button_holder button{
+		width: 170px;
+		}
 }
 @media(max-width: 480px){		
 	.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
 	padding-left: 15px;		
 	}
 	.col-md-8.slectionRefund ~ .button_holder button{
-		width: 150px;
-		}		
+	 	width: 150px;
+	}
 	}
 @media(max-width: 450px){
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
@@ -76303,6 +76315,14 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow {
     left: 123px;
 }
+.col-md-8.slectionRefund ~ .button_holder button {
+    width: 150px;
+}
+}
+@media(max-width: 420px){
+	.col-md-8.slectionRefund ~ .button_holder button {
+    	width: 100px;
+}	
 }
 @media(max-width: 790px){
 	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
