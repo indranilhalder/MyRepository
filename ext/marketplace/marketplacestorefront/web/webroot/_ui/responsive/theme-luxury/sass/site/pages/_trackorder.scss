@@ -154,12 +154,25 @@ body .account .right-account .order-history.order-details .status .message.track
     z-index: 100;
     top: 55px !important;
     min-height: 50px;
-    border: 3px solid #b9b9b9;
+    border: 1px solid #e4e4e4;
     padding: 10px;
     font-weight: 500;
     position: absolute;
     background: #fff;
     text-align: center;
+    box-shadow: 1px 3px 2px #ccc;
+    
+    @include media-breakpoint-down(sm) {
+        width: 200%!important;
+    }
+    
+    li{
+       padding: 5px; 
+        line-height: 18px;
+    }
+    p{
+         line-height: 18px; 
+    }
 }
 
 body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47{
@@ -167,15 +180,14 @@ body .account .right-account .order-history.order-details .status .message.track
 }
 
 body .right-account .order-details .deliveryTrack .dot-arrow{
-	position: absolute;
-    top: 27px;
+	position: absolute;    
     width: 26px;
     z-index: 101;
     display: none;
     left: 0;
     right: 0;
     margin: auto;
-    top:23px;
+    top:22px;
     
 }
 
