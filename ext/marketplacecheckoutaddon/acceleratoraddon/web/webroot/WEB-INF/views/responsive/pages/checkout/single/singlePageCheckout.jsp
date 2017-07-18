@@ -155,7 +155,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 <!-- <div id="mobileSnackbar">
 <h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
 <span id="selectSnackbar">SELECT</span>
-</div> --> -->
+</div> -->
 <div id="confirmOverlay" style="display:none">
     <div id="confirmBox" style="display:none">
 
