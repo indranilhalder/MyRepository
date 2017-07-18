@@ -2119,7 +2119,7 @@ public class ProductPageController extends MidPageController
 							else if (ModelAttributetConstants.FASHION_ACCESSORIES.equalsIgnoreCase(productData.getRootCategory())
 									|| ModelAttributetConstants.WATCHES.equalsIgnoreCase(productData.getRootCategory()))
 							{
-								final String[] propertiesValues = null;
+								String[] propertiesValues = null;
 								if(null != properitsValue) {
 									propertiesValues = properitsValue.split(",");
 								}
@@ -2225,7 +2225,7 @@ public class ProductPageController extends MidPageController
 				}
 			 // TPR-3878  START 
 			//Values for the Attributes "Feature 1", "Feature 2" and "Feature 3" should be concatenated with comma as a separator and Label "Features"
-				if(CollectionUtils.isNotEmpty(mapFeaturesList)) {
+				if(MapUtils.isNotEmpty(mapFeaturesList)) {
 					mapConfigurableAttributes.put(ModelAttributetConstants.FEATURES, mapFeaturesList);
 				}
 			// TPR-3878  END 
@@ -2242,7 +2242,7 @@ public class ProductPageController extends MidPageController
 			{
 				final String properitsValue = configurationService.getConfiguration().getString(
 						ModelAttributetConstants.CONFIGURABLE_ATTRIBUTE + productData.getRootCategory());
-				final String[] propertiesValues = null;
+			   String[] propertiesValues = null;
 				if(null != properitsValue) {
 					propertiesValues = properitsValue.split(",");
 				}
@@ -2252,7 +2252,7 @@ public class ProductPageController extends MidPageController
 			//	TPR-1999  START
 			// Inserting Values into mapWatchesConfigurableAttributes According to the order mentioned in Property "classification.attributes.Watches"
 			// The same order will be displayed storeFront
-				if(null != properitsValue && null != mapConfigurableAttributes && CollectionUtils.isNotEmpty(mapConfigurableAttributes)) {
+				if(null != properitsValue && MapUtils.isNotEmpty(mapConfigurableAttributes)) {
 					for (final String value : propertiesValues)
 					{
 						if (mapConfigurableAttributes.keySet().contains(value))
