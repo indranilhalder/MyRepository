@@ -321,7 +321,6 @@
 		<property name="userService" ref="extendedUserService"/>
 		<property name="useSecureCookie" value="false"/>
 		<property name="customerFacade" ref="customerFacade"/>
-		<property name="tokenValiditySeconds" value="172800" />
 		<property name="checkoutCustomerStrategy" ref="checkoutCustomerStrategy"/>
 		<property name="urlEncoderService" ref="urlEncoderService"/>
 		<property name="storeSessionFacade" ref="storeSessionFacade"/>
