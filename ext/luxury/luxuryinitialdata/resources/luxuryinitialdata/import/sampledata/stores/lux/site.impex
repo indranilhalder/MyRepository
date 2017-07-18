@@ -65,6 +65,11 @@ INSERT_UPDATE UncollectedOrdersCronJob;code[unique=true];job(code)[default=uncol
 INSERT_UPDATE SiteMapMediaCronJob;code[unique=true];job(code)[default=siteMapMediaJob];contentSite(uid)[default=$siteUid];sessionLanguage(isoCode)[default=en]
 ;$siteUid-SiteMapMediaJob;;;;$siteMapUrlLimitPerFile
 
+#Cart Removal Age
+INSERT_UPDATE CMSSite;uid[unique=true];cartRemovalCronJob(code);uncollectedOrdersCronJob(code);cartRemovalCronJob;anonymousCartRemovalAge
+;$siteUid;$siteUid-CartRemovalJob;$siteUid-UncollectedOrdersJob;2419200;1209600
+
+
 INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
 ;$siteUid-CartRemovalJob;0;5;4;-1;-1;-1;false;true;-1
 ;$siteUid-UncollectedOrdersJob;0;0;6;-1;-1;-1;true;false;-1
