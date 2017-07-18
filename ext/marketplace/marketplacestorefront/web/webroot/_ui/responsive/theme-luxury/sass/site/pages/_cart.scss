@@ -5,6 +5,70 @@
                 margin-bottom: 20px;
                 padding-bottom: 20px;
         }
+        
+        div.other-sellers {
+            background-color: #fff;
+            width: 100%;
+            text-align: center;
+        }
+        .other-sellers{
+            border: 1px solid #ccc;
+            .title-popover{
+                background-color: #fff;               
+                margin: 0px;
+                text-align: left;
+                font-size: 15px;
+                border-bottom: 1px solid #ccc;
+                padding: 5px;
+            }
+        }
+        .popover-content .savetowishlistbutton, .cart.wrapper .popover-content .savetowishlistbutton{
+            margin: 4px auto;
+            color: #fff;
+            background-color: #2d2d2d;
+            width: 70px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px !important;
+            font-weight: 600;
+            height: 20px !important;
+            line-height: 2px !important;
+            padding: 13px 18px;
+            border: 0;
+        }
+        
+        #wishListDetailsId{
+            .other-sellers-table.add-to-wishlist-popover-table{
+                td{
+                    border-bottom: 1px solid #ccc;
+                    padding: 5px; 
+                    
+                    input[name="wishlistradio"]{
+                        display: block!important;
+                        width: 20px;
+                        float: left;
+                    }
+                }
+            }
+            
+           /* .popover.bottom>.arrow {
+                left: 50%;
+                margin-left: -11px;
+                border-top-width: 0;
+                border-bottom-color: #999;
+                border-bottom-color: rgba(0,0,0,0.25);
+                top: -11px !important;
+                
+                &:after{
+                    content: " ";
+                    top: 1px;
+                    margin-left: -10px;
+                    border-top-width: 0;
+                    border-bottom-color: #fff;
+                }
+            }*/
+        }
+        
     }
     .delivery{
         .success_msg{
