@@ -554,7 +554,7 @@ tr.d0 td {
 		</c:choose> --%>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
     <!-- Fine Jewellery Details Tree Section  -->
-		<c:if test="${product.rootCategory=='FineJewellery'}">
+		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
 			<product:productDetailsClassifications product="${product}" />
 			</c:if>
 	</div>

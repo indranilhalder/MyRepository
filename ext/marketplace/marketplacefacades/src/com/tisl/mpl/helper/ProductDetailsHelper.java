@@ -120,6 +120,10 @@ public class ProductDetailsHelper
 	/*
 	 * Added for Fine Jewellery
 	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME = "classification.attributes.fashionjewellery.groupname";
+	/*
+	 * Added for Fashion Jewellery
+	 */
 	/**
 	 *
 	 */
@@ -215,8 +219,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -402,7 +406,8 @@ public class ProductDetailsHelper
 				if (featureDetails.isEmpty()
 						&& !(classData.getName().equalsIgnoreCase(N_A))
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
-								.contains(classData.getName())))
+								.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME).contains(classData.getName())))
 				{
 					final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
 					if (classData.getName().equalsIgnoreCase("Stone Details"))
@@ -502,7 +507,8 @@ public class ProductDetailsHelper
 				{
 					if (!(classData.getName().equalsIgnoreCase(N_A))
 							&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
-									.contains(classData.getName())))
+									.contains(classData.getName()) || configurationService.getConfiguration()
+									.getString(CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME).contains(classData.getName())))
 					{
 						final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
 						if (classData.getName().equalsIgnoreCase("Stone Details"))
@@ -1241,15 +1247,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
