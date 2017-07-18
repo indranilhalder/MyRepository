@@ -875,6 +875,6 @@ public final class ModelAttributetConstants
 	public static final String MOVEMENT_LIST = "movementList";
 	public static final String FUNCTIONALITY = "functionality";
 	public static final String SPECIAL_FEATURES = "special Features";
-	public static final String FEATURES = "features";
-	// TPR-3878 END 
+	public static final String FEATURES = "Features";
+	// TPR-3878 END
 }
