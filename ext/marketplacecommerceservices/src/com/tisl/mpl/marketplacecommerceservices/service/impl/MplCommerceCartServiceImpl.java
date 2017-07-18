@@ -1127,6 +1127,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					 *
 					 * }
 					 */
+					if (!entryWishlist.getIsDeleted().booleanValue())
+					{
 					if (null != cartData.getEntries() && !cartData.getEntries().isEmpty())
 					{
 						for (final OrderEntryData entry : cartData.getEntries())
@@ -1142,6 +1144,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 					}
 					productDataList.add(entryWishlist);
+					}
 				}
 
 			}
