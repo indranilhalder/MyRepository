@@ -422,6 +422,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		return null;
 
 	}
+
 	//TPR-5225
 	@Override
 	public List<OrderModel> getOrderByMobile(final String mobileNo)
@@ -432,7 +433,6 @@ public class DefaultMplOrderDao implements MplOrderDao
 			//final String query = "select {o:pk} from {Order As o} WHERE {o.type}=?type order by {o.creationtime} desc fetch first 3 rows only";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
-
 			flexiQuery.addQueryParameter("type", "SubOrder");
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return listOfData;
@@ -440,7 +440,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		catch (final Exception e)
 		{
 			LOG.error("Error while fetching orderModel by mobileNo  " + e);
-
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -467,7 +467,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		catch (final Exception e)
 		{
 			LOG.error("Error while fetching l4 category" + e);
-
+			e.printStackTrace();
 		}
 		return l4CategoryId;
 	}
@@ -479,7 +479,6 @@ public class DefaultMplOrderDao implements MplOrderDao
 		{
 			final String query = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
-
 			flexiQuery.addQueryParameter("transactionId", transactionId);
 			flexiQuery.addQueryParameter("type", "SubOrder");
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
@@ -487,8 +486,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error while fetching orderModel transactionId  " + e);
-
+			LOG.error("Error while fetching orderModel by transactionId  " + e);
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -508,6 +507,8 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
+			LOG.error("Error while fetching orderModel by orderId  " + e);
+			e.printStackTrace();
 			throw new EtailNonBusinessExceptions(e);
 		}
 
