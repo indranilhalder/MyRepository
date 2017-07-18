@@ -1624,7 +1624,7 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode))
+					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode) && !entry.getIsDeleted().booleanValue())//TPR-5787 check added
 					{
 						existPcode = true;
 						break;
