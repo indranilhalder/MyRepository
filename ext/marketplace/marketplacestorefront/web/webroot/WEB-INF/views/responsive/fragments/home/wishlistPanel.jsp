@@ -20,10 +20,8 @@
 						<c:set var="size" value="0"></c:set>
 						<c:forEach items="${wishlist.getEntries()}" var="wishlistEntry">
 						    <%-- TPR-5787 check starts here --%>
-						    <c:if test="${wishlistEntry.isDeleted eq false} ">
-							<c:if test="${not empty wishlistEntry.product}">
+						    <c:if test="${wishlistEntry.isDeleted eq false && not empty wishlistEntry.product}">
 								<c:set var="size" value="${size +1}"></c:set>
-							</c:if>
 							<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>
 						    </c:if>
 						    <%-- TPR-5787 check ends here--%>
