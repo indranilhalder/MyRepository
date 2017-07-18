@@ -23,7 +23,7 @@
 <div class="right-block billing  checkout-list-right">
 	<div class="checkout-order-summary">
 	<h3><spring:theme code="checkout.single.payment.payableAmount"/></h3>
-		<span id="orderTotalSpanId">
+		<span id="oredrTotalSpanId">
 		<%-- <single-checkout:showOrderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/> --%>
 			<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
 		</span>
