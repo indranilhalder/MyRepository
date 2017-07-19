@@ -5148,6 +5148,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
+				  if (!entry.getIsDeleted().booleanValue())//TPR-5787
+				     {
 					//TISEE-6376
 					if (entry.getProduct() != null && entry.getProduct().getCode() != null)
 					{
@@ -5183,7 +5185,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 						modelService.remove(entry);
 						isDelisted = Boolean.TRUE;
 					}
-
+                                     }
 				}
 				// LW-225,230
 				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxProduct);
