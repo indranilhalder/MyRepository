@@ -83,7 +83,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -285,17 +284,17 @@ public class MiscsController extends BaseController
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 * 
+	 *
 	 * /**
-	 * 
+	 *
 	 * /*
-	 * 
+	 *
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 * 
+	 *
 	 * /**
-	 * 
+	 *
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -1423,7 +1422,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1436,11 +1435,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; } =======
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1839,6 +1838,9 @@ public class MiscsController extends BaseController
 		//New addition
 		final List<String> checkList = new ArrayList<String>();
 		final List<String> masterCheckList = new ArrayList<String>();
+		String delayValue = "0";
+		long delay = 0;
+		List<AbstractOrderEntryModel> orderEntriesModel = null;
 
 		try
 		{
@@ -1846,13 +1848,17 @@ public class MiscsController extends BaseController
 			final JAXBContext jaxbContext = JAXBContext.newInstance(OneTouchCancelReturnCrmRequestList.class);
 			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			crmReqObj = (OneTouchCancelReturnCrmRequestList) jaxbUnmarshaller.unmarshal(crmRequestXML);
-			final String delayValue = configurationService.getConfiguration().getString("onetouch.time.delay");
-			long delay = 0;
-			if (StringUtils.isNotEmpty(delayValue) && null != delayValue)
+			final String delayOnOff = configurationService.getConfiguration().getString("onetouch.time.delay.onOff");
+			LOG.debug("===========Thread on off switch:==========" + delayOnOff);
+			if ("Y".equalsIgnoreCase(delayOnOff))
 			{
-				delay = Long.parseLong(delayValue);
-			}
+				delayValue = configurationService.getConfiguration().getString("onetouch.time.delay");
 
+				if (StringUtils.isNotEmpty(delayValue) && null != delayValue)
+				{
+					delay = Long.parseLong(delayValue);
+				}
+			}
 			//Iterating over each object
 			outer: for (final OneTouchCancelReturnCrmRequestDTO oneTouchCrmObj : crmReqObj.getOneTouchCancelReturnRequestDTOlist())
 			{
@@ -1892,8 +1898,7 @@ public class MiscsController extends BaseController
 						//						}
 
 						/////////Newly moved here
-						final List<AbstractOrderEntryModel> orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel,
-								oneTouchCrmObj.getTransactionId());
+						orderEntriesModel = cancelReturnFacade.associatedEntries(subOrderModel, oneTouchCrmObj.getTransactionId());
 						if (!masterCheckList.contains(oneTouchCrmObj.getTransactionId()))
 						{
 							for (final AbstractOrderEntryModel abstractOrderEntryModel : orderEntriesModel)
@@ -2001,33 +2006,33 @@ public class MiscsController extends BaseController
 										LOG.debug("===Inside deliveryCheckFlag loop====");
 										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
 										{
-										output = new OneTouchCancelReturnDTO();
-										for (final ConsignmentEntryModel con : orderEntry2.getConsignmentEntries())
+											output = new OneTouchCancelReturnDTO();
+											for (final ConsignmentEntryModel con : orderEntry2.getConsignmentEntries())
 											{
-											if ((con.getConsignment().getStatus().getCode()).equalsIgnoreCase("RETURN_INITIATED"))
-											{
-												output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
-												output.setTransactionId(orderEntry2.getTransactionID());
-												output.setServiceability(serviceabilty == true ? "S" : "F");
-												//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
-												output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
-												output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
-														: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
-												outputList.add(output);
-											}
-											else
-											{
-												//output = new OneTouchCancelReturnDTO();
-												output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
-												consignmentStatus = "All the products in promotion are not in delivered status";
-												output.setTransactionId(orderEntry2.getTransactionID());
-												output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
-												output.setServiceability(serviceabilty == true ? "S" : "F");
-												//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
-												output.setRemarks(serviceabilty == true ? consignmentStatus
-														: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
-												outputList.add(output);
-											}
+												if ((con.getConsignment().getStatus().getCode()).equalsIgnoreCase("RETURN_INITIATED"))
+												{
+													output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+													output.setTransactionId(orderEntry2.getTransactionID());
+													output.setServiceability(serviceabilty == true ? "S" : "F");
+													//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+													output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
+													output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+															: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+													outputList.add(output);
+												}
+												else
+												{
+													//output = new OneTouchCancelReturnDTO();
+													output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
+													consignmentStatus = "All the products in promotion are not in delivered status";
+													output.setTransactionId(orderEntry2.getTransactionID());
+													output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
+													output.setServiceability(serviceabilty == true ? "S" : "F");
+													//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
+													output.setRemarks(serviceabilty == true ? consignmentStatus
+															: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
+													outputList.add(output);
+												}
 											}
 										}
 										continue outer;
@@ -2054,7 +2059,7 @@ public class MiscsController extends BaseController
 								if (entry.getTransactionId().equalsIgnoreCase(transactionId))
 								{
 									orderEntry = entry;
-									if (orderEntry.isGiveAway() == true || orderEntry.isIsBOGOapplied() == true)
+									if (orderEntry.isGiveAway() || orderEntry.isIsBOGOapplied())
 
 									{
 										continue outer;
@@ -2074,37 +2079,37 @@ public class MiscsController extends BaseController
 							}
 						}
 						//Bank details to be sent to FICO for COD return
-						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
-								&& oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
-						{
-							codSelfShipData = new CODSelfShipData();
-							if (null != subOrderModel.getUser().getUid())
-							{
-								codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
-							}
-							codSelfShipData.setOrderRefNo(oneTouchCrmObj.getOrderRefNum());
-							//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
-							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
-							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
-							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
-							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
-							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
-							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
-							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
-							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
-							codSelfShipData.setPaymentMode(oneTouchCrmObj.getRefundType());
-							codSelfShipData.setAmount(orderEntry.getAmountAfterAllDisc().toString());
-							codSelfShipData.setTransactionType(RETURN_TYPE_COD);
-							if (null != orderData.getCreated())
-							{
-								final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-								codSelfShipData
-										.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
-								codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData
-										.getCreated())));
-							}
-
-						}
+						//						if (subOrderModel.getModeOfOrderPayment().equalsIgnoreCase("COD")
+						//								&& oneTouchCrmObj.getTicketType().equalsIgnoreCase(MarketplacewebservicesConstants.RETURN_TICKET))
+						//						{
+						//							codSelfShipData = new CODSelfShipData();
+						//							if (null != subOrderModel.getUser().getUid())
+						//							{
+						//								codSelfShipData.setCustomerNumber(subOrderModel.getUser().getUid());
+						//							}
+						//							codSelfShipData.setOrderRefNo(oneTouchCrmObj.getOrderRefNum());
+						//							//codSelfShipData.getOrderNo(oneTouchCrmObj.getSubOrderNum());
+						//							codSelfShipData.setBankName(oneTouchCrmObj.getBankName());
+						//							codSelfShipData.setBankBranch(oneTouchCrmObj.getBranch());
+						//							codSelfShipData.setName(oneTouchCrmObj.getAccHolderName());
+						//							codSelfShipData.setBankKey(oneTouchCrmObj.getIFSC());
+						//							codSelfShipData.setBankAccount(oneTouchCrmObj.getAccNum());
+						//							codSelfShipData.setTransactionID(oneTouchCrmObj.getTransactionId());
+						//							codSelfShipData.setTransactionType(subOrderModel.getModeOfOrderPayment());
+						//							codSelfShipData.setOrderTag(MarketplacewebservicesConstants.ORDERTAG_TYPE_POSTPAID);
+						//							codSelfShipData.setPaymentMode(oneTouchCrmObj.getRefundType());
+						//							codSelfShipData.setAmount(orderEntry.getAmountAfterAllDisc().toString());
+						//							codSelfShipData.setTransactionType(RETURN_TYPE_COD);
+						//							if (null != orderData.getCreated())
+						//							{
+						//								final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+						//								codSelfShipData
+						//										.setOrderDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData.getCreated())));
+						//								codSelfShipData.setTransactionDate(dateUtilHelper.convertDateWithFormat(formatter.format(orderData
+						//										.getCreated())));
+						//							}
+						//
+						//						}
 
 
 
@@ -2290,7 +2295,10 @@ public class MiscsController extends BaseController
 					output.setRemarks(MarketplacewebservicesConstants.MISSING_MANDATORY_FIELDS);
 					outputList.add(output);
 				}
-				Thread.sleep(delay); // do nothing for 1000 miliseconds (1 second)
+				if ("Y".equalsIgnoreCase(delayOnOff))
+				{
+					Thread.sleep(delay); // do nothing for 1000 miliseconds (1 second)
+				}
 			}
 			LOG.debug("========Sending response in XML format=========");
 			//Automatic conversion of JAVA object to XML
