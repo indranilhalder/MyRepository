@@ -9,6 +9,7 @@ import de.hybris.platform.commercefacades.order.data.OrderHistoryData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -173,9 +174,11 @@ public interface MplOrderFacade
 	 * @param orderCode
 	 * @return OrderModel
 	 */
-	List<OrderModel> getOrderWithMobileNo(final String mobileNo);
+	public List<OrderEntryModel> getOrderWithMobileNo(final String mobileNo);
 
 	public String getL4CategoryIdForProduct(final String productCode);
+
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(List<OrderEntryModel> orderModels);
 
 	//TPR-5225 ends here
 
@@ -185,9 +188,8 @@ public interface MplOrderFacade
 	//TPR-4840
 	public OrderInfoWsDTO storeOrderInfoByOrderNo(OrderModel orderModel);
 
+	//TPR-4841
 	public OrderInfoWsDTO storeOrderInfoByTransactionId(OrderModel orderModel, String transactionId);
-
-	public OrderInfoWsDTO storeOrderInfoByMobileNo(List<OrderModel> orderModels);
 
 	//TPR-4841
 	public OrderModel fetchOrderInfoByTransactionId(final String transactionId);

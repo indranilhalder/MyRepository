@@ -8,6 +8,7 @@ import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
@@ -104,12 +105,13 @@ public interface MplOrderDao
 	public AbstractOrderEntryModel getEntryModel(String transactionId);
 
 	//TPR-5225
-	public List<OrderModel> getOrderByMobile(final String mobileNo);
-
-	public OrderModel getOrderByParentOrder(String orderRefNo);
+	public List<OrderEntryModel> getOrderByMobile(final String mobileNo);
 
 	//TPR-5225
 	public String getL4CategoryId(String productCode);
+
+	//TPR-4840
+	public OrderModel getOrderByParentOrder(String orderRefNo);
 
 	//TPR-4841
 	public OrderModel fetchOrderByTransaction(final String transactionId);

@@ -51,6 +51,7 @@ import de.hybris.platform.commercewebservicescommons.mapping.DataMapper;
 import de.hybris.platform.commercewebservicescommons.mapping.FieldSetBuilder;
 import de.hybris.platform.commercewebservicescommons.mapping.impl.FieldSetBuilderContext;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -1861,14 +1862,14 @@ public class MiscsController extends BaseController
 			throws EtailNonBusinessExceptions
 	{
 		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
-		List<OrderModel> orderModels = new ArrayList<OrderModel>();
+		List<OrderEntryModel> orderEntryModels = new ArrayList<OrderEntryModel>();
 		try
 		{
 
 			if (StringUtils.isNotEmpty(mobileNo))
 			{
-				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo);
-				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderModels);
+				orderEntryModels = mplOrderFacade.getOrderWithMobileNo(mobileNo);
+				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderEntryModels);
 			}
 
 		}
