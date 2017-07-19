@@ -32,7 +32,6 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	@Override
 	public List<Wishlist2Model> findAllWishlists(final UserModel user)
 	{
-		//TPR-5787 query changed
 		final String queryString = //
 		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {creationtime} desc";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
