@@ -213,7 +213,7 @@
 					</div>
 					
 					<span>Safe & Secure Checkout</span>		<!-- UF-281 text change -->
-					
+					<span class="need-help-call">Need Help? Call 1800 935 6555</span>
 					
 					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
