@@ -72866,3 +72866,15 @@ footer #footerLink div.column ul li:last-child:after {
 }
 }
 /*TPR-5733 end*/
+/* TPR-6410 start */
+.shop-by-department-banner{
+	float: right;
+    max-width: calc(49.5%  - -30px);
+}
+@media(max-width: 790px){
+.shop-by-department-banner{
+	display: none;
+}	
+}
+/* TPR-6410 end */
+

@@ -4323,16 +4323,18 @@
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- TPR-6410 starts -->
 			<itemtype code="CMSNavigationNode" generate="false"
 				autocreate="false">
 				<attributes>
 					<attribute qualifier="media" generate="true" autocreate="true"
-						type="localized:Media">
+						type="Media">
 						<persistence type="property" />
 						<description>Attribute that stores the localized media in CMS Navigation Node.</description>
 					</attribute>
 				</attributes>
 			</itemtype>
+			<!-- TPR-6410 ends -->
 			<itemtype code="MplNavigationNodeComponent" autocreate="true"
 				generate="true" extends="CMSNavigationNode"
 				jaloclass="com.tisl.mpl.core.jalo.MplNavigationNodeComponent">

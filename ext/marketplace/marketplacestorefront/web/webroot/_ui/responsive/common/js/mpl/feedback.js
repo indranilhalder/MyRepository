@@ -1740,7 +1740,7 @@ $(document).ready(function(){
 				if($(this).children('ul').height() > 0) {
 					$(this).children('ul').css("height","0px");
 				} else {
-					$(this).children('ul').css("height","450px");
+					$(this).children('ul').css("height","500px"); //changes for TPR-6410
 				}
 			}
 				
