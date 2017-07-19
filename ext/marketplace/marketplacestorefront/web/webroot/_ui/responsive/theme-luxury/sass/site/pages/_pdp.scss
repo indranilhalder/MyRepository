@@ -15,7 +15,7 @@
     .Cta{
         .buy-btn-holder{
             #buyNow{
-                padding-left: 0px;
+                padding-left: 0!important;
             }
         }
     }
@@ -173,10 +173,12 @@
 		
 		li {
 			display: inline-block;
+            margin: 4px;
 			
-			& + li {
+			/*& + li {
 				margin-left: 10px;
-			}
+			}*/
+            
             
             a{
                 width: 44px;
@@ -188,6 +190,7 @@
                 text-transform: uppercase;
                 cursor: pointer;  
                 display: block;
+                overflow: hidden;
                 
                 &:hover, &.active {
                     background-color: $gray-darker;
@@ -262,16 +265,21 @@
 					width: 17px;
 				}
 				.save:before {
-                    background: $Sprite no-repeat;
-					background-position: -460px -59px;		
+                    background: $Sprite_icon no-repeat;
+					background-position:  -1110px 0;
+                    
+                    &:hover{
+                        background-position: -1080px 0;
+                    }
+                    
 				}
 				.share:before {
-                    background: $Sprite no-repeat;
-					background-position: -379px -59px;	
+                    background: $Sprite_icon no-repeat;
+					background-position: -1250px 0;	
 				}
                 
                 .save.added:before {
-                    background-position: -35px 0px;
+                     background-position: -1080px 0;
                 }
                 
 			}
@@ -902,6 +910,15 @@
 		.pincodeEmpty{
 			display:none;
 		}
+        
+        .do{
+            margin: 10px 0px 0px 0px;
+            
+            #homeDate, span{
+                font-size: 11px;
+                padding-left: 10px;
+            }
+        }
 	}
 	.right-delivery-block {
 		width:48%;
@@ -1166,5 +1183,13 @@ a:hover.tooltips {
 	}
 	.pdp-view .pdp-img img {border : 0}
     /*#addToCartButton {display : none !important;}*/
+    .gig-rating .gig-button-container{
+        clear: both;
+        
+        .gig-rating-readReviewsLink, .gig-rating-writeYourReview.gig-rating-button{
+            display: block;
+            float: none!important;
+        }
+    }
 	
 }
