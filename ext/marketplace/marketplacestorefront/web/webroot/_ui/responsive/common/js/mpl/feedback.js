@@ -3726,17 +3726,4 @@ $(document).ready(function(){
 	    });
 	}
 });
-$(window).on("load resize", function(){
-	if ($(window).width() >= 773) {
-		$(".product-specification-accordion").hide();
-		$(".nav.pdp.productNav").show();
-		$(".tabs.pdp.productTabs").show();
-	}
-	else{
-		$(".nav.pdp.productNav").hide();
-		$(".tabs.pdp.productTabs").hide();
-		$(".product-specification-accordion").show();
-	}
-	
-});
 /* UF-377 ends */
