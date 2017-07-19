@@ -556,7 +556,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				for (final InventoryReservRequest entry : request.getItem())
 				{
 					//	if (null != entry.getUSSID() && !entry.getUSSID().isEmpty() && entry.isJewellery() == false)//SONAR FIX JEWELLERY
-					if ((null != entry.getUSSID() && !entry.getUSSID().isEmpty()) && entry.isJewellery() == false)
+					if ((null != entry.getUSSID() && !entry.getUSSID().isEmpty()) && !entry.isJewellery())
 					{
 						mockXmlSecondPhase = mockXmlSecondPhase.replaceAll("<replaceussid>", entry.getUSSID());
 						outputXml += mockXmlSecondPhase;
