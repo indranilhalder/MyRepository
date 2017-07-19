@@ -109,6 +109,8 @@
 				</c:forEach>
 				</ul></li>
 				</c:forEach>
+				<!-- TPR-6410 -->
+				<img class="shop-by-department-banner" alt="tesr" src="${component.navigationNode.media.URL}">
 				</ul>		<!-- TPR-561 -->
 				
 	</c:when>
