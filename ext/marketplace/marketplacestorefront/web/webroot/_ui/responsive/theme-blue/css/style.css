@@ -71120,6 +71120,16 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	font-size: 14px;
   	color: #31363d;
 }
+.product-specification-accordion.smk_accordion .accordion_in.acc_active .acc_head h2{
+	font-weight: bold;
+}
+.tabs-block .tab-details> ul{
+	list-style-type: disc;
+	margin-left: 16px;
+}
+.tabs-block .tab-details> ul[style="list-style:none; padding-left:0;"]{
+	margin-left: 0px;
+}
 .product-specification-accordion.smk_accordion .accordion_in .acc_head:after{
 	content: "+";
 	position: absolute;
