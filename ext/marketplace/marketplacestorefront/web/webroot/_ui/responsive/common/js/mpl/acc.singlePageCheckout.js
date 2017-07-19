@@ -2781,8 +2781,15 @@ $(document).ready(function(){
 		var deviceType=$("#deviceType").html();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
-			//Reload the page if a user directly accesses the site in a small sized desktop browser
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in a small sized desktop browser.
 			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
+		}
+		else if(deviceType=="mobile" && !ACC.singlePageCheckout.getIsResponsive())
+		{
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in desktop browser modifying the user agent in browser dev tools to mobile where as width of view port is more than 768px.
+			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isNormal=true";
 		}
 		
 		if(ACC.singlePageCheckout.getIsResponsive())
@@ -2812,8 +2819,3 @@ $(document).ready(function(){
 		}
 	}
 });
-
-
-$('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery-modes li input:radio').click(function(){
-	alert("Hiii");
-	});

@@ -366,7 +366,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@PreValidateCheckoutStep(checkoutStep = MarketplacecheckoutaddonConstants.DELIVERY_METHOD)
 	public String checkoutPage(final Model model, final RedirectAttributes redirectAttributes, final HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "false") final boolean isAjax,
-			@RequestParam(required = false, defaultValue = "false") final boolean isResponsive)
+			@RequestParam(required = false, defaultValue = "false") final boolean isResponsive,
+			@RequestParam(required = false, defaultValue = "false") final boolean isNormal)
 	{
 		try
 		{
@@ -451,6 +452,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				if (isResponsive)
 				{
 					model.addAttribute("deviceType", "mobile");
+				}
+				else if (isNormal)
+				{
+					model.addAttribute("deviceType", "normal");
 				}
 				else
 				{
