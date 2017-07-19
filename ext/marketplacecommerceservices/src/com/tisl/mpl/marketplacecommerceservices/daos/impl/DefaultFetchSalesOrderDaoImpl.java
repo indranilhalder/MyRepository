@@ -294,10 +294,11 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 	 * @desc This method helps to find the new order whose entry is not present in NPSMailer model.
 	 * @return Map<OrderModel, AbstractOrderEntryModel>
 	 */
+	//Change for TPR-TPR-6033
 	@Override
-	public Map<OrderModel, OrderEntryModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
+	public Map<OrderEntryModel, OrderModel> fetchOrderDetailsforDeliveryMail(final Date mplConfigDate)
 	{
-		final Map<OrderModel, OrderEntryModel> orderWithSingleEntry = new HashMap<OrderModel, OrderEntryModel>();
+		final Map<OrderEntryModel, OrderModel> orderWithSingleEntry = new HashMap<OrderEntryModel, OrderModel>();
 
 		try
 		{
@@ -352,7 +353,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 					final OrderEntryModel absOrderEntryModel = (OrderEntryModel) obj.get(1);
 					if (!orderWithSingleEntry.containsKey(orderModel))
 					{
-						orderWithSingleEntry.put(orderModel, absOrderEntryModel);
+						orderWithSingleEntry.put(absOrderEntryModel, orderModel);
 						LOG.debug("result>>>>>>>>>>>>>>>>>>>>>>>nps mailer job order entry" + orderWithSingleEntry);
 					}
 				}
@@ -369,7 +370,7 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.FetchSalesOrderDao#getTransactionIdCount(de.hybris.platform.core
 	 * .model.order.OrderModel)
@@ -549,8 +550,8 @@ public class DefaultFetchSalesOrderDaoImpl implements FetchSalesOrderDao
 			//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B3000);
 			/*
 			 * } else
-			 *
-			 *
+			 * 
+			 * 
 			 * {
 			 */
 			for (final List<Object> obj : result.getResult())

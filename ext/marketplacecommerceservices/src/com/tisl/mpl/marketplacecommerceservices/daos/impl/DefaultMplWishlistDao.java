@@ -32,9 +32,8 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	@Override
 	public List<Wishlist2Model> findAllWishlists(final UserModel user)
 	{
-		//TPR-5787 query changed
 		final String queryString = //
-		"SELECT {wish.pk} FROM {Wishlist2 as wish},{Wishlist2entry as wishentry} WHERE {wish.user} = ?user AND {wishentry.wishlist}={wish.pk} AND {wishentry.isdeleted} = 0 ORDER BY {creationtime} desc";
+		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {creationtime} desc";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.USERPARAM, user);
 		return flexibleSearchService.<Wishlist2Model> search(query).getResult();
