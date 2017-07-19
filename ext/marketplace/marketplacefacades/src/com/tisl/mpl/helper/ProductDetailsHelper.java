@@ -1164,7 +1164,7 @@ public class ProductDetailsHelper
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid))
+					if (null != (entry) && null != entry.getUssid() && (entry.getUssid()).equalsIgnoreCase(ussid) && !entry.getIsDeleted().booleanValue())//TPR-5787 condition added
 					{
 						existUssid = true;
 						break;

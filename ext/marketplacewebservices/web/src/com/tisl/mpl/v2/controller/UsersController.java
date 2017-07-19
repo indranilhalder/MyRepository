@@ -3193,6 +3193,9 @@ public class UsersController extends BaseCommerceController
 						wldpDTOList = new ArrayList<GetWishListProductWsDTO>();
 						for (final Wishlist2EntryModel entryModel : entryModels)
 						{
+						        int entryModelSize=0;//TPR-5787
+							if (!entryModel.getIsDeleted().booleanValue())//TPR-5787 check added
+							{
 							wldpDTO = new GetWishListProductWsDTO();
 							ProductData productData1 = null;
 							if (null != entryModel.getProduct())
@@ -3400,7 +3403,10 @@ public class UsersController extends BaseCommerceController
 											.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_WISHLIST);
 									wlDTO.setDelistedMessage(delistMessage);
 								}
-								wldDTO.setCount(Integer.valueOf(entryModels.size()));
+								//wldDTO.setCount(Integer.valueOf(entryModels.size()));
+								entryModelSize+= 1;//TPR-5787 modified
+								wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
+								}
 							}
 						}
 					}

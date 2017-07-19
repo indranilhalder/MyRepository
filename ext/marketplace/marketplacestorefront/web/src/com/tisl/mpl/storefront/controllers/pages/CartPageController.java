@@ -1069,7 +1069,7 @@ public class CartPageController extends AbstractPageController
 					{
 						boolean flag = true;
 						//TISEE-6376
-						if (entryModel.getProduct() != null)
+						if (entryModel.getProduct() != null && !entryModel.getIsDeleted().booleanValue())//TPR-5787 check added
 						{
 							/*
 							 * ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(),
