@@ -2195,7 +2195,16 @@ ACC.singlePageCheckout = {
         	$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
-		}        
+		} 
+		
+		//UF-429
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : 'new_address_clicked', 
+				event_type : 'new_address_clicked'
+			});
+		}
 		return false;	
 	},
 	//Function used to check pincode serviceability for responsive
