@@ -8,6 +8,7 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -394,7 +395,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	//TPR-5225
 	@Override
-	public List<OrderModel> fetchOrderByMobile(final String mobileNo)
+	public List<OrderEntryModel> fetchOrderByMobile(final String mobileNo)
 	{
 		return mplOrderDao.getOrderByMobile(mobileNo);
 	}
@@ -406,6 +407,7 @@ public class DefaultMplOrderService implements MplOrderService
 		return mplOrderDao.getL4CategoryId(productCode);
 	}
 
+	//TPR-4841
 	@Override
 	public OrderModel fetchOrderByTransactionId(final String transactionId)
 	{
