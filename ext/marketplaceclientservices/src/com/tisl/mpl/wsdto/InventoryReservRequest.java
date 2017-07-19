@@ -17,7 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "invReserve", propOrder =
-{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode","isJewellery","transportMode","ServiceableSlaves"})
+{ "USSID", "quantity", "parentUSSID", "isAFreebie", "storeId", "fulfillmentType", "deliveryMode", "jewellery", "transportMode",
+		"ServiceableSlaves" })
 public class InventoryReservRequest
 {
 	@XmlElement(name = "ussId")
@@ -35,13 +36,13 @@ public class InventoryReservRequest
 	@XmlElement(name = "quantity")
 	private String quantity;
 	@XmlElement(name = "isJewellery")
-	private boolean isJewellery;	
+	private boolean jewellery;
 	@XmlElement(name = "ServiceableSlaves")
 	private List<ServiceableSlavesDTO> ServiceableSlaves;
-	
+
 	@XmlElement(name = "transportMode")
 	private String transportMode;
-	
+
 	/**
 	 * @return the uSSID
 	 */
@@ -168,33 +169,37 @@ public class InventoryReservRequest
 		this.quantity = quantity;
 	}
 
+
 	/**
-	 * @return the isJewellery
+	 * @return the jewellery
 	 */
 	public boolean isJewellery()
 	{
-		return isJewellery;
+		return jewellery;
 	}
 
 	/**
-	 * @param isJewellery
-	 *           the isJewellery to set
+	 * @param jewellery
+	 *           the jewellery to set
 	 */
-	public void setJewellery(final boolean isJewellery)
+	public void setJewellery(final boolean jewellery)
 	{
-		this.isJewellery = isJewellery;
+		this.jewellery = jewellery;
 	}
-    /**
+
+	/**
 	 * @return the serviceableSlaves
 	 */
 	public List<ServiceableSlavesDTO> getServiceableSlaves()
 	{
 		return ServiceableSlaves;
 	}
+
 	/**
-	 * @param serviceableSlaves the serviceableSlaves to set
+	 * @param serviceableSlaves
+	 *           the serviceableSlaves to set
 	 */
-	public void setServiceableSlaves(List<ServiceableSlavesDTO> serviceableSlaves)
+	public void setServiceableSlaves(final List<ServiceableSlavesDTO> serviceableSlaves)
 	{
 		ServiceableSlaves = serviceableSlaves;
 	}
@@ -208,9 +213,10 @@ public class InventoryReservRequest
 	}
 
 	/**
-	 * @param transportMode the transportMode to set
+	 * @param transportMode
+	 *           the transportMode to set
 	 */
-	public void setTransportMode(String transportMode)
+	public void setTransportMode(final String transportMode)
 	{
 		this.transportMode = transportMode;
 	}
