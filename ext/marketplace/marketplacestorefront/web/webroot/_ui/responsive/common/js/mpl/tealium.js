@@ -568,7 +568,6 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 		}
 if(typeof(utag) != "undefined"){
 	utag.link({
-
 		link_text: triggerPoint ,
 		event_type : triggerPoint+"_"+ pageName,
 		product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
@@ -2160,3 +2159,22 @@ $(window).unload(function(event) {
 		}
 	}
 });
+
+//UF-398
+$(document).on('click','#selectedAddressDivId',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "change_address_clicked",
+			event_type : "change_address_clicked"
+		});
+	   }
+});
+
+$(document).on('click','#selectedDeliveryOptionsDivId',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "change_delivery_option_clicked",
+			event_type : "change_delivery_option_clicked"
+		});
+	   }
+	});

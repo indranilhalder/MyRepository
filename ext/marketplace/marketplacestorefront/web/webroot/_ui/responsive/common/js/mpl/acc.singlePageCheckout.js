@@ -1670,7 +1670,7 @@ ACC.singlePageCheckout = {
 					{
 						utag.link({
 							link_text: 'review_order_add_to_wishlist' , 
-							event_type : 'review_order__to_wishlist', 
+							event_type : 'review_order_add_to_wishlist', 
 							product_sku_wishlist : productcodearray
 						});
 					}
