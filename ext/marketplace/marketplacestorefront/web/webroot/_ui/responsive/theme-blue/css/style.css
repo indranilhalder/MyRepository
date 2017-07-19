@@ -75822,6 +75822,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 100%;
 	table-layout: fixed;
 }
+.accordin.FineJewellery .item .detail table#showPriceBreakup,
+.accordin.FashionJewellery .item .detail table#showPriceBreakup{
+	border-top: solid 2px #cccccc;
+}
 .accordin.FineJewellery .item .detail table tr td.title,
 .accordin.FashionJewellery .item .detail table tr td.title{
 	padding-top: 16px;
