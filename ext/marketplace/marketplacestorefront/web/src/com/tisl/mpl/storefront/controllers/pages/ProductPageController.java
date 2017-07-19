@@ -185,7 +185,8 @@ public class ProductPageController extends MidPageController
 	/**
 	 *
 	 */
-	private static final String CLOTHING = "Clothing";
+	//SONAR FIX JEWELLERY
+	//private static final String CLOTHING = "Clothing";
 
 	/**
 	 * Added Size Guide For Accessories
@@ -353,8 +354,9 @@ public class ProductPageController extends MidPageController
 	@Resource(name = "mplJewelleryFacade")
 	private MplJewelleryFacade mplJewelleryFacade;
 
-	@Resource(name = "jewelleryDescMapping")
-	private Map<String, String> jewelleryDescMapping;
+	//SONAR FIX JEWELLERY
+	//	@Resource(name = "jewelleryDescMapping")
+	//	private Map<String, String> jewelleryDescMapping;
 
 	/**
 	 * @param buyBoxFacade
@@ -1924,12 +1926,13 @@ public class ProductPageController extends MidPageController
 			//if (productModel.getProductCategoryType().equalsIgnoreCase(ELECTRONICS))
 			if (ELECTRONICS.equalsIgnoreCase(productModel.getProductCategoryType())
 					|| WATCHES.equalsIgnoreCase(productModel.getProductCategoryType())
-					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType())
-					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					|| TRAVELANDLUGGAGE.equalsIgnoreCase(productModel.getProductCategoryType()))
+			//|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				productDetailsHelper.groupGlassificationData(productData);
 			}
-			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				productDetailsHelper.groupGlassificationDataForFineDeatils(productData);
 			}

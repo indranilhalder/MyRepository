@@ -154,7 +154,7 @@
 				   	   			<p class="delivery-method-description"><spring:theme code="text.home.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
 				   	   		</c:when>
 				   	   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
-				   	   			<p class="delivery-method-description"><spring:theme code="text.express.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
+				   	   			<p class="delivery-method-description"><spring:theme code="text.express.shipping"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>
 				   	   		</c:when>
 				   	   		<c:otherwise>
 				   	   			<p class="delivery-method-description"><spring:theme code="text.clickandcollect.delivery"/>&nbsp;-&nbsp;<c:if test="${entry.currDelCharge.value.unscaledValue() == 0}"><c:out value="FREE"></c:out></c:if><c:if test="${entry.currDelCharge.value.unscaledValue() != 0}"><c:out value="${entry.currDelCharge.formattedValue}"></c:out></c:if></p>

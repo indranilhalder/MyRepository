@@ -111,7 +111,8 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 		try
 		{
 			final String classAttrquery = "select distinct{ussid} from {JewelleryInformation} where {pcmussid} IN({{select distinct{pcmussid} from {JewelleryInformation} where {ussid} = ?mainUssid}})";
-			final FlexibleSearchQuery weightVariantQuery = new FlexibleSearchQuery(classAttrquery.toString());
+			//	final FlexibleSearchQuery weightVariantQuery = new FlexibleSearchQuery(classAttrquery.toString());//SONAR FIX JEWELLERY
+			final FlexibleSearchQuery weightVariantQuery = new FlexibleSearchQuery(classAttrquery);
 			final List resultClassList = new ArrayList();
 			resultClassList.add(String.class);
 			weightVariantQuery.setResultClassList(resultClassList);
@@ -188,7 +189,8 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 		try
 		{
-			panCardInfo = flexibleSearchService.<PancardInformationModel> search(query.toString()).getResult();
+			//	panCardInfo = flexibleSearchService.<PancardInformationModel> search(query.toString()).getResult();//SONAR FIX JEWELLERY
+			panCardInfo = flexibleSearchService.<PancardInformationModel> search(query).getResult();
 			if (CollectionUtils.isNotEmpty(panCardInfo))
 			{
 				status = panCardInfo.get(0).getStatus();

@@ -140,13 +140,13 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					{
 						reqObj.setQuantity(cartObj.getQuantity().toString());
 					}
-		
+
 					if (cartObj.getTransportMode() != null)
 					{
 						reqObj.setTransportMode(cartObj.getTransportMode().toString());
 					}
-		
-		
+
+
 					// Added code for Inventory Reservation Request change
 					if ((null != cartObj.getServiceableSlaves() && cartObj.getServiceableSlaves().size() > 0))
 					{
@@ -178,7 +178,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 						LOG.debug("Added in Inventory reservation request list");
 					}
 				}
-				else{
+				else
+				{
 
 					LOG.debug("inside cart soft reservation data list for Jewellery");
 
@@ -290,7 +291,7 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 					}
 
 				}
-				
+
 			}
 			reqlist.addAll(freebieItemslist);
 
@@ -554,7 +555,8 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
 				String outputXml = mockXmlFirstPhase;
 				for (final InventoryReservRequest entry : request.getItem())
 				{
-					if (null != entry.getUSSID() && !entry.getUSSID().isEmpty() && entry.isJewellery() == false)
+					//	if (null != entry.getUSSID() && !entry.getUSSID().isEmpty() && entry.isJewellery() == false)//SONAR FIX JEWELLERY
+					if ((null != entry.getUSSID() && !entry.getUSSID().isEmpty()) && entry.isJewellery() == false)
 					{
 						mockXmlSecondPhase = mockXmlSecondPhase.replaceAll("<replaceussid>", entry.getUSSID());
 						outputXml += mockXmlSecondPhase;
