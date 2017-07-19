@@ -1200,22 +1200,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				for (final AbstractOrderEntryModel entry : orderEntryModels)
 				{
 					final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-					if (StringUtils.isNotEmpty(entry.getTransactionID()))
-					{
-						customerOrderInfoWsDTO.setTransactionId(entry.getTransactionID());
-					}
-					else
-					{
-						customerOrderInfoWsDTO.setTransactionId("NULL");
-					}
-					if (StringUtils.isNotEmpty(entry.getProduct().getName()))
-					{
-						customerOrderInfoWsDTO.setProductName(entry.getProduct().getName());
-					}
-					else
-					{
-						customerOrderInfoWsDTO.setProductName("NULL");
-					}
+					customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID() : "NULL");
+					customerOrderInfoWsDTO
+							.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName() : "NULL");
 					if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
 					{
 						customerOrderInfoWsDTO.setL4CategoryId(mplOrderService.getL4CategoryIdOfProduct(entry.getProduct().getCode()));
@@ -1235,8 +1222,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured" + e.getMessage());
-			e.printStackTrace();
+			LOG.error("Exception occured: ", e);
 			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderInfoWsDTO;
@@ -1262,211 +1248,156 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					for (final AbstractOrderEntryModel entry : subOrderModel)
 					{
 						final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-						if (StringUtils.isNotEmpty(entry.getTransactionID()))
+						if (StringUtils.isNotEmpty(entry.getTransactionID())
+								&& entry.getTransactionID().equalsIgnoreCase(transactionId))
 						{
-							if (entry.getTransactionID().equalsIgnoreCase(transactionId))
+							customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
+									: "NULL");
+							customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo() : "NULL");
+							if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
 							{
-								customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
-										: "NULL");
-
-								customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo() : "NULL");
-
-								if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
-								{
-									customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setEdd("NULL");
-								}
-								if (StringUtils.isNotEmpty(entry.getTotalSalePrice().toString()))
-								{
-									customerOrderInfoWsDTO.setApportionedPrice(entry.getTotalSalePrice().toString());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setApportionedPrice("NULL");
-								}
-								customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
-										.toString().toUpperCase() : "NULL");
-								customerOrderInfoWsDTO
-										.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
-												.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
-								//customerOrderInfoWsDTO.setOrderStatus(entry.getOrder().getStatus().getCode());
-
-								if (orderModel.getPaymentTransactions() != null)
-								{
-									final List<PaymentTransactionModel> paymlists = orderModel.getPaymentTransactions();
-									final PaymentTransactionModel paytm = paymlists.get(paymlists.size() - 1);
-
-									final List<PaymentTransactionEntryModel> paytmentry = paytm.getEntries();
-
-									final PaymentTransactionEntryModel pt = paytmentry.get(paytmentry.size() - 1);
-
-									customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getType().getCode() ? pt.getType()
-											.getCode() : "NULL");//Transaction status details
-
-									customerOrderInfoWsDTO.setTransactionStatus(null != pt.getTransactionStatus() ? pt
-											.getTransactionStatus() : "NULL");//Transaction Status
-
-									if (null != pt.getModifiedtime())
-									{
-										customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));//Transaction Timestamp
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
-									}
-								}
-								customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus()
-										.getCode() : "NULL");//Order Status
-
-								if (StringUtils.isNotEmpty(orderModel.getModifiedtime().toString()))
-								{
-									customerOrderInfoWsDTO.setOrderTimestamp(formatter.format(orderModel.getModifiedtime()));//Order timestamp
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setOrderTimestamp("NULL");
-								}
-								final Iterator it = entry.getConsignmentEntries().iterator();
-								while (it.hasNext())
-								{
-
-									final ConsignmentEntryModel consg = (ConsignmentEntryModel) it.next();
-
-									//	customerOrderInfoWsDTO.setTransactionStatus(consg.getConsignment().getStatus().getCode());//Transaction status
-									//									if (StringUtils.isNotEmpty(consg.getConsignment().getModifiedtime().toString()))
-									//									{
-									//										customerOrderInfoWsDTO.setConsignmentTimestamp(formatter.format(consg.getConsignment()
-									//												.getModifiedtime()));//Consignment Timestamp
-									//									}
-									//									else
-									//									{
-									//										customerOrderInfoWsDTO.setConsignmentTimestamp("NULL");
-									//									}
-									if (StringUtils.isNotEmpty(consg.getConsignment().getCarrier()))
-									{
-										customerOrderInfoWsDTO.setCarrierName(consg.getConsignment().getCarrier());//Carrier Name
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setCarrierName("NULL");
-									}
-									//(consg.getConsignment().getDeliveryMode().getCode());//Delivery Mode
-									//????????Shipping Status (Shipment delivered/in Transit etc) & Timestamp
-								}
-								//orderModel.getPaymentStatus().getCode();
-								if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
-								{
-									customerOrderInfoWsDTO.setPaymentMode(orderModel.getModeOfOrderPayment());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setPaymentMode("NULL");
-								}
-								final Iterator itr = orderModel.getConsignments().iterator();
-								while (itr.hasNext())
-								{
-									cng = (ConsignmentModel) itr.next();
-
-									if (null != cng.getDeliveryDate())
-									{
-										customerOrderInfoWsDTO.setDeliveryTrackingDate(formatter.format(cng.getDeliveryDate()));//Delivery tracking date
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setDeliveryTrackingDate("NULL");
-									}
-									if (StringUtils.isNotEmpty(cng.getTrackingID()))
-									{
-										customerOrderInfoWsDTO.setAwbNumber(cng.getTrackingID());//AWB number
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setAwbNumber("NULL");
-									}
-
-									{
-										customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
-												: "NULL");//Return carrier
-									}
-
-									{
-										customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum()
-												: "NULL");//Return AWB number
-									}
-								}
-								if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
-								{
-									if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
-									{
-										customerOrderInfoWsDTO.setPaymentType("POSTPAID");
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setPaymentType("PREPAID");
-									}
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setPaymentType("NULL");
-								}
-								final Iterator it1 = orderModel.getReturnRequests().iterator();
-								while (it1.hasNext())
-								{
-									final ReturnRequestModel rq = (ReturnRequestModel) it1.next();
-
-									final Iterator it2 = rq.getReturnEntries().iterator();
-
-									while (it2.hasNext())
-									{
-										final ReturnEntryModel rte = (ReturnEntryModel) it2.next();
-
-										if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase("transactionId-passed"))
-										{
-											if (StringUtils.isNotEmpty(rte.getStatus().toString()))
-											{
-												customerOrderInfoWsDTO.setReturnRequestStatus(rte.getStatus().toString());//Return request status
-											}
-											else
-											{
-												customerOrderInfoWsDTO.setReturnRequestStatus("NULL");
-											}
-											if (StringUtils.isNotEmpty(rte.getCreationtime().toString()))
-											{
-												customerOrderInfoWsDTO.setReturnRequestTimestamp(formatter.format((rte.getCreationtime())));//Return timeStamp
-											}
-											else
-											{
-												customerOrderInfoWsDTO.setReturnRequestTimestamp("NULL");
-											}
-											break;
-										}
-
-									}
-									if (StringUtils.isNotEmpty(rq.getRejectionReason()))
-									{
-										customerOrderInfoWsDTO.setQcRejectionReason(rq.getRejectionReason());//QC rejection reason
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setQcRejectionReason("NULL");
-									}
-									if (StringUtils.isNotEmpty(rq.getTypeofreturn().toString()))
-									{
-										customerOrderInfoWsDTO.setReturnType(rq.getTypeofreturn().toString());//Type of Return
-									}
-									else
-									{
-										customerOrderInfoWsDTO.setReturnType("NULL");
-									}
-
-								}
-								custdto.add(customerOrderInfoWsDTO);
-								orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
-								break;
+								customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
 							}
+							else
+							{
+								customerOrderInfoWsDTO.setEdd("NULL");
+							}
+							customerOrderInfoWsDTO.setApportionedPrice(null != entry.getTotalSalePrice().toString() ? entry
+									.getTotalSalePrice().toString() : "NULL");
+							customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
+									.toString().toUpperCase() : "NULL");
+							customerOrderInfoWsDTO
+									.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
+											.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
+							//customerOrderInfoWsDTO.setOrderStatus(entry.getOrder().getStatus().getCode());
+							if (orderModel.getPaymentTransactions() != null)
+							{
+								final List<PaymentTransactionModel> paymlists = orderModel.getPaymentTransactions();
+								final PaymentTransactionModel paytm = paymlists.get(paymlists.size() - 1);
+
+								final List<PaymentTransactionEntryModel> paytmentry = paytm.getEntries();
+
+								final PaymentTransactionEntryModel pt = paytmentry.get(paytmentry.size() - 1);
+
+								customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getType().getCode() ? pt.getType()
+										.getCode() : "NULL");//Transaction status details
+
+								customerOrderInfoWsDTO.setTransactionStatus(null != pt.getTransactionStatus() ? pt.getTransactionStatus()
+										: "NULL");//Transaction Status
+
+								if (null != pt.getModifiedtime())
+								{
+									customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));//Transaction Timestamp
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
+								}
+							}
+							customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus()
+									.getCode() : "NULL");//Order Status
+
+							if (StringUtils.isNotEmpty(orderModel.getModifiedtime().toString()))
+							{
+								customerOrderInfoWsDTO.setOrderTimestamp(formatter.format(orderModel.getModifiedtime()));//Order timestamp
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setOrderTimestamp("NULL");
+							}
+							final Iterator it = entry.getConsignmentEntries().iterator();
+							while (it.hasNext())
+							{
+								final ConsignmentEntryModel consg = (ConsignmentEntryModel) it.next();
+								//	customerOrderInfoWsDTO.setTransactionStatus(consg.getConsignment().getStatus().getCode());//Transaction status
+								//									if (StringUtils.isNotEmpty(consg.getConsignment().getModifiedtime().toString()))
+								//									{
+								//										customerOrderInfoWsDTO.setConsignmentTimestamp(formatter.format(consg.getConsignment()
+								//												.getModifiedtime()));//Consignment Timestamp
+								//									}
+								//									else
+								//									{
+								//										customerOrderInfoWsDTO.setConsignmentTimestamp("NULL");
+								//									}
+								customerOrderInfoWsDTO.setCarrierName(null != consg.getConsignment().getCarrier() ? consg
+										.getConsignment().getCarrier() : "NULL");//Carrier Name
+								//(consg.getConsignment().getDeliveryMode().getCode());//Delivery Mode
+								//????????Shipping Status (Shipment delivered/in Transit etc) & Timestamp
+							}
+							//orderModel.getPaymentStatus().getCode();
+							customerOrderInfoWsDTO.setPaymentMode(null != orderModel.getModeOfOrderPayment() ? orderModel
+									.getModeOfOrderPayment() : "NULL");
+							final Iterator itr = orderModel.getConsignments().iterator();
+							while (itr.hasNext())
+							{
+								cng = (ConsignmentModel) itr.next();
+
+								if (null != cng.getDeliveryDate())
+								{
+									customerOrderInfoWsDTO.setDeliveryTrackingDate(formatter.format(cng.getDeliveryDate()));//Delivery tracking date
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setDeliveryTrackingDate("NULL");
+								}
+								customerOrderInfoWsDTO.setAwbNumber(null != cng.getTrackingID() ? cng.getTrackingID() : "NULL");//AWB number
+
+								customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier() : "NULL");//Return carrier
+
+								customerOrderInfoWsDTO.setReturnAwbNumber(null != cng.getReturnAWBNum() ? cng.getReturnAWBNum() : "NULL");//Return AWB number
+
+							}
+							if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
+							{
+								if (orderModel.getModeOfOrderPayment().equalsIgnoreCase("COD"))
+								{
+									customerOrderInfoWsDTO.setPaymentType("POSTPAID");
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setPaymentType("PREPAID");
+								}
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setPaymentType("NULL");
+							}
+							final Iterator it1 = orderModel.getReturnRequests().iterator();
+							while (it1.hasNext())
+							{
+								final ReturnRequestModel rq = (ReturnRequestModel) it1.next();
+
+								final Iterator it2 = rq.getReturnEntries().iterator();
+
+								while (it2.hasNext())
+								{
+									final ReturnEntryModel rte = (ReturnEntryModel) it2.next();
+
+									if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase("transactionId-passed"))
+									{
+										customerOrderInfoWsDTO.setReturnRequestStatus(null != rte.getStatus().toString() ? rte.getStatus()
+												.toString() : "NULL");//Return request status
+										if (StringUtils.isNotEmpty(rte.getCreationtime().toString()))
+										{
+											customerOrderInfoWsDTO.setReturnRequestTimestamp(formatter.format((rte.getCreationtime())));//Return timeStamp
+										}
+										else
+										{
+											customerOrderInfoWsDTO.setReturnRequestTimestamp("NULL");
+										}
+										break;
+									}
+
+								}
+								customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq.getRejectionReason()
+										: "NULL");//QC rejection reason
+								customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn().toString() ? rq.getTypeofreturn()
+										.toString() : "NULL");//Type of Return
+							}
+							custdto.add(customerOrderInfoWsDTO);
+							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+							break;
+
 						}
 
 					}
@@ -1479,9 +1410,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured" + e.getMessage());
+			LOG.error("Exception occured: ", e);
 			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
-			e.printStackTrace();
 		}
 		return orderInfoWsDTO;
 	}
@@ -1490,41 +1420,30 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	@Override
 	public OrderInfoWsDTO storeOrderInfoByOrderNo(final OrderModel orderModel)
 	{
-
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
-
+		StringBuilder custFirstName = null;
+		StringBuilder custLastName = null;
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		try
 		{
 			if (orderModel != null)
 			{
-				if (StringUtils.isNotEmpty(orderModel.getTotalPriceWithConv().toString()))
-				{
-					orderInfoWsDTO.setOrderTotal(orderModel.getTotalPriceWithConv().toString());
-				}
-				else
-				{
-					orderInfoWsDTO.setOrderTotal("NULL");
-				}
+				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv().toString() ? orderModel
+						.getTotalPriceWithConv().toString() : "NULL");
 				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getFirstname())
 						&& (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getLastname())))
 				{
-					orderInfoWsDTO.setCustName(orderModel.getDeliveryAddress().getFirstname() + " "
-							+ orderModel.getDeliveryAddress().getLastname());
+					custFirstName = new StringBuilder(orderModel.getDeliveryAddress().getFirstname());
+					custLastName = new StringBuilder(orderModel.getDeliveryAddress().getLastname());
+					orderInfoWsDTO.setCustName(custFirstName.append(" ").append(custLastName).toString());
 				}
 				else
 				{
 					orderInfoWsDTO.setCustName("NULL");
 				}
-				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getCellphone()))
-				{
-					orderInfoWsDTO.setCustMobileNo(orderModel.getDeliveryAddress().getCellphone());
-				}
-				else
-				{
-					orderInfoWsDTO.setCustMobileNo("NULL");
-				}
+				orderInfoWsDTO.setCustMobileNo(null != orderModel.getDeliveryAddress().getCellphone() ? orderModel
+						.getDeliveryAddress().getCellphone() : "NULL");
 				if (StringUtils.isNotEmpty(orderModel.getCreationtime().toString()))
 				{
 					orderInfoWsDTO.setOrderDate(formatter.format(orderModel.getCreationtime()));
@@ -1547,47 +1466,16 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							for (final AbstractOrderEntryModel entry : orderEntryModel)
 							{
 								final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-								if (StringUtils.isNotEmpty(entry.getTotalPrice().toString()))
-								{
-									customerOrderInfoWsDTO.setApportionedPrice((entry.getTotalSalePrice().toString()));
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setApportionedPrice("NULL");
-								}
-								if (StringUtils.isNotEmpty(entry.getSellerInfo()))
-								{
-									customerOrderInfoWsDTO.setSellerName(entry.getSellerInfo());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setSellerName("NULL");
-								}
-								if (StringUtils.isNotEmpty(entry.getFulfillmentType()))
-
-								{
-									customerOrderInfoWsDTO.setShippingType(entry.getFulfillmentType().toString().toUpperCase());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setShippingType("NULL");
-								}
-								if (StringUtils.isNotEmpty(entry.getTransactionID()))
-								{
-									customerOrderInfoWsDTO.setTransactionId(entry.getTransactionID());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setTransactionId("NULL");
-								}
-								if (StringUtils.isNotEmpty(entry.getProduct().getName()))
-								{
-									customerOrderInfoWsDTO.setProductName(entry.getProduct().getName());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setProductName("NULL");
-								}
+								customerOrderInfoWsDTO.setApportionedPrice((null != entry.getTotalSalePrice().toString() ? entry
+										.getTotalSalePrice().toString() : "NULL"));
+								customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo() : "NULL");
+								customerOrderInfoWsDTO
+										.setShippingType(null != entry.getFulfillmentType().toString().toUpperCase() ? entry
+												.getFulfillmentType().toString().toUpperCase() : "NULL");
+								customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID()
+										: "NULL");
+								customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
+										: "NULL");
 								if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
 								{
 									customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
@@ -1596,14 +1484,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								{
 									customerOrderInfoWsDTO.setEdd("NULL");
 								}
-								if (StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
-								{
-									customerOrderInfoWsDTO.setShippingMode(entry.getMplDeliveryMode().getDeliveryMode().getCode());
-								}
-								else
-								{
-									customerOrderInfoWsDTO.setShippingMode("NULL");
-								}
+								customerOrderInfoWsDTO
+										.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
+												.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
 								if (StringUtils.isNotEmpty(subOrder.getModeOfOrderPayment()))
 								{
 									if (subOrder.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -1646,8 +1529,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Exception occured" + e.getMessage());
-			e.printStackTrace();
+			LOG.error("Exception occured: ", e);
 			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderInfoWsDTO;

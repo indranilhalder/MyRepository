@@ -439,8 +439,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error while fetching orderModel by mobileNo  " + e);
-			e.printStackTrace();
+			LOG.error("Error while fetching orderModel by mobileNo  ", e);
 		}
 		return null;
 	}
@@ -467,8 +466,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error while fetching l4 category" + e);
-			e.printStackTrace();
+			LOG.error("Error while fetching l4 category", e);
 		}
 		return l4CategoryId;
 	}
@@ -488,8 +486,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error while fetching orderModel by transactionId  " + e);
-			e.printStackTrace();
+			LOG.error("Error while fetching orderModel by transactionId  ", e);
 		}
 		return null;
 	}
@@ -509,8 +506,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("Error while fetching orderModel by orderId  " + e);
-			e.printStackTrace();
+			LOG.error("Error while fetching orderModel by orderId  ", e);
 			throw new EtailNonBusinessExceptions(e);
 		}
 
