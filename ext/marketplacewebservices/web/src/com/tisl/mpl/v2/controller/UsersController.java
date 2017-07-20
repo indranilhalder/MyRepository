@@ -6566,7 +6566,6 @@ public class UsersController extends BaseCommerceController
 					{
 						result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 						result.setError(MarketplacecommerceservicesConstants.INVALID_CART_ID);
-
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 					}
 				}

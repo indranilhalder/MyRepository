@@ -3715,6 +3715,19 @@ $(window).on("load resize",function(){
 	
 	/* UF-338 ends */
 	
+	/* UF-338 starts */
+	$(".product-info>div.tabs-block .tabs .tab-details > ul li:contains(Brand Color)").each(function(){
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);
+
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);		//Code Repeat
+	});
+	
+	/* UF-338 ends */
+	
 	/* TPR-6013 responsive class addition starts*/
 	$("body .account .right-account .info,body .account .right-account .password,body .account .right-account .signOut,body .account .right-account .order-history").removeClass("responsiveProfile");
 	if($(window).width() <= 1007)

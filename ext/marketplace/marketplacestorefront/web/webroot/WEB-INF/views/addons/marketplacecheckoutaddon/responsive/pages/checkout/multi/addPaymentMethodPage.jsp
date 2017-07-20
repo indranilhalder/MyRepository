@@ -364,7 +364,7 @@
 										        			<div class="radio">
 										        				 <c:choose>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 														           </c:when> 
 														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>
@@ -685,7 +685,7 @@
 										        				<div class="radio">
 															     <c:choose>
 														           <c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'visa')}">
-														           <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
+														           <span class="visa card_image payment-failed-card-image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span>
 														           </c:when> 
 														           	<c:when test="${fn:containsIgnoreCase(map.value.cardBrand, 'master')}">
 														           <span class="visa card_image"><img src="${commonResourcePath}/images/Master_Card.png" alt=""></span>

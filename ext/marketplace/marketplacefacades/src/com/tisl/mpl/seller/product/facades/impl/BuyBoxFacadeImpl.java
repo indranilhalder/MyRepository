@@ -1064,10 +1064,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1179,7 +1179,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
-
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
 
 		//for fine jewellery other seller count
@@ -1210,10 +1209,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		if (sellerSize < 0)
 		{
+
 			buyboxData.setNumberofsellers(Integer.valueOf(0));
+
 		}
 		else
 		{
+
+
 			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
 		}
 		//CKD:TPR-250:End
@@ -1287,7 +1290,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736

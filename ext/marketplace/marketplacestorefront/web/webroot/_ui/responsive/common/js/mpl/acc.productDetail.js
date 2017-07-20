@@ -174,7 +174,8 @@ ACC.productDetail = {
 			 localStorage.removeItem('removeFromCart_msgFromCart');
 			 
 // added in merging.....
-	
+			 
+
 
 
 
@@ -1148,7 +1149,6 @@ $(function() {
 								//$("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options.");
 								return false;
 							}
-
 							//TISPRDT-1606
 							var productCode = $('#product').val();
 							var dataString  = "pin=" + pin + "&productCode="+ productCode;
@@ -3342,7 +3342,7 @@ function loadDefaultWishListName_SizeGuide() {
 		
 	}
 
-	//TPR-978
+//TPR-978
 function getProductContents() {
 		
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
@@ -3391,7 +3391,7 @@ function getProductContents() {
 						itemsTablet: [650,2], 
 						itemsMobile : [480,2],*/
 					});
-				}
+				 }
 				//TPR-4701 | utag event for A+ products
 				var productId=[];
 				productId.push($('#product_id').val());
@@ -3429,8 +3429,8 @@ function lazyLoadProductContents(){
 	if($('#pageTemplateId').val() == 'ProductDetailsPageTemplate'){
 		$(window).on('scroll load',function() {
 		lazyLoadProductContents();
-		});	
-	}
+	});
+}
 
 
 //PDP Specifications arrow
@@ -4166,6 +4166,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 						$("#otherSellersId").html(data['othersSellersCount']);
 						$("#otherSellerLinkId").show();
 					}
+					
 
 
 					else if (isOOS() && data['othersSellersCount']>0) {

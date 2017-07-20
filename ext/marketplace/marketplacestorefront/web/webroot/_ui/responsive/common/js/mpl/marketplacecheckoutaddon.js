@@ -6037,7 +6037,6 @@ function checkPincodeServiceability(buttonType,el)
  	 	 			$("#unserviceablepincode_tooltip_btm").hide(); 
  	 	 			//Added for UF-252 End
  				}
-
  			// TISPRM-33
 	 			$("#defaultPinDiv").show();
 	 			
