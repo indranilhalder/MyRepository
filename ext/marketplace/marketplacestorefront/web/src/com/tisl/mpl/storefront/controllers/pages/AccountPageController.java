@@ -5203,7 +5203,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
 						//TISEE-6376
-						if (entryModel.getProduct() != null)
+						if (entryModel.getProduct() != null && !entryModel.getIsDeleted().booleanValue())//TPR-5787
 						{
 							/*
 							 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
