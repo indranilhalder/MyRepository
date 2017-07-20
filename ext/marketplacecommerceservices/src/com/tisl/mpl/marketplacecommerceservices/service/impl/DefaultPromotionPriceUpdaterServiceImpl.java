@@ -97,7 +97,6 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	@Override
 	public List<ProductPromotionModel> getRequiredPromotion(final Date mplConfigDate)
 	{
-		// YTODO Auto-generated method stub
 
 		return promotionPriceUpdaterDao.getRequiredPromotionList(mplConfigDate);
 	}
@@ -700,7 +699,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 	 *
 	 * @param isPercentage
 	 * @param buyAPercentageDiscount
-	 * @return
+	 * @return price
 	 */
 	private Double getDiscountPriceForBuyABDiscount(final boolean isPercentage,
 			final BuyABFreePrecentageDiscountModel buyAPercentageDiscount)
@@ -735,7 +734,8 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 
 	/**
 	 * @Description: To Set Discount Price
-	 * @param buyAPercentageDiscount
+	 * @param promoDiscount
+	 * @param flag
 	 * @return flag
 	 */
 	private Double setDiscountPrice(final ProductPromotionModel promoDiscount, final boolean flag)
@@ -921,7 +921,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					//final Collection<PromotionalPriceRowModel> existingList = price.getPromotionalPriceRow();
 
 					//updating price row
-					boolean isEligibletoDisable = false;
+					//boolean isEligibletoDisable = false;
 					if (CollectionUtils.isEmpty(sellers) && CollectionUtils.isEmpty(rejectSellerList))
 					{
 						updateSpecialPrice = true;//set the flag true if there is no seller restriction
@@ -930,19 +930,22 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 					{
 						////CHANGING
 						updateSpecialPrice = isPriceToUpdate(price, sellers, rejectSellerList);
-						if (!updateSpecialPrice)
-						{
-							isEligibletoDisable = true;
-						}
+
+
+						//						if (!updateSpecialPrice) // Logic not required as we will removing the Promotional Price Rows
+						//						{
+						//							isEligibletoDisable = true;
+						//						}
 					}
 					if (CollectionUtils.isEmpty(channelList))
 					{
-						final PromotionalPriceRowModel pm = modelService.create(PromotionalPriceRowModel.class);
+						PromotionalPriceRowModel pm = null;
 						final List<PromotionalPriceRowModel> pmList = new ArrayList<>();
 						if (updateSpecialPrice)
 						{
 							if (!percent)
 							{
+								pm = modelService.create(PromotionalPriceRowModel.class);
 								pm.setPromotionStartDate(startDate);
 								pm.setPromotionEndDate(endtDate);
 								pm.setIsPercentage(Boolean.valueOf(percent));
@@ -956,6 +959,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 							}
 							else
 							{
+								pm = modelService.create(PromotionalPriceRowModel.class);
 								pm.setPromotionStartDate(startDate);
 								pm.setPromotionEndDate(endtDate);
 								pm.setIsPercentage(Boolean.valueOf(percent));
@@ -969,34 +973,35 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 							}
 							promoPriceList.add(pm);
 						}
-						else if (!updateSpecialPrice && isEligibletoDisable)
-						{
-							LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
-							pm.setPromotionStartDate(null);
-							pm.setPromotionEndDate(null);
-							pm.setIsPercentage(null);
-							pm.setPromotionValue(null);
-							pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
-							pm.setMaxDiscount(null);
-							pm.setPromotionChannel(null);
-							LOG.debug("Saving Price Row ");
-							pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
-							pmList.add(pm);
-							price.setPromotionalPriceRow(pmList);
-							priceRowtobeSaved.add(price);
-						}
+						//						else if (!updateSpecialPrice && isEligibletoDisable) // Creating Blank Promotional Price Rows
+						//						{
+						//							LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
+						//							pm.setPromotionStartDate(null);
+						//							pm.setPromotionEndDate(null);
+						//							pm.setIsPercentage(null);
+						//							pm.setPromotionValue(null);
+						//							pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+						//							pm.setMaxDiscount(null);
+						//							pm.setPromotionChannel(null);
+						//							LOG.debug("Saving Price Row ");
+						//							pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
+						//							pmList.add(pm);
+						//							price.setPromotionalPriceRow(pmList);
+						//							priceRowtobeSaved.add(price);
+						//						}
 					}
 
 					else
 					{
 						for (final String channel : channelList)
 						{
-							final PromotionalPriceRowModel pm = new PromotionalPriceRowModel();
+							PromotionalPriceRowModel pm = null;
 							final List<PromotionalPriceRowModel> pmList = new ArrayList<>();
 							if (updateSpecialPrice)
 							{
 								if (!percent)
 								{
+									pm = modelService.create(PromotionalPriceRowModel.class);
 									pm.setPromotionStartDate(startDate);
 									pm.setPromotionEndDate(endtDate);
 									pm.setIsPercentage(Boolean.valueOf(percent));
@@ -1022,6 +1027,7 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								}
 								else
 								{
+									pm = modelService.create(PromotionalPriceRowModel.class);
 									pm.setPromotionStartDate(startDate);
 									pm.setPromotionEndDate(endtDate);
 									pm.setIsPercentage(Boolean.valueOf(percent));
@@ -1047,22 +1053,22 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 								}
 								promoPriceList.add(pm);
 							}
-							else if (!updateSpecialPrice && isEligibletoDisable)
-							{
-								//LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
-								pm.setPromotionStartDate(null);
-								pm.setPromotionEndDate(null);
-								pm.setIsPercentage(null);
-								pm.setPromotionValue(null);
-								pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
-								pm.setMaxDiscount(null);
-								pm.setPromotionChannel(null);
-								LOG.debug("Saving Price Row ");
-								pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
-								pmList.add(pm);
-								price.setPromotionalPriceRow(pmList);
-								priceRowtobeSaved.add(price);
-							}
+							//							else if (!updateSpecialPrice && isEligibletoDisable) // Creating Blank Promotional Price Rows
+							//							{
+							//								//LOG.debug("Removing Promotion Details from the Price Row : USSID not eligible for Promotion");
+							//								pm.setPromotionStartDate(null);
+							//								pm.setPromotionEndDate(null);
+							//								pm.setIsPercentage(null);
+							//								pm.setPromotionValue(null);
+							//								pm.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
+							//								pm.setMaxDiscount(null);
+							//								pm.setPromotionChannel(null);
+							//								LOG.debug("Saving Price Row ");
+							//								pmList.addAll(getPromoPriceRowList(price.getPromotionalPriceRow()));
+							//								pmList.add(pm);
+							//								price.setPromotionalPriceRow(pmList);
+							//								priceRowtobeSaved.add(price);
+							//							}
 						}
 					}
 
@@ -1170,16 +1176,20 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			{
 				for (final PromotionalPriceRowModel priceRow : priceRowModelList)
 				{
-					final PriceRowModel finalModel = priceRow.getPriceRow();
-					finalModel.setPromotionEndDate(new Date());
-					priceModifiedtsChange.add(finalModel);
+					final PriceRowModel finalModel = priceRow.getPriceRow(); //Added for PRDI-549
+					if (null != finalModel)
+					{
+						finalModel.setPromotionEndDate(new Date());
+						priceModifiedtsChange.add(finalModel);
+					}
 				}
 
 				modelService.removeAll(priceRowModelList);
-				modelService.saveAll(priceModifiedtsChange);
-
-
-
+				//Added for PRDI-549
+				if (CollectionUtils.isNotEmpty(priceModifiedtsChange))
+				{
+					modelService.saveAll(priceModifiedtsChange);
+				}
 			}
 		}
 
@@ -1663,9 +1673,10 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 				{
 					for (final ProductPromotionModel promotion : promotionData)
 					{
-						if (promotion instanceof BuyAPercentageDiscountModel
+						if (StringUtils.isEmpty(promotion.getImmutableKey()) && promotion instanceof BuyAPercentageDiscountModel
 								&& null != ((BuyAPercentageDiscountModel) promotion).getQuantity()
-								&& ((BuyAPercentageDiscountModel) promotion).getQuantity().intValue() == 1)
+								&& ((BuyAPercentageDiscountModel) promotion).getQuantity().intValue() == 1
+								&& promotion.getEndDate().after(new Date()))
 						{
 							if (maxPriority < promotion.getPriority().intValue() && BooleanUtils.isTrue(promotion.getEnabled()))
 							{
@@ -1874,5 +1885,28 @@ public class DefaultPromotionPriceUpdaterServiceImpl implements PromotionPriceUp
 			finalChannel.add(channel.getCode().toUpperCase());
 		}
 		return finalChannel;
+	}
+
+	/**
+	 * @Description : This method removes redundant Promotional Price Rows from DB
+	 *
+	 */
+	@Override
+	public void purgeRedundantData()
+	{
+		final List<PromotionalPriceRowModel> promoPriceRowList = updatePromotionalPriceDao.getRedundantData();
+		try
+		{
+			if (CollectionUtils.isNotEmpty(promoPriceRowList))
+			{
+				modelService.removeAll(promoPriceRowList);
+			}
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error in Job ||| Method : purgeRedundantData ");
+			LOG.error("Error during purging of data " + exception.getMessage());
+		}
+
 	}
 }

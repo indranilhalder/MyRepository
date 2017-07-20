@@ -1494,8 +1494,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="categorySource" ref="mplCategorySource" />
 	</bean>
 	
-
-	<bean id="mplCategorySource" parent="abstractCategorySource">
+   <!-- TPR-6336 -->
+	<bean id="mplCategorySource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1,LSH1" />
 	</bean>
 

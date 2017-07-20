@@ -37,6 +37,10 @@
 			</c:choose> 
 			</ul>
 </c:if> --%>
+ <div id="addToCartFormTitle" class="addToCartTitle prod-dlisted-msg">
+	<spring:theme code="basket.added.to.basket" />
+	<spring:theme code="product.addtocart.success" />
+</div> 
 <div class="Cta">
 
 <!-- TPR-4966 -->
@@ -53,10 +57,10 @@
 	<span id="dListedErrorMsg" style="display: none"  class="dlist_message prod-dlisted-msg">
 		<spring:theme code="pdp.delisted.message" />
 	</span>
-	<div id="addToCartFormTitle" class="addToCartTitle prod-dlisted-msg">
-	<%-- <spring:theme code="basket.added.to.basket" /> --%>
+	<%-- <div id="addToCartFormTitle" class="addToCartTitle prod-dlisted-msg">
+	<spring:theme code="basket.added.to.basket" />
 	<spring:theme code="product.addtocart.success" />
-</div>
+</div> --%>
 	<div class="buy-btn-holder clearfix">
 	<div id="buyNow">
 		<input type="hidden" id="showSize" name="showSize" value="${showSizeGuideForFA}" />

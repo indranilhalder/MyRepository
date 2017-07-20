@@ -8,8 +8,12 @@
 			</tr>
 			<tr>
 				<td height="125px" width="25%" colspan="2" rowspan="2" class="structureViewSection">
-					<cockpit code="SiteLogo" />
+					<cockpit code="SiteLogoNew" />
 				</td>
+				<td height="125px" width="25%" colspan="2" rowspan="2" class="structureViewSection">
+					<cockpit code="placeh" />
+				</td>
+				
 				<td colspan="2" class="structureViewSection">
 					<cockpit code="HeaderLinks" />
 					<cockpit code="SearchBox" />
@@ -78,11 +82,37 @@
 				</td>
 			</tr>
 			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="orderplaced" />
+					<cockpit code="arrow" /> 
+					<cockpit code="orderprocessed" />
+					<cockpit code="arrow" />
+					<cockpit code="orderdelivered" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="tatatrust" />
+					<cockpit code="easyreturn" />
+					<cockpit code="freeshipping" />
+					<cockpit code="authenticbrands" />
+					<cockpit code="cliqnpic" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6" style="vertical-align:top;" class="structureViewSection">
+					<cockpit code="appstore" />
+					<cockpit code="googleplay" />
+					<cockpit code="linegrey" />
+				</td>
+			</tr>
+			<tr>
 				<td height="270px" colspan="6" class="structureViewSection">
-					<cockpit code="fb" />
-					<cockpit code="twitter" />
-					<cockpit code="youtube" />
+					<cockpit code="fbNew" />
+					<cockpit code="tweetNew" />
+					<cockpit code="instaNew" />
 					<cockpit code="gplus" />
+					<cockpit code="youtubeNew" />
 				</td>
 			</tr>
 		</tbody>
