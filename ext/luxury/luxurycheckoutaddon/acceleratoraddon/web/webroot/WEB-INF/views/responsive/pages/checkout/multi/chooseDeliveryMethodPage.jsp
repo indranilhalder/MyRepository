@@ -205,7 +205,7 @@ display: none;
 							
 						<!-- change here for modified checkout page starts -->
 									
-									<div class="address-accordion smk_accordion acc_with_icon">
+									<div class="acc_with_icon">
  									<div class="choose-address accordion_in acc_active">
     
       								<div class="acc_head">
@@ -493,7 +493,7 @@ display: none;
 							
 						<!-- change here for modified checkout page starts -->
 									
-									<div class="address-accordion smk_accordion acc_with_icon">
+									<div class="acc_with_icon">
   <div class="choose-address accordion_in acc_active">
     
       <div class="acc_head newAddressCenter">
