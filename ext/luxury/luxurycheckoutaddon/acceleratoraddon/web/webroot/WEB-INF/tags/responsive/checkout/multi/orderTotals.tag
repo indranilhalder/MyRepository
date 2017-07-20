@@ -120,6 +120,7 @@
                  <format:price priceData="${cartData.totalPrice}"/>
               </ycommerce:testId></span></li>
          </ul> --%>
+         <p class="hide" id="outstanding-amount"> </p>
 		<ul>
 			<li id="totals" class="orderTotal">
     <span class="orderLabel">
