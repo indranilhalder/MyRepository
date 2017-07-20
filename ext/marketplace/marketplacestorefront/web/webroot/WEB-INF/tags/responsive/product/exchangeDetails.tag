@@ -17,7 +17,7 @@
 
 <c:if test="${isExchangeavailable ne false}">
 <div class="Exchange Exchange_wrapper" id="exchangeStickerId">
-<p onclick="" >
+<p  onclick="" >
 	<spring:theme code="marketplace.exchange" />
 	
 				
@@ -178,3 +178,12 @@
 </div>
 </div>
 </c:if>
+ <!--TPR- 5193 -->
+ <c:choose>
+<c:when test="${isExchangeavailable ne false}">
+   <input id="tealiumExchangeVar" type="hidden" value="available"/>
+ </c:when>
+  <c:otherwise>
+ <input id="tealiumExchangeVar" type="hidden" value="notAvailable"/>
+</c:otherwise>
+</c:choose>
