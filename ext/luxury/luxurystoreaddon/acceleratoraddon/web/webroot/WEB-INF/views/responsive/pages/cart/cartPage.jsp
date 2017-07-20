@@ -123,7 +123,7 @@
 											<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 										</c:otherwise>
 									</c:choose>
-									<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+									<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return luxurycheckPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 									<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
 									<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
 									<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>

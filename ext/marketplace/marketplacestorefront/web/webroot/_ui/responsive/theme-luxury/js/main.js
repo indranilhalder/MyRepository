@@ -1554,7 +1554,7 @@ TATA.Pages = {
     },
 };
 
-function checkPincodeServiceability(buttonType,el)
+function luxurycheckPincodeServiceability(buttonType, el)
 {
 
     /*spinner commented starts*/
@@ -1726,7 +1726,7 @@ function checkPincodeServiceability(buttonType,el)
     } //CAR-246
     else if(selectedPincode!==""){
         // TPR-5666 | cartGuid Append in url during pincode servicability check
-        var cartGuidParamValue = getParameterByName("cartGuid");
+        var cartGuidParamValue = luxurygetParameterByName("cartGuid");
         if(typeof cartGuidParamValue != "undefined"){
             $(location).attr('href',ACC.config.encodedContextPath + "/cart?cartGuid="+cartGuidParamValue+"&pincode="+selectedPincode);
         }
@@ -1791,7 +1791,7 @@ function checkPincodeServiceability(buttonType,el)
                     $("#cartPinCodeAvailableBtm").hide();//UF-68
                     $("#unserviceablepincodeBtm").show();//UF-68
                     $(".pincodeServiceError").show();
-                    populatePincodeDeliveryMode(response,buttonType);
+                    luxurypopulatePincodeDeliveryMode(response,buttonType);
                     reloadpage(selectedPincode,buttonType);
                     $("#isPincodeServicableId").val('N');
                     // reloadpage(selectedPincode,buttonType);
@@ -1818,7 +1818,7 @@ function checkPincodeServiceability(buttonType,el)
                     $("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
                     $("#AvailableMessage").show();
                     $("#AvailableMessageBtm").show();//UF-68
-                    populatePincodeDeliveryMode(response,buttonType);
+                    luxurypopulatePincodeDeliveryMode(response,buttonType);
                     reloadpage(selectedPincode,buttonType);
                 }
 
@@ -1908,13 +1908,13 @@ function checkPincodeServiceability(buttonType,el)
     }
 }
 
-function getParameterByName(name){
+function luxurygetParameterByName(name){
     if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search)){
         return decodeURIComponent(name[1]);
     }
 }
 
-function checkIsServicable()
+function luxurycheckIsServicable()
 {
 
     var selectedPincode=$("#defaultPinCodeIds").val();
@@ -1925,7 +1925,7 @@ function checkIsServicable()
             type: "GET",
             cache: false,
             success : function(response) {
-                populatePincodeDeliveryMode(response,'pageOnLoad');
+                luxurypopulatePincodeDeliveryMode(response,'pageOnLoad');
             },
             error : function(resp) {
                 //TISTI-255
@@ -1945,7 +1945,7 @@ function checkIsServicable()
 
 }
 
-function populatePincodeDeliveryMode(response,buttonType){
+function luxurypopulatePincodeDeliveryMode(response, buttonType){
 
     var checkoutLinkURlId = $('#checkoutLinkURlId').val();
     // response='Y|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"4","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12},{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"12","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12}]';
@@ -2550,7 +2550,7 @@ function loadDefaultWishLstForCart(productCode,ussid) {
 
 
 $(document).ready(function () {
-    checkIsServicable();
+    luxurycheckIsServicable();
     
     $('.checkout-paymentmethod .payment-tab').removeClass('active');
     $('#card').css('display','none');
