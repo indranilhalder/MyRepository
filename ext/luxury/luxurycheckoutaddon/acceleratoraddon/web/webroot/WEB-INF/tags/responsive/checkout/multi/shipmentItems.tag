@@ -77,10 +77,14 @@
 												<!-- start TISEE-4631 TISUAT-4229 -->
 												
 												 <c:if test="${fn:toUpperCase(entry.product.rootCategory) != 'ELECTRONICS'}">
-												 	
-												 	<ycommerce:testId code="cart_product_size">
-														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
-													</ycommerce:testId>
+
+													 <c:choose>
+														 <c:when test="${not empty entry.product.size}">
+															 <ycommerce:testId code="cart_product_size">
+																 <div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
+															 </ycommerce:testId>
+														 </c:when>
+													 </c:choose>
 													<!-- INC_11620/INC_11466 -->
 													 <!--<div class="item-price delivery-price delivery-price-mobile">
 														<ycommerce:testId code="cart_totalProductPrice_label">
