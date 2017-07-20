@@ -72825,3 +72825,9 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 		margin: 5px 0;
 	}
 }
+
+/*start change of INC144316778*/
+.listing.wrapper .left-block.topTheFix {
+    top: 38px;
+}
+/*end change of INC144316778*/

@@ -3811,3 +3811,26 @@ $(window).on("load resize",function(){
 	}
 });
 /*end change of INC144316990*/
+
+/*start change of INC144316778*/
+$(window).on("scroll resize",function(){
+	fixTopAdjust();
+	if($(window).scrollTop() == 0)
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
+});
+$(document).on("click",".product-facet .facet .facet-name",function(){
+	fixTopAdjustTimeOut();
+});
+function fixTopAdjust(){
+if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
+	$(".listing.wrapper .left-block").addClass("topTheFix");
+else
+	$(".listing.wrapper .left-block").removeClass("topTheFix");
+}
+
+function fixTopAdjustTimeOut(){
+	setTimeout( function(){ 
+		fixTopAdjust(); 
+	}  , 100 );
+}
+/*end change of INC144316778*/
