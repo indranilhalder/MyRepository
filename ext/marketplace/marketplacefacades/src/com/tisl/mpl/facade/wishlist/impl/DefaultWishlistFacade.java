@@ -107,6 +107,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 						&& entryModel.getUssid().equals(ussid))
 				{
 					//TPR-5787 starts here
+					LOG.debug("To remove the prod from wishlist ----- 1");
 					final Date date = new Date();
 					entryModel.setIsDeleted(Boolean.TRUE);
 					entryModel.setDeletedDate(new Timestamp(date.getTime()));
@@ -141,6 +142,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 				if (null != entryModel.getProduct() && entryModel.getProduct().getCode().equals(productCode))
 				{
 					//TPR-5787 starts here
+					LOG.debug("To remove the prod from wishlist ----- 2");
 					final Date date = new Date();
 					entryModel.setIsDeleted(Boolean.TRUE);
 					entryModel.setDeletedDate(new Timestamp(date.getTime()));
@@ -233,7 +235,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 		boolean add = true;
 		try
 		{
-			LOG.debug("addProductToWishlist in Mobile : *****productCode: " + productCode + " **** ussid: " + ussid
+			LOG.debug("addProductToWishlist in web : *****productCode: " + productCode + " **** ussid: " + ussid
 					+ " *** selectedSize: " + selectedSize);
 			List<Wishlist2EntryModel> wishlist2Entry = null;
 
@@ -242,20 +244,23 @@ public class DefaultWishlistFacade implements WishlistFacade
 			ProductModel product = null;
 			if (CollectionUtils.isEmpty(wishlist2Entry))
 			{
+				LOG.debug("wishlistentry is empty");
 				product = productService.getProductForCode(productCode);
 				final String comment = MplConstants.MPL_WISHLIST_COMMENT;
 				if (null != ussid && !ussid.isEmpty())
 				{
+					LOG.debug("wishlistentry is empty and ussid is not null");
 					mplWishlistService.addWishlistEntry(wishlist, product, Integer.valueOf(1), Wishlist2EntryPriority.HIGH, comment,
 							ussid, selectedSize);
 				}
 			}
 			else
 			{
-
+				LOG.debug("wishlist entry is not empty");
 				final Wishlist2EntryModel wishlist2UpdateEntry = wishlist2Entry.get(0);
 				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
 				{
+					LOG.debug("wishlist entry added");
 					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
 					wishlist2UpdateEntry.setDeletedDate(null);
 					modelService.save(wishlist2UpdateEntry);
@@ -263,6 +268,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 				}
 				else
 				{
+					LOG.debug("wishlist entry not added");
 					add = false;
 				}
 			}
@@ -297,10 +303,12 @@ public class DefaultWishlistFacade implements WishlistFacade
 			ProductModel product = null;
 			if (CollectionUtils.isEmpty(wishlist2Entry))
 			{
+				LOG.debug("wishlistentry is empty");
 				product = productService.getProductForCode(productCode);
 				final String comment = MplConstants.MPL_WISHLIST_COMMENT;
 				if (null != ussid && !ussid.isEmpty())
 				{
+					LOG.debug("wishlistentry is empty and ussid is not null");
 					mplWishlistService.addWishlistEntry(wishlist, product, Integer.valueOf(1), Wishlist2EntryPriority.HIGH, comment,
 							ussid, selectedSize);
 				}
@@ -308,15 +316,18 @@ public class DefaultWishlistFacade implements WishlistFacade
 			else
 			{
 				//TPR-5787 starts here
+				LOG.debug("wishlist entry is not empty");
 				final Wishlist2EntryModel wishlist2UpdateEntry = wishlist2Entry.get(0);
 				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
 				{
+					LOG.debug("wishlist entry added");
 					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
 					wishlist2UpdateEntry.setDeletedDate(null);
 					modelService.save(wishlist2UpdateEntry);
 				}
 				else
 				{
+					LOG.debug("wishlist entry not added");
 					add = false;
 				}
 				//TPR-5787 ends here
