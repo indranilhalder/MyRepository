@@ -121,7 +121,10 @@ ACC.carousel = {
 		$(".electronic-rotatingImage").owlCarousel({
 			items:1,
     		//loop: true,
-			loop: $("#rotatingImage img").length == 1 ? false : true,
+			/*start change of INC144318267 */
+			/*loop: $("#rotatingImage img").length == 1 ? false : true,*/
+            loop: ($("#rotatingImage img").length > 1)?true:false,
+            /* end change of INC144318267 */
     		nav:true,
     		dots:false,
     		navText:[]
