@@ -263,8 +263,8 @@
 										</c:choose></c:if>
 									<!-- TPR-970 changes starts-->
 									<span id="totalPriceDisplay_${entry.entryNumber}"></span>
-									<span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><div class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></div></span>
-									<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><div class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></div></span>
+									<span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm totalPrice"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><div class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></div></span>
+									<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm totalPrice"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><div class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></div></span>
 									<!-- TPR-970 changes ends-->
 								</ycommerce:testId>
 							</div>
