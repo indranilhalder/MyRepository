@@ -69709,8 +69709,10 @@ footer .footer-text{
     width: 100%;
     /* z-index: 1; */
     display: table;
-    padding: 0 30px;
-    
+    /* start change of INC144317154 */
+    /* padding: 0 30px; */
+    padding: 0 8px;
+    /* end change of INC144317154 */
 }
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after ,
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
