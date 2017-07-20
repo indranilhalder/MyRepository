@@ -1108,7 +1108,7 @@
 			</ul>
 			<span class="select_store error_txt" style="text-align: left;font-size: 15px;">
 			<spring:theme code="checkout.multi.cnc.select.products.validate.msg"/></span>
-			<div class="container" id='pickup'>
+			<div class="" id='pickup'>
 				<div class="panel">
 					<div class="pickUpPersonAjax"></div>
    			 	</div>
@@ -1133,12 +1133,12 @@
 	        					<input type="text" name="pickupPersonName"  maxlength="30" class="form-control"/>
 	        					<div class="error_txt pickupPersonNameError"></div>
 	            			</div>
-	            			<div class="mobileSubPanel">
+	            			<div class="mobileSubPanel mt-10">
 								<input type="text" id="pickupPersonMobile" class="form-control" maxlength="10" placeholder="Enter Mobile Number*" value="${pickUpPersonMobile}"/><br/>
 								<div class="error_txt pickupPersonMobileError"></div>
 	        			    </div>
-				             <div class="submitSubPanel mb-10">
-				             <button type="button"  class="savenewid btn btn-primary btn-lg" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
+				             <div class="submitSubPanel mb-10 mt-10">
+				             <button type="button"  class="savenewid btn btn-primary btn-md" id="savePickupPersondDetails"><spring:theme code="checkout.multi.cnc.pickup.details.submit"/></button>
 				          <div id="pickupPersonSubmit"></div>
 				          <div class="error_txt pickupPersonSubmitError"></div>
 				            </div>
@@ -1152,7 +1152,7 @@
 		</div>
 		
 		<div class="right-block shipping right-block-width col-md-4">
-				<c:choose>
+				<%-- <c:choose>
 					<c:when test="${expCheckout gt 0}">
 						<a class="continue_btn btn btn-primary btn-lg btn-block " href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">	
 							<div class="continue_btn_anchor"><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></div>
@@ -1170,7 +1170,7 @@
 							<div class="continue_btn_anchor"><spring:theme code="checkout.multi.deliveryAddress.continue"  text="Next"/></div>
 					</a>
 					</c:otherwise>
-				</c:choose>
+				</c:choose> --%>
 <%-- 				<div class="checkout-order-summary orderSummary">
 					<multi-checkout:orderTotals cartData="${cartData}"
 						showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
@@ -1181,7 +1181,7 @@
 											value="${CSRFToken}">
 			</div>
 			<div class="row">
-		<div class="continue_holder col-md-12">
+		<div class="continue_holder col-md-12 mb-20">
 			<c:choose>
 				<c:when test="${expCheckout gt 0}">
 					<a class="continue_btn_a btn btn-primary btn-lg" href="${request.contextPath}/checkout/multi/delivery-method/invReservation" type="button">
