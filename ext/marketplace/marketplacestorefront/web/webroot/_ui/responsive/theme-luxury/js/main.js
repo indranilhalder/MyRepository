@@ -13,7 +13,7 @@ TATA.CommonFunctions = {
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
-    },    
+    }, 
     
     getCorrectErrorMessage: function(errorItem){
     	var errorMsg = errorItem.message;
@@ -746,7 +746,33 @@ TATA.CommonFunctions = {
     					}
     				});
     			});
-    },  
+    },
+    displayRemoveCoupon:function(){
+    	if($('#cartPromotionApplied').css('display') == 'block'){
+	    	$.ajax({
+	            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
+	            type: "GET",
+	            data: { 'paymentMode' : "" , 'bankName' :""  , 'guid' : ""},
+	            returnType: "text/html",
+	            dataType: "json",
+	            success: function(response) {
+	           	 	$("#cartPromotionApplied").css("display","none");
+	           	 	$("#couponApplied").css("display","block");
+		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+		 				if($("#couponFieldId").val()=="")
+		 					{
+		 						$("#couponFieldId").val(response.voucherDiscount.voucherCode);
+		 					}
+		 				$('#couponFieldId').attr('readonly', true);
+		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
+		 				$('#couponMessage').show();
+		 				$('#couponMessage').delay(5000).fadeOut('slow');
+		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
+			
+	            	} 
+	        });
+    	}
+   },
     
     init: function () {
 
@@ -767,7 +793,8 @@ TATA.CommonFunctions = {
         _self.leftBarAccordian();
         _self.deliveryaddressform();
         _self.swipeLookBook();  
-        _self.removeProdouct();         
+        _self.removeProdouct();
+        _self.displayRemoveCoupon();
     }
 
 };
