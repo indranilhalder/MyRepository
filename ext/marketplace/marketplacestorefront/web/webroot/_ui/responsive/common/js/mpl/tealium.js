@@ -1259,7 +1259,12 @@ function tealiumCallOnPageLoad()
 					+ $("#pdpOtherSellerIDs").val() + '",';
 				}
 				//TPR-429 END
-				
+				//TPR-5193|Req-1 starts
+				if($("#tealiumExchangeVar").val() != 'undefined' && $("#tealiumExchangeVar").val() !='' &&  $("#tealiumExchangeVar").val()!= "notAvailable"){ 
+					tealiumData += '"exchange":"'
+					+ $("#tealiumExchangeVar").val() + '",';
+				}
+				//TPR-5193|Req-1 ends
 				//TPR-4688
 				var sizeVariantList=$('#variant').find('li');
 				if(sizeVariantList.length > 0){
@@ -2178,3 +2183,17 @@ $(document).on('click','#selectedDeliveryOptionsDivId',function(){
 		});
 	   }
 	});
+//UF-398 ends
+
+//tpr-5193
+$(document).on('click','.Exchange.callExchangeAction',function(){
+	if(typeof utag !="undefined"){
+		utag.link({
+			link_text: "exchange_clicked",
+			event_type : "exchange_clicked",
+			product_id : productIdArray
+		});
+	   }
+	})
+
+
