@@ -71,13 +71,13 @@
 								<div class="error_text mobileNumberError"></div>
 							</div>		<!-- TISPRDT-1213 reverting back --> --%>
 							<div class="col-md-6">
-								<div class="form-group">
+								
 									<label for="pincode"><spring:theme code="text.order.returns.pincode"/></label>
-									<form:input path="postcode" class="address_postcode" onkeypress="return isNumber(event)"
+									<form:input path="postcode" class="address_postcode form-control" onkeypress="return isNumber(event)"
 										id="pincode" maxlength="6"
 										value="${orderDetails.deliveryAddress.postalCode}"  placeholder="Pincode" />
 									
-								</div>
+							
 							</div>
 							<div  class="col-md-12 error_text pincodeNoError"></div>
 						</div>
@@ -137,7 +137,7 @@
 							<input type="hidden" id="otherLandmarkInitial" value="${orderDetails.deliveryAddress.landmark}"/>
 								<div class="col-md-12">
 									<label><spring:theme code="text.order.returns.landmarkother"/></label>
-										<form:input class="otherLandMark address_landmarkOther" placeholder="Other Landmark" path="otherLandmark"/>	
+										<form:input class="otherLandMark address_landmarkOther form-control" placeholder="Other Landmark" path="otherLandmark"/>	
 										<div class="error_text otherLandMarkError"></div>									
 								</div>
 							</div>
@@ -146,7 +146,7 @@
 							<div class="col-md-12" style="margin-top: 10px;">
 								<div class="form-group">
 									<label for="city"><spring:theme code="text.order.returns.city"/></label>
-									<form:input path="townCity" class="address_townCity" id="city"
+									<form:input path="townCity" class="address_townCity form-control" id="city"
 										value="${orderDetails.deliveryAddress.town}" placeholder="City" maxlength="40"/>
 										<!-- PRDI-124 END-->
 									<div class="error_text cityError"></div>
@@ -160,7 +160,7 @@
 <!-- 								<label for="state">State*</label> -->
 								<div class="mainDrop">
 								<formElement:formSelectBox idKey="state"
-									selectCSSClass="l textInputChangeAddress address_states" 
+									selectCSSClass="l textInputChangeAddress address_states form-control" 
 									labelKey="address.states"
 									path="state" mandatory="true" skipBlank="false"
 									skipBlankMessageKey="${orderDetails.deliveryAddress.state}"
@@ -182,7 +182,7 @@
 									value='${orderDetails.deliveryAddress.country.name}' readonly />
 								<form:input path="countryIso" type="hidden" id="country"
 									name="countryIso"
-									value="${orderDetails.deliveryAddress.country.isocode}" />
+									value="${orderDetails.deliveryAddress.country.isocode}"  class="form-control"/>
 							</div>
 						</div>
 						
