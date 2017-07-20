@@ -4817,6 +4817,12 @@ $.ajax({
 		},
 		error : function(resp,error) {
 			alert("error:" + error);
+			//tpr-5193|exchange error
+			if(typeof utag !="undefined"){
+				utag.link({
+					error_type : "exchange_unavailable"
+				});
+			}
 		}
 	});
 }
