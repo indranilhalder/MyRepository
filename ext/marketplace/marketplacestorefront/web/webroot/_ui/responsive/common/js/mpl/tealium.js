@@ -2185,15 +2185,3 @@ $(document).on('click','#selectedDeliveryOptionsDivId',function(){
 	});
 //UF-398 ends
 
-//tpr-5193
-$(document).on('click','.Exchange.callExchangeAction',function(){
-	if(typeof utag !="undefined"){
-		utag.link({
-			link_text: "exchange_clicked",
-			event_type : "exchange_clicked",
-			product_id : productIdArray
-		});
-	   }
-	})
-
-

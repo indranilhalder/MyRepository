@@ -3120,6 +3120,16 @@ function loadDefaultWishListName_SizeGuide() {
 				$("body").addClass("no-scroll");
 				
 			}
+			//tpr-5193
+			var productId=[];
+			productId.push($('#product_id').val());
+			if(typeof utag !="undefined"){
+				utag.link({
+					link_text: "exchange_clicked",
+					event_type : "exchange_clicked",
+					product_id : productId
+				});
+			   }
 		});
 		$(document).on("click",".Exchange-overlay,.pdp .Exchange .modal-content .Close",function(){
 			$(".pdp .Exchange > p").removeClass("active mobile");
