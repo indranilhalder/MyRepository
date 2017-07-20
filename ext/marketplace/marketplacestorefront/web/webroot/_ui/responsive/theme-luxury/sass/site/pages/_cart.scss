@@ -700,7 +700,16 @@
  a.proceedCheckout {
   width : 100%;
   color : #fff;
+    &.checkout-disabled {
+        opacity: 0.7;
+        pointer-events: none;
+        cursor: default;
+    }
  }
+    
+    #emptyId_tooltip_btm, .checkoutBtn #error-Id_tooltip_btm {
+        color: red;
+    }
 }
 
 .MyBag-pincode {
@@ -759,3 +768,6 @@
  	pointer-events: none;
     cursor: default;
 }
+.orderSummary #convChargeFieldId{
+  display: none;
+ }
