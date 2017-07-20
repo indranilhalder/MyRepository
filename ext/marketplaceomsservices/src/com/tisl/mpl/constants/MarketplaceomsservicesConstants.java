@@ -50,6 +50,10 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	public static final String YES = "yes";
 	public static final String NO = "no";
 
+	//added for TPR-1348
+	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
+
+
 	private MarketplaceomsservicesConstants()
 	{
 		//empty to avoid instantiating this constant class

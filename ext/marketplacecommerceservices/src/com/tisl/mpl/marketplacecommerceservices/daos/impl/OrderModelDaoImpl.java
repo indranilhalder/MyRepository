@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -157,7 +159,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -199,7 +201,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrder(java.util.Date)
 	 */
 	@Override
@@ -332,36 +334,12 @@ public class OrderModelDaoImpl implements OrderModelDao
 	}
 
 
-	/**
-	 * It gets the list of Parent Order No and Transaction Id
-	 *
-	 * @return List<BulkReturnProcessModel>
-	 *
-	 */
-	@Override
-	public List<BulkCancellationProcessModel> getAllBulkCancelData()
-	{
-		try
-		{
-			final String queryString = MarketplacecommerceservicesConstants.BULK_CANCEL_DATA_QUERY_START;
 
-			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
-			query.addQueryParameter(MarketplacecommerceservicesConstants.LOADSTATUS, "0");
-
-			final List<BulkCancellationProcessModel> listOfData = flexibleSearchService.<BulkCancellationProcessModel> search(query)
-					.getResult();
-			return listOfData;
-		}
-		catch (final Exception e)
-		{
-			throw new EtailNonBusinessExceptions(e);
-		}
-	}
 
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.OrderModelDao#getOrderByAgent(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -385,20 +363,66 @@ public class OrderModelDaoImpl implements OrderModelDao
 	}
 
 	@Override
-	public PointOfServiceModel getPointOfService(String storeId){
-	
-			try
-			{
-		      final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + PointOfServiceModel.PK + "}" + " FROM {"
-						+ PointOfServiceModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + PointOfServiceModel.SLAVEID + "}=?code ";
-				if(LOG.isDebugEnabled()){
-					LOG.debug("In getPointOfService - storeId ***"+storeId);
-				}
-				final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID);
-				fQuery.addQueryParameter("code", storeId);
+	public PointOfServiceModel getPointOfService(final String storeId)
+	{
 
-				final List<PointOfServiceModel> listOfData = flexibleSearchService.<PointOfServiceModel> search(fQuery).getResult();
-				return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		try
+		{
+			final String MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID = "SELECT {srm:" + PointOfServiceModel.PK + "}" + " FROM {"
+					+ PointOfServiceModel._TYPECODE + " AS srm} " + "WHERE " + "{srm:" + PointOfServiceModel.SLAVEID + "}=?code ";
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("In getPointOfService - storeId ***" + storeId);
+			}
+			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(MPL_DELIVERY_ADDRESS_REPORT_QUERY_BY_ORDERID);
+			fQuery.addQueryParameter("code", storeId);
+
+			final List<PointOfServiceModel> listOfData = flexibleSearchService.<PointOfServiceModel> search(fQuery).getResult();
+			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+	}
+
+
+	//Added For Bulk Return Cancellation Job For reducing Loops
+
+	@Override
+	public List<OrderEntryModel> getOrderCancelData()
+	{
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(
+					MarketplacecommerceservicesConstants.SUBORDER_DATA_FOR_BULK_CANCELLATION);
+
+			return flexibleSearchService.<OrderEntryModel> search(query).getResult();
+
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e);
+		}
+	}
+
+	/**
+	 * It gets the list of Parent Order No and Transaction Id
+	 *
+	 * @return List<BulkReturnProcessModel>
+	 *
+	 */
+	@Override
+	public BulkCancellationProcessModel getAllBulkCancelData(final String transactionID)
+	{
+		try
+		{
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(
+					MarketplacecommerceservicesConstants.BULK_CANCEL_DATA_QUERY_START);
+			query.addQueryParameter(MarketplacecommerceservicesConstants.TRANSACTIONID, transactionID);
+			final List<BulkCancellationProcessModel> listOfData = flexibleSearchService.<BulkCancellationProcessModel> search(query)
+					.getResult();
+			return CollectionUtils.isNotEmpty(listOfData) ? listOfData.get(0) : null;
 		}
 		catch (final Exception e)
 		{

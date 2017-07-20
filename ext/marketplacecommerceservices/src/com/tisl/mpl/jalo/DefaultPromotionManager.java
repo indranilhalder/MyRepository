@@ -2396,10 +2396,12 @@ public class DefaultPromotionManager extends PromotionsManager
 					isPaymentResticted = true;
 					String paymentMode = null;
 					String selectedBank = MarketplacecommerceservicesConstants.EMPTY;
+					//String selectedNBBank = MarketplacecommerceservicesConstants.EMPTY;//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					if (null != ctx)
 					{
 						paymentMode = ctx.getAttribute(MarketplacecommerceservicesConstants.PAYMENTMODEFORPROMOTION);
 						selectedBank = ctx.getAttribute(MarketplacecommerceservicesConstants.BANKFROMBIN);
+						//selectedNBBank = ctx.getAttribute(MarketplacecommerceservicesConstants.BANKNAMEFORNETBANKING);//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
 					}
 					if (paymentMode != null)
 					{
@@ -2417,6 +2419,12 @@ public class DefaultPromotionManager extends PromotionsManager
 										flag = true;
 										break;
 									}
+									//									else if ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING) && (StringUtils
+									//											.isNotEmpty(selectedNBBank) && checkBankData(selectedNBBank, restrBanks)))
+									//											|| ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
+									//													|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode
+									//														.equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI)) && (StringUtils
+									//													.isNotEmpty(selectedBank) && checkBankData(selectedBank, restrBanks))))
 									else if ((paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.DEBIT)
 											|| paymentMode.equalsIgnoreCase(MarketplacecommerceservicesConstants.CREDIT) || paymentMode

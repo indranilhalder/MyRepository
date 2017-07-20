@@ -60835,7 +60835,10 @@ Previous different code end*/
 }
 .gwc-chat-head .gwc-chat-title #dCustEmail {
 	position: relative;
-    top: -14px;
+    /* start change of INC144316843 */
+    /* top: -14px; */
+    top: -7px;
+    /* end change of INC144316843 */
 }
 .gwc-chat-head .gwc-chat-title div{
     font: inherit;
@@ -69709,8 +69712,10 @@ footer .footer-text{
     width: 100%;
     /* z-index: 1; */
     display: table;
-    padding: 0 30px;
-    
+    /* start change of INC144317154 */
+    /* padding: 0 30px; */
+    padding: 0 8px;
+    /* end change of INC144317154 */
 }
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after ,
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
@@ -72820,3 +72825,9 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 		margin: 5px 0;
 	}
 }
+
+/*start change of INC144316778*/
+.listing.wrapper .left-block.topTheFix {
+    top: 38px;
+}
+/*end change of INC144316778*/
