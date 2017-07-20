@@ -13186,7 +13186,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -13727,38 +13727,34 @@ TATA.CommonFunctions = {
             });
         });
     },
-    displayRemoveCoupon:function(){
-    	if($('#cartPromotionApplied').css('display') == 'block'){
-	    	$.ajax({
-	            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-	            type: "GET",
-	            data: { 'paymentMode' : "" , 'bankName' :""  , 'guid' : ""},
-	            returnType: "text/html",
-	            dataType: "json",
-	            success: function(response) {
-	           	 	$("#cartPromotionApplied").css("display","none");
-	           	 	$("#couponApplied").css("display","block");
-		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
-		 				if($("#couponFieldId").val()=="")
-		 					{
-		 						$("#couponFieldId").val(response.voucherDiscount.voucherCode);
-		 					}
-		 				$('#couponFieldId').attr('readonly', true);
-		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
-		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(5000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
-			
-	            	} 
-	        });
-    	}
-   },
+    displayRemoveCoupon: function() {
+        "block" == $("#cartPromotionApplied").css("display") && $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
+            type: "GET",
+            data: {
+                paymentMode: "",
+                bankName: "",
+                guid: ""
+            },
+            returnType: "text/html",
+            dataType: "json",
+            success: function(response) {
+                $("#cartPromotionApplied").css("display", "none"), $("#couponApplied").css("display", "block"), 
+                document.getElementById("couponValue").innerHTML = response.voucherDiscount.couponDiscount.formattedValue, 
+                "" == $("#couponFieldId").val() && $("#couponFieldId").val(response.voucherDiscount.voucherCode), 
+                $("#couponFieldId").attr("readonly", !0), $("#couponMessage").html("Coupon application may be changed based on promotion application"), 
+                $("#couponMessage").show(), $("#couponMessage").delay(5e3).fadeOut("slow"), setTimeout(function() {
+                    $("#couponMessage").html("");
+                }, 1e4);
+            }
+        });
+    },
     init: function() {
         var _self = TATA.CommonFunctions;
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
         _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.deleteWishlist(), _self.leftBarAccordian(), 
-        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct(),_self.displayRemoveCoupon();
+        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct(), _self.displayRemoveCoupon();
     }
 }, TATA.Pages = {
     PLP: {
@@ -13770,7 +13766,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
