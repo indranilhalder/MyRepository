@@ -35821,8 +35821,10 @@ color:#a9143c;
     margin: 0 5px 5px;
 }
 .listing.wrapper .right-block .facet-values.js-facet-values{
-	margin-left:-27%;
-	display: none;
+	/* start change of INC144316906 */
+	/* margin-left:-27%;
+	display: none; */
+	/* end change of INC144316906 */
 }
 .product-tile .image .new, .newExclusiveElement .new {
     left: 5px !important;
