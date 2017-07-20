@@ -70786,6 +70786,19 @@ background:#f8f8f8;
 .payement-failed-delivery-heading{
 	text-align: left !important;
 }
+.marketplace-checkout span.need-help-call {
+    font-size: 12px ! important;
+    text-align: right !important;
+    color: #999 ! important;
+    float: right;
+    display: inline-block;
+    right: 0px;
+}
+@media(max-width: 768px){
+.marketplace-checkout span.need-help-call {
+    display: none;
+}
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
