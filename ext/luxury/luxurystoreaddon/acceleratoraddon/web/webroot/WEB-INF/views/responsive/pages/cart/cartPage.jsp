@@ -100,9 +100,9 @@
 								<multi-checkout:orderTotals isCart="true" cartData="${cartData}"
 															showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 							</div>
-							<div class="checkoutBtn text-center mt-20">
-								<a href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
-									<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
+							<div id="checkout-id" class="checkoutBtn text-center mt-20">
+								<a id="checkout-enabled" href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
+								<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
 							</div>
 							<div class="cartBottomCheck">
 								<div id="changePinDiv">
