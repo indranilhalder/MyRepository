@@ -264,14 +264,14 @@ INSERT_UPDATE LuxuryLookBookComponent;$contentCV[unique=true];uid[unique=true];l
 INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
 ;;PersonalInformationMediaParagraphComponent;Personal Information Media Paragraph Component;PersonalInformationMediaParagraphComponent;;personalInformation.jpg;;
 ;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;;savedCards.jpg;;
-;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
-;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
+#;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
+#;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
 ;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;;orderHistory.jpg;;
 ;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;;savedAddresses.jpg;;
 ;;PersonalInformationMediaParagraphComponent;Personal Information Media Paragraph Component;PersonalInformationMediaParagraphComponent;;personalInformation.jpg;;
 ;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;;savedCards.jpg;;
-;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
-;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
+#;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
+#;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
 ;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;;orderHistory.jpg;;
 ;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;;savedAddresses.jpg;;
 ;;PersonalInformationMediaParagraphComponent;;;"<h3>ALL ABOUT YOU</h3>
@@ -282,13 +282,13 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 <p>Manage and delete your credit/debit card details here.</p>
 <a href='/my-account/payment-details'>VIEW PAYMENT INFO</a>"
 
-;;MyRecommendationsMediaParagraphComponent;;;"<h3>MY RECOMMENDATIONS</h3>
-<p>Let's get personal</p>
-<a href='/my-account/myInterest'>VIEW RECOMMENDATIONS</a>"
+#;;MyRecommendationsMediaParagraphComponent;;;"<h3>MY RECOMMENDATIONS</h3>
+#<p>Let's get personal</p>
+#<a href='/my-account/myInterest'>VIEW RECOMMENDATIONS</a>"
 
-;;InviteFriendsMediaParagraphComponent;;;"<h3>INVITE YOUR FRIENDS</h3>
-<p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
-<a href='/my-account/friendsInvite'>INVITE FRIENDS TO THE MARKETPLACE</a>"
+#;;InviteFriendsMediaParagraphComponent;;;"<h3>INVITE YOUR FRIENDS</h3>
+#<p>Why shop solo when you can do it with your friends?  Get your crew here.</p>
+#<a href='/my-account/friendsInvite'>INVITE FRIENDS TO THE MARKETPLACE</a>"
 
 ;;OrderHistoryMediaParagraphComponent;;;"<h3>ORDER HISTORY</h3>
 <p>When will that package arrive? And other such pressing questions.</p>
@@ -712,7 +712,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 
 
 ####################STATIC PAGES ########################
-;;BodyContent-Overview;Body Content for Overview Page;true;PersonalInformationMediaParagraphComponent,OrderHistoryMediaParagraphComponent,SavedCardsMediaParagraphComponent,SavedAddressesMediaParagraphComponent,MyRecommendationsMediaParagraphComponent,InviteFriendsMediaParagraphComponent;
+;;BodyContent-Overview;Body Content for Overview Page;true;PersonalInformationMediaParagraphComponent,OrderHistoryMediaParagraphComponent,SavedCardsMediaParagraphComponent,SavedAddressesMediaParagraphComponent;
 ;;Section2ASlot-Cancellation;Section2A Slot for Cancellation Page;true;FooterLeftNavigationCustomerComponent;
 ;;Section2BSlot-Cancellation;Section2B Slot for Cancellation Page;true;TitleForCancellationPageComponent,CancellationPageComponent;
 ;;Section2ASlot-FAQ;Section2A Slot for Frequently Asked Question Page;true;FooterLeftNavigationCustomerComponent;
