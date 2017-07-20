@@ -261,8 +261,7 @@
                                 }
                             }
                             
-                        }
-                        
+                        }                       
                         
                         .modal.cancellation-request{
                             top:25%;
@@ -273,9 +272,35 @@
                                 margin: auto;
                                 background: #fff;
                                 .cancellation-request-block{
+                                    
+                                    h2{
+                                        font-size: 18px;
+                                        font-weight: bold;                                     
+                                    }
+                                    
                                     ul{
                                         padding: 0px;
                                     }
+                                    .products{
+                                          .product-info{
+                                            .product-img{
+                                                vertical-align: top;
+                                                width: 34%;
+                                                display: inline-block;
+                                            }
+                                            .product{
+                                                vertical-align: top;
+                                                width: 65%;
+                                                display: inline-block;
+
+                                                .item-info{
+                                                    display: block;
+                                                    font-size: 14px;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
                                     .product{
                                         .item-info{
                                             span{
@@ -290,6 +315,12 @@
                                         }
                                         .item{
                                             padding: 0px;
+                                        }                                        
+                                      
+                                    }
+                                    .questions{
+                                        label{
+                                            font-size: 18px;
                                         }
                                     }
                                     .return-container{
