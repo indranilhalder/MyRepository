@@ -75,6 +75,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
 
 	//SONAR FIX
+	public static final String SHIPPING = "SHIPPING";
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
 	public static final String BOXING = "boxing";
 	public static final String APPLICATION_JSON_VALUE = "application/json";
@@ -2155,4 +2156,3 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TPR-5733
 	public static final String FOOTER_LINK_QUERY = "select pk from {MplFooterLink} order by {footerLinkRow},{footerLinkColumn} asc";
 }
-

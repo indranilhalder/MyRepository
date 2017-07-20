@@ -752,7 +752,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 							final String orderEntryStatus = orderEntryData.getConsignment().getStatus().getCode();
 							final String stage = cancelReturnFacade.getOrderStatusStage(orderEntryStatus);
 
-							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase("SHIPPING"))
+							if (StringUtils.isNotEmpty(stage) && stage.equalsIgnoreCase(MarketplacecommerceservicesConstants.SHIPPING))//SONAR FIX
 							{
 								cancellationMsgFlag = true;
 							}
