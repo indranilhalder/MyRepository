@@ -698,10 +698,21 @@
  }
 }
 .checkoutBtn {
+    position: relative;
+    
  a.proceedCheckout {
   width : 100%;
   color : #fff;
- }
+     
+     &.checkout-disabled{
+        opacity: .7;
+        pointer-events: none;
+        cursor: default;
+     }
+ } 
+    #emptyId_tooltip_btm, #error-Id_tooltip_btm, #emptyId_tooltip_btm{
+       color: red;
+    }    
 }
 
 .MyBag-pincode {
@@ -755,3 +766,6 @@
         margin-bottom: 0;       
     }
 }
+.orderSummary #convChargeFieldId{
+  display: none;
+ }

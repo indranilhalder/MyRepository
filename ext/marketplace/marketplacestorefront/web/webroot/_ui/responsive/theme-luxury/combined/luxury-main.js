@@ -14209,6 +14209,8 @@ $(document).ready(function() {
         $("#sameAsShipping").is(":checked") ? $(".payment-billing-form").hide() : $(".payment-billing-form").show();
     }), $(document).on("click", ".gig-rating-button", function() {
         $(".ratingsAndReview").trigger("click");
+    }), $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover", function() {
+        $(this).find("a#checkout-enabled.checkout-disabled").length > 0 ? $(this).css("cursor", "not-allowed") : $(this).css("cursor", "default");
     });
     isDuringCheckout = !1, TATA.CommonFunctions.init(), TATA.Pages.init(), $("#gender, .select-bar select, #stateListBox, .responsiveSort").selectBoxIt(), 
     $(".header-login-target-link").on("click", function() {

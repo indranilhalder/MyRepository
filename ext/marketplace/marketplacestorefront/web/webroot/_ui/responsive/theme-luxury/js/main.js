@@ -2512,7 +2512,6 @@ function loadDefaultWishLstForCart(productCode,ussid) {
 }
 
 
-
 $(document).ready(function () {
     checkIsServicable();
     
@@ -2537,7 +2536,15 @@ $(document).ready(function () {
         $(".ratingsAndReview").trigger("click");
     });
     
-	  
+    $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover",function(){
+        if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
+            $(this).css("cursor","not-allowed");
+        }
+        else{
+            $(this).css("cursor","default");
+        }
+    });  
+    
     var luxuryluxuryHeaderLoggedinStatus = false;
     isDuringCheckout = false;
     TATA.CommonFunctions.init();
