@@ -72870,6 +72870,8 @@ footer #footerLink div.column ul li:last-child:after {
 .shop-by-department-banner{
 	float: right;
     max-width: calc(49.5%  - -30px);
+    margin-right: 2%;
+    margin-top: 5px;
 }
 @media(max-width: 790px){
 .shop-by-department-banner{
