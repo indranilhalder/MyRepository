@@ -60835,7 +60835,10 @@ Previous different code end*/
 }
 .gwc-chat-head .gwc-chat-title #dCustEmail {
 	position: relative;
-    top: -14px;
+    /* start change of INC144316843 */
+    /* top: -14px; */
+    top: -7px;
+    /* end change of INC144316843 */
 }
 .gwc-chat-head .gwc-chat-title div{
     font: inherit;
