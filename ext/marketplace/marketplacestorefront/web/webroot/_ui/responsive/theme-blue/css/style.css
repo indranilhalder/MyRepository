@@ -36594,6 +36594,11 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 .left-block .facet-values.js-facet-values.js-facet-form .facet-list, #searchPageDeptHierTreeForm #searchPageDeptHierTree, #categoryPageDeptHierTreeForm #categoryPageDeptHierTree {
     padding: 0px 10px 6px 20px;
 }
+/* start change of INC144316370  */
+#categoryPageDeptHierTreeForm #categoryPageDeptHierTree{
+	padding-left:15px;
+}
+/* end change of INC144316370  */
 .priceBucketExpand, .listing-leftmenu h4.customPriceRange, #customPriceFilter {
     padding-left: 20px;
 }
