@@ -149,6 +149,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addExchange(source, target);
 			//TPR-1083 End
 
+
 		}
 		target.setIsRefundable(source.isIsRefundable());
 	}
@@ -299,6 +300,12 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			{
 				target.setProdLevelPercentage(Integer.toString(source.getProdLevelPercentageDisc().intValue()));
 			}
+			//UF-260 starts here
+			if (null != source.getCartAdditionalDiscPerc() && source.getCartAdditionalDiscPerc().doubleValue() != 0.0)
+			{
+				target.setCartAdditionalDiscPerc(createPrice(source, source.getCartAdditionalDiscPerc()));
+			}
+			//UF-260 ends here
 			if (null != source.getTotalSalePrice() && source.getTotalSalePrice().doubleValue() != 0.0)
 			{
 				target.setTotalSalePrice(createPrice(source, source.getTotalSalePrice()));
@@ -400,6 +407,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	}
 
 
+
 	//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
 	//	{
 	//		final ProductModel productModel = source.getProduct();
@@ -441,8 +449,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 
 
 
-	//	@Override
-	@Override
+@Override
 	protected void addDeliveryMode(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
 		if (orderEntry.getMplDeliveryMode() != null)

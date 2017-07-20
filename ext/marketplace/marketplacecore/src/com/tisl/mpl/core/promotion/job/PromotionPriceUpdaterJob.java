@@ -72,12 +72,11 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 	}
 
 	/**
-	 * @description Crom job to update Price Row for priority respective promotional products
+	 * @description Cron job to update Price Row for priority respective promotional products
 	 */
 	@Override
 	public PerformResult perform(final CronJobModel cronJob)
 	{
-		// YTODO Auto-generated method stub
 		try
 		{
 
@@ -89,11 +88,11 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 			if (null != configModel && null != configModel.getMplConfigDate())
 			{
 				LOG.error("CRON LAST START DATE" + configModel.getMplConfigDate());
-				List<ProductPromotionModel> PromotionList = new ArrayList<ProductPromotionModel>();
-				PromotionList = fetchRequiredPromotion(configModel.getMplConfigDate());
-				if (CollectionUtils.isNotEmpty(PromotionList))
+				List<ProductPromotionModel> promotionList = new ArrayList<ProductPromotionModel>();
+				promotionList = fetchRequiredPromotion(configModel.getMplConfigDate());
+				if (CollectionUtils.isNotEmpty(promotionList))
 				{
-					for (final ProductPromotionModel promoModel : PromotionList)
+					for (final ProductPromotionModel promoModel : promotionList)
 					{
 
 						errorFlag = promotionPriceUpdaterService.poulatePriceRowData(promoModel);
@@ -130,18 +129,28 @@ public class PromotionPriceUpdaterJob extends AbstractJobPerformable<CronJobMode
 			ExceptionUtil.etailNonBusinessExceptionHandler(exception);
 			return new PerformResult(CronJobResult.ERROR, CronJobStatus.ABORTED);
 		}
+
+		finally
+		{
+			promotionPriceUpdaterService.purgeRedundantData();
+		}
 	}
 
 	/**
 	 * @description fetch Required Promotions
-	 * @param promotionList
+	 *
+	 *
+	 * @param mplConfigDate
+	 * @return promotionResultList
+	 *
 	 */
 	private List<ProductPromotionModel> fetchRequiredPromotion(final Date mplConfigDate)
 	{
-		List<ProductPromotionModel> PromotionResultList = new ArrayList<ProductPromotionModel>();
+		List<ProductPromotionModel> promotionResultList = new ArrayList<ProductPromotionModel>();
 
-		PromotionResultList = promotionPriceUpdaterService.getRequiredPromotion(mplConfigDate);
-		return PromotionResultList;
+		promotionResultList = promotionPriceUpdaterService.getRequiredPromotion(mplConfigDate);
+
+		return promotionResultList;
 
 	}
 

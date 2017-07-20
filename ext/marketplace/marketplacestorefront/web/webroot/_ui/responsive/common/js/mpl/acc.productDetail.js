@@ -469,6 +469,7 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				$("#videoModal #player").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
+				$("#videoModal").css("z-index", "100003");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
 				/*$(".zoomContainer").remove();
 				$('.picZoomer-pic').removeData('zoom-image');*/
@@ -1554,6 +1555,7 @@ $( document ).ready(function() {
 	/*var data =*/ getBuyBoxDataAjax(productCode,variantCodesJson);//Moving buybox call on load in a method so that it can be reused.UF-60
 
 
+
 //}
 	$(".size-guide").click(function(){
 		if(null!= availibility){
@@ -1610,10 +1612,9 @@ function displayDeliveryDetails(sellerName) {
 				var fulFillment = data['fulfillment'];
 				var deliveryModes = data['deliveryModes'];
 				
-				/*TISPRDT-878 start*/
+				 /*TISPRDT-878 start*/
 				var fulFillmentP1 = data['fulfillmentType1'];
 				/*TISPRDT-878 END*/
-				
 
 
 				var leadTime=0;
@@ -2376,9 +2377,9 @@ function nextImage(elem)
 	}
 	else if (grandParentId == 'zoom_gallery') {
 		$("#zoom_gallery .imageListCarousel li img").each(function() {
-			if ($(this).attr('data-type') == "image") {
+			//if ($(this).attr('data-type') == "image") {
 				$(this).show();
-			}
+			//}
 		});
 		var item_height = $("#zoom_gallery .imageListCarousel li").height();
 		var item_count = $("#zoom_gallery .imageListCarousel li").length;
@@ -2913,8 +2914,23 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
-			$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
+			//alert('here');
 			$("#addToCartFormTitle").show();
+			//$('#addToCartFormTitle').remove();
+			if ($(window).width() < 768) {
+				setTimeout(function(){
+					$('#addToCartFormTitle').fadeOut(2000);		
+				},2000);
+				//UF-390
+				$('html, body').animate({
+		              scrollTop: $('.product-info .product-image-container.device').height()
+		        }, 1000);
+			}
+			
+			/*setTimeout(function(){
+				$('#addToCartFormTitle').remove();		
+			},4000);*/
 			//For pdp analytics changes
 			utag.link({"error_type":"size_not_selected"});
 	 	    return false;

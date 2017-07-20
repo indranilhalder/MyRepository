@@ -144,8 +144,6 @@ import com.tisl.mpl.wsdto.StatusResponseListDTO;
 import com.tisl.mpl.wsdto.StatusResponseMessageDTO;
 import com.tisl.mpl.wsdto.UserResultWsDto;
 import com.tisl.mpl.wsdto.WebSerResponseWsDTO;
-
-
 /**
  * Web Service Controller for the ORDERS resource. Most methods check orders of the user. Methods require authentication
  * and are restricted to https channel.
@@ -232,10 +230,10 @@ public class OrdersController extends BaseCommerceController
 	private MplSellerInformationService mplSellerInformationService;
 	@Resource(name = "mplDataMapper")
 	protected DataMapper mplDataMapper;
-
+	
 	@Autowired
 	private MplDeliveryAddressFacade mplDeliveryAddressFacade;
-
+	
 	@Autowired
 	private MplDeliveryAddressComparator mplDeliveryAddressComparator;
 	@Autowired
@@ -1708,7 +1706,7 @@ public class OrdersController extends BaseCommerceController
 
 
 	}
-
+	
 	//R2.3 FLO1 Added new Controller Method Change Delivery Request
 	@Secured(
 	{ "ROLE_CUSTOMERGROUP", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })

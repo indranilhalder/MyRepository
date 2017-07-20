@@ -903,6 +903,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 	if ($('#pageType').val() == 'productsearch' || $('#pageType').val() == 'category') {
 		   window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 		   window.localStorage.setItem('lastUrlquery',encodeURI(query));
+		   $("img.lazy").lazyload();
 	 }
 	
 	// INC144315462 and INC144315104 
@@ -1302,7 +1303,9 @@ $(document).on("click",".brandFacetRequire",function(){
 		/*refer to the AJAX for checkbox code--from line no.111--Starts*/
 		var staticHost=$('#staticHost').val();
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		//$("body").append('<img src="'+staticHost+'/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		//PRDI-540 spinner issue on multiple brand selection
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		
 		var dataString = null;
 		var nonEmptyDataString= null;

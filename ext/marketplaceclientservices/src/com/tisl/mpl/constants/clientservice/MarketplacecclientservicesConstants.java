@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.constants.clientservice;
 
 /**
