@@ -132,6 +132,7 @@ import com.granule.json.JSON;
 import com.granule.json.JSONArray;
 import com.granule.json.JSONException;
 import com.granule.json.JSONObject;
+import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
 import com.tis.mpl.facade.address.validator.MplDeliveryAddressComparator;
 import com.tis.mpl.facade.changedelivery.MplDeliveryAddressFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -231,7 +232,7 @@ import com.tisl.mpl.ticket.facades.MplSendTicketFacade;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.GigyaProductReviewWsDTO;
-import com.hybris.oms.domain.changedeliveryaddress.TransactionSDDto;
+
 
 /**
  * Controller for home page
@@ -5148,44 +5149,44 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
-				  if (!entry.getIsDeleted().booleanValue())//TPR-5787
-				     {
-					//TISEE-6376
-					if (entry.getProduct() != null && entry.getProduct().getCode() != null)
+					if (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null)//TPR-5787
 					{
-						final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
-						if (null != productModel.getSellerInformationRelator())
+						//TISEE-6376
+						if (entry.getProduct() != null && entry.getProduct().getCode() != null)
 						{
-							final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
-									.getSellerInformationRelator();
-							for (final SellerInformationModel sellerInformationModel : sellerInfo)
+							final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
+							if (null != productModel.getSellerInformationRelator())
 							{
-								if (sellerInformationModel.getSellerArticleSKU().equals(entry.getUssid())
-										&& null != sellerInformationModel.getSellerAssociationStatus()
-										&& sellerInformationModel.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.NO))
+								final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel
+										.getSellerInformationRelator();
+								for (final SellerInformationModel sellerInformationModel : sellerInfo)
 								{
-									modelService.remove(entry);
-									isDelisted = Boolean.TRUE;
+									if (sellerInformationModel.getSellerArticleSKU().equals(entry.getUssid())
+											&& null != sellerInformationModel.getSellerAssociationStatus()
+											&& sellerInformationModel.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.NO))
+									{
+										modelService.remove(entry);
+										isDelisted = Boolean.TRUE;
+									}
 								}
 							}
+							// LW-225,230 start
+							if (productModel.getLuxIndicator() != null
+									&& productModel.getLuxIndicator().getCode()
+											.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
+							{
+								luxProduct = true; //Setting true if at least one luxury product found
+							}
+							// LW-225,230 end
 						}
-						// LW-225,230 start
-						if (productModel.getLuxIndicator() != null
-								&& productModel.getLuxIndicator().getCode()
-										.equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
-						{
-							luxProduct = true; //Setting true if at least one luxury product found
-						}
-						// LW-225,230 end
-					}
 
-					final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
-					if (!isDelisted && !isWishlistEntryValid)
-					{
-						modelService.remove(entry);
-						isDelisted = Boolean.TRUE;
+						final boolean isWishlistEntryValid = mplCartFacade.isWishlistEntryValid(entry);
+						if (!isDelisted && !isWishlistEntryValid)
+						{
+							modelService.remove(entry);
+							isDelisted = Boolean.TRUE;
+						}
 					}
-                                     }
 				}
 				// LW-225,230
 				model.addAttribute(ModelAttributetConstants.IS_LUXURY, luxProduct);
@@ -5203,7 +5204,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
 						//TISEE-6376
-						if (entryModel.getProduct() != null && !entryModel.getIsDeleted().booleanValue())//TPR-5787
+						if (entryModel.getProduct() != null
+								&& (!entryModel.getIsDeleted().booleanValue() || entryModel.getIsDeleted() == null))//TPR-5787
 						{
 							/*
 							 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),
