@@ -36,7 +36,6 @@
             padding: 13px 18px;
             border: 0;
         }
-        
         #wishListDetailsId{
             .other-sellers-table.add-to-wishlist-popover-table{
                 td{
@@ -754,4 +753,9 @@
     .cart.wrapper .product-block li.item>ul>li.delivery ul.success_msg, .confirmation .product-block li.item>ul>li.delivery ul.success_msg{
         margin-bottom: 0;       
     }
+}
+
+.disable-click{
+ 	pointer-events: none;
+    cursor: default;
 }

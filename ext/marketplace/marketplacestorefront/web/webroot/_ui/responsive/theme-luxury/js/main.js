@@ -1442,13 +1442,22 @@ TATA.Pages = {
         },
         
         writeReview:function() {
-        	 $("body").on("click touchstart", ".gig-rating-writeYourReview", function(e) {
+        	 $("body").on("click touchstart", ".gig-rating-writeYourReview,.gig-rating-readReviewsLink", function(e) {
              	e.preventDefault();
         		$('.accordion-title').removeClass('active');
         		$('.accordion-content').hide();
         		$('.review-accordion').addClass('active');
         		$('.review-accordion-content').show();        		
         	});
+        },
+        editAddressCheckout:function() {
+            $('.edit_address').on('click',function(){
+                $(this).addClass('disable-click');
+            });
+
+            $(document).on('click', '.address-details .cancelBtnEdit', function(e){
+                $('.edit_address').removeClass('disable-click');
+            });
         },
         // PDP Page initiate
         init: function () {
@@ -1463,6 +1472,7 @@ TATA.Pages = {
             _self.wishlistInit();
             _self.luxuryDeliveryOptions();
             _self.writeReview();
+            _self.editAddressCheckout();
         }
     },
 
