@@ -36,7 +36,6 @@
             padding: 13px 18px;
             border: 0;
         }
-        
         #wishListDetailsId{
             .other-sellers-table.add-to-wishlist-popover-table{
                 td{
@@ -698,21 +697,10 @@
  }
 }
 .checkoutBtn {
-    position: relative;
-    
  a.proceedCheckout {
   width : 100%;
   color : #fff;
-     
-     &.checkout-disabled{
-        opacity: .7;
-        pointer-events: none;
-        cursor: default;
-     }
- } 
-    #emptyId_tooltip_btm, #error-Id_tooltip_btm, #emptyId_tooltip_btm{
-       color: red;
-    }    
+ }
 }
 
 .MyBag-pincode {
@@ -766,6 +754,8 @@
         margin-bottom: 0;       
     }
 }
-.orderSummary #convChargeFieldId{
-  display: none;
- }
+
+.disable-click{
+ 	pointer-events: none;
+    cursor: default;
+}

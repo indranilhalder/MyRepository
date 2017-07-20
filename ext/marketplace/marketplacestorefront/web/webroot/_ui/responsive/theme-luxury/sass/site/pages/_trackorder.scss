@@ -134,8 +134,8 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
 }
 
 body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_00cbe9:before{
-	background-color: #a9143c;
-    box-shadow: 0 0 0 3px #a9143c;
+	background-color: #b99d6b;
+    box-shadow: 0 0 0 3px #b99d6b;
     z-index: 2;
     content: "";
     display: inline-block;
@@ -143,7 +143,6 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     height: 10px;
     border-radius: 50%;
     border: 2px solid #fff;
-    box-shadow: 0 0 0 3px #a9143c;
     position: relative;
     top: -2px;
 }
@@ -160,12 +159,7 @@ body .account .right-account .order-history.order-details .status .message.track
     position: absolute;
     background: #fff;
     text-align: center;
-    box-shadow: 1px 3px 2px #ccc;
-    
-    @include media-breakpoint-down(sm) {
-        width: 200%!important;
-    }
-    
+    box-shadow: 1px 3px 2px #ccc;    
     li{
        padding: 5px; 
         line-height: 18px;
@@ -173,6 +167,10 @@ body .account .right-account .order-history.order-details .status .message.track
     p{
          line-height: 18px; 
     }
+}
+
+body .account .right-account .order-history.order-details .status .processingStatus .message.trackOrdermessage_00cbe9{
+	left:-100%;
 }
 
 body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47{
@@ -248,14 +246,16 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 .processing-stage-arrow1 p,
 .cancellation.message p{
 	font-weight: bold;
-    padding-bottom: 5px;
+    padding-bottom: 0px;
     font-size: 12px;
+    margin-bottom: 0px;
 }
 
 .order-placed-arrow ul li,
 .processing-stage-arrow1 ul li,
 .cancellation.message ul li{
 	font-size: 12px;
+    padding-bottom: 0 !important;
 }
 
  #newCardCC,.newCardPaymentCC,.payment-billing-form,.payment-section #netbanking{
