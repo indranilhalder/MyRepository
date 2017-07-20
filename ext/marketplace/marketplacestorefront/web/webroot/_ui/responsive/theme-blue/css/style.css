@@ -70604,6 +70604,9 @@ background:#f8f8f8;
 	.cart.wrapper.checkout-payment .card-sec .card-num .card_image{
 	margin-left: 30px;
 	}
+	.cart.wrapper.checkout-payment .card-sec .card-num .payment-failed-card-image{
+	margin-left: 0px;
+	}
 	div#savedCreditCard .credit-card-group .right-align-form input.cvvValdiation, 
 	div#savedDebitCard .debit-card-group .right-align-form input.cvvValdiation, 
 	div#savedEMICard .credit-card-group .right-align-form input.cvvValdiation{
@@ -70747,6 +70750,46 @@ background:#f8f8f8;
     letter-spacing: 0.6px;
     text-align: left;
     color: #a5173c;
+}
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable{
+    top: 64px !important;
+    display: block;
+    height: auto !important;
+    padding: 13px 8px 14px 16px !important;
+    font-size: 12px;
+    letter-spacing: .6px;
+    color: red;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    border: solid 1px red;
+}
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable span{
+	    display: block;
+}
+.payment-failed-card-image + input + label{
+	opacity:1.5 !important;
+}
+.payment-failed-card-image + input + label span{
+	font-weight: bold !important;
+}
+.payement-failed-delivery-method{
+	margin-left: 23px;
+}
+.payement-failed-delivery-heading{
+	text-align: left !important;
+}
+.marketplace-checkout span.need-help-call {
+    font-size: 12px ! important;
+    text-align: right !important;
+    color: #999 ! important;
+    float: right;
+    display: inline-block;
+    right: 0px;
+}
+@media(max-width: 768px){
+.marketplace-checkout span.need-help-call {
+    display: none;
+}
 }
 /*UF-281 UF-282 single page checkout css ends*/
 
@@ -75792,6 +75835,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 100%;
 	table-layout: fixed;
 }
+.accordin.FineJewellery .item .detail table#showPriceBreakup,
+.accordin.FashionJewellery .item .detail table#showPriceBreakup{
+	border-top: solid 2px #cccccc;
+}
 .accordin.FineJewellery .item .detail table tr td.title,
 .accordin.FashionJewellery .item .detail table tr td.title{
 	padding-top: 16px;
@@ -75921,7 +75968,7 @@ table#showPriceBreakup{
 	.product-info>div.accordin.FashionJewellery
 	{
 	width: 44%;
-	margin-top: 66px;
+	margin-top: 95px;
 	}
 }
 @media (min-width: 1025px) and (max-width: 1189px){

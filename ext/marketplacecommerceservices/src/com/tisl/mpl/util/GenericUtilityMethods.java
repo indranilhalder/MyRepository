@@ -749,11 +749,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1146,7 +1146,10 @@ public class GenericUtilityMethods
 						if (null != entry.getBrandName())
 						{
 
-							brand = appendQuote(entry.getBrandName());
+							//brand = appendQuote(entry.getBrandName());
+							brand = appendQuote(entry.getBrandName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_")
+									.toLowerCase());
+
 
 						}
 

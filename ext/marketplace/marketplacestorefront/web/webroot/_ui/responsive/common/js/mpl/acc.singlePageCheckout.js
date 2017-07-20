@@ -1670,7 +1670,7 @@ ACC.singlePageCheckout = {
 					{
 						utag.link({
 							link_text: 'review_order_add_to_wishlist' , 
-							event_type : 'review_order__to_wishlist', 
+							event_type : 'review_order_add_to_wishlist', 
 							product_sku_wishlist : productcodearray
 						});
 					}
@@ -2195,7 +2195,16 @@ ACC.singlePageCheckout = {
         	$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
-		}        
+		} 
+		
+		//UF-429
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : 'new_address_clicked', 
+				event_type : 'new_address_clicked'
+			});
+		}
 		return false;	
 	},
 	//Function used to check pincode serviceability for responsive
@@ -2781,8 +2790,15 @@ $(document).ready(function(){
 		var deviceType=$("#deviceType").html();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
-			//Reload the page if a user directly accesses the site in a small sized desktop browser
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in a small sized desktop browser.
 			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
+		}
+		else if(deviceType=="mobile" && !ACC.singlePageCheckout.getIsResponsive())
+		{
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in desktop browser modifying the user agent in browser dev tools to mobile where as width of view port is more than 768px.
+			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isNormal=true";
 		}
 		
 		if(ACC.singlePageCheckout.getIsResponsive())
@@ -2812,8 +2828,3 @@ $(document).ready(function(){
 		}
 	}
 });
-
-
-$('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery-modes li input:radio').click(function(){
-	alert("Hiii");
-	});
