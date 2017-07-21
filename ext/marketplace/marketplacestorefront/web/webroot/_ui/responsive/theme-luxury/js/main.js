@@ -1102,6 +1102,7 @@ TATA.Pages = {
 
             $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
                 dots: true,
+                loop:true,
                 items: 1,
                 autoplay: true,
                 autoplayTimeout: 5000,

@@ -367,6 +367,7 @@
 									    height: 20px;
 									    top: 0;
 									    border-radius: $border-radius-small;
+									    border: 1px solid #b3b3b3;
                                         @include media-breakpoint-down(sm) {
                                             left: 25px;
                                         }

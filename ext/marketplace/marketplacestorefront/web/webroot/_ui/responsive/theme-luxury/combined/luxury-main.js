@@ -1,4 +1,4 @@
-function checkPincodeServiceability(buttonType, el) {
+function luxurycheckPincodeServiceability(buttonType, el) {
     var selectedPincode = $("#defaultPinCodeIds").val(), regPostcode = /^([1-9])([0-9]){5}$/;
     $(".deliveryUlClass").remove();
     var utagCheckPincodeStatus = "";
@@ -57,7 +57,7 @@ function checkPincodeServiceability(buttonType, el) {
     $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
     !1;
     if ("" !== selectedPincode) {
-        var cartGuidParamValue = getParameterByName("cartGuid");
+        var cartGuidParamValue = luxurygetParameterByName("cartGuid");
         void 0 !== cartGuidParamValue ? $(location).attr("href", ACC.config.encodedContextPath + "/cart?cartGuid=" + cartGuidParamValue + "&pincode=" + selectedPincode) : $(location).attr("href", ACC.config.encodedContextPath + "/cart?pincode=" + selectedPincode);
     } else {
         document.getElementById("pinCodeButtonIds").className = "CheckPincode", document.getElementById("pinCodeButtonIdsBtm").className = "CheckPincode", 
@@ -77,11 +77,11 @@ function checkPincodeServiceability(buttonType, el) {
                 populateCartDetailsafterPincodeCheck(responeStr[1]), "N" == responeStr[0] ? (utagCheckPincodeStatus = "cart_pincode_check_failure", 
                 $("#AvailableMessage").hide(), $("#cartPinCodeAvailable").hide(), $("#unserviceablepincode").show(), 
                 $("#AvailableMessageBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#unserviceablepincodeBtm").show(), 
-                $(".pincodeServiceError").show(), populatePincodeDeliveryMode(response, buttonType), 
+                $(".pincodeServiceError").show(), luxurypopulatePincodeDeliveryMode(response, buttonType), 
                 reloadpage(selectedPincode, buttonType), $("#isPincodeServicableId").val("N")) : (utagCheckPincodeStatus = "cart_pincode_check_success", 
                 $(".pincodeServiceError").hide(), $("#unserviceablepincode").hide(), $("#cartPinCodeAvailable").hide(), 
                 $("#unserviceablepincodeBtm").hide(), $("#cartPinCodeAvailableBtm").hide(), $("#AvailableMessage").html("Available delivery options for the pincode " + selectedPincode + " are"), 
-                $("#AvailableMessage").show(), $("#AvailableMessageBtm").show(), populatePincodeDeliveryMode(response, buttonType), 
+                $("#AvailableMessage").show(), $("#AvailableMessageBtm").show(), luxurypopulatePincodeDeliveryMode(response, buttonType), 
                 reloadpage(selectedPincode, buttonType)), $("#defaultPinDiv").show(), $("#defaultPinCodeIdsq").val(selectedPincode), 
                 $("#pinCodeDispalyDiv .spinner").remove(), $("#no-click,.spinner").remove(), $("#defaultPinCodeIds").blur(), 
                 "" == $("#defaultPinCodeIds").val() ? ($("#cartPinCodeAvailable").show(), document.getElementById("pinCodeButtonIds").className = "CheckAvailability") : ($("#cartPinCodeAvailable").hide(), 
@@ -111,18 +111,18 @@ function checkPincodeServiceability(buttonType, el) {
     }
 }
 
-function getParameterByName(name) {
+function luxurygetParameterByName(name) {
     if (name = new RegExp("[?&]" + encodeURIComponent(name) + "=([^&]*)").exec(location.search)) return decodeURIComponent(name[1]);
 }
 
-function checkIsServicable() {
+function luxurycheckIsServicable() {
     var selectedPincode = $("#defaultPinCodeIds").val();
     null != selectedPincode && void 0 != selectedPincode && "" != selectedPincode && $.ajax({
         url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/" + selectedPincode,
         type: "GET",
         cache: !1,
         success: function(response) {
-            populatePincodeDeliveryMode(response, "pageOnLoad");
+            luxurypopulatePincodeDeliveryMode(response, "pageOnLoad");
         },
         error: function(resp) {
             console.log(resp);
@@ -133,7 +133,7 @@ function checkIsServicable() {
     });
 }
 
-function populatePincodeDeliveryMode(response, buttonType) {
+function luxurypopulatePincodeDeliveryMode(response, buttonType) {
     var checkoutLinkURlId = $("#checkoutLinkURlId").val(), values = response.pincodeData.split("|"), isServicable = values[0], selectedPincode = values[1], deliveryModeJsonMap = values[2];
     if ($(".pincodeServiceError").hide(), "null" == deliveryModeJsonMap) {
         $(".unservicePins").show(), $("#checkout-enabled").css("pointer-events", "none"), 
@@ -13728,29 +13728,26 @@ TATA.CommonFunctions = {
         });
     },
     displayRemoveCoupon: function() {
-	    	$.ajax({
-	            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
-	            type: "GET",
-	            data: { 'paymentMode' : "" , 'bankName' :""  , 'guid' : ""},
-	            returnType: "text/html",
-	            dataType: "json",
-	            success: function(response) {
-		 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
-		 				if($("#couponFieldId").val()=="")
-		 					{
-		 						$("#couponFieldId").val(response.voucherDiscount.voucherCode);
-		 					}
-		 				if ($('#couponValue').html()!=" "){
-		 					$("#couponApplied").css("display","block");
-		 				}
-		 				$('#couponFieldId').attr('readonly', true);
-		 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
-		 				$('#couponMessage').show();
-		 				$('#couponMessage').delay(5000).fadeOut('slow');
-		 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
-			
-	            	} 
-	        });
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
+            type: "GET",
+            data: {
+                paymentMode: "",
+                bankName: "",
+                guid: ""
+            },
+            returnType: "text/html",
+            dataType: "json",
+            success: function(response) {
+                document.getElementById("couponValue").innerHTML = response.voucherDiscount.couponDiscount.formattedValue, 
+                "" == $("#couponFieldId").val() && $("#couponFieldId").val(response.voucherDiscount.voucherCode), 
+                " " != $("#couponValue").html() && $("#couponApplied").css("display", "block"), 
+                $("#couponFieldId").attr("readonly", !0), $("#couponMessage").html("Coupon application may be changed based on promotion application"), 
+                $("#couponMessage").show(), $("#couponMessage").delay(5e3).fadeOut("slow"), setTimeout(function() {
+                    $("#couponMessage").html("");
+                }, 1e4);
+            }
+        });
     },
     init: function() {
         var _self = TATA.CommonFunctions;
@@ -13827,7 +13824,7 @@ TATA.CommonFunctions = {
         },
         showSelectedRefinements: function() {
             0 == $(".facetValues .facet-form input:checked").length && $(".plp-wrapper h4.categor-name").show(), 
-            $(".facetValues .facet-form input:checked").each(function() {
+            $(window).width() < 768 && $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             }), $(".facet-form input[type=checkbox]").each(function() {
                 var colorString = $(this).attr("data-colour"), colorArray = colorString.split("_"), colorCode = "#" + colorArray[1];
@@ -13854,6 +13851,7 @@ TATA.CommonFunctions = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
+                    $(filtered).has("h4.categor-name") && $(".plp-wrapper h4").html($(filtered).find("h4.categor-name")), 
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")), 
                     TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html()), 
                     $(filtered).has("input[name=noOfPages]") && (totalPages = parseInt($(filtered).find("input[name=noOfPages]").val()), 
@@ -13943,6 +13941,7 @@ TATA.CommonFunctions = {
                 }
             }), $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
                 dots: !0,
+                loop: !0,
                 items: 1,
                 autoplay: !0,
                 autoplayTimeout: 5e3
@@ -14234,7 +14233,7 @@ TATA.CommonFunctions = {
 var wishListList = [];
 
 $(document).ready(function() {
-    checkIsServicable(), $(".checkout-paymentmethod .payment-tab").removeClass("active"), 
+    luxurycheckIsServicable(), $(".checkout-paymentmethod .payment-tab").removeClass("active"), 
     $("#card").css("display", "none"), $(".credit_tab").on("click", function() {
         $(".new_card_tab.credit_tab").hasClass("active_tab") && $(".newCardPaymentCC").show();
     }), $("#sameAsShipping").on("click", function() {
