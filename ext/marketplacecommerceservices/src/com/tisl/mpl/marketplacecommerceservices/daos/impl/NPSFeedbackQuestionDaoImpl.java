@@ -49,7 +49,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#getFeedback(java.lang.String)
 	 */
 	@Override
@@ -70,7 +70,7 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#validateCustomerForTransaction(java.lang.
 	 * String)
@@ -91,14 +91,14 @@ public class NPSFeedbackQuestionDaoImpl implements NPSFeedbackQuestionDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao#getFeedback(java.lang.String)
 	 */
 	@Override
 	public List<NPSFeedbackModel> getFeedbackModel(final String transactionId)
 	{
-		final String queryString = "SELECT * FROM { " + NPSFeedbackModel._TYPECODE + "} " + "WHERE " + " { "
-				+ NPSFeedbackModel.TRANSACTIONID + " }  = ?transactionId";
+		final String queryString = "SELECT " + NPSFeedbackModel.PK + " FROM { " + NPSFeedbackModel._TYPECODE + "} " + "WHERE "
+				+ " { " + NPSFeedbackModel.TRANSACTIONID + " }  = ?transactionId";
 		LOG.debug("Fetching NPSFeedbackModel " + queryString);
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter("transactionId", transactionId);
