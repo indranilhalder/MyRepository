@@ -399,7 +399,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;BottomContent;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CustomerProfileUpdateEmailTemplate'];validComponentTypes(code)
-;CustomerProfileUpdateSiteLogo;;;logo
+;SiteLogo;;;logo
 ;TopContent;;$wideContent;
 ;BottomContent;;$wideContent;
 ;Tip;;$wideContent;
@@ -411,6 +411,15 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
 
 
 
@@ -1098,19 +1107,20 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;fb-FriendsInviteEmail;fb;;EmailfbCUSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='CustomerProfileUpdateEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-CustomerProfileUpdateEmail;CustomerProfileUpdateSiteLogo;;EmailSiteLogoCUSlot;true
-;;TopContent-CustomerProfileUpdateEmail;TopContent;;EmailTopCUSlot;true
-;;BottomContent-CustomerProfileUpdateEmail;BottomContent;;EmailBottomCUSlot;true
-;;Tip-CustomerProfileUpdateEmail;Tip;;EmailTipCUSlot;true
-#;;Description-CustomerProfileUpdateEmail;Description;;EmailDescriptionCUSlot;true
-#;;CustomerProfileUpdateBanner-CustomerProfileUpdateEmail;CustomerProfileUpdateBanner;;EmailConfBannerCUSlot;true
-;;AppDownloadUrl-CustomerProfileUpdateEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
-;;smileyimg-CustomerProfileUpdateEmail;smileyimg;;EmailsmileyimgCUSlot;true
-;;fb-CustomerProfileUpdateEmail;fb;;EmailfbCUSlot;true
-#;;gplus-CustomerProfileUpdateEmail;gplus;;EmailgplusCUSlot;true
-;;tweet-CustomerProfileUpdateEmail;tweet;;EmailtweetSlot;true
-;;youtube-CustomerProfileUpdateEmail;youtube;;EmailYouTubeSlot;true
-;;insta-CustomerProfileUpdateEmail;insta;;EmailInstaSlot;true
+;;SiteLogo-CustomerProfileUpdateEmailnew;SiteLogo;;EmailCUSiteLogoSlot;true
+;;fb-CustomerProfileUpdateEmailnew;fb;;EmailCUfbSlot;true
+;;tweet-CustomerProfileUpdateEmailnew;tweet;;EmailCUtweetSlot;true
+;;gplus-CustomerProfileUpdateEmailnew;gplus;;EmailCUgplusSlot;true
+;;youtube-CustomerProfileUpdateEmailnew;youtube;;EmailCUYouTubeSlot;true
+;;insta-CustomerProfileUpdateEmailnew;insta;;EmailCUInstaSlot;true
+;;tatatrust-CustomerProfileUpdateEmailnew;tatatrust;;EmailCUTatatrustSlot;true
+;;cliqnpic-CustomerProfileUpdateEmailnew;cliqnpic;;EmailCUcliqnpicSlot;true
+;;easyreturn-CustomerProfileUpdateEmailnew;easyreturn;;EmailCUEasyreturnSlot;true
+;;authenticbrands-CustomerProfileUpdateEmailnew;authenticbrands;;EmailCUAuthenticbrandsSlot;true
+;;freeshipping-CustomerProfileUpdateEmailnew;freeshipping;;EmailCUFreeshippingSlot;true
+;;linegrey-CustomerProfileUpdateEmailnew;linegrey;;EmailCULinegreySlot;true
+;;appstore-CustomerProfileUpdateEmailnew;appstore;;EmailCUAppleStoreSlot;true
+;;googleplay-CustomerProfileUpdateEmailnew;googleplay;;EmailCUAndroidStoreSlot;true
 
 ##reset password content slot For Template
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ChangePasswordEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite

@@ -173,6 +173,87 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 
 
 
+#Customer Profile Update Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
+;;/images/theme/TataTrust.png;Luxury_TataTrust.png;$siteResource/images/theme/TataTrust.png;;
+;;/images/theme/cliqnpic.png;Luxury_Cliqnpic.png;$siteResource/images/theme/cliqnpic.png;;
+;;/images/theme/easyreturns.png;Luxury_Easyreturns.png;$siteResource/images/theme/easyreturns.png;;
+;;/images/theme/authenticbrands.png;Luxury_Authenticbrands.png;$siteResource/images/theme/authenticbrands.png;;
+;;/images/theme/freeshipping.png;Luxury_Freeshipping.png;$siteResource/images/theme/freeshipping.png;;
+;;/images/theme/applestore.png;Applestore.png;$siteResource/images/theme/applestore.png;;
+;;/images/theme/androidstore.png;Androidstore.png;$siteResource/images/theme/androidstore.png;;
+;;/images/theme/linegrey.png;Luxury_Linegrey.png;$siteResource/images/theme/linegrey.png;;
+;;/images/theme/Luxury_Fb.jpg;Luxury_Fb.jpg;$siteResource/images/theme/facebook.png;;
+;;/images/theme/gplus.png;gplus.jpg;$siteResource/images/theme/gplus.png;;
+;;/images/theme/Luxury_youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
+;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
+;;/images/theme/Luxury_Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailCUSiteLogoImage;/images/theme/logo.png
+;;EmailCUTatatrustImage;/images/theme/TataTrust.png
+;;EmailCUcliqnpicImage;/images/theme/cliqnpic.png
+;;EmailCUEasyreturnImage;/images/theme/easyreturns.png
+;;EmailCUAuthenticbrandsImage;/images/theme/authenticbrands.png
+;;EmailCUFreeshippingImage;/images/theme/freeshipping.png
+;;EmailCUAppleStoreImage;/images/theme/applestore.png
+;;EmailCUAndroidstoreImage;/images/theme/androidstore.png
+;;EmailCULinegreyImage;/images/theme/linegrey.png
+;;EmailCUFBImage;/images/theme/Luxury_Fb.jpg;
+;;EmailCUYouTubeImage;/images/theme/Luxury_youtube.png;
+;;EmailCUInstagramImage;/images/theme/Luxury_Insta.png;
+;;EmailCUTweetImage;/images/theme/tweet.png
+;;EmailCUgplusImage;/images/theme/gplus.png
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailCUSiteLogoSlot;EmailCUSiteLogoImage
+;;EmailCUTatatrustSlot;EmailCUTatatrustImage
+;;EmailCUcliqnpicSlot;EmailCUcliqnpicImage
+;;EmailCUEasyreturnSlot;EmailCUEasyreturnImage
+;;EmailCUAuthenticbrandsSlot;EmailCUAuthenticbrandsImage
+;;EmailCUFreeshippingSlot;EmailCUFreeshippingImage
+;;EmailCUAppleStoreSlot;EmailCUAppleStoreImage
+;;EmailCUAndroidStoreSlot;EmailCUAndroidstoreImage
+;;EmailCULinegreySlot;EmailCULinegreyImage
+;;EmailCUfbSlot;EmailCUFBImage
+;;EmailCUtweetSlot;EmailCUTweetImage
+;;EmailCUYouTubeSlot;EmailCUYouTubeImage
+;;EmailCUInstaSlot;EmailCUInstagramImage
+;;EmailCUgplusSlot;EmailCUgplusImage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Order Collected By PickUp Person Email Template
 # Media
@@ -480,41 +561,6 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailInstaSlot;EmailInstagramImage
 
 
-#Customer Profile Update Email
-
-
-INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
-;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
-#;;/images/theme/ProfileUpdateDescription.jpg;ProfileUpdateDescription.jpg;$siteResource/images/theme/ProfileUpdateDescription.jpg;;
-#;;/images/theme/ProfileUpdateBanner.jpg;ProfileUpdateBanner.jpg;$siteResource/images/theme/ProfileUpdateBanner.jpg;;
-;;/images/theme/TweeterImage.jpg;TweeterImage.jpg;$siteResource/images/theme/TweeterImage.jpg;;
-;;/images/theme/YouTubeImage.jpg;YouTubeImage.jpg;$siteResource/images/theme/YouTubeImage.jpg;;
-;;/images/theme/InstagramImage.jpg;InstagramImage.jpg;$siteResource/images/theme/InstagramImage.jpg;;
-;;/images/theme/click-app.jpg;click-app.jpg;$siteResource/images/theme/click-app.jpg;;
-
-# CMS Image Components
-INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
-;;ProfileUpdateSIteLogoImage;/images/theme/headerBanner.jpg;
-#;;ProfileUpdateDescriptionImage;/images/theme/ProfileUpdateDescription.jpg;
-#;;ProfileUpdateBannerImage;/images/theme/ProfileUpdateBanner.jpg;
-;;EmailtweetImage;/images/theme/TweeterImage.jpg;
-;;EmailYouTubeImage;/images/theme/YouTubeImage.jpg
-;;EmailInstagramImage;/images/theme/InstagramImage.jpg
-;;AppDownloadImage;/images/theme/click-app.jpg
-
-# Content Slots
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
-;;EmailSiteLogoCUSlot;ProfileUpdateSIteLogoImage
-;;EmailTipCUSlot;TipImage
-#;;EmailDescriptionCUSlot;ProfileUpdateDescriptionImage
-#;;EmailConfBannerCUSlot;ProfileUpdateBannerImage
-;;AppDownloadUrlSlot;AppDownloadImage
-;;EmailsmileyimgCUSlot;EmailsmileyImage
-;;EmailfbCUSlot;EmailfbImage
-;;EmailgplusCUSlot;EmailgplusImage
-;;EmailtweetSlot;EmailtweetImage
-;;EmailYouTubeSlot;EmailYouTubeImage
-;;EmailInstaSlot;EmailInstagramImage
 
 #PDP Email Template
 
