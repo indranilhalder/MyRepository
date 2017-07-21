@@ -73,18 +73,25 @@
 						
 	<script type="text/javascript">
 		function allLetter(inputtxt) { 
-	        var letters = new RegExp(/^(\w+\s?)*\s*$/);
+	        /* var letters = new RegExp(/^(\w+\s?)*\s*$/); */	/* comment for INC144316084  */
 	        var number = new RegExp(/\d/g);
-	        if(inputtxt.value.match(letters))
+	        /* start change of INC144316084  */
+	        if(number.test(inputtxt))
+	        {
+	        /* if(inputtxt.value.match(letters))
 	        {
 	        	if(inputtxt.value.match(number))
-		        {
+		        { */
+	        /* end change of INC144316084  */
 		            return false;
-		        }
+		        /* start comment of INC144316084  */  
+		        /* }
 		        else
 		        {
 		            return true;
-		        }
+		        } 
+	        } */
+		    /* end comment of INC144316084  */
 	        }
 	        else
 	        {

@@ -35821,8 +35821,10 @@ color:#a9143c;
     margin: 0 5px 5px;
 }
 .listing.wrapper .right-block .facet-values.js-facet-values{
-	margin-left:-27%;
-	display: none;
+	/* start change of INC144316906 */
+	/* margin-left:-27%;
+	display: none; */
+	/* end change of INC144316906 */
 }
 .product-tile .image .new, .newExclusiveElement .new {
     left: 5px !important;
@@ -36594,6 +36596,11 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
 .left-block .facet-values.js-facet-values.js-facet-form .facet-list, #searchPageDeptHierTreeForm #searchPageDeptHierTree, #categoryPageDeptHierTreeForm #categoryPageDeptHierTree {
     padding: 0px 10px 6px 20px;
 }
+/* start change of INC144316370  */
+#categoryPageDeptHierTreeForm #categoryPageDeptHierTree{
+	padding-left:15px;
+}
+/* end change of INC144316370  */
 .priceBucketExpand, .listing-leftmenu h4.customPriceRange, #customPriceFilter {
     padding-left: 20px;
 }
@@ -50013,19 +50020,27 @@ body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
 }
 /* -------------End TPR-179 Start Style For ShopTheStyle---------- */
 .plp-wishlist{
-    background: url('../images/wishlist.png') no-repeat 0 0;
+	/* start change of INC144316496 */
+    /* background: url('../images/wishlist.png') no-repeat 0 0; */
+    background: url('../images/wishlist.png') no-repeat right 0;
+    /* end change of INC144316496 */
     padding: 0;
-    height: 15px;
-    width: 16px;
+    /* start change of INC144316496 */
+    /* height: 15px;
+    width: 16px; */
+    height: 17px;
+    width: 30px;
+    /* end change of INC144316496 */
     position: absolute;
     right: 10px;
     top: 10px;
     }
 .plp-wishlist.added {
-	background-position: 0 -17px;
-
-
-
+	/* start change of INC144316496 */
+	/* background-position: 0 -17px; */
+	background-position: right -17px;
+	width: 40px;
+	/* end change of INC144316496 */
 }
 /*Quickview changes start*/
 .quickview .sizetext{
@@ -61590,7 +61605,11 @@ body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist:before {
     font-size: 15px;
     color: #A9143C;
     margin-right: 5px;
-    position: relative;
+    /* start change of INC144316496 */
+    /* position: relative; */
+    position: absolute;
+    right: 0;
+    /* end change of INC144316496 */
     font-weight: bold;
 }
 
