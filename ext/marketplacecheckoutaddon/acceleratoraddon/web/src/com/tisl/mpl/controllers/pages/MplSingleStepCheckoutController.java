@@ -514,14 +514,17 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	public String checkLocationRestrictedPincode(
 			@RequestParam(value = "contExchnage", required = false) final String exchangeEnabled,
 			@PathVariable(MarketplacecheckoutaddonConstants.PINCODE) final String selectedPincode,
-			@RequestParam(value = "locRestrictedPromoPresent", required = false, defaultValue = "false") final boolean locRestrictedPromoPresent)
-			throws CMSItemNotFoundException, UnsupportedEncodingException
+			@RequestParam(value = "locRestrictedPromoPresent", required = false, defaultValue = "false") final boolean locRestrictedPromoPresent,
+			final HttpServletRequest request) throws CMSItemNotFoundException, UnsupportedEncodingException
 	{
 		try
 		{
 			if (LOG.isDebugEnabled())
 			{
-				LOG.debug("Inside selectAddress Method...");
+				LOG.debug("Inside checkLocationRestrictedPincode Method...");
+				LOG.debug("User Agent==>" + request.getHeader("user-agent"));
+				LOG.debug("Method selectedPincode==>" + selectedPincode);
+				LOG.debug("Method locRestrictedPromoPresent==>" + locRestrictedPromoPresent);
 			}
 			if (getUserFacade().isAnonymousUser())
 			{
@@ -603,7 +606,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			{
 				exchangeGuideFacade.removeExchangefromCart(cart);
 			}
-
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("End of checkLocationRestrictedPincode Method...Pincode is serviceable.");
+			}
 		}
 		catch (final EtailBusinessExceptions e)
 		{
@@ -4659,7 +4665,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4717,7 +4723,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
