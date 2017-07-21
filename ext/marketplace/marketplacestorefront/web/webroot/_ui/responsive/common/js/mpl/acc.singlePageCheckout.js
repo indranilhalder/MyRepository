@@ -2780,8 +2780,11 @@ $(document).ready(function(){
 	{
 		//Updating need help number ACC.singlePageCheckout.needHelpContactNumber is set in 'needhelpcomponent.jsp' file.
 		var needHelpNumber=ACC.singlePageCheckout.needHelpContactNumber;
-		needHelpNumber=needHelpNumber.replace(/\-/g, " ");
-		$("#singlePageNeedHelpComponent").text("Need Help? Call "+needHelpNumber);
+		if(needHelpNumber!="" && needHelpNumber!=null)
+		{
+			needHelpNumber=needHelpNumber.replace(/\-/g, " ");
+			$("#singlePageNeedHelpComponent").text("Need Help? Call "+needHelpNumber);
+		}
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
 			//Reload the page if a user resizes the device and viewport width changes from desktop to responsive
