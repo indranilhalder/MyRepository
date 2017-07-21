@@ -3,21 +3,16 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
-import de.hybris.platform.commercefacades.converter.ConfigurablePopulator;
-import de.hybris.platform.commercefacades.product.ProductOption;
-import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
-import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,10 +72,12 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	private ProductAttributeStrategy productAttributeStrategy;
 	private OrderEntryNoteStrategy orderEntryNoteStrategy;
 	private OndemandTaxCalculationService ondemandTaxCalculationService;
-	@Resource(name = "productConverter")
-	private Converter<ProductModel, ProductData> productConverter;
-	@Resource(name = "productConfiguredPopulator")
-	private ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator;
+	/* SONAR FIX JEWELLERY */
+	//	@Resource(name = "productConverter")
+	//	private Converter<ProductModel, ProductData> productConverter;
+	/* SONAR FIX JEWELLERY */
+	//	@Resource(name = "productConfiguredPopulator")
+	//	private ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator;
 
 	//Added for 3782
 	private PriceBreakupService priceBreakupService;

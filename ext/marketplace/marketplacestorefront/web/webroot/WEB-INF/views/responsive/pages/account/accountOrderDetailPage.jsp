@@ -617,7 +617,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p>${entry.mplDeliveryMode.name} :</p> 
+														<p class="track-order-pickup">${entry.mplDeliveryMode.name}</p><span>: </span> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -3772,8 +3772,7 @@ body .account .right-account .order-history.order-details li.header>ul{
 body .account .right-account .order-history.order-details li.header>ul> li{
 	width: 100%;
 }
-body.page-order .body-Content,
-body .account .right-account .order-history.order-details li.item{
+body.page-order .body-Content{
 	padding-bottom:0;
 }
 body .account .right-account .order-history.order-details li.item .order{
@@ -3893,8 +3892,11 @@ body .account .right-account .order-history.order-details li.item{
 	border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
 }
+/* body .account .right-account .order-history.order-details li.item .status{
+	padding-bottom: 100px;
+} */
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
@@ -3917,8 +3919,11 @@ body .account .right-account {
     border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
 }
+/* body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+    padding-bottom: 100px;
+} */
 }
 @media (max-width: 500px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {

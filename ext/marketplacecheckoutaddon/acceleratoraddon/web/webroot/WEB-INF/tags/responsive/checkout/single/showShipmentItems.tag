@@ -57,7 +57,7 @@
 													   
 											<div class="delivery-details">		   
 											<div class="details product" >
-											<p class="delivery_title">Select your preferred delivery option</p>
+											<p class="delivery_title"><spring:theme code="checkout.single.deliveryMode.selectMode"/></p>
 												<p class="product_name"><span class="desk_prod">for "</span><%-- <h3 class="product-brand-name"><a href="${entryProductUrl}">${entry.product.brand.brandname}</a></h3> --%>
 												<ycommerce:testId code="cart_product_name">
 													<%-- <a href="${productUrl}"><div class="name product-name">${entry.product.name}</div></a> --%>
@@ -231,7 +231,11 @@
 																			
 																			<li class="${delMode.code } <c:if test="${!delMode.isSelected eq true}"> hideDelModeMobile</c:if>">
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}'); "  <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
-																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>) --%>
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.home.delivery"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.home.delivery"/> (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
+																			<!-- UF-306 ends -->
 																			
 																		<p>${delMode.description }</p></label></li>
 																		<%-- <c:set var='delModeChecked'  value='true' /> --%>			
@@ -239,8 +243,11 @@
 																	<c:when test="${delMode.code eq 'click-and-collect'}">
 																			<li class="${delMode.code } <c:if test="${!delMode.isSelected eq true}"> hideDelModeMobile</c:if>">
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="ACC.singlePageCheckout.fetchStores('${entry.entryNumber}','${delMode.sellerArticleSKU}','${delMode.code }','','');return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
-																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
-																			
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>) --%>
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.clickandcollect.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.clickandcollect.delivery"/> (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
+																			<!-- UF-306 ends -->
 																		<p>${delMode.description }</p></label></li>
 																		<c:set var="isCncPresentInSinglePageCart" value="true"></c:set>
 																		<%-- <c:if test="${delMode.isSelected eq true}">
@@ -255,15 +262,18 @@
 																	<c:otherwise>
 																			<li class="${delMode.code } <c:if test="${!delMode.isSelected eq true}"> hideDelModeMobile</c:if>">
 																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   <c:if test="${delMode.isSelected eq true}">checked="checked"</c:if>/>
-																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
-																			
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>) --%>
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.express.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.express.shipping"/> (<format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/>)
+																			<!-- UF-306 ends -->
 																		<p>${delMode.description }</p></label></li>
 																		<%-- <c:set var='delModeChecked'  value='true' /> --%>
 																	</c:otherwise>
 															</c:choose>
 									
 														</c:forEach>
-														<span id="slotMsgId_${entry.selectedSellerInformation.ussid}" class="preferred-delivery-type" style="display:none">Select preferred delivery time</span>
+														<span id="slotMsgId_${entry.selectedSellerInformation.ussid}" class="preferred-delivery-type" style="display:none"><spring:theme code="checkout.single.deliveryMode.selectSlotDeliveryTime"/></span>
 														<c:if test="${numberOfDelModesInEntry>1}">
 															<c:set var="hideChangeLink" value="false"/>
 														</c:if>

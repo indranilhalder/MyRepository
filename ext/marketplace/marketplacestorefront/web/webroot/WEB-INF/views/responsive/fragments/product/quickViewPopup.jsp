@@ -413,12 +413,12 @@ display:none;
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
 	<c:choose>
 	<c:when test="${product.rootCategory=='FineJewellery'}">
-	<a href="${productUrl}"> <product:productPrimaryImage
+		<a href="${productUrl}"> <product:productPrimaryImage
 				product="${product}" format="fineJewelproductquickview" />
 		</a>
 	</c:when>
 	<c:otherwise>
-	 <a href="${productUrl}"> <product:productPrimaryImage
+ 		<a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
 				product="${product}" format="product" />
 				</a>
 	</c:otherwise>

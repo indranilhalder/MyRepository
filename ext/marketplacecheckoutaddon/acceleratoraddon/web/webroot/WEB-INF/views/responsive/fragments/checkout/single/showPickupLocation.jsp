@@ -56,7 +56,7 @@
 	<span class="cnc_arrow"></span>
 		<div class="cnc_title_search">
 		<h1>
-			Select nearby store to pick up from (pincode <span id="cncChangedPincode${entryNumber}">${defaultPincode}</span>) <span>[?]</span>
+			<spring:theme code="checkout.single.cnc.nearBy"/> (pincode <span id="cncChangedPincode${entryNumber}">${defaultPincode}</span>) <span>[?]</span>
 		</h1>
 		<div class="cnc_search_wrapper">
 		<input class="cncStoreSearch" type="text" id="cncStoreSearch${entryNumber}" name="cncStoreSearch" placeholder="Search nearby store" onkeypress="ACC.singlePageCheckout.searchOnEnterPress(event,'cncStoreSearch${entryNumber}','${entryNumber}')">
@@ -67,12 +67,12 @@
 			<span class="change_txt txt${entryNumber}">Change Pincode</span>
 			<div class="input${entryNumber} row enter-pincode-block" style="display:none;">
 				<span class="">
-						Want to pick from other area? 
-						Enter pincode below
+						<spring:theme code="checkout.single.cnc.otherArea"/>
+						<spring:theme code="checkout.single.cnc.enterPincode"/>
 				</span>
 				<div class="" style="padding:0px;">
 					<input style="width: 100%" type="text" name="changepin${entryNumber}" class="changepin${entryNumber}" maxlength="6" placeholder="New Pincode">
-					<button type="button" class="submitPincode submitPincode${entryNumber}" style="" name="submitPincode${entryNumber}">Submit</button>
+					<button type="button" class="submitPincode submitPincode${entryNumber}" style="" name="submitPincode${entryNumber}"><spring:theme code="checkout.single.cnc.submitPincode"/></button>
 				</div>
 				<div class="pincodeValidation error_txt" style="margin-left: 15px;width: 200px;"></div>
 			</div>

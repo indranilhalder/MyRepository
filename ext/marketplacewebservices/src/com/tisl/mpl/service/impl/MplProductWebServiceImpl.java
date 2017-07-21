@@ -148,7 +148,6 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	private static final String HTTP = "http";
 	private static final String HTTPS = "https";
-	private static final String CHANNEL = "Mobile";
 
 
 	private static final Logger LOG = Logger.getLogger(MplProductWebServiceImpl.class);
@@ -392,7 +391,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					//CKD:TPR-250:Start
 					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString);
 					//final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null);
-					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null, CHANNEL);
+					final Map<String, Object> buydata = buyBoxFacade.buyboxPricePDP(variantsString, null, channel);
 					//CKD:TPR-250:End
 					if (MapUtils.isNotEmpty(buydata))
 					{
@@ -608,9 +607,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
 				} //backward compatible
-				else if (!specialMobileFlag && null != buyBoxData && null == buyBoxData.getSpecialPriceMobile()
-						&& null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getFormattedValue()
-						&& null != buyBoxData.getSpecialPrice().getValue()
+				else if (!specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPrice()
+						&& null != buyBoxData.getSpecialPrice().getFormattedValue() && null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
@@ -624,14 +622,12 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 				if (specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPriceMobile()
 						&& null != buyBoxData.getSpecialPriceMobile().getValue()
-						&& null != buyBoxData.getSpecialPriceMobile().getValue()
 						&& buyBoxData.getSpecialPriceMobile().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPriceMobile().getValue());
 				} //backward compatible
-				else if (!specialMobileFlag && null != buyBoxData && null == buyBoxData.getSpecialPriceMobile()
-						&& null != buyBoxData.getSpecialPrice() && null != buyBoxData.getSpecialPrice().getValue()
-						&& null != buyBoxData.getSpecialPrice().getValue()
+				else if (!specialMobileFlag && null != buyBoxData && null != buyBoxData.getSpecialPrice()
+						&& null != buyBoxData.getSpecialPrice().getValue() && null != buyBoxData.getSpecialPrice().getValue()
 						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
 					isEMIeligible = getEMIforProduct(buyBoxData.getSpecialPrice().getValue());
@@ -2526,7 +2522,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	}
 
 	@Override
-	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl)
+	public ProductDetailMobileWsData getProductInfoForProductCode(final String productCode, final String baseUrl,
+			final String channel)
 	{
 		final ProductDetailMobileWsData productDetailMobile = new ProductDetailMobileWsData();
 		//final MplProductWebServiceImpl mplProductWebServiceImpl = new MplProductWebServiceImpl();
@@ -2540,6 +2537,8 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		try
 		{
 			String sharedText = Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_PRE);
+			final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+					MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 			productModel = productService.getProductForCode(productCode);
 			if (null != productModel)
 			{
@@ -2615,15 +2614,16 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					productDetailMobile.setProductName(productData.getProductTitle());
 				}
-
-				if (null != buyBoxData && null != buyBoxData.getSpecialPrice()
-						&& null != buyBoxData.getSpecialPrice().getValue().toString()
-						&& null != buyBoxData.getSpecialPrice().getValue()
-						&& buyBoxData.getSpecialPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
+				if (specialMobileFlag && buyBoxData.getSpecialPriceMobile() != null
+						&& buyBoxData.getSpecialPriceMobile().getValue().doubleValue() > 0)
+				{
+					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPriceMobile().getFormattedValue());
+				}
+				else if (!specialMobileFlag && buyBoxData.getSpecialPrice() != null
+						&& buyBoxData.getSpecialPrice().getValue().doubleValue() > 0) //backward compatible
 				{
 					productDetailMobile.setWinningSellerSpecialPrice(buyBoxData.getSpecialPrice().getFormattedValue());
 				}
-
 				if (null != buyBoxData && null != buyBoxData.getPrice() && null != buyBoxData.getPrice().getValue().toString()
 						&& null != buyBoxData.getPrice().getValue() && buyBoxData.getPrice().getValue().compareTo(BigDecimal.ZERO) > 0)
 				{
@@ -2666,6 +2666,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 							&& img.getFormat().equalsIgnoreCase(MarketplacecommerceservicesConstants.PRODUCT_IMAGE))
 					{
 						productDetailMobile.setImageUrl(img.getUrl());
+						break;
 					}
 
 				}

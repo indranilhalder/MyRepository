@@ -4,6 +4,7 @@
 package com.tisl.mpl.promotion.dao.impl;
 
 import de.hybris.platform.europe1.model.PriceRowModel;
+import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.SearchResult;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -150,6 +152,40 @@ public class UpdatePromotionalPriceDaoImpl implements UpdatePromotionalPriceDao
 			priceRowList = flexibleSearchService.<PromotionalPriceRowModel> search(query).getResult();
 		}
 		return priceRowList;
+	}
+
+	/**
+	 * The Method removes redundant data from DB
+	 *
+	 * @return priceRowList
+	 */
+	public List<PromotionalPriceRowModel> getRedundantData()
+	{
+		List<PromotionalPriceRowModel> priceRowList = null;
+
+		try
+		{
+			final String queryString = "SELECT {pk} FROM {Promotionalpricerow} WHERE  {priceRow} IS NULL";
+
+			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
+			priceRowList = flexibleSearchService.<PromotionalPriceRowModel> search(query).getResult();
+
+			if (CollectionUtils.isNotEmpty(priceRowList))
+			{
+				return priceRowList;
+			}
+		}
+		catch (final ModelNotFoundException exception)
+		{
+			LOG.error("Error in method" + "getRedundantData DAO Call");
+			LOG.error("No Data Found" + exception);
+		}
+		catch (final Exception exception)
+		{
+			LOG.error("Error in method" + "getRedundantData DAO Call");
+			LOG.error("No Data Found" + exception);
+		}
+		return null;
 	}
 
 

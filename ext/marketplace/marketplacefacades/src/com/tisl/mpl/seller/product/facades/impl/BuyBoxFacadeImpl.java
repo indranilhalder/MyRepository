@@ -41,7 +41,6 @@ import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
-import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
@@ -83,8 +82,9 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 	private ProductDetailsHelper productDetailsHelper;
 	@Autowired
 	private MplSellerInformationService mplSellerInformationService;
-	@Resource(name = "mplJewelleryService")
-	private MplJewelleryService jewelleryService;
+	/* SONAR FIX JEWELLERY */
+	//	@Resource(name = "mplJewelleryService")
+	//	private MplJewelleryService jewelleryService;
 
 	private static final String BUYBOX_LIST = "buyboxList";
 
@@ -134,6 +134,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 
 
+
+
+
+
 	//TISPRM-56
 
 	/**
@@ -148,7 +152,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	@Override
 	public Map<String, Object> buyboxPricePDP(final String productCode, final String bBoxSellerId //CKD:TPR-250
-			, final String Channel) throws EtailNonBusinessExceptions
+			, final String channel) throws EtailNonBusinessExceptions
 	{
 		BuyBoxData buyboxData = new BuyBoxData();
 		boolean onlyBuyBoxHasStock = false;
@@ -190,16 +194,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 			List<BuyBoxModel> buyboxModelListAll = null;
 			//CKD:TPR-250 Start : Manipulating (rearranging) elements of the buy box list for microsite seller
 
-			//TISPRM -56
-			if (Channel.equalsIgnoreCase("Mobile"))
-			{
-
-				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceMobile(productCode));
-			}
-
-			else
+			//TISPRM -56 //Luxury handling
+			if (StringUtils.isNotEmpty(channel) && channel.equalsIgnoreCase("web"))
 			{
 				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPrice(productCode));
+			}
+			else
+			{
+				buyboxModelListAll = new ArrayList<BuyBoxModel>(buyBoxService.buyboxPriceMobile(productCode));
 			}
 
 			if (StringUtils.isNotBlank(bBoxSellerId))
@@ -547,7 +549,8 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 				//other sellers count
 				final int oosSellersCount = getOosSellerCount(buyboxModelList);
-				int sellerSize = -20;
+				int sellerSize = buyboxModelList.size() - 1 - oosSellersCount;
+
 				int count = 0;
 				String pussidCheck = "pussidCheck";
 
@@ -588,6 +591,11 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 				//				else
 
 				//				{
+
+
+
+
+
 
 				buyboxData.setNumberofsellers(noofsellers);
 
@@ -1056,10 +1064,10 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * This method is used to get the price of a product by giving the ussid
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getpriceForUssid(java.lang.String)
 	 */
 
@@ -1171,7 +1179,6 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		buyboxData.setMrpPriceValue(productDetailsHelper.formPriceData(new Double(buyBoxMod.getMrp().doubleValue())));
 		//CKD:TPR-250:Start: checking if list has Buy Box list has OOS seller to be removed from other sellers count when call comes from microsite
-
 		final int oosSellersCount = getOosSellerCount(buyboxModelList);
 
 		//for fine jewellery other seller count
@@ -1202,10 +1209,14 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 		}
 		if (sellerSize < 0)
 		{
+
 			buyboxData.setNumberofsellers(Integer.valueOf(0));
+
 		}
 		else
 		{
+
+
 			buyboxData.setNumberofsellers(Integer.valueOf(sellerSize));
 		}
 		//CKD:TPR-250:End
@@ -1279,7 +1290,7 @@ public class BuyBoxFacadeImpl implements BuyBoxFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.seller.product.facades.BuyBoxFacade#getBuyBoxDataForUssids(java.util.List, java.lang.String)
 	 */
 	//TPR-3736

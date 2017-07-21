@@ -134,7 +134,20 @@
 			</li>
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
-					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
+					 <!-- UF-306 starts -->
+					 <%-- <li class="deliver-type">${entry.mplDeliveryMode.name}</li> --%>
+					 <c:choose>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.home.delivery"/></li>
+				   		</c:when>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.express.shipping"/></li>
+				   		</c:when>
+				   		<c:otherwise>
+				   			<li class="deliver-type"><spring:theme code="text.clickandcollect.delivery"/></li>
+				   		</c:otherwise>
+				   	</c:choose>
+				   	<!-- UF-306 ends -->	
 					<li class="deliver">
 					<c:choose>
 					<%-- PRDI-378 starts here --%>
@@ -161,24 +174,7 @@
 							<c:otherwise>
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
-						</c:choose> <%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
-						<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
-						<c:choose>
-							<c:when
-								test="${not empty entry.timeSlotFrom  && entry.timeSlotFrom !=null }">
-
-								<li class="deliver deliver-desc">Your Order Will Be
-									Delivered on ${entry.selectedDeliverySlotDate} -
-									${entry.timeSlotFrom} TO ${entry.timeSlotTo}</li>
-
-							</c:when>
-							<c:otherwise>
-								<li class="deliver deliver-desc">Your Order Will Be
-									Delivered ${entry.eddDateBetWeen}</li>
-
-							</c:otherwise>
-
-						</c:choose>
+						</c:choose>						
 						</c:otherwise>
 				</c:choose>
 						

@@ -6,7 +6,6 @@ package com.tisl.mpl.marketplacecommerceservices.daos.pancard.impl;
 import de.hybris.platform.core.model.PancardInformationModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
-import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.search.exceptions.FlexibleSearchException;
@@ -16,7 +15,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -34,9 +32,9 @@ public class MplPancardDaoImpl implements MplPancardDao
 
 	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
-
-	@Autowired
-	private ModelService modelService;
+	//SONAR FIX JEWELLERY
+	//	@Autowired
+	//	private ModelService modelService;
 
 	private static final String SELECT_CLASS = "SELECT {p:";
 	private static final String FROM_CLASS = "FROM {";

@@ -601,8 +601,14 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
         //calling tealium
-        $("#checkoutPageName").val("Choose Your Delivery Options");
-        tealiumCallOnPageLoad();
+        //$("#checkoutPageName").val("Choose Your Delivery Options");
+        if(typeof utag_data !="undefined"){
+        	var checkoutDeliveryPage = "Multi Checkout Summary Page:Choose Your Delivery Options";
+        	utag_data.page_name = checkoutDeliveryPage;
+        	//$("#pageName").val(checkoutDeliveryPage);
+        	 
+        }
+        //tealiumCallOnPageLoad();
         var disableHideAjaxLoader=false;
         xhrResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
@@ -779,11 +785,11 @@ ACC.singlePageCheckout = {
                 	var str ="";
                 	if(data.hd>0)
                 	{
-                		str+="Home Delivery ("+data.hd+" item),"
+                		str+="Standard Shipping ("+data.hd+" item),"
                 	}
                 	if(data.ed>0)
                 	{
-                		str+="Express Delivery ("+data.ed+" item),"
+                		str+="Express Shipping ("+data.ed+" item),"
                 	}
                 	if(data.cnc>0)
                 	{
@@ -1300,8 +1306,14 @@ ACC.singlePageCheckout = {
         		$("#selectedReviewOrderHighlight").html(countItemsText+" Items, "+$("#reviewOrder #totPriceWithoutRupeeSymbol").text());
         	}
         	//added for tealium
-  		  $("#checkoutPageName").val("Review Order");
-  	       tealiumCallOnPageLoad();
+  		  //$("#checkoutPageName").val("Review Order");
+        	if(typeof utag_data !="undefined"){
+            	var checkoutDeliveryPage = "Multi Checkout Summary Page:Review Order";
+            	utag_data.page_name = checkoutDeliveryPage;
+            	$("#pageName").val(checkoutDeliveryPage);
+            	 
+            }
+  	      // tealiumCallOnPageLoad();
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
@@ -1658,7 +1670,7 @@ ACC.singlePageCheckout = {
 					{
 						utag.link({
 							link_text: 'review_order_add_to_wishlist' , 
-							event_type : 'review_order__to_wishlist', 
+							event_type : 'review_order_add_to_wishlist', 
 							product_sku_wishlist : productcodearray
 						});
 					}
@@ -1768,8 +1780,14 @@ ACC.singlePageCheckout = {
 			console.log("ERROR:"+textStatus + ': ' + errorThrown);
 		});
 		//tealium page name addition
-		$("#checkoutPageName").val("Payment Options");
-		  tealiumCallOnPageLoad();
+		//$("#checkoutPageName").val("Payment Options");
+		if(typeof utag_data !="undefined"){
+        	var checkoutDeliveryPage = "Multi Checkout Summary Page:Payment Options";
+        	utag_data.page_name = checkoutDeliveryPage;
+        	$("#pageName").val(checkoutDeliveryPage);
+        	 
+        }
+		  //tealiumCallOnPageLoad();
 		xhrValidateResponse.done(function(data, textStatus, jqXHR) {
         	if (jqXHR.responseJSON) {
         		if(data.type!="response")
@@ -1938,7 +1956,27 @@ ACC.singlePageCheckout = {
 			$("#page_subcategory_l4").val(updatedSubCategoryL4);
 			$("#page_subcategory_name_l4").val(updatedSubCategoryL4);
 			$("#checkoutSellerIDs").val(updatedCheckoutSeller);
-			tealiumCallOnPageLoad();
+			if(typeof utag_data !="undefined"){
+	        	utag_data.product_id = updatedProduct;
+	        	utag_data.product_sku = updatedProduct;
+	        	utag_data.adobe_product = updatedAdobeSku;
+	        	utag_data.product_name = updatedProductName;
+	        	utag_data.product_quantity = updatedQuantity;
+	        	utag_data.product_list_price = updatedproductListPrice;
+	        	utag_data.product_unit_price = updatedUnitPrice;
+	        	utag_data.cart_total = updatedCartTotal;
+	        	utag_data.product_brand = updatedBrand;
+	        	utag_data.page_subcategory_L1 = updatedCategory;
+	        	utag_data.product_category = updatedCategory;
+	        	utag_data.page_subcategory_L2 = updatedSubCategory;
+	        	utag_data.page_subcategory_name = updatedSubCategory;
+	        	utag_data.page_subcategory_l3 = updatedSubCategoryL3;
+	        	utag_data.page_subcategory_name_l3 = updatedSubCategoryL3;
+	        	utag_data.page_subcategory_l4 = updatedSubCategoryL4;
+	        	utag_data.page_subcategory_name_l4 = updatedSubCategoryL4;
+	        	utag_data.checkoutSellerIDs = updatedCheckoutSeller;
+	        	
+	        }
 			
     	}
 				
@@ -2019,7 +2057,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
-		ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
+		//ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2157,7 +2195,16 @@ ACC.singlePageCheckout = {
         	$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
-		}        
+		} 
+		
+		//UF-429
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : 'new_address_clicked', 
+				event_type : 'new_address_clicked'
+			});
+		}
 		return false;	
 	},
 	//Function used to check pincode serviceability for responsive
@@ -2176,7 +2223,8 @@ ACC.singlePageCheckout = {
 		{
 			//$("input[name=selectedAddressCodeMobile]").prop("checked", false);
 		}
-		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){	
+		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
+			 ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
 			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
 			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -2193,6 +2241,7 @@ ACC.singlePageCheckout = {
 	            		$(".new-address-form-mobile").slideUp();
                 	}
 					if (jqXHR.responseJSON) {
+						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
 		                {
 		                	if(isNew)
@@ -2217,6 +2266,7 @@ ACC.singlePageCheckout = {
 	           
 		                }
 		            } else {
+		            	//In case of no error at server end below block will execute.
 		            	if(isNew)
 	                	{
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
@@ -2743,8 +2793,15 @@ $(document).ready(function(){
 		var deviceType=$("#deviceType").html();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
-			//Reload the page if a user directly accesses the site in a small sized desktop browser
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in a small sized desktop browser.
 			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
+		}
+		else if(deviceType=="mobile" && !ACC.singlePageCheckout.getIsResponsive())
+		{
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in desktop browser modifying the user agent in browser dev tools to mobile where as width of view port is more than 768px.
+			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isNormal=true";
 		}
 		
 		if(ACC.singlePageCheckout.getIsResponsive())
