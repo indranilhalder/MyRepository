@@ -700,6 +700,10 @@
 			}
 			.mpl-addressBook{
 				margin-bottom:10px;
+                
+                address{
+                    word-wrap:break-word;
+                }
 			}
 			.mpl-addressPopup{                
                 /*left: auto;
