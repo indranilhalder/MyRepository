@@ -599,8 +599,8 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 			TypedObject item, long quantityToAdd, Long pincode,
 			ProductModel product, final String isDeliveryDateRequired, String ussid) {
 		try {
-			((MarketplaceSearchCommandController) widget
-					.getWidgetController()).setCurrentSite();
+			//((MarketplaceSearchCommandController) widget
+			//		.getWidgetController()).setCurrentSite();
 
 			boolean isPinCodeServicable =false;
 			//TISUAT-4526 no sship in cod
@@ -622,8 +622,8 @@ public class MarketPlaceBasketResultWidgetRenderer<SC extends CsFacetSearchComma
 						pinCodeResponses);
 				isPinCodeServicable = sessionService.getAttribute("isPincodeServicable");
 				if(isAddtoCartRequired){
-					((MarketplaceSearchCommandController) widget
-							.getWidgetController()).setCurrentSite();
+					//((MarketplaceSearchCommandController) widget
+					//		.getWidgetController()).setCurrentSite();
 					getItemAppender().add(item, quantityToAdd);
 				} else {
 					LOG.info("Serviceability check failed for product:"+product.getCode());

@@ -4,12 +4,12 @@
 package com.tisl.mpl.util;
 
 import de.hybris.platform.catalog.CatalogVersionService;
-import de.hybris.platform.catalog.model.CatalogModel;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.model.contents.ContentCatalogModel;
 import de.hybris.platform.cms2.servicelayer.services.CMSSiteService;
 import de.hybris.platform.site.BaseSiteService;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -36,18 +36,13 @@ public class CatalogUtils
 
 	public CatalogVersionModel getSessionCatalogVersionForProduct()
 	{
-		CatalogVersionModel catalogVersionModel = null;
-		final List<CatalogModel> productCatalogs = baseSiteService.getProductCatalogs(baseSiteService.getCurrentBaseSite());
-		if (CollectionUtils.isNotEmpty(productCatalogs))
+		final Collection<CatalogVersionModel> currentCatalogVersion = catalogVersionService.getSessionCatalogVersions();
+		if (CollectionUtils.isNotEmpty(currentCatalogVersion))
 		{
-			catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
+			return currentCatalogVersion.iterator().next();
 		}
-		else
-		{
-			catalogVersionModel = catalogVersionService
-					.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
-		}
-		return catalogVersionModel;
+		return catalogVersionService
+				.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
 	}
 
 	public CatalogVersionModel getSessionCatalogVersionForContent()
