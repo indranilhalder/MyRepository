@@ -10,6 +10,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
+
+import com.tisl.mpl.core.model.NPSFeedbackModel;
 import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 import com.tisl.mpl.marketplacecommerceservices.daos.NPSFeedbackQuestionDao;
 import com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService;
@@ -35,7 +38,7 @@ public class NPSFeedbackQuestionServiceImpl implements NPSFeedbackQuestionServic
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService#getFeedback(java.lang.String)
 	 */
 	@Override
@@ -46,7 +49,7 @@ public class NPSFeedbackQuestionServiceImpl implements NPSFeedbackQuestionServic
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService#getNPSId()
 	 */
 	@Override
@@ -57,7 +60,7 @@ public class NPSFeedbackQuestionServiceImpl implements NPSFeedbackQuestionServic
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.NPSFeedbackQuestionService#validateCustomerForTransaction(java
 	 * .lang.String)
@@ -67,4 +70,22 @@ public class NPSFeedbackQuestionServiceImpl implements NPSFeedbackQuestionServic
 	{
 		return npsFeedbackQuestionDao.validateCustomerForTransaction(transactionId);
 	}
+
+	//Added for 6081
+	@Override
+	public NPSFeedbackModel getFeedbackModel(final String transactionId)
+	{
+		final List<NPSFeedbackModel> npsList = npsFeedbackQuestionDao.getFeedbackModel(transactionId);
+		if (CollectionUtils.isNotEmpty(npsList))
+		{
+			return npsList.get(0);
+		}
+		else
+		{
+			return null;
+		}
+
+	}
+
+
 }

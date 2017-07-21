@@ -7,6 +7,7 @@ import de.hybris.platform.core.model.user.CustomerModel;
 
 import java.util.List;
 
+import com.tisl.mpl.core.model.NPSFeedbackModel;
 import com.tisl.mpl.core.model.NPSFeedbackQuestionModel;
 
 
@@ -21,4 +22,8 @@ public interface NPSFeedbackQuestionDao
 	public int getFeedback(String transactionId);
 
 	public CustomerModel validateCustomerForTransaction(String transactionId);
+
+	//Added for 6081
+
+	public List<NPSFeedbackModel> getFeedbackModel(String transactionId);
 }
