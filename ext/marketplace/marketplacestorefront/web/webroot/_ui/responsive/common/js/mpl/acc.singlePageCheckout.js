@@ -1317,14 +1317,24 @@ ACC.singlePageCheckout = {
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
+//    		$("li.price").each(function(){
+//    				if($(this).find(".off-bag").css("display") === "block"){
+//    					$(this).find("span.delSeat").addClass("delAction");
+//    				}
+//    				else{
+//    					$(this).find("span.delSeat").removeClass("delAction");
+//    				}
+//    			});
     		$("li.price").each(function(){
-    				if($(this).find(".off-bag").css("display") === "block"){
-    					$(this).find("span.delSeat").addClass("delAction");
+    			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+    				if($(this).find("span.delSeat.mop").length > 0){
+    				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
     				}
-    				else{
-    					$(this).find("span.delSeat").removeClass("delAction");
-    				}
-    			});
+    			}
+    			else{
+    				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+    			}
+    		});
     		//END:Code to show strike off price
         	if($('body').find('a.cart_move_wishlist').length > 0){
         	$('a.cart_move_wishlist').popover({ 
