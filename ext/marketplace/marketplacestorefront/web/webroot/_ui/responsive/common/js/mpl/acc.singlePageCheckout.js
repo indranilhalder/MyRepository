@@ -2057,7 +2057,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
-		ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
+		//ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2223,7 +2223,8 @@ ACC.singlePageCheckout = {
 		{
 			//$("input[name=selectedAddressCodeMobile]").prop("checked", false);
 		}
-		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){	
+		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
+			 ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
 			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
 			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -2240,6 +2241,7 @@ ACC.singlePageCheckout = {
 	            		$(".new-address-form-mobile").slideUp();
                 	}
 					if (jqXHR.responseJSON) {
+						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
 		                {
 		                	if(isNew)
@@ -2264,6 +2266,7 @@ ACC.singlePageCheckout = {
 	           
 		                }
 		            } else {
+		            	//In case of no error at server end below block will execute.
 		            	if(isNew)
 	                	{
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";

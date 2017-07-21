@@ -14,6 +14,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:if test="${param.source ne null and param.source eq 'App' }">
 	<c:set var="showOnlySiteLogo" value="true"></c:set>
@@ -81,7 +82,7 @@
 			${feature.notice}
         	</cms:pageSlot>
        		<cms:pageSlot position="Footer" var="feature">
-			<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
+			<c:if test="${feature.typeCode eq 'NeedHelpComponent' and !(fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkout/single'))}"><!-- UF-281 -->
    			<cms:component component="${feature}"></cms:component>
    			</c:if>
         	</cms:pageSlot>
