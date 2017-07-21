@@ -2244,7 +2244,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
      font-size:17px; }
       header .content .search button:before {
           content: "";
-    background: url("../images/sprite-07.png") no-repeat scroll -300px -207px;
+    background: url("../images/Sprite-combined.png") no-repeat scroll -300px -207px;
     display: inline-block;
     height: 18px;
     width: 18px;
@@ -2589,7 +2589,7 @@ header .content .bottom.active nav>ul>li:first-child+li.hovered > ul {
         transition: opacity 0.15s 0.15s; }
         header .content .bottom .bag .mini-cart-link:before{
         content: "";
-    	background: url(../images/sprite-07.png) no-repeat scroll -380px -176px;
+    	background: url(../images/Sprite-combined.png) no-repeat scroll -380px -176px;
    		display: inline-block;
 	    width: 23px;
 	    height: 23px;
@@ -30882,7 +30882,7 @@ li.download-app a:before{
     top: 2px;
     position: relative;
 	content: "";
-    background: url(../images/sprite-07.png) no-repeat scroll -296px -175px;
+    background: url(../images/Sprite-combined.png) no-repeat scroll -296px -175px;
     display: inline-block;
     width:23px;height:23px;
     opacity:0.7;
@@ -30898,7 +30898,7 @@ li.store-locator-header a:before{
     top: 6px;
     position: relative;
   content: "";
-    background: url(../images/sprite-07.png) no-repeat scroll -320px -176px;
+    background: url(../images/Sprite-combined.png) no-repeat scroll -320px -176px;
     display: inline-block;
     width:23px;height:23px;
     opacity:0.7;
@@ -30925,7 +30925,7 @@ span.material-icons {
    /* margin-top: -2px;*/
     margin-right: -2px;
 content: "";
-    background: url(../images/sprite-07.png) no-repeat scroll -352px -176px;
+    background: url(../images/Sprite-combined.png) no-repeat scroll -352px -176px;
     display: inline-block;
     width: 23px;
     height: 23px;
@@ -44926,7 +44926,7 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 /************** Sprite images start *****************/
 
 .spriteImg {
-	background-image: url("../images/icons_sprite.png");
+	background-image: url("../images/Sprite-combined.png");
 }
 
 .shop-promos .promos li a span.spriteImg {
@@ -44945,19 +44945,19 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 }
 
 .shop-promos .promos li a span.spriteImg.hotBrands {
-	background-position: -262px -23px;
+	background-position: -262px -240px;
 }
 .shop-promos .promos li a span.spriteImg.coolDeals {
-	background-position: -413px -23px;
+	background-position: -413px -240px;
 }
 .shop-promos .promos li a span.spriteImg.realStories {
-	background-position: -183px -23px;
+	background-position: -183px -240px;
 }
 .shop-promos .promos li a span.spriteImg.trackOrders {
-	background-position: -101px -23px;
+	background-position: -101px -240px;
 }
 .shop-promos .promos li a span.spriteImg.storePickup {
-	background-position: -338px -23px;
+	background-position: -338px -240px;
 }
 
 .shop-promos .promos li a span.spriteImg:after {
@@ -44976,30 +44976,30 @@ ul.jqtree-tree .jqtree-moving > .jqtree-element .jqtree-title {
 	display: none;
 }
 .social.share .links a.facebook span.spriteImg {
-	background-position: -269px -92px;
+	background-position: -269px -312px;
 }
 .social.share .links a.gplus span.spriteImg {
-	background-position: -345px -92px;
+	background-position: -345px -312px;
 }
 .social.share .links a.twitter span.spriteImg {
-	background-position: -190px -92px;
+	background-position: -190px -312px;
 }
 .social.share .links a.insta span.spriteImg {
-	background-position: -108px -92px;
+	background-position: -108px -312px;
 }
 .social.share .links a.youtube span.spriteImg {
-	background-position: -26px -92px;
+	background-position: -26px -312px;
 }
 
 .social.app-download .links a span.spriteImg {
 	display: inline-block;
     height: 32px;
     width: 28px;
-    background-position: -28px -155px;
+    background-position: -28px -375px;
     background-repeat: no-repeat;
 }
 .social.app-download .links a:last-child span.spriteImg {
-    background-position: -111px -155px;
+    background-position: -111px -375px;
 }
 /************** Sprite images end *****************/
 body.page-checkout-login header .content nav>ul {
@@ -55839,7 +55839,7 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 }
 
 .callouts .Padd ul li p:before {
-     background: url("../images/sprite-07.png") no-repeat scroll -7px -175px;
+     background: url("../images/Sprite-combined.png") no-repeat scroll -7px -175px;
     content: "";
     display: inline-block;
     height: 47px;
@@ -55854,13 +55854,13 @@ body.page-multiStepCheckoutSummaryPage .marketplace-checkout span{
 }
 
 .callouts .Padd ul li.omni p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -73px -175px;
+	background: url("../images/Sprite-combined.png") no-repeat scroll -73px -175px;
 }
 .callouts .Padd ul li.genuine p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -205px -175px;
+	background: url("../images/Sprite-combined.png") no-repeat scroll -205px -175px;
 }
 .callouts .Padd ul li.returns p:before {
-	background: url("../images/sprite-07.png") no-repeat scroll -139px -175px;
+	background: url("../images/Sprite-combined.png") no-repeat scroll -139px -175px;
 }
 .callouts .Padd ul li:last-child{
 	border:none;
@@ -60417,7 +60417,7 @@ header .content .right > ul > li.bag > a:before {
     position: relative;
     font-weight: bold;
  content: "";
-    background: url(../images/sprite-07.png) no-repeat scroll -378px -173px;
+    background: url(../images/Sprite-combined.png) no-repeat scroll -378px -173px;
     display: inline-block;
     width:23px;height:23px;
     opacity:0.7;
@@ -67914,13 +67914,14 @@ header .content nav>ul>li>.toggle{
 header .content nav>ul>li>.toggle:before{
 	content: "";
     width: 20px;
-    height: 15px;
+    height: 12px;
     position: absolute;
-    bottom: -2px;
+    bottom: 3px;
     left: 16px;
     z-index: 999999;
-    background-image: url('../images/header-arrow.PNG');
-    background-size: 100%;
+    background-image: url('../images/Sprite-combined.png');
+    background-position: -197px -376px;
+    /* background-size: 100%; */
     background-repeat : no-repeat;
 /*     transform: rotate(45deg);
     border: solid #eee;
@@ -68717,14 +68718,14 @@ header > .content .bottom .mobile-bag.bag {
     top: 3px;
 }
 header > .content .bottom .mobile-bag.bag:before {
-    background: url(../images/sprite-07.png) no-repeat scroll -383px -145px;
+    background: url(../images/Sprite-combined.png) no-repeat scroll -383px -145px;
 }
 header > .content .bottom .mobile-bag.bag a {
     width: 26px;
     background: #000;
 }
 header > .content .bottom .search form button:before {
-    background: url(../images/sprite-07.png) no-repeat scroll -300px -207px;
+    background: url(../images/Sprite-combined.png) no-repeat scroll -300px -207px;
 }
 li.store-locator-header a:before,
 li.download-app a:before,
@@ -71157,3 +71158,9 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 }
 }
 /*UF-377 end*/
+/*UF-404 start for multi-color facet*/
+.product-facet .filter-colour:not(.selected-multi-colour) input[value='Multi_multi'] + input.js-facet-colourbutton{
+	background: url("../images/Sprite-combined.png") no-repeat scroll -6px -115px !important;
+	background-size: 85px 175px !important;
+}
+/*UF-404 end for multi-color facet*/
