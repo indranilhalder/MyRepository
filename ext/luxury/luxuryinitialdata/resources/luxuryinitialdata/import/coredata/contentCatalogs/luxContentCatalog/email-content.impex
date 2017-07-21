@@ -254,6 +254,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;linegrey;;$wideContent;
 ;appstore;;$wideContent;
 ;googleplay;;$wideContent;
+;gplus;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];validComponentTypes(code)
 ;SiteLogoNew;;;logo
@@ -676,8 +677,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 
 #Order Refund Credit Email
 INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsComponents(uid,$contentCV) 	;name 			;active
-				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
-				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
+#				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
+#				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
 				;			;emailClickAppDownContSlotrefund  	;mail_clickApp_refund		;App Download Slot	;true
 				;			;emailHappyShopContSlotrefund  		;mail_happyshopping		;Happy Shop Slot	;true
 				;			;emailFacebookContSlotrefund  		;mail_facebook_refund		;Facebook Slot		;true
@@ -918,28 +919,19 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ForgottenPasswordEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;ForgotPwdSiteLogo-ForgottenPasswordEmail;ForgotPwdSiteLogo;;EmailForgotPwdSiteLogoSlot;true
-;;TopContent-ForgottenPasswordEmail;TopContent;;EmailTopSlot;true
-;;BottomContent-ForgottenPasswordEmail;BottomContent;;EmailBottomSlot;true
-;;ChangePasswordOne-ForgottenPasswordEmail;ChangePasswordOne;;EmailChangePasswordOneSlot;true
-;;ChangePasswordTwo-ForgottenPasswordEmail;ChangePasswordTwo;;EmailChangePasswordTwoSlot;true
-;;ForgorPwdTip-ForgottenPasswordEmail;ForgorPwdTip;;EmailForgorPwdTipSlot;true
-#;;ForgotPwdDescription-ForgottenPasswordEmail;ForgotPwdDescription;;EmailForgotPwdDescriptionSlot;true
-#;;ForgotPwdBannerTwo-ForgottenPasswordEmail;ForgotPwdBannerTwo;;EmailForgotPwdBannerTwoSlot;true
-;;AppDownloadUrl-ForgottenPasswordEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
-;;ForgotPwdsmileyimg-ForgottenPasswordEmail;ForgotPwdsmileyimg;;EmailForgotPwdsmileyimgSlot;true
 ;;ForgotPwdfb-ForgottenPasswordEmail;ForgotPwdfb;;EmailForgotPwdfbSlot;true
-#;;ForgotPwdgplus-ForgottenPasswordEmail;ForgotPwdgplus;;EmailForgotPwdgplusSlot;true
-;;tweet-ForgottenPasswordEmail;tweet;;EmailtweetSlot;true
-;;youtube-ForgottenPasswordEmail;youtube;;EmailYouTubeSlot;true
-;;insta-ForgottenPasswordEmail;insta;;EmailInstaSlot;true
-;;tatatrust-ForgottenPasswordEmail;tatatrust;;EmailTatatrustSlot;true
-;;cliqnpic-ForgottenPasswordEmail;cliqnpic;;EmailcliqnpicSlot;true
-;;easyreturn-ForgottenPasswordEmail;easyreturn;;EmailEasyreturnSlot;true
-;;authenticbrands-ForgottenPasswordEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
-;;freeshipping-ForgottenPasswordEmail;freeshipping;;EmailFreeshippingSlot;true
-;;linegrey-ForgottenPasswordEmail;linegrey;;EmailLinegreySlot;true
-;;appstore-ForgottenPasswordEmail;appstore;;EmailAppleStoreSlot;true
-;;googleplay-ForgottenPasswordEmail;googleplay;;EmailAndroidStoreSlot;true
+;;tweeter-ForgottenPasswordEmail;tweet;;EmailForgotPwdtweetSlot;true
+;;Luxuryyoutube-ForgottenPasswordEmail;youtube;;EmailForgotPwdYouTubeSlot;true
+;;Luxuryinsta-ForgottenPasswordEmail;insta;;EmailForgotPwdInstaSlot;true
+;;gplus-ForgottenPasswordEmail;gplus;;EmailForgotPwdgplusSlot;true
+;;tatatrust-ForgottenPasswordEmail;tatatrust;;EmailForgotPwdTatatrustSlot;true
+;;cliqnpic-ForgottenPasswordEmail;cliqnpic;;EmailForgotPwdcliqnpicSlot;true
+;;easyreturn-ForgottenPasswordEmail;easyreturn;;EmailForgotPwdEasyreturnSlot;true
+;;authenticbrands-ForgottenPasswordEmail;authenticbrands;;EmailForgotPwdAuthenticbrandsSlot;true
+;;freeshipping-ForgottenPasswordEmail;freeshipping;;EmailForgotPwdFreeshippingSlot;true
+;;linegrey-ForgottenPasswordEmail;linegrey;;EmailForgotPwdLinegreySlot;true
+;;appstore-ForgottenPasswordEmail;appstore;;EmailForgotPwdAppleStoreSlot;true
+;;googleplay-ForgottenPasswordEmail;googleplay;;EmailForgotPwdAndroidStoreSlot;true
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite

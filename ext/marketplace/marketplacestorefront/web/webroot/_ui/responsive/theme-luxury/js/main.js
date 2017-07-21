@@ -13,7 +13,7 @@ TATA.CommonFunctions = {
         if (!results) return null;
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, " "));
-    },    
+    }, 
     
     getCorrectErrorMessage: function(errorItem){
     	var errorMsg = errorItem.message;
@@ -746,7 +746,32 @@ TATA.CommonFunctions = {
     					}
     				});
     			});
-    },  
+    },
+    displayRemoveCoupon:function(){
+      	$.ajax({
+            url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
+            type: "GET",
+            data: { 'paymentMode' : "" , 'bankName' :""  , 'guid' : ""},
+            returnType: "text/html",
+            dataType: "json",
+            success: function(response) {
+	 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+	 				if($("#couponFieldId").val()=="")
+	 					{
+	 						$("#couponFieldId").val(response.voucherDiscount.voucherCode);
+	 					}
+	 				if ($('#couponValue').html()!=" "){
+	 					$("#couponApplied").css("display","block");
+	 				}
+	 				$('#couponFieldId').attr('readonly', true);
+	 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
+	 				$('#couponMessage').show();
+	 				$('#couponMessage').delay(5000).fadeOut('slow');
+	 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
+		
+            	} 
+        });
+   },
     
     init: function () {
 
@@ -767,7 +792,8 @@ TATA.CommonFunctions = {
         _self.leftBarAccordian();
         _self.deliveryaddressform();
         _self.swipeLookBook();  
-        _self.removeProdouct();         
+        _self.removeProdouct();
+        _self.displayRemoveCoupon();
     }
 
 };
@@ -1445,13 +1471,22 @@ TATA.Pages = {
         },
         
         writeReview:function() {
-        	 $("body").on("click touchstart", ".gig-rating-writeYourReview", function(e) {
+        	 $("body").on("click touchstart", ".gig-rating-writeYourReview,.gig-rating-readReviewsLink", function(e) {
              	e.preventDefault();
         		$('.accordion-title').removeClass('active');
         		$('.accordion-content').hide();
         		$('.review-accordion').addClass('active');
         		$('.review-accordion-content').show();        		
         	});
+        },
+        editAddressCheckout:function() {
+            $('.edit_address').on('click',function(){
+                $(this).addClass('disable-click');
+            });
+
+            $(document).on('click', '.address-details .cancelBtnEdit', function(e){
+                $('.edit_address').removeClass('disable-click');
+            });
         },
         // PDP Page initiate
         init: function () {
@@ -1466,6 +1501,7 @@ TATA.Pages = {
             _self.wishlistInit();
             _self.luxuryDeliveryOptions();
             _self.writeReview();
+            _self.editAddressCheckout();
         }
     },
 
@@ -1520,7 +1556,7 @@ TATA.Pages = {
     },
 };
 
-function checkPincodeServiceability(buttonType,el)
+function luxurycheckPincodeServiceability(buttonType, el)
 {
 
     /*spinner commented starts*/
@@ -1692,7 +1728,7 @@ function checkPincodeServiceability(buttonType,el)
     } //CAR-246
     else if(selectedPincode!==""){
         // TPR-5666 | cartGuid Append in url during pincode servicability check
-        var cartGuidParamValue = getParameterByName("cartGuid");
+        var cartGuidParamValue = luxurygetParameterByName("cartGuid");
         if(typeof cartGuidParamValue != "undefined"){
             $(location).attr('href',ACC.config.encodedContextPath + "/cart?cartGuid="+cartGuidParamValue+"&pincode="+selectedPincode);
         }
@@ -1757,7 +1793,7 @@ function checkPincodeServiceability(buttonType,el)
                     $("#cartPinCodeAvailableBtm").hide();//UF-68
                     $("#unserviceablepincodeBtm").show();//UF-68
                     $(".pincodeServiceError").show();
-                    populatePincodeDeliveryMode(response,buttonType);
+                    luxurypopulatePincodeDeliveryMode(response,buttonType);
                     reloadpage(selectedPincode,buttonType);
                     $("#isPincodeServicableId").val('N');
                     // reloadpage(selectedPincode,buttonType);
@@ -1784,7 +1820,7 @@ function checkPincodeServiceability(buttonType,el)
                     $("#AvailableMessage").html("Available delivery options for the pincode " +selectedPincode+ " are");
                     $("#AvailableMessage").show();
                     $("#AvailableMessageBtm").show();//UF-68
-                    populatePincodeDeliveryMode(response,buttonType);
+                    luxurypopulatePincodeDeliveryMode(response,buttonType);
                     reloadpage(selectedPincode,buttonType);
                 }
 
@@ -1874,13 +1910,13 @@ function checkPincodeServiceability(buttonType,el)
     }
 }
 
-function getParameterByName(name){
+function luxurygetParameterByName(name){
     if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search)){
         return decodeURIComponent(name[1]);
     }
 }
 
-function checkIsServicable()
+function luxurycheckIsServicable()
 {
 
     var selectedPincode=$("#defaultPinCodeIds").val();
@@ -1891,7 +1927,7 @@ function checkIsServicable()
             type: "GET",
             cache: false,
             success : function(response) {
-                populatePincodeDeliveryMode(response,'pageOnLoad');
+                luxurypopulatePincodeDeliveryMode(response,'pageOnLoad');
             },
             error : function(resp) {
                 //TISTI-255
@@ -1911,7 +1947,7 @@ function checkIsServicable()
 
 }
 
-function populatePincodeDeliveryMode(response,buttonType){
+function luxurypopulatePincodeDeliveryMode(response, buttonType){
 
     var checkoutLinkURlId = $('#checkoutLinkURlId').val();
     // response='Y|123456|[{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011717","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"ED","inventory":"2","deliveryDate":null},{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"4","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12},{"fulfilmentType":null,"isPrepaidEligible":"Y","ussid":"123653098765485130011719","pinCode":null,"validDeliveryModes":[{"isCOD":true,"isPrepaidEligible":null,"isPincodeServiceable":null,"isCODLimitFailed":null,"type":"HD","inventory":"12","deliveryDate":null}],"cod":"Y","transportMode":null,"isCODLimitFailed":"N","deliveryDate":"2015-08-29T13:30:00Z","isServicable":"Y","stockCount":12}]';
@@ -2515,9 +2551,8 @@ function loadDefaultWishLstForCart(productCode,ussid) {
 }
 
 
-
 $(document).ready(function () {
-    checkIsServicable();
+    luxurycheckIsServicable();
     
     $('.checkout-paymentmethod .payment-tab').removeClass('active');
     $('#card').css('display','none');
@@ -2540,7 +2575,15 @@ $(document).ready(function () {
         $(".ratingsAndReview").trigger("click");
     });
     
-	  
+    $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover",function(){
+        if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
+            $(this).css("cursor","not-allowed");
+        }
+        else{
+            $(this).css("cursor","default");
+        }
+    });  
+    
     var luxuryluxuryHeaderLoggedinStatus = false;
     isDuringCheckout = false;
     TATA.CommonFunctions.init();

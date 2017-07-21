@@ -130,7 +130,7 @@
 					</c:otherwise>
 				</c:choose>
 				<input type="hidden" id="pinId" value="${defaultPinCode}"/>
-				<button class="btn btn-primary btn-md" id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				<button class="btn btn-primary btn-md" id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return luxurycheckPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 
 				<!-- error message position change as part of UF-61 -->
 				<p id="unserviceablepincode" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
@@ -148,7 +148,7 @@
 	</div>
 	<script type="text/javascript">
         $( window ).load(function() {
-            checkIsServicable();
+            luxurycheckIsServicable();
         	});
 	</script>
 	<!-- TISCR-320 -->

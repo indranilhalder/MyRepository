@@ -4623,7 +4623,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		$('#addressForm').submit();	
 //		$.ajax({
 
-//			url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+zipcode,
+//			url: ACC.config.encodedContextPath + "/cart/luxurycheckPincodeServiceability/"+zipcode,
 //			type: "GET",
 //			cache: false,
 //			success : function(response) {
@@ -5840,7 +5840,7 @@ function checkPincodeServiceability(buttonType,el)
 
 		$("#emptyId_tooltip_btm").hide();
 	$.ajax({
- 		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
+ 		url: ACC.config.encodedContextPath + "/cart/luxurycheckPincodeServiceability/"+selectedPincode,
  		type: "GET",
  		cache: false,
  		success : function(response) {
@@ -5974,7 +5974,7 @@ function checkPincodeServiceability(buttonType,el)
  			//console.log("errorDetails 1>> "+errorDetails);
  			
  			handleExceptionOnServerSide(errorDetails);
- 			//console.log('Some issue occured in checkPincodeServiceability');
+ 			//console.log('Some issue occured in luxurycheckPincodeServiceability');
  			// setTimeout(function(){
  	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
  	 			$("#no-click,.loaderDiv").remove();
@@ -6539,7 +6539,7 @@ function checkIsServicable()
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
 		$.ajax({
-	 		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
+	 		url: ACC.config.encodedContextPath + "/cart/luxurycheckPincodeServiceability/"+selectedPincode,
 	 		type: "GET",
 	 		cache: false,
 	 		success : function(response) {
@@ -6599,7 +6599,7 @@ function checkIsServicable()
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
-	 			//console.log('Some issue occured in checkPincodeServiceability');
+	 			//console.log('Some issue occured in luxurycheckPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 			// TISPRM-65
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
@@ -8763,7 +8763,7 @@ $("button[name='pinCodeButtonId']").click(function(){
 	$("input[name='defaultPinCodeIds']").val(pincode).css("color","rgb(255, 28, 71)");
 	
 	//$(".emptyPins").show();
-	//checkPincodeServiceability('typeSubmit',this);
+	//luxurycheckPincodeServiceability('typeSubmit',this);
 	});
 
 /*UF-68 UF-69*/

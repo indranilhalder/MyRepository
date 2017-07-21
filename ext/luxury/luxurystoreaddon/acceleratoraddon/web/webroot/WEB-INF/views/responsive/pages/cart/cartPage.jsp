@@ -100,9 +100,9 @@
 								<multi-checkout:orderTotals isCart="true" cartData="${cartData}"
 															showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" />
 							</div>
-							<div class="checkoutBtn text-center mt-20">
-								<a href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
-									<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
+							<div id="checkout-id" class="checkoutBtn text-center mt-20">
+								<a id="checkout-enabled" href="${checkoutUrl}" class="btn btn-primary btn-lg proceedCheckout" >Proceed to Checkout</a>
+								<p class="normalSizeRegularTxt grayTxt">Promo codes can be added at checkout.</p>
 							</div>
 							<div class="cartBottomCheck">
 								<div id="changePinDiv">
@@ -123,7 +123,7 @@
 											<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 										</c:otherwise>
 									</c:choose>
-									<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+									<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return luxurycheckPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 									<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
 									<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
 									<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>

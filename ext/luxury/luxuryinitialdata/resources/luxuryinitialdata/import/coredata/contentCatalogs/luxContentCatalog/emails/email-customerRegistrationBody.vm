@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width" />
 
-  <title>Tata CliQ</title>
+  <title>Tata CliQ Luxury</title>
 
 </head>
 <body style="padding: 0; margin:0; font-family:Arial, Helvetica, sans-serif;">
@@ -47,12 +47,11 @@
 </style>
 <table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="min-width: 600px;">
 			<tbody>
-			    <tr>
+	<tr>
 		      <td width="10" class="dsnone">&nbsp;</td>
 		      <td bgcolor="#ffffff">   	
 <!-- main content-->
-
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tbody>
 			    <tr>
 			      <td>
@@ -62,12 +61,6 @@
 			  	        	<td>
 			  	        		<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 			  	        		  <tbody>
-			  	        		    <!-- <tr>
-			  	        		      <td >
-			  	        		        <img src="images/placeh.gif" height="10" style="display:block;line-height:0;font-size:0;">
-			  	        		      </td>
-		  	        		        </tr>
-		  	        		        -->
 			  	        		    <tr>
 			  	        		      <td class="logo" ><a href="#">${ctx.cmsSlotContents.SiteLogo}</td>
 			  	        		      <td align="right" class="toplink">
@@ -77,7 +70,6 @@
 			  	        		  </tbody>
 			  	        		</table>
 			  	        	</td>
-			  	        	
 			  	        </tr>
 			          </tbody>
 			        </table>
@@ -88,8 +80,7 @@
 					  <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 					   <tbody>
 					    <tr>
-					      
-                          <td>
+					      <td>
 					  	 <!-- starts here-->
 					  	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 					  	     <tbody>
@@ -126,10 +117,10 @@
 		  	        		  <tr>
 		  	        		    	<td class="inPad content">
 		  	        		    		<div style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    		<strong>Hi &lt;Fname&gt;,</strong>
+		  	        		    		<strong>Hi ${ctx.displayName},</strong>
 		  	        		    		<br>
-		  	        		    		<br>
-		  	        		    		We've created your Tata CLiQ Luxury account for you! With your Tata CLiQ Luxury account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier. 
+		  	        		    		<br> 	  	        		    		 
+		  	        		    		 We've created your Tata CLiQ Luxury account for you! With your Tata CLiQ Luxury account, you will have access to the New &amp; Now. Find the latest collections from authentic brands and enjoy a truly unique CLiQ and PIQ experience that mixes the convenience of online shopping with the benefit of shopping in-store - you'll get the goods quicker, and returning and exchanging products will be that much easier. 
 		  	        		    		<br>
 		  	        		    		<br>
 		  	        		    		At Tata CLiQ, find the best apparel, watches, bags, shoes, electronics and luxury brands, hand-picked for you, every season. 
@@ -138,7 +129,7 @@
 		  	        		    		Ready to shop? Here are your account details:
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		Username:  ${ctx.customerId};
+		  	        		    		Username:  ${ctx.customerId}
 		  	        		    		
 		  	        		    		</div>
 
@@ -195,8 +186,7 @@
                                                            
                                   <tr align="center">
                                       <td>
-                                          
-                                          <table class="content inPad">
+                                         <table class="content inPad">
                                               <tbody>
                                                   <tr>
                                                       <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
@@ -208,11 +198,11 @@
                                                             <a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&tcid=em:general:registration:android:22052017" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.googleplay}</a> 
                                                         #end
                                                     </td>
-                                                      <td class="smFull dsnone">
+                                                    <td class="smFull dsnone">
                                                         ${ctx.cmsSlotContents.linegrey}
                                                     </td>
-                                                      <td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
-                                                      <td class="smFull socialLinks">
+                                                    <td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
+                                                    <td class="smFull socialLinks">
                                                           #if($ctx.cmsSlotContents.fb)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.fb}</a> #end
                                                           #if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.tweet}</a>#end
                                                           #if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.insta}</a>#end
@@ -220,14 +210,13 @@
                                                           #if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.gplus}</a>#end
                                                           
                                                         #if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration: none;">${ctx.cmsSlotContents.youtube}</a>#end
-                                                      </td>
+                                                    </td>
                                                   </tr>
                                               </tbody>
                                           </table> 
-                                          
+                                          </td>
                                      </tr>
                                 <tr>
-                                      </td>
                                       <td align="center" class="content foocontnt inPad">
                                         <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
                                           This email can't receive replies. Get in touch with us by contacting <a href ="https://www.e2eluxury.tataunistore.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Luxury Care</a>
