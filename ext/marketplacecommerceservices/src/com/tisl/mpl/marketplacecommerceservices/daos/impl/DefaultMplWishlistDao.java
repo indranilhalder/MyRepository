@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao;
@@ -26,7 +26,8 @@ import com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao;
  */
 public class DefaultMplWishlistDao implements MplWishlistDao
 {
-	@Autowired
+	//TPR-5787 autowired changed to resource
+	@Resource(name = "flexibleSearchService")
 	private FlexibleSearchService flexibleSearchService;
 
 	@Override
@@ -50,7 +51,7 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.MplWishlistDao#getWishListAgainstUser(de.hybris.platform.core.model
 	 * .user.UserModel)
@@ -58,9 +59,8 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	@Override
 	public List<Wishlist2Model> getWishListAgainstUser(final UserModel user)
 	{
-		//TPR-5787 query changed
 		final String queryString = //
-		"SELECT {wish.pk} FROM {Wishlist2 as wish},{Wishlist2entry as wishentry} WHERE {wish.user} = ?user AND {wishentry.wishlist}={wish.pk} AND {wishentry.isdeleted} = 0 ORDER BY {modifiedtime} desc";
+		"SELECT {pk} FROM {Wishlist2} WHERE {user} = ?user ORDER BY {modifiedtime} desc";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 		query.addQueryParameter(MarketplacecommerceservicesConstants.USERPARAM, user);
 		return flexibleSearchService.<Wishlist2Model> search(query).getResult();
@@ -72,9 +72,8 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	@Override
 	public Wishlist2Model findMobileWishlistswithName(final UserModel user, final String name)
 	{
-		//TPR-5787 query changed
 		final String queryString = //
-		"SELECT {wish.pk} FROM {Wishlist2 as wish},{Wishlist2entry as wishentry} WHERE {wish.user} = ?user AND {wish.name}=?name AND {wishentry.wishlist}={wish.pk} AND {wishentry.isdeleted} = 0";
+		"SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name}=?name";
 		final Map<String, Object> params = new HashMap<String, Object>(1);
 		params.put(MarketplacecommerceservicesConstants.USERPARAM, user);
 		params.put("name", name);
@@ -98,9 +97,8 @@ public class DefaultMplWishlistDao implements MplWishlistDao
 	@Override
 	public int findMobileWishlistswithNameCount(final UserModel user, final String name)
 	{
-		//TPR-5787 query changed
-		final String queryString = "SELECT {wish.pk} FROM {Wishlist2 as wish},{Wishlist2entry as wishentry} WHERE {wish.user} = ?user AND {wish.name} like '%"
-				+ name + "%' AND {wish.name}=?name AND {wishentry.wishlist}={wish.pk} AND {wishentry.isdeleted} = 0";
+		final String queryString = "SELECT {pk} FROM {Wishlist2 as wish} WHERE {wish.user} = ?user AND {wish.name} like '%" + name
+				+ "%' ";
 		final Map<String, Object> params = new HashMap<String, Object>(1);
 		params.put(MarketplacecommerceservicesConstants.USERPARAM, user);
 		//params.put("name", name);

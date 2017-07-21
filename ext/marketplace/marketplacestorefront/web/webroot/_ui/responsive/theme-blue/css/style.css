@@ -36415,7 +36415,7 @@ padding-bottom:10px;
 height: auto;
 }
 ul.jqtree_common.jqtree-tree>li.jqtree_common:first-child .jqtree-element{
-height: 16px;
+min-height: 16px; /*PRDI-596*/
 }
 div#searchPageDeptHierTree .jqtree-tree > .jqtree-folder{
 	padding-top: 14px;
@@ -46481,11 +46481,11 @@ body.page-homepage .trending h2 > span{
     font-weight: bold;
     font-size: 28px;
 }
-.listing.wrapper .left-block .listing-leftmenu .facet.js-facet.AvailabilitySize h3{
+/* .listing.wrapper .left-block .listing-leftmenu .facet.js-facet.AvailabilitySize h3{
 	font-size: inherit;
     padding: 0;
     text-transform: inherit !important;
-}
+} */ /* Commented for PRDI-237 */
 .click2chat-container h2{
 	font-size: 24px;
     margin-bottom: 15px;
@@ -69678,7 +69678,8 @@ footer .footer-text{
     font-size: 11px;
     color: #878787;
 }
-.homepage-banner .owl-theme .owl-controls .owl-nav div {
+/*PRDI-310	fix start*/
+/* .homepage-banner .owl-theme .owl-controls .owl-nav div {
     display: block !important;
     color: transparent;
     width: 37px !important;
@@ -69686,12 +69687,39 @@ footer .footer-text{
     max-width: 37px !important;
     background-color: rgba(0,0,0,0.2);
     z-index: 1;
+} 
+ .homepage-banner .owl-theme .owl-controls  .owl-nav div:hover{
+	background-color: rgba(0,0,0,0.2);
+	color: transparent;
+} 
+.homepage-banner .home-rotatingImage.owl-theme .owl-controls, .homepage-banner .owl-theme .owl-controls{
+	position: static;
 }
-.homepage-banner .owl-theme .owl-controls  .owl-nav div:hover{
+.homepage-banner .owl-theme .owl-controls .owl-nav{
+	 bottom: 0px; 
+	top: 50%;
+    margin: auto;
+    position: absolute;
+    width: 100%;
+     z-index: 1; 
+    display: table;
+    padding: 0 30px;
+    
+}*/
+body.page-homepage .homepage-banner .owl-theme .owl-controls .owl-nav div{
+	display: block !important;
+    color: transparent;
+    width: 37px !important;
+    height: 37px;
+    max-width: 37px !important;
+    background-color: rgba(0,0,0,0.2);
+    z-index: 1;
+}
+body.page-homepage .homepage-banner .owl-theme .owl-controls  .owl-nav div:hover{
 	background-color: rgba(0,0,0,0.2);
 	color: transparent;
 }
-.homepage-banner .home-rotatingImage.owl-theme .owl-controls, .homepage-banner .owl-theme .owl-controls{
+body.page-homepage .homepage-banner .home-rotatingImage.owl-theme .owl-controls, body.page-homepage .homepage-banner .owl-theme .owl-controls{
 	position: static;
 }
 .homepage-banner .owl-theme .owl-controls .owl-dots{
@@ -69701,17 +69729,15 @@ footer .footer-text{
     width: 100%;
     z-index: 1;
 }
-.homepage-banner .owl-theme .owl-controls .owl-nav{
-	/* bottom: 0px; */
+body.page-homepage .homepage-banner .owl-theme .owl-controls .owl-nav{
 	top: 50%;
     margin: auto;
     position: absolute;
     width: 100%;
-    /* z-index: 1; */
     display: table;
     padding: 0 30px;
-    
 }
+/*PRDI-310	fix end*/
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after ,
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
     left: 0;
@@ -72524,6 +72550,7 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
 body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header{
  	margin-bottom: -75px;
  	overflow: hidden;
+ 	padding-top: 50px; /* TISPRDT-1574 fix */
  }
  /* TISTE-204 fix */
 body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header + .col-md-4.col-sm-6{
@@ -72880,3 +72907,30 @@ footer #footerLink div.column ul li:last-child:after {
 }
 /* TPR-6410 end */
 
+@media (max-width: 790px){
+	.product-facet .facet.size .facet-list li.filter-Size,
+	.product-facet .facet.Size .facet-list li.filter-size,
+	.product-facet .facet.size .facet-list li.filter-size,
+	.product-facet .facet.Size .facet-list li.filter-Size{
+		margin: 5px 0;
+	}
+}
+/*TISPRDT-1835 fix start*/
+body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>.mop_span + span.delSeat{
+ 	display: inline-block;
+ 	margin-top: 5px;
+ }
+body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>.mop_span + span.delSeat + .off-bag{
+ 	display: inline-block;
+ 	color: #000;
+ 	width: auto;
+ }
+/*TISPRDT-1835 fix end*/
+@media (max-width: 1060px){
+	body .account .right-account .order-history.order-details li.item:not(.in-store).first .item-header{
+		padding-top: 75px; /* TISPRDT-1574 fix */
+		}
+	body .account .right-account .order-history.order-details li.header + li.item .item-header{
+		padding-top: 0px !important;	/* TISPRDT-1574 fix */
+		}
+}

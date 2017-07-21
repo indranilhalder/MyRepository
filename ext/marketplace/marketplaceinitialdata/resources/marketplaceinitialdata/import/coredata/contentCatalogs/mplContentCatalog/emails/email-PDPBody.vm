@@ -130,7 +130,7 @@
 		  	        		    		What do you think of this <strong>${ctx.productName} </strong> that I found on Tata CLiQ? 
 		  	        		    		<br>
 		  	        		    		<br>
-		  	        		    		Can't wait for you to check it out  <a href="${ctx.productUrl}" style="color:#AA133D;font-size:14px; font-weight:bold;">here</a>.
+		  	        		    		Can't wait for you to check it out  <a href="${ctx.productUrl}" style="color:#AA133D;font-size:14px; font-weight:bold; text-decoration: underline;">here</a>.
 		  	        		    		<br>
 		  	        		    		<br>
 		  	        		    		 Regards,

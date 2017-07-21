@@ -1364,9 +1364,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 
@@ -1624,7 +1624,8 @@ public class SearchPageController extends AbstractSearchPageController
 			{
 				for (final Wishlist2EntryModel entry : lastCreatedWishlist.getEntries())
 				{
-					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode) && !entry.getIsDeleted().booleanValue())//TPR-5787 check added
+					if (null != (entry) && null != entry.getProduct() && (entry.getProduct()).equals(pcode)
+							&& (!entry.getIsDeleted().booleanValue() || entry.getIsDeleted() == null))//TPR-5787 check added
 					{
 						existPcode = true;
 						break;
