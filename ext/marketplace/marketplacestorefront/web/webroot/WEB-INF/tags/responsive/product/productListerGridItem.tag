@@ -135,8 +135,8 @@
 				<a class="thumb_${product.code}" href="${productUrl}"
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
-						<!-- TPR-250 -->
-						        <span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>
+						<!-- TPR-250 --><!-- TPR-5787 -->
+						        <span class="plp-wishlist" data-product="${productUrl}" data-ussid="${product.ussID}"></span>
 						<!-- TPR-250 -->
 						<%-- <span class="plp-wishlist" data-product="${productUrl}"></span> --%>
 						<span class="plpWlcode" style="display: none;">${productUrl}</span>
