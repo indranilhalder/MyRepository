@@ -29,7 +29,9 @@
 			<!-- <a class="sm-back js-enquire-sub-close" href="#">Back</a> -->
 			<ul class="words depts${component.link.category.code}"> <!-- TPR-561 -->
 				<li></li>		<!-- TPR-561 -->
+				<c:set var="columnCounter" value="0"></c:set>
 				<c:forEach items="${component.navigationNode.children}" var="child1">
+				<c:set var="columnCounter" value="${columnCounter+1}"></c:set>
 				<li class="l2_wrapper"><ul>
 				<c:forEach items="${child1.children}" var="child">
 				
@@ -110,7 +112,7 @@
 				</ul></li>
 				</c:forEach>
 				<!-- TPR-6410 -->
-				<img class="shop-by-department-banner" alt="tesr" src="${component.navigationNode.media.URL}">
+				<img class="shop-by-department-banner banner-column-${columnCounter}" alt="tesr" src="${component.navigationNode.media.URL}" />
 				</ul>		<!-- TPR-561 -->
 				
 	</c:when>
