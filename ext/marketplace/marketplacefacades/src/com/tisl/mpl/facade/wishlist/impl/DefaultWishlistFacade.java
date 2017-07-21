@@ -111,6 +111,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 					final Date date = new Date();
 					entryModel.setIsDeleted(Boolean.TRUE);
 					entryModel.setDeletedDate(new Timestamp(date.getTime()));
+					entryModel.setDesired(Integer.valueOf(0));//TISSPTEN-2
 					modelService.save(entryModel);
 					break;
 					//TPR-5787 ends here
@@ -146,6 +147,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 					final Date date = new Date();
 					entryModel.setIsDeleted(Boolean.TRUE);
 					entryModel.setDeletedDate(new Timestamp(date.getTime()));
+					entryModel.setDesired(Integer.valueOf(0));//TISSPTEN-2
 					modelService.save(entryModel);
 					break;
 					//TPR-5787 ends here
@@ -261,8 +263,12 @@ public class DefaultWishlistFacade implements WishlistFacade
 				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
 				{
 					LOG.debug("wishlist entry added");
+					final Date date = new Date();//TISSPTEN-2
+					wishlist2UpdateEntry.setAddedDate(new Timestamp(date.getTime()));//TISSPTEN-2
 					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
 					wishlist2UpdateEntry.setDeletedDate(null);
+					wishlist2UpdateEntry.setSizeSelected(Boolean.valueOf(selectedSize));//TISSPTEN-2
+					wishlist2UpdateEntry.setDesired(Integer.valueOf(1));//TISSPTEN-2
 					modelService.save(wishlist2UpdateEntry);
 
 				}
@@ -321,8 +327,12 @@ public class DefaultWishlistFacade implements WishlistFacade
 				if (wishlist2UpdateEntry.getIsDeleted().booleanValue())
 				{
 					LOG.debug("wishlist entry added");
+					final Date date = new Date();//TISSPTEN-2
+					wishlist2UpdateEntry.setAddedDate(new Timestamp(date.getTime()));//TISSPTEN-2
 					wishlist2UpdateEntry.setIsDeleted(Boolean.FALSE);
 					wishlist2UpdateEntry.setDeletedDate(null);
+					wishlist2UpdateEntry.setSizeSelected(Boolean.valueOf(selectedSize));//TISSPTEN-2
+					wishlist2UpdateEntry.setDesired(Integer.valueOf(1));//TISSPTEN-2
 					modelService.save(wishlist2UpdateEntry);
 				}
 				else

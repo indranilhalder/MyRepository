@@ -72898,7 +72898,17 @@ footer #footerLink div.column ul li:last-child:after {
 	float: right;
     max-width: calc(49.5%  - -30px);
     margin-right: 2%;
-    margin-top: 5px;
+    margin-top: 8px;
+}
+@media(max-width: 1190px){
+.shop-by-department-banner.banner-column-3{
+	max-width: calc(35.5%  - -20px);
+}	
+}
+@media(max-width: 1050px){
+.shop-by-department-banner.banner-column-4{
+	max-width: calc(19.5%  - -10px);
+}
 }
 @media(max-width: 790px){
 .shop-by-department-banner{
