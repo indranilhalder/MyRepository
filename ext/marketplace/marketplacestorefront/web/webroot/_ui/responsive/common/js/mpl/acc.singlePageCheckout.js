@@ -2014,6 +2014,7 @@ ACC.singlePageCheckout = {
 	formValidationErrorCount:0,
 	isSlotDeliveryAndCncPresent:false,
 	countItemsForReviewOrder:"",
+	needHelpContactNumber:"",
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -2777,6 +2778,10 @@ $(document).ready(function(){
 	var pageType=$("#pageType").val();
 	if(pageType=="multistepcheckoutsummary")
 	{
+		//Updating need help number ACC.singlePageCheckout.needHelpContactNumber is set in 'needhelpcomponent.jsp' file.
+		var needHelpNumber=ACC.singlePageCheckout.needHelpContactNumber;
+		needHelpNumber=needHelpNumber.replace(/\-/g, " ");
+		$("#singlePageNeedHelpComponent").text("Need Help? Call "+needHelpNumber);
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
 			//Reload the page if a user resizes the device and viewport width changes from desktop to responsive

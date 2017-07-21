@@ -24,8 +24,12 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <style>
+/* below style is written here as class 'page-multiStepCheckoutSummaryPage' appears twice once in one page again in payment failure page*/
 body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	background: #eee;
+}
+body.page-multiStepCheckoutSummaryPage #up{
+	display: none;
 }
 </style>
 <cart:tealiumCartParameters/>
