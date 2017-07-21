@@ -1308,6 +1308,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								{
 									customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));//Transaction Timestamp
 								}
+								if (null != pt.getCreationtime())
+								{
+									customerOrderInfoWsDTO.setTransactionCreationDate(formatter.format(pt.getCreationtime()));
+								}
 								else
 								{
 									customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
@@ -1319,6 +1323,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								customerOrderInfoWsDTO.setTransactionStatus("NULL");
 								customerOrderInfoWsDTO.setRefundDate("NULL");
 								customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
+								customerOrderInfoWsDTO.setTransactionCreationDate("NULL");
 							}
 
 							customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus()
