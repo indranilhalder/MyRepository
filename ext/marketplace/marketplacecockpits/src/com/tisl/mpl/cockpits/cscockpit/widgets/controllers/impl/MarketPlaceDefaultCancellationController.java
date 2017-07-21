@@ -149,7 +149,7 @@ public class MarketPlaceDefaultCancellationController extends
 					long totalquantity = orderEntry.getQuantity();
 					// Returning delivery cost in case of cancellation.
 					double deliveryCost = 0.0D;
-					if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD()) {
+					if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
 							deliveryCost = orderEntry.getHdDeliveryCharge() != null ? orderEntry
 									.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
 					}else {
@@ -227,7 +227,7 @@ public class MarketPlaceDefaultCancellationController extends
 										.getCurrDelCharge()
 										: NumberUtils.DOUBLE_ZERO;
 										double deliveryCost  = 0.0D;
-										if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD()) {
+										if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
 											deliveryCost=orderEntry.getHdDeliveryCharge() != null ? orderEntry
 													.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
 										}else {

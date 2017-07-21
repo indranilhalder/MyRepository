@@ -902,7 +902,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (orderEntry != null)
 			{
 				Double currDelCharges = Double.valueOf(0.0D);
-				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()) {
+				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
 						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
 								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
 				}else {
@@ -972,7 +972,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (orderEntry != null)
 			{
 				Double currDelCharges = Double.valueOf(0.0D);
-				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue()) {
+				if(orderEntry.getIsEDtoHD() != null && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() != 0D) {
 						currDelCharges = orderEntry.getHdDeliveryCharge() != null ?orderEntry
 								.getHdDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
 				}else {
