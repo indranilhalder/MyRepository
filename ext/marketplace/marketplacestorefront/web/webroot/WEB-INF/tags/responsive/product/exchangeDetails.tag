@@ -17,7 +17,7 @@
 
 <c:if test="${isExchangeavailable ne false}">
 <div class="Exchange Exchange_wrapper" id="exchangeStickerId">
-<p  class="callExchangeAction" onclick="" >
+<p  onclick="" >
 	<spring:theme code="marketplace.exchange" />
 	
 				
