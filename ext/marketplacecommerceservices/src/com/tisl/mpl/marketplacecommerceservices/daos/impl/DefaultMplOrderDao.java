@@ -457,7 +457,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final List<CategoryModel> l4List = flexibleSearchService.<CategoryModel> search(flexiQuery).getResult();
 			if (null != l4List && l4List.size() > 0)
 			{
-				l4CategoryId = l4List.get(0).getCode();
+				l4CategoryId = l4List.get(0).getName();
 			}
 			if (LOG.isDebugEnabled())
 			{
