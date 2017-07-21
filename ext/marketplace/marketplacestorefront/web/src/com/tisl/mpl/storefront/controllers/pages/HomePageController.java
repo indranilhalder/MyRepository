@@ -616,7 +616,40 @@ public class HomePageController extends AbstractPageController
 							headerText = showcaseItem.getHeaderText();
 						}
 						showCaseItemJson.put("headerText", headerText);
+						//UF-420 starts
+						try
+						{
+							JSONObject showCaseItemDetailJson = new JSONObject();
+							MplShowcaseItemComponentModel showcaseItemDetail = null;
+							showcaseItemDetail = (MplShowcaseItemComponentModel) cmsComponentService.getSimpleCMSComponent(showcaseItem
+									.getUid());
+							showCaseItemDetailJson = getJSONForShowCaseItem(showcaseItemDetail, ShowCaseLayout.COLLECTIONSHOWCASE);
+							showCaseItemJson.put("details", showCaseItemDetailJson);
+						}
+						catch (final CMSItemNotFoundException e)
+						{
+							LOG.error(e.getStackTrace());
+							LOG.error("Could not find component with id::::" + showcaseItem.getUid());
+
+						}
+						catch (final EtailBusinessExceptions e)
+						{
+							ExceptionUtil.etailBusinessExceptionHandler(e, null);
+
+						}
+						catch (final EtailNonBusinessExceptions e)
+						{
+							ExceptionUtil.etailNonBusinessExceptionHandler(e);
+
+						}
+						catch (final Exception e)
+						{
+							ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
+									MarketplacecommerceservicesConstants.E0000));
+						}
+						//UF-420 ends
 					}
+
 					subComponentJsonArray.add(showCaseItemJson);
 				}
 				else
