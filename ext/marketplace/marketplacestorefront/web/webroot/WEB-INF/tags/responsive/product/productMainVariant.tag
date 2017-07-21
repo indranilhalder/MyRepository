@@ -110,7 +110,7 @@ var productSizeVar = '${productSize}';
 	<c:choose>
 		<c:when test="${not empty product.variantOptions}">
  <!-- Color heading will not come for FineJewellery -->
-		<c:if test="${product.rootCategory !='FineJewellery'}">
+		<c:if test="${product.rootCategory !='FineJewellery' && product.rootCategory !='FashionJewellery'}">
 			<p>
 				<spring:theme code="text.colour" />
 			</p>
@@ -330,7 +330,7 @@ share mobile -->
 			</c:choose> --%>
 		<!-- 	TPR_3752 Jewellery Changes applied here -->
 			<c:choose>                                              
-			   <c:when test="${ product.rootCategory =='FineJewellery'}">					    		     			
+			   <c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">					    		     			
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
 						<c:url value="${entry.key}" var="link" />							
