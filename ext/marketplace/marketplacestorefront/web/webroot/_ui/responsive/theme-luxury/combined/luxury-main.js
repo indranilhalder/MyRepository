@@ -13728,25 +13728,28 @@ TATA.CommonFunctions = {
         });
     },
     displayRemoveCoupon: function() {
-        $.ajax({
+      	$.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
-            data: {
-                paymentMode: "",
-                bankName: "",
-                guid: ""
-            },
+            data: { 'paymentMode' : "" , 'bankName' :""  , 'guid' : ""},
             returnType: "text/html",
             dataType: "json",
             success: function(response) {
-                document.getElementById("couponValue").innerHTML = response.voucherDiscount.couponDiscount.formattedValue, 
-                "" == $("#couponFieldId").val() && $("#couponFieldId").val(response.voucherDiscount.voucherCode), 
-                " " != $("#couponValue").html() && $("#couponApplied").css("display", "block"), 
-                $("#couponFieldId").attr("readonly", !0), $("#couponMessage").html("Coupon application may be changed based on promotion application"), 
-                $("#couponMessage").show(), $("#couponMessage").delay(5e3).fadeOut("slow"), setTimeout(function() {
-                    $("#couponMessage").html("");
-                }, 1e4);
-            }
+            		if(response.voucherDiscount.couponDiscount!=null){
+            			document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+            			$("#couponApplied").css("display","block");
+            			$('#couponFieldId').attr('readonly', true);
+            		}
+	 				if($("#couponFieldId").val()=="")
+	 					{
+	 						$("#couponFieldId").val(response.voucherDiscount.voucherCode);
+	 					}
+	 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
+	 				$('#couponMessage').show();
+	 				$('#couponMessage').delay(5000).fadeOut('slow');
+	 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
+		
+            	} 
         });
     },
     init: function() {
