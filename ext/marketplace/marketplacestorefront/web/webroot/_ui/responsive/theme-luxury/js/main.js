@@ -884,9 +884,11 @@ TATA.Pages = {
             if($(".facetValues .facet-form input:checked").length == 0){
                 $(".plp-wrapper h4.categor-name").show();
             }
-            $(".facetValues .facet-form input:checked").each(function() {
-                $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
-            });
+            if($(window).width() < 768) {
+                $(".facetValues .facet-form input:checked").each(function () {
+                    $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
+                });
+            }
             $('.facet-form input[type=checkbox]').each(function () {
                 var colorString = $(this).attr("data-colour");
                 var colorArray = colorString.split("_");
@@ -921,6 +923,7 @@ TATA.Pages = {
                 },
                 success: function(x) {
                     var filtered = $.parseHTML(x);
+                    $(filtered).has("h4.categor-name") && $(".plp-wrapper h4").html($(filtered).find("h4.categor-name"));
                     $(filtered).has(".filterblocks") && ($(".filterblocks").html($(filtered).find(".filterblocks")),
                         TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html());
                     if($(filtered).has('input[name=noOfPages]')){
