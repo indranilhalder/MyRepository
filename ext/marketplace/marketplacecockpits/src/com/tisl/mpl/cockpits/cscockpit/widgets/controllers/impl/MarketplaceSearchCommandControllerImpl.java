@@ -225,7 +225,7 @@ public class MarketplaceSearchCommandControllerImpl extends
 		ProductModel product =(ProductModel) productObject.getObject();
 		boolean isProductAddedToCart=false;
 		try {
-			//setCurrentSite();
+			setCurrentSite();
 			LOG.info("Bypass the pincode serviceability:"+configurationService.getConfiguration().getBoolean(MarketplaceCockpitsConstants.COCKPIT_SERVICEABILITY_CHECK_BYPASS));
 			if(configurationService.getConfiguration().getBoolean(MarketplaceCockpitsConstants.COCKPIT_SERVICEABILITY_CHECK_BYPASS, false)) {
 				defaultMarketplaceBasketController.addToMarketPlaceCart(productObject, quantity, ussId);

@@ -487,8 +487,8 @@ public class MarketPlaceProductSearchProductDetailRenderer extends
 			final TypedObject item, Div productDetailDiv, Long pincode,
 			Window popupWindow, ProductModel product,
 			final String isDeliveryDateRequired) {
-		//((MarketplaceSearchCommandController) widget.getWidgetController())
-		//		.setCurrentSite();
+		((MarketplaceSearchCommandController) widget.getWidgetController())
+				.setCurrentSite();
 		try {
 
 			LOG.info("Bypass proxy status:"
