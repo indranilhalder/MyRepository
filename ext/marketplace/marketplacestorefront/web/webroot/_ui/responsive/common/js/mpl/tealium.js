@@ -7,9 +7,15 @@ $(document).ready(
 			if($('body').hasClass('pageType-ContentPage') && $('#ia_category_code').val() != '' && $('#ia_category_code').val().toLowerCase().indexOf('mbh') != -1){
  				var pageName = $('#pageName').val();
  				var brandName='';
- 				if(typeof pageName != undefined && pageName != ''){
+ 				//PRDI-564 Fix
+ 				if(typeof pageName != "undefined" && pageName != ''){
  					pageName=pageName.split('BrandStore-');
- 					brandName = pageName[1].trim().toLowerCase();
+ 					if(typeof pageName[1] != "undefined" && pageName[1] != ''){
+ 						brandName = pageName[1].trim().toLowerCase();
+ 					}
+ 					else{
+ 						brandName =	pageName[0];
+ 					}
  					if(typeof(Storage) !== "undefined") {
  						localStorage.setItem("brandName", brandName);
  					}
@@ -566,14 +572,15 @@ function utagAddProductToBag(triggerPoint,productCodeMSD){
 			 productCode= $('#productCode').val();
 			 productCodeArray.push(productCode);
 		}
-
-	utag.link({
-
-		link_text: triggerPoint ,
-		event_type : triggerPoint+"_"+ pageName,
-		product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
-		product_id :  productCodeArray
-	});
+		//PRDI-564 FIX
+		if(typeof(utag) != "undefined"){
+	          utag.link({
+		          link_text: triggerPoint ,
+		          event_type : triggerPoint+"_"+ pageName,
+		          product_sku : productCodeArray,		// Product code passed as an array for Web Analytics - INC_11511  fix
+		          product_id :  productCodeArray
+	        });
+		}
 }
 
 
@@ -1321,7 +1328,15 @@ function tealiumCallOnPageLoad()
 					}
 				});*/
 	
-		var pageTypeGeneric = 'generic';
+		var pageTypeGeneric = '';
+ 		//done for PRDI-95
+ 		if ( pageType == 'checkout-login'){
+ 			pageTypeGeneric = 'login';
+ 		}
+ 		else{
+ 			pageTypeGeneric = 'generic';
+ 		}
+ 
 		var site_section = pageName;
         var genericPageTealium = '';
         //TPR-430
@@ -2091,7 +2106,9 @@ $(document).on('click',".color-swatch > li", function(){
  
  /*Out Of Stock During adding to bag*/
 function errorAddToBag(errorMessage){
+	if(typeof(utag) != "undefined"){
 	utag.link({"error_type":errorMessage});
+	}
 }
 
 /*TPR-4687 | Broken Image*/
@@ -2115,9 +2132,11 @@ function tealiumBrokenImage(){
 	});
 	if(brokenImageCount > 0){
 		var msg = brokenImageCount+" broken_image_found";
-		utag.link({ 
-			error_type : msg
-		});
+		if(typeof(utag) != "undefined"){
+		  utag.link({ 
+			  error_type : msg
+		   });
+		}
 	}
 }
 /*TPR-4728 | add to compare page  3rd part */

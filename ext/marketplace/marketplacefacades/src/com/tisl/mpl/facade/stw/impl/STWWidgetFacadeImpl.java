@@ -154,7 +154,7 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 						return finder.getListingId().equals(buyBoxListingIdLwrCase);
 					}
 				});
-				if (buyBoxModel.getSpecialPrice() != null && !buyBoxModel.getSpecialPrice().equals(ZERO))
+				if (buyBoxModel.getSpecialPrice() != null && Double.compare(buyBoxModel.getSpecialPrice().doubleValue(), 0.0) > 0)
 				{
 					stwPojo.setMop(buyBoxModel.getSpecialPrice().toString());
 				}

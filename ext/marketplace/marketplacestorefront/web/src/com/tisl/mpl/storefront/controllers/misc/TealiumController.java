@@ -175,7 +175,8 @@ public class TealiumController extends AbstractController
 		try
 		{
 			final JSONObject utag = populateCommonTealiumData();
-			utag.put(PAGETYPE, "checkout");
+			//utag.put(PAGETYPE, "checkout");
+			utag.put(PAGETYPE, "cart"); //PRDI-95 Fix
 			utag.put(SITE_SECTION, "My Bag");
 			utag.put(PAGE_NAME, "Cart Page");
 			final String utagData = utag.toJSONString();
@@ -226,7 +227,8 @@ public class TealiumController extends AbstractController
 		try
 		{
 			final JSONObject utag = populateCommonTealiumData();
-			utag.put(PAGETYPE, "checkout");
+			//utag.put(PAGETYPE, "checkout");
+			utag.put(PAGETYPE, "orderconfirmation"); //PRDI-95 Fix
 			utag.put(SITE_SECTION, "orderconfirmation");
 			utag.put(PAGE_NAME, "Order Confirmation");
 			final String utagData = utag.toJSONString();
