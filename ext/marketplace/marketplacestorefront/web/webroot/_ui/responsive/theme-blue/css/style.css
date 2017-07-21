@@ -76788,3 +76788,10 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 		margin: 5px 0;
 	}
 }
+/*TISJEW-3230 start*/
+@media(max-width: 790px) and (min-width: 768px){
+	body.page-order.pageType-ContentPage.template-pages-account-accountOrderDetailPage .account .wrapper{
+		margin-top: 54px;
+	}
+}
+/*TISJEW-3230 end*/
