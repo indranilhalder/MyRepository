@@ -103,7 +103,7 @@
 				<li>
 				<div class="hidden-lg row">
 					<div class="itemsImage col-xs-5 col-sm-3">
-								<product:productPrimaryImage product="${product}" format="product" />
+								<product:productPrimaryImage product="${product}" format="luxuryProduct" />
 					</div>
 					
 					<div class="itemsDescription col-xs-7 col-sm-9 product">
