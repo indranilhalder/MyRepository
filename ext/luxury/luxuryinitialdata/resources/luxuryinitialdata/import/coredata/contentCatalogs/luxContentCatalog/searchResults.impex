@@ -63,9 +63,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
 ;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
 
-INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
-;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true
+#INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
+#;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;categoryAssociated(code,$productCV);defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;LuxProductsListingPage-100001SHW0001;Luxury Products Listing Page For 100001SHW0001;LuxSearchResultsPageTemplate;luxuryProductsListingPage;MSH1116101

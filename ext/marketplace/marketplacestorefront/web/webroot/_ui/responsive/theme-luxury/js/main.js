@@ -908,9 +908,9 @@ TATA.Pages = {
         },
         showSelectedRefinements: function() {
             if($(".facetValues .facet-form input:checked").length == 0){
-                $(".plp-wrapper h4.categor-name").show();
+                // $(".plp-wrapper h4.categor-name").show();
             }
-            if($(window).width() < 768) {
+            if($(window).width() >= 768) {
                 $(".facetValues .facet-form input:checked").each(function () {
                     $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
                 });

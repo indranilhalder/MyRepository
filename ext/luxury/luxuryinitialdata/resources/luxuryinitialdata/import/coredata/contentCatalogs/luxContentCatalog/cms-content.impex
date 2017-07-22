@@ -824,9 +824,9 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 
 ########### Luxury PLP Page Template ##########################
-INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
-;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true
+#INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;Banner-LuxPLP;LuxPLPBannerPosition;;LuxPLPBannerSlot;true
+#;;VisualFilter-LuxPLP;LuxPLPVisualFilterPosition;;LuxPLPVisualFilterSlot;true
 
 
 ########### Luxury Gender Page Template ##########################
