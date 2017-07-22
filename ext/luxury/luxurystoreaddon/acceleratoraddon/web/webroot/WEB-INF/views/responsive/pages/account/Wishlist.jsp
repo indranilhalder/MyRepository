@@ -758,9 +758,9 @@
 	</body>
 
 <!-- For Infinite Analytics Start -->
-<c:if test="${fn:length(WishlistProductDataList) > 0}">	
+<%--<c:if test="${fn:length(WishlistProductDataList) > 0}">
 	<div class="trending"  id="ia_products"></div>
-</c:if>
+</c:if>--%>
 <!-- For Infinite Analytics End -->
 
 

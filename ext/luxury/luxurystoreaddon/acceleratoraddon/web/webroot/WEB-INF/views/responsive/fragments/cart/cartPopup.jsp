@@ -64,7 +64,7 @@
 											</p>
 										</div>
 										<ul class="item-edit-details">
-											<li><spring:theme code="cart.popup.quantity" /> ${entry.quantity}</li>
+											<li><spring:theme code="cart.popup.quantity" /> ${fn:length(entries)}</li>
 											<c:if test="${not empty entry.product.size}">
 											<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
 											</c:if>

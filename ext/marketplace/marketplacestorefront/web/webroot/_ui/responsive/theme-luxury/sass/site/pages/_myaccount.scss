@@ -120,8 +120,7 @@
 					display:block;
 					height:30px;
 				}
-			}
-            
+			}            
             .info.card-list{
                 h2 {
                     font-size: 14px;
@@ -701,6 +700,10 @@
 			}
 			.mpl-addressBook{
 				margin-bottom:10px;
+                
+                address{
+                    word-wrap:break-word;
+                }
 			}
 			.mpl-addressPopup{                
                 /*left: auto;

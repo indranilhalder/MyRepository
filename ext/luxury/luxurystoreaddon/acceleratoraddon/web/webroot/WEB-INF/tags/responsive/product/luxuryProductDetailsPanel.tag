@@ -192,7 +192,7 @@ tr.d0 td {
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal">�</button>
+									<button type="button" class="close" data-dismiss="modal">x</button>
 									<h4 class="modal-title">Share</h4>
 								</div>
 								<div class="modal-body nopadding mt-10 clearfix">

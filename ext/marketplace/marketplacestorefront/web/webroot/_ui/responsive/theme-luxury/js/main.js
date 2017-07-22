@@ -748,22 +748,22 @@ TATA.CommonFunctions = {
     			});
     },
     displayRemoveCoupon:function(){
-      	$.ajax({
+     	$.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
             data: { 'paymentMode' : "" , 'bankName' :""  , 'guid' : ""},
             returnType: "text/html",
             dataType: "json",
             success: function(response) {
-	 				document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+            		if(response.voucherDiscount.couponDiscount!=null){
+            			document.getElementById("couponValue").innerHTML=response.voucherDiscount.couponDiscount.formattedValue;
+            			$("#couponApplied").css("display","block");
+            			$('#couponFieldId').attr('readonly', true);
+            		}
 	 				if($("#couponFieldId").val()=="")
 	 					{
 	 						$("#couponFieldId").val(response.voucherDiscount.voucherCode);
 	 					}
-	 				if ($('#couponValue').html()!=" "){
-	 					$("#couponApplied").css("display","block");
-	 				}
-	 				$('#couponFieldId').attr('readonly', true);
 	 				$("#couponMessage").html("Coupon application may be changed based on promotion application");
 	 				$('#couponMessage').show();
 	 				$('#couponMessage').delay(5000).fadeOut('slow');
@@ -1102,6 +1102,7 @@ TATA.Pages = {
 
             $(".lux-main-banner-slider .electronic-rotatingImage").owlCarousel({
                 dots: true,
+                loop:true,
                 items: 1,
                 autoplay: true,
                 autoplayTimeout: 5000,

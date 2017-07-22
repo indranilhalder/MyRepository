@@ -13,6 +13,7 @@ update * [y] hybris Platform
  */
 package com.tisl.mpl.storefront.controllers.pages;
 
+import com.tisl.mpl.util.CatalogUtils;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.Breadcrumb;
 import de.hybris.platform.acceleratorstorefrontcommons.breadcrumb.ResourceBreadcrumbBuilder;
@@ -81,7 +82,8 @@ import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
-
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.catalog.model.CatalogVersionModel;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -356,6 +358,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 	@Autowired
 	private BaseStoreService baseStoreService;
 
+	@Autowired
+	private CatalogVersionService catalogVersionService;
 	//	Autowired variable declaration
 	@Autowired
 	private MplPaymentFacadeImpl mplPaymentFacadeImpl;
@@ -433,6 +437,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 
 	@Autowired
 	private MplConfigFacade mplConfigFacade;
+
+	@Autowired
+	private CatalogUtils catalogUtils;
 
 	//sonar issue fixed
 	/*
@@ -5146,6 +5153,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 			final List<WishlistProductData> wpDataList = new ArrayList<WishlistProductData>();
 			Boolean isDelisted = Boolean.FALSE;
 			boolean luxProduct = false;
+			String  catalogVersion = catalogUtils.getSessionCatalogVersionForProduct().getCatalog().getId().toString();
 			if (null != particularWishlist && null != particularWishlist.getEntries() && !particularWishlist.getEntries().isEmpty())
 			{
 				final List<Wishlist2EntryModel> entryModels = particularWishlist.getEntries();
@@ -5207,7 +5215,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					{
 						final WishlistProductData wishlistProductData = new WishlistProductData();
 						//TISEE-6376
-						if (entryModel.getProduct() != null)
+						if (entryModel.getProduct() != null && ((entryModel.getProduct().getCatalogVersion().getCatalog().getId().toString()).equalsIgnoreCase(catalogVersion)))
 						{
 							/*
 							 * final ProductData productData1 = productFacade.getProductForOptions(entryModel.getProduct(),

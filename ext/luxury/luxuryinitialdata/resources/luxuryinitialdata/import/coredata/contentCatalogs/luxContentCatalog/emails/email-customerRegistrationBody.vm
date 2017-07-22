@@ -130,18 +130,10 @@
 		  	        		    		<br>
 		  	        		    		<br>
 		  	        		    		Username:  ${ctx.customerId}
-		  	        		    		
 		  	        		    		</div>
 
 		  	        		    	</td>
 		  	        		    </tr>
-		  	        		  <!--  <tr>
-		  	        		      <td class="lesspad">
-		  	        		        <img src="images/placeh.gif" height="20" style="display:block;line-height:0;font-size:0;">
-		  	        		      </td>
-		  	        		    </tr>
-		  	        		    -->
-
 		  	        		    <tr class="dsnone">
 		  	        		    	<td style="background-color:#aa1d3d" align="center">
                                         <table  border="0" cellspacing="0" cellpadding="0" align="center">
@@ -216,7 +208,7 @@
                                           </table> 
                                           </td>
                                      </tr>
-                                <tr>
+                                  <tr>
                                       <td align="center" class="content foocontnt inPad">
                                         <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
                                           This email can't receive replies. Get in touch with us by contacting <a href ="https://www.e2eluxury.tataunistore.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Luxury Care</a>
