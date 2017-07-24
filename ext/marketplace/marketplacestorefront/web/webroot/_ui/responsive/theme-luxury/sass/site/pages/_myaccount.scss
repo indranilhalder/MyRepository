@@ -273,7 +273,7 @@
                                 .cancellation-request-block{
                                     
                                     h2{
-                                        font-size: 18px;
+                                        font-size: 15px;
                                         font-weight: bold;                                     
                                     }
                                     
@@ -284,7 +284,7 @@
                                           .product-info{
                                             .product-img{
                                                 vertical-align: top;
-                                                width: 34%;
+                                                width: 32%;
                                                 display: inline-block;
                                             }
                                             .product{
@@ -340,7 +340,34 @@
                             }
                             .light-red.cancel-confirm{
                                 width: 100%;
+                            }                            
+                            button.close{
+                                display: block;
+                                position: absolute;
+                                width: 25px;
+                                height: 25px;
+                                top: 10px;
+                                right: 10px;
+                                left: auto;
+                                margin: 0;
+                                line-height: 1;
+                                min-width: 0;
+                                padding: 0;
+                                border: 0;
+                                background: 0;
+                                box-shadow: none;
+                                z-index: 5;        
+                                &:before {
+                                    content: "\00d7";
+                                    color: #2d2d2d;
+                                    font-family: Montserrat;
+                                    font-size: 24px;
+                                    font-weight: 500;
+                                    transition: font-weight .15s;
+                                }
                             }
+
+                            
                         }
                         
                     }
@@ -1068,7 +1095,7 @@
                 font-weight: bold;
             }
         }
-    }
+    }    
 }
 #mplCustomerProfileForm{
 	#errfn,#errln,#errEmail,#errMob{
