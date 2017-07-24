@@ -1227,6 +1227,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			else
 			{
 				orderInfoWsDTO.setError("Mobile number is not present in Commerce System");
+				LOG.error("orderEntryModel is null");
 			}
 		}
 		catch (final Exception e)
@@ -1279,7 +1280,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
 											.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
 							//customerOrderInfoWsDTO.setOrderStatus(entry.getOrder().getStatus().getCode());
-							if (orderModel.getPaymentTransactions() != null)
+							if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 							{
 								final List<PaymentTransactionModel> paymlists = orderModel.getPaymentTransactions();
 								final PaymentTransactionModel paytm = paymlists.get(paymlists.size() - 1);
@@ -1288,8 +1289,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 								final PaymentTransactionEntryModel pt = paytmentry.get(paytmentry.size() - 1);
 
-								customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getType().getCode() ? pt.getType()
-										.getCode() : "NULL");//Transaction status details
+								customerOrderInfoWsDTO.setTransactionStatusDetails(null != pt.getTransactionStatusDetails() ? pt
+										.getTransactionStatusDetails() : "NULL");//Transaction status details
 
 								customerOrderInfoWsDTO.setTransactionStatus(null != pt.getTransactionStatus() ? pt.getTransactionStatus()
 										: "NULL");//Transaction Status
@@ -1308,13 +1309,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								{
 									customerOrderInfoWsDTO.setTransactionTimestamp(formatter.format(pt.getModifiedtime()));//Transaction Timestamp
 								}
+								else
+								{
+									customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
+								}
 								if (null != pt.getCreationtime())
 								{
 									customerOrderInfoWsDTO.setTransactionCreationDate(formatter.format(pt.getCreationtime()));
 								}
 								else
 								{
-									customerOrderInfoWsDTO.setTransactionTimestamp("NULL");
+									customerOrderInfoWsDTO.setTransactionCreationDate("NULL");
 								}
 							}
 							else
@@ -1534,6 +1539,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			else
 			{
 				orderInfoWsDTO.setError("TransactionId is not present in Commerce System");
+				LOG.error("subOrderModel is null");
 			}
 		}
 		catch (final Exception e)
@@ -1653,6 +1659,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			else
 			{
 				orderInfoWsDTO.setError("Order Reference Number is not present in Commerce System");
+				LOG.error("suborderModel is null");
 			}
 		}
 		catch (final Exception e)

@@ -435,7 +435,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
 			flexiQuery.addQueryParameter("type", "SubOrder");
 			final List<OrderEntryModel> listOfData = flexibleSearchService.<OrderEntryModel> search(flexiQuery).getResult();
-			return listOfData;
+			return !listOfData.isEmpty() ? listOfData : null;
 		}
 		catch (final Exception e)
 		{
