@@ -3034,6 +3034,7 @@
 		<property name="paymentMode" type="String" />
 		<property name="l4CategoryName" type="String" />
 		<property name="transactionTimestamp" type="String" />
+		<property name="transactionCreationDate" type="String" />
 		<property name="orderTimestamp" type="String" />
 		<property name="transactionStatus" type="String" />
 		<property name="transactionStatusDetails" type="String" />
