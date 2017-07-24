@@ -1171,18 +1171,18 @@ public class SearchPageController extends AbstractSearchPageController
 
 
 
-				final List<ProductData> suggestedProducts = searchPageData.getResults();
-
-				//this is done to remove some of the data issues where we
-				//have null images or price
-				if (suggestedProducts != null)
-				{
-					cleanSearchResults(suggestedProducts);
-					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
-					resultData.setProducts(suggestedProducts);
-					resultData.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
-							: term);
-				}
+				//				final List<ProductData> suggestedProducts = searchPageData.getResults();
+				//
+				//				//this is done to remove some of the data issues where we
+				//				//have null images or price
+				//				if (suggestedProducts != null)
+				//				{
+				//					cleanSearchResults(suggestedProducts);
+				//					//resultData.setProductNames(subList(suggestedProducts, component.getMaxSuggestions()));
+				//					resultData.setProducts(suggestedProducts);
+				//					resultData.setSearchTerm(resultData.getSuggestions().size() > 0 ? resultData.getSuggestions().get(0).getTerm()
+				//							: term);
+				//				}
 
 
 			}
