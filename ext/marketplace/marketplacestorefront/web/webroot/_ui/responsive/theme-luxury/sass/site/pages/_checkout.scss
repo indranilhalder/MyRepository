@@ -610,6 +610,10 @@
         &:first-child{
          border-top:0px;
         }
+        &.active{
+            pointer-events: none;
+            cursor: default;
+        }
       
         span{   
             
@@ -1588,3 +1592,6 @@ h2.panel-defaultHeading {
 #pickup{
     width: 100%!important;
 }
+#COD .make_payment{
+  float: right;
+ }

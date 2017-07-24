@@ -387,6 +387,50 @@
              -webkit-transform: rotate(0deg);
 			transform: rotate(0deg);
 		}
+        
+        &.review-accordion{
+            
+            h4{
+                display: inline-block;
+            }
+            
+            .gig-button-container.gig-clr{
+                    display: none!important;
+            }
+            .gig-rating.gig-clr{
+                height: 20px!important;
+                padding-top: 2px;
+                margin-left: 10px;
+            }
+            .gig-rating-star{
+                font-size: 20px;
+                
+                @include media-breakpoint-down(sm) {
+                     font-size: 15px;
+                }
+            }
+            .gig-rating-star.gig-rating-star-empty, .gig-rating-star.gig-rating-star-full{
+                &:before {
+                    color: #ffb607!important;                
+                }
+            }            
+           .gig-rating-topbar .gig-rating-averageRating{
+                 display: none!important;
+            }
+            #ratingDiv{
+                width: auto!important;    
+                display: inline-block!important;    
+            }
+            *.gig-composebox-post{
+                box-shadow: none!important; 
+                border: 1px solid #2d2d2d!important; 
+                background: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#2d2d2d))!important; 
+                
+                &:hover{
+                    background: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#2d2d2d))!important;
+                }
+            }
+        }
 	}
     
     .accordion-content.full-box{
@@ -539,6 +583,17 @@
 			transform: rotate(-45deg);
 		}
 	}
+    
+    .review-accordion-content{
+        .gig-comments-container.gig-comments-reviews{
+            width:100%!important;
+        }
+    }
+    .gig-comment-rating-star.gig-comment-rating-star-full, .gig-selfreview-rating-star.gig-selfreview-rating-star-full, .gig-comment-rating-star{
+        &:before{
+            color: #ffb607!important;
+        }
+    }
 
 }
 .pdp-size-modal{
