@@ -354,7 +354,7 @@ public class SearchPageController extends AbstractSearchPageController
 
 						{
 
-							LOG.debug("############################search4" + searchText.replaceAll("[^a-zA-Z0-9]+", ""));
+							
 
 							model.addAttribute("spellingSearchterm",
 									searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[^a-zA-Z&0-9\\s+]+", ""));//setting the terms for suggestion
