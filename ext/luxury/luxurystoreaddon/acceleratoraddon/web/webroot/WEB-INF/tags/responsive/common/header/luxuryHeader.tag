@@ -90,6 +90,7 @@
 								<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
 								<ycommerce:testId code="header_LoggedUser">
 									<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
+									<spring:theme code="lux.header.welcome" text=" - My Account"  />
 								</ycommerce:testId>
 									</a>
 								</li>
