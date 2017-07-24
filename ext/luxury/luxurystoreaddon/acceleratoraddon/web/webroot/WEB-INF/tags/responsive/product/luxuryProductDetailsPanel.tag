@@ -346,10 +346,10 @@ tr.d0 td {
 				<cms:component component="${component}" />
 			</cms:pageSlot>
 			
-			<c:if test="${isGigyaEnabled=='Y'}">
+			<%-- <c:if test="${isGigyaEnabled=='Y'}">
 				<div id='ratingDiv'></div>
 				</ul>
-			</c:if>
+			</c:if> --%>
 			<%-- <cms:pageSlot position="AddToCart" var="component">
 					<cms:component component="${component}" />
 				</cms:pageSlot> --%>
