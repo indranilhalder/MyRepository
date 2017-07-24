@@ -546,7 +546,7 @@
 													<div>
 														<div class="thumb product-img">
 															<a href="${request.contextPath}/${freebieProds.product.url}"><product:productPrimaryImage
-																	product="${freebieProds.product}" format="thumbnail" /></a>
+																	product="${freebieProds.product}" format="luxuryThumbnail" /></a>
 														</div>
 														<div class="details product">
 															<h3 class="product-brand-name">
