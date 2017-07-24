@@ -3822,10 +3822,18 @@ $(document).on("click",".product-facet .facet .facet-name",function(){
 	fixTopAdjustTimeOut();
 });
 function fixTopAdjust(){
-if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
-	$(".listing.wrapper .left-block").addClass("topTheFix");
-else
-	$(".listing.wrapper .left-block").removeClass("topTheFix");
+	/* start change of TISPRDT-1898 */
+	if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active"))){
+		$(".listing.wrapper .left-block").addClass("topTheFix");
+		if(!$(".content .top").hasClass("header_fix"))
+			$(".listing.wrapper .left-block").removeClass("fix");
+	}
+	else{
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
+		if(!$(".content .top").hasClass("header_fix"))
+			$(".listing.wrapper .left-block").removeClass("fix");
+	}
+	/* end change of TISPRDT-1898 */
 }
 
 function fixTopAdjustTimeOut(){
