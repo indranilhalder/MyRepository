@@ -606,8 +606,8 @@
 			float: left;
 			width: 75%;
 			+ span {
-				text-align: right;
-				width: 25%;
+				text-align: left;
+				width: 25%;				
 			}
 		}
 		&.orderTotal {
@@ -677,24 +677,26 @@
      }
 }
 .itemsQty {
-  margin-left: 10px;
- form { display : inline }
+  	margin-left: 10px;
+ 	form { 
+ 		display: inline;
+ 	}
  }
  .itemsTitle a {
-  color : #2d2d2d
+  	color : #2d2d2d
  }
  .mybag-undo-form {display : inline-block}
  .totalPrice{
- text-decoration: none !important; 
- span {
-  color: #DE2844 !important;
-  font-weight: 300;
-  text-decoration: none !important;
-  font-size: 100% !important;
- }
- span.priceFormat { 
-  color :#2d2d2d !important;
- }
+ 	text-decoration: none !important; 
+ 	span {
+	  color: #DE2844 !important;
+	  font-weight: 300;
+	  text-decoration: none !important;
+	  font-size: 100% !important;
+ 	}
+ 	span.priceFormat { 
+  		color :#2d2d2d !important;
+ 	}
 }
 .checkoutBtn {
  a.proceedCheckout {

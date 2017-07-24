@@ -13823,8 +13823,7 @@ TATA.CommonFunctions = {
             });
         },
         showSelectedRefinements: function() {
-            0 == $(".facetValues .facet-form input:checked").length && $(".plp-wrapper h4.categor-name").show(), 
-            $(window).width() < 768 && $(".facetValues .facet-form input:checked").each(function() {
+            $(".facetValues .facet-form input:checked").length, $(window).width() >= 768 && $(".facetValues .facet-form input:checked").each(function() {
                 $(this).parents(".allFacetValues").show(), $(this).parents(".facet").addClass("open");
             }), $(".facet-form input[type=checkbox]").each(function() {
                 var colorString = $(this).attr("data-colour"), colorArray = colorString.split("_"), colorCode = "#" + colorArray[1];

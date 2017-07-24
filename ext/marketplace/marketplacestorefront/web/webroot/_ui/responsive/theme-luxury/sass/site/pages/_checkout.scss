@@ -1137,11 +1137,13 @@ checkout-shipping-items.left-block-width{
             }
         }
         li.item>ul>li:first-child {
-            width: 38.5%;
+            width: 100%;
             margin-top: 0;
             padding: 15px 0 15px 0px;
             clear: both;
-            
+        }
+        li.item.delivery_options>ul>li:first-child {
+            width: 38.5%;
             @include media-breakpoint-down(sm) {
                 width: 100%;
             }
