@@ -22,9 +22,9 @@
 						 <c:choose>
 						<c:when test="${not empty entries}">		
          
-             <c:forEach items="${entries}" var="entry" end="${numberShowing - 1}">
-								<c:url value="${entry.product.url}" var="entryProductUrl"/>
-							<li class="item">
+							<c:forEach items="${entries}" var="entry" end="${numberShowing - 1}"  varStatus="status" >
+							<c:url value="${entry.product.url}" var="entryProductUrl"/>
+							<li class="item item_${status.count}">
 								<ul>
 									<li>
 										<div class="product-img">
@@ -64,12 +64,13 @@
 											</p>
 										</div>
 										<ul class="item-edit-details">
+											<li class="hide">${fn:length(entries)}</li>
 											<li><spring:theme code="cart.popup.quantity" /> ${entry.quantity}</li>
 											<c:if test="${not empty entry.product.size}">
 											<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
 											</c:if>
 											<c:if test="${entry.giveAway ne true}">
-											<li><a href="#nogo" class="removeFromCart" data-entry-no="${entry.entryNumber}" data-ussid="${entry.selectedUssid}"><spring:theme code="text.iconCartRemove" /></a></li>
+											<li><a href="#nogo" class="removeFromCart" data-entry-no="${entry.entryNumber}" data-status="${status.count}" data-ussid="${entry.selectedUssid}"><spring:theme code="text.iconCartRemove" /></a></li>
 											</c:if>
 										</ul>
 									</li>

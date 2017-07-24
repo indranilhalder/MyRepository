@@ -507,8 +507,8 @@ sendAddToBag : function(formId, isBuyNow) {
 									+ (new Date()).getTime();
 									$.get(url, function(html) {
 										var cartqtytext = $(html).find('.item-edit-details li:first-child').html();
-										var cartcount = cartqtytext.split(":")[1];
-										$('#addtocart-popup .lux-cart-btn span').html('('+cartcount+')');
+										//var cartcount = cartqtytext;
+										$('#addtocart-popup .lux-cart-btn span').html('('+cartqtytext+')');
 									}); 
 									$('#addtocart-popup,.luxury-over-lay').show(); 
 									$("#no-click,.loaderDiv").remove();
