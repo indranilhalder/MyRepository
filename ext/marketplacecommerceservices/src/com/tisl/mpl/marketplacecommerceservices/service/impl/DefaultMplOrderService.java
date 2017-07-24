@@ -8,7 +8,6 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -258,7 +257,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplAwbStatusService#prepAwbStatus(com.tisl.mpl.xml.pojo.AWBStatusResponse)
 	 */
 	@Override
@@ -338,7 +337,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplOrderService#findProductsByCode(java.lang.String)
 	 */
 	@Override
@@ -355,11 +354,11 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
-	 * 
+	 *
 	 * @param orderEntryModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Override
@@ -395,7 +394,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	//TPR-5225
 	@Override
-	public List<OrderEntryModel> fetchOrderByMobile(final String mobileNo)
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo)
 	{
 		return mplOrderDao.getOrderByMobile(mobileNo);
 	}
