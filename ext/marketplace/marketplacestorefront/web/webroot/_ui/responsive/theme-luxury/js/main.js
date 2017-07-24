@@ -83,7 +83,6 @@ TATA.CommonFunctions = {
                     maxlength: 30
                 },
                 mobileNumber: {
-                    number:true,
                     minlength: 10,
                     maxlength: 10
                 },
@@ -105,8 +104,8 @@ TATA.CommonFunctions = {
             },
             messages:{
             	mobileNumber: {
-            		minlength:"Please enter at least 10 numbers.",
-            		maxlength:"Please enter no more than 10 numbers.",
+            		minlength:"Mobile number should contain 10 digit number only.",
+            		maxlength:"Mobile number should contain 10 digit number only.",
             	},
             	
             },
