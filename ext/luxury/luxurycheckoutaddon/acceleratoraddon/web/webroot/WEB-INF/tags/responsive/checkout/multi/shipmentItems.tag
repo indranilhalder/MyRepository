@@ -36,7 +36,7 @@
 			<h3> <a href="${request.contextPath}/cart"><spring:theme code="checkout.multi.deliveryMethod.backToBag" text="Back to My Bag"></spring:theme> </a> </h3>
 		</div> --%>
 		<ul id="deliveryradioul" class="checkout-table product-block mybag-items checkout-items">
-				<li class="headers">
+				<%-- <li class="headers">
 					<ul class="headline mybag-item-head">
 					
 						<li id="header2" class="Product"><spring:theme code="text.product.delivery.product"/></li>
@@ -44,7 +44,7 @@
 						<li id="header2" class="qty"><spring:theme code="text.product.delivery.quantity"/></li>
 						<li class="delivery dev" id="header4"><spring:theme code="text.product.delivery.deliveryoption"/></li>
 					</ul>
-				</li>
+				</li> --%>
 				
 						<c:forEach items="${cartData.entries}" var="entry">
 								<c:url value="${entry.product.url}" var="productUrl" />
