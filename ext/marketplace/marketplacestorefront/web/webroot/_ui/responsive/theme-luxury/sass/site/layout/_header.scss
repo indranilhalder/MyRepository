@@ -137,8 +137,8 @@
 		@include media-breakpoint-down(sm) {
 			margin-top: 14px;
 			position: fixed;
-			top: 0;
-			left: -100%;
+			top: -100%;
+			left: 0;
 			background: rgba(65, 65, 65, 0.9);
 			color: $white;
 			z-index: 9999;
@@ -937,7 +937,7 @@
 		overflow: hidden;
 		z-index: 999;
 		.main-nav {
-			left: 0;
+			top: 0;
 		}
 	}
 	.header-promo{
