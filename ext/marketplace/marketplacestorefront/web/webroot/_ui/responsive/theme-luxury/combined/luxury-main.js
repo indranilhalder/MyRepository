@@ -14232,14 +14232,6 @@ TATA.CommonFunctions = {
 var wishListList = [];
 
 $(document).ready(function() {
-	
-	$(document).on("click", ".variant-select", function(){
-    	$(".add-to-wl-pdp").removeClass("added");
-    	if($("a#myWishlistHeader").length > 0){
-    		$("a#myWishlistHeader").trigger("mouseover");
-    	}
-	});
-    
     luxurycheckIsServicable(), $(".checkout-paymentmethod .payment-tab").removeClass("active"), 
     $("#card").css("display", "none"), $(".credit_tab").on("click", function() {
         $(".new_card_tab.credit_tab").hasClass("active_tab") && $(".newCardPaymentCC").show();
@@ -14247,6 +14239,8 @@ $(document).ready(function() {
         $("#sameAsShipping").is(":checked") ? $(".payment-billing-form").hide() : $(".payment-billing-form").show();
     }), $(document).on("click", ".gig-rating-button", function() {
         $(".ratingsAndReview").trigger("click");
+    }), $(document).on("click", ".variant-select", function() {
+        $(".add-to-wl-pdp").removeClass("added"), $("a#myWishlistHeader").length > 0 && $("a#myWishlistHeader").trigger("mouseover");
     }), $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover", function() {
         $(this).find("a#checkout-enabled.checkout-disabled").length > 0 ? $(this).css("cursor", "not-allowed") : $(this).css("cursor", "default");
     });

@@ -455,6 +455,59 @@
 	.pdp #addtocart-popup {
 		width: 250px;
 		transform: translateX(30%);
+        padding: 0px;
+        
+        h3{
+            margin-top: 30px;
+            margin-bottom:10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        ul{
+            .product{
+                margin-bottom: 20px;
+                li{
+                    text-align: left;
+                    h3{
+                        font-size: 12px;
+                        margin: 0px;
+                        border: 0px;
+                    }
+                    
+                    .itemsImage{
+                        img{
+                            border: 1px solid #ccc;
+                        }
+                        
+                    }
+                    .itemsDescription{
+                        
+                    }
+                   
+                }
+            }
+            li a.btn{
+              font-size: 14px;
+            }
+            .lux-cart-btn{
+                background: #fff;
+                color: #000;
+                border: 1px solid #000;
+                
+            }
+            .lux-keepshop-btn{
+                background: #B9966B;
+                color: #fff;
+                border: 1px solid #B9966B;                
+            }
+        }
+        >ul{
+                padding: 15px;
+                
+        }
+        
 	}
 	.plp-banner-wrapper,.breadcrumb,.grid-wrapper,.sort-wrapper{
 		display:none;
