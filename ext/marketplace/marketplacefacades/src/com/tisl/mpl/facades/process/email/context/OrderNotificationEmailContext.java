@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.core.model.OrderShortUrlInfoModel;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.StateData;
@@ -161,7 +162,20 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ orderCode;
 		/* Added in R2.3 for shortUrl START */
-		final String shortUrl = shortUrlService.genearateShortURL(orderCode);
+
+		final OrderShortUrlInfoModel orderShortUrlInfoModel = shortUrlService.getShortUrlReportModelByOrderId(orderCode);
+
+		String shortUrl = null;
+
+		if (orderShortUrlInfoModel == null)
+		{
+
+			shortUrl = shortUrlService.genearateShortURL(orderCode);
+		}
+		else
+		{
+			shortUrl = orderShortUrlInfoModel.getShortURL();
+		}
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
 		put(ORDER_CODE, orderCode);
