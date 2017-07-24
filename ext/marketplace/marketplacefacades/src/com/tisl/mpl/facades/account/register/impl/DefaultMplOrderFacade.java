@@ -16,7 +16,6 @@ import de.hybris.platform.commerceservices.strategies.CheckoutCustomerStrategy;
 import de.hybris.platform.converters.Converters;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -403,7 +402,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -454,9 +453,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -493,11 +492,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -531,11 +530,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -870,7 +869,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1160,11 +1159,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	 * @return OrderModel
 	 */
 	@Override
-	public List<OrderEntryModel> getOrderWithMobileNo(final String mobileNo)
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo)
 	{
-		List<OrderEntryModel> orderEntryModel = null;
-		orderEntryModel = mplOrderService.fetchOrderByMobile(mobileNo);
-		return orderEntryModel;
+		List<OrderModel> orderModel = null;
+		orderModel = mplOrderService.fetchOrderByMobile(mobileNo);
+		return orderModel;
 	}
 
 	//TPR-5225
@@ -1197,31 +1196,93 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	//TPR-5225
 	@Override
-	public OrderInfoWsDTO storeOrderInfoByMobileNo(final List<OrderEntryModel> orderEntryModels)
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(final List<OrderModel> orderModels)
 	{
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
+		List<OrderModel> subordermodels = new ArrayList<OrderModel>();
+		OrderModel parentOrderModel = null;
+		int count = 0;
+
 		try
 		{
-			if (orderEntryModels != null)
+			//			final List<OrderModel> orderModels = new ArrayList<OrderModel>();
+			//
+			//			for (final OrderEntryModel orderentry : orderEntryModels)
+			//			{
+			//				final OrderModel oModel = orderentry.getOrder().getParentReference();
+			//				if (!orderModels.contains(oModel))
+			//				{
+			//					orderModels.add(orderentry.getOrder().getParentReference());
+			//				}
+			//			}
+
+
+			if (CollectionUtils.isNotEmpty(orderModels))
 			{
-				for (final AbstractOrderEntryModel entry : orderEntryModels)
+				for (final OrderModel parentOrder : orderModels)
 				{
-					final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-					customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID() : "NULL");
-					customerOrderInfoWsDTO
-							.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName() : "NULL");
-					if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
+					parentOrderModel = parentOrder;
+					subordermodels = parentOrderModel.getChildOrders();
+
+					if (CollectionUtils.isNotEmpty(subordermodels))
 					{
-						customerOrderInfoWsDTO
-								.setL4CategoryName(mplOrderService.getL4CategoryIdOfProduct(entry.getProduct().getCode()));
+						//subOrderModel = orderModels.getChildOrders();
+						List<AbstractOrderEntryModel> subOrderEntryModels = new ArrayList<AbstractOrderEntryModel>();
+						for (final OrderModel subOrder : subordermodels)
+						{
+
+							subOrderEntryModels = subOrder.getEntries();
+
+							for (final AbstractOrderEntryModel entry : subOrderEntryModels)
+							{
+								if (count < 3)
+								{
+									final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+									customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID()
+											: "NULL");
+									customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct()
+											.getName() : "NULL");
+									if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
+									{
+										customerOrderInfoWsDTO.setL4CategoryName(mplOrderService.getL4CategoryIdOfProduct(entry
+												.getProduct().getCode()));
+									}
+									else
+									{
+										customerOrderInfoWsDTO.setL4CategoryName("NULL");
+									}
+									count++;
+									custdto.add(customerOrderInfoWsDTO);
+									orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+								}
+								else
+								{
+									break;
+								}
+							}
+						}
 					}
 					else
 					{
-						customerOrderInfoWsDTO.setL4CategoryName("NULL");
+						//						final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+						//						customerOrderInfoWsDTO.setTransactionId("Order Ref No:" + parentOrder + "NULL");
+						//						customerOrderInfoWsDTO.setProductName("NULL");
+						//						customerOrderInfoWsDTO.setL4CategoryName("NULL");
+						//						custdto.add(customerOrderInfoWsDTO);
+						//						orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+						if (count < 3)
+						{
+							final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+							count++;
+							customerOrderInfoWsDTO.setTransactionId("NULL");
+							customerOrderInfoWsDTO.setProductName("NULL");
+							customerOrderInfoWsDTO.setL4CategoryName("NULL");
+							custdto.add(customerOrderInfoWsDTO);
+							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+							//orderInfoWsDTO.setError("Order Ref No:" + parentOrder.getCode() + " doesn't have any details");
+						}
 					}
-					custdto.add(customerOrderInfoWsDTO);
-					orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 				}
 			}
 			else
@@ -1253,7 +1314,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			{
 				List<AbstractOrderEntryModel> subOrderModel = new ArrayList<AbstractOrderEntryModel>();
 				subOrderModel = orderModel.getEntries();
-				if (subOrderModel != null)
+				if (CollectionUtils.isNotEmpty(subOrderModel))
 				{
 					for (final AbstractOrderEntryModel entry : subOrderModel)
 					{
@@ -1590,12 +1651,12 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 				List<AbstractOrderEntryModel> orderEntryModel = new ArrayList<AbstractOrderEntryModel>();
 				subOrderModel = orderModel.getChildOrders();
-				if (subOrderModel != null)
+				if (CollectionUtils.isNotEmpty(subOrderModel))
 				{
 					for (final OrderModel subOrder : subOrderModel)
 					{
 						orderEntryModel = subOrder.getEntries();
-						if (orderEntryModel != null)
+						if (CollectionUtils.isNotEmpty(orderEntryModel))
 						{
 							for (final AbstractOrderEntryModel entry : orderEntryModel)
 							{
@@ -1654,6 +1715,22 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							}
 						}
 					}
+				}
+				else
+				{
+					final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
+					customerOrderInfoWsDTO.setApportionedPrice("NULL");
+					customerOrderInfoWsDTO.setSellerName("NULL");
+					customerOrderInfoWsDTO.setShippingType("NULL");
+					customerOrderInfoWsDTO.setTransactionId("NULL");
+					customerOrderInfoWsDTO.setProductName("NULL");
+					customerOrderInfoWsDTO.setEdd("NULL");
+					customerOrderInfoWsDTO.setShippingMode("NULL");
+					customerOrderInfoWsDTO.setPaymentType("NULL");
+					customerOrderInfoWsDTO.setOrderStatus("NULL");
+					custdto.add(customerOrderInfoWsDTO);
+					orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+
 				}
 			}
 			else

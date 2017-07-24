@@ -7,7 +7,6 @@ import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
-import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -92,11 +91,11 @@ public interface MplOrderService
 
 	/*
 	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
-	 * 
+	 *
 	 * @param orderEntryModel
-	 * 
+	 *
 	 * @return boolean
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	boolean checkIfBuyABGetCApplied(final AbstractOrderEntryModel orderEntryModel) throws Exception;
@@ -107,7 +106,7 @@ public interface MplOrderService
 	public OrderModel getOrderByParentOrderId(final String orderRefNo);
 
 	//TPR-5225
-	public List<OrderEntryModel> fetchOrderByMobile(final String mobileNo);
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo);
 
 	//TPR-5225
 	public String getL4CategoryIdOfProduct(final String productCode);
