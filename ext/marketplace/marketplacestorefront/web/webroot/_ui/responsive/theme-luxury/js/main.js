@@ -2576,6 +2576,14 @@ $(document).ready(function () {
         $(".ratingsAndReview").trigger("click");
     });
     
+    
+    $(document).on("click", ".variant-select", function(){
+    	$(".add-to-wl-pdp").removeClass("added");
+    	if($("a#myWishlistHeader").length > 0){
+    		$("a#myWishlistHeader").trigger("mouseover");
+    	}
+	});
+    
     $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover",function(){
         if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
             $(this).css("cursor","not-allowed");
