@@ -87,8 +87,8 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;LuxuryFreeShippingLink;Luxury Free Shipping Link;/free-shipping;;;;;;"Free Shipping + free return"
 ;;ContactUsLink;Contact Us Link;/contact;;;;;;Contact Us
 ;;FrequentlyAskedQuestionsLink;Frequently Asked Questions Link;/faq;;;;;;FAQ
-;;TermsAndConditions;Terms And Conditions;/terms-conditions;;;;;;Terms and Conditions
-;;TermsOfUse;Terms Of Use;/terms-use;;;;;;Terms Of Use
+;;TermsAndConditions;Terms And Conditions;/termsAndConditions;;;;;;Terms and Conditions
+;;TermsOfUse;Terms Of Use;/termsOfUse;;;;;;Terms Of Use
 ;;TrackOrdersLink;Track Orders Link;/trackorders;;;;;;Track Orders
 ;;ShippingLink;Shipping Link;/shipping;;;;;;Shipping
 ;;CancellationLink;Cancellation Link;/cancellation;;;;;;Cancellation
@@ -887,7 +887,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
 ;SearchBox;;;searchbox
-;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;Luxury-MiniCart
+;MiniCart;;CMSLinkComponent,TrackOrderHeaderComponent,MyWishListInHeaderComponent,SignInFlyOutComponent;
 ;NavigationBar;;;navigation
 ;Section1;;JspIncludeComponent,CMSParagraphComponent,AccountNavigationComponent,BrandCollectionComponent,SimpleBannerComponent,SimpleResponsiveBannerComponent,BannerComponent,MplBigPromoBannerComponent,MplBigFourPromoBannerComponent;
 ;Section2A;;CMSParagraphComponent,AccountNavigationComponent,JspIncludeComponent;
@@ -926,7 +926,7 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo
 ;HeaderLinks;;;headerlinks
 ;SearchBox;;;searchbox
-;MiniCart;;;Luxury-MiniCart
+;MiniCart;;;
 ;NavigationBar;;;navigation
 ;TopBannerMen;;;wide
 ;TopBannerWomen;;;wide
@@ -1095,6 +1095,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-LuxuryContentPage;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
 ;;HomepageLink-AccountCouponDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
@@ -1189,14 +1190,28 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='cancellation'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2A-Cancellation;Section2A;;Section2ASlot-Cancellation;;;
 ;;Section2B-Cancellation;Section2B;;Section2BSlot-Cancellation;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='faq'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2A-FAQ;Section2A;;Section2ASlot-FAQ;;;
 ;;Section2B-FAQ;Section2B;;Section2BSlot-FAQ;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='returns'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2A-returns;Section2A;;Section2ASlot-returns;;;
 ;;Section2B-returns;Section2B;;Section2BSlot-returns;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='shipping'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2A-shipping;Section2A;;Section2ASlot-shipping;;;
 ;;Section2B-shipping;Section2B;;Section2BSlot-shipping;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='trackorders'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2A-trackorders;Section2A;;Section2ASlot-trackorders;;;
 ;;Section2B-trackorders;Section2B;;Section2BSlot-trackorders;;;
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='termsAndConditions'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2A-TAC;Section2A;;Section2ASlot-TAC;;;
 ;;Section2B-TAC;Section2B;;Section2BSlot-TAC;;;
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='termsOfUse'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2B-termsOfUse;Section2B;;Section2BSlot-termsOfUse;;;
