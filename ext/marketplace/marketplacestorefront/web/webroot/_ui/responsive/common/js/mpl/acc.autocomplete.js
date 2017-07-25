@@ -42,7 +42,7 @@ ACC.autocomplete = {
 							.appendTo(ul);
 					
 				}
-				if (item.type == "productResult"){ 
+				if (item.type == "productResult" && site != "lux"){ 
 					var renderHtml = "<a href='" + ACC.config.encodedContextPath + item.url + "' >";
 					
 					renderHtml += 	"<div class='Best-Sellers'>" + "Best Sellers" +"</div>";
@@ -85,7 +85,7 @@ ACC.autocomplete = {
 							"</a>";
 					return $("<li class='product-list'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
 				}
-				if (item.type == "productResult")
+				if (item.type == "productResult" && site != "lux")
 				{				
 					var renderHtml = "<a href='" + ACC.config.contextPath + item.url + "' class='product-list clearfix'>";
 					if (option.displayProductImages &&  item.image != null)
