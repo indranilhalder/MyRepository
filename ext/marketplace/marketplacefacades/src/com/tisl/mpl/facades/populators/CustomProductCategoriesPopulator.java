@@ -41,7 +41,7 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 	@Resource
 	private ConfigurationService configurationService;
 
-	protected static final Logger LOG = Logger.getLogger(CustomProductBasicPopulator.class);
+	protected static final Logger LOG = Logger.getLogger(CustomProductCategoriesPopulator.class);
 
 	//Exchange Changes
 	@Resource(name = "exchangeGuideFacade")
@@ -86,7 +86,7 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 			productData.setRootCategoryL2((productModel.getProductCategoryTypeL2()));
 		}
 		//For TPR:4847: size facet clubbing for kidswear end
-		
+
 		//		  final Collection<CategoryModel> categories = getCommerceProductService()
 		//		  .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
 		final List<CategoryModel> resultList = new ArrayList<>();
@@ -129,9 +129,11 @@ public class CustomProductCategoriesPopulator<SOURCE extends ProductModel, TARGE
 
 
 		//commented as a fix for TISSQAUAT-665
-		/**final Collection<CategoryModel> categories = getCommerceProductService()
-				.getSuperCategoriesExceptClassificationClassesForProduct(productModel);
-		productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));**/
+		/**
+		 * final Collection<CategoryModel> categories = getCommerceProductService()
+		 * .getSuperCategoriesExceptClassificationClassesForProduct(productModel);
+		 * productData.setCategories(Converters.convertAll(categories, getCategoryConverter()));
+		 **/
 
 
 

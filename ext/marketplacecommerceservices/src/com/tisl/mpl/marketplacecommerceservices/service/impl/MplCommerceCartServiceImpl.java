@@ -6010,7 +6010,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								&& StringUtils.isNotEmpty(pinCodeResponseData.getExchangePincode()))
 						{
 
-							pinCodeResponseData.setIsExchangeServiceable(exchangeService.isBackwardServiceble(pinCodeResponseData
+							pinCodeResponseData.setExchangeServiceable(exchangeService.isBackwardServiceble(pinCodeResponseData
 									.getExchangePincode()));
 
 						}
