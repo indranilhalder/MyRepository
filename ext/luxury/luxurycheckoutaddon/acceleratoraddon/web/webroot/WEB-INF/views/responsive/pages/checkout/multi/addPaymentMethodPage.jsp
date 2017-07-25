@@ -503,6 +503,13 @@
 								                           		<span class="error-message" id="address3Error"></span>
 							                           		</div>
 						                           		</div>
+						                     			<div class="row mb-20">
+						                           		<div class="full">
+							                           		<label><spring:theme code="text.city"/></label>
+							                           		<input type="text" id="city" required="required" maxlength="40">
+							                           		<span class="error-message" id="cityError"></span>
+						                           		</div>
+						                           		</div>
 						                           		<div class="row mb-20">
 							                           		<div class="half col-md-6">
 								                           		<label><spring:theme code="text.state"/></label>
