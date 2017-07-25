@@ -20,6 +20,49 @@
         }
     }
     
+    .pdp-promo-title.pdp-title{
+        cursor: pointer;
+    }
+    
+    #offerPopup{
+        top: 25%;
+        .overlay{
+            display: none;
+        }
+        &.content{
+            padding: 10px;
+            min-width: 20%;
+            width: 300px;
+            background: #fff;
+            margin: 0 auto;
+            li{
+                list-style: none;
+                .offer-modal-heading{
+                    font-size: 18px;
+                }
+                .offer-outer-wrapper{
+                    h3{
+                        font-size: 14px;
+                        font-weight: 700;
+                    }
+                    .Left primary_promo_img{
+                        display: inline-block;
+                        width: 25%;
+                        vertical-align: top;
+                    }
+                    .pdp-promoDesc{
+                        display: inline-block;
+                        width: 74%;
+                        vertical-align: top;
+                        h3{
+                            margin: 0px;
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
+        }
+    }
     .product-detail.pdp-right{
          @include media-breakpoint-down(sm) {
              .Cta{
@@ -429,6 +472,10 @@
                 &:hover{
                     background: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#2d2d2d))!important;
                 }
+            }
+            
+            .gig-rating-dimensions .gig-rating-dimension{
+                display: none!important; 
             }
         }
 	}
