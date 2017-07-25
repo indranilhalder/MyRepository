@@ -160,13 +160,13 @@
 			}
 		}
 	}    
-   .show-lookbok-desktop{
+   .show-lookbok-desktop,.shortbanner-desktop{
         display: block;
         @include media-breakpoint-down(sm) {
             display: none;
         }
     }
-    .show-lookbok-mobile{
+    .show-lookbok-mobile,.shortbanner-mobile{
         display: none;
         @include media-breakpoint-down(sm) {
             display: block;

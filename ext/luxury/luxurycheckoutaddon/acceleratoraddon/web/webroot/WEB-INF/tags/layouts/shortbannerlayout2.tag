@@ -14,12 +14,12 @@
 		                    <c:forEach items="${medias.medias}" var="media">
 		                        <c:choose>
 		                            <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
-		                                <a href="${media.urlLink}">
+		                                <a class="shortbanner-desktop" href="${media.urlLink}">
 		                                    <img src="${media.url}">
 		                                </a>
 		                            </c:when>
-		                            <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
-		                                <a href="${media.urlLink}">
+		                            <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
+		                                <a class="shortbanner-mobile" href="${media.urlLink}">
 		                                    <img src="${media.url}">
 		                                </a>
 		                            </c:when>
@@ -36,12 +36,12 @@
 		                    <c:forEach items="${medias.medias}" var="media">
 			                    <c:choose>
 				                    <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
-				                        <a href="${media.urlLink}">
+				                        <a class="shortbanner-desktop" href="${media.urlLink}">
 				                            <img src="${media.url}">
 				                        </a>
 				                    </c:when>
-				                     <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
-				                        <a href="${media.urlLink}">
+				                     <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
+				                        <a class="shortbanner-mobile" href="${media.urlLink}">
 				                            <img src="${media.url}">
 				                        </a>
 				                    </c:when>
