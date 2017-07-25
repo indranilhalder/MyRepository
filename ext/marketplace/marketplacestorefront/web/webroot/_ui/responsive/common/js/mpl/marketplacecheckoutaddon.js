@@ -8997,13 +8997,14 @@ function populateIsExchangeApplied(response,stringCaller)
 		for ( var key in deliveryModeJsonObj) 
 		{
 			ussId= deliveryModeJsonObj[key].ussid;
-			isExchangeServicable= deliveryModeJsonObj[key].isExchangeServiceable;
+			isExchangeServicable= deliveryModeJsonObj[key].exchangeServiceable;
 			exchangePincode=deliveryModeJsonObj[key].exchangePincode;	
 		}
 		
 		if(isExchangeServicable && exchangePincode==selectedPincode)
 			{
 			$(".cart_exchange").css('display','block');
+			$("#exCartAlert").css('display','block');
 			}
 		else
 			{
