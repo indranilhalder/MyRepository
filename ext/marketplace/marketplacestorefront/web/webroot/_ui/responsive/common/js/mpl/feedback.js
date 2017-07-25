@@ -3784,11 +3784,7 @@ $(document).ready(function() {
 	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
 	}
-	/*start change of INC144316990*/
-	if($('#my-review-carousel .owl-stage-outer .owl-stage .owl-item').children().is("script")){
-		$('#my-review-carousel .owl-stage-outer .owl-stage .owl-item script').parent().css("width", "0px");
-	}
-	/*end change of INC144316990*/
+	
 });
 
 
@@ -3804,13 +3800,7 @@ $(window).on("load resize click",function(){
 });
 /* end change of PRDI-92 */
 
-/*start change of INC144316990*/
-$(window).on("load resize",function(){
-	if($('#my-review-carousel .owl-stage-outer .owl-stage .owl-item').children().is("script")){
-		$('#my-review-carousel .owl-stage-outer .owl-stage .owl-item script').parent().css("width", "0px");
-	}
-});
-/*end change of INC144316990*/
+
 
 /*start change of INC144316778*/
 $(window).on("scroll resize",function(){
