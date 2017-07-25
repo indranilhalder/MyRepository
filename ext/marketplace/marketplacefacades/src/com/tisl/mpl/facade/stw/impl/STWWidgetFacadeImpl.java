@@ -35,8 +35,6 @@ public class STWWidgetFacadeImpl implements STWWidgetFacade
 {
 
 	private static final Logger LOG = Logger.getLogger(STWWidgetFacadeImpl.class);//sonar fix
-	private static String ZERO = "0";
-
 	private STWWidgetService stwWidgetService;
 	private BuyBoxService buyBoxService;
 
