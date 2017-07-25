@@ -785,11 +785,11 @@ ACC.singlePageCheckout = {
                 	var str ="";
                 	if(data.hd>0)
                 	{
-                		str+="Home Delivery ("+data.hd+" item),"
+                		str+="Standard Shipping ("+data.hd+" item),"
                 	}
                 	if(data.ed>0)
                 	{
-                		str+="Express Delivery ("+data.ed+" item),"
+                		str+="Express Shipping ("+data.ed+" item),"
                 	}
                 	if(data.cnc>0)
                 	{
@@ -1317,14 +1317,24 @@ ACC.singlePageCheckout = {
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
+//    		$("li.price").each(function(){
+//    				if($(this).find(".off-bag").css("display") === "block"){
+//    					$(this).find("span.delSeat").addClass("delAction");
+//    				}
+//    				else{
+//    					$(this).find("span.delSeat").removeClass("delAction");
+//    				}
+//    			});
     		$("li.price").each(function(){
-    				if($(this).find(".off-bag").css("display") === "block"){
-    					$(this).find("span.delSeat").addClass("delAction");
+    			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+    				if($(this).find("span.delSeat.mop").length > 0){
+    				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
     				}
-    				else{
-    					$(this).find("span.delSeat").removeClass("delAction");
-    				}
-    			});
+    			}
+    			else{
+    				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+    			}
+    		});
     		//END:Code to show strike off price
         	if($('body').find('a.cart_move_wishlist').length > 0){
         	$('a.cart_move_wishlist').popover({ 
@@ -1670,7 +1680,7 @@ ACC.singlePageCheckout = {
 					{
 						utag.link({
 							link_text: 'review_order_add_to_wishlist' , 
-							event_type : 'review_order__to_wishlist', 
+							event_type : 'review_order_add_to_wishlist', 
 							product_sku_wishlist : productcodearray
 						});
 					}
@@ -2014,6 +2024,7 @@ ACC.singlePageCheckout = {
 	formValidationErrorCount:0,
 	isSlotDeliveryAndCncPresent:false,
 	countItemsForReviewOrder:"",
+	needHelpContactNumber:"",
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -2057,7 +2068,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
-		ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
+		//ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2195,7 +2206,16 @@ ACC.singlePageCheckout = {
         	$(".mobile_add_address").addClass("form_open");
 			$(".new-address-form-mobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
-		}        
+		} 
+		
+		//UF-429
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : 'new_address_clicked', 
+				event_type : 'new_address_clicked'
+			});
+		}
 		return false;	
 	},
 	//Function used to check pincode serviceability for responsive
@@ -2214,7 +2234,8 @@ ACC.singlePageCheckout = {
 		{
 			//$("input[name=selectedAddressCodeMobile]").prop("checked", false);
 		}
-		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){	
+		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
+			 ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
 			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
 			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -2231,6 +2252,7 @@ ACC.singlePageCheckout = {
 	            		$(".new-address-form-mobile").slideUp();
                 	}
 					if (jqXHR.responseJSON) {
+						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
 		                {
 		                	if(isNew)
@@ -2255,6 +2277,7 @@ ACC.singlePageCheckout = {
 	           
 		                }
 		            } else {
+		            	//In case of no error at server end below block will execute.
 		            	if(isNew)
 	                	{
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
@@ -2765,6 +2788,13 @@ $(document).ready(function(){
 	var pageType=$("#pageType").val();
 	if(pageType=="multistepcheckoutsummary")
 	{
+		//Updating need help number ACC.singlePageCheckout.needHelpContactNumber is set in 'needhelpcomponent.jsp' file.
+		var needHelpNumber=ACC.singlePageCheckout.needHelpContactNumber;
+		if(needHelpNumber!="" && needHelpNumber!=null)
+		{
+			needHelpNumber=needHelpNumber.replace(/\-/g, " ");
+			$("#singlePageNeedHelpComponent").text("Need Help? Call "+needHelpNumber);
+		}
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
 			//Reload the page if a user resizes the device and viewport width changes from desktop to responsive
@@ -2781,8 +2811,15 @@ $(document).ready(function(){
 		var deviceType=$("#deviceType").html();
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
-			//Reload the page if a user directly accesses the site in a small sized desktop browser
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in a small sized desktop browser.
 			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
+		}
+		else if(deviceType=="mobile" && !ACC.singlePageCheckout.getIsResponsive())
+		{
+			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
+			//Reload the page if a user directly accesses the site in desktop browser modifying the user agent in browser dev tools to mobile where as width of view port is more than 768px.
+			window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isNormal=true";
 		}
 		
 		if(ACC.singlePageCheckout.getIsResponsive())
@@ -2812,8 +2849,3 @@ $(document).ready(function(){
 		}
 	}
 });
-
-
-$('#selectDeliveryMethodForm #deliveryradioul .delivery_options .delivery-modes li input:radio').click(function(){
-	alert("Hiii");
-	});

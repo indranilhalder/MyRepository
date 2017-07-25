@@ -112,7 +112,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.impl.MplCommerceCartServ
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.seller.product.facades.BuyBoxFacade;
 import com.tisl.mpl.service.MplCartWebService;
-import com.tisl.mpl.service.MplPaymentWebService;
 import com.tisl.mpl.util.DiscountUtility;
 import com.tisl.mpl.utility.MplDiscountUtil;
 import com.tisl.mpl.wsdto.BillingAddressWsDTO;
@@ -203,9 +202,9 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 	@Autowired
 	private CommerceCartService commerceCartService;
-
-	@Autowired
-	private MplPaymentWebService mplPaymentWebService;
+	/* SONAR FIX JEWELLERY */
+	//	@Autowired
+	//	private MplPaymentWebService mplPaymentWebService;
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService mplJewelleryService;
@@ -3284,7 +3283,8 @@ public class MplCartWebServiceImpl extends DefaultCartFacade implements MplCartW
 
 		final CartModel toCart = getCommerceCartService().getCartForGuidAndSiteAndUser(toUserCartGuid, currentBaseSite,
 				userService.getCurrentUser());
-		final CartModel anonymousCartModel = null;
+		/* SONAR FIX JEWELLERY */
+		//	final CartModel anonymousCartModel = null;
 		if (toCart == null)
 		{
 			throw new CommerceCartRestorationException("Cart cannot be null");

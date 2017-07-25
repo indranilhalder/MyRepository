@@ -4,10 +4,8 @@
 package com.tisl.mpl.facade.product.impl;
 
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
-import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.util.ArrayList;
@@ -103,10 +101,13 @@ public class ExchangeGuideFacadeImpl implements ExchangeGuideFacade
 
 	@Resource(name = "sizeGuideComparator")
 	private SizeGuideComparator sizeGuideComparator;
-	@Resource(name = "productService")
-	private ProductService productService;
-	@Resource(name = "accProductFacade")
-	private ProductFacade productFacade;
+
+	/* SONAR FIX JEWELLERY */
+	//	@Resource(name = "productService")
+	//	private ProductService productService;
+	// SONAR FIX JEWELLERY
+	//	@Resource(name = "accProductFacade")
+	//	private ProductFacade productFacade;
 
 
 	/*

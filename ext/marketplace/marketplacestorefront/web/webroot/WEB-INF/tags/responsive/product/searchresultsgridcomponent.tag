@@ -43,10 +43,10 @@
 		  <h2><span><spring:theme code="text.competing.products"/></span></h2>
 		  	<ul class="product-list">
 				<c:forEach items="${competingProductsSearchPageData.results}" var="product" varStatus="status">
-					<product:productListerGridItem product="${product}"/>
+					<product:productListerGridItem product="${product}" index="${status.index}"/>
 				</c:forEach>
 				<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
-					<product:productListerGridItem product="${product}"/>
+					<product:productListerGridItem product="${product}" index="${status.index}"/>
 				</c:forEach>
 			</ul>
 			</div>
@@ -55,7 +55,7 @@
 		  
 			<ul class="product-list">
 				<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
-					<product:productListerGridItem product="${product}"/>
+					<product:productListerGridItem product="${product}" index="${status.index}"/>
 				</c:forEach>
 			</ul>
 		</c:otherwise>
@@ -69,7 +69,7 @@
 		</div>
 	</div>
 	</div>
-<div class="bottom-pagination" style="display: none;">
+<%-- UF-409 unnecessary code commented  <div class="bottom-pagination" style="display: none;">
 	<nav:pagination top="false"  supportShowPaged="${isShowPageAllowed}" supportShowAll="${isShowAllAllowed}"  searchPageData="${searchPageData}" searchUrl="${searchPageData.currentQuery.url}"  numberPagesShown="${numberPagesShown}"/>
 
-</div>
+</div> --%>

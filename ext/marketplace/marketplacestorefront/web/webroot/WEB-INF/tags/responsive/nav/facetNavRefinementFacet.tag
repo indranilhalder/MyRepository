@@ -68,7 +68,15 @@ function navigateToPage(queryString,textString)
 
 <ycommerce:testId code="facetNav_title_${facetData.code}">
 <c:if test="${facetData.values.size()>0}">
-	<li class="facet js-facet ${facetData.name}">
+	<c:choose>
+		<c:when test="${fn:contains(facetData.name, 'Colour')}">
+			<c:set var="facetNameClass" value="${facetData.name}"></c:set>
+		</c:when>
+		<c:otherwise>
+			<c:set var="facetNameClass" value="${fn:replace(facetData.name,' ','_')}"></c:set>
+		</c:otherwise>
+	</c:choose>
+	<li class="facet js-facet ${facetNameClass}">
 		<div class="facet-name js-facet-name">
 		
 		<c:choose>
@@ -206,7 +214,8 @@ function navigateToPage(queryString,textString)
 											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
 											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
 											   <c:choose>
-											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <%-- PRDI-547 fix --%>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5  && fn:containsIgnoreCase(catCode, 'MBH')=='false'}">
 											   <a class="brandFacetRequire" href="${urls}${fn:toLowerCase(brandCode)}">
 											   ${facetValue.name}</a>	
 											   </c:when >
@@ -389,7 +398,22 @@ function navigateToPage(queryString,textString)
 								<input type="hidden" name="pageFacetData" value="${pageFacetData}"/>
 								<input type="hidden" name="isFacet" value="true"/>
 								<input type="hidden" name="facetValue" value="${facetValue.code}"/>
-								<input type="button" class="js-facet-sizebutton" value="${facetValue.name}"/>
+								<label>
+								<input type="checkbox" ${facetValue.selected ? 'checked="checked"' : ''}  class="facet-checkbox js-facet-checkbox sr-only" value="${facetValue.code}"/>
+								<span class="facet-label">
+										<span class="facet-mark"></span>
+										<div class="facet-text">
+										<span class="facet-text">
+											${facetValue.name}&nbsp;											
+
+										</span>
+
+										 <ycommerce:testId code="facetNav_count">
+												<span class="facet-count"><spring:theme code="search.nav.facetValueCount" arguments="${facetValue.count}"/></span>
+										</ycommerce:testId>
+										</div>
+									</span>
+								</label>
 								</form>
 						<%-- <a href="#">${facetValue.name}</a> --%>
 							<%-- <a href="${facetValueQueryUrl}&amp;text=${searchPageData.freeTextSearch}">${facetValue.name}</a> --%>
@@ -440,7 +464,8 @@ function navigateToPage(queryString,textString)
 											  <c:set var="brandName" value="${fn:replace(facetValue.name, ' ', '-')}" />
 											  <c:set var="urls" value="/${catName}-${fn:toLowerCase(brandName)}/c-${catCode}/b-"/>
 											   <c:choose>
-											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5}">
+											   <%-- PRDI-547 fix --%>
+											   <c:when test="${isCatPage=='true' && fn:length(catCode) > 5  && fn:containsIgnoreCase(catCode, 'MBH')=='false'}">
 											   <a class="brandFacetRequire" href="${urls}${fn:toLowerCase(brandCode)}">
 											   ${facetValue.name}</a>	
 											   </c:when >
@@ -577,6 +602,7 @@ function navigateToPage(queryString,textString)
 				<input type="hidden" id="facetTopValuesCnt" value="${fn:length(facetData.topValues)}"/>
 		    	<input type="hidden" id="remainingFacetValuesCnt" value="${fn:length(facetData.values)}"/>
 			</c:if>
+			
 			<c:if test="${not empty facetData.topValues}">
 			
 			<c:set var="remainingFacetValues" value="${facetData.values}" />

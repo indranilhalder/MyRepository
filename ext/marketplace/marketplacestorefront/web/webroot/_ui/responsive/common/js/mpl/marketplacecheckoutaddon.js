@@ -4891,6 +4891,8 @@ function applyPromotion(bankName,binValue,formSubmit)
 							dataType:'json',
 							success : function(response) {
 								if(response.length>0){
+									//PRDI-478
+									$("#bankNameForEMI option").remove();
 									$("#bankNameForEMI, #listOfEMiBank").css("display","block");
 									$("#emiRangeError").css("display","none");
 									var bankList=document.getElementById("bankNameForEMI");
@@ -5618,6 +5620,11 @@ $(document).ready(function(){
 	    		$("#unserviceablepincodeBtm").hide();
 	    		$("#unserviceablepincode_tooltip").hide();
 	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		//TISPRDT-1667
+	    		$( "#error-Id").hide();
+	    		$( "#error-IdBtm").hide();
+	    		$( "#error-Id_tooltip").hide();
+	    		$( "#error-Id_tooltip_btm").hide();
 	    		//TISSTRT-1550
 	    		$("#defaultPinCodeIdsBtm").val("");
 	    		
@@ -5644,6 +5651,11 @@ $(document).ready(function(){
 	    		$("#unserviceablepincodeBtm").hide();
 	    		$("#unserviceablepincode_tooltip").hide();
 	    		$("#unserviceablepincode_tooltip_btm").hide();
+	    		//TISPRDT-1667
+	    		$( "#error-Id").hide();
+	    		$( "#error-IdBtm").hide();
+	    		$( "#error-Id_tooltip").hide();
+	    		$( "#error-Id_tooltip_btm").hide();
 	    		//TISSTRT-1550
 	    		$("#defaultPinCodeIds").val("");
 	        }
@@ -6018,13 +6030,13 @@ function checkPincodeServiceability(buttonType,el)
  					//TPR-1083
  					populateIsExchangeApplied(response,'checkPincodeServiceability 2');	
  					
+
  					//reloadpage(selectedPincode,buttonType); commenting the code
  					//Added for UF-252 Start
  					$("#unserviceablepincode_tooltip").hide(); 
  	 	 			$("#unserviceablepincode_tooltip_btm").hide(); 
  	 	 			//Added for UF-252 End
  				}
-
  			// TISPRM-33
 	 			$("#defaultPinDiv").show();
 	 			
@@ -6152,16 +6164,16 @@ function populateCartDetailsafterPincodeCheck(responseData){
 				isOfferPresent=true;
 				$(".add-disc-pincode").show();
 				$("#CartofferDisplay_"+entryNumber).show();
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat");
 			    //$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
-			if(cartData[cart]['cartLevelPercentage']!=null){
+			if(cartData[cart]['cartLevelPercentage']!=null && cartData[cart]['cartLevelDisc']!=null){
 				isOfferPresent=true;
 				$("#CartofferDisplay_"+entryNumber).show();
 				$(".add-disc-pincode").show();
 				//$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelPercentage']+"%").addClass("priceFormat").append("<span>Off Bag</span>");
 				//UF-260
-				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat").append("<span>Off</span>");
+				$("#off-bag-cartLevelDisc_"+entryNumber).html(cartData[cart]['cartLevelDisc'].formattedValue).addClass("priceFormat");
 				//$("#off-cartLevelDiscAmt_"+entryNumber).html(cartData[cart]['amountAfterAllDisc'].formattedValue).addClass("priceFormat");
 			}
 			//Start:<!-- prodLevelPercentage replace with productPerDiscDisplay -->
@@ -6209,7 +6221,12 @@ function populateCartDetailsafterPincodeCheck(responseData){
 			}
 			
 			//UF-260
-			cartTotalMrp = cartTotalMrp + cartData[cart]['totalMrp'].doubleValue;
+			
+			if(cartData[cart]['totalMrp']!=null)
+			{
+				cartTotalMrp += cartData[cart]['totalMrp'].doubleValue;
+			}
+			
 		}
 		if(cartValue!=null){
 		//UF-260 Commenting the line as Total MRP is to be shown.
@@ -6250,8 +6267,9 @@ $("#defaultPinCodeIds").click(function(){
 	//TISSTRT-1550 starts
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincodeBtm").hide();//UF-68
-	$("#unserviceablepincode_tooltip").hide();
-	$("#unserviceablepincode_tooltip_btm").hide();
+	//TISPRDT-1667
+	//$("#unserviceablepincode_tooltip").hide();
+	//$("#unserviceablepincode_tooltip_btm").hide();
 	//TISSTRT-1550 ends
 	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
@@ -6259,12 +6277,14 @@ $("#defaultPinCodeIds").click(function(){
 	$("#cartPinCodeAvailableBtm").show();//UF-68
 	 $( "#error-Id").hide();
 	 $( "#error-IdBtm").hide();
-	 $( "#error-Id_tooltip").hide();
-	 $( "#error-Id_tooltip_btm").hide();
+	 //TISPRDT-1667
+	 //$( "#error-Id_tooltip").hide();
+	 //$( "#error-Id_tooltip_btm").hide();
 	 $("#emptyId").hide();
 	 $("#emptyIdBtm").hide();//UF-68
-	 $("#emptyId_tooltip").hide();
-	 $("#emptyId_tooltip_btm").hide();
+	 //TISPRDT-1667
+	 //$("#emptyId_tooltip").hide();
+	 //$("#emptyId_tooltip_btm").hide();
 	//Commented for UF-252 Start
 	 //$(".pincodeServiceError").hide();
 	 //TPR-1341
@@ -6286,8 +6306,9 @@ $("#defaultPinCodeIdsBtm").click(function(){
 	//TISSTRT-1550 starts
 	$("#unserviceablepincode").hide();
 	$("#unserviceablepincodeBtm").hide();//UF-68
-	$("#unserviceablepincode_tooltip").hide();
-	$("#unserviceablepincode_tooltip_btm").hide();
+	//TISPRDT-1667
+	//$("#unserviceablepincode_tooltip").hide();
+	//$("#unserviceablepincode_tooltip_btm").hide();
 	//TISSTRT-1550 ends
 	//Commented for UF-252 End
 	$(".deliveryUlClass").remove();//TPR-1341
@@ -6295,12 +6316,14 @@ $("#defaultPinCodeIdsBtm").click(function(){
 	$("#cartPinCodeAvailableBtm").show();//UF-68
 	 $("#error-Id").hide();
 	 $("#error-IdBtm").hide();
-	 $( "#error-Id_tooltip").hide();
-	 $( "#error-Id_tooltip_btm").hide();
+	 //TISPRDT-1667
+	 //$( "#error-Id_tooltip").hide();
+	 //$( "#error-Id_tooltip_btm").hide();
 	 $("#emptyId").hide();
 	 $("#emptyIdBtm").hide();//UF-68
-	 $("#emptyId_tooltip").hide();
-	 $("#emptyId_tooltip_btm").hide();
+	 //TISPRDT-1667
+	 //$("#emptyId_tooltip").hide();
+	 //$("#emptyId_tooltip_btm").hide();
 	//Commented for UF-252 Start
 	// $(".pincodeServiceError").hide();
 	/* //TPR-1341
@@ -6452,15 +6475,24 @@ function populatePincodeDeliveryMode(response,buttonType){
 		}
 		var newLi = document.createElement("li");
 		newLi.setAttribute("class", "methodHome");
-		var text = document.createTextNode("Home Delivery");
+		//UF-306 starts here
+		//var text = document.createTextNode("Home Delivery");
+		var text = document.createTextNode("Standard Shipping");
+		//UF-306 ends here
 		newLi.appendChild(text);
 		var newLi1 = document.createElement("li");
 		newLi1.setAttribute("class", "methodExpress");
-		var text = document.createTextNode("Express Delivery");
+		//UF-306 starts here
+		//var text = document.createTextNode("Express Delivery");
+		var text = document.createTextNode("Express Shipping");
+		//UF-306 ends here
 		newLi1.appendChild(text);
 		var newLi2 = document.createElement("li");
 		newLi2.setAttribute("class", "methodClick");
-		var text = document.createTextNode("Click and Collect");
+		//UF-306 starts here
+		//var text = document.createTextNode("Click and Collect");
+		var text = document.createTextNode("CLiQ AND PiQ");
+		//UF-306 ends here
 		newLi2.appendChild(text);
 		
 		var isHd = false;
@@ -7192,8 +7224,9 @@ $( "#sameAsShippingEmi" ).change(function(){
 
 function validateNameOnAddress(name, errorHandle, identifier) {
 	var regex = new RegExp(/^[a-zA-Z ]+$/);
-	//UF-277 TISSTRT-1601
-	var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var strname = name.trim();
+	//UF-277 TISSTRT-1601   //TISPRDT-1825
+	//var regexnew = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name=="" && identifier=="firstName"){
 		errorHandle.innerHTML = "Please enter a First name.";
         return false;
@@ -7214,8 +7247,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="firstName") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="firstName") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
@@ -7223,8 +7256,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="lastName") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="lastName") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
@@ -7232,8 +7265,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="firstNameEmi") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="firstNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid first name.";
         return false;
     }
@@ -7241,8 +7274,8 @@ function validateNameOnAddress(name, errorHandle, identifier) {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
-	//TISSTRT-1601
-	else if (!regexnew.test(name) && identifier=="lastNameEmi") {
+	//TISSTRT-1601  //TISPRDT-1825
+	else if (strname=="" && identifier=="lastNameEmi") {
 		errorHandle.innerHTML = "Please enter a valid last name.";
         return false;
     }
@@ -7287,17 +7320,17 @@ $("#lastName").focus(function(){
 });
 
 function validateAddressLine1(addressLine, errorHandle){
-	//TISSTRT-1601 UF-277 regex
-	var regex = new RegExp(/^[a-zA-Z0-9,/.-]+([\s]?[a-zA-Z0-9,/.-]+)*$/);
+	//PRDI-546
+	var str = addressLine.trim();
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
         return false;
 	}
-	//TISSTRT-1601 UF-277
-	else if(!regex.test(addressLine)){
-		errorHandle.innerHTML = "Please enter a valid Address";
-        return false;
+	else if(str==""){
+		errorHandle.innerHTML = "Please enter a valid Address.";
+       return false;
 	}
+	
 	errorHandle.innerHTML = "";
 	return true;
 }
@@ -7363,14 +7396,21 @@ $("#pincode").focus(function(){
 
 function validateCity() {
 	var name=$("#city").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("cityError");
-	//var regex = new RegExp(/^[a-zA-Z ]+$/);
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a City.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid City.";
+        return false;
+	}
+	//TISPRDT-1825
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid City.";
         return false;
 	}
@@ -7380,14 +7420,21 @@ function validateCity() {
 
 function validateCityEmi() {
 	var name=$("#cityEmi").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("cityErrorEmi");
-	//var regex = new RegExp(/^[a-zA-Z ]+$/);
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a City.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid City.";
+        return false;
+	}
+	//TISPRDT-1825
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid City.";
         return false;
 	}
@@ -7397,14 +7444,20 @@ function validateCityEmi() {
 
 function validateState() {
 	var name=$("#state").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("stateError");
-	//TISSTRT-1601 UF-277
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z ]+$/);
+	//TISSTRT-1601 UF-277  //TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid State.";
+        return false;
+	}
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid State.";
         return false;
 	}
@@ -7414,14 +7467,20 @@ function validateState() {
 
 function validateStateEmi() {
 	var name=$("#stateEmi").val();
+	var strname = name.trim();
 	var errorHandle=document.getElementById("stateErrorEmi");
-	//TISSTRT-1601 UF-277
-	var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
+	var regex = new RegExp(/^[a-zA-Z\ ]+$/);
+	//TISSTRT-1601 UF-277  //TISPRDT-1825
+	//var regex = new RegExp(/^[a-zA-Z]+([\s]?[a-zA-Z]+)*$/);
 	if(name==""){
 		errorHandle.innerHTML = "Please enter a State.";
         return false;
 	}
 	else if (!regex.test(name)) {
+		errorHandle.innerHTML = "Please enter a valid State.";
+        return false;
+	}
+	else if (strname=="") {
 		errorHandle.innerHTML = "Please enter a valid State.";
         return false;
 	}
@@ -8482,18 +8541,22 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 		$("#defaultPinCodeIdsBtm").css("color","black");
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();
-		$("#unserviceablepincode_tooltip").hide();
-		$("#unserviceablepincode_tooltip_btm").hide();
+		//TISPRDT-1667
+		//$("#unserviceablepincode_tooltip").hide();
+		//$("#unserviceablepincode_tooltip_btm").hide();
 		//TISSTRT-1550 ends
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();
 		 $( "#error-Id").hide();
 		 $("#error-IdBtm").hide();
-		 $( "#error-Id_tooltip").hide();
-		 $("#error-Id_tooltip_btm").hide();
+		 //TISPRDT-1667
+		 //$( "#error-Id_tooltip").hide();
+		 //$("#error-Id_tooltip_btm").hide();
 		 $("#emptyId").hide();
-		 $("#emptyId_tooltip").hide();
-		 $("#emptyId_tooltip_btm").hide();
+		 $("#emptyIdBtm").hide();
+		 //TISPRDT-1667
+		 //$("#emptyId_tooltip").hide();
+		 //$("#emptyId_tooltip_btm").hide();
 		 //$(".pincodeServiceError").hide();
 		 //TPR-1341
 		 /*$(".cartItemBlankPincode").show();
@@ -8514,8 +8577,9 @@ $("#savedDebitCard").find("input[type=password]").click(function(){
 		$("#defaultPinCodeIds").css("color","black");
 		$("#unserviceablepincode").hide();
 		$("#unserviceablepincodeBtm").hide();
-		$("#unserviceablepincode_tooltip").hide();
-		$("#unserviceablepincode_tooltip_btm").hide();
+		//TISPRDT-1667
+		//$("#unserviceablepincode_tooltip").hide();
+		//$("#unserviceablepincode_tooltip_btm").hide();
 		//TISSTRT-1550 ends
 		$(".deliveryUlClass").remove();//TPR-1341
 		$("#cartPinCodeAvailable").show();

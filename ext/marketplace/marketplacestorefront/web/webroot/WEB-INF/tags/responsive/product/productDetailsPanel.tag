@@ -9,6 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme" %>
 <style type="text/css">
 tr.d0 td {
 	background-color: #E0E0E0;
@@ -152,20 +153,28 @@ tr.d0 td {
 			<c:set var="thumbNailImageLengthDevice"
 				value="${fn:length(galleryImages)}" />
 			<div class="jcarousel-skin imageListCarousel" id="pdpProductCarousel">
-				<c:forEach items="${galleryImages}" var="container"
-					varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">
-					<div id="addiImageTab${varStatus.index}">
-						<span> 
-							<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
-							<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
-						</c:if>
-						<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
-						<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
-						<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
-						</c:if>
-						</span>
-					</div>
-				</c:forEach>
+			<!-- TISJEWST-15 empty checking for galleryImages -->
+				<c:choose>
+					<c:when test="${not empty galleryImages}">
+					<c:forEach items="${galleryImages}" var="container"
+						varStatus="varStatus" begin="0" end="${thumbNailImageLengthDevice}">
+						<div id="addiImageTab${varStatus.index}">
+							<span> 
+								<c:if test="${container.thumbnail.mediaType.code eq 'Image'}">
+								<img src="${container.product.url}" data-type="image" data-zoomimagesrc="${container.superZoom.url}"  data-primaryimagesrc="${container.product.url}" data-galleryposition="${varStatus.index}" alt="${container.thumbnail.altText}" title="${container.thumbnail.altText}" />	
+							</c:if>
+							<c:if test="${container.thumbnail.mediaType.code eq 'Video'}">
+							<img src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" />
+							<%-- <iframe src="${commonResourcePath}/images/video-play.png"  data-type="video" data-videosrc="${container.thumbnail.url}?rel=0&enablejsapi=1" id="player"></iframe> --%>
+							</c:if>
+							</span>
+						</div>
+					</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<theme:image code="img.missingProductImage.product" alt="${fn:escapeXml(product.name)}" title="${fn:escapeXml(product.name)}"/>
+					</c:otherwise>
+				</c:choose>
 			</div>
 			<!-- start change for INC144314454 -->
 			<div class="modal fade" id="videoModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -554,7 +563,7 @@ tr.d0 td {
 		</c:choose> --%>
 		<!-- CODE MOVED HERE FOR OTHER PRODUCTS APART FROM JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE -->
     <!-- Fine Jewellery Details Tree Section  -->
-		<c:if test="${product.rootCategory=='FineJewellery'}">
+		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
 			<product:productDetailsClassifications product="${product}" />
 			</c:if>
 	</div>

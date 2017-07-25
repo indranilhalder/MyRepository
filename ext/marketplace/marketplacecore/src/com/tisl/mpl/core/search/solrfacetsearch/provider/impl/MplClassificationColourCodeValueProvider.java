@@ -156,9 +156,10 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				value = ((ClassificationAttributeValue) value).getCode();
 				value = value.toString().toLowerCase();
 				if (value.toString().startsWith(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR))
-				               
-				{   value = value.toString().replaceAll(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
-						MarketplaceCoreConstants.COLORFAMILYFOOTWEARBLANK);
+
+				{
+					value = value.toString().replaceAll(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
+							MarketplaceCoreConstants.COLORFAMILYFOOTWEARBLANK);
 					//value = value.toString().replaceAll(COLORFAMILYFOOTWEAR, COLORFAMILY_BLANK);
 				}
 				//For TPR-3955
@@ -176,12 +177,13 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 					{
 						if (value.toString().startsWith(colorFeature))
 						{
-							value = value.toString().replaceAll(colorFeature.toString(), COLORFAMILY_BLANK);
+							//value = value.toString().replaceAll(colorFeature.toString(), COLORFAMILY_BLANK); SONAR FIX JEWELLERY
+							value = value.toString().replaceAll(colorFeature, COLORFAMILY_BLANK);
 							break;
 						}
 					}
 
-					
+
 
 				}
 				// INC_12606 starts

@@ -24,8 +24,12 @@
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <style>
+/* below style is written here as class 'page-multiStepCheckoutSummaryPage' appears twice once in one page again in payment failure page*/
 body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	background: #eee;
+}
+body.page-multiStepCheckoutSummaryPage #up{
+	display: none;
 }
 </style>
 <cart:tealiumCartParameters/>
@@ -155,7 +159,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 <!-- <div id="mobileSnackbar">
 <h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
 <span id="selectSnackbar">SELECT</span>
-</div> --> -->
+</div> -->
 <div id="confirmOverlay" style="display:none">
     <div id="confirmBox" style="display:none">
 
