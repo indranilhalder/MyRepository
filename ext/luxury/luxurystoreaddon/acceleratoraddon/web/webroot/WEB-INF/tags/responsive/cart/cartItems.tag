@@ -110,7 +110,7 @@
 						<div class="itemsTitle row cart-product-info">
 							<!-- <p class="company"> </p> -->
 
-							<p class="col-xs-12 col-sm-8 col-md-9 grayTxt mediumSizeTxt text-left mb-10"><a href="${entryProductUrl}"><strong>${entry.product.brand.brandname}</strong></a>
+							<div class="col-xs-12 col-sm-8 col-md-9 grayTxt mediumSizeTxt text-left mb-10"><a href="${entryProductUrl}"><strong>${entry.product.brand.brandname}</strong></a>
 								<!--   <h2 class="product-name"> -->
 								<ycommerce:testId code="cart_product_name">
 									<a href="${productUrl}">${entry.product.productTitle}</a>
@@ -129,8 +129,94 @@
 		                </p>
 		                -->
 								<!-- <p class="item-info"> -->
+								<div class="itemsQuantity mt-20 mb-30">
+							<div class="itemsSize">
+								<c:if test="${not empty entry.product.size}">
+									<ycommerce:testId code="cart_product_size">
+										<label class="grayTxt mediumSizeTxt size"><spring:theme code="product.variant.size"/></label>
+										:&nbsp;${entry.product.size}
+									</ycommerce:testId>
+								</c:if>
+							</div>
 
-							</p>
+							<div class="itemsQty">
+								<label for="itemQty" class="grayTxt mediumSizeTxt">Qty:</label>
+								<c:url value="/cart/update" var="cartUpdateFormAction" />
+
+								<c:choose>
+									<c:when test="${entry.giveAway}">
+										<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}_${entry.giveAway}" />
+									</c:when>
+									<c:otherwise>
+										<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}" />
+									</c:otherwise>
+								</c:choose>
+
+								<form:form id="${updateFormId}" action="${cartUpdateFormAction}" method="post" commandName="updateQuantityForm${entry.entryNumber}">
+									<input type="hidden" name="entryNumber"		value="${entry.entryNumber}" />
+									<input type="hidden" name="productCode"		value="${entry.product.code}" />
+									<input type="hidden" name="initialQuantity" value="${entry.quantity}" />
+
+									<ycommerce:testId code="cart_product_quantity">
+										<c:set var="priceBase" value="${entry.basePrice.formattedValue}" />
+										<c:set var="subPrice" value="${entry.basePrice.value}" />
+										<fmt:parseNumber var="price" type="number" value="${subPrice}" />
+
+										<c:choose>
+											<c:when test="${price lt 0.1 && entry.giveAway}">
+												<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
+													<c:forEach items="${configuredQuantityList}"
+															   var="quantity">
+														<form:option value="${quantity}"></form:option>
+													</c:forEach>
+												</form:select>
+											</c:when>
+											<c:when test="${price lt 0.1}">
+												<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
+													<c:forEach items="${configuredQuantityList}"
+															   var="quantity">
+														<form:option value="${quantity}"></form:option>
+													</c:forEach>
+												</form:select>
+											</c:when>
+											<c:otherwise>
+												<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
+													<c:forEach items="${configuredQuantityList}"
+															   var="quantity">
+														<form:option value="${quantity}"></form:option>
+													</c:forEach>
+												</form:select>
+											</c:otherwise>
+										</c:choose>
+										<!-- <select>
+										<option>1</option>
+										<option>2</option>
+										</select> -->
+									</ycommerce:testId>
+								</form:form>
+							</div>
+						</div>
+						<div class="itemsStock">
+							<c:forEach items="${fullfillmentData}" var="fullfillmentData">
+								<c:if test="${fullfillmentData.key == entry.entryNumber}">
+									<c:set var="fulfilmentValue" value="${fn:toLowerCase(fullfillmentData.value)}"> </c:set>
+									<c:choose>
+										<c:when test="${fulfilmentValue eq 'tship'}">
+											<p class="mediumSizeTxt">
+												<spring:theme code="mpl.myBag.fulfillment"/>&nbsp; <span class="grayTxt"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
+											</p>
+										</c:when>
+										<c:otherwise>
+											<p class="mediumSizeTxt">
+												<spring:theme code="mpl.myBag.fulfillment" /> &nbsp; <span class="grayTxt"> ${entry.selectedSellerInformation.sellername} </span>
+											</p>
+										</c:otherwise>
+									</c:choose>
+								</c:if>
+							</c:forEach>
+						</div>
+
+							</div>
 							<div class="itemsPrice text-right col-xs-12 col-sm-4 col-md-3 mediumSizeTxt mb-10">
 
 									<%--  <c:out value="${entry.basePrice.value}"></c:out> --%>
@@ -270,92 +356,8 @@
 							</div>
 
 						</div>
-						<div class="itemsQuantity mt-20 mb-30">
-							<div class="itemsSize">
-								<c:if test="${not empty entry.product.size}">
-									<ycommerce:testId code="cart_product_size">
-										<label class="grayTxt mediumSizeTxt size"><spring:theme code="product.variant.size"/></label>
-										:&nbsp;${entry.product.size}
-									</ycommerce:testId>
-								</c:if>
-							</div>
-
-							<div class="itemsQty">
-								<label for="itemQty" class="grayTxt mediumSizeTxt">Qty:</label>
-								<c:url value="/cart/update" var="cartUpdateFormAction" />
-
-								<c:choose>
-									<c:when test="${entry.giveAway}">
-										<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}_${entry.giveAway}" />
-									</c:when>
-									<c:otherwise>
-										<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}" />
-									</c:otherwise>
-								</c:choose>
-
-								<form:form id="${updateFormId}" action="${cartUpdateFormAction}" method="post" commandName="updateQuantityForm${entry.entryNumber}">
-									<input type="hidden" name="entryNumber"		value="${entry.entryNumber}" />
-									<input type="hidden" name="productCode"		value="${entry.product.code}" />
-									<input type="hidden" name="initialQuantity" value="${entry.quantity}" />
-
-									<ycommerce:testId code="cart_product_quantity">
-										<c:set var="priceBase" value="${entry.basePrice.formattedValue}" />
-										<c:set var="subPrice" value="${entry.basePrice.value}" />
-										<fmt:parseNumber var="price" type="number" value="${subPrice}" />
-
-										<c:choose>
-											<c:when test="${price lt 0.1 && entry.giveAway}">
-												<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
-													<c:forEach items="${configuredQuantityList}"
-															   var="quantity">
-														<form:option value="${quantity}"></form:option>
-													</c:forEach>
-												</form:select>
-											</c:when>
-											<c:when test="${price lt 0.1}">
-												<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
-													<c:forEach items="${configuredQuantityList}"
-															   var="quantity">
-														<form:option value="${quantity}"></form:option>
-													</c:forEach>
-												</form:select>
-											</c:when>
-											<c:otherwise>
-												<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
-													<c:forEach items="${configuredQuantityList}"
-															   var="quantity">
-														<form:option value="${quantity}"></form:option>
-													</c:forEach>
-												</form:select>
-											</c:otherwise>
-										</c:choose>
-										<!-- <select>
-										<option>1</option>
-										<option>2</option>
-										</select> -->
-									</ycommerce:testId>
-								</form:form>
-							</div>
-						</div>
-						<div class="itemsStock">
-							<c:forEach items="${fullfillmentData}" var="fullfillmentData">
-								<c:if test="${fullfillmentData.key == entry.entryNumber}">
-									<c:set var="fulfilmentValue" value="${fn:toLowerCase(fullfillmentData.value)}"> </c:set>
-									<c:choose>
-										<c:when test="${fulfilmentValue eq 'tship'}">
-											<p class="mediumSizeTxt">
-												<spring:theme code="mpl.myBag.fulfillment"/>&nbsp; <span class="grayTxt"><spring:theme code="product.default.fulfillmentType"></spring:theme></span>
-											</p>
-										</c:when>
-										<c:otherwise>
-											<p class="mediumSizeTxt">
-												<spring:theme code="mpl.myBag.fulfillment" /> &nbsp; <span class="grayTxt"> ${entry.selectedSellerInformation.sellername} </span>
-											</p>
-										</c:otherwise>
-									</c:choose>
-								</c:if>
-							</c:forEach>
-						</div>
+						
+						
 
 
 					</div>
