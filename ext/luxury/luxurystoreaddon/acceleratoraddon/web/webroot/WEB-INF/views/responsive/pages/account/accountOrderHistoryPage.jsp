@@ -460,8 +460,8 @@
 													id="cancelOrder${subOrder.code}${entry.mplDeliveryMode.sellerArticleSKU}${entryStatus.index}">
 
 													<div class="content">
-														<!-- <button type="button" class="close pull-right"
-															aria-hidden="true" data-dismiss="modal"></button> -->
+														<button type="button" class="close pull-right"
+															aria-hidden="true" data-dismiss="modal"></button>
 														<div class="cancellation-request-block">
 															<h2>Request Cancellation </h2>
 
