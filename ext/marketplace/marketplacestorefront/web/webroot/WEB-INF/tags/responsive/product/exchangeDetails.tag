@@ -5,9 +5,7 @@
 <%@ attribute name="product" required="true" type="de.hybris.platform.commercefacades.product.data.ProductData" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
-<script>
-<%--js Moved to acc.productDetail.js --%>
-</script>	
+<%-- JS Moved to acc.productDetail.js --%>
 <c:set var="l3code" value="${product.level3CategoryCode}"/>
 <c:set var="l3name" value="${product.level3CategoryName}"/>
 <c:set var="isExchangeavailable" value="true"/>

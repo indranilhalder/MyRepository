@@ -4564,6 +4564,6 @@ function populateIsExchangeApplied(response)
 		var isServicable=values[0];
 		var selectedPincode=values[1];
 		var deliveryModeJsonMap=values[2];
-		alert(deliveryModeJsonMap);
+		
 		}
 }
