@@ -41,7 +41,7 @@
 		<property name="deliveryDate" type="String" />
 		<!-- TPR-1083 Exchange Start -->
 		<property name="exchangePincode" type="String" />
-		<property name="isExchangeServiceable" type="boolean" />
+		<property name="exchangeServiceable" type="boolean" />
 		<!-- TPR-1083 Exchange End -->
 		
 	</bean>
