@@ -140,7 +140,7 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},
+																	${fn:escapeXml(fn:replace(address.line1, '%20', ' '))},
 																	&nbsp;<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
@@ -152,7 +152,7 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.line2)},
+																	${fn:escapeXml(fn:replace(address.line1, '%20', ' '))},&nbsp;${fn:escapeXml(fn:replace(address.line2, '%20', ' '))}
 																	&nbsp;<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
@@ -164,8 +164,8 @@
 																
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},&nbsp;
-																	${fn:escapeXml(address.line3)},&nbsp;${fn:escapeXml(address.landmark)},<br>
+																	${fn:escapeXml(fn:replace(address.line1, '%20', ' '))},&nbsp;
+																	${fn:escapeXml(fn:replace(address.line3, '%20', ' '))},&nbsp;${fn:escapeXml(address.landmark)},<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -175,8 +175,8 @@
                                                                <c:if test="${not empty myline2  && not empty myline3}">
 																<address>
 																	${fn:escapeXml(address.firstName)}&nbsp;${fn:escapeXml(address.lastName)}<br>
-																	${fn:escapeXml(address.line1)},&nbsp;${fn:escapeXml(address.line2)},
-																	${fn:escapeXml(address.line3)},&nbsp;${fn:escapeXml(address.landmark)},<br>
+																	${fn:escapeXml(fn:replace(address.line1, '%20', ' '))},&nbsp;${fn:escapeXml(fn:replace(address.line2, '%20', ' '))}
+																	${fn:escapeXml(fn:replace(address.line3, '%20', ' '))},&nbsp;${fn:escapeXml(address.landmark)},<br>
 																	${fn:escapeXml(address.town)},&nbsp;${fn:escapeXml(address.state)},&nbsp;${fn:escapeXml(address.postalCode)}
 																	&nbsp;IN <br> ${fn:escapeXml(address.region.name)}
 																	 91&nbsp;${fn:escapeXml(address.phone)} <br>
@@ -243,7 +243,7 @@
 																
 																<li>${fn:escapeXml(address.firstName)}
 																	&nbsp;${fn:escapeXml(address.lastName)}</li>
-																<li>${fn:escapeXml(address.line1)},</li>
+																<li>${fn:escapeXml(fn:replace(address.line1, '%20', ' '))},</li>
 																	<%-- &nbsp;${fn:escapeXml(address.line2)},</li>
 																<li>${fn:escapeXml(address.line3)},</li> --%>
 																<li>${fn:escapeXml(address.landmark)},</li>

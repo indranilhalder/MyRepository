@@ -116,7 +116,7 @@ function editAddress(addressId) {
    				$('#addressId').val(addressId);
    				$('#firstName').val(data.firstName);
    				$('#lastName').val(data.lastName);
-   				$('#line1').val(data.line1);
+   				$('#line1').val(unescape(data.line1));
    				$('#line2').val(data.line2);
    				$('#line3').val(data.line3);
    				$('#postcode').val(data.postcode);
