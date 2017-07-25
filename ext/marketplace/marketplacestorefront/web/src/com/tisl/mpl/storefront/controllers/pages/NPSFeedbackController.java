@@ -74,6 +74,7 @@ public class NPSFeedbackController
 		final List<NPSFeedbackQuestionForm> npsFeedbackQRDetail = new ArrayList<NPSFeedbackQuestionForm>();
 		final NPSFeedbackQRForm npsFeedbackQRForm = new NPSFeedbackQRForm();
 		final NPSFeedbackQRData feedbackData = new NPSFeedbackQRData();
+		//Added for TPR-6081
 		int npsFeedBackModelCount = 0;
 		npsFeedBackModelCount = npsFeedbackQuestionFacade.getFeedback(transactionId);
 		try
@@ -87,11 +88,11 @@ public class NPSFeedbackController
 				feedbackData.setOverAllRating(rating);
 				feedbackData.setTransactionId(transactionId);
 				feedbackData.setOriginalUid(originalUid);
-
+				//Save NPS rating for transactionId
 				npsFeedbackQuestionFacade.saveFeedbackRating(originalUid, transactionId, rating);
 			}
 
-			//1. Stop the form submission if any of these values are missing
+
 			if (StringUtils.isEmpty(transactionId))
 			{
 				GlobalMessages.addErrorMessage(model, "Invalid Transaction , User or Rating. ");
@@ -171,7 +172,7 @@ public class NPSFeedbackController
 			final BindingResult result, final Model model) throws CMSItemNotFoundException
 	{
 		String returnStatement = null;
-		/* int npsFeedBackModelCount = 0; */
+
 		final NPSFeedbackQRData feedbackData = new NPSFeedbackQRData();
 		final List<NPSFeedbackQRDetailData> feedbackDataDetail = new ArrayList<>();
 		try
@@ -183,12 +184,7 @@ public class NPSFeedbackController
 				GlobalMessages.addErrorMessage(model, "Invalid transactions , user or rating. ");
 				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 			}//2. Check if a feedback already exist for this transaction ID
-			/*
-			 * else { npsFeedBackModelCount = npsFeedbackQuestionFacade.getFeedback(feedbackForm.getTransactionId());
-			 * 
-			 * 
-			 * }
-			 */
+
 
 			if (result.hasErrors())
 			{
@@ -196,10 +192,7 @@ public class NPSFeedbackController
 				return ControllerConstants.Views.Fragments.NPS_Emailer.NPSFeedback;
 
 			}
-			/*
-			 * else if (npsFeedBackModelCount > 0) { return
-			 * ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists; }
-			 */
+
 			else if (!npsFeedbackQuestionFacade.validateCustomerForTransaction(feedbackForm.getTransactionId()).getOriginalUid()
 					.equals(feedbackForm.getOriginalUid()))
 			{
