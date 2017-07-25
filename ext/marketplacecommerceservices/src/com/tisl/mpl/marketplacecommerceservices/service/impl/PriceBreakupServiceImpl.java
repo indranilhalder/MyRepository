@@ -99,8 +99,12 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	@Override
 	public List<PriceBreakupData> getPricebreakup(final String ussid)
 	{
-		//final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
-		final JewelleryPriceRowModel jPrice = priceBreakupDao.getPricebreakup(ussid).get(0);
+		JewelleryPriceRowModel jPrice = null;
+		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
+		if (CollectionUtils.isNotEmpty(jewelleryPriceRowList))
+		{
+			jPrice = priceBreakupDao.getPricebreakup(ussid).get(0);
+		}
 		final List<JewelleryInformationModel> jewelleryInfoList = priceBreakupDao.getJewelInfo(ussid);
 
 		PriceBreakupData priceBreakupData = null;
@@ -110,7 +114,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 		final List<String> diamondWeightRateList = new ArrayList();
 		final PriceBreakupData diamondPriceData = new PriceBreakupData();
 
-		if (null != jewelleryInfoList && null != jPrice)
+		if (CollectionUtils.isNotEmpty(jewelleryInfoList) && null != jPrice)
 		{
 			//for (final JewelleryPriceRowModel jPrice : jewelleryPriceRowList)
 			//{
