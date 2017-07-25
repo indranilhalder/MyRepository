@@ -1265,12 +1265,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					}
 					else
 					{
-						//						final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-						//						customerOrderInfoWsDTO.setTransactionId("Order Ref No:" + parentOrder + "NULL");
-						//						customerOrderInfoWsDTO.setProductName("NULL");
-						//						customerOrderInfoWsDTO.setL4CategoryName("NULL");
-						//						custdto.add(customerOrderInfoWsDTO);
-						//						orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 						if (count < 3)
 						{
 							final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
@@ -1325,7 +1319,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
 									: "NULL");
 							customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo() : "NULL");
-							if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
+							if (null != entry.getExpectedDeliveryDate())
 							{
 								customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
 							}
@@ -1333,14 +1327,19 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							{
 								customerOrderInfoWsDTO.setEdd("NULL");
 							}
-							customerOrderInfoWsDTO.setApportionedPrice(null != entry.getTotalSalePrice().toString() ? entry
-									.getTotalSalePrice().toString() : "NULL");
+							customerOrderInfoWsDTO.setApportionedPrice(null != entry.getNetAmountAfterAllDisc() ? entry
+									.getNetAmountAfterAllDisc().toString() : "NULL");
 							customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
 									.toString().toUpperCase() : "NULL");
-							customerOrderInfoWsDTO
-									.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
-											.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
-							//customerOrderInfoWsDTO.setOrderStatus(entry.getOrder().getStatus().getCode());
+							if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
+									&& StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
+							{
+								customerOrderInfoWsDTO.setShippingMode(entry.getMplDeliveryMode().getDeliveryMode().getCode());
+							}
+							else
+							{
+								customerOrderInfoWsDTO.setShippingMode("NULL");
+							}
 							if (CollectionUtils.isNotEmpty(orderModel.getPaymentTransactions()))
 							{
 								final List<PaymentTransactionModel> paymlists = orderModel.getPaymentTransactions();
@@ -1395,7 +1394,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus()
 									.getCode() : "NULL");//Order Status
 
-							if (StringUtils.isNotEmpty(orderModel.getModifiedtime().toString()))
+							if (null != orderModel.getModifiedtime())
 							{
 								customerOrderInfoWsDTO.setOrderTimestamp(formatter.format(orderModel.getModifiedtime()));//Order timestamp
 							}
@@ -1411,27 +1410,14 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								while (it.hasNext())
 								{
 									final ConsignmentEntryModel consg = (ConsignmentEntryModel) it.next();
-									//	customerOrderInfoWsDTO.setTransactionStatus(consg.getConsignment().getStatus().getCode());//Transaction status
-									//									if (StringUtils.isNotEmpty(consg.getConsignment().getModifiedtime().toString()))
-									//									{
-									//										customerOrderInfoWsDTO.setConsignmentTimestamp(formatter.format(consg.getConsignment()
-									//												.getModifiedtime()));//Consignment Timestamp
-									//									}
-									//									else
-									//									{
-									//										customerOrderInfoWsDTO.setConsignmentTimestamp("NULL");
-									//									}
 									customerOrderInfoWsDTO.setCarrierName(null != consg.getConsignment().getCarrier() ? consg
 											.getConsignment().getCarrier() : "NULL");//Carrier Name
-									//(consg.getConsignment().getDeliveryMode().getCode());//Delivery Mode
-									//????????Shipping Status (Shipment delivered/in Transit etc) & Timestamp
 								}
 							}
 							else
 							{
 								customerOrderInfoWsDTO.setCarrierName("NULL");
 							}
-							//orderModel.getPaymentStatus().getCode();
 							customerOrderInfoWsDTO.setPaymentMode(null != orderModel.getModeOfOrderPayment() ? orderModel
 									.getModeOfOrderPayment() : "NULL");
 							if (CollectionUtils.isNotEmpty(orderModel.getConsignments()))
@@ -1441,29 +1427,32 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								{
 									cng = (ConsignmentModel) itr.next();
 									//Delivery tracking Details
-									final AWBStatusResponse aWBStatusResponse = mplAwbStatusService.prepAwbNumbertoOMS(
-											cng.getTrackingID(), cng.getCarrier());
-
-									if (null != aWBStatusResponse && CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
+									if (StringUtils.isNotEmpty(cng.getTrackingID()) && StringUtils.isNotEmpty(cng.getCarrier()))
 									{
-										for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
+										final AWBStatusResponse aWBStatusResponse = mplAwbStatusService.prepAwbNumbertoOMS(
+												cng.getTrackingID(), cng.getCarrier());
+
+										if (null != aWBStatusResponse && CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
 										{
-											for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
+											for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
 											{
-												final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-												final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
-												deliveryTrackingInfoWsDTO
-														.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords.getDate()
-																: "NULL");
-												deliveryTrackingInfoWsDTO
-														.setDeliveryTrackingLocation(null != statusRecords.getLocation() ? statusRecords
-																.getLocation() : "NULL");
-												deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
-														.getStatusDescription() ? statusRecords.getStatusDescription() : "NULL");
-												deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
-												customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-												//												custdto.add(customerOrderInfoWsDTO);
-												//												orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+												for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
+												{
+													final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+													final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
+													deliveryTrackingInfoWsDTO
+															.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords.getDate()
+																	: "NULL");
+													deliveryTrackingInfoWsDTO
+															.setDeliveryTrackingLocation(null != statusRecords.getLocation() ? statusRecords
+																	.getLocation() : "NULL");
+													deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
+															.getStatusDescription() ? statusRecords.getStatusDescription() : "NULL");
+													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+													//												custdto.add(customerOrderInfoWsDTO);
+													//												orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
+												}
 											}
 										}
 									}
@@ -1479,15 +1468,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 										//										custdto.add(customerOrderInfoWsDTO);
 										//										orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 									}
-
-									//								if (null != cng.getDeliveryDate())
-									//								{
-									//									customerOrderInfoWsDTO.setDeliveryTrackingDate(formatter.format(cng.getDeliveryDate()));//Delivery tracking date
-									//								}
-									//								else
-									//								{
-									//									customerOrderInfoWsDTO.setDeliveryTrackingDate("NULL");
-									//								}
 									customerOrderInfoWsDTO.setAwbNumber(null != cng.getTrackingID() ? cng.getTrackingID() : "NULL");//AWB number
 									customerOrderInfoWsDTO.setReturnCarrier(null != cng.getReturnCarrier() ? cng.getReturnCarrier()
 											: "NULL");//Return carrier
@@ -1546,8 +1526,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									final ReturnRequestModel rq = (ReturnRequestModel) it1.next();
 									customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq.getRejectionReason()
 											: "NULL");//QC rejection reason
-									customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn().toString() ? rq.getTypeofreturn()
-											.toString() : "NULL");//Type of Return
+									customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn().toString()
+											: "NULL");//Type of Return
 									if (CollectionUtils.isNotEmpty(rq.getReturnEntries()))
 									{
 										final Iterator it2 = rq.getReturnEntries().iterator();
@@ -1558,9 +1538,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 											if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase(transactionId))
 											{
-												customerOrderInfoWsDTO.setReturnRequestStatus(null != rte.getStatus().toString() ? rte
-														.getStatus().toString() : "NULL");//Return request status
-												if (StringUtils.isNotEmpty(rte.getCreationtime().toString()))
+												customerOrderInfoWsDTO.setReturnRequestStatus(null != rte.getStatus() ? rte.getStatus()
+														.toString() : "NULL");//Return request status
+												if (null != rte.getCreationtime())
 												{
 													customerOrderInfoWsDTO
 															.setReturnRequestTimestamp(formatter.format((rte.getCreationtime())));//Return timeStamp
@@ -1624,9 +1604,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			if (orderModel != null)
 			{
-				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv().toString() ? orderModel
-						.getTotalPriceWithConv().toString() : "NULL");
-				if (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getFirstname())
+				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv() ? orderModel.getTotalPriceWithConv()
+						.toString() : "NULL");
+				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getFirstname())
+						&& (StringUtils.isNotEmpty(orderModel.getPaymentAddress().getLastname())))
+				{
+					custFirstName = new StringBuilder(orderModel.getPaymentAddress().getFirstname());
+					custLastName = new StringBuilder(orderModel.getPaymentAddress().getLastname());
+					orderInfoWsDTO.setCustName(custFirstName.append(" ").append(custLastName).toString());
+				}
+				else if (null != orderModel.getDeliveryAddress()
+						&& StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getFirstname())
 						&& (StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getLastname())))
 				{
 					custFirstName = new StringBuilder(orderModel.getDeliveryAddress().getFirstname());
@@ -1637,9 +1625,20 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				{
 					orderInfoWsDTO.setCustName("NULL");
 				}
-				orderInfoWsDTO.setCustMobileNo(null != orderModel.getDeliveryAddress().getCellphone() ? orderModel
-						.getDeliveryAddress().getCellphone() : "NULL");
-				if (StringUtils.isNotEmpty(orderModel.getCreationtime().toString()))
+				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getCellphone()))
+				{
+					orderInfoWsDTO.setCustMobileNo(orderModel.getPaymentAddress().getCellphone());
+				}
+				else if (null != orderModel.getDeliveryAddress()
+						&& StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getCellphone()))
+				{
+					orderInfoWsDTO.setCustMobileNo(orderModel.getDeliveryAddress().getCellphone());
+				}
+				else
+				{
+					orderInfoWsDTO.setCustMobileNo("NULL");
+				}
+				if (null != orderModel.getCreationtime())
 				{
 					orderInfoWsDTO.setOrderDate(formatter.format(orderModel.getCreationtime()));
 				}
@@ -1661,17 +1660,16 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							for (final AbstractOrderEntryModel entry : orderEntryModel)
 							{
 								final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
-								customerOrderInfoWsDTO.setApportionedPrice((null != entry.getTotalSalePrice().toString() ? entry
-										.getTotalSalePrice().toString() : "NULL"));
+								customerOrderInfoWsDTO.setApportionedPrice((null != entry.getNetAmountAfterAllDisc() ? entry
+										.getNetAmountAfterAllDisc().toString() : "NULL"));
 								customerOrderInfoWsDTO.setSellerName(null != entry.getSellerInfo() ? entry.getSellerInfo() : "NULL");
-								customerOrderInfoWsDTO
-										.setShippingType(null != entry.getFulfillmentType().toString().toUpperCase() ? entry
-												.getFulfillmentType().toString().toUpperCase() : "NULL");
+								customerOrderInfoWsDTO.setShippingType(null != entry.getFulfillmentType() ? entry.getFulfillmentType()
+										.toString().toUpperCase() : "NULL");
 								customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID()
 										: "NULL");
 								customerOrderInfoWsDTO.setProductName(null != entry.getProduct().getName() ? entry.getProduct().getName()
 										: "NULL");
-								if (StringUtils.isNotEmpty(entry.getExpectedDeliveryDate().toString()))
+								if (entry.getExpectedDeliveryDate() != null)
 								{
 									customerOrderInfoWsDTO.setEdd(formatter.format(entry.getExpectedDeliveryDate()));
 								}
@@ -1679,9 +1677,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								{
 									customerOrderInfoWsDTO.setEdd("NULL");
 								}
-								customerOrderInfoWsDTO
-										.setShippingMode(null != entry.getMplDeliveryMode().getDeliveryMode().getCode() ? entry
-												.getMplDeliveryMode().getDeliveryMode().getCode() : "NULL");
+								if (null != entry.getMplDeliveryMode() && null != entry.getMplDeliveryMode().getDeliveryMode()
+										&& StringUtils.isNotEmpty(entry.getMplDeliveryMode().getDeliveryMode().getCode()))
+								{
+									customerOrderInfoWsDTO.setShippingMode(entry.getMplDeliveryMode().getDeliveryMode().getCode());
+								}
+								else
+								{
+									customerOrderInfoWsDTO.setShippingMode("NULL");
+								}
 								if (StringUtils.isNotEmpty(subOrder.getModeOfOrderPayment()))
 								{
 									if (subOrder.getModeOfOrderPayment().equalsIgnoreCase("COD"))
@@ -1727,7 +1731,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					customerOrderInfoWsDTO.setEdd("NULL");
 					customerOrderInfoWsDTO.setShippingMode("NULL");
 					customerOrderInfoWsDTO.setPaymentType("NULL");
-					customerOrderInfoWsDTO.setOrderStatus("NULL");
+					customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().toString() ? orderModel.getStatus()
+							.toString() : "NULL");
 					custdto.add(customerOrderInfoWsDTO);
 					orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 
