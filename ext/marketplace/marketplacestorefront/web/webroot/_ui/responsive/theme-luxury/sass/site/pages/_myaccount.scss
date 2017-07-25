@@ -577,6 +577,10 @@
                             display: inline-block;
                             float: none;
                             vertical-align: top;
+                            
+                            &.deletcard{
+                              vertical-align:bottom;
+                            }
 
                              @include media-breakpoint-down(sm) {  
                                  width: 100%;
