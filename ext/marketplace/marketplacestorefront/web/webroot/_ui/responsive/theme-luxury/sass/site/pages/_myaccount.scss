@@ -307,6 +307,12 @@
                                                 .item-info{
                                                     display: block;
                                                     font-size: 14px;
+                                                    
+                                                    .price{
+                                                        b, .priceFormat{
+                                                            display: inline-block;                                                            
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
