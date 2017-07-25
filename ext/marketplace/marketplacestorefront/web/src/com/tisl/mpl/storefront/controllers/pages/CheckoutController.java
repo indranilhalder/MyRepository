@@ -467,11 +467,11 @@ public class CheckoutController extends AbstractCheckoutController
 	 * private void callNonBusinessError(final Model model, final String messageKey) throws CMSItemNotFoundException {
 	 * storeCmsPageInModel(model, getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE)); setUpMetaDataForContentPage(model,
 	 * getContentPageForLabelOrId(NBZ_ERROR_CMS_PAGE));
-	 * 
+	 *
 	 * model.addAttribute(WebConstants.MODEL_KEY_ADDITIONAL_BREADCRUMB,
 	 * resourceBreadcrumbBuilder.getBreadcrumbs(MessageConstants.BREADCRUMB_NOT_FOUND));
 	 * GlobalMessages.addErrorMessage(model, messageKey);
-	 * 
+	 *
 	 * storeContentPageTitleInModel(model, MessageConstants.NON_BUSINESS_ERROR); }
 	 */
 
@@ -683,6 +683,13 @@ public class CheckoutController extends AbstractCheckoutController
 		for (final AbstractOrderEntryModel entry : orderModel.getEntries())
 		{
 			String selectedUSSID = entry.getSelectedUSSID();
+
+			//JEWELLERY CHANGES STARTS
+			if (entry.getProduct().getProductCategoryType().equalsIgnoreCase("FineJewellery"))
+			{
+				selectedUSSID = mplJewelleryFacade.getJewelleryInfoByUssid(selectedUSSID).get(0).getPCMUSSID();
+			}
+			//JEWELLERY CHANGES ENDS
 			final String selectedDeliveryMode = entry.getMplDeliveryMode().getDeliveryMode().getCode();
 			final MplZoneDeliveryModeValueModel deliveryModel = mplDeliveryCostService.getDeliveryCost(selectedDeliveryMode,
 					MarketplacecommerceservicesConstants.INR, selectedUSSID);
@@ -691,14 +698,6 @@ public class CheckoutController extends AbstractCheckoutController
 			String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? deliveryModel.getDeliveryMode().getEnd().toString()
 					: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
 			List<RichAttributeModel> richAttributeModel = new ArrayList<RichAttributeModel>();
-
-
-			//JEWELLERY CHANGES STARTS
-			if (entry.getProduct().getProductCategoryType().equalsIgnoreCase("FineJewellery"))
-			{
-				selectedUSSID = mplJewelleryFacade.getJewelleryInfoByUssid(selectedUSSID).get(0).getPCMUSSID();
-			}
-			//JEWELLERY CHANGES ENDS
 
 			final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(selectedUSSID);
 

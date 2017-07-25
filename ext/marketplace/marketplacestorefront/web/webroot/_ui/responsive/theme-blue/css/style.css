@@ -70799,6 +70799,26 @@ background:#f8f8f8;
     display: none;
 }
 }
+body.page-multiStepCheckoutSummaryPage span.delSeat.delAction{
+	color: #ff2c43;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>.add-disc ~ span>.off-bag span:last-child {
+    font-size: 12px ! important;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>span>.off-bag {
+    display: inline;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item>ul.desktop>li.price {
+    font-size: 12px !important;
+    font-weight: normal !important;
+    letter-spacing: 1px;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .off-bag span:last-child {
+    display: inline !important;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>.add-disc {
+    margin-top: 10px;
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -76788,3 +76808,10 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 		margin: 5px 0;
 	}
 }
+/*TISJEW-3230 start*/
+@media(max-width: 790px) and (min-width: 768px){
+	body.page-order.pageType-ContentPage.template-pages-account-accountOrderDetailPage .account .wrapper{
+		margin-top: 54px;
+	}
+}
+/*TISJEW-3230 end*/

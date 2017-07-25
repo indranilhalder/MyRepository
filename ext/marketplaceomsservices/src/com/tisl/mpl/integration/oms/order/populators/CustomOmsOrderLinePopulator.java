@@ -3,15 +3,20 @@
  */
 package com.tisl.mpl.integration.oms.order.populators;
 
+import de.hybris.platform.catalog.CatalogVersionService;
+import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commerceservices.externaltax.TaxCodeStrategy;
 import de.hybris.platform.converters.Populator;
+import de.hybris.platform.core.Registry;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.payment.CODPaymentInfoModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.integration.commons.services.OndemandTaxCalculationService;
 import de.hybris.platform.integration.oms.order.service.ProductAttributeStrategy;
 import de.hybris.platform.integration.oms.order.strategies.OrderEntryNoteStrategy;
+import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.dto.converter.ConversionException;
 
 import java.text.ParseException;
@@ -39,10 +44,12 @@ import com.hybris.oms.domain.types.Amount;
 import com.hybris.oms.domain.types.Quantity;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
+import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.PcmProductVariantModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
+import com.tisl.mpl.jalo.DefaultPromotionManager;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerMasterService;
@@ -87,6 +94,12 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 	@Resource(name = "mplJewelleryService")
 	private MplJewelleryService jewelleryService;
+
+	@Resource(name = "productService")
+	private ProductService productService;
+
+	@Resource(name = "catalogVersionService")
+	private CatalogVersionService catalogVersionService;
 
 	@Override
 	public void populate(final OrderEntryModel source, final OrderLine target) throws ConversionException
@@ -208,44 +221,32 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setProductName(source.getProduct().getName());
 			}
 
+			catalogVersionService.setSessionCatalogVersion("mplProductCatalog", "Online");
+
+			final ProductModel productModel = productService.getProductForCode(source.getProduct().getCode());
+
+			if (null != productModel)
+			{
+				final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(productModel);
+				if (CollectionUtils.isNotEmpty(productCategoryList))
+				{
+					target.setCategoryName(productCategoryList.get(0).getCode());
+				}
+			}
+
 			/* Added For Jewellery */
 			if (null != source.getProduct()
 					&& source.getProduct().getProductCategoryType()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 			{
 				populateJewelleryInfo(source, target);
+
+				final List<BrandModel> brands = (List<BrandModel>) productModel.getBrands();
+				if (CollectionUtils.isNotEmpty(brands))
+				{
+					target.setBrandName(brands.get(0).getName());
+				}
 			}
-			/*
-			 * source.getOrderJewelEntry().getDiamondRate1(); source.getOrderJewelEntry().getDiamondRate2();
-			 * source.getOrderJewelEntry().getDiamondRate3(); source.getOrderJewelEntry().getDiamondRate4();
-			 * source.getOrderJewelEntry().getDiamondRate5(); source.getOrderJewelEntry().getDiamondRate6();
-			 * source.getOrderJewelEntry().getDiamondRate7(); source.getOrderJewelEntry().getDiamondtotalprice();
-			 * source.getOrderJewelEntry().getGemStoneRate1(); source.getOrderJewelEntry().getGemStoneRate2();
-			 * source.getOrderJewelEntry().getGemStoneRate3(); source.getOrderJewelEntry().getGemStoneRate4();
-			 * source.getOrderJewelEntry().getGemStoneRate5(); source.getOrderJewelEntry().getGemStoneRate6();
-			 * source.getOrderJewelEntry().getGemStoneRate7(); source.getOrderJewelEntry().getGemStoneRate8();
-			 * source.getOrderJewelEntry().getGemStoneRate9(); source.getOrderJewelEntry().getGemStoneRate10();
-			 * source.getOrderJewelEntry().getGemstonetotalprice(); source.getOrderJewelEntry().getMakingCharge();
-			 * source.getOrderJewelEntry().getWastageTax();
-			 *
-			 * }
-			 */
-
-
-			/*
-			 * if (null != source.getProduct()) { final ProductModel product = source.getProduct(); for (final
-			 * CategoryModel category : product.getClassificationClasses().) { category.getName();
-			 *
-			 *
-			 * if (category.getCode().contains("MSH")) { category.getName(); //category.gets }
-			 *
-			 * }
-			 *
-			 *
-			 * }
-			 */
-			/* Added For Jewellery */
-
 
 			if (source.getOrder() != null && source.getOrder().getStatus() != null
 					&& source.getOrder().getStatus().getCode() != null)
@@ -554,6 +555,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 			{
 				target.setIsLPAWBEdit(Boolean.FALSE);
 			}
+
+			//New Changes for Jewellery
 		}
 	}
 
@@ -579,57 +582,263 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 
 	private void populateJewelleryInfo(final OrderEntryModel source, final OrderLine target)
 	{
-
-		/*
-		 * final ProductData productData = productConverter.convert(source.getProduct());
-		 * productConfiguredPopulator.populate(source.getProduct(), productData, Arrays.asList(ProductOption.CATEGORIES,
-		 * ProductOption.CLASSIFICATION)); if (null != productData.getClassifications()) { final List<ClassificationData>
-		 * ConfigurableAttributeList = new ArrayList<ClassificationData>( productData.getClassifications()); for (final
-		 * ClassificationData classification : ConfigurableAttributeList) { classification.getName(); }
-		 * 
-		 * }
-		 */
 		final OrderJewelEntryModel jewelleryEntry = source.getOrderJewelEntry();
-		/*
-		 * if (null != jewelleryEntry.getDiamondPrice1()) { jewelleryEntry.getDiamondPrice1(); } if (null !=
-		 * jewelleryEntry.getDiamondPrice2()) { jewelleryEntry.getDiamondPrice2(); } if (null !=
-		 * jewelleryEntry.getDiamondPrice3()) { jewelleryEntry.getDiamondPrice3(); } if (null !=
-		 * jewelleryEntry.getDiamondPrice4()) { jewelleryEntry.getDiamondPrice4(); } if (null !=
-		 * jewelleryEntry.getDiamondPrice5()) { jewelleryEntry.getDiamondPrice5(); } if (null !=
-		 * jewelleryEntry.getDiamondPrice6()) { jewelleryEntry.getDiamondPrice6(); } if (null !=
-		 * jewelleryEntry.getDiamondPrice7()) { jewelleryEntry.getDiamondPrice7(); } if (null !=
-		 * jewelleryEntry.getDiamondtotalprice()) { jewelleryEntry.getDiamondtotalprice(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice1()) { jewelleryEntry.getGemStonePrice1(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice1()) { jewelleryEntry.getGemStonePrice1(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice2()) { jewelleryEntry.getGemStonePrice2(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice3()) { jewelleryEntry.getGemStonePrice3(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice4()) { jewelleryEntry.getGemStonePrice4(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice5()) { jewelleryEntry.getGemStonePrice5(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice6()) { jewelleryEntry.getGemStonePrice6(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice7()) { jewelleryEntry.getGemStonePrice7(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice8()) { jewelleryEntry.getGemStonePrice8(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice9()) { jewelleryEntry.getGemStonePrice9(); } if (null !=
-		 * jewelleryEntry.getGemStonePrice10()) { jewelleryEntry.getGemStonePrice10(); }
-		 */
-		if (null != jewelleryEntry.getStoneValue())
+
+		if (null != jewelleryEntry)
 		{
-			jewelleryEntry.getStoneValue();
+			if (null != jewelleryEntry.getPurity())
+			{
+				target.setPurity(jewelleryEntry.getPurity());
+			}
+			if (null != jewelleryEntry.getMetalValue())
+			{
+				target.setMetalValue(jewelleryEntry.getMetalValue());
+			}
+			if (null != jewelleryEntry.getSolitaireValue())
+			{
+				target.setSolitaireValue(jewelleryEntry.getSolitaireValue());
+			}
+			if (null != jewelleryEntry.getDiamondValue())
+			{
+				target.setDiamondValue(jewelleryEntry.getDiamondValue());
+			}
+			if (null != jewelleryEntry.getStoneValue())
+			{
+				target.setStoneValue(jewelleryEntry.getStoneValue());
+			}
+			if (null != jewelleryEntry.getMakingCharge())
+			{
+				target.setMakingCharges(jewelleryEntry.getMakingCharge());
+			}
+			if (null != jewelleryEntry.getWastageTax())
+			{
+				target.setWastageCharges(jewelleryEntry.getWastageTax());
+			}
+			if (null != jewelleryEntry.getMetalRate())
+			{
+				target.setMetalRate(jewelleryEntry.getMetalRate().toString());
+			}
+			if (null != jewelleryEntry.getSolitaireRate())
+			{
+				target.setSolitaireRate(jewelleryEntry.getSolitaireRate().toString());
+			}
+			if (null != jewelleryEntry.getDiamondRateType1())
+			{
+				target.setDiamondRateType1(jewelleryEntry.getDiamondRateType1().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType1())
+			{
+				target.setDiamondColorType1(jewelleryEntry.getDiamondColorType1());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType1())
+			{
+				target.setDiamondClarityType1(jewelleryEntry.getDiamondClarityType1());
+			}
+			if (null != jewelleryEntry.getDiamondRateType2())
+			{
+				target.setDiamondRateType2(jewelleryEntry.getDiamondRateType2().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType2())
+			{
+				target.setDiamondColorType2(jewelleryEntry.getDiamondColorType2());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType2())
+			{
+				target.setDiamondClarityType2(jewelleryEntry.getDiamondClarityType2());
+			}
+			if (null != jewelleryEntry.getDiamondRateType3())
+			{
+				target.setDiamondRateType3(jewelleryEntry.getDiamondRateType3().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType3())
+			{
+				target.setDiamondColorType3(jewelleryEntry.getDiamondColorType3());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType3())
+			{
+				target.setDiamondClarityType3(jewelleryEntry.getDiamondClarityType3());
+			}
+			if (null != jewelleryEntry.getDiamondRateType4())
+			{
+				target.setDiamondRateType4(jewelleryEntry.getDiamondRateType4().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType4())
+			{
+				target.setDiamondColorType4(jewelleryEntry.getDiamondColorType4());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType4())
+			{
+				target.setDiamondClarityType4(jewelleryEntry.getDiamondClarityType4());
+			}
+			if (null != jewelleryEntry.getDiamondRateType5())
+			{
+				target.setDiamondRateType5(jewelleryEntry.getDiamondRateType5().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType5())
+			{
+				target.setDiamondColorType5(jewelleryEntry.getDiamondColorType5());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType5())
+			{
+				target.setDiamondClarityType5(jewelleryEntry.getDiamondClarityType5());
+			}
+			if (null != jewelleryEntry.getDiamondRateType6())
+			{
+				target.setDiamondRateType6(jewelleryEntry.getDiamondRateType6().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType6())
+			{
+				target.setDiamondColorType6(jewelleryEntry.getDiamondColorType6());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType6())
+			{
+				target.setDiamondClarityType6(jewelleryEntry.getDiamondClarityType6());
+			}
+			if (null != jewelleryEntry.getDiamondRateType7())
+			{
+				target.setDiamondRateType7(jewelleryEntry.getDiamondRateType7().toString());
+			}
+			if (null != jewelleryEntry.getDiamondColorType7())
+			{
+				target.setDiamondColorType7(jewelleryEntry.getDiamondColorType7());
+			}
+			if (null != jewelleryEntry.getDiamondClarityType7())
+			{
+				target.setDiamondClarityType7(jewelleryEntry.getDiamondClarityType7());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType1())
+			{
+				target.setStoneRateType1(jewelleryEntry.getStoneRateType1().toString());
+			}
+			if (null != jewelleryEntry.getStoneType1())
+			{
+				target.setStoneType1(jewelleryEntry.getStoneType1());
+			}
+			if (null != jewelleryEntry.getStoneSizeType1())
+			{
+				target.setStoneSizeType1(jewelleryEntry.getStoneSizeType1());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType2())
+			{
+				target.setStoneRateType2(jewelleryEntry.getStoneRateType2().toString());
+			}
+			if (null != jewelleryEntry.getStoneType2())
+			{
+				target.setStoneType2(jewelleryEntry.getStoneType2());
+			}
+			if (null != jewelleryEntry.getStoneSizeType2())
+			{
+				target.setStoneSizeType2(jewelleryEntry.getStoneSizeType2());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType3())
+			{
+				target.setStoneRateType3(jewelleryEntry.getStoneRateType3().toString());
+			}
+			if (null != jewelleryEntry.getStoneType3())
+			{
+				target.setStoneType3(jewelleryEntry.getStoneType3());
+			}
+			if (null != jewelleryEntry.getStoneSizeType3())
+			{
+				target.setStoneSizeType3(jewelleryEntry.getStoneSizeType3());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType4())
+			{
+				target.setStoneRateType4(jewelleryEntry.getStoneRateType4().toString());
+			}
+			if (null != jewelleryEntry.getStoneType4())
+			{
+				target.setStoneType4(jewelleryEntry.getStoneType4());
+			}
+			if (null != jewelleryEntry.getStoneSizeType4())
+			{
+				target.setStoneSizeType4(jewelleryEntry.getStoneSizeType4());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType5())
+			{
+				target.setStoneRateType5(jewelleryEntry.getStoneRateType5().toString());
+			}
+			if (null != jewelleryEntry.getStoneType5())
+			{
+				target.setStoneType5(jewelleryEntry.getStoneType5());
+			}
+			if (null != jewelleryEntry.getStoneSizeType5())
+			{
+				target.setStoneSizeType5(jewelleryEntry.getStoneSizeType5());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType6())
+			{
+				target.setStoneRateType6(jewelleryEntry.getStoneRateType6().toString());
+			}
+			if (null != jewelleryEntry.getStoneType6())
+			{
+				target.setStoneType6(jewelleryEntry.getStoneType6());
+			}
+			if (null != jewelleryEntry.getStoneSizeType6())
+			{
+				target.setStoneSizeType6(jewelleryEntry.getStoneSizeType6());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType7())
+			{
+				target.setStoneRateType7(jewelleryEntry.getStoneRateType7().toString());
+			}
+			if (null != jewelleryEntry.getStoneType7())
+			{
+				target.setStoneType7(jewelleryEntry.getStoneType7());
+			}
+			if (null != jewelleryEntry.getStoneSizeType7())
+			{
+				target.setStoneSizeType7(jewelleryEntry.getStoneSizeType7());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType8())
+			{
+				target.setStoneRateType8(jewelleryEntry.getStoneRateType8().toString());
+			}
+			if (null != jewelleryEntry.getStoneType8())
+			{
+				target.setStoneType8(jewelleryEntry.getStoneType8());
+			}
+			if (null != jewelleryEntry.getStoneSizeType8())
+			{
+				target.setStoneSizeType8(jewelleryEntry.getStoneSizeType8());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType9())
+			{
+				target.setStoneRateType9(jewelleryEntry.getStoneRateType9().toString());
+			}
+			if (null != jewelleryEntry.getStoneType9())
+			{
+				target.setStoneType9(jewelleryEntry.getStoneType9());
+			}
+			if (null != jewelleryEntry.getStoneSizeType9())
+			{
+				target.setStoneSizeType9(jewelleryEntry.getStoneSizeType9());
+			}
+
+			if (null != jewelleryEntry.getStoneRateType10())
+			{
+				target.setStoneRateType10(jewelleryEntry.getStoneRateType10().toString());
+			}
+			if (null != jewelleryEntry.getStoneType10())
+			{
+				target.setStoneType10(jewelleryEntry.getStoneType10());
+			}
+			if (null != jewelleryEntry.getStoneSizeType10())
+			{
+				target.setStoneSizeType10(jewelleryEntry.getStoneSizeType10());
+			}
+
+
 		}
-		if (null != jewelleryEntry.getMakingCharge())
-		{
-			jewelleryEntry.getMakingCharge();
-		}
-		if (null != jewelleryEntry.getWastageTax())
-		{
-			jewelleryEntry.getWastageTax();
-		}
-
-
-		//final ProductFeatureModel jewelleryProductFeature = productFeatureJewelleryOrderService.ProductFeatureJewelleryOrderService(source.getSelectedUSSID());
-
-
-		//source.getProduct().getProductFeatureComponents();
-		//jewelleryEntry.getAbstractOrderEntryjewel().getProduct().getSupercategories();
 	}
 
 	/**
@@ -783,5 +992,10 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 	public void setPriceBreakupService(final PriceBreakupService priceBreakupService)
 	{
 		this.priceBreakupService = priceBreakupService;
+	}
+
+	protected DefaultPromotionManager getDefaultPromotionsManager()
+	{
+		return Registry.getApplicationContext().getBean("defaultPromotionManager", DefaultPromotionManager.class);
 	}
 }
