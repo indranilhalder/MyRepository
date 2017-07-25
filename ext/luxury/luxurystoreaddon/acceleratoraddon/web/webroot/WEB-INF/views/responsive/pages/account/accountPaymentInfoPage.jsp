@@ -61,6 +61,7 @@
 			<!----- Left Navigation ENDS --------->
 			<!----- Right Navigation ENDS --------->
 			<div class="right-account">
+			<h2><spring:theme code="lux.savecart.heading.text" text="Saved Cards"/></h2>
 				<div class="info card-list">
 					<h2>
 						<%-- <spring:theme code="text.account.SavedCards" text="Saved Cards" /><span> --%><spring:theme code="lux.text.account.SavedCards.details" text="Add, delete and manage your credit/debit card details here." /></span>
@@ -247,7 +248,7 @@
 												<%-- <input type="hidden" name="paymentInfoId"
 													value="${paymentInfo.cardToken}" /> --%>
 												<%-- <li><a href="${removePaymentActionUrl}" class="delete">Delete Card</a></li> --%>
-												<li><a href="#nogo" data-toggle="modal" class="delete"
+												<li class="deletcard"><a href="#nogo" data-toggle="modal" class="delete"
 														data-target="#delete-card_${debitCard.value.cardToken}_${debitStatus.index}"
 														data-mylist="<spring:theme code="text.help" />"
 														data-dismiss="modal">
