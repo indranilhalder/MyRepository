@@ -14192,7 +14192,7 @@ TATA.CommonFunctions = {
                 var addressId = $(this).attr("data-addressId");
                 TATA.Pages.MYACCOUNT.editLuxuryAddress(addressId);
             }), $(".view-details").on("click", function(e) {
-                $(".saved-cards").find(".paymentItem").toggleClass("active");
+                $(this).parents(".saved-cards").find(".paymentItem").toggleClass("active");
             });
         },
         editLuxuryAddress: function(addressId) {

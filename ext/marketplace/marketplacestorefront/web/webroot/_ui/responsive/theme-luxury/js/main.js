@@ -1514,7 +1514,7 @@ TATA.Pages = {
          
             $(".view-details").on('click', function(e) {
                 
-                $(".saved-cards").find(".paymentItem").toggleClass("active");                
+                $(this).parents(".saved-cards").find(".paymentItem").toggleClass("active");                
                
             });
     	},
