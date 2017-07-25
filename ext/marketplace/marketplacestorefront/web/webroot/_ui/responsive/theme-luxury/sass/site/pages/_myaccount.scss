@@ -218,11 +218,23 @@
                                 background: #f9f9f9;
                                 border: 1px solid #e4e8f0;
                                 padding: 0px;
+                                display: table;
+                                
+                                @include media-breakpoint-down(sm) {
+                                    display: block;
+                                }
+                                
                                 li{
                                     display: inline-block;
                                     border-right: 1px solid #e4e8f0;
                                     padding: 5px;
                                     width: 24%;
+                                    vertical-align: top;
+                                    word-break: break-all;
+                                    display: table-cell;
+                                    @include media-breakpoint-down(sm) {
+                                        display: block;
+                                    }
                                     
                                     @include media-breakpoint-down(sm) {
                                         display: block;
