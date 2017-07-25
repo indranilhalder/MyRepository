@@ -113,6 +113,11 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     font-size: 20px;
     cursor: pointer;
     position: relative;
+    margin-left: 33%;
+}
+
+body .account .right-account .order-history.order-details .status>ul>li.progress.shippingStatus.processing span.dot{
+    margin-left: 16.5%;
 }
 
 body .account .right-account .order-history.order-details .status>ul>li.progress span.start:before{
@@ -122,6 +127,9 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     bottom: 25%;
     left: 0;
     height: 30px;
+}
+body .account .right-account .order-history.order-details .status>ul>li.progress span.return-start:before{
+    opacity:0;
 }
 body .account .right-account .order-history.order-details .status>ul>li.progress span.start:after{
 	content: '';
@@ -133,7 +141,8 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     width: 100%;
 }
 
-body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_00cbe9:before{
+body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_00cbe9:before,
+body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_ff1c47:before{
 	background-color: #b99d6b;
     box-shadow: 0 0 0 3px #b99d6b;
     z-index: 2;
@@ -169,9 +178,29 @@ body .account .right-account .order-history.order-details .status .message.track
     }
 }
 
-body .account .right-account .order-history.order-details .status .processingStatus .message.trackOrdermessage_00cbe9{
+body .account .right-account .order-history.order-details .status .processingStatus .message.trackOrdermessage_00cbe9,
+body .account .right-account .order-history.order-details .status .cancelStatus .message.trackOrdermessage_ff1c47{
 	left:-100%;
 }
+
+body .account .right-account .order-history.order-details .status .message.tracking-information{
+    left:-200%;
+}
+body .account .right-account .order-history.order-details .status .message.return{
+    left:-400% !important;
+}
+
+body .account .right-account .order-history.order-details .status .message.tracking-information>p:first-child,
+body .account .right-account .order-history.order-details .status .message.tracking-information ul{
+    width: 100%;
+    clear: both;
+}
+body .account .right-account .order-history.order-details .status .message.tracking-information p{
+    width:50%;
+    float: left;
+}
+
+
 
 body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47{
 	display: none;
@@ -206,8 +235,13 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     width: 100%;
 }
 
+body .account .right-account .order-history.order-details .status>ul>li.progress span.end.return-end:after{
+    opacity: 0;
+}
+
 body .account .right-account .order-history.order-details .status>ul>li.progress.cancelStatus span.end:after{
 	right:0;
+    opacity: 0;
 }
 
 body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.inactive:before,
@@ -232,6 +266,10 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
     height: 40px;
     border: 3px solid #b9b9b9;
 }
+body .account .right-account .order-history.order-details .status>ul>li.delivery-status p{
+    line-height: initial;
+    height: 20px;
+}
 
 .product-block.order-details{
 	border: 1px solid #dce1eb;
@@ -244,7 +282,9 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 
 .order-placed-arrow p,
 .processing-stage-arrow1 p,
-.cancellation.message p{
+.cancellation.message p,
+.tracking-information p,
+.trackOrdermessage_00cbe9 p{
 	font-weight: bold;
     padding-bottom: 0px;
     font-size: 12px;
@@ -253,7 +293,9 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 
 .order-placed-arrow ul li,
 .processing-stage-arrow1 ul li,
-.cancellation.message ul li{
+.cancellation.message ul li,
+.tracking-information ul li,
+.trackOrdermessage_00cbe9 ul li{
 	font-size: 12px;
     padding-bottom: 0 !important;
 }
@@ -271,26 +313,26 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
     margin-top: -50px;
  }
  
- @media (max-width:768px){
- 	.product-block.order-details .list-top-title li{
- 		display: block;
-	    width: 100%;
-	    border-bottom: 1px solid #e4e8f0;
- 	}
- 	body .account .right-account .order-history.order-details .status>ul.nav>li{
- 		font-size:12px;
- 	}
- 	#changeAddressLink{
- 		margin-bottom: 40px;
+@media (max-width:768px){
+	.product-block.order-details .list-top-title li{
+		display: block;
+        width: 100%;
+        border-bottom: 1px solid #e4e8f0;
+	}
+	body .account .right-account .order-history.order-details .status>ul.nav>li{
+		font-size:12px;
+	}
+	#changeAddressLink{
+		margin-bottom: 40px;
     	display: block;
     	line-height:1px !important;
     	margin-right: -20px;
- 	}
- 	#card .terms{
-	 	width: 100%;
-	    margin-top: 10px;
-	 }
-	 #card .newCardPaymentCC .button{
-	 	width:100%;
-	 } 	
- }
+	}
+	#card .terms{
+     	width: 100%;
+        margin-top: 10px;
+    }
+    #card .newCardPaymentCC .button{
+    	width:100%;
+    } 	
+}
