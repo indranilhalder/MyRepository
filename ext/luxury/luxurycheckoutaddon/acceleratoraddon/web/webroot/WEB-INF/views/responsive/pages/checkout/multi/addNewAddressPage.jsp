@@ -282,7 +282,7 @@
 						 <div class="formaddress" style="display: block;">
 		<div class="heading-form">
 														<h3>Add New Address</h3>
-														<input type="button" value="cancel" class="cancelBtn">
+													
 													</div>
 	  
 	  
