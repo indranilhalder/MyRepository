@@ -480,7 +480,8 @@ public class ProductDetailsHelper
 					{
 						//TISEE-6376
 						if (wlEntry.getProduct() != null && wlEntry.getProduct().getCode() != null
-								&& wlEntry.getProduct().getCode().equals(productCode))
+								&& wlEntry.getProduct().getCode().equals(productCode)
+								&& (!wlEntry.getIsDeleted().booleanValue() || wlEntry.getIsDeleted() == null))//TPR-5787 TISSPTEN-9 check added
 						{
 							ussidEntries.add(wlEntry.getUssid());
 						}

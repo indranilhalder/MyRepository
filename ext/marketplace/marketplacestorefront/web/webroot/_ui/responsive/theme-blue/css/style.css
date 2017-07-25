@@ -72944,3 +72944,22 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>.mop_span + 
 		padding-top: 0px !important;	/* TISPRDT-1574 fix */
 		}
 }
+/* TISSPTEN-22 start */
+body.page-offersPage .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after,
+body.page-offersPage .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
+	height: 28px;
+	}
+body.page-offersPage .homepage-banner .home-rotatingImage.owl-theme .owl-controls{
+	position: static;
+}
+body.page-offersPage .homepage-banner .owl-theme .owl-controls{
+	position: absolute;
+}
+/* TISSPTEN-22 end */
+/* Footer allignment issue start */
+@media (max-width: 790px){
+footer #footerLink div.column ul li a {
+	line-height: 2.3;
+}
+}
+/* Footer allignment issue end */

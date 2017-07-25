@@ -15,7 +15,7 @@ ACC.micrositeautocomplete = {
 				var option = this.element.data("options");
 				// set the options to the widget
 				//PRDI-564 fix for brand-page undefined fix
-				if(typeof option != undefined){
+				if(typeof(option) != "undefined"){
 					this._setOptions({
 						minLength: option.minCharactersBeforeRequest,
 						displayProductImages: option.displayProductImages,

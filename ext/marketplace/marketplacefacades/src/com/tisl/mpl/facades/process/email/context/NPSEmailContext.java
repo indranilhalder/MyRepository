@@ -88,19 +88,12 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 			{
 				final Double couponDiscount = orderEntry.getCouponValue();
 				put(COUPON_DISCOUNT, couponDiscount);
-
-				final Double totalNetAmount = new Double(orderEntry.getNetAmountAfterAllDisc().doubleValue());
-
-				put(TOTAL_NET_AMOUNT, totalNetAmount);
 			}
-			else
-			{
+			final Double totalNetAmount = new Double(orderEntry.getNetAmountAfterAllDisc().doubleValue());
 
-				final Double totalNetAmount = new Double(orderEntry.getTotalPrice().doubleValue());
+			put(TOTAL_NET_AMOUNT, totalNetAmount);
 
-				put(TOTAL_NET_AMOUNT, totalNetAmount);
 
-			}
 
 			if (productInfo.getPicture() != null)
 			{
@@ -192,7 +185,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getSite(de.hybris.platform.
 	 * processengine.model.BusinessProcessModel)
 	 */
@@ -204,7 +197,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -213,7 +206,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getEmailLanguage(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)
@@ -226,7 +219,7 @@ public class NPSEmailContext extends AbstractEmailContext<NpsEmailProcessModel>
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.acceleratorservices.process.email.context.AbstractEmailContext#getCustomer(de.hybris.platform
 	 * .processengine.model.BusinessProcessModel)

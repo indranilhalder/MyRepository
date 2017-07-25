@@ -26,8 +26,8 @@ import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -514,39 +514,42 @@ public class DefaultWishlistFacade implements WishlistFacade
 	{
 		try
 		{
-			final List<OrderEntryData> orderEntryDatas = orderDetails.getEntries();
-			final List<Wishlist2Model> allWishlists = getAllWishlistsForCustomer(userModel);
-
-			if (CollectionUtils.isNotEmpty(orderEntryDatas) && CollectionUtils.isNotEmpty(allWishlists))
+			List<Wishlist2EntryModel> wishlist2EntryModels = new ArrayList<>();
+			if (CollectionUtils.isNotEmpty(orderDetails.getEntries()))
 			{
-				for (final OrderEntryData orderEntryData : orderEntryDatas)
+				for (final OrderEntryData orderEntryData : orderDetails.getEntries())
 				{
-					if (null != orderEntryData.getProduct() && StringUtils.isNotEmpty(orderEntryData.getSelectedUssid()))
+					if (StringUtils.isNotEmpty(orderEntryData.getSelectedUssid()))
 					{
-						for (final Wishlist2Model wishlist2Model : allWishlists)
+						wishlist2EntryModels = mplWishlistService.getWishlistByUserAndUssid(userModel,
+								orderEntryData.getSelectedUssid());
+
+						for (final Wishlist2EntryModel wishlist2EntryModel : wishlist2EntryModels)
 						{
-							final Iterator iter = wishlist2Model.getEntries().iterator();
-							while (iter.hasNext())
+							if (null != wishlist2EntryModel.getAddToCartFromWl()
+									&& wishlist2EntryModel.getAddToCartFromWl().equals(Boolean.TRUE)
+									&& (Boolean.FALSE.equals(wishlist2EntryModel.getIsDeleted()) || null == wishlist2EntryModel
+											.getIsDeleted()))
 							{
-								final Wishlist2EntryModel wishlist2EntryModel = (Wishlist2EntryModel) iter.next();
-								if (null != wishlist2EntryModel.getAddToCartFromWl()
-										&& wishlist2EntryModel.getAddToCartFromWl().equals(Boolean.TRUE))
-								{
-									wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
-								}
+								final Date date = new Date();
+								wishlist2EntryModel.setIsDeleted(Boolean.TRUE);
+								wishlist2EntryModel.setDeletedDate(new Timestamp(date.getTime()));
+								wishlist2EntryModel.setDesired(Integer.valueOf(0));//TISSPTEN-2
+								modelService.save(wishlist2EntryModel);
+								break;
+								//wishlistService.removeWishlistEntry(wishlist2Model, wishlist2EntryModel);
 							}
 						}
 					}
 				}
 			}
+
 		}
 		catch (final Exception ex)
 		{
 			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
 		}
 	}
-
-
 
 	/**
 	 * Desc It will fetch all wishlists for a customer/user TISPT-179 Point 1
@@ -569,7 +572,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getSingleWishlist(de.hybris.platform.core.model.user.UserModel)
 	 */
 	@Override
