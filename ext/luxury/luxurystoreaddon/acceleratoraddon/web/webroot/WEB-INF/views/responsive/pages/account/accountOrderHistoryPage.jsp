@@ -169,8 +169,8 @@
 														test="${orderDataMap[orderHistoryDetail.code] ne null}">
 													${orderDataMap[orderHistoryDetail.code]}
 												</c:if></li>
-												<li class="order-total"><span><spring:theme
-															code="text.orderHistory.total" /></span>  
+												<li class="order-number"><span><spring:theme
+															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 												<!-- TISSIT-1773 -->
 															<%-- <format:price priceData="${orderHistoryDetail.totalPrice}" /> --%>
 												<c:choose>
@@ -196,8 +196,9 @@
 																</c:otherwise>
 													</c:choose>
 													</li>
-												<li class="order-number"><span><spring:theme
-															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
+													<li class="order-total"><span><spring:theme
+															code="text.orderHistory.total" /></span>  
+												
 
 												
 											</ul>
@@ -271,7 +272,7 @@
 																</ycommerce:testId>
 															</p>
 															<p>
-																<spring:theme text="Delivery Charges:" />
+																<spring:theme text="Schedule Delivery and Shipping Charges:" />
 																&nbsp;
 															<c:choose>
 																<c:when test="${entry.currDelCharge.value=='0.0'}">
@@ -686,9 +687,9 @@
 							</ul>
 						</c:forEach>
 
-						<div class="navigation2" >
+						<%-- <div class="navigation2" >
 							<span id="ofPagination"></span>
-							<%-- <div class="navigation2" >
+							<div class="navigation2" >
 							<span id="ofPagination"></span>
 							<c:if test="${fn:length(orderDataList)>pageSizeInoh}">
 								<ul class="pagination orderhistory_address_pagination2">
@@ -696,7 +697,7 @@
 	
 								</ul>
 							</c:if>
-							</div> --%>
+							</div>
 							<!-- TISPRO-48 ---- call mpl-pagination.tag for pagination -->
 							<nav:mpl-pagination top="false"
 								supportShowPaged="${isShowPageAllowed}"
@@ -706,7 +707,7 @@
 								msgKey="text.account.orderHistory.page"
 								numberPagesShown="${numberPagesShown}" />
 						<!-- mycode -->
-						</div>
+						</div> --%>
 						<!-- mycode -->
 					</c:if>
 
