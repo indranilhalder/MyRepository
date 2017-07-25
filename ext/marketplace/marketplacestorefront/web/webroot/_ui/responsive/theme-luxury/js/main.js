@@ -2584,6 +2584,10 @@ $(document).ready(function () {
     	}
 	});
     
+    $(document).on("click",".lux-remove-entry-button",(function(){
+        $(window).scrollTop(0);
+    }));
+    
     $("body.page-cartPage .cart.wrapper .checkout-types div#checkout-id").on("mouseover",function(){
         if($(this).find("a#checkout-enabled.checkout-disabled").length > 0){
             $(this).css("cursor","not-allowed");
