@@ -17,6 +17,7 @@ ACC.micrositeautocomplete = {
 				//PRDI-564 fix for brand-page undefined fix
 				if(typeof(option) != "undefined"){
 					this._setOptions({
+						console.log("inside bindMicrositeSearchAutocomplete");
 						minLength: option.minCharactersBeforeRequest,
 						displayProductImages: option.displayProductImages,
 						delay: option.waitTimeBeforeRequest,
