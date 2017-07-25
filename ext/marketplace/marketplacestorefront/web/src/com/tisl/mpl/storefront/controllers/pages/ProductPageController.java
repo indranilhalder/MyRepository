@@ -2201,9 +2201,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 *
+										 * 
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 *
+										 * 
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -2975,10 +2975,13 @@ public class ProductPageController extends MidPageController
 		LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
 
 		final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
-		buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, gson.toJson(PriceMap));
+		if (CollectionUtils.isNotEmpty(PriceMap))
+		{
+			buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, gson.toJson(PriceMap));
 
-		buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR, displayConfigurableAttributeForPriceBreakup);
-
+			buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR,
+					displayConfigurableAttributeForPriceBreakup);
+		}
 		//buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, JewelInfo);
 
 		//PRICE BREAKUP ENDS:TPR-3782
