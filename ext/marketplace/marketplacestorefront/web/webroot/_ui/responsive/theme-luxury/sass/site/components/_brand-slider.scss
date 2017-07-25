@@ -45,4 +45,9 @@
     &:not(:empty){
         margin: 0 auto 70px;
     }
+    @include media-breakpoint-down(sm) {
+    	.slick-track{
+    		margin-left: -32%;
+    	}
+    }
 }
