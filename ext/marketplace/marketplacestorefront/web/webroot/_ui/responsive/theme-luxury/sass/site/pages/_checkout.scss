@@ -923,7 +923,8 @@
     @include media-breakpoint-down(sm) {
         .card_image{
             width: 35px;
-            display: block;
+            display: block;            
+            
         }
     }
 }
@@ -948,6 +949,12 @@
 }
 .card.card-num .card-details{
      margin-left: 15px;
+    @include media-breakpoint-down(sm) {
+        margin-left: 0px;
+        width: 100%;
+        margin-top: 10px;
+       
+    }
 }
 
 /*Order confirmation page*/
@@ -1036,6 +1043,10 @@ checkout-shipping-items.left-block-width{
         .cvv.right-align-form{
             display: inline-block;
             width: 19%; 
+            
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
         }
         .cvv.right-align-form #cvv1{
             width: 100%;
@@ -1315,7 +1326,8 @@ ul.delivered.scrollThis {
 .cart.wrapper .left-block input[type="radio"] ~ label {  
     cursor: pointer;
     padding-left: 20px;
-    font-weight: 500;
+    font-weight: 500;    
+  
 }
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth ul li span {
     padding-left: 20px;
@@ -1595,3 +1607,13 @@ h2.panel-defaultHeading {
 #COD .make_payment{
   float: right;
  }
+
+@include media-breakpoint-down(sm) {
+    .debit-card-group{
+        .radio{
+            label{
+                padding-left: 0px;
+            }
+        }
+    }  
+}
