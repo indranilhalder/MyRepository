@@ -1317,14 +1317,24 @@ ACC.singlePageCheckout = {
         	//START:Code to show strike off price
     		$("#off-bag").show();
 
+//    		$("li.price").each(function(){
+//    				if($(this).find(".off-bag").css("display") === "block"){
+//    					$(this).find("span.delSeat").addClass("delAction");
+//    				}
+//    				else{
+//    					$(this).find("span.delSeat").removeClass("delAction");
+//    				}
+//    			});
     		$("li.price").each(function(){
-    				if($(this).find(".off-bag").css("display") === "block"){
-    					$(this).find("span.delSeat").addClass("delAction");
+    			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+    				if($(this).find("span.delSeat.mop").length > 0){
+    				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
     				}
-    				else{
-    					$(this).find("span.delSeat").removeClass("delAction");
-    				}
-    			});
+    			}
+    			else{
+    				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+    			}
+    		});
     		//END:Code to show strike off price
         	if($('body').find('a.cart_move_wishlist').length > 0){
         	$('a.cart_move_wishlist').popover({ 
@@ -2014,6 +2024,7 @@ ACC.singlePageCheckout = {
 	formValidationErrorCount:0,
 	isSlotDeliveryAndCncPresent:false,
 	countItemsForReviewOrder:"",
+	needHelpContactNumber:"",
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -2057,7 +2068,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
-		ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
+		//ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2223,7 +2234,8 @@ ACC.singlePageCheckout = {
 		{
 			//$("input[name=selectedAddressCodeMobile]").prop("checked", false);
 		}
-		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){	
+		if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
+			 ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
 			 var url= ACC.config.encodedContextPath + "/checkout/single/delModesOnAddrSelect/"+selectedPincode;
 			 var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
 			  xhrResponse.fail(function(xhr, textStatus, errorThrown) {
@@ -2240,6 +2252,7 @@ ACC.singlePageCheckout = {
 	            		$(".new-address-form-mobile").slideUp();
                 	}
 					if (jqXHR.responseJSON) {
+						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
 		                {
 		                	if(isNew)
@@ -2264,6 +2277,7 @@ ACC.singlePageCheckout = {
 	           
 		                }
 		            } else {
+		            	//In case of no error at server end below block will execute.
 		            	if(isNew)
 	                	{
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
@@ -2774,6 +2788,13 @@ $(document).ready(function(){
 	var pageType=$("#pageType").val();
 	if(pageType=="multistepcheckoutsummary")
 	{
+		//Updating need help number ACC.singlePageCheckout.needHelpContactNumber is set in 'needhelpcomponent.jsp' file.
+		var needHelpNumber=ACC.singlePageCheckout.needHelpContactNumber;
+		if(needHelpNumber!="" && needHelpNumber!=null)
+		{
+			needHelpNumber=needHelpNumber.replace(/\-/g, " ");
+			$("#singlePageNeedHelpComponent").text("Need Help? Call "+needHelpNumber);
+		}
 		var onLoadIsResponsive=ACC.singlePageCheckout.getIsResponsive();
 		$(window).on("resize",function(){
 			//Reload the page if a user resizes the device and viewport width changes from desktop to responsive

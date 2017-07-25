@@ -213,7 +213,7 @@
 					</div>
 					
 					<span>Safe & Secure Checkout</span>		<!-- UF-281 text change -->
-					<span class="need-help-call">Need Help? Call 1800 935 6555</span>
+					<span id="singlePageNeedHelpComponent" class="need-help-call"></span><!--Need Help? Call Number is added using js code written in acc.singlePageCheckout.js -->
 					
 					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>
