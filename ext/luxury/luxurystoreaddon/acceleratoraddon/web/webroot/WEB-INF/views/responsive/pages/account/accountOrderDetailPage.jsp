@@ -412,8 +412,7 @@
 	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															<br>
-															<br>
+															
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
