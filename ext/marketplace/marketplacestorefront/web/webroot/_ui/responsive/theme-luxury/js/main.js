@@ -2558,6 +2558,8 @@ $(document).ready(function () {
     $('.checkout-paymentmethod .payment-tab').removeClass('active');
     $('#card').css('display','none');
     
+    
+    
     $('.credit_tab').on('click',function(){
         if($('.new_card_tab.credit_tab').hasClass('active_tab')){
         $('.newCardPaymentCC').show();
@@ -2620,3 +2622,10 @@ $(document).ready(function () {
 $(window).scroll(function () {
     TATA.CommonFunctions.WindowScroll();
 });
+
+
+$(document).ready(function ()
+		{$("#clear_filter").click(function(){
+    $(".reset-filters").trigger("click"); 
+    		});
+		}
