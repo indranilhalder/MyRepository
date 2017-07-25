@@ -33,6 +33,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,7 +54,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -98,7 +99,8 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	@Override
 	public List<PriceBreakupData> getPricebreakup(final String ussid)
 	{
-		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
+		//final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
+		final JewelleryPriceRowModel jPrice = priceBreakupDao.getPricebreakup(ussid).get(0);
 		final List<JewelleryInformationModel> jewelleryInfoList = priceBreakupDao.getJewelInfo(ussid);
 
 		PriceBreakupData priceBreakupData = null;
@@ -108,164 +110,194 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 		final List<String> diamondWeightRateList = new ArrayList();
 		final PriceBreakupData diamondPriceData = new PriceBreakupData();
 
-		if (null != jewelleryInfoList && null != jewelleryPriceRowList)
+		if (null != jewelleryInfoList && null != jPrice)
 		{
-			for (final JewelleryPriceRowModel jPrice : jewelleryPriceRowList)
+			//for (final JewelleryPriceRowModel jPrice : jewelleryPriceRowList)
+			//{
+			for (final JewelleryInformationModel jInfo : jewelleryInfoList)
 			{
-				for (final JewelleryInformationModel jInfo : jewelleryInfoList)
+				if (null != jInfo.getPIMAttributeId())
 				{
-					if (null != jInfo.getPIMAttributeId())
+					if (jInfo.getPIMAttributeId().equalsIgnoreCase("metalweightfinejwlry"))
 					{
-						if (jInfo.getPIMAttributeId().equalsIgnoreCase("metalweightfinejwlry"))
+						//priceBreakupData = new PriceBreakupData();
+						//weightRateList = new ArrayList();
+
+						if (null != jPrice.getGoldValue() && null != jPrice.getGoldRate() && null != jInfo.getWeight())
 						{
 							priceBreakupData = new PriceBreakupData();
 							weightRateList = new ArrayList();
 
-							if (null != jPrice.getGoldValue() && null != jPrice.getGoldRate() && null != jInfo.getWeight())
-							{
-								priceBreakupData.setName(MarketplacecommerceservicesConstants.GOLD);
-								key = jInfo.getWeight() + "/" + jPrice.getGoldRate();
-								weightRateList.add(key);
-								final PriceData price = createPriceSign(PriceDataType.BUY,
-										new BigDecimal(jPrice.getGoldValue().doubleValue()), commonI18NService.getCurrency(INR));
-								priceBreakupData.setWeightRateList(weightRateList);
-								priceBreakupData.setPrice(price);
-							}
-							if (null != jPrice.getSilverValue() && null != jPrice.getSilverRate() && null != jInfo.getWeight())
-							{
-								priceBreakupData.setName(MarketplacecommerceservicesConstants.SILVER);
-								key = jInfo.getWeight() + "/" + jPrice.getSilverRate();
-								weightRateList.add(key);
-								final PriceData price = createPriceSign(PriceDataType.BUY,
-										new BigDecimal(jPrice.getSilverValue().doubleValue()), commonI18NService.getCurrency(INR));
-								priceBreakupData.setWeightRateList(weightRateList);
-								priceBreakupData.setPrice(price);
-							}
-							if (null != jPrice.getPlatinumValue() && null != jPrice.getPlatinumRate() && null != jInfo.getWeight())
-							{
-								priceBreakupData.setName(MarketplacecommerceservicesConstants.PLATINUM);
-								key = jInfo.getWeight() + "/" + jPrice.getPlatinumRate();
-								weightRateList.add(key);
-								final PriceData price = createPriceSign(PriceDataType.BUY,
-										new BigDecimal(jPrice.getPlatinumValue().doubleValue()), commonI18NService.getCurrency(INR));
-								priceBreakupData.setWeightRateList(weightRateList);
-								priceBreakupData.setPrice(price);
-							}
-							if (null != jPrice.getSolitaireValue() && null != jPrice.getSolitaireRate() && null != jInfo.getWeight())
-							{
-								priceBreakupData.setName(MarketplacecommerceservicesConstants.SOLITAIRE);
-								key = jInfo.getWeight() + "/" + jPrice.getSolitaireRate();
-								weightRateList.add(key);
-								final PriceData price = createPriceSign(PriceDataType.BUY,
-										new BigDecimal(jPrice.getSolitaireValue().doubleValue()), commonI18NService.getCurrency(INR));
-								priceBreakupData.setWeightRateList(weightRateList);
-								priceBreakupData.setPrice(price);
-							}
-							priceBreakupDataList.add(priceBreakupData);
-							break;
-						}
-					}
-				}
-				if (null != jPrice.getTotalDiamondValue())
-				{
-					for (final JewelleryInformationModel jInfo : jewelleryInfoList)
-					{
-						if (null != jInfo.getPIMAttributeId())
-						{
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry1"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType1())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType1().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry2"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType2())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType2().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry3"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType3())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType3().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry4"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType4())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType4().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry5"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType5())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType5().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry6"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType6())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType6().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-							if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry7"))
-							{
-								if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType7())
-								{
-									key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType7().toString();
-									diamondWeightRateList.add(key);
-								}
-							}
-						}
-					}
-					final PriceData diamondprice = createPriceSign(PriceDataType.BUY,
-							new BigDecimal(jPrice.getTotalDiamondValue().doubleValue()), commonI18NService.getCurrency(INR));
-					diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
-					diamondPriceData.setPrice(diamondprice);
-					diamondPriceData.setWeightRateList(diamondWeightRateList);
-					priceBreakupDataList.add(diamondPriceData);
-				}
+							priceBreakupData.setName(MarketplacecommerceservicesConstants.GOLD);
+							key = jInfo.getWeight() + "/" + jPrice.getGoldRate();
+							weightRateList.add(key);
+							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getGoldValue()
+									.doubleValue()), commonI18NService.getCurrency(INR));
+							priceBreakupData.setWeightRateList(weightRateList);
+							priceBreakupData.setPrice(price);
 
-				if (null != jPrice.getTotalStoneValue())
-				{
-					priceBreakupData = new PriceBreakupData();
-					final PriceData price = createPriceSign(PriceDataType.BUY,
-							new BigDecimal(jPrice.getTotalStoneValue().doubleValue()), commonI18NService.getCurrency(INR));
-					priceBreakupData.setName(MarketplacecommerceservicesConstants.GEMSTONE);
-					priceBreakupData.setPrice(price);
-					priceBreakupDataList.add(priceBreakupData);
+							priceBreakupDataList.add(priceBreakupData);
+						}
+						if (null != jPrice.getSilverValue() && null != jPrice.getSilverRate() && null != jInfo.getWeight())
+						{
+							priceBreakupData = new PriceBreakupData();
+							weightRateList = new ArrayList();
+
+							priceBreakupData.setName(MarketplacecommerceservicesConstants.SILVER);
+							key = jInfo.getWeight() + "/" + jPrice.getSilverRate();
+							weightRateList.add(key);
+							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSilverValue()
+									.doubleValue()), commonI18NService.getCurrency(INR));
+							priceBreakupData.setWeightRateList(weightRateList);
+							priceBreakupData.setPrice(price);
+
+							priceBreakupDataList.add(priceBreakupData);
+						}
+						if (null != jPrice.getPlatinumValue() && null != jPrice.getPlatinumRate() && null != jInfo.getWeight())
+						{
+							priceBreakupData = new PriceBreakupData();
+							weightRateList = new ArrayList();
+
+							priceBreakupData.setName(MarketplacecommerceservicesConstants.PLATINUM);
+							key = jInfo.getWeight() + "/" + jPrice.getPlatinumRate();
+							weightRateList.add(key);
+							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getPlatinumValue()
+									.doubleValue()), commonI18NService.getCurrency(INR));
+							priceBreakupData.setWeightRateList(weightRateList);
+							priceBreakupData.setPrice(price);
+
+							priceBreakupDataList.add(priceBreakupData);
+						}
+						if (null != jPrice.getSolitaireValue() && null != jPrice.getSolitaireRate() && null != jInfo.getWeight())
+						{
+							priceBreakupData = new PriceBreakupData();
+							weightRateList = new ArrayList();
+
+							priceBreakupData.setName(MarketplacecommerceservicesConstants.SOLITAIRE);
+							key = jInfo.getWeight() + "/" + jPrice.getSolitaireRate();
+							weightRateList.add(key);
+							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSolitaireValue()
+									.doubleValue()), commonI18NService.getCurrency(INR));
+							priceBreakupData.setWeightRateList(weightRateList);
+							priceBreakupData.setPrice(price);
+
+							priceBreakupDataList.add(priceBreakupData);
+						}
+						//priceBreakupDataList.add(priceBreakupData);
+						//break;
+					}
+					//}
+					//}
+					if (null != jPrice.getTotalDiamondValue())
+					{
+						//for (final JewelleryInformationModel jInfo : jewelleryInfoList)
+						//{
+						//if (null != jInfo.getPIMAttributeId())
+						//	{
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry1"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType1())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType1().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry2"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType2())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType2().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry3"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType3())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType3().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry4"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType4())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType4().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry5"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType5())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType5().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry6"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType6())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType6().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+						if (jInfo.getPIMAttributeId().equalsIgnoreCase("diamondweightfinejwlry7"))
+						{
+							if (null != jInfo.getWeight() && null != jPrice.getDiamondRateType7())
+							{
+								key = jInfo.getWeight() + "/" + jPrice.getDiamondRateType7().toString();
+								diamondWeightRateList.add(key);
+							}
+						}
+					}
 				}
-				if (null != jPrice.getMakingCharges())
-				{
-					priceBreakupData = new PriceBreakupData();
-					final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getMakingCharges().doubleValue()),
-							commonI18NService.getCurrency(INR));
-					priceBreakupData.setName(MarketplacecommerceservicesConstants.MAKINGCHARGE);
-					priceBreakupData.setPrice(price);
-					priceBreakupDataList.add(priceBreakupData);
-				}
-				if (null != jPrice.getWastageCharges())
-				{
-					priceBreakupData = new PriceBreakupData();
-					final PriceData price = createPriceSign(PriceDataType.BUY,
-							new BigDecimal(jPrice.getWastageCharges().doubleValue()), commonI18NService.getCurrency(INR));
-					priceBreakupData.setName(MarketplacecommerceservicesConstants.WASTAGETAX);
-					priceBreakupData.setPrice(price);
-					priceBreakupDataList.add(priceBreakupData);
-				}
+				//				final PriceData diamondprice = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getTotalDiamondValue()
+				//						.doubleValue()), commonI18NService.getCurrency(INR));
+				//				diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
+				//				diamondPriceData.setPrice(diamondprice);
+				//				diamondPriceData.setWeightRateList(diamondWeightRateList);
+				//				priceBreakupDataList.add(diamondPriceData);
 			}
+
+			if (CollectionUtils.isNotEmpty(diamondWeightRateList))
+			{
+				final PriceData diamondprice = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getTotalDiamondValue()
+						.doubleValue()), commonI18NService.getCurrency(INR));
+				diamondPriceData.setName(MarketplacecommerceservicesConstants.DIAMOND);
+				diamondPriceData.setPrice(diamondprice);
+				diamondPriceData.setWeightRateList(diamondWeightRateList);
+				priceBreakupDataList.add(diamondPriceData);
+			}
+
+			if (null != jPrice.getTotalStoneValue())
+			{
+				priceBreakupData = new PriceBreakupData();
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getTotalStoneValue().doubleValue()),
+						commonI18NService.getCurrency(INR));
+				priceBreakupData.setName(MarketplacecommerceservicesConstants.GEMSTONE);
+				priceBreakupData.setPrice(price);
+				priceBreakupDataList.add(priceBreakupData);
+			}
+			if (null != jPrice.getMakingCharges())
+			{
+				priceBreakupData = new PriceBreakupData();
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getMakingCharges().doubleValue()),
+						commonI18NService.getCurrency(INR));
+				priceBreakupData.setName(MarketplacecommerceservicesConstants.MAKINGCHARGE);
+				priceBreakupData.setPrice(price);
+				priceBreakupDataList.add(priceBreakupData);
+			}
+			if (null != jPrice.getWastageCharges())
+			{
+				priceBreakupData = new PriceBreakupData();
+				final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getWastageCharges().doubleValue()),
+						commonI18NService.getCurrency(INR));
+				priceBreakupData.setName(MarketplacecommerceservicesConstants.WASTAGETAX);
+				priceBreakupData.setPrice(price);
+				priceBreakupDataList.add(priceBreakupData);
+			}
+			//}
 		}
 
 

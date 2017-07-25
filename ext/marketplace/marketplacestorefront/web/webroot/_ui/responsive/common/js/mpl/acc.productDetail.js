@@ -3992,7 +3992,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				/* PRICE BREAKUP STARTS HERE */
 			    jwllryShowPrcBrkUp = data['displayconfigattr'];
 			    jwlryPrcBrkUp = data['priceBreakup'];
-				if(data['displayconfigattr'] == "Yes"){
+				if(jwllryShowPrcBrkUp == "Yes"){
 					$("#showPrice").show();
 					var priceBreakUp= '<p>Price Breakup</p>'
 					$('#show').empty();
@@ -4001,41 +4001,53 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					$("#showPrice").hide();				
 				}else{
 					$("#showPrice").hide();
-				}
+				}				
 				
 				try{
 					$('#showPriceBreakup').empty();
-					var priceBreakupList = data['priceBreakup'];
+					var priceBreakupList = jwlryPrcBrkUp;
+					var priceBreakup;
 					
 					if(null!=priceBreakupList && undefined!=priceBreakupList && !priceBreakupList==""){
-						var priceBreakup = JSON.parse(priceBreakupList);
-					}
-					if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
-						priceBreakup.forEach(function(entry) {
-							 var html1 = '<tr><td class="title">'+entry.name+'</td>';
-							 var list;
-							 var weightRateList = entry.weightRateList;
-							 if(undefined!=weightRateList) {
-								 	weightRateList.forEach(function(entry1) {
-								 		if(undefined!=list){
-								 			list=list+"<br>"+entry1;
-								 		}else{
-								 			list = entry1;
-								 		}
+						
+						priceBreakup = JSON.parse(priceBreakupList);
+					
+						if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
+							priceBreakup.forEach(function(entry) {
+								if(undefined!=entry){
+									if(undefined!=entry.name){
+										var html1 = '<tr><td class="title">'+entry.name+'</td>';
+									}else {
+										html1 = '<tr><td class="title">-</td>';
+									}
+									 var list;
+									 var weightRateList = entry.weightRateList;
+									 if(undefined!=weightRateList) {
+										 	weightRateList.forEach(function(entry1) {
+										 		if(undefined!=list){
+										 			list=list+"<br>"+entry1;
+										 		}else{
+										 			list = entry1;
+										 		}
+									});
+									var html2 = "<td>"+list+"</td>";
+									}else {
+										html2 = "<td>-</td>";
+									}
+									if(undefined!=entry.price){
+										var html3 = "<td>"+entry.price.formattedValue+"</td></tr>";
+									}else {
+										html3 = "<td>-</td></tr>";
+									}
+									var preFinalHtml = html1.concat(html2);
+									var finalHtml = preFinalHtml.concat(html3);
+									$("#showPriceBreakup").append(finalHtml);
+								}
 							});
-							var html2 = "<td>"+list+"</td>";
-							}else {
-								html2 = "<td>-</td>";
-							}
-							var html3 = "<td>"+entry.price.formattedValue+"</td></tr>";
-							var preFinalHtml = html1.concat(html2);
-							var finalHtml = preFinalHtml.concat(html3);
-							
-							 $("#showPriceBreakup").append(finalHtml);
-						});
-					}else {
-						console.log("priceBreakup is undefined*******");	
+						}else {
+							console.log("priceBreakup is undefined*******");	
 						}
+					}
 				}		
 				catch(err) {
 					console.log("exception is:"+err);  
@@ -4593,7 +4605,12 @@ function populateClassificationForJewellery(jsonData)
 				if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
 					htmlCode = htmlCode + '<div class="detail acc_content" style="display: none;"><table id="showPriceBreakup" style="display:block"><tbody>';
 					priceBreakup.forEach(function(entry) {
-						htmlCode = htmlCode + '<tr><td class="title">'+entry.name+'</td>';
+						if(undefined!=entry.name){
+							htmlCode = htmlCode + '<tr><td class="title">'+entry.name+'</td>';
+						}else{
+							htmlCode = htmlCode + '<tr><td class="title">-</td>';
+						}
+						//htmlCode = htmlCode + '<tr><td class="title">'+entry.name+'</td>';
 						 var list;	
 						 var weightRateList = entry.weightRateList;
 						 if(undefined!=weightRateList) {
@@ -4608,7 +4625,12 @@ function populateClassificationForJewellery(jsonData)
 						}else {
 							htmlCode = htmlCode + '<td>-</td>';
 						}
-						 htmlCode = htmlCode + '<td>'+entry.price.formattedValue+'</td></tr>';
+						 if(undefined!=entry.price){
+							 htmlCode = htmlCode + '<td>'+entry.price.formattedValue+'</td></tr>';
+						 }else{
+							 htmlCode = htmlCode + "<td>-</td></tr>";
+						 }
+						// htmlCode = htmlCode + '<td>'+entry.price.formattedValue+'</td></tr>';
 					});
 					htmlCode = htmlCode + '</tbody> </table></div>';
 				}
