@@ -72944,3 +72944,9 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price>ul>.mop_span + 
 		padding-top: 0px !important;	/* TISPRDT-1574 fix */
 		}
 }
+/* TISSPTEN-22 start */
+body.page-offersPage .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after,
+body.page-offersPage .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
+	height: 28px;
+	}
+/* TISSPTEN-22 end */
