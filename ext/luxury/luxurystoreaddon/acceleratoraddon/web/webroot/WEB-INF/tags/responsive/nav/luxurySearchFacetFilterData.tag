@@ -73,6 +73,7 @@
 					</div>
 				</div>
 			</div>
+			<button type="button" class="btn btn-block" id="clear_filter">CLEAR FILTERS</button>
 		</div>
 		<div class="col-sm-9 col-xs-12 rightbar right-side-content text-right pull-right nopadding">
 			<div class="product-list-wrapper col-sm-12 nopadding">
