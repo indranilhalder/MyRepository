@@ -1327,11 +1327,20 @@ function tealiumCallOnPageLoad()
 						$('#tealiumHome').html(data);
 					}
 				});*/
-	
+		var currentPageURL = window.location.href;
 		var pageTypeGeneric = '';
  		//done for PRDI-95
  		if ( pageType == 'checkout-login'){
  			pageTypeGeneric = 'login';
+ 		}
+ 		else if(pageType.indexOf("electronics") !== -1){
+ 			pageTypeGeneric = 'category';
+ 		}
+ 		else if(currentPageURL.indexOf("/c-mbh") > -1){
+ 			pageTypeGeneric = 'brand';
+ 		}
+ 		else if(currentPageURL.indexOf("/c-msh") > -1){
+ 			pageTypeGeneric = 'category';
  		}
  		else{
  			pageTypeGeneric = 'generic';
