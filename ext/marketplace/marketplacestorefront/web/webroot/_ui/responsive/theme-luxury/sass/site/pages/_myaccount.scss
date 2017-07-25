@@ -1193,3 +1193,18 @@
     top: -8px;
     right: 2px;
 }
+#changeAddressPopup .modal-dialog{
+	max-height: calc(100vh - 100px);
+	overflow: auto;
+    overflow-x: hidden!important;
+}
+#changeAddressPopup .or{
+    text-align: center;
+}
+#changeAddressPopup .NOP{
+border-right: 1px solid #ccc;
+}
+#deliveryAddressForm .addressSpace{
+    word-wrap: break-word;
+    font-size: 12px;
+}

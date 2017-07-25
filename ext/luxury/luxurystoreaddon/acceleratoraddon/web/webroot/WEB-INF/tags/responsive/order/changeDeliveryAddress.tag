@@ -28,11 +28,11 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 				<div class="row" id="onTop">
-					<div class="col-md-6">
+					<div class="col-md-5">
 					<div class="error_text serverError"></div>
 						<h4><spring:theme code="text.order.deliveryAddress.editAddress"/></h4>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-2 or">
 						<h4><spring:theme code="text.order.deliveryAddress.or"/></h4>
 					</div>
 					<div class="col-md-5">
@@ -42,7 +42,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-md-7 NOP" >
+					<div class="col-md-6 NOP" >
 						<div class="row">
 							<div class="col-md-6 form-group">
 								<label for="firstName"><spring:theme code="text.order.returns.firstname"/></label>
@@ -179,7 +179,7 @@
 							<div class="col-md-6 form-group">
 								<label for="country"><spring:theme code="text.order.returns.country"/></label> <input type="text"
 									id="country"
-									value='${orderDetails.deliveryAddress.country.name}' readonly />
+									value='${orderDetails.deliveryAddress.country.name}' readonly class="form-control"/>
 								<form:input path="countryIso" type="hidden" id="country"
 									name="countryIso"
 									value="${orderDetails.deliveryAddress.country.isocode}"  class="form-control"/>
@@ -204,7 +204,7 @@
 						
 					<form:input type="hidden" path="addressType" name="addressType"
 						id="new-address-option-1" value="${orderDetails.deliveryAddress.addressType}" />
-					<div class="col-md-5 addressListPop">
+					<div class="col-md-6 addressListPop">
 
 						<!-- varStatus="i" -->
 						<c:if test="${not empty orderDetails.deliveryAddressList}">
@@ -338,6 +338,7 @@ width: 17px;
 #changeAddressPopup .modal-dialog{
 	max-height: calc(100vh - 100px);
 	overflow: auto;
+    overflow-x: hidden;
 }
 #changeAddressPopup select {
     padding-right: 15px;
