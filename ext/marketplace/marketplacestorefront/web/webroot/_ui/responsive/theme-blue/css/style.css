@@ -72956,3 +72956,10 @@ body.page-offersPage .homepage-banner .owl-theme .owl-controls{
 	position: absolute;
 }
 /* TISSPTEN-22 end */
+/* Footer allignment issue start */
+@media (max-width: 790px){
+footer #footerLink div.column ul li a {
+	line-height: 2.3;
+}
+}
+/* Footer allignment issue end */
