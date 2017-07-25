@@ -339,6 +339,7 @@
                                             select{
                                                 margin-bottom: 10px;
                                                 width: 100%;
+                                                font-size: 14px;
                                             }
                                         }
                                     }
@@ -377,8 +378,21 @@
                                     font-weight: 500;
                                     transition: font-weight .15s;
                                 }
+                            } 
+                        }
+                        .modal.account{
+                            
+                             .cancellation-request-block.success{
+                                h2{
+                                    font-size: 18px;
+                                    line-height: 14px;
+                                    font-weight: bold;
+                                }
+                                .return-container.container{
+                                    width: 100%;
+                                    padding: 0px;
+                                }
                             }
-
                             
                         }
                         
