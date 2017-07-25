@@ -103,9 +103,8 @@
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
 		p:mapping="weight_variant_seller" p:converter-ref="batchLeadUssidMplAssociationConverter" />
  	 <!-- Converters -->
- 	
  	<!-- Converter for Price Import --> 
-       <bean id="batchMplpriceJewelleryConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexConverter">
+       <bean id="batchMplpriceJewelleryConverter" class="com.tisl.mpl.dataimport.batch.converter.impl.ExtDefaultImpexJewlConverter">
         <property name="header">
             <value>#{defaultImpexProductHeader}
             	$productCatalog=mplProductCatalog
@@ -162,9 +161,6 @@
          </bean>
          
         <!-- Converter for Product Approval when price is given Import --> 
-        
-     
-      
                
         <bean id="batchJewelleryConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter" >
         <property name="header">
