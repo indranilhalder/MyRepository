@@ -70823,6 +70823,11 @@ body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block 
 .page-multiStepCheckoutSummaryPage #singlePageDesktop #makePaymentDiv .alert.alert-danger.alert-dismissable {
     top: 0px ! important;
 }
+.page-multiStepCheckoutSummaryPage #singlePageDesktop #reviewOrder tr.d0 td {
+  background-color:#E0E0E0 ;
+  color: black;
+}
+
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
