@@ -4621,28 +4621,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		address3.value=encodeURIComponent(address3.value);
     	}
 		$('#addressForm').submit();	
-//		$.ajax({
 
-//			url: ACC.config.encodedContextPath + "/cart/luxurycheckPincodeServiceability/"+zipcode,
-//			type: "GET",
-//			cache: false,
-//			success : function(response) {
-//				console.log("response "+response);
-//				var values=response.split("|");
-//				var isServicable=values[0];
-//				if(isServicable=='N'){
-//					$("#addressPincodeServicableDiv").show();
-//					$("#addressPincodeServicableDiv").html("<p>Pincode is not serviceable</p>");
-//				}else{
-//				
-//					$('#addressForm').submit();	
-//				}
-//			},
-//			error : function(resp) {
-//				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
-
-//			}
-//		});	 
 	}
 	return false;
 });
@@ -5840,7 +5819,7 @@ function checkPincodeServiceability(buttonType,el)
 
 		$("#emptyId_tooltip_btm").hide();
 	$.ajax({
- 		url: ACC.config.encodedContextPath + "/cart/luxurycheckPincodeServiceability/"+selectedPincode,
+ 		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
  		type: "GET",
  		cache: false,
  		success : function(response) {
@@ -5974,7 +5953,6 @@ function checkPincodeServiceability(buttonType,el)
  			//console.log("errorDetails 1>> "+errorDetails);
  			
  			handleExceptionOnServerSide(errorDetails);
- 			//console.log('Some issue occured in luxurycheckPincodeServiceability');
  			// setTimeout(function(){
  	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
  	 			$("#no-click,.loaderDiv").remove();
@@ -6539,7 +6517,7 @@ function checkIsServicable()
 	if(selectedPincode!=null && selectedPincode != undefined && selectedPincode!=""){
 	
 		$.ajax({
-	 		url: ACC.config.encodedContextPath + "/cart/luxurycheckPincodeServiceability/"+selectedPincode,
+	 		url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+selectedPincode,
 	 		type: "GET",
 	 		cache: false,
 	 		success : function(response) {
@@ -6599,7 +6577,6 @@ function checkIsServicable()
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
-	 			//console.log('Some issue occured in luxurycheckPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 			// TISPRM-65
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
@@ -8762,8 +8739,6 @@ $("button[name='pinCodeButtonId']").click(function(){
 	pincode=$(this).parent().children("input[name='defaultPinCodeIds']").val();
 	$("input[name='defaultPinCodeIds']").val(pincode).css("color","rgb(255, 28, 71)");
 	
-	//$(".emptyPins").show();
-	//luxurycheckPincodeServiceability('typeSubmit',this);
 	});
 
 /*UF-68 UF-69*/
