@@ -2624,8 +2624,8 @@ $(window).scroll(function () {
 });
 
 
-$(document).ready(function ()
-		{$("#clear_filter").click(function(){
-    $(".reset-filters").trigger("click"); 
-    		});
-		}
+$(document).ready(function (){
+    $("#clear_filter").click(function(){
+        $(".reset-filters").trigger("click"); 
+    });
+});
