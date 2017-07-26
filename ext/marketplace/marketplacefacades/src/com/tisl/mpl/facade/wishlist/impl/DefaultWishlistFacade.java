@@ -163,6 +163,37 @@ public class DefaultWishlistFacade implements WishlistFacade
 	}
 
 	/**
+	 * @description this method is called to remove Product From Wishlist with USSID
+	 * @return wishlist2Model
+	 */
+	@Override
+	public boolean removeWishlistEntry(final Wishlist2EntryModel wishentryModel)
+	{
+		boolean saved = false;
+		try
+		{
+			if (null != wishentryModel.getProduct()
+					&& (Boolean.FALSE.equals(wishentryModel.getIsDeleted()) || null == wishentryModel.getIsDeleted()))
+			{
+				//TPR-5787 starts here
+				LOG.debug("To remove the prod from wishlist entry-----");
+				final Date date = new Date();
+				wishentryModel.setIsDeleted(Boolean.TRUE);
+				wishentryModel.setDeletedDate(new Timestamp(date.getTime()));
+				wishentryModel.setDesired(Integer.valueOf(0));//TISSPTEN-2
+				modelService.save(wishentryModel);
+				saved = true;
+				//TPR-5787 ends here
+			}
+			return saved;
+		}
+		catch (final Exception ex)
+		{
+			throw new EtailNonBusinessExceptions(ex, MarketplacecommerceservicesConstants.E0000);
+		}
+	}
+
+	/**
 	 * @description to get all wishlist
 	 * @return List<Wishlist2Model>
 	 */
@@ -420,7 +451,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getBuyBoxPrice(java.lang.String,
 	 * de.hybris.platform.commercefacades.product.data.ProductData)
 	 */
@@ -458,7 +489,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#removeProductFromWL(java.lang.String)
 	 */
 	@Override
@@ -572,7 +603,7 @@ public class DefaultWishlistFacade implements WishlistFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.wishlist.WishlistFacade#getSingleWishlist(de.hybris.platform.core.model.user.UserModel)
 	 */
 	@Override
