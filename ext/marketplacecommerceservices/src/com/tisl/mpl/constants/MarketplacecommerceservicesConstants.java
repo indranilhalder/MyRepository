@@ -2161,4 +2161,14 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//TPR-4512
 	public static final String TRANSACTION_NO_KEY = "transaction.count";
+	public static final String NULL_VALUE = "NULL".intern();
+	public static final String COD_PAYMENT = "COD".intern();
+	public static final String POSTPAID = "POSTPAID".intern();
+	public static final String PREPAID = "PREPAID".intern();
+	public static final String EMPTY_SPACE = " ".intern();
+	public static final String REFUND_SUCCESSFUL_ = "REFUND_SUCCESSFUL".intern();
+	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+	public static final String TRANSACTION_ID_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+	public static final String ORDER_ID_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+
 }
