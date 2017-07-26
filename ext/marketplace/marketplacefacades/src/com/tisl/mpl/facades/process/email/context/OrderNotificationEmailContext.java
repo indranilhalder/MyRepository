@@ -165,17 +165,23 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 
 		final OrderShortUrlInfoModel orderShortUrlInfoModel = shortUrlService.getShortUrlReportModelByOrderId(orderCode);
 
+		LOG.debug("**OrderCode**" + orderCode + "--**orderShortUrlInfoModel--" + orderShortUrlInfoModel);
+
 		String shortUrl = null;
 
 		if (orderShortUrlInfoModel == null)
 		{
 
+			LOG.debug("Inside orderShortUrlInfoModel null for orderCode**" + orderCode);
 			shortUrl = shortUrlService.genearateShortURL(orderCode);
 		}
 		else
 		{
+			LOG.debug("Inside orderShortUrlInfoModel not null for orderCode**" + orderCode);
 			shortUrl = orderShortUrlInfoModel.getShortURL();
 		}
+		LOG.debug("Generated shortUrl**" + shortUrl);
+
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
 		put(ORDER_CODE, orderCode);
