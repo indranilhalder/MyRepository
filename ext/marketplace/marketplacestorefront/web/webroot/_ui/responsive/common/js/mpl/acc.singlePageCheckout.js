@@ -2821,7 +2821,6 @@ $(document).ready(function(){
 			}
 		});
 		var deviceType=$("#deviceType").text();
-		alert("deviceType=>"+deviceType);
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
 			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
