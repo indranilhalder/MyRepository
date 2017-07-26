@@ -51,6 +51,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 
 	//Sonar fix
 	private static final String PARENT_KEY = "Parent";
+	private static final String SUB_ORDER_KEY = "SubOrder";
 
 
 	@Override
@@ -484,7 +485,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final String query = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("transactionId", transactionId);
-			flexiQuery.addQueryParameter("type", "SubOrder");
+			flexiQuery.addQueryParameter("type", SUB_ORDER_KEY);
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
 		}
