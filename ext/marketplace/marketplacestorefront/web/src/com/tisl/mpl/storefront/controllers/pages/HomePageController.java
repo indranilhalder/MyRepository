@@ -162,6 +162,10 @@ public class HomePageController extends AbstractPageController
 	@Resource(name = "STWFacade")
 	private STWWidgetFacade stwWidgetFacade;
 
+	//Sonar fix
+	private static final String DISP_PRICE = "dispPrice";
+	private static final String STRIKE_PRICE = "strikePrice";
+
 	/**
 	 * @return the stwWidgetFacade
 	 */
@@ -975,7 +979,7 @@ public class HomePageController extends AbstractPageController
 								{
 									//UF-319
 									priceMap = getProductPriceNewAndExclusive(product);
-									price = priceMap.get("dispPrice");
+									price = priceMap.get(DISP_PRICE);
 								}
 								catch (final EtailBusinessExceptions e)
 								{
@@ -1130,15 +1134,15 @@ public class HomePageController extends AbstractPageController
 					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
 					if (productPrice != null && StringUtils.isNotEmpty(productPrice))
 					{
-						productPriceMap.put("dispPrice", productPrice);
+						productPriceMap.put(DISP_PRICE, productPrice);
 					}
 				}
 				if (buyBoxData.getPrice() != null)
 				{
 					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
-					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get(DISP_PRICE) == null)
 					{
-						productPriceMap.put("dispPrice", productPrice);
+						productPriceMap.put(DISP_PRICE, productPrice);
 					}
 					/*
 					 * else if (productPrice != null && StringUtils.isNotEmpty(productPrice)) {
@@ -1148,24 +1152,24 @@ public class HomePageController extends AbstractPageController
 				if (buyBoxData.getMrp() != null)
 				{
 					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
-					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get(DISP_PRICE) == null)
 					{
-						productPriceMap.put("dispPrice", productPrice);
-						productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+						productPriceMap.put(DISP_PRICE, productPrice);
+						productPriceMap.put(STRIKE_PRICE, MarketplacecommerceservicesConstants.EMPTY);
 					}
 					else if (productPrice != null && StringUtils.isNotEmpty(productPrice))
 					{
-						productPriceMap.put("strikePrice", productPrice);
+						productPriceMap.put(STRIKE_PRICE, productPrice);
 					}
 					else
 					{
-						if (productPriceMap.get("dispPrice") == null)
+						if (productPriceMap.get(DISP_PRICE) == null)
 						{
-							productPriceMap.put("dispPrice", MarketplacecommerceservicesConstants.EMPTY);
+							productPriceMap.put(DISP_PRICE, MarketplacecommerceservicesConstants.EMPTY);
 						}
-						if (productPriceMap.get("strikePrice") == null)
+						if (productPriceMap.get(STRIKE_PRICE) == null)
 						{
-							productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+							productPriceMap.put(STRIKE_PRICE, MarketplacecommerceservicesConstants.EMPTY);
 						}
 
 					}
@@ -1173,8 +1177,8 @@ public class HomePageController extends AbstractPageController
 			}
 			else
 			{
-				productPriceMap.put("dispPrice", productPrice);
-				productPriceMap.put("strikePrice", productPrice);
+				productPriceMap.put(DISP_PRICE, productPrice);
+				productPriceMap.put(STRIKE_PRICE, productPrice);
 			}
 			LOG.info("ProductPrice>>>>>>>" + productPrice);
 			//productPriceMap.put("price", productPrice);

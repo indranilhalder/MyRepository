@@ -188,6 +188,9 @@ public class CategoryPageController extends AbstractCategoryPageController
 	//sonar fix
 	//private static final Integer PAGE_SIZE = new Integer(24);
 
+	//sonar fix
+	private static final String PAGE_SIZE_KEY = "pageSize";
+
 	private static final Integer PAGE_SIZE = Integer.valueOf(24);
 
 	/**
@@ -229,7 +232,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
@@ -458,7 +461,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "q", required = false) String searchQuery, @PathVariable("page") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
@@ -685,7 +688,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = "show", defaultValue = "Page") final ShowMode showMode,
 			@RequestParam(value = "sort", required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) final Integer pageSize,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) final Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
@@ -882,7 +885,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = PAGE, defaultValue = "0") int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
 			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
@@ -1234,7 +1237,7 @@ public class CategoryPageController extends AbstractCategoryPageController
 			@RequestParam(value = "q", required = false) String searchQuery, @PathVariable(PAGE) int pageNo,
 			@RequestParam(value = SHOW, defaultValue = PAGEVAl) final ShowMode showMode,
 			@RequestParam(value = SORT, required = false) final String sortCode,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = PAGE_SIZE_KEY, required = false) Integer pageSize,
 			@RequestParam(value = "searchCategory", required = false) String dropDownText,
 			@RequestParam(value = "resetAll", required = false) final boolean resetAll,
 			@RequestParam(value = "lazyInterface", required = false) final String lazyInterface, final Model model,
