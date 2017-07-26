@@ -1530,7 +1530,7 @@ TATA.Pages = {
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
-                    $("#line1").val(data.line1), $("#line2").val(data.line2), $("#line3").val(data.line3), 
+                    $("#line1").val(unescape(data.line1 +data.line2 +data.line3)), 
                     $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
                     loadPincodeData("edit").done(function() {
                         otherLandMarkTri(data.landmark, "defult");
