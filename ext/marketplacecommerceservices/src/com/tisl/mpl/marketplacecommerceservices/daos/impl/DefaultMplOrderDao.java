@@ -49,6 +49,9 @@ public class DefaultMplOrderDao implements MplOrderDao
 	@Autowired
 	private PagedFlexibleSearchService pagedFlexibleSearchService;
 
+	//Sonar fix
+	private static final String PARENT_KEY = "Parent";
+
 
 	@Override
 	public List<ReturnReasonModel> getReturnReasonForOrderItem()
@@ -139,7 +142,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			List sortQueries;
 			if ((status != null) && (status.length > 0))
 			{
@@ -195,7 +198,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final Map queryParams = new HashMap();
 			queryParams.put("customer", customerModel);
 			queryParams.put("store", store);
-			queryParams.put(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			queryParams.put(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			queryParams.put("creationtime", fromDate);
 
 			final List sortQueries = Arrays
@@ -350,7 +353,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			final String query = "SELECT {om:pk} FROM {Order as om} WHERE {guid} = ?guid and ( {type} = ?type OR {type} IS NULL ) ";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("guid", cartModel.getGuid());
-			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, "Parent");
+			flexiQuery.addQueryParameter(MarketplacecommerceservicesConstants.TYPE, PARENT_KEY);
 			final List<OrderModel> orderModelList = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return (CollectionUtils.isNotEmpty(orderModelList)) ? orderModelList : null;
 		}
@@ -434,7 +437,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 			//final String query = "SELECT DISTINCT {o:pk} from {Order As o},{address as b} WHERE {o.type}=?type and {b.cellphone}=?mobileNo and {o:user}={b:owner} order by {o.creationtime} desc fetch first 3 rows only";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
-			flexiQuery.addQueryParameter("type", "Parent");
+			flexiQuery.addQueryParameter("type", PARENT_KEY);
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData : null;
 		}
@@ -500,7 +503,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		{
 			final String queryString = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo";
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
-			fQuery.addQueryParameter("type", "Parent");
+			fQuery.addQueryParameter("type", PARENT_KEY);
 			fQuery.addQueryParameter("orderRefNo", orderRefNo);
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(fQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
