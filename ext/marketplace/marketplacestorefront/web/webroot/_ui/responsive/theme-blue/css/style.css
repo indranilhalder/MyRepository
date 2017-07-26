@@ -70760,9 +70760,9 @@ background:#f8f8f8;
     color: #a5173c;
 }
 .page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable{
-    top: 64px !important;
+    top: 106px !important;
     display: block;
-    height: auto !important;
+    height: auto ! important;
     padding: 13px 8px 14px 16px !important;
     font-size: 12px;
     letter-spacing: .6px;
@@ -70770,6 +70770,7 @@ background:#f8f8f8;
     border-radius: 4px;
     background-color: #ffe5ec;
     border: solid 1px red;
+    position: relative ! important;
 }
 .page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable span{
 	    display: block;
@@ -70818,6 +70819,9 @@ body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .off-bag span:l
 }
 body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>.add-disc {
     margin-top: 10px;
+}
+.page-multiStepCheckoutSummaryPage #singlePageDesktop #makePaymentDiv .alert.alert-danger.alert-dismissable {
+    top: 0px ! important;
 }
 /*UF-281 UF-282 single page checkout css ends*/
 
