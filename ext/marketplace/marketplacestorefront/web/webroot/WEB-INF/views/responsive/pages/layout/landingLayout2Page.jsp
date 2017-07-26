@@ -52,8 +52,8 @@
 	<!-- <div class="feature-categories" id="ia_categories_favorites"></div>
 	<div class="feature-collections" id="ia_collections"></div> -->
 	
-	<div id="stw_widget"></div>
-	<div class="trending" id="ia_products_hot"></div>
+	<div id="stw_widget" class="lazy-reached-stw"></div>
+	<div class="trending lazy-reached-ia" id="ia_products_hot"></div>
 	<div id="showcase" class="showcase feature-collections lazy-reached-showcase"></div>
 	
 	<div id="showcaseMobile" class="showcase feature-collections lazy-reached-showcaseMobile"></div>

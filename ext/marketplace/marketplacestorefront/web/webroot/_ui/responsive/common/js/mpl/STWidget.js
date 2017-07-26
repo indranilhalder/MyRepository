@@ -211,12 +211,23 @@ var stwRender = {
 }
     
 $(document).ready(function() {
-    if ($("#pageType").val() == "homepage" && $('#stw_widget').length == 1) {
-        stw.renderTabsWidget();
-    } else if ($('#stw_widget_blp').length == 1) {
-        stw.renderFlatWidget();
-    }
-
+	
+	
+	$(window).on("scroll",function(){
+		var hT = $('.lazy-reached-stw').offset().top,
+	    hH = $('.lazy-reached-stw').outerHeight(),
+		wH = $(window).height(),
+	    wS = $(this).scrollTop();
+		if (!$('#stw_widget').attr('loaded')) {
+		if ($("#pageType").val() == "homepage" && $('#stw_widget').length == 1 && wS > (hT + hH - wH)) {
+	        stw.renderTabsWidget();
+	        $('#stw_widget').attr('loaded', true);
+	    } else if ($('#stw_widget_blp').length == 1 && wS > (hT + hH - wH)) {
+	        stw.renderFlatWidget();
+	    }
+		}
+	});
+    
     $(document).off("click", ".best_seller.stw-list .Menu ul li").on("click", ".best_seller.stw-list .Menu ul li", function() {
 
         var category = $(this).text() == 'ALL' ? '' : $(this).text();

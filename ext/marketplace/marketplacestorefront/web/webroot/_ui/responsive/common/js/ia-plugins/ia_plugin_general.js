@@ -382,7 +382,18 @@ function callRecApi(params, requestURL) {
           requestURL = "normal";
         }
       }
-      updatePage(response, requestURL);
+      $(window).on("scroll",function(){
+  		var hT = $('.lazy-reached-ia').offset().top,
+  	    hH = $('.lazy-reached-ia').outerHeight(),
+  		wH = $(window).height(),
+  	    wS = $(this).scrollTop();
+  		
+  		if (!$('#ia_products_hot').attr('loaded') && wS > (hT + hH - wH)) {
+  			updatePage(response, requestURL);
+  			$('#ia_products_hot').attr('loaded', true);
+  		}
+      });
+      
     }, error: function(jqXHR, textStatus, errorThrown) {
       eT = errorThrown;
 		  tS = textStatus; 
