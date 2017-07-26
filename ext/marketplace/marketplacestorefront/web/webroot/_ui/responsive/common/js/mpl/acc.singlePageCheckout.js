@@ -2820,7 +2820,8 @@ $(document).ready(function(){
 				window.location.href=ACC.config.encodedContextPath +"/checkout/single"+"?isResponsive=true";
 			}
 		});
-		var deviceType=$("#deviceType").html();
+		var deviceType=$("#deviceType").text();
+		alert("deviceType=>"+deviceType);
 		if(deviceType=="normal" && ACC.singlePageCheckout.getIsResponsive())
 		{
 			//These is to handle abnormal scenarios, Which are likely to occur in test environment.
@@ -2836,9 +2837,9 @@ $(document).ready(function(){
 		
 		if(ACC.singlePageCheckout.getIsResponsive())
 		{
-			var defaultAddressPincode=$("#defaultAddressPincode").html();
-			var defaultAddressId=$("#defaultAddressId").html();
-			var defaultAddressPresent=$("#defaultAddressPresent").html();
+			var defaultAddressPincode=$("#defaultAddressPincode").text();
+			var defaultAddressId=$("#defaultAddressId").text();
+			var defaultAddressPresent=$("#defaultAddressPresent").text();
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
 				alert("Before calling pincode serviceability onload");
