@@ -189,6 +189,8 @@ public class MiscsController extends BaseController
 {
 
 	private static final String APPLICATION_JSON = "application/json"; //Sonar fix
+	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT"; //Sonar fix
+	private static final String ROLE_CLIENT = "ROLE_CLIENT"; //Sonar fix
 
 
 	@Resource(name = "brandFacade")
@@ -439,7 +441,7 @@ public class MiscsController extends BaseController
 	}
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ ROLE_CLIENT, "ROLE_CUSTOMERGROUP", ROLE_TRUSTED_CLIENT, "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{baseSiteId}/updateprofile", method = RequestMethod.POST)
 	//	@ResponseStatus(HttpStatus.OK)
 	public void updateUser(final HttpServletRequest request) throws DuplicateUidException
@@ -706,7 +708,7 @@ public class MiscsController extends BaseController
 	//reset password or change password arunashis
 
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
+	{ ROLE_CLIENT, "ROLE_CUSTOMERGROUP", ROLE_TRUSTED_CLIENT, "ROLE_CUSTOMERMANAGERGROUP" })
 	@RequestMapping(value = "/{baseSiteId}/{userId}/password", method = RequestMethod.PUT)
 	//@ResponseStatus(value = HttpStatus.ACCEPTED)
 	@ResponseBody
@@ -718,7 +720,7 @@ public class MiscsController extends BaseController
 		final UserSignUpWsDTO customer = new UserSignUpWsDTO();
 		customer.setPassword(newPassword);
 		validate(customer, "password", passwordStrengthValidator);
-		if (containsRole(auth, "ROLE_TRUSTED_CLIENT") || containsRole(auth, "ROLE_CUSTOMERMANAGERGROUP"))
+		if (containsRole(auth, ROLE_TRUSTED_CLIENT) || containsRole(auth, "ROLE_CUSTOMERMANAGERGROUP"))
 		{
 			extUserService.setPassword(userId, newPassword);
 		}
@@ -1614,10 +1616,6 @@ public class MiscsController extends BaseController
 	 * @return userResultWsDto
 	 * @throws CMSItemNotFoundException
 	 */
-	/*
-	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 */
-
 	@RequestMapping(value = "/{baseSiteId}/feedbackno", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto captureFeedbackNo(@RequestParam final String emailId, @RequestParam final String searchCategory,
@@ -1652,10 +1650,6 @@ public class MiscsController extends BaseController
 	 * @description to get Feedback
 	 * @return Map containing feedback categories
 	 */
-	/*
-	 * @Secured( { "ROLE_CUSTOMERGROUP", "ROLE_TRUSTED_CLIENT", "ROLE_CUSTOMERMANAGERGROUP" })
-	 */
-
 	@RequestMapping(value = "/{baseSiteId}/getFeedbackCategory", method = RequestMethod.GET, produces = APPLICATION_JSON)
 	@ResponseBody
 	public UserResultWsDto getFeedbackCategory()
@@ -1783,7 +1777,7 @@ public class MiscsController extends BaseController
 
 	//TPR-4840 starts
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
 	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByOrderId", method = RequestMethod.POST, produces = APPLICATION_JSON)
 	@ResponseBody
 	public OrderInfoWsDTO fetchCustomerOrderInfoByOrderId(
@@ -1812,7 +1806,7 @@ public class MiscsController extends BaseController
 
 	//TPR-4841 starts
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
 	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByTransactionId", method = RequestMethod.POST, produces = APPLICATION_JSON)
 	@ResponseBody
 	public OrderInfoWsDTO fetchCustomerOrderInfoByTransactionId(
@@ -1844,7 +1838,7 @@ public class MiscsController extends BaseController
 
 	//TPR-5225 starts
 	@Secured(
-	{ "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT" })
+	{ ROLE_CLIENT, ROLE_TRUSTED_CLIENT })
 	@RequestMapping(value = "/{baseSiteId}/orderCustDetailsByMobileNo", method = RequestMethod.POST, produces = APPLICATION_JSON)
 	@ResponseBody
 	public OrderInfoWsDTO fetchCustomerOrderInfoByMobileNo(@RequestParam(value = "mobileNo", required = true) final String mobileNo)
