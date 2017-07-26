@@ -1202,6 +1202,14 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
 		List<OrderModel> subordermodels = new ArrayList<OrderModel>();
 		OrderModel parentOrderModel = null;
+
+
+
+		final int countLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TRANSACTION_NO_KEY));
+
+		LOG.debug("**Transaction count Limit**" + countLimit);
+
 		int count = 0;
 
 		try
@@ -1236,7 +1244,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 							for (final AbstractOrderEntryModel entry : subOrderEntryModels)
 							{
-								if (count < 3)
+								if (count < countLimit)
 								{
 									final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
 									customerOrderInfoWsDTO.setTransactionId(null != entry.getTransactionID() ? entry.getTransactionID()
@@ -1265,7 +1273,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					}
 					else
 					{
-						if (count < 3)
+						if (count < countLimit)
 						{
 							final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
 							count++;
@@ -1857,8 +1865,22 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		this.orderConverter = orderConverter;
 	}
 
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
 
-
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
+	}
 
 
 }
