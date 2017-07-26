@@ -63,7 +63,7 @@ public class OrderShortUrlDaoImpl implements OrderShortUrlDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("�rror while searching for Short Report model for order  id" + orderCode);
+			LOG.error("Error while searching for Short Report model for order  id" + orderCode);
 		}
 		return null;
 	}
@@ -91,7 +91,7 @@ public class OrderShortUrlDaoImpl implements OrderShortUrlDao
 		}
 		catch (final Exception e)
 		{
-			LOG.error("�rror while searching for Short Report models between From Date:" + fromDate + "toDate:" + toDate);
+			LOG.error("Error while searching for Short Report models between From Date:"+fromDate +"toDate:"+toDate);
 		}
 		return null;
 	}
