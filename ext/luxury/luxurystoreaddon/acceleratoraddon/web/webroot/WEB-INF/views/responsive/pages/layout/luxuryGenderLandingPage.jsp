@@ -46,6 +46,11 @@
 		<cms:component component="${ShowCase1}" />
 	</cms:pageSlot>
 
+	<cms:pageSlot position="Gender-ShowCase2" var="ShowCase2" element="div"
+				  class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${ShowCase2}" />
+	</cms:pageSlot>
+
 	<section class="brand-slider-wrapper text-center">
 		<cms:pageSlot position="Gender-WeeklyBanner2" var="WeeklyBanner2" element="div"
 					  class="span-24 section5 cms_disp-img_slot">

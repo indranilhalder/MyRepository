@@ -8,7 +8,9 @@
 <%@ taglib prefix="layouts" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/layouts" %>
 
 
+title ${title}
 
+description ${description}
 
 <c:choose>
     <c:when test="${layoutCode eq 'layout1'}">
@@ -43,5 +45,11 @@
     </c:when>
     <c:when test="${layoutCode eq 'shortbanner-layout4'}">
         <layouts:shortbannerlayout4/>
+    </c:when>
+    <c:when test="${layoutCode eq 'shortbanner-layout5'}">
+        <layouts:shortbannerlayout5/>
+    </c:when>
+    <c:when test="${layoutCode eq 'shortbanner-layout6'}">
+        <layouts:shortbannerlayout6/>
     </c:when>
 </c:choose>
