@@ -66088,8 +66088,9 @@ header .content nav>ul>li>.toggle:before{
     bottom: 3px;
     left: 16px;
     z-index: 999999;
-    background-image: url('../images/header-arrow.PNG');
-    background-size: 100%;
+	background-image: url('../images/Sprite-combined.png');
+    background-position: -197px -376px;
+    /* background-size: 100%; */
     background-repeat : no-repeat;
 /*     transform: rotate(45deg);
     border: solid #eee;
