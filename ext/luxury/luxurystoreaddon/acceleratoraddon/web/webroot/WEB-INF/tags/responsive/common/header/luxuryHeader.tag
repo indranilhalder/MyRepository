@@ -64,6 +64,17 @@
 	              </a>
 				</div>
 				<nav class="main-nav" id="main-nav">
+				   <ul class="hidden-sm hidden-md hidden-lg mob-menu">
+					 <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+						<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
+						<ycommerce:testId code="header_LoggedUser">
+							<div class="welcome-link"><spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
+							<spring:theme code="lux.header.welcome" text=" - My Account"  /></div>
+						</ycommerce:testId>
+							</a>
+						</li>
+					</sec:authorize>
+					</ul>
 					<ul  class="mega-menu">
 						<cms:pageSlot position="NavigationBar" var="feature">
 							<cms:component component="${feature}" />
@@ -86,7 +97,7 @@
 							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 								<li class="mob-login"><a href="/logout">Sign Out</a>
 							</sec:authorize>
-							<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+							<%-- <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
 								<a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">
 								<ycommerce:testId code="header_LoggedUser">
 									<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
@@ -94,7 +105,7 @@
 								</ycommerce:testId>
 									</a>
 								</li>
-							</sec:authorize>
+							</sec:authorize> --%>
 					</ul>
 					
 					<div class="main-nav-close" id="main-nav-close"></div>
