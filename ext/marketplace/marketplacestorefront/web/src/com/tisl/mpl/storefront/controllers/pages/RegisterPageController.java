@@ -251,39 +251,60 @@ public class RegisterPageController extends AbstractRegisterPageController
 			try
 			{
 				//TPR-6272 starts here
-				int platformNumber = 0;
-				final String userAgent = request.getHeader(
-						configurationService.getConfiguration().getString("useragent.responsive.header")).toLowerCase();
+				int platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ZERO;
+				//added for IQA starts here
+				final String userAgentHeader = configurationService.getConfiguration().getString("useragent.responsive.header");
+				String userAgent = null;
 
-				if (StringUtils.isNotEmpty(userAgent) && userAgent != null)
+				if (StringUtils.isNotEmpty(userAgentHeader))
 				{
-					final String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+					userAgent = request.getHeader(userAgentHeader);
 
-					if (StringUtils.isNotEmpty(mobileDevices) && mobileDevices != null)
+					if (StringUtils.isNotEmpty(userAgent))
 					{
-						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices.split(","));
-						final Iterator it = mobileDeviceArray.iterator();
-						while (it.hasNext())
+						userAgent = userAgent.toLowerCase();
+					}
+				}
+				//added for IQA ends here
+				if (StringUtils.isNotEmpty(userAgent))
+				{
+					String mobileDevices = configurationService.getConfiguration().getString("useragent.responsive.mobile");
+
+					//added for IQA starts here
+					if (StringUtils.isNotEmpty(mobileDevices))
+					{
+						mobileDevices = mobileDevices.toLowerCase();
+					}
+					//added for IQA ends here
+
+					if (StringUtils.isNotEmpty(mobileDevices))
+					{
+						final List<String> mobileDeviceArray = Arrays.asList(mobileDevices
+								.split(MarketplacecommerceservicesConstants.COMMACONSTANT));
+						if (null != mobileDeviceArray && mobileDeviceArray.size() > 0)//IQA added here
 						{
-							if (userAgent.contains(it.next().toString()))
+							for (final String mobDevice : mobileDeviceArray)
 							{
-								isExist = true;
-								break;
+								if (userAgent.contains(mobDevice))
+								{
+									isExist = true;
+									break;
+								}
 							}
 						}
 					}
 					if (isExist)
 					{
-						platformNumber = 5;//for mobile responsive
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_FIVE;//for mobile responsive
 					}
 					else
 					{
-						platformNumber = 1;//for mkt desktop web
+						platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
 					}
 				}
 				else
 				{
-					platformNumber = 1;//for mkt desktop web
+					platformNumber = MarketplacecommerceservicesConstants.PLATFORM_ONE;//for mkt desktop web
 				}
 				LOG.debug("The platform number is " + platformNumber);
 				//TPR-6272 ends here

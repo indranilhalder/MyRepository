@@ -546,13 +546,13 @@ public class UsersController extends BaseCommerceController
 			//TPR-6272 starts here
 			LOG.debug("The platform number is " + platformNumber);
 			int platformDecider;
-			if (StringUtils.isNotEmpty(platformNumber) && platformNumber != null)
+			if (StringUtils.isNotEmpty(platformNumber))//IQA
 			{
 				platformDecider = Integer.parseInt(platformNumber);
 			}
 			else
 			{
-				platformDecider = 4;//for backward compatiblity mobile app
+				platformDecider = MarketplacecommerceservicesConstants.PLATFORM_FOUR;//for backward compatiblity mobile app and iqa
 			}
 			LOG.debug("The platform number is " + platformDecider);
 			//TPR-6272 ends here

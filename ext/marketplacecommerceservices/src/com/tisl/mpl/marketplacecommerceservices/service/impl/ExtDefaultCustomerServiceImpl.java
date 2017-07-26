@@ -308,36 +308,38 @@ public class ExtDefaultCustomerServiceImpl extends DefaultCustomerAccountService
 
 			//TPR-6272 starts here
 			LOG.debug("The platform number is " + platformNumber);
-			if (platformNumber == 1)
+			if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_ONE)//IQA
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
 						"registration.platform.mktdesktopweb"));
 			}
-			else if (platformNumber == 2)
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_TWO)//IQA
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
 						"registration.platform.mktiosapp"));
 			}
-			else if (platformNumber == 3)
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_THREE)//IQA
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
 						"registration.platform.mktandroidapp"));
 			}
-			else if (platformNumber == 4)
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_FOUR)//IQA
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
 						"registration.platform.mktmobileapp"));//for backward compatibility
 			}
-			else if (platformNumber == 5)
+			else if (platformNumber == MarketplacecommerceservicesConstants.PLATFORM_FIVE)//IQA
 			{
 				customerModel.setCustomerRegistrationPlatform(configurationService.getConfiguration().getString(
 						"registration.platform.mktmobileweb"));
 			}
 			else
 			{
-				LOG.debug(" --------- The registration platform is not in scope/not required to be stored ---------- ");
+				LOG.error(" --------- The registration platform is not in scope/not required to be stored ---------- "
+						+ platformNumber);//IQA
 			}
 			//TPR-6272 ends here
+
 
 			internalSaveCustomer(customerModel);
 
