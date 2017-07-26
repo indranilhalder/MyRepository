@@ -45,7 +45,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final int PLATFORM_FOUR = 4;
 	public static final int PLATFORM_FIVE = 5;
 	//TPR-6272 ends here
-	
+
 	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
 
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
@@ -2158,4 +2158,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
 	//TPR-5733
 	public static final String FOOTER_LINK_QUERY = "select pk from {MplFooterLink} order by {footerLinkRow},{footerLinkColumn} asc";
+
+	//TPR-4512
+	public static final String TRANSACTION_NO_KEY = "transaction.count";
 }
