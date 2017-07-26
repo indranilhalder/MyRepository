@@ -23,12 +23,25 @@
  	display:block;
  }
  
-  #shipping-track-order{
+  #shipping-track-order, .order-details .delivery-address{
   	width:50%;
   	float:left;  	
   	padding: 10px 10px 0px;
   }
- 
+  #shipping-track-order.click-collect-option{
+	  width:100%;
+	  margin-bottom: 20px;
+	  padding-bottom:90px;
+	  border: 1px solid #dce1eb;
+	      border-top: 0;
+	          margin-top: 32px;
+  }
+ #shipping-track-order.click-collect-option .item-header,
+ #shipping-track-order.click-collect-option .item-fulfillment,
+ #shipping-track-order.click-collect-option .order{
+ 	padding: 10px;
+ }
+
  #shipping-track-order h2,#anchor .payment-method h2,
  .account .wrapper .right-account h2{
  	font-size:14px;
@@ -47,6 +60,21 @@
     border-top: 1px solid #dce1eb;
     padding: 10px 10px 0;
     margin-bottom: 10px;
+}
+
+.click-collect-option .item-fulfillment{
+	margin-top:0;	
+	padding:0;
+	border-top:0;
+}
+.collect-order address{
+	margin-bottom:0;
+}
+.click-collect-option .pickupeditbtn{
+	padding:0px !important;
+}
+.click-collect-option .pickup_name{
+	margin-top:20px;
 }
 
 .item.delivered{
@@ -275,7 +303,9 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 	border: 1px solid #dce1eb;
     padding: 0 0 125px 0 !important;
 }
-
+.product-block.order-details.collect-order{
+	padding: 0 0 50px 0 !important;
+}		
 .progtrckr.tabs{
 	padding: 0 5px !important;
 }
@@ -314,25 +344,25 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
  }
  
 @media (max-width:768px){
-	.product-block.order-details .list-top-title li{
-		display: block;
-        width: 100%;
-        border-bottom: 1px solid #e4e8f0;
-	}
-	body .account .right-account .order-history.order-details .status>ul.nav>li{
-		font-size:12px;
-	}
-	#changeAddressLink{
-		margin-bottom: 40px;
+ 	.product-block.order-details .list-top-title li{
+ 		display: block;
+	    width: 100%;
+	    border-bottom: 1px solid #e4e8f0;
+ 	}
+ 	body .account .right-account .order-history.order-details .status>ul.nav>li{
+ 		font-size:12px;
+ 	}
+ 	#changeAddressLink{
+ 		margin-bottom: 40px;
     	display: block;
     	line-height:1px !important;
     	margin-right: -20px;
-	}
-	#card .terms{
-     	width: 100%;
-        margin-top: 10px;
-    }
-    #card .newCardPaymentCC .button{
-    	width:100%;
-    } 	
-}
+ 	}
+ 	#card .terms{
+	 	width: 100%;
+	    margin-top: 10px;
+	 }
+	 #card .newCardPaymentCC .button{
+	 	width:100%;
+	 } 	
+ }

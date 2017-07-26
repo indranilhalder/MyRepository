@@ -1513,11 +1513,11 @@ TATA.Pages = {
     			TATA.Pages. MYACCOUNT.editLuxuryAddress(addressId);
     	});
          
-            $(".view-details").on('click', function(e) {
+           /* $(".view-details").on('click', function(e) {
                 
                 $(this).parents(".saved-cards").find(".paymentItem").toggleClass("active");                
                
-            });
+            });*/
     	},
     	editLuxuryAddress: function(addressId) {
             var requiredUrl = ACC.config.encodedContextPath + "/my-account/populateAddressDetail", dataString = "&addressId=" + addressId;

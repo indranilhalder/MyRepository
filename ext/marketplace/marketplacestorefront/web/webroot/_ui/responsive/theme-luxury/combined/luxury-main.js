@@ -14192,8 +14192,6 @@ TATA.CommonFunctions = {
             $(".edit").on("click", function(e) {
                 var addressId = $(this).attr("data-addressId");
                 TATA.Pages.MYACCOUNT.editLuxuryAddress(addressId);
-            }), $(".view-details").on("click", function(e) {
-                $(this).parents(".saved-cards").find(".paymentItem").toggleClass("active");
             });
         },
         editLuxuryAddress: function(addressId) {
@@ -14207,8 +14205,8 @@ TATA.CommonFunctions = {
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
-                    $("#line1").val(data.line1), $("#line2").val(data.line2), $("#line3").val(data.line3), 
-                    $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
+                    $("#line1").val(unescape(data.line1 + data.line2 + data.line3)), $("#postcode").val(data.postcode), 
+                    $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
                     loadPincodeData("edit").done(function() {
                         otherLandMarkTri(data.landmark, "defult");
                     }), $("#townCity").val(data.townCity), $("#mobileNo").val(data.mobileNo), $("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state), 
