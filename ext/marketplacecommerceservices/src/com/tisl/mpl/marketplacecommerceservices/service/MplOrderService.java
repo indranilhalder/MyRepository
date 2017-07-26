@@ -106,7 +106,7 @@ public interface MplOrderService
 	public OrderModel getOrderByParentOrderId(final String orderRefNo);
 
 	//TPR-5225
-	public List<OrderModel> fetchOrderByMobile(final String mobileNo);
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo, int queryCount);
 
 	//TPR-5225
 	public String getL4CategoryIdOfProduct(final String productCode);

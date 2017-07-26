@@ -429,16 +429,20 @@ public class DefaultMplOrderDao implements MplOrderDao
 
 	//TPR-5225
 	@Override
-	public List<OrderModel> getOrderByMobile(final String mobileNo)
+	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount)
 	{
+
 		try
 		{
+			LOG.debug("QueryCount**" + queryCount);
 			//final String query = "SELECT UNIQUE {c:pk} FROM {order as a},{address as b},{orderentry as c} WHERE {a:user}={b:owner} AND {c:order}={a:pk} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({c.creationtime} > sysdate -180) order by {c.creationtime} desc fetch first 3 rows only";
-			final String query = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first 3 rows only";
+			final String query = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first ?queryCount rows only";
 			//final String query = "SELECT DISTINCT {o:pk} from {Order As o},{address as b} WHERE {o.type}=?type and {b.cellphone}=?mobileNo and {o:user}={b:owner} order by {o.creationtime} desc fetch first 3 rows only";
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
 			flexiQuery.addQueryParameter("type", PARENT_KEY);
+			flexiQuery.addQueryParameter("queryCount", String.valueOf(queryCount));
+
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData : null;
 		}

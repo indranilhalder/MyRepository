@@ -173,11 +173,11 @@ public interface MplOrderFacade
 	 * @param orderCode
 	 * @return OrderModel
 	 */
-	public List<OrderModel> getOrderWithMobileNo(final String mobileNo);
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, int queryCount);
 
 	public String getL4CategoryIdForProduct(final String productCode);
 
-	public OrderInfoWsDTO storeOrderInfoByMobileNo(List<OrderModel> orderModels);
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(List<OrderModel> orderModels, int countLimit);
 
 	//TPR-5225 ends here
 
