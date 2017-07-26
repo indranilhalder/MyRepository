@@ -397,7 +397,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//Mobile all cat
 	public static final String SALESCATEGORYTYPE = "marketplace.mplcatalog.salescategory.code";
 	public static final String DEFAULTCATALOGID = "cronjob.promotion.catelog";
-	public static final String DEFAULTLUXURYCATALOGID = "cronjob.luxury.locapromotion.catelog";
+	public static final String DEFAULTLUXURYCATALOGID = "cronjob.luxury.promotion.catelog";
 	public static final String DEFAULTLUXURYSITEID = "luxury.site.id";
 	public static final String DEFAULTCATALOGVERISONID = "cronjob.promotion.catalogVersionName";
 	public static final String SALESROOTCATEGORY = "marketplace.mplcatalog.sales.rootcategory.code";
