@@ -108,40 +108,26 @@
 			<div class="header-right">
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-					<li class="header-account-link">
-					
-					<a class="toggle-link luxury-login hidden-xs" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"> Sign in</a>
-  						
-  						
-						
-						
-						<!-- <a class="toggle-link luxury-login hidden-xs" data-target-id="#header-account" href="javascript:;" data-href="/luxurylogin/signin">Sign In</a>
-						<div class="header-account toggle-skip text-center" id="header-account">
-							<div class="header-account-inner clearfix" id="login-container">
-								<div class="header-account-section header-forget-pass"></div>
-								<div class="header-account-section header-sign-in"></div>
-								<div class="header-account-section header-signup"></div>
-							</div>
-						</div> -->
-					</li>
+						<li class="header-account-link">
+							<a class="toggle-link luxury-login hidden-xs" data-target-id="#mypopUpModal" href="javascript:void(0);" role="button" data-href="/luxurylogin/signin"> Sign in</a>
+						</li>
 					</sec:authorize>
-					<%-- <sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-					<li class="sign-out"><a href="/logout">Sign Out</a></li>
-					</sec:authorize> --%>
+					
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
-					<li class="logged_in">
-					<a href="javascript:void(0)" class="account-userTitle account-userTitle-custom">
-					<ycommerce:testId code="header_LoggedUser">
-					<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
-					</ycommerce:testId>
-					</a>
-					<div class="sign-pop">
-					 <ul>
-					  <li><a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">My account</a></li>
-					  <li><sec:authorize ifNotGranted="ROLE_ANONYMOUS"><a href="/logout">Sign Out</a></sec:authorize></li>
-					 </ul>
-					</div>
-					</li>
+						<li class="logged_in">
+							<a href="javascript:void(0)" class="account-userTitle account-userTitle-custom">
+								<ycommerce:testId code="header_LoggedUser">
+									<spring:theme code="header.welcome" arguments="${fname}" htmlEscape="true" />
+								</ycommerce:testId>
+							</a>
+							<div class="sign-pop">
+							 	<ul>
+							  		<li><a href="<c:url value="/my-account"/>" class="account-userTitle account-userTitle-custom">My account</a></li>
+							 		 <li><sec:authorize ifNotGranted="ROLE_ANONYMOUS"><a href="/logout">Sign Out</a></sec:authorize></li>
+							 	</ul>
+							</div>
+							<span class="toggle-link luxury-login hidden-xs hide" data-target-id="#mypopUpModal" data-href="/luxurylogin/signin"></span>
+						</li>
 					</sec:authorize>				
 					<li class="header-search-link"><a href="#" id="header-search-menu" class="toggle-link search" data-target-id="#header-search">Search</a></li>
 					<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
@@ -204,15 +190,15 @@
 	</cms:pageSlot>
 	
 	<div class="modal fade text-center signin-box" id="mypopUpModal" >
-  						 <div class="modal-dialog">
-  							<div class="modal-content">
-  							<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
-								<div class="header-account-inner clearfix" id="login-container">
-									<div class="header-account-section header-forget-pass"></div>
-									<div class="header-account-section header-sign-in"></div>
-									<div class="header-account-section header-signup"></div>
-								</div>
-								</div>
-								</div>
-						</div>
-						</div>
+		 <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
+					<div class="header-account-inner clearfix" id="login-container">
+						<div class="header-account-section header-forget-pass"></div>
+						<div class="header-account-section header-sign-in"></div>
+						<div class="header-account-section header-signup"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
