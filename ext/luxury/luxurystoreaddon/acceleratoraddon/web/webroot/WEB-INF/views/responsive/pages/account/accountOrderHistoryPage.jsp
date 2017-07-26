@@ -446,7 +446,7 @@
 
 														<c:if test="${entry.showInvoiceStatus eq 'true'}">
 															<a
-																href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${subOrder.code}&transactionId=${entry.transactionId}"
+																href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${subOrder.code}&transactionId=${entry.transactionId}" class="btn btn-primary btn-sm"
 																onclick="callSendInvoice();"><spring:theme
 																	code="text.account.RequestInvoice"
 																	text="Request Invoice" /></a>
