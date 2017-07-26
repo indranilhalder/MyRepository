@@ -370,6 +370,7 @@
 									    border: 1px solid #b3b3b3;
                                         @include media-breakpoint-down(sm) {
                                             left: 25px;
+                                            display: none;
                                         }
                                         
 									}
@@ -409,6 +410,19 @@
 					.facet.open{
 						.facetHead{
 							h4{
+                                a{
+                                 color: #b99d6b;
+                                    position: relative;
+                                    
+                                    &:after{
+                                        content: "\f0da";
+                                        font: normal normal normal 14px/1 FontAwesome; 
+                                        position: absolute;
+                                        top: 3px;
+                                        padding-left: 15px;
+                                    }  
+                                    
+                                }
 								.sprite::after{
 									content: "";
 									height: 2px;
@@ -423,6 +437,11 @@
 								}
 							}
 						}
+                        .facet_block{
+                            .le-checkbox input[type=checkbox]:checked~label{
+                                color: #b99d6b;
+                            }
+                        }
 					}
 					.half-width{
 						.allFacetValues{
@@ -431,6 +450,7 @@
 									width:50%;
 									float:left;
 								 }
+                                 
 							 }
 						}
 					}
