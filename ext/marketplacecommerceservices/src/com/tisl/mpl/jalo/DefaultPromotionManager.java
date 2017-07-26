@@ -985,7 +985,7 @@ public class DefaultPromotionManager extends PromotionsManager
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		String catalogId = "";
 		if (null != currentBaseSite && StringUtils.isNotBlank(currentBaseSite.getUid())
-				&& currentBaseSite.getUid().equals(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID)){
+				&& currentBaseSite.getUid().equals(configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYSITEID))){
 			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTLUXURYCATALOGID, "");
 		}else{
 			catalogId = configurationService.getConfiguration().getString(MarketplacecommerceservicesConstants.DEFAULTCATALOGID, "");
