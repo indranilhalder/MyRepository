@@ -140,7 +140,7 @@ body.page-multiStepCheckoutSummaryPage #up{
 	</div>
 </div>
 <div class="modal fade" id="singlePagePickupPersonPopup">
-	<div class="content" style="padding:36px 26px 36px 36px; overflow-y: hidden; max-width: 30%;border-radius: 8px;">
+	<div class="content" style="padding:36px 26px 36px 36px;/*  overflow-y: hidden; */ max-width: 30%;border-radius: 8px;">
 		<span id="modalBody" data-htmlPopulated="NO"></span>
 		<button class="close" data-dismiss="modal"></button>
 	</div>
