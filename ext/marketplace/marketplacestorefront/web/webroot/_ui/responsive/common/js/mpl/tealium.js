@@ -9,7 +9,11 @@ $(document).ready(
  				var brandName='';
  				if(typeof pageName != undefined && pageName != ''){
  					pageName=pageName.split('BrandStore-');
- 					brandName = pageName[1].trim().toLowerCase();
+ 					/*start change of TISPRDT-1925*/
+ 					/*brandName = pageName[1].trim().toLowerCase();*/
+ 					brandName = pageName[1].trim();
+ 					brandName = brandName.toLowerCase();
+ 					/*end change of TISPRDT-1925*/
  					if(typeof(Storage) !== "undefined") {
  						localStorage.setItem("brandName", brandName);
  					}
