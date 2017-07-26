@@ -476,12 +476,14 @@ $(document).on('mousedown','.owl-prev,.owl-next',function(e){
 $(document).on("click",".product-info > .product-image-container > .productImageGallery .imageListCarousel .thumb",function(){
 	var thumbnail_value = $(this).parent().attr('class');
 	var thumbnail_type = $(this).find('img').attr('data-type');
-	utag.link({
+	if(typeof(utag) != "undefined"){
+	  utag.link({
 		"link_text":"pdp_"+thumbnail_value+"_clicked",
 		"event_type":"pdp_"+thumbnail_type+"_clicked",
 		"thumbnail_value":thumbnail_value,
 		product_id : productIdArray
-	});
+	 });
+	}
 })
 
 /*Product Specification*/
@@ -491,30 +493,36 @@ $(document).on("click",".nav-wrapper .nav.pdp",function(){
 
 /*Out Of Stock During adding to bag*/
 function errorAddToBag(errorMessage){
-	utag.link({"error_type":errorMessage});
+	if(typeof(utag) != "undefined"){
+	   utag.link({"error_type":errorMessage});
+	}
 }
 
 /*On Size selection | PDP*/
 $(document).on('click',".variant-select > li", function(){
 	var product_size = $(this).find('a').html();
-	utag.link({
+	if(typeof(utag) != "undefined"){
+	  utag.link({
 		"link_text":"pdp_size_"+product_size,
 		"event_type":"pdp_size_selected",
 		"product_size":product_size,
 		product_id : productIdArray
 	});
+  }
 })
 
 
 /*On Colour selection | PDP*/
 $(document).on('click',".color-swatch > li", function(){
 	var product_color = $(this).find('img').attr('title').toLowerCase();
-	utag.link({
+	if(typeof(utag) != "undefined"){
+	  utag.link({
 		"link_text":"pdp_color_"+product_color,
 		"event_type":"pdp_color_selected",
 		"product_color":product_color,
 		product_id : productIdArray
-	});
+	  });
+	}
 })
 
 /*TPR-4803| hot now | homepage*/
@@ -602,8 +610,9 @@ $(document).on("click","#expressCheckoutButtonId",function(){
 
  /*TPR-4745  | Add New Address | Checkout */
 $(document).on('click','.pincode-button',function(){
-				 
-utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+	if(typeof(utag) != "undefined"){				 
+    utag.link({ link_text : 'add_new_address_clicked' ,event_type : 'add_new_address_clicked'});
+	}
 })
 
 /*TPR-4687 | Broken Image*/
