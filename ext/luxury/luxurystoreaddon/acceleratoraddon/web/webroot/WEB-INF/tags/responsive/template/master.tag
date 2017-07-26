@@ -287,7 +287,7 @@
 					  fn:contains(requestScope['javax.servlet.forward.request_uri'],'/payment-method/')}"></c:when>
 		<c:otherwise>
 		<c:choose>
- 		<c:when test="${!isMinificationEnabled}">
+ 		<c:when test="${isMinificationEnabled}">
  		<script type="text/javascript">
  		var luxuryGigyasocialloginurl='${luxuryGigyasocialloginurl}';
  		var luxuryGigyaApiKey='${luxuryGigyaAPIKey}';
@@ -308,7 +308,28 @@
  		});
  		</script>
  	</c:when>
- 		
+ 		<c:otherwise>
+ 		<script type="text/javascript">
+ 		var luxuryGigyasocialloginurl='${luxuryGigyasocialloginurl}';
+ 		var luxuryGigyaApiKey='${luxuryGigyaAPIKey}';
+ 		var themeResourcePath='${themeResourcePath}';
+ 		var buildNumber='${buildNumber}'; 
+ 		/* done for TISPT-203 */
+ 		$(window).on('load',function(){
+ 			
+ 		 	/* $.getScript('${gigyasocialloginurl}?apikey=${gigyaAPIKey}').done(function(){
+ 				$.getScript('${commonResourcePath}/js/gigya/acc.gigya.js').done(function(){
+ 					loadGigya();
+ 				});
+ 			});  */
+ 			
+ 			$.getScript('${themeResourcePath}/js/feedback.js').done(function(){
+ 				callLuxuryGigyaWhenNotMinified();
+ 			});
+ 			
+ 		});
+ 		</script>
+ 		</c:otherwise>
  		</c:choose>
 		</c:otherwise>
 		</c:choose>
