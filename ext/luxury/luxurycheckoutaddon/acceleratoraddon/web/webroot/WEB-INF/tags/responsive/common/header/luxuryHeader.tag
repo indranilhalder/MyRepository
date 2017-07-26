@@ -104,6 +104,11 @@
 				<cms:component component="${MiddleHeader}" element="div" class="miniCart" />
 			</cms:pageSlot></a>
 			</div>
+			<div class="header-right">
+				<sec:authorize ifNotGranted="ROLE_ANONYMOUS">
+					<span class="toggle-link luxury-login hidden-xs hide" data-target-id="#mypopUpModal" data-href="/luxurylogin/signin"></span>
+				</sec:authorize>
+			</div>
 			<%-- <div class="header-right">
 				<ul class="list-unstyled">
 					<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
@@ -203,15 +208,15 @@
 	</cms:pageSlot>
 	
 	<div class="modal fade text-center signin-box" id="mypopUpModal" >
-  						 <div class="modal-dialog">
-  							<div class="modal-content">
-  							<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
-								<div class="header-account-inner clearfix" id="login-container">
-									<div class="header-account-section header-forget-pass"></div>
-									<div class="header-account-section header-sign-in"></div>
-									<div class="header-account-section header-signup"></div>
-								</div>
-								</div>
-								</div>
-						</div>
-						</div>
+		 <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="header-account toggle-skip text-center" id="header-account" role="dialog">
+					<div class="header-account-inner clearfix" id="login-container">
+						<div class="header-account-section header-forget-pass"></div>
+						<div class="header-account-section header-sign-in"></div>
+						<div class="header-account-section header-signup"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
