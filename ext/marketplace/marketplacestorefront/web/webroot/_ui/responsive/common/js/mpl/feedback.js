@@ -3805,25 +3805,22 @@ $(window).on("load resize click",function(){
 /*start change of INC144316778*/
 $(window).on("scroll resize",function(){
 	fixTopAdjust();
-	if($(window).scrollTop() == 0)
+	if($(window).scrollTop() == 0){
 		$(".listing.wrapper .left-block").removeClass("topTheFix");
+		/*start change for TISPRDT-1898*/
+		if($("header .content .top").hasClass("header_fix"))
+			$(".listing.wrapper .left-block").removeClass("fix"); 
+		/*end change for TISPRDT-1898*/
+	}
 });
 $(document).on("click",".product-facet .facet .facet-name",function(){
 	fixTopAdjustTimeOut();
 });
 function fixTopAdjust(){
-	/* start change of TISPRDT-1898 */
-	if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active"))){
+	if($(".left-block ul.product-facet.js-product-fcet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
 		$(".listing.wrapper .left-block").addClass("topTheFix");
-		if(!$(".content .top").hasClass("header_fix"))
-			$(".listing.wrapper .left-block").removeClass("fix");
-	}
-	else{
+	else
 		$(".listing.wrapper .left-block").removeClass("topTheFix");
-		if(!$(".content .top").hasClass("header_fix"))
-			$(".listing.wrapper .left-block").removeClass("fix");
-	}
-	/* end change of TISPRDT-1898 */
 }
 
 function fixTopAdjustTimeOut(){
