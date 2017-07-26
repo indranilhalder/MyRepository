@@ -77,13 +77,25 @@
 
 			<!----- RIGHT Navigation STARTS --------->
 
-
+								<c:set var ="collectorder" scope="session" value=""/> 
+								<c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
+									varStatus="status">
+									<c:forEach items="${sellerOrder.entries}" var="entry"
+										varStatus="entryStatus">
+								        ${entry.mplDeliveryMode.code}
+										<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
+										<c:set var ="collectorder" scope="session" value="collect-order"/> 
+										</c:if>
+									</c:forEach>
+								</c:forEach>
+								
 			<div class="right-account">
 				<%-- <p class="nav-orderHistory">
 					<a href="<c:url value="/my-account/orders"/>" class="order-history"><spring:theme
 							code="text.account.orderHistorylink" text="Back to Order History" />
 					</a>
 				</p> --%>
+				
 				<div class="order-history order-details">
 					<!-- Heading for saved Cards -->
 					<div class="navigation">
@@ -93,9 +105,7 @@
 
 
 					</div>
-
-
-					<ul class="product-block order-details">
+					<ul class="product-block order-details ${collectorder}">
 						<li class="track-order-list">
 
 							<ul class="list-top-title">
@@ -136,8 +146,7 @@
 							<li class="totals" id="anchor">
 								<!-- <h2>Total:</h2> -->
 								<ul>
-									<li><spring:theme code="text.account.order.subtotal"
-											/>  <format:price
+									<li><spring:theme code="text.account.order.subtotal"/>  <format:price
 												priceData="${subOrder.subTotal}" />
 									</li>
 									<li><spring:theme code="text.account.order.delivery"
@@ -262,6 +271,8 @@
 							</li>
 							</c:if>
 							<c:choose>
+							
+										
 								<c:when test="${(subOrder.status eq 'PAYMENT_PENDING' || subOrder.status eq 'PAYMENT_TIMEOUT' || subOrder.status eq 'PAYMENT_FAILED') && empty subOrder.mplPaymentInfo}">
 									
 									<div class="payment-method">
@@ -271,62 +282,13 @@
 									
 								</c:when>
 								<c:otherwise>
-								<c:set var="paymentError" value="false"/>
-									<div class="payment-method">
-								<h2>Payment Method:
-									${subOrder.mplPaymentInfo.paymentOption}</h2>
-								<c:set var="cardNumberMasked"
-									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
-								<c:set var="cardNumberLength"
-									value="${fn:length(cardNumberMasked)}" />
-								<c:set var="cardNumEnd"
-									value="${fn:substring(cardNumberMasked, cardNumberLength-4, cardNumberLength)}" />
-
-								<c:if
-									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card'}">
-									<c:set var="creditCardBillingAddress"
+								<c:set var="creditCardBillingAddress"
 										value="${subOrder.mplPaymentInfo.billingAddress}" />
-								</c:if>
-								<!--  TISBOX-1182 -->
-								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%>
-								<c:if
-									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
-									<p>${subOrder.mplPaymentInfo.cardCardType} ending in
-										${cardNumEnd}</p>
-									<p>Expires on:
-										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p>
-								</c:if>
-								<c:if
-									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}">
-									<p>${subOrder.mplPaymentInfo.bank}</p>
-								</c:if>
-
-
-								<!-- }
-								//TODO
-								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
-								{
-									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
-									orderWsDTO.setPaymentCardDigit(paymentInfo.getCardAccountHolderName());
-									if (paymentInfo.getEmiInfo() != null)
-									{
-										orderWsDTO.setPaymentCardExpire(paymentInfo.getEmiInfo().getTerm());
-									}
-					
-								}
-								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
-								{
-									//reportDTO.setRiskScore();
-									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
-									orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
-									orderWsDTO.setPaymentCardExpire("NA");
-								} -->
-							</div>
-							<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
+								<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
 							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
-							<div class="delivery-address">
+							<li class="delivery-address">
 								<c:if test="${not empty creditCardBillingAddress.firstName}">
-									<h3>Billing Address:</h3>
+									<h2>Billing Address:</h2>
 									
 									<address>
 										${fn:escapeXml(creditCardBillingAddress.firstName)}&nbsp;
@@ -338,7 +300,6 @@
 										<c:if test="${not empty creditCardLine3}">
 														${fn:escapeXml(creditCardBillingAddress.line3)},
 													</c:if>
-										<br>
 										<!-- R2.3: START -->
 										<c:if test="${not empty creditCardBillingAddress.landmark}">
 														${fn:escapeXml(creditCardBillingAddress.landmark)},
@@ -373,7 +334,59 @@
 											91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)} <br>
 										</address>
 									</c:if> --%>
+							</li>
+								<c:set var="paymentError" value="false"/>
+									<div class="payment-method">
+								<h2>Payment Method:
+									${subOrder.mplPaymentInfo.paymentOption}</h2>
+								<c:set var="cardNumberMasked"
+									value="${subOrder.mplPaymentInfo.cardIssueNumber}" />
+								<c:set var="cardNumberLength"
+									value="${fn:length(cardNumberMasked)}" />
+								<c:set var="cardNumEnd"
+									value="${fn:substring(cardNumberMasked, cardNumberLength-4, cardNumberLength)}" />
+
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card'}">
+									<c:set var="creditCardBillingAddress"
+										value="${subOrder.mplPaymentInfo.billingAddress}" />
+								</c:if>
+								<!--  TISBOX-1182 -->
+								<%-- <p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p> --%>
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Credit Card' or 'EMI' or 'Debit Card'}">
+									<%-- <p>${subOrder.mplPaymentInfo.cardCardType} ending in
+										${cardNumEnd}</p>
+									<p>Expires on:
+										${subOrder.mplPaymentInfo.cardExpirationMonth}/${subOrder.mplPaymentInfo.cardExpirationYear}</p> --%>
+								</c:if>
+								<c:if
+									test="${subOrder.mplPaymentInfo.paymentOption eq 'Netbanking'}">
+									<%-- <p>${subOrder.mplPaymentInfo.bank}</p> --%>
+								</c:if>
+
+
+								<!-- }
+								//TODO
+								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.EMI))
+								{
+									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
+									orderWsDTO.setPaymentCardDigit(paymentInfo.getCardAccountHolderName());
+									if (paymentInfo.getEmiInfo() != null)
+									{
+										orderWsDTO.setPaymentCardExpire(paymentInfo.getEmiInfo().getTerm());
+									}
+					
+								}
+								else if (paymentInfo.getPaymentOption().equalsIgnoreCase(MarketplacecommerceservicesConstants.NETBANKING))
+								{
+									//reportDTO.setRiskScore();
+									orderWsDTO.setPaymentCard(paymentInfo.getCardAccountHolderName()); //changed
+									orderWsDTO.setPaymentCardDigit(paymentInfo.getBank());
+									orderWsDTO.setPaymentCardExpire("NA");
+								} -->
 							</div>
+							
 								</c:otherwise>
 							</c:choose>
 							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
@@ -412,7 +425,7 @@
 	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															
+
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
@@ -1589,7 +1602,7 @@
 								    <c:if test="${storeId ne entry.deliveryPointOfService.address.id }">
 									   <c:set var="pos"
 																value="${entry.deliveryPointOfService.address}" />
-																<li class="item delivered first" id="shipping-track-order">
+																<li class="item delivered first  click-collect-option" id="shipping-track-order">
 																	<div class="item-header">
 															<c:set var="storeId" value="${pos.id}" />
 															
@@ -1604,8 +1617,7 @@
 	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s)-Collect</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
-															<br>
-															<br>
+															
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
@@ -1703,53 +1715,30 @@
 														style="width: 11px; padding-top: 7px; padding-left: -45px; font-weight: 100;margin-left: 15pc;">Edit
 													    </a> -->
 													  <c:set var="button" value="false" />
-													   <div class="container pickup_Edit">
-														
-														<div class="row">
-														
-															<div class="col-md-5">
-														
-															<div class="row mobileWidth" style="float: left; z-index: 999;">
-																		<div class="col-md-5">
-																		
-																		  <div class="col-md-5">
-																			<label class="pickup_name">PickUpName</label>
-																		 </div>
-																		
-																		<div class="col-md-7"
-																			style="z-index: 99999 !important;">
-																			<input id="pickUpName" class="pickUpName" type="Text" maxlength="30"
-																				name="pickUpName1"
-																				value="${sellerOrder.getPickupName()}" /> <br />
-																			<div class="error_text pickupPersonNameError"></div>
-																		</div>
-																  </div>
-													        </div>
-													        </div>
-													        
-													        <div class="col-md-4" style="z-index: 99;">
-																	<div class="row mobileWidth" style="z-index: 99;">
-																	<div class="col-md-5">
-																			<label class="pickup_mob">Mobile No</label>
-																		</div>
-																		<div class="col-md-7">
-																			<input id="pickMobileNo" class="pickMobileNo"
-																				type="Text" name="mobileNo"   maxlength="10"
-																				value="${sellerOrder.getPickupPhoneNumber()}" />
-																			<div class="error_text pickupPersonMobileError"
-																				style=""></div>
-																				
-																			</div>
-																			</div>
-																		</div>
-																	<div class="col-md-1"></div>	
-																	<div class="col-md-1">
-																    </div>	
-																    <input type="button" value="Save" class="savebtn savebtnOther"
-																		onclick="editPickUpDetails('${subOrder.code}')" />
-
-															
-													   </div>
+													   <div class="pickup_Edit">											
+															<div class="">
+																  
+																	<label class="pickup_name">PickUpName</label>						
+																<div class="">
+																	<input id="pickUpName" class="pickUpName" type="Text" maxlength="30"
+																		name="pickUpName1"
+																		value="${sellerOrder.getPickupName()}" /> <br />
+																	<div class="error_text pickupPersonNameError"></div>
+																</div>																  
+													        </div>													        
+													        <div class="">
+																	<label class="pickup_mob">Mobile No</label>
+																<div class="">
+																	<input id="pickMobileNo" class="pickMobileNo"
+																		type="Text" name="mobileNo"   maxlength="10"
+																	value="${sellerOrder.getPickupPhoneNumber()}" />
+																<div class="error_text pickupPersonMobileError"
+																	style=""></div>
+																	
+																</div>
+															</div>	
+															<input type="button" value="Save" class="btn btn-block btn-primary savebtn savebtnOther"
+																		onclick="editPickUpDetails('${subOrder.code}')" />													  
 													   </div>
 														</c:if>
 														</c:if>
