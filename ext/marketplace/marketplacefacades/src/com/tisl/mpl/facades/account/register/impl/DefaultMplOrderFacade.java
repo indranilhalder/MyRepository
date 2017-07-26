@@ -402,7 +402,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -453,9 +453,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 * 
+	 *
 	 * @return Map<String, Map<String, String>>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -492,11 +492,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Boolean>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -530,11 +530,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 * 
+	 *
 	 * @param : orderEntryData
-	 * 
+	 *
 	 * @return OrderEntryData
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -869,7 +869,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1276,6 +1276,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 							//orderInfoWsDTO.setError("Order Ref No:" + parentOrder.getCode() + " doesn't have any details");
 						}
+						else
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -1606,6 +1610,19 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			{
 				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv() ? orderModel.getTotalPriceWithConv()
 						.toString() : "NULL");
+
+				//Getting CustomerModel from Order
+				//				final String uid = orderModel.getUser().getUid();
+				//
+				//				final CustomerModel customerModel = mplOrderService.getCustomerByUid(uid);
+				//
+				//				if (null != customerModel && StringUtils.isNotEmpty(customerModel.getFirstName())
+				//						&& (StringUtils.isNotEmpty(customerModel.getLastName())))
+				//				{
+				//					custFirstName = new StringBuilder(customerModel.getFirstName());
+				//					custLastName = new StringBuilder(customerModel.getLastName());
+				//					orderInfoWsDTO.setCustName(custFirstName.append(" ").append(custLastName).toString());
+				//				}
 				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getFirstname())
 						&& (StringUtils.isNotEmpty(orderModel.getPaymentAddress().getLastname())))
 				{
@@ -1621,10 +1638,21 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					custLastName = new StringBuilder(orderModel.getDeliveryAddress().getLastname());
 					orderInfoWsDTO.setCustName(custFirstName.append(" ").append(custLastName).toString());
 				}
+				else if (StringUtils.isNotEmpty(orderModel.getPickupPersonName()))
+				{
+					orderInfoWsDTO.setCustName(orderModel.getPickupPersonName());
+				}
+
 				else
 				{
 					orderInfoWsDTO.setCustName("NULL");
 				}
+
+				//				if (null != customerModel && StringUtils.isNotEmpty(customerModel.getMobileNumber()))
+				//				{
+				//					orderInfoWsDTO.setCustMobileNo(customerModel.getMobileNumber());
+				//				}
+
 				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getCellphone()))
 				{
 					orderInfoWsDTO.setCustMobileNo(orderModel.getPaymentAddress().getCellphone());
@@ -1633,6 +1661,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 						&& StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getCellphone()))
 				{
 					orderInfoWsDTO.setCustMobileNo(orderModel.getDeliveryAddress().getCellphone());
+				}
+				else if (StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()))
+				{
+					orderInfoWsDTO.setCustMobileNo(orderModel.getPickupPersonMobile());
 				}
 				else
 				{
