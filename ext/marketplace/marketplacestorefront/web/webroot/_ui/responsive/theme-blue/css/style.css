@@ -50028,18 +50028,18 @@ body.pageLabel--Lingerie-page-revised .brand-content-grid .hero ul{
     /* start change of INC144316496 */
     /* height: 15px;
     width: 16px; */
-    height: 17px;
-    width: 30px;
+    height: 60px;
+    width: 60px;
     /* end change of INC144316496 */
     position: absolute;
-    right: 10px;
+    right: 5px;		/* change for TISPRDT-1906 */
     top: 10px;
     }
 .plp-wishlist.added {
 	/* start change of INC144316496 */
 	/* background-position: 0 -17px; */
 	background-position: right -17px;
-	width: 40px;
+	width: 60px;
 	/* end change of INC144316496 */
 }
 /*Quickview changes start*/
@@ -61581,6 +61581,7 @@ body.template-pages-layout-footwearCategoryLandingPage ul.jqtree-tree .jqtree-to
     -webkit-transition: none;
 }
 /* UF-53 */
+body.page-search .plp-wishlist,	/* add for TISPRDT-1906 */
 body.page-productGrid .plp-wishlist,
 body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist,
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist,
@@ -61590,6 +61591,7 @@ body.template-pages-layout-ShoeBrandLandingLayoutPage .plp-wishlist,
 body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist{
 background-image: none;
 }
+body.page-search .plp-wishlist:before,	/* add for TISPRDT-1906 */
 body.page-productGrid .plp-wishlist:before ,
 body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist:before ,
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist:before ,
@@ -61608,11 +61610,12 @@ body.template-pages-layout-footwearCategoryLandingPage .plp-wishlist:before {
     /* start change of INC144316496 */
     /* position: relative; */
     position: absolute;
-    right: 0;
+    right: 5;	/* change for TISPRDT-1906 */
     /* end change of INC144316496 */
     font-weight: bold;
+    margin-top: 10px;	/* add for TISPRDT-1906 */
 }
-
+body.page-search .plp-wishlist.added:before,	/* add for TISPRDT-1906 */
 body.page-productGrid .plp-wishlist.added:before,
 body.template-pages-layout-apparelCategoryLandingPage .plp-wishlist.added:before,
 body.template-pages-layout-apparelCategoryLandingPageV1 .plp-wishlist.added:before,
