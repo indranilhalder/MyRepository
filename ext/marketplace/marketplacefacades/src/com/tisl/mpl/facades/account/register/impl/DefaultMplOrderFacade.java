@@ -1610,6 +1610,19 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			{
 				orderInfoWsDTO.setOrderTotal(null != orderModel.getTotalPriceWithConv() ? orderModel.getTotalPriceWithConv()
 						.toString() : "NULL");
+
+				//Getting CustomerModel from Order
+				//				final String uid = orderModel.getUser().getUid();
+				//
+				//				final CustomerModel customerModel = mplOrderService.getCustomerByUid(uid);
+				//
+				//				if (null != customerModel && StringUtils.isNotEmpty(customerModel.getFirstName())
+				//						&& (StringUtils.isNotEmpty(customerModel.getLastName())))
+				//				{
+				//					custFirstName = new StringBuilder(customerModel.getFirstName());
+				//					custLastName = new StringBuilder(customerModel.getLastName());
+				//					orderInfoWsDTO.setCustName(custFirstName.append(" ").append(custLastName).toString());
+				//				}
 				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getFirstname())
 						&& (StringUtils.isNotEmpty(orderModel.getPaymentAddress().getLastname())))
 				{
@@ -1625,10 +1638,21 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					custLastName = new StringBuilder(orderModel.getDeliveryAddress().getLastname());
 					orderInfoWsDTO.setCustName(custFirstName.append(" ").append(custLastName).toString());
 				}
+				else if (StringUtils.isNotEmpty(orderModel.getPickupPersonName()))
+				{
+					orderInfoWsDTO.setCustName(orderModel.getPickupPersonName());
+				}
+
 				else
 				{
 					orderInfoWsDTO.setCustName("NULL");
 				}
+
+				//				if (null != customerModel && StringUtils.isNotEmpty(customerModel.getMobileNumber()))
+				//				{
+				//					orderInfoWsDTO.setCustMobileNo(customerModel.getMobileNumber());
+				//				}
+
 				if (null != orderModel.getPaymentAddress() && StringUtils.isNotEmpty(orderModel.getPaymentAddress().getCellphone()))
 				{
 					orderInfoWsDTO.setCustMobileNo(orderModel.getPaymentAddress().getCellphone());
@@ -1637,6 +1661,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 						&& StringUtils.isNotEmpty(orderModel.getDeliveryAddress().getCellphone()))
 				{
 					orderInfoWsDTO.setCustMobileNo(orderModel.getDeliveryAddress().getCellphone());
+				}
+				else if (StringUtils.isNotEmpty(orderModel.getPickupPersonMobile()))
+				{
+					orderInfoWsDTO.setCustMobileNo(orderModel.getPickupPersonMobile());
 				}
 				else
 				{
