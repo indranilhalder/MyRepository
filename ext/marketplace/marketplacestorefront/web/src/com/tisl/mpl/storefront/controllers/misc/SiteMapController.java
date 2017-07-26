@@ -39,6 +39,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -138,85 +139,178 @@ public class SiteMapController extends AbstractPageController
 		final ArrayList<CategoryModel> departments = new ArrayList<CategoryModel>();
 
 		final ContentSlotModel contentSlotModel = contentSlotService.getContentSlotForId("NavigationBarSlot");
-		final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
-		for (final AbstractCMSComponentModel model : componentLists)
+		if (contentSlotModel != null)
 		{
-			if (model instanceof NavigationBarCollectionComponentModel)
+			final List<AbstractCMSComponentModel> componentLists = contentSlotModel.getCmsComponents();
+			if (CollectionUtils.isNotEmpty(componentLists))
 			{
-				final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) model;
-				final Collection<NavigationBarComponentModel> navigationBars = deptModel.getComponents();
-
-				for (final NavigationBarComponentModel navigationBar : navigationBars)
+				for (final AbstractCMSComponentModel model : componentLists)
 				{
-					final CategoryModel department = navigationBar.getLink().getCategory();
-					departments.add(department);
-				}
-
-				for (final CategoryModel categoryModel : departments)
-				{
-					try
+					if (model instanceof NavigationBarCollectionComponentModel)
 					{
-						final Map<CategoryModel, Collection<CategoryModel>> innerLevelMap = new HashMap<CategoryModel, Collection<CategoryModel>>();
-
-						final CategoryModel department = categoryService.getCategoryForCode(categoryModel.getCode());
-						final Collection<CategoryModel> secondLevelCategories = department.getCategories();
-
-						//code changes for INC_10885
-						final StringBuilder catName1 = new StringBuilder();
-						catName1.append(department.getName()).append("||").append(department.getLinkComponents().get(0).getUrl());
-						department.setName(catName1.toString());
-						//code changes for INC_10885
-
-
-						// Iterating through the second level categories
-						for (final CategoryModel secondLevelCategory : secondLevelCategories)
+						final NavigationBarCollectionComponentModel deptModel = (NavigationBarCollectionComponentModel) model;
+						final Collection<NavigationBarComponentModel> navigationBars = deptModel.getComponents();
+						if (CollectionUtils.isNotEmpty(navigationBars))
 						{
-							/* code changes for TISPRD-3183 */
-							// Fetching the third level category against a second
-							// level category
-							final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
-
-							for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
+							for (final NavigationBarComponentModel navigationBar : navigationBars)
 							{
-
-								final String categoryPathChildlevel3 = getCategoryPath(thirdLevelCategories);
-
-								final StringBuilder catName3 = new StringBuilder();
-								catName3.append(thirdLevelCategories.getName()).append("||").append(categoryPathChildlevel3);
-								thirdLevelCategories.setName(catName3.toString());
+								if (navigationBar.getLink() != null && navigationBar.getLink().getCategory() != null)
+								{
+									final CategoryModel department = navigationBar.getLink().getCategory();
+									departments.add(department);
+								}
+								else
+								{
+								LOG.debug("navigationBar Link or Category Missing");
+								}
 							}
-							final String categoryPathChildlevel2 = getCategoryPath(secondLevelCategory);
-
-							final StringBuilder catName2 = new StringBuilder();
-							catName2.append(secondLevelCategory.getName()).append("||").append(categoryPathChildlevel2);
-							secondLevelCategory.setName(catName2.toString());
-
-							/* code changes end for TISPRD-3183 */
-							// Storing the third level categories in a map
-							//thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
-							innerLevelMap.put(secondLevelCategory, thirdLevelCategory);
 						}
+						else
+						{
+							LOG.debug(deptModel.getName() + ":navigationBars missing");
+						}
+						if (CollectionUtils.isNotEmpty(departments))
+						{
+							for (final CategoryModel categoryModel : departments)
+							{
+								try
+								{
+									final Map<CategoryModel, Collection<CategoryModel>> innerLevelMap = new HashMap<CategoryModel, Collection<CategoryModel>>();
 
-						// Storing the second level categories in a map
-						//secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
-						megaMap.put(categoryModel, innerLevelMap);
-					}
-					catch (final EtailBusinessExceptions businessException)
-					{
-						ExceptionUtil.etailBusinessExceptionHandler(businessException, null);
-					}
-					catch (final EtailNonBusinessExceptions nonBusinessException)
-					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(nonBusinessException);
-					}
-					catch (final Exception exception)
-					{
-						ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+									final CategoryModel department = categoryService.getCategoryForCode(categoryModel.getCode());
+									if (department != null)
+									{
+										final Collection<CategoryModel> secondLevelCategories = department.getCategories();
+
+										//code changes for INC_10885
+										if (department.getName() != null && CollectionUtils.isNotEmpty(department.getLinkComponents())
+												&& StringUtils.isNotEmpty(department.getLinkComponents().get(0).getUrl()))
+										{
+											final StringBuilder catName1 = new StringBuilder();
+											catName1.append(department.getName()).append("||")
+													.append(department.getLinkComponents().get(0).getUrl());
+											if (StringUtils.isNotEmpty(catName1.toString()))
+											{
+												department.setName(catName1.toString());
+											}
+											else
+											{
+												LOG.debug("catName1 is missing");
+
+											}
+											//code changes for INC_10885
+										}
+										else
+										{
+											LOG.debug("department is missing link components");
+										}
+
+										// Iterating through the second level categories
+										if (CollectionUtils.isNotEmpty(secondLevelCategories))
+										{
+											for (final CategoryModel secondLevelCategory : secondLevelCategories)
+											{
+												/* code changes for TISPRD-3183 */
+												// Fetching the third level category against a second
+												// level category
+												final Collection<CategoryModel> thirdLevelCategory = secondLevelCategory.getCategories();
+
+												if (CollectionUtils.isNotEmpty(thirdLevelCategory))
+												{
+													for (final CategoryModel thirdLevelCategories : thirdLevelCategory)
+													{
+
+														final String categoryPathChildlevel3 = getCategoryPath(thirdLevelCategories);
+
+														final StringBuilder catName3 = new StringBuilder();
+														if (StringUtils.isNotEmpty(thirdLevelCategories.getName())
+																&& StringUtils.isNotEmpty(categoryPathChildlevel3))
+														{
+															catName3.append(thirdLevelCategories.getName()).append("||")
+																	.append(categoryPathChildlevel3);
+
+															thirdLevelCategories.setName(catName3.toString());
+														}
+														else
+														{
+															LOG.debug(secondLevelCategory.getName()
+																	+ "::::thirdlevel Category Missing Name or categoryPathChildlevel3");
+														}
+													}
+												}
+												else
+												{
+													LOG.debug(secondLevelCategory.getName() + "::::third Level Categories is empty");
+												}
+
+												final String categoryPathChildlevel2 = getCategoryPath(secondLevelCategory);
+												if (StringUtils.isNotEmpty(secondLevelCategory.getName())
+														&& StringUtils.isNotEmpty(categoryPathChildlevel2))
+												{
+													final StringBuilder catName2 = new StringBuilder();
+													catName2.append(secondLevelCategory.getName()).append("||")
+															.append(categoryPathChildlevel2);
+													secondLevelCategory.setName(catName2.toString());
+												}
+												else
+												{
+													LOG.debug(department.getName()
+															+ "::::secondlevel Category Missing Name or categoryPathChildlevel2");
+												}
+												/* code changes end for TISPRD-3183 */
+												// Storing the third level categories in a map
+												//thirdLevelCategoryMap.put(secondLevelCategory.getCode(), thirdLevelCategory);
+												innerLevelMap.put(secondLevelCategory, thirdLevelCategory);
+											}
+										}
+										else
+										{
+											LOG.debug(department.getName() + "::::second Level Categories is empty");
+										}
+
+										// Storing the second level categories in a map
+										//secondLevelCategoryMap.put(department.getCode(), secondLevelCategories);
+										megaMap.put(categoryModel, innerLevelMap);
+									}
+									else
+									{
+										LOG.debug("department is null");
+									}
+								}
+								catch (final EtailBusinessExceptions businessException)
+								{
+									ExceptionUtil.etailBusinessExceptionHandler(businessException, null);
+								}
+								catch (final EtailNonBusinessExceptions nonBusinessException)
+								{
+									ExceptionUtil.etailNonBusinessExceptionHandler(nonBusinessException);
+								}
+								catch (final Exception exception)
+								{
+									
+									ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(exception));
+								}
+							}
+						}
+						else
+						{
+							LOG.debug("department is empty");
+						}
 					}
 				}
-			}
-		}
 
+			}
+			else
+			{
+				LOG.debug("componentList empty");
+			}
+
+
+		}
+		else
+		{
+			LOG.debug("contentSlotModel missing");
+		}
 		modelSpring.addAttribute("megaMap", megaMap);
 
 		storeCmsPageInModel(modelSpring, getContentPageForLabelOrId(SITEMAP_CMS_PAGE));

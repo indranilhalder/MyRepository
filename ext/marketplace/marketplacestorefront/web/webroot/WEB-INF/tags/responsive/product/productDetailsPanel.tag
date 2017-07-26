@@ -105,8 +105,14 @@ tr.d0 td {
 
 <!-- TISPRM-56 -->
 <input type="hidden" id="product_allVariantsListingId" value="${allVariantsString}"/>
+
+
+<!-- UF-160 -->
+<input type="hidden" id="isLargeAppliance" value="${isLargeAppliance}" />
+
 <!-- CKD:TPR-250 -->
 <input type="hidden" id="msiteBuyBoxSellerId" value="${msiteBuyBoxSellerId}"/> 
+
 
 <div itemscope itemtype="http://schema.org/Product" class="pdp">
 	<div class="product-info wrapper">
@@ -421,7 +427,11 @@ tr.d0 td {
 	
 	<!-- For Infinite Analytics Start -->
 	<input type="hidden" value="${productCategoryType}" id="categoryType"/>
-	<div id="productContentDivId"></div>
+	<!-- changes for UF-238 -->
+	
+	<div id="productContentDivId">
+	<c:if test="${not empty aplusHTML}">${aplusHTML}</c:if>
+	</div>
 <c:choose>
 		<c:when test="${product.rootCategory==clothing || product.rootCategory== footwear || product.rootCategory==accessories}">  <!-- Added for TISPRO-271 -->
 			<div class="trending"  id="ia_products_complements"></div>

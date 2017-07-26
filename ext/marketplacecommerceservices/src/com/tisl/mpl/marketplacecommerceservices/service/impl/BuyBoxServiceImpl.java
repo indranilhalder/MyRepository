@@ -181,8 +181,8 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	 * @throws EtailBusinessExceptions
 	 */
 	@Override
-	public BuyBoxModel buyboxForSizeGuide(final String productCode, final String sellerId) throws EtailNonBusinessExceptions,
-			EtailBusinessExceptions
+	public BuyBoxModel buyboxForSizeGuide(final String productCode, final String sellerId)
+			throws EtailNonBusinessExceptions, EtailBusinessExceptions
 	{
 		//Get Buybox data in respect of product code and seller id
 		return buyBoxDao.buyBoxForSizeGuide(productCode, sellerId);
@@ -240,7 +240,15 @@ public class BuyBoxServiceImpl implements BuyBoxService
 	{
 		// YTODO Auto-generated method stub
 		return buyBoxDao.getBuyboxPricesForSizeVariant(productCode);// INC144314878_INC_11113
+	}
 
+	// TISPRD-8944
+	@Override
+	public List<BuyBoxModel> buyboxPriceMobile(final String productCode) throws EtailNonBusinessExceptions, EtailBusinessExceptions
+	{
+		final List<BuyBoxModel> buyBoxList = buyBoxDao.buyBoxPriceMobile(productCode);
+
+		return buyBoxList;
 	}
 
 	/***

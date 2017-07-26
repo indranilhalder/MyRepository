@@ -30,6 +30,7 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -62,10 +63,13 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 	private static final String CUSTOMER = "Customer";
 	private static final String CONTACT_US_LINK = "contactUsLink";
 	private static final String NUMBERTOOL = "numberTool";
-
+	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
-
+	private static final String ORDER_ENTRY = "orderEntry";
+	private static final String TOTALPRICE = "totalPrice";
+	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
+	private static final String SUBTOTAL = "subTotal";
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -79,6 +83,8 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 		super.init(orderRefundProcessModel, emailPageModel);
 		orderData = getOrderConverter().convert(orderRefundProcessModel.getOrder());
 		final OrderModel orderModel = orderRefundProcessModel.getOrder();
+		double deliveryCharge = 0.0;
+		double subTotal = 0.0d;
 		orderCode = orderRefundProcessModel.getOrder().getCode();
 		orderGuid = orderRefundProcessModel.getOrder().getGuid();
 		guest = CustomerType.GUEST.equals(getCustomer(orderRefundProcessModel).getType());
@@ -90,20 +96,48 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 		put(ORDER_REFERENCE_NUMBER, orderCode);
 		final CustomerModel customer = (CustomerModel) orderRefundProcessModel.getOrder().getUser();
 		put(EMAIL, customer.getOriginalUid());
+		final double orderTotalPrice = orderRefundProcessModel.getOrder().getTotalPrice() == null ? 0D : orderRefundProcessModel
+				.getOrder().getTotalPrice().doubleValue();
+		final double convenienceCharges = orderRefundProcessModel.getOrder().getConvenienceCharges() == null ? 0D
+				: orderRefundProcessModel.getOrder().getConvenienceCharges().doubleValue();
+		final Double convenienceChargesVal = Double.valueOf(convenienceCharges);
+
+		final Double totalPrice = Double.valueOf(orderTotalPrice + convenienceCharges);
 		final ReturnEntryModel returnEntry = orderRefundProcessModel.getReturnEntry();
 
 		BigDecimal refundAmount = BigDecimal.ZERO;
 		AbstractOrderEntryModel orderEntry = null;
-		double deliveryCharge = 0.0;
+
 		if (returnEntry instanceof RefundEntryModel)
 		{
 			final RefundEntryModel refundEntry = (RefundEntryModel) returnEntry;
 			orderEntry = refundEntry.getOrderEntry();
+
 			deliveryCharge = orderEntry.getCurrDelCharge() == null ? 0D : orderEntry.getCurrDelCharge().doubleValue();
 			if (null != orderEntry.getNetAmountAfterAllDisc())
 			{
 				refundAmount = BigDecimal.valueOf(orderEntry.getNetAmountAfterAllDisc().doubleValue());
+
 			}
+			final String orderPlaceDate;
+
+			SimpleDateFormat formatter;
+			formatter = new SimpleDateFormat("MMM d, yyyy");
+			orderPlaceDate = formatter.format(orderEntry.getCreationtime());
+
+			if (StringUtils.isEmpty(orderEntry.getProductPromoCode()) || (StringUtils.isEmpty(orderEntry.getCartPromoCode())))
+			{
+				subTotal += orderEntry.getTotalPrice().doubleValue();
+			}
+			else
+			{
+				subTotal += orderEntry.getNetAmountAfterAllDisc().doubleValue();
+			}
+			put(ORDERPLACEDATE, orderPlaceDate);
+			put(ORDER_ENTRY, orderEntry);
+			put(TOTALPRICE, totalPrice);
+			put(CONVENIENCECHARGE, convenienceChargesVal);
+			put(SUBTOTAL, Double.valueOf(subTotal));
 		}
 
 		LOG.info("--------------------------- For order :" + orderCode + ", Refund Amount is >>>>>>" + refundAmount
@@ -134,7 +168,7 @@ public class OrderRefundEmailContext extends AbstractEmailContext<OrderRefundPro
 				}
 			}
 		}
-		catch (Exception e)
+		catch (final Exception e)
 		{
 			LOG.debug("Delivery Address Null ");
 		}

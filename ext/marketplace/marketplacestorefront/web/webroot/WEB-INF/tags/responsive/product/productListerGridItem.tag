@@ -2,6 +2,7 @@
 <%@ attribute name="product" required="true"
 	type="de.hybris.platform.commercefacades.product.data.ProductData"%>
 <%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<%@ attribute name="index" required="false" type="java.lang.Integer"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
@@ -47,6 +48,20 @@
                                 </c:if>
                     </c:forEach>	 
     <!--   tpr-250 CHANGES -->
+    <!-- CKD:PRDI-350 Changes for price and oos label issue  Start -->
+       				<c:set var="stockVal" value="${product.stockValue}" />	
+       				
+       				 <c:forEach var="type" items="${product.availabilityMap}">
+								<c:if test="${msiteSellerId  eq type.key}"> 
+								 <c:set var="availMapValue"
+									value="${type.value}" />
+                                </c:if>
+                    </c:forEach>
+       				
+                    <c:if test="${not empty msiteSellerId && availMapValue <=0}">
+				 		<c:set var="stockVal" value="false" />
+				 	</c:if> 
+    <!-- CKD:PRDI-350 Changes for price and oos label issue:End -->
 
 <!--CKD:TPR-250:Start -->
 <c:url value="${product.url}" var="productUrl" />
@@ -67,7 +82,15 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('marketplace.static.resource.host')" var="staticHost"/>
 
 
+<%-- UF-407 : TODO: step 1: put the lazyreached when initail page no is 1 and no XMLHttpRequest --%>
+<c:choose>
+<c:when test="${index eq 23 and not lazyInterface}">
+<li class="product-item lazy-reached">
+</c:when>
+<c:otherwise>
 <li class="product-item">
+</c:otherwise>
+</c:choose>
 <span class="serpProduct">
 <input type ="hidden"  id="productCode" value="${product.code}"/>
 <input type ="hidden"  id="categoryType" value="${product.productCategoryType}"/>
@@ -148,7 +171,8 @@
 					</a>
 				</c:if> --%>
 				<c:choose>
-				 <c:when test="${product.stockValue eq false}">
+				<c:when test="${stockVal eq false}"> 	<!--CKD:PRDI-350  -->
+				<%--  <c:when test="${product.stockValue eq false}"> --%>	
 				  <input type="hidden" id="stockStatusId" value="true"/>
 					<a id="stockIdDefault_${product.name}" class="stockLevelStatus"
 						href="${productUrl}" title="${product.name}"> <spring:theme

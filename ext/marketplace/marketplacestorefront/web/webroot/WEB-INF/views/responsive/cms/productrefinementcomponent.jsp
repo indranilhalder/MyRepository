@@ -19,6 +19,48 @@ $(document).ready(function(){
 	    	$(this).parent().siblings('#categoryPageDeptHierTreeForm').find("#categoryPageDeptHierTree").hide(100);
 		}
 	}); 
+	 
+	 
+	 displayPriotrityBrand();
+		
+});
+function displayPriotrityBrand(){
+	//PRDI-540 fix
+	if ('${PriorityBrandArray}'!=''){	
+	 var x= '${PriorityBrandArray}';
+	 x=$.parseJSON(x);
+	 console.log("PriorityBrandArray"+x);
+	 $.each(x.priorityBrands,function(index,brandCode){
+		 if($('#facetTopValuesCnt').val()=="0"){
+		//	 alert("1");
+			 var elements =$('.facet_desktop .js-facet-list').find('input[value='+brandCode+']').parents('li.filter-brand');
+			 $('.facet_desktop li.facet.js-facet.Brand').find('ul.facet-list.js-facet-list').prepend(elements);
+		 }
+		 else{
+	//		 alert("2");
+		 var elements =$('.facet_desktop .facet-list-hidden').find('input[value='+brandCode+']').parents('li.filter-brand');
+		 var elementsN =$('.facet_desktop .js-facet-top-values').find('input[value='+brandCode+']').parents('li.filter-brand');
+		 $('.facet_desktop li.facet.js-facet.Brand').find('ul.facet-list.js-facet-top-values,ul.facet-list.facet-list-hidden').prepend(elements);
+		 $(elementsN).remove();
+		 var facetTopValuesCnt=$("#facetTopValuesCnt").val();
+		 var cnt=(facetTopValuesCnt-1);
+		 var countLiInTopValues=$('.facet_desktop li.facet.js-facet.Brand').find('ul.facet-list.js-facet-top-values>li').length;
+		 if(countLiInTopValues>facetTopValuesCnt)
+		 	{
+		 	$('.facet_desktop li.facet.js-facet.Brand').find('ul.facet-list.js-facet-top-values>li:gt('+cnt+')').hide();
+			}
+		 }
+		 
+	//	$(elements).remove(); 
+	 });
+	}
+}
+//
+//alert("priorityarray");
+$( document ).ajaxComplete(function(event, xhr, settings) {	
+	if ( settings.url.includes("getFacetData") ) {
+	displayPriotrityBrand(); 
+	}
 });
 
 </script>

@@ -45,7 +45,7 @@
 		.borTotal{ border-top: 1px solid #ccc; padding: 10px 0 0 0}
 	}
 </style> 
-		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center">
+		<table class="maintable" width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;max-width:600px;">
 			<tbody>
 			    <tr>
 			      <td>
@@ -82,7 +82,7 @@
 				  	        		        </tr>
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
-			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
+			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://www.tatacliq.com/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d; line-height: 16px; text-decoration: none;">Your Orders</a></p>
 			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Delivered - Order  <span style="color: #aa1d3d;">${ctx.pOrderCode}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
@@ -116,20 +116,18 @@
 					  	        </tr>
 		  	        		    <tr>
 		  	        		    	<td align="center" class="topLinks">
-		  	        		    		<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </a>
+		  	        		    		<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> FASHION </span>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </span>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> MOBILES </span>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
-			  	        		      	<a href="javascript:void(0);" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </a>
+			  	        		      	<span style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> LUXURY </span>
 			  	        		      	
 		  	        		    	</td> 
 		  	        		    </tr>
 		  	        		     <tr >
-		  	        		      <td style="border-bottom:1px solid #aa1d3d;">
-		  	        		        <span style="display:block; height: 5px; line-height:0;font-size:0;"></span>
-		  	        		      </td>
+		  	        		      <td style="border-bottom:1px solid #aa1d3d;"></td>
 		  	        		    </tr>
 		  	        		    <tr class="dsnone">
 		  	        		      <td>
@@ -177,7 +175,7 @@
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<p style="margin:0px">
-		  	        		      	   	 	  	<a href="${ctx.trackOrderUrl}?tcid=em:transactional:Orderdelivered:manageorder:22052017" class="btn" style="background-color:#aa1d3d; color:#ffffff;font-size;12px;font-family:Arial, Helvetica, sans-serif;padding:4px 10px; text-decoration:none;display:inherit;width:120px;text-align:center;border-bottom:2px solid #8e0f2d;text-decoration:none;">View / Manage Order</a>
+		  	        		      	   	 	  	<a href="${ctx.trackOrderUrl}?tcid=em:transactional:Orderdelivered:manageorder:22052017" class="btn" style="background-color: #aa1d3d; color: #ffffff; font-size: 12px; font-family: Arial, Helvetica, sans-serif; padding: 4px 10px; text-decoration: none; display: inherit; width: 120px; text-align: center; border-bottom: 2px solid #8e0f2d; text-decoration: none;">View / Manage Order</a>
 		  	        		      	   	 	  	</p>
 		  	        		      	   	 	  </div>
 		  	        		      	   	 	  
@@ -280,17 +278,17 @@
 		  	        		    		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		  	        		    		  <tbody>
 		  	        		    		  	<tr>
-			  	        		    		    <td class="smFull dsnone" width="300">&nbsp;</td>
+			  	        		    		    <td class="smFull dsnone" width="100">&nbsp;</td>
 			  	        		    		    <td class="smFull">
 			  	        		    		    	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content">
 	  	        		    		 				 <tbody>
 	  	        		    		 				 	<tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Subtotal</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.subTotal)</td>
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Shipping Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.shippingCharge == 0)
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.shippingCharge == 0)
 Free
 #else
 &#x20b9; $ctx.numberTool.format("#0.00",$ctx.shippingCharge)
@@ -298,7 +296,7 @@ Free
 			 			  	        		    	   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Convenience Charges</td>
-						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000;">#if($ctx.convenienceChargesVal == 0)
+						  	        		    		    <td align="right" class="taleft" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">#if($ctx.convenienceChargesVal == 0)
 Free
 #else
 &#x20b9; $ctx.numberTool.format("#0.00",$ctx.convenienceChargesVal)
@@ -313,7 +311,7 @@ Free
 								  	        		   </tr>
 						  	        		    	   <tr>
 			 			  	        		    		    <td class="borTotal" style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">Total</td>
-						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
+						  	        		    		    <td class="borTotal taleft" align="right"  style="font-size:12px;font-weight:bold;font-family:Arial, Helvetica, sans-serif;color: #000000; text-align: right;">&#x20b9; $ctx.numberTool.format("#0.00",$ctx.totalPrice)</td>
 			 			  	        		    	   </tr>
 	  	        		    		 				 </tbody>
 	  	        		    		 				</table> 

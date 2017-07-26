@@ -278,7 +278,11 @@ $(document).ready(function(){
 	//cat = cat.toLowerCase();
 	cat = cat.substr(2);
 	//alert(cat);
-	
+	//PRDI-258-Fix
+	if (cat.indexOf("mbh") == 0) 
+         {
+ 		cat = cat.toUpperCase();
+ 	 }
 	// TPR-1287 end
 	if(null!= cat ){
 		 window.setTimeout(function(){

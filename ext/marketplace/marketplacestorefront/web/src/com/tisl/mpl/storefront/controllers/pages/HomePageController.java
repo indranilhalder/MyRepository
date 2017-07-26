@@ -73,8 +73,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
-//Sonar fix
-//import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.core.enums.ShowCaseLayout;
 import com.tisl.mpl.core.model.BrandComponentModel;
 import com.tisl.mpl.core.model.MplBigFourPromoBannerComponentModel;
@@ -88,9 +86,11 @@ import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.cms.MplCmsFacade;
 import com.tisl.mpl.facade.latestoffers.LatestOffersFacade;
+import com.tisl.mpl.facade.stw.STWWidgetFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
 import com.tisl.mpl.facades.data.FooterComponentData;
 import com.tisl.mpl.facades.data.LatestOffersData;
+import com.tisl.mpl.facades.data.STWJsonRecomendationData;
 import com.tisl.mpl.facades.product.data.BuyBoxData;
 import com.tisl.mpl.marketplacecommerceservices.service.HomepageComponentService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCmsPageService;
@@ -103,6 +103,8 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.util.CSRFTokenManager;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+//Sonar fix
+//import com.tisl.mpl.constants.MplConstants;
 
 
 /**
@@ -154,6 +156,26 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "notificationFacade")
 	private NotificationFacade notificationFacade;
+
+	@Resource(name = "STWFacade")
+	private STWWidgetFacade stwWidgetFacade;
+
+	/**
+	 * @return the stwWidgetFacade
+	 */
+	public STWWidgetFacade getStwWidgetFacade()
+	{
+		return stwWidgetFacade;
+	}
+
+	/**
+	 * @param stwWidgetFacade
+	 *           the stwWidgetFacade to set
+	 */
+	public void setStwWidgetFacade(final STWWidgetFacade stwWidgetFacade)
+	{
+		this.stwWidgetFacade = stwWidgetFacade;
+	}
 
 	@Resource(name = "mplCmsFacade")
 	private MplCmsFacade mplCmsFacade;
@@ -669,6 +691,7 @@ public class HomePageController extends AbstractPageController
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@ResponseBody
 	@RequestMapping(value = "/getBrandsYouLoveContent", method = RequestMethod.GET)
 	public JSONObject getBrandsYouLoveContent(@RequestParam(value = "id") final String componentId)
@@ -977,10 +1000,13 @@ public class HomePageController extends AbstractPageController
 								}
 								newAndExclusiveProductJson.put("productTitle", product.getProductTitle());
 								newAndExclusiveProductJson.put("productUrl", product.getUrl());
+								Map<String, String> priceMap = new HashMap<String, String>();
 								String price = null;
 								try
 								{
-									price = getProductPrice(product);
+									//UF-319
+									priceMap = getProductPriceNewAndExclusive(product);
+									price = priceMap.get("dispPrice");
 								}
 								catch (final EtailBusinessExceptions e)
 								{
@@ -1000,7 +1026,7 @@ public class HomePageController extends AbstractPageController
 								//#2 If Price is available then only show Products
 								if (!StringUtils.isEmpty(price))
 								{
-									newAndExclusiveProductJson.put("productPrice", price);
+									newAndExclusiveProductJson.put("productPrice", priceMap);
 									newAndExclusiveJsonArray.add(newAndExclusiveProductJson);
 								}
 
@@ -1111,6 +1137,93 @@ public class HomePageController extends AbstractPageController
 		}
 
 		return productPrice;
+	}
+
+	//Product-price map for UF-319
+
+	/**
+	 * @param buyBoxData
+	 * @param product
+	 * @return productPrice
+	 */
+	private Map<String, String> getProductPriceNewAndExclusive(final ProductData product)
+	{
+		final Map<String, String> productPriceMap = new HashMap<String, String>();
+		String productPrice = MarketplacecommerceservicesConstants.EMPTY;
+		try
+		{
+			final BuyBoxData buyBoxData = buyBoxFacade.buyboxPrice(product.getCode());
+
+			if (buyBoxData != null)
+			{
+				if (buyBoxData.getSpecialPrice() != null)
+				{
+					productPrice = buyBoxData.getSpecialPrice().getFormattedValueNoDecimal();
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice))
+					{
+						productPriceMap.put("dispPrice", productPrice);
+					}
+				}
+				if (buyBoxData.getPrice() != null)
+				{
+					productPrice = buyBoxData.getPrice().getFormattedValueNoDecimal();
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					{
+						productPriceMap.put("dispPrice", productPrice);
+					}
+					/*
+					 * else if (productPrice != null && StringUtils.isNotEmpty(productPrice)) {
+					 * productPriceMap.put("strikePrice", productPrice); }
+					 */
+				}
+				if (buyBoxData.getMrp() != null)
+				{
+					productPrice = buyBoxData.getMrp().getFormattedValueNoDecimal();
+					if (productPrice != null && StringUtils.isNotEmpty(productPrice) && productPriceMap.get("dispPrice") == null)
+					{
+						productPriceMap.put("dispPrice", productPrice);
+						productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+					}
+					else if (productPrice != null && StringUtils.isNotEmpty(productPrice))
+					{
+						productPriceMap.put("strikePrice", productPrice);
+					}
+					else
+					{
+						if (productPriceMap.get("dispPrice") == null)
+						{
+							productPriceMap.put("dispPrice", MarketplacecommerceservicesConstants.EMPTY);
+						}
+						if (productPriceMap.get("strikePrice") == null)
+						{
+							productPriceMap.put("strikePrice", MarketplacecommerceservicesConstants.EMPTY);
+						}
+
+					}
+				}
+			}
+			else
+			{
+				productPriceMap.put("dispPrice", productPrice);
+				productPriceMap.put("strikePrice", productPrice);
+			}
+			LOG.info("ProductPrice>>>>>>>" + productPrice);
+			//productPriceMap.put("price", productPrice);
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
+
+		return productPriceMap;
 	}
 
 
@@ -1469,7 +1582,7 @@ public class HomePageController extends AbstractPageController
 					/*
 					 * for (final NotificationData single : notificationMessagelist) { if (single.getNotificationRead() !=
 					 * null && !single.getNotificationRead().booleanValue()) { notificationCount++; }
-					 * 
+					 *
 					 * }
 					 */
 
@@ -1608,4 +1721,48 @@ public class HomePageController extends AbstractPageController
 		return request.getRemoteAddr();
 	}
 
+	private static String getVisitorIp(final HttpServletRequest request)
+	{
+		final String REMOTE_IP = request.getHeader("REMOTE_ADDR");
+		final String HTTP_FORWARDED_FOR = request.getHeader("HTTP_FORWARDED_FOR");
+
+		if (REMOTE_IP != null && REMOTE_IP.length() != 0 && !"unknown".equalsIgnoreCase(REMOTE_IP))
+		{
+			return REMOTE_IP;
+		}
+		else if (HTTP_FORWARDED_FOR != null && HTTP_FORWARDED_FOR.length() != 0 && !"unknown".equalsIgnoreCase(HTTP_FORWARDED_FOR))
+		{
+			return HTTP_FORWARDED_FOR;
+		}
+		else
+		{
+			return request.getRemoteAddr();
+		}
+	}
+
+	/**
+	 * UF-258 This is a Sales Traffic Widget with upstream data from the Dew Server
+	 */
+
+	@ResponseBody
+	@RequestMapping(value = "/getStwrecomendations", method = RequestMethod.GET)
+	public JSONObject getStwWidgetDada(final HttpServletRequest request)
+	{
+		final JSONObject STWJObject = new JSONObject();
+		final String stwUse = configurationService.getConfiguration().getString("stw.use");
+		if (stwUse.equalsIgnoreCase("Y"))
+		{
+			final Map<String, String[]> stwRequest = request.getParameterMap();
+			final List<STWJsonRecomendationData> stwRecData = getStwWidgetFacade().getSTWWidgetFinalData(stwRequest);
+			final String stwCategories = configurationService.getConfiguration().getString("stw.categories");
+			final String stwWidgetHeading = configurationService.getConfiguration().getString("stw.heading");
+			final String stwWidgetBlpHeading = configurationService.getConfiguration().getString("stw.blpheading");
+			STWJObject.put("STWBlpHeading", stwWidgetBlpHeading);
+			STWJObject.put("STWHeading", stwWidgetHeading);
+			STWJObject.put("STWElements", stwRecData);
+			STWJObject.put("STWCategories", stwCategories);
+			STWJObject.put("visiterIP", getVisitorIp(request));
+		}
+		return STWJObject;
+	}
 }

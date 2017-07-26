@@ -44,6 +44,8 @@
 
 			<div class="right-account">
 				<div class="info">
+					<%-- <h2><spring:theme code="profile.heading.text" text="My Profile"/></h2>		<!--  UF-249 text change -->
+					<p><spring:theme code="profile.heading.deatils" text="Manage your account details including your name, contact number and password"/></p> --%>
 					<div class="global-alerts myprofile" style="display: none;">
 						<div class="alert alert-warning alert-dismissable">
 							<ul id="myProfileError">
@@ -280,3 +282,4 @@
 	   
 	</script>
 </template:page>
+

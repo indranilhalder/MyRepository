@@ -816,6 +816,10 @@ public final class ModelAttributetConstants
 	//LW-230
 	public static final String IS_LUXURY = "isLuxury";
 
+
+	//UF-160
+	public static final String IS_LARGE_APPLIANCE = "isLargeAppliance";
+
 	public static final String PHONE_NUMBER = "phoneNumber";
 	public static final String ADDRESS_CHANGE_ELIGIBLE = "addressChangeEligible";
 	public static final String STRINGMEAASGE = "stringMessage";

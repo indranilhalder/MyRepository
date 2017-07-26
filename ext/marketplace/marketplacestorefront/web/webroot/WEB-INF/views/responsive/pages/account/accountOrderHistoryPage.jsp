@@ -88,6 +88,7 @@
 					<div class="navigation" id=order_pagination>
 						<h2>
 							<spring:theme text="My Orders" />		<!--  UF-249 text change -->
+
 						</h2>
 						<p class="commonAccountPara"><spring:theme text="Track your order status, cancel a product or request a return here." /></p>
 						<c:if test="${not empty searchPageData.results}">
@@ -194,6 +195,7 @@
 												
 
 												<li class="viewDetailsAnchor"><a
+
 													href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"><spring:theme
 															code="text.orderHistory.view.orde" text="Order Details" /></a></li>
 															<!-- &pageAnchor=trackOrder -->
@@ -209,6 +211,7 @@
 
 											<c:forEach items="${subOrder.entries}" var="entry"
 												varStatus="entryStatus">
+
 												<c:url value="${entry.product.url}" var="productUrl" />
 												<c:set var="orderEntrySellerSKU"
 													value="${entry.mplDeliveryMode.sellerArticleSKU}" />
@@ -241,6 +244,8 @@
 															<a href="${productUrl}">${entry.product.name}</a>
 														</h2>
 														
+
+
 															<p>
 																<c:if test="${entry.quantity > 1}">
 																	<spring:theme code="text.orderHistory.quantity" />
@@ -273,6 +278,7 @@
 															</p>
 															<p>
 																<%-- <spring:theme text="Delivery Charges:" /> --%>
+
 																<span>	<spring:theme code="text.account.order.delivery2" text="Scheduled Delivery and Shipping Charges:"/>
 																&nbsp;</span>
 															<c:choose>
@@ -301,6 +307,7 @@
 														<c:if
 															test="${not empty entry.imeiDetails.serialNum &&  fn:length(entry.imeiDetails.serialNum) > 0}">
 															<p class="order-serial-num">
+
 																<spring:theme code="text.orderHistory.serial.number" />
 																&nbsp; ${entry.imeiDetails.serialNum}
 															</p>
@@ -331,6 +338,7 @@
 														</c:forEach> --%>
 
 														<p  class="order-serial-num">
+
 															<spring:theme
 																code="text.orderHistory.seller.order.number" />&nbsp;
 															${subOrder.code}
@@ -515,6 +523,7 @@
 															<%-- R2.3: Commented <c:if test="${entry.isCancellationMissed eq 'true'}">
 																<spring:theme code="orderHistory.cancellationDeadlineMissed.msg" />
 															</c:if> --%>
+
 														<!-- TISCR-410 ends -->
 														<!--Chairman Demo Changes end-->
 														<!-- changes for TISSTRT-1173 -->
@@ -541,11 +550,13 @@
 
 														<c:if test="${entry.showInvoiceStatus eq 'true'}">
 														<span  class="RequestInvoice"><a
+
 																href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${subOrder.code}&transactionId=${entry.transactionId}"
 																onclick="callSendInvoice();"><spring:theme
 																code="text.account.RequestInvoice"
 																text="Request Invoice" /></a>
 													    </span>
+
 														</c:if>
 														
 														
@@ -670,7 +681,7 @@
 																			</c:forEach>
 																		</form:select>
 																		<div id="blankReasonError" style="display:none; color:red; padding-top: 10px;"><spring:theme
-																					code="text.cancel.requestDropdown.selected.error" text="Do let us know why you would like to cancel this item."/></div> 
+																					code="text.cancel.requestDropdown.selected.error" text="Let us know why you would like to cancel this product."/></div> 
 																	</div>
 																	<form:hidden path="ticketTypeCode"
 																		class="ticketTypeCodeClass" value="C" />

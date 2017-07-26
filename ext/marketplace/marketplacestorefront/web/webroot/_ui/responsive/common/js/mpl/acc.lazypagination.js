@@ -40,12 +40,11 @@ function innerLazyLoad(options) {
     }
    
     if (initPageLoad) { //TODO: duplicate loading prevention
-        //$('ul.product-listing.product-grid').eq(2).html(gridHTML).hide().fadeIn(500);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').html(gridHTML).hide().fadeIn(500);
         initPageLoad = false;
     } else {
-        //$('ul.product-listing.product-grid').eq(2).append(gridHTML);
         $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').append(gridHTML);
+        $("img.lazy").lazyload();
     }
     deleteArraySet(productItemArray);
     
@@ -194,6 +193,8 @@ function getProductSetDataCustomSku() {
 }
 
 $(document).ready(function() {
+    //lazy image load initialization
+    $("img.lazy").lazyload();	
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -244,15 +245,19 @@ $(document).ready(function() {
     	if($('input[name=customSku]').length == 1){
     		getProductSetDataCustomSku();
     	}else{
-    		getProductSetData();
+    		//inital call to this function commented for starting the lazy load from page 2 UF-409
+    		   //	getProductSetData();
+    		initPageLoad = false;
+    		directPaginatedLoad = false;
     	}
     }
         $(window).on('scroll', function() {
             if ($('.lazy-reached').length != 0) {
             	
-            	if(productItemArray.length == 16){
-					lazyPushInitalPage();
-				}
+            	var productItemArrayLength = $('ul.product-listing.product-grid.lazy-grid,ul.product-listing.product-grid.lazy-grid-facet,ul.product-list,ul.product-listing.product-grid.lazy-grid-normal,ul.product-listing.product-grid.custom-sku').find('li.product-item').length;
+            	if(productItemArrayLength > 16){
+            		lazyPushInitalPage();
+            	}
                 var hT = $('.lazy-reached').offset().top,
                     hH = $('.lazy-reached').outerHeight(),
                     wH = $(window).height(),
@@ -323,6 +328,7 @@ $(document).ready(function() {
         		 sort($(this),false);
         	 	}
 
+
         });
       //Added for PRDI-109  and INC144315439
         $(document).on('change','.responsiveSort',function(){ 
@@ -360,7 +366,12 @@ $(document).ready(function() {
       		window.localStorage.removeItem('lastUrlquery');
         });
 });
-
+//UF-409 -> added for ajax complete events to auto lazy load
+$( document ).ajaxComplete(function( event, xhr, settings ) {
+	//if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+		$("img.lazy").lazyload();
+	//}
+});
 function findGetParameter(parameterName) {
     var result = null,
         tmp = [];
@@ -412,7 +423,7 @@ function ajaxPLPLoad(ajaxUrl){
         },
         beforeSend: function() {
             var staticHost = $('#staticHost').val();
-            $('ul.product-listing.product-grid.lazy-grid,ul.product-list').after('<p class="lazyLoadPagination" style="text-align: center;margin: 5px 0;font-size: 18px;">Loading...<img src="' + staticHost + '/_ui/responsive/common/images/spinner.gif" class="spinner" style="margin-left:5px;"></p>');
+            $('ul.product-listing.product-grid.lazy-grid,ul.product-list').after('<p class="lazyLoadPagination" style="text-align: center;margin: 5px 0;font-size: 18px;">Loading...<span class="loaderDiv" style="vertical-align:middle;"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></span></p>');
             
         },
         success: function(x) {

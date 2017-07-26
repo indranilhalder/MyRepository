@@ -98,7 +98,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 
 		try
 		{
-			clearExistingData(promoCode);
+			//clearExistingData(promoCode);  //commented for channel specific promotion
 			final List<String> product = new ArrayList<String>();
 			//final List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();
@@ -249,33 +249,19 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	 *
 	 * @param promoCode
 	 */
-	private void clearExistingData(final String promoCode)
-	{
-		if (StringUtils.isNotEmpty(promoCode))
-		{
-			final List<PriceRowModel> priceRowList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode);
-			final List<PriceRowModel> finalList = new ArrayList<PriceRowModel>();
-			if (CollectionUtils.isNotEmpty(priceRowList))
-			{
-				for (final PriceRowModel price : priceRowList)
-				{
-					price.setPromotionStartDate(null);
-					price.setPromotionEndDate(null);
-					price.setIsPercentage(null);
-					price.setPromotionValue(null);
-					price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY);
-					price.setMaxDiscount(null);
-
-					finalList.add(price);
-				}
-
-				if (CollectionUtils.isNotEmpty(finalList))
-				{
-					modelService.saveAll(finalList);
-				}
-			}
-		}
-	}
+	// Below code are commented for channel specific promotion
+	/*
+	 * private void clearExistingData(final String promoCode) { if (StringUtils.isNotEmpty(promoCode)) { final
+	 * List<PriceRowModel> priceRowList = updatePromotionalPriceDao.fetchPromoPriceData(promoCode); final
+	 * List<PriceRowModel> finalList = new ArrayList<PriceRowModel>(); if (CollectionUtils.isNotEmpty(priceRowList)) {
+	 * for (final PriceRowModel price : priceRowList) { price.setPromotionStartDate(null);
+	 * price.setPromotionEndDate(null); price.setIsPercentage(null); price.setPromotionValue(null);
+	 * price.setPromotionIdentifier(MarketplacecommerceservicesConstants.EMPTY); price.setMaxDiscount(null);
+	 * 
+	 * finalList.add(price); }
+	 * 
+	 * if (CollectionUtils.isNotEmpty(finalList)) { modelService.saveAll(finalList); } } } }
+	 */
 
 	/**
 	 * For TISPRD-383 Get Staged Product Details
@@ -287,15 +273,15 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	/*
 	 * private List<String> getStagedProductDetails(final List<String> productList) { final List<String>
 	 * stagedProductList = new ArrayList<String>();
-	 * 
+	 *
 	 * final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
 	 * configurationService.getConfiguration().getString("cronjob.promotion.catelog"),
 	 * MarketplacecommerceservicesConstants.STAGED);
-	 * 
+	 *
 	 * if (CollectionUtils.isNotEmpty(productList)) { for (final String productCode : productList) { final ProductModel
 	 * product = productService.getProductForCode(catalogVersionModel, productCode);
 	 * stagedProductList.add(product.getPk().toString()); } }
-	 * 
+	 *
 	 * return stagedProductList; }
 	 */
 
@@ -309,8 +295,8 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	private boolean isPriceToUpdate(final PriceRowModel price, final List<String> sellers, final List<String> rejectSellerList)
 	{
 		boolean updateSpecialPrice = false;
-		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(price.getProduct()
-				.getSellerInformationRelator());
+		final List<SellerInformationModel> sellerModels = new ArrayList<SellerInformationModel>(
+				price.getProduct().getSellerInformationRelator());
 
 		if (CollectionUtils.isNotEmpty(sellers))
 		{
@@ -367,7 +353,7 @@ public class UpdatePromotionalPriceServiceImpl implements UpdatePromotionalPrice
 	{
 		try
 		{
-			clearExistingData(promoCode);
+			//clearExistingData(promoCode); //commented for channel specific promotion
 			final List<String> product = new ArrayList<String>();
 			//final List<String> stagedProductList = new ArrayList<String>();
 			final List<String> promoproductList = new ArrayList<String>();

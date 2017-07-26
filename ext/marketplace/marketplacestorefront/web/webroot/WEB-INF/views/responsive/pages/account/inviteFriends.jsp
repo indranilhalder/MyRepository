@@ -94,7 +94,7 @@
 				<p><spring:theme code="text.InviteFriends.SendInvitationEmail" text="Recommed us to your friends and family. Send them an invite!"/></p>
                 <form>
 						<c:if test="${not empty textMessage}">
-							<c:set var="textMessage" value="Hey! I loved the the shopping experience on Tata CLiQ and I recommend that you try it as well."></c:set>
+							<c:set var="textMessage" value="Have you shopped on Tata CLiQ yet? <www.tatacliq.com>"></c:set>
                        	</c:if>
                         <label><spring:theme code="text.InviteFriends.friends.email" /></label>	
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()" placeholder='<spring:theme code="text.InviteFriends.SeparateWithCommas"/>'/>

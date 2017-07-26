@@ -80,6 +80,7 @@
 						
 						<p class="commonAccountPara">If you find any issue with the details, you can contact our customer care at 1800 208 8282.</p>
 
+
 					</div>
 
 
@@ -90,6 +91,7 @@
 							
 								<li><span>Order #</span>${subOrder.code}</li>
 								<li class="placed_date"><span><spring:theme
+
 											code="text.orderHistory.order.place" text="Placed on:" /></span> <c:if
 										test="${not empty orderDate}">${orderDate}</c:if> <%-- <fmt:formatDate
 										value="${subOrder.created}" pattern="MMMMM dd, yyyy" /> --%></li>
@@ -112,6 +114,7 @@
 								
 								
 								</li> --%>			<!-- Commented for TPR-6013 Order History  -->
+
 								<%-- <li class="recipient"><span><spring:theme
 											code="text.orderHistory.recipient" /></span> <c:choose>
 										<c:when test="${subOrder.deliveryAddress != null}">
@@ -121,6 +124,7 @@
 												${subOrder.mplPaymentInfo.cardAccountHolderName}
 												</c:otherwise>
 									</c:choose></li> --%>		<!-- Commented for TPR-6013 Order History  -->
+
 								<%-- <li><span>Order Reference Number: </span> ${subOrder.code}</li> --%>	
 								<!-- Commented for TPR-6013 Order History -->
 								
@@ -133,6 +137,9 @@
 									<li><spring:theme code="text.account.order.subtotal"
 											/>  <format:price
 												priceData="${subOrder.subTotal}" />
+
+
+
 									</li>
 									<li class="shipping-li"><span class="shipping-text"><spring:theme code="text.account.order.delivery1Charges" text="Scheduled Delivery & Shipping Charges"/></span>
 									<%-- <spring:theme code="text.account.order.delivery"
@@ -145,7 +152,12 @@
 										<li><spring:theme code="text.account.order.savings"
 												text="Discount" /> <span class="amt"> -<format:price
 													priceData="${subOrder.totalDiscounts}" />
+					<!-- UF-260 -->
+									<%-- <format:price priceData="${totalDiscount}" /></span></li> --%>
+
+
 										</span></li>
+
 									</c:if>
 									<!-- TISEE-2672 -->
 									
@@ -195,7 +207,7 @@
 								<c:otherwise>
 								
 								<!-- TPR-6013 Order History Ends -->
-								
+													
 								<c:set var="creditCardLine2" value="${fn:trim(creditCardBillingAddress.line2)}"/>
 							<c:set var="creditCardLine3" value="${fn:trim(creditCardBillingAddress.line3)}"/>
 							<div class="delivery-address" style="display:none;">
@@ -312,6 +324,7 @@
   										<c:when test="${not empty subOrder.mplPaymentInfo.paymentOption && fn:toLowerCase(subOrder.mplPaymentInfo.paymentOption) eq 'mrupee'}">	
   											<h2>Payment Method</h2>
   											<span><spring:theme code="checkout.multi.paymentMethod.selectMode.ThrdPrtWllt" /></span>
+
 									<p>${subOrder.mplPaymentInfo.cardAccountHolderName}</p>
 									${subOrder.mplPaymentInfo.paymentOption}
   										</c:when>
@@ -373,9 +386,9 @@
 							
 							
 							
-							<!-- Commented TPR-6013 Order History Ends -->
 							
-								</c:otherwise>
+							<!-- Commented TPR-6013 Order History Ends -->
+													</c:otherwise>
 							</c:choose>
 							
 						</li>
@@ -439,6 +452,7 @@
 									</c:if>
 									<span data-tribhuvan="pincode">${fn:escapeXml(subOrder.deliveryAddress.postalCode)}</span>&nbsp;<span data-tribhuvan="country">${fn:escapeXml(subOrder.deliveryAddress.country.isocode)}</span>
 									, 
+
 									<span data-tribhuvan="mobileNo">91&nbsp;${fn:escapeXml(subOrder.deliveryAddress.phone)}</span>
 								</address>
 							</div>
@@ -456,6 +470,8 @@
 							<div class="itemBorder">&nbsp;</div> 
 							<!-- R2.3: END -->
 							</c:if>
+
+
 							<c:forEach items="${filterDeliveryMode}" var="deliveryType">
 							
 							<!-- TRP-1081 -->
@@ -492,6 +508,8 @@
 	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s): CLiQ & PiQ</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
+
+
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
@@ -542,10 +560,13 @@
 										
 											
 											
+
+
 									<!--R2.3 TISRLEE-1615- Start   -->
 									     <c:choose>
 												   <c:when test="${not empty entry.selectedDeliverySlotDate}">
 													   <p class="order_history_del_mode">
+
 										                 <span style="font-weight: bold;"> ${entry.mplDeliveryMode.name} :</span>
 											             <span>${entry.selectedDeliverySlotDate} &nbsp;, ${entry.timeSlotFrom}-${entry.timeSlotTo}</span>
 										              </p>
@@ -585,7 +606,7 @@
 										               </c:if>
 														
 												<c:if test="${editButton eq 'enable' and button ne false}">
-														<p>${entry.mplDeliveryMode.name} :</p> 
+														<p class="track-order-pickup">${entry.mplDeliveryMode.name}</p><span>: </span> 
 														<!-- <div id="pickName" 
 														style="font-size: 12px; padding-top: 7px; padding-left: 128px; margin-top: -22px; font-weight: 100;margin-right: 0px !important;margin-left: 0px;"> -->
 														<a type="button"  id="pickName" class="pickupeditbtn" style="color: #000;padding-left: 10px;">${sellerOrder.pickupName}</a><!--  </div> -->
@@ -702,6 +723,7 @@
 
 										</div>
 										<div class="actions">
+
 										<div class="col-md-6"> <!-- R2.3: START >
 											<c:if
 												test="${entry.itemCancellationStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false and cancelFlag}">
@@ -719,6 +741,7 @@
 
 											 <%-- R2.3: START:Commented: <c:if
 												test="${entry.itemReturnStatus eq 'true' and entry.giveAway eq false and entry.isBOGOapplied eq false}">
+
 
 
 
@@ -751,6 +774,7 @@
 
 
 												
+
 											<c:if test="${entry.showInvoiceStatus eq 'true'}">
 												<a
 													href="${request.contextPath}/my-account/order/requestInvoice?orderCode=${sellerOrder.code}&transactionId=${entry.transactionId}"
@@ -779,6 +803,8 @@
 														</c:choose> --%>
 											<!-- TISCR-410 ends -->
 											
+
+
 											</div>
 											<div class="col-md-5">
 												<c:if test="${fn:containsIgnoreCase(entry.returnMethodType , 'SELF_COURIER')}">
@@ -796,6 +822,8 @@
 
 											
 										</div>
+
+
 
 										<!-- R2.3 : END -->
 										<div class="modal cancellation-request fade"
@@ -917,6 +945,7 @@
 															<!-- TISPRDT - 995 -->
 																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
 																<!-- TISPRDT - 995 -->
+
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -1089,6 +1118,7 @@
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
 																<li>Ready For Pickup</li>
+
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -1385,8 +1415,10 @@
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
 															var="dotCount" /> 
+
 															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
 															<input type="hidden" name="shippingResponseCode" value="${productStatus.responseCode}" />
+
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
@@ -1415,6 +1447,7 @@
 																		</c:otherwise>
 																	</c:choose>
 																	
+
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -1510,6 +1543,7 @@
 															<span class="dot inactive" style="float: right;"></span>
 															</c:when>
 															<c:otherwise>
+
 															<span class="dot inactive"></span>
 															</c:otherwise>
 															</c:choose>
@@ -1523,10 +1557,12 @@
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
 													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
 														<%-- <p> 
+
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
 														</p> --%>
+
 													</li>
 												</c:if>
 												
@@ -1655,6 +1691,45 @@
 															
 							</c:if> 
 							
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 							 <c:forEach items="${subOrder.sellerOrderList}" var="sellerOrder"
 								varStatus="status">
 								
@@ -1685,6 +1760,8 @@
 	                                                 <c:if test="${not empty cncQuantity}"> <h3>${cncQuantity} Product(s): CLiQ & PiQ</h3></c:if>
 															<p style="font-size: 12px; font-weight: 600;">Store
 																Address:</p>
+
+
 						                          <c:if test="${not empty entry.deliveryPointOfService.address}">
 															<address
 																style="line-height: 18px; font-size: 12px; padding-top: 5px;">
@@ -1731,6 +1808,7 @@
 										
 											
 											
+
 									<!--R2.3 TISRLEE-1615- Start   -->
 								   <c:if test="${entry.mplDeliveryMode.code ne 'click-and-collect'}">
 								             <c:choose>
@@ -1749,6 +1827,8 @@
 								   </c:if>
 									 
 								 <!--R2.3 TISRLEE-1615- END   -->
+
+
 											<!--  Edit button and input box for  pickup Person details -->
 											
 														<div id="pickNo" style="font-size: 12px;padding-top: 5px; display:none;"> ${sellerOrder.pickupPhoneNumber}<br> </div> 
@@ -1886,6 +1966,7 @@
 													<p>Color: ${entry.product.colour}</p>
 												</c:if>
 												<p class="track-order-price">
+
 													Price:
 													<ycommerce:testId
 														code="orderDetails_productTotalPrice_label">
@@ -1988,6 +2069,7 @@
 																					</a>
 																				</div> -->
 																				
+
 																				<!-- INC144315335-->
 																				<div class="product-img">
 																					<c:choose>
@@ -2005,6 +2087,7 @@
 																						</c:otherwise>
 																					</c:choose>
 																				</div>
+
 																				<div class="product">
 																					<!-- <p class="company">Nike</p> -->
 																					<h2 class="product-name">
@@ -2081,9 +2164,11 @@
 																id="entryNumber" value="${entry.entryNumber}" />
 														</div>
 														<div class="buttons">
+
 															<!-- TISPRDT - 995 -->
 																	<!-- <a class="close" data-dismiss="modal" >Close</a> -->
 																<!-- TISPRDT - 995 -->
+
 															<button type="button"
 																class="light-red cancel-confirm-detail" id="myaccount"
 																data-dismiss="modal">Confirm Cancellation</button>
@@ -2252,6 +2337,7 @@
 															test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 															<c:if test="${fn:length(cancelStatus) eq 0}">
 																<li>Ready For Pickup</li>
+
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -2426,7 +2512,7 @@
 													<li class="progress progtrckr-done cancelStatus processing"
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}"><c:set value="${0}"
-															var="dotCount" /> <c:forEach items="${cancelStatus}"
+										       			var="dotCount" /> <c:forEach items="${cancelStatus}"
 															var="productStatus" varStatus="loop">
 
 															<c:choose>
@@ -2493,8 +2579,10 @@
 														ordercode="${subOrder.code}">
 														<!-- <span class="start"></span> --> <c:set value="${0}"
 															var="dotCount" /> 
+
 															<c:forEach items="${shippingStatus}" var="productStatus" varStatus="loop">
 															<input type="hidden" name="shippingResponseCode" value="${productStatus.responseCode}" />
+
 															<c:choose>
 																<c:when
 																	test="${productStatus.isSelected eq true && productStatus.isEnabled eq true}">
@@ -2523,6 +2611,7 @@
 																		</c:otherwise>
 																	</c:choose>
 																	
+
 																	<c:set var="dotCount" value="${dotCount + 1}" />
 																</c:when>
 															</c:choose>
@@ -2618,6 +2707,7 @@
 															<span class="dot inactive" style="float: right;"></span>
 															</c:when>
 															<c:otherwise>
+
 															<span class="dot inactive"></span>
 															</c:otherwise>
 															</c:choose>
@@ -2631,10 +2721,12 @@
 													test="${fn:length(cancelStatus) eq 0  and not(productDelivered eq '0' and fn:length(returnStatus) gt 0)}">
 													<li class="progress progtrckr-done delivery-status processing" style="height: 26px;">
 														<%-- <p> 
+
 															<c:if test="${not empty orderActualDeliveryDateMap[entry.orderLineId]}">		
 																	${orderActualDeliveryDateMap[entry.orderLineId]}
 															</c:if>
 														</p> --%>
+
 													</li>
 												</c:if>
 												
@@ -2757,6 +2849,7 @@
 
 
                                    </c:if>
+
 								 <!-- R2.3: One line -->
 								</c:forEach>
 								 </c:forEach> 
@@ -2802,6 +2895,7 @@
 <script>
 
 /*--------- Start of track order UI -------*/
+
 <!-- R2.3: START --> 
  <!--   AWB Jquery codes PopUp  -->
 	$(document).ready(function(){
@@ -2819,6 +2913,7 @@
 	
 	<!--  End of AWB Jquery codes PopUp  -->
 <!-- R2.3: END -->	
+
 
 $(function(){
 	$('body .right-account .order-details .deliveryTrack ul.nav').each(function(){
@@ -2937,6 +3032,9 @@ $(function() {
 	function showCancelDiv(orderLineId) {
 
 		
+
+
+
 		var divId='cancellation' + orderLineId;
 		showDiv(divId);
 
@@ -3168,6 +3266,8 @@ $(function() {
 
 		
 		
+
+
 		    var length = $(".returnStatus .dot").length;
 		    if(length >=3) {
 			    var percent = 100/parseInt(length);
@@ -3228,6 +3328,9 @@ $("#saveBlockData").click(function(){
 			     tribhuvanAwbLink.parent().next().css("z-index","999999");
 			  });
 		 
+
+
+
 			  $(".submitButton").click(function(event){
 				// TISRLUAT-50 changes 
 				  var tribhuvaAwbSubmit = $(this);
@@ -3399,6 +3502,7 @@ body .account .right-account .order-history.order-details li.item .item-header{m
 		left:0 !important;
 	}
 	
+
 
 
 	.submitButton {
@@ -3648,8 +3752,7 @@ body .account .right-account .order-history.order-details li.header>ul{
 body .account .right-account .order-history.order-details li.header>ul> li{
 	width: 100%;
 }
-body.page-order .body-Content,
-body .account .right-account .order-history.order-details li.item{
+body.page-order .body-Content{
 	padding-bottom:0;
 }
 body .account .right-account .order-history.order-details li.item .order{
@@ -3769,8 +3872,11 @@ body .account .right-account .order-history.order-details li.item{
 	border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
 }
+/* body .account .right-account .order-history.order-details li.item .status{
+	padding-bottom: 100px;
+} */
 @media (max-width: 790px){
 body .account .right-account .order-history .product-block li.header {
     padding-left: 20px;
@@ -3793,8 +3899,11 @@ body .account .right-account {
     border-top: 0px;
 }
 body .account .right-account .order-history.order-details li.item .message {
-    margin-bottom: 5px !important;
+    margin-bottom: 10px !important;
 }
+/* body .account .right-account .order-history.order-details.responsiveProfile li.item .status {
+    padding-bottom: 100px;
+} */
 }
 @media (max-width: 500px){
 	body .account .right-account .order-history.order-details li.item .status>ul.nav>li:nth-child(1), body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
@@ -3816,3 +3925,4 @@ body .account .right-account .order-history.order-details li.item .message {
 </style>
 </c:if>
 <!-- added for track order iframe styling end-->
+
