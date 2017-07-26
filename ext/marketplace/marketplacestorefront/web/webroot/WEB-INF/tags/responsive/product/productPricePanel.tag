@@ -41,7 +41,7 @@
 	<%--for price breakup(TPR-3752) --%>
 
 	  <c:if test="${product.rootCategory=='FineJewellery' }">	
-	               <span class="price-breakup" style="display:none">Price Breakup</span>
+	               <span class="price-breakup">Price Breakup</span>
 	</c:if>
 	
 	<%--for price breakup(TPR-3752) --%>	

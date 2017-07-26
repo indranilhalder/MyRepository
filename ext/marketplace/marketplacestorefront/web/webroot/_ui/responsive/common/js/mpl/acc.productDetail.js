@@ -4018,9 +4018,8 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 				/* PRICE BREAKUP STARTS HERE */
 			    jwllryShowPrcBrkUp = data['displayconfigattr'];
 			    jwlryPrcBrkUp = data['priceBreakup'];
-			   // alert("**"+jwlryPrcBrkUp);
+			    //alert("**"+jwlryPrcBrkUp);
 				if(jwllryShowPrcBrkUp == "Yes"){
-					$(".price-breakup").show();
 					$("#showPrice").show();
 					var priceBreakUp= '<p>Price Breakup</p>'
 					$('#show').empty();
@@ -4037,7 +4036,6 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 					var priceBreakup;
 					
 					if(null!=priceBreakupList && undefined!=priceBreakupList && !priceBreakupList==""){
-						
 						priceBreakup = JSON.parse(priceBreakupList);
 					
 						if(null!=priceBreakup && undefined != priceBreakup && !priceBreakup==""){
