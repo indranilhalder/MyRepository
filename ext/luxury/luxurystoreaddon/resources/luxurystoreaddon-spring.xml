@@ -152,6 +152,9 @@
 		<entry key="pages/account/returnSubmit" value="addon:/luxurystoreaddon/pages/account/returnSubmit"/>
 		<entry key="pages/account/returnSuccess" value="addon:/luxurystoreaddon/pages/account/returnSuccess"/>
 		<entry key="pages/checkout/checkoutConfirmationPage" value="addon:/luxurystoreaddon/pages/checkout/checkoutConfirmationPage"/>
+		<entry key="pages/account/returnPincodeAvailabilityCheck" value="addon:/luxurystoreaddon/pages/account/returnPincodeAvailabilityCheck"/>
+
+
 		
 	</util:map>
 	<!-- Logic for resolving view resolver for addon prefix -->

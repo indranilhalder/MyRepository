@@ -355,7 +355,7 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 
 
 
-INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];headline;&componentRef;urlLink;$picture[lang=$lang]
 ;;ImageCourselBanner;Bags;ImageCourselBanner;/;ImageCoursel
 ;;ImageCourselBanner1;Shoes;ImageCourselBanner1;/;ImageCoursel
 ;;ImageCourselBanner2;Wallets;ImageCourselBanner2;/;ImageCoursel
@@ -651,7 +651,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-FooterSlot;Gender Footer;true;
 ;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
 ;;Men-BannerDescriptionSlot;Brand BannerDescription;true;
-;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;LookBook-Bag
+;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
 ;;Men-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
 ;;Men-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
 ;;Men-ProductCurosel1Slot;Brand ProductCurosel1;true;Bag-shopLookBook
