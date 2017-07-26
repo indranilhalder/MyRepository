@@ -879,6 +879,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;LuxFooter-SearchResultsGrid;Footer;;FooterSlot;true
 ;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true
 ;;WishList-SearchResultsGrid;WishList;;WishListSlot;true
+;;BottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
 

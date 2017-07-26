@@ -872,7 +872,8 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;LuxNavigationBar-SearchResultsGrid;NavigationBar;;NavigationBarSlot;true          
 ;;LuxWhyShopOnLuxury-SearchResultsGrid;WhyShopOnLuxury;;WhyShopOnLuxury;true
 ;;LuxFooter-SearchResultsGrid;Footer;;FooterSlot;true          
-;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true          
+;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true   
+;;LuxBottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true       
 
 
 ####################  END Luxury ContentSlotsForTemplates	####################
