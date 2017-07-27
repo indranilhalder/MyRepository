@@ -19,7 +19,7 @@
 <ycommerce:testId code="facetNav_title_${facetData.code}">
 	<c:if test="${facetData.values.size()>0}">
 		<div class="${facetClass}">
-			<div class="facetHead">
+			<div class="facetHead" id="${facetData.name}-facet">
 				<h4>
 					<a class="" href="javascript:;">${facetData.name}</a>
 					<span class="sprite sp-minus"></span>
