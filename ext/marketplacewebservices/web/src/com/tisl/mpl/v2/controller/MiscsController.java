@@ -55,6 +55,7 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.event.EventService;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.model.ModelService;
@@ -317,6 +318,9 @@ public class MiscsController extends BaseController
 	//TPR-4512
 	@Resource
 	private MplOrderFacade mplOrderFacade;
+
+	@Autowired
+	private ConfigurationService configurationService;
 
 	/*
 	 * private static final String DROPDOWN_BRAND = "MBH"; private static final String DROPDOWN_CATEGORY = "MSH";
@@ -1790,6 +1794,7 @@ public class MiscsController extends BaseController
 
 			if (StringUtils.isNotEmpty(orderRefNo))
 			{
+				//Fetching parent order model by order id
 				orderModel = mplOrderFacade.getOrderByParentOrderNo(orderRefNo);
 				orderInfoWsDTO = mplOrderFacade.storeOrderInfoByOrderNo(orderModel);
 			}
@@ -1820,6 +1825,7 @@ public class MiscsController extends BaseController
 		{
 			if (StringUtils.isNotEmpty(transactionId))
 			{
+				//Fetching sub order model by transaction id
 				orderModel = mplOrderFacade.fetchOrderInfoByTransactionId(transactionId);
 				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByTransactionId(orderModel, transactionId);
 			}
@@ -1844,6 +1850,11 @@ public class MiscsController extends BaseController
 	public OrderInfoWsDTO fetchCustomerOrderInfoByMobileNo(@RequestParam(value = "mobileNo", required = true) final String mobileNo)
 			throws EtailNonBusinessExceptions
 	{
+
+		final int countLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.TRANSACTION_NO_KEY));
+
+		LOG.debug("**Transaction count Limit**" + countLimit);
 		OrderInfoWsDTO orderInformationWsDTO = new OrderInfoWsDTO();
 		List<OrderModel> orderModels = new ArrayList<OrderModel>();
 		try
@@ -1851,8 +1862,9 @@ public class MiscsController extends BaseController
 
 			if (StringUtils.isNotEmpty(mobileNo))
 			{
-				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo);
-				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderModels);
+				//Fetching parent order models by mobile no
+				orderModels = mplOrderFacade.getOrderWithMobileNo(mobileNo, countLimit);
+				orderInformationWsDTO = mplOrderFacade.storeOrderInfoByMobileNo(orderModels, countLimit);
 			}
 
 		}
@@ -1862,6 +1874,26 @@ public class MiscsController extends BaseController
 			orderInformationWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 		return orderInformationWsDTO;
+	}
+
+	//TPR-5225 ends
+
+
+	/**
+	 * @return the configurationService
+	 */
+	public ConfigurationService getConfigurationService()
+	{
+		return configurationService;
+	}
+
+	/**
+	 * @param configurationService
+	 *           the configurationService to set
+	 */
+	public void setConfigurationService(final ConfigurationService configurationService)
+	{
+		this.configurationService = configurationService;
 	}
 	//TPR-5225 ends
 }

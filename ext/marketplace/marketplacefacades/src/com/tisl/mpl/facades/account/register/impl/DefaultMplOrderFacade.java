@@ -136,6 +136,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	@Autowired
 	private MplAwbStatusService mplAwbStatusService;
 
+	private final int queryCount = 0;
+
 	protected static final Logger LOG = Logger.getLogger(DefaultMplOrderFacade.class);
 
 	/**
@@ -1159,19 +1161,19 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	 * @return OrderModel
 	 */
 	@Override
-	public List<OrderModel> getOrderWithMobileNo(final String mobileNo)
+	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, final int queryCount)
 	{
 		List<OrderModel> orderModel = null;
-		orderModel = mplOrderService.fetchOrderByMobile(mobileNo);
+		orderModel = mplOrderService.fetchOrderByMobile(mobileNo, queryCount);
 		return orderModel;
 	}
 
 	//TPR-5225
 	@Override
-	public String getL4CategoryIdForProduct(final String productCode)
+	public String getL4CategoryNameForProduct(final String productCode)
 	{
 		String pCode = null;
-		pCode = mplOrderService.getL4CategoryIdOfProduct(productCode);
+		pCode = mplOrderService.getL4CategoryNameOfProduct(productCode);
 		return pCode;
 	}
 
@@ -1196,22 +1198,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	//TPR-5225
 	@Override
-	public OrderInfoWsDTO storeOrderInfoByMobileNo(final List<OrderModel> orderModels)
+	public OrderInfoWsDTO storeOrderInfoByMobileNo(final List<OrderModel> orderModels, final int countLimit)
 	{
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
 		List<OrderModel> subordermodels = new ArrayList<OrderModel>();
 		OrderModel parentOrderModel = null;
-
-
-
-		final int countLimit = Integer.parseInt(getConfigurationService().getConfiguration().getString(
-				MarketplacecommerceservicesConstants.TRANSACTION_NO_KEY));
-
-		LOG.debug("**Transaction count Limit**" + countLimit);
-
 		int count = 0;
-
 		try
 		{
 			//			final List<OrderModel> orderModels = new ArrayList<OrderModel>();
@@ -1224,24 +1217,22 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			//					orderModels.add(orderentry.getOrder().getParentReference());
 			//				}
 			//			}
-
-
 			if (CollectionUtils.isNotEmpty(orderModels))
 			{
 				for (final OrderModel parentOrder : orderModels)
 				{
 					parentOrderModel = parentOrder;
+					//Fetching suborders under parent order
 					subordermodels = parentOrderModel.getChildOrders();
 
 					if (CollectionUtils.isNotEmpty(subordermodels))
 					{
 						//subOrderModel = orderModels.getChildOrders();
 						List<AbstractOrderEntryModel> subOrderEntryModels = new ArrayList<AbstractOrderEntryModel>();
+						//Fetching entries under suborder
 						for (final OrderModel subOrder : subordermodels)
 						{
-
 							subOrderEntryModels = subOrder.getEntries();
-
 							for (final AbstractOrderEntryModel entry : subOrderEntryModels)
 							{
 								if (count < countLimit)
@@ -1253,7 +1244,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 											.getName() : MarketplacecommerceservicesConstants.NULL_VALUE);
 									if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
 									{
-										customerOrderInfoWsDTO.setL4CategoryName(mplOrderService.getL4CategoryIdOfProduct(entry
+										customerOrderInfoWsDTO.setL4CategoryName(mplOrderService.getL4CategoryNameOfProduct(entry
 												.getProduct().getCode()));
 									}
 									else
@@ -1271,6 +1262,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							}
 						}
 					}
+					//For payment pending order
 					else
 					{
 						if (count < countLimit)
@@ -1282,7 +1274,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							customerOrderInfoWsDTO.setL4CategoryName(MarketplacecommerceservicesConstants.NULL_VALUE);
 							custdto.add(customerOrderInfoWsDTO);
 							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
-							//orderInfoWsDTO.setError("Order Ref No:" + parentOrder.getCode() + " doesn't have any details");
 						}
 						else
 						{
@@ -1294,7 +1285,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			else
 			{
 				orderInfoWsDTO.setError(MarketplacecommerceservicesConstants.MOBILE_NO_NOT_PRESENT);
-				LOG.error("orderEntryModel is null");
+				LOG.error("parent orderModels are null");
 			}
 		}
 		catch (final Exception e)
@@ -1319,6 +1310,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			if (orderModel != null)
 			{
 				List<AbstractOrderEntryModel> subOrderModel = new ArrayList<AbstractOrderEntryModel>();
+				//fetching entry of suborder specific to transaction id
 				subOrderModel = orderModel.getEntries();
 				if (CollectionUtils.isNotEmpty(subOrderModel))
 				{
@@ -1449,12 +1441,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 										if (null != aWBStatusResponse && CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
 										{
+											final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
+											final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
 											for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
 											{
 												for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
 												{
-													final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-													final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
+													LOG.debug("********delivery tracking date" + statusRecords.getDate());
+													LOG.debug("********delivery tracking location" + statusRecords.getLocation());
+													LOG.debug("********delivery tracking description" + statusRecords.getStatusDescription());
 													deliveryTrackingInfoWsDTO
 															.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords.getDate()
 																	: MarketplacecommerceservicesConstants.NULL_VALUE);
@@ -1466,8 +1461,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 															: MarketplacecommerceservicesConstants.NULL_VALUE);
 													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
 													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-													//												custdto.add(customerOrderInfoWsDTO);
-													//												orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 												}
 											}
 										}
@@ -1483,8 +1476,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 												.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
 										deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
 										customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
-										//										custdto.add(customerOrderInfoWsDTO);
-										//										orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 									}
 									customerOrderInfoWsDTO.setAwbNumber(null != cng.getTrackingID() ? cng.getTrackingID()
 											: MarketplacecommerceservicesConstants.NULL_VALUE);//AWB number
@@ -1519,8 +1510,6 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								customerOrderInfoWsDTO.setReturnAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setShippingStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setShippingTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
-								//								custdto.add(customerOrderInfoWsDTO);
-								//								orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 							}
 							if (StringUtils.isNotEmpty(orderModel.getModeOfOrderPayment()))
 							{
@@ -1699,11 +1688,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				List<OrderModel> subOrderModel = new ArrayList<OrderModel>();
 
 				List<AbstractOrderEntryModel> orderEntryModel = new ArrayList<AbstractOrderEntryModel>();
+				//Fetching sub orders under parent order
 				subOrderModel = orderModel.getChildOrders();
 				if (CollectionUtils.isNotEmpty(subOrderModel))
 				{
 					for (final OrderModel subOrder : subOrderModel)
 					{
+						//Fetching all entries of all sub orders
 						orderEntryModel = subOrder.getEntries();
 						if (CollectionUtils.isNotEmpty(orderEntryModel))
 						{

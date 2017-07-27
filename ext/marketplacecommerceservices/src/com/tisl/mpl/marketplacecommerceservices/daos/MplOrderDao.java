@@ -104,14 +104,16 @@ public interface MplOrderDao
 	public AbstractOrderEntryModel getEntryModel(String transactionId);
 
 	//TPR-5225
-	public List<OrderModel> getOrderByMobile(final String mobileNo);
+	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount);
 
 	//TPR-5225
-	public String getL4CategoryId(String productCode);
+	public String getL4CategoryName(String productCode);
 
 	//TPR-4840
 	public OrderModel getOrderByParentOrder(String orderRefNo);
 
 	//TPR-4841
 	public OrderModel fetchOrderByTransaction(final String transactionId);
+
+
 }

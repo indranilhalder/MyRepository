@@ -257,7 +257,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplAwbStatusService#prepAwbStatus(com.tisl.mpl.xml.pojo.AWBStatusResponse)
 	 */
 	@Override
@@ -337,7 +337,7 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplOrderService#findProductsByCode(java.lang.String)
 	 */
 	@Override
@@ -354,11 +354,11 @@ public class DefaultMplOrderService implements MplOrderService
 
 	/*
 	 * @Desc : used to check if BuyAandBGetC is applied on order entry or not TISPRO-249
-	 *
+	 * 
 	 * @param orderEntryModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Override
@@ -394,16 +394,16 @@ public class DefaultMplOrderService implements MplOrderService
 
 	//TPR-5225
 	@Override
-	public List<OrderModel> fetchOrderByMobile(final String mobileNo)
+	public List<OrderModel> fetchOrderByMobile(final String mobileNo, final int queryCount)
 	{
-		return mplOrderDao.getOrderByMobile(mobileNo);
+		return mplOrderDao.getOrderByMobile(mobileNo, queryCount);
 	}
 
 	//TPR-5225
 	@Override
-	public String getL4CategoryIdOfProduct(final String productCode)
+	public String getL4CategoryNameOfProduct(final String productCode)
 	{
-		return mplOrderDao.getL4CategoryId(productCode);
+		return mplOrderDao.getL4CategoryName(productCode);
 	}
 
 	//TPR-4841
