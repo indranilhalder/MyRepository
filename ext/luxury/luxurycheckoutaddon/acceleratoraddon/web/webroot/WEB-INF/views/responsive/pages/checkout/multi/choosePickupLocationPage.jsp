@@ -587,7 +587,7 @@
 											<div>
 												<div class="thumb product-img">
 													<a class="productUrlName" href="${poses.product.url}"><product:productPrimaryImage
-															product="${poses.product}" format="thumbnail" /></a>
+															product="${poses.product}" format="luxuryThumbnail" /></a>
 												</div>
 												<div class="details product" >
 													<h3 class="product-brand-name">${poses.product.brand.brandname}</h3>
