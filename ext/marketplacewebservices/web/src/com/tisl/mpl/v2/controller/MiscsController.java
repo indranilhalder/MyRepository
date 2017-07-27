@@ -891,17 +891,35 @@ public class MiscsController extends BaseController
 		try
 		{
 			LOG.debug("searchAndSuggest---------" + searchString);
-			final List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(searchString);
-			if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+			final List<AutocompleteSuggestionData> finalSuggestions = new ArrayList<AutocompleteSuggestionData>();
+			List<AutocompleteSuggestionData> suggestions = productSearchFacade.getAutocompleteSuggestions(searchString);
+			if (CollectionUtils.isNotEmpty(suggestions))
 			{
-				wsData.setSuggestions(suggestions);
+				finalSuggestions.add(suggestions.get(0));
+				wsData.setSuggestions(finalSuggestions);
 			}
 			else
 			{
 				String substr = "";
 				substr = searchString.substring(0, searchString.length() - 1);
-				wsData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+				suggestions = productSearchFacade.getAutocompleteSuggestions(substr);
+				if (CollectionUtils.isNotEmpty(suggestions))
+				{
+					finalSuggestions.add(suggestions.get(0));
+				}
+				wsData.setSuggestions(finalSuggestions);
 			}
+
+			//if (CollectionUtils.isNotEmpty(suggestions) && suggestions.size() > 0)
+			//			{
+			//				wsData.setSuggestions(suggestions);
+			//			}
+			//			else
+			//			{
+			//				String substr = "";
+			//				substr = searchString.substring(0, searchString.length() - 1);
+			//				wsData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(substr));
+			//			}
 			LOG.debug("searchAndSuggest-------------Size" + suggestions.size());
 
 			//resultData.setSuggestions(productSearchFacade.getAutocompleteSuggestions(term));

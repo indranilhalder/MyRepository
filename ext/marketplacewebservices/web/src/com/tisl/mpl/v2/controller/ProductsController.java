@@ -636,6 +636,7 @@ public class ProductsController extends BaseController
 			suggestionData.setValue(autoSuggestion.getTerm());
 			suggestions.add(suggestionData);
 		}
+
 		suggestionDataList.setSuggestions(suggestions);
 
 		return dataMapper.map(suggestionDataList, SuggestionListWsDTO.class, fields);
@@ -1093,7 +1094,8 @@ public class ProductsController extends BaseController
 				}
 				if (null != searchPageData.getSpellingSuggestion() && null != searchPageData.getSpellingSuggestion().getSuggestion())
 				{
-					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+							.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 				}
 			}
 
