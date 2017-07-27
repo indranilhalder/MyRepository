@@ -876,7 +876,8 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 			}
 		}
 		return productSearchPage;
@@ -1286,7 +1287,8 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 			}
 		}
 		return productSearchPage;
