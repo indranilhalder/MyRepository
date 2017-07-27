@@ -69423,7 +69423,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 .checkout-accordion:first-child .checkout-accordion-heading,
 .checkout-accordion.checkout-selected .checkout-accordion-heading,
-.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading {
+/* .checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading */ {
     cursor: pointer;
     pointer-events: all;
 } 
@@ -76179,12 +76179,12 @@ table#showPriceBreakup{
   	text-decoration: none;		
   	float: right;		
 }		
-.col-md-8.slectionRefund ~ .button_holder{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder{		
 	margin-top: 30px;		
 	margin-bottom: 21px;		
 	position: static;		
 }		
-.col-md-8.slectionRefund ~ .button_holder button{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{		
 	width: 181px;		
     height: 42px;		
     font-size: 12px;		
@@ -76192,7 +76192,8 @@ table#showPriceBreakup{
     letter-spacing: 0.6px;		
     font-weight: normal;		
 }		
-.col-md-8.slectionRefund ~ .button_holder button.light-blue.submit-request{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button.light-blue.submit-request
+{		
 	    margin-right: 26px;		
 }		
 .accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10 .returnPayment{		
@@ -76294,7 +76295,7 @@ left: 60px !important;
 .accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason{
 	width: 47%;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry ~ .button_holder button{
+body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder button{
 	width: 181px;
 	height: 42px;
 	font-size: 12px;
@@ -76353,11 +76354,11 @@ body.page-returnSubmit .account .wrapper{
 	padding: 0 31px;
 	margin-bottom: 0;
 }
-/* body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
+ body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
  		position: static;
- 		margin-bottom: 79px;
- 	} */
- body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12.reverseSealJwlry ~ .button_holder{		
+ 		/* margin-bottom: 79px; */
+ 	} 
+ body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder{		
  		position: static;	
  		margin-bottom: 79px;
  		}
@@ -76444,6 +76445,11 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	    padding-left: 10px;		
 }
 }
+@media(max-width: 690px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 120px;
+}
+}
 @media(max-width: 640px){
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4{
 		padding-left: 0px !important;
@@ -76454,15 +76460,20 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{
 		padding-left: 0px;
 		}
-		.col-md-8.slectionRefund ~ .button_holder button{
+		body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{
 		width: 170px;
 		}
+}
+@media(max-width: 520px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 140px;
+}
 }
 @media(max-width: 480px){		
 	.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
 	padding-left: 15px;		
 	}
-	.col-md-8.slectionRefund ~ .button_holder button{
+	body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{
 	 	width: 150px;
 	}
 	}
@@ -76473,14 +76484,25 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow {
     left: 123px;
 }
-.col-md-8.slectionRefund ~ .button_holder button {
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button {
     width: 150px;
+}
+.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 160px;
 }
 }
 @media(max-width: 420px){
-	.col-md-8.slectionRefund ~ .button_holder button {
+	body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button {
     	width: 100px;
 }	
+.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 180px;
+}
+}
+@media(max-width: 350px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 220px;
+}
 }
 @media(max-width: 790px){
 	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{

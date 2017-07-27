@@ -76,6 +76,7 @@ ACC.singlePageCheckout = {
 		              $("#address_carousel").owlCarousel({
 		                items:3,
 						loop: false,
+						mouseDrag:($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
 						nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
 						dots:false,
 						navText:[],
@@ -621,7 +622,6 @@ ACC.singlePageCheckout = {
         			ACC.singlePageCheckout.processError("#selectedAddressMessage",data);
                 }
             } else {
-	        	//alert(data);
             	ACC.singlePageCheckout.getSelectedAddress();
 	        	$("#choosedeliveryMode").html(data);
 	        	ACC.singlePageCheckout.showAccordion("#choosedeliveryMode");
@@ -919,17 +919,20 @@ ACC.singlePageCheckout = {
 	            				stagePadding: 36,
 	            				slideBy: 1,
 	            				margin: 0,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
 	            			},
 	            			// breakpoint from 768 up
 	            			768 : {
 	            				items:2,
 	            				slideBy: 2,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
 	            			},
 	            			// breakpoint from 1280 up
 	            			1280 : {
 	            				items:3,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
 	            			}			
 	            		},
@@ -1698,7 +1701,7 @@ ACC.singlePageCheckout = {
 	},
 	//Function called from onPaymentModeSelection() function for responsive
 	proceedWithPaymentForResponsive:function(paymentMode,savedOrNew,radioId,callFromCvv){
-		alert("proceedWithPaymentForResponsive called with paymentMode:"+paymentMode+" savedOrNew:"+savedOrNew+" radioId:"+radioId+" callFromCvv:"+callFromCvv);
+		//alert("proceedWithPaymentForResponsive called with paymentMode:"+paymentMode+" savedOrNew:"+savedOrNew+" radioId:"+radioId+" callFromCvv:"+callFromCvv);
 		ACC.singlePageCheckout.showAjaxLoader();
 		//function call to validate payment before proceeding
 		var xhrValidateResponse=ACC.singlePageCheckout.validateCartForPayment();
@@ -1751,7 +1754,7 @@ ACC.singlePageCheckout = {
         			
         			//Populating sub-total which is subject to change on order item removal
         			$("#orderTotalSpanId ul.totals li.subtotal span.amt span.priceFormat").html(data.subTotalPrice.formattedValue);
-        			alert("Saved or New"+savedOrNew);
+        			//alert("Saved or New"+savedOrNew);
         			if(savedOrNew=="savedCard")
         			{
         				////Code to be executed if a saved card is selected
@@ -2223,16 +2226,14 @@ ACC.singlePageCheckout = {
 	//Function used to check pincode serviceability for responsive
 	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
 	{
-		alert("Calling pincode serviceability for responsive with Pincode:"+selectedPincode+"/AddressId:"+addressId+"/isNew:"+isNew);
+		//alert("Calling pincode serviceability for responsive with Pincode:"+selectedPincode+"/AddressId:"+addressId+"/isNew:"+isNew);
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable || ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-		{alert("resetting validation steps now");
+		{
 			ACC.singlePageCheckout.resetValidationSteps();
-			alert("resetting payment modes now");
     		ACC.singlePageCheckout.resetPaymentModes();
-    		alert("Done resetting...");
 		}
 		if(addressId!="")
-		{alert("checking addressId:"+addressId+" checkbox");
+		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
 		}
 		else
@@ -2247,27 +2248,27 @@ ACC.singlePageCheckout = {
 					console.log("ERROR:"+textStatus + ': ' + errorThrown);
 				});
 				xhrResponse.done(function(response, textStatus, jqXHR) {
-					alert("Pincode serviceability ajax called successfully");
+					//alert("Pincode serviceability ajax called successfully");
 					//Hiding address pincode serviceability failure error messages
 	            	$("#selectedAddressMessageMobile").hide();
 	            	$("#addressMessage").hide();
 	            	if(!isNew)
-                	{alert("isNew");
+                	{
 	            		//Remove new address radio nutton check
 	            		$("div.mobile_add_address.form_open").removeClass("form_open");
 	            		$(".new-address-form-mobile").slideUp();
                 	}
-					if (jqXHR.responseJSON) {alert("jqXHR.responseJSON is true");
+					if (jqXHR.responseJSON) {
 						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
-		                {alert('response.type!="response" && response.type!="confirm"');
+		                {
 		                	if(isNew)
 		                	{
 		                		ACC.singlePageCheckout.processError("#addressMessage",response);
 		                		ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
 		                	}
 		                	else
-	                		{alert("is not new");
+	                		{
 		                		//Remove new address radio nutton check
 		                		$("div.mobile_add_address.form_open").removeClass("form_open");
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
@@ -2278,11 +2279,9 @@ ACC.singlePageCheckout = {
 		                //For Confirm Box TPR-1083
 		                else if(response.type=="confirm")
 		                {
-		                	alert('response.type=="confirm"');
 		                		ACC.singlePageCheckout.processConfirm("#selectedAddressMessageMobile",response,addressId,selectedPincode,isNew,"");
-	           
 		                }
-		            } else {alert("In case of no error at server end below block will execute.");
+		            } else {
 		            	//In case of no error at server end below block will execute.
 		            	if(isNew)
 	                	{
@@ -2294,10 +2293,10 @@ ACC.singlePageCheckout = {
 		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
 		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
 		            	}
-		            	alert("Before setting #choosedeliveryModeMobile");
+		            	//alert("Before setting #choosedeliveryModeMobile");
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=true;
-		            	alert("ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
+		            	//alert("ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
 //		            	var entryNumbersId=$("#entryNumbersId").val();		            	
 //		            	var entryNumbers=entryNumbersId.split("#");
 //		            	for(var i=0;i<entryNumbers.length-1;i++)
@@ -2546,7 +2545,6 @@ ACC.singlePageCheckout = {
 	{
 		var formValidationSuccess=true;
 		ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected=paymentMode;
-		alert("onPaymentModeSelection:ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable="+ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable);
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
 		{
@@ -2582,12 +2580,10 @@ ACC.singlePageCheckout = {
 		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
-			alert("Set delivery address now");
 			ACC.singlePageCheckout.setDeliveryAddress();
-			alert("Set delivery address done");
 		}
 		if(formValidationSuccess && !ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && !ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
-		{	alert("onPaymentModeSelection:If part called with formValidationSuccess:"+formValidationSuccess+"&ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet:"+ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet+"&ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved:"+ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved);
+		{	
 			ACC.singlePageCheckout.showAjaxLoader();
 			var isPincodeRestrictedPromoPresent="";
 			if(typeof($("#isPincodeRestrictedPromoPresent").text())!='undefined')
@@ -2644,7 +2640,6 @@ ACC.singlePageCheckout = {
 		}
 		else if(formValidationSuccess && ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet && ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved && ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone)
     	{
-			alert("onPaymentModeSelection:Else part called with formValidationSuccess:"+formValidationSuccess+"&ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet:"+ACC.singlePageCheckout.mobileValidationSteps.isDeliveryModeSet+"&ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved:"+ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved+"&ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone:"+ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone);
 			if(savedOrNew=="savedCard")
 			{
 				////Code to be executed if a saved card is selected
@@ -2841,7 +2836,6 @@ $(document).ready(function(){
 			var defaultAddressPresent=$("#defaultAddressPresent").text();
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
-				alert("Before calling pincode serviceability onload");
 				//Calling pincode serviceability on page load for responsive cases.
 				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
 			}
