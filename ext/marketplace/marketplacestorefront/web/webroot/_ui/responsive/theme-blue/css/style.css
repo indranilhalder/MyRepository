@@ -69423,7 +69423,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 }
 .checkout-accordion:first-child .checkout-accordion-heading,
 .checkout-accordion.checkout-selected .checkout-accordion-heading,
-/* .checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading */ {
+.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading  {
     cursor: pointer;
     pointer-events: all;
 } 
