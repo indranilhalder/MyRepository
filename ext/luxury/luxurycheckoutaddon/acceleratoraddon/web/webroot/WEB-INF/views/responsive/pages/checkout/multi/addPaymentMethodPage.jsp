@@ -1149,14 +1149,14 @@
 									
 									
 									<!-- COD error messages -->
-									<div id="codErrorMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
+									<div id="codErrorMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codErrorMessage"/>
 									</div>
 									
-									<div id="codMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
+									<div id="codMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codMessage"/>
 									</div>
 									
 									
-								 	<div id="customerBlackListMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.customerBlackListMessage"/>
+								 	<div id="customerBlackListMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.customerBlackListMessage"/>
 									</div>
 									
 									
@@ -1167,16 +1167,16 @@
 									<div id="wrongOtpValidationMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.wrongOtpValidationMessage"/>
 									</div>
 									
-									<%-- <div id="otpSentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
-									</div> --%>
+									<div id="otpSentMessage" class="error-message payment-notification hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.otpSentMessage"/>
+									</div> 
 									
 									<div id="expiredOtpValidationMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.expiredOtpValidationMessage"/>
 									</div>
 									
-									<div id="fulfillmentMessage" class="error-message payment-notification hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
+									<div id="fulfillmentMessage" class="error-message payment-notification"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.fulfillmentMessage"/>
 									</div>
 									
-									<div id="codItemEligibilityMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
+									<div id="codItemEligibilityMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.codItemEligibilityMessage"/>
 									</div>
 									
 									<div id="emptyOTPMessage" class="error-message hide"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>

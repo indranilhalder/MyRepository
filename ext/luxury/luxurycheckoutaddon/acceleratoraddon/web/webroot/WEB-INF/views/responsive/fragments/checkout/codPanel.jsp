@@ -65,7 +65,7 @@
 				code="checkout.multi.paymentMethod.addPaymentDetails.codResendMessage" />
 		</div>
 	</div> --%>
-	<div id="OTPGenerationErrorMessage" class="error-message">
+	<div id="OTPGenerationErrorMessage" class="error-message" style="display:none">
 		<spring:theme
 			code="checkout.multi.paymentMethod.addPaymentDetails.codMessage" />
 	</div>
