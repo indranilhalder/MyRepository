@@ -36,6 +36,12 @@
 			<cms:component component="${WeeklyBanner1}" />
 		</cms:pageSlot>
 	</section>
+		<section class="brand-slider-wrapper text-center">
+		<cms:pageSlot position="Gender-WeeklyBanner2" var="WeeklyBanner2"
+					  element="div" class="span-24 section5 cms_disp-img_slot">
+			<cms:component component="${WeeklyBanner2}" />
+		</cms:pageSlot>
+	</section>
 
 	<cms:pageSlot position="Gender-ShortlookBook" var="feature" class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${feature}" />
@@ -66,10 +72,37 @@
 			<cms:component component="${ProductCurosel1}" />
 		</cms:pageSlot>
 	</section>
+	
+		<section class="luxgender-carousel shop-by-catagory text-center">
+		<cms:pageSlot position="Gender-ProductCurosel2" var="ProductCurosel1" element="div"
+					  class="span-24 section5 cms_disp-img_slot">
+			<cms:component component="${ProductCurosel1}" />
+		</cms:pageSlot>
+	</section>
 
 
-
-	<cms:pageSlot position="Gender-MoreStoriesbanner1Col1" var="component" element="div"
+	
+		<cms:pageSlot position="Gender-MoreStoriesbanner1Col1" var="component" element="div"
+				  class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${component}" />
+	</cms:pageSlot>
+		<cms:pageSlot position="Gender-MoreStoriesbanner1Col2" var="component" element="div"
+				  class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${component}" />
+	</cms:pageSlot>
+		<cms:pageSlot position="Gender-MoreStoriesbanner1Col3" var="component" element="div"
+				  class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${component}" />
+	</cms:pageSlot>
+		<cms:pageSlot position="Gender-MoreStoriesbanner1Col4" var="component" element="div"
+				  class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${component}" />
+	</cms:pageSlot>
+	<cms:pageSlot position="Gender-MoreStoriesbanner1Col5" var="component" element="div"
+				  class="span-24 section5 cms_disp-img_slot">
+		<cms:component component="${component}" />
+	</cms:pageSlot>
+	<cms:pageSlot position="Gender-MoreStoriesbanner1Col4" var="component" element="div"
 				  class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${component}" />
 	</cms:pageSlot>

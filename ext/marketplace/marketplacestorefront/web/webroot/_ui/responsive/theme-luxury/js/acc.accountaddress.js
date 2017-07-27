@@ -1030,6 +1030,7 @@ function editAddress(addressId) {
    		 var input = $(this);    
    		 $(this).val($(this).val().trim());    		     		
    	});  
+    	$("line1").val($("line1").val().trim());
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;

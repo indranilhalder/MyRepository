@@ -143,6 +143,14 @@
         .lookbook-pd-0{
             padding:0 0px;
         }
+        .lookbook-pdr-10{
+            padding:0px;
+            padding-right: 10px;
+        }
+        .lookbook-pdl-10{
+            padding:0px;
+            padding-left: 10px;
+        }
 		.colmn {
 			&:nth-child(1) {
 				padding-right: 5px;
@@ -162,6 +170,7 @@
 	}
    .show-lookbok-desktop,.shortbanner-desktop{
         display: block;
+      
         @include media-breakpoint-down(sm) {
             display: none;
         }
@@ -219,9 +228,18 @@
         float: left;
         width: 50%;
     }
+    .layout-width-100{
+        float: left;
+        width: 100%;
+    }
     .layout-width-25{
         float: left;
         width: 25%;
+    }
+    .show-lookbok-desktop,.shortbanner-desktop{    
+        img{
+            border-radius: 5px;
+        }
     }
 	/* EOF look book 4 column */
 	/* look book link */
@@ -278,6 +296,9 @@
 		}
 	}
 }
+.short_banner-heading{
+    text-align: center;
+}
 .trav-edition{
 
 	position: relative;
@@ -318,6 +339,9 @@
 		margin: 0px 10px;
 	}
 
+}
+.short-banner-heading{
+    text-align: center;
 }
 .shop-by-catagory{
 	.slick-track{
