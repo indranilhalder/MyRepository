@@ -14231,7 +14231,8 @@ var wishListList = [];
 
 $(document).ready(function() {
     luxurycheckIsServicable(), $(".checkout-paymentmethod .payment-tab").removeClass("active"), 
-    $("#card").css("display", "none"), $(".credit_tab").on("click", function() {
+    $("#card").css("display", "none"), $(".checkout-paymentmethod #COD").css("display", "none"), 
+    $(".credit_tab").on("click", function() {
         $(".new_card_tab.credit_tab").hasClass("active_tab") && $(".newCardPaymentCC").show();
     }), $("#sameAsShipping").on("click", function() {
         $("#sameAsShipping").is(":checked") ? $(".payment-billing-form").hide() : $(".payment-billing-form").show();

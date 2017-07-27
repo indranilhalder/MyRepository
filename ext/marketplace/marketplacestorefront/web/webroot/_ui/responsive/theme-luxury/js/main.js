@@ -2559,7 +2559,7 @@ $(document).ready(function () {
     $('.checkout-paymentmethod .payment-tab').removeClass('active');
     $('#card').css('display','none');
     
-    
+    $('.checkout-paymentmethod #COD').css('display','none');   
     
     $('.credit_tab').on('click',function(){
         if($('.new_card_tab.credit_tab').hasClass('active_tab')){
