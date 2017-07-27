@@ -3784,11 +3784,7 @@ $(document).ready(function() {
 	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
 		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
 	}
-	/*start change of INC144316990*/
-	if($('#my-review-carousel .owl-stage-outer .owl-stage .owl-item').children().is("script")){
-		$('#my-review-carousel .owl-stage-outer .owl-stage .owl-item script').parent().css("width", "0px");
-	}
-	/*end change of INC144316990*/
+	
 });
 
 
@@ -3804,30 +3800,26 @@ $(window).on("load resize click",function(){
 });
 /* end change of PRDI-92 */
 
-/*start change of INC144316990*/
-$(window).on("load resize",function(){
-	if($('#my-review-carousel .owl-stage-outer .owl-stage .owl-item').children().is("script")){
-		$('#my-review-carousel .owl-stage-outer .owl-stage .owl-item script').parent().css("width", "0px");
-	}
-});
-/*end change of INC144316990*/
-
 /*start change of INC144316778*/
 $(window).on("scroll resize",function(){
 	fixTopAdjust();
-	if($(window).scrollTop() == 0)
+	if($(window).scrollTop() == 0){
 		$(".listing.wrapper .left-block").removeClass("topTheFix");
+		/*start change for TISPRDT-1898*/
+		if($("header .content .top").hasClass("header_fix"))
+			$(".listing.wrapper .left-block").removeClass("fix"); 
+		/*end change for TISPRDT-1898*/
+	}
 });
 $(document).on("click",".product-facet .facet .facet-name",function(){
 	fixTopAdjustTimeOut();
 });
 function fixTopAdjust(){
-if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
-	$(".listing.wrapper .left-block").addClass("topTheFix");
-else
-	$(".listing.wrapper .left-block").removeClass("topTheFix");
+	if($(".left-block ul.product-facet.js-product-fcet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
+		$(".listing.wrapper .left-block").addClass("topTheFix");
+	else
+		$(".listing.wrapper .left-block").removeClass("topTheFix");
 }
-
 function fixTopAdjustTimeOut(){
 	setTimeout( function(){ 
 		fixTopAdjust(); 

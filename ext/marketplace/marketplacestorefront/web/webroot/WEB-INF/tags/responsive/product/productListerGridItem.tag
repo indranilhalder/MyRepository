@@ -136,14 +136,13 @@
 					title="${product.name}"> <%-- <product:productPrimaryImage
 						product="${product}" format="searchPage" /> --%> <product:productSearchPrimaryImage product="${product}" format="searchPage"/>
 						<!-- TPR-250 -->
-						        <span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>
+								<span class="plp-wishlist" data-product="${productUrl}" data-ussid="${ussidVal}"></span>	
 						<!-- TPR-250 -->
 						<%-- <span class="plp-wishlist" data-product="${productUrl}"></span> --%>
 						<span class="plpWlcode" style="display: none;">${productUrl}</span>
 			
 
 				</a>
-				
 				<c:if test="${product.isOfferExisting}">
 					<%-- <div style="z-index: 2;display: none;" class="on-sale" id="on-sale_${product.code}"> --%>
 						<div style="z-index: 2;" class="on-sale" id="on-sale_${product.code}">

@@ -166,7 +166,7 @@ public class OrderModelDaoImpl implements OrderModelDao
 	public OrderModel getOrder(final String code) throws EtailNonBusinessExceptions
 	{
 		OrderModel order = null;
-		List<OrderModel> orderlist = null;
+		//List<OrderModel> orderlist = null;
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put(MarketplacecommerceservicesConstants.ORDERCODE, code);
 		params.put(MarketplacecommerceservicesConstants.ORDERTYPE, MarketplacecommerceservicesConstants.SUBORDER);
@@ -174,19 +174,25 @@ public class OrderModelDaoImpl implements OrderModelDao
 		try
 		{
 			//forming the flexible search query
-			final FlexibleSearchQuery orderQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.ORDER_QUERY, params);
-			orderlist = flexibleSearchService.<OrderModel> search(orderQuery).getResult();
-			if (null != orderlist && !orderlist.isEmpty())
-			{
-				for (final OrderModel orderModel : orderlist)
-				{
-					if (orderModel.getVersionID() == null)
-					{
-						order = orderModel;
-					}
-				}
-				//return order;
-			}
+			//final FlexibleSearchQuery orderQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.ORDER_QUERY, params);
+			//CAR-301--
+			//The following peice of code has been modified for performance tuning.
+			final FlexibleSearchQuery orderQuery = new FlexibleSearchQuery(MarketplacecommerceservicesConstants.ORDER_QUERY_SUB,
+					params);
+			order = flexibleSearchService.<OrderModel> search(orderQuery).getResult().get(0);
+
+
+			//			if (null != orderlist && !orderlist.isEmpty())
+			//			{
+			//				for (final OrderModel orderModel : orderlist)
+			//				{
+			//					if (orderModel.getVersionID() == null)
+			//					{
+			//						order = orderModel;
+			//					}
+			//				}
+			//				//return order;
+			//			}
 			//			else
 			//			{
 			//				return null;

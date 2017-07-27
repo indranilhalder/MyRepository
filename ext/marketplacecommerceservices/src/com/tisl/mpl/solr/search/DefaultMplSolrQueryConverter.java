@@ -157,6 +157,26 @@ public class DefaultMplSolrQueryConverter extends DefaultSolrQueryConverter
 	}
 
 	@Override
+	public SolrQuery applyPostProcessorsInOrder(final SolrQuery solrQuery, final SearchQuery solrSearchQuery)
+
+	{
+		if (solrQuery == null)
+
+		{
+			throw new IllegalArgumentException("SolrQuery may not be null!");
+		}
+		if (searchQuery.isEnableSpellcheck())
+		{
+			final String defaultDict = "wordbreak";
+			solrQuery.add("spellcheck.dictionary", new String[]
+			{ defaultDict });
+			solrQuery.add("spellcheck.accuracy", "0.65");
+
+		}
+		return super.applyPostProcessorsInOrder(solrQuery, solrSearchQuery);
+	}
+
+	@Override
 	protected void addFacetFields(final SolrQuery solrQuery, Map<String, IndexedFacetInfo> facetInfoMap)
 			throws FacetSearchException
 	{
