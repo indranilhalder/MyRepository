@@ -35,7 +35,7 @@
 
 	<section class="cartSection">
 		<section class="cartContent">
-			<div class="container">
+			<div >
 
 				<div class="row">
 					<div class="col-xs-12 <c:out value="${not empty cartData.entries ? 'col-md-8 col-sm-8' : 'col-md-12 col-sm-12'}" />">
