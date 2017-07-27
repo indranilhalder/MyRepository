@@ -8,9 +8,12 @@
 <%@ taglib prefix="layouts" tagdir="/WEB-INF/tags/addons/luxurycheckoutaddon/layouts" %>
 
 
-title ${title}
+<div class="look-book look-book-wrapper">
+    <h3 class="section-title mb-10">${title}</h3>
+    <p class="mb-30">${description}</p>
 
-description ${description}
+</div>
+
 
 <c:choose>
     <c:when test="${layoutCode eq 'layout1'}">
