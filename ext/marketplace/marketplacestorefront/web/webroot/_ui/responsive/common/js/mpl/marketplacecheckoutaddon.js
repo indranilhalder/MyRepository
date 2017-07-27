@@ -8440,6 +8440,13 @@ $("*[data-id=newCCard]").click(function(){
 });
 
 $("*[data-id=savedCCard]").change(function(){
+	//UF-282:Start
+	if(ACC.singlePageCheckout.getIsResponsive() && !ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
+	{
+		console.log("SinglePage:Pincode is not serviceable for responsive hence cannot proceed");
+		return false;
+	}
+	//UF-282:End
 	$(".proceed-button").each(function(){
 		$(this).hide();
 	});
@@ -8464,6 +8471,13 @@ $("*[data-id=newDCard]").click(function(){
 });
 
 $("*[data-id=savedDCard]").change(function(){
+	//UF-282:Start
+	if(ACC.singlePageCheckout.getIsResponsive() && !ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
+	{
+		console.log("SinglePage:Pincode is not serviceable for responsive hence cannot proceed");
+		return false;
+	}
+	//UF-282:End
 	$(".proceed-button").each(function(){
 		$(this).hide();
 	});
