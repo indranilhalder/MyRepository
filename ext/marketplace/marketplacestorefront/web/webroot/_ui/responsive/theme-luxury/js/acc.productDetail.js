@@ -4398,13 +4398,14 @@ function populateProductPageTabs(jsonData)
 	//if(jsonData['validTabs'].includes('stylenote'))
 	if(jsonData['validTabs'].includes('details'))
 	{
+		$('div.nav-wrapper>.accordion-content>#details').html(populateProductDetailsTab(jsonData));
 		//$('ul.tabs.pdp>li:eq(1)').html(populateProductDetailsTab(jsonData));
-		var index=$('ul.nav.pdp>li').index($('#tabs_details'));
+		/*var index=$('ul.nav.pdp>li').index($('#tabs_details'));
 		if(index!=-1)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDetailsTab(jsonData));
-		}
+		}*/
 	}
 	if(jsonData['validTabs'].includes('description'))
 	{

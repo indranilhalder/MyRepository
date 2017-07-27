@@ -43,7 +43,9 @@ var buyboxskuId='';
 	<c:if test="${fn:contains(validTabs, 'details')}">
 		<div class="accordion-content">
 			${product.articleDescription}
+			<div id="details">
 			<product:productDetailsTab product="${product}" />
+		</div>
 		</div>
 	</c:if>
 	
