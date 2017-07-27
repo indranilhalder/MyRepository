@@ -3800,8 +3800,6 @@ $(window).on("load resize click",function(){
 });
 /* end change of PRDI-92 */
 
-
-
 /*start change of INC144316778*/
 $(window).on("scroll resize",function(){
 	fixTopAdjust();
@@ -3822,7 +3820,6 @@ function fixTopAdjust(){
 	else
 		$(".listing.wrapper .left-block").removeClass("topTheFix");
 }
-
 function fixTopAdjustTimeOut(){
 	setTimeout( function(){ 
 		fixTopAdjust(); 
