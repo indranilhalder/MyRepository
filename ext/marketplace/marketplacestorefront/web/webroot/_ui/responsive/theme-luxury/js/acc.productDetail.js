@@ -4040,7 +4040,7 @@ function getBuyBoxDataAjax(productCode,variantCodesJson)
 							|| promorestrictedSellers == "") {
 						//TPR-772
 						$(".promo-block").show();
-						if(promoindentifier = '') {
+						if(promoindentifier != '') {
 							  $(".pdp-promo-title-link").show();
 						} 
 
@@ -4378,7 +4378,7 @@ function populatePromotionsInProductDetailsPanel(responsePotentialPromotions)
 		if(typeof($('div.pdp-promo-title.pdp-title'))!='undefined')
 		{
 			//If the current selected listing id doesn't have potential promotions and previous listing id had one
-			$('div.pdp-promo-block.promo-block').html(promoTitleDiv);
+			$('div.pdp-promo-block.promo-block').html("");
 		}
 	}
 	//Removing messages displayed through populateOfferMsgWrapper() method

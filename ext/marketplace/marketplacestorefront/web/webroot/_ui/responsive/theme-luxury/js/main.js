@@ -1530,7 +1530,7 @@ TATA.Pages = {
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
-                    $("#line1").val(unescape(data.line1 +data.line2 +data.line3)), 
+                    $("#line1").val((data.line1 + data.line2 + data.line3).trim()), 
                     $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
                     loadPincodeData("edit").done(function() {
                         otherLandMarkTri(data.landmark, "defult");
@@ -1696,7 +1696,8 @@ function luxurycheckPincodeServiceability(buttonType, el)
         return false;
         // TPR-1055 ends
     }
-    else if(document.getElementById("pinCodeButtonIdsBtm").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIdsBtm")//UF-71
+    
+    else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
     {
         $("#unserviceablepincode").hide();
         $("#unserviceablepincodeBtm").hide();//UF-68

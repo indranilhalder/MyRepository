@@ -3,76 +3,112 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-
-<div class="look-book">
+<%-- <div class="look-book shortbanner-layout1">
     <div class="look-book-img">
         <div class="look-book-list clearfix">
-            <div class="colmn">
-                <c:forEach items="${firstCol}" var="medias">
-                <ul class="list-unstyled clearfix">
-                    <c:forEach items="${medias.medias}" var="media">
-                        <c:choose>
-                            <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
-                                <a href="${media.urlLink}">
-                                    <img src="${media.url}">
-                                </a>
-                            </c:when>
-                        </c:choose>
-                    </c:forEach>
+            <div class="layout-width-50 short-banner-colum4 lookbook-pdr-10">
+            	<ul class="list-unstyled clearfix">
+                	<c:forEach items="${firstCol}" var="medias">
+	                	<li>
+		                    <c:forEach items="${medias.medias}" var="media">
+		                        <c:choose>
+		                            <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
+		                                <a class="shortbanner-desktop" href="${media.urlLink}">
+		                                    <img src="${media.url}">
+		                                </a>
+		                            </c:when>
+		                            <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
+		                                <a class="shortbanner-mobile" href="${media.urlLink}">
+		                                    <img src="${media.url}">
+		                                </a>
+		                            </c:when>
+		                        </c:choose>
+		                    </c:forEach>
+	                    </li>
                     </c:forEach>
                 </ul>
             </div>
-            <div class="colmn">
-                <c:forEach items="${secondCol}" var="medias">
-                <ul class="list-unstyled clearfix">
-                    <c:forEach items="${medias.medias}" var="media">
-                    <c:choose>
-                    <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
-                        <a href="${media.urlLink}">
-                            <img src="${media.url}">
-                        </a>
-                    </c:when>
-                    </c:choose>
+           <div class="layout-width-50 short-banner-colum4 lookbook-pdl-10">
+             	<ul class="list-unstyled clearfix">
+                	<c:forEach items="${secondCol}" var="medias">
+	               		<li>
+		                    <c:forEach items="${medias.medias}" var="media">
+			                    <c:choose>
+				                    <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
+				                        <a class="shortbanner-desktop" href="${media.urlLink}">
+				                            <img src="${media.url}">
+				                        </a>
+				                    </c:when>
+				                     <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
+				                        <a class="shortbanner-mobile" href="${media.urlLink}">
+				                            <img src="${media.url}">
+				                        </a>
+				                    </c:when>
+			                    </c:choose>
+		                    </c:forEach>
+	                    </li>
                     </c:forEach>
-                    </c:forEach>
-            </div>
+            	</ul>
+            </div> 
+           
+            
         </div>
     </div>
 </div>
+  --%>
 
 
-<div class="look-book hide">
+
+<div class="look-book shortbanner-layout1">
     <div class="look-book-img">
         <div class="look-book-list clearfix">
-            <div class="colmn">
-                <c:forEach items="${firstCol}" var="medias">
-                <ul class="list-unstyled clearfix">
-                    <c:forEach items="${medias.medias}" var="media">
-                        <c:choose>
-                            <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
-                                <a href="${media.urlLink}">
-                                    <img src="${media.url}">
-                                </a>
-                            </c:when>
-                        </c:choose>
+        
+        <c:forEach items="${firstCol}" var="medias">
+        <div class="layout-width-25 short-banner-colum4 lookbook-pdr-10">
+					<ul class="list-unstyled clearfix">
+						<li><c:forEach items="${medias.medias}" var="media">
+								<c:choose>
+									<c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
+										<a class="shortbanner-desktop" href="${media.urlLink}"> <img
+											src="${media.url}">
+										</a>
+									</c:when>
+									<c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
+										<a class="shortbanner-mobile" href="${media.urlLink}"> <img
+											src="${media.url}">
+										</a>
+									</c:when>
+								</c:choose>
+							</c:forEach></li>
+					</ul>
+				</div>
+                    </c:forEach>  
+                    
+                    <c:forEach items="${secondCol}" var="medias">
+                     <div class="layout-width-25 short-banner-colum4 lookbook-pdl-10">
+                     <ul class="list-unstyled clearfix">
+	               		<li>
+		                    <c:forEach items="${medias.medias}" var="media">
+			                    <c:choose>
+				                    <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
+				                        <a class="shortbanner-desktop" href="${media.urlLink}">
+				                            <img src="${media.url}">
+				                        </a>
+				                    </c:when>
+				                     <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
+				                        <a class="shortbanner-mobile" href="${media.urlLink}">
+				                            <img src="${media.url}">
+				                        </a>
+				                    </c:when>
+			                    </c:choose>
+		                    </c:forEach>
+	                    </li>
+	                    </ul>
+	                    </div>
                     </c:forEach>
-                    </c:forEach>
-                </ul>
-            </div>
-            <div class="colmn">
-                <c:forEach items="${secondCol}" var="medias">
-                <ul class="list-unstyled clearfix">
-                    <c:forEach items="${medias.medias}" var="media">
-                    <c:choose>
-                    <c:when test="${media.mediaFormat.qualifier eq 'mobile'}">
-                        <a href="${media.urlLink}">
-                            <img src="${media.url}">
-                        </a>
-                    </c:when>
-                    </c:choose>
-                    </c:forEach>
-                    </c:forEach>
-            </div>
+                             
         </div>
-    </div>
-</div>
+        </div>
+        </div>
+        
+

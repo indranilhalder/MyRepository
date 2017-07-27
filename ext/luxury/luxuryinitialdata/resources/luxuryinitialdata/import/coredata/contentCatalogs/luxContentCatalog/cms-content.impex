@@ -172,6 +172,7 @@ INSERT_UPDATE LuxuryMedia;$contentCV[unique=true];code[unique=true];mime;realfil
 
 
 
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 
 INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];internalURL;mediaType(code)[default='Image'];altText;
 ;;shopMen;text/png;ShopMen.png;$jarResourceCms/preview-images/ShopMen.png;;/men-landing
@@ -231,12 +232,18 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;Brand-team;text/png;niketeam.png;$jarResourceCms/preview-images/niketeam.png;;;
 ;;mobile-RedPoster;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;
 ;;pickitup-poster;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;
-;;personalInformation.jpg;image/jpg;personalInformation.jpg;$siteResource/images/banners/site/personalInformation.jpg;;;;"Personal Information"
-#;;savedCards.jpg;image/jpg;savedCards.jpg;$siteResource/images/banners/site/savedCards.jpg;"Saved Cards"
-;;myRecommendations.jpg;image/jpeg;myRecommendations.jpg;$siteResource/images/banners/site/myRecommendations.jpg;;;;"My Recommendations"
-;;inviteFriends.jpg;image/jpg;inviteFriends.jpg;$siteResource/images/banners/site/inviteFriends.jpg;;;;"Invite Friends"
-;;orderHistory.jpg;image/jpg;orderHistory.jpg;$siteResource/images/banners/site/orderHistory.jpg;;;;"Order History"
-;;savedAddresses.jpg;image/jpg;savedAddresses.jpg;$siteResource/images/banners/site/savedAddresses.jpg;;;;"Saved Addresses"
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+
+;;personalInformation.jpg;$siteResource/images/banners/site/personalInformation.jpg;personalInformation.jpg;"Personal Information"
+;;savedCards.jpg;$siteResource/images/banners/site/savedCards.jpg;savedCards.jpg;"Saved Cards"
+#;;myRecommendations.jpg;$siteResource/images/banners/site/myRecommendations.jpg;myRecommendations.jpg;"My Recommendations"
+#;;inviteFriends.jpg;$siteResource/images/banners/site/inviteFriends.jpg;inviteFriends.jpg;"Invite Friends"
+;;orderHistory.jpg;$siteResource/images/banners/site/orderHistory.jpg;orderHistory.jpg;"Order History"
+;;savedAddresses.jpg;$siteResource/images/banners/site/savedAddresses.jpg;savedAddresses.jpg;"Saved Addresses"
+
+
 
 INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
 ;;Brand-shopbycategory	;Brand-shopbycategory;Shop by Category;BagsImageCoursel1,PantsImageCoursel1,ClothingImageCoursel1,FootwearImageCoursel1,GroomingImageCoursel1
@@ -268,12 +275,7 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 #;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
 ;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;;orderHistory.jpg;;
 ;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;;savedAddresses.jpg;;
-;;PersonalInformationMediaParagraphComponent;Personal Information Media Paragraph Component;PersonalInformationMediaParagraphComponent;;personalInformation.jpg;;
-;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;;savedCards.jpg;;
-#;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
-#;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
-;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;;orderHistory.jpg;;
-;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;;savedAddresses.jpg;;
+
 ;;PersonalInformationMediaParagraphComponent;;;"<h3>ALL ABOUT YOU</h3>
 <p>Pick a name, change your password and all that jazz.</p>
 <a href='/my-account/update-profile'>VIEW PERSONAL INFO</a>"
@@ -355,7 +357,7 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 
 
 
-INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];headline;&componentRef;urlLink;$picture[lang=$lang]
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;ImageCourselBanner;Bags;ImageCourselBanner;/;ImageCoursel
 ;;ImageCourselBanner1;Shoes;ImageCourselBanner1;/;ImageCoursel
 ;;ImageCourselBanner2;Wallets;ImageCourselBanner2;/;ImageCoursel
@@ -651,7 +653,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-FooterSlot;Gender Footer;true;
 ;;Men-HeroBannerSlot;Brand HeroBanner;true;MenBanner
 ;;Men-BannerDescriptionSlot;Brand BannerDescription;true;
-;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Men-CategoryCuroselSlot;Brand CategoryCurosel;true;LookBook-Bag
 ;;Men-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
 ;;Men-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
 ;;Men-ProductCurosel1Slot;Brand ProductCurosel1;true;Bag-shopLookBook
@@ -879,6 +881,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;LuxFooter-SearchResultsGrid;Footer;;FooterSlot;true
 ;;LuxPlaceholderContentSlot-SearchResultsGrid;PlaceholderContentSlot;;PlaceholderContentSlot;true
 ;;WishList-SearchResultsGrid;WishList;;WishListSlot;true
+;;BottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
 
@@ -1215,3 +1218,6 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='termsOfUse'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;Section2B-termsOfUse;Section2B;;Section2BSlot-termsOfUse;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
+;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;

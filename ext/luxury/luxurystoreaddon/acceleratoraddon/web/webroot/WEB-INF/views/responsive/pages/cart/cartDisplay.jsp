@@ -113,14 +113,14 @@
                         <a id="changePinAnchor" onClick="pinCodeDiv()">Change </a>
                         <!-- <button class="orange submit" id="pdpPincodeCheck"  onClick="pinCodeDiv()">Change Pincode</button> -->
                     </div> --%>
-			<div id="changePinDiv">
-					<%-- <p><spring:theme code="product.pincode.input" /></p> --%>
+			<%-- <div id="changePinDiv">
+					<p><spring:theme code="product.pincode.input" /></p>
 				<p id="cartPinCodeAvailable"><spring:theme code="product.pincode.input" /></p>
 				<!-- TPR_1055 EQA -->
 				<p id="AvailableMessage" style="display:none" class="availablePins"></p>
-					<%-- <p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
+					<p id="unserviceablepincode" style="display:none"><spring:theme code="cart.unserviceable.pincode" /></p>
                     <p id="error-Id" style="display:none" ><spring:theme code="product.invalid.pincode" /></p>
-                    <p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p> --%>
+                    <p id="emptyId" style="display:none"><spring:theme code="product.empty.pincode" /></p>
 				<c:choose>
 					<c:when test="${not empty defaultPinCode}">
 						<input type="text" class="form-control" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="${defaultPinCode}" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
@@ -136,7 +136,7 @@
 				<p id="unserviceablepincode" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
 				<p id="error-Id" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>
 				<p id="emptyId" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
-			</div>
+			</div> --%>
 
 
 

@@ -46,7 +46,7 @@ function luxurycheckPincodeServiceability(buttonType, el) {
     $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
     $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
     !1;
-    if ("ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && "pinCodeButtonIdsBtm" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
+    if ("ChangePincode" == document.getElementById("pinCodeButtonIds").className && "pinCodeButtonIds" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
     $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
     $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
     $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 
@@ -588,7 +588,7 @@ function luxValidateAccountAddress() {
     $("form#addressForm :input[type=text]").each(function() {
         $(this);
         $(this).val($(this).val().trim());
-    });
+    }), $("line1").val($("line1").val().trim());
     var selectedValueState = document.getElementById("stateListBox").selectedIndex, regexCharSpace = /^[a-zA-Z]+$/, regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/, regexSpace = /\s/, equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/, flagFn = !0, flagLn = !0, flagAd1 = !0, flagPost = !0, flagCity = !0, flagState = !0, flagMob = !0, addLine1 = encodeURIComponent(addressForm.line1.value);
     return 0 == addressForm.addressRadioType[0].checked && 0 == addressForm.addressRadioType[1].checked && (document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>", 
     flagFn = !1), null == addressForm.firstName.value || "" == addressForm.firstName.value ? ($("#erraddressfn").css({
@@ -14205,7 +14205,7 @@ TATA.CommonFunctions = {
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
-                    $("#line1").val(unescape(data.line1 + data.line2 + data.line3)), $("#postcode").val(data.postcode), 
+                    $("#line1").val((data.line1 + data.line2 + data.line3).trim()), $("#postcode").val(data.postcode), 
                     $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
                     loadPincodeData("edit").done(function() {
                         otherLandMarkTri(data.landmark, "defult");
