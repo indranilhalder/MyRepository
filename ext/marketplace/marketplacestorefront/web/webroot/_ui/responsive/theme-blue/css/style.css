@@ -20908,7 +20908,7 @@ body.account .right-account ul.saved-cards>li img {
     height: 27px;
     background-position: -57px -5px;}
     .credit-cards-sprite {
-    background-image: url(../images/credit-cards.png);
+    background-image: url(../images/Sprite-combined.png);
     background-repeat: no-repeat;
     display: block;
 }
@@ -34804,7 +34804,7 @@ body.page-cartPage .cart.wrapper .product-block li.item>ul.desktop>li.productIte
     letter-spacing: 0px;
 }
 .mybag-undo-form .undo-add-to-cart:before{
-background: rgba(0, 0, 0, 0) url("../images/sprite.png") no-repeat scroll -43px -52px;
+background: rgba(0,0,0,0) url("../images/Sprite-combined.png") no-repeat scroll -137px -652px;
     content: "";
     height: 14px;
     left: 0;
@@ -35387,12 +35387,14 @@ cursor: auto;
     display: inline-block;
 }
 .product-facet .filter-colour.selected-colour .js-facet-colourbutton {
-    background-image: url(../images/color-tick.png);
+    background-image: url(../images/Sprite-combined.png);
+    background-position: -212px -650px;
     transition: all .2s;
     opacity: 1;
 }
 .product-facet .filter-colour.selected-multi-colour input[type="button"] {
-    background-image: url(../images/multi-color-tick.png) !important;
+    background-image: url(../images/Sprite-combined.png) !important;
+    background-position: -173px -650px;
     transition: all .2s;
     opacity: 1;
 }
