@@ -83,6 +83,11 @@
 	max-width: 910px;
 	margin: 0 auto 60px;
 	text-align: center;
+    
+    li{
+        list-style: none;
+    }
+    
     &.layout-2{
         max-width: 930px;
     }
@@ -213,10 +218,16 @@
             li:nth-child(2){
                 width: 50%;
                 float: left;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
             }
             li:last-child{
                 width: 50%;
                 float: right;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
             }
         }
     }
@@ -456,4 +467,16 @@
 			margin: 10px 15px;
 		}
 	}
+}
+.template-pages-addon--luxurystoreaddon-pages-layout-luxuryGenderLandingPage{
+    .container{
+        padding-left: 0px;
+        padding-right: 0px; 
+    }
+    footer{
+        .container{
+            padding-left: 20px;
+            padding-right: 20px;
+        }           
+    }
 }

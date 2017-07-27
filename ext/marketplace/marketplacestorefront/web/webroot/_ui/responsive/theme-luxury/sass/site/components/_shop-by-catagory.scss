@@ -1,6 +1,6 @@
 .shop-by-catagory {
     max-width: 1150px;
-    margin: 0 auto 80px;
+    margin: 0 auto 0px;
 	li {
 		display: inline-block;
 		margin: 0 -2px;
@@ -9,4 +9,14 @@
 	.slick-slide img {
 		display: inline-block;
 	}
+    
+    .link{
+        display: none;
+        text-decoration: underline;
+    }
+    @include media-breakpoint-down(sm) {
+        .link{
+            display: block;
+        }
+    }
 }

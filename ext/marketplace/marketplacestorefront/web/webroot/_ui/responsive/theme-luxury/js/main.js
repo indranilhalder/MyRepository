@@ -299,8 +299,8 @@ TATA.CommonFunctions = {
     	var $seastionSec = $('.seastion-sec .cms_disp-img_slot');
     	$seastionSec.html($.trim($seastionSec.html()));    	
     	
-    	var $brandSliderWrapper = $('.brand-slider-wrapper');
-    	$brandSliderWrapper.html($.trim($brandSliderWrapper.html()));
+    	/*var $brandSliderWrapper = $('.brand-slider-wrapper');
+    	$brandSliderWrapper.html($.trim($brandSliderWrapper.html()));*/
 
         $('.main-banner').slick({
             arrows: false,
@@ -627,6 +627,7 @@ TATA.CommonFunctions = {
     Footer: function() {
         if($(window).width() >= 768){
             $('footer').find('.accordion').removeClass('accordion');
+            $('footer').find('.accordion-content').removeClass('accordion-content');
         }
         $('#main-nav > ul.mega-menu').addClass('footer-cloned-ul').clone().appendTo('.footer-popular-search');
         $('.footer-popular-search .footer-cloned-ul > li').append('<br/>');

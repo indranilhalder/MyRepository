@@ -12,11 +12,12 @@
 		<c:forEach items="${component.relatedImage}" var="Image" varStatus="status">
 		<li>
 			<a href="javascript:;">
-				<img src="${Image.media.url}" alt="${Image.name}">
-				<h5>${Image.name}</h5>
+				<img src="${Image.media.url}" alt="${Image.headline}">
+				<h5>${Image.headline}</h5>
 			</a>
 		</li>
 		</c:forEach>
 		
 	</ul>
+	<a href="#" class="link">See All</a>
 </section>

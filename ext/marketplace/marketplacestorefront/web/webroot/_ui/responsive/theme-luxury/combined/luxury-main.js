@@ -683,6 +683,1090 @@ function onAddressSelectValidate() {
     document.getElementById("erraddressState").innerHTML = "";
 }
 
+function openPop(ussidfromSeller) {
+    $("loggedIn").val();
+    $("#addedMessage").hide(), ussidValue = null == ussidfromSeller || "" == ussidfromSeller ? $("#ussid").val() : ussidfromSeller;
+    var productCode = $("#product").val(), requiredUrl = ACC.config.encodedContextPath + "/p-viewWishlistsInPDP", dataString = "productCode=" + productCode + "&ussid=" + ussidValue;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            null == data ? ($("#wishListNonLoggedInId").show(), $("#wishListDetailsId").hide()) : "" == data || data == [] ? loadDefaultWishListName() : LoadWishLists(ussidValue, data, productCode);
+        },
+        error: function(xhr, status, error) {
+            $("#wishListNonLoggedInId").show(), $("#wishListDetailsId").hide();
+        }
+    });
+}
+
+function loadDefaultWishListName() {
+    var wishListContent = "", wishName = $("#defaultWishId").text();
+    $("#wishListNonLoggedInId").hide(), $("#wishListDetailsId").show(), wishListContent = wishListContent + "<tr><td><input type='text' id='defaultWishName'  value='" + wishName + "'/></td></td></tr>", 
+    $("#wishlistTbodyId").html(wishListContent);
+}
+
+function gotoLogin() {
+    window.open(ACC.config.encodedContextPath + "/login", "_self");
+}
+
+function LoadWishLists(ussid, data, productCode) {
+    var addedWlList_pdp = [], wishListContent = "", wishName = "";
+    $this = this, $("#wishListNonLoggedInId").hide(), $("#wishListDetailsId").show();
+    for (var i in data) {
+        var index = -1, checkExistingUssidInWishList = !1, wishList = data[i];
+        wishName = wishList.particularWishlistName, wishListList[i] = wishName;
+        var entries = wishList.ussidEntries;
+        for (var j in entries) {
+            if (entries[j] == ussid) {
+                checkExistingUssidInWishList = !0;
+                break;
+            }
+        }
+        checkExistingUssidInWishList ? (index++, wishListContent = wishListContent + "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist(" + i + ")' disabled><label for='radio_" + i + "'>" + wishName + "</label></td></tr>", 
+        addedWlList_pdp.push(wishName)) : (index++, wishListContent = wishListContent + "<tr><td><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist(" + i + ")'><label for='radio_" + i + "'>" + wishName + "</label></td></tr>"), 
+        $("#alreadyAddedWlName_pdp").val(JSON.stringify(addedWlList_pdp));
+    }
+    $("#wishlistTbodyId").html(wishListContent);
+}
+
+function selectWishlist(i) {
+    $("#hidWishlist").val(i);
+}
+
+function addToWishlist(alreadyAddedWlName_pdp) {
+    var productCodePost = ($("#loggedIn").val(), $("#productCodePost").val()), productcodearray = [];
+    productcodearray.push(productCodePost);
+    var ussidValue = $("#ussid").val(), isMSDEnabled = $("input[name=isMSDEnabled]").val();
+    if ("true" === isMSDEnabled) {
+        var isApparelExist = $("input[name=isApparelExist]").val(), salesHierarchyCategoryMSD = $("input[name=salesHierarchyCategoryMSD]").val(), rootCategoryMSD = $("input[name=rootCategoryMSD]").val(), productCodeMSD = $("input[name=productCodeMSD]").val(), priceformad = $("input[id=price-for-mad]").val();
+        void 0 === isMSDEnabled && (isMSDEnabled = !1), void 0 === isApparelExist && (isApparelExist = !1);
+    }
+    var requiredUrl = ACC.config.encodedContextPath + "/p-addToWishListInPDP", sizeSelected = !0;
+    $("#variant li").hasClass("selected") || (sizeSelected = !1), "#" == $("#variant,#sizevariant option:selected").val() && (sizeSelected = !1);
+    var dataString = "wish=&product=" + productCodePost + "&ussid=" + ussidValue + "&sizeSelected=" + sizeSelected;
+    if (headerLoggedinStatus) {
+        getLastModifiedWishlist(ussidValue) ? removeFromWishlistInPdp("", productCodePost, ussidValue, isMSDEnabled, isApparelExist, rootCategoryMSD, salesHierarchyCategoryMSD, priceformad, "INR") : ($.ajax({
+            contentType: "application/json; charset=utf-8",
+            url: requiredUrl,
+            data: dataString,
+            dataType: "json",
+            success: function(data) {
+                1 == data && ($(".wishAddSucess").addClass("active"), setTimeout(function() {
+                    $(".wishAddSucess").removeClass("active");
+                }, 3e3), $("#add_to_wishlist").attr("disabled", !0), $(".add_to_cart_form .out_of_stock #add_to_wishlist").addClass("wishDisabled"), 
+                $(".product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon").addClass("added"), 
+                populateMyWishlistFlyOut(""), "true" === isMSDEnabled && Boolean(isMSDEnabled) && Boolean(isApparelExist) && "Clothing" === rootCategoryMSD && ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad, "INR"), 
+                utag.link({
+                    link_obj: this,
+                    link_text: "add_to_wishlist_pdp",
+                    event_type: "add_to_wishlist_pdp",
+                    product_sku_wishlist: productcodearray
+                }));
+            }
+        }), setTimeout(function() {
+            $("a.wishlist#wishlist").popover("hide"), $("input.wishlist#add_to_wishlist").popover("hide");
+        }, 0));
+    } else $(".wishAddLogin").addClass("active"), setTimeout(function() {
+        $(".wishAddLogin").removeClass("active");
+    }, 3e3);
+}
+
+function populateMyWishlistFlyOut(wishName) {
+    var requiredUrl = ACC.config.encodedContextPath + "/my-account/wishlistAndItsItems", dataString = "wishlistName=" + wishName;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(response) {
+            $("#DropDownMyWishList").empty();
+            for (var i in response) {
+                var name = response[i].wishlistName, size = response[i].wishlistSize, url = response[i].wishlistUrl;
+                $("#DropDownMyWishList").append('<li><a href="' + url + '">' + name + "<br><span>" + size + "&nbsp;items</span></a></li>");
+            }
+        }
+    });
+}
+
+function showUrlInDialog(url) {
+    var tag = $("<div></div>");
+    $.ajax({
+        url: url,
+        success: function(data) {
+            tag.html(data).dialog({
+                modal: !0
+            }).dialog("open");
+        }
+    });
+}
+
+function setValidPrice(sellersArray, index) {
+    var roundedSpPrice = Math.round(100 * sellersArray[index].spPrice) / 100;
+    if ("" == mrp) $("#mrpPriceId").hide(), $("#savingsOnProductId").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
+    $("#addToCartButton-wrong").show(), $("#addToCartButton").hide(), $("#buyNowButton").attr("disabled", !0); else if (null != sellersArray[index].spPrice && 0 != sellersArray[index].spPrice) sellersArray[index].mopPrice == mrp ? ($("#mrpPriceId").append("<strike>" + mrp + "</strike>"), 
+    $("#mopPriceId").html(""), $("#spPriceId").append(roundedSpPrice)) : ($("#mrpPriceId").append("<strike>" + mrp + "</strike>"), 
+    $("#mopPriceId").append("<strike>" + sellersArray[index].mopPrice + "</strike>"), 
+    $("#spPriceId").append(roundedSpPrice)); else {
+        var freebiePriceThresVal = $("#freebiePriceThreshId").val();
+        if (null != sellersArray[index].mopPrice && 0 != sellersArray[index].mopPrice && sellersArray[index].mopPrice > freebiePriceThresVal) sellersArray[index].mopPrice == mrp ? ($("#mrpPriceId").append(mrp), 
+        $("#mopPriceId").html(""), $("#spPriceId").html("")) : ($("#mrpPriceId").append("<strike>" + mrp + "</strike>"), 
+        $("#mopPriceId").append(sellersArray[index].mopPrice), $("#spPriceId").html("")); else if (0 != sellersArray[index].mopPrice && sellersArray[index].mopPrice <= freebiePriceThresVal) {
+            $(".size").hide(), $(".color-swatch").hide(), $(".reviews").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
+            $("#addToCartButton-wrong").show(), $("#addToCartButton").hide(), $("#otherSellerInfoId").hide(), 
+            $(".wish-share").hide(), $(".fullfilled-by").hide(), $("#pdpPincodeCheck").hide(), 
+            $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
+            $("#mopPriceId").show(), $("#mrpPriceId").hide(), $("#savingsOnProductId").hide();
+            var prodCode = $("#productCodePost").val(), freebieproductMsg = ($("#ussid").val(), 
+            populateFreebieMsg(prodCode));
+            $.isEmptyObject(freebieproductMsg) ? $("#freebieProductMsgId").show() : ($("#freebieProductMsgId").html(freebieMsg), 
+            $("#freebieProductMsgId").show());
+        } else $("#mrpPriceId").append(mrp), $("#mopPriceId").html(""), $("#spPriceId").html("");
+    }
+}
+
+function setSeller(index) {
+    $("#inventory").hide(), setValidPrice(sellersArray, index), $("#sellerNameId").html(sellersArray[index].sellername), 
+    $("#ussid").val(sellersArray[index].ussid), $("#stock").val(sellersArray[index].stock), 
+    populateSellers(index);
+}
+
+function refreshSellers(dataArray, ussid) {
+    console.log("dataArray" + dataArray + "ussid" + ussid);
+    for (var nonservicableussids = [], isproductPage = $("#isproductPage").val(), usidList = [], ussidListWithNoStock = [], n = -1, m = -1, indx = -1, count = 0, skuIdsForED = [], skuIdsForHD = [], skuIdForCNC = [], skuForCodList = [], stockDataArrayList = [], stockIndx = -1, c = -1, i = 0; i < dataArray.length; i++) if (ussid != dataArray[i].ussid) if ("Y" == dataArray[i].isServicable) {
+        "Y" == dataArray[i].cod && (skuForCodList[++c] = "'" + dataArray[i].ussid + "'"), 
+        usidList[i] = "'" + dataArray[i].ussid + "'", count += 1, 0 == dataArray[i].stockCount && (console.log("ussid" + dataArray[i].ussid), 
+        ussidListWithNoStock[++n] = "'" + dataArray[i].ussid + "'");
+        var deliveryModes = dataArray[i].validDeliveryModes;
+        for (var j in deliveryModes) {
+            var mode = deliveryModes[j].type;
+            "HD" == mode && (skuIdsForHD[++indx] = "'" + dataArray[i].ussid + "'"), "ED" == mode && (skuIdsForED[++indx] = "'" + dataArray[i].ussid + "'"), 
+            "CNC" == mode && (skuIdForCNC[++indx] = "'" + dataArray[i].ussid + "'");
+            var stockDataArray = {};
+            stockDataArray.ussid = dataArray[i].ussid, stockDataArray.stock = dataArray[i].stockCount, 
+            stockDataArrayList[++stockIndx] = stockDataArray, $("#stockDataArray").val(JSON.stringify(stockDataArrayList));
+        }
+    } else nonservicableussids[++m] = dataArray[i].ussid;
+    0 == count ? $("#otherSellerInfoId").hide() : ($("#otherSellerInfoId").show(), $("#otherSellersId").html(count)), 
+    $("#otherSellersCount").html(count);
+    var usidList = usidList.join(","), ussidListWithNoStock = ussidListWithNoStock.join(",");
+    sessionStorage.setItem("notServicables", nonservicableussids), sessionStorage.setItem("skuIdsForED", skuIdsForED), 
+    sessionStorage.setItem("skuIdsForHD", skuIdsForHD), sessionStorage.setItem("skuIdForCNC", skuIdForCNC), 
+    sessionStorage.setItem("skuIdForCod", skuIdForCNC), sessionStorage.setItem("skuIdForCNC", skuIdForCNC), 
+    sessionStorage.setItem("skuIdsWithNoStock", ussidListWithNoStock), sessionStorage.setItem("pincodeChecked", "true"), 
+    sessionStorage.setItem("stockDataArrayList", stockDataArrayList), sessionStorage.setItem("pincodeChecked", "true"), 
+    "false" == isproductPage && ($("#sellerTable").show(), $("#other-sellers-id").show(), 
+    count > 0 ? fetchAllSellers() : ($("#sellerTable").hide(), $("#other-sellers-id").hide()));
+}
+
+function populateSellers(index) {
+    for (var contentData = "", i = 0; i < sellersArray.length; i++) i != index && (contentData += "<tr>", 
+    contentData += "<td> <a href='javascript: void(0)'\tonclick='setSeller(" + i + ")'>" + sellersArray[i].sellername + "</a></td>", 
+    contentData += "<td>" + sellersArray[i].ussid + "</td>", contentData += "<td>&nbsp;" + sellersArray[i].stock + "</td>", 
+    contentData += "</tr>");
+    $("#sellerListId").html(contentData);
+}
+
+function isNum(evt) {
+    evt = evt || window.event;
+    var charCode = evt.which ? evt.which : evt.keyCode;
+    return !(charCode > 31 && (charCode < 48 || charCode > 57)) && (13 === evt.keyCode && $(".submit").click(), 
+    !0);
+}
+
+function isOOS() {
+    var skuOOS = !1, totalOptions = $("#variant li").length, disabledOption = $("#variant li.strike").length;
+    return void 0 != availibility && "object" == typeof availibility && Object.keys(availibility).length > 0 && $.each(availibility, function(k, v) {
+        window.location.pathname.endsWith(k.toLowerCase()) && 0 == v && (skuOOS = !0);
+    }), totalOptions == disabledOption && 0 != totalOptions || !!skuOOS;
+}
+
+function displayDeliveryDetails(sellerName) {
+    var buyboxSeller = $("#ussid").val(), productCode = $("#product").val(), requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode + "/getRichAttributes", dataString = "buyboxid=" + buyboxSeller;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            if (null != data) {
+                var isLuxury = $("#isLuxury").val(), pinCodeAvailable = $("#pinCodeAvailable").val(), pretext = $("#deliveryPretext").text(), posttext = $("#deliveryPosttext").text(), fulFillment = data.fulfillment, deliveryModes = data.deliveryModes, fulFillmentP1 = data.fulfillmentType1, leadTime = 0;
+                if (null != data.leadTimeForHomeDelivery && (leadTime = data.leadTimeForHomeDelivery), 
+                null != data.newProduct && "y" == data.newProduct.toLowerCase() && ($("#newProduct").show(), 
+                $(".picZoomer-pic-wp #codId").css("top", "85px")), data.onlineExclusive && $(".online-exclusive").show(), 
+                null != fulFillment && "both" == fulFillment.toLowerCase() ? null != fulFillmentP1 && "tship" == fulFillmentP1.toLowerCase() ? ($("#fulFilledBySship").hide(), 
+                $("#fulFilledByTship").show()) : ($("#fulFilledByTship").hide(), $("#fulFilledBySship").show(), 
+                $("#fulFilledBySship").html(sellerName)) : null != fulFillment && "tship" == fulFillment.toLowerCase() ? ($("#fulFilledBySship").hide(), 
+                $("#fulFilledByTship").show()) : ($("#fulFilledByTship").hide(), $("#fulFilledBySship").show(), 
+                $("#fulFilledBySship").html(sellerName)), !$("#pdpPincodeCheck").data("clicked")) {
+                    var start_hd = parseInt($("#homeStartId").val()) + leadTime, end_hd = parseInt($("#homeEndId").val()) + leadTime;
+                    null != deliveryModes && -1 == deliveryModes.indexOf("HD") ? isLuxury ? ($("#home").hide(), 
+                    $("#homeli").hide()) : ($("#homeDate").html(pretext + start_hd + "-" + end_hd + posttext), 
+                    $("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected")) : ($("#homeDate").html(pretext + start_hd + "-" + end_hd + posttext), 
+                    isLuxury ? "true" == pinCodeAvailable ? ($("#home").show(), $("#homeli").show()) : ($("#home").hide(), 
+                    $("#homeli").hide()) : ($("#home").show(), $("#homeli").show()), $("#homeli").addClass("selected"), 
+                    $("#homeli").css("opacity", "1"));
+                    var start_ed = $("#expressStartId").val(), end_ed = $("#expressEndId").val();
+                    if (null != deliveryModes && -1 == deliveryModes.indexOf("ED")) isLuxury ? ($("#express").hide(), 
+                    $("#expressli").hide()) : ($("#expressDate").html(pretext + start_ed + "-" + end_ed + posttext), 
+                    $("#expressli").css("opacity", "0.5"), $("#expressli").removeClass("selected")); else {
+                        if ($("#expressDate").html(pretext + start_ed + "-" + end_ed + posttext), isLuxury ? "true" == pinCodeAvailable ? ($("#express").show(), 
+                        $("#expressli").show()) : ($("#express").hide(), $("#expressli").hide()) : ($("#express").show(), 
+                        $("#expressli").show()), $("#expressli").addClass("selected"), $("#expressli").css("opacity", "1"), 
+                        null != deliveryModes && -1 == deliveryModes.indexOf("HD")) isLuxury ? ($("#home").hide(), 
+                        $("#homeli").hide()) : ($("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected")); else {
+                            var start = parseInt($("#homeStartId").val()) + leadTime, end = parseInt($("#homeEndId").val()) + leadTime;
+                            $("#homeDate").html(pretext + start + "-" + end + posttext), isLuxury ? "true" == pinCodeAvailable ? ($("#home").show(), 
+                            $("#homeli").show()) : ($("#home").hide(), $("#homeli").hide()) : ($("#home").show(), 
+                            $("#homeli").show()), $("#homeli").addClass("selected"), $("#homeli").css("opacity", "1");
+                        }
+                        if (null != deliveryModes && -1 == deliveryModes.indexOf("ED")) $("#express").hide(), 
+                        $("#expressli").hide(); else {
+                            var start = $("#expressStartId").val(), end = $("#expressEndId").val();
+                            $("#expressDate").html(pretext + start + "-" + end + posttext), isLuxury ? "true" == pinCodeAvailable ? ($("#express").show(), 
+                            $("#expressli").show()) : ($("#express").hide(), $("#expressli").show()) : ($("#express").show(), 
+                            $("#expressli").show()), $("#expressli").addClass("selected"), $("#expressli").css("opacity", "1");
+                        }
+                        if (null != deliveryModes && -1 == deliveryModes.indexOf("CNC")) isLuxury ? ($("#collect").hide(), 
+                        $("#collectli").hide()) : ($("#collectli").css("opacity", "0.5"), $("#collectli").removeClass("selected")); else {
+                            var start = $("#clickStartId").val(), end = $("#clickEndId").val();
+                            $("#clickDate").html(pretext + start + "-" + end + posttext), isLuxury ? "true" == pinCodeAvailable ? ($("#collect").show(), 
+                            $("#collectli").show()) : ($("#collect").hide(), $("#collectli").hide()) : ($("#collect").show(), 
+                            $("#collectli").show()), $("#collectli").css("opacity", "1"), $("#collectli").addClass("selected");
+                        }
+                    }
+                    var start_cnc = $("#clickStartId").val(), end_cnc = $("#clickEndId").val();
+                    null != deliveryModes && -1 == deliveryModes.indexOf("CNC") ? isLuxury ? ($("#collect").hide(), 
+                    $("#collectli").hide()) : ($("#clickDate").html(pretext + start_cnc + "-" + end_cnc + posttext), 
+                    $("#collectli").css("opacity", "0.5"), $("#collectli").removeClass("selected")) : ($("#clickDate").html(pretext + start_cnc + "-" + end_cnc + posttext), 
+                    isLuxury ? "true" == pinCodeAvailable ? ($("#collect").show(), $("#collectli").show()) : ($("#collect").hide(), 
+                    $("#collectli").hide()) : ($("#collect").show(), $("#collectli").show()), $("#collectli").addClass("selected"), 
+                    $("#collectli").css("opacity", "1"));
+                }
+                if ("Y" == data.isCod ? $("#codId").show() : $("#codId").hide(), null != data.returnWindow) {
+                    var rWindowValue = data.returnWindow;
+                    "LINGERIE1" == rWindowValue ? ($("#lingerieKnowMoreLi1").show(), $("#defaultKnowMoreLi").hide()) : "LINGERIE2" == rWindowValue ? ($("#lingerieKnowMoreLi2").show(), 
+                    $("#defaultKnowMoreLi").hide()) : "0" == rWindowValue ? ($("#defaultKnowMoreLi4").show(), 
+                    $("#defaultKnowMoreLi").hide()) : $("#returnWindow").text(data.returnWindow);
+                } else $("#defaultKnowMoreLi4").show(), $("#defaultKnowMoreLi").hide(), $("#returnWindow").text("0");
+            }
+        }
+    });
+}
+
+function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
+    if ($("#mrpPriceId").html(""), $("#mopPriceId").html(""), $("#spPriceId").html(""), 
+    $("#savingsOnProductId").html(""), void 0 === savingsOnProduct && (null != mrp && null != spPrice ? (savingPriceCal = mrp.doubleValue - spPrice.doubleValue, 
+    savingPriceCalPer = savingPriceCal / mrp.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100)) : null != mrp && null != mop && (savingPriceCal = mrp.doubleValue - mop.doubleValue, 
+    savingPriceCalPer = savingPriceCal / mrp.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100))), 
+    null != mrp && $("#mrpPriceId").append(mrp.formattedValueNoDecimal), null != mop && $("#mopPriceId").append(mop.formattedValueNoDecimal), 
+    null != spPrice && $("#spPriceId").append(spPrice.formattedValueNoDecimal), null != savingsOnProduct && $("#savingsOnProductId").append("(-" + savingsOnProduct + " %)"), 
+    null != savingsOnProduct && 0 != savingsOnProduct && $("#savingsOnProductId").show(), 
+    "" == mrp.value) $("#mrpPriceId").hide(), $("#savingsOnProductId").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
+    $("#addToCartButton-wrong").show(), $("#addToCartButton").hide(), $("#buyNowButton").attr("disabled", !0); else if (null != spPrice && 0 != spPrice) mop.value, 
+    mrp.value, $("#mrpPriceId").css("text-decoration", "line-through"), $("#mrpPriceId").show(), 
+    $("#spPriceId").show(), $("#mopPriceId").hide(), $("#mrpPriceId").removeClass("sale").addClass("old"); else {
+        var freebiePriceThresVal = $("#freebiePriceThreshId").val();
+        if (null != mop && 0 != mop.value && mop.value > freebiePriceThresVal) mop.value == mrp.value ? ($("#mrpPriceId").removeClass("old").addClass("sale"), 
+        $("#mrpPriceId").show(), $("#mrpPriceId").css("text-decoration", ""), $("#mopPriceId").hide(), 
+        $("#spPriceId").hide()) : ($("#mrpPriceId").css("text-decoration", "line-through"), 
+        $("#mrpPriceId").show(), $("#mopPriceId").show(), $("#spPriceId").hide(), $("#mrpPriceId").removeClass("sale").addClass("old")); else if (0 != mop.value && mop.value <= freebiePriceThresVal) {
+            $(".size").hide(), $(".color-swatch").hide(), $(".reviews").hide(), $("#addToCartButton-wrong").attr("disable", !0), 
+            $("#addToCartButton-wrong").show(), $("#addToCartButton").hide(), $("#otherSellerInfoId").hide(), 
+            $(".wish-share").hide(), $(".fullfilled-by").hide(), $("#pdpPincodeCheck").hide(), 
+            $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
+            $("#mopPriceId").hide(), $("#mrpPriceId").hide(), $("#savingsOnProductId").hide(), 
+            $(".delivery-block").hide(), $(".seller").hide(), $(".star-review").hide(), $("#spPriceId").hide();
+            var prodCode = $("#productCodePost").val(), freebieproductMsg = ($("#ussid").val(), 
+            populateFreebieMsg(prodCode));
+            $.isEmptyObject(freebieproductMsg) ? $("#freebieProductMsgId").show() : ($("#freebieProductMsgId").html(freebieMsg), 
+            $("#freebieProductMsgId").show());
+        } else $("#mrpPriceId").show();
+    }
+    void 0 != spPrice || null != spPrice ? ($("#prodPrice").val(spPrice.value), $("#price-for-mad").val(spPrice.value)) : void 0 != mop || null != mop ? ($("#prodPrice").val(mop.value), 
+    $("#price-for-mad").val(mop.value)) : ($("#prodPrice").val(mrp.value), $("#price-for-mad").val(mrp.value)), 
+    parseInt($("#prodPrice").val()) > emiCuttOffAmount.value ? $("#emiStickerId").show() : $("#emiStickerId").hide();
+}
+
+function openPopForBankEMI() {
+    var productVal = $("#prodPrice").val(), optionData = "<option value='select' disabled selected>Select</option>";
+    $("#EMITermTable").hide(), $("#emiTableTHead").hide(), $("#emiTableTbody").hide();
+    var requiredUrl = ACC.config.encodedContextPath + "/p-enlistEMIBanks", dataString = "productVal=" + productVal;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            for (var i = 0; i < data.length; i++) optionData += "<option value='" + data[i] + "'>" + data[i] + "</option>";
+            $("#bankNameForEMI").html(optionData), utag.link({
+                link_obj: this,
+                link_text: "emi_more_information",
+                event_type: "emi_more_information",
+                product_id: productIdArray
+            });
+        },
+        error: function(xhr, status, error) {}
+    });
+}
+
+function populateEMIDetailsForPDP() {
+    var productVal = $("#prodPrice").val(), selectedBank = $("#bankNameForEMI :selected").text(), contentData = "", productId = [];
+    if (productId.push($("#product_id").val()), "select" != selectedBank) {
+        var dataString = "selectedEMIBank=" + selectedBank + "&productVal=" + productVal;
+        $.ajax({
+            url: ACC.config.encodedContextPath + "/p-getTerms",
+            data: dataString,
+            type: "GET",
+            cache: !1,
+            success: function(data) {
+                if (null != data) {
+                    $("#emiTableTHead").show(), $("#emiTableTbody").show();
+                    for (var index = 0; index < data.length; index++) contentData += "<tr>", contentData += "<td>" + data[index].term + "</td>", 
+                    contentData += "<td>" + data[index].interestRate + "</td>", contentData += "<td>" + data[index].monthlyInstallment + "</td>", 
+                    contentData += "<td>" + data[index].interestPayable + "</td>", contentData += "</tr>";
+                    $("#emiTableTbody").html(contentData), $("#EMITermTable").show();
+                } else $("#emiNoData").show();
+                emiBankSelectedTealium = "emi_option_" + selectedBank.replace(/ /g, "").replace(/[^a-z0-9\s]/gi, "").toLowerCase(), 
+                emiBankSelected = selectedBank.toLowerCase().replace(/  +/g, " ").replace(/ /g, "_").replace(/[',."]/g, ""), 
+                "undefined" != typeof utag && utag.link({
+                    link_text: emiBankSelectedTealium,
+                    event_type: "emi_option_selected",
+                    emi_selected_bank: emiBankSelected,
+                    product_id: productId
+                });
+            },
+            error: function(resp) {
+                $("#emiSelectBank").show();
+            }
+        });
+    }
+}
+
+function getSelectedEMIBankForPDP() {
+    var productVal = $("#prodPrice").val(), selectedBank = $("#bankNameForEMI :selected").text(), contentData = "";
+    "select" != selectedBank && $.ajax({
+        url: ACC.config.encodedContextPath + "/p-getTerms",
+        data: {
+            selectedEMIBank: selectedBank,
+            productVal: productVal
+        },
+        type: "GET",
+        cache: !1,
+        success: function(data) {
+            if (null != data) {
+                $("#emiTableTHead").show(), $("#emiTableTbody").show();
+                for (var index = 0; index < data.length; index++) contentData += "<tr>", contentData += "<td>" + data[index].term + "</td>", 
+                contentData += "<td>" + data[index].interestRate + "</td>", contentData += "<td>" + data[index].monthlyInstallment + "</td>", 
+                contentData += "<td>" + data[index].interestPayable + "</td>", contentData += "</tr>";
+                $("#emiTableTbody").html(contentData);
+            } else $("#emiNoData").show();
+        },
+        error: function(resp) {
+            $("#emiSelectBank").show();
+        }
+    });
+}
+
+function CheckonReload() {
+    var user_id = getCookie("mpl-user");
+    "session" == getCookie("mpl-userType") && "anonymous" == user_id ? $("#commentsDiv .gig-comments-composebox").hide() : $("#commentsDiv .gig-comments-composebox").show();
+}
+
+function getRating(key, productCode, category) {
+    var url = "https://comments.us1.gigya.com/comments.getStreamInfo?apiKey=" + key + "&categoryID=" + category + "&streamId=" + productCode + "&includeRatingDetails=true&format=jsonp&callback=?";
+    $.getJSON(url, function(data) {
+        var totalCount = data.streamInfo.ratingCount, ratingArray = data.streamInfo.ratingDetails._overall.ratings;
+        ratingArray = ratingArray.reverse(), $("div.rate-details div.after").each(function(count) {
+            var countIndiv = ratingArray[count];
+            $("div.rate-bar div.rating").eq(count).css({
+                width: countIndiv / totalCount * 100 + "%"
+            }), $("div.rate-details div.after").eq(count).text(ratingArray[count]);
+        });
+        var avgreview = data.streamInfo.avgRatings._overall, raingcount = data.streamInfo.ratingCount;
+        $(".product-detail ul.star-review a").empty(), $(".product-detail ul.star-review li").attr("class", "empty");
+        for (var rating = Math.floor(avgreview), ratingDec = avgreview - rating, i = 0; i < rating; i++) $("#pdp_rating li").eq(i).removeClass("empty").addClass("full");
+        0 != ratingDec && $("#pdp_rating li").eq(rating).removeClass("empty").addClass("half"), 
+        1 == raingcount ? ($(".gig-rating-readReviewsLink_pdp").text(raingcount + " REVIEW"), 
+        $("#ratingDiv .gig-rating-readReviewsLink").text(data.streamInfo.ratingCount + " REVIEW")) : raingcount > 0 && ($(".gig-rating-readReviewsLink_pdp").text(raingcount + " REVIEWS"), 
+        $("#ratingDiv .gig-rating-readReviewsLink").text(data.streamInfo.ratingCount + " REVIEWS")), 
+        $("#customer").text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
+    });
+    var ratingsParams = {
+        categoryID: category,
+        streamID: productCode,
+        containerID: "ratingDiv",
+        linkedCommentsUI: "commentsDiv",
+        showCommentButton: "true",
+        onAddReviewClicked: function(response) {
+            CheckUserLogedIn();
+        }
+    };
+    gigya.comments.showRatingUI(ratingsParams);
+}
+
+function CheckUserLogedIn() {
+    var user_id = getCookie("mpl-user");
+    "session" == getCookie("mpl-userType") && "anonymous" == user_id && gotoLogin();
+}
+
+function nextImage(elem) {
+    var grandParentId = $(elem).parent().parent().attr("id");
+    if ("pdp_gallery" == grandParentId) {
+        $("#pdp_gallery .imageListCarousel li img").each(function() {
+            $(this).show();
+        });
+        var item_height = $("#pdp_gallery .imageListCarousel li").height(), item_count = $("#pdp_gallery .imageListCarousel:first li").length, top = parseInt($("#pdp_gallery .imageListCarousel").css("top"));
+        top % item_height || (parseInt($("#pdp_gallery .imageListCarousel").css("top")) > -item_height * (item_count - imagePageLimit) ? ($("#pdp_gallery .imageListCarousel").animate({
+            top: "-=" + item_height + "px"
+        }, "250"), $("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity", "1")) : $("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity", "0.5")), 
+        parseInt($("#pdp_gallery .imageListCarousel").css("top")) == (item_count - imagePageLimit - 1) * -item_height && $("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity", "0.5");
+    } else if ("zoom_gallery" == grandParentId) {
+        $("#zoom_gallery .imageListCarousel li img").each(function() {
+            "image" == $(this).attr("data-type") && $(this).show();
+        });
+        var item_height = $("#zoom_gallery .imageListCarousel li").height(), item_count = $("#zoom_gallery .imageListCarousel li").length, top = parseInt($("#zoom_gallery .imageListCarousel").css("top"));
+        top % item_height || (parseInt($("#zoom_gallery .imageListCarousel").css("top")) > -item_height * (item_count - imagePageLimit) ? ($("#zoom_gallery .imageListCarousel").animate({
+            top: "-=" + item_height + "px"
+        }, "250"), $("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity", "1")) : $("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity", "0.5")), 
+        parseInt($("#zoom_gallery .imageListCarousel").css("top")) == (item_count - imagePageLimit - 1) * -item_height && $("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity", "0.5");
+    }
+}
+
+function previousImage(elem) {
+    var grandParentId = $(elem).parent().parent().attr("id");
+    if ("pdp_gallery" == grandParentId) {
+        var item_height = $("#pdp_gallery .imageListCarousel li").height(), top = parseInt($("#pdp_gallery .imageListCarousel").css("top"));
+        top % item_height || (parseInt($("#pdp_gallery .imageListCarousel").css("top")) < 0 ? ($("#pdp_gallery #nextImage,#pdp_gallery #zoomModal #nextImage").css("opacity", "1"), 
+        $("#pdp_gallery .imageListCarousel").animate({
+            top: "+=" + item_height + "px"
+        }, "250")) : $("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity", "0.5")), 
+        parseInt($("#pdp_gallery .imageListCarousel").css("top")) == -item_height && $("#pdp_gallery #previousImage,#pdp_gallery #zoomModal #previousImage").css("opacity", "0.5");
+    } else if ("zoom_gallery" == grandParentId) {
+        var item_height = $("#zoom_gallery .imageListCarousel li").height(), top = parseInt($("#zoom_gallery .imageListCarousel").css("top"));
+        top % item_height || (parseInt($("#zoom_gallery .imageListCarousel").css("top")) < 0 ? ($("#zoom_gallery #nextImage,#zoom_gallery #zoomModal #nextImage").css("opacity", "1"), 
+        $("#zoom_gallery .imageListCarousel").animate({
+            top: "+=" + item_height + "px"
+        }, "250")) : $("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity", "0.5")), 
+        parseInt($("#zoom_gallery .imageListCarousel").css("top")) == -item_height && $("#zoom_gallery #previousImage,#zoom_gallery #zoomModal #previousImage").css("opacity", "0.5");
+    }
+}
+
+function sendmail() {
+    $("#emailSuccess,#emailUnSuccess,#emailError,#validateemail,#emailEmpty").hide();
+    var email = $("#emailId").val(), productId = $("#pId").val(), dataString = "emailList=" + email + "&productId=" + productId;
+    return "" == email ? ($("#emailSuccess,#emailUnSuccess,#emailError,#validateemail").hide(), 
+    $("#emailEmpty").show(), !1) : validEmail(email) ? void $.ajax({
+        url: ACC.config.encodedContextPath + "/p-sendEmail",
+        data: dataString,
+        type: "GET",
+        cache: !1,
+        success: function(data) {
+            if (1 != data) return $("#emailSuccess,#emailError,#validateemail,#emailEmpty").hide(), 
+            $("#emailUnSuccess").show(), !1;
+            $("#emailUnSuccess,#emailError,#validateemail,#emailEmpty").hide(), $("#emailSuccess").show();
+        },
+        error: function(resp) {
+            return $("#emailSuccess,#emailUnSuccess,#validateemail,#emailEmpty").hide(), $("#emailError").show(), 
+            !1;
+        }
+    }) : ($("#emailSuccess,#emailUnSuccess,#emailError,#emailEmpty").hide(), $("#validateemail").show(), 
+    !1);
+}
+
+function validEmail(email) {
+    for (var arr = email.split(","), i = 0; i < arr.length; i++) {
+        if (!/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(arr[i])) return !1;
+    }
+    return !0;
+}
+
+function dispPriceForSizeGuide(mrp, mop, spPrice, savingsOnProduct) {
+    null != mrp && $("#sizemrpPriceId").append(mrp), null != mop && $("#sizemopPriceId").append(mop), 
+    null != spPrice && $("#sizespPriceId").append(spPrice), null != savingsOnProduct && $("#savingsOnProductIdSG").append("(-" + savingsOnProduct + " %)"), 
+    null != savingsOnProduct && 0 != savingsOnProduct && $("#savingsOnProductIdSG").show(), 
+    null != spPrice && 0 != spPrice ? ($("#sizemrpPriceId").css("text-decoration", "line-through"), 
+    $("#sizemrpPriceId").show(), $("#sizespPriceId").show()) : null != mop && 0 != mop ? mop == mrp ? ($("#sizemrpPriceId").removeClass("old").addClass("sale"), 
+    $("#sizemrpPriceId").show()) : ($("#sizemrpPriceId").css("text-decoration", "line-through"), 
+    $("#sizemrpPriceId").show(), $("#sizemopPriceId").show()) : $("#sizemrpPriceId").show(), 
+    "" == mrp ? $("#sizemrpPriceId").hide() : $("#sizemrpPriceId").show();
+}
+
+function isOOSSizeGuide() {
+    var skuOOS = !1, totalOptions = $(".variant-select-sizeGuidePopUp li").length, disabledOption = $(".variant-select-sizeGuidePopUp li.strike").length;
+    return void 0 != availibility && Object.keys(availibility).length > 0 && $.each(availibility, function(k, v) {
+        window.location.pathname.endsWith(k.toLowerCase()) && 0 == v && (skuOOS = !0);
+    }), totalOptions == disabledOption && 0 != totalOptions || !!skuOOS;
+}
+
+function isOOSQuicks() {
+    var totalOptions = $("ul[label=sizes] li").length;
+    return (totalOptions -= 1) == $("ul[label=sizes] li").find("[style]").length;
+}
+
+function buyboxDetailsForSizeGuide(productCode) {
+    var sellerID = $("#sellerSelId").val(), productCode = productCode, requiredUrl = ACC.config.encodedContextPath + "/p-buyboxDataForSizeGuide", dataString = "productCode=" + productCode + "&sellerId=" + sellerID;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            var sellerName = data.sellerName, sellerID = data.sellerId, mopPrice = data.price, mrpPrice = data.mrp, specialPrice = data.specialPrice, availableStock = data.availablestock, ussid = data.sellerArticleSKU, nosellerData = data.noseller, savingsOnProduct = data.savingsOnProduct;
+            "undefined" != sellerName && null != sellerName && "" != sellerName || ($("#productDetails").hide(), 
+            $("#sizePrice").hide(), $("#addToCartSizeGuide").hide(), $("#noProductForSelectedSeller").show(), 
+            $("#addToCartSizeGuide #addToCartButton").attr("style", "display:none")), null != specialPrice ? $("#specialSelPrice").html(specialPrice) : $("#specialSelPrice").html(mopPrice), 
+            $("#sellerSelName").html(sellerName), $("#sellerIdSizeGuide").html(sellerID), $("#mopSelPrice").html(mopPrice), 
+            $("#mrpSelPrice").html(mrpPrice), $("#sizeStock").val(availableStock), $("#sellerSelArticleSKU").html(ussid), 
+            $("#sellerSelArticleSKUVal").val(ussid), $("#nosellerVal").val(nosellerData), dispPriceForSizeGuide(mrpPrice, mopPrice, specialPrice, savingsOnProduct), 
+            null != availibility && $.each(availibility, function(key, value) {
+                $(".variant-select-sizeGuidePopUp option").each(function() {
+                    void 0 !== $(this).attr("data-producturl") && -1 != $(this).attr("data-producturl").indexOf(key) && 0 == value && $(this).attr("disabled", "disabled");
+                });
+            }), $(".variant-select-sizeGuidePopUp").trigger("click"), isOOSSizeGuide() ? ($("#outOfStockText").html("<font color='#ff1c47'>" + $("#outOfStockText").text() + "</font>"), 
+            $("#addToCartSizeGuideTitleoutOfStockId").show(), $(".btn-block.js-add-to-cart").hide()) : $("#addToCartSizeGuide #addToCartButton").removeAttr("style");
+        }
+    });
+}
+
+function openPop_SizeGuide() {
+    $("loggedIn").val();
+    $("#addedMessage_sizeGuide").hide(), ussidValue = $("#sellerSelArticleSKUVal").val();
+    var productCode = $("#productCode").val(), requiredUrl = ACC.config.encodedContextPath + "/p-viewWishlistsInPDP", dataString = "productCode=" + productCode + "&ussid=" + ussidValue;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            null == data ? ($("#wishListNonLoggedInId_sizeGuide").show(), $("#wishListDetailsId_sizeGuide").hide()) : "" == data || data == [] ? loadDefaultWishListName_SizeGuide() : LoadWishLists_SizeGuide(ussidValue, data, productCode);
+        },
+        error: function(xhr, status, error) {
+            $("#wishListNonLoggedInId_sizeGuide").show(), $("#wishListDetailsId_sizeGuide").hide();
+        }
+    });
+}
+
+function LoadWishLists_SizeGuide(ussid, data, productCode) {
+    var wishListContent = "", wishName = "";
+    $this = this, $("#wishListNonLoggedInId_sizeGuide").hide(), $("#wishListDetailsId_sizeGuide").show();
+    for (var i in data) {
+        var index = -1, checkExistingUssidInWishList = !1, wishList = data[i];
+        wishName = wishList.particularWishlistName, wishListList[i] = wishName;
+        var entries = wishList.ussidEntries;
+        for (var j in entries) {
+            if (entries[j] == ussid) {
+                checkExistingUssidInWishList = !0;
+                break;
+            }
+        }
+        checkExistingUssidInWishList ? (index++, wishListContent = wishListContent + "<tr class='d0'><td ><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist_SizeGuide(" + i + ")' disabled><label for='radio_" + i + "'>" + wishName + "</label></td></tr>") : (index++, 
+        wishListContent = wishListContent + "<tr><td><input type='radio' name='wishlistradio' id='radio_" + i + "' style='display: none' onclick='selectWishlist_SizeGuide(" + i + ")'><label for='radio_" + i + "'>" + wishName + "</label></td></tr>");
+    }
+    $("#wishlistTbodyId_sizeGuide").html(wishListContent);
+}
+
+function loadDefaultWishListName_SizeGuide() {
+    var wishListContent = "", wishName = $("#defaultWishId_sizeGuide").text();
+    $("#wishListNonLoggedInId_sizeGuide").hide(), $("#wishListDetailsId_sizeGuide").show(), 
+    wishListContent = wishListContent + "<tr><td><input type='text' id='defaultWishName_sizeGuide' value='" + wishName + "'/></td></td></tr>", 
+    $("#wishlistTbodyId_sizeGuide").html(wishListContent);
+}
+
+function selectWishlist_SizeGuide(i) {
+    $("#hidWishlist_sizeGuide").val(i);
+}
+
+function addToWishlist_SizeGuide() {
+    var productCodePost = $("#productCode").val(), wishName = "";
+    if ("" == (wishName = "" == wishListList ? $("#defaultWishName_sizeGuide").val() : wishListList[$("#hidWishlist_sizeGuide").val()])) {
+        var msg = $("#wishlistnotblank_sizeGuide").text();
+        return $("#addedMessage_sizeGuide").show(), $("#addedMessage_sizeGuide").html(msg), 
+        !1;
+    }
+    if (void 0 == wishName || null == wishName) return !1;
+    var requiredUrl = ACC.config.encodedContextPath + "/p-addToWishListInPDP", sizeSelected = !0;
+    "#" == $("#variant.size-g option:selected").val() && (sizeSelected = !1);
+    var dataString = "wish=" + wishName + "&product=" + productCodePost + "&ussid=" + ussidValue + "&sizeSelected=" + sizeSelected;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        success: function(data) {
+            if (1 == data) {
+                $("#radio_" + $("#hidWishlist_sizeGuide").val()).prop("disabled", !0);
+                var msg = $("#wishlistSuccess_sizeGuide").text();
+                $("#addedMessage_sizeGuide").show(), $("#addedMessage_sizeGuide").html(msg), setTimeout(function() {
+                    $("#addedMessage_sizeGuide").fadeOut().empty();
+                }, 1500), populateMyWishlistFlyOut(wishName);
+                var isMSDEnabled = $("input[name=isMSDEnabled]").val();
+                if ("true" === isMSDEnabled) {
+                    var isApparelExist = $("input[name=isApparelExist]").val(), salesHierarchyCategoryMSD = $("input[name=salesHierarchyCategoryMSD]").val(), rootCategoryMSD = $("input[name=rootCategoryMSD]").val(), productCodeMSD = $("input[name=productCodeMSD]").val(), priceformad = $("input[id=price-for-mad]").val();
+                    void 0 === isMSDEnabled && (isMSDEnabled = !1), void 0 === isApparelExist && (isApparelExist = !1), 
+                    Boolean(isMSDEnabled) && Boolean(isApparelExist) && "Clothing" === rootCategoryMSD && ACC.track.trackAddToWishListForMAD(productCodeMSD, salesHierarchyCategoryMSD, priceformad, "INR");
+                }
+            }
+        }
+    }), setTimeout(function() {
+        $("a.wishlist#wishlist").popover("hide"), $("input.wishlist#add_to_wishlist-sizeguide").popover("hide");
+    }, 1500);
+}
+
+function openSizeGuidePopuponLoad() {
+    var productcode = productCodeSG;
+    $("body").on("hidden.bs.modal", "#popUpModal", function() {
+        $(this).removeData("bs.modal");
+    }), $("#popUpModal").modal("show"), buyboxDetailsForSizeGuide(productcode);
+}
+
+function getLastModifiedWishlist(ussidValue) {
+    var isInWishlist = !1, requiredUrl = ACC.config.encodedContextPath + "/p-getLastModifiedWishlistByUssid", dataString = "ussid=" + ussidValue;
+    return $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: dataString,
+        dataType: "json",
+        async: !1,
+        success: function(data) {
+            1 == data && (isInWishlist = !0, $(".product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon").addClass("added"), 
+            $("#add_to_wishlist").attr("disabled", !0), $(".add_to_cart_form .out_of_stock #add_to_wishlist").addClass("wishDisabled"));
+        },
+        error: function(xhr, status, error) {
+            $("#wishlistErrorId_pdp").html("Could not add the product in your wishlist");
+        }
+    }), isInWishlist;
+}
+
+function removeFromWishlistInPdp(wishlistName, productCode, ussid, isMSDEnabled, isApparelExist, rootCategoryMSD, catID, price, currency) {
+    var requiredUrl = ACC.config.encodedContextPath + "/p-removeFromWl", dataString = "wish=" + wishlistName + "&product=" + productCode + "&ussid=" + ussid;
+    $.ajax({
+        url: requiredUrl,
+        type: "GET",
+        data: dataString,
+        dataType: "json",
+        cache: !1,
+        contentType: "application/json; charset=utf-8",
+        success: function(data) {
+            if (Boolean(isMSDEnabled) && Boolean(isApparelExist) && "Clothing" == rootCategoryMSD) try {
+                track([ "removeFromWishlist", productCode, catID, price, currency ]);
+            } catch (err) {
+                console.log("Error Adding trackers when remove from cart: " + err.message);
+            }
+            $(".wishRemoveSucess").addClass("active"), setTimeout(function() {
+                $(".wishRemoveSucess").removeClass("active");
+            }, 3e3), $("#add_to_wishlist").attr("disabled", !1), $(".add_to_cart_form .out_of_stock #add_to_wishlist").removeClass("wishDisabled"), 
+            $(".product-info .picZoomer-pic-wp .zoom a,.product-image-container.device a.wishlist-icon").removeClass("added"), 
+            populateMyWishlistFlyOut(wishlistName), utag.link({
+                link_obj: this,
+                link_text: "remove_from_wishlist",
+                event_type: "remove_from_wishlist",
+                product_sku_wishlist: "" + productCode
+            });
+        },
+        error: function(xhr, status, error) {
+            "parsererror" == status ? window.location.href = ACC.config.encodedContextPath + "/login" : alert("Some issues are there with Wishlist at this time. Please try later or contact out helpdesk");
+        }
+    });
+}
+
+function repopulateBuyBoxDetails(data, buyBoxList) {
+    for (var isproductPage = $("#isproductPage").val(), servicableUssids = [], servicableList = [], nonServicableList = [], i = 0; i < data.length; i++) "Y" == data[i].isServicable && servicableUssids.push(data[i].ussid);
+    var allOosFlag = !0;
+    for (var i in buyBoxList) buyBoxList[i].available > 0 && (allOosFlag = !1), "" != servicableUssids && -1 != servicableUssids.indexOf(buyBoxList[i].sellerArticleSKU) && servicableList.push(buyBoxList[i]), 
+    "" != servicableUssids && -1 == servicableUssids.indexOf(buyBoxList[0].sellerArticleSKU) && nonServicableList.push(buyBoxList[i]);
+    $.isEmptyObject(servicableList) || sessionStorage.setItem("servicableList", JSON.stringify(servicableList[0])), 
+    sessionStorage.setItem("isproductPage", isproductPage), sessionStorage.setItem("allOosFlag", allOosFlag), 
+    sessionStorage.setItem("otherSellerCount", servicableList.length - 1), sessionStorage.setItem("pincodeChecked", "Y"), 
+    $.isEmptyObject(servicableList) || populateBuyBoxData(JSON.parse(sessionStorage.getItem("servicableList")), servicableList.length - 1, isproductPage, allOosFlag);
+}
+
+function offerPopup(comp) {
+    $("body").append('<div class="modal fade" id="offerPopup"><div class="content offer-content" style="padding: 40px;min-width: 45%;">' + comp + '<button class="close" data-dismiss="modal" style="border:0px !important;margin: 0px !important;"></button></div><div class="overlay" data-dismiss="modal"></div></div>'), 
+    0 == $("#OfferWrap .Inner .Left").children().length ? $("#OfferWrap .Inner .Left").remove() : "none" != $(".primary_promo_img").css("display") && ($(".offercalloutdesc").css({
+        float: "right"
+    }), $(".offercalloutdesc").css({
+        padding: "30px 5px 30px 12px",
+        width: "58%"
+    })), $("#offerPopup").modal("show");
+}
+
+function setDetailsForStock() {
+    var productCode = $("#productCodeSizeGuid").val(), variantCodesJson = "";
+    "undefined" != typeof variantCodesPdp && "" != variantCodesPdp && (variantCodes = variantCodesPdp.split(","), 
+    variantCodesJson = JSON.stringify(variantCodes));
+    var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode + "/buybox", availibility = null;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: {
+            productCode: productCode,
+            variantCode: variantCodesJson
+        },
+        cache: !1,
+        dataType: "json",
+        success: function(data) {
+            var stockInfo = data.availibility;
+            availibility = stockInfo, $.each(stockInfo, function(key, value) {
+                $("#variant>li>span").each(function() {
+                    -1 != $(this).data("productcode1").toString().toUpperCase().indexOf(key) && ($(this).attr("disabled", !0), 
+                    $(this).parent("li").addClass("strike"), $(this).on("mouseenter", function() {
+                        $(this).parent("li").css("background", "#fff");
+                    }), $(this).on("click", function(event) {
+                        return event.preventDefault(), !1;
+                    }));
+                });
+            });
+        },
+        error: function(err) {}
+    });
+}
+
+function getProductContents() {
+    var requiredUrl = ACC.config.encodedContextPath + "/p-fetchPageContents", dataString = "productCode=" + productCode;
+    $.ajax({
+        url: requiredUrl,
+        data: dataString,
+        success: function(data) {
+            if (data) {
+                $("#productContentDivId").html(data), data.indexOf('class="Manufacturer Temp07"') > -1 && $(".every-scene-carousel").owlCarousel({
+                    items: 3,
+                    loop: !0,
+                    nav: !0,
+                    dots: !1,
+                    navText: [],
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+                        768: {
+                            items: 2
+                        },
+                        1123: {
+                            items: 3
+                        }
+                    }
+                });
+                var productId = [];
+                productId.push($("#product_id").val()), utag.link({
+                    link_text: "a_plus_product",
+                    event_type: "a_plus_product",
+                    a_plus_product_id: productId
+                });
+            }
+        },
+        error: function(xhr, status, error) {}
+    });
+}
+
+function lazyLoadProductContents() {
+    $(window).scrollTop() + $(window).height() >= $("#productContentDivId").offset().top && ($("#productContentDivId").attr("loaded") || ($("#productContentDivId").attr("loaded", !0), 
+    0 == $("#productContentDivId").children().length && getProductContents()));
+}
+
+function populateFreebieMsg(ussId) {
+    var requiredUrl = ACC.config.encodedContextPath + "/p-" + ussId + "/getFreebieMessage", dataString = "ussId=" + ussId;
+    return $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        async: !1,
+        data: dataString,
+        cache: !1,
+        dataType: "json",
+        success: function(data) {
+            if (null != data) {
+                var freebieMessageMap = data.offerMessageMap;
+                $.isEmptyObject(freebieMessageMap) || $.each(freebieMessageMap, function(key, value) {
+                    freebieMsg = value;
+                });
+            }
+        }
+    }), freebieMsg;
+}
+
+function onSizeSelectPopulateDOM() {
+    $("ul#variant.variant-select li a").on("click", function(e) {
+        var currentSelectedElement = this, productCode = "";
+        if (void 0 !== (productCode = $(currentSelectedElement).attr("data-productCode")) && "" != productCode && "product" == $("#pageType").val()) {
+            e.preventDefault();
+            var href = $(this).attr("href"), prvsProductCode = (getParamsFromUrl(href), $("#product").val()), staticHost = $("#staticHost").val();
+            if ($("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+            $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+            "" != $("#promolist").val() && $("#promolist").val(""), "" != window.location.port) var port = ":" + window.location.port; else var port = "";
+            var hostName = window.location.hostname, baseUrl = "//" + hostName + port, originalUrl = baseUrl + href;
+            $("#addToCartFormTitle").hide();
+            var xhrAjaxProductData = getProductDetailOnSizeChange(productCode);
+            xhrAjaxProductData.fail(function(xhr, textStatus, errorThrown) {
+                console.log("ERROR:" + textStatus + ": " + errorThrown), window.location.href = originalUrl;
+            }), xhrAjaxProductData.done(function(data) {
+                try {
+                    $("#productPromotionSection").html(data);
+                    var jsonData = JSON.parse($("#sizeSelectAjaxData").text());
+                    if ($("#sizeSelectAjaxData").remove(), void 0 === jsonData.error) {
+                        document.title = jsonData.mapConfigurableAttribute.metaTitle;
+                        var responseProductCode = jsonData.code, responseProductUrl = jsonData.url, responseProductArticleDescription = jsonData.articleDescription, responsePdpSellerIds = jsonData.pdpSellerIDs;
+                        if (void 0 !== jsonData.productSize) var responseProductSize = jsonData.productSize; else var responseProductSize = "";
+                        if (void 0 !== jsonData.potentialPromotions) var responsePotentialPromotions = jsonData.potentialPromotions; else var responsePotentialPromotions = [];
+                        $("#selectedSize").val("true"), $("input[name=productCodeMSD]").val(responseProductCode), 
+                        $("#product").val(responseProductCode), $("#pdpSellerIDs").val("[" + responsePdpSellerIds + "]"), 
+                        $('meta[itemprop="sku"]').attr("content", responseProductCode), $("a.size-guide").attr("href", "/p-sizeGuide?productCode=" + responseProductCode + "&sizeSelected=true"), 
+                        $("a.size-guide").data("productcode", responseProductCode), $("a.size-guide").data("sizeSelected", "true"), 
+                        $("#pdpPincodeCheck").data("clicked", !1), $("#ia_product_code").val(responseProductCode), 
+                        $("#dListedErrorMsg").hide(), $(".reviews").show(), $(".fullfilled-by").show();
+                        var msiteSeller = $("#msiteBuyBoxSellerId").val(), msiteSellerQueryString = "";
+                        $.isEmptyObject(msiteSeller) || (msiteSellerQueryString = "?sellerId=" + msiteSeller), 
+                        $("a#submit.otherSellersFont").attr("href", "/p/" + responseProductCode + "/viewSellers" + msiteSellerQueryString), 
+                        $("#sellerForm").attr("action", "/p/" + responseProductCode + "/viewSellers" + msiteSellerQueryString), 
+                        $("ul#variant.variant-select li").each(function(index, value) {
+                            $(this).hasClass("selected") && $(this).removeClass("selected");
+                        }), $(currentSelectedElement).parent("li").addClass("selected"), productSizeVar = responseProductSize, 
+                        $("#productCodePost").val(responseProductCode), $("#selectedSizeVariant").val(responseProductCode), 
+                        $("#product_sku").val(responseProductCode), $("#product_id").val(responseProductCode), 
+                        $("#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin,#serviceablePin").hide(), 
+                        $("#pdpPinCodeAvailable").html("Enter your pincode to see your available delivery options  "), 
+                        $("#pdpPinCodeAvailable").show(), "" != responseProductArticleDescription && void 0 !== $(".tab-details span:eq(0)").text() && $(".tab-details span:eq(0)").text(responseProductArticleDescription), 
+                        void 0 !== $(".tab-details li.stylenote").text() && $(".tab-details li.stylenote").text(responseProductArticleDescription), 
+                        $("#productUrl").text(responseProductUrl), $(".g-interactivepost").attr("data-contenturl", window.location.host + responseProductUrl), 
+                        $(".g-interactivepost").attr("data-calltoactionurl", window.location.host + responseProductUrl), 
+                        $("div#emailSend #pId").val(responseProductCode), void 0 !== $("#rating_review") && ($("#rating_review").val(responseProductCode), 
+                        $("input[name=gigya_product_code]").val(responseProductCode)), populatePromotionsInProductDetailsPanel(responsePotentialPromotions), 
+                        changeBrowserUrl(originalUrl), getLastModifiedWishlistForPLP(responseProductCode);
+                        var variantCodes = $("#product_allVariantsListingId").val(), variantCodesJson = "", currentProductCode = responseProductCode;
+                        if (void 0 !== prvsProductCode && "" != currentProductCode) {
+                            if (void 0 !== variantCodes && "" != variantCodes) {
+                                variantCodes = variantCodes.split(","), variantCodes.push(prvsProductCode);
+                                var index = variantCodes.indexOf(currentProductCode);
+                                variantCodes.splice(index, 1), variantCodesJson = JSON.stringify(variantCodes), 
+                                $("#product_allVariantsListingId").val(variantCodes.join());
+                            }
+                            var xhrBuyBox = getBuyBoxDataAjax(currentProductCode, variantCodesJson);
+                            xhrBuyBox.fail(function(xhr, textStatus, errorThrown) {
+                                console.log("ERROR:" + textStatus + ": " + errorThrown), window.location.href = originalUrl;
+                            }), xhrBuyBox.done(function(data) {
+                                var spPrice = void 0 !== data.specialPrice ? data.specialPrice : null, mrpPrice = void 0 !== data.mrp ? data.mrp : null, mop = void 0 !== data.price ? data.price : null;
+                                null != mrpPrice && $("#product_unit_price").val(mrpPrice.doubleValue.toFixed(2)), 
+                                null != spPrice ? $("#product_list_price").val(spPrice.doubleValue.toFixed(2)) : null != mop && $("#product_list_price").val(mop.doubleValue.toFixed(2)), 
+                                void 0 !== data.availablestock && $("#product_stock_count").val(parseInt(data.availablestock));
+                                var savingPriceCal, savingPriceCalPer, savingsOnProduct;
+                                null != mrpPrice && null != spPrice ? (savingPriceCal = mrpPrice.doubleValue - spPrice.doubleValue, 
+                                savingPriceCalPer = savingPriceCal / mrpPrice.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100)) : null != mrpPrice && null != mop && (savingPriceCal = mrpPrice.doubleValue - mop.doubleValue, 
+                                savingPriceCalPer = savingPriceCal / mrpPrice.doubleValue * 100, savingsOnProduct = Math.round(100 * savingPriceCalPer / 100)), 
+                                $("#product_discount").val(Math.round(100 * savingPriceCal / 100)), $("#product_discount_percentage").val(savingsOnProduct);
+                            }), xhrBuyBox.always(function() {
+                                $("#pin").val(""), $("#addToCartButton-wrong").hide(), $("#buyNowButton").attr("disabled", !1), 
+                                $("#fulFilledByTship").hide(), $("#fulFilledBySship").hide(), $(".online-exclusive").hide(), 
+                                $("#newProduct").hide(), $(".picZoomer-pic-wp #codId").css("top", ""), $("#no-click,.loaderDiv").remove(), 
+                                xhrClassAttrib = getClassificationAttributes(responseProductCode), xhrClassAttrib.done(function(data) {
+                                    jsonData = $.parseJSON(data), void 0 === jsonData.error ? populateProductPageTabs(jsonData) : console.log("ERROR:Server side error occured while fetching classification attributes.");
+                                }), xhrClassAttrib.fail(function(xhr, textStatus, errorThrown) {
+                                    console.log("ERROR:" + textStatus + ": " + errorThrown), window.location.href = originalUrl;
+                                }), void 0 !== $("input[name=isGigyaEnabled]").val() && "Y" == $("input[name=isGigyaEnabled]").val() && (setTimeout(function() {
+                                    getPdpRatingOnSizeSelect($("input[name=gigya_api_key]").val(), $("input[name=gigya_product_code]").val(), $("input[name=gigya_product_root_category]").val());
+                                }, 200), $("#ReviewSecion .commentcontent").attr("loaded", !1), $("#ReviewSecion ul#commentsDiv").empty(), 
+                                attachOnScrollEventForPdpOnSizeSelect()), setTimeout(function() {
+                                    populateSizeSelectUtagObject();
+                                }, 500);
+                            });
+                        }
+                    } else $("#no-click,.loaderDiv").remove(), console.log("ERROR:Server side exception thrown while changing size using ajax:" + jsonData.error), 
+                    console.log("ERROR:Resorting to page load as fall back"), window.location.href = originalUrl;
+                } catch (e) {
+                    console.log("ERROR:Client side error occured while fetching product data for size select using ajax:" + e), 
+                    console.log("ERROR:Resorting to page load as fall back."), window.location.href = originalUrl;
+                }
+            });
+        }
+    }), $("#no-click,.loaderDiv").remove();
+}
+
+function getClassificationAttributes(productCode) {
+    var requiredUrl = ACC.config.encodedContextPath + "/p-productClassAttribs?productCode=" + productCode;
+    return $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        cache: !0,
+        dataType: "json"
+    });
+}
+
+function getBuyBoxDataAjax(productCode, variantCodesJson) {
+    var isproductPage = $("#isproductPage").val(), msiteBuyBoxSeller = $("#msiteBuyBoxSellerId").val(), requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode + "/buybox";
+    return $("#allVariantOutOfStock").hide(), $("#outOfStockId").hide(), $("#addToCartButton").show(), 
+    $("#addToCartButton").show(), $("#buyNowButton").show(), $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: requiredUrl,
+        data: {
+            productCode: productCode,
+            variantCode: variantCodesJson,
+            sellerId: msiteBuyBoxSeller
+        },
+        cache: !1,
+        dataType: "json",
+        success: function(data) {
+            for (var i in data.buyboxList) buyBoxList.push(data.buyboxList[i]);
+            "true" == $("#isProductPage").val() && sessionStorage.setItem("servicableList", "");
+            var stockInfo = data.availibility;
+            if (availibility = stockInfo, $.each(stockInfo, function(key, value) {
+                $("#variant li a").each(function() {
+                    void 0 !== $(this).attr("href") && -1 != $(this).attr("href").toUpperCase().indexOf(key) && 0 == value && ($(this).removeAttr("href"), 
+                    $(this).attr("title", "out of stock"), $(this).parent().addClass("strike"), $("#outOfStockId").hide());
+                }), $(".variant-select-sizeGuidePopUp option").each(function() {
+                    void 0 !== $(this).attr("data-producturl") && -1 != $(this).attr("data-producturl").indexOf(key) && 0 == value && $(this).attr("disabled", "disabled");
+                });
+            }), void 0 != data.sellerArticleSKU) {
+                if ("" != data.errMsg) return !1;
+                var channelTypeWeb = $("#promolist").val(), promorestrictedSellers = $("#promotedSellerId").val(), promoindentifier = $("#product_applied_promotion_code").val();
+                void 0 != channelTypeWeb && (null == promorestrictedSellers || void 0 == promorestrictedSellers || "" == promorestrictedSellers ? ($(".promo-block").show(), 
+                "" != promoindentifier && $(".pdp-promo-title-link").show()) : promorestrictedSellers.length > 0 && -1 != promorestrictedSellers.indexOf(data.sellerId) ? ($(".pdp-promo-title-link").show(), 
+                $(".promo-block").show()) : ($(".offercalloutdesc").css({
+                    float: "right"
+                }), "" != $("#product_applied_promotion_code").val() && ($(".primary_promo_desc").hide(), 
+                $(".primary_promo_title").hide(), $(".primary_promo_img").hide())));
+                var allStockZero = data.allOOStock, sellerName = data.sellerName, sellerID = data.sellerId, oosMicro = data.isOOsForMicro;
+                $("#sellerNameId").html(sellerName), $("#sellerSelId").val(sellerID), data.othersSellersCount > 0 && 1 == oosMicro ? ($("#addToCartButton").hide(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), 
+                $("#otherSellerInfoId").show(), $("#otherSellersId").html(data.othersSellersCount), 
+                $("#otherSellerLinkId").show()) : isOOS() && data.othersSellersCount > 0 ? ($("#addToCartButton").hide(), 
+                $("#outOfStockId").show(), $("#buyNowButton").hide(), $("#otherSellerInfoId").hide(), 
+                $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
+                $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : isOOS() && 0 == data.othersSellersCount ? ($("#addToCartButton").hide(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $("#otherSellerInfoId").hide(), 
+                $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), $("#pin").attr("disabled", !0), 
+                $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), $("#allVariantOutOfStock").show()) : "Y" == allStockZero && data.othersSellersCount > 0 && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
+                $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), $("#buyNowButton").hide(), 
+                $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").show(), $("#pdpPincodeCheck").hide(), 
+                $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
+                $("#variant li a").each(function() {
+                    $(this).removeAttr("href"), $(this).parent().addClass("strike");
+                })) : "Y" == allStockZero && 0 == data.othersSellersCount && $("#variant li").length == $("#variant li.strike").length ? ($("#addToCartButton").hide(), 
+                $("#buyNowButton").hide(), $("#outOfStockId").show(), $("#allVariantOutOfStock").show(), 
+                $("#variant li a").each(function() {
+                    $(this).removeAttr("href"), $(this).parent().addClass("strike");
+                }), $("#otherSellerInfoId").hide(), $("#otherSellerLinkId").hide(), $("#pdpPincodeCheck").hide(), 
+                $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0)) : 0 == data.othersSellersCount ? ($("#otherSellerInfoId").hide(), 
+                $("#otherSellerLinkId").hide()) : -1 == data.othersSellersCount ? ($("#otherSellerInfoId").hide(), 
+                $("#otherSellerLinkId").show()) : ($("#otherSellerInfoId").show(), $("#otherSellersId").html(data.othersSellersCount), 
+                $("#minPriceId").html(data.minPrice.formattedValueNoDecimal)), $("#ussid").val(data.sellerArticleSKU), 
+                $("#sellerSkuId").val(data.sellerArticleSKU);
+                var spPrice = data.specialPrice, mrpPrice = data.mrp, mop = data.price, savingsOnProduct = data.savingsOnProduct;
+                $("#stock").val(data.availablestock), $(".selectQty").change(function() {
+                    $("#qty").val($(".selectQty :selected").val());
+                }), displayDeliveryDetails(sellerName), dispPrice(mrpPrice, mop, spPrice, savingsOnProduct);
+                getLastModifiedWishlist(data.sellerArticleSKU), "false" == isproductPage && (fetchAllSellers(), 
+                $("#minPrice").html(data.minPrice.formattedValueNoDecimal)), populateOfferMsgWrapper(productCode, sellerID, null);
+            } else $(".reviews").hide(), $("#addToCartButton-wrong").attr("disable", !0), $("#addToCartButton-wrong").show(), 
+            $("#addToCartButton").hide(), $("#otherSellerInfoId").hide(), $(".wish-share").hide(), 
+            $(".fullfilled-by").hide(), $("#dListedErrorMsg").show(), $("#pdpPincodeCheck").hide(), 
+            $("#pin").attr("disabled", !0), $("#pdpPincodeCheckDList").show(), $("#buyNowButton").attr("disabled", !0), 
+            $.isEmptyObject(data.availibility) && ($("#variant li a").removeAttr("href"), $("#variant li a").removeAttr("title"), 
+            $("#variant li a").attr("disabled", !0), $("#variant li a").parent().addClass("strike"));
+        },
+        complete: function() {
+            differentiateSeller();
+        }
+    });
+}
+
+function populateProductDetailsTab(jsonData) {
+    var rootCategory = $("input[name=rootCategoryMSD]").val(), htmlCode = "", productCategoryType = $("#productCategoryType").val();
+    return htmlCode += '<div class="tab-details">', htmlCode += "<ul>", htmlCode = htmlCode + '<input type="hidden" value="' + productCategoryType + '" id="productCategoryType"/>', 
+    "Clothing" == rootCategory || "Footwear" == rootCategory || "Accessories" == rootCategory ? $.each(jsonData.mapConfigurableAttributes, function(key, value) {
+        "" != value ? "Accessories" == rootCategory && (key.toUpperCase().includes("Feature1".toUpperCase()) || key.toUpperCase().includes("Feature2".toUpperCase()) || key.toUpperCase().includes("Feature3".toUpperCase())) ? $.each(value, function(key1, value1) {
+            htmlCode = htmlCode + "<li>" + key1 + " &nbsp;&nbsp;" + value1 + "</li>";
+        }) : $.each(value, function(key1, value1) {
+            htmlCode = htmlCode + "<li> " + key + " - " + key1 + " &nbsp;&nbsp;" + value1 + "</li>";
+        }) : htmlCode = htmlCode + "<li>" + key + "</li>";
+    }) : $.each(jsonData.mapConfigurableAttributes, function(key, value) {
+        htmlCode = htmlCode + "<li>" + key + " - " + value + "</li>";
+    }), htmlCode = htmlCode + "<li>Product Listing Id :" + $("#product").val() + "</li>", 
+    htmlCode += "</ul>", htmlCode += "</div>";
+}
+
+function populateProductDescriptionTab(jsonData) {
+    var htmlCode = "";
+    return htmlCode += '<div class="tab-details">', void 0 !== $(".tab-details span:eq(0)").text() && (htmlCode = htmlCode + '<span itemprop="description">' + $(".tab-details span:eq(0)").text() + "</span>"), 
+    htmlCode += "<ul>", $.each(jsonData.mapConfigurableAttributes, function(key, value) {
+        htmlCode = htmlCode + "<li>" + value + "</li>";
+    }), htmlCode += "</ul>", htmlCode += "</div>";
+}
+
+function populateProductWarrantyTab(jsonData) {
+    var htmlCode = "";
+    return htmlCode += '<div class="tabs_warranty">', $.each(jsonData.Warranty, function(index, value) {
+        htmlCode += "<ul>", htmlCode = htmlCode + "<li>" + value + "</li>", htmlCode += "</ul>";
+    }), htmlCode += "</div>";
+}
+
+function getProductDetailOnSizeChange(productCode) {
+    return url = ACC.config.encodedContextPath + "/p-ajaxProductData?productCode=" + productCode, 
+    $.ajax({
+        url: url,
+        method: "GET",
+        cache: !1
+    });
+}
+
+function changeBrowserUrl(originalUrl) {
+    history.pushState && history.pushState(null, null, originalUrl);
+}
+
+function populatePromotionsInProductDetailsPanel(responsePotentialPromotions) {
+    var responseProductPromotionTiltle = "", responseProductPromotionCode = "";
+    if (!$.isEmptyObject(responsePotentialPromotions) && responsePotentialPromotions.length > 0) {
+        responseProductPromotionTiltle = responsePotentialPromotions[0].title, responseProductPromotionCode = responsePotentialPromotions[0].code;
+        var promoTitleDiv = '<div class="pdp-promo-title pdp-title"><b>OFFER:</b> ' + responsePotentialPromotions[0].title + "</div>";
+        null != responsePotentialPromotions[0].channels && "" != responsePotentialPromotions[0].channels ? $.each(responsePotentialPromotions[0].channels, function(index, value) {
+            "Web" != value && "" != value && null != value || $("div.pdp-promo-block.promo-block").html(promoTitleDiv);
+        }) : $("div.pdp-promo-block.promo-block").html(promoTitleDiv), $("#promolist").val("[object Object]");
+    } else void 0 !== $("div.pdp-promo-title.pdp-title") && $("div.pdp-promo-block.promo-block").html("");
+    void 0 !== $("div.pdp-offer-title.pdp-title") && $("div.pdp-offer-title.pdp-title").length > 0 && $("div.pdp-offer-title.pdp-title").remove(), 
+    $("a.pdp-promo-title-link").css("display", "none"), $("#product_applied_promotion_title").val(responseProductPromotionTiltle), 
+    $("#product_applied_promotion_code").val(responseProductPromotionCode);
+}
+
+function populateProductPageTabs(jsonData) {
+    if (jsonData.validTabs.includes("details")) {
+        var index = $("ul.nav.pdp>li").index($("#tabs_details"));
+        if (-1 != index) {
+            var selector = "ul.tabs.pdp>li:eq(" + index + ")";
+            $(selector).html(populateProductDetailsTab(jsonData));
+        }
+    }
+    if (jsonData.validTabs.includes("description")) {
+        var index = $("ul.nav.pdp>li").index($("#tabs_description"));
+        if (-1 != index) {
+            var selector = "ul.tabs.pdp>li:eq(" + index + ")";
+            $(selector).html(populateProductDescriptionTab(jsonData));
+        }
+    }
+    if (jsonData.validTabs.includes("warranty")) {
+        var index = $("ul.nav.pdp>li").index($("#tabs_warranty"));
+        if (-1 != index) {
+            var selector = "ul.tabs.pdp>li:eq(" + index + ")";
+            $(selector).html(populateProductWarrantyTab(jsonData));
+        }
+    }
+}
+
+function attachOnScrollEventForPdpOnSizeSelect() {
+    $(window).on("scroll load", function() {
+        void 0 !== $("input[name=isGigyaEnabled]").val() && "Y" == $("input[name=isGigyaEnabled]").val() && "undefined" != typeof params && lazyLoadGigyaCommentsUi();
+    });
+}
+
+function getParamsFromUrl(href) {
+    return href.match("[^&?]*?=[^&?]*");
+}
+
+function getProductCodeFromPdpUrl(url) {
+    var a = $("<a>", {
+        href: url
+    })[0], lastIndexOfp = a.pathname.lastIndexOf("/p-");
+    return -1 != lastIndexOfp && (productCode = a.pathname.substring(lastIndexOfp + 3)), 
+    productCode;
+}
+
 if (function(a, b) {
     "object" == typeof module && "object" == typeof module.exports ? module.exports = a.document ? b(a, !0) : function(a) {
         if (!a.document) throw new Error("jQuery requires a window with a document");
@@ -13484,9 +14568,7 @@ TATA.CommonFunctions = {
     },
     MainBanner: function() {
         var $seastionSec = $(".seastion-sec .cms_disp-img_slot");
-        $seastionSec.html($.trim($seastionSec.html()));
-        var $brandSliderWrapper = $(".brand-slider-wrapper");
-        $brandSliderWrapper.html($.trim($brandSliderWrapper.html())), $(".main-banner").slick({
+        $seastionSec.html($.trim($seastionSec.html())), $(".main-banner").slick({
             arrows: !1,
             dots: !0
         });
@@ -13667,8 +14749,8 @@ TATA.CommonFunctions = {
         }
     },
     Footer: function() {
-        $(window).width() >= 768 && $("footer").find(".accordion").removeClass("accordion"), 
-        $("#main-nav > ul.mega-menu").addClass("footer-cloned-ul").clone().appendTo(".footer-popular-search"), 
+        $(window).width() >= 768 && ($("footer").find(".accordion").removeClass("accordion"), 
+        $("footer").find(".accordion-content").removeClass("accordion-content")), $("#main-nav > ul.mega-menu").addClass("footer-cloned-ul").clone().appendTo(".footer-popular-search"), 
         $(".footer-popular-search .footer-cloned-ul > li").append("<br/>"), $(".footer-popular-search .footer-cloned-ul > li").each(function() {
             $(this).find(".sub-menu").length ? $(this).show() : $(this).hide();
         });
@@ -13839,10 +14921,10 @@ TATA.CommonFunctions = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-                $(".plp-wrapper h4.categor-name").hide(), TATA.Pages.PLP.performAjax(requestUrl);
+                $(".plp-wrapper h4.categor-name").hide(), TATA.Pages.PLP.performAjax(requestUrl, $(this).closest(".facet").children(".facetHead").attr("id"));
             });
         },
-        performAjax: function(requestUrl) {
+        performAjax: function(requestUrl, facetHeadId) {
             $("body").addClass("loader"), $.ajax({
                 url: requestUrl,
                 data: {
@@ -13864,13 +14946,13 @@ TATA.CommonFunctions = {
                 complete: function() {
                     $("body").removeClass("loader"), $(".plp-leftbar-close a").on("click", function() {
                         $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
-                    });
+                    }), void 0 !== facetHeadId && null !== facetHeadId && "" !== facetHeadId && $("#" + facetHeadId).click();
                 }
             });
         },
         Filtershow: function() {
             $(".plp-mob-filter").on("click", function() {
-                $(".leftbar").addClass("active");
+                $(".leftbar").addClass("active"), $(".facetHead").find("a").first().click();
             }), $(".plp-leftbar-close a").on("click", function() {
                 $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
             });
@@ -14435,4 +15517,383 @@ $(document).ready(function() {
             error_type: "invite_friends_error"
         });
     });
+}), ACC.productDetail = {
+    _autoload: [ "initPageEvents", "bindVariantOptions" ],
+    checkQtySelector: function(self, mode) {
+        var input = $(self).parents(".js-qty-selector").find(".js-qty-selector-input"), inputVal = parseInt(input.val()), max = input.data("max"), minusBtn = $(self).parents(".js-qty-selector").find(".js-qty-selector-minus"), plusBtn = $(self).parents(".js-qty-selector").find(".js-qty-selector-plus");
+        $(self).parents(".js-qty-selector").find(".btn").removeAttr("disabled"), "minus" == mode ? 1 != inputVal ? (ACC.productDetail.updateQtyValue(self, inputVal - 1), 
+        inputVal - 1 == 1 && minusBtn.attr("disabled", "disabled")) : minusBtn.attr("disabled", "disabled") : "reset" == mode ? ACC.productDetail.updateQtyValue(self, 1) : "plus" == mode ? inputVal != max ? (ACC.productDetail.updateQtyValue(self, inputVal + 1), 
+        inputVal + 1 == max && plusBtn.attr("disabled", "disabled")) : plusBtn.attr("disabled", "disabled") : "input" == mode && (1 == inputVal ? $(self).parents(".js-qty-selector").find(".js-qty-selector-minus").attr("disabled", "disabled") : inputVal == max ? $(self).parents(".js-qty-selector").find(".js-qty-selector-plus").attr("disabled", "disabled") : inputVal < 1 ? (ACC.productDetail.updateQtyValue(self, 1), 
+        $(self).parents(".js-qty-selector").find(".js-qty-selector-minus").attr("disabled", "disabled")) : inputVal > max && (ACC.productDetail.updateQtyValue(self, max), 
+        $(self).parents(".js-qty-selector").find(".js-qty-selector-plus").attr("disabled", "disabled")));
+    },
+    updateQtyValue: function(self, value) {
+        var input = $(self).parents(".js-qty-selector").find(".js-qty-selector-input"), addtocartQty = $(self).parents(".addtocart-component").find("#addToCartForm").find(".js-qty-selector-input");
+        input.val(value), addtocartQty.val(value);
+    },
+    initPageEvents: function() {
+        $(document).on("click", ".js-qty-selector .js-qty-selector-minus", function() {
+            ACC.productDetail.checkQtySelector(this, "minus");
+        }), $(document).on("click", ".js-qty-selector .js-qty-selector-plus", function() {
+            ACC.productDetail.checkQtySelector(this, "plus");
+        }), $(document).on("keydown", ".js-qty-selector .js-qty-selector-input", function(e) {
+            " " != $(this).val() && (e.which >= 48 && e.which <= 57 || e.which >= 96 && e.which <= 105) || 8 == e.which || 46 == e.which || 37 == e.which || 39 == e.which || 9 == e.which || (38 == e.which ? ACC.productDetail.checkQtySelector(this, "plus") : 40 == e.which ? ACC.productDetail.checkQtySelector(this, "minus") : e.preventDefault());
+        }), $(document).on("keyup", ".js-qty-selector .js-qty-selector-input", function(e) {
+            ACC.productDetail.checkQtySelector(this, "input"), ACC.productDetail.updateQtyValue(this, $(this).val());
+        }), $("#Size").change(function() {
+            var url = "", selectedIndex = 0;
+            $("#Size option:selected").each(function() {
+                url = $(this).attr("value"), selectedIndex = $(this).attr("index");
+            }), 0 != selectedIndex && (window.location.href = url);
+        }), $("#variant").change(function() {
+            var url = "", selectedIndex = 0;
+            $("#variant option:selected").each(function() {
+                url = $(this).attr("value"), selectedIndex = $(this).attr("index");
+            }), 0 != selectedIndex && (window.location.href = url);
+        }), "Y" == localStorage.getItem("movedToWishlist_msgFromCart") && ($("#movedToWishlist_Cart").show(), 
+        setTimeout(function() {
+            $("#movedToWishlist_Cart").fadeOut().empty();
+        }, 1500)), localStorage.removeItem("movedToWishlist_msgFromCart"), "Y" == localStorage.getItem("removeFromCart_msgFromCart") && ($("#removeFromCart_Cart").css("display", "inline-block"), 
+        setTimeout(function() {
+            $("#removeFromCart_Cart").fadeOut().empty();
+        }, 1500)), localStorage.removeItem("removeFromCart_msgFromCart"), $(document).on("click", ".colorBox", function() {
+            var target = $(this).attr("data-producturl");
+            $(this).attr("data-productcode");
+            $("body").on("hidden.bs.modal", "#popUpModal", function() {
+                $(this).removeData("bs.modal");
+            }), $("#popUpModal .modal-content").load(target, function() {
+                $("#popUpModal").modal("show");
+            });
+        }), $(document).on("click", ".variant-select li span, .color-swatch li span", function() {
+            var target = $(this).attr("data-producturl"), productcode = $(this).attr("data-productcode1");
+            if ($("body").on("hidden.bs.modal", "#popUpModal", function() {
+                $(this).removeData("bs.modal");
+            }), $("#isLuxury").val()) {
+                var action = $("#sizeGuideAction").val();
+                void 0 !== action && null !== action && "" !== action ? ($(".page-variant [data-productcode='" + productcode + "']").click(), 
+                $("#popUpModal").modal("hide"), setTimeout(function() {
+                    var staticHost = $("#staticHost").val();
+                    $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+                    $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="' + staticHost + '/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'), 
+                    $(action).click();
+                }, 3e3)) : ($(".page-variant [data-productcode='" + productcode + "']").click(), 
+                $("#popUpModal").modal("hide")), $("#sizeGuideAction").val("");
+            } else $("#popUpModal .modal-content").load(target, function() {
+                $("#popUpModal").modal("show");
+            });
+        });
+    },
+    bindVariantOptions: function() {
+        ACC.productDetail.bindCurrentStyle(), ACC.productDetail.bindCurrentSize(), ACC.productDetail.bindCurrentType();
+    },
+    bindCurrentStyle: function() {
+        var currentStyle = $("#currentStyleValue").data("styleValue"), styleSpan = $(".styleName");
+        null != currentStyle && styleSpan.text(": " + currentStyle);
+    },
+    bindCurrentSize: function() {
+        var currentSize = $("#currentSizeValue").data("sizeValue"), sizeSpan = $(".sizeName");
+        null != currentSize && sizeSpan.text(": " + currentSize);
+    },
+    bindCurrentType: function() {
+        var currentSize = $("#currentTypeValue").data("typeValue"), sizeSpan = $(".typeName");
+        null != currentSize && sizeSpan.text(": " + currentSize);
+    }
+};
+
+var freebieMsg = "", ussidValue = "";
+
+$(document).on("click", "#colorbox .productImageGallery .imageList img", function(e) {
+    if ("image" == $(this).attr("data-type")) $("#player").hide(), $(".productImagePrimary .picZoomer-pic-wp img").show(), 
+    $("#colorbox .main-image img.picZoomer-pic").attr("src", $(this).attr("data-primaryimagesrc")), 
+    $("#colorbox .productImageGallery .thumb").removeClass("active"), $(this).parent(".thumb").addClass("active"), 
+    $(".zoomContainer").remove(), $(".picZoomer-pic").removeData("zoom-image"), $("img.picZoomer-pic").attr("data-zoom-image", $(".quickview .product-image-container .productImageGallery .active img").attr("data-zoomimagesrc")), 
+    $(".quickview .picZoomer-pic").elevateZoom({
+        zoomType: "window",
+        cursor: "crosshair",
+        zoomWindowFadeIn: 500,
+        zoomWindowFadeOut: 750
+    }); else {
+        var url = $(this).attr("data-videosrc");
+        $("#player").show(), $("#player").attr("src", url), $("#videoModal #player").attr("src", url), 
+        $("#videoModal").modal(), $("#videoModal").addClass("active");
+    }
+}), $(".product-image-container .productImageGallery.pdp-gallery .imageList img").click(function(e) {
+    $(this).attr("data-type"), $(this).parents("li").attr("id");
+    if ("image" == $(this).attr("data-type")) $("#player").hide(), $(".productImagePrimary .picZoomer-pic-wp img").show(), 
+    $(".productImagePrimary .picZoomer-pic-wp img").attr("src", $(this).attr("data-primaryimagesrc")), 
+    $("#player").attr("src", ""), $(".super_zoom img").attr("src", $(this).attr("data-zoomimagesrc")), 
+    $(".productImageGallery .thumb").removeClass("active"), $(this).parent(".thumb").addClass("active"), 
+    $(".zoomContainer").remove(), $(".picZoomer-pic").removeData("zoom-image"), $(".picZoomer-pic-wp img").attr("data-zoom-image", $(this).attr("data-zoomimagesrc")), 
+    $(window).width() > 789 && $(".picZoomer-pic-wp .picZoomer-pic").elevateZoom({
+        zoomType: "window",
+        cursor: "crosshair",
+        zoomWindowFadeIn: 500,
+        zoomWindowFadeOut: 750
+    }); else {
+        var url = $(this).attr("data-videosrc");
+        $("#player").show(), $("#player").attr("src", url), $("#videoModal #player").attr("src", url), 
+        $("#videoModal").modal(), $("#videoModal").addClass("active");
+    }
+}), $(document).on("keypress", "#defaultWishName", function(e) {
+    var wishlistname = $("#defaultWishName").val();
+    validateSpcharWlName(e, wishlistname, "defaultWishName", "#addedMessage");
+    var key = e.keyCode;
+    if (key >= 33 && key < 48 || key >= 58 && key < 65 || key >= 91 && key < 97) {
+        e.preventDefault();
+        var start = this.selectionStart, end = this.selectionEnd;
+        $("#defaultWishName").val(wishlistname), $("#addedMessage").show(), $("#addedMessage").html("<font color='#ff1c47'><b>Special characters are not allowed</b></font>"), 
+        $("#addedMessage").show().fadeOut(3e3), this.setSelectionRange(start, end);
+    }
+});
+
+var wishListList = [], pinCodeChecked = !1;
+
+$(function() {
+    var regExp = /^([1-9])([0-9]){5}$/;
+    $("#codId").hide(), $(".submit").click(function() {
+        if ("Check" == document.getElementById("pdpPincodeCheck").className) {
+            $(this).data("clicked", !0), pinCodeChecked = !0, $("#homeli").css("opacity", "0.5"), 
+            $("#homeli").removeClass("selected"), $("#expressli").css("opacity", "0.5"), $("#expressli").removeClass("selected"), 
+            $("#collectli").css("opacity", "0.5"), $("#collectli").removeClass("selected"), 
+            $("#codId").hide(), $("#wrongPin,#unableprocessPin,#unsevisablePin,#emptyPin").hide(), 
+            $("#addToCartButton-wrong").attr("disable", !0), $("#addToCartButton-wrong").hide(), 
+            $("#outOfStockId").hide();
+            var checkBuyBoxIdPresent = !1, pin = ($("#ussid").val(), $("#pin").val()), requiredUrl = ACC.config.encodedContextPath + "/p-checkPincode";
+            if ("" == pin) return $("#unsevisablePin,#unableprocessPin,#wrongPin,#serviceablePin").hide(), 
+            $("#emptyPin").show(), $("#pdpPinCodeAvailable").hide(), $("#addToCartButton").show(), 
+            $("#buyNowButton").attr("disabled", !1), !1;
+            if (!regExp.test(pin)) return $("#unsevisablePin,#unableprocessPin,#emptyPin").hide(), 
+            $("#wrongPin").show(), $("#pdpPinCodeAvailable").hide(), $("#serviceablePin").hide(), 
+            $("#addToCartButton").show(), $("#buyNowButton").attr("disabled", !1), !1;
+            var productCode = $("#product").val(), dataString = "pin=" + pin + "&productCode=" + productCode;
+            jQuery.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: requiredUrl,
+                data: dataString,
+                success: function(data) {
+                    var isLuxury = $("#isLuxury").val();
+                    if ("" == data || data == [] || null == data) return refreshSellers(data, buyboxSeller), 
+                    $("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected"), $("#expressli").css("opacity", "0.5"), 
+                    $("#expressli").removeClass("selected"), $("#collectli").css("opacity", "0.5"), 
+                    $("#collectli").removeClass("selected"), $("#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin").hide(), 
+                    $("#addToCartFormTitle").hide(), $("#addToCartButton-wrong").show(), $("#addToCartButton").hide(), 
+                    $("#unsevisablePin").show(), $("#pdpPinCodeAvailable").hide(), $("#buyNowButton").attr("disabled", !0), 
+                    $("#pdpPinCodeAvailable").html("Available delivery options for the pincode " + pin + " are"), 
+                    utag.link({
+                        link_text: "pdp_pincode_check_failure",
+                        event_type: "pdp_pincode_check",
+                        pdp_pin_sku: productCode,
+                        pdp_pin_status: "not_servicable",
+                        pdp_pin_value: pin,
+                        pdp_pincode_non_serviceable: pin,
+                        pdp_pin_delivery: "error"
+                    }), !1;
+                    if ("NA" == data[0].isServicable) return isLuxury && ($(this).hide(), $(".luxuyChangepincode").show()), 
+                    $("#home").show(), $("#homeli").show(), $("#homeli").addClass("selected"), $("#homeli").css("opacity", "1"), 
+                    $("#express").show(), $("#expressli").show(), $("#expressli").addClass("selected"), 
+                    $("#expressli").css("opacity", "1"), $("#collect").show(), $("#collectli").show(), 
+                    $("#collectli").addClass("selected"), $("#collectli").css("opacity", "1"), $("#codId").show(), 
+                    $("#pdpPinCodeAvailable").html("Available delivery options for the pincode " + pin + " are"), 
+                    utag.link({
+                        link_text: "pdp_pincode_check_failure",
+                        event_type: "pdp_pincode_check",
+                        pdp_pin_sku: productCode,
+                        pdp_pin_status: "not_servicable",
+                        pdp_pin_value: pin,
+                        pdp_pincode_non_serviceable: pin,
+                        pdp_pin_delivery: "error"
+                    }), !1;
+                    isLuxury && ($(this).hide(), $(".luxuyChangepincode").show()), repopulateBuyBoxDetails(data, buyBoxList);
+                    var buyboxSeller = $("#ussid").val();
+                    refreshSellers(data, buyboxSeller), deliverModeTealium = new Array();
+                    for (var i in data) {
+                        var pincodedata = data[i];
+                        if (ussid = pincodedata.ussid, ussid == buyboxSeller) if ("Y" == pincodedata.isServicable) {
+                            $("#serviceablePin").show(), checkBuyBoxIdPresent = !0, deliveryModes = pincodedata.validDeliveryModes;
+                            var home = !1, exp = !1, click = !1;
+                            0 == pincodedata.stockCount ? ($("#addToCartButton").hide(), $("#outOfStockId").show(), 
+                            $("#buyNowButton").hide(), $("#stock").val(0)) : ($("#addToCartButton").show(), 
+                            $("#buyNowButton").attr("disabled", !1), $("#buyNowButton").show()), "Y" == pincodedata.cod && $("#codId").show();
+                            for (var j in deliveryModes) {
+                                var mode = deliveryModes[j];
+                                deliveryModeName = mode.type, $("#stock").val(pincodedata.stockCount), "HD" == deliveryModeName ? home = !0 : "CNC" == deliveryModeName ? click = !0 : exp = !0;
+                            }
+                            1 == home ? ($("#home").show(), $("#homeli").show(), $("#homeli").addClass("selected"), 
+                            $("#homeli").css("opacity", "1"), deliverModeTealium.push("home")) : ($("#homeli").css("opacity", "0.5"), 
+                            $("#homeli").removeClass("selected")), 1 == exp ? ($("#express").show(), $("#expressli").show(), 
+                            $("#expressli").addClass("selected"), $("#expressli").css("opacity", "1"), deliverModeTealium.push("express")) : ($("#expressli").css("opacity", "0.5"), 
+                            $("#expressli").removeClass("selected")), 1 == click ? ($("#collect").show(), $("#collectli").show(), 
+                            $("#collectli").addClass("selected"), $("#collectli").css("opacity", "1"), deliverModeTealium.push("clickandcollect")) : ($("#collectli").css("opacity", "0.5"), 
+                            $("#collectli").removeClass("selected")), utag.link({
+                                link_text: "pdp_pincode_check_success",
+                                event_type: "pdp_pincode_check",
+                                pdp_pin_sku: productCode,
+                                pdp_pin_status: "servicable",
+                                pdp_pin_value: pin,
+                                pdp_pincode_serviceable: pin,
+                                pdp_pin_delivery: deliverModeTealium.join("_")
+                            });
+                        } else $("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected"), 
+                        $("#click").hide(), $("#expressli").css("opacity", "0.5"), $("#expressli").removeClass("selected"), 
+                        $("#collectli").css("opacity", "0.5"), $("#collectli").removeClass("selected"), 
+                        $("#wrongPin,#unableprocessPin,#emptyPin,#serviceablePin").hide(), $("#addToCartFormTitle").hide(), 
+                        $("#stock").val() > 0 ? ($("#addToCartButton-wrong").show(), $("#buyNowButton").attr("disabled", !0)) : ($("#outOfStockId").show(), 
+                        $("#buyNowButton").hide()), $("#addToCartButton").hide(), $("#unsevisablePin").show(), 
+                        utag.link({
+                            link_text: "pdp_pincode_check_failure",
+                            event_type: "pdp_pincode_check",
+                            pdp_pin_sku: productCode,
+                            pdp_pin_status: "not_servicable",
+                            pdp_pin_value: pin,
+                            pdp_pincode_non_serviceable: pin,
+                            pdp_pin_delivery: "error"
+                        });
+                    }
+                    checkBuyBoxIdPresent || ($("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected"), 
+                    $("#click").hide(), $("#expressli").css("opacity", "0.5"), $("#expressli").removeClass("selected"), 
+                    $("#wrongPin,#unableprocessPin,#emptyPin").hide(), $("#addToCartFormTitle").hide(), 
+                    $("#stock").val() > 0 ? $("#addToCartButton-wrong").show() : ($("#outOfStockId").show(), 
+                    $("#buyNowButton").hide()), $("#addToCartButton").hide(), $("#unsevisablePin").show(), 
+                    $("#pdpPinCodeAvailable").hide()), $("#pinCodeChecked").val(pinCodeChecked), $("#pdpPinCodeAvailable").html("Available delivery options for the pincode " + pin + " are");
+                },
+                error: function(xhr, status, error) {
+                    $("#wrongPin,#unsevisablePin,#emptyPin").hide(), $("#unableprocessPin").show(), 
+                    $("#pdpPinCodeAvailable").html("Available delivery options for the pincode " + pin + " are");
+                    var error = $("#unableprocessPin").val();
+                    "undefined" != typeof utag && utag.link({
+                        error_type: error
+                    });
+                }
+            }), $("#pin").blur(), "" == $("#pin").val() ? document.getElementById("pdpPincodeCheck").className = "Check" : $("#pdpPincodeCheck").text("Check");
+        } else $("#pin").focus(), $("#emptyPin").hide();
+    });
+});
+
+var availibility = null, buyBoxList = [];
+
+$(document).ready(function() {
+    $("#categoryType").val();
+    $("#variant,#sizevariant option:selected").val();
+    $("#isproductPage").val();
+    $("#addToCartButton").show(), $("#outOfStockId").hide();
+    var productCode = $("#product").val(), variantCodes = $("#product_allVariantsListingId").val(), variantCodesJson = "";
+    $("#msiteBuyBoxSellerId").val();
+    if (void 0 !== variantCodes && "" != variantCodes && (variantCodes = variantCodes.split(","), 
+    variantCodesJson = JSON.stringify(variantCodes)), void 0 === productCode || "cart" == $("#pageType").val()) return !1;
+    ACC.config.encodedContextPath;
+    getBuyBoxDataAjax(productCode, variantCodesJson), $(".size-guide").click(function() {
+        null != availibility && (setTimeout(function() {
+            $.each(availibility, function(key, value) {
+                $(".variant-select-sizeGuidePopUp li span").each(function() {
+                    void 0 !== $(this).attr("data-producturl") && -1 != $(this).attr("data-producturl").indexOf(key) && 0 == value && ($(this).attr("disabled", "disabled"), 
+                    $(this).css({
+                        color: "gray"
+                    }), $(this).removeAttr("data-producturl"), $(this).parent().addClass("strike"));
+                });
+            });
+        }, 2e3), setTimeout(function() {
+            isOOS() && ($("#outOfStockText").html("<font color='#ff1c47'>" + $("#outOfStockText").text() + "</font>"), 
+            $("#addToCartSizeGuideTitleoutOfStockId").show(), $("#addToCartSizeGuide #addToCartButton").hide());
+        }, 3e3));
+    });
+}), $(".showDate").click(function() {
+    $(".show-date").toggle();
+}), $(document).on("click", "#buyNow .js-add-to-cart", function(event) {
+    var isShowSize = $("#showSize").val();
+    if (!$("#variant li ").hasClass("selected") && void 0 === $(".variantFormLabel").html() && "Electronics" != $("#ia_product_rootCategory_type").val() && "Watches" != $("#ia_product_rootCategory_type").val() && "true" == isShowSize) {
+        return $("#isLuxury").val() ? ($("#sizeGuideAction").val("#buyNow .js-add-to-cart"), 
+        $(".size-guide").click()) : ($("#addToCartFormTitle").html("<font color='#ff1c47'>" + $("#selectSizeId").text() + "</font>"), 
+        $("#addToCartFormTitle").show(), utag.link({
+            error_type: "size_not_selected"
+        })), !1;
+    }
+    if ("true" == $("#isLargeAppliance").val() && 0 == pinCodeChecked) return $("#addToCartFormTitle").html("<font color='#ff1c47'>" + $("#addToCartLargeAppliance").text() + "</font>"), 
+    $("#addToCartFormTitle").show().fadeOut(6e3), $("#pin").focus(), $("#pin").css("border", "1px solid #000"), 
+    !1;
+    ACC.product.sendAddToBag("addToCartForm", !0);
+}), $(document).ready(function() {
+    window.location.href.indexOf("selectedSize=true") >= 0 && "undefined" != typeof productSizeVar && ($("#variant option").each(function() {
+        $(this).text().trim() == productSizeVar && $(this).attr("selected", "selected");
+    }), $("#sizevariant option").each(function() {
+        $(this).text().trim() == productSizeVar && $(this).attr("selected", "selected");
+    }));
+}), $(document).ready(function() {
+    $(".pdp .Emi > p").on("click", function(e) {
+        e.stopPropagation(), !$(this).hasClass("active") && $(window).width() > 1024 && ($(this).addClass("active"), 
+        openPopForBankEMI());
+    }), $(".pdp .Emi .modal-content .Close").on("click", function(e) {
+        e.stopPropagation(), $(".Emi > p").removeClass("active mobile"), $(".emi-overlay").remove();
+    }), $(".pdp .Emi > #EMImodal-content").on("click", function(e) {
+        e.stopPropagation(), $(window).width() > 1024 && $(".pdp .Emi > p").addClass("active");
+    }), $(document).on("click", function(e) {
+        $(e.currentTarget).parents(".Emi").hasClass("Emi_wrapper") ? $(".pdp .Emi > p").addClass("active") : $(".pdp .Emi > p").removeClass("active");
+    }), $(".pdp .Emi > p").on("click", function() {
+        $(window).width() <= 1024 && ($(this).addClass("active mobile"), $("body").append("<div class='emi-overlay' style='opacity:0.65; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>"), 
+        openPopForBankEMI(), $("body").addClass("no-scroll"));
+    }), $(document).on("click", ".pdp .emi-overlay,.pdp .Emi .modal-content .Close", function() {
+        $(".pdp .Emi > p").removeClass("active mobile"), $(".emi-overlay").remove(), $("body").removeClass("no-scroll");
+    }), $(window).resize(function() {
+        $(window).width() > 1024 && ($(".pdp .Emi > p").removeClass("active mobile"), $(".pdp .emi-overlay").remove(), 
+        $("body").removeClass("no-scroll"));
+    }), $(document).on("click", ".product-detail .promo-block .pdp-promo-title, .pdp-promo-title-link", function(e) {
+        e.preventDefault(), utag.link({
+            link_obj: this,
+            link_text: "product_offer_view_details",
+            event_type: "product_offer_details"
+        }), offerPopup($("#promotionDetailsId").html());
+    }), $(document).on("hide.bs.modal", function() {
+        $("#offerPopup").remove();
+    }), $("#pin").focus(function() {
+        document.getElementById("pdpPincodeCheck").className = "Check";
+    }), $("a.otherSellersFont").click(function() {
+        $("#sellerForm").submit();
+    });
+}), "ProductDetailsPageTemplate" == $("#pageTemplateId").val() && $(window).on("scroll load", function() {
+    lazyLoadProductContents();
+}), $(document).ready(function() {
+    var width = 0;
+    $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width() > 60 ? $(".SpecWrap .Padd .tabs-block .nav > li").each(function() {
+        width += $(this).width();
+    }) : $(".SpecWrap .Padd .tabs-block .nav > li").each(function() {
+        width = width + $(this).width() + 15;
+    });
+    var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+    if (width <= winWidth && ($(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display", "none"), 
+    $(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top", "0px")), width > winWidth) {
+        var l = 0;
+        $(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display", "inline-block"), 
+        $(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top", "15px"), $(".SpecWrap .Padd .tabs-block .nav").animate({
+            left: 0
+        }), $(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
+            l += 200, !$(".SpecWrap .Padd .tabs-block .nav li:last-child").visible() && l <= width ? $(".SpecWrap .Padd .tabs-block .nav").animate({
+                left: -l
+            }) : (l = 0, $(".SpecWrap .Padd .tabs-block .nav").animate({
+                left: 0
+            }));
+        });
+    }
+}), $(window).on("resize", function() {
+    var width = 0;
+    $(".SpecWrap .Padd").innerWidth() - $(".SpecWrap .Padd").width() > 60 ? $(".SpecWrap .Padd .tabs-block .nav > li").each(function() {
+        width += $(this).width();
+    }) : $(".SpecWrap .Padd .tabs-block .nav > li").each(function() {
+        width = width + $(this).width() + 15;
+    });
+    var winWidth = $(".SpecWrap .nav-wrapper").innerWidth();
+    if (width <= winWidth && ($(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display", "none"), 
+    $(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top", "0px")), width > winWidth) {
+        var l = 0;
+        $(".SpecWrap .Padd .tabs-block .nav-wrapper > span").css("display", "inline-block"), 
+        $(".SpecWrap .Padd .tabs-block .nav-wrapper").css("padding-top", "15px"), $(".SpecWrap .Padd .tabs-block .nav").animate({
+            left: 0
+        }), $(".SpecWrap .Padd .tabs-block .nav-wrapper > span").unbind().click(function() {
+            l += 200, !$(".SpecWrap .Padd .tabs-block .nav li:last-child").visible() && l <= width ? $(".SpecWrap .Padd .tabs-block .nav").animate({
+                left: -l
+            }) : (l = 0, $(".SpecWrap .Padd .tabs-block .nav").animate({
+                left: 0
+            }));
+        });
+    }
+}), $(document).ready(function() {
+    onSizeSelectPopulateDOM();
 });
