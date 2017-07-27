@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.product.impl;
 
-import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.catalog.model.ProductFeatureModel;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -34,8 +33,9 @@ import com.tisl.mpl.util.CatalogUtils;
 public class MplProductDaoImpl extends DefaultProductDao implements MplProductDao
 {
 
-	@Autowired
-	private CatalogVersionService catalogVersionService;
+	/*
+	 * @Autowired private CatalogVersionService catalogVersionService;
+	 */
 
 	@Autowired
 	private SearchRestrictionService searchRestrictionService;
@@ -130,13 +130,11 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 		return productList;
 	}
 
-	private CatalogVersionModel getCatalogVersion()
-	{
-		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
-		return catalogVersionModel;
-	}
+	/*
+	 * private CatalogVersionModel getCatalogVersion() { final CatalogVersionModel catalogVersionModel =
+	 * catalogVersionService.getCatalogVersion( MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+	 * MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION); return catalogVersionModel; }
+	 */
 
 	@Override
 	public List<ProductModel> findProductsByCodeHero(final String code)
@@ -174,7 +172,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
 	 * .lang.String, java.lang.String)
@@ -205,7 +203,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.util.List)
@@ -214,7 +212,6 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	public List<ProductModel> findProductListByCodeList(final CatalogVersionModel catalogVersion,
 			final List<String> productCodeList)
 	{
-		// YTODO Auto-generated method stub
 		List<ProductModel> productModelList = null;
 		final StringBuilder productCodes = new StringBuilder(100);
 		final Map<String, String> queryParamMap = new HashMap<String, String>();

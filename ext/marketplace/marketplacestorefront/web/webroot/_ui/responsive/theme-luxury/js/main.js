@@ -936,10 +936,10 @@ TATA.Pages = {
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
                 $(".plp-wrapper h4.categor-name").hide();
-                TATA.Pages.PLP.performAjax(requestUrl);
+                TATA.Pages.PLP.performAjax(requestUrl, $(this).closest('.facet').children('.facetHead').attr('id'));
             });
         },
-        performAjax: function(requestUrl) {
+        performAjax: function(requestUrl, facetHeadId) {
 
             $('body').addClass('loader');
 
@@ -983,6 +983,9 @@ TATA.Pages = {
                         $('.leftbar').removeClass('active');
                         $('.facet').removeClass('open')
                     });
+                    if(typeof facetHeadId != 'undefined' && facetHeadId !== null && facetHeadId !== '') {
+                        $('#'+facetHeadId).click();
+                    }
                 }
             });
         },
@@ -990,6 +993,7 @@ TATA.Pages = {
         Filtershow: function() {
             $('.plp-mob-filter').on('click', function(){
                 $('.leftbar').addClass('active');
+                $('.facetHead').find('a').first().click();
             });
             $('.plp-leftbar-close a').on('click', function(){
                 $('.leftbar').removeClass('active');

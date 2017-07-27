@@ -3,7 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
-import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -31,15 +30,14 @@ public class SizeGuideDaoImpl implements SizeGuideDao
 
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
-	@Autowired
-	private CatalogVersionService catalogVersionService;
+
 
 	@Autowired
 	private CatalogUtils catalogUtils;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.SizeGuideDao#getsizeGuideByCode(java.lang.String)
 	 */
 	@Override
@@ -51,7 +49,7 @@ public class SizeGuideDaoImpl implements SizeGuideDao
 			final CatalogVersionModel catalogVersion = catalogUtils.getSessionCatalogVersionForProduct();
 			final String queryString = "SELECT {sg." + SizeGuideModel.PK + "} FROM {" + SizeGuideModel._TYPECODE + " AS sg}"
 
-			+ " WHERE {sg:" + SizeGuideModel.SIZEGUIDEID + "}=?sizeGuideCode  AND {sg:" + SizeGuideModel.CATALOGVERSION
+					+ " WHERE {sg:" + SizeGuideModel.SIZEGUIDEID + "}=?sizeGuideCode  AND {sg:" + SizeGuideModel.CATALOGVERSION
 					+ "} = ?catalogVersion";
 
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
@@ -74,11 +72,9 @@ public class SizeGuideDaoImpl implements SizeGuideDao
 
 	}
 
-	private CatalogVersionModel getCatalogVersion()
-	{
-		final CatalogVersionModel catalogVersionModel = catalogVersionService.getCatalogVersion(
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
-		return catalogVersionModel;
-	}
+	/*
+	 * private CatalogVersionModel getCatalogVersion() { final CatalogVersionModel catalogVersionModel =
+	 * catalogVersionService.getCatalogVersion( MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
+	 * MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION); return catalogVersionModel; }
+	 */
 }
