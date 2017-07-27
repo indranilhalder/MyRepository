@@ -65,7 +65,7 @@ grunt.initConfig({
 					'js/lib/bootstrap.min.js',
 				    'js/lib/jquery.validate.min.js',
 				    'js/main.js',
-                    'js/acc.accountaddress.js',
+                    'js/acc.accountaddress.js',                
                     'js/acc.productDetail.js'
 				    /*'js/login.js',
 				    'js/tulvalidation.js',*/

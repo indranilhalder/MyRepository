@@ -1726,14 +1726,8 @@ function populatePromotionsInProductDetailsPanel(responsePotentialPromotions) {
 }
 
 function populateProductPageTabs(jsonData) {
-    if (jsonData.validTabs.includes("details")) {
-        var index = $("ul.nav.pdp>li").index($("#tabs_details"));
-        if (-1 != index) {
-            var selector = "ul.tabs.pdp>li:eq(" + index + ")";
-            $(selector).html(populateProductDetailsTab(jsonData));
-        }
-    }
-    if (jsonData.validTabs.includes("description")) {
+    if (jsonData.validTabs.includes("details") && $("div.nav-wrapper>.accordion-content>#details").html(populateProductDetailsTab(jsonData)), 
+    jsonData.validTabs.includes("description")) {
         var index = $("ul.nav.pdp>li").index($("#tabs_description"));
         if (-1 != index) {
             var selector = "ul.tabs.pdp>li:eq(" + index + ")";
@@ -14836,7 +14830,7 @@ TATA.CommonFunctions = {
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
         _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.deleteWishlist(), _self.leftBarAccordian(), 
-        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct(), _self.displayRemoveCoupon();
+        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct();
     }
 }, TATA.Pages = {
     PLP: {
