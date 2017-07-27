@@ -55,7 +55,7 @@
 				<entry key="promoted_product" value="0"/>
 				<entry key="bulk_return_initiation" value="0"/>
 				<entry key="bulk_cancel_initiation" value="0"/>
-				<entry key="weight_variant_seller" value="0" />
+				<entry key="pcmmplassociation" value="0" />
 					</map>
 		</property>
 	</bean>
@@ -269,7 +269,7 @@
     
     <bean id="batchMplLeadAssociationConverterMapping"
 		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-		p:mapping="weight_variant_seller" p:converter-ref="batchLeadUssidMplAssociationConverter" />
+		p:mapping="pcmmplassociation" p:converter-ref="batchLeadUssidMplAssociationConverter" />
     
       <!-- Converter for seller Import -->
       <bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
