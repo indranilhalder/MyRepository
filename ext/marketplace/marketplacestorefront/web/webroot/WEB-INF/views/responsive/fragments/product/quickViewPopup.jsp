@@ -530,7 +530,7 @@ display:none;
    						 		<c:forEach var="classValue" items="${classification.value }">
    						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
    						 			 </c:forEach>
-   						 			 <a href="" class="more-link">More</a>
+   						 			<!--  <a href="" class="more-link">More</a> -->
 							  </c:if> 
 								</c:forEach>
 							</span> 
@@ -1156,8 +1156,4 @@ $(window).resize(function(){
 });
 
 /*add to wishlist st*/
-   
-    <!-- //TPR-3752 Jewel Heading Added -->
-var propQuick = '${mapConfigurableAttributes}';
-	propQuick =propQuick.replace(/[{}]/g, '');
 </script>
