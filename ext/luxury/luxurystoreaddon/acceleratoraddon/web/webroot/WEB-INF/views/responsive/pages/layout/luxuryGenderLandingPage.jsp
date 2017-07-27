@@ -165,29 +165,6 @@
             </div>
         </div>--%>
 
-	<div class="look-book">
-		<div class="look-book-img">
-			<div class="look-book-list clearfix">
-				<div class="colmn">
-					<ul class="list-unstyled clearfix">
-						<cms:pageSlot position="Gender-MoreStoriesbanner2Col1" var="MoreStoriesbanner2Col1" element="div"
-									  class="span-24 section5 cms_disp-img_slot">
-							<li><cms:component component="${MoreStoriesbanner2Col1}" /></li>
-						</cms:pageSlot>
-					</ul>
-				</div>
-				<div class="colmn">
-					<ul class="list-unstyled clearfix">
-						<li>
-							<cms:pageSlot position="Gender-MoreStoriesbanner2Col2" var="MoreStoriesbanner2Col2" element="div"
-										  class="span-24 section5 cms_disp-img_slot">
-						<li><cms:component component="${MoreStoriesbanner2Col2}"/> </li>
-						</cms:pageSlot>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
 	<cms:pageSlot position="Gender-PopularCategory" var="feature" element="div"
 				  class="span-24 section5 cms_disp-img_slot">
 		<cms:component component="${feature}" />
