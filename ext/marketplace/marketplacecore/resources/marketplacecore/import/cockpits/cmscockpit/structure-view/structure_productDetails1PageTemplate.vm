@@ -65,7 +65,7 @@
 			</tr>
 			<tr>
 				<td colspan="3" class="structureViewSection">
-					<cockpit code="Section2" />
+					<cockpit code="ExchangeSlot"/>
 				</td>
 			</tr>
 			<tr>

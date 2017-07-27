@@ -76,6 +76,7 @@ ACC.singlePageCheckout = {
 		              $("#address_carousel").owlCarousel({
 		                items:3,
 						loop: false,
+						mouseDrag:($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
 						nav: ($(".checkTab .addressList_wrapper .address-list").length <= 3)?false:true,
 						dots:false,
 						navText:[],
@@ -918,17 +919,20 @@ ACC.singlePageCheckout = {
 	            				stagePadding: 36,
 	            				slideBy: 1,
 	            				margin: 0,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 1)?false:true,
 	            			},
 	            			// breakpoint from 768 up
 	            			768 : {
 	            				items:2,
 	            				slideBy: 2,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 2)?false:true,
 	            			},
 	            			// breakpoint from 1280 up
 	            			1280 : {
 	            				items:3,
+	            				mouseDrag:($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
 	            				nav: ($(".cnc_item .removeColor"+entryNumber).length <= 3)?false:true,
 	            			}			
 	            		},
