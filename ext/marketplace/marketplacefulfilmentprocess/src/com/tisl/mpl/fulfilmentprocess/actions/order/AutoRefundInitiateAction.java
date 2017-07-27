@@ -4,6 +4,7 @@
 package com.tisl.mpl.fulfilmentprocess.actions.order;
 
 import de.hybris.platform.basecommerce.enums.ConsignmentStatus;
+import de.hybris.platform.basecommerce.enums.RefundReason;
 import de.hybris.platform.basecommerce.enums.ReturnStatus;
 import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
@@ -39,6 +40,7 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplPaymentService;
 public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProcessModel>
 {
 	private static final Logger LOG = Logger.getLogger(AutoRefundInitiateAction.class);
+	private static final String REFUND_MODE_C = "C";
 
 	private List<OrderEntryModel> refundList;
 	private List<ReturnEntryModel> returnList;
@@ -57,6 +59,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	public void executeAction(final OrderProcessModel process)
 	{
 		LOG.error("Inside AutoRefundInitiateAction");
+		boolean refundedAtRts = false;
+		boolean refundReasonSiteError = false;
 
 		refundList = Collections.synchronizedList(new ArrayList<OrderEntryModel>());
 		returnList = Collections.synchronizedList(new ArrayList<ReturnEntryModel>());
@@ -79,10 +83,23 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 								if (returnEntry.getOrderEntry() != null
 										&& CollectionUtils.isNotEmpty(returnEntry.getOrderEntry().getConsignmentEntries()))
 								{
+									refundedAtRts = false;
+									if (returnEntry instanceof RefundEntryModel
+											&& null != ((RefundEntryModel) returnEntry).getRefundMode()
+											&& ((RefundEntryModel) returnEntry).getRefundMode().equalsIgnoreCase(REFUND_MODE_C)) // added for store return mode
+									{
+										refundedAtRts = true;
+									}
+									refundReasonSiteError = false;
+									if (returnEntry instanceof RefundEntryModel && null != ((RefundEntryModel) returnEntry).getReason()
+											&& ((RefundEntryModel) returnEntry).getReason().equals(RefundReason.SITEERROR)) // added for store return mode
+									{
+										refundReasonSiteError = true;
+									}
 									final ConsignmentStatus status = returnEntry.getOrderEntry().getConsignmentEntries().iterator().next()
 											.getConsignment().getStatus();
 
-									if (status.equals(ConsignmentStatus.RETURN_CLOSED))
+									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundReasonSiteError)
 									{
 										populateRefundList(orderModel);
 
