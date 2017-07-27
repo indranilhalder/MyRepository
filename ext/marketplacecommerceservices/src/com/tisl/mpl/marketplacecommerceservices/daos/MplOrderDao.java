@@ -107,7 +107,7 @@ public interface MplOrderDao
 	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount);
 
 	//TPR-5225
-	public String getL4CategoryId(String productCode);
+	public String getL4CategoryName(String productCode);
 
 	//TPR-4840
 	public OrderModel getOrderByParentOrder(String orderRefNo);

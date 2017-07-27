@@ -404,7 +404,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -455,9 +455,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 * 
+	 *
 	 * @return Map<String, Map<String, String>>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -494,11 +494,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Boolean>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -532,11 +532,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 * 
+	 *
 	 * @param : orderEntryData
-	 * 
+	 *
 	 * @return OrderEntryData
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -871,7 +871,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1163,19 +1163,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	@Override
 	public List<OrderModel> getOrderWithMobileNo(final String mobileNo, final int queryCount)
 	{
-
 		List<OrderModel> orderModel = null;
-
 		orderModel = mplOrderService.fetchOrderByMobile(mobileNo, queryCount);
 		return orderModel;
 	}
 
 	//TPR-5225
 	@Override
-	public String getL4CategoryIdForProduct(final String productCode)
+	public String getL4CategoryNameForProduct(final String productCode)
 	{
 		String pCode = null;
-		pCode = mplOrderService.getL4CategoryIdOfProduct(productCode);
+		pCode = mplOrderService.getL4CategoryNameOfProduct(productCode);
 		return pCode;
 	}
 
@@ -1246,7 +1244,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 											.getName() : MarketplacecommerceservicesConstants.NULL_VALUE);
 									if (StringUtils.isNotEmpty(entry.getProduct().getCode()))
 									{
-										customerOrderInfoWsDTO.setL4CategoryName(mplOrderService.getL4CategoryIdOfProduct(entry
+										customerOrderInfoWsDTO.setL4CategoryName(mplOrderService.getL4CategoryNameOfProduct(entry
 												.getProduct().getCode()));
 									}
 									else
@@ -1287,7 +1285,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			else
 			{
 				orderInfoWsDTO.setError(MarketplacecommerceservicesConstants.MOBILE_NO_NOT_PRESENT);
-				LOG.error("orderEntryModel is null");
+				LOG.error("parent orderModels are null");
 			}
 		}
 		catch (final Exception e)
@@ -1443,12 +1441,15 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 										if (null != aWBStatusResponse && CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
 										{
+											final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
+											final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
 											for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
 											{
 												for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
 												{
-													final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-													final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
+													LOG.debug("********delivery tracking date" + statusRecords.getDate());
+													LOG.debug("********delivery tracking location" + statusRecords.getLocation());
+													LOG.debug("********delivery tracking description" + statusRecords.getStatusDescription());
 													deliveryTrackingInfoWsDTO
 															.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords.getDate()
 																	: MarketplacecommerceservicesConstants.NULL_VALUE);
