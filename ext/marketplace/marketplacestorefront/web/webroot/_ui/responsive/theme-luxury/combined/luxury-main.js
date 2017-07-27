@@ -46,7 +46,7 @@ function luxurycheckPincodeServiceability(buttonType, el) {
     $("#error-Id").hide(), $("#error-IdBtm").hide(), $("#error-Id_tooltip").hide(), 
     $("#error-Id_tooltip_btm").hide(), $("#no-click,.spinner").remove(), $(".delivery ul.success_msg").hide(), 
     !1;
-    if ("ChangePincode" == document.getElementById("pinCodeButtonIdsBtm").className && "pinCodeButtonIdsBtm" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
+    if ("ChangePincode" == document.getElementById("pinCodeButtonIds").className && "pinCodeButtonIds" == $(el).attr("id")) return $("#unserviceablepincode").hide(), 
     $("#unserviceablepincodeBtm").hide(), $("#unserviceablepincode_tooltip").hide(), 
     $("#unserviceablepincode_tooltip_btm").hide(), $("#cartPinCodeAvailable").show(), 
     $("#cartPinCodeAvailableBtm").show(), $(".pincodeServiceError").hide(), $("#AvailableMessage").hide(), 

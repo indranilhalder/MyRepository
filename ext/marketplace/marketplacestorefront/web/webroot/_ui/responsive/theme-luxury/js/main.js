@@ -1696,6 +1696,7 @@ function luxurycheckPincodeServiceability(buttonType, el)
         return false;
         // TPR-1055 ends
     }
+    
     else if(document.getElementById("pinCodeButtonIds").className == 'ChangePincode' && $(el).attr("id") =="pinCodeButtonIds")//UF-71
     {
         $("#unserviceablepincode").hide();
