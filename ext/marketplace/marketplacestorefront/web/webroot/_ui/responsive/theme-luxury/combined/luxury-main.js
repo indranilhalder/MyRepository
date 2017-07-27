@@ -14921,10 +14921,10 @@ TATA.CommonFunctions = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-                $(".plp-wrapper h4.categor-name").hide(), TATA.Pages.PLP.performAjax(requestUrl);
+                $(".plp-wrapper h4.categor-name").hide(), TATA.Pages.PLP.performAjax(requestUrl, $(this).closest(".facet").children(".facetHead").attr("id"));
             });
         },
-        performAjax: function(requestUrl) {
+        performAjax: function(requestUrl, facetHeadId) {
             $("body").addClass("loader"), $.ajax({
                 url: requestUrl,
                 data: {
@@ -14946,13 +14946,13 @@ TATA.CommonFunctions = {
                 complete: function() {
                     $("body").removeClass("loader"), $(".plp-leftbar-close a").on("click", function() {
                         $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
-                    });
+                    }), void 0 !== facetHeadId && null !== facetHeadId && "" !== facetHeadId && $("#" + facetHeadId).click();
                 }
             });
         },
         Filtershow: function() {
             $(".plp-mob-filter").on("click", function() {
-                $(".leftbar").addClass("active");
+                $(".leftbar").addClass("active"), $(".facetHead").find("a").first().click();
             }), $(".plp-leftbar-close a").on("click", function() {
                 $(".leftbar").removeClass("active"), $(".facet").removeClass("open");
             });
