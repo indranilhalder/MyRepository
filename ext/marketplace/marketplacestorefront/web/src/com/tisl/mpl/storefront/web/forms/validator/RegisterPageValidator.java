@@ -116,7 +116,7 @@ public class RegisterPageValidator implements Validator
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (site != null && !"".equals(site) && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+		if (null != site && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
 		{
 			if (StringUtils.isEmpty(firstName))
 			{

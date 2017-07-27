@@ -137,7 +137,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (site != null && !"".equals(site) && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		if (null != site && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
 		{
 			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
 			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
@@ -367,7 +367,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (site != null && !"".equals(site) && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		if (null != site && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
 		{
 			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
 			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
@@ -455,7 +455,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (site != null && !"".equals(site) && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		if (null != site && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
 		{
 			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
 			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
