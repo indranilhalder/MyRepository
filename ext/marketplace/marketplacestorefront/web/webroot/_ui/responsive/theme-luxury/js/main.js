@@ -328,6 +328,7 @@ TATA.CommonFunctions = {
         $('.look-book-carousel').slick();
 
     },
+    
 
     BrandSlider: function() {
 
@@ -808,7 +809,7 @@ TATA.CommonFunctions = {
         _self.deliveryaddressform();
         _self.swipeLookBook();  
         _self.removeProdouct();
-        _self.displayRemoveCoupon();
+        //_self.displayRemoveCoupon();
     }
 
 };
