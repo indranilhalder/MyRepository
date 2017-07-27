@@ -6,7 +6,6 @@
 
 
 
-<h2 class="section-title text-center mb-40">${title}</h2>
 
 <c:forEach items="${ShowCase}" var="ShowCase" varStatus="status">			
 <section class="look-book look-book-wrapper"> 

@@ -4,13 +4,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
-<div class="look-book shortbanner-layout3">
+<div class="look-book shortbanner-layout2">
     <div class="look-book-img">
         <div class="look-book-list clearfix">
-            <div class="col-xs-6 col-sm-6 col-lg-6 lookbook-pd-0">
-            	<ul class="list-unstyled clearfix">
+          
                 	<c:forEach items="${firstCol}" var="medias">
-	                	<li class="layout-width-50">
+                	  <div class="layout-width-25 lookbook-pdr-10">
+            	<ul class="list-unstyled clearfix">
+	                	<li>
 		                    <c:forEach items="${medias.medias}" var="media">
 		                        <c:choose>
 		                            <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
@@ -26,13 +27,15 @@
 		                        </c:choose>
 		                    </c:forEach>
 	                    </li>
-                    </c:forEach>
-                </ul>
+	                          </ul>
             </div>
-            <div class="col-xs-6 col-sm-6 col-lg-6 lookbook-pd-0">
-             	<ul class="list-unstyled clearfix">
+                    </c:forEach>
+          
+           
                 	<c:forEach items="${secondCol}" var="medias">
-	               		<li class="layout-width-50">
+                	 <div class="layout-width-25 lookbook-pdl-10">
+             	<ul class="list-unstyled clearfix">
+	               		<li>
 		                    <c:forEach items="${medias.medias}" var="media">
 			                    <c:choose>
 				                    <c:when test="${media.mediaFormat.qualifier eq 'desktop'}">
@@ -48,9 +51,10 @@
 			                    </c:choose>
 		                    </c:forEach>
 	                    </li>
-                    </c:forEach>
-            	</ul>
+	                    </ul>
             </div>
+                    </c:forEach>
+            	
         </div>
     </div>
 </div>
