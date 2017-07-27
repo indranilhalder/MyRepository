@@ -2969,18 +2969,22 @@ public class ProductPageController extends MidPageController
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
 
 		//PRICE BREAKUP STARTS:TPR-3782
-
-		final String displayConfigurableAttributeForPriceBreakup = displayConfigurableAttributeForPriceBreakup(buyboxdata
-				.getSellerArticleSKU());
-		LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
-
-		final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
-		if (CollectionUtils.isNotEmpty(PriceMap))
+		if (StringUtils.isNotEmpty(buyboxdata.getSellerArticleSKU()))
 		{
-			buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, gson.toJson(PriceMap));
+			final String displayConfigurableAttributeForPriceBreakup = displayConfigurableAttributeForPriceBreakup(buyboxdata
+					.getSellerArticleSKU());
+			LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
+			if (StringUtils.isNotEmpty(displayConfigurableAttributeForPriceBreakup))
+			{
+				final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
+				if (CollectionUtils.isNotEmpty(PriceMap))
+				{
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, gson.toJson(PriceMap));
 
-			buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR,
-					displayConfigurableAttributeForPriceBreakup);
+					buyboxJson.put(ControllerConstants.Views.Fragments.Product.DISPLAYCONFIGATTR,
+							displayConfigurableAttributeForPriceBreakup);
+				}
+			}
 		}
 		//buyboxJson.put(ControllerConstants.Views.Fragments.Product.JEWEL_DESCRIPTION, JewelInfo);
 
