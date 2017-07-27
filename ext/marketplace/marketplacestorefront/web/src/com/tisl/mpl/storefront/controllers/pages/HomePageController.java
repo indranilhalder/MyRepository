@@ -33,7 +33,6 @@ import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
-import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -130,9 +129,6 @@ public class HomePageController extends AbstractPageController
 
 	@Resource(name = "cmsComponentService")
 	private CMSComponentService cmsComponentService;
-
-	@Resource(name = "customerData")
-	private CustomerData customerData;
 
 	@Resource(name = "cartFacade")
 	private CartFacade cartFacade;
@@ -351,7 +347,7 @@ public class HomePageController extends AbstractPageController
 			storeCmsPageInModel(model, getContentPageForLabelOrId(null));
 			setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));
 			updatePageTitle(model, getContentPageForLabelOrId(null));
-			
+
 			//UF-287
 			final JSONObject singleBanner = getHomePageBanners("Online", "yes");
 			model.addAttribute("mobileBanner", singleBanner.get("moblileBanners"));
@@ -369,8 +365,8 @@ public class HomePageController extends AbstractPageController
 		}
 		catch (final Exception e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0000));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000));
 		}
 		return getViewForPage(model);
 	}
@@ -406,6 +402,7 @@ public class HomePageController extends AbstractPageController
 		}
 		return super.getContentPageForLabelOrId(labelOrId);
 	}
+
 	/**
 	 * @param AtoZ
 	 *           brands range

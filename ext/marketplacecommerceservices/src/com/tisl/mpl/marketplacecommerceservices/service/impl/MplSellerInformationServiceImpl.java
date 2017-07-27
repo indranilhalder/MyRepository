@@ -3,8 +3,6 @@
  */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
-import de.hybris.platform.catalog.CatalogService;
-import de.hybris.platform.catalog.CatalogVersionService;
 import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.cms2.model.pages.ContentPageModel;
 import de.hybris.platform.core.model.order.OrderEntryModel;
@@ -33,12 +31,6 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	private static final Logger LOG = Logger.getLogger(MplSellerInformationServiceImpl.class);
 	@Autowired
 	private MplSellerInformationDAO mplSellerInformationDAO;
-
-	@Autowired
-	private CatalogService catalogService;
-
-	@Autowired
-	private CatalogVersionService catalogVersionService;
 
 	@Autowired
 	private CatalogUtils catalogUtils;
@@ -153,8 +145,8 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		{
 			if (null != orderEntry && null != orderEntry.getParentTransactionID())
 			{
-				LOG.debug("parent transaction Id for" + orderEntry.getTransactionID() + " is : "
-						+ orderEntry.getParentTransactionID());
+				LOG.debug(
+						"parent transaction Id for" + orderEntry.getTransactionID() + " is : " + orderEntry.getParentTransactionID());
 
 				parentFulfillmentType = mplSellerInformationDAO.getparentFulfillmenttype(orderEntry.getParentTransactionID());
 
@@ -198,7 +190,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String,
 	 * de.hybris.platform.catalog.model.CatalogVersionModel)

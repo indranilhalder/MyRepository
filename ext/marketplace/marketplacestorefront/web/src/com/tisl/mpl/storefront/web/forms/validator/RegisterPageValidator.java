@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.routines.DomainValidator;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -44,7 +43,6 @@ public class RegisterPageValidator implements Validator
 	//"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*&.]).{8,16})";
 	@Autowired
 	private BaseSiteService baseSiteService;
-	private static final Logger LOG = Logger.getLogger(RegisterPageValidator.class);
 
 	@Override
 	public boolean supports(final Class<?> aClass)

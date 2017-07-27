@@ -30,14 +30,13 @@ public class CommonUtilsImpl implements CommonUtils
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (site != null && !"".equals(site) && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+		boolean isLuxury = false;
+
+		if (null != site && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
 		{
-			return true;
+			isLuxury = true;
 		}
-		else
-		{
-			return false;
-		}
+		return isLuxury;
 	}
 }
 

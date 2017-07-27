@@ -13,10 +13,7 @@
  */
 package com.tisl.mpl.storefront.interceptors.beforecontroller;
 
-import com.tisl.lux.facade.CommonUtils;
-import com.tisl.lux.facade.impl.CommonUtilsImpl;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
-import org.springframework.beans.factory.annotation.Autowired;
 import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.order.CartService;
 import de.hybris.platform.servicelayer.session.SessionService;
@@ -31,12 +28,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.util.CookieGenerator;
 
+import com.tisl.lux.facade.CommonUtils;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.storefront.interceptors.BeforeControllerHandler;
 
@@ -194,8 +193,8 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 			if (null != findAnnotation(handler, RequireHardLogIn.class))
 			{
 				final String guid = (String) request.getSession().getAttribute(SECURE_GUID_SESSION_KEY);
-				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout()) && checkForGUIDCookie(
-						request, response, guid))))
+				if (!(((!getUserService().isAnonymousUser(getUserService().getCurrentUser()) || checkForAnonymousCheckout())
+						&& checkForGUIDCookie(request, response, guid))))
 				{
 					boolean redirect = true;
 					if (keepLoginAlive(request))
@@ -224,7 +223,7 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 	protected boolean checkForGUIDCookie(final HttpServletRequest request, final HttpServletResponse response, final String guid)
 	{////Deeply nested if..then statements are hard to read
-	 //		if (guid != null && request.getCookies() != null)
+		 //		if (guid != null && request.getCookies() != null)
 	 //		{
 	 //			final String guidCookieName = getCookieGenerator().getCookieName();
 	 //			if (guidCookieName != null)
@@ -288,15 +287,21 @@ public class RequireHardLoginBeforeControllerHandler implements BeforeController
 
 	protected String getRedirectUrl(final HttpServletRequest request)
 	{
-		if(commonUtils.isLuxurySite() && request != null && !request.getServletPath().contains("checkout")){
+		if (commonUtils.isLuxurySite() && request != null && !request.getServletPath().contains("checkout"))
+		{
 			return getLuxuryLoginUrl();
-		} else if (commonUtils.isLuxurySite() && request != null && request.getServletPath().contains("checkout")){
+		}
+		else if (commonUtils.isLuxurySite() && request != null && request.getServletPath().contains("checkout"))
+		{
 			return getLuxuryLoginAndCheckoutUrl();
 		}
 
-		if (request != null && request.getServletPath().contains("checkout")) {
+		if (request != null && request.getServletPath().contains("checkout"))
+		{
 			return getLoginAndCheckoutUrl();
-		} else {
+		}
+		else
+		{
 			return getLoginUrl();
 		}
 	}
