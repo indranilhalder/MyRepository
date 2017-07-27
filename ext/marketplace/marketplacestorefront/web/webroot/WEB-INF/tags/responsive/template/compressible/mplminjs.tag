@@ -1,17 +1,56 @@
 <%@ tag body-content="empty" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <c:if test="${empty buildNumber}">
-<c:set var="buildNumber" value= "100000"/>
+	<c:set var="buildNumber" value="100000" />
 </c:if>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}<%-- ?clear=${minificationTimeStamp} --%>"></script>
-<script type="text/javascript"
-	src="${commonResourcePath}/js/minified/tmpmain.min.js?v=${buildNumber}"></script>
-<c:if test="${isIAEnabled}">
-	<script type="text/javascript"
-		src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}<%-- ?clear=${minificationTimeStamp} --%>"></script>
-</c:if>
+
+<!-- UF-439 -->
+<c:choose>
+	<c:when test="${fn:contains(pageBodyCssClasses, 'homepage')}">
+		<script type="text/javascript">
+			var plugins = document.createElement("script");
+			plugins.src = "${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}";
+
+			var tmpmain = document.createElement("script");
+			tmpmain.src = "${commonResourcePath}/js/minified/tmpmain.min.js?v=${buildNumber}";
+
+			var ia = document.createElement("script");
+			ia.src = "${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}";
+
+			function downloadJSAtOnload() {
+				// add the first script element
+				document.body.appendChild(plugins);
+
+				plugins.onload = function() {
+					document.body.appendChild(tmpmain);
+				}
+
+				tmpmain.onload = function() {
+					//document.body.appendChild(ia);
+				}
+			}
+
+			if (window.addEventListener)
+				window.addEventListener("load", downloadJSAtOnload, false);
+			else if (window.attachEvent)
+				window.attachEvent("onload", downloadJSAtOnload);
+			else
+				window.onload = downloadJSAtOnload;
+		</script>
+	</c:when>
+	<c:otherwise>
+		<script type="text/javascript"
+			src="${commonResourcePath}/js/minified/plugins.min.js?v=${buildNumber}"></script>
+		<script type="text/javascript"
+			src="${commonResourcePath}/js/minified/tmpmain.min.js?v=${buildNumber}"></script>
+		<c:if test="${isIAEnabled}">
+			<script type="text/javascript"
+				src="${commonResourcePath}/js/minified/ia.min.js?v=${buildNumber}"></script>
+		</c:if>
+	</c:otherwise>
+</c:choose>
+
 <!--[if lt IE 9]>
 <script type="text/javascript" src="${commonResourcePath}/js/minified/ie9.min.js"></script>
 <![endif]-->
@@ -21,26 +60,190 @@
 <![endif]-->
 
 <c:forEach items="${addOnJavaScriptPaths}" var="addOnJavaScript">
-	<script type="text/javascript" src="${addOnJavaScript}?v=${buildNumber}"></script>
+	<script type="text/javascript"
+		src="${addOnJavaScript}?v=${buildNumber}"></script>
 </c:forEach>
 
-<%-- <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/address-book') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/populateAddressDetail') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/addNewAddress') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/editAddress') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/set-default-address/*') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/remove-address/*') or
+<script>
+//TISPT-290
+$(window).load(function(){
+	if($('#pageTemplateId').val() =='LandingPage2Template'){
+		setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
+	}
+	 $(window).on('scroll', function() {
+		 
+	     var hT = $('.lazy-reached-bestPics').offset().top,
+         hH = $('.lazy-reached-bestPics').outerHeight(),
+         wH = $(window).height(),
+         wS = $(this).scrollTop();
+	     
+	     // bestPics ID 
+	     if (wS > (hT + hH - wH)) {
+	    	 if (!$('#bestPicks').attr('loaded')) {
+	             //not in ajax.success due to multiple sroll events
+	             $('#bestPicks').attr('loaded', true);
+	             if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
+	                 'LandingPage2Template') {
+	                 getBestPicksAjaxCall();
+	             }
+	         }
+	     }
+	     
+	     // brandsYouLove ID 
+	     var hT = $('.lazy-reached-brandsYouLove').offset().top,
+         hH = $('.lazy-reached-brandsYouLove').outerHeight();
+	     
+         if (wS > (hT + hH - wH)) {
+        	 if (!$('#brandsYouLove').attr('loaded')) {
+                 $('#brandsYouLove').attr('loaded', true);
+                 
+                 if ($('#brandsYouLove').children().length == 0 && $('#pageTemplateId').val() ==
+                     'LandingPage2Template') {
+                     if (window.localStorage) {
+                         for (var key in localStorage) {
+                             if (key.indexOf("brandContent") >= 0) {
+                                 window.localStorage.removeItem(key);
+                                 //console.log("Deleting.." + key);
+                             }
+                         }
+                     }
+                     getBrandsYouLoveAjaxCall();
+                 }
+             }
+	     }
+	     
+      // bestOffers ID 
+	     var hT = $('.lazy-reached-bestOffers').offset().top,
+         hH = $('.lazy-reached-bestOffers').outerHeight();
+	     if (wS > (hT + hH - wH)) {
+	    	 
+	    	 if (!$('#bestOffers').attr('loaded')) {
+		            //not in ajax.success due to multiple sroll events
+		            $('#bestOffers').attr('loaded', true);
 
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/orders') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/order/*') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnRequest') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/returnSuccess') or
-fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}">
-	<script type="text/javascript"
-		src="${commonResourcePath}/js/acc.accountpagination.js?v=${buildNumber}"></script>
-</c:if> --%>
+		            //ajax goes here
+		            //by theory, this code still may be called several times
+		            if ($('#bestOffers').children().length == 0 && $('#pageTemplateId').val() ==
+		                'LandingPage2Template') {
+		                getBestOffersAjaxCall();
+		            }
+		        }
+	     }
+	    
+	     
+	     // promobannerhomepage ID
+	     var hT = $('.lazy-reached-promobannerhomepage').offset().top,
+         hH = $('.lazy-reached-promobannerhomepage').outerHeight();
+	     
+	     if (wS > (hT + hH - wH)) {
+	    	 if (!$('#promobannerhomepage').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#promobannerhomepage').attr('loaded', true);
 
-<%-- <!-- Fix for defect TISPT-202 -->
-<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/store-finder') || (requestScope['javax.servlet.forward.request_uri']=='/') || fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method/check')}">
-	<script src="https://maps.googleapis.com/maps/api/js?v=3&amp;"></script>
-</c:if>  --%>
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#promobannerhomepage').children().length == 0 && $('#pageTemplateId').val() ==
+	                'LandingPage2Template') {
+	                getPromoBannerHomepage();
+	            }
+	        }
+	     }
+	     
+	     
+	     //productYouCare ID
+	     var hT = $('.lazy-reached-productYouCare').offset().top,
+         hH = $('.lazy-reached-productYouCare').outerHeight();
+	     
+	     if (wS > (hT + hH - wH)) {
+	    	 if (!$('#productYouCare').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#productYouCare').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#productYouCare').children().length == 0 && $('#pageTemplateId').val() ==
+	                'LandingPage2Template') {
+	                getProductsYouCareAjaxCall();
+	            }
+	        }
+	     }
+	     
+	     //stayQued ID
+	     var hT = $('.lazy-reached-stayQued').offset().top,
+         hH = $('.lazy-reached-stayQued').outerHeight();
+	     
+	     if (wS > (hT + hH - wH)) {
+	    	  if (!$('#stayQued').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#stayQued').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#stayQued').children().length == 0 && $('#pageTemplateId').val() ==
+	                'LandingPage2Template') {
+	                getStayQuedHomepage();
+	            }
+	        }
+	     }
+	     
+	     //newAndExclusive ID
+	     var hT = $('.lazy-reached-newAndExclusive').offset().top,
+         hH = $('.lazy-reached-newAndExclusive').outerHeight();
+	     
+	     if (wS > (hT + hH - wH)) {
+	    	 if (!$('#newAndExclusive').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#newAndExclusive').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#newAndExclusive').children().length == 0 && $('#pageTemplateId').val() ==
+	                'LandingPage2Template') {
+	                getNewAndExclusiveAjaxCall();
+	            }
+	        }
+	     }
+	     
+	    //showcase ID
+	     var hT = $('.lazy-reached-showcase').offset().top,
+         hH = $('.lazy-reached-showcase').outerHeight();
+	     
+	     if (wS > (hT + hH - wH)) {
+	    	  if (!$('#showcase').attr('loaded')) {
+	            //not in ajax.success due to multiple sroll events
+	            $('#showcase').attr('loaded', true);
+
+	            //ajax goes here
+	            //by theory, this code still may be called several times
+	            if ($('#showcase').children().length == 0 && $('#pageTemplateId').val() ==
+	                'LandingPage2Template') {
+	                if (window.localStorage) {
+	                    for (var key in localStorage) {
+	                        if (key.indexOf("showcaseContent") >= 0) {
+	                            window.localStorage.removeItem(key);
+	                            //console.log("Deleting.." + key);
+	                        }
+	                    }
+	                }
+	                getShowCaseAjaxCall();
+	            }
+	        }
+	     }
+	     
+	   //showcaseMobile ID
+	     var hT = $('.lazy-reached-showcaseMobile').offset().top,
+         hH = $('.lazy-reached-showcaseMobile').outerHeight();
+	    
+	     if (wS > (hT + hH - wH)) {
+	    	 if (!$('#showcaseMobile').attr('loaded')) {
+	             //not in ajax.success due to multiple sroll events
+	             $('#showcaseMobile').attr('loaded', true);
+
+	             if ($('#showcaseMobile').children().length == 0 && $('#pageTemplateId').val() == 'LandingPage2Template') {
+	                 showMobileShowCase();
+	             }
+	         }
+	     }
+	 });
+});
+</script>

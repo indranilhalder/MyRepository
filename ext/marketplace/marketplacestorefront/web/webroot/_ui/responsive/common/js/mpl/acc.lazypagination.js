@@ -194,7 +194,7 @@ function getProductSetDataCustomSku() {
 
 $(document).ready(function() {
     //lazy image load initialization
-    $("img.lazy").lazyload();	
+    //$("img.lazy").lazyload();	
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
