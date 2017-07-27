@@ -93,7 +93,6 @@ import de.hybris.platform.voucher.VoucherService;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
-import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
 
@@ -331,8 +330,6 @@ public class UsersController extends BaseCommerceController
 	@Autowired
 	private CustomAddressReversePopulator addressReversePopulator;
 	/* R2.3 end */
-	@Resource
-	private Wishlist2Service wishlistService;
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
@@ -3083,7 +3080,7 @@ public class UsersController extends BaseCommerceController
 				name = MarketplacecommerceservicesConstants.WISHLIST_NO + MarketplacecommerceservicesConstants.UNDER_SCORE
 						+ (++getWishlistforNameCount);
 			}
-			allWishlists = wishlistService.getWishlists(user);
+			allWishlists = wishlistFacade.getAllWishlists();
 
 			Wishlist2Model requiredWl = null;
 			for (final Wishlist2Model wl : allWishlists)
@@ -3169,7 +3166,7 @@ public class UsersController extends BaseCommerceController
 		String selectedSize = null;
 		try
 		{
-			allWishlists = wishlistService.getWishlists();
+			allWishlists = wishlistFacade.getAllWishlists();
 			if (CollectionUtils.isNotEmpty(allWishlists))
 			{
 				for (final Wishlist2Model requiredWl : allWishlists)
@@ -3400,7 +3397,7 @@ public class UsersController extends BaseCommerceController
 									}
 									else
 									{
-										wishlistService.removeWishlistEntry(requiredWl, entryModel);
+										wishlistFacade.removeWishlistEntry(entryModel);
 										delistMessage = Localization
 												.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_WISHLIST);
 										wlDTO.setDelistedMessage(delistMessage);
@@ -3466,78 +3463,59 @@ public class UsersController extends BaseCommerceController
 	{
 
 		boolean successFlag = false;
-		boolean userflag = false;
-		boolean wishlistflag = false;
-
+		final boolean wishlistflag = false;
 		final UserResultWsDto result = new UserResultWsDto();
-		//		final MplCustomerProfileData mplCustData = new MplCustomerProfileData();
-		//		mplCustData.setDisplayUid(userId);
+		Wishlist2EntryModel requiredWlEntry = null;
+		boolean productFound = false;
 		try
 		{
-			//final UserModel user = userexService.getUserForUID(mplCustData.getDisplayUid());
 			final UserModel user = userService.getCurrentUser();
-
 			if (null == user)
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9025);
 			}
-			//Fetching all wishList for the user
-			final List<Wishlist2Model> allWishlists = wishlistService.getWishlists(user);
-			userflag = true;
-			Wishlist2Model requiredWl = null;
-			String name = null;
 
-			//Checking wether wishlistname is empty or not
-			if (!wishlistName.isEmpty())
+			final List<Wishlist2EntryModel> allWishlistEntry = wishlistFacade.getAllWishlistByUssid(USSID);
+			if (CollectionUtils.isNotEmpty(allWishlistEntry))
 			{
-				name = wishlistName;
-			}
-
-			for (final Wishlist2Model wl : allWishlists)
-			{
-				if (name.equals(wl.getName()))
+				for (final Wishlist2EntryModel wishentryModel : allWishlistEntry)
 				{
-					requiredWl = wl;
-					wishlistflag = true;
-					break;
-				}
-			}
-
-			Wishlist2EntryModel wishlist2EntryModel = null;
-			boolean ProductFound = false;
-			final List<Wishlist2EntryModel> entryModels = requiredWl.getEntries();
-			if (entryModels.size() >= 1)
-			{
-				for (final Wishlist2EntryModel entryModel : entryModels)
-				{
-					final Collection<SellerInformationModel> sellerList = entryModel.getProduct().getSellerInformationRelator();
-					for (final SellerInformationModel seller : sellerList)
+					if (null != wishentryModel.getWishlist() && StringUtils.isNotBlank(wishlistName)
+							&& wishlistName.equalsIgnoreCase(wishentryModel.getWishlist().getName()))
 					{
-						if (seller.getSellerArticleSKU().equals(USSID))
-						{
-							wishlist2EntryModel = entryModel;
-							ProductFound = true;
-						}
-
+						productFound = true;
+						requiredWlEntry = wishentryModel;
+						break;
 					}
-				}
-
-				if (ProductFound)
-				{
-					wishlistService.removeWishlistEntry(requiredWl, wishlist2EntryModel);
-					//Set Success Flag to true
-					successFlag = true;
-				}
-				else
-				{
-					throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
 				}
 			}
 			else
 			{
 				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9211);
+			}
+
+			if (productFound)
+			{
+				successFlag = wishlistFacade.removeWishlistEntry(requiredWlEntry);
+				//Set Success Flag to true
+			}
+			else
+			{
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9210);
+			}
+
+			if (successFlag)
+			{
+				//Set result status to success
+				result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
 
 			}
+			else
+			{
+				//Set result status to error
+				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
+			}
+
 		}
 		catch (final EtailNonBusinessExceptions e)
 		{
@@ -3567,34 +3545,12 @@ public class UsersController extends BaseCommerceController
 		}
 		catch (final Exception e)
 		{
-			//Check if user was found
-			if (!userflag)
-			{
-				result.setError(MarketplacecommerceservicesConstants.USER_NOT_FOUND);
-			}
 			//Check if Wishlist was found for user
-			if (userflag)
+			if (!wishlistflag)
 			{
-				if (!wishlistflag)
-				{
-					result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
-				}
-
+				result.setError(MarketplacecommerceservicesConstants.WISHLIST_NOT_FOUND);
 			}
-
 			//Set Success Flag to false
-			successFlag = false;
-		}
-
-		if (successFlag)
-		{
-			//Set result status to success
-			result.setStatus(MarketplacecommerceservicesConstants.SUCCESS_FLAG);
-
-		}
-		else
-		{
-			//Set result status to error
 			result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
 
@@ -8922,23 +8878,6 @@ public class UsersController extends BaseCommerceController
 	public void setAddressReversePopulator(final CustomAddressReversePopulator addressReversePopulator)
 	{
 		this.addressReversePopulator = addressReversePopulator;
-	}
-
-	/**
-	 * @return the wishlistService
-	 */
-	public Wishlist2Service getWishlistService()
-	{
-		return wishlistService;
-	}
-
-	/**
-	 * @param wishlistService
-	 *           the wishlistService to set
-	 */
-	public void setWishlistService(final Wishlist2Service wishlistService)
-	{
-		this.wishlistService = wishlistService;
 	}
 
 	/**
