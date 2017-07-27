@@ -52,6 +52,9 @@
 	<div class="wishRemoveSucessPlp">
 	<span><spring:theme code="mpl.pdp.wishlistRemoveSuccess"></spring:theme></span>
 	</div>
+	<sec:authorize ifNotGranted="ROLE_ANONYMOUS">	
+		<c:set var="activeUser" value="activeUser"/>	
+	</sec:authorize>
 	<div class="container-fluid">
 		<div class="inner">
 		    <div id="hamburger-menu" class="hamburger-menu visible-xs-block"><span></span></div> 

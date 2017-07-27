@@ -7,7 +7,7 @@
 <div class="look-book shortbanner-layout1">
     <div class="look-book-img">
         <div class="look-book-list clearfix">
-            <div class="layout-width-75 lookbook-pd-0">
+            <div class="layout-width-75 lookbook-pdr-10">
             	<ul class="list-unstyled clearfix">
                 	<c:forEach items="${firstCol}" var="medias">
 	                	<li>
@@ -29,7 +29,7 @@
                     </c:forEach>
                 </ul>
             </div>
-            <div class="layout-width-25 lookbook-pd-0">
+            <div class="layout-width-25 lookbook-pdl-10">
              	<ul class="list-unstyled clearfix">
                 	<c:forEach items="${secondCol}" var="medias">
 	               		<li>
