@@ -636,13 +636,16 @@ TATA.CommonFunctions = {
     Header: {
         MobileMenu: function() {
         	$(".mega-menu li span").each(function() {
-        	    	$(this).prev().css('pointer-events','none');
+    	    	$(this).prev().css('pointer-events','none');
         	});
         	$(".mega-menu > li ").on("click",function(){
+        		$(".mega-menu li span").each(function() {
+        	    	$(this).prev().css('pointer-events','none');
+            	});
         		$(".mega-menu > li ").each(function(){
         			$(".sub-menu-toggle",this).first().removeClass("active").next(".sub-menu").removeClass("active");
-        			$(".mega-menu li a").css('pointer-events','none');
         		});
+        		$(this).addClass("parent");
 				$(".sub-menu-toggle",this).first().addClass("active").next(".sub-menu").addClass("active");
 				$(".sub-menu-inner").addClass("open-inner-menu");
 				$("a:first-child",this).css('pointer-events','auto');
@@ -651,10 +654,10 @@ TATA.CommonFunctions = {
         	$(document).on("click", ".open-inner-menu li", function() {
         		$(".open-inner-menu li").each(function(){
         			$(".sub-menu-toggle",this).first().removeClass("active").next(".sub-menu").removeClass("active");
-        			$(".mega-menu li a").css('pointer-events','none');
         		});
         		$(".sub-menu-toggle",this).first().toggleClass("active").next(".sub-menu").toggleClass("active");
-        		$(this).children().css('pointer-events','auto');
+        		$("a",this).css('pointer-events','auto');
+        		$(this).closest('.parent').children(":first").css('pointer-events','auto');
         		
         	});
             $("#hamburger-menu").on("click", function() {
