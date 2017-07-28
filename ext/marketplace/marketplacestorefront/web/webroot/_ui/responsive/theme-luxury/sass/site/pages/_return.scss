@@ -1,0 +1,136 @@
+.accordtionTataCliq {
+    border: 1px solid #ebeff0;
+    height: auto;
+    padding: 0 !important;
+	
+	.accHeading {
+		padding: 15px;
+		background: #ebeff0;
+		color: #596161;
+		font-size: 16px;
+		cursor: pointer;
+		margin-bottom: 1px;
+	}
+	.accContents .productDetails .productName {
+		font-size: 14px;
+	}
+	.accContents span {
+		clear: both;
+	}
+    
+    input[type="checkbox"]:checked {
+        content: '';
+        text-align: center;
+        background-color: #B9966B;
+        -webkit-transition: color .15s,box-shadow .15s,background .15s;
+        -moz-transition: color .15s,box-shadow .15s,background .15s;
+        transition: color .15s,box-shadow .15s,background .15s;
+    }
+	
+}
+.firstTataCliq span {
+    margin-bottom: -4px !important;
+    display: block !important;
+}
+.accordtionTataCliq .reasonType, .accordtionTataCliq .returnMethod, .accordtionTataCliq .accContents .quickDrop .mapArea, .accordtionTataCliq .accContents .scheduledPickup {
+    display: none;
+}
+.accordtionTataCliq .accContents {
+    padding: 0 0 15px 0 !important;
+    margin-top: 10px;
+}
+.accordtionTataCliq .errorText, .accordtionTataCliq .errorTextSelection {
+    color: red;
+    text-align: center;
+}
+.accordtionTataCliq .accContents .button_holder {  
+    width: 100%;
+    text-align: center;
+	
+	.submit-request{
+		margin: 0 auto;
+		text-align: center;
+		font-size: 12px;
+		margin-top: 0;
+		display: inline-block;
+	}
+}
+.accordtionTataCliq .accContents .radioButton:checked {
+    background-color: #B9966B;
+    border: 2px solid #B9966B !important;
+}
+.accordtionTataCliq .accContents .radioButton {
+    display: block !important;
+    height: 15px !important;
+    width: 15px !important;
+    color: #fff;
+    padding: 0 !important;
+    margin-right: 5px;
+    border: 1px solid #B9966B !important;
+    cursor: pointer;
+    margin-top: 5px;
+    border-radius: 50%;
+    z-index: 9999999999;
+    position: static;
+    overflow: auto;
+}
+.accordtionTataCliq .radioButton{
+      -webkit-appearance: none;
+	  appearance: none;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+    z-index: 99;
+}
+.accordtionTataCliq .accContents .checkButton {
+    display: block !important;
+    height: 15px !important;
+    width: 15px !important;
+    color: #fff;
+    padding: 5px !important;
+    margin-right: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+    z-index: 9999999999;
+}
+.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
+    height: 211px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+.accordtionTataCliq .accContents .quickDrop span, .accordtionTataCliq .accContents .scheduledPickup span {
+    line-height: 25px;
+}
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
+    margin-top: 15px;
+}
+.accordtionTataCliq .blackColor {
+    color: #000;
+}
+.accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
+    height: 211px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+    z-index: 99;
+}
+.accordtionTataCliq .greyColor {
+    color: #ccc;
+}
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
+    margin-top: 15px;
+}
+.accordtionTataCliq .returnMethod .col-sm-6, .accordtionTataCliq .returnMethod .col-sm-12, .accordtionTataCliq .returnMethod .col-sm-2 {
+    z-index: 99;
+}
+.accordtionTataCliq .accContents .button_holder .newRequest {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 0;
+    display: inline-block;
+    margin-right: 15px;
+	color: #fff;
+	background-color: #2d2d2d;
+}
