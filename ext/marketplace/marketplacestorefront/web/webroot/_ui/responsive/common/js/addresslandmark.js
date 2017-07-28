@@ -54,7 +54,7 @@ $(".address_landmarkOtherDiv").hide();
 $(".dupDisplay").hide();
 
 var tmpValue= -1;
-$(".address_postcode").blur(function() {
+/*$(".address_postcode").blur(function() {
 	 console.log("addresslandmark line 74 "+tmpValue);
 	 tmpValue++;
 	 if($(".address_postcode").val().length == "6") {
@@ -75,7 +75,7 @@ $(".address_postcode").blur(function() {
 			$(".dupDisplay").hide();
 		}
 
-});
+});*/
 
 /*function checkOutAdress(arg1, arg2){
 	var tmpTribhuvan;
