@@ -20,7 +20,6 @@ import de.hybris.platform.commercefacades.order.data.OrderData;
 import de.hybris.platform.core.model.c2l.LanguageModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.core.model.user.AddressModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
@@ -28,6 +27,7 @@ import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+//import de.hybris.platform.core.model.product.ProductModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,7 +79,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 	private static final String SPACE = " ";
 	private static final String NUMBERTOOL = "numberTool";
 	private static final String WEBSITE_URL = "websiteUrl";
-	private static final String PRODUCT_IMAGE_URL = "productImageUrl";
+	//private static final String PRODUCT_IMAGE_URL = "productImageUrl";//commented as part of TISSPTEN-7
 	private static final String ORDERPLACEDATE = "orderPlaceDate";
 	private static final String DELIVERYDATE = "deliveryDate";
 	@Autowired
@@ -208,20 +208,16 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 			LOG.debug("total sale price" + entryModel.getTotalSalePrice());
 			childEntries.add(entryModel);
 
-			final String productImageUrl;
-
-			final ProductModel productModel = entryModel.getProduct();
-			if (null != productModel.getPicture())
-			{
-				productImageUrl = productModel.getPicture().getURL();
-			}
-			else
-			{
-				productImageUrl = "";
-			}
-
-
-			put(PRODUCT_IMAGE_URL, productImageUrl);
+			//Commented as part of TISSPTEN-7
+			/*
+			 * final String productImageUrl;
+			 * 
+			 * final ProductModel productModel = entryModel.getProduct(); if (null != productModel.getPicture()) {
+			 * productImageUrl = productModel.getPicture().getURL(); } else { productImageUrl = ""; }
+			 * 
+			 * 
+			 * put(PRODUCT_IMAGE_URL, productImageUrl);
+			 */
 
 
 			final String orderPlaceDate;
