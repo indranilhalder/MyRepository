@@ -30,7 +30,7 @@ display: none;
 
 </style>
 
-
+<input type="hidden" id="currentPageName" value="${progressBarClass}">
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
 <cart:tealiumCartParameters/>
 	<!-- <div class="checkout-headline">
