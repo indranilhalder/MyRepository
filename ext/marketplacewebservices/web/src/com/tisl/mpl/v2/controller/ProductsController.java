@@ -1034,6 +1034,10 @@ public class ProductsController extends BaseController
 						final SearchQueryData searchQueryDataAll = new SearchQueryData();
 						searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
 						searchStateAll.setQuery(searchQueryDataAll);
+						if (isFromLuxuryWeb)
+						{
+							searchStateAll.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+						}
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
 					}
