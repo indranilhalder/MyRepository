@@ -774,6 +774,7 @@ TATA.CommonFunctions = {
     			});
     },
     displayRemoveCoupon:function(){
+    	if ($("#currentPageName").val()=="selectPage"){
      	$.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
@@ -796,7 +797,8 @@ TATA.CommonFunctions = {
 	 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
 		
             	} 
-        });
+     		});
+    	}
    },
     
     init: function () {
@@ -819,7 +821,7 @@ TATA.CommonFunctions = {
         _self.deliveryaddressform();
         _self.swipeLookBook();  
         _self.removeProdouct();
-        //_self.displayRemoveCoupon();
+        _self.displayRemoveCoupon();
     }
 
 };
