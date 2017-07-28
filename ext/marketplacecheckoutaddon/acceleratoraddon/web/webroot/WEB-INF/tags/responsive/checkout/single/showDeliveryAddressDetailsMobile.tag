@@ -55,6 +55,11 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
+									<span class="edit"> <a
+										href="javascript:void(0)"
+										class=""
+										onclick="ACC.singlePageCheckout.getEditAddress(this,event);"></a>
+									</span>
 									 <div class="clickableDivMobile" style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
