@@ -2659,4 +2659,7 @@ $(document).ready(function (){
     $("#clear_filter").click(function(){
         $(".reset-filters").trigger("click"); 
     });
+    $("#apply_filter").click(function() {
+        $(".plp-leftbar-close a").trigger("click");
+    });
 });
