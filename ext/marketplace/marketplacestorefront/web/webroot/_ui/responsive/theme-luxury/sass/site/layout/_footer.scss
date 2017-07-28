@@ -252,21 +252,24 @@ footer{
 
 					&:first-child{
 						&:before{
-							background:$Sprite_icon1 no-repeat -206px -175px;
-                            width: 46px;
+							background:$Sprite_icon no-repeat -1950px 0;
+                            width: 40px;
                             height: 45px;
                             margin-right: 20px;
+                           opacity: .6;
 						}
 					}
 					&:nth-child(2){
 						&:before{
-                            background:$Sprite_icon no-repeat -1727px -41px;
+                            background:$Sprite_icon no-repeat  -1880px 0;
+                            width: 55px;
+                            height: 45px;
                             opacity: .6;
 						}
 					}
 					&:last-child{
 						&:before{
-							background:$Sprite_icon no-repeat -1800px -45px;
+							background:$Sprite_icon no-repeat -1800px 0;
                             width: 64px;
                             height: 45px;
                             opacity: .6;

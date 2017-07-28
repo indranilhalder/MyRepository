@@ -14818,7 +14818,7 @@ TATA.CommonFunctions = {
         });
     },
     displayRemoveCoupon: function() {
-        $.ajax({
+        "selectPage" == $("#currentPageName").val() && $.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
             data: {
@@ -14844,7 +14844,7 @@ TATA.CommonFunctions = {
         _self.Header.init(), _self.Footer(), _self.Toggle(), _self.DocumentClick(), _self.WindowScroll(), 
         _self.MainBanner(), _self.LookBookSlider(), _self.BrandSlider(), _self.Accordion(), 
         _self.ShopByCatagorySlider(), _self.wishlistInit(), _self.deleteWishlist(), _self.leftBarAccordian(), 
-        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct();
+        _self.deliveryaddressform(), _self.swipeLookBook(), _self.removeProdouct(), _self.displayRemoveCoupon();
     }
 }, TATA.Pages = {
     PLP: {
