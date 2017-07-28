@@ -692,12 +692,15 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//Added
 			if (!StringUtils.isEmpty(sendInvoiceData.getInvoiceUrl()) && !StringUtils.isEmpty(sendInvoiceData.getTransactionId()))
 			{
-				if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-						sendInvoiceData.getTransactionId())))
-				{
-					sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
-							sendInvoiceData.getTransactionId()));
-				}
+				//INC144318174- duplicate media fix
+
+				/*
+				 * if (!StringUtils.isEmpty(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+				 * sendInvoiceData.getTransactionId()))) {
+				 */
+				sendInvoiceProcessModel.setInvoiceUrl(createInvoiceEmailAttachment(sendInvoiceData.getInvoiceUrl(),
+						sendInvoiceData.getTransactionId()));
+				//}
 			}
 			//End
 			sendInvoiceProcessModel.setOrderCode(sendInvoiceData.getOrdercode());
