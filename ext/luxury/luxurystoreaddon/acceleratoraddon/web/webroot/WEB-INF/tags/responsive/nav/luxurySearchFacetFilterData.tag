@@ -73,7 +73,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="apply-clear" style="display: block;">
+			<div class="apply-clear visible-xs-block">
           <button type="button" class="btn btn-block" id="clear_filter">CLEAR FILTERS</button>
           <button type="button" class="btn btn-block plp-leftbar-close" id="apply_filter">APPLY FILTERS</button>
 		    </div>	
