@@ -97,8 +97,6 @@
 		<c:when test="${fn:contains(reqURI,'search')}">
 		</c:when>
 		<c:otherwise>
-			
-			
 			<c:choose>
 				<c:when test="${not empty canonicalUrl}">
 					<c:set var="canonical" value="${baseURL}${canonicalUrl}"></c:set>
@@ -117,8 +115,51 @@
 				</c:otherwise>
 			</c:choose> --%>
 			<%-- <link rel="canonical" href="${regex:regExMatchAndRemove(canonical,'[/]$') }" /> --%>
-			
-			<link rel="canonical" href="${canonical}" />
+			<c:choose>
+				<c:when test = "${fn:contains(canonical, '/page-1')}">
+	   				<link rel="canonical" href="${fn:replace(canonical,'/page-1','')}" />
+				</c:when>
+				<c:otherwise>
+					<link rel="canonical" href="${canonical}" />
+				</c:otherwise>
+			</c:choose>
+			<c:choose>
+				<c:when test="${searchPageData ne null && searchPageData.pagination ne null && searchPageData.pagination.numberOfPages gt 0}">
+					<c:set var="totalNumberOfPages" value="${searchPageData.pagination.numberOfPages}"/>
+				</c:when>
+			</c:choose>
+			<c:if test="${totalNumberOfPages gt 0}">
+				<c:set var="currentPageNumber" value="${fn:substringAfter(canonical,'/page-')}"/>
+				<c:if test="${empty currentPageNumber}">
+					<c:set var="currentPageNumber" value="1"/>
+				</c:if>
+				<c:set var="currentPage" value="page-${currentPageNumber}"/>
+				<c:set var="nextPage" value="page-${currentPageNumber + 1}"/>
+				<c:set var="previousPage" value="page-${currentPageNumber - 1}"/>
+				<c:choose>
+					<c:when test="${currentPageNumber lt totalNumberOfPages}">
+						<c:choose>
+							<c:when test="${currentPageNumber eq 1}">
+								<c:choose>
+									<c:when test="${fn:contains(canonical, currentPage)}">
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:when>
+									<c:otherwise>
+										<link rel="next" href="${canonical}/${nextPage}" />
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+							<c:otherwise>
+								<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+								<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+							</c:otherwise>
+						</c:choose>
+					</c:when>
+					<c:otherwise>
+						<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+					</c:otherwise>
+				</c:choose>
+			</c:if>
 		</c:otherwise>
 	</c:choose>
 	
