@@ -221,7 +221,7 @@
 					padding-bottom:30px;
 					text-align:center;
 					//min-height:300px;
-					height:380px;
+					height:352px;
 					img{
 						-webkit-transition: -webkit-transform 500ms ease;
 						transition: -webkit-transform 500ms ease;
@@ -662,7 +662,9 @@
         
 		.plpsinglecolumn{
 			.product-grid{
+                border: 1px solid #ccc;                
 				width:100% !important;
+                
 				border-bottom:1px solid #cecece;
 				&:first-child{
 					border-top:1px solid #cecece;
@@ -670,8 +672,9 @@
 				&:nth-child(2){
 					border-top:none;
 				}
+                
                 .product-image{
-                    height:380px !important;
+                    height:352px !important;
                 }
 			}
 		}        

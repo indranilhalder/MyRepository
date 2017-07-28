@@ -18,6 +18,36 @@ var screenXsMax="639px";
 var screenSmMax="1023px";
 var screenMdMax="1399px";
 
+
+/*---Start of Checkout Payment tab switching  ----*/		
+var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile");		
+$(window).on('load resize',function(){			
+paymentModes.on("click",function(e) {		
+	 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);		
+	/*if($(window).width()<651){		
+	 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);		
+	 $(this).parents('ul.nav').addClass('hide-menu');		
+	 $(this).parents('.left-block').find('h1.payment-options').addClass('hide-menu');		
+	 }*/		
+	 if(paymentModes.parent().hasClass("active")){		
+		 paymentModes.parent().removeClass("active");		
+	 }		
+	 $(this).parent().addClass("active"); 		
+	 $('ul.accepted-cards li').removeClass('active-card');		
+});		
+/* $('.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment').click(function(){		
+	 $(this).parent().hide(200);		
+	 $(this).parent().siblings('ul.nav').removeClass('hide-menu');		
+	 $(this).parents('.left-block').find('h1.payment-options').removeClass('hide-menu');		
+});*/		
+});		
+if($("#savedCard").css("display") === "block") {		
+	 $(".newCardPayment").css("display","none");		
+}		
+/*---END of Checkout Payment tab switching  ----*/
+
+
+
 TATA.CommonFunctions = {
     getUrlParameterByName: function(name, url) {
         if (!url) url = window.location.href;

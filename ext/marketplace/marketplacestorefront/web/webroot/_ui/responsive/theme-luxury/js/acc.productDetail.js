@@ -1595,8 +1595,11 @@ $( document ).ready(function() {
 /**
  * This method is used to display delivery modes against a sku id
  */
-function displayDeliveryDetails(sellerName) {
 
+
+
+function displayDeliveryDetails(sellerName) {    
+    
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
@@ -1684,7 +1687,8 @@ function displayDeliveryDetails(sellerName) {
 							$("#homeli").show();
 						}
 						
-					} else {
+					
+                    else {
 						$("#home").show();
 						$("#homeli").show();
 					}
@@ -1732,6 +1736,7 @@ function displayDeliveryDetails(sellerName) {
 							$("#homeli").removeClass("selected");
 						}
 					} else {
+                        
 						var start=parseInt($("#homeStartId").val())+leadTime;
 						var end=parseInt($("#homeEndId").val())+leadTime;
 						$("#homeDate").html(pretext+start+"-"+end+posttext);
@@ -1740,7 +1745,7 @@ function displayDeliveryDetails(sellerName) {
 								$("#homeli").show();
 							}
 							
-						} else {
+						 else {
 							$("#home").show();
 							$("#homeli").show();
 						}
@@ -1762,7 +1767,7 @@ function displayDeliveryDetails(sellerName) {
 								$("#expressli").show();
 							}
 							
-						} else {
+						else {
 							$("#express").show();
 							$("#expressli").show();
 						}
@@ -1787,7 +1792,7 @@ function displayDeliveryDetails(sellerName) {
 								$("#collectli").show();
 							}
 							
-						} else {
+						 else {
 							$("#collect").show();
 							$("#collectli").show();
 						}
@@ -1821,7 +1826,7 @@ function displayDeliveryDetails(sellerName) {
 							$("#collectli").show();
 						}
 						
-					} else {
+					else {
 						$("#collect").show();
 						$("#collectli").show();
 					}
