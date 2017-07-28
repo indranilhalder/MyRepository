@@ -7,6 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!-- Accordtion Panel 1 For Select Reason For Return -->
+	
 				<div class="accordtionTataCliq activeTataCliq  firstTataCliq col-md-12">
 					<div class="accHeading"><spring:theme code="text.order.return.selectreason"></spring:theme></div>
 					<div class="accContents selectReason col-md-12">
@@ -24,20 +25,20 @@
 							
 								
 								<div class="col-md-7 productDetails col-sm-7 col-xs-7">
-										<span class="productName">${entryReturn.product.name}</span><br/>
-										<span><spring:theme code="text.order.returns.quantitylable"/> ${entryReturn.quantity}</span><br/>
+										<span class="productName">${entryReturn.product.name}</span>
+										<span><spring:theme code="text.order.returns.quantitylable"/> ${entryReturn.quantity}</span>
 												<c:if test="${not empty entryReturn.product.size}">
-				 									<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span><br/>
+				 									<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
 												</c:if>
 												<c:if test="${not empty entryReturn.product.colour}">
-													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span><br/>
+													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span>
 												</c:if>
 												<c:forEach items="${entryReturn.product.seller}" var="seller">
 													<c:if test="${ussid eq seller.ussid}">
 														<c:set var="sellerId" value="${seller.sellerID}" />
 													</c:if>
 												</c:forEach>
-												<span>Seller ID: ${sellerId} </span><br/>
+												<span>Seller ID: ${sellerId} </span>
 												<span class="otherAttributes"><spring:message code="seller.order.code"> </spring:message>&nbsp;${subOrder.code} </span>
 								</div>
 								<p style="clear:both"></p>
@@ -59,7 +60,7 @@
 						</div>
 						<p style="clear:both"></p>
 						<div class="button_holder">
-								<button onclick="checkReturnSelected()" type="button" class="light-blue submit-request" ><spring:theme code="text.returRequest.continueButton" text="Continue"/></button>
+								<button onclick="checkReturnSelected()" type="button" class="light-blue submit-request btn btn-primary btn-sm" ><spring:theme code="text.returRequest.continueButton " text="Continue"/></button>
 						</div>
 					</div>
 				</div>

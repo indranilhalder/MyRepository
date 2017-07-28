@@ -6,6 +6,7 @@
 <!-- Accordtion Panel 2 For Select Return Type -->
 
 <div class="payment-method">
+										
 							</div>
 		
 				<div class="accordtionTataCliq  secondTataCliq col-md-12">
@@ -14,12 +15,12 @@
 					<div class="accContents reasonType col-md-12">
 						<div class="col-md-4">
 							<b>Return Type :</b> <br/>
-							<div class="selectReason selectRefund col-md-12">
-								<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
+							<div class="selectReason selectRefund">
+								<div class="selectRadio">
 							<!-- 	<input class="radioButton" onclick="changeRadioColor('refund')" type="radio" value="refund" name="return" checked /> -->
 									<form:radiobutton class="radioButton" onclick="changeRadioColor('refund')" path="refundType"  value="R" checked="checked" />
 								</div>
-								<div class="col-md-10 col-sm-10 col-xs-10">
+								<div class="select-content">
 									<b><spring:theme code="text.order.returns.returnandrefund"/></b> <br/>
 									<div class="returnPayment">${subOrder.mplPaymentInfo.paymentOption}</div>
 									<c:choose>
@@ -180,8 +181,8 @@
 						
 						<p style="clear:both"></p>
 						<div class="button_holder">
-							<button type="button" onclick="goBackToFirstTataCliq()" class="light-blue newRequest" >Back</button> 
-							<button onclick="checkSecondTataCliq('${subOrder.mplPaymentInfo.paymentOption}')"  class="light-blue submit-request" ><spring:theme code="text.returRequest.continueButton" text="Continue"/></button>
+							<button type="button" onclick="goBackToFirstTataCliq()" class="light-blue newRequest btn btn-primary btn-sm" >Back</button>
+							<button onclick="checkSecondTataCliq('${subOrder.mplPaymentInfo.paymentOption}')"  class="light-blue submit-request btn btn-primary btn-sm" ><spring:theme code="text.returRequest.continueButton" text="Continue"/></button>
 						</div>
 					</div>
 				</div>
