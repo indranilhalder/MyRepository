@@ -450,7 +450,7 @@ ACC.carousel = {
 	/*sprint8(TPR-1672 CLP)*/
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
-					autoWidth : true,	/*add for INC144315059*/
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:true,
@@ -614,7 +614,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
 		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
 		$(".top_deal_blp .offersCarousel").owlCarousel({
-					autoWidth : true,	/*add for INC144315059*/
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -677,7 +677,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('.top_deal #autoplayTimeoutOffer').val()?$('.top_deal #autoplayTimeoutOffer').val():5000;
 		
 		$(".top_deal .offersCarousel").owlCarousel({
-					autoWidth : true,	/*add for INC144315059*/
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -739,7 +739,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".best-offers .offersCarousel").owlCarousel({
-					autoWidth : true,	/*add for INC144315059*/
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -801,7 +801,7 @@ BlpBestOffersCarousel: function(){
 		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".best-offers_blp .offersCarousel").owlCarousel({
-					autoWidth : true,	/*add for INC144315059*/
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
