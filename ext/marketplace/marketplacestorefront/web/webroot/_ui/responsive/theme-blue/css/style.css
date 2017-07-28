@@ -76141,7 +76141,8 @@ table#showPriceBreakup{
 }
 /*TPR-4134 starts*/
 .accordtionTataCliq .accContents .selectReason.selectRefund  b,		
-.accordtionTataCliq .accContents .slectionRefund b{		
+.accordtionTataCliq .accContents .slectionRefund b,
+.accordtionTataCliq .accContents.returnMethod .selectReturnMethod b{		
 	font-size: 14px;		
   	line-height: 1.43;		
   	letter-spacing: 0.6px;		
@@ -76179,12 +76180,14 @@ table#showPriceBreakup{
   	text-decoration: none;		
   	float: right;		
 }		
-body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder{		
 	margin-top: 30px;		
 	margin-bottom: 21px;		
 	position: static;		
 }		
-body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button{		
 	width: 181px;		
     height: 42px;		
     font-size: 12px;		
@@ -76192,7 +76195,8 @@ body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefu
     letter-spacing: 0.6px;		
     font-weight: normal;		
 }		
-body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button.light-blue.submit-request
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button.light-blue.submit-request,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button#saveBlockData.btn.btn-primary
 {		
 	    margin-right: 26px;		
 }		
@@ -76401,6 +76405,9 @@ p.disclaimer-txt{
 body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in .arrow{
 	left: 70%;
 }
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress{
+	width: 100%;
+	}
 @media(min-width: 1024px){
 	body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4{
 	width: 38%;
@@ -76497,6 +76504,9 @@ body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefu
 }	
 .accordtionTataCliq .slectionRefund .paymentCC {
     margin-top: 180px;
+}
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress{
+	float: none;
 }
 }
 @media(max-width: 350px){
