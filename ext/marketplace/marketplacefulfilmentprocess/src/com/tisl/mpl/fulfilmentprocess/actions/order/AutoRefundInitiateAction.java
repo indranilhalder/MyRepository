@@ -230,9 +230,22 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 
 	protected void populateRefundList(final OrderModel orderModel)
 	{
+		boolean refundedAtRts = false;
+
 		if (orderModel != null)
 		{
 			final List<ReturnRequestModel> returnRequestList = orderModel.getReturnRequests();
+
+			if (null != refundList)
+			{
+				refundList.clear();
+			}
+			if (null != returnList)
+			{
+				returnList.clear();
+			}
+
+
 			if (CollectionUtils.isNotEmpty(returnRequestList))
 			{
 				for (final ReturnRequestModel returnRequest : returnRequestList)
@@ -249,7 +262,16 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 									final ConsignmentStatus status = returnEntry.getOrderEntry().getConsignmentEntries().iterator().next()
 											.getConsignment().getStatus();
 
-									if (status.equals(ConsignmentStatus.RETURN_CLOSED))
+									refundedAtRts = false;
+									if (returnEntry instanceof RefundEntryModel
+											&& null != ((RefundEntryModel) returnEntry).getRefundMode()
+											&& ((RefundEntryModel) returnEntry).getRefundMode().equalsIgnoreCase(REFUND_MODE_C)) // added for store return mode
+									{
+										refundedAtRts = true;
+									}
+
+
+									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts)
 									{
 										final ReturnEntryModel returnEntryModel = returnEntry;
 										final OrderEntryModel orderEntryModel = (OrderEntryModel) returnEntryModel.getOrderEntry();
