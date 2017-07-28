@@ -193,6 +193,13 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 							MarketplaceCoreConstants.DIALCOLORELECTRONICSBLANK);
 				}
 				// INC_12606 ends
+				//INC144316508 starts
+				else if (value.toString().startsWith(MarketplaceCoreConstants.COLORELECTRONICS))
+				{
+					value = value.toString().replaceAll(MarketplaceCoreConstants.COLORELECTRONICS,
+							MarketplaceCoreConstants.COLORELECTRONICSBLANK);
+				}
+				// INC144316508 ends
 			}
 			final List<String> rangeNameList = getRangeNameList(indexedProperty, value);
 			final Collection<String> fieldNames = this.fieldNameProvider.getFieldNames(indexedProperty, (language == null) ? null
