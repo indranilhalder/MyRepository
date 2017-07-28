@@ -6,43 +6,44 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- Accordtion Panel 3 For Select Return Method -->
+	
 <div class="accordtionTataCliq thirdTataCliq col-md-12">
 	<div class="accHeading"><spring:theme code="text.order.returns.selectreturnmethod"/></div>
 	<div class="accContents returnMethod col-md-12">
 		<div class="col-md-3 col-sm-6">
 			<b><spring:theme code="text.order.returns.returnmethod"/> </b> <br />
-			<div class="selectReturnMethod quick col-md-12 col-sm-12">
+			<div class="selectReturnMethod quick ">
 			<c:if test="${productRichAttrOfQuickDrop eq 'yes' &&  sellerRichAttrOfQuickDrop eq 'yes' }">
-				<div class="selectRadio quickDropRadio col-md-2 col-sm-2 col-xs-2">
+				<div class="selectRadio quickDropRadio">
 					<!-- <input id="QuickDrop" onclick="changeRadioColor('quick')"
 						class="radioButton" type="radio" value="quick" name="returnMethod" /> -->
 						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('quick')"
 						class="radioButton"  value="quickDrop" name="returnMethod" path="returnMethod" />
 				</div>
 				
-				<div class="col-md-10 col-sm-10 col-xs-10">
+				<div class="select-content">
 					<b><spring:theme code="text.order.returns.quickdrop"/></b> <br />
 					 <span><spring:theme code="text.order.returns.droppackagenearbystore"/></span>
 				</div>
 				</c:if>
 			</div>
-			<div class="selectReturnMethod scheduled col-md-12 col-sm-12">
-				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
+			<div class="selectReturnMethod scheduled ">
+				<div class="selectRadio ">
 						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('scheduled')"
 						class="radioButton" value="schedule" name="returnMethod" path="returnMethod" />
 				</div>
-				<div class="col-md-10 col-sm-10 col-xs-10">
+				<div class="select-content">
 					<b><spring:theme code="text.order.returns.schedulepickup"/></b> <br /> 
 					<span><spring:theme code="text.order.returns.pickedupfromaddress"/></span>
 				</div>
 			</div>
-			<div class="selectReturnMethod self col-md-12 col-sm-12">
-				<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
+			<div class="selectReturnMethod self">
+				<div class="selectRadio ">
 
 						<form:radiobutton id="QuickDrop" onclick="changeRadioColor('self')"
 						class="radioButton" value="selfShipment" name="returnMethod" path="returnMethod" />
 				</div>
-				<div class="col-md-10 col-sm-10 col-xs-10">
+				<div class="select-content">
 					<b><spring:theme code="text.order.returns.selfcourier"/></b> <br /> <span><spring:theme code="text.order.returns.sendthepackageback"/></span>
 				</div>
 			</div>
@@ -165,13 +166,13 @@
 						<c:forEach var="address" items="${addressData}" varStatus="i">
 
 							<div
-								class="selectScheduledPickup  address${i.count} col-md-12 col-sm-12 col-xs-12">
-								<div class="selectRadio col-md-2 col-sm-2 col-xs-2">
+								class="selectScheduledPickup  address${i.count} ">
+								<div class="selectRadio">
 									<input onclick="showPickupTimeDate('address${i.count}')"
 										class="radioButton" type="radio" value="schedule"
 										name="selectScheduledPickup" />
 								</div>
-								<div class="col-md-6 col-sm-6 col-xs-6 updateaddress${i.count}">
+								<div class="select-content updateaddress${i.count}">
 									<ul >
 										<li>${fn:escapeXml(address.title)}&nbsp;<span class="firstName">${fn:escapeXml(address.firstName)}</span>&nbsp;<span class="lastName">${fn:escapeXml(address.lastName)}</span></li>
 										<li><span class="addressline1">${fn:escapeXml(address.line1)}</span></li>
@@ -186,7 +187,7 @@
 										<li style="display: none" id="addressUniqueId">${address.id}</li>
 									</ul>
 								</div>
-								<div class="col-md-4 col-sm-4 col-xs-4 editAddress">
+								<div class="editAddress">
 									<a href="#" class="changeAddressLinkPop" data-class="address${i.count}"><spring:theme code="text.order.returns.editaddress"/></a>
 								</div>		
 							</div> 
@@ -207,7 +208,7 @@
 			<div class="col-md-6 col-sm-12 col-xs-12">
 			
 				<b><spring:theme code="text.order.returns.selectpickupdate"/></b><br /> <br />
-				<div class="row col-md-12 col-sm-6 col-xs-12 selectDateTime">
+				<div class="row selectDateTime">
 					<div class="sideHead"><spring:theme code="text.order.returns.preferreddate"/></div>
 					<br />
 					<c:forEach var="returnDate" items="${returnDates}" varStatus="i">
@@ -221,7 +222,7 @@
 						
 					</div>
 					</c:forEach>
-					<br /> <br /> <br />
+
 				</div>
 
 				<!-- R2.3 START -->
@@ -278,7 +279,7 @@
 		<p style="clear: both"></p>
 		<div class="button_holder">
 			<button type="button" onclick="goBackToSecondTataCliq()"
-				class="light-blue newRequest"><spring:theme code="text.order.returns.backbutton"/></button>
+				class="light-blue newRequest btn btn-primary"><spring:theme code="text.order.returns.backbutton"/></button>
 			<button type="submit" id="saveBlockData" class="btn btn-primary">	
 <spring:theme code="text.returRequest.continueButton"/></button>
 				</div>
