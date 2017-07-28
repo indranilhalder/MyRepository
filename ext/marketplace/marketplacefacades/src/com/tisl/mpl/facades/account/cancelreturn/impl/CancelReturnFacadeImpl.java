@@ -2229,6 +2229,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 
 								orderEntry.setRefundedDeliveryChargeAmt(currDeliveryCharges);
 								orderEntry.setCurrDelCharge(new Double(0D));
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+									double hdDeliveryCharges=0.0D;
+									if(null !=orderEntry.getHdDeliveryCharge()) {
+										hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+									}
+									orderEntry.setRefundedEdChargeAmt(Double.valueOf(currDeliveryCharges.doubleValue()-hdDeliveryCharges));
+								}
 								// Added in R2.3 START
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
 								orderEntry.setScheduledDeliveryCharge(new Double(0D));
@@ -2984,6 +2991,13 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 									newStatus = ConsignmentStatus.REFUND_INITIATED;
 								}
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+									double hdDeliveryCharges=0.0D;
+									if(null !=orderEntry.getHdDeliveryCharge()) {
+										hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+									}
+									orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost.doubleValue()-hdDeliveryCharges));
+								}
 								orderEntry.setCurrDelCharge(new Double(0D));
 
 								// Added in R2.3 START

@@ -299,6 +299,14 @@ public class MarketPlaceDefaultCancellationController extends
 
 								double totalprice = orderEntry.getNetAmountAfterAllDisc();
 								orderEntry.setRefundedDeliveryChargeAmt(currDeliveryCharges);
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+									double hdDeliveryCharges=0.0D;
+									if(null !=orderEntry.getHdDeliveryCharge() ) {
+										hdDeliveryCharges = orderEntry.getHdDeliveryCharge();
+									}
+									orderEntry.setRefundedEdChargeAmt(currDeliveryCharges - hdDeliveryCharges);
+								}
+								
 								orderEntry.setCurrDelCharge(0D);
 								
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
