@@ -1822,7 +1822,7 @@ public class MiscsController extends BaseController
 	 *
 	 * @return void
 	 */
-	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST, consumes = "application/xml")
+	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
 	@ResponseBody
 	public void pancardStatusFromSP(final InputStream panStatusXML) throws RequestParameterException, JAXBException
 	{
