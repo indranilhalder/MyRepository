@@ -9,7 +9,7 @@
 
 <div class="listing wrapper">
 	<div class="search-result">
-		<h2>  
+		<h2> 
 			<c:choose>
 				<c:when
 					test="${not empty isSpellCheck}">
@@ -23,7 +23,8 @@
 							code="search.page.searchTextValue"
 							arguments="${spellSearchTerm}" /></span>', <spring:theme
 						code="search.page.searchTextForDYMShow" />&nbsp;
-						${resultCount}&nbsp;${resultStr} for 
+						<!-- ${resultCount}&nbsp;${resultStr} -->
+						  ${searchPageData.pagination.totalNumberOfResults} for 
 						<span class="searchString">"<i>
 								<spring:theme code="search.page.searchTextValue"
 										arguments="${spellingSearchterm}" /></i>"
