@@ -15,7 +15,9 @@
         var addStylesNode = document.getElementById("deferred-styles");
         var replacement = document.createElement("div");
         replacement.innerHTML = addStylesNode.textContent;
-        document.body.appendChild(replacement)
+        document.body.appendChild(replacement);
+        var inlinestyle = document.getElementById("onloadcss");
+        document.head.removeChild(inlinestyle);
         addStylesNode.parentElement.removeChild(addStylesNode);
       };
       var raf = requestAnimationFrame || mozRequestAnimationFrame ||
