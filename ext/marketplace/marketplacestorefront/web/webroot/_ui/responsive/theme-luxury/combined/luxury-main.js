@@ -14349,21 +14349,7 @@ if (function(a, b) {
     });
 }), window.TATA || (window.TATA = {});
 
-var TATA = window.TATA;
-
-var screenXs="480px";
-var screenSm="640px";
-var screenMd="1024px";
-var screenLg="1400px";
-
-var screenXsMin="480px";
-var screenSmMin="640px";
-var screenMdMin="1024px";
-var screenLgMin="1400px";
-
-var screenXsMax="639px";
-var screenSmMax="1023px";
-var screenMdMax="1399px";
+var TATA = window.TATA, screenXs = "480px", screenSm = "640px", screenMd = "1024px", screenLg = "1400px", screenXsMin = "480px", screenSmMin = "640px", screenMdMin = "1024px", screenLgMin = "1400px", screenXsMax = "639px", screenSmMax = "1023px", screenMdMax = "1399px";
 
 TATA.CommonFunctions = {
     getUrlParameterByName: function(name, url) {
@@ -14736,7 +14722,21 @@ TATA.CommonFunctions = {
     },
     Header: {
         MobileMenu: function() {
-            $("#hamburger-menu").on("click", function() {
+            $(".mega-menu li span").each(function() {
+                $(this).prev().css("pointer-events", "none");
+            }), $(".mega-menu > li ").on("click", function() {
+                $(".mega-menu > li ").each(function() {
+                    $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active"), 
+                    $(".mega-menu li a").css("pointer-events", "none");
+                }), $(".sub-menu-toggle", this).first().addClass("active").next(".sub-menu").addClass("active"), 
+                $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");
+            }), $(document).on("click", ".open-inner-menu li", function() {
+                $(".open-inner-menu li").each(function() {
+                    $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active"), 
+                    $(".mega-menu li a").css("pointer-events", "none");
+                }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
+                $(this).children().css("pointer-events", "auto");
+            }), $("#hamburger-menu").on("click", function() {
                 $("body").addClass("menu-open");
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");

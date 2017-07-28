@@ -57,7 +57,7 @@
 	</sec:authorize>
 	<div class="container-fluid">
 		<div class="inner">
-		    <div id="hamburger-menu" class="hamburger-menu visible-xs-block"><span></span></div> 
+		    <div id="hamburger-menu" class="hamburger-menu visible-xs-block  ${activeUser }"><span class="menu-icon"></span><span class="login-user"></span></div> 
 			<div class="logo-main-nav-wrapper">
 				<div class="logo text-center">
 					<a href="#"><cms:pageSlot position="SiteLogo" var="logo" limit="1">
