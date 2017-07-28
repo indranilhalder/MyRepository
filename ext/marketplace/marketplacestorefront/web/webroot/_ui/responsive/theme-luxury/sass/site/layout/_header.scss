@@ -339,7 +339,13 @@
 								> a {
 									font-size: 14px;
 									font-weight: 700;
+                                    padding-bottom: 50px;
+                                    
+                                    ~ .sub-menu{
+                                         margin-top: -50px;
+                                    }
 								}
+                                
 								> ul {
 									> li {
 										margin-top: 10px;
