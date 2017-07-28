@@ -240,7 +240,7 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 * @return OrderData
 	 */
 	OrderData getOrderDetailsForCode(OrderModel orderModel);
-	
+
 	/**
 	 * @description: It is used for fetching order data by order code for non-logged in users
 	 * @param orderCode
@@ -270,12 +270,19 @@ public interface MplCheckoutFacade extends CheckoutFacade
 	 */
 	void submitOrder(OrderModel orderModel);
 
-public OrderData getOrderDetailsForCockpitUser(String orderCode,CustomerModel customerModel);
-	
-	
-	public Map<String, List<String>> getDateAndTimeslotMapList(List<MplTimeSlotsModel> modelList, List<String> calculatedDateList, 
-			String deteWithOutTime ,String timeWithOutDate,  OrderEntryData cartEntryData, MplLPHolidaysModel mplLPHolidaysModel);
-	
-	
-	public void constructDeliverySlotsForEDAndHD(InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse,OrderEntryData cartEntryData,MplLPHolidaysModel mplLPHolidaysModel);
+	/**
+	 * @param deliveryPOSMap
+	 * @param cartModel
+	 */
+	void rePopulateDeliveryPointOfService(Map deliveryPOSMap, CartModel cartModel);
+
+	public OrderData getOrderDetailsForCockpitUser(String orderCode, CustomerModel customerModel);
+
+
+	public Map<String, List<String>> getDateAndTimeslotMapList(List<MplTimeSlotsModel> modelList, List<String> calculatedDateList,
+			String deteWithOutTime, String timeWithOutDate, OrderEntryData cartEntryData, MplLPHolidaysModel mplLPHolidaysModel);
+
+
+	public void constructDeliverySlotsForEDAndHD(InvReserForDeliverySlotsItemEDDInfoData deliverySlotsResponse,
+			OrderEntryData cartEntryData, MplLPHolidaysModel mplLPHolidaysModel);
 }

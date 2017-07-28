@@ -64,7 +64,7 @@ tr.d0 td {
    <c:if test="${not empty cartLevelDiscountModified}">
    	<li class="promo-msg"># ${cartLevelDiscountModified}</li>
    </c:if>
-  
+    <input type="hidden" id="exchangeApplicable" value="${cartData.exchangeAppliedCart}">
   <%---start changes for TISPRD-9417 --%> 
   <%--<c:forEach items="${cartData.entries}" var="entry"> --%>
   <c:forEach items="${cartData.entries}" var="entry" varStatus="status">
@@ -98,7 +98,7 @@ tr.d0 td {
    
    <div class="product-img">
    
-   <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
+<c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
 												product="${entry.product}" format="cartPage" /></a>
 												</c:if>
@@ -106,9 +106,7 @@ tr.d0 td {
    <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
 												product="${entry.product}" format="luxuryCartPage" /></a>
-												</c:if>
-   
-   </div>
+												</c:if>   </div>
    <span id="defaultWishId" style="display:none"><spring:theme code="wishlist.defaultname"/></span>
    
    <div class="product">
@@ -141,40 +139,56 @@ tr.d0 td {
 										</c:when>
 										<c:otherwise>
 												<div class="name">
-													<spring:theme code="mpl.myBag.fulfillment" /> &nbsp; ${entry.selectedSellerInformation.sellername} 
-												</div>	
-										</c:otherwise>
-									</c:choose>
-								</c:if>
-							</c:forEach>
-		                </p>
-		                
-		                <c:if test="${not empty entry.product.size}">
-		                 <p class="size"><ycommerce:testId code="cart_product_size">
-											<spring:theme code="product.variant.size"/>:&nbsp;${entry.product.size}
-										</ycommerce:testId>
-										</p>
-						</c:if>
-		             </div>
-		              
-		                
-		              <ul class="item-edit-details">
-		              	<c:if test="${entry.updateable}">
-		              			<c:forEach items="${entry.product.seller}" var="seller">
-								<c:if test="${seller.ussid eq entry.selectedSellerInformation.ussid }">
-								<c:set var="stock" value="${seller.availableStock }"/>
-								</c:if>
+													<spring:theme code="mpl.myBag.fulfillment" />
+													&nbsp; ${entry.selectedSellerInformation.sellername}
+												</div>
+											</c:otherwise>
+										</c:choose>
+									</c:if>
+								</c:forEach>
+							</p>
+							<!-- TPR-3780 STARTS HERE -->
+							<c:if test="${not empty entry.product.size}">
+								<p class="size disclaimer-txt more">
+									<ycommerce:testId code="cart_product_size">
+										<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+											<c:if test="${entry.product.rootCategory=='FineJewellery' }">
+											<spring:theme code="cart.price.disclaimer" />
+										</c:if>
+
+									</ycommerce:testId>
+								</p>
+							</c:if>
+							<!-- TPR-3780 ENDS HERE -->
+						</div>
+
+
+						<ul class="item-edit-details">
+						<c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange" style="display:none">
+<%-- 			              		<c:set var="exchangeId" value="${entry.exchangeApplied}"/> --%>
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
+							<c:if test="${entry.updateable}">
+								<c:forEach items="${entry.product.seller}" var="seller">
+									<c:if test="${seller.ussid eq entry.selectedUssid }">
+										<c:set var="stock" value="${seller.availableStock }" />
+									</c:if>
 								</c:forEach>
 							<ycommerce:testId code="cart_product_removeProduct">
 		                  		<li> 
-			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedSellerInformation.ussid}"><span><spring:theme code="cart.remove"/></span></a>
+			              			<a class="remove-entry-button" id="removeEntry_${entry.entryNumber}_${entry.selectedUssid}"><span><spring:theme code="cart.remove"/></span></a>
 			              		</li>
+			              	
 			              		<li><form:form name="addToCartForm" method="post" action="#" class="mybag-undo-form">
 								<input type="hidden" name="qty" value="${entry.quantity}" />
 								<input type="hidden" name=pinCodeChecked value="true" />
 								<input type="hidden" name="productCodePost" value="${entry.product.code}" />
 								<input type="hidden" name="wishlistNamePost" value="N" />
-								<input type="hidden" name="ussid" value="${entry.selectedSellerInformation.ussid}" />
+								<input type="hidden" name="ussid" value="${entry.selectedUssid}" />
 								<input type="hidden" name="stock" value="${stock}" />
 								<div class="undo-text-wrapper">
 								<p><spring:theme code="mpl.myBag.product.remove.text"/></p>
@@ -204,6 +218,65 @@ tr.d0 td {
 						<fmt:parseNumber var="price" type="number" value="${subPrice}" />
 					  	<c:set var="tot_price" value="${quantity * price}" />
 						<ycommerce:testId code="cart_totalProductPrice_label">
+						
+						<!-- TPR-970 Starts--><%-- TISPRDT-1673 For data population on Pincode check--%>
+						
+						<span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm">
+						<span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span>
+						</span>
+						<%-- <span class="priceFormat priceFormatOnUpdate">&nbsp;<span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span> --%>
+						</span>
+						<!-- TPR-970 Ends-->
+						
+						 	<%-- TISPRDT-1673 MOP Block Begins--%>
+							<c:choose>
+									<c:when test="${not empty entry.cartLevelDisc}">
+									<c:choose>
+										<%-- ${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage} --%>
+										<c:when test="${not empty entry.productPerDiscDisplay}">
+											<c:choose>
+												<c:when test="${not empty entry.productLevelDisc}">
+													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}" class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span></span>
+												</c:when>
+												<c:otherwise>
+													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"  class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span></span>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+											<%-- <c:if test="${not empty entry.productLevelDisc}">
+											<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
+											</c:if> --%>
+										</c:otherwise>
+									</c:choose>
+									</c:when>
+									<c:otherwise>
+									<c:choose>
+										<c:when test="${not empty entry.productPerDiscDisplay}">
+										<c:choose>
+												<c:when test="${not empty entry.productLevelDisc}">
+													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}" class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.netSellingPrice}"/></span></span>
+												</c:when>
+												<c:otherwise>
+													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}" class="mop_span"><span   class="delSeat mop"><format:price priceData="${entry.totalPrice}"/></span></span>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+										<c:otherwise>
+										<%-- <c:if test="${not empty entry.productLevelDisc}">
+										<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.netSellingPrice}"/></span>
+										</c:if> --%>
+											<%-- <c:if test="${entry.basePrice.formattedValue < entry.totalMrp.formattedValue}">
+												<span><format:price priceData="${entry.basePrice}"/></span>
+											</c:if> --%>
+											
+										</c:otherwise>
+									</c:choose>
+									</c:otherwise>
+								</c:choose>
+								<%-- TISPRDT-1673 MOP Block Ends--%>
+								
+								<%-- TISPRDT-1673 MRP Block--%>
 								<c:choose>
 									<c:when test="${entry.giveAway}"> <!-- For Freebie item price will be shown as free -->
 										<spring:theme code="text.free" text="FREE"/>
@@ -214,6 +287,12 @@ tr.d0 td {
 											<span class="delSeat" id="totalPrice_${entry.entryNumber}">
 												 <format:price priceData="${strikeoffprice}" displayFreeForZero="true" />
 											</span>
+												 <c:if test="${not empty entry.productPerDiscDisplay}">
+												 	<span class="off-bag">(
+													<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+													<spring:theme code="off.item.percentage"/>)</span>
+												 </c:if>
+											
 											<c:choose>
 												 <c:when test="${entry.totalPrice.value<'1.00'}">
 													<span>Free</span>
@@ -231,9 +310,15 @@ tr.d0 td {
 												<c:choose>
     											<c:when test="${not empty entry.cartLevelDisc || not empty entry.productLevelDisc || not empty entry.productPerDiscDisplay}">
         											<!-- TPR-970 changes-->	<c:set var="totalPrice"  value="${entry.totalPrice.formattedValue}"/>
-        											<!-- TPR-970 changes-->	<span class="delSeat" id="totalPrice_${entry.entryNumber}">
+        											<!-- TPR-970 changes-->	<li><span class="delSeat" id="totalPrice_${entry.entryNumber}">
 													<!-- TPR-970 changes-->		<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
-		 												</span>
+													</span></li>
+													<c:if test="${not empty entry.productPerDiscDisplay}">
+													<span class="off-bag">(
+													<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+													<spring:theme code="off.item.percentage"/>)</span>
+													</c:if>
+		 											
     											</c:when>    
     											<c:otherwise>
     											<%-- <c:choose> --%>
@@ -262,10 +347,20 @@ tr.d0 td {
         												<!-- TPR-970 changes-->	<c:set var="totalPrice"  value="${entry.totalPrice}"/>
 												          <!-- TPR-970 changes-->   <span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalPrice}"/>
 																<format:price priceData="${entry.totalMrp}" displayFreeForZero="false" />
-		 													</span>
+																</span>
+																<c:if test="${not empty entry.productPerDiscDisplay}">
+																<span class="off-bag">(
+																<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+																<spring:theme code="off.item.percentage"/>)</span>
+																</c:if>
     													</c:when>    
     												<c:otherwise>
        													<span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${entry.totalMrp}"/></span>
+       													<c:if test="${not empty entry.productPerDiscDisplay}">
+														<span class="off-bag">(
+														<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+														<spring:theme code="off.item.percentage"/>)</span>
+														</c:if>
    												 	</c:otherwise>
 													</c:choose>
 													</c:when>
@@ -277,12 +372,24 @@ tr.d0 td {
 																	<c:choose>
 																		<c:when test="${mrpPrice.value.formattedValue != entry.totalMrp.formattedValue||not empty entry.cartLevelDisc}">
 																		<!-- TPR-970 changes--><input type="hidden" id="basePrice_${entry.entryNumber}" value='${mrpPrice.value.formattedValue}'/>
-																	<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
-																		</c:when>
-																		<c:otherwise>
+																	<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"><format:price priceData="${mrpPrice.value}" displayFreeForZero="true" />
+																	</span></li>
+																	<c:if test="${not empty entry.productPerDiscDisplay}">
+																	<span class="off-bag">(
+																	<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+																	<spring:theme code="off.item.percentage"/>)</span>
+																	</c:if>
+																	</c:when>
+																	<c:otherwise>
 																			<c:if test="${mrpPrice.value.formattedValue != entry.totalMrp }">
-																		<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" /></span></li>
-																			</c:if>
+																		<!-- TPR-970 changes-->	<li><span id ="totalPrice_${entry.entryNumber}" class="delSeat"> <format:price priceData="${mrpPrice.value}" displayFreeForZero="true" />
+																		</span></li>
+																		<c:if test="${not empty entry.productPerDiscDisplay}">
+																		<span class="off-bag">(
+																		<fmt:formatNumber type = "number" pattern = "#.##" value = "${entry.productPerDiscDisplay.value}" />
+																		<spring:theme code="off.item.percentage"/>)</span>
+																		</c:if>
+																		</c:if>
 																		</c:otherwise>
 																	</c:choose>
 																	</c:when>
@@ -307,6 +414,8 @@ tr.d0 td {
 										</c:choose>	
 									</c:otherwise>
 								</c:choose>
+								
+								
 								<%-- <c:if	test="${empty itemLevelDiscount}">
 									<c:forEach items="${priceModified}" var="priceModified">
 											<c:if	test="${priceModified.key == entry.entryNumber}"><br/>
@@ -324,70 +433,46 @@ tr.d0 td {
 								--
 								${entry.amountAfterAllDisc.value} --%>
 								<!-- prodLevelPercentage replace with productPerDiscDisplay -->
-								<c:choose>
-									<c:when test="${not empty entry.cartLevelDisc}">
-									<c:choose>
-										<%-- ${not empty entry.productLevelDisc && not empty entry.prodLevelPercentage} --%>
-										<c:when test="${not empty entry.productPerDiscDisplay}">
-											<c:choose>
-												<c:when test="${not empty entry.productLevelDisc}">
-													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.netSellingPrice}"/></span></span></span>
-												</c:when>
-												<c:otherwise>
-													<!-- TPR-970 changes--><span id="itemCartCentDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><span   class="delSeat"><format:price priceData="${entry.totalPrice}"/></span></span></span>
-												</c:otherwise>
-											</c:choose>
-										</c:when>
-										<c:otherwise>
-											<%-- <c:if test="${not empty entry.productLevelDisc}">
-											<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><del><format:price priceData="${entry.netSellingPrice}"/></del></span>
-											</c:if> --%>
-										</c:otherwise>
-									</c:choose>
-									</c:when>
-									<c:otherwise>
-									<c:choose>
-										<c:when test="${not empty entry.productPerDiscDisplay}">
-										<c:choose>
-												<c:when test="${not empty entry.productLevelDisc}">
-													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.netSellingPrice}"/></span></span>
-												</c:when>
-												<c:otherwise>
-													<!-- TPR-970 changes--><span id="itemCartAmtDisplay_${entry.entryNumber}"><span class="off-bag">${entry.productPerDiscDisplay.value}<spring:theme code="off.item.percentage"/><format:price priceData="${entry.totalPrice}"/></span></span>
-												</c:otherwise>
-											</c:choose>
-										</c:when>
-										<c:otherwise>
-										<%-- <c:if test="${not empty entry.productLevelDisc}">
-										<span class="off-bag"><format:price priceData="${entry.productLevelDisc}"/><spring:theme code="off.item"/><format:price priceData="${entry.netSellingPrice}"/></span>
-										</c:if> --%>
-											<%-- <c:if test="${entry.basePrice.formattedValue < entry.totalMrp.formattedValue}">
-												<span><format:price priceData="${entry.basePrice}"/></span>
-											</c:if> --%>
-											
-										</c:otherwise>
-									</c:choose>
-									</c:otherwise>
-								</c:choose>
+								
+								
+								<%-- TISPRDT-1673 Cart Promotion Block--%>
 								<c:if test="${not empty entry.cartLevelDisc}">
 									<c:choose>
 										<c:when test="${not empty entry.cartLevelDisc && not empty entry.cartLevelPercentage}">
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-											<!-- TPR-970 changes--><span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
+											<p class="add-disc">Additional Discount</p>
+											<!-- TPR-970 changes--><%-- <span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span> --%>
+												<!-- UF-260 -->
+												<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
+												<span id="cartCentOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>
+												</span>&nbsp(<fmt:formatNumber pattern="#.##" value="${entry.cartAdditionalDiscPerc.value}" />% )&nbspOff</span>
+												
 												<%-- <span class="off-bag">${entry.cartLevelPercentage}<spring:theme code="off.bag.percentage"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 										</c:when>
 										<c:otherwise>
 											<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
-											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span></span>
-												<%-- <span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
+											<p class="add-disc">Additional Discount</p>
+											<%-- <format:price priceData="${entry.amountAfterAllDisc}"/> --%>
+											<span id="cartAmtOfferDisplay_${entry.entryNumber}"><span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/>
+											</span>&nbsp(<fmt:formatNumber pattern="#.##" value="${entry.cartAdditionalDiscPerc.value}" />
+											% )&nbspOff</span>
+											<%-- <span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span> --%>
 											</c:if>
 									</c:otherwise>
-							</c:choose></c:if>
+							</c:choose>
+							</c:if>
+							
 							<!-- TPR-970 changes starts-->
 							<span id="totalPriceDisplay_${entry.entryNumber}"></span>
-                            <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span></span>
-							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><br/><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}"></span></span></span>
+                            <%-- <span id="ItemAmtofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat"><span id="off-bag-ItemLevelDiscAmt_${entry.entryNumber}"></span></span><span class="priceFormat priceFormatOnUpdate">&nbsp;<span id="off-bag-ItemLevelDisc_${entry.entryNumber}"></span></span></span> --%>
+							
+							<c:if test="${entry.amountAfterAllDisc.value gt 0.1}">
+							<p class="add-disc-pincode" style="display:none;">Additional Discount</p>
+							<span id="CartofferDisplay_${entry.entryNumber}" style="display: none" class="ItemAmtofferDisplayPrFm"><span class="priceFormat priceFormatOnUpdate"><span id="off-bag-cartLevelDisc_${entry.entryNumber}"></span></span><span class="priceFormat"><span id="off-cartLevelDiscAmt_${entry.entryNumber}">
+							</span>&nbsp(<fmt:formatNumber pattern="#.##" value="${entry.cartAdditionalDiscPerc.value}" />% )&nbspOff</span></span>
+							</c:if>
+							
 							<!-- TPR-970 changes ends-->
 								<%--  <c:if test="${not empty entry.cartLevelDisc}">
 									<span class="off-bag"><format:price priceData="${entry.cartLevelDisc}"/><spring:theme code="off.bag"/><format:price priceData="${entry.amountAfterAllDisc}"/></span>
@@ -406,10 +491,10 @@ tr.d0 td {
    <!-- TISUTO-124 -->
     <c:choose>
 		<c:when test="${entry.giveAway}">
-				<li id ="${entry.selectedSellerInformation.ussid}_qty_${entry.giveAway}" class="qty">
+				<li id ="${entry.selectedUssid}_qty_${entry.giveAway}" class="qty">
 		</c:when>
 		<c:otherwise>
-				<li id ="${entry.selectedSellerInformation.ussid}_qty" class="qty">
+				<li id ="${entry.selectedUssid}_qty" class="qty">
 		</c:otherwise>	
 	</c:choose>		
    <!-- TISUTO-124 -->
@@ -418,10 +503,10 @@ tr.d0 td {
         
    <c:choose>
 		<c:when test="${entry.giveAway}">
-			<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}_${entry.giveAway}" />
+			<c:set var="updateFormId" value="updateCartForm${entry.selectedUssid}_${entry.giveAway}" />
 		</c:when>
 		<c:otherwise>
-			<c:set var="updateFormId" value="updateCartForm${entry.selectedSellerInformation.ussid}" />
+			<c:set var="updateFormId" value="updateCartForm${entry.selectedUssid}" />
 		</c:otherwise>	
   </c:choose>				
     
@@ -438,8 +523,9 @@ tr.d0 td {
 					<fmt:parseNumber var="price" type="number" value="${subPrice}" />
 											
 					<c:choose>
+
 							<c:when test="${price lt 0.1 && entry.giveAway}">
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
+								<form:select path="quantity" id="quantity_${entry.selectedUssid}_${entry.giveAway}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
 									<c:forEach items="${configuredQuantityList}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
@@ -447,17 +533,32 @@ tr.d0 td {
 								</form:select>
 							</c:when>
 							<c:when test="${price lt 0.1}">
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" disabled="true" onchange="updateCart(this.id);">
-									<c:forEach items="${configuredQuantityList}"
+								<form:select path="quantity"
+									id="quantity_${entry.selectedUssid}"
+									cssClass="update-entry-quantity-input" disabled="true"
+									onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityList}" var="quantity">
+										<form:option value="${quantity}"></form:option>
+									</c:forEach>
+								</form:select>
+							</c:when>
+							<c:when test="${'FineJewellery' eq entry.product.rootCategory}">
+								<form:select path="quantity"
+									id="quantity_${entry.selectedUssid}"
+									cssClass="update-entry-quantity-input"
+									onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityForJewellery}"
 										var="quantity">
 										<form:option value="${quantity}"></form:option>
 									</c:forEach>
 								</form:select>
 							</c:when>
 							<c:otherwise>
-								<form:select path="quantity" id="quantity_${entry.selectedSellerInformation.ussid}"	cssClass="update-entry-quantity-input" onchange="updateCart(this.id);">
-									<c:forEach items="${configuredQuantityList}"
-										var="quantity">
+								<form:select path="quantity"
+									id="quantity_${entry.selectedUssid}"
+									cssClass="update-entry-quantity-input"
+									onchange="updateCart(this.id);">
+									<c:forEach items="${configuredQuantityList}" var="quantity">
 										<form:option value="${quantity}"></form:option>
 									</c:forEach>
 								</form:select>
@@ -470,17 +571,17 @@ tr.d0 td {
 		            
 	            	<c:choose>
 	            		<c:when test="${entry.giveAway}"> <!-- For Freebie item delivery mode will no tbe displayed -->
-	            			<li id ="${entry.selectedSellerInformation.ussid}_li_${entry.giveAway}" class="delivery freebie-delivery">
-	            				<ul id="${entry.selectedSellerInformation.ussid}_${entry.giveAway}">	
+	            			<li id ="${entry.selectedUssid}_li_${entry.giveAway}" class="delivery freebie-delivery">
+	            				<ul id="${entry.selectedUssid}_${entry.giveAway}">	
 						</c:when>
 						<c:otherwise>
-							<li id ="${entry.selectedSellerInformation.ussid}_li" class="delivery">
+							<li id ="${entry.selectedUssid}_li" class="delivery">
 							<p class="mobile-delivery"><spring:theme code="basket.delivery.options"/></p>
 							<!-- TPR-1458-->
 							<!-- <span class='pincodeServiceError'></span> -->
 							<!-- 1341 -->
 							<p class="cartItemBlankPincode"><a href="#defaultPinCodeIds"><spring:theme code="cart.pincode.blanklink"/>&nbsp;</a><spring:theme code="cart.pincode.blank"/></p>	
-							<ul id="${entry.selectedSellerInformation.ussid}">
+							<ul id="${entry.selectedUssid}">
 						</c:otherwise>
 					</c:choose>	
 	             	 
@@ -661,7 +762,7 @@ tr.d0 td {
 		<c:forEach items="${promoModified}" var="promoModified">
 			<c:choose>
 				<c:when	test="${promoModified.key == entry.entryNumber}">
-					<li># ${promoModified.value}</li>
+					<li>${promoModified.value}</li>
 				</c:when>
 			</c:choose>
 		</c:forEach>
@@ -669,7 +770,7 @@ tr.d0 td {
 			<c:forEach items="${priceModifiedMssg}" var="priceModifiedMssg">
 				<c:choose>
 					<c:when	test="${priceModifiedMssg.key == entry.entryNumber}">
-						<li># ${priceModifiedMssg.value}</li>
+						<li>${priceModifiedMssg.value}</li>
 					</c:when>
 				</c:choose>
 			</c:forEach>
@@ -1176,16 +1277,22 @@ tr.d0 td {
    <%-- <c:out value="${cartData.entries[0].netSellingPrice}"></c:out> --%>
     <%--  <h2><spring:theme code="mpl.orderDetails" /></h2> --%>
 	<ul class="totals">
-            <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li>
+            <%-- <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartData.subTotal}"/></ycommerce:testId></span></li> --%>
+            <!-- UF-260 -->
+            <li id="subtotal"><spring:theme code="basket.page.totals.subtotal"/> <span class="amt"><ycommerce:testId code="Order_Totals_Subtotal"><format:price priceData="${cartTotalMrp}"/></ycommerce:testId></span></li>
             <li id="subtotal_Value" style="display:none"><spring:theme code="basket.page.totals.subtotal"/><span class="amt"><span id="subtotalValue"></span></span></li>
             <li id="discount_Value" style="display:none"><spring:theme code="basket.page.totals.savings"/> <span class="amt"><span id="discountValue"></span></span></li>
             <li id="total_Value" class="totalValue" style="display:none"><spring:theme code="basket.page.totals.total"/><span class="amt"><span id="totalValue"></span></span></li>
-         <c:if test="${cartData.totalDiscounts.value > 0}">
-        <li id="discount"><spring:theme code="basket.page.totals.savings"/><span class="amt">
+         <%-- <c:if test="${cartData.totalDiscounts.value > 0}"> --%>
+       <%--  <li id="discount" style='${cartData.totalDiscounts.value > 0?"display:block;":"display:none;"}'><spring:theme code="basket.page.totals.savings"/><span class="amt">
         <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${cartData.totalDiscounts}"/></ycommerce:testId>
-       <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/>
+       <spring:theme code="text.parenthesis.open"/>  <c:out value="${cartData.discountPercentage}"></c:out><spring:theme code="text.percentage"/><spring:theme code="text.parenthesis.close"/> --%>
+        <%-- </c:if>  --%>
+         <!-- UF-260 -->
+         <c:if test="${totalDiscount.value > 0}">
+	        <li id="discount"><spring:theme code="text.account.order.savings"/><span class="amt">
+	        <ycommerce:testId code="Order_Totals_Savings"><format:price priceData="${totalDiscount}"/></ycommerce:testId>
         </c:if> 
-        
         </span></li>
             
             <li id="total"><spring:theme code="basket.page.totals.total"/><span class="amt"><ycommerce:testId code="cart_totalPrice_label">
@@ -1241,8 +1348,8 @@ tr.d0 td {
           
 				
 				<ul class="checkout-types onlyCheckoutButton checkOutBtnBtm">
-				<li id="checkout-id-down" class="checkout-button">
-				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<li id="checkout-id-down" class="checkout-button" style="cursor: not-allowed;">
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red checkout-disabled" style="pointer-events: none; cursor: not-allowed; opacity: 0.5;"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				<p id="unserviceablepincode_tooltip_btm" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
      			<p id="error-Id_tooltip_btm" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
@@ -1335,4 +1442,3 @@ tr.d0 td {
            <!-- commented as part of TISPRD-9245, TPR-3691 -->
          
 <storepickup:pickupStorePopup />
-

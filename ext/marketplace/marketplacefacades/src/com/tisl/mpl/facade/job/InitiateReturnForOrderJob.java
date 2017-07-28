@@ -5,6 +5,7 @@ import de.hybris.platform.commercefacades.order.data.OrderEntryData;
 import de.hybris.platform.commercefacades.product.PriceDataFactory;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.PriceDataType;
+import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
@@ -92,7 +93,6 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			String orderCode = null; // TODO to fetch from given CSV66
 			String transactionId = null; // TODO to fetch from given CSV66
 			OrderData subOrderDetails = null;
-			ReturnItemAddressData returnAddrData = null;
 			Map<String, BulkReturnStatusData> returnResonseMap = null;
 			OrderEntryData subOrderEntry = null;
 
@@ -117,10 +117,9 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 								+ bulkModel.getTransactionId());
 
 						final OrderModel orderModel = orderModelService.getParentOrder(orderCode);
-						final AddressModel addrModel = orderModel.getDeliveryAddress();
 
 						//Step 1. prepare AddressData
-						returnAddrData = getReturnData(addrModel);
+						//returnAddrData = getReturnData(addrModel);
 
 						//Step 2: prepare map to call OMS
 						for (final OrderModel subOrder : orderModel.getChildOrders())
@@ -155,7 +154,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			try
 			{
 				//Step 3: call OMS and CRM
-				returnResonseMap = callOMSandCRM(dataToCallOMS, returnAddrData);
+				returnResonseMap = callOMSandCRM(dataToCallOMS);
 			}
 			catch (final Exception e)
 			{
@@ -196,28 +195,60 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 
-	//prepare AddressData
-	private ReturnItemAddressData getReturnData(final AddressModel addrModel)
+	//prepare AddressData INC144315946
+	private ReturnItemAddressData getReturnDataforOrder(final String code)
 	{
 		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
-		returnAddrData.setPincode(addrModel.getPostalcode());
-		returnAddrData.setFirstName(addrModel.getFirstname());
-		returnAddrData.setLastName(addrModel.getLastname());
-		returnAddrData.setCity(addrModel.getCity());
-		returnAddrData.setMobileNo(addrModel.getCellphone());
-		returnAddrData.setState(addrModel.getState());
+		final OrderModel orderModel = orderModelService.getOrder(code);
+		AddressModel addrModel = null;
+		if (null != orderModel && null != orderModel.getDeliveryAddress())
+		{
+			addrModel = orderModel.getDeliveryAddress();
+			returnAddrData.setPincode(addrModel.getPostalcode());
+			returnAddrData.setFirstName(addrModel.getFirstname());
+			returnAddrData.setLastName(addrModel.getLastname());
+			returnAddrData.setAddressLane1(addrModel.getLine1());
+			returnAddrData.setAddressLane2(addrModel.getLine2());
+			returnAddrData.setLandmark(addrModel.getAddressLine3());
+			returnAddrData.setCity(addrModel.getTown());
+			returnAddrData.setMobileNo(addrModel.getPhone1());
+			returnAddrData.setState(addrModel.getDistrict());
+			if (null != addrModel.getCountry())
+			{
+				returnAddrData.setCountry(addrModel.getCountry().getIsocode());
+			}
+		}
+		return returnAddrData;
+	}
+
+	//prepare AddressData INC144315946
+	private ReturnItemAddressData getReturnData(final AddressData addrData)
+	{
+		final ReturnItemAddressData returnAddrData = new ReturnItemAddressData();
+		returnAddrData.setPincode(addrData.getPostalCode());
+		returnAddrData.setFirstName(addrData.getFirstName());
+		returnAddrData.setLastName(addrData.getLastName());
+		returnAddrData.setAddressLane1(addrData.getLine1());
+		returnAddrData.setAddressLane2(addrData.getLine2());
+		returnAddrData.setLandmark(addrData.getLine3());
+		returnAddrData.setCity(addrData.getTown());
+		returnAddrData.setMobileNo(addrData.getPhone());
+		returnAddrData.setState(addrData.getState());
+		if (null != addrData.getCountry())
+		{
+			returnAddrData.setCountry(addrData.getCountry().getIsocode());
+		}
 		return returnAddrData;
 	}
 
 	//call OMS
-	private Map<String, BulkReturnStatusData> callOMSandCRM(final Map<OrderEntryData, OrderData> dataToCallOMS,
-			final ReturnItemAddressData returnAddrData)
+	private Map<String, BulkReturnStatusData> callOMSandCRM(final Map<OrderEntryData, OrderData> dataToCallOMS)
 	{
 		final String ticketTypeCode = MarketplacecommerceservicesConstants.TICKETTYPECODE;
 		final String refundType = MarketplacecommerceservicesConstants.REFUNDTYPE;
 		final String reasonCode = MarketplacecommerceservicesConstants.REASONCODE;
 		final Map<String, BulkReturnStatusData> returnResonseMap = new HashMap<String, BulkReturnStatusData>();
-
+		ReturnItemAddressData returnAddrData = null;
 
 		for (final Map.Entry<OrderEntryData, OrderData> entry : dataToCallOMS.entrySet())
 		{
@@ -228,6 +259,16 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			final CustomerData customerData = subOrderDetails.getCustomerData();
 			final String ussid = subOrderEntry.getSelectedUssid();
 			String orderConsignmentStatus = MarketplacecommerceservicesConstants.EMPTY;
+
+			//INC144315946
+			if (null != subOrderDetails.getDeliveryAddress())
+			{
+				returnAddrData = getReturnData(subOrderDetails.getDeliveryAddress());
+			}
+			else
+			{
+				returnAddrData = getReturnDataforOrder(subOrderDetails.getCode());
+			}
 
 			if (subOrderEntry.getQuantity().intValue() != 0 && null != subOrderEntry.getConsignment()
 					&& null != subOrderEntry.getConsignment().getStatus())
@@ -241,7 +282,7 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			{
 				LOG.info(subOrderEntry.getTransactionId());
 				returnStatus = cancelReturnFacade.implementReturnItem(subOrderDetails, subOrderEntry, reasonCode, ussid,
-						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData);
+						ticketTypeCode, customerData, refundType, true, SalesApplication.WEB, returnAddrData, "");
 			}
 			else
 			{
@@ -370,7 +411,8 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 			{
 				customer = (CustomerModel) orderModel.getUser();
 			}
-			if (customer != null && null != customer.getDefaultShipmentAddress())
+			//INC144315982
+			if (customer != null)
 			{
 				customerData = new CustomerData();
 				//TISUAT-4850
@@ -381,6 +423,11 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 				else
 				{
 					customerData.setEmail(MarketplacecommerceservicesConstants.NA);
+				}
+				//INC144315982
+				if (customer.getUid() != null)
+				{
+					customerData.setUid(customer.getUid());
 				}
 				customerData.setRegistrationDate(customer.getCreationtime());
 				orderData.setCustomerData(customerData);
@@ -414,6 +461,11 @@ public class InitiateReturnForOrderJob extends AbstractJobPerformable<CronJobMod
 					else
 					{
 						customerData.setEmail(MarketplacecommerceservicesConstants.NA);
+					}
+					//INC144315982
+					if (customer.getUid() != null)
+					{
+						customerData.setUid(customer.getUid());
 					}
 					customerData.setRegistrationDate(customer.getCreationtime());
 					sellerOrderData.setCustomerData(customerData);

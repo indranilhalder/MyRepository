@@ -82,6 +82,10 @@
 
                                                 comparableProductCode
                                                     .push(v.productCode);
+                                              //TPR-4727 | add to compare 1st part
+    	                       					if(typeof utag !="undefined"){
+    	                       						utag.link({ link_text : "add_to_compare_clicked" , event_type : "add_to_compare_clicked" });
+    	                       					}
                                                 tealiumCompare=comparableProductCode;
                                                 //TPR-6290
                                                 if(typeof _satellite !="undefined"){
@@ -166,6 +170,10 @@
                                     var divId = '#compare-id' +
                                         checkboxId;
                                     $(divId).remove();
+                                    /*TPR-4715 |add to compare */
+                                    if(typeof utag !="undefined"){
+                                  		 utag.link({ link_text : "add_to_compare_removed" , event_type : "add_to_compare_removed" });
+                                  	 }
                                     var compareProdLen = $('#compareSection .compare-item').length;
                                     $(
                                         "input:checkbox[id=" +
@@ -245,11 +253,7 @@
 
                                         if (selected.length < items){
                                             selected.push(productCode);
-                                            //TPR-4727 | add to compare 1st part
-	                       					if(typeof utag !="undefined"){
-	                       						utag.link({ link_text : "add_to_compare_clicked" , event_type : "add_to_compare_clicked" });
-	                       					}
-	                       					
+
                                         }	
                                         else {
                                             $('#compareError')

@@ -72,8 +72,8 @@
 				<%-- <formElement:formCheckbox idKey="defaultAddress" 
 						labelKey="address.default" path="defaultAddress"
 						        labelCSS="add-address-left-label" mandatory="false"/> --%>	
-						        <input type="checkbox" id="defaultAddress" name="defaultAddress" value="true"/>
-												<label for="defaultAddress">SAVE THIS ADDRESS FOR LATER</label>
+						        <input type="checkbox" id="defaultAddress" name="defaultAddress" value="true" checked="checked" style="display:none;"/>
+												<label for="defaultAddress" style="display:none;">SAVE THIS ADDRESS FOR LATER</label>
 			</c:when>
 		</c:choose>
 	</div>

@@ -150,8 +150,8 @@
 												code="header.trackorder" /></a></li>
 								</c:if> 
 					         </c:if>
-								
-								<li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li>
+								<!-- R2.3 for track order END -->
+								<%-- <li class="store-locator-header"><a href="${request.contextPath}/store-finder">Our Stores</a></li> //commented for UF-353--%>
 								<li class="download-app"><a href="${request.contextPath}/apps">Download App</a></li>
 							</c:if>
 						</c:if>
@@ -212,8 +212,8 @@
 					</div>
 					</div>
 					
-					<span>CHECKOUT</span>
-					
+					<span>Safe & Secure Checkout</span>		<!-- UF-281 text change -->
+					<span id="singlePageNeedHelpComponent" class="need-help-call"></span><!--Need Help? Call Number is added using js code written in acc.singlePageCheckout.js -->
 					
 					<button id="deliveryAddressSubmitUp" type="submit" class="button checkout-next" style="display:none;">Proceed to Payment</button>
 						</c:if>

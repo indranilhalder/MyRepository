@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -175,7 +176,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductFeaturesByCodeAndQualifier(java
 	 * .lang.String, java.lang.String)
@@ -206,7 +207,7 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductListByCodeList(de.hybris.platform
 	 * .catalog.model.CatalogVersionModel, java.util.List)
@@ -276,4 +277,39 @@ public class MplProductDaoImpl extends DefaultProductDao implements MplProductDa
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao#findProductData(java.lang.String)
+	 */
+	@Override
+	public ProductModel findProductData(final String code)
+	{
+
+		ProductModel prod = new ProductModel();
+
+		LOG.debug("findProductsByCode: code********** " + code);
+		final CatalogVersionModel catalogVersion = getCatalogVersion();
+		final StringBuilder stringBuilder = new StringBuilder(70);
+		stringBuilder.append(SELECT_STRING).append(ProductModel.PK).append("} ");
+		stringBuilder.append(FROM_STRING).append(ProductModel._TYPECODE).append(" AS p ");
+		stringBuilder.append("JOIN ").append(SellerInformationModel._TYPECODE).append(" AS s ");
+		stringBuilder.append("ON {s:").append(SellerInformationModel.PRODUCTSOURCE).append("}={p:").append(ProductModel.PK)
+				.append("} } ");
+		final String inPart = "{p:" + ProductModel.CODE + CODE_STRING + ProductModel.CATALOGVERSION + "} = ?catalogVersion";
+		stringBuilder.append("WHERE ").append(inPart);
+		LOG.debug("findProductsByCode: stringBuilder******* " + stringBuilder);
+		final FlexibleSearchQuery query = new FlexibleSearchQuery(stringBuilder.toString());
+		query.addQueryParameter(CODE, code);
+		query.addQueryParameter("catalogVersion", catalogVersion);
+		query.setResultClassList(Collections.singletonList(ProductModel.class));
+		final SearchResult<ProductModel> searchResult = getFlexibleSearchService().search(query);
+		LOG.debug("findProductsByCode: searchResult********** " + searchResult);
+		System.out.println("*************list Size" + searchResult.getResult().size());
+		if (CollectionUtils.isNotEmpty(searchResult.getResult()))
+		{
+			prod = searchResult.getResult().get(0);
+		}
+		return prod;
+	}
 }

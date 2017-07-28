@@ -38,6 +38,7 @@ public class MarketplacecclientservicesConstants
 	public static final String SMS_SERVICE_USERNAME = "marketplace.sms.service.username";
 	public static final String SMS_SERVICE_PASSWORD = "marketplace.sms.service.password";
 	public static final String OMS_INVENTORY_RESERV_URL = "oms.inventoryreservation.url";
+	public static final String OMS_ORDER_CREATE_URL = "oms.order.createOrder.url";
 	public static final String M = "M";
 	public static final String F = "F";
 	public static final String U = "U";
@@ -135,7 +136,9 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL = "oms.inventory.reservation.realtimecall";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLFIRSTPHASE = "oms.inventory.reservation.mock.urlfirstxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLSECONDPHASE = "oms.inventory.reservation.mock.urlsecondxmlphase";
+	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLJEWELPHASE = "oms.inventory.reservation.mock.urljewelxmlphase";
 	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_URLTHIRDPHASE = "oms.inventory.reservation.mock.urlthirdxmlphase";
+	public static final String OMS_INVENTORY_RESV_REALTIMECALL_MOCK_JEWLUSSID = "oms.inventory.reservation.mock.urljewelxmlphaseUssid";
 	public static final String OMS_INVENTORY_RESV_SUCCESS = "SUCCESS";
 	public static final String Y = "Y";
 	public static final String N = "N";
@@ -145,7 +148,8 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_PINCODE_SERVICEABILTY_MSG_SESSION_ID = "pincodeVerificationFailed";
 	public static final String OMS_PINCODE_REQUEST_TYPE_GET = "GET";
 	public static final String OMS_PINCODE_REQUEST_TYPE_POST = "POST";
-	public static final String DATE_FORMAT_AWB = "E dd MMM";
+	//public static final String DATE_FORMAT_AWB = "E dd MMM";TPR-6013
+	public static final String DATE_FORMAT_AWB = "dd MMM YYYY";
 	public static final String TIME_FORMAT_AWB = "hh:mm a";
 
 	public static final String DELIVERY_MODE_ENTER_STEP_ERROR_ID = "deliveryModeEnterStepError";
@@ -174,6 +178,9 @@ public class MarketplacecclientservicesConstants
 	public static final String MEDIA = "mediaItems";
 	public static final String CLOTHING = "Clothing";
 	public static final String FOOTWEAR = "Footwear";
+	//Added for jewellery
+	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
 	public static final String FIT = "Fit";
 	public static final String EASE_OF_USE = "Ease of use";
 	public static final String VALUE_FOR_MONEY = "Value for Money";
@@ -222,6 +229,10 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_INVETNORY_SOFTRESERV_READ_TIMEOUT = "oms.inventory.softreserv.read.timeout";
 	public static final String OMS_SEND_ORDER_CON_TIMEOUT = "oms.send.order.connection.timeout";
 	public static final String OMS_SEND_ORDER_READ_TIMEOUT = "oms.send.order.read.timeout";
+	//CAR 295
+	public static final String CRM_SEND_ORDER_CON_TIMEOUT = "crm.send.order.connection.timeout";
+	public static final String CRM_SEND_ORDER_READ_TIMEOUT = "crm.send.order.read.timeout";
+
 	public static final String OMS_HTTP_ERROR_CODE = "oms.http.error.code";
 	public static final String DELIVERY_DATE_FORMATTER = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
@@ -257,11 +268,18 @@ public class MarketplacecclientservicesConstants
 	public static final String OMS_DELIVERY_SLOT_READ_TIMEOUT = "oms.deliveryslot.read.timeout";
 	public static final String OMS_DELIVERY_SLOT_URL = "oms.deliveryslot.url";
 	public static final String CNC = "CNC";
-	
+
 
 	public static final String YES = "YES".intern();
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
 
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	public static final String APPROVED = "APPROVED".intern();
+	public static final String REJECTED = "REJECTED".intern();
+	public static final String NA = "NA".intern();
+	public static final String PANCARD = "PANCARD";
+	public static final String PANCARD_UPLOAD_URL = "pancard.upload.pi.url";
 }

@@ -186,6 +186,29 @@ public interface MplCommerceCartService
 	boolean addItemToCart(final String cartId, final CartModel cartModel, final ProductModel productModel, final long quantity,
 			final String ussid) throws InvalidCartException, CommerceCartModificationException;
 
+	/**
+	 * Method for adding item to cart for Mobile service
+	 *
+	 * @param cartId
+	 *
+	 * @param productCode
+	 *
+	 * @param quantity
+	 *
+	 * @param ussid
+	 *
+	 * @return boolean , for success return true else false
+	 *
+	 * @throws CommerceCartModificationException
+	 *            if cartid , product code , quantity id null or empty if cart id , product id is invalid if quantity is
+	 *            less than or equals to 0
+	 */
+
+	boolean addItemToCartWithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
+			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException;
+
+
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -537,6 +560,17 @@ public interface MplCommerceCartService
 	 * @return
 	 */
 	InvReserForDeliverySlotsResponseData convertDeliverySlotsDatatoWsdto(InvReserForDeliverySlotsRequestData cartdata);
+
+
+	//TPR-5346 STARTS
+	long checkMaxLimit(String code, CartModel cartModel);
+
+	boolean checkMaxLimitUpdate(long entryNumber, long quantityToBeUpdated);
+
+	boolean checkMaxLimitCheckout(CartModel serviceCart);
+
+	//TPR-5346 ENDS
+
 	//TPR-5666 samsung cart changes
 	/**
 	 * @param cartGuid
@@ -544,5 +578,14 @@ public interface MplCommerceCartService
 	 * @throws InvalidCartException
 	 */
 	public CartModel fetchCartUsingGuid(String cartGuid) throws InvalidCartException;
+
+	/**
+	 * @param cartData
+	 * @param omsDeliveryResponse
+	 * @return
+	 * @throws CMSItemNotFoundException
+	 */
+	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData,
+			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
 
 }

@@ -42,6 +42,7 @@ import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.core.Constants.USER;
+import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.order.CartService;
@@ -99,8 +100,9 @@ import com.tisl.mpl.data.WishlistData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facade.wishlist.WishlistFacade;
-import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
+import com.tisl.mpl.facades.account.address.AccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -110,6 +112,7 @@ import com.tisl.mpl.storefront.controllers.ControllerConstants;
 import com.tisl.mpl.storefront.controllers.helpers.FrontEndErrorHelper;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
+import com.tisl.mpl.wsdto.MaxLimitData;
 
 
 /*@author TCS*/
@@ -140,9 +143,6 @@ public class CartPageController extends AbstractPageController
 	@Resource(name = "siteConfigService")
 	private SiteConfigService siteConfigService;
 
-	//@Resource(name = "simpleBreadcrumbBuilder")
-	//private ResourceBreadcrumbBuilder resourceBreadcrumbBuilder;   //Sonar fix
-
 	@Autowired
 	private WishlistFacade wishlistFacade;
 
@@ -156,7 +156,7 @@ public class CartPageController extends AbstractPageController
 	private UserFacade userFacade;
 
 	@Autowired
-	private MplAccountAddressFacade accountAddressFacade;
+	private AccountAddressFacade accountAddressFacade;
 
 	@Autowired
 	private PriceDataFactory priceDataFactory;
@@ -168,6 +168,10 @@ public class CartPageController extends AbstractPageController
 	private ConfigurationService configurationService;
 	@Resource(name = "modelService")
 	private ModelService modelService;
+
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
 
 	//Blocked for SONAR FIX
 	//	@Resource(name = "pincodeServiceFacade")
@@ -189,13 +193,16 @@ public class CartPageController extends AbstractPageController
 	public String showCart(final Model model, @RequestParam(value = "ussid", required = false) final String ussid,
 			@RequestParam(value = "pincode", required = false) final String pinCode,
 			@RequestParam(value = "isLux", required = false) final boolean isLux,
-			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request)
-			throws CMSItemNotFoundException, CommerceCartModificationException, CalculationException
+			@RequestParam(value = "cartGuid", required = false) final String cartGuid, final HttpServletRequest request,
+			final RedirectAttributes redirectModel) throws CMSItemNotFoundException, CommerceCartModificationException,
+			CalculationException
 	{
 		LOG.debug("Entering into showCart" + "Class Nameshowcart :" + className + "pinCode " + pinCode);
 		String returnPage = ControllerConstants.Views.Pages.Cart.CartPage;
+
 		try
 		{
+
 			CartModel externalCart = null;
 			CartModel cartModel = null;
 			final String currentUser = userService.getCurrentUser().getUid();
@@ -235,17 +242,76 @@ public class CartPageController extends AbstractPageController
 				}
 
 			}
-			else
-			{
-				cartModel = getCartService().getSessionCart();
-			}
+			/*
+			 * else { cartModel = getCartService().getSessionCart(); }
+			 */
 
+			//TPR-3780
+
+			final String flashupdateStatus = getSessionService().getAttribute("flashupdateStatus");
+			if (flashupdateStatus != null)
+			{
+				model.addAttribute("priceNotificationUpdateStatus", flashupdateStatus);
+				getSessionService().removeAttribute("flashupdateStatus");
+			}
+			//final String flashupdateStatus = (String) model.asMap().get("flashupdateStatus");
+			final String flashtotalCartPriceAsString = (String) model.asMap().get("flashtotalCartPriceAsString");
+			//model.addAttribute("priceNotificationUpdateStatus", flashupdateStatus);
+			model.addAttribute("totalCartPriceAsStringStatus", flashtotalCartPriceAsString);
+			//TPR-3780
 			//TISST-13012
 			//if (StringUtils.isNotEmpty(cartDataOnLoad.getGuid())) //TISPT-104
 			if (getCartService().hasSessionCart())
 			{
+
 				cartModel = getCartService().getSessionCart();
 				CartData cartDataOnLoad = mplCartFacade.getSessionCartWithEntryOrdering(true);
+
+
+				//TPR-5346 STARTS
+
+				//This method will update the cart  with respect to the max quantity configured for the product
+				//String ReachedMaxLimitforproduct = null;
+				final Map<String, MaxLimitData> updateCartOnMaxLimExceeds = getMplCartFacade().updateCartOnMaxLimExceeds(cartModel);
+
+				if (MapUtils.isNotEmpty(updateCartOnMaxLimExceeds) && updateCartOnMaxLimExceeds.size() > 0)
+				{
+					String errorMsg = null;
+					final Map<String, String> msgMap = new HashMap<String, String>();
+					if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+					{
+						for (final AbstractOrderEntryModel orderEntry : cartModel.getEntries())
+						{
+
+							if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
+									&& null != orderEntry.getProduct().getMaxOrderQuantity())
+							{
+								errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.MIDCOUNTMSG
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ orderEntry.getProduct().getMaxOrderQuantity().toString()
+										+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+										+ MarketplacecommerceservicesConstants.LASTCOUNTMSG;
+								msgMap.put(orderEntry.getProduct().getCode(), errorMsg);
+							}
+						}
+					}
+					if (MapUtils.isNotEmpty(msgMap))
+					{
+						for (final Map.Entry<String, String> entry : msgMap.entrySet())
+						{
+							if (updateCartOnMaxLimExceeds.containsKey(entry.getKey()))
+							{
+								GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, entry.getValue());
+							}
+						}
+					}
+					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				}
+				//TPR-5346 ENDS
+
 
 				//setExpressCheckout(serviceCart); //TISPT-104
 				/*
@@ -255,21 +321,30 @@ public class CartPageController extends AbstractPageController
 				//TISEE-3676 & TISEE-4013
 				//final boolean deListedStatus = getMplCartFacade().isCartEntryDelisted(serviceCart); Moved to facade layer //TISPT-104
 				//LOG.debug("Cart Delisted Status " + deListedStatus);
-				//CAR-246
-				if (StringUtils.isNotEmpty(pinCode))
+
+
+				final boolean isUserAnym = getUserFacade().isAnonymousUser();//UF-70
+				model.addAttribute("isUserAnym", isUserAnym);//UF-70
+
+				//TISEE-432//UF-70
+				final String selectedPinCode = StringUtil.isNotEmpty(pinCode) ? pinCode : fetchPincode(isUserAnym);//UF-70
+				//CAR-246//UF-70
+				if (StringUtils.isNotEmpty(selectedPinCode))
 				{
-					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, pinCode);
+					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPinCode);
+					mplCartFacade.populatePinCodeData(cartModel, selectedPinCode);
 				}
 
-				final Object sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
-				if (null != sessionPincode)
-				{
-					//TPR-970 changes
-					mplCartFacade.populatePinCodeData(cartModel, sessionPincode.toString());
-					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
-				}
+				//final Object sessionPincode = getSessionService().getAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE);
+				//				if (null != sessionPincode)
+				//				{
+				//					//TPR-970 changes
+				//					mplCartFacade.populatePinCodeData(cartModel, sessionPincode.toString());
+				//					//	getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
+				//				}
 				getMplCouponFacade().releaseVoucherInCheckout(cartModel); //TISPT-104
 				cartModel = getMplCartFacade().getCalculatedCart(cartModel); /// Cart recalculation method invoked inside this method
+
 				//final CartModel cart = mplCartFacade.removeDeliveryMode(serviceCart); // Contains recalculate cart TISPT-104
 				//TISST-13010
 
@@ -283,8 +358,7 @@ public class CartPageController extends AbstractPageController
 
 
 				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-				final boolean isUserAnym = getUserFacade().isAnonymousUser();
-				model.addAttribute("isUserAnym", isUserAnym);
+
 
 				// TPR-429
 				String cartLevelSellerID = null;
@@ -303,8 +377,7 @@ public class CartPageController extends AbstractPageController
 				}
 				model.addAttribute(ModelAttributetConstants.CHECKOUT_SELLER_IDS, cartLevelSellerID);
 
-				//TISEE-432
-				final String selectedPinCode = fetchPincode(isUserAnym);
+
 
 				checkCartDataChange(cartModel, cartDataOnLoad, cartData, model);
 				showPincode(model, selectedPinCode, cartData);
@@ -320,6 +393,14 @@ public class CartPageController extends AbstractPageController
 				if (CollectionUtils.isNotEmpty(quantityConfigurationList))
 				{
 					model.addAttribute("configuredQuantityList", quantityConfigurationList);
+				}
+
+				//added for jewellery
+				final ArrayList<Integer> quantityConfigurationListForJewellery = getMplCartFacade()
+						.getQuantityConfiguratioListforJewellery();
+				if (CollectionUtils.isNotEmpty(quantityConfigurationListForJewellery))
+				{
+					model.addAttribute("configuredQuantityForJewellery", quantityConfigurationListForJewellery);
 				}
 				else
 				{
@@ -348,6 +429,7 @@ public class CartPageController extends AbstractPageController
 
 				cartDataOnLoad = cartData;
 				prepareDataForPage(model, cartDataOnLoad);
+
 				//TPR-6371| DTM Track promotions start
 				List<PromotionResultData> productPromoList = new ArrayList<PromotionResultData>();
 				List<PromotionResultData> orderPromoList = new ArrayList<PromotionResultData>();
@@ -384,6 +466,12 @@ public class CartPageController extends AbstractPageController
 				model.addAttribute("promolist", promolist);
 				//TPR-6371| DTM Track promotions end
 
+
+
+
+				model.addAttribute("isPincodeRestrictedPromoPresent",
+						mplCartFacade.checkPincodeRestrictedPromoOnCartProduct(cartModel));
+
 			}
 			else if (isLux)
 			{
@@ -409,8 +497,7 @@ public class CartPageController extends AbstractPageController
 			}
 			else
 			{
-
-				prepareDataForPage(model, mplCartFacade.getSessionCartWithEntryOrdering(true));
+				prepareDataForPage(model, new CartData());
 			}
 			// for MSD
 			//TPR-174
@@ -424,6 +511,9 @@ public class CartPageController extends AbstractPageController
 			//TISSQAUATS-522
 			if (null != cartModel)
 			{
+				//UF-260
+				GenericUtilityMethods.getCartPriceDetails(model, cartModel, null);
+
 				cartModel.setMerged(false);
 				modelService.save(cartModel);
 			}
@@ -479,22 +569,22 @@ public class CartPageController extends AbstractPageController
 	{
 		if (!isLux)
 		{
-			if (luxFlag && !marketplaceFlag)//If source is Not Luxury and cart contains luxury product
+			if (luxFlag && !marketplaceFlag) //If source is Not Luxury and cart contains luxury product
 			{
 				GlobalMessages.addInfoMessage(model, "cart.merge.mpl.onlyLuxury");
 			}
-			else if (luxFlag && marketplaceFlag)//If source is Not Luxury and cart contains both luxury product and mpl product
+			else if (luxFlag && marketplaceFlag) //If source is Not Luxury and cart contains both luxury product and mpl product
 			{
 				GlobalMessages.addInfoMessage(model, "cart.merge.mpl.both");
 			}
 		}
 		else
 		{
-			if (!luxFlag && marketplaceFlag)//If source is Luxury and cart contains mpl product
+			if (!luxFlag && marketplaceFlag) //If source is Luxury and cart contains mpl product
 			{
 				GlobalMessages.addInfoMessage(model, "cart.merge.lux.onlyMpl");
 			}
-			else if (luxFlag && marketplaceFlag)//If source is Luxury and cart contains both luxury product and mpl product
+			else if (luxFlag && marketplaceFlag) //If source is Luxury and cart contains both luxury product and mpl product
 			{
 				GlobalMessages.addInfoMessage(model, "cart.merge.lux.both");
 			}
@@ -604,7 +694,8 @@ public class CartPageController extends AbstractPageController
 									- Double.parseDouble(entryLatest.getTotalPrice().getValue().toString());
 							if (oldPromoValue != latestPromoValue)
 							{
-								promoModified.put(entryLatest.getEntryNumber().toString(), "Promotion has been modified");
+								//TISSTRT-1594 UF-277 message
+								promoModified.put(entryLatest.getEntryNumber().toString(), "Sorry! The price of this item has changed");
 							}
 
 							//TISEE-535
@@ -831,6 +922,23 @@ public class CartPageController extends AbstractPageController
 		{
 
 			final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+			//TPR-1083
+			boolean isExchangeEntry = false;
+			//else if block for Exchange
+			if (cartData != null && cartData.getEntries() != null)
+			{
+				for (final OrderEntryData od : cartData.getEntries())
+				{
+					if (od.getEntryNumber().longValue() == entryNumber)
+					{
+						if (StringUtils.isNotBlank(od.getExchangeApplied()))
+						{
+							isExchangeEntry = true;
+							break;
+						}
+					}
+				}
+			}
 			if (bindingResult.hasErrors())
 			{
 				for (final ObjectError error : bindingResult.getAllErrors())
@@ -846,11 +954,40 @@ public class CartPageController extends AbstractPageController
 				}
 			}
 
-			else if (getMplCartFacade().hasEntries())
+			else if (getMplCartFacade().hasEntries() && !isExchangeEntry)
 
 
 			{
+				//TPR-5346 start
+				final boolean checkMaxLimList = getMplCartFacade().checkMaxLimitUpdate(entryNumber, form.getQuantity().longValue());
+				if (!checkMaxLimList)
+				{
+					final CartModel checkCartCount = getCartService().getSessionCart();
+					for (final AbstractOrderEntryModel orderEntry : checkCartCount.getEntries())
+					{
 
+						if (null != orderEntry.getProduct() && null != orderEntry.getProduct().getName()
+								&& null != orderEntry.getProduct().getMaxOrderQuantity())
+						{
+							final String errorMsg = MarketplacecommerceservicesConstants.PRECOUNTMSG
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + orderEntry.getProduct().getName().toString()
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE + MarketplacecommerceservicesConstants.MIDCOUNTMSG
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+									+ orderEntry.getProduct().getMaxOrderQuantity().toString()
+									+ MarketplacecommerceservicesConstants.SINGLE_SPACE
+									+ MarketplacecommerceservicesConstants.LASTCOUNTMSG;
+
+
+							GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, errorMsg);
+							//						GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
+							//								"basket.page.message.product.maxcnterror");
+							returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+							prepareDataForPage(model, cartData);
+							return returnPage;
+						}
+					}
+				}
+				//TPR-5346 end
 				final CartModificationData cartModification = getMplCartFacade().updateCartEntry(entryNumber,
 						form.getQuantity().longValue());
 				if (cartModification != null)
@@ -905,7 +1042,13 @@ public class CartPageController extends AbstractPageController
 				}
 			}
 
-
+			if (isExchangeEntry)
+			{
+				// Success in update quantity
+				GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
+						"basket.page.message.exchange.error.productcount");
+				returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+			}
 
 			prepareDataForPage(model, cartData);
 
@@ -989,10 +1132,10 @@ public class CartPageController extends AbstractPageController
 			{
 				final String defaultPinCodeId = fetchPincode(isUserAnym);
 
-				final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-
-				//if (getCartService().hasSessionCart()) TISPT-169
-				if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid()) && getCartService().hasSessionCart())
+				//final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true); TISPT-169
+				final CartModel cartModel = getCartService().getSessionCart();
+				//if (cartData != null && StringUtils.isNotEmpty(cartData.getGuid())) TISPT-169
+				if (getCartService().hasSessionCart())
 				{
 					final Map<String, String> ussidMap = new HashMap<String, String>();
 					Map<String, List<String>> giftYourselfDeliveryModeDataMap = new HashMap<String, List<String>>();
@@ -1004,14 +1147,12 @@ public class CartPageController extends AbstractPageController
 					LOG.debug("Class NameprepareDataForPag :" + className + " minimum_gift_quantity :" + minimum_gift_quantity);
 
 					//final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlists(); TISPT-179 Point 1
-					//TISPT-169
-					final CartModel cartModel = getCartService().getSessionCart();
 					final List<Wishlist2Model> allWishlists = wishlistFacade.getAllWishlistsForCustomer(cartModel.getUser());
 					//TISPT-179 Point 3
 					//entryModels = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity, allWishlists, defaultPinCodeId,cartModel); // Code moved to Facade and Impl
 
 					final Tuple2<?, ?> wishListPincodeObject = getMplCartFacade().getGiftYourselfDetails(minimum_gift_quantity,
-							allWishlists, defaultPinCodeId, cartData);
+							allWishlists, defaultPinCodeId, getMplCartFacade().getSessionCartWithEntryOrdering(true));
 					entryModels = (List<Wishlist2EntryModel>) wishListPincodeObject.getFirst();
 
 					for (final Wishlist2EntryModel entryModel : entryModels)
@@ -1020,6 +1161,7 @@ public class CartPageController extends AbstractPageController
 						//TISEE-6376
 						if (entryModel.getProduct() != null)
 						{
+
 							/*
 							 * ProductData productData = productFacade.getProductForOptions(entryModel.getProduct(),
 							 * Arrays.asList( ProductOption.BASIC, ProductOption.PRICE, ProductOption.SUMMARY,
@@ -1069,9 +1211,9 @@ public class CartPageController extends AbstractPageController
 							}
 
 							//TISPT-169
-							for (final OrderEntryData cart : cartData.getEntries())
+							for (final AbstractOrderEntryModel cart : cartModel.getEntries())
 							{
-								if ((cart.getSelectedUssid().equals(entryModel.getUssid())))
+								if ((cart.getSelectedUSSID().equals(entryModel.getUssid())))
 								{
 									flag = false;
 									break;
@@ -1249,6 +1391,7 @@ public class CartPageController extends AbstractPageController
 		}
 		//TISPT-174
 		//populateTealiumData(model, cartData);
+		//merge changes of tcs_dev_master and jewellery
 		//final CartModel cartModel = getCartService().getSessionCart();
 		GenericUtilityMethods.populateTealiumDataForCartCheckout(model, cartData);
 	}
@@ -1437,7 +1580,7 @@ public class CartPageController extends AbstractPageController
 		//TISSEC-11
 		final String regex = "\\d{6}";
 		//final CartModel cart = getCartService().getSessionCart();
-
+		CartData cartData = null;
 		try
 		{
 			String isServicable = MarketplacecommerceservicesConstants.Y;
@@ -1452,13 +1595,11 @@ public class CartPageController extends AbstractPageController
 
 				if (StringUtil.isNotEmpty(selectedPincode))
 				{
-					//TPR-970 changes
-					//mplCartFacade.populatePinCodeData(cart, selectedPincode);
 					getSessionService().setAttribute(MarketplacecommerceservicesConstants.SESSION_PINCODE, selectedPincode);
 				}
 				try
 				{
-					final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+					cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 
 					if (cartData != null && CollectionUtils.isNotEmpty(cartData.getEntries()))
 					{
@@ -1496,6 +1637,8 @@ public class CartPageController extends AbstractPageController
 									// then removing that deliveryMode in Choose DeliveryMode Page
 									try
 									{
+										//added for exchange TPR-1083
+										pinCodeResponseData.setExchangePincode(selectedPincode);
 										pinCodeResponseData = getMplCartFacade().getVlaidDeliveryModesByInventory(pinCodeResponseData,
 												cartData);
 									}
@@ -1511,23 +1654,32 @@ public class CartPageController extends AbstractPageController
 						{
 							isServicable = MarketplacecommerceservicesConstants.N;
 						}
-						//							if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
-						//							{
-						//								final CartModel cart = getCartService().getSessionCart();
-						//								getMplCartFacade().getCalculatedCart(cart);
-						//								cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-						//								jsonObject.put("cartData", cartData);
-						//								jsonObject.put("cartEntries", cartData.getEntries());
-						//
-						//								//								getMplCartFacade().getCalculatedCart().getEntries()
-						//								//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
-						//								//								cartData.get
-						//								//
-						//								//								getMplCartFacade().setCartSubTotal();
-						//							}
+						if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
+						{
+							//TPR-970 changes
+							CartModel cart = getCartService().getSessionCart();
+							mplCartFacade.populatePinCodeData(cart, selectedPincode);
+							cart = getMplCartFacade().getCalculatedCart(cart);
+
+							getMplCartFacade().setCartSubTotal(cart);
+
+							//To calculate discount percentage amount for display purpose
+							// TPR-774-- Total MRP calculation and the Product percentage calculation
+							getMplCartFacade().totalMrpCal(cart);
+							cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+							jsonObject.put("cartData", cartData);
+							jsonObject.put("cartEntries", cartData.getEntries());
+
+							//								getMplCartFacade().getCalculatedCart().getEntries()
+							//								final CartData cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
+							//								cartData.get
+							//
+							//								getMplCartFacade().setCartSubTotal();
+						}
 						final ObjectMapper objectMapper = new ObjectMapper();
 						jsonResponse = objectMapper.writeValueAsString(responseData);
 						//}
+						getSessionService().setAttribute("isCartPincodeServiceable", isServicable);
 					}
 
 					LOG.debug(">> isServicable :" + isServicable + " >> json " + jsonResponse);
@@ -1851,8 +2003,8 @@ public class CartPageController extends AbstractPageController
 
 				if (isServicable.equals(MarketplacecommerceservicesConstants.Y))
 				{
-
-					getMplCartFacade().getCalculatedCart(getCartService().getSessionCart());
+					final CartModel cartModel = getCartService().getSessionCart();
+					getMplCartFacade().getCalculatedCart(cartModel);
 					cartData = getMplCartFacade().getSessionCartWithEntryOrdering(true);
 					jsonObject.put("cartData", cartData);
 					jsonObject.put("cartEntries", cartData.getEntries());
@@ -2065,4 +2217,59 @@ public class CartPageController extends AbstractPageController
 	{
 		this.mplCouponFacade = mplCouponFacade;
 	}
+
+	//TPR-1083
+	/**
+	 * @description method is used to remove exchange from Cart when the pincode is not serviceable
+	 * @return Json Object
+	 * @throws JSONException
+	 */
+	@RequestMapping(value = MarketplacecheckoutaddonConstants.REMOVEEXCHANGEFROMCART, method = RequestMethod.GET)
+	public @ResponseBody JSONObject removeAllExchangeFromCart(
+			@RequestParam(ControllerConstants.Views.Fragments.Cart.pincode) final String pincode) throws JSONException
+	{
+		final JSONObject jsonObj = new JSONObject();
+		try
+		{
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Inside Remove from Cart...");
+			}
+			final CartModel cart = getCartService().getSessionCart();
+
+			final Boolean exchangeCart = cart.getExchangeAppliedCart();
+			if (exchangeCart.booleanValue() && !exchangeGuideFacade.isBackwardServiceble(pincode))
+			{
+				exchangeGuideFacade.removeExchangefromCart(cart);
+				jsonObj.put("exchangeItemsRemoved", "true");
+
+			}
+
+
+
+
+		}
+		catch (final EtailBusinessExceptions e)
+		{
+			ExceptionUtil.etailBusinessExceptionHandler(e, null);
+			LOG.error("EtailBusinessExceptions Removing Exchange from Cart ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			ExceptionUtil.etailNonBusinessExceptionHandler(e);
+			LOG.error("EtailNonBusinessExceptions  Removing Exchange from Cart ", e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Exception occured while Removing Exchange from Cart" + e);
+			jsonObj.put("displaymessage", "jsonExceptionMsg");
+			jsonObj.put("type", "errorCode");
+		}
+		return jsonObj;
+	}
+	//TPR-1083
 }

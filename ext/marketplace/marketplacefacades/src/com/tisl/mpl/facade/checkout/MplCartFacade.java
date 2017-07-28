@@ -39,6 +39,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsReq
 import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsResponseData;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
+import com.tisl.mpl.wsdto.MaxLimitData;
 import com.tisl.mpl.wsdto.MplEDDInfoWsDTO;
 import com.tisl.mpl.wsdto.MplSelectedEDDForUssID;
 
@@ -65,45 +66,45 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc fetching seller info
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
+	 * 
+	 * 
 	 * @param ussid
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getSellerInfo(CartData cartData, final String ussid) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc fetching address
-	 *
-	 *
+	 * 
+	 * 
 	 * @param addressData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getAddress(List<AddressData> addressData) throws CMSItemNotFoundException;
 
 	/*
 	 * @Desc fetching fulfilmentmode
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getFullfillmentMode(CartData cartData) throws CMSItemNotFoundException;
@@ -111,14 +112,14 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc fetching fulfilmentmode TISEE-6290
-	 *
-	 *
+	 * 
+	 * 
 	 * @param orderData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return Map<String, String>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CMSItemNotFoundException
 	 */
 	Map<String, String> getOrderEntryFullfillmentMode(OrderData orderData) throws CMSItemNotFoundException;
@@ -191,6 +192,30 @@ public interface MplCartFacade extends CartFacade
 			throws InvalidCartException, CommerceCartModificationException;
 
 	/**
+	 * Method for adding item to cart for Mobile service
+	 *
+	 * @param cartId
+	 *
+	 * @param productCode
+	 *
+	 * @param quantity
+	 *
+	 * @param ussid
+	 *
+	 * @return boolean , for success return true else false
+	 *
+	 * @throws CommerceCartModificationException
+	 *            if cartid , product code , quantity id null or empty if cart id , product id is invalid if quantity is
+	 *            less than or equals to 0
+	 */
+
+
+	boolean addItemToCartwithExchange(String cartId, CartModel cartModel, ProductModel productModel, long quantity, String ussid,
+			String exchangeParam) throws InvalidCartException, CommerceCartModificationException;
+
+
+
+	/**
 	 * @param cartData
 	 * @param omsDeliveryResponse
 	 * @param cartModel
@@ -203,8 +228,8 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc setting cart sub total
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	void setCartSubTotal(CartModel cartModel) throws EtailNonBusinessExceptions;
@@ -213,17 +238,17 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc fetching pincode response
-	 *
-	 *
+	 * 
+	 * 
 	 * @param pincode
-	 *
-	 *
+	 * 
+	 * 
 	 * @param cartData
-	 *
-	 *
+	 * 
+	 * 
 	 * @return List<PinCodeResponseData>
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	List<PinCodeResponseData> getOMSPincodeResponseData(String pincode, CartData cartData, CartModel cartModel)
@@ -239,17 +264,17 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
-	 *
-	 *
+	 * 
+	 * 
 	 * @param userModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @param pincode
-	 *
-	 *
+	 * 
+	 * 
 	 * @return GetWishListWsDTO
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -258,15 +283,15 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
-	 *
+	 * 
 	 * @param pincodeResponseData
-	 *
+	 * 
 	 * @param deliveryModeMap
-	 *
+	 * 
 	 * @param cartModel
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	/*
@@ -280,17 +305,17 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc checking max added quantity with store configuration
-	 *
-	 *
+	 * 
+	 * 
 	 * @param productCode
-	 *
-	 *
+	 * 
+	 * 
 	 * @param qty
-	 *
-	 *
+	 * 
+	 * 
 	 * @return String
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws CommerceCartModificationException
 	 */
 	String isMaxQuantityAlreadyAdded(final String productCode, final long qty, final long stock, final String ussid)
@@ -298,11 +323,11 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	//commented for CAR:127
@@ -314,11 +339,11 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment For Mobile
-	 *
+	 * 
 	 * @param requestType
-	 *
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -343,25 +368,30 @@ public interface MplCartFacade extends CartFacade
 	/*
 	 * @Desc used for In case pincode is changed in delivery address selection page then this method will be called to
 	 * check pincode serviceabilty
-	 *
-	 *
+	 * 
+	 * 
 	 * @param selectedPincode
-	 *
-	 *
+	 * 
+	 * 
 	 * @return String
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	String checkPincodeAndInventory(final String selectedPincode) throws EtailNonBusinessExceptions, CMSItemNotFoundException;
 
 	/*
 	 * @Desc used to display quantity in cart page
-	 *
-	 *
+	 * 
+	 * 
 	 * @return ArrayList<Integer>
 	 */
 	ArrayList<Integer> getQuantityConfiguratioList() throws EtailNonBusinessExceptions;
+
+
+	//added for jewellery
+
+	ArrayList<Integer> getQuantityConfiguratioListforJewellery() throws EtailNonBusinessExceptions;
 
 
 	/**
@@ -386,14 +416,14 @@ public interface MplCartFacade extends CartFacade
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 *
-	 *
+	 * 
+	 * 
 	 * @param wishlistEntryModel
-	 *
-	 *
+	 * 
+	 * 
 	 * @return boolean
-	 *
-	 *
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	boolean isWishlistEntryValid(final Wishlist2EntryModel wishlistEntryModel) throws EtailNonBusinessExceptions;
@@ -525,9 +555,22 @@ public interface MplCartFacade extends CartFacade
 
 
 	/**
-	 *
+	 * @param selectedPincode
+	 * @param sessionPincode
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 * @throws CMSItemNotFoundException
+	 */
+	String singlePagecheckPincode(String selectedPincode, String sessionPincode) throws EtailNonBusinessExceptions,
+			CMSItemNotFoundException;
+
+
+	/* *
+	 * 
 	 * @param cartModel
+	 * 
 	 * @param mplSelectedEDDInfo
+	 * 
 	 * @return boolean
 	 */
 	public boolean addSelectedEDD(CartModel cartModel, List<MplSelectedEDDForUssID> mplSelectedEDDInfo);
@@ -550,11 +593,81 @@ public interface MplCartFacade extends CartFacade
 
 	/**
 	 * For TPR-5666
-	 * 
+	 *
 	 * @param cartModel
 	 * @param sourceCartModel
 	 * @return
 	 */
 	public void mergeCarts(CartModel sourceCartModel, CartModel targetCartModel);
 
+	/**
+	 * This method is used to check if any product in the cart is having pincode restricted promotion configured.
+	 *
+	 * @param cart
+	 * @return boolean
+	 */
+	boolean checkPincodeRestrictedPromoOnCartProduct(CartModel cart);
+
+	//TPR-5346 STARTS
+	/**
+	 * @param code
+	 * @param qty
+	 * @param stock
+	 * @param ussid
+	 * @return String
+	 */
+	public String isMaxProductQuantityAlreadyAdded(Integer maxCount, String code, long qty, long stock, String ussid,
+			long checkMaxLimList);
+
+	/**
+	 * @param code
+	 * @return long
+	 */
+	long checkMaxLimit(String code, CartModel cartModel);
+
+	boolean checkMaxLimitUpdate(long entryNumber, long quantityToBeUpdated);
+
+	boolean checkMaxLimitCheckout(CartModel serviceCart);
+
+	/**
+	 * @param cartModel
+	 * @return boolean
+	 */
+	//boolean UpdateCartOnMaxLimExceeds(CartModel cartModel);
+
+	Map<String, MaxLimitData> updateCartOnMaxLimExceeds(CartModel cartModel);
+	//TPR-5346 ENDS
+
+	/**
+	 * TPR-1083 Add to Cart Exchange Method for adding a product to cart.
+	 *
+	 * @param code
+	 *           code of product to add
+	 * @param quantity
+	 *           the quantity of the product
+	 * @param ussid
+	 *           the ussid to be added to cart
+	 * @param exchangeParam
+	 *           the exchange parameter for adding product with exchange to cart
+	 * @return the cart modification data that includes a statusCode and the actual quantity added to the cart
+	 * @throws CommerceCartModificationException
+	 *            if the cart cannot be modified
+	 */
+	CartModificationData addToCartwithExchange(String code, long quantity, String ussid, String exchangeParam)
+			throws CommerceCartModificationException;
+
+	/**
+	 * @param cartData
+	 * @param omsDeliveryResponse
+	 * @return
+	 * @throws CMSItemNotFoundException
+	 */
+	Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(CartData cartData,
+			List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException;
+
+	/**
+	 * @param cartModel
+	 * @throws EtailNonBusinessExceptions
+	 */
+	void setCartSubTotalForReviewOrder(CartModel cartModel) throws EtailNonBusinessExceptions;
 }

@@ -65,9 +65,13 @@ public class WebhookReportJob extends AbstractJobPerformable<MplWebhookReportJob
 		LOG.debug("Inside Webhook Report Job:::::::::::::::::::::::::::");
 		try
 		{
-			if (null != mplWebhookReportJobModel.getStartDate() && null != mplWebhookReportJobModel.getEndDate())
+			if (null != mplWebhookReportJobModel.getStartDate() && mplWebhookReportJobModel.getStartDate().before(new Date()))
 			{
-				fetchSpecificDetails(mplWebhookReportJobModel.getStartDate(), mplWebhookReportJobModel.getEndDate());
+				fetchSpecificDetails(mplWebhookReportJobModel.getStartDate(), new Date());
+			}
+			else
+			{
+				fetchSpecificDetails(null, new Date());
 			}
 
 		}
@@ -89,7 +93,6 @@ public class WebhookReportJob extends AbstractJobPerformable<MplWebhookReportJob
 
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
-
 
 	/**
 	 * This Method fetches all details in Blacklist Model within the prescribed date Range

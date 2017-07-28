@@ -120,7 +120,9 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									final List<FieldValue> temp = getFeaturesValues(indexConfig, feature, indexedProperty);
 									//Added for Tata-24 Start :::
 									final String dynCategory = configurationService.getConfiguration().getString(
-											MarketplaceCoreConstants.DYNAMICATTRIBUTE + productModel.getProductCategoryType());
+									/* DYNAMICATTRIBUTE + productModel.getProductCategoryType()); */
+									MarketplaceCoreConstants.DYNAMICATTRIBUTE + productModel.getProductCategoryType());
+
 									if (StringUtils.isNotEmpty(dynCategory))
 									{
 										final String[] dynProperties = dynCategory.split(",");
@@ -163,8 +165,8 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									 * MDD Requirement Here: Features ==> This facet will mainly use the attribute
 									 * specialfeatureswatches (PIM_WATCH_028) from the MDD and use all LOVs from this attribute
 									 * on the UI. In addition, if the attribute waterresistancewatches (PIM_WATCH_011) is present
-									 * and set to a value more than 50m then an additional LOV called “Water Resistant” must be
-									 * added to the LOV for this facet automatically.
+									 * and set to a value more than 50m then an additional LOV called â€œWater Resistantâ€� must
+									 * be added to the LOV for this facet automatically.
 									 */
 									if ("features".equalsIgnoreCase(indexedProperty.getName()))
 									{
@@ -289,18 +291,64 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 
 		else if (indexedProperty.isLocalized())
 		{
-			for (final LanguageModel language : indexConfig.getLanguages())
+
+			//TPR-3548 Start
+			if (indexedProperty.getIsNumericRange().equals(Boolean.TRUE))
 			{
-				final Locale locale = this.i18nService.getCurrentLocale();
-				try
+				for (final LanguageModel language : indexConfig.getLanguages())
 				{
-					this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
-					result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
-							: featureValues));
+
+					final Locale locale = this.i18nService.getCurrentLocale();
+					try
+					{ //merge issue fixed.
+						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+
+						final List<FeatureValue> listFeatureValue = featureValues;
+
+						for (final FeatureValue singleFeatureValue : listFeatureValue)
+						{
+							Object value = singleFeatureValue.getValue();
+							//if (null != value && value instanceof String) SONAR FIX JEWELLERY
+							if (value instanceof String)
+							{
+								final String vString = (String) value;
+								value = Double.valueOf(vString);
+							}
+							singleFeatureValue.setValue(value);
+							//clearing the existing value
+							listFeatureValue.clear();
+							//adding the standard value
+							listFeatureValue.add(singleFeatureValue);
+						}
+
+						//result.addAll(extractFieldValues(indexedProperty, language, listFeatureValue));
+						result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+								: featureValues));
+					}
+					finally
+					{
+						this.i18nService.setCurrentLocale(locale);
+					}
+
+
+
 				}
-				finally
+			} //TPR-3548 End
+			else
+			{
+				for (final LanguageModel language : indexConfig.getLanguages())
 				{
-					this.i18nService.setCurrentLocale(locale);
+					final Locale locale = this.i18nService.getCurrentLocale();
+					try
+					{
+						this.i18nService.setCurrentLocale(this.localeService.getLocaleByString(language.getIsocode()));
+						result.addAll(extractFieldValues(indexedProperty, language, (feature.isLocalized()) ? feature.getValues()
+								: featureValues));
+					}
+					finally
+					{
+						this.i18nService.setCurrentLocale(locale);
+					}
 				}
 			}
 
@@ -333,7 +381,9 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
+					//DYNAMICATTRIBUTE + property + "." + name);
 							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
+
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -397,7 +447,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
+
+					//DYNAMICATTRIBUTE + property + "." + name);
+
 							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
+
 					if (StringUtils.isNotEmpty(dynAttribute))
 					{
 						//dynAttributes=[Metal,Alloys,Titanium,Aluminium,Stainless Steel]
@@ -414,16 +468,12 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 									if (value instanceof ClassificationAttributeValue)
 									{
 										final String valueName = ((ClassificationAttributeValue) value).getName();
-										System.out.println("loggggggg========valueName=" + valueName);
 										if (valueName != null && StringUtils.isNotEmpty(valueName))
 										{
 											final String formattedValueName = valueName.replaceAll(" ", "").replaceAll("-", "")
 													.toLowerCase();
-											System.out.println("loggggggg========att=" + att);
 											if (att.equals(formattedValueName))
 											{
-												System.out.println("loggggggg========formattedValueName=" + formattedValueName);
-												System.out.println("loggggggg========groupName=" + groupName);
 												((ClassificationAttributeValue) value).setName(groupName);
 												featureValue.setValue(value);
 												flag = true;

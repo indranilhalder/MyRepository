@@ -161,9 +161,10 @@
 														</p>
 													</div>
 													<br>
+													<!-- TISSTRT-1595 UF-277 -->
 													<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
-																	text="Are you sure you would like to delete this card?" />
+																	text="You sure you want to delete this card?" />
 															</p>
 
 															<div class="buttons">
@@ -283,9 +284,10 @@
 														</p>
 													</div>
 													<br>
+													<!-- TISSTRT-1595 UF-277 -->
 													<p Class="address-deleteConfirmation">
 																<spring:theme code="text.adress.remove.confirmation"
-																	text="Are you sure you would like to delete this card?" />
+																	text="You sure you want to delete this card?" />
 															</p>
 
 															<div class="buttons">

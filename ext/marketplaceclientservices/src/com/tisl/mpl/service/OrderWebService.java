@@ -1,20 +1,17 @@
-/**
- *
- *//*
 package com.tisl.mpl.service;
 
-import com.tisl.mpl.facades.data.OrderDataForXML;
-import com.tisl.mpl.wsdto.OrderTrialWSDTO;
+import com.hybris.oms.domain.order.Order;
 
 
-*//**
- * @author 884206
- *
- *//*
+
+/*@author 884206*/
+
 public interface OrderWebService
 {
-	public void orderModeltoWsDTO(OrderDataForXML orderDataForXML);
 
-	public void orderCreate(final OrderTrialWSDTO orderTrialWSDTO);
+	/**
+	 * @param order
+	 * @return
+	 */
+	public Order createOmsOrder(Order order) throws Exception;
 }
-*/

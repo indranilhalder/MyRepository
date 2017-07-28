@@ -9,6 +9,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.order.CommerceCartService;
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCartMergingStrategy;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.UserModel;
@@ -16,15 +17,19 @@ import de.hybris.platform.servicelayer.user.UserService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.site.BaseSiteService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.strategy.ExtCommerceCartMergingStrategy;
 import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStrategy;
 
@@ -33,8 +38,8 @@ import com.tisl.mpl.marketplacecommerceservices.strategy.MplCommerceAddToCartStr
  * @author TCS
  *
  */
-public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMergingStrategy
-		implements ExtCommerceCartMergingStrategy
+public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMergingStrategy implements
+		ExtCommerceCartMergingStrategy
 {
 	@Resource
 	private UserService userService;
@@ -45,7 +50,20 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
 
+	@Resource(name = "exchangeGuideService")
+	private ExchangeGuideService exchangeService;
+	//SONAR FIX JEWELLERY
+	//	@Resource(name = "commerceCartService")
+	//	private MplCommerceCartService mplCommerceCartService;
+
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
 	private static final String MOBILE = "MOBILE";
+	//JEWELLERY CHANGES
+	private static final String FINEJEWELLERY = "FineJewellery";
+
+	//ENDS
 
 	@Override
 	public void mergeCarts(final CartModel fromCart, final CartModel toCart, final List<CommerceCartModification> modifications)
@@ -53,6 +71,7 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 	{
 		final UserModel currentUser = this.userService.getCurrentUser();
 		boolean cartMerged = false;
+
 		if ((currentUser == null) || (this.userService.isAnonymousUser(currentUser)))
 		{
 			throw new AccessDeniedException("Only logged user can merge carts!");
@@ -80,8 +99,20 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 
 		try
 		{
-			for (final AbstractOrderEntryModel entry : fromCart.getEntries())
+			for (final AbstractOrderEntryModel entryFromCart : fromCart.getEntries())
 			{
+				//JEWELLERY CHANGES
+				boolean jewelleryMarge = false;
+				String fromCartUssid = entryFromCart.getSelectedUSSID();
+				if (FINEJEWELLERY.equalsIgnoreCase(entryFromCart.getProduct().getProductCategoryType()))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(fromCartUssid);
+					if (org.apache.commons.collections.CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						fromCartUssid = jewelleryInfo.get(0).getPCMUSSID();
+					}
+				}
+				//ENDS
 				boolean isProductAddRequired = false;
 				if (null != fromCart.getChannel() && StringUtils.isNotEmpty(fromCart.getChannel().getCode())
 						&& !fromCart.getChannel().getCode().equalsIgnoreCase(MOBILE))
@@ -92,28 +123,66 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 				else
 				{
 					// freebie addition as normal product mobile issue fix TISEE-915
-					if (null != entry.getGiveAway() && !entry.getGiveAway().booleanValue())
+					if (null != entryFromCart.getGiveAway() && !entryFromCart.getGiveAway().booleanValue())
 					{
 						isProductAddRequired = true;
 					}
 				}
 				if (isProductAddRequired)
 				{
-					final CommerceCartParameter newCartParameter = new CommerceCartParameter();
+					//JEWELLERY CHANGES
+					for (final AbstractOrderEntryModel entryToCart : toCart.getEntries())
+					{
+						String toCartUssid = entryToCart.getSelectedUSSID();
+						if (FINEJEWELLERY.equalsIgnoreCase(entryToCart.getProduct().getProductCategoryType()))
+						{
+							final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(toCartUssid);
+							if (org.apache.commons.collections.CollectionUtils.isNotEmpty(jewelleryInfo))
+							{
+								toCartUssid = jewelleryInfo.get(0).getPCMUSSID();
+							}
+							if (fromCartUssid.equalsIgnoreCase(toCartUssid)
+									&& FINEJEWELLERY.equalsIgnoreCase(entryToCart.getProduct().getProductCategoryType()))
+							{
+								jewelleryMarge = true;
+							}
+						}
+						//ENDS
 
-					newCartParameter.setEnableHooks(true);
-					newCartParameter.setCart(toCart);
-					newCartParameter.setProduct(entry.getProduct());
-					newCartParameter.setPointOfService(entry.getDeliveryPointOfService());
-					newCartParameter.setQuantity((entry.getQuantity() == null) ? 0L : entry.getQuantity().longValue());
-					newCartParameter.setUssid((null != entry.getSelectedUSSID()) ? entry.getSelectedUSSID() : "");
-					newCartParameter.setUnit(entry.getUnit());
-					newCartParameter.setCreateNewEntry(false);
-					//TPR-174
-					cartMerged = true;
-					//getModelService().save(toCart);
-					mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
+					}
+					if (!jewelleryMarge)
+					{
+
+						final CommerceCartParameter newCartParameter = new CommerceCartParameter();
+
+						newCartParameter.setEnableHooks(true);
+						newCartParameter.setCart(toCart);
+						newCartParameter.setProduct(entryFromCart.getProduct());
+						newCartParameter.setPointOfService(entryFromCart.getDeliveryPointOfService());
+						newCartParameter.setQuantity((entryFromCart.getQuantity() == null) ? 0L : entryFromCart.getQuantity()
+								.longValue());
+						newCartParameter.setUssid((null != entryFromCart.getSelectedUSSID()) ? entryFromCart.getSelectedUSSID() : "");
+						newCartParameter.setUnit(entryFromCart.getUnit());
+						newCartParameter.setCreateNewEntry(false);
+						if (fromCart.getExchangeAppliedCart() != null && fromCart.getExchangeAppliedCart().booleanValue()
+								&& StringUtils.isNotEmpty(entryFromCart.getExchangeId()))
+						{
+							newCartParameter.setExchangeParam(entryFromCart.getExchangeId());
+
+						}
+
+						//TPR-174
+
+						cartMerged = true;
+						//getModelService().save(toCart);
+						mergeModificationToList(mplCommerceAddToCartStrategy.addToCart(newCartParameter), modifications);
+
+					}
+
+
 				}
+
+
 			}
 		}
 		catch (final CommerceCartModificationException e)
@@ -128,7 +197,47 @@ public class ExtDefaultCommerceCartMergingStrategy extends DefaultCommerceCartMe
 			toCart.setMerged(Boolean.TRUE);
 		}
 		getModelService().save(toCart);
+		if (cartMerged)
+		{
+			final List<Integer> entryNumberList = new ArrayList<>();
+			for (final AbstractOrderEntryModel entry : toCart.getEntries())
+			{
+				if (StringUtils.isNotEmpty(entry.getExchangeId()))
+				{
+					entryNumberList.add(entry.getEntryNumber());
+				}
+
+			}
+			if (CollectionUtils.isNotEmpty(entryNumberList))
+			{
+				changeQuantitieswithExchangeOffer(toCart, entryNumberList);
+				exchangeService.changeGuidforCartMerge(toCart);
+			}
+		}
+
 		getModelService().remove(fromCart);
+	}
+
+	private void changeQuantitieswithExchangeOffer(final CartModel cartModel, final List<Integer> entryNumberList)
+	{
+		for (final Integer entryNumber : entryNumberList)
+		{
+			final CommerceCartParameter parameter = new CommerceCartParameter();
+			parameter.setEnableHooks(true);
+			parameter.setCart(cartModel);
+			parameter.setEntryNumber(entryNumber.longValue());
+			parameter.setQuantity(1);
+
+			try
+			{
+				getCommerceCartService().updateQuantityForCartEntry(parameter);
+			}
+			catch (final CommerceCartModificationException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private void mergeModificationToList(final CommerceCartModification modificationToAdd,

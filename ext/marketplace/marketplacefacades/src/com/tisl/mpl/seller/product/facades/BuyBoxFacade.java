@@ -24,21 +24,13 @@ public interface BuyBoxFacade
 {
 	public BuyBoxData buyboxPrice(String ProductCode) throws EtailNonBusinessExceptions;
 
+//CKD:TPR-250 Start
+	//Added channel for TISPRD-8944
+	public Map<String, Object> buyboxPricePDP(String ProductCode, String bBoxSellerId, String Channel) throws EtailNonBusinessExceptions;
 
-	//CKD:TPR-250 Start
-	//public Map<String, Object> buyboxPricePDP(String ProductCode) throws EtailNonBusinessExceptions;
-	/**
-	 * @param productCode
-	 * @param bBoxSellerId
-	 * @return
-	 * @throws EtailNonBusinessExceptions
-	 */
-	Map<String, Object> buyboxPricePDP(String productCode, String bBoxSellerId) throws EtailNonBusinessExceptions;
-
-	//CKD:TPR-250 End
-
-
-	public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	//CKD: TPR-3809
+	//public List<SellerInformationData> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	public List<SellerInformationData> getsellersDetails(String productCode, String productCatType) throws EtailNonBusinessExceptions;
 
 	/**
 	 * @param productModel
@@ -53,9 +45,16 @@ public interface BuyBoxFacade
 	public boolean isCatLingerie(final List<CategoryModel> categoryList, final String configLingerieCategoris)
 			throws EtailNonBusinessExceptions;
 
-
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+	
+	//CKD:TPR-3809
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	public String findPussid(String selectedUSSID);
 
 
 }
+

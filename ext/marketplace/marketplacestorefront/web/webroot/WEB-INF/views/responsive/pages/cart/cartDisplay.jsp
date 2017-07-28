@@ -15,6 +15,13 @@
     <c:set var="showTax" value="false"/>
     <c:set var="userName" value="${user.firstName}"/>
     <div class="MyBag-top-section">
+    <!-- TPR3780 STARTS HERE -->
+												<c:if test="${priceNotificationUpdateStatus!= null}">
+												<p class="disclaimer-txt">
+												<spring:theme code="cart.price.change.notification"></spring:theme>&nbsp;₹ ${totalCartPriceAsStringStatus}
+												</p>
+												</c:if>
+    <!-- TPR3780 ENDS HERE -->
     <div class="MyBag-buttons">
 	<%-- <h1 class="MyBagHeadingDesktop" ><spring:theme code="mpl.myBag" /><span id="mybagcnt"></span></h1> --%>		<!-- commented for UF-62 -->
 	<p class="desk-view">${welcome_message}</p>
@@ -32,15 +39,15 @@
 	<ul class="checkout-types">
 			
 			<!-- TISBOX-879 -->
-			<li id="checkout-id" class="checkout-button">
+			<li id="checkout-id" class="checkout-button" style="cursor: not-allowed;">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red checkout-disabled" style="pointer-events: none; cursor: not-allowed; opacity: 0.5;"  onclick="return checkServiceabilityRequired('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				
 				<!-- error message position change as part of UF-61 -->
  				<p id="unserviceablepincode_tooltip" style="display:none">One or more item(s) are not available at this location. Please remove the item(s) to proceed or try another <span>pincode</span>?</p>
      			<p id="error-Id_tooltip" style="display:none" >Oops! Invalid <span>pincode</span>.Please enter a valid <span>pincode</span>.</p>
- 				<p id="emptyId_tooltip" style="display:none">Enter <span>pincode</span> on the left to continue</p> 
+ 				<p id="emptyId_tooltip" style="display:none">Enter <span class="red-text">pincode</span> on the <span class="pin-desktop">left</span><span class="pin-responsive">top</span> to continue</p> 
 			</li>
 
 			<!-- TISBOX-879
@@ -147,10 +154,18 @@
 	</div>
 	</div>
 	<script>
-                               $(window).on('load',function(){ 
+
+				//UF-70 Commenting onload call to checkIsServicable() and making it on ready in marketplacecheckoutaddon.js
+   				//window.onload =	function(){
+   						//checkIsServicable();   						
+   				//}
+
+
+                             /*   $(window).on('load',function(){ 
    						checkIsServicable();
    						
-   				});
+   				}); */
+
 	</script>
 <!-- TISCR-320 -->
 <%-- <span class="continue-shopping">
@@ -165,3 +180,6 @@
 		<cart:cartGiftYourself/>
 
 </c:if>
+
+<!-- UF-70 -->
+<input type="hidden" name="isPincodeRestrictedPromoPresent" id="isPincodeRestrictedPromoPresentId" value="${isPincodeRestrictedPromoPresent}">

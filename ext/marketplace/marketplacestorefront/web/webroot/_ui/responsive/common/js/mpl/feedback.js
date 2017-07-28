@@ -153,23 +153,21 @@ $(document).ready(function(){
 	/*------------Start of SNS auto complete----------*/
 			
 			var style = null ;
-			
-			var getUrlParameter = function getUrlParameter(sParam) {
-			    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-			        sURLVariables = sPageURL.split('&'),
-			        sParameterName,
-			        i;
+			// For INC144315410
+			var findGetParameter = function findGetParameter(parameterName) {
+ 			    var result = null,
+ 		        tmp = [];
+ 			    location.search
+ 			    .substr(1)
+ 		        .split("&")
+ 		        .forEach(function (item) {
+ 		        tmp = item.split("=");
+ 		        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+ 		    });
+ 		    return result;
+			}
 
-			    for (i = 0; i < sURLVariables.length; i++) {
-			        sParameterName = sURLVariables[i].split('=');
-
-			        if (sParameterName[0] === sParam) {
-			            return sParameterName[1] === undefined ? true : sParameterName[1];
-			        }
-			    }
-			};
-
-			var isLux = getUrlParameter('isLux');
+			var isLux = findGetParameter('isLux');
 			console.log("isLux"+ isLux);
 			var isLuxury = $("#isLuxury").val();
 			console.log("isLuxury"+ isLuxury);
@@ -577,6 +575,64 @@ $(document).ready(function(){
 				// $("ul.tabs.pdp>li").eq(count).addClass("active");
 			    }); 
 	/*----END of  PDP tabs -----*/
+
+	/*----START-- Added for tab horizontal scrolling while working on Jewellery  -----
+			 
+			 
+			 $(".FineJewellery .nav.pdp, .FashionJewellery .nav.pdp").owlCarousel({
+					items: 5,
+					loop: false,
+					nav: false,
+					dots: false,
+					navText: [],
+					touchDrag: true,
+					mouseDrag: true,
+				    responsive: {
+						0 : {
+						  items: 2,
+						  autoHeight: false,
+						  stagePadding: 0,
+						},
+						480 : {
+						   items: 2,
+						  autoHeight: false,
+						},
+						768 : {
+						   items: 4,
+						   autoHeight: false,
+						   stagePadding: 0,
+						},
+						980 : {
+						   items: 4,
+						},
+						1024 : {
+						   items: 4,
+						}
+					 }
+				});
+			 
+	----END-- Added for tab horizontal scrolling while working on Jewellery  -----*/
+			 
+	/*----Start of  PDP tabs for Jewellery -----*/
+			 
+			 if($(".tabs-block").hasClass("FineJewellery") || $(".tabs-block").hasClass("FashionJewellery")){			 
+				 $(".tabs-block.FineJewellery .nav.pdp .owl-item, .tabs-block.FashionJewellery .nav.pdp .owl-item").on("click",function(e) {
+					 var count = $(".tabs-block .nav.pdp .owl-item").index(this);
+					 $(".tabs-block .nav.pdp .owl-item").removeClass("current");
+					 $(this).addClass("current");
+					 $("ul.tabs.pdp>li").removeClass("active");
+					 $("ul.tabs.pdp>li").eq(count).addClass("active");
+			    }); 
+			 } else {
+				 $(".tabs-block .nav.pdp li").on("click",function(e) {
+	 				$("ul.nav.pdp li").removeClass('active'); 
+	 				$(this).addClass('active');
+	 				var count = $(this).index();
+	 				$("ul.tabs.pdp>li").removeClass('active'); 
+	 				$("ul.tabs.pdp>li").eq(count).addClass("active");
+			    }); 
+			 }
+	/*----END of  PDP tabs for Jewellery -----*/
 	
 	/*----Start of  SHop by brand A_E hover functionality  -----*/
 			 $(".range").hide();
@@ -1452,18 +1508,37 @@ $(document).ready(function(){
 		/*--- END of  Mobile view Left menu Sign In toggle---- */
 	/*--- Start of  Mobile view sort by arrow in SERP and PLP---- */
 	
-	$(".progtrckr .progress.processing").each(function(){
+	/*$(".progtrckr .progress.processing").each(function(){
+
 		var len = $(this).children("span.dot").length;
 		if(len == 2) {
 			$(this).children("span.dot").first().css("marginLeft","16.5%");
 		} else if(len == 1) {
-			$(this).children("span.dot").first().css("marginLeft","33%");
+			$(this).children("span.dot").first().css("marginLeft","33%");		TPR-6013 Order History 
 		}
 
-	}); 
-	$(".progtrckr").each(function(){
-		$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+	}); */
+	$(".progtrckr .progress.processing").each(function(){
+		var len = $(this).children("span.dot").length;
+		if(len == 3) {
+			$(this).children("span.dot").css("marginLeft","12%");
+		}
+		if(len == 2) {
+			$(this).children("span.dot").css("marginLeft","16.5%");
+		} 
+		
+		if(len == 4) {
+			$(this).children("span.dot").css("marginLeft","8%");
+		} 
+
 	});
+	$(".progtrckr").each(function(){
+		//$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show();
+		if($(this).find(".progress.processing .dot:not(.inactive)").last().next(".message").css("display") == "block"){
+			$(this).find(".progress.processing .dot:not(.inactive)").last().find('img').show(); //TISPRDT-1570
+		}
+	});	/*TPR-6013 Order History */
+
 	
 	/*$(window).on("load resize",function(){
 		if($(window).width()<651)
@@ -1515,11 +1590,11 @@ $(document).ready(function(){
 		}
 		});
 
-	$(window).on("load resize", function() {
+	/*$(window).on("load resize", function() {
 		var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
 		var thumbnailImageHeight = (mainImageHeight / 5);
 			$(".imageList ul li img").css("height", thumbnailImageHeight);
-		});
+		});*/
 	
 	$('.marketplace-checkout').find('a').click(function(e){
 		e.preventDefault();
@@ -1774,7 +1849,7 @@ $(document).ready(function(){
 		$(window).on("load resize", function() {
 			var filter_height = 0;
 			if ($(".searchSpellingSuggestionPrompt").is(":visible")) {
-				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 72;
+				filter_height=$(".searchSpellingSuggestionPrompt").outerHeight() + 96; /* PRDI-69 */
 			 /*else {
 				filter_height=$(".facet-list.filter-opt").height() + 32;
 			}*/
@@ -1839,7 +1914,7 @@ $(document).ready(function(){
 		var sort_top=parseInt($(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top"));
 		$(window).on("load resize", function() {
 			if($(window).width() <= 773){
-				$('.listing.wrapper .left-block').css('margin-top','20px');
+				/*$('.listing.wrapper .left-block').css('margin-top','20px');*/ /* PRDI-69 */
 				var search_text_height = $(".listing.wrapper .search-result h2").height();
 				var search_spelling_height = $(".searchSpellingSuggestionPrompt").height();
 				
@@ -1859,7 +1934,7 @@ $(document).ready(function(){
 					$(".listing.wrapper .right-block .listing-menu>div .wrapped-form.sort.mobile").css("top",sort_top+"px");
 				}
 				if($(".searchSpellingSuggestionPrompt").height()>0){
-					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 40;
+					var left_block_top_margin= $(".searchSpellingSuggestionPrompt").height() + 96; /* PRDI-69 */
 					$('.listing.wrapper .left-block').css('margin-top',left_block_top_margin+'px');
 				}
 			}
@@ -2004,6 +2079,19 @@ $(".product-tile .image .item.quickview").each(function(){
 		$(this).addClass("quick-bag-both");
 	}
 	});		
+/*added for TISTE-225*/
+if ($(".facet-list.filter-opt").children().length){
+	if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
+	var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
+	$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);
+	}
+	else{
+		var sort_height =$(".facet-list.filter-opt").outerHeight() - 12 + "px";
+		$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
+	}
+}
+/*added for TISTE-225 end*/
+
 		});
 		$(window).on("load resize", function() {
 		if($(".listing.wrapper").length > 0){
@@ -2519,7 +2607,7 @@ function sizeSwatch() {
 				if ($(this).next().length != 0) {
 					if (($(this).offset().top < $(this).next().offset().top)) {
 						row++;
-						if (row > 2 && back) {
+						if (row > 7 && back) {
 							start = $(this).next().index();
 							$(".facet_mobile li.filter-size").slice(start, end_mobile).addClass("deactivate");
 							back = false;
@@ -2532,7 +2620,7 @@ function sizeSwatch() {
 				if ($(this).next().length != 0) {
 					if (($(this).offset().top < $(this).next().offset().top)) {
 						row++;
-						if (row > 2 && back) {
+						if (row > 7 && back) {
 							start = $(this).next().index();
 							$(".facet_desktop li.filter-size").slice(start, end_desktop).addClass("deactivate");
 							back = false;
@@ -2629,7 +2717,7 @@ function sortByFilterResult(top){
 	
 	if($("input[name=customSku]").length > 0){
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		$("body").append('<div class="loaderDiv" style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2655,7 +2743,7 @@ function sortByFilterResult(top){
 			complete: function() {
 				// AJAX changes for custom price filter
 				$("#no-click").remove();
-				$(".spinner").remove();
+				$(".loaderDiv").remove();
 				
 			}
 		});
@@ -2676,7 +2764,7 @@ function viewByFilterResult(top){
 
 	if($("input[name=customSku]").length > 0){
 		$("body").append("<div id='no-click' style='opacity:0.60; background:black; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-		$("body").append('<img src="/_ui/responsive/common/images/spinner.gif" class="spinner" style="position: fixed; left: 50%;top: 50%; height: 30px;">');
+		$("body").append('<div class="loaderDiv"  style="position: fixed; left: 50%;top: 50%;"><img src="/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>');
 		var pageNo = 1;
 		if ($("#paginationFormBottom .pagination.mobile li.active span").length) {
 			pageNo = $("#paginationFormBottom .pagination.mobile li.active span").text();
@@ -2702,7 +2790,7 @@ function viewByFilterResult(top){
 			complete: function() {
 				// AJAX changes for custom price filter
 				$("#no-click").remove();
-				$(".spinner").remove();
+				$(".loaderDiv").remove();
 			}
 		});
 		
@@ -2745,9 +2833,26 @@ $(document).ready(function() {
 	});
 	$(document).on('click','.zoomLens',function(){hit();})
 	$(document).on('click','.product-image-container.device img',function(){
-		hit({
-			windowWidth : $(window).width()
-		});
+		if($(this).attr("data-type")=='image'){		/*add if for INC144314454*/
+			hit({
+				windowWidth : $(window).width()
+			});
+		/*start change for INC144314454*/
+		}else{
+			var url = $(this).attr("data-videosrc");
+			/*$("#player").show();
+			$("#player").attr("src",url);*/
+			$("#videoModal1 #player").attr("src",url).show();
+			$("#videoModal1").modal();
+			$("#videoModal1").addClass("active");
+			//$(".productImagePrimary .picZoomer-pic-wp img").hide();
+			/*$(".zoomContainer").remove();
+			$('.picZoomer-pic').removeData('zoom-image');*/
+			if ($(window).width() < 1025) {
+				$(".product-info .product-image-container.device").show();
+			}
+		}
+		/*end change for INC144314454*/
 	});
 	var pdpStyle;
 		 $(window).on('load resize',function(){	
@@ -3443,6 +3548,10 @@ $(window).on("load resize",function(){
 	else
 		$(".tabs-block .nav.pdp.productNav>li").css("width","");
 	/*TPR-5061*/
+	
+	/*$(".showcaseItem > a").removeClass("showcase-border");		TISSTRT-1525	
+	$(".showcaseItem").eq(1).find("a").addClass("showcase-border");		TISSTRT-1525*/
+	
 });
 
 
@@ -3452,9 +3561,12 @@ $(window).on("load resize",function(){
 //});
 
 /*TPR-4471 ends*/
+$(document).ready(function(){
 if ($(".facet-list.filter-opt").children().length){
 	$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
 	$("body.page-productGrid .facet-list.filter-opt").css("padding-top","65px");
+	var filter_height = $(".facet-list.filter-opt").height() - 8;   /* PRDI-69 */
+	$("body.page-productGrid .listing.wrapper .left-block").css("margin-top",filter_height + "px");
 	/* UF-253 start */
 	if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
 	var sort_height ="-" + $(".facet-list.filter-opt").outerHeight() + "px";
@@ -3465,6 +3577,7 @@ if ($(".facet-list.filter-opt").children().length){
 		$("body.page-productGrid .listing.wrapper .right-block .listing-menu").css("margin-top",sort_height);	
 	}
 }
+});
 $(window).on("load resize", function() {
 	if ($(".facet-list.filter-opt").children().length){
 		$("body.page-productGrid .product-listing.product-grid.lazy-grid, body.page-productGrid .product-listing.product-grid.lazy-grid-facet, body.page-productGrid .product-listing.product-grid.lazy-grid-normal").css("padding-top","15px");  //INC144315068
@@ -3479,9 +3592,9 @@ $(window).on("load resize", function() {
 			}
 	}	
 	/* UF-257 start */
-	if($('.smartbanner-show .smartbanner').css('display') == 'none'){
+	/*if($('.smartbanner-show .smartbanner').css('display') == 'none'){
 		$(".smartbanner-show").css("margin-top","0px");
-	}
+	}*/
 	/* UF-257 end */
 });
 /* UF-253 end */
@@ -3543,9 +3656,12 @@ $(document).on("click","button[name='pinCodeButtonId']",function(){
 }); 
 
 $(document).ajaxComplete(function(){
+
+	//Modified for  UF-68 UF-69 UF-252
 	//$("body.page-cartPage .cartBottomCheck button#pinCodeButtonIdsBtm").addClass("CheckAvailability");
+	$("body.page-cartPage a[class='checkoutButton checkout button red']").attr("onclick","return checkServiceabilityRequired('typeCheckout',this);");
 	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").css("pointer-events","");
-	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").removeAttr("onclick");
+	$("body.page-cartPage .cart-total-block ul.checkOutBtnBtm li.checkout-button a#checkout-down-enabled.checkout-disabled").attr("onclick","");
 	$("a#checkout-enabled.checkout-disabled").removeAttr("onclick");
 	
 	/*TISSQAUATS-881*/
@@ -3573,10 +3689,52 @@ $("#sameAsShippingEmi").click(function(){
 	}
 	});
 
+$("header .content nav > ul > li > ul > li").on("mouseover",function(){
+	$(this).parent().parent().find(".toggle").addClass("show_arrow");
+});
+$("header .content nav > ul > li > ul > li").on("mouseout",function(){
+	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
+});
+
+
 
 /*TISSQAEE-335*/
 $(window).on("load resize",function(){
 	topLeftLocator();
+	
+	/* UF-338 starts */
+	$(".product-info>div.tabs-block .tabs .tab-details > ul li:contains(Brand Color)").each(function(){
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);
+
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);		//Code Repeat
+	});
+	
+	/* UF-338 ends */
+	
+	/* UF-338 starts */
+	$(".product-info>div.tabs-block .tabs .tab-details > ul li:contains(Brand Color)").each(function(){
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);
+
+		var original = $(this).text();
+		var result = original.substr(original.indexOf(" ") + 1);
+		$(this).text(result);		//Code Repeat
+	});
+	
+	/* UF-338 ends */
+	
+	/* TPR-6013 responsive class addition starts*/
+	$("body .account .right-account .info,body .account .right-account .password,body .account .right-account .signOut,body .account .right-account .order-history").removeClass("responsiveProfile");
+	if($(window).width() <= 1007)
+		$("body .account .right-account .info,body .account .right-account .password").addClass("responsiveProfile");
+	if($(window).width() <= 773)
+		$("body .account .right-account .signOut,body .account .right-account .order-history").addClass("responsiveProfile");
+	/* TPR-6013 responsive class addition starts*/
 });
 $(document).ajaxComplete(function(){
 	topLeftLocator();
@@ -3586,7 +3744,8 @@ window.onload = function (){
 }
 
 function topLeftLocator(){
-var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 10;
+var topLegend = $(".store-finder-search").outerHeight() + parseInt($(".store-finder-search").css("margin-bottom")) + $(".gmnoprint.gm-bundled-control .gmnoprint").height() + parseInt($(".gmnoprint.gm-bundled-control").css("margin-top"))  + 20;	//TISSTRT-1611 fix
+
 $(".store-finder-legends").css("top",topLegend);
 var leftLegend = $(".store-finder-map.js-store-finder-map").outerWidth() + parseInt($(".store-finder-map.js-store-finder-map").parent(".js-store-finder").css("margin-left")) - $(".store-finder-legends").width() - parseInt($(".gmnoprint.gm-bundled-control").css("margin-right")) - 15;
 $(".store-finder-legends").css("left",leftLegend);
@@ -3599,15 +3758,139 @@ if($(window).width() < 313)
 	$(".store-finder-legends").css("left","");
 }
 /*TISSQAEE-335*/
+/*TPR-1283-code added for change heading height for brand filtered PLP--Starts*/
+$(window).on("load resize",function(){
+	var htH1 = $("body.page-productGrid .list_title h1").height();
+	var lineHtH1 = parseInt($("body.page-productGrid .list_title h1").css("line-height"));
+	var htH1Multiple = htH1/lineHtH1;
+	var paddingOrigin = parseInt($("body.page-productGrid .facet-list.filter-opt").css("padding-top"));
+	paddingOrigin = paddingOrigin + (lineHtH1 * (htH1Multiple-1));
+	$("body.page-productGrid .facet-list.filter-opt").css("padding-top",paddingOrigin);
+});
+/*TPR-1283-code added for change heading height for brand filtered PLP--Ends*/
 $(document).on("mouseover","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").addClass("show_arrow");
 });
 $(document).on("mouseout","header .content nav > ul > li > ul > li",function(){
 	$(this).parent().parent().find(".toggle").removeClass("show_arrow");
 });
+/*added for UF-353*/
+$(document).ready(function(){
+	$("#footerByAjaxId ul li a[title='Store Locator']").parent().remove();
+});
+/*UF-353 end*/
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
 $(document).on("click",".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li",function(){
 	$(".cart.wrapper.checkout-payment .left-block .payments.tab-view .nav li").removeClass("active");
 	$(this).addClass("active");
 	});
 /*Issue in payment page by selecting payment mode in kidswear ST testing*/
+
+/* TPR-6013 starts*/
+$(document).on("click","body .account .right-account .password .blue.changePass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.changePassResponsive",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","block");
+	$(this).css("display","none");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.crossPass").css("display","block");
+});
+$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	if ($(window).width() > 790) {
+		$("body .account .right-account .password .blue.changePass").css("display","block");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","none");
+	} else {
+		$("body .account .right-account .password .blue.changePass").css("display","none");
+		$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+	}   
+	
+});
+/*$(document).on("click","body .account .right-account .password .blue.crossPass",function(){
+	$("body .account .right-account .password #frmUpdatePassword").css("display","");
+	$(this).css("display","");
+	$("body .account .right-account .password .blue.changePass").css("display","none");
+	$("body .account .right-account .password .blue.changePassResponsive").css("display","block");
+});*/
+
+$(".deliveryTrack.status.suman").each(function(){
+	$(this).find(".progtrckr.tabs").find("li").each(function(){
+	if($(this).find(".commonBlock").length === 2){
+	var index = $(this).index();
+	$(this).parents(".progtrckr.tabs").siblings(".nav").find("li").eq(index).addClass("greenProgress");
+
+
+
+
+
+
+
+
+	}
+	});
+	});
+/* TPR-6013 ends*/
+/*PRDI-402 start*/
+$(document).ready(function(){
+	if($(window).width() < 790){
+		$(".pagination_ul .product-block").each(function(){
+			if($(this).children().length == 1){
+				$(this).find('li.viewDetails').css('margin-bottom','30px');
+			}
+		});
+	}	
+});
+/*PRDI-402 end*/
+/* start change of PRDI-92 */
+$(document).ready(function() {
+    if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+        $(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+    }
+	if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+		$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+	}
+});
+
+
+$(window).on("load resize click",function(){
+	setTimeout(function(){
+		if ($(".facet_desktop .facet.js-facet.Dial li.filter-colour").hasClass("deactivate")){
+			$(".facet_desktop .facet.js-facet.Dial li.filter-colour").removeClass("deactivate");
+		}
+		if($('.facet_desktop .facet.js-facet.Dial').hasClass("Colour")){
+			$('.facet_desktop .facet.js-facet.Dial.Colour .more-lessFacetLinks').remove();
+		}
+	},500);
+});
+/* end change of PRDI-92 */
+$(".accordin").smk_Accordion({
+    closeAble: true,
+    closeOther: false,
+    slideSpeed: 750,
+});
+/*$(".accordin").on("click", function(){
+	$(this).parent().find(".accordin.FineJewellery .item div.title").slideToggle();
+	$(this).parent().toggleClass("accordion-open");
+	$(this).parent().siblings().find(".accordin.FineJewellery .item div.title").slideUp();
+	$(this).parent().siblings().removeClass("accordion-open");
+});*/
+
+/*price breakup scroll start*/
+$("span.price-breakup").click(function() {
+	  $("body,html").animate({ scrollTop: $("#showPrice").offset().top - 150 }, "slow");
+	  $("#showPrice").addClass("acc_active");
+	  $("#showPrice").find(".detail.acc_content").slideDown();
+});
+/*price breakup scroll end*/
+/*Feature for FineJewellery scroll start*/
+$("span.more-link").click(function() {
+	  $("body,html").animate({ scrollTop: $("#tabs_styleNotes").offset().top - 150 }, "slow");
+	  $("#tabs_styleNotes").addClass("active");
+});
+/*Feature for FineJewellery scroll end*/
+/* end change of PRDI-92 */

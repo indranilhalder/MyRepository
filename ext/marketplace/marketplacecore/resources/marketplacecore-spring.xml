@@ -47,6 +47,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<!-- <import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_product-spring.xml" /> -->
 
+		<!-- Jewellery hot-folder for jewellery price -->	
+	<import
+		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_jewelleryprice-spring.xml" />
 	<import
 		resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_stock-spring.xml" />
 	<!-- <import
@@ -68,6 +71,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 <import resource="classpath:/marketplacecore/integration/hot-folder-marketplace-freebie-product-details.xml"/>
 
+	<!-- TPR-4683 -->
+	<import	resource="classpath:/marketplacecore/integration/hot-folder-store-marketplace_instant_import-spring.xml" />
 		
 <!-- TPR-1316 -->	
 	<import
@@ -445,6 +450,18 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="modelService" ref="modelService" />
 		<property name="businessProcessService" ref="businessProcessService" />
 	</bean>
+	
+	<!-- pan card reject -->
+	
+	<bean id="pancardRejectEventListener" class="com.tisl.mpl.core.event.PancardRejectEventListener"
+		parent="abstractSiteEventListener">
+		<property name="modelService" ref="modelService" />
+		<property name="businessProcessService" ref="businessProcessService" />
+	</bean>
+	
+    <!-- end -->
+	
+	
 	<bean id="orderConfirmationPushNotificationEventListener" class="com.tisl.mpl.core.event.OrderConfirmationPushNotificationEventListener"
 		parent="abstractSiteEventListener">
 		<property name="notificationService" ref="notificationService" />
@@ -594,6 +611,22 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="resource"
 			value="classpath:/marketplacecore/processes/orderConfirmationEmailProcess.xml" />
 	</bean>
+	
+	
+	
+	<!-- pan card reject -->
+	
+	<bean id="pancardRejectEmailProcessDefinitionResource"
+		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource"
+			value="classpath:/marketplacecore/processes/pancardRejectEmailProcess.xml" />
+	</bean>
+	
+	<!-- end -->
+	
+	
+	
+	
 	<!-- TPR-815 -->
 	<bean id="paymentPendingEmailProcessDefinitionResource"
 		class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
@@ -783,6 +816,8 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="frontendTemplateName" value="CustomerRegistrationEmailTemplate" />
 	</bean>
 	
+	
+	
 
 	<bean id="generateCustomerRegistrationInCsEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="CustomerRegistrationInCsEmailTemplate" />
@@ -795,6 +830,14 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 	<bean id="generateOrderConfirmationEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="OrderConfirmationEmailTemplate" />
 	</bean>
+	
+	<!-- pan card reject -->
+	<bean id="generatePancardRejectEmail" parent="abstractGenerateEmailAction">
+		<property name="frontendTemplateName" value="PancardRejectEmailTemplate" />
+	</bean>
+	<!-- pan card reject end -->
+	
+	
 	<!-- TPR-815 -->
 	<bean id="generatePaymentPendingEmail" parent="abstractGenerateEmailAction">
 		<property name="frontendTemplateName" value="PaymentPendingEmailTemplate" />
@@ -1010,6 +1053,16 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="priceService" ref="priceService" />
 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
 	</bean>
+
+	<!-- TPR-1886 | JEWELLERY START-->
+     <bean id="mplPriceValueRangeProviderJewellery"
+ 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplPriceValueRangeProviderJewellery"
+ 		parent="abstractPropertyFieldValueProvider">
+ 		<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+ 		<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+ 		<property name="mplJewelleryUtility" ref="mplJewelleryUtility" />
+ 	</bean>
+ 	<!--  JEWELLERY  END-->
 
 	<bean id="mplMrpPriceValueProvider"
 		class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMrpPriceValueProvider"
@@ -1441,11 +1494,10 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="categorySource" ref="mplCategorySource" />
 	</bean>
 	
-
-	<bean id="mplCategorySource" parent="abstractCategorySource">
+   <!-- TPR-6336 -->
+	<bean id="mplCategorySource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1,LSH1" />
 	</bean>
-	
 
 	<bean id="mplCategoryBrandSource" parent="abstractMplCategorySource">
 		<property name="rootCategory" value="MSH1,MBH1,SSH1,LSH1" />
@@ -1781,6 +1833,27 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 			</property>
 	</bean>
 	
+	<!-- TPR-3548 | Gender Facet Compare Start-->
+	<bean id="genderAttributeSortProvider"
+	      class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.GenderFacetTopValuesProvider">
+		<property name="comparator" ref="genderFacetAttributeComparator"/>
+	</bean>
+     <bean id="genderFacetAttributeComparator"
+	      class="com.tisl.mpl.core.comparator.GenderFacetComparator">
+		<property name="pattern" value="^[0-9]+(\.?([0-9])+)?$"/>
+		<property name="genderSystems">
+			<list>
+				<value>MEN</value>
+				<value>WOMEN</value>
+				<value>COUPLES</value>
+				<value>KIDS</value>
+				<value>BOYS</value>
+				<value>GIRLS</value>
+				<value>UNISEX</value>
+			</list>
+		</property>
+	</bean>
+	<!-- TPR-3548 | Gender Facet Compare End-->
 	 
   <!-- ============== configure beans for CRM Ticket and Refund Initiation Events ============== -->
   <bean id="sendUnCollectedOrderToCRMEventListener"
@@ -1852,6 +1925,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
  		class="com.tisl.mpl.core.promotion.job.PromotionPriceUpdaterJob"
  		autowire="byName" >
  	</bean>
+
   <!--   mrupee changes -->
      <bean id="mplThirdPartyWalletCronJob" parent="abstractJobPerformable" class="com.tisl.mpl.core.payment.cronjob.MplThirdPartyWalletCronJob" autowire="byName">
     </bean>
@@ -1899,5 +1973,22 @@ http://www.springframework.org/schema/aop/spring-aop.xsd">
 		<property name="start" value="100000001" />
 		<property name="numeric" value="false" />
 	</bean>
+
+    <!-- TISPRD-8944 -->
+	<bean id="mplMobilePriceValueProvider"
+	class="com.tisl.mpl.core.search.solrfacetsearch.provider.impl.MplMobilePriceValueProvider"
+	parent="abstractPropertyFieldValueProvider">
+	<property name="fieldNameProvider" ref="solrFieldNameProvider" />
+	<property name="mplPriceRowService" ref="mplPriceRowService" />
+	<property name="priceService" ref="priceService" />
+	<property name="mplBuyBoxUtility" ref="mplBuyBoxUtility" />
+	</bean>
+<!-- End TISPRD-8944 -->
+    
+    <!-- Change for CAR-271 -->
+    <bean id="customPromotionService" class="de.hybris.platform.promotions.jalo.CustomPromotion" >
+    
+	</bean>
+    
 			
 </beans>

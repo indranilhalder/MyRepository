@@ -46,8 +46,14 @@ if(loginStatus){
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/new-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/edit-address') or
 		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/delivery-method') or
-		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
-	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script>
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')or
+		fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
+	<script type="text/javascript" src="${commonResourcePath}/js/addresslandmark.js"></script><!-- R2.3: One line -->
+
+</c:if>
+<c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
+	<script type="text/javascript" src="${commonResourcePath}/js/moment.min.js"></script>
+	<script type="text/javascript" src="${commonResourcePath}/js/pikaday.min.js"></script>
 </c:if>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('luxury.resource.host')" var="luxuryHost"/>
 <c:set var="headerWidgetJsSource" value="${luxuryHost}/header-widget.js"/>

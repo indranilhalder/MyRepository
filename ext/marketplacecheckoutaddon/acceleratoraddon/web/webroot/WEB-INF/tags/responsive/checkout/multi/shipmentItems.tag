@@ -81,22 +81,21 @@
 												 	<ycommerce:testId code="cart_product_size">
 														<div class="size"><spring:theme code="text.size"/>${entry.product.size}</div>
 													</ycommerce:testId>
-													<!-- INC_11620/INC_11466 -->
-													 <!--<div class="item-price delivery-price delivery-price-mobile">
-														<ycommerce:testId code="cart_totalProductPrice_label">
-														<c:choose>
-														<c:when test="${not empty entry.totalSalePrice}">
-															<format:price priceData="${entry.totalSalePrice}"
-																displayFreeForZero="true" />
-																</c:when>
-																<c:otherwise>
-																<format:price priceData="${entry.totalPrice}"
-																displayFreeForZero="true" />
-																</c:otherwise>
-																</c:choose>
-														</ycommerce:testId>
-														
-													   </div>-->
+													 <%--  <div class="item-price delivery-price delivery-price-mobile">
+											<ycommerce:testId code="cart_totalProductPrice_label">
+											<c:choose>
+											<c:when test="${not empty entry.totalSalePrice}">
+												<format:price priceData="${entry.totalSalePrice}"
+													displayFreeForZero="true" />
+													</c:when>
+													<c:otherwise>
+													<format:price priceData="${entry.totalPrice}"
+													displayFreeForZero="true" />
+													</c:otherwise>
+													</c:choose>
+											</ycommerce:testId>
+											
+										</div> --%>
 													<ycommerce:testId code="cart_product_colour">
 																<%-- <div class="colour"><spring:theme code="text.colour"/>${entry.product.colour}</div> --%>
 													</ycommerce:testId>
@@ -235,8 +234,7 @@
 											
 										</div>  --%>
 									</li>
-									<!-- INC_11620/INC_11466 -->
-								    <!--  <li class="price">
+								    <li class="price">
 								    
 								    <div class="item-price delivery-price">
 											<ycommerce:testId code="cart_totalProductPrice_label">
@@ -255,7 +253,7 @@
 										</div>
 								    
 								    
-								    </li>-->
+								    </li>
 								    
 								    <li class="quantity">
 								      <div>
@@ -297,17 +295,66 @@
 															<c:choose>
 																	<c:when test="${delMode.code eq 'home-delivery'}">
 																			<li class="${delMode.code }">
+																			<%-- PRDI-378 FIX STARTS HERE --%>
+																			<c:choose>
+																			   <c:when test="${entry.isBOGOapplied}">	
+																			        <c:choose>
+																			              <c:when test="${delMode.deliveryCost.value > 0}" >
+																			                   <input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
+																			                   <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			              </c:when>
+																			              <c:otherwise>
+																			                   <input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
+																			                   <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  FREE</label>
+																			              </c:otherwise>	
+																			         </c:choose>	
+																			   </c:when>
+																			<%-- PRDI-378 ENDS HERE --%>																			
+																			   <c:otherwise>
 																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
-																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
-																			
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.home.delivery"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			<!-- UF-306 ends -->
+																			   </c:otherwise>																			
+																			</c:choose>
+																		<span>	${delMode.description }.</span></li>																					
+																	</c:when>																	
+																	<c:when test="${delMode.code eq 'express-delivery'}">
+																			<li class="${delMode.code }">
+																			<input type="radio"  name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code}" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"   checked="checked"/>
+																			<!-- UF-306 starts -->
+																			<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.express.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			<!-- UF-306 ends -->
 																		<span>	${delMode.description }.</span></li>
 																					
 																	</c:when>
 																	<c:otherwise>
 																			<li class="${delMode.code }">
-																			<input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
-																			<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
-																			
+																			<%-- PRDI-378 FIX STARTS HERE --%>
+																			<c:choose>
+																			   <c:when test="${entry.isBOGOapplied}">	
+																			         <c:choose>
+																			              <c:when test="${delMode.deliveryCost.value > 0}" >
+																			                   <input type="radio" name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
+																			                    <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																			              </c:when>
+																			              <c:otherwise>
+																			                    <input type="radio" name="${entry.entryNumber}" value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
+																			                    <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  FREE</label>
+																			              </c:otherwise>	
+																			         </c:choose>	
+																			   </c:when>
+																			    <%-- PRDI-378 ENDS HERE --%>
+																			   <c:otherwise>
+																			        <input type="radio"   name="${entry.entryNumber}"  value="${delMode.deliveryCost.value}" id="radio_${entry.entryNumber}_${delMode.code }" onclick="return calculateDeliveryCost('radio_${entry.entryNumber}','${delMode.code}');"  />
+																			        <!-- UF-306 starts -->
+																					<%-- <label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" >${delMode.name } -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label> --%>
+																					<label class="deliveryModeLabel" for="radio_${entry.entryNumber}_${delMode.code }" ><spring:theme code="text.clickandcollect.shipping"/> -  <format:price priceData="${delMode.deliveryCost}" displayFreeForZero="TRUE"/></label>
+																					<!-- UF-306 ends -->
+																			   </c:otherwise>
+																			</c:choose>
 																		<span>${delMode.description }.</span> </li>
 																			
 																	</c:otherwise>
@@ -353,50 +400,6 @@
 								</li>
 							</c:forEach>
 			</ul>
-
-		<!--	
-		<c:if test="${showDeliveryAddress and not empty deliveryAddress}">
-			<p>
-				${fn:escapeXml(deliveryAddress.title)}&nbsp;${fn:escapeXml(deliveryAddress.firstName)}&nbsp;${fn:escapeXml(deliveryAddress.lastName)}
-				<br>
-				<c:if test="${ not empty deliveryAddress.line1 }">
-					${fn:escapeXml(deliveryAddress.line1)},&nbsp;
-				</c:if>
-				<c:if test="${ not empty deliveryAddress.line2 }">
-					${fn:escapeXml(deliveryAddress.line2)},&nbsp;
-				</c:if>
-				<c:if test="${not empty deliveryAddress.town }">
-					${fn:escapeXml(deliveryAddress.town)},&nbsp;
-				</c:if>
-				<c:if test="${ not empty deliveryAddress.region.name }">
-					${fn:escapeXml(deliveryAddress.region.name)},&nbsp;
-				</c:if>
-				<c:if test="${ not empty deliveryAddress.state }">
-					${fn:escapeXml(deliveryAddress.state)},&nbsp; <!--DSC_006 : Fix for Checkout Address State display issue -->
-			<!-- 	</c:if>
-				<c:if test="${ not empty deliveryAddress.postalCode }">
-					${fn:escapeXml(deliveryAddress.postalCode)},&nbsp;
-				</c:if>
-				<c:if test="${ not empty deliveryAddress.country.name }">
-					${fn:escapeXml(deliveryAddress.country.name)}
-				</c:if>
-			</p>	
-		</c:if>
-		<ul> 
-			 
-		 	<c:forEach items="${cartData.entries}" var="entry">
-				<c:if test="${entry.deliveryPointOfService == null}">
-					<c:url value="${entry.product.url}" var="productUrl"/>
-					<li class="details">
-						<span class="name">${entry.product.name}</span> 
-						<span class="qty"><spring:theme code="basket.page.qty"/>&nbsp;${entry.quantity}</span>
-					</li>
-				</c:if>
-			</c:forEach>
-		
-		</ul>
-		 -->
 		
 	</div>
 	</c:if>
-

@@ -60,6 +60,8 @@
 		<product:searchresultsgridcomponent/>
 		<!--  TPR-656 -->
 		<c:if test="${not empty lookId}">
+		<!-- INC144315462 and INC144315104  -->
+		<input type="hidden" name="customSkuUrl" value="/CustomSkuCollection/${lookId}/page-1?q="/>
 		<input type="hidden" name="customSku" value="true"/>
 	    <input type="hidden" name="customSkuCollectionId" value="${lookId}"/>
 	    </c:if>

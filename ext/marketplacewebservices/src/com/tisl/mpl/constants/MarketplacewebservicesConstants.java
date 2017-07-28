@@ -546,14 +546,26 @@ public class MarketplacewebservicesConstants
 	public final static String MRUPEE_NARRATION_VALUE = "payment.mRupee.narration".intern();
 	public final static String MRUPEE_MERCHANT_CODE = "payment.mRupee.merchantID".intern();
 	public final static String FAIL = "fail";
+	public static final String TRAVELANDLUGGAGE = "travelandluggage";
+
+
 	public static final String ORDER_HISTORY_PAGESIZE_WEBSERVICE = "orderHistory.pagesize.defaultValue";
 
 	public static final String TO = "TO";
 	public static final String RETURN_SELF_COURIER_FILE_DOWNLOAD_URL = "/my-account/returns/returnFileDownload?orderCode=";
-	public static final String TRANSACTION_ID ="transactionId";
+	public static final String TRANSACTION_ID = "transactionId";
 	public static final String AMPERSAND = "&";
 	public static final String EQUALS_TO = "=";
 	public static final String COLON = ":";
 	public static final String FORWARD_SLASHES = "//";
+	//TPR-6117
+	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "MAX QUANTITY ADDED";
+	public static final String FINEJEWELLERY = "finejewellery";
 
+	//TPR-1083
+	public static final String MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE = "1";
+	public static final String EXCHANGEAPPLIED = "Exchange Applied";
+	public static final String EXCHANGENOTAPPLIED = "Exchange Is Not Applicable For Pincode";
+	public static final String SPECIAL_MOBILE_FLAG = "special.mobile.flag".intern();
+	public static final String PRICE_DISCLAIMER_JEWELLERY = "Price and Weight are subjected to change on the basis of availability. Please check final Price and Weight before making a payment.";
 }

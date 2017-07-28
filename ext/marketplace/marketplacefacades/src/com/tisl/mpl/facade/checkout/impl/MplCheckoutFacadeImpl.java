@@ -44,6 +44,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 import de.hybris.platform.voucher.VoucherModelService;
 import de.hybris.platform.voucher.jalo.PromotionVoucher;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
@@ -107,6 +108,7 @@ import com.tisl.mpl.shorturl.service.ShortUrlService;
 import com.tisl.mpl.sms.facades.SendSMSFacade;
 import com.tisl.mpl.sns.push.service.impl.MplSNSMobilePushServiceImpl;
 import com.tisl.mpl.wsdto.PushNotificationData;
+
 
 
 /**
@@ -1013,7 +1015,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final CartData cartData)
 			throws EtailNonBusinessExceptions
 	{
-
 		List<PinCodeResponseData> pincoderesponseDataList = null;
 		pincoderesponseDataList = getSessionService().getAttribute(
 				MarketplacecommerceservicesConstants.PINCODE_RESPONSE_DATA_TO_SESSION);
@@ -1094,7 +1095,6 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 				}
 			}
 		}
-
 		return deliveryModeDataMap;
 	}
 
@@ -2259,6 +2259,25 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 
 	}
 
+	@Override
+	public void rePopulateDeliveryPointOfService(final Map deliveryPOSMap, final CartModel cartModel)
+	{
+		final Iterator it = deliveryPOSMap.entrySet().iterator();
+		while (it.hasNext())
+		{
+			final Map.Entry pair = (Map.Entry) it.next();
+			System.out.println(pair.getKey() + " = " + pair.getValue());
 
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (pair.getKey().equals(entry.getSelectedUSSID()) && null != entry.getMplDeliveryMode().getDeliveryMode()
+						&& entry.getMplDeliveryMode().getDeliveryMode().getCode().equals(MarketplaceFacadesConstants.CLICK_AND_COLLECT))
+				{
+					entry.setDeliveryPointOfService((PointOfServiceModel) pair.getValue());
+					getModelService().save(entry);
+				}
+			}
+		}
+	}
 
 }

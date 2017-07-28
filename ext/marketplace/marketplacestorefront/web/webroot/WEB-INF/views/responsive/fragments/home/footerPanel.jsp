@@ -85,9 +85,15 @@
 <script>
 	function emailvalidate() {
 		<!-- TPR - 667--->
-		utag.link({
-		 "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
-	}); 
+		/*utag.link({
+		"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	}); */
+		//TISSTRT-1527
+       if(typeof(utag) != "undefined"){
+	       	utag.link({
+		      "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 
+	        }); 
+     }
 		
 		if(typeof _satellite !="undefined"){
 			   _satellite.track('news_letter_sign_up');
@@ -128,7 +134,7 @@
 					} else if (data == "success") {
 						
 						$("#error_message").css({"display":"block"});
-			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Yay! We can't wait to be pen-pals with you.</font>";
+			            document.getElementById("error_message").innerHTML = "<font color='#60a119'>Thanks for signing up. We'll keep you updated with our newsletters.</font>";//TISSTRT-1599 message changed
 			          //TPR-667 START
 			            /* utag.link({
 							"link_obj": this, "link_text": "newsletter_subscription" , "event_type" : "newsletter_subscription" 

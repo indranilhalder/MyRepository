@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.catalog.model.classification.ClassAttributeAssignmentModel;
+import de.hybris.platform.core.model.product.ProductModel;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,9 @@ public interface BuyBoxService
 {
 
 	List<BuyBoxModel> buyboxPrice(String productCode) throws EtailNonBusinessExceptions;
+
+	//added for jewellery
+	List<BuyBoxModel> buyboxPriceForJewellery(String pcmUssid) throws EtailNonBusinessExceptions;
 
 	//List<BuyBoxModel> getStockFromBuyBox(String ProductCode) throws EtailNonBusinessExceptions;
 
@@ -50,7 +54,9 @@ public interface BuyBoxService
 	RichAttributeModel getRichAttributeData(String ussid) throws EtailNonBusinessExceptions;
 
 	//get seller data
-	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	//CKD: TPR-3809
+	//Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode) throws EtailNonBusinessExceptions;
+	Set<Map<BuyBoxModel, RichAttributeModel>> getsellersDetails(String productCode, String prodCatType) throws EtailNonBusinessExceptions;
 
 	//
 	List<BuyBoxModel> buyBoxStockForSeller(final String sellerID);
@@ -63,8 +69,18 @@ public interface BuyBoxService
 
 	List<ClassAttributeAssignmentModel> getClassAttrAssignmentsForCode(String code);
 
+
 	//TPR-3736
 	public Map<String, List<Double>> getBuyBoxDataForUssids(final String ussidList) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param sellerArticleSKUList
+	 * @return
+	 * @throws EtailNonBusinessExceptions
+	 */
+	List<BuyBoxModel> getBuyboxSellerPricesForSearch(List<String> sellerArticleSKUList) throws EtailNonBusinessExceptions;
+
+	ProductModel getProductDetailsByProductCode(final String productcode);
 
 
 	/**
@@ -76,14 +92,29 @@ public interface BuyBoxService
 	 */
 	//CKD:TPR-250
 	List<BuyBoxModel> buyboxPriceForMicrosite(String productCode, String sellerID) throws EtailNonBusinessExceptions;
-	
+
 	/**
-	 * TPR-5712
-	 * buybox price for all seller
+	 * TPR-5712 buybox price for all seller
+	 * 
 	 * @param productCode
 	 * @return
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<BuyBoxModel> buyboxPriceForAllSeller(final String productCode) throws EtailNonBusinessExceptions;
 
+
+	//TISPRD-8944
+	List<BuyBoxModel> buyboxPriceMobile(String productCode) throws EtailNonBusinessExceptions;
+
+	/**
+	 * @param ussID
+	 */
+	public List<BuyBoxModel> buyboxPriceForJewelleryWithVariant(String ussID);
+
+	//CKD:TPR-3809
+	/**
+	 * @param selectedUSSID
+	 * @return
+	 */
+	public String findPussid(String selectedUSSID);
 }

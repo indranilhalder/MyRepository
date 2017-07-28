@@ -19,17 +19,20 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.marketplacecommerceservices.service.AgentIdForStore;
+import com.tisl.mpl.marketplacecommerceservices.service.BuyBoxService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPriceRowService;
 import com.tisl.mpl.model.SellerInformationModel;
@@ -66,6 +69,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 
 	@Resource
 	private AgentIdForStore agentIdForStore;
+	//for Jewellery
+	@Resource
+	private BuyBoxService buyBoxService;
 
 	/**
 	 * @return the mplPriceRowService
@@ -164,6 +170,7 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 	public void populate(final SOURCE productModel, final TARGET productData) throws ConversionException,
 			EtailNonBusinessExceptions
 	{
+
 		/**
 		 * TPR-5712: OIS change to handle delisted products
 		 */
@@ -178,8 +185,15 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 			final List<SellerInformationData> sellerDataList = new ArrayList<SellerInformationData>();
 			for (final SellerInformationModel sellerInformationModel : sellerList)
 			{
-				if ((sellerInformationModel.getSellerAssociationStatus() == null || sellerInformationModel
-						.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+				final SellerAssociationStatusEnum enumData = sellerInformationModel.getSellerAssociationStatus(); //CAR-283
+
+				//				if ((sellerInformationModel.getSellerAssociationStatus() == null || sellerInformationModel
+				//						.getSellerAssociationStatus().equals(SellerAssociationStatusEnum.YES))
+				//						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
+				//								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate())))
+
+				// If condition modified for CAR-283
+				if ((null == enumData || enumData.equals(SellerAssociationStatusEnum.YES))
 						&& (null != sellerInformationModel.getStartDate() && new Date().after(sellerInformationModel.getStartDate())
 								&& null != sellerInformationModel.getEndDate() && new Date().before(sellerInformationModel.getEndDate())))
 				{
@@ -189,11 +203,33 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 					for (final RichAttributeModel rm : sellerInformationModel.getRichAttribute())
 					{
 
-						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
-								sellerInformationModel.getSellerArticleSKU()));
+						//changes for Jewellery pincode service in pdp
+						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
+						{
+							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
+									buyBoxService.buyboxPriceForJewellery(sellerInformationModel.getSellerArticleSKU()));
+							if (CollectionUtils.isNotEmpty(buyboxModelListAll))
+							{
+								final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+								sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm, sellerArticleSKU));
+							}
+						}
+						//end
 
-						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
-								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+						else
+						{
+							sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
+									sellerInformationModel.getSellerArticleSKU()));
+						}
+
+
+						final PaymentModesEnum paymentEnum = rm.getPaymentModes();
+
+						//						if ((null != rm.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.BOTH) || (null != rm
+						//								.getPaymentModes() && rm.getPaymentModes().equals(PaymentModesEnum.COD))))
+
+						if ((null != paymentEnum && paymentEnum.equals(PaymentModesEnum.BOTH) || (null != paymentEnum && paymentEnum
+								.equals(PaymentModesEnum.COD))))
 						{
 							sellerData.setIsCod(MarketplaceFacadesConstants.Y);
 						}

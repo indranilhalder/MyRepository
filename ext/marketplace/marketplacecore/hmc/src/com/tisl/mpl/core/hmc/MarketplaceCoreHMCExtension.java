@@ -28,7 +28,9 @@ import de.hybris.platform.hmc.webchips.DisplayState;
 import de.hybris.platform.jalo.Item;
 import de.hybris.platform.jalo.product.Product;
 import de.hybris.platform.jalo.type.ComposedType;
+import de.hybris.platform.promotions.jalo.AbstractPromotion;
 import de.hybris.platform.promotions.jalo.AbstractPromotionRestriction;
+import de.hybris.platform.promotions.jalo.CustomPromotion;
 import de.hybris.platform.promotions.jalo.OrderPromotion;
 import de.hybris.platform.promotions.jalo.ProductPromotion;
 import de.hybris.platform.promotions.jalo.PromotionPriceRow;
@@ -307,6 +309,20 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 				getPromotionSendMailService().sendMail(item);
 
 				checkForMsgModify(item, currentValues, initialValues);
+
+				/** changes for CAR-271 **/
+				final AbstractPromotion promotion = (AbstractPromotion) item;
+				if (promotion.isEnabled())
+				{
+					final CustomPromotion customPromotionService = getCustomPromotion();
+					if (customPromotionService != null)
+					{
+						customPromotionService.findOrCreateImmutableCloneNew((item.getSession()).getSessionContext(), promotion);
+					}
+					LOG.debug("Promotion immutable Hashkey created for :: "
+							+ (promotion.getDescription() == null ? "promotion Description is null" : promotion.getDescription()));
+				}
+				/** End **/
 			}
 
 			//Saving data into VoucherStatusNotificationModel while saving voucher
@@ -751,4 +767,10 @@ public class MarketplaceCoreHMCExtension extends HMCExtension
 	{
 		return Registry.getApplicationContext().getBean("modelService", ModelService.class);
 	}
+
+	protected CustomPromotion getCustomPromotion()
+	{
+		return Registry.getApplicationContext().getBean("customPromotionService", CustomPromotion.class);
+	}
+
 }

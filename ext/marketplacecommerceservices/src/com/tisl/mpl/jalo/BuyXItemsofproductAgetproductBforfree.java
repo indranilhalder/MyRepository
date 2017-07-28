@@ -116,8 +116,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 			final PromotionsManager.RestrictionSetResult rsr = getDefaultPromotionsManager().findEligibleProductsInBasket(ctx,
 					promoContext, this, getCategories());
 
-			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag
-					&& flagForPincodeRestriction) //***Blocked for TISPT-154**
+			if ((rsr.isAllowedToContinue()) && (!(rsr.getAllowedProducts().isEmpty())) && checkChannelFlag && sellerFlag) //***Blocked for TISPT-154**
 			//if (checkChannelFlag && sellerFlag && flagForPincodeRestriction)
 			{
 				final List<String> sellerIDData = new ArrayList<String>();
@@ -202,7 +201,7 @@ public class BuyXItemsofproductAgetproductBforfree extends GeneratedBuyXItemsofp
 						tcMapForValidEntries.put(mapEntry.getKey(), Integer.valueOf(mapEntry.getValue().getQuantity().intValue()));
 					}
 
-					if (realQuantity >= qualifyingCount && flagForDeliveryModeRestrEval)
+					if (realQuantity >= qualifyingCount && flagForDeliveryModeRestrEval && flagForPincodeRestriction)
 					{
 						final Map<String, Integer> validProductList = getDefaultPromotionsManager().getSortedValidProdUssidMap(
 								validProductUssidMap, realQuantity, qualifyingCount, ctx, restrictionList, getCode());

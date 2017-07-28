@@ -977,12 +977,13 @@ public class MarketplaceDeliveryAddressWidgetRenderer extends
 						Messagebox.OK, Messagebox.ERROR);
 					return;
 			}
-			else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(cityField.getValue()))
+			//INC144316265
+			/*else if (!MarketplaceCockpitCommonAsciiValidator.validateAlphaWithoutSpaceNoSpCh(cityField.getValue()))
 			{
 					Messagebox.show(LabelUtils.getLabel(widget, "invalidCityChar"),LabelUtils.getLabel(widget, FAILED_VALIDATION),
 						Messagebox.OK, Messagebox.ERROR);
 					return;
-			}
+			}*/
 			
 			else if (stateFieldListBox.getSelectedItem() == null || stateFieldListBox.getSelectedItem().getLabel().equalsIgnoreCase("Select"))
 			{

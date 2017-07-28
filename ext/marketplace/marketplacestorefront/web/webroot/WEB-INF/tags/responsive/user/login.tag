@@ -43,7 +43,14 @@
 			labelKey=""  path="j_password" inputCSS="form-control"
 			mandatory="true" />
 		<div class="help-block has-error" id="signinPasswordDiv" style="display: none;"></div>
-		
+		<!-- Added for UF-93 -->
+		<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+			<div id="checkBox">
+				<input type="checkbox" id="j_RememberMe" name="j_RememberMe" checked="checked" value="true">
+				<label for="j_RememberMe">Remember Me !</label><p>
+			</div>
+		</c:if>
+		<!-- End UF-93 -->
 		<!-- Captcha start -->
 		<div id="recaptchaWidgetForLogin" style="display: none">
 			<div class="g-recaptcha" data-sitekey="${recaptchaKey}"></div>
@@ -74,7 +81,7 @@
 				name="Mobileno" id="Mobileno" value="${Mobileno}" />
 		</div> --%>
 		<div class="forgotten-password_register">
-			New to Tatacliq? &nbsp;<a id="newToTata" href="javascript:void(0);">Register here</a>
+			New to Tata CLiQ? &nbsp;<a id="newToTata" href="javascript:void(0);">Register here</a>
 		</div>
 
 
@@ -169,6 +176,9 @@
 
 <script type="text/javascript" >
 $(document).ready(function (){
+	//<c:if test="${'Y'.equalsIgnoreCase(rememberMeEnabled)}">
+		//$('#j_username_login').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved...
+	//</c:if>
 	$('#j_username_login').val('${lastLoggedInUser}'); // added for UF-93 for showing last loggedinUSer if saved...
 	$.ajax({
 		url: ACC.config.encodedContextPath + "/login/captcha/widget/recaptcha",

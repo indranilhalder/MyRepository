@@ -172,6 +172,9 @@ public final class MessageConstants
 	public static final String SITE_NAME = "site.name";
 	public static final String EMAIL_URL = "update_Email_url";
 
+	public static final String CANCEL_LOCAL_PROP = "orderHistory.cancel";
+	public static final String RETURN_LOCAL_PROP = "orderHistory.return";
+
 	//Compare
 	public static final String COMPARE_SYSTEM_ERROR = "Sorry! we are unable to compare the selected products";
 

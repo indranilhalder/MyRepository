@@ -10,7 +10,8 @@
 	
 <h2 class="coupon">Apply Coupon Code</h2>	
 <div class="coupon block">
-		<label for="couponFieldId">Coupon Code</label>
+		<label for="couponFieldId" class="coupon_title_desktop">Have coupon code? Apply here</label>
+		<label for="couponFieldId" class="coupon_title_mobile">Coupon Code</label>
 		<div><input type="text" id="couponFieldId" />
 		<button type="submit" id="couponSubmitButton" class="button btn-block">Apply</button></div>
 		<span class="error-message" id="invalidCouponError"><spring:theme code="checkout.multi.coupons.invalid"/></span>
@@ -23,7 +24,9 @@
 		<span class="error-message" id="notReservableCouponError"><spring:theme code="checkout.multi.coupons.notReservable"/></span>
 		<span class="error-message" id="freebieCouponError"><spring:theme code="checkout.multi.coupons.freebie"/></span>
 		<span class="error-message" id="userInvalidCouponError"><spring:theme code="checkout.multi.coupons.userInvalid"/></span>
-<!-- changes for  [ TPR-1075]-->
+<!-- changes for  [ TPR-4461] TISSTRT-1523-->		
+		<span class="error-message correctMessageCoupon" id="couponPaymentRestrictionMessage"></span>
+<!-- changes for  [ TPR-1075] TISSTRT-1523-->
 	   <span class="error-message" id="firstPurchaseOfferError"><spring:theme code="checkout.multi.coupons.firstPurchaseInvalid"/></span>
 <!-- changes for  [ TPR-4460]-->
 	   <span class="error-message" id="invalidChannelError"><spring:theme code="checkout.multi.coupons.channelInvalid"/></span>

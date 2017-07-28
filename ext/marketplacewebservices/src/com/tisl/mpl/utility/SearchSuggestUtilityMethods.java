@@ -9,6 +9,7 @@ import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.commercefacades.product.data.CategoryData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
+import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.search.data.SearchStateData;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.enums.LuxIndicatorEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.facades.product.data.ProductTagDto;
 import com.tisl.mpl.helper.ProductDetailsHelper;
 import com.tisl.mpl.service.MplProductWebService;
@@ -171,7 +173,7 @@ public class SearchSuggestUtilityMethods
 
 	/*
 	 * @param productData
-	 * 
+	 *
 	 * @retrun ProductSNSWsData
 	 */
 	private ProductSNSWsData getTopProductDetailsDto(final ProductData productData)
@@ -192,10 +194,16 @@ public class SearchSuggestUtilityMethods
 		{
 			wsDto.setMrpPrice(productData.getProductMRP());
 		}
-		if (null != productData.getPrice())
+		//Below codes are commented for channel specific promotion
+
+		/*
+		 * if (null != productData.getPrice()) { wsDto.setSellingPrice(productData.getPrice()); }
+		 */
+		if (null != productData.getMobileprice())
 		{
-			wsDto.setSellingPrice(productData.getPrice());
+			wsDto.setSellingPrice(productData.getMobileprice());
 		}
+
 		if (null != productData.getLeastSizeProduct())
 		{
 			wsDto.setLeastSizeProduct(productData.getLeastSizeProduct());
@@ -650,7 +658,8 @@ public class SearchSuggestUtilityMethods
 		final String emiCuttOffAmount = configurationService.getConfiguration().getString("marketplace.emiCuttOffAmount");
 		List<GalleryImageData> galleryImages = null;
 
-
+		final boolean specialMobileFlag = configurationService.getConfiguration().getBoolean(
+				MarketplacewebservicesConstants.SPECIAL_MOBILE_FLAG, false);
 		//ProductData productDataImage = null;
 
 		for (final ProductData productData : searchPageData.getResults())
@@ -672,25 +681,16 @@ public class SearchSuggestUtilityMethods
 				/*
 				 * try { productDataImage = productFacade.getProductForCodeAndOptions(productData.getCode(),
 				 * Arrays.asList(ProductOption.GALLERY)); galleryImages =
-				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) {
-				 * LOG.error("SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
+				 * productDetailsHelper.getGalleryImagesMobile(productDataImage); } catch (final Exception e) { LOG.error(
+				 * "SERPSEARCH Product Image Error:" + productData.getCode()); continue; }
 				 */
 
 				//TPR-796
-				/*try
-				{
-					galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData);
-				}
-				catch (final Exception e)
-				{
-					LOG.error("SERPSEARCH ProductError:" + productData.getCode());
-					ExceptionUtil.getCustomizedExceptionTrace(e);
-					continue;
-				}*/
-
-				
-
-
+				/*
+				 * try { galleryImages = productDetailsHelper.getPrimaryGalleryImagesMobile(productData); } catch (final
+				 * Exception e) { LOG.error("SERPSEARCH ProductError:" + productData.getCode());
+				 * ExceptionUtil.getCustomizedExceptionTrace(e); continue; }
+				 */
 
 				//TPR-796
 				try
@@ -703,7 +703,6 @@ public class SearchSuggestUtilityMethods
 					ExceptionUtil.getCustomizedExceptionTrace(e);
 					continue;
 				}
-
 
 
 				if (CollectionUtils.isNotEmpty(galleryImages))
@@ -817,10 +816,38 @@ public class SearchSuggestUtilityMethods
 				{
 					sellingItemDetail.setMrpPrice(productData.getProductMRP());
 				}
-				if (null != productData.getPrice())
+				// Below codes are commented for channel specific promotion
+				if (specialMobileFlag && null != productData.getMobileprice())
+				{
+					sellingItemDetail.setSellingPrice(productData.getMobileprice());
+				}
+				else if (!specialMobileFlag && null != productData.getPrice()) //backward compatible
 				{
 					sellingItemDetail.setSellingPrice(productData.getPrice());
 				}
+
+				//added for jewellery mobile web services:maxSellingPrice & minSellingPrice
+				if (null != productData.getProductCategoryType()
+						&& MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productData.getProductCategoryType()))
+				{
+					PriceData pDataMax = new PriceData();
+					PriceData pDataMin = new PriceData();
+					final BuyBoxModel buyBoxData = productDetailsHelper.buyboxPriceForJewelleryWithVariant(productData.getUssID());
+					if (null != buyBoxData)
+					{
+						if (null != buyBoxData.getPLPMaxPrice())
+						{
+							pDataMax = productDetailsHelper.formPriceData(new Double(buyBoxData.getPLPMaxPrice().doubleValue()));
+						}
+						if (null != buyBoxData.getPLPMinPrice())
+						{
+							pDataMin = productDetailsHelper.formPriceData(new Double(buyBoxData.getPLPMinPrice().doubleValue()));
+						}
+					}
+					sellingItemDetail.setMaxSellingPrice(pDataMax);
+					sellingItemDetail.setMinSellingPrice(pDataMin);
+				}
+
 				if (null != productData.getInStockFlag())
 				{
 					sellingItemDetail.setInStockFlag(productData.getInStockFlag());

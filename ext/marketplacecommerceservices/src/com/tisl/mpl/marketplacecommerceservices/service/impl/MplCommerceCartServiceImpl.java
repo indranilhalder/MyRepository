@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.acceleratorservices.config.SiteConfigService;
@@ -36,6 +33,7 @@ import de.hybris.platform.commerceservices.order.CommerceCartModificationExcepti
 import de.hybris.platform.commerceservices.order.impl.DefaultCommerceCartService;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
 import de.hybris.platform.core.Registry;
+import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -81,16 +79,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import net.sourceforge.pmd.util.StringUtil;
@@ -103,6 +105,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MplConstants;
 import com.tisl.mpl.constants.MplGlobalCodeConstants;
@@ -130,10 +134,12 @@ import com.tisl.mpl.marketplacecommerceservices.daos.BuyBoxDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCommerceCartDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplPincodeServiceDao;
 import com.tisl.mpl.marketplacecommerceservices.order.MplCommerceCartCalculationStrategy;
+import com.tisl.mpl.marketplacecommerceservices.service.ExchangeGuideService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplCustomerProfileService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDelistingService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplDeliveryCostService;
+import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplPincodeRestrictionService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplStockService;
@@ -158,8 +164,11 @@ import com.tisl.mpl.wsdto.EDDResponseWsDTO;
 import com.tisl.mpl.wsdto.GetWishListDataWsDTO;
 import com.tisl.mpl.wsdto.GetWishListProductWsDTO;
 import com.tisl.mpl.wsdto.GetWishListWsDTO;
+import com.tisl.mpl.wsdto.InventoryReservJewelleryRequest;
+import com.tisl.mpl.wsdto.InventoryReservListRequest;
 import com.tisl.mpl.wsdto.InventoryReservListRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservListResponse;
+import com.tisl.mpl.wsdto.InventoryReservRequest;
 import com.tisl.mpl.wsdto.InventoryReservRequestWsDTO;
 import com.tisl.mpl.wsdto.InventoryReservResponse;
 import com.tisl.mpl.wsdto.MobdeliveryModeWsDTO;
@@ -209,6 +218,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Resource(name = "baseSiteService")
 	private BaseSiteService baseSiteService;
 
+	@Resource(name = "mplJewelleryService")
+	private MplJewelleryService jewelleryService;
+
+	@Resource(name = "mplCommerceCartService")
+	private MplCommerceCartService mplCommerceCartService;
 	@Autowired
 	private BuyBoxDao buyBoxDao;
 
@@ -240,7 +254,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	@Autowired
 	private PriceDataFactory priceDataFactory;
 
-
+	@Autowired
+	private SessionService sessionService;
 
 	@Autowired
 	private MplDefaultCommerceAddToCartStrategyImpl mplDefaultCommerceAddToCartStrategyImpl;
@@ -288,7 +303,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	private Converter<OrderModel, OrderData> orderConverter;
 
 	@Autowired
-	private SessionService sessionService;
+	private ExchangeGuideService exchangeService;
+
+
 
 	private static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
 
@@ -439,8 +456,31 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				if (entry != null && entry.getSelectedUssid() != null)
 				{
-					final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
-							.getSelectedUssid());
+					/*
+					 * final SellerInformationModel sellerInfoModel = mplSellerInformationService.getSellerDetail(entry
+					 * .getSelectedUssid());
+					 */
+					SellerInformationModel sellerInfoModel = null;
+					if ((null != entry.getProduct())
+							&& (entry.getProduct().getRootCategory()
+									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY)))
+					{
+						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(entry
+								.getSelectedUssid());
+						if (CollectionUtils.isNotEmpty(jewelleryInfo))
+						{
+							sellerInfoModel = getMplSellerInformationService().getSellerDetail(jewelleryInfo.get(0).getPCMUSSID());
+						}
+						else
+						{
+							LOG.error("No entry in JewelleryInformationModel for ussid " + entry.getSelectedUssid());
+						}
+					}
+					else
+					{
+						sellerInfoModel = getMplSellerInformationService().getSellerDetail(entry.getSelectedUssid());
+					}
+
 					if (sellerInfoModel != null
 							&& CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute())
 							&& null != ((List<RichAttributeModel>) sellerInfoModel.getRichAttribute()).get(0)
@@ -538,20 +578,31 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
 		List<MarketplaceDeliveryModeData> deliveryModeDataList = null;
+		boolean deliveryModeSelectedForEntry = false;
 		if (cartData != null && omsDeliveryResponse != null && !omsDeliveryResponse.isEmpty())
 		{
 			for (final OrderEntryData entry : cartData.getEntries())
 			{
 				final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
+				final String sellectedUssid = entry.getSelectedUssid();
 				deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
+				String defaultPriorityDeliveryMode = "";
 
 				for (final PinCodeResponseData pincodeRes : omsDeliveryResponse)
 				{
-					if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
-							&& pincodeRes.getIsServicable() != null
-							&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
-							&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+					/*
+					 * if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid()
+					 * != null && pincodeRes.getIsServicable() != null &&
+					 * sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid()) &&
+					 * pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+					 */
+					if (sellectedUssid != null && pincodeRes.getUssid() != null && pincodeRes.getIsServicable() != null
+
+					&& sellectedUssid.equalsIgnoreCase(pincodeRes.getUssid()) && pincodeRes.getIsServicable().equalsIgnoreCase("Y")
+							&& !entry.isGiveAway())
+
 					{
+						deliveryModeSelectedForEntry = false;
 
 						for (final DeliveryDetailsData deliveryData : pincodeRes.getValidDeliveryModes())
 						{
@@ -578,21 +629,35 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								}
 
 								final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-										deliveryMode, MarketplacecommerceservicesConstants.INR, pincodeRes.getUssid());
+										deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
 
 								if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModel.getDeliveryMode() != null)
 								{
 									PriceData priceData = null;
-									if (entry.isIsBOGOapplied())
+									if (entry.isIsBOGOapplied()
+											&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
+													.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
-										priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
-												* entry.getQualifyingCount().intValue()), cartData);
+										/*
+										 * priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
+										 * entry.getQualifyingCount().intValue()), cartData);
+										 */
+										//TISPRDT-1226
+										priceData = formPriceData(
+												Double.valueOf(deliveryModel.getValue().doubleValue()
+														* (entry.getQuantity().intValue() - entry.getFreeCount().intValue())), cartData);
 									}
-									else
+									else if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
+											.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
 										priceData = formPriceData(
 												Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
 												cartData);
+									}
+									else
+									{
+
+										priceData = formPriceData(Double.valueOf(0.0), cartData);
 									}
 									deliveryModeData.setCode(checkDataValue(deliveryModel.getDeliveryMode().getCode()));
 									//deliveryModeData.setDescription(checkDataValue(deliveryModel.getDeliveryMode().getDescription()));
@@ -619,9 +684,38 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 									{
 										deliveryModeData.setFulfillmentType(deliveryModel.getDeliveryFulfillModes().getCode());
 									}
+									//UF-314
+									deliveryModeData.setPriority(deliveryModel.getDeliveryMode().getPriority());
+
+									if (null != entry.getMplDeliveryMode() && StringUtils.isNotEmpty(entry.getMplDeliveryMode().getCode())
+											&& entry.getMplDeliveryMode().getCode().equals(deliveryMode))
+									{
+										deliveryModeSelectedForEntry = true;
+										deliveryModeData.setIsSelected(true);
+										defaultPriorityDeliveryMode = deliveryMode;
+
+									}
+									else
+									{
+										deliveryModeData.setIsSelected(false);
+									}
 								}
 								deliveryModeDataList.add(deliveryModeData);
 							}
+						}
+						//UF-314
+						deliveryModeDataList.sort(Comparator.comparing(MarketplaceDeliveryModeData::getPriority).reversed());
+						if (deliveryModeSelectedForEntry)
+						{
+							deliveryModeDataList.get(deliveryModeDataList.size() - 1).setDefaultSelectedDelMode(
+									defaultPriorityDeliveryMode);//UF-281
+						}
+						else
+						{
+							defaultPriorityDeliveryMode = deliveryModeDataList.get(deliveryModeDataList.size() - 1).getCode();
+							deliveryModeDataList.get(deliveryModeDataList.size() - 1).setIsSelected(true);//UF-281
+							deliveryModeDataList.get(deliveryModeDataList.size() - 1).setDefaultSelectedDelMode(
+									defaultPriorityDeliveryMode);//UF-281
 						}
 						deliveryModeDataMap.put(entry.getEntryNumber().toString(), deliveryModeDataList);
 					}
@@ -643,13 +737,20 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						deliveryModeData.setCode(marketplaceDeliveryModeData.getCode());
 						deliveryModeData.setDescription(marketplaceDeliveryModeData.getDescription());
 						deliveryModeData.setName(marketplaceDeliveryModeData.getName());
-						deliveryModeData.setSellerArticleSKU(entry.getSelectedSellerInformation().getUssid());
+						//deliveryModeData.setSellerArticleSKU(entry.getSelectedSellerInformation().getUssid());
+						deliveryModeData.setSellerArticleSKU(entry.getSelectedUssid());
 						deliveryModeData.setDeliveryCost(marketplaceDeliveryModeData.getDeliveryCost());
+						//UF-314 Start
+						deliveryModeData.setPriority(marketplaceDeliveryModeData.getPriority());
+						//UF-314 End
 						deliveryModeDataList.add(deliveryModeData);
 					}
 				}
 				if (!deliveryModeDataList.isEmpty())
 				{
+					//UF-314
+					deliveryModeDataList.sort(Comparator.comparing(MarketplaceDeliveryModeData::getPriority).reversed());
+					deliveryModeDataList.get(0).setIsSelected(true);//UF-281
 					deliveryModeDataMap.put(entry.getEntryNumber().toString(), deliveryModeDataList);
 				}
 				else
@@ -662,6 +763,47 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 
+
+	/**
+	 * Returns Fulfillment Details
+	 *
+	 *
+	 * @param fulfilmentType
+	 * @param zodeFulflmntcode
+	 * @param sellerInformationData
+	 * @return flag
+	 */
+	private boolean isFulFillmentTypeMatch(final String fulfilmentType, final String zodeFulflmntcode,
+			final SellerInformationData sellerInformationData)
+	{
+		boolean flag = false;
+
+		final String omsPincodeServiceability = getConfigurationService().getConfiguration()
+				.getString(MarketplacecclientservicesConstants.PIN_CODE_DELIVERY_MODE_OMS_MOCK).trim();
+
+		if (StringUtils.isNotEmpty(fulfilmentType) && StringUtils.isNotEmpty(zodeFulflmntcode))
+		{
+			if (StringUtils.equalsIgnoreCase(omsPincodeServiceability, "Y"))
+			{
+				flag = (StringUtils.equalsIgnoreCase(fulfilmentType, zodeFulflmntcode)) ? true : false;
+			}
+			else
+			{
+				flag = true;
+
+				LOG.debug("Executing code for real time set as False");
+
+				if (null != sellerInformationData && StringUtils.equalsIgnoreCase(sellerInformationData.getFullfillment(), "TSHIP")
+						&& !StringUtils.equalsIgnoreCase(fulfilmentType, zodeFulflmntcode))
+				{
+					LOG.debug("TSHIP but no TSHIP charges configured in Zone Delivery");
+					flag = false;
+				}
+			}
+		}
+
+		return flag;
+	}
 
 	/**
 	 * @description: It is responsible to find possible delivery mode
@@ -757,14 +899,18 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		{
 
 			final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
+			final String selectedUssid = entry.getSelectedUssid();
 			deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
 
 			for (final PinCodeResponseData pincodeRes : omsDeliveryResponse)
 			{
-				if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
-						&& pincodeRes.getIsServicable() != null
-						&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
-						&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+				//				if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
+				//						&& pincodeRes.getIsServicable() != null
+				//						&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
+				//						&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+				if (StringUtils.isNotEmpty(selectedUssid) && pincodeRes.getUssid() != null && pincodeRes.getIsServicable() != null
+						&& selectedUssid.equalsIgnoreCase(pincodeRes.getUssid()) && pincodeRes.getIsServicable().equalsIgnoreCase("Y")
+						&& !entry.isGiveAway())
 				{
 
 					for (final DeliveryDetailsData deliveryData : pincodeRes.getValidDeliveryModes())
@@ -792,7 +938,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							//}
 
 							final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
-									deliveryMode, MarketplacecommerceservicesConstants.INR, pincodeRes.getUssid());
+									deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
 
 							if (deliveryModel != null && deliveryModel.getValue() != null && deliveryModel.getDeliveryMode() != null)
 							{
@@ -826,7 +972,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					deliveryModeData.setCode(marketplaceDeliveryModeData.getCode());
 					deliveryModeData.setDescription(marketplaceDeliveryModeData.getDescription());
 					deliveryModeData.setName(marketplaceDeliveryModeData.getName());
-					deliveryModeData.setSellerArticleSKU(entry.getSelectedSellerInformation().getUssid());
+					deliveryModeData.setSellerArticleSKU(entry.getSelectedUssid());
 					deliveryModeData.setDeliveryCost(marketplaceDeliveryModeData.getDeliveryCost());
 					deliveryModeDataList.add(deliveryModeData);
 				}
@@ -847,19 +993,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc : used to fetch delivery mode description details TISEE-950
 	 * 
-
+	 * 
+	 * 
 	 * @param ussId
 	 * 
-
+	 * 
+	 * 
 	 * @param deliveryMode
 	 * 
-
+	 * 
+	 * 
 	 * @param startTime
 	 * 
-
+	 * 
+	 * 
 	 * @param endTime
 	 * 
-
+	 * 
+	 * 
 	 * @return String
 	 */
 
@@ -1055,14 +1206,12 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					/*
 					 * if (null != cartModel.getEntries() && !cartModel.getEntries().isEmpty()) { for (final
 					 * AbstractOrderEntryModel entry : cartModel.getEntries()) {
-					 * 
-
+					 *
 					 * if (null != entry.getSelectedUSSID() && !entry.getSelectedUSSID().isEmpty() && null !=
 					 * entryWishlist.getUssid() && !entryWishlist.getUssid().isEmpty() &&
 					 * entry.getSelectedUSSID().equalsIgnoreCase(entryWishlist.getUssid())) {
 					 * productExistInCartList.add(entryWishlist); } }
-					 * 
-
+					 *
 					 * }
 					 */
 					if (null != cartData.getEntries() && !cartData.getEntries().isEmpty())
@@ -1286,14 +1435,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc checking wishlist entry is valid or not , delisted , end date , online from TISEE-5185
-	 * 
-
+	 *
 	 * @param wishlistEntryModel
-	 * 
-
+	 *
 	 * @return boolean
-	 * 
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -1340,14 +1486,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 * 
-
+	 *
 	 * @param sortedWishListMap
-	 * 
-
+	 *
 	 * @return List<PincodeServiceData>
-	 * 
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestData(
@@ -1385,7 +1528,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							wishlist2EntryModel.getUssid());
 
-					if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+					if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 					{
 						richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 						fullfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes() != null ? richAttributeModel.get(0)
@@ -1399,21 +1542,23 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 					final List<MplZoneDeliveryModeValueModel> deliveryModes = getMplDeliveryCostService().getDeliveryModesAndCost(
 							MarketplacecommerceservicesConstants.INR, wishlist2EntryModel.getUssid());
-					if (null != deliveryModes && !deliveryModes.isEmpty())
+					if (CollectionUtils.isNotEmpty(deliveryModes))
 					{
 						for (final MplZoneDeliveryModeValueModel deliveryEntry : deliveryModes)
 						{
 
-							if ((null != richAttributeModel.get(0).getHomeDelivery()
+							if ((CollectionUtils.isNotEmpty(richAttributeModel) && null != richAttributeModel.get(0).getHomeDelivery()
 									&& richAttributeModel.get(0).getHomeDelivery().equals(HomeDeliveryEnum.YES) && StringUtils
 										.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 												MarketplacecommerceservicesConstants.HOME_DELIVERY))
-									|| (null != richAttributeModel.get(0).getExpressDelivery()
+									|| (CollectionUtils.isNotEmpty(richAttributeModel)
+											&& null != richAttributeModel.get(0).getExpressDelivery()
 											&& richAttributeModel.get(0).getExpressDelivery().equals(ExpressDeliveryEnum.YES) && StringUtils
 												.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 														MarketplacecommerceservicesConstants.EXPRESS_DELIVERY))
 
-									|| (null != richAttributeModel.get(0).getClickAndCollect()
+									|| (CollectionUtils.isNotEmpty(richAttributeModel)
+											&& null != richAttributeModel.get(0).getClickAndCollect()
 											&& richAttributeModel.get(0).getClickAndCollect().equals(ClickAndCollectEnum.YES) && StringUtils
 												.equalsIgnoreCase(deliveryEntry.getDeliveryMode().getCode(),
 														MarketplacecommerceservicesConstants.CLICK_COLLECT)))
@@ -1433,7 +1578,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					//TISPRD-3072 ends
 
 					pincodeServiceData.setFullFillmentType(fullfillmentType.toUpperCase());
-					if (richAttributeModel.get(0).getShippingModes() != null
+					if (CollectionUtils.isNotEmpty(richAttributeModel) && richAttributeModel.get(0).getShippingModes() != null
 							&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 					{
 						pincodeServiceData.setTransportMode(MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0)
@@ -1446,7 +1591,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					pincodeServiceData.setSellerId(sellerInfo.getSellerID());
 					pincodeServiceData.setUssid(wishlist2EntryModel.getUssid());
 
-					if (null != richAttributeModel.get(0).getPaymentModes()
+					if (CollectionUtils.isNotEmpty(richAttributeModel)
+							&& null != richAttributeModel.get(0).getPaymentModes()
 							&& ((PaymentModesEnum.valueOf("COD")).toString().equalsIgnoreCase(
 									richAttributeModel.get(0).getPaymentModes().getCode()) || (PaymentModesEnum.valueOf("BOTH"))
 									.toString().equalsIgnoreCase(richAttributeModel.get(0).getPaymentModes().getCode())))
@@ -1478,14 +1624,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @Desc creating pin code service data for pincode serviceability for wishlist
-	 * 
-
+	 *
 	 * @param sortedWishListMap
-	 * 
-
+	 *
 	 * @return List<PincodeServiceData>
-	 * 
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<PincodeServiceData> fetchWishlistPincodeRequestDataMobile(final Wishlist2EntryModel wishlist2EntryModel,
@@ -1516,7 +1659,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 					wishlist2EntryModel.getUssid());
 
-			if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
+			if (sellerInfoModel != null && CollectionUtils.isNotEmpty(sellerInfoModel.getRichAttribute()))
 			{
 				richAttributeModel = (List<RichAttributeModel>) sellerInfoModel.getRichAttribute();
 				fullfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes() != null ? richAttributeModel.get(0)
@@ -1529,7 +1672,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			final List<MplZoneDeliveryModeValueModel> deliveryModes = getMplDeliveryCostService().getDeliveryModesAndCost(
 					MarketplacecommerceservicesConstants.INR, wishlist2EntryModel.getUssid());
-			if (null != deliveryModes && !deliveryModes.isEmpty())
+			if (CollectionUtils.isNotEmpty(deliveryModes))
 			{
 				for (final MplZoneDeliveryModeValueModel deliveryEntry : deliveryModes)
 				{
@@ -1545,7 +1688,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 				}
 			}
 			pincodeServiceData.setFullFillmentType(fullfillmentType.toUpperCase());
-			if (richAttributeModel.get(0).getShippingModes() != null
+			if (CollectionUtils.isNotEmpty(richAttributeModel) && richAttributeModel.get(0).getShippingModes() != null
 					&& richAttributeModel.get(0).getShippingModes().getCode() != null)
 			{
 				pincodeServiceData.setTransportMode(MplCodeMasterUtility.getglobalCode(richAttributeModel.get(0).getShippingModes()
@@ -1558,7 +1701,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			pincodeServiceData.setSellerId(sellerInfo.getSellerID());
 			pincodeServiceData.setUssid(wishlist2EntryModel.getUssid());
 
-			if (null != richAttributeModel.get(0).getPaymentModes()
+			if (CollectionUtils.isNotEmpty(richAttributeModel)
+					&& null != richAttributeModel.get(0).getPaymentModes()
 					&& ((PaymentModesEnum.valueOf("COD")).toString().equalsIgnoreCase(
 							richAttributeModel.get(0).getPaymentModes().getCode()) || (PaymentModesEnum.valueOf("BOTH")).toString()
 							.equalsIgnoreCase(richAttributeModel.get(0).getPaymentModes().getCode())))
@@ -1912,8 +2056,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * CurrencyModel(); currency.setIsocode(MarketplacecommerceservicesConstants.INR);
 	 * currency.setSymbol(cartModel.getCurrency().getSymbol()); formattedPriceData =
 	 * getPriceDataFactory().create(PriceDataType.BUY, new BigDecimal(price.doubleValue()), currency);
-	 * 
-
+	 *
 	 * } return formattedPriceData; }
 	 */
 
@@ -2468,13 +2611,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	}
 
 	/**
-
+	 * 
 	 * @Desc fetching reservation details
 	 *
-
-
-
-
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param pincode
 	 *
 	 * @throws EtailNonBusinessExceptions
@@ -2518,14 +2661,17 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								try
 								{
 									//  INC144316545 START 
-							   		if(null != salesApplication && salesApplication.equals(SalesApplication.MOBILE)){
-							   			   if(null!=item.getFulfillmentType()){
-							   			   	    if(MarketplacecommerceservicesConstants.TSHIP.equalsIgnoreCase(item.getFulfillmentType())){
-							   			   	   	 entry.setCurrDelCharge(Double.valueOf(0.0));
-							   			   	    }
-							   			   }
-							   		}
-							      	//  INC144316545 END
+									if (null != salesApplication && salesApplication.equals(SalesApplication.MOBILE))
+									{
+										if (null != item.getFulfillmentType())
+										{
+											if (MarketplacecommerceservicesConstants.TSHIP.equalsIgnoreCase(item.getFulfillmentType()))
+											{
+												entry.setCurrDelCharge(Double.valueOf(0.0));
+											}
+										}
+									}
+									//  INC144316545 END
 
 									final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 											entry.getSelectedUSSID());
@@ -2635,13 +2781,23 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 			{
 				try
 				{
+
+					//added for jewellery
+					final InventoryReservListRequest reqestData = getInventoryReservationService().convertDatatoWsdto(
+							cartSoftReservationDatalist, abstractOrderData.getGuid(), pincode, requestType);
+					inventoryReservListResponse = getInventoryReservationService().reserveInventoryAtCheckout(reqestData);
+					if (CollectionUtils.isNotEmpty(reqestData.getJewelleryItem()))
+					{
+						updateCart(reqestData, inventoryReservListResponse, abstractOrderModel);
+					}
+					//end
+					//commented for CAR:127
 					/*
 					 * inventoryReservListResponse =
 					 * getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
 					 * abstractOrderModel.getGuid(), pincode, requestType);
 					 */
-					inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
-							abstractOrderData.getGuid(), pincode, requestType);
+					//inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,abstractOrderData.getGuid(), pincode, requestType);
 				}
 				catch (final ClientEtailNonBusinessExceptions e)
 				{
@@ -2730,11 +2886,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							//throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
 						}
 					}
-
-
-
-
-
+					else
+					{
+						LOG.debug("Inventory reservationData for Mobile from OMS is empty###### =" + cartGuid);
+						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9047);
+					}
 				}
 				else
 				{
@@ -2757,13 +2913,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc converting response to dto
 	 * 
-
+	 * 
 	 * @param inventoryReservListResponse
 	 * 
-
+	 * 
 	 * @return List<ReservationItemWsDTO>
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private List<ReservationItemWsDTO> converter(final InventoryReservListResponse inventoryReservListResponse)
@@ -2801,13 +2957,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc populating data for soft reservation
 	 * 
-
+	 * 
 	 * @param cartData
 	 * 
-
+	 * 
 	 * @return List<CartSoftReservationData>
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	public List<CartSoftReservationData> populateDataForSoftReservation(final CartData cartData) throws EtailNonBusinessExceptions
@@ -2881,16 +3037,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @DESC MobileWS105 : get top two wish list for mobile web service
 	 * 
-
+	 * 
 	 * @param userModel
 	 * 
-
+	 * 
 	 * @param pincode
 	 * 
-
+	 * 
 	 * @return GetWishListWsDTO
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -2963,11 +3119,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	/*
 	 * @param sortedWishListMap
-	 * 
-
+	 *
 	 * @return GetWishListWsDTO
-	 * 
-
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListWsDTO getWishListWebserviceDetails(final Map<String, List<Wishlist2EntryModel>> sortedWishListMap,
@@ -3207,16 +3361,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc For webservice
 	 * 
-
+	 * 
 	 * @param buyBoxModelList
 	 * 
-
+	 * 
 	 * @param getWishListProductWsObj
 	 * 
-
+	 * 
 	 * @return GetWishListProductWsDTO
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3246,13 +3400,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc For webservice
 	 * 
-
+	 * 
 	 * @param wishlist2EntryModel
 	 * 
-
+	 * 
 	 * @param getWishListProductWsObj
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private GetWishListProductWsDTO setWSWishlistEligibleDeliveryMode(final Wishlist2EntryModel wishlist2EntryModel,
@@ -3385,16 +3539,15 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @DESC TISST-6994,TISST-6990 adding to cart COD eligible or not with Pincode serviceabilty and sship product
 	 * 
-
 	 * @param deliveryModeMap
 	 * 
-
+	 * 
 	 * @param pincodeResponseData
 	 * 
-
+	 * 
 	 * @return boolean
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3717,13 +3870,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc fetching state details for a state name
 	 * 
-
+	 * 
 	 * @param stateName
 	 * 
-
+	 * 
 	 * @return StateModel
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 
@@ -3749,10 +3902,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc to generate Sub order id
 	 * 
-
+	 * 
 	 * @return String
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3764,10 +3917,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc to generate Order Line id and transaction id
 	 * 
-
+	 * 
 	 * @return String
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3780,10 +3933,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc to generate Order Id
 	 * 
-
+	 * 
 	 * @return String
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -3796,16 +3949,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @Desc used for inventory soft reservation from Commerce Checkout and Payment
 	 * 
-
+	 * 
 	 * @param requestType
 	 * 
-
+	 * 
 	 * @param abstractOrderModel
 	 * 
-
+	 * 
 	 * @return boolean
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	//commented for CAR:127
@@ -3865,14 +4018,24 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			try
 			{
+
+				final InventoryReservListRequest reqestData = getInventoryReservationService().convertDatatoWsdto(
+						cartSoftReservationDatalist, abstractOrderData.getGuid(), defaultPinCodeId, requestType);
+				inventoryReservListResponse = getInventoryReservationService().reserveInventoryAtCheckout(reqestData);
+				if (CollectionUtils.isNotEmpty(reqestData.getJewelleryItem()))
+				{
+					updateCart(reqestData, inventoryReservListResponse, abstractOrderModel);
+				}
+
+
+
 				//commented for CAR:127
 				/*
 				 * inventoryReservListResponse =
 				 * getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
 				 * abstractOrderModel.getGuid(), defaultPinCodeId, requestType);
 				 */
-				inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,
-						abstractOrderData.getGuid(), defaultPinCodeId, requestType);
+				//inventoryReservListResponse = getInventoryReservationService().convertDatatoWsdto(cartSoftReservationDatalist,abstractOrderData.getGuid(), defaultPinCodeId, requestType);
 			}
 			catch (final ClientEtailNonBusinessExceptions e)
 			{
@@ -3907,6 +4070,11 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						inventoryReservListResponse = callInventoryReservationCommerce(cartSoftForCncReservationDatalist);
 					}
 				}
+			}
+			catch (final JAXBException e)
+			{
+				// YTODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			LOG.debug("inventoryReservListResponse " + inventoryReservListResponse);
@@ -4016,10 +4184,10 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @description:Populate data to CartSoftReservationData
 	 * 
-
+	 * 
 	 * @return:List<CartSoftReservationData>
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	//commented for CAR:127
@@ -4058,6 +4226,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 					if (tupleData != null && tupleData.getFirst() != null && tupleData.getFirst().equals(Boolean.TRUE))
 					{
 						final List<CartSoftReservationData> dataList = (List<CartSoftReservationData>) tupleData.getSecond();
+
 						if (CollectionUtils.isNotEmpty(dataList))
 						{
 							cartSoftReservationDataList.addAll(dataList);
@@ -4072,6 +4241,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 						String deliveryModeGlobalCode = null;
 						String deliveryMode = null;
 						cartSoftReservationData = new CartSoftReservationData();
+						String fulfillmentType = null;
+
 						//commented for CAR:127
 						/*
 						 * if (entryModel.getSelectedUSSID() != null) {
@@ -4260,8 +4431,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							 * final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 							 * entryModel.getSelectedUSSID());
 							 */
-							final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
+							SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
 									entryModel.getSelectedUssid());
+
+							if (null == sellerInfoModel)
+							{
+								final List<JewelleryInformationModel> jeweleryInfo = jewelleryService.getJewelleryInfoByUssid(entryModel
+										.getSelectedUssid());
+								if (CollectionUtils.isNotEmpty(jeweleryInfo))
+								{
+									sellerInfoModel = getMplSellerInformationService().getSellerDetail(jeweleryInfo.get(0).getPCMUSSID());
+								}
+
+							}
 							List<RichAttributeModel> richAttributeModel = null;
 							if (sellerInfoModel != null && sellerInfoModel.getRichAttribute() != null)
 							{
@@ -4270,7 +4452,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 										&& richAttributeModel.get(0).getDeliveryFulfillModes() != null
 										&& richAttributeModel.get(0).getDeliveryFulfillModes().getCode() != null)
 								{
-									final String fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
+									fulfillmentType = richAttributeModel.get(0).getDeliveryFulfillModes().getCode();
 									cartSoftReservationData.setFulfillmentType(fulfillmentType.toUpperCase());
 									//commented for CAR:127
 									//if (entryModel.getGiveAway().booleanValue())
@@ -4295,6 +4477,25 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								}
 							}
 						}
+
+						//if (null != entryModel.getProduct()
+						//		&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(entryModel.getProduct()
+						//				.getProductCategoryType()))
+
+						if (null != entryModel.getProduct()
+								&& MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(entryModel.getProduct()
+										.getRootCategory())) // added for fine jewellery merge.
+						{
+
+							cartSoftReservationData.setJewellery(true);
+
+						}
+
+						if (null != entryModel.getProduct())
+						{
+							cartSoftReservationData.setListingId(entryModel.getProduct().getCode());
+						}
+
 						if (null != inventoryRequest && null != salesApplication && salesApplication.equals(SalesApplication.MOBILE))
 						{
 							for (final InventoryReservRequestWsDTO item : inventoryRequest.getItem())
@@ -4353,6 +4554,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 							}
 						}
 						cartSoftReservationDataList.add(cartSoftReservationData);
+						populataJewelleryWeight(deliveryModeGlobalCode, cartSoftReservationDataList, fulfillmentType,
+								entryModel.getSelectedUssid(), cartSoftReservationData.getListingId());
 					}
 				}
 			}
@@ -4365,8 +4568,43 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 		getSessionService().setAttribute(MarketplacecommerceservicesConstants.RESERVATION_DATA_TO_SESSION,
 				cartSoftReservationDataList);
-
 		return cartSoftReservationDataList;
+	}
+
+	/**
+	 * @param jeweleryInfo
+	 * @param deliveryModeGlobalCode
+	 * @param cartSoftReservationDataList
+	 * @param fulfillmentType
+	 * @param ListingId
+	 * @param string
+	 */
+	private void populataJewelleryWeight(final String deliveryModeGlobalCode,
+			final List<CartSoftReservationData> cartSoftReservationDataList, final String fulfillmentType, final String ussid,
+			final String ListingId)
+	{
+		// YTODO Auto-generated method stub
+		final List<BuyBoxModel> jewelleryUssid = jewelleryService.getAllWeightVariant(ussid);
+		if (CollectionUtils.isNotEmpty(jewelleryUssid))
+		{
+			final List<BuyBoxModel> jewelleryUssidModifieableList = new ArrayList(jewelleryUssid);
+			jewelleryUssidModifieableList.sort(Comparator.comparing(BuyBoxModel::getPrice).reversed());
+			for (final BuyBoxModel jewelInfoUssid : jewelleryUssidModifieableList)
+			{
+				if (null != ussid && !jewelInfoUssid.getSellerArticleSKU().equals(ussid))
+				{
+					final CartSoftReservationData jewellery = new CartSoftReservationData();
+					jewellery.setDeliveryMode(deliveryModeGlobalCode);
+					jewellery.setFulfillmentType(fulfillmentType.toUpperCase());
+					jewellery.setJewellery(true);
+					jewellery.setListingId(ListingId);
+					jewellery.setUSSID(jewelInfoUssid.getSellerArticleSKU());
+					jewellery.setQuantity(Integer.valueOf(1));
+					cartSoftReservationDataList.add(jewellery);
+				}
+			}
+		}
+
 	}
 
 	/**
@@ -4375,7 +4613,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	 * @author TECHOUTS
 	 * @param cartSoftReservationData
 	 * @param abstractOrderData
-
+	 * 
 	 * @return void
 	 */
 	//commented for CAR:127
@@ -4607,13 +4845,13 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
 	 * 
-
+	 * 
 	 * @param abstractOrderModel
 	 * 
-
+	 * 
 	 * @param entryModel
 	 * 
-
+	 * 
 	 * @return Tuple2<?, ?>
 	 */
 	//commented for CAR:127
@@ -4673,16 +4911,16 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @DESC : Inventory list to be generated for TISPRD-2758
 	 * 
-
+	 * 
 	 * @param abstractOrderModel
 	 * 
-
+	 * 
 	 * @param entryModel
 	 * 
-
+	 * 
 	 * @param productPromoCode
 	 * 
-
+	 * 
 	 * @return List<CartSoftReservationData>
 	 */
 	//commented for CAR:127
@@ -5448,19 +5686,19 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	/*
 	 * @desc use to save freebie delivery mode
 	 * 
-
+	 * 
 	 * @param cartModel
 	 * 
-
+	 * 
 	 * @param freebieModelMap
 	 * 
-
+	 * 
 	 * @param freebieParentQtyMap
 	 * 
-
+	 * 
 	 * @return void
 	 * 
-
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -5768,6 +6006,14 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 								validDeliveryDetailsData.add(deliveryDetailsData);
 							}
 						}
+						if (StringUtils.isNotEmpty(orderEntryData.getExchangeApplied())
+								&& StringUtils.isNotEmpty(pinCodeResponseData.getExchangePincode()))
+						{
+
+							pinCodeResponseData.setExchangeServiceable(exchangeService.isBackwardServiceble(pinCodeResponseData
+									.getExchangePincode()));
+
+						}
 					}
 					pinCodeResponseData.setValidDeliveryModes(validDeliveryDetailsData);
 				}
@@ -5777,8 +6023,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 			/*
 			 * @Override public PinCodeResponseData getVlaidDeliveryModesByInventory(final PinCodeResponseData
-			 * pinCodeResponseData) throws EtailNonBusinessExceptions {
-			 * LOG.info("Inside getVlaidDeliveryModesByInventory Method"); try { final List<DeliveryDetailsData>
+			 * pinCodeResponseData) throws EtailNonBusinessExceptions { LOG.info(
+			 * "Inside getVlaidDeliveryModesByInventory Method"); try { final List<DeliveryDetailsData>
 			 * validDeliveryDetailsData = new ArrayList<DeliveryDetailsData>(); final CartModel cartModel =
 			 * cartService.getSessionCart(); // Start Modified as part of performance fix if (null != pinCodeResponseData
 			 * && CollectionUtils.isNotEmpty(pinCodeResponseData.getValidDeliveryModes()) && cartModel != null &&
@@ -5874,6 +6120,253 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		}
 	}
 
+	//added for jewellery
+	/**
+	 * @param reqdata
+	 * @param response
+	 * @param cart
+	 */
+	private void updateCart(final InventoryReservListRequest request, final InventoryReservListResponse response,
+			final AbstractOrderModel cart)
+	{
+		// YTODO Auto-generated method stub
+		for (final InventoryReservJewelleryRequest item : request.getJewelleryItem())
+		{
+			for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
+			{
+				if (null != cartEntry.getProduct() && cartEntry.getProduct().getCode().equalsIgnoreCase(item.getListingID()))
+				{
+					for (final InventoryReservResponse responseItem : response.getItem())
+					{
+						if (!cartEntry.getSelectedUSSID().equalsIgnoreCase(responseItem.getUSSID()))
+						{
+							for (final InventoryReservRequest requestItem : item.getItem())
+							{
+								if (requestItem.getUSSID().equalsIgnoreCase(responseItem.getUSSID()))
+								{
+
+									replaceItemForJewellery(cart, responseItem.getUSSID(), cartEntry);
+									sessionService.setAttribute("replacedUssid", Boolean.TRUE);
+								}
+
+
+							}
+
+
+
+						}
+
+
+
+					}
+
+
+				}
+
+			}
+		}
+
+	}
+
+	//added for jewellery
+
+	/**
+	 * @param cart
+	 * @param ussid
+	 * @param cartEntry
+	 */
+	private void replaceItemForJewellery(final AbstractOrderModel cart, final String ussid, final AbstractOrderEntryModel cartEntry)
+	{
+		// YTODO Auto-generated method stub
+
+
+		try
+		{
+			final CommerceCartParameter removeParameter = new CommerceCartParameter();
+			removeParameter.setEnableHooks(true);
+			removeParameter.setCart((CartModel) cart);
+			removeParameter.setEntryNumber(cartEntry.getEntryNumber().longValue());
+			removeParameter.setQuantity(0);
+			final CommerceCartModification modification = mplCommerceCartService.updateQuantityForCartEntry(removeParameter);
+			if (MarketplacecclientservicesConstants.OMS_INVENTORY_RESV_SUCCESS.equalsIgnoreCase(modification.getStatusCode()))
+			{
+				final CommerceCartParameter addParameter = new CommerceCartParameter();
+				addParameter.setCreateNewEntry(true);
+				addParameter.setEnableHooks(true);
+				addParameter.setCart((CartModel) cart);
+				addParameter.setProduct(cartEntry.getProduct());
+				addParameter.setQuantity(1);
+				addParameter.setUnit(cartEntry.getProduct().getUnit());
+				addParameter.setUssid(ussid);
+
+				//mplCommerceCartService.addToCartWithUSSID(addParameter);
+				getMplDefaultCommerceAddToCartStrategyImpl().addToCart(addParameter); //
+
+				//	setDeliveryModeForJewellery(ussid, cartEntry);
+			}
+		}
+		catch (final CommerceCartModificationException e)
+		{
+			LOG.error("CommerceCartModificationException" + " " + e);
+		}
+
+
+	}
+
+
+	/**
+	 * @param cart
+	 * @param ussid
+	 */
+	private void setDeliveryModeForJewellery(final String ussid, final AbstractOrderEntryModel cartEntryOld)
+	{
+		// YTODO Auto-generated method stub
+		final CartModel cart = cartService.getSessionCart();
+		if (cart.getEntries() != null)
+		{
+			for (final AbstractOrderEntryModel cartEntry : cart.getEntries())
+			{
+				if (cartEntry.getSelectedUSSID().equalsIgnoreCase(ussid))
+				{
+					if (null == cartEntry.getMplDeliveryMode())
+					{
+						cartEntry.setMplDeliveryMode(cartEntryOld.getMplDeliveryMode());
+						getModelService().save(cartEntry);
+						break;
+					}
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * @description: It is responsible to find selected delivery mode map
+	 * @param cartData
+	 * @return Map<String, List<String>>
+	 * @throws CMSItemNotFoundException
+	 */
+	@Override
+	public Map<String, MarketplaceDeliveryModeData> getDeliveryModeMapForReviewOrder(final CartData cartData,
+			final List<PinCodeResponseData> omsDeliveryResponse) throws CMSItemNotFoundException
+	{
+
+		final Map<String, MarketplaceDeliveryModeData> deliveryModeDataMap = new HashMap<String, MarketplaceDeliveryModeData>();
+		//List<MarketplaceDeliveryModeData> deliveryModeDataList = null;
+		if (cartData != null)
+		{
+			for (final OrderEntryData entry : cartData.getEntries())
+			{
+				final SellerInformationData sellerInformationData = entry.getSelectedSellerInformation();
+				final String selectedUssid = entry.getSelectedUssid();
+				//deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
+
+				for (final PinCodeResponseData pincodeRes : omsDeliveryResponse)
+				{
+					//					if (sellerInformationData != null && sellerInformationData.getUssid() != null && pincodeRes.getUssid() != null
+					//							&& pincodeRes.getIsServicable() != null
+					//							&& sellerInformationData.getUssid().equalsIgnoreCase(pincodeRes.getUssid())
+					//							&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+					if (StringUtils.isNotEmpty(selectedUssid) && pincodeRes.getUssid() != null && pincodeRes.getIsServicable() != null
+							&& selectedUssid.equalsIgnoreCase(pincodeRes.getUssid())
+							&& pincodeRes.getIsServicable().equalsIgnoreCase("Y") && !entry.isGiveAway())
+
+					{
+
+						for (final DeliveryDetailsData deliveryData : pincodeRes.getValidDeliveryModes())
+						{
+							//TISUTO 63
+							if (deliveryData.getInventory() != null)
+							{
+								String deliveryMode = MarketplacecommerceservicesConstants.EMPTYSPACE;
+								String deliveryModeFromResponseData = MarketplacecommerceservicesConstants.EMPTYSPACE;
+								final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
+
+								if (deliveryData.getType() != null
+										&& deliveryData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.HD))
+								{
+									deliveryModeFromResponseData = MarketplacecommerceservicesConstants.HOME_DELIVERY;
+								}
+								else if (deliveryData.getType() != null
+										&& deliveryData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.ED))
+								{
+									deliveryModeFromResponseData = MarketplacecommerceservicesConstants.EXPRESS_DELIVERY;
+								}
+								else if (deliveryData.getType() != null
+										&& deliveryData.getType().equalsIgnoreCase(MarketplacecommerceservicesConstants.CnC))
+								{
+									deliveryModeFromResponseData = MarketplacecommerceservicesConstants.CLICK_COLLECT;
+								}
+								deliveryMode = entry.getMplDeliveryMode().getCode();
+								if (deliveryData.getType() != null && deliveryModeFromResponseData.equalsIgnoreCase(deliveryMode))
+								{
+
+									final MplZoneDeliveryModeValueModel deliveryModel = getMplDeliveryCostService().getDeliveryCost(
+											deliveryMode, MarketplacecommerceservicesConstants.INR, sellerInformationData.getUssid());
+
+									if (deliveryModel != null && deliveryModel.getValue() != null
+											&& deliveryModel.getDeliveryMode() != null)
+									{
+										PriceData priceData = null;
+										if (entry.isIsBOGOapplied()
+												&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
+														.getDeliveryFulfillModes().getCode(), sellerInformationData))
+										{
+											priceData = formPriceData(
+													Double.valueOf(deliveryModel.getValue().doubleValue()
+															* entry.getQualifyingCount().intValue()), cartData);
+										}
+										else if (isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
+												.getDeliveryFulfillModes().getCode(), sellerInformationData))
+										{
+											priceData = formPriceData(
+													Double.valueOf(deliveryModel.getValue().doubleValue() * entry.getQuantity().doubleValue()),
+													cartData);
+										}
+										else
+										{
+
+											priceData = formPriceData(Double.valueOf(0.0), cartData);
+										}
+										deliveryModeData.setCode(checkDataValue(deliveryModel.getDeliveryMode().getCode()));
+										//deliveryModeData.setDescription(checkDataValue(deliveryModel.getDeliveryMode().getDescription()));
+
+
+										final String startValue = deliveryModel.getDeliveryMode().getStart() != null ? ""
+												+ deliveryModel.getDeliveryMode().getStart().intValue()
+												: MarketplacecommerceservicesConstants.DEFAULT_START_TIME;
+
+										final String endValue = deliveryModel.getDeliveryMode().getEnd() != null ? ""
+												+ deliveryModel.getDeliveryMode().getEnd().intValue()
+												: MarketplacecommerceservicesConstants.DEFAULT_END_TIME;
+
+
+										deliveryModeData.setDescription(getDeliveryModeDescription(pincodeRes.getUssid(), deliveryModel
+												.getDeliveryMode().getCode(), startValue, endValue));
+
+										deliveryModeData.setName(checkDataValue(deliveryModel.getDeliveryMode().getName()));
+										deliveryModeData.setSellerArticleSKU(checkDataValue(pincodeRes.getUssid()));
+										deliveryModeData.setDeliveryCost(priceData);
+										//New Code Added for TPR-579 : TSHIP Shipping Charges
+										if (null != deliveryModel.getDeliveryFulfillModes()
+												&& StringUtils.isNotEmpty(deliveryModel.getDeliveryFulfillModes().getCode()))
+										{
+											deliveryModeData.setFulfillmentType(deliveryModel.getDeliveryFulfillModes().getCode());
+										}
+									}
+									//deliveryModeDataList.add(deliveryModeData);
+									deliveryModeDataMap.put(entry.getEntryNumber().toString(), deliveryModeData);
+								}//End of delivery data If
+							}
+						}
+					}
+
+				}
+			}
+		}
+
+		return deliveryModeDataMap;
+	}
 
 	/**
 	 * This method recalculates order
@@ -5934,10 +6427,200 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		this.orderConverter = orderConverter;
 	}
-//TPR-5666 samsung cart changes
+
+	//TPR-5346 STARTS
+	/*
+	 * This method will check the max quantity configured for the product at cart level
+	 */
+	@Override
+	public long checkMaxLimit(final String code, CartModel cartModel)
+	{
+		// YTODO Auto-generated method stub
+		long checkMaxLimList = 0L;
+		if (cartModel == null)
+		{
+			cartModel = getCartService().getSessionCart();
+		}
+		if (CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		{
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if (StringUtils.equalsIgnoreCase(code, entry.getProduct().getCode()))
+				{
+					//checkMaxLimList.add(entry.getProduct().getCode());
+					checkMaxLimList += entry.getQuantity().longValue();
+				}
+			}
+		}
+		return checkMaxLimList;
+	}
+
+	/*
+	 * This method will check the max quantity configured for the product and update the cart accordingly
+	 */
+	@Override
+	public boolean checkMaxLimitUpdate(final long entryNumber, final long quantityToBeUpdated)
+	{
+		// YTODO Auto-generated method stub
+		final int maximum_configured_quantiy = siteConfigService.getInt(
+				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+		final CartModel cartModel = getCartService().getSessionCart();
+		//final ArrayList<String> checkMaxLimList = new ArrayList<String>();
+		long checkMaxLimList = 0L;
+		long cartmaxcount = 0L;
+		final AbstractOrderEntryModel entryToUpdate = getEntryForNumberUpdate(cartModel, (int) entryNumber);
+		if (entryToUpdate != null)
+		{
+			checkMaxLimList = checkMaxLimit(entryToUpdate.getProduct().getCode(), null);
+		}
+		if (entryToUpdate.getProduct().getMaxOrderQuantity() != null
+				&& entryToUpdate.getProduct().getMaxOrderQuantity().intValue() > 0
+				&& entryToUpdate.getProduct().getMaxOrderQuantity().intValue() < maximum_configured_quantiy)
+		{
+			//			if (quantityToBeUpdated < checkMaxLimList)
+			cartmaxcount = quantityToBeUpdated + checkMaxLimList;
+
+			if (checkMaxLimList <= entryToUpdate.getProduct().getMaxOrderQuantity().intValue()
+					&& quantityToBeUpdated <= entryToUpdate.getProduct().getMaxOrderQuantity().intValue()
+					&& cartmaxcount <= entryToUpdate.getProduct().getMaxOrderQuantity().intValue())
+			{
+				//return true;
+				entryToUpdate.setMaxCountReached(true);
+				getModelService().save(entryToUpdate);
+				//	getModelService().save(cartModel);
+				return true;
+			}
+			if (checkMaxLimList <= entryToUpdate.getProduct().getMaxOrderQuantity().intValue()
+					&& quantityToBeUpdated <= entryToUpdate.getProduct().getMaxOrderQuantity().intValue()
+					&& entryToUpdate.getQuantity().longValue() >= quantityToBeUpdated)
+			{
+				entryToUpdate.setMaxCountReached(true);
+				getModelService().save(entryToUpdate);
+				//getModelService().save(cartModel);
+				return true;
+			}
+			if (checkMaxLimList == 0)
+			{
+				//return true;
+				entryToUpdate.setMaxCountReached(true);
+				getModelService().save(entryToUpdate);
+				//getModelService().save(cartModel);
+				return true;
+			}
+			if (checkMaxLimList >= entryToUpdate.getProduct().getMaxOrderQuantity().intValue())
+			{
+				//return false;
+				entryToUpdate.setMaxCountReached(false);
+				getModelService().save(entryToUpdate);
+				//	getModelService().save(cartModel);
+				return false;
+			}
+		}
+		//	getModelService().save(entryToUpdate);
+		return true;
+	}
+
+	/**
+	 * Will get the entry number which will be updated
+	 *
+	 * @param cartModel
+	 * @param entryNumber
+	 * @return AbstractOrderEntryModel
+	 */
+	protected AbstractOrderEntryModel getEntryForNumberUpdate(final CartModel cartModel, final int entryNumber)
+	{
+		if (cartModel.getEntries() != null && CollectionUtils.isNotEmpty(cartModel.getEntries()))
+		{
+			final Integer requestedEntryNumber = Integer.valueOf(entryNumber);
+			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			{
+				if ((entry != null) && (requestedEntryNumber.equals(entry.getEntryNumber())))
+				{
+					return entry;
+				}
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * This method will check the max quantity configured for the product at cart level
+	 */
+	@Override
+	public boolean checkMaxLimitCheckout(final CartModel serviceCart)
+	{
+		// YTODO Auto-generated method stub
+		final int maximum_configured_quantiy = siteConfigService.getInt(
+				MarketplacecommerceservicesConstants.MAXIMUM_CONFIGURED_QUANTIY, 0);
+		long quantity = 0L;
+		int maxCount = 0;
+		int count = 0;
+
+		final Map<AbstractOrderEntryModel, String> productList = new HashMap<>();
+		final Set<String> uniqueProductList = new HashSet<>();
+
+		for (final AbstractOrderEntryModel entry : serviceCart.getEntries())
+		{
+			if (entry.getProduct().getMaxOrderQuantity() != null)
+			{
+				if (entry.getProduct().getMaxOrderQuantity().intValue() <= maximum_configured_quantiy
+						&& entry.getProduct().getMaxOrderQuantity().intValue() > 0)
+				{
+					if (entry.getProduct().getMaxOrderQuantity().intValue() < entry.getQuantity().intValue())
+					{
+						return false;
+					}
+				}
+			}
+			productList.put(entry, entry.getProduct().getCode());
+			uniqueProductList.add(entry.getProduct().getCode());
+		}
+
+		if (productList.size() != uniqueProductList.size())
+		{
+			final Multimap<String, AbstractOrderEntryModel> multiMap = HashMultimap.create();
+			for (final Entry<AbstractOrderEntryModel, String> entry : productList.entrySet())
+			{
+				multiMap.put(entry.getValue(), entry.getKey());
+			}
+
+			for (final Entry<String, Collection<AbstractOrderEntryModel>> entry : multiMap.asMap().entrySet())
+			{
+				for (final AbstractOrderEntryModel entries : entry.getValue())
+				{
+					quantity += entries.getQuantity().longValue();
+					count++;
+					if (count == entry.getValue().size())
+					{
+
+						maxCount = (entries.getProduct().getMaxOrderQuantity() != null ? entries.getProduct().getMaxOrderQuantity()
+								.intValue() : 0);
+						break;
+					}
+				}
+				if (maxCount > 0 && maxCount < maximum_configured_quantiy)
+				{
+					if (quantity == 0)
+					{
+						return true;
+					}
+					if (quantity >= maxCount)
+					{
+						return false;
+					}
+				}
+
+			}
+		}
+		return true;
+	}
+
+	//TPR-5346 ENDS
+
+	//TPR-5666 samsung cart changes
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#fetchCartUsingGuid(java.lang.String)
 	 */
 	@Override
@@ -5945,5 +6628,95 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 	{
 		return mplCommerceCartDao.getCartByGuid(cartGuid);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplCommerceCartService#addItemToCartWithExchange(java.lang.String
+	 * , de.hybris.platform.core.model.order.CartModel, de.hybris.platform.core.model.product.ProductModel, long,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean addItemToCartWithExchange(final String cartId, final CartModel cartModel, final ProductModel productModel,
+			final long quantity, final String ussid, final String exchangeParam) throws InvalidCartException,
+			CommerceCartModificationException
+	{
+
+		boolean success = false;
+		//commented for car project implementation CAR:62
+		//CartData cartData = null;
+		final CommerceCartParameter parameter = new CommerceCartParameter();
+		CartModificationData cartModificationData = null;
+		String sellerUssId = null;
+
+		if (cartModel != null)
+		{
+			// Check if product code is valid or not
+			if (productModel == null)
+			{
+				throw new CommerceCartModificationException("Invalid ussid " + ussid);
+			}
+
+			//check if quantity is valid or not
+			if (quantity <= 0)
+			{
+				throw new CommerceCartModificationException("Invalid quantity " + quantity);
+			}
+			//commented for car project implementation CAR:62
+			//cartData = getCartConverter().convert(cartModel);
+
+			// Check if ussid is null then fetch ussid
+			if (ussid == null || ussid.isEmpty())
+			{
+				sellerUssId = getSellerUssid(cartModel);
+			}
+			else
+			{
+				sellerUssId = ussid;
+			}
+			//			if (isMaxQuantityAlreadyAdded(cartData, productCode))
+			//commented for car project implementation CAR:62: added cartModel instead of carData as param in isMaxQuantityAlreadyAdded
+			//if (isMaxQuantityAlreadyAdded(cartData, sellerUssId, quantity, productModel.getCode()))
+			if (isMaxQuantityAlreadyAdded(cartModel, sellerUssId, quantity, productModel.getCode()))
+			{
+				parameter.setEnableHooks(true);
+				parameter.setCart(cartModel);
+				parameter.setProduct(productModel);
+				parameter.setQuantity(quantity);
+				parameter.setUnit(productModel.getUnit());
+				parameter.setCreateNewEntry(false);
+				parameter.setUssid(sellerUssId);
+
+				//final CommerceCartModification modification = addToCartWithUSSID(parameter);
+				final String cartGuid = cartModel.getGuid();
+				final String paramList[] = exchangeParam.split(Pattern.quote("|"));
+				String tempId = "";
+				if (paramList.length == 5 && StringUtils.isNotEmpty(cartGuid))
+				{
+					tempId = exchangeService.getExchangeID(paramList[0], paramList[1], paramList[2], paramList[3], paramList[4],
+							cartGuid, productModel.getCode(), ussid);
+				}
+
+				parameter.setExchangeParam(tempId);
+				final CommerceCartModification modification = getMplDefaultCommerceAddToCartStrategyImpl().addToCart(parameter);
+				cartModificationData = getCartModificationConverter().convert(modification);
+
+				success = (cartModificationData != null) ? true : false;
+			}
+			else
+			{
+				throw new CommerceCartModificationException("Maximum quantity reached ");
+			}
+		}
+		else
+		{
+			throw new CommerceCartModificationException(" Required Paramteres are null or empty");
+		}
+
+		return success;
+	}
+
+
 
 }

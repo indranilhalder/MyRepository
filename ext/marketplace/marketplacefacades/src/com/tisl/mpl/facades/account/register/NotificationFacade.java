@@ -41,10 +41,17 @@ public interface NotificationFacade
 
 	/**
 	 * TPR-629
-	 * 
+	 *
 	 * @param orderModel
 	 */
 	void sendOrderConfirmationNotification(OrderModel orderModel);
+
+	/**
+	 * pan card
+	 *
+	 * @param orderModel
+	 */
+	//void sendPancardRejectNotification(OrderModel orderModel);
 
 
 }

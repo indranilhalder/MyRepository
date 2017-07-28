@@ -94,7 +94,7 @@
 			<map merge="true">
 				<entry key="previous" value-ref="REDIRECT_TO_CART"/>
 				<entry key="current" value-ref="REDIRECT_MULTI_STEP_CHECKOUTLOGGIN"/>
-				<entry key="next" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<entry key="next" value-ref="REDIRECT_TO_SINGLE_STEP"/>
 			</map>
 		</property>
 		<property name="progressBarId" value="checkoutloggin"/>
@@ -405,6 +405,10 @@
 
 	<bean id="REDIRECT_TO_DELIVERY_METHOD" class="java.lang.String">
 		<constructor-arg value="redirect:/checkout/multi/delivery-method/choose"/>
+	</bean>
+	
+	<bean id="REDIRECT_TO_SINGLE_STEP" class="java.lang.String">
+		<constructor-arg value="redirect:/checkout/single"/>
 	</bean>
 
 	<bean id="REDIRECT_TO_PICKUP_LOCATION" class="java.lang.String">

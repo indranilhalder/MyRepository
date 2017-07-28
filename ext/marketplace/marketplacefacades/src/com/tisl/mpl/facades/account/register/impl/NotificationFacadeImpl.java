@@ -4,6 +4,7 @@
 package com.tisl.mpl.facades.account.register.impl;
 
 import de.hybris.platform.core.model.order.OrderModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.dto.converter.Converter;
@@ -246,10 +247,12 @@ public class NotificationFacadeImpl implements NotificationFacade
 			final String shopperStatus) throws EtailNonBusinessExceptions
 	{
 
-		final UserModel user = extendedUserService.getUserForOriginalUid(emailId);
+		//final UserModel user = extendedUserService.getUserForOriginalUid(emailId);
+		final CustomerModel user = extendedUserService.getUserForOriginalUid(emailId);
 		if (user != null)
 		{
-			markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
+			//markNotificationRead(user.getUid(), orderNo, consignmentNo, shopperStatus);
+			markNotificationRead(user.getOriginalUid(), orderNo, consignmentNo, shopperStatus);
 		}
 	}
 
@@ -314,7 +317,9 @@ public class NotificationFacadeImpl implements NotificationFacade
 		try
 		{
 			getNotificationService().triggerEmailAndSmsOnOrderConfirmation(orderModel, trackOrderUrl);
+
 		}
+
 		catch (final JAXBException e)
 		{
 			LOG.error("Error while sending notifications from job>>>>>>", e);
@@ -328,4 +333,35 @@ public class NotificationFacadeImpl implements NotificationFacade
 	}
 
 
+
+
+	/**
+	 * This method sends opan card reject email tpr-3765
+	 *
+	 * @param orderModel
+	 */
+
+
+	//	@Override
+	//	public void sendPancardRejectNotification(final OrderModel orderModel)
+	//	{
+	//		//Email and sms for Payment_Successful
+	//		final String trackOrderUrl = getConfigurationService().getConfiguration().getString(
+	//				MarketplacecommerceservicesConstants.SMS_ORDER_TRACK_URL)
+	//				+ orderModel.getCode();
+	//		try
+	//		{
+	//			getNotificationService().triggerEmailAndSmsOnPancardReject(orderModel, trackOrderUrl);
+	//		}
+	//		catch (final JAXBException e)
+	//		{
+	//			LOG.error("Error while sending notifications from job>>>>>>", e);
+	//			throw new EtailNonBusinessExceptions(e);
+	//		}
+	//		catch (final Exception ex)
+	//		{
+	//			LOG.error("Error while sending notifications>>>>>>", ex);
+	//			throw new EtailNonBusinessExceptions(ex);
+	//		}
+	//	}
 }

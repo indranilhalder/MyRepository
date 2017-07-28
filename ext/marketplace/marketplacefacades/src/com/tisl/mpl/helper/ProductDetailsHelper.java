@@ -16,6 +16,7 @@ import de.hybris.platform.commercefacades.product.ProductFacade;
 import de.hybris.platform.commercefacades.product.ProductOption;
 import de.hybris.platform.commercefacades.product.data.ClassificationData;
 import de.hybris.platform.commercefacades.product.data.FeatureData;
+import de.hybris.platform.commercefacades.product.data.FeatureValueData;
 import de.hybris.platform.commercefacades.product.data.ImageData;
 import de.hybris.platform.commercefacades.product.data.ImageDataType;
 import de.hybris.platform.commercefacades.product.data.PincodeServiceData;
@@ -45,8 +46,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -64,6 +68,7 @@ import com.tisl.mpl.constants.MplGlobalCodeConstants;
 import com.tisl.mpl.core.enums.ClickAndCollectEnum;
 import com.tisl.mpl.core.enums.ExpressDeliveryEnum;
 import com.tisl.mpl.core.enums.HomeDeliveryEnum;
+import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.ConfigureImagesCountComponentModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
@@ -93,6 +98,7 @@ public class ProductDetailsHelper
 	 */
 	private static final String N = "N";
 	public static final String EMPTY = "";
+	private final static String COMMACONSTANT = ",";
 	/**
 	 *
 	 */
@@ -106,7 +112,18 @@ public class ProductDetailsHelper
 	/*
 	 * Added by I313024 for TATAUNISTORE-15 END :::
 	 */
-
+	private static final String CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME = "classification.attributes.travelandluggage.groupname";
+	/*
+	 * Added for travel and Luggage
+	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME = "classification.attributes.finejewellery.groupname";
+	/*
+	 * Added for Fine Jewellery
+	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME = "classification.attributes.fashionjewellery.groupname";
+	/*
+	 * Added for Fashion Jewellery
+	 */
 	/**
 	 *
 	 */
@@ -202,8 +219,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 * 
-	 * 
+	 *
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -251,81 +268,83 @@ public class ProductDetailsHelper
 	public List<MarketplaceDeliveryModeData> getDeliveryModeLlist(final RichAttributeModel rich, final String skuid)
 	{
 		final List<MarketplaceDeliveryModeData> deliveryModeDataList = new ArrayList<MarketplaceDeliveryModeData>();
+		final StringBuilder deliveryMode = new StringBuilder();
+
 		if (null != rich.getHomeDelivery() && rich.getHomeDelivery().equals(HomeDeliveryEnum.YES))
 		{
-			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.HD, MarketplaceFacadesConstants.INR, skuid);
-			//Populating Delivery Modes for each USSID
-			if (mplZoneDeliveryModeValueModel != null)
+			deliveryMode.append(MarketplaceFacadesConstants.HD);
+			deliveryMode.append(COMMACONSTANT);//sonar fix
+		}
+
+		if (null != rich.getClickAndCollect() && rich.getClickAndCollect().equals(ClickAndCollectEnum.YES))
+		{
+			deliveryMode.append(MarketplaceFacadesConstants.C_C);
+			deliveryMode.append(COMMACONSTANT);//sonar fix
+		}
+
+		if (null != rich.getExpressDelivery() && rich.getExpressDelivery().equals(ExpressDeliveryEnum.YES))
+		{
+			deliveryMode.append(MarketplaceFacadesConstants.EXPRESS);
+		}
+
+
+		if (deliveryMode.length() > 0)
+		{
+			final List<MplZoneDeliveryModeValueModel> mplZoneDeliveryModeValueModelList = getMplDeliveryCostService()
+					.getDeliveryCost(deliveryMode, MarketplaceFacadesConstants.INR, skuid);
+
+			if (CollectionUtils.isNotEmpty(mplZoneDeliveryModeValueModelList))
 			{
-				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
-				deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-				deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-				deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-				deliveryModeData.setSellerArticleSKU(skuid);
-				if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
+				final List<MarketplaceDeliveryModeData> dataList = getDeliveryData(mplZoneDeliveryModeValueModelList, rich);
+				if (CollectionUtils.isNotEmpty(dataList))
 				{
-					final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
-					deliveryModeData.setDeliveryCost(priceForTshipItem);
+					deliveryModeDataList.addAll(dataList);
 				}
-				else
-				{
-					deliveryModeData.setDeliveryCost(priceData);
-				}
-				deliveryModeDataList.add(deliveryModeData);
 			}
 
 		}
-		if (null != rich.getClickAndCollect() && rich.getClickAndCollect().equals(ClickAndCollectEnum.YES))
-		{
-			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.C_C, MarketplaceFacadesConstants.INR, skuid);
-			if (mplZoneDeliveryModeValueModel != null)
-			{
-				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
-				deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-				deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-				deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-				deliveryModeData.setSellerArticleSKU(mplZoneDeliveryModeValueModel.getSellerArticleSKU());
-				if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
-				{
-					final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
-					deliveryModeData.setDeliveryCost(priceForTshipItem);
-				}
-				else
-				{
-					deliveryModeData.setDeliveryCost(priceData);
-				}
-				deliveryModeDataList.add(deliveryModeData);
-			}
-		}
-		if (null != rich.getExpressDelivery() && rich.getExpressDelivery().equals(ExpressDeliveryEnum.YES))
-		{
-			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
-			final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = getMplDeliveryCostService().getDeliveryCost(
-					MarketplaceFacadesConstants.EXPRESS, MarketplaceFacadesConstants.INR, skuid);
-			if (mplZoneDeliveryModeValueModel != null)
-			{
-				final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
-				deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
-				deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
-				deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
-				deliveryModeData.setSellerArticleSKU(skuid);
-				if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
-				{
-					final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
-					deliveryModeData.setDeliveryCost(priceForTshipItem);
-				}
-				else
-				{
-					deliveryModeData.setDeliveryCost(priceData);
-				}
-				deliveryModeDataList.add(deliveryModeData);
-			}
-		}
+
 		return deliveryModeDataList;
+	}
+
+	/**
+	 * Populate Data Class for Delivery Information
+	 *
+	 * CAR-266
+	 *
+	 * @param mplZoneDeliveryModeValueModelList
+	 * @param rich
+	 * @return dataList
+	 */
+	private List<MarketplaceDeliveryModeData> getDeliveryData(
+			final List<MplZoneDeliveryModeValueModel> mplZoneDeliveryModeValueModelList, final RichAttributeModel rich)
+	{
+		final List<MarketplaceDeliveryModeData> dataList = new ArrayList<MarketplaceDeliveryModeData>();
+
+		for (final MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel : mplZoneDeliveryModeValueModelList)
+		{
+			final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData();
+			final PriceData priceData = formPriceData(mplZoneDeliveryModeValueModel.getValue());
+
+			deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
+			deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
+			deliveryModeData.setName(mplZoneDeliveryModeValueModel.getDeliveryMode().getName());
+			deliveryModeData.setSellerArticleSKU(mplZoneDeliveryModeValueModel.getSellerArticleSKU());
+
+			if (rich.getDeliveryFulfillModes().getCode().equalsIgnoreCase("tship"))
+			{
+				final PriceData priceForTshipItem = formPriceData(Double.valueOf(0.0));
+				deliveryModeData.setDeliveryCost(priceForTshipItem);
+			}
+			else
+			{
+				deliveryModeData.setDeliveryCost(priceData);
+			}
+
+			dataList.add(deliveryModeData);
+		}
+
+		return dataList;
 	}
 
 	public void groupGlassificationData(final ProductData productData)
@@ -340,8 +359,10 @@ public class ProductDetailsHelper
 				if (classicationDataList.isEmpty()
 						&& !(classData.getName().equalsIgnoreCase(N_A))
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-								.contains(classData.getName()) || configurationService.getConfiguration()
-								.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
+								.contains(classData.getName())
+								|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+										.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME).contains(classData.getName())))
 				{
 					classicationDataList.add(classData);
 				}
@@ -359,16 +380,266 @@ public class ProductDetailsHelper
 					{
 						if (!(classData.getName().equalsIgnoreCase(N_A))
 								&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_ELECTRONICS_GROUPNAME)
-										.contains(classData.getName()) || configurationService.getConfiguration()
-										.getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME).contains(classData.getName())))
+										.contains(classData.getName())
+										|| configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_WATCHES_GROUPNAME)
+												.contains(classData.getName()) || configurationService.getConfiguration()
+										.getString(CLASSIFICATION_ATTRIBUTES_TRAVELANDLUGGAGE_GROUPNAME).contains(classData.getName())))
 						{
 							classicationDataList.add(classData);
 						}
 					}
 				}
 			}
+			productData.setClassifications(classicationDataList);
 		}
-		productData.setClassifications(classicationDataList);
+	}
+
+
+	public void groupGlassificationDataForFineDeatils(final ProductData productData)
+	{
+		final LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
+		String classificationName = null;
+		if (null != productData.getClassifications())
+		{
+			for (final ClassificationData classData : productData.getClassifications())
+			{
+				if (featureDetails.isEmpty()
+						&& !(classData.getName().equalsIgnoreCase(N_A))
+						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
+								.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME).contains(classData.getName())))
+				{
+					final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
+					if (classData.getName().equalsIgnoreCase("Stone Details"))
+					{
+						String StoneclassificationName = null;
+						for (final FeatureData feature : classDataName)
+						{
+							final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+							final String featurename = feature.getName();
+							final Set keys = featureDetails.keySet();
+							final Iterator itr = keys.iterator();
+							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+							final List<String> featureValueList = new ArrayList<String>();
+							for (final FeatureValueData featurevalue : featuredvalue)
+							{
+								if (featurename.equalsIgnoreCase("Stone"))
+								{
+									StoneclassificationName = featurevalue.getValue() + " Details";
+								}
+								else
+								{
+									if (!featurename.equalsIgnoreCase("Total Count") && keys.contains(StoneclassificationName))
+									{
+
+										final String featureV = featurevalue.getValue();
+
+										while (itr.hasNext())
+										{
+											final String key = (String) itr.next();
+											if (key != null && key.equalsIgnoreCase(StoneclassificationName))
+											{
+												if (featureDetails.get(StoneclassificationName).keySet() != null
+														&& featureDetails.get(StoneclassificationName).keySet().contains(featurename))
+												{
+													for (final String featureMapKey : featureDetails.get(StoneclassificationName).keySet())
+													{
+														if (featureMapKey.equalsIgnoreCase(featurename))
+														{
+															featureDetails.get(StoneclassificationName).get(featureMapKey).add(featureV);
+														}
+													}
+												}
+												else
+												{
+													featureValueList.add(featureV);
+													featureMap.put(featurename, featureValueList);
+												}
+											}
+										}
+									}
+								}
+							}
+							final Iterator fItr = keys.iterator();
+							if (keys.contains(StoneclassificationName))
+							{
+								while (fItr.hasNext())
+								{
+									final String key = (String) fItr.next();
+									if (key != null && key.equalsIgnoreCase(StoneclassificationName))
+									{
+										featureDetails.get(StoneclassificationName).putAll(featureMap);
+									}
+								}
+							}
+							else
+							{
+								if (StoneclassificationName != null)
+								{
+									featureDetails.put(StoneclassificationName, featureMap);
+								}
+							}
+						}
+					}
+					else
+					{
+						final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+						classificationName = classData.getName();
+						for (final FeatureData feature : classDataName)
+						{
+							final String featurename = feature.getName();
+							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+							final List<String> featureValueList = new ArrayList<String>();
+							for (final FeatureValueData featurevalue : featuredvalue)
+							{
+								final String featureV = featurevalue.getValue();
+								featureValueList.add(featureV);
+								featureMap.put(featurename, featureValueList);
+
+							}
+						}
+						featureDetails.put(classificationName, featureMap);
+
+					}
+
+				}
+				else
+				{
+					if (!(classData.getName().equalsIgnoreCase(N_A))
+							&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
+									.contains(classData.getName()) || configurationService.getConfiguration()
+									.getString(CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME).contains(classData.getName())))
+					{
+						final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
+						if (classData.getName().equalsIgnoreCase("Stone Details"))
+						{
+							String StoneclassificationName = null;
+							for (final FeatureData feature : classDataName)
+							{
+								final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+								final String featurename = feature.getName();
+								final Set keys = featureDetails.keySet();
+								final Iterator itr = keys.iterator();
+								final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+								final List<String> featureValueList = new ArrayList<String>();
+								for (final FeatureValueData featurevalue : featuredvalue)
+								{
+									if (featurename.equalsIgnoreCase("Stone"))
+									{
+										StoneclassificationName = featurevalue.getValue() + " Details";
+									}
+									else
+									{
+										if (!featurename.equalsIgnoreCase("Total Count") && keys.contains(StoneclassificationName))
+										{
+
+											final String featureV = featurevalue.getValue();
+
+											while (itr.hasNext())
+											{
+												final String key = (String) itr.next();
+												if (key != null && key.equalsIgnoreCase(StoneclassificationName))
+												{
+													if (featureDetails.get(StoneclassificationName).keySet() != null
+															&& featureDetails.get(StoneclassificationName).keySet().contains(featurename))
+													{
+														for (final String featureMapKey : featureDetails.get(StoneclassificationName).keySet())
+														{
+															if (featureMapKey.equalsIgnoreCase(featurename))
+															{
+																featureDetails.get(StoneclassificationName).get(featureMapKey).add(featureV);
+															}
+														}
+													}
+													else
+													{
+														featureValueList.add(featureV);
+														featureMap.put(featurename, featureValueList);
+													}
+												}
+											}
+										}
+									}
+								}
+								final Iterator fItr = keys.iterator();
+								if (keys.contains(StoneclassificationName))
+								{
+									while (fItr.hasNext())
+									{
+										final String key = (String) fItr.next();
+										if (key != null && key.equalsIgnoreCase(StoneclassificationName))
+										{
+											featureDetails.get(StoneclassificationName).putAll(featureMap);
+										}
+									}
+								}
+								else
+								{
+									if (StoneclassificationName != null)
+									{
+										featureDetails.put(StoneclassificationName, featureMap);
+									}
+								}
+							}
+						}
+						else
+						{
+							final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
+							classificationName = classData.getName();
+							for (final FeatureData feature : classDataName)
+							{
+								final String featurename = feature.getName();
+								final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
+								final List<String> featureValueList = new ArrayList<String>();
+								for (final FeatureValueData featurevalue : featuredvalue)
+								{
+									final String featureV = featurevalue.getValue();
+									final Set keys = featureMap.keySet();
+									final Iterator itr = keys.iterator();
+									String key = null;
+									if (keys.contains(featurename))
+									{
+										while (itr.hasNext())
+										{
+											key = (String) itr.next();
+											if (key != null && key.equalsIgnoreCase(featurename))
+											{
+												featureMap.get(featurename).add(featureV);
+											}
+										}
+									}
+									else
+									{
+										featureValueList.add(featureV);
+										featureMap.put(featurename, featureValueList);
+									}
+								}
+							}
+							final Set keys = featureDetails.keySet();
+							final Iterator itr = keys.iterator();
+							if (keys.contains(classificationName))
+							{
+								while (itr.hasNext())
+								{
+									final String key = (String) itr.next();
+									if (key != null && key.equalsIgnoreCase(classificationName))
+									{
+										featureDetails.get(classificationName).putAll(featureMap);
+									}
+								}
+							}
+							else
+							{
+
+								featureDetails.put(classificationName, featureMap);
+							}
+						}
+
+					}
+				}
+			}
+			productData.setFineJewelleryDeatils(featureDetails);
+		}
 	}
 
 	public ClassificationData getExistingClasificationData(final String name, final List<ClassificationData> classificationList)
@@ -383,6 +654,26 @@ public class ProductDetailsHelper
 		}
 		return classificationData;
 	}
+
+
+	//public ClassificationData getExistingClasificationDataForFine(final String name,
+	//			final Map<String, Map<String, List<String>>> classificationList)
+	//	{
+	//	ClassificationData classificationData = null;
+	//	for (final ClassificationData cData : classificationList)
+	//	{
+	//		if (cData.getName().equals(name))
+	//		{
+	//			classificationData = cData;
+	//		}
+	//	}
+	//	return classificationData;
+	//	}
+
+
+
+
+
 
 	public PriceData formPriceData(final Double price)
 	{
@@ -956,15 +1247,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 * 
+	 *
 	 * @param deliveryCode
-	 * 
+	 *
 	 * @param currencyIsoCode
-	 * 
+	 *
 	 * @param sellerArticleSKU
-	 * 
+	 *
 	 * @return MplZoneDeliveryModeValueModel
-	 * 
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,
@@ -1199,10 +1490,10 @@ public class ProductDetailsHelper
 		Wishlist2Model lastCreatedWishlist = null;
 		final UserModel user = userService.getCurrentUser();
 		//String ussid = null;
-//		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
-//		{
-//			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
-//		}
+		//		if (getBuyBoxService().getBuyboxPricesForSearch(productCode) != null)
+		//		{
+		//			ussid = getBuyBoxService().getBuyboxPricesForSearch(productCode).get(0).getSellerArticleSKU();
+		//		}
 		try
 		{
 			lastCreatedWishlist = wishlistFacade.getSingleWishlist(user);
@@ -1351,5 +1642,20 @@ public class ProductDetailsHelper
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
 		return removeFromWl;
+	}
+
+	/**
+	 * @param ussID
+	 * @return
+	 */
+	public BuyBoxModel buyboxPriceForJewelleryWithVariant(final String ussID)
+	{
+		BuyBoxModel buyBox = null;
+		final List<BuyBoxModel> buyBoxList = getBuyBoxService().buyboxPriceForJewelleryWithVariant(ussID);
+		if (CollectionUtils.isNotEmpty(buyBoxList))
+		{
+			buyBox = buyBoxList.get(0);
+		}
+		return buyBox;
 	}
 }

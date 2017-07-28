@@ -13,7 +13,7 @@
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 <%@ taglib prefix="format" tagdir="/WEB-INF/tags/shared/format"%>
 <%@ taglib prefix="order" tagdir="/WEB-INF/tags/responsive/order"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!-- <div class="orderList"> -->
 <%-- 	<div class="headline"><spring:theme code="basket.page.title.yourDeliveryItems" text="Your Delivery Items"/></div>
  --%>
@@ -23,11 +23,10 @@
 
 <c:set var="bogoGiveaway" value="false" />
 <c:forEach items="${orderGroup.entries}" var="entry">
-	<c:if 
-	test="${ entry.isBOGOapplied || entry.giveAway}">
-	<c:set var="bogoGiveaway" value="true" />	
+	<c:if test="${ entry.isBOGOapplied || entry.giveAway}">
+		<c:set var="bogoGiveaway" value="true" />
 	</c:if>
-</c:forEach> 
+</c:forEach>
 
 <c:forEach items="${orderGroup.entries}" var="entry">
 
@@ -78,32 +77,43 @@
 					<c:if test="${not empty parentOrder.appliedProductPromotions}">
 						<ul>
 							<c:set var="displayed" value="false" />
-						
+
 							<c:forEach items="${parentOrder.appliedProductPromotions}"
 								var="promotion">
-								
+
 								<c:forEach items="${promotion.consumedEntries}"
 									var="consumedEntry">
-									
-						 <c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
-									
-									<c:if 
-										test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
-										<c:set var="displayed" value="true" />
-										<li><span>${promotion.description}</span></li>
-									</c:if>
 
-									<c:if
-										test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
-										<c:set var="displayed" value="true" />
-										<li><span>${promotion.description}</span></li>
+									<c:if test="${consumedEntry.ussid eq entry.selectedUssid}">
+
+										<c:if
+											test="${not displayed &&  entry.isBOGOapplied || entry.giveAway && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+											<c:set var="displayed" value="true" />
+											<li><span>${promotion.description}</span></li>
+										</c:if>
+
+										<c:if
+											test="${not displayed &&  not bogoGiveaway && not empty entry.productPromoCode && ((consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.0' ||(consumedEntry.adjustedUnitPrice - entry.amountAfterAllDisc.doubleValue) == '0.00')}">
+											<c:set var="displayed" value="true" />
+											<li><span>${promotion.description}</span></li>
+										</c:if>
 									</c:if>
-									</c:if>
-									</c:forEach>
-						</c:forEach>
+								</c:forEach>
+							</c:forEach>
 						</ul>
 					</c:if>
+					<ul>
+					<!-- TPR 1083 Start -->
+						  <c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange">
 
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
+			              		<!-- TPR 1083 End -->
+</ul>
 					<p class="item-info">
 						<span> <spring:theme code="order.qty" /> <ycommerce:testId
 								code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>
@@ -117,15 +127,43 @@
 						</span>
 					</p>
 					<ul class="item-details">
-					 <%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
-					</ul> 
-					</div>
-					  
-					</li>
+						<%-- <li><b><spring:theme code="seller.order.code"/>&nbsp;${order.code}</b></li> --%>
+					</ul>
+				</div>
+
+			</li>
 			<li class="shipping">
 				<ul class="${entry.mplDeliveryMode.name}">
-					<li class="deliver-type">${entry.mplDeliveryMode.name}</li>
-					<li class="deliver"><c:choose>
+					 <!-- UF-306 starts -->
+					 <%-- <li class="deliver-type">${entry.mplDeliveryMode.name}</li> --%>
+					 <c:choose>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'home-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.home.delivery"/></li>
+				   		</c:when>
+				   		<c:when test="${entry.mplDeliveryMode.code eq 'express-delivery'}">
+				   			<li class="deliver-type"><spring:theme code="text.express.shipping"/></li>
+				   		</c:when>
+				   		<c:otherwise>
+				   			<li class="deliver-type"><spring:theme code="text.clickandcollect.delivery"/></li>
+				   		</c:otherwise>
+				   	</c:choose>
+				   	<!-- UF-306 ends -->	
+					<li class="deliver">
+					<c:choose>
+					<%-- PRDI-378 starts here --%>
+					<c:when
+						test="${entry.isBOGOapplied eq true}">
+						<%-- <del>
+															 <format:price priceData=0.0
+																displayFreeForZero="true" />
+														</del> --%>
+						<%-- <span> <format:price priceData=0.0 displayFreeForZero="true"/></span> --%>
+						<span>Free</span>
+					</c:when>
+					<%-- PRDI-378 ends here --%>
+					<c:otherwise>
+					
+					<c:choose>
 							<c:when test="${entry.currDelCharge.value=='0.0'}">
 								<%-- <spring:theme code="order.free"  /> --%>
 								<ycommerce:testId code="orderDetails_productTotalPrice_label">
@@ -136,7 +174,10 @@
 							<c:otherwise>
 								<format:price priceData="${entry.currDelCharge}" />
 							</c:otherwise>
-						</c:choose>
+						</c:choose>						
+						</c:otherwise>
+				</c:choose>
+						
 						<%--${entry.eddDateBetWeen}  ${entry.mplDeliveryMode.description}--%>
 					<%-- <li class="deliver deliver-desc"> Your Order Will Be Delivered Between ${entry.eddDateBetWeen}</li> --%>
 					</li>  

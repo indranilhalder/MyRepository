@@ -35,6 +35,16 @@ import com.tisl.mpl.core.model.ProductFreebieDetailModel;
 { "PMD", "deprecation" })
 public final class MarketplacecommerceservicesConstants extends GeneratedMarketplacecommerceservicesConstants
 {
+
+	//TPR-4461 starts here
+	//public static final String RESTRICTIONBANK = "restrictionbank".intern();
+	//public static final String RESTRICTIONPAYMENTMODE = "restrictionpaymentmode".intern();
+	//public final static String BANKFROMBINFORPROMOTION = "bankForPromotion".intern();
+	//public static final String PAYMENTMODECOUPON = "paymentmodecoupon".intern();
+	// TPR-4464 ends here
+	//TPR-4461 STARTS HERE
+	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
+
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
 	public static final String EMPTYSPACE = "";
@@ -63,6 +73,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String CART_DELISTED_STATUS = "Cart Delisted Status :";
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
+	public static final String FINEJEWELLERY = "FineJewellery";
 
 	//SONAR FIX
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
@@ -495,9 +506,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String INVALIDDATE = "Please Enter valid date in formate dd/mm/yyyy";
 	public static final String OTPVALIDITY = "VALID";
 	public static final String OTPEXPIRY = "EXPIRED";
-	public static final String OTP_SENT = "OTP sent";
+	public static final String OTP_SENT = "Your OTP has been sent."; //UF-277
 	public static final String OTP_EXPIRY_MESSAGE = "Sorry! This OTP has expired.";
-	public static final String INVALID_OTP = "Are you sure that's the right OTP?";
+	public static final String INVALID_OTP = "The OTP entered is incorrect or invalid."; //UF-277
 	public static final String OTPERROR = "Please Enter valid OTP";
 	public static final String MOBILE_REGEX = "^[0-9]*$";
 	public static final String NAME_REGEX = "[a-zA-Z]+\\.?";
@@ -585,7 +596,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While weï¿½ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
@@ -729,11 +740,23 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String QUANTITY_INVALID_BINDING_MESSAGE_KEY = "basket.error.quantity.invalid.binding";
 	public static final String MINIMUM_CONFIGURED_QUANTIY = "mpl.cart.minimumConfiguredQuantity.lineItem";
 	public static final String MAXIMUM_CONFIGURED_QUANTIY = "mpl.cart.maximumConfiguredQuantity.lineItem";
+
+
+	//added for jewellery
+
+	public static final String MINIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.minimumConfiguredQuantityForJewellery.lineItem";
+	public static final String MAXIMUM_CONFIGURED_QUANTIY_JEWELLERY = "mpl.cart.maximumConfiguredQuantityForJewellery.lineItem";
+
+	//end
+
 	public static final String CROSSED_MAX_LIMIT = "crossedMaxLimit";
 	public static final String REACHED_MAX_LIMIT = "reachedMaxLimit";
 	public static final String WISHLIST_DISPLAY_QUANTITY = "mpl.cart.wishlist.display.quantity";
 	public static final String OUT_OF_INVENTORY = "outofinventory";
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
+	public static final String MAX_QUANTITY_ADDED_FOR_EXCHANGE = "maxqtyexchange";
+	//TISJEWST-10
+	public static final String MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY = "maxqtyaddedforfinejewellery";
 
 	//For SellerPriority Report
 	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified Swllwe ID, Modified Seller Name, Modified Start Date, Modified End Date, Modified Active Flag";
@@ -866,6 +889,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9074 = "B9074";
 	public static final String B9075 = "B9075";
 	public static final String B9076 = "B9076";
+	public static final String B9078 = "B9078"; // TPR-4461
+	public static final String B9079 = "B9079"; // TPR-4461
 
 	public static final String E9040 = "E9040";
 	public static final String E9041 = "E9041";
@@ -930,6 +955,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9700 = "B9700";
 
 	public static final String B9710 = "B9710";
+	public static final String B9110 = "B9110";
 	// Added in R2.3 start
 	// Auto populating pincode details Error Codes   Start
 	public static final String B9351 = "B9351";
@@ -1011,6 +1037,12 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String B9302 = "B9302";
 	public static final String B9303 = "B9303";
 	public static final String B9304 = "B9304";
+
+	//Added for TPR-1083
+	public static final String B9305 = "B9305";
+	public static final String B9306 = "B9306";
+
+	public static final String REVERSE_PINCODE_NOT_SERVICABLE = "Exchange is Not Servicable";
 	//TISPRD-5986  MSH category 404 error handling
 	public static final String E0023 = "E0023";
 
@@ -1443,6 +1475,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String PENDING_VAL = "PENDING";
 
 	public static final String CART_DELISTED_SESSION_ID = "cartItemDelisted";
+	public static final String IS_RESPONSIVE = "isResponsive";
 	public static final String CART_DELISTED_SESSION_MESSAGE = "Sorry! Some of items in your cart is no longer available";
 	public static final String ORDERHISTORY_CREATE_ERROR = "Error while creating orderhistoryentry at ";
 	public static final String BY_DATE = "byDate";
@@ -2063,6 +2096,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RSS = "RSS";
 	public static final String RETURN_TRANSACTON_TYPE_01 = "01";
 	public static final String ADDRESS_NOT_CHANGED = "ADDRESS_NOT_CHANGED";
+
 	public static final String PROMO = "promo";
 	public static final String QUERYSOURCE = "source";
 	public static final String QUERYTARGET = "target";
@@ -2090,7 +2124,17 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String USERPARAM = "user";
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
+
 	public static final String SECONDPRODUCT = "secondProduct";
+
+	//TPR-5346
+
+	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "reachedMaxLimitforproduct";
+
+	public static final String PRECOUNTMSG = "Unfortunately, there is a restriction on the number of";
+	public static final String MIDCOUNTMSG = "you can order. Since you can purchase only ";
+	public static final String LASTCOUNTMSG = "we have modified your shopping bag to reflect this.";
+	public static final String FOUNDCOMPONENT = "Found Component>>>>with id :::";
 
 
 	public static final String AGENT_ID = "agentId";
@@ -2128,4 +2172,25 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//UF-281
+	public static final String B1002 = "B1002";
+
+
+	//For sending pancard details to SP through PI and save data into database for new pancard entry
+	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
+	//TPR-3782
+	public static final String GOLD = "GOLD";
+	public static final String SILVER = "SILVER";
+	public static final String PLATINUM = "PLATINUM";
+	public static final String SOLITAIRE = "SOLITAIRE";
+	public static final String TANISHQ = "Tanishq";
+	public static final String DIAMOND = "DIAMOND";
+	public static final String GEMSTONE = "GEMSTONE";
+	public static final String WASTAGETAX = "WASTAGE TAX";
+	public static final String MAKINGCHARGE = "MAKING CHARGE";
+	//TPR-4134 web service
+	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
+	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";
+	public static final String REV_SEAL_RADIO_NO = "No,I do not have reverse seal";
 }

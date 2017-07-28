@@ -17,6 +17,9 @@ ACC.quickview = {
 		// changes a value in a hidden form field in order
 		// to trigger a buffer update in a screen reader
 		$('#accesibility_refreshScreenReaderBufferField').attr('value', new Date().getTime());
+		$("#showquick").click(function() {
+			$("#showPriceBreakupquick").slideToggle("fast");
+		})
 	},
 	
 
@@ -79,13 +82,17 @@ function quickviewGallery() {
 	$(document).ready(function(){
 		//UF-24 thumbnail image load
 		$('.main-image a img.picZoomer-pic').on('load', function(){
+			console.log("js image is loaded");
 			var mainImageHeight = $(".main-image").find("img.picZoomer-pic").height();
-			console.log("mainImageHeight is " + mainImageHeight);
+			console.log("js mainImageHeight is " + mainImageHeight);
 			var thumbnailImageHeight = (mainImageHeight / 5);
 			$(".imageList ul li img").css("height", thumbnailImageHeight);
+			console.log("js thumbnailImageHeight is " + thumbnailImageHeight);
 		 	$("#previousImage").css("opacity","0.5");
 		 	$("#nextImage").css("opacity","1");
 		 	var listHeight = $(".imageList li").height();
+		 	console.log("js listHeight is " + listHeight);
+		 	console.log("js previousImage length is " + $("#previousImage").length);
 		 	if($("#previousImage").length){
 		 		$(".imageList").css("height",(listHeight*imagePageLimit)+"px");
 		 		$(".productImageGallery").css("height",(listHeight*imagePageLimit+100)+"px");
@@ -129,7 +136,7 @@ function quickviewGallery() {
 
 function removedisabled()
 {
-	    $("#buyNowButton").removeAttr('disabled');
+	    $(".js-add-to-cart-qv").removeAttr('disabled');
 	    $("#addToCartButtonQuick").removeAttr('disabled');
 }
 
@@ -227,7 +234,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					/*TPR-1772 functionality change for non-saleable products*/
 					/*$("#buyNowButtonQuick-wrong").show();*/
 					/*$('#buyNowButton').hide();*/
-					$("#buyNowButton").attr("disabled","disabled");
+					$(".js-add-to-cart-qv").attr("disabled","disabled");
 					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
 					$("#dListedErrorMsg").show();				
@@ -240,7 +247,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					/*TPR-1772 functionality change for non-saleable products*/
 					/*$("#buyNowButtonQuick-wrong").show();*/
 					/*$('#buyNowButton').hide();*/
-					$("#buyNowButton").attr("disabled","disabled");
+					$(".js-add-to-cart-qv").attr("disabled","disabled");
 					/*TPR-1772 functionality change for non-saleable products*/
 					$("#addToCartButtonQuick").hide();
 					$("#dListedErrorMsg").show();				
@@ -258,7 +265,17 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				
 				$("#ussid_quick").val(data['sellerArticleSKU']);
 				stock = data['availablestock'];
-				$("#stock").val(stock);					
+				//INC144316286
+				//$("#stock").val(stock);				
+				if($('#pageType').val() == 'wishlist' || $('#pageType').val() == 'product') 
+				{ 
+					$("#addToCartFormQuick").closest('[id]').find('#stock').val(stock); 
+				} 
+				else { 
+					$("#stock").val(stock);
+				} 
+				
+				
 				var allStockZero = data['allOOStock'];
 				sellerId = data['sellerId'];
 				$("#sellerSelId").val(sellerId); 
@@ -269,23 +286,23 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				//if (allStockZero == 'Y' && data['othersSellersCount']>0) {
 				if (isOOSQuick() && data['othersSellersCount']>0) {
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
+					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 				}else if (isOOSQuick() && data['othersSellersCount']==0){
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
+					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 				}else if (allStockZero == 'Y' && data['othersSellersCount']>0 && $("ul[label=sizes] li").length == 0) { //TPR-465
 					//if( $(".quickViewSelect").html()!="Select") {  //TISPRD-1173
 					$("#addToCartButtonQuick").hide();
-					$('#buyNowButton').hide();
+					$('.js-add-to-cart-qv').hide();
 					$("#outOfStockIdQuick").show();
 					//}					
 				}
 				else if (allStockZero == 'Y' && data['othersSellersCount']==0 && $("ul[label=sizes] li").length == 0){
 					//if($(".quickViewSelect").html()!="Select"){	//TISPRD-1173 TPR-465
 						$("#addToCartButton").hide();
-						$('#buyNowButton').hide();
+						$('.js-add-to-cart-qv').hide();
 						$("#outOfStockIdQuick").show();
 					//}					
 				}
@@ -299,7 +316,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					});
 					
 					$("#addToCartButtonQuick").show();
-					$('#buyNowButton').show();
+					$('.js-add-to-cart-qv').show();
 					$("#outOfStockIdQuick").hide();
 					}				
 				if(oosMicro==true){ //TPR-250 change
@@ -313,6 +330,33 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 				$("#sellerNameIdQuick").html(sellerName);
 				getRichAttributeQuickView(sellerName);
 				
+
+				
+				
+
+				/* PRICE BREAKUP STARTS HERE */
+			/*	
+				$("#showPrice").show();
+				if(data['displayconfigattr'] == "Yes"){
+					$("#showPricequick").show();
+				}else if(data['displayconfigattr'] == "No"){
+					$("#showPricequick").hide();
+				}else{
+					$("#showPricequick").hide();
+				}
+				
+				var priceBreakupForPDP = data['priceBreakup'];
+					$.each(priceBreakupForPDP,function(key,value) {	
+						var pricebreakuplist = "<li><span>"+ key +"</span><strong>"+ value.formattedValue +"</strong></li>";
+							$("#showPriceBreakupquick").append(pricebreakuplist);
+							
+						
+				});
+				*/
+				
+				
+				/* PRICE BREAKUP ENDS HERE */
+
 			},
 			complete: function() {
 				if($('#pageType').val() != "/compare"){
@@ -334,6 +378,7 @@ function setBuyBoxDetails(msiteBuyBoxSeller) // CKD:TPR-250
 					var discountPercentage = savingsOnProduct+"%";
 					quickViewUtag(productCode,sellerId,sellerName,priceMRP,priceMOP,discount,discountPercentage,stock);
 				}
+
 			}
 		});	
 		
@@ -716,6 +761,8 @@ function selectWishlist_quick(i) {
 			}
 
 			else if (data == "" || data == []) {
+			
+		
 				alert("Login 2");
 				loadDefaultWishListName_quick();
 
@@ -767,7 +814,7 @@ function openPop_quick(ussidfromSeller){
 	var requiredUrl = ACC.config.encodedContextPath + "/p"
 			+ "-addToWishListInPDP";
     var sizeSelected=true;
-    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'){
+    if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage'){
     	sizeSelected=false;
     }
 	var dataString = 'wish=' + wishName + '&product=' + productCodePost
@@ -780,7 +827,7 @@ function openPop_quick(ussidfromSeller){
 		},3000);
 	}
 	else {
-			
+	 		
 		$.ajax({
 			contentType : "application/json; charset=utf-8",
 			url : requiredUrl,
@@ -1020,6 +1067,15 @@ $(document).on("click",".quickview .Emi > #EMImodal-content",function(e){
 });
 
 $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
+		 if(!$("#quickViewVariant li ").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='TravelAndLuggage') {
+			// alert("Please select")
+			 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+			 				$("#addToCartFormQuickTitle").show();
+			  				$("#addToCartFormQuickTitle").fadeOut(5000);
+	 	    return false;
+	     }
+	
+		 ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
 	
 	 if(!$("#quickViewVariant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#categoryType").val()!='Electronics' && $("#categoryType").val()!='Watches' && $("#categoryType").val()!='Accessories' ){
 		 $("#addToCartFormQuickTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
@@ -1030,6 +1086,7 @@ $(document).on('click','#buyNowQv .js-add-to-cart-qv',function(event){
  }else{			 
 	ACC.product.sendToCartPageQuick("addToCartFormQuick",true);
 }
+
 });
 /*End of quickview Emi*/
 /*TPR-924*/
@@ -1107,3 +1164,8 @@ function LoadWishLists(ussid, data, productCode) {
 	
 
 }
+$(document).ready(function() {
+	$("#showquick").click(function() {
+		$("#showPriceBreakupquick").slideToggle("fast");
+	});
+});

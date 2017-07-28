@@ -121,6 +121,8 @@ import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
 import com.tisl.mpl.facade.brand.BrandFacade;
 import com.tisl.mpl.facade.netbank.MplNetBankingFacade;
+import com.tisl.mpl.facade.pancard.MplPancardFacade;
+import com.tisl.mpl.facade.product.ExchangeGuideFacade;
 import com.tisl.mpl.facades.account.address.MplAccountAddressFacade;
 import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.product.data.MplCustomerProfileData;
@@ -133,6 +135,7 @@ import com.tisl.mpl.model.cms.components.MplNewsLetterSubscriptionModel;
 import com.tisl.mpl.order.data.CardTypeDataList;
 import com.tisl.mpl.pincode.facade.PinCodeServiceAvilabilityFacade;
 import com.tisl.mpl.pincode.facade.PincodeServiceFacade;
+import com.tisl.mpl.pojo.PanCardResDTO;
 import com.tisl.mpl.populator.HttpRequestCustomerUpdatePopulator;
 import com.tisl.mpl.search.feedback.facades.UpdateFeedbackFacade;
 import com.tisl.mpl.service.HomescreenService;
@@ -164,6 +167,7 @@ import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
 import com.tisl.mpl.wsdto.RestrictionPins;
+import com.tisl.mpl.wsdto.ReversePincodeExchangeData;
 import com.tisl.mpl.wsdto.SearchDropdownWsDTO;
 import com.tisl.mpl.wsdto.SellerMasterWsDTO;
 import com.tisl.mpl.wsdto.SellerSlaveDTO;
@@ -202,13 +206,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -235,7 +239,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -257,6 +261,14 @@ public class MiscsController extends BaseController
 	@Resource(name = "categoryService")
 	private CategoryService categoryService;
 
+	//Exchange Changes
+	@Resource(name = "exchangeGuideFacade")
+	private ExchangeGuideFacade exchangeGuideFacade;
+
+	@Resource(name = "mplPancardFacadeImpl")
+	private MplPancardFacade mplPancardFacade;
+
+
 	//	private static final String APPLICATION_TYPE = "application/json";
 	//	public static final String EMAIL_REGEX = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	/*
@@ -269,10 +281,10 @@ public class MiscsController extends BaseController
 	 * /*
 	 *
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
-	 *                APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
-	 *                "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
+	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
+	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 	 *
-	 *                /**
+	 * /**
 	 *
 	 * @return the configurationService
 	 */
@@ -677,9 +689,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1748,8 +1760,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
@@ -1773,4 +1785,66 @@ public class MiscsController extends BaseController
 		final Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
 	}//LW-176 ends
+
+
+
+	/**
+	 * Is Pincode Exchange Serviceable
+	 *
+	 * @param pincode
+	 * @param l3code
+	 * @return reverseCheckdata
+	 * @throws CMSItemNotFoundException
+	 */
+
+	@RequestMapping(value = "/{baseSiteId}/reversePincodeCheck/{pincode}", method = RequestMethod.POST)
+	@ResponseBody
+	public ReversePincodeExchangeData reversePincodeCheck(@PathVariable final String pincode,
+			@RequestParam(required = false) final String l3code) throws CMSItemNotFoundException
+	{
+
+		final ReversePincodeExchangeData reverseCheckdata = new ReversePincodeExchangeData();
+		final boolean isServicable = exchangeGuideFacade.isBackwardServiceble(pincode);
+		reverseCheckdata.setPincodeResponse(exchangeGuideFacade.isBackwardServiceble(pincode));
+		if (isServicable && StringUtils.isNotEmpty(l3code))
+		{
+			reverseCheckdata.setPriceMatrix(exchangeGuideFacade.getExchangeGuide(l3code));
+		}
+
+
+		return reverseCheckdata;
+	}
+
+	/*
+	 * to receive pancard status from SP for jewellery
+	 *
+	 * @param restrictionXML
+	 *
+	 * @return void
+	 */
+	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST, consumes = "application/xml")
+	@ResponseBody
+	public void pancardStatusFromSP(final InputStream panStatusXML) throws RequestParameterException, JAXBException
+	{
+		try
+		{
+			final JAXBContext jaxbContext = JAXBContext.newInstance(PanCardResDTO.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			final PanCardResDTO resDTO = (PanCardResDTO) jaxbUnmarshaller.unmarshal(panStatusXML);
+
+			mplPancardFacade.setPancardRes(resDTO);
+		}
+		catch (final RequestParameterException e)
+		{
+			LOG.error("the exception is **** " + e.getMessage());
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("the exception is **** " + e.getMessage());
+		}
+		catch (final Exception e)
+		{
+			LOG.error("the exception is **** " + e.getMessage());
+		}
+	}
 }

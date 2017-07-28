@@ -14,7 +14,6 @@
 package com.tisl.mpl.storefront.controllers.misc;
 
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.AbstractController;
-import com.tisl.mpl.storefront.controllers.ControllerConstants;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +21,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.tisl.mpl.storefront.controllers.ControllerConstants;
+
 
 /**
  * Controller for web robots instructions
@@ -41,4 +43,5 @@ public class RobotsController extends AbstractController
 
 		return ControllerConstants.Views.Pages.Misc.MiscRobotsPage;
 	}
+
 }

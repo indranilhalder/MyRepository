@@ -8,6 +8,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="header"
 	tagdir="/WEB-INF/tags/responsive/common/header"%>
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%> <!-- CODE ADDED FOR JEWELLERY TO DISPLAY PRODUCT DETAILS IN TAB  -->
 <%@ taglib prefix="footer"
 	tagdir="/WEB-INF/tags/responsive/common/footer"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
@@ -38,27 +39,43 @@
 			<spring:theme code="text.skipToNavigation" var="skipToNavigation" />
 			<a href="#skiptonavigation" class="skiptonavigation" data-role="none">${skipToNavigation}</a> --%>
 
-
+			<c:if test="${param.frame eq null}">
 			<header:header hideHeaderLinks="${hideHeaderLinks}"
-			showOnlySiteLogo="${showOnlySiteLogo}" />
-
+				showOnlySiteLogo="${showOnlySiteLogo}" />
+			</c:if>
 
 			<div class="mainContent-wrapper">
 	
 			<a id="skip-to-content"></a>
 		
-			<div class="container">
-			
+			<div class="container">			
 				<common:globalMessages />
 				<div class="body-Content"><jsp:doBody /></div>
-			</div>
+				
+				
+			<%-- <!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB STARTS HERE -->
+				<c:set var="finejewellery"><spring:theme code='product.finejewellery'/></c:set>
+				<c:choose>		
+				    <c:when test ="${product.rootCategory==finejewellery}"> 
+				    	<div class="container">
+							<div class="tabs-block ${product.rootCategory}">
+								 <product:productPageTabs /> 
+							</div>
+						</div>
+					</c:when> 
+				</c:choose>
+			<!-- CODE ADDED FOR JEWELLERY TO DISPLAY DETAILS IN TAB ENDS HERE --> --%>
+				
+			</div>	
+			
+			<c:if test="${param.frame eq null}">
 			<c:choose>
             <c:when test="${empty showOnlySiteLogo }">
 				<footer:footer />
 			</c:when>
 			<c:otherwise>
 			<c:if test="${empty hideAllFooter}">
-			<footer>
+			<footer class="mobile-footer">
 			<div class="banner">
 			<cms:pageSlot position="Footer" var="feature" limit="1">
 			${feature.notice}
@@ -67,12 +84,13 @@
 			<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
    			<cms:component component="${feature}"></cms:component>
    			</c:if>
-        </cms:pageSlot>
+        	</cms:pageSlot>
         </div>
         </footer>
  		</c:if>
 			</c:otherwise>
 			</c:choose>
+			</c:if>
 			</div>
 		</main> 
 

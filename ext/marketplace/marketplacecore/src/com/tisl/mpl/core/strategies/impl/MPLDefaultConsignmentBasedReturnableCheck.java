@@ -11,6 +11,8 @@ import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.returns.strategy.impl.DefaultConsignmentBasedReturnableCheck;
 import de.hybris.platform.servicelayer.model.ModelService;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,6 +24,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import com.tisl.mpl.core.model.RichAttributeModel;
+import com.tisl.mpl.model.SellerInformationModel;
 
 
 public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmentBasedReturnableCheck
@@ -43,7 +46,17 @@ public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmen
 		{
 			return false;
 		}
-		for (final RichAttributeModel richAttribute : orderentry.getProduct().getRichAttribute())
+		// Changes for richAttribute from Seller Information for TISTNL-4
+		final Collection<SellerInformationModel> sellerInfo = orderentry.getProduct().getSellerInformationRelator();
+
+		Collection<RichAttributeModel> richAttributeList = new ArrayList<>();
+
+		for (final SellerInformationModel seller : sellerInfo)
+		{
+			richAttributeList = seller.getRichAttribute();
+		}
+
+		for (final RichAttributeModel richAttribute : richAttributeList)
 		{
 			//			if (StringUtils.isNotEmpty(richAttribute.getReplacementWindow()))
 			//			{
@@ -64,8 +77,8 @@ public class MPLDefaultConsignmentBasedReturnableCheck extends DefaultConsignmen
 		//			finalWindow = refundWindow;
 		//		}
 		finalWindow = refundWindow;
-		final Set consignments = BasecommerceManager.getInstance().getConsignments(
-				(Order) getModelService().toPersistenceLayer(order));
+		final Set consignments = BasecommerceManager.getInstance()
+				.getConsignments((Order) getModelService().toPersistenceLayer(order));
 		boolean isReturnable = false;
 		if (!consignments.isEmpty())
 		{

@@ -4,10 +4,13 @@
 package com.tisl.mpl.service;
 
 import de.hybris.platform.commercefacades.order.data.CartData;
+import de.hybris.platform.commercefacades.order.data.CartRestorationData;
 import de.hybris.platform.commercefacades.product.data.PinCodeResponseData;
 import de.hybris.platform.commercefacades.product.data.PriceData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.order.CommerceCartMergingException;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
+import de.hybris.platform.commerceservices.order.CommerceCartRestorationException;
 import de.hybris.platform.commercewebservicescommons.dto.user.AddressListWsDTO;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
@@ -74,8 +77,8 @@ public interface MplCartWebService
 	 * @throws EtailBusinessExceptions
 	 * @throws EtailNonBusinessExceptions
 	 */
-	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions;
+	List<GetWishListProductWsDTO> freeItems(List<AbstractOrderEntryModel> aoem)
+			throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * Service to get product details
@@ -91,8 +94,8 @@ public interface MplCartWebService
 	//CAR-57
 	public List<GetWishListProductWsDTO> productDetails(final AbstractOrderModel abstractOrderModel,
 			final Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap, final boolean isPinCodeCheckRequired,
-			final boolean resetRequired, final List<PinCodeResponseData> pincodeList) throws EtailBusinessExceptions,
-			EtailNonBusinessExceptions;
+			final boolean resetRequired, final List<PinCodeResponseData> pincodeList, final String pincode)
+					throws EtailBusinessExceptions, EtailNonBusinessExceptions;
 
 	/**
 	 * pincode response from OMS at cart level
@@ -150,5 +153,32 @@ public interface MplCartWebService
 	public CartDataDetailsWsDTO displayOrderSummary(final String pincode, final OrderModel cartModel,
 			final CartDataDetailsWsDTO cartDetailsData);
 
+	/**
+	 * Service to add product to cart
+	 *
+	 * @param productCode
+	 * @param cartId
+	 * @param quantity
+	 * @param USSID
+	 * @param exchangeParam
+	 * @return WebSerResponseWsDTO
+	 * @throws CommerceCartModificationException
+	 * @throws InvalidCartException
+	 */
+	WebSerResponseWsDTO addProductToCartwithExchange(final String productCode, final String cartId, final String quantity,
+			String USSID, boolean addedToCartWl, String channel, String exchangeParam)
+					throws InvalidCartException, CommerceCartModificationException;
+
+	/**
+	 * Service to merge carts
+	 * 
+	 * @param fromAnonymousCartGuid
+	 * @param toUserCartGuid
+	 * @return CartRestorationData
+	 * @throws CommerceCartRestorationException
+	 * @throws CommerceCartMergingException
+	 */
+	public CartRestorationData restoreAnonymousCartAndMerge(final String fromAnonymousCartGuid, final String toUserCartGuid)
+			throws CommerceCartRestorationException, CommerceCartMergingException;
 
 }
