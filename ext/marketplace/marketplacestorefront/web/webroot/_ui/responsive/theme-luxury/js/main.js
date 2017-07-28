@@ -992,7 +992,7 @@ TATA.Pages = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-                $(".plp-wrapper h4.categor-name").hide();
+                /* TCL-843  $(".plp-wrapper h4.categor-name").hide();*/
                 TATA.Pages.PLP.performAjax(requestUrl, $(this).closest('.facet').children('.facetHead').attr('id'));
             });
         },
