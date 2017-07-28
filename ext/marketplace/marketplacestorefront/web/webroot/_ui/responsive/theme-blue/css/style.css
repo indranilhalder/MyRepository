@@ -69413,7 +69413,11 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading #selectedReviewOrderDivId span#selectedReviewOrderHighlight{
     color: #cccccc;
 }
-.checkout-accordion .checkout-accordion-heading{
+.checkout-accordion .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open + .checkout-accordion .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open + .checkout-accordion.checkout-selected  + .checkout-accordion.checkout-selected .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.accordion-open .checkout-accordion-heading{
 	cursor: not-allowed;
 	pointer-events: none;
 }
@@ -69422,8 +69426,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin-bottom: 0px !important;
 }
 .checkout-accordion:first-child .checkout-accordion-heading,
-.checkout-accordion.checkout-selected .checkout-accordion-heading,
-.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading  {
+.checkout-accordion.checkout-selected .checkout-accordion-heading/* ,
+.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading */ {
     cursor: pointer;
     pointer-events: all;
 } 
