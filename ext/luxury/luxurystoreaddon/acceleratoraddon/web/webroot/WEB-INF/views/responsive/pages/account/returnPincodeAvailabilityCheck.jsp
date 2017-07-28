@@ -39,9 +39,9 @@
 					<form:form
 						action="${returnUrl}"
 						method="post" name="returnForm" commandName="returnForm">
-						<return:selectReason />
-						<return:selectReturntype />
-						<return:selectReturnMethod />
+						<return:luxSelectReason />
+						<return:luxSelectReturntype />
+						<return:luxSelectReturnMethod />
 					</form:form>
 					
 				</div>
