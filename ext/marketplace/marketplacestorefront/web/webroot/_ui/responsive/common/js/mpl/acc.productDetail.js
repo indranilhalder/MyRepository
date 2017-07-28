@@ -4303,6 +4303,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDetailsTab(jsonData));
+			//UF-377
+			$("#detailsAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	if(jsonData['validTabs'].includes('description'))
@@ -4312,6 +4314,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductDescriptionTab(jsonData));
+			//UF-377
+			$("#descriptionAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 	if(jsonData['validTabs'].includes('warranty'))
@@ -4321,6 +4325,8 @@ function populateProductPageTabs(jsonData)
 		{
 			var selector='ul.tabs.pdp>li:eq('+index+')';
 			$(selector).html(populateProductWarrantyTab(jsonData));
+			//UF-377
+			$("#warrantyAccordion").html(populateProductDetailsTab(jsonData));
 		}
 	}
 }

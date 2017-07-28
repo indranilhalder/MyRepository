@@ -1409,10 +1409,11 @@ function getShowCaseAjaxCall() {
                 "/getCollectionShowcase",
             data: dataString,
             success: function(response) {
-                //console.log(response.subComponents);
 	        	//TPR-559 Show/Hide Components and Sub-components
 	            if (response.hasOwnProperty("title") && response.hasOwnProperty("subComponents") && response.subComponents.length) { 
 	                defaultComponentId = "";
+	              //UF-420
+	                var defaultHtml = '';
 	                renderHtml = "<h2>" + response.title + "</h2>" +
 	                    "<div class='MenuWrap'><div class='showcase-heading showcase-switch'>";
 	                $.each(response.subComponents, function(k, v) {
@@ -1427,12 +1428,70 @@ function getShowCaseAjaxCall() {
 	                            v.compId +
 	                            "' class='showcase-border'>" +
 	                            v.headerText + "</a></div>";
-	                        defaultComponentId = v.compId;
+	                        defaultComponentId = v.compId;	                        
+	                      //UF-420 starts
+	                        defaultHtml =
+	                            "<div class='about-one showcase-section'>";
+	                        if (typeof v.details.bannerImageUrl !==
+	                            "undefined") {
+	                            defaultHtml += "<div class='desc-section'>";
+	                            if (typeof v.details.bannerUrl !==
+	                                "undefined") {
+	                                defaultHtml += "<a href='" + appendIcid(v.details.bannerUrl, v.details.icid) + "'>";
+	                            }
+	                            defaultHtml += "<img class='lazy' src='" + v.details.bannerImageUrl +
+	                                "'></img>";
+	                            if (typeof v.details.bannerUrl !==
+	                                "undefined") {
+	                                defaultHtml += "</a>";
+	                            }
+	                            defaultHtml += "</div>";
+	                        }
+	                        if (typeof v.details.text !== "undefined") {
+	                            defaultHtml += "<div class='desc-section'>" +
+	                            v.details.text + "</div>"
+	                        }
+	                        if (typeof v.details.firstProductImageUrl !==
+	                            "undefined") {
+	                            defaultHtml +=
+	                                " <div class='desc-section'><a href='" +
+	                                ACC.config.encodedContextPath +
+	                                v.details.firstProductUrl +
+	                                "'><img class='lazy' src='" + v.details.firstProductImageUrl +
+	                                "'></img>";
+	                            defaultHtml +=
+	                                "<div class='showcase-center'>";
+	                            if (typeof v.details.firstProductTitle !==
+	                                "undefined") {
+	                                defaultHtml +=
+	                                    "<h2 class='product-name'>" +
+	                                    v.details.firstProductTitle +
+	                                    "</h2>";
+
+	                            }
+	                            if (typeof v.details.firstProductPrice !==
+	                                "undefined") {
+	                                defaultHtml +=
+	                                    "<div class='price'><p class='normal'><span class='priceFormat'>" +
+	                                    v.details.firstProductPrice +
+	                                    "</span></p></div>";
+	                            }
+	                            defaultHtml += "</a></div>";
+	                        }
+	                        defaultHtml += "</div>";
+	                      //UF-420 ends
 	                    }
 	                });
 	                renderHtml += "</div></div>";
 	                $('#showcase').html(renderHtml);
-	                getShowcaseContentAjaxCall(defaultComponentId);
+	                //UF-420 starts
+	                if (defaultHtml != '') {
+	                	$('#showcase').append(defaultHtml);
+	                	 window.localStorage.setItem("showcaseContent-" +
+	                			 defaultComponentId, encodeURI(defaultHtml));
+	                }
+	                //getShowcaseContentAjaxCall(defaultComponentId);
+	                //UF-420 ends
 	                //$('.selectmenu').text($(".showcaseItem .showcase-border").text());
 	            }  
 	            if($(".showcaseItem").length == 1){
@@ -1682,8 +1741,9 @@ $(window).on('resize', function() {
 		   $(this).attr("src",original);
 		   $(this).removeAttr("data-src");
 	   });
-   }); 
-   showMobileShowCase();
+   });
+   
+   //showMobileShowCase();
 });
 
 
@@ -2000,8 +2060,8 @@ function populateEnhancedSearch(enhancedSearchData)
 	        }
 	}
 		
-		
-		if ($(window).scrollTop() + $(window).height() >= $('#showcase').offset().top) {
+		//alert("$('#showcase').offset().top ----------" + $('#showcase').offset().top);
+		if ($(window).scrollTop() + $(window).height() >= $('#showcase').offset().top && $(window).width() > 767) {
 	        if(!$('#showcase').attr('loaded')) {
 	            //not in ajax.success due to multiple sroll events
 	            $('#showcase').attr('loaded', true);
@@ -2022,6 +2082,19 @@ function populateEnhancedSearch(enhancedSearchData)
 			}
 	        }
 	}
+	
+		//UF-420 starts
+		if ($(window).scrollTop() + $(window).height() >= $('#showcaseMobile').offset().top && $(window).width() <= 767) {
+			 if(!$('#showcaseMobile').attr('loaded')) {
+				 //not in ajax.success due to multiple sroll events
+		         $('#showcaseMobile').attr('loaded', true);
+				 
+		         if ($('#showcaseMobile').children().length == 0 && $('#pageTemplateId').val() == 'LandingPage2Template') {
+					   showMobileShowCase();
+				   }
+			 	} 
+		 }
+		//UF-420 ends
 }
 $(document).ready(function()
 {
@@ -2504,6 +2577,15 @@ $(document).ready(function()
 				}
 				if (window.localStorage && (html = window.localStorage.getItem("showcaseContentMobile")) && html != "") {
 					$('#showcaseMobile').html(decodeURI(html));
+					//UF-420 starts
+					$(".showcase-carousel").owlCarousel({
+						items:1,
+			    		loop: $(".showcase-carousel img").length == 1 ? false : true,
+			    		navText:[],
+			    		nav:true,
+			    		dots:false
+					});
+					//UF-420 ends
 				}else{
 				$.ajax({
 			            type: "GET",
@@ -2513,11 +2595,17 @@ $(document).ready(function()
 			            data: dataString,
 			            success: function(response) {
 			            	try{
-			            			var showCaseMobile = '<h2>'+response.title+'</h2>';
-			            			showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
+			            		var showCaseMobile = '<h2>'+response.title+'</h2>';
+			            		showCaseMobile+= '<div class="owl-carousel showcase-carousel">';
 								$.each(response.subComponents, function(k, v) {	
-									  showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
-									 
+									//UF-420 starts
+									//showCaseMobile+= getShowcaseMobileContentAjaxCall(v.compId);
+									showCaseMobile+= '<div class="item showcase-section">';
+									showCaseMobile+= '<div class="desc-section">'+v.details.text;
+									showCaseMobile+= '<img class="lazy" src="'+v.details.bannerImageUrl+'">'
+									showCaseMobile+= '</div>'
+									showCaseMobile+= '</div>'; 
+									//UF-420 ends
 								});
 								showCaseMobile+= '</div>';
 								$('#showcaseMobile').html(showCaseMobile);
