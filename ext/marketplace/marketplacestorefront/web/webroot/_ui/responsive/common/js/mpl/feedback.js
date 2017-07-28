@@ -3765,6 +3765,17 @@ $(".deliveryTrack.status.suman").each(function(){
 	});
 	});
 /* TPR-6013 ends*/
+/* UF-377 starts */
+$(document).ready(function(){
+	if ($(".product-specification-accordion").length) {
+	    $(".product-specification-accordion").smk_Accordion({
+	        closeAble: true,
+	        closeOther: true,
+	        slideSpeed: 750,
+	    });
+	}
+});
+/* UF-377 ends */
 /*PRDI-402 start*/
 $(document).ready(function(){
 	if($(window).width() < 790){

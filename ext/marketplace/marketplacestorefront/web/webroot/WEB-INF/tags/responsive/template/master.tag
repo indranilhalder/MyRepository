@@ -15,8 +15,8 @@
 <%@ taglib prefix="tealium" tagdir="/WEB-INF/tags/addons/tealiumIQ/shared/analytics" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- <%@ taglib prefix="regex" uri="/WEB-INF/common/tld/regex.tld" %> --%>
-<%-- <%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
-<compress:html removeIntertagSpaces="true"> --%>
+<%@ taglib uri="http://htmlcompressor.googlecode.com/taglib/compressor" prefix="compress" %>
+<compress:html removeIntertagSpaces="true">
 <!DOCTYPE html>
 <html lang="${currentLanguage.isocode}">
 <head>
@@ -51,14 +51,14 @@
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host')" var="productMediadnsHost"/>
 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('product.dns.host1')" var="productMediadnsHost1"/>
 
-<link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css?${rand}"/>
+<%-- <link rel="stylesheet" type="text/css" media="all" href="//${mediaHost}/preload.css?${rand}"/>
 <link rel="stylesheet" type="text/css" media="all" href="//${staticResourceHost}/preload.css?${rand}"/>
 <c:if test="${not empty productMediadnsHost}">
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost}/preload.css?${rand}"/>
 </c:if>
 <c:if test="${not empty productMediadnsHost1}">
 <link rel="stylesheet" type="text/css" media="all" href="//${productMediadnsHost1}/preload.css?${rand}"/>
-</c:if>
+</c:if> --%>
 
 
 
@@ -412,4 +412,4 @@
 
 <debug:debugFooter/>
 </html>
-<%-- </compress:html> --%>
+</compress:html> 
