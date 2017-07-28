@@ -312,6 +312,17 @@ ACC.singlePageCheckout = {
 						}
     				}
 	        	}
+				//Hiding/Showing COD if cnc is selcted
+				if(cncSelected=="true")
+				{
+					$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
+					$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+				}
+				else
+				{
+					$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
+					$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+				}
 			}
 		}
 		ACC.singlePageCheckout.showAjaxLoader();
@@ -2000,7 +2011,40 @@ ACC.singlePageCheckout = {
     xhrResponse.always(function(){        	
 	});
   },	
-	
+  showHideCodTab:function(){
+	  if(ACC.singlePageCheckout.getIsResponsive()){
+		  //Mobile
+		  var entryNumbersId=$("#selectDeliveryMethodFormMobile #entryNumbersId").val();
+		  var isCncPresent=$("#selectDeliveryMethodFormMobile #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+	  }
+	  else{
+		  //Desktop
+		  var entryNumbersId=$("#selectDeliveryMethodForm #entryNumbersId").val();
+		  var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();//This will be true if any cart item has CNC as delivery mode
+	  }
+	  var cncSelected="false";
+	  var entryNumbers=entryNumbersId.split("#");
+	  for(var i=0;i<entryNumbers.length-1;i++)
+	  {
+		if(isCncPresent=="true")
+	  	{
+	  		if($("input[name='"+entryNumbers[i]+"']").length>0 && $('input:radio[name='+entryNumbers[i]+']:checked').attr("id").includes("click-and-collect"))
+	  		{
+	  			cncSelected="true";	
+	  		}
+	  	}
+	  }
+	  if(cncSelected=="true")
+	  {
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+	  }
+	  else
+	  {
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
+	  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+	  }
+  },
 //	mobileAccordion:function(){
 //		$("#address-change-link").on("click", function(){
 //			$(this).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
