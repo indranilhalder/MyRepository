@@ -464,7 +464,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4 deliveryWidth"><button class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
+								<li class="delivery header4 deliveryWidth"><button class="changeDeliveryMethod btn btn-primary btn-md"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
