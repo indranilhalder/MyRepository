@@ -173,14 +173,7 @@
 															code="text.orderHistory.number" /></span>#${orderHistoryDetail.code}</li>
 												<!-- TISSIT-1773 -->
 															<%-- <format:price priceData="${orderHistoryDetail.totalPrice}" /> --%>
-												<c:choose>
-													<c:when test="${orderHistoryDetail.net}">
-														<format:price priceData="${orderHistoryDetail.totalPriceWithTax}" />
-													</c:when>
-													<c:otherwise>
-														<format:price priceData="${orderHistoryDetail.totalPriceWithConvCharge}" />
-													</c:otherwise>
-												</c:choose>	
+												
 															
 															
 															</li>
@@ -198,6 +191,16 @@
 													</li>
 													<li class="order-total"><span><spring:theme
 															code="text.orderHistory.total" /></span>  
+															
+															
+															<c:choose>
+													<c:when test="${orderHistoryDetail.net}">
+														<format:price priceData="${orderHistoryDetail.totalPriceWithTax}" />
+													</c:when>
+													<c:otherwise>
+														<format:price priceData="${orderHistoryDetail.totalPriceWithConvCharge}" />
+													</c:otherwise>
+												</c:choose>	
 												
 
 												
