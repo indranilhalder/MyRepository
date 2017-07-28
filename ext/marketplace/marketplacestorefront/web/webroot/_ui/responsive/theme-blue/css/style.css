@@ -69730,20 +69730,27 @@ footer .footer-text{
 	top: 50%;
     margin: auto;
     position: absolute;
-    width: 100%;
+    /* start change of TISPRDT-1934 */
+    /* width: 100%; */
+    width: 98%;
+    /* end change of TISPRDT-1934 */
     /* z-index: 1; */
     display: table;
-    /* start change of INC144317154 */
+    /* start change of TISPRDT-1934 */
     /* padding: 0 30px; */
-    padding: 0 8px;
-    /* end change of INC144317154 */
+    padding: 0 0px 0 4px;
+	margin-left: -19px;
+	/* end change of TISPRDT-1934 */
 }
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after ,
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
     left: 0;
     right: 0;
     top: 0;
-    bottom: 0;
+    /* start change of TISPRDT-1934 */
+    /* bottom: 0; */
+    bottom: 16px;
+    /* end change of TISPRDT-1934 */
     margin: auto;
     width: 10px;
     height: 10px;
