@@ -1193,7 +1193,7 @@
 				<c:when test="${delModeCount gt 0}">
 				
 				<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
-								<button class="continue_btn" id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;display: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+								<button class="continue_btn btn btn-primary btn-lg" id="deliveryMethodSubmit1" type="submit" class="checkout-next" "><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				</form:form>
 				</c:when>
 				
