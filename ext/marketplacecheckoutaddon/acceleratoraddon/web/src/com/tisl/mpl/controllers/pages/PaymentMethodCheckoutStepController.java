@@ -54,6 +54,7 @@ import de.hybris.platform.voucher.model.RestrictionModel;
 import de.hybris.platform.voucher.model.VoucherModel;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -92,6 +93,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import reactor.function.support.UriUtils;
+
 import com.hybris.oms.tata.model.MplBUCConfigurationsModel;
 import com.tisl.mpl.bin.facade.BinFacade;
 import com.tisl.mpl.checkout.steps.validation.impl.ResponsivePaymentCheckoutStepValidator;
@@ -122,6 +125,7 @@ import com.tisl.mpl.facade.checkout.MplCustomAddressFacade;
 import com.tisl.mpl.facade.config.MplConfigFacade;
 import com.tisl.mpl.facade.product.PriceBreakupFacade;
 import com.tisl.mpl.facades.account.register.NotificationFacade;
+import com.tisl.mpl.facades.constants.MarketplaceFacadesConstants;
 import com.tisl.mpl.facades.payment.MplPaymentFacade;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.juspay.response.ListCardsResponse;
@@ -2152,7 +2156,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//Existing code for cart
 				//getting the session cart
 				final CartModel cart = getCartService().getSessionCart();
-
+				//UF-281/282 Starts
+				if (!checkCODforCNC(cart))
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+				//UF-281/282 End
 				//to check customer is blacklisted or not against customer id, email, phone no. & ip address
 				//TISEE-5555
 				model.addAttribute(MarketplacecheckoutaddonConstants.CELLNO, getMplPaymentFacade().fetchPhoneNumber(cart));
@@ -4914,6 +4924,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			//getting current user
 			emailId = getUserService().getCurrentUser().getUid();
 			//OTP handled for both cart and order
+
 			if (StringUtils.isNotEmpty(guid))
 			{
 				orderModel = getMplPaymentFacade().getOrderByGuid(guid);
@@ -4922,7 +4933,13 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			{
 				//Existing code for cartModel
 				final CartModel cart = getCartService().getSessionCart();
-
+				//UF-281/282 Starts
+				if (!checkCODforCNC(cart))
+				{
+					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
+					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				}
+				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
 				final ArrayList<DiscountModel> voucherList = new ArrayList<DiscountModel>(getVoucherService()
 						.getAppliedVouchers(cart));
@@ -5722,7 +5739,37 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	{
 		this.voucherService = voucherService;
 	}
-	//TPR-4461 ends here
 
+	//TPR-4461 ends here
+	/**
+	 * @param cart
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	//UF-281/282 Start
+	public boolean checkCODforCNC(final CartModel cart) throws UnsupportedEncodingException
+	{
+
+		boolean codEligible = true;
+
+		if (cart != null)
+		{
+			for (final AbstractOrderEntryModel entry : cart.getEntries())
+			{
+
+				if (entry.getMplDeliveryMode() != null && entry.getMplDeliveryMode().getDeliveryMode() != null)
+				{
+					if (entry.getMplDeliveryMode().getDeliveryMode().getCode().equalsIgnoreCase(MarketplaceFacadesConstants.C_C))
+					{
+						codEligible = false;
+						LOG.debug("CNC not allowed for CNC");
+					}
+				}
+
+			}
+		}
+		//UF-281/282 End
+		return codEligible;
+	}
 
 }

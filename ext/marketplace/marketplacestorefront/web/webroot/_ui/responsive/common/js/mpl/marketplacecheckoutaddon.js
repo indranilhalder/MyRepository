@@ -441,7 +441,19 @@ function displayCODForm()
 		type: "GET",
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
-		success : function(response) {
+		success : function(response,textStatus, jqXHR) {
+			if (jqXHR.responseJSON && response.displaymessage=="codNotallowed") {
+				$("#codNotAllowedMessage").css("display","block");
+				$(".terms.cod").css("display","none");
+				$("#paymentButtonId_up,#paymentButtonId").css("display","none");
+				return false;
+			}
+			else
+			{
+				$("#codNotAllowedMessage").css("display","none");
+				$(".terms.cod").css("display","block");
+				$("#paymentButtonId_up,#paymentButtonId").css("display","block");
+			}
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
 			$("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
@@ -5214,6 +5226,12 @@ function submitNBForm(){
 
 function calculateDeliveryCost(radioId,deliveryCode)
 {
+	//UF-282:Starts
+	if(ACC.singlePageCheckout.getIsResponsive())
+	{
+		ACC.singlePageCheckout.showHideCodTab();
+	}
+	//UF-282:Ends
 	if(radioId=="" || radioId==undefined || deliveryCode=="" || deliveryCode==undefined )
 	{
 		var radioSelected=$('#deliveryradioul input:radio');	
