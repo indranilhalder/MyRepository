@@ -404,7 +404,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -455,9 +455,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 *
+	 * 
 	 * @return Map<String, Map<String, String>>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -494,11 +494,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 *
+	 * 
 	 * @param : orderModelList
-	 *
+	 * 
 	 * @return Map<String, Boolean>
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -532,11 +532,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 *
+	 * 
 	 * @param : orderEntryData
-	 *
+	 * 
 	 * @return OrderEntryData
-	 *
+	 * 
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -871,7 +871,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1360,8 +1360,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								customerOrderInfoWsDTO.setTransactionStatus(null != pt.getTransactionStatus() ? pt.getTransactionStatus()
 										: MarketplacecommerceservicesConstants.NULL_VALUE);//Transaction Status
 
-								if (null != pt.getTransactionStatus()
-										&& pt.getTransactionStatus().equalsIgnoreCase(
+								if (null != pt.getTransactionStatusDetails()
+										&& pt.getTransactionStatusDetails().equalsIgnoreCase(
 												MarketplacecommerceservicesConstants.REFUND_SUCCESSFUL_))
 								{
 									customerOrderInfoWsDTO.setRefundDate(formatter.format(pt.getTime()));
@@ -1436,29 +1436,49 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									//Delivery tracking Details
 									if (StringUtils.isNotEmpty(cng.getTrackingID()) && StringUtils.isNotEmpty(cng.getCarrier()))
 									{
+										LOG.debug("**********tracking id*********" + cng.getTrackingID());
+										LOG.debug("**********carrier*********" + cng.getCarrier());
 										final AWBStatusResponse aWBStatusResponse = mplAwbStatusService.prepAwbNumbertoOMS(
 												cng.getTrackingID(), cng.getCarrier());
 
 										if (null != aWBStatusResponse && CollectionUtils.isNotEmpty(aWBStatusResponse.getAWBResponseInfo()))
 										{
+											LOG.debug("**********AWB STATUS RESPONSE*********" + aWBStatusResponse);
+											LOG.debug("**********AWB RESPONSE INFO*********" + aWBStatusResponse.getAWBResponseInfo());
 											final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
 											final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
 											for (final AWBResponseInfo awbResponseInfo : aWBStatusResponse.getAWBResponseInfo())
 											{
-												for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
+												if (CollectionUtils.isNotEmpty(awbResponseInfo.getStatusRecords()))
 												{
-													LOG.debug("********delivery tracking date" + statusRecords.getDate());
-													LOG.debug("********delivery tracking location" + statusRecords.getLocation());
-													LOG.debug("********delivery tracking description" + statusRecords.getStatusDescription());
+													for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
+													{
+														LOG.debug("********delivery tracking date" + statusRecords.getDate());
+														LOG.debug("********delivery tracking location" + statusRecords.getLocation());
+														LOG.debug("********delivery tracking description"
+																+ statusRecords.getStatusDescription());
+														deliveryTrackingInfoWsDTO
+																.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords
+																		.getDate() : MarketplacecommerceservicesConstants.NULL_VALUE);
+														deliveryTrackingInfoWsDTO.setDeliveryTrackingLocation(null != statusRecords
+																.getLocation() ? statusRecords.getLocation()
+																: MarketplacecommerceservicesConstants.NULL_VALUE);
+														deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
+																.getStatusDescription() ? statusRecords.getStatusDescription()
+																: MarketplacecommerceservicesConstants.NULL_VALUE);
+														deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+														customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+													}
+												}
+												else
+												{
+													LOG.debug("**********Inside else part of status records*********");
 													deliveryTrackingInfoWsDTO
-															.setDeliveryTrackingDate(null != statusRecords.getDate() ? statusRecords.getDate()
-																	: MarketplacecommerceservicesConstants.NULL_VALUE);
+															.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
 													deliveryTrackingInfoWsDTO
-															.setDeliveryTrackingLocation(null != statusRecords.getLocation() ? statusRecords
-																	.getLocation() : MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
-															.getStatusDescription() ? statusRecords.getStatusDescription()
-															: MarketplacecommerceservicesConstants.NULL_VALUE);
+															.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
+													deliveryTrackingInfoWsDTO
+															.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
 													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
 													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 												}
@@ -1467,6 +1487,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									}
 									else
 									{
+										LOG.debug("**********Inside else part of awb response*********");
 										final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
 										final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
 										deliveryTrackingInfoWsDTO.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
@@ -1498,6 +1519,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 							}
 							else
 							{
+								LOG.debug("**********Inside else part consignment*********");
 								final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
 								final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
 								deliveryTrackingInfoWsDTO.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
