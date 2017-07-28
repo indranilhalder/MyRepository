@@ -233,6 +233,7 @@
                                 border: 1px solid #e4e8f0;
                                 padding: 0px;
                                 display: table;
+                                width: 100%;
                                 
                                 @include media-breakpoint-down(sm) {
                                     display: block;
