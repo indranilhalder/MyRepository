@@ -45,7 +45,7 @@
 					</form:form>
 					
 				</div>
-		 <return:pickupAddressPopup />
+		 <return:luxPickupAddressPopup />
 
 			</div>
 
