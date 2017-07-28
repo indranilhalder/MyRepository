@@ -644,6 +644,13 @@ public class CustomOmsCancelAdapter implements Serializable
 								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry.getScheduledDeliveryCharge()
 										: NumberUtils.DOUBLE_ZERO;
 								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+								if(null != orderEntry.getIsEDtoHD() && orderEntry.getIsEDtoHD().booleanValue() && null != orderEntry.getRefundedEdChargeAmt() && orderEntry.getRefundedEdChargeAmt().doubleValue() == 0D){
+									double hdDeliveryCharges=0.0D;
+									if(null !=orderEntry.getHdDeliveryCharge()) {
+										hdDeliveryCharges = orderEntry.getHdDeliveryCharge().doubleValue();
+									}
+									orderEntry.setRefundedEdChargeAmt(Double.valueOf(deliveryCost.doubleValue()-hdDeliveryCharges));
+								}
 								orderEntry.setCurrDelCharge(new Double(0D));
 								// Added in R2.3 START 
 								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
