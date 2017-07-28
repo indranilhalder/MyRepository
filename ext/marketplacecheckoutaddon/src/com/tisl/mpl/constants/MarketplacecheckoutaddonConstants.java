@@ -192,20 +192,20 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	// Request Mapping URL
 
 	public static final String MPLDELIVERYMETHODURL = "/checkout/multi/delivery-method";
-	public static final String MPLSINGLEPAGEURL = "/checkout/single";
+	public static final String MPLSINGLEPAGEURL = "/checkout/single".intern();//UF-281
 	public static final String MPLDELIVERYCHOOSEURL = "/choose";
 	public static final String MPLDELIVERYSELECTURL = "/select";
 	public static final String MPLDELIVERYSELECTURLRESPONSIVE = "/select-responsive";
 	public static final String MPLDELIVERYCHECKURL = "/check";
 	public static final String GETCNCSTRORES = "/cncStores";
-	public static final String GETREVIEWORDER = "/reviewOrder";
+	public static final String GETREVIEWORDER = "/reviewOrder".intern();//UF-281;
 	public static final String MPLDELIVERYCNCINVRESV = "/invReservation";
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
 	public static final String MPLRESPONSIVEDELIVERYNEWADDRESSURL = "/new-address-responsive";
-	public static final String SLOTDELIVERYRESPONSIVE = "/slotDelivery-responsive";
+	public static final String SLOTDELIVERYRESPONSIVE = "/slotDelivery-responsive".intern();//UF-282
 	public static final String MPLSHOWMESSAGE = "/message";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
-	public static final String MPLRESPONSIVESELECTADDRESSURL = "/select-address-responsive";
+	public static final String MPLRESPONSIVESELECTADDRESSURL = "/select-address-responsive".intern();//UF-282
 	public static final String CHECKLOCATIONRESTRICTEDPINCODE = "/delModesOnAddrSelect/{pincode:.*}";
 	public static final String ADDRESS_CODE_PATH_VARIABLE_PATTERN = "{addressCode:.*}";
 	public static final String CALCULATEDELIVERYCOST = "/calculateDeliveryCost/{deliveryCost:.*}";
