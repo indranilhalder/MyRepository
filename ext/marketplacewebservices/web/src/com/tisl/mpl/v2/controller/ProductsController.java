@@ -1020,6 +1020,22 @@ public class ProductsController extends BaseController
 					{
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
+
+
+					}
+
+					//TPR-6528
+					if (null != searchPageData.getSpellingSuggestion()
+							&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+					{
+						productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+								.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+						final SearchStateData searchStateAll = new SearchStateData();
+						final SearchQueryData searchQueryDataAll = new SearchQueryData();
+						searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
+						searchStateAll.setQuery(searchQueryDataAll);
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+								.textSearch(searchStateAll, pageableData);
 					}
 
 					if (isFilter)
@@ -1093,11 +1109,7 @@ public class ProductsController extends BaseController
 				{
 					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
 				}
-				if (null != searchPageData.getSpellingSuggestion() && null != searchPageData.getSpellingSuggestion().getSuggestion())
-				{
-					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
-							.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
-				}
+
 			}
 
 		}
