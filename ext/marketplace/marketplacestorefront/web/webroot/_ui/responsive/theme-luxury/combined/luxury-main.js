@@ -15346,6 +15346,8 @@ $(document).ready(function() {
 }), $(document).ready(function() {
     $("#clear_filter").click(function() {
         $(".reset-filters").trigger("click");
+    }), $("#apply_filter").click(function() {
+        $(".plp-leftbar-close a").trigger("click");
     });
 }), $(document).ready(function() {
     null != document.getElementById("check_MyRewards") && void 0 != document.getElementById("check_MyRewards") && (document.getElementById("check_MyRewards").checked = !0);
