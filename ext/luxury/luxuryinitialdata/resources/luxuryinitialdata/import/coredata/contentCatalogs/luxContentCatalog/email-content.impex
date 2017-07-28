@@ -971,7 +971,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;gplus-OrderConfirmationEmail;gplus;;EmailgplusRegSlot1;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-OrderDeliveryEmail;SiteLogo;;EmailSiteLogoDlvrySlot;true
+;;SiteLogo-OrderDeliveryEmail;SiteLogo;;EmailSiteLogoConfSlot;true
 ;;TopContent-OrderDeliveryEmail;TopContent;;EmailTopDlvrySlot;true
 ;;BottomContent-OrderDeliveryEmail;BottomContent;;EmailBottomDlvrySlot;true
 #;;OrderReferenceNumberOne-OrderDeliveryEmail;OrderReferenceNumberOne;;EmailOrderReferenceNumberOneDlvrySlot;true
@@ -995,7 +995,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomContent-OrderCancelledEmail;BottomContent;;EmailBottomSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-OrderRefundEmail;SiteLogo;;EmailSiteLogoRefundSlot;true
+;;SiteLogo-OrderRefundEmail;SiteLogo;;EmailSiteLogoConfSlot;true
 ;;Tip-OrderRefundEmail;Tip;;EmailTipCUSlot;true
 ;;Description-OrderRefundEmail;Description;;EmailDescriptionRefundSlot;true
 #;;RefundBanner-OrderRefundEmail;RefundBanner;;EmailRefundBannerSlot;true
@@ -1020,7 +1020,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
 ;;EmailgplusRefundSlot;Default Google Pluslot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='DeliverySentEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;SiteLogo-DeliverySentEmail;SiteLogo;;EmailSiteLogoDlvrySlot;true
+;;SiteLogo-DeliverySentEmail;SiteLogo;;EmailSiteLogoConfSlot;true
 ;;TopContent-DeliverySentEmail;TopContent;;EmailTopDlvrySlot;true
 ;;BottomContent-DeliverySentEmail;BottomContent;;EmailBottomDlvrySlot;true
 ;;OrderReferenceNumberOne-DeliverySentEmail;OrderReferenceNumberOne;;EmailOrderReferenceNumberOneDlvrySlot;true
@@ -1169,18 +1169,6 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;insta-ShippingConfirmationEmail;insta;;EmailInstaSlot;true
 ;;Tip-ShippingConfirmationEmail;Tip;;EmailTipCUSlot;true
 
-
-#INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;SiteLogo-OrderOnHoldEmail;SiteLogo;;EmailSiteLogoSlot;true
-#;;TopContent-OrderOnHoldEmail;TopContent;;EmailTopSlot;true
-#;;BottomContent-OrderOnHoldEmail;BottomContent;;EmailBottomSlot;true
-
-
-#Shipment out for delivery
-#INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OutForDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;SiteLogo-OutForDeliveryEmail;SiteLogo;;EmailSiteLogoSlot;true
-#;;TopContent-OutForDeliveryEmail;TopContent;;EmailTopSlot;true
-#;;BottomContent-OutForDeliveryEmail;BottomContent;;EmailBottomSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderOnHoldEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;OnHOldSiteLogo-OrderOnHoldEmail;OnHOldSiteLogo;;EmailSiteLogoOnHoldSlot;true
