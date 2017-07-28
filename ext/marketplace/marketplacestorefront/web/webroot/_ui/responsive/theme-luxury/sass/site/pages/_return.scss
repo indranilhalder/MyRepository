@@ -134,3 +134,55 @@
 	color: #fff;
 	background-color: #2d2d2d;
 }
+.accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectScheduledPickup{
+ width: 100%;
+ }
+ .accordtionTataCliq .accContents .selectReason .selectRadio, .accordtionTataCliq .accContents .selectReturnMethod .selectRadio, .accordtionTataCliq .accContents .selectScheduledPickup .selectRadio{
+ width: 20px;
+    display: inline-block;
+    vertical-align: top;
+ }
+ .accordtionTataCliq .accContents .selectReason .select-content, .accordtionTataCliq .accContents .selectReturnMethod .select-content, .accordtionTataCliq .accContents .selectScheduledPickup .select-content{
+ display: inline-block;
+    width: 80%;
+    vertical-align: top;
+ }
+ .accordtionTataCliq .slectionRefund .paymentCC {
+    background: #ebeff0;
+    margin: 30px;
+    padding: 25px;
+}
+
+.accordtionTataCliq .selectScheduledPickup .select-content ul{
+ margin: 0px;
+    padding: 0px;
+} 
+.accordtionTataCliq .selectScheduledPickup .select-content ul li{
+     list-style: none;
+    padding: 0px;
+    margin: 0px;
+} 
+.accordtionTataCliq .selectScheduledPickup .select-content ul li span{
+ word-wrap: break-word;
+ 
+}
+.scheduledPickup div{
+ padding: 10px;
+ 
+}
+.modal-dialog.changeAdddd{
+   width:700px;
+    @include media-breakpoint-down(sm) {
+        width: 300px;
+    }
+}
+
+.modal-dialog.changeAdddd .close span{
+  line-height: 14px;
+ 
+}
+.modal-dialog.changeAdddd .modal-body .optionsLandmark, .modal-dialog.changeAdddd .modal-body .mainDrop{
+ margin-top: 10px;
+}
+.modal-dialog.changeAdddd .defaultAddCheck{margin-top: 10px;}
+.modal-dialog.changeAdddd .modal-body{overflow-x: hidden;}

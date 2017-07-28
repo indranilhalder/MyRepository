@@ -14817,7 +14817,7 @@ TATA.CommonFunctions = {
         });
     },
     displayRemoveCoupon: function() {
-        "selectPage" == $("#currentPageName").val() && $.ajax({
+        "selectPage" != $("#currentPageName").val() && "choosePage" != $("#currentPageName").val() || $.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
             data: {
@@ -14928,7 +14928,7 @@ TATA.CommonFunctions = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-                $(".plp-wrapper h4.categor-name").hide(), TATA.Pages.PLP.performAjax(requestUrl, $(this).closest(".facet").children(".facetHead").attr("id"));
+                TATA.Pages.PLP.performAjax(requestUrl, $(this).closest(".facet").children(".facetHead").attr("id"));
             });
         },
         performAjax: function(requestUrl, facetHeadId) {
