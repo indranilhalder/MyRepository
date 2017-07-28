@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
+import com.tisl.mpl.model.BuyAGetPercentageDiscountOnBModel;
 import com.tisl.mpl.model.BuyAandBGetPrecentageDiscountCashbackModel;
 import com.tisl.mpl.model.BuyAandBGetPromotionOnShippingChargesModel;
 import com.tisl.mpl.model.BuyAandBPrecentageDiscountModel;
@@ -510,47 +511,47 @@ public class ProductPromotionInterceptor implements PrepareInterceptor
 				}
 
 			}
-			//			else if (object instanceof BuyAGetPercentageDiscountOnBModel)
-			//			{
-			//				final BuyAGetPercentageDiscountOnBModel promotion = (BuyAGetPercentageDiscountOnBModel) object;
-			//				populatePromotionGroup(promotion);
-			//				if (StringUtils.isNotEmpty(promotion.getSecondProductCodeList()))
-			//				{
-			//					final String productCodes = promotion.getSecondProductCodeList();
-			//					final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
-			//
-			//					final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes,
-			//							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
-			//
-			//					if (null != catalogVersionModel)
-			//
-			//
-			//					{
-			//						while (newSecondProductCodeTokens.hasMoreTokens())
-			//						{
-			//							newSecondProductModelList.add(productService.getProductForCode(catalogVersionModel,
-			//									newSecondProductCodeTokens.nextToken().trim()));
-			//						}
-			//						final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
-			//
-			//						final List<ProductModel> finalSecondProductList = new ArrayList<ProductModel>();
-			//						final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
-			//						if (null != existingSecondProductList && !existingSecondProductList.isEmpty())
-			//						{
-			//							finalSecondProductList.addAll(existingSecondProductList);
-			//						}
-			//						finalSecondProductList.addAll(newSecondProductModelList);
-			//
-			//						productModelSet.addAll(finalSecondProductList);
-			//						finalSecondProductList.clear();
-			//						finalSecondProductList.addAll(productModelSet);
-			//						promotion.setSecondProducts(finalSecondProductList);
-			//						promotion.setSecondProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
-			//					}
-			//
-			//				}
-			//
-			//			}
+			else if (object instanceof BuyAGetPercentageDiscountOnBModel)
+			{
+				final BuyAGetPercentageDiscountOnBModel promotion = (BuyAGetPercentageDiscountOnBModel) object;
+				populatePromotionGroup(promotion);
+				if (StringUtils.isNotEmpty(promotion.getSecondProductCodeList()))
+				{
+					final String productCodes = promotion.getSecondProductCodeList();
+					final List<ProductModel> newSecondProductModelList = new ArrayList<ProductModel>();
+
+					final StringTokenizer newSecondProductCodeTokens = new StringTokenizer(productCodes,
+							MarketplacecommerceservicesConstants.PROMO_PRODUCT_UPLOAD_SEPARATOR);
+
+					if (null != catalogVersionModel)
+
+
+					{
+						while (newSecondProductCodeTokens.hasMoreTokens())
+						{
+							newSecondProductModelList.add(productService.getProductForCode(catalogVersionModel,
+									newSecondProductCodeTokens.nextToken().trim()));
+						}
+						final Collection<ProductModel> existingSecondProductList = promotion.getSecondProducts();
+
+						final List<ProductModel> finalSecondProductList = new ArrayList<ProductModel>();
+						final Set<ProductModel> productModelSet = new HashSet<ProductModel>();
+						if (null != existingSecondProductList && !existingSecondProductList.isEmpty())
+						{
+							finalSecondProductList.addAll(existingSecondProductList);
+						}
+						finalSecondProductList.addAll(newSecondProductModelList);
+
+						productModelSet.addAll(finalSecondProductList);
+						finalSecondProductList.clear();
+						finalSecondProductList.addAll(productModelSet);
+						promotion.setSecondProducts(finalSecondProductList);
+						promotion.setSecondProductCodeList(MarketplacecommerceservicesConstants.EMPTY);
+					}
+
+				}
+
+			}
 		}
 		else if (!StringUtils.equalsIgnoreCase(data, MarketplacecommerceservicesConstants.TRUE)
 				&& object instanceof ProductPromotionModel)
