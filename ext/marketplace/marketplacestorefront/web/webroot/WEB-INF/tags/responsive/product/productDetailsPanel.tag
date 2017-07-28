@@ -432,7 +432,38 @@ tr.d0 td {
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiHRD"></li>  
             </c:if>
-            </li>     
+            <c:if test="${certification.value=='BIS'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiBIS"></li>  
+            </c:if>
+            <c:if test="${certification.value=='EGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiEGL"></li>  
+            </c:if>
+             <c:if test="${certification.value=='GIA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGIA"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GII'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGII"></li>  
+            </c:if>
+            <c:if test="${certification.value=='Gubelin'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGubelin"></li>  
+            </c:if>
+            <c:if test="${certification.value=='IDL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIDL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='IGI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIGI"></li>  
+            </c:if> 
+            <c:if test="${certification.value=='IGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiIGL"></li>  
+            </c:if>   
            </c:forEach>
          </ul>
       </div>
