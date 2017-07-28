@@ -1,5 +1,5 @@
 /**
- * All home page XHR that are lazy loaded.
+ * All home page XHR that are lazy loaded are written here. mplminjs.tag is the file where the scroll event for binding is added UF-439
  */
 
 // AJAX CALL BEST PICKS START

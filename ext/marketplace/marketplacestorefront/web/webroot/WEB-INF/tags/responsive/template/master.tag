@@ -372,7 +372,7 @@
  		var buildNumber='${buildNumber}'; 
  		
  		$(window).on('load',function(){
- 			callGigya();
+ 			//callGigya();
  		});
  		</script>
  	</c:when>
@@ -380,7 +380,7 @@
  		<script type="text/javascript">
  		
  		$(window).on('load',function(){
- 			callGigyaWhenNotMinified();
+ 			//callGigyaWhenNotMinified();
  		});
  		</script>
  		</c:otherwise>

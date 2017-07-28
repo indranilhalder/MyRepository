@@ -27,7 +27,82 @@
 				}
 
 				tmpmain.onload = function() {
-					//document.body.appendChild(ia);
+					document.body.appendChild(ia);
+				}
+				
+				ia.onload = function(){
+					
+					$(".electronic-rotatingImage").owlCarousel({
+						items:1,
+			    		//loop: true,
+						loop: $("#rotatingImage img").length == 1 ? false : true,
+			    		nav:true,
+			    		dots:false,
+			    		navText:[]
+					});
+					/*TPR-268*/
+				 
+					//Desktop view
+					/*TISSQAEE-403 Start*/
+					if(typeof homePageBannerTimeout!== "undefined"){
+						var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+						var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
+						var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
+						//$(".home-rotatingImage").owlCarousel({
+						$("#rotatingImageTimeout").owlCarousel({
+							items:1,
+							nav:false,
+							dots:dots,
+							loop: loop,
+					        autoplay: true,
+					        //autoHeight : true, //UF-365
+					        autoplayTimeout: timeout
+					    });
+						//UF-291 starts here ---- UF-365 starts here 
+						if ($(window).width() > 773) {
+							$("#rotatingImageTimeout img").each(function() {
+							    if ($(this).attr("data-src")) {
+									$(this).attr("src",$(this).attr("data-src"));
+									$(this).removeAttr("data-src");
+									$(this).load(function(){
+										$(this).css("display", "block");
+									});
+								}	
+							});
+						}
+						//UF-291 ends here
+					}
+						//Mobile View
+						if(typeof homePageBannerTimeout!== "undefined"){
+							var timeout = parseInt(homePageBannerTimeout) * 1000 ;
+							var loop = $(".homepage-banner #rotatingImageTimeoutMobile img").length > 1 ? true :false;
+							var dots = $(".homepage-banner #rotatingImageTimeoutMobile img").length > 1 ? true :false;
+							
+							$("#rotatingImageTimeoutMobile").owlCarousel({
+								
+								items:1,
+								nav:false,
+								dots:dots,
+								loop: loop,
+						        autoplay: true,
+						        //autoHeight : true, //UF-365
+						        autoplayTimeout: timeout
+						    });
+							//UF-291 starts here ---- UF-365 starts here
+							if ($(window).width() <= 773) {	
+								$("#rotatingImageTimeoutMobile img").each(function() {
+								    if ($(this).attr("data-src")) {
+										$(this).attr("src",$(this).attr("data-src"));
+										$(this).removeAttr("data-src");
+										$(this).load(function(){
+											$(this).css("display", "block");
+										});
+									}	
+								});
+							}
+							//UF-291 ends here
+						
+					}
 				}
 			}
 
@@ -37,6 +112,7 @@
 				window.attachEvent("onload", downloadJSAtOnload);
 			else
 				window.onload = downloadJSAtOnload;
+
 		</script>
 	</c:when>
 	<c:otherwise>
@@ -67,6 +143,7 @@
 <script>
 //TISPT-290
 $(window).load(function(){
+	
 	if($('#pageTemplateId').val() =='LandingPage2Template'){
 		setTimeout(function(){$(".timeout-slider").removeAttr("style")},1500);
 	}
