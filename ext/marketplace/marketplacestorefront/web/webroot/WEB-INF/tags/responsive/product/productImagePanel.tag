@@ -95,8 +95,8 @@
 
 		 <%-- <span id="codId" style="display:none;"> <img  alt="cod" src="${commonResourcePath}/images/cod.png" style="width:60px;">  </span> --%> 
 		 <div id ="newProduct" style="z-index: 1;display:none;" class="new">
-					<img class="brush-strokes-sprite sprite-New"
-					src="//${mplStaticResourceHost}/_ui/responsive/common/images/transparent.png"><span>New</span>
+					<%-- <img class="brush-strokes-sprite sprite-New"
+					src="//${mplStaticResourceHost}/_ui/responsive/common/images/transparent.png"> --%><span>New</span>
 					</div>
 		 
 		 
