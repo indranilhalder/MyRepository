@@ -82,7 +82,6 @@
 									varStatus="status">
 									<c:forEach items="${sellerOrder.entries}" var="entry"
 										varStatus="entryStatus">
-								        ${entry.mplDeliveryMode.code}
 										<c:if test="${entry.mplDeliveryMode.code eq 'click-and-collect'}">
 										<c:set var ="collectorder" scope="session" value="collect-order"/> 
 										</c:if>

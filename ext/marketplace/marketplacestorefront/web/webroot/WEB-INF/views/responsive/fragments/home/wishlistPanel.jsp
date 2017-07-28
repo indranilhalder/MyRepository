@@ -6,7 +6,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
 <c:if test="${isSignedInUser eq 'yes' }">
 	<ul id="DropDownMyWishList">
 		<c:if test="${empty latestThreeWishList}">
@@ -19,10 +18,10 @@
 					href="<c:url value="/my-account/viewParticularWishlist?particularWishlist=${wishlist.name}" />">${wishlist.name}
 						<c:set var="size" value="0"></c:set>
 						<c:forEach items="${wishlist.getEntries()}" var="wishlistEntry">
-							<c:if test="${not empty wishlistEntry.product}">
+							<c:if test="${not empty wishlistEntry.product && wishlistEntry.product.catalogVersion.catalog.id eq cmsSite.productCatalogs[0].id}">
 								<c:set var="size" value="${size +1}"></c:set>
+								<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>	
 							</c:if>
-							<span class="wlCode" style="display: none;">${wishlistEntry.product.code}</span>
 						</c:forEach>
 						<span> <c:if test="${size> 1}">${size}&nbsp;<spring:theme
 									code="text.items" />

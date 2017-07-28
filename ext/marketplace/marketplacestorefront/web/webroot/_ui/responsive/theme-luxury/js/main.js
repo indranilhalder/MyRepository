@@ -804,7 +804,7 @@ TATA.CommonFunctions = {
     			});
     },
     displayRemoveCoupon:function(){
-    	if ($("#currentPageName").val()=="selectPage"){
+    	if ($("#currentPageName").val()=="selectPage" || $("#currentPageName").val()=="choosePage"){
      	$.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
