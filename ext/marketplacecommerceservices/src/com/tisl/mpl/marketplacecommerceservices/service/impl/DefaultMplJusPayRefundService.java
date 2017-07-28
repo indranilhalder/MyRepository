@@ -685,6 +685,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			paymentTransactionEntryModel.setTransactionStatusDetails(statusDetails);
 			paymentTransactionEntryModel.setPaymentMode(getValidPaymentModeType(orderModel));
 			paymentTransactionEntryModel.setType(paymentTransactionType);
+			modelService.save(paymentTransactionEntryModel);
 			final List<PaymentTransactionEntryModel> entries = new ArrayList<>();
 			entries.add(paymentTransactionEntryModel);
 			paymentTransactionModel.setEntries(entries);
