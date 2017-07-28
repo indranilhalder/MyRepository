@@ -399,7 +399,7 @@
 														</span>
 														</c:if>
 														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')}">
-														<span id="addToCartButtonId" style="display: none">
+														<span id="addToCartButtonId">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
 															data-target="#redirectsToPDP">
