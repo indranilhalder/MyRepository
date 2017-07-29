@@ -891,7 +891,7 @@ function displayDeliveryDetails(sellerName) {
         dataType: "json",
         success: function(data) {
             if (null != data) {
-                var isLuxury = $("#isLuxury").val(), pinCodeAvailable = $("#pinCodeAvailable").val(), pretext = $("#deliveryPretext").text(), posttext = $("#deliveryPosttext").text(), fulFillment = data.fulfillment, deliveryModes = data.deliveryModes, fulFillmentP1 = data.fulfillmentType1, leadTime = 0;
+                var pretext = ($("#isLuxury").val(), $("#pinCodeAvailable").val(), $("#deliveryPretext").text()), posttext = $("#deliveryPosttext").text(), fulFillment = data.fulfillment, deliveryModes = data.deliveryModes, fulFillmentP1 = data.fulfillmentType1, leadTime = 0;
                 if (null != data.leadTimeForHomeDelivery && (leadTime = data.leadTimeForHomeDelivery), 
                 null != data.newProduct && "y" == data.newProduct.toLowerCase() && ($("#newProduct").show(), 
                 $(".picZoomer-pic-wp #codId").css("top", "85px")), data.onlineExclusive && $(".online-exclusive").show(), 
@@ -901,38 +901,35 @@ function displayDeliveryDetails(sellerName) {
                 $("#fulFilledByTship").show()) : ($("#fulFilledByTship").hide(), $("#fulFilledBySship").show(), 
                 $("#fulFilledBySship").html(sellerName)), !$("#pdpPincodeCheck").data("clicked")) {
                     var start_hd = parseInt($("#homeStartId").val()) + leadTime, end_hd = parseInt($("#homeEndId").val()) + leadTime;
-                    null != deliveryModes && -1 == deliveryModes.indexOf("HD") ? isLuxury ? ($("#home").show(), 
-                    $("#homeli").show()) : ($("#homeDate").html(pretext + start_hd + "-" + end_hd + posttext), 
+                    null != deliveryModes && -1 == deliveryModes.indexOf("HD") ? ($("#homeDate").html(pretext + start_hd + "-" + end_hd + posttext), 
                     $("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected")) : ($("#homeDate").html(pretext + start_hd + "-" + end_hd + posttext), 
                     $("#home").show(), $("#homeli").show(), $("#homeli").addClass("selected"), $("#homeli").css("opacity", "1"));
                     var start_ed = $("#expressStartId").val(), end_ed = $("#expressEndId").val();
-                    if (null != deliveryModes && -1 == deliveryModes.indexOf("ED")) isLuxury ? ($("#express").show(), 
-                    $("#expressli").show()) : ($("#expressDate").html(pretext + start_ed + "-" + end_ed + posttext), 
-                    $("#expressli").css("opacity", "0.5"), $("#expressli").removeClass("selected")); else {
-                        if ($("#expressDate").html(pretext + start_ed + "-" + end_ed + posttext), isLuxury ? "true" == pinCodeAvailable && ($("#express").show(), 
-                        $("#expressli").show()) : ($("#express").show(), $("#expressli").show()), $("#expressli").addClass("selected"), 
-                        $("#expressli").css("opacity", "1"), null != deliveryModes && -1 == deliveryModes.indexOf("HD")) isLuxury ? ($("#home").show(), 
-                        $("#homeli").show()) : ($("#homeli").css("opacity", "0.5"), $("#homeli").removeClass("selected")); else {
+                    if (null != deliveryModes && -1 == deliveryModes.indexOf("ED")) $("#expressDate").html(pretext + start_ed + "-" + end_ed + posttext), 
+                    $("#expressli").css("opacity", "0.5"), $("#expressli").removeClass("selected"); else {
+                        if ($("#expressDate").html(pretext + start_ed + "-" + end_ed + posttext), $("#express").show(), 
+                        $("#expressli").show(), $("#expressli").addClass("selected"), $("#expressli").css("opacity", "1"), 
+                        null != deliveryModes && -1 == deliveryModes.indexOf("HD")) $("#homeli").css("opacity", "0.5"), 
+                        $("#homeli").removeClass("selected"); else {
                             var start = parseInt($("#homeStartId").val()) + leadTime, end = parseInt($("#homeEndId").val()) + leadTime;
                             $("#homeDate").html(pretext + start + "-" + end + posttext), $("#home").show(), 
                             $("#homeli").show(), $("#homeli").addClass("selected"), $("#homeli").css("opacity", "1");
                         }
-                        if (null != deliveryModes && -1 == deliveryModes.indexOf("ED")) $("#express").show(), 
-                        $("#expressli").show(); else {
+                        if (null != deliveryModes && -1 == deliveryModes.indexOf("ED")) $("#express").hide(), 
+                        $("#expressli").hide(); else {
                             var start = $("#expressStartId").val(), end = $("#expressEndId").val();
                             $("#expressDate").html(pretext + start + "-" + end + posttext), $("#express").show(), 
                             $("#expressli").show(), $("#expressli").addClass("selected"), $("#expressli").css("opacity", "1");
                         }
-                        if (null != deliveryModes && -1 == deliveryModes.indexOf("CNC")) isLuxury ? ($("#collect").show(), 
-                        $("#collectli").show()) : ($("#collectli").css("opacity", "0.5"), $("#collectli").removeClass("selected")); else {
+                        if (null != deliveryModes && -1 == deliveryModes.indexOf("CNC")) $("#collectli").css("opacity", "0.5"), 
+                        $("#collectli").removeClass("selected"); else {
                             var start = $("#clickStartId").val(), end = $("#clickEndId").val();
                             $("#clickDate").html(pretext + start + "-" + end + posttext), $("#collect").show(), 
                             $("#collectli").show(), $("#collectli").css("opacity", "1"), $("#collectli").addClass("selected");
                         }
                     }
                     var start_cnc = $("#clickStartId").val(), end_cnc = $("#clickEndId").val();
-                    null != deliveryModes && -1 == deliveryModes.indexOf("CNC") ? isLuxury ? ($("#collect").show(), 
-                    $("#collectli").show()) : ($("#clickDate").html(pretext + start_cnc + "-" + end_cnc + posttext), 
+                    null != deliveryModes && -1 == deliveryModes.indexOf("CNC") ? ($("#clickDate").html(pretext + start_cnc + "-" + end_cnc + posttext), 
                     $("#collectli").css("opacity", "0.5"), $("#collectli").removeClass("selected")) : ($("#clickDate").html(pretext + start_cnc + "-" + end_cnc + posttext), 
                     $("#collect").show(), $("#collectli").show(), $("#collectli").addClass("selected"), 
                     $("#collectli").css("opacity", "1"));

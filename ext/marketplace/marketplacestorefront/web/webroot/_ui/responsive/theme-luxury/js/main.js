@@ -18,7 +18,6 @@ var screenXsMax="639px";
 var screenSmMax="1023px";
 var screenMdMax="1399px";
 
-
 /*---Start of Checkout Payment tab switching  ----*/		
 var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile");		
 $(window).on('load resize',function(){			
