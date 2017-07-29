@@ -1590,16 +1590,11 @@ $( document ).ready(function() {
 }); 
 
 
- 
-
 /**
  * This method is used to display delivery modes against a sku id
  */
+function displayDeliveryDetails(sellerName) {
 
-
-
-function displayDeliveryDetails(sellerName) {    
-    
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
@@ -1670,28 +1665,19 @@ function displayDeliveryDetails(sellerName) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-					if(isLuxury) {
-						$("#home").show();
-						$("#homeli").show();
-					} else {
-						$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
-						$("#homeli").css("opacity","0.5");
-						$("#homeli").removeClass("selected");
-					}
+					
+					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
+					$("#homeli").css("opacity","0.5");
+					$("#homeli").removeClass("selected");
+					
 				} else {
 					//var start=parseInt($("#homeStartId").val())+leadTime;
 					//var end=parseInt($("#homeEndId").val())+leadTime;
 					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
-					if(isLuxury) {
-							$("#home").show();
-							$("#homeli").show();
-						}
-						
 					
-                    else {
-						$("#home").show();
-						$("#homeli").show();
-					}
+					$("#home").show();
+					$("#homeli").show();
+					
 					$("#homeli").addClass("selected");
 				    $("#homeli").css("opacity","1");
 					
@@ -1702,100 +1688,68 @@ function displayDeliveryDetails(sellerName) {
 					
 					//var start=$("#expressStartId").val();
 					//var end=$("#expressEndId").val();
-					if(isLuxury) {
-						$("#express").show();
-						$("#expressli").show();
-					} else {
-						$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
-						$("#expressli").css("opacity","0.5");
-						$("#expressli").removeClass("selected");
-					}
+					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
+					$("#expressli").css("opacity","0.5");
+					$("#expressli").removeClass("selected");
+					
 				} else {		
 					
 			    
 					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
-					if(isLuxury) {
-						if(pinCodeAvailable == 'true') {
-							$("#express").show();
-							$("#expressli").show();
-						}
-						
-					} else {
-						$("#express").show();
-						$("#expressli").show();
-					}
+					
+					$("#express").show();
+					$("#expressli").show();
+					
 					$("#expressli").addClass("selected");
 				    $("#expressli").css("opacity","1");
 
 					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-						if(isLuxury) {
-							$("#home").show();
-							$("#homeli").show();
-						} else {
-							$("#homeli").css("opacity","0.5");
-							$("#homeli").removeClass("selected");
-						}
+						
+						$("#homeli").css("opacity","0.5");
+						$("#homeli").removeClass("selected");
+						
 					} else {
-                        
 						var start=parseInt($("#homeStartId").val())+leadTime;
 						var end=parseInt($("#homeEndId").val())+leadTime;
 						$("#homeDate").html(pretext+start+"-"+end+posttext);
-						if(isLuxury) {
-								$("#home").show();
-								$("#homeli").show();
-							}
-							
-						 else {
-							$("#home").show();
-							$("#homeli").show();
-						}
+						
+						$("#home").show();
+						$("#homeli").show();
+						
 						$("#homeli").addClass("selected");
 						$("#homeli").css("opacity","1");
 					}
 					
 					if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
-						$("#express").show();
-						$("#expressli").show();
+						$("#express").hide();
+						$("#expressli").hide();
 						//$("#expressli").css("opacity","0.5");
 						//$("#expressli").removeClass("selected");
 					} else {
 						var start=$("#expressStartId").val();
 						var end=$("#expressEndId").val();
 						$("#expressDate").html(pretext+start+"-"+end+posttext);
-						if(isLuxury) {
-								$("#express").show();
-								$("#expressli").show();
-							}
-							
-						else {
-							$("#express").show();
-							$("#expressli").show();
-						}
+						
+						$("#express").show();
+						$("#expressli").show();
+						
 						$("#expressli").addClass("selected");
 						$("#expressli").css("opacity","1");
 					}
 					
 					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
-						if(isLuxury) {
-							$("#collect").show();
-							$("#collectli").show();
-						} else {
-							$("#collectli").css("opacity","0.5");
-							$("#collectli").removeClass("selected");
-						}
+						
+						$("#collectli").css("opacity","0.5");
+						$("#collectli").removeClass("selected");
+						
 					} else {
 						var start=$("#clickStartId").val();
 						var end=$("#clickEndId").val();
 						$("#clickDate").html(pretext+start+"-"+end+posttext);
-						if(isLuxury) {
-								$("#collect").show();
-								$("#collectli").show();
-							}
-							
-						 else {
-							$("#collect").show();
-							$("#collectli").show();
-						}
+						
+						$("#collect").show();
+						$("#collectli").show();
+						
 						$("#collectli").css("opacity","1");
 						$("#collectli").addClass("selected");
 					}
@@ -1809,27 +1763,19 @@ function displayDeliveryDetails(sellerName) {
 				var start_cnc=$("#clickStartId").val();
 				var end_cnc=$("#clickEndId").val();
 				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
-					if(isLuxury) {
-						$("#collect").show();
-						$("#collectli").show();
-					} else {
-						$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
-						$("#collectli").css("opacity","0.5");
-						$("#collectli").removeClass("selected");
-					}
+					
+					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
+					$("#collectli").css("opacity","0.5");
+					$("#collectli").removeClass("selected");
+					
 				} else {
 				    //var start=$("#clickStartId").val();
 		        	//var end=$("#clickEndId").val();
 					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
-					if(isLuxury) {
-							$("#collect").show();
-							$("#collectli").show();
-						}
-						
-					else {
-						$("#collect").show();
-						$("#collectli").show();
-					}
+					
+					$("#collect").show();
+					$("#collectli").show();
+					
 					$("#collectli").addClass("selected");
 				    $("#collectli").css("opacity","1");
 				  }
@@ -1881,7 +1827,9 @@ function displayDeliveryDetails(sellerName) {
 			}
 		}
 	});
-}
+} 
+
+
 
 function dispPrice(mrp, mop, spPrice, savingsOnProduct) {
 	//alert("mrp "+ mrp.formattedValue +"mop "+mop.formattedValue +"spPrice "+spPrice.formattedValue +"savingsOnProduct "+ savingsOnProduct.formattedValue);
