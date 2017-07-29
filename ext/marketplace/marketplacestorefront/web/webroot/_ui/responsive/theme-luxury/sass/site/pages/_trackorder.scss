@@ -386,3 +386,9 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 	 	width:100%;
 	 } 	
  }
+.deliveryTrack.status.suman .progress.progtrckr-done.returnStatus.processing .dot{
+            top: 5px;
+}
+.deliveryTrack.status .progress.progtrckr-done.returnStatus.processing .dot.inactive{
+            top: -5px;
+}
