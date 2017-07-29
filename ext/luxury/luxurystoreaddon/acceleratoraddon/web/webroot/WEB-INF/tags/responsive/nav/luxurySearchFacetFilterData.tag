@@ -15,7 +15,13 @@
 				<spring:theme code="search.page.searchText"/>
 				<span>"<spring:theme code="search.page.searchResultsCount" arguments="${searchPageData.pagination.totalNumberOfResults}"/>"</span> 
 				<spring:theme code="search.page.searchTextItem"/>
-				<span class="searchString">"<%= request.getParameter("text")%>"</span>
+				<c:if test="${empty searchPageData.freeTextSearch}">
+					<span class="searchString">"<%= request.getParameter("text")%>"</span>
+				</c:if>
+				<c:if test="${not empty searchPageData.freeTextSearch}">
+					<span class="searchString">					
+					"<spring:theme code="search.page.searchTextValue" arguments="${searchPageData.freeTextSearch}"/>"</span>
+				</c:if>
 			</c:when>
 		</c:choose>
 	</h4>
