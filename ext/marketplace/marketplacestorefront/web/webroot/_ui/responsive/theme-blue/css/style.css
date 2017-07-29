@@ -69730,17 +69730,10 @@ footer .footer-text{
 	top: 50%;
     margin: auto;
     position: absolute;
-    /* start change of TISPRDT-1934 */
-    /* width: 100%; */
-    width: 98%;
-    /* end change of TISPRDT-1934 */
+    width: 100%;
     /* z-index: 1; */
     display: table;
-    /* start change of TISPRDT-1934 */
-    /* padding: 0 30px; */
-    padding: 0 0px 0 4px;
-	margin-left: -19px;
-	/* end change of TISPRDT-1934 */
+    padding: 0 8px;
 }
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-prev:after ,
 .homepage-banner .owl-theme .owl-controls .owl-nav .owl-next:after{
@@ -72816,6 +72809,13 @@ body .account .right-account .order-history.order-details li.item #pickNo{
 	.product-listing{
 		clear: both; /*TISPRDT-1724 fix*/
 	}
+	/* start change of TISPRDT-1934 & TISPRDT-1935 */
+	.homepage-banner .offersCarousel.owl-theme#shopByLookCarousel .owl-controls .owl-nav{
+		margin-left: -19px;
+		width: 98%;
+		padding: 0 0px 0 4px;
+	}
+	/* end change of TISPRDT-1934 & TISPRDT-1935 */
 }
 /*TISTE-225 fix end*/
 
@@ -72859,3 +72859,9 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     top: 38px;
 }
 /*end change of INC144316778*/
+
+/*start for TISPRDT-1936*/
+.top_deal .offersCarousel#shopByLookCarousel .item.slide{
+	margin: 0 3px;
+}
+/*end for TISPRDT-1936*/
