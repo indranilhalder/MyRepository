@@ -34,6 +34,7 @@ ACC.autocomplete = {
 					window.location.href = ui.item.url;
 				}
 			},_renderItem : function (ul, item){
+				var site =$("#ia_site_id").val();
 			if (item.type == "autoSuggestion"){
 					var renderHtml = "<a href='/search?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
 					return $("<li>")
