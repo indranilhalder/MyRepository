@@ -38,6 +38,13 @@
 .accordtionTataCliq .accContents {
     padding: 0 0 15px 0 !important;
     margin-top: 10px;
+     @include media-breakpoint-down(sm) {
+        .selectReasonForReturn{
+            .reasonSelectBox{
+                width:100%;
+            }
+        }
+    }
 }
 .accordtionTataCliq .errorText, .accordtionTataCliq .errorTextSelection {
     color: red;
@@ -169,6 +176,14 @@
 .scheduledPickup div{
  padding: 10px;
  
+}
+.accordtionTataCliq .scheduledPickup{
+    .selectRadio{
+        text-align: center;
+    }
+    .radioButton{
+        margin: auto;
+    }
 }
 .modal-dialog.changeAdddd{
    width:700px;
