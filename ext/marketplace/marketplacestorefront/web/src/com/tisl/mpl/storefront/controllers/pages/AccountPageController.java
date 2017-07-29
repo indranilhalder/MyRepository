@@ -5174,7 +5174,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 				for (final Wishlist2EntryModel entry : entryModels)
 				{
 					//TISEE-6376
-					if (entry.getProduct() != null && entry.getProduct().getCode() != null)
+					if (entry.getProduct() != null && entry.getProduct().getCode() != null && (entry.getProduct().getCatalogVersion().getCatalog().getId().toString().equalsIgnoreCase(catalogVersion)))
 					{
 						final ProductModel productModel = getMplOrderFacade().getProductForCode(entry.getProduct().getCode());
 						if (null != productModel.getSellerInformationRelator())
