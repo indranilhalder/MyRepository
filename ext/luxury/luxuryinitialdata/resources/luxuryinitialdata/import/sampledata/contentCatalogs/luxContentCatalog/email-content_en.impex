@@ -164,7 +164,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailOrderRefNoTwoConfSlot;OrderRefNumbTwoConfImage
 ;;EmailTipConfSlot;EmailTipsImage
 ;;EmailsmileyimgConfSlot;EmailsmileyImage
-;;EmailfbConfSlot;EmailFBImage
+;;EmailfbConfSlot;ForgetPwEmailfbImage
 ;;EmailtweetSlot;Emailtwitter
 ;;EmailYouTubeSlot;Emailyoutube
 ;;EmailappConfSlot;EmailAppImage;
@@ -221,7 +221,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailCUAppleStoreSlot;EmailCUAppleStoreImage
 ;;EmailCUAndroidStoreSlot;EmailCUAndroidstoreImage
 ;;EmailCULinegreySlot;EmailCULinegreyImage
-;;EmailCUfbSlot;EmailCUFBImage1
+;;EmailCUfbSlot;ForgetPwEmailfbImage
 ;;EmailCUtweetSlot;EmailCUTweetImage
 ;;EmailCUYouTubeSlot;EmailCUYouTubeImage
 ;;EmailCUInstaSlot;EmailCUInstagramImage
