@@ -1595,8 +1595,11 @@ $( document ).ready(function() {
 /**
  * This method is used to display delivery modes against a sku id
  */
-function displayDeliveryDetails(sellerName) {
 
+
+
+function displayDeliveryDetails(sellerName) {    
+    
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
@@ -1668,8 +1671,8 @@ function displayDeliveryDetails(sellerName) {
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
 					if(isLuxury) {
-						$("#home").hide();
-						$("#homeli").hide();
+						$("#home").show();
+						$("#homeli").show();
 					} else {
 						$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
 						$("#homeli").css("opacity","0.5");
@@ -1680,15 +1683,12 @@ function displayDeliveryDetails(sellerName) {
 					//var end=parseInt($("#homeEndId").val())+leadTime;
 					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
 					if(isLuxury) {
-						if(pinCodeAvailable == 'true') {
 							$("#home").show();
 							$("#homeli").show();
-						} else {
-							$("#home").hide();
-							$("#homeli").hide();
 						}
 						
-					} else {
+					
+                    else {
 						$("#home").show();
 						$("#homeli").show();
 					}
@@ -1703,8 +1703,8 @@ function displayDeliveryDetails(sellerName) {
 					//var start=$("#expressStartId").val();
 					//var end=$("#expressEndId").val();
 					if(isLuxury) {
-						$("#express").hide();
-						$("#expressli").hide();
+						$("#express").show();
+						$("#expressli").show();
 					} else {
 						$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
 						$("#expressli").css("opacity","0.5");
@@ -1718,9 +1718,6 @@ function displayDeliveryDetails(sellerName) {
 						if(pinCodeAvailable == 'true') {
 							$("#express").show();
 							$("#expressli").show();
-						} else {
-							$("#express").hide();
-							$("#expressli").hide();
 						}
 						
 					} else {
@@ -1732,26 +1729,23 @@ function displayDeliveryDetails(sellerName) {
 
 					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
 						if(isLuxury) {
-							$("#home").hide();
-							$("#homeli").hide();
+							$("#home").show();
+							$("#homeli").show();
 						} else {
 							$("#homeli").css("opacity","0.5");
 							$("#homeli").removeClass("selected");
 						}
 					} else {
+                        
 						var start=parseInt($("#homeStartId").val())+leadTime;
 						var end=parseInt($("#homeEndId").val())+leadTime;
 						$("#homeDate").html(pretext+start+"-"+end+posttext);
 						if(isLuxury) {
-							if(pinCodeAvailable == 'true') {
 								$("#home").show();
 								$("#homeli").show();
-							} else {
-								$("#home").hide();
-								$("#homeli").hide();
 							}
 							
-						} else {
+						 else {
 							$("#home").show();
 							$("#homeli").show();
 						}
@@ -1760,8 +1754,8 @@ function displayDeliveryDetails(sellerName) {
 					}
 					
 					if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
-						$("#express").hide();
-						$("#expressli").hide();
+						$("#express").show();
+						$("#expressli").show();
 						//$("#expressli").css("opacity","0.5");
 						//$("#expressli").removeClass("selected");
 					} else {
@@ -1769,15 +1763,11 @@ function displayDeliveryDetails(sellerName) {
 						var end=$("#expressEndId").val();
 						$("#expressDate").html(pretext+start+"-"+end+posttext);
 						if(isLuxury) {
-							if(pinCodeAvailable == 'true') {
 								$("#express").show();
-								$("#expressli").show();
-							} else {
-								$("#express").hide();
 								$("#expressli").show();
 							}
 							
-						} else {
+						else {
 							$("#express").show();
 							$("#expressli").show();
 						}
@@ -1787,8 +1777,8 @@ function displayDeliveryDetails(sellerName) {
 					
 					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 						if(isLuxury) {
-							$("#collect").hide();
-							$("#collectli").hide();
+							$("#collect").show();
+							$("#collectli").show();
 						} else {
 							$("#collectli").css("opacity","0.5");
 							$("#collectli").removeClass("selected");
@@ -1798,15 +1788,11 @@ function displayDeliveryDetails(sellerName) {
 						var end=$("#clickEndId").val();
 						$("#clickDate").html(pretext+start+"-"+end+posttext);
 						if(isLuxury) {
-							if(pinCodeAvailable == 'true') {
 								$("#collect").show();
 								$("#collectli").show();
-							} else {
-								$("#collect").hide();
-								$("#collectli").hide();
 							}
 							
-						} else {
+						 else {
 							$("#collect").show();
 							$("#collectli").show();
 						}
@@ -1824,8 +1810,8 @@ function displayDeliveryDetails(sellerName) {
 				var end_cnc=$("#clickEndId").val();
 				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
 					if(isLuxury) {
-						$("#collect").hide();
-						$("#collectli").hide();
+						$("#collect").show();
+						$("#collectli").show();
 					} else {
 						$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
 						$("#collectli").css("opacity","0.5");
@@ -1836,15 +1822,11 @@ function displayDeliveryDetails(sellerName) {
 		        	//var end=$("#clickEndId").val();
 					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
 					if(isLuxury) {
-						if(pinCodeAvailable == 'true') {
 							$("#collect").show();
 							$("#collectli").show();
-						} else {
-							$("#collect").hide();
-							$("#collectli").hide();
 						}
 						
-					} else {
+					else {
 						$("#collect").show();
 						$("#collectli").show();
 					}

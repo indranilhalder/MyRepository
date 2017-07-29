@@ -464,7 +464,7 @@
 									</span>	
 								</c:if>
 								</li>
-								<li class="delivery header4 deliveryWidth"><button class="changeDeliveryMethod"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
+								<li class="delivery header4 deliveryWidth"><button class="changeDeliveryMethod btn btn-primary btn-md"><spring:theme code="checkout.multi.cnc.store.change.delivery.mode"/></button></li>
 								
 								<%-- <li class="delivery header4"><a class="cd-popup-trigger${status1.index}"
 														style="color: #00cbe9 !important;" data-toggle="modal" data-target="#myModal">Change Delivery Mode</a></li>
@@ -1193,7 +1193,7 @@
 				<c:when test="${delModeCount gt 0}">
 				
 				<form:form id="selectDeliveryMethodForm1" action="${request.contextPath}/checkout/multi/delivery-method/select" method="post" commandName="deliveryMethodForm">
-								<button class="continue_btn" id="deliveryMethodSubmit1" type="submit" class="checkout-next" style="border: none;display: none;"><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
+								<button class="continue_btn btn btn-primary btn-lg" id="deliveryMethodSubmit1" type="submit" class="checkout-next" "><spring:theme code="checkout.multi.deliveryMethod.continue" text="Next"/></button>
 				</form:form>
 				</c:when>
 				

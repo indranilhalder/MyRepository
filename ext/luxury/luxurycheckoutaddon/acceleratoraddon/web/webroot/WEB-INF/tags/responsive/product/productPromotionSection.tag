@@ -42,7 +42,7 @@
 												var="promotionProduct">
 												<a href="${request.contextPath}${promotionProduct.url}">
 													<product:productPrimaryImage product="${promotionProduct}"
-														format="thumbnail" />
+														format="luxuryThumbnail" />
 												</a>
 											</c:forEach>
 										</div>

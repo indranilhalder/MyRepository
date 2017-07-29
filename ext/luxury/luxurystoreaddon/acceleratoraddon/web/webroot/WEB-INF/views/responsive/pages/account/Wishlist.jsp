@@ -353,15 +353,15 @@
 										<c:url value="/cart/add" var="addToCartUrl" />
 										<ycommerce:testId
 											code="searchPage_addToCart_button_${product.code}">
-											<form:form id="addToCartForm_${product.code}_${seller.ussid}"
+											<form:form id="addToCartForm_${product.code}_${entry_ussid}"
 												action="#" method="get"
 												class="add_to_cart_wl_form add_to_bag_wl">
-												<div id="addToCartForm_${product.code}_${seller.ussid}Title" class="addToCartFormTitleSuccessWl"></div>
+												<div id="addToCartForm_${product.code}_${entry_ussid}Title" class="addToCartFormTitleSuccessWl"></div>
 												<input type="hidden" maxlength="3" size="1" id="qty"
 													name="qty" value="1">
 												<input type="hidden" maxlength="3" size="1" id="stock"
 													name="stock" value="${seller.availableStock}">
-												<input type="hidden" name="ussid" value="${seller.ussid}" />
+												<input type="hidden" name="ussid" value="${entry_ussid}" />
 												<input type="hidden" name="productCodePost"
 													value="${product.code}" />
 													<!-- For Infinite Analytics Start-->
@@ -399,7 +399,7 @@
 														</span>
 														</c:if>
 														<c:if test="${(empty wpproduct.wishlistProductSize && wpproduct.productCategory eq 'Clothing')||(empty wpproduct.wishlistProductSize &&wpproduct.productCategory eq 'Footwear')||(showSizeGuideForFA eq 'true' &&wpproduct.productCategory eq 'Accessories')}">
-														<span id="addToCartButtonId" style="display: none">
+														<span id="addToCartButtonId">
 															<button type="button" id="addToCartButtonwl" 
 																class="blue button sizeNotSpecified_wl" data-toggle="modal"
 															data-target="#redirectsToPDP">
@@ -456,7 +456,7 @@
 												</span>
 												<input type="hidden" id="particularWishlistName_wl" name="wishlistName" value="${particularWishlistName}" />
 												<input type="hidden" id="productCode_wl" name="productCodeWl" value="${product.code}" />
-					                            <input type="hidden" id="ussid_wl" name="ussidWl" value="${seller.ussid}" />
+					                            <input type="hidden" id="ussid_wl" name="ussidWl" value="${entry_ussid}" />
 												<!-- START: INSERTED for MSD -->
 												
 												<c:if test="${isMSDEnabled}">

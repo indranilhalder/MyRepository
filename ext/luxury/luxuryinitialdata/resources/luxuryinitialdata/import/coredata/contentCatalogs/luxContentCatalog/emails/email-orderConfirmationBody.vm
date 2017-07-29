@@ -64,7 +64,7 @@
 			  	        		    <tr>
 									
 										#if($ctx.cmsSlotContents.SiteLogoNew)
-										<td class="logo" ><a href="https://www.e2eluxury.tataunistore.com/" target="_blank">
+										<td class="logo" ><a href="https://e2eluxury.tataunistore.com/" target="_blank">
 										
 										<span style="width:133px; height:48px; display:block; line-height:0; font-size:0">
 										${ctx.cmsSlotContents.SiteLogoNew}</span>

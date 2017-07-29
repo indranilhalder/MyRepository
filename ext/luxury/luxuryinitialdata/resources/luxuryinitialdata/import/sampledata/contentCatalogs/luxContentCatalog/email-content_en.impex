@@ -185,7 +185,7 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 ;;/images/theme/applestore.png;Applestore.png;$siteResource/images/theme/applestore.png;;
 ;;/images/theme/androidstore.png;Androidstore.png;$siteResource/images/theme/androidstore.png;;
 ;;/images/theme/linegrey.png;Luxury_Linegrey.png;$siteResource/images/theme/linegrey.png;;
-;;/images/theme/Luxury_Fb.jpg;Luxury_Fb.jpg;$siteResource/images/theme/facebook.png;;
+;;/images/theme/Luxury_Fb.jpg;facebook.png;$siteResource/images/theme/facebook.png;;
 ;;/images/theme/gplus.png;gplus.jpg;$siteResource/images/theme/gplus.png;;
 ;;/images/theme/Luxury_youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
 ;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
@@ -203,7 +203,7 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;EmailCUAppleStoreImage;/images/theme/applestore.png
 ;;EmailCUAndroidstoreImage;/images/theme/androidstore.png
 ;;EmailCULinegreyImage;/images/theme/linegrey.png
-;;EmailCUFBImage;/images/theme/Luxury_Fb.jpg;
+;;EmailCUFBImage1;/images/theme/Luxury_Fb.jpg;
 ;;EmailCUYouTubeImage;/images/theme/Luxury_youtube.png;
 ;;EmailCUInstagramImage;/images/theme/Luxury_Insta.png;
 ;;EmailCUTweetImage;/images/theme/tweet.png
@@ -221,37 +221,11 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailCUAppleStoreSlot;EmailCUAppleStoreImage
 ;;EmailCUAndroidStoreSlot;EmailCUAndroidstoreImage
 ;;EmailCULinegreySlot;EmailCULinegreyImage
-;;EmailCUfbSlot;EmailCUFBImage
+;;EmailCUfbSlot;EmailCUFBImage1
 ;;EmailCUtweetSlot;EmailCUTweetImage
 ;;EmailCUYouTubeSlot;EmailCUYouTubeImage
 ;;EmailCUInstaSlot;EmailCUInstagramImage
 ;;EmailCUgplusSlot;EmailCUgplusImage
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

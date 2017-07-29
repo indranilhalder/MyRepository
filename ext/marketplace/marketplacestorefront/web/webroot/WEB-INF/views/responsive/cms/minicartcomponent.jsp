@@ -14,15 +14,12 @@
 					class="mini-cart-link myBag-sticky"
 					data-mini-cart-url="${rolloverPopupUrl}"
 					data-mini-cart-refresh-url="${refreshMiniCartUrl}"
-					data-mini-cart-name="<spring:theme code="text.cart"/>"
+					data-mini-cart-name="<spring:theme code="text.cart"/>" data-shan=""
 					data-mini-cart-empty-name="<spring:theme code="popup.cart.empty"/>">
 					<spring:theme code="minicart.mybag" />&nbsp;(<span class="js-mini-cart-count">${totalItems}</span>)</a>
-
-
-
 					<div class="mini-bag">
 					</div>
-					
+					<span class="js-mini-cart-count">${totalItems}</span>
 					</li>
 
 

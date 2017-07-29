@@ -18,6 +18,36 @@ var screenXsMax="639px";
 var screenSmMax="1023px";
 var screenMdMax="1399px";
 
+
+/*---Start of Checkout Payment tab switching  ----*/		
+var paymentModes =  $("#viewPaymentCredit, #viewPaymentDebit, #viewPaymentNetbanking, #viewPaymentCOD, #viewPaymentEMI,#viewPaymentCreditMobile, #viewPaymentDebitMobile, #viewPaymentNetbankingMobile, #viewPaymentCODMobile, #viewPaymentEMIMobile");		
+$(window).on('load resize',function(){			
+paymentModes.on("click",function(e) {		
+	 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);		
+	/*if($(window).width()<651){		
+	 $('.cart.wrapper .left-block .payments.tab-view ul.tabs').show(200);		
+	 $(this).parents('ul.nav').addClass('hide-menu');		
+	 $(this).parents('.left-block').find('h1.payment-options').addClass('hide-menu');		
+	 }*/		
+	 if(paymentModes.parent().hasClass("active")){		
+		 paymentModes.parent().removeClass("active");		
+	 }		
+	 $(this).parent().addClass("active"); 		
+	 $('ul.accepted-cards li').removeClass('active-card');		
+});		
+/* $('.cart.wrapper .left-block .payments.tab-view .tabs li.change-payment').click(function(){		
+	 $(this).parent().hide(200);		
+	 $(this).parent().siblings('ul.nav').removeClass('hide-menu');		
+	 $(this).parents('.left-block').find('h1.payment-options').removeClass('hide-menu');		
+});*/		
+});		
+if($("#savedCard").css("display") === "block") {		
+	 $(".newCardPayment").css("display","none");		
+}		
+/*---END of Checkout Payment tab switching  ----*/
+
+
+
 TATA.CommonFunctions = {
     getUrlParameterByName: function(name, url) {
         if (!url) url = window.location.href;
@@ -606,13 +636,16 @@ TATA.CommonFunctions = {
     Header: {
         MobileMenu: function() {
         	$(".mega-menu li span").each(function() {
-        	    	$(this).prev().css('pointer-events','none');
+    	    	$(this).prev().css('pointer-events','none');
         	});
         	$(".mega-menu > li ").on("click",function(){
+        		$(".mega-menu li span").each(function() {
+        	    	$(this).prev().css('pointer-events','none');
+            	});
         		$(".mega-menu > li ").each(function(){
         			$(".sub-menu-toggle",this).first().removeClass("active").next(".sub-menu").removeClass("active");
-        			$(".mega-menu li a").css('pointer-events','none');
         		});
+        		$(this).addClass("parent");
 				$(".sub-menu-toggle",this).first().addClass("active").next(".sub-menu").addClass("active");
 				$(".sub-menu-inner").addClass("open-inner-menu");
 				$("a:first-child",this).css('pointer-events','auto');
@@ -621,10 +654,10 @@ TATA.CommonFunctions = {
         	$(document).on("click", ".open-inner-menu li", function() {
         		$(".open-inner-menu li").each(function(){
         			$(".sub-menu-toggle",this).first().removeClass("active").next(".sub-menu").removeClass("active");
-        			$(".mega-menu li a").css('pointer-events','none');
         		});
         		$(".sub-menu-toggle",this).first().toggleClass("active").next(".sub-menu").toggleClass("active");
-        		$(this).children().css('pointer-events','auto');
+        		$("a",this).css('pointer-events','auto');
+        		$(this).closest('.parent').children(":first").css('pointer-events','auto');
         		
         	});
             $("#hamburger-menu").on("click", function() {
@@ -774,6 +807,7 @@ TATA.CommonFunctions = {
     			});
     },
     displayRemoveCoupon:function(){
+    	if ($("#currentPageName").val()=="selectPage" || $("#currentPageName").val()=="choosePage"){
      	$.ajax({
             url: ACC.config.encodedContextPath + "/checkout/multi/payment-method/applyPromotions",
             type: "GET",
@@ -796,7 +830,8 @@ TATA.CommonFunctions = {
 	 				setTimeout(function(){ $("#couponMessage").html(""); }, 10000);
 		
             	} 
-        });
+     		});
+    	}
    },
     
     init: function () {
@@ -819,7 +854,7 @@ TATA.CommonFunctions = {
         _self.deliveryaddressform();
         _self.swipeLookBook();  
         _self.removeProdouct();
-        //_self.displayRemoveCoupon();
+        _self.displayRemoveCoupon();
     }
 
 };
@@ -960,7 +995,7 @@ TATA.Pages = {
                 $("#" + relevantCheckbox).click();
             }), $(document).on("change", ".facet-form input:checkbox", function() {
                 var requestUrl = $(this).closest("form").attr("action") + "?" + $(this).closest("form").serialize();
-                $(".plp-wrapper h4.categor-name").hide();
+                /* TCL-843  $(".plp-wrapper h4.categor-name").hide();*/
                 TATA.Pages.PLP.performAjax(requestUrl, $(this).closest('.facet').children('.facetHead').attr('id'));
             });
         },

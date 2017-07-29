@@ -60,6 +60,7 @@
     border-top: 1px solid #dce1eb;
     padding: 10px 10px 0;
     margin-bottom: 10px;
+    
 }
 
 .click-collect-option .item-fulfillment{
@@ -144,6 +145,12 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
     margin-left: 33%;
 }
 
+body .account .right-account .order-history.order-details .status>ul>li.progress.cancelStatus span.dot{
+	    margin-top: -10px;
+}
+body .account .right-account .order-history.order-details .status>ul>li.progress.cancelStatus span.dot:first-child{
+	    margin-top: 0px;
+}
 body .account .right-account .order-history.order-details .status>ul>li.progress.shippingStatus.processing span.dot{
     margin-left: 16.5%;
 }
@@ -213,6 +220,10 @@ body .account .right-account .order-history.order-details .status .cancelStatus 
 
 body .account .right-account .order-history.order-details .status .message.tracking-information{
     left:-200%;
+    
+    .view-more-consignment{
+        cursor: pointer;
+    }
 }
 body .account .right-account .order-history.order-details .status .message.return{
     left:-400% !important;
@@ -297,8 +308,17 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 body .account .right-account .order-history.order-details .status>ul>li.delivery-status p{
     line-height: initial;
     height: 20px;
+    font-size: 12px;
+    vertical-align: middle;
+    display: table-cell;
 }
-
+.order-history.order-details{
+    .order{
+        .deliveryTrack.status{
+                padding-bottom: 50px;
+        }
+    }
+}
 .product-block.order-details{
 	border: 1px solid #dce1eb;
     padding: 0 0 125px 0 !important;
