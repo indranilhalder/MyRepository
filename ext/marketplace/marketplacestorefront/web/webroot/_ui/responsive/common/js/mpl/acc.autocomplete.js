@@ -43,16 +43,19 @@ ACC.autocomplete = {
 							.appendTo(ul);
 					
 				}
-				if (item.type == "productResult" && site != "lux"){ 
+				if (item.type == "productResult"){ 
 					var renderHtml = "<a href='" + ACC.config.encodedContextPath + item.url + "' >";
-					
-					renderHtml += 	"<div class='Best-Sellers'>" + "Best Sellers" +"</div>";
+					if($("#isLuxury").val() != "true"){
+						renderHtml += 	"<div class='Best-Sellers'>" + "Best Sellers" +"</div>";
+					}
 					if (item.image != null){
 						renderHtml += "<img src='" + item.image + "'  />";
 					}
 
 					renderHtml += 	"<div class='name'>" + item.value +"</div>";
-					renderHtml += 	"<div class='price'>" + item.price +"</div>";
+					if($("#isLuxury").val() != "true"){
+						renderHtml += 	"<div class='price'>" + item.price +"</div>";
+					}
 					renderHtml += 	"</a>";
 
 					return $("<li class='product'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
@@ -86,16 +89,18 @@ ACC.autocomplete = {
 							"</a>";
 					return $("<li class='product-list'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
 				}
-				if (item.type == "productResult" && site != "lux")
+				if (item.type == "productResult")
 				{				
 					var renderHtml = "<a href='" + ACC.config.contextPath + item.url + "' class='product-list clearfix'>";
 					if (option.displayProductImages &&  item.image != null)
 					{
 						renderHtml += "<span class='thumb'><img src='" + item.image + "' /></span><span class='desc clearfix'>";
 					}
-					renderHtml += "<span class='title'>" + item.manufacturer +" "+ item.value /*+ " in " + item.category*/ +
-							"</span><span class='price'>" + item.price + "</span></span>" +
-							"</a>";
+					if($("#isLuxury").val() != "true"){
+						renderHtml += "<span class='title'>" + item.manufacturer +" "+ item.value /*+ " in " + item.category*/ +
+						"</span><span class='price'>" + item.price + "</span></span>" +
+						"</a>";
+					}
 					return $("<li class='product-list'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
 				}
 			},
