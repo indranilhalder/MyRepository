@@ -21,7 +21,7 @@
     }
     
     .pdp-promo-title.pdp-title{
-        cursor: pointer;
+        /*cursor: pointer;*/
     }  
   
     .product-detail.pdp-right{
@@ -217,8 +217,8 @@
                 a{
                     background-color: $light-gray;
                     border-color: $slight-gray;
-                    color: $gray-darker;
-                    text-decoration:underline;
+                    color: $gray-darker;                    
+                    text-decoration: line-through;
                     cursor: default;
                 }
             }
@@ -1037,6 +1037,29 @@
 				    text-transform: uppercase;
 				    cursor: pointer;
 				    margin-left: 10px;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                    display:inline-block;
+                    overflow: hidden;
+
+                    
+                    
+                    &.strike{
+                        background-color: $light-gray;
+                        border-color: $slight-gray;
+                        color: $gray-darker; 
+                        cursor: default;
+                        span{
+                            text-decoration: line-through;                            
+                        }
+
+                    }
+                    &.selected{
+                        background-color: #2d2d2d;
+                        border-color: #2d2d2d;
+                        color: #fff;
+                        text-decoration: none;
+                    }
 				}
 			}
 			label{
@@ -1054,6 +1077,7 @@
 			margin-top:15px;
 			display:inline-block;
 			width:100%;
+            
            
             p{
                padding: 10px;  
