@@ -14724,17 +14724,17 @@ TATA.CommonFunctions = {
             $(".mega-menu li span").each(function() {
                 $(this).prev().css("pointer-events", "none");
             }), $(".mega-menu > li ").on("click", function() {
-                $(".mega-menu > li ").each(function() {
-                    $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active"), 
-                    $(".mega-menu li a").css("pointer-events", "none");
-                }), $(".sub-menu-toggle", this).first().addClass("active").next(".sub-menu").addClass("active"), 
+                $(".mega-menu li span").each(function() {
+                    $(this).prev().css("pointer-events", "none");
+                }), $(".mega-menu > li ").each(function() {
+                    $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
+                }), $(this).addClass("parent"), $(".sub-menu-toggle", this).first().addClass("active").next(".sub-menu").addClass("active"), 
                 $(".sub-menu-inner").addClass("open-inner-menu"), $("a:first-child", this).css("pointer-events", "auto");
             }), $(document).on("click", ".open-inner-menu li", function() {
                 $(".open-inner-menu li").each(function() {
-                    $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active"), 
-                    $(".mega-menu li a").css("pointer-events", "none");
+                    $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
-                $(this).children().css("pointer-events", "auto");
+                $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");
             }), $("#hamburger-menu").on("click", function() {
                 $("body").addClass("menu-open");
             }), $("#main-nav-close").on("click", function() {
@@ -15000,9 +15000,8 @@ TATA.CommonFunctions = {
         },
         productHover: function() {
             $(".product-grid").hover(function() {
-                if(!$(this).find('.plp-hover-img').hasClass("error")) {
-                    $(this).addClass("hover"), $(this).find(".plp-hover-img").show().siblings().hide();
-                }
+                $(this).find(".plp-hover-img").hasClass("error") || ($(this).addClass("hover"), 
+                $(this).find(".plp-hover-img").show().siblings().hide());
             }, function() {
                 $(this).removeClass("hover"), $(".plp-modelimg-show.active").length ? $(this).find(".plp-model-img").show().siblings().hide() : $(this).find(".plp-default-img").show().siblings().hide();
             });
@@ -15851,7 +15850,7 @@ $(document).ready(function() {
             link_obj: this,
             link_text: "product_offer_view_details",
             event_type: "product_offer_details"
-        }), offerPopup($("#promotionDetailsId").html());
+        });
     }), $(document).on("hide.bs.modal", function() {
         $("#offerPopup").remove();
     }), $("#pin").focus(function() {
