@@ -41,6 +41,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 {
 	private static final Logger LOG = Logger.getLogger(AutoRefundInitiateAction.class);
 	private static final String REFUND_MODE_C = "C";
+	private static final String REFUND_MODE_WALLET = "W";
 
 	private List<OrderEntryModel> refundList;
 	private List<ReturnEntryModel> returnList;
@@ -61,6 +62,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 		LOG.error("Inside AutoRefundInitiateAction");
 		boolean refundedAtRts = false;
 		boolean refundReasonSiteError = false;
+		boolean refundedByWallet = false;
 
 		refundList = Collections.synchronizedList(new ArrayList<OrderEntryModel>());
 		returnList = Collections.synchronizedList(new ArrayList<ReturnEntryModel>());
@@ -90,6 +92,14 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 									{
 										refundedAtRts = true;
 									}
+									refundedByWallet = false;
+									if (returnEntry instanceof RefundEntryModel
+											&& null != ((RefundEntryModel) returnEntry).getRefundMode()
+											&& ((RefundEntryModel) returnEntry).getRefundMode().equalsIgnoreCase(REFUND_MODE_WALLET)) // added for wallet store return mode
+									{
+										refundedByWallet = true;
+									}
+
 									refundReasonSiteError = false;
 									if (returnEntry instanceof RefundEntryModel && null != ((RefundEntryModel) returnEntry).getReason()
 											&& ((RefundEntryModel) returnEntry).getReason().equals(RefundReason.SITEERROR)) // added for store return mode
@@ -99,7 +109,8 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 									final ConsignmentStatus status = returnEntry.getOrderEntry().getConsignmentEntries().iterator().next()
 											.getConsignment().getStatus();
 
-									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundReasonSiteError)
+									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundedByWallet
+											&& !refundReasonSiteError)
 									{
 										populateRefundList(orderModel);
 
@@ -231,6 +242,7 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 	protected void populateRefundList(final OrderModel orderModel)
 	{
 		boolean refundedAtRts = false;
+		boolean refundedByWallet = false;
 
 		if (orderModel != null)
 		{
@@ -269,9 +281,16 @@ public class AutoRefundInitiateAction extends AbstractProceduralAction<OrderProc
 									{
 										refundedAtRts = true;
 									}
+									refundedByWallet = false;
+									if (returnEntry instanceof RefundEntryModel
+											&& null != ((RefundEntryModel) returnEntry).getRefundMode()
+											&& ((RefundEntryModel) returnEntry).getRefundMode().equalsIgnoreCase(REFUND_MODE_WALLET)) // added for wallet store return mode
+									{
+										refundedByWallet = true;
+									}
 
 
-									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts)
+									if (status.equals(ConsignmentStatus.RETURN_CLOSED) && !refundedAtRts && !refundedByWallet)
 									{
 										final ReturnEntryModel returnEntryModel = returnEntry;
 										final OrderEntryModel orderEntryModel = (OrderEntryModel) returnEntryModel.getOrderEntry();
