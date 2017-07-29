@@ -7929,7 +7929,7 @@ $(document).ready(function(){
 			  margin:"0px",
 			  top: alert_top
 		});
-		$(".alert-danger").css("z-index","101");
+		//$(".alert-danger").css("z-index","101");
 	}
 	
 	$("li.price").each(function(){

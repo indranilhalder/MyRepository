@@ -14,6 +14,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:if test="${param.source ne null and param.source eq 'App' }">
 	<c:set var="showOnlySiteLogo" value="true"></c:set>
@@ -77,9 +78,21 @@
 			<c:if test="${empty hideAllFooter}">
 			<footer class="mobile-footer">
 			<div class="banner">
-			<cms:pageSlot position="Footer" var="feature" limit="1">
-			${feature.notice}
-        	</cms:pageSlot>
+				<!-- UF-281/282:starts -->
+				<c:choose>
+					<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
+						<span style="display:none;"><spring:theme code="checkout.single.footer.secure.text"></spring:theme></span>
+						<cms:pageSlot position="Footer" var="feature" limit="1">
+						${feature.notice}
+			        	</cms:pageSlot>
+	        		</c:when>
+	        		<c:otherwise>
+						<cms:pageSlot position="Footer" var="feature" limit="1">
+						${feature.notice}
+			        	</cms:pageSlot>
+	        		</c:otherwise>
+        		</c:choose>
+        		<!-- UF-281/282:Ends -->
        		<cms:pageSlot position="Footer" var="feature">
 			<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
    			<cms:component component="${feature}"></cms:component>

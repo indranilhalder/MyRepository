@@ -69346,6 +69346,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
   	display: inline-block;
   	padding: 13px 8px 14px 16px !important;
   	height: auto !important;
+  	top: 0px !important;
 }
 #singlePageAccordion .new-address{
 	text-align: center;
