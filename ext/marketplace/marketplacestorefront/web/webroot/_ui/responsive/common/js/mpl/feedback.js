@@ -3815,7 +3815,7 @@ $(document).on("click",".product-facet .facet .facet-name",function(){
 	fixTopAdjustTimeOut();
 });
 function fixTopAdjust(){
-	if($(".left-block ul.product-facet.js-product-fcet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
+	if($(".left-block ul.product-facet.js-product-facet.listing-leftmenu").outerHeight() <= $(window).height() && ($(".listing.wrapper .left-block").hasClass("fix") && $("header .content .bottom").hasClass("active")))
 		$(".listing.wrapper .left-block").addClass("topTheFix");
 	else
 		$(".listing.wrapper .left-block").removeClass("topTheFix");
