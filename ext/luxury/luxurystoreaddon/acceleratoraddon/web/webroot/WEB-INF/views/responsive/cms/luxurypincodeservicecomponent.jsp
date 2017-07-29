@@ -74,7 +74,7 @@
 			  <input type="hidden" value="${expressEntry.value}" id="expressEndId"/>
 		     </c:if>
 		    </c:forEach>
-			<span id="expressDate"><%-- <c:out value="${entry.value}" /> --%></span>
+			<span id="expressDate"> <c:out value="${entry.value}" /></span>
 			</li>	
 		</c:if> 
 		
