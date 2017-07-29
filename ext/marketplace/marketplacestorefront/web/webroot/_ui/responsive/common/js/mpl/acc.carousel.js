@@ -677,7 +677,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('.top_deal #autoplayTimeoutOffer').val()?$('.top_deal #autoplayTimeoutOffer').val():5000;
 		
 		$(".top_deal .offersCarousel").owlCarousel({
-					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
+					autoWidth : true,	/*add for INC144315059*/	/*add for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
