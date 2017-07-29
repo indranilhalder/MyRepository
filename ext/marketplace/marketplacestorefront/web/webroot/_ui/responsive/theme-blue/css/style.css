@@ -59295,6 +59295,17 @@ header > .content .top.header_fix .toggle{
 }
 /* Carousel Portion Ends */
 
+/*start change of TISPRDT-1936*/
+.owl-stage {
+display: -webkit-box;
+display: -moz-box;
+display: -ms-box;
+display: box;
+}
+.owl-item {
+display: inline !important;
+}
+/*end change of TISPRDT-1936*/
 .related-video-wrapper {
     width: 100%;
     float: left;
