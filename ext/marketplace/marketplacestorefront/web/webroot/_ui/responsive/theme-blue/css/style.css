@@ -69129,6 +69129,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-radius: 4px;
     background-color: #ffe5ec;
     border: solid 1px #ff0000;
+    top: 0px ! important;
 }
 	#singlePageAddressPopup .product-block.addresses.new-form fieldset select ,
 	.new-address-form-mobile .product-block.addresses.new-form fieldset select {

@@ -1356,7 +1356,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	// Save a new address in responsive
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVEDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
-	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm, final BindingResult bindingResult)
+	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm,
+			@RequestParam(required = false, defaultValue = "false") final boolean isEdit, final BindingResult bindingResult)
 			throws JSONException
 	{
 		final JSONObject jsonObj = new JSONObject();
@@ -1398,7 +1399,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 					jsonObj.put("type", "error");
 					return jsonObj;
 				}
-				saveAndSetDeliveryAddress(addressForm, false);
+				saveAndSetDeliveryAddress(addressForm, isEdit);
 				jsonObj.put("isAddressSaved", "true");
 				jsonObj.put("isAddressSet", "true");
 				jsonObj.put("type", "response");
@@ -4177,10 +4178,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				{
 					for (int i = 0; i < storeLocationRequestData.getStoreId().size(); i++)
 					{
-						if (i == 3)
-						{
-							break;
-						}
+						//						if (i == 3)
+						//						{
+						//							break;
+						//						}
 						final PointOfServiceModel posModel = mplSlaveMasterFacade.findPOSBySellerAndSlave(
 								sellerInfoModel.getSellerID(), storeLocationRequestData.getStoreId().get(i));
 						posModelList.add(posModel);
@@ -4665,7 +4666,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4723,7 +4724,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody
