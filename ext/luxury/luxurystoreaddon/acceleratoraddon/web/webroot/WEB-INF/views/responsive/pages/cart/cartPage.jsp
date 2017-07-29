@@ -109,7 +109,7 @@
 									<p></p>
 									<p id="cartPinCodeAvailable" class="cartPins"><spring:theme code="product.pincode.input" /></p>
 									<!-- TPR_1055 EQA -->
-									<p id="AvailableMessage" style="display:none"></p>
+									<!-- <p id="AvailableMessage" style="display:none"></p> -->
 										<%--
                                                                             <p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
                                         --%>
@@ -124,8 +124,8 @@
 										</c:otherwise>
 									</c:choose>
 									<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return luxurycheckPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
-									<p id="AvailableMessage" style="display:none" class="availablePins"></p>
-									<p id="unserviceablepincode" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
+									<!-- <p id="AvailableMessage" style="display:none" class="availablePins"></p> -->
+									<p id="unserviceablepincode" style="display:none" class="unservicePins error_text"><spring:theme code="cart.unserviceable.pincode" /></p>
 									<p id="error-Id" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>
 									<p id="emptyId" style="display:none" class="emptyPins"><spring:theme code="product.empty.pincode" /></p>
 								</div>
