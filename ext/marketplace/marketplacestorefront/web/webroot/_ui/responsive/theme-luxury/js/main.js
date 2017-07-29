@@ -1076,8 +1076,10 @@ TATA.Pages = {
 
         productHover: function(){
             $(".product-grid").hover(function () {
-                    $(this).addClass("hover");
-                    $(this).find('.plp-hover-img').show().siblings().hide();
+                    if(!$(this).find('.plp-hover-img').hasClass("error")){
+                        $(this).addClass("hover");
+                        $(this).find('.plp-hover-img').show().siblings().hide();
+                    }
                 },
                 function () {
                     $(this).removeClass("hover");

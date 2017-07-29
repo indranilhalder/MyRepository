@@ -15001,7 +15001,9 @@ TATA.CommonFunctions = {
         },
         productHover: function() {
             $(".product-grid").hover(function() {
-                $(this).addClass("hover"), $(this).find(".plp-hover-img").show().siblings().hide();
+                if(!$(this).find('.plp-hover-img').hasClass("error")) {
+                    $(this).addClass("hover"), $(this).find(".plp-hover-img").show().siblings().hide();
+                }
             }, function() {
                 $(this).removeClass("hover"), $(".plp-modelimg-show.active").length ? $(this).find(".plp-model-img").show().siblings().hide() : $(this).find(".plp-default-img").show().siblings().hide();
             });

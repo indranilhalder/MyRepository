@@ -18,4 +18,4 @@
 	</c:otherwise>
 </c:choose>
 
-<img class="${imgClass}" src="${imageUrl}" alt="${alt}" title="${title}" onError="this.onerror=null;this.src='/_ui/responsive/theme-luxury/images/plpPlaceholder.png';"/>
+<img class="${imgClass}" src="${imageUrl}" alt="${alt}" title="${title}" onError="this.onerror=null;this.src='/_ui/responsive/theme-luxury/images/plpPlaceholder.png';this.addClass('error');"/>
