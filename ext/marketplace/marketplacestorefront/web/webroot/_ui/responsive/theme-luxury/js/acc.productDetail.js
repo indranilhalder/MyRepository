@@ -3108,7 +3108,7 @@ function loadDefaultWishListName_SizeGuide() {
 			utag.link({"link_obj": this, "link_text": 'product_offer_view_details', "event_type": 'product_offer_details'}); 
 			
 			/*TPR-694 ends */
-			offerPopup($("#promotionDetailsId").html());
+			//offerPopup($("#promotionDetailsId").html());
 		});
 		$(document).on('hide.bs.modal', function () {
 		    $("#offerPopup").remove();

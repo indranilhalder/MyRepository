@@ -301,7 +301,7 @@ tr.d0 td {
 			
 			<!-- TISPRM-97 starts -->
 				<!-- TPR-772 starts -->
-			<div class="pdp-promo-block promo-block" style="display:none">
+			<div class="pdp-promo-block promo-block">
 			<!-- TPR-772 ends -->
 			<c:if test="${not empty product.potentialPromotions}">
 			
