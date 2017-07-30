@@ -9036,7 +9036,7 @@ function populateIsExchangeApplied(response,stringCaller)
 		if(isExchangeServicable && exchangePincode==selectedPincode)
 			{
 			$(".cart_exchange").css('display','block');
-			$("#exCartAlert").css('display','block');
+			$("#exCartAlert").css('display','none');
 			}
 		else
 			{
