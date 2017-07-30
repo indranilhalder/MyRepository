@@ -42,7 +42,7 @@
 								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; ">Tata CliQ Luxury.... The Joy of Shopping<p></td>
 							</tr>
 							<tr>
-								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; "><b><a href="mailto:${ctx.customerCareEmail}" style="color: #11309F;">www.tatacliq.com</a></b><p></font>
+								<td><p style="font-size: 13px; padding-left: 40px; padding-right: 40px; "><b><a href="mailto:${ctx.customerCareEmail}" style="color: #11309F;">${ctx.secureBaseUrl}</a></b><p></font>
 								</td>	
 							</tr>
 							

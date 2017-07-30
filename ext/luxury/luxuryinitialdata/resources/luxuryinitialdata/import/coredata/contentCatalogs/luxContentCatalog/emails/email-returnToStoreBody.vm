@@ -214,7 +214,7 @@ width:100%;
 			   #if($ctx.cmsSlotContents.app)
          <tr bgcolor="#fbfbfb">
             <td colspan="5" align="center">
-               <a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
+               <a href="${ctx.secureBaseUrl}/apps" target="_blank" style="display: block; margin-bottom: 25px;" class="downloadapp-icon">
      ${ctx.cmsSlotContents.app}
     </a> 
             </td>

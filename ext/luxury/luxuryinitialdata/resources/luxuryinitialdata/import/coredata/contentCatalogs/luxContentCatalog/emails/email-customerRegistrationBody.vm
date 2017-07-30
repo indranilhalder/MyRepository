@@ -211,7 +211,7 @@
                                   <tr>
                                       <td align="center" class="content foocontnt inPad">
                                         <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-                                          This email can't receive replies. Get in touch with us by contacting <a href ="https://e2eluxury.tataunistore.com/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Luxury Care</a>
+                                          This email can't receive replies. Get in touch with us by contacting <a href="${ctx.secureBaseUrl}/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Luxury Care</a>
                                           <br>
                                           You can also write to us at <a href="mailto:hello@tatacliq.com.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
                                         </div>

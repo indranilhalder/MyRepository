@@ -48,7 +48,7 @@
 	                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">If you want to know more about the goods you've bought, quote your order number when you call us. </span></td>
               	</tr>
               	<tr>
-                	#if($ctx.cmsSlotContents.handpick)<td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.handpick}</a></td>#end
+                	#if($ctx.cmsSlotContents.handpick)<td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.handpick}</a></td>#end
               	</tr>
               	<tr>
                 	<td>${ctx.cmsSlotContents.slashImgOne}</td>

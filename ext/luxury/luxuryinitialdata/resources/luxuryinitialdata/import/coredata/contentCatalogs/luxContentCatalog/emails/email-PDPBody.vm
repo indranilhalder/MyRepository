@@ -168,7 +168,7 @@
 					 
 					  <td align="left" valign="top" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:18px; color:#ed0c6e;"><table width="550" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
-                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
 						<tr>
 						 <td>${ctx.cmsSlotContents.smileyimg}</td></td>

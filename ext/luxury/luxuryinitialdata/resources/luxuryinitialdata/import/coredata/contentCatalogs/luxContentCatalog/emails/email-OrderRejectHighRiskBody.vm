@@ -57,7 +57,7 @@
  </span></td>
               </tr>
               <tr>
-                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
                 <td>${ctx.cmsSlotContents.smileyimg}</td>

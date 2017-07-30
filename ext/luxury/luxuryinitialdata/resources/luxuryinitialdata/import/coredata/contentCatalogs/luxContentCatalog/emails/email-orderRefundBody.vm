@@ -127,7 +127,7 @@ width:100%;
                 <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">The best way to get over a failed love affair? A tub of ice cream and binge shopping!There's nothing a click can't fix at TataCliQ.</span></td>
               </tr>
               <tr>
-                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
                 <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>

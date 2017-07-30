@@ -201,7 +201,7 @@ width:100%;
 							  information about an individual product, quote its <strong>transaction ID.</strong></span></td>
               </tr>
               <tr>
-                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
                 <td><span>${ctx.cmsSlotContents.smileyimg}</span></td>

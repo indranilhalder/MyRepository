@@ -64,7 +64,7 @@
 			  	        		    <tr>
 									
 										#if($ctx.cmsSlotContents.SiteLogoNew)
-										<td class="logo" ><a href="https://e2eluxury.tataunistore.com/" target="_blank">
+										<td class="logo" ><a href="${ctx.secureBaseUrl}" target="_blank">
 										
 										<span style="width:133px; height:48px; display:block; line-height:0; font-size:0">
 										${ctx.cmsSlotContents.SiteLogoNew}</span>
@@ -82,7 +82,7 @@
 				  	        		        </tr>
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
-			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="https://e2eluxury.tataunistore.com/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
+			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="${ctx.secureBaseUrl}/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
 			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Confirmation - Order  <span style="color: #aa1d3d;">${ctx.orderReferenceNumber}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
@@ -496,7 +496,7 @@ Free
 		  	        		    <tr>
 		  	        		    	<td align="center" class="content foocontnt inPad">
 		  	        		    	  <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    	    This email can't receive replies. Get in touch with us by contacting Tata CLiQ Luxury Care <a href="https://e2eluxury.tataunistore.com/contact" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
+		  	        		    	    This email can't receive replies. Get in touch with us by contacting Tata CLiQ Luxury Care <a href="${ctx.secureBaseUrl}/contact" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
 		  	        		    	    <br>
 		  	        		    	    You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
 		  	        		    	  </div>

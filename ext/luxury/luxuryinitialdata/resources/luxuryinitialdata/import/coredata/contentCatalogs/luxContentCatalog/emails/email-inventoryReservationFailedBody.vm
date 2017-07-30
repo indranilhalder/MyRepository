@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-<title>TATA - CLiQ</title>
+<title>TATA - CLiQ Luxury</title>
 </head>
 
 <body>
@@ -36,6 +36,7 @@
 
 </table>    
       </td>
+      
             <td width="13">&nbsp;</td>
           </tr>
         </table></td>
@@ -55,7 +56,7 @@
               </tr>
               
               <tr>
-                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
               </tr>
               <tr>
                 <td>${ctx.cmsSlotContents.smileyimg}</td>

@@ -226,7 +226,7 @@
               </tr>
               #if($ctx.cmsSlotContents.app)
               <tr>
-                <td height="70" align="center"><a href="https://www.e2eluxury.tataunistore.com/apps" target="_blank">${ctx.cmsSlotContents.app}</a></td>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.app}</a></td>
               </tr>
               #end
               <tr>
