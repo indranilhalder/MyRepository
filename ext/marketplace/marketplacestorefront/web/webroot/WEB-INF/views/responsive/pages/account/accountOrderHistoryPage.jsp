@@ -263,8 +263,19 @@
 															</p>
 															<p>
 																<c:if test="${not empty entry.product.size}">
-																	<spring:theme code="text.orderHistory.size" />
-																	&nbsp;${entry.product.size}
+																	<c:choose>
+																		<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+																			<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																			<c:if test="${entry.product.size ne noSize }">
+																				<spring:theme code="text.orderHistory.size" />
+																										&nbsp;${entry.product.size}
+																			</c:if>
+																		</c:when>
+																		<c:otherwise>
+																			<spring:theme code="text.orderHistory.size" />
+																										&nbsp;${entry.product.size}
+																		</c:otherwise>
+																	</c:choose>
 																</c:if>
 															</p>
 															<p>

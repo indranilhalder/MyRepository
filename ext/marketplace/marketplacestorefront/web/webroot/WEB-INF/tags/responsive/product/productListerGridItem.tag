@@ -274,12 +274,16 @@
 						<!-- TISSTRT - 985  TISPRO-277::Size of footwear products are not displayed in SERP page-->
 						<c:if
 							test="${not empty product.productCategoryType && product.isVariant &&  (product.productCategoryType eq 'Apparel' 
-							                          || product.productCategoryType eq 'Footwear'|| product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery') }">
-
-
+							                          || product.productCategoryType eq 'Footwear') }">
 							<%-- <li class="product-size-list"><span class="product-size">Size : ${fn:toUpperCase(product.displaySize)} </span></li> --%>
 							<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
 							</span></li>
+						</c:if>
+						<c:if test="${not empty product.productCategoryType && product.isVariant && (product.productCategoryType eq 'FineJewellery'|| product.productCategoryType eq 'FashonJewellery')}">
+							<c:if test="${not empty product.displaySize && product.displaySize ne '[NOSIZE]'}">
+									<li class="product-size-list"><span class="product-size">Size: <span class="size-col">${product.displaySize}</span><%-- Price : ${product.displayPrice}### ${product.displayUrl} --%>
+								</span></li>
+							</c:if>
 						</c:if>
 						<%-- <li>Color: ${product.swatchColor}</li> --%>
 						<c:if

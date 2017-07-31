@@ -2018,6 +2018,21 @@ public class ProductPageController extends MidPageController
 
 
 			}
+
+			if (ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+					|| ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				if (productModel instanceof PcmProductVariantModel)
+				{
+					final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
+					if (variantProductModel.getSize().equalsIgnoreCase(ModelAttributetConstants.NOSIZE))
+					{
+						showSizeGuideForFA = false;
+					}
+
+				}
+			}
+
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 			/**
 			 * Add Filter for FA END :::::
@@ -3263,6 +3278,16 @@ public class ProductPageController extends MidPageController
 
 
 			}
+
+			if (ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(variantProductModel.getProductCategoryType())
+					|| ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
+			{
+				if (variantProductModel.getSize().equalsIgnoreCase(ModelAttributetConstants.NOSIZE))
+				{
+					showSizeGuideForFA = false;
+				}
+			}
+
 			model.addAttribute("showSizeGuideForFA", showSizeGuideForFA);
 
 		}
