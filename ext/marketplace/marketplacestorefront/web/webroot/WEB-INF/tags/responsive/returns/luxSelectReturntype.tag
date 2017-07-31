@@ -82,13 +82,13 @@
 
 									<b><spring:theme code="text.order.returns.accountnumber"/></b> <br/>
 									<!-- Start INC144316970- SPACE in between bank details in COD_SELFSHIP -->
-									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/[^0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"/>
+									<form:password onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" path="accountNumber" name="accountNumber" placeholder="Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/[^0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');" class="form-control"/>
 								    <!-- End INC144316970- SPACE in between bank details in COD_SELFSHIP -->
 								</div>
 								<div class="col-md-6 col-sm-6 reenteraccountnumber">
 									<b><spring:theme code="text.order.returns.reenteraccountnumber"/></b> <br/>
 									<!-- Start INC144316970- SPACE in between bank details in COD_SELFSHIP -->
-									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/[^0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"/>
+									<form:input onkeypress="return event.charCode >= 48 && event.charCode <= 57" maxlength="24" minlength="16" type="text" path="reEnterAccountNumber" name="reaccountNumber" placeholder="Re-Account Number" value="${customerBankDetails.bankAccount}" onkeyup="this.value=this.value.replace(/[^0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');" class="form-control"/>
 								    <!-- End INC144316970- SPACE in between bank details in COD_SELFSHIP -->
 								</div>
 								<div class="col-md-12 col-sm-12 suggestionText">
@@ -99,20 +99,20 @@
 							<div class="row mt-10">
 								<div class="col-md-5 col-sm-5 accountholdername">
 									<b><spring:theme code="text.order.returns.accountholdername"/></b> <br/>
-									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"  maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" />
+									<form:input type="text" onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"  maxlength="40"  path="accountHolderName" name="accountHolderName" placeholder="Account Holder Name" value="${customerBankDetails.name}" class="form-control" />
 								</div>
-								<div class="col-md-5 col-sm-5">
+								<div class="col-md-4 col-sm-4">
 									<b><spring:theme code="text.order.returns.refundmode"/></b> <br/>
-									<form:select name="size" class="refundMode" path="refundMode" value="${customerBankDetails.transactionType}">
+									<form:select name="size" class="refundMode form-control" path="refundMode" value="${customerBankDetails.transactionType}">
 										    <form:option value="N">NEFT</form:option>
 <%-- 											<form:option value="R">RTGS</form:option> --%>
 <%-- 											<form:option value="C">CHEQUE</form:option> --%>
 <%-- 											<form:option value="B">Bank Transfer</form:option>						 --%>
 									</form:select>
 								</div>
-								<div class="col-md-2 col-sm-2">
+								<div class="col-md-3 col-sm-3">
 									<b><spring:theme code="text.order.returns.title"/></b> <br/>
-									<form:select name="size" class="refundMode" path="title" value="${customerBankDetails.title}">
+									<form:select name="size" class="refundMode form-control" path="title" value="${customerBankDetails.title}">
 										   <%--  <form:option  value="mr" >MR</form:option>
 											<form:option value="Mrs">MRs</form:option>
 											<form:option value="Company">Company</form:option>	 --%>		
@@ -127,11 +127,11 @@
 							<div class="row mt-10">
 								<div class="col-md-6 col-sm-6 bankname">
 									<b><spring:theme code="text.order.returns.bankname"/></b> <br/>
-									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" value="${customerBankDetails.bankName}" />
+									<form:input  onkeyup="this.value=this.value.replace(/[^A-z\s]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');" path="bankName" type="text"  name="bankName" placeholder="Bank Name" value="${customerBankDetails.bankName}" class="form-control" />
 								</div>
 								<div class="col-md-6 col-sm-6 ifsccode">
 									<b><spring:theme code="text.order.returns.ifsccode"/></b> <br/>
-									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}"/>
+									<form:input  path="iFSCCode"  onkeyup="this.value=this.value.replace(/[^A-z0-9]/g,''); this.value=this.value.trim().replace(/\s\s+/g,'');"   maxlength="11" minlength="" type="text" name="ifscCode" placeholder="IFSC CODE"  value="${customerBankDetails.bankKey}" class="form-control" />
 								</div>
 								<div class="col-md-12 col-sm-12 suggestionText">
 									<span><spring:theme code="text.order.returns.safetyinformationlabl3"/></span><br/>
