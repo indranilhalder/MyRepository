@@ -910,7 +910,7 @@ TATA.Pages = {
         },
 
         addSortParameter: function(){
-            var item = $(".responsiveSort").val();
+            var item = $(".responsiveSort option:selected").val();
             var url = "";
             switch (item) {
                 case 'relevance':

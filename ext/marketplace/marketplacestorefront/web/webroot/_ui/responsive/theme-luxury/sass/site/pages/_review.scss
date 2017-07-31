@@ -809,3 +809,16 @@
 		}
 	}
 }
+.account .wrapper .return-order-history{
+    position: relative;
+    margin-left: 15px;
+    
+    &:before {
+        content: "\f0d9";
+        font: normal normal normal 14px/1 FontAwesome;
+        position: absolute;
+        top: 1px;       
+        left: -9px;
+        font-size: 18px;
+    }
+}

@@ -84,6 +84,10 @@
 	margin: 0 auto 60px;
 	text-align: center;
     
+    @include media-breakpoint-down(sm) {
+        margin: 0 auto 20px;
+    }
+    
     li{
         list-style: none;
     }
@@ -472,11 +476,17 @@
     .container{
         padding-left: 0px;
         padding-right: 0px; 
+        width: 100%;
     }
     footer{
         .container{
             padding-left: 20px;
             padding-right: 20px;
-        }           
+        }
+        @media (min-width: 1200px){
+            .container {
+                width: 1200px;
+            } 
+        }       
     }
 }

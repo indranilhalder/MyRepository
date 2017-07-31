@@ -700,3 +700,9 @@ footer{
 .has-error, .error_text{
     color: red;
 }
+@include media-breakpoint-down(sm) {
+    .loaderDiv {
+        left: 50% !important;
+        transform: translateX(-50%);
+    }
+}
