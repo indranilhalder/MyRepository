@@ -91,8 +91,8 @@
 <div id="submit&Condition">
 <label id="error_tc" for="exchange_tc"></label>
 <input type="checkbox" name="terms&condition" id="exchange_tc" >
-<label for="exchange_tc"><span>I agree to the <span>terms and conditions</span></span></label>
-	<cms:pageSlot position="Section2" var="component">
+<label for="exchange_tc"><span>I agree to the</span></label>
+	<cms:pageSlot position="ExchangeSlot" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>	
 			<br>

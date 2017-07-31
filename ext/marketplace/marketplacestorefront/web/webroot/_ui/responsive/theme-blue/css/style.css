@@ -69129,6 +69129,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-radius: 4px;
     background-color: #ffe5ec;
     border: solid 1px #ff0000;
+    top: 0px ! important;
 }
 	#singlePageAddressPopup .product-block.addresses.new-form fieldset select ,
 	.new-address-form-mobile .product-block.addresses.new-form fieldset select {
@@ -69345,6 +69346,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
   	display: inline-block;
   	padding: 13px 8px 14px 16px !important;
   	height: auto !important;
+  	top: 0px !important;
 }
 #singlePageAccordion .new-address{
 	text-align: center;
@@ -69413,7 +69415,11 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading #selectedReviewOrderDivId span#selectedReviewOrderHighlight{
     color: #cccccc;
 }
-.checkout-accordion .checkout-accordion-heading{
+.checkout-accordion .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open + .checkout-accordion .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open + .checkout-accordion.checkout-selected  + .checkout-accordion.checkout-selected .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.accordion-open .checkout-accordion-heading{
 	cursor: not-allowed;
 	pointer-events: none;
 }
@@ -69422,8 +69428,8 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 	margin-bottom: 0px !important;
 }
 .checkout-accordion:first-child .checkout-accordion-heading,
-.checkout-accordion.checkout-selected .checkout-accordion-heading,
-.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading {
+.checkout-accordion.checkout-selected .checkout-accordion-heading/* ,
+.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading */ {
     cursor: pointer;
     pointer-events: all;
 } 
@@ -70760,9 +70766,9 @@ background:#f8f8f8;
     color: #a5173c;
 }
 .page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable{
-    top: 64px !important;
+    top: 106px !important;
     display: block;
-    height: auto !important;
+    height: auto ! important;
     padding: 13px 8px 14px 16px !important;
     font-size: 12px;
     letter-spacing: .6px;
@@ -70770,6 +70776,7 @@ background:#f8f8f8;
     border-radius: 4px;
     background-color: #ffe5ec;
     border: solid 1px red;
+    position: relative ! important;
 }
 .page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable span{
 	    display: block;
@@ -70818,6 +70825,34 @@ body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .off-bag span:l
 }
 body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>.add-disc {
     margin-top: 10px;
+}
+.page-multiStepCheckoutSummaryPage #singlePageDesktop #makePaymentDiv .alert.alert-danger.alert-dismissable {
+    top: 0px ! important;
+}
+.page-multiStepCheckoutSummaryPage #singlePageDesktop #reviewOrder tr.d0 td {
+  background-color:#E0E0E0 ;
+  color: black;
+}
+select.update-entry-quantity-input.review-page-select{
+   background-image: none ! important;
+   width: 50px ! important;
+   padding: 0px 18px 0 22px ! important;
+}
+.footer-copyrigt-text{
+	float:right;
+}
+.mobile-footer .banner.copyright-footer-text {
+	background: #eee;
+	line-height: 20px;
+}	
+.safe-secure-icon{
+	background-image: url(../images/safe_secure_icon.JPG);
+    background-size: 100%;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    vertical-align: bottom;
 }
 /*UF-281 UF-282 single page checkout css ends*/
 
@@ -75869,27 +75904,27 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 .product-info .product-detail.FineJewellery .certified-by ul li{
 	position: relative;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq{
-	width: 50px;
-	height: 30px;
+.product-info .product-detail.FineJewellery .certified-by ul li{
+	width: 58px;
+	height: 40px;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before, 
-.product-info .product-detail.FashionJewellery .certified-by ul li.jwlryCertiTanishq:before{
-	width: 50px;
-    height: 30px;
+.product-info .product-detail.FineJewellery .certified-by ul li:before, 
+.product-info .product-detail.FashionJewellery .certified-by ul li:before{
+	width: 58px;
+    height: 40px;
     display: inline-block;
     content: "";
-    position: absolute;
+    position: relative;
     left: 0;
     top: 8px;
-    background: url(../images/cerified_logo.png) no-repeat 0px 0px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
+/* .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGS,
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGTA,
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiHRD{
 	display: none;
-}
+} */
 .product-info>div.tabs-block.FineJewellery,
 .product-info>div.tabs-block.FashionJewellery
 {
@@ -76128,7 +76163,8 @@ table#showPriceBreakup{
 }
 /*TPR-4134 starts*/
 .accordtionTataCliq .accContents .selectReason.selectRefund  b,		
-.accordtionTataCliq .accContents .slectionRefund b{		
+.accordtionTataCliq .accContents .slectionRefund b,
+.accordtionTataCliq .accContents.returnMethod .selectReturnMethod b{		
 	font-size: 14px;		
   	line-height: 1.43;		
   	letter-spacing: 0.6px;		
@@ -76166,12 +76202,14 @@ table#showPriceBreakup{
   	text-decoration: none;		
   	float: right;		
 }		
-.col-md-8.slectionRefund ~ .button_holder{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder{		
 	margin-top: 30px;		
 	margin-bottom: 21px;		
 	position: static;		
 }		
-.col-md-8.slectionRefund ~ .button_holder button{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button{		
 	width: 181px;		
     height: 42px;		
     font-size: 12px;		
@@ -76179,7 +76217,9 @@ table#showPriceBreakup{
     letter-spacing: 0.6px;		
     font-weight: normal;		
 }		
-.col-md-8.slectionRefund ~ .button_holder button.light-blue.submit-request{		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button.light-blue.submit-request,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button#saveBlockData.btn.btn-primary
+{		
 	    margin-right: 26px;		
 }		
 .accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10 .returnPayment{		
@@ -76281,7 +76321,7 @@ left: 60px !important;
 .accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason{
 	width: 47%;
 }
-.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry ~ .button_holder button{
+body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder button{
 	width: 181px;
 	height: 42px;
 	font-size: 12px;
@@ -76340,11 +76380,11 @@ body.page-returnSubmit .account .wrapper{
 	padding: 0 31px;
 	margin-bottom: 0;
 }
-/* body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
+ body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
  		position: static;
- 		margin-bottom: 79px;
- 	} */
- body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12.reverseSealJwlry ~ .button_holder{		
+ 		/* margin-bottom: 79px; */
+ 	} 
+ body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder{		
  		position: static;	
  		margin-bottom: 79px;
  		}
@@ -76387,6 +76427,9 @@ p.disclaimer-txt{
 body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in .arrow{
 	left: 70%;
 }
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress{
+	width: 100%;
+	}
 @media(min-width: 1024px){
 	body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4{
 	width: 38%;
@@ -76431,6 +76474,11 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	    padding-left: 10px;		
 }
 }
+@media(max-width: 690px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 120px;
+}
+}
 @media(max-width: 640px){
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4{
 		padding-left: 0px !important;
@@ -76441,15 +76489,20 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{
 		padding-left: 0px;
 		}
-		.col-md-8.slectionRefund ~ .button_holder button{
+		body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{
 		width: 170px;
 		}
+}
+@media(max-width: 520px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 140px;
+}
 }
 @media(max-width: 480px){		
 	.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
 	padding-left: 15px;		
 	}
-	.col-md-8.slectionRefund ~ .button_holder button{
+	body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{
 	 	width: 150px;
 	}
 	}
@@ -76460,14 +76513,28 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow {
     left: 123px;
 }
-.col-md-8.slectionRefund ~ .button_holder button {
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button {
     width: 150px;
+}
+.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 160px;
 }
 }
 @media(max-width: 420px){
-	.col-md-8.slectionRefund ~ .button_holder button {
+	body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button {
     	width: 100px;
 }	
+.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 180px;
+}
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress{
+	float: none;
+}
+}
+@media(max-width: 350px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 220px;
+}
 }
 @media(max-width: 790px){
 	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
