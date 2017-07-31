@@ -118,10 +118,23 @@
 						<span> <spring:theme code="order.qty" /> <ycommerce:testId
 								code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>
 							<c:if test="${not empty entry.product.size}">
-								<ycommerce:testId code="cart_product_size">
-									<div class="size">
-										<spring:theme code="text.size" />${entry.product.size}</div>
-								</ycommerce:testId>
+								<c:choose>
+									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize }">
+											<ycommerce:testId code="cart_product_size">
+												<div class="size">
+													<spring:theme code="text.size" />${entry.product.size}</div>
+											</ycommerce:testId>
+										</c:if>
+									</c:when>
+									<c:otherwise>
+										<ycommerce:testId code="cart_product_size">
+											<div class="size">
+												<spring:theme code="text.size" />${entry.product.size}</div>
+										</ycommerce:testId>
+									</c:otherwise>
+								</c:choose>
 							</c:if>
 
 						</span>
