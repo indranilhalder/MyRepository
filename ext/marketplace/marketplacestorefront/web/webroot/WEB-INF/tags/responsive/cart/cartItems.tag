@@ -148,16 +148,46 @@ tr.d0 td {
 								</c:forEach>
 							</p>
 							<!-- TPR-3780 STARTS HERE -->
+							<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>	
 							<c:if test="${not empty entry.product.size}">
-								<p class="size disclaimer-txt more">
-									<ycommerce:testId code="cart_product_size">
-										<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
-											<c:if test="${entry.product.rootCategory=='FineJewellery' }">
-											<spring:theme code="cart.price.disclaimer" />
+								<c:choose>
+									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='FineJewellery'}">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:choose>
+											<c:when test="${entry.product.size ne noSize }">
+												<p class="size disclaimer-txt more">
+													<ycommerce:testId code="cart_product_size">
+														<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+														${disclaimer}
+													</ycommerce:testId>
+												</p>
+											</c:when>
+											<c:otherwise>
+													<p class="size disclaimer-txt more">
+														<ycommerce:testId code="cart_product_size">
+															${disclaimer}
+														</ycommerce:testId>
+													</p>
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='FashionJewellery'}">
+										<c:if test="${entry.product.size ne 'FreeSize' }">
+											<p class="size disclaimer-txt more">
+												<ycommerce:testId code="cart_product_size">
+													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+												</ycommerce:testId>
+											</p>		
 										</c:if>
-
-									</ycommerce:testId>
-								</p>
+									</c:when>
+									<c:otherwise>
+										<p class="size disclaimer-txt more">
+											<ycommerce:testId code="cart_product_size">
+												<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+											</ycommerce:testId>
+										</p>
+									</c:otherwise>
+								</c:choose>
 							</c:if>
 							<!-- TPR-3780 ENDS HERE -->
 						</div>

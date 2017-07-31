@@ -41,16 +41,17 @@
 	<%--for price breakup(TPR-3752) --%>
 
 	  <c:if test="${product.rootCategory=='FineJewellery' }">	
-	               <span class="price-breakup">Price Breakup</span>
+	               <span class="price-breakup" id = "pricebreakupIdSpan" style="display:none">Price Breakup</span>
 	</c:if>
 	
 	<%--for price breakup(TPR-3752) --%>	
 	<br>
 
 	<!-- TPR-3780 STARTS HERE -->
-	<c:if test="${product.rootCategory=='FineJewellery' }">										
+	<c:if test="${product.rootCategory=='FineJewellery' }">
+		 <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('cart.price.disclaimer')" var="disclaimer"/>										
 	    <p class="disclaimer-txt">
-	    	<spring:theme code="cart.price.disclaimer"/>
+	    		${disclaimer}
 	    </p>
 	</c:if>	
 	     
