@@ -214,6 +214,7 @@ $(document).ready(function() {
 	
 	
 	$(window).on("scroll",function(){
+		if($('.lazy-reached-stw').length){
 		var hT = $('.lazy-reached-stw').offset().top,
 	    hH = $('.lazy-reached-stw').outerHeight(),
 		wH = $(window).height(),
@@ -226,6 +227,8 @@ $(document).ready(function() {
 	        stw.renderFlatWidget();
 	    }
 		}
+		}
+		
 	});
     
     $(document).off("click", ".best_seller.stw-list .Menu ul li").on("click", ".best_seller.stw-list .Menu ul li", function() {

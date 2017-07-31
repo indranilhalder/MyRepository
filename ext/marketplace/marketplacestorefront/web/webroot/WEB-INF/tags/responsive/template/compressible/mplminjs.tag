@@ -28,6 +28,14 @@
 
 				tmpmain.onload = function() {
 					document.body.appendChild(ia);
+					 if (!$('#bestPicks').attr('loaded')) {
+			             //not in ajax.success due to multiple sroll events
+			             $('#bestPicks').attr('loaded', true);
+			             if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
+			                 'LandingPage2Template') {
+			                 getBestPicksAjaxCall();
+			             }
+			         }
 				}
 				
 				ia.onload = function(){
@@ -139,7 +147,7 @@
 	<script type="text/javascript"
 		src="${addOnJavaScript}?v=${buildNumber}"></script>
 </c:forEach>
-
+<c:if test="${fn:contains(pageBodyCssClasses, 'homepage')}">
 <script>
 //TISPT-290
 $(window).load(function(){
@@ -149,23 +157,9 @@ $(window).load(function(){
 	}
 	 $(window).on('scroll', function() {
 		 
-	     var hT = $('.lazy-reached-bestPics').offset().top,
-         hH = $('.lazy-reached-bestPics').outerHeight(),
-         wH = $(window).height(),
+         var wH = $(window).height(),
          wS = $(this).scrollTop();
-	     
-	     // bestPics ID 
-	     if (wS > (hT + hH - wH)) {
-	    	 if (!$('#bestPicks').attr('loaded')) {
-	             //not in ajax.success due to multiple sroll events
-	             $('#bestPicks').attr('loaded', true);
-	             if ($('#bestPicks').children().length == 0 && $('#pageTemplateId').val() ==
-	                 'LandingPage2Template') {
-	                 getBestPicksAjaxCall();
-	             }
-	         }
-	     }
-	     
+         
 	     // brandsYouLove ID 
 	     var hT = $('.lazy-reached-brandsYouLove').offset().top,
          hH = $('.lazy-reached-brandsYouLove').outerHeight();
@@ -324,3 +318,4 @@ $(window).load(function(){
 	 });
 });
 </script>
+</c:if>

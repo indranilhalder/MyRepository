@@ -383,7 +383,8 @@ function callRecApi(params, requestURL) {
         }
       }
       $(window).on("scroll",function(){
-  		var hT = $('.lazy-reached-ia').offset().top,
+    	  if($('.lazy-reached-ia').length){
+    		  var hT = $('.lazy-reached-ia').offset().top,
   	    hH = $('.lazy-reached-ia').outerHeight(),
   		wH = $(window).height(),
   	    wS = $(this).scrollTop();
@@ -392,6 +393,8 @@ function callRecApi(params, requestURL) {
   			updatePage(response, requestURL);
   			$('#ia_products_hot').attr('loaded', true);
   		}
+    	  }
+  		
       });
       
     }, error: function(jqXHR, textStatus, errorThrown) {
