@@ -5,9 +5,7 @@
 <%@ attribute name="product" required="true" type="de.hybris.platform.commercefacades.product.data.ProductData" %>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 
-<script>
-<%--js Moved to acc.productDetail.js --%>
-</script>	
+<%-- JS Moved to acc.productDetail.js --%>
 <c:set var="l3code" value="${product.level3CategoryCode}"/>
 <c:set var="l3name" value="${product.level3CategoryName}"/>
 <c:set var="isExchangeavailable" value="true"/>
@@ -93,8 +91,8 @@
 <div id="submit&Condition">
 <label id="error_tc" for="exchange_tc"></label>
 <input type="checkbox" name="terms&condition" id="exchange_tc" >
-<label for="exchange_tc"><span>I agree to the <span>terms and conditions</span></span></label>
-	<cms:pageSlot position="Section2" var="component">
+<label for="exchange_tc"><span>I agree to the</span></label>
+	<cms:pageSlot position="ExchangeSlot" var="component">
 				<cms:component component="${component}" />
 			</cms:pageSlot>	
 			<br>

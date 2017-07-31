@@ -42,19 +42,21 @@
 		return false;
 	});
 </script>
-<div class="formaddress">
-	<div class="heading-form">
-		<h3>Edit Address</h3>
-	</div>
-	<div class="checkout-indent left-block address-form ">
-		<ul class="product-block addresses new-form account-section">
-			<li
-				class="item account-section-content	 account-section-content-small ">
-				<address:addressFormSelector supportedCountries="${countries}"
-					regions="${regions}" cancelUrl="${currentStepUrl}"
-					country="${country}" />
-			</li>
-		</ul>
+<div class="checkout-shipping addNewAddress">
+	<div class="formaddress">
+		<div class="heading-form">
+			<h3>Edit Address</h3>
+		</div>
+		<div class="checkout-indent left-block address-form ">
+			<ul class="product-block addresses new-form account-section">
+				<li
+					class="item account-section-content	 account-section-content-small ">
+					<address:addressFormSelector supportedCountries="${countries}"
+						regions="${regions}" cancelUrl="${currentStepUrl}"
+						country="${country}" />
+				</li>
+			</ul>
+		</div>
 	</div>
 </div>
 <script>ACC.singlePageCheckout.hideAjaxLoader();</script>
