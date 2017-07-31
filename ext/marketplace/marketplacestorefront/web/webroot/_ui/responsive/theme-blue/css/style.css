@@ -70838,6 +70838,22 @@ select.update-entry-quantity-input.review-page-select{
    width: 50px ! important;
    padding: 0px 18px 0 22px ! important;
 }
+.footer-copyrigt-text{
+	float:right;
+}
+.mobile-footer .banner.copyright-footer-text {
+	background: #eee;
+	line-height: 20px;
+}	
+.safe-secure-icon{
+	background-image: url(../images/safe_secure_icon.JPG);
+    background-size: 100%;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */

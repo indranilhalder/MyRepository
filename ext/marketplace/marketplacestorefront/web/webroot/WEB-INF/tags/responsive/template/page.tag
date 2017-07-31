@@ -8,18 +8,21 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="header"
 	tagdir="/WEB-INF/tags/responsive/common/header"%>
-<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%> <!-- CODE ADDED FOR JEWELLERY TO DISPLAY PRODUCT DETAILS IN TAB  -->
+<%@ taglib prefix="product" tagdir="/WEB-INF/tags/responsive/product"%>
+<!-- CODE ADDED FOR JEWELLERY TO DISPLAY PRODUCT DETAILS IN TAB  -->
 <%@ taglib prefix="footer"
 	tagdir="/WEB-INF/tags/responsive/common/footer"%>
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/responsive/common"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <c:if test="${param.source ne null and param.source eq 'App' }">
 	<c:set var="showOnlySiteLogo" value="true"></c:set>
 	<c:set var="hideAllFooter" value="true"></c:set>
-	<div id="js-site-search-input"><!-- on source=App hide of search box results in error throw in js --></div>
+	<div id="js-site-search-input">
+		<!-- on source=App hide of search box results in error throw in js -->
+	</div>
 </c:if>
 
 <template:master pageTitle="${pageTitle}">
@@ -77,29 +80,42 @@
 			<c:otherwise>
 			<c:if test="${empty hideAllFooter}">
 			<footer class="mobile-footer">
-			<div class="banner">
 				<!-- UF-281/282:starts -->
 				<c:choose>
-					<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
-						<span style="display:none;"><spring:theme code="checkout.single.footer.secure.text"></spring:theme></span>
-						<cms:pageSlot position="Footer" var="feature" limit="1">
+					<c:when
+										test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
+						<div class="banner copyright-footer-text">
+						<span class="safe-secure-icon"></span>
+							<span style="display: none;">
+							<spring:theme code="checkout.single.footer.secure.text"></spring:theme></span>
+        						<div class="footer-copyrigt-text">
+								<cms:pageSlot position="Footer" var="feature" limit="1">
+								${feature.notice}
+       								 </cms:pageSlot>
+        									</div>
+    							  <cms:pageSlot position="Footer" var="feature">
+						<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
+  						<cms:component component="${feature}"></cms:component>
+  					</c:if>
+       				 </cms:pageSlot>
+       </div>
+        </c:when>
+        <c:otherwise>
+        <div class="banner">
+				<cms:pageSlot position="Footer" var="feature" limit="1">
 						${feature.notice}
-			        	</cms:pageSlot>
-	        		</c:when>
-	        		<c:otherwise>
-						<cms:pageSlot position="Footer" var="feature" limit="1">
-						${feature.notice}
-			        	</cms:pageSlot>
-	        		</c:otherwise>
-        		</c:choose>
-        		<!-- UF-281/282:Ends -->
-       		<cms:pageSlot position="Footer" var="feature">
-			<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
-   			<cms:component component="${feature}"></cms:component>
-   			</c:if>
-        	</cms:pageSlot>
-        </div>
-        </footer>
+       					 </cms:pageSlot>
+      			<cms:pageSlot position="Footer" var="feature">
+					<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
+ 		 <cms:component component="${feature}"></cms:component>
+  			</c:if>
+        </cms:pageSlot>
+       </div>
+        </c:otherwise>
+        </c:choose>
+        
+<!-- UF-281/282:end -->
+</footer>
  		</c:if>
 			</c:otherwise>
 			</c:choose>
