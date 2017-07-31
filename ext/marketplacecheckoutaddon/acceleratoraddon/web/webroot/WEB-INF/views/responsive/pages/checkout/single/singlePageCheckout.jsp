@@ -95,7 +95,7 @@ body.page-multiStepCheckoutSummaryPage #up{
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
 		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper">
-		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress(this);">Change</p>
+		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress();">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="chooseDeliveryAddressMobileDiv">
@@ -140,7 +140,7 @@ body.page-multiStepCheckoutSummaryPage #up{
 	</div>
 </div>
 <div class="modal fade" id="singlePagePickupPersonPopup">
-	<div class="content" style="padding:36px 26px 36px 36px; overflow-y: hidden; max-width: 30%;border-radius: 8px;">
+	<div class="content" style="padding:36px 26px 36px 36px;/*  overflow-y: hidden; */ max-width: 30%;border-radius: 8px;">
 		<span id="modalBody" data-htmlPopulated="NO"></span>
 		<button class="close" data-dismiss="modal"></button>
 	</div>

@@ -67,7 +67,7 @@ public class PancardController
 	}
 
 	//For displaying pancard upload page
-	@RequestMapping(value = "/pancarddetailsupload/{orderreferancenumber}/{customername}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pancarddetailsupload/{orderReferanceNumber}/{customerName}", method = RequestMethod.GET)
 	public String pancardDetailsUploadPage(@PathVariable final String orderReferanceNumber,
 			@PathVariable final String customerName, final Model model)
 	{

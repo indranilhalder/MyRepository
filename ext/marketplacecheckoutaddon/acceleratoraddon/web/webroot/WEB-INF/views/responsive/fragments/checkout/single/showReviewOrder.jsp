@@ -505,7 +505,7 @@
 					<input type="hidden" name="initialQuantity"
 						value="${entry.quantity}" />
 					
-					<select class="update-entry-quantity-input" disabled="disabled">
+					<select class="update-entry-quantity-input review-page-select" disabled="disabled">
 						<option value="${entry.quantity}" selected="selected" >${entry.quantity}</option>
 					</select>
 				</form>
