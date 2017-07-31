@@ -265,11 +265,18 @@ public class SalesOrderXMLUtility
 								LOG.debug("set sub order list");
 							}
 						}
-						bulkSalesDataList.add(salesXMLData);
+						if (salesXMLData.getMerchantCode() != null && !(salesXMLData.getMerchantCode().isEmpty())
+								&& salesXMLData.getSubOrderList() != null && !(salesXMLData.getSubOrderList().isEmpty()))//INC144317909 Fix
+						{
+
+
+							bulkSalesDataList.add(salesXMLData);
+						}
 					}
 				}
 			}
 		}
+
 		return bulkSalesDataList;
 	}
 
@@ -469,7 +476,7 @@ public class SalesOrderXMLUtility
 							if (entry.getCurrDelCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting current delivery charge...");
-						   //	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
+								//	xmlData.setExpressdeliveryCharge(entry.getCurrDelCharge().doubleValue());
 								xmlData.setShipmentCharge(entry.getCurrDelCharge().doubleValue());
 							}
 							else
@@ -478,9 +485,9 @@ public class SalesOrderXMLUtility
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
 							xmlData.setExpressdeliveryCharge(0.00);
-							 //	TISPRDT-1186 END 
+							//	TISPRDT-1186 END
 							LOG.debug("set express del charge from curr del charge" + entry.getCurrDelCharge().doubleValue());// zoneDelivery.getValue().doubleValue()
-							
+
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
@@ -514,9 +521,9 @@ public class SalesOrderXMLUtility
 								LOG.debug(REFUNDED_DELIVERY_MESSAGE + entry.getRefundedDeliveryChargeAmt());
 								xmlData.setShipmentCharge(entry.getRefundedDeliveryChargeAmt().doubleValue());
 							}
-						// TISPRDT-1186 START 
+							// TISPRDT-1186 START
 							xmlData.setExpressdeliveryCharge(0.00);
-						// TISPRDT-1186 END 
+							// TISPRDT-1186 END
 							if (null != entry.getScheduledDeliveryCharge() && entry.getScheduledDeliveryCharge().doubleValue() > 0)
 							{
 								LOG.debug("setting schedule delivery charge..." + entry.getScheduledDeliveryCharge());
