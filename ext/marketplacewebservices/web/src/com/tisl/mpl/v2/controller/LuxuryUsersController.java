@@ -160,10 +160,13 @@ public class LuxuryUsersController extends BaseCommerceController
 
 	private String getGender(final String gender)
 	{
-		if (StringUtils.isNotEmpty(gender) && (gender.equalsIgnoreCase(MarketplacecommerceservicesConstants.MALE_CAPS)
-				|| gender.equalsIgnoreCase(MarketplacecommerceservicesConstants.FEMALE_CAPS)))
+		if (MarketplacecommerceservicesConstants.MALE_CAPS.equalsIgnoreCase(gender))
 		{
-			return gender;
+			return MarketplacecommerceservicesConstants.MALE_CAPS;
+		}
+		if (MarketplacecommerceservicesConstants.FEMALE_CAPS.equalsIgnoreCase(gender))
+		{
+			return MarketplacecommerceservicesConstants.FEMALE_CAPS;
 		}
 		return null;
 	}
