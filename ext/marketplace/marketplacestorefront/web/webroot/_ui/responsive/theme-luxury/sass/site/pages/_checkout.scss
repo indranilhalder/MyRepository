@@ -1649,3 +1649,27 @@ h2.panel-defaultHeading {
 .make_payment.payment-button #submitPaymentFormCODButton{
  display:block!important;
 }
+.page-multiStepCheckoutSummaryPage{
+    .checkout-content.checkout-payment{
+        margin-bottom: 20px;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .page-multiStepCheckoutSummaryPage{
+        .container{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .payment-section{
+            padding: 10px;
+            #COD{
+                padding: 10px;
+            }
+        }
+        #hamburger-menu{
+            span{
+                display: none;
+            }
+        }
+    }
+}

@@ -289,3 +289,21 @@
         }
     }
 }
+.products .item.look{
+    list-style: none;
+    .product-info{
+        li{
+            list-style: none;
+        }
+    }
+}
+.page-returnSuccess .return-form .return-container .products .item .product-info{
+    .product{
+        .product-name{
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 19px;
+            margin: 0px;
+        }
+    }
+}
