@@ -19,7 +19,7 @@
 								<div class="col-md-5 col-sm-5 col-xs-5">
 									<div class="image_holder">
 											<product:productPrimaryImage
-													product="${entryReturn.product}" format="thumbnail" />
+													product="${entryReturn.product}" format="luxuryThumbnail" />
 									</div>
 								</div>
 							
