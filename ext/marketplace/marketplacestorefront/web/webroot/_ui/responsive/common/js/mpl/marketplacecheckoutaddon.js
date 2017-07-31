@@ -442,18 +442,18 @@ function displayCODForm()
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success : function(response,textStatus, jqXHR) {
+			//UF-281/282:Starts
 			if (jqXHR.responseJSON && response.displaymessage=="codNotallowed") {
 				$("#codNotAllowedMessage").css("display","block");
-				$(".terms.cod").css("display","none");
 				$("#paymentButtonId_up,#paymentButtonId").css("display","none");
 				return false;
 			}
 			else
 			{
 				$("#codNotAllowedMessage").css("display","none");
-				$(".terms.cod").css("display","block");
 				$("#paymentButtonId_up,#paymentButtonId").css("display","block");
 			}
+			//UF-281/282:Ends
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
 			$("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
@@ -7929,7 +7929,7 @@ $(document).ready(function(){
 			  margin:"0px",
 			  top: alert_top
 		});
-		$(".alert-danger").css("z-index","101");
+		//$(".alert-danger").css("z-index","101");
 	}
 	
 	$("li.price").each(function(){
@@ -9036,7 +9036,7 @@ function populateIsExchangeApplied(response,stringCaller)
 		if(isExchangeServicable && exchangePincode==selectedPincode)
 			{
 			$(".cart_exchange").css('display','block');
-			$("#exCartAlert").css('display','block');
+			$("#exCartAlert").css('display','none');
 			}
 		else
 			{

@@ -1210,7 +1210,7 @@ ACC.singlePageCheckout = {
 		var selector="#"+elementId+" #modalBody"
 		$(selector).html(data);
 		$("#"+elementId).modal('show');
-		$(".new-address-form-mobile").html('');
+		$("#newAddressFormMobile.new-address-form-mobile").html('');
 	},
 	//Generic function to showAccordion
 	showAccordion: function(showElementId){
@@ -1427,6 +1427,7 @@ ACC.singlePageCheckout = {
 						$(showElementId).show();
 						ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
 	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 					 document.getElementById('confirmOverlay').style.display = "none";
 					 document.getElementById('confirmBox').style.display = "none";
 					 document.getElementById('singlePageAddressPopup').style.display = "block";
@@ -1461,6 +1462,7 @@ ACC.singlePageCheckout = {
 					$(showElementId).show();
 					ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
             		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 				 document.getElementById('confirmOverlay').style.display = "none";
 				 document.getElementById('confirmBox').style.display = "none";
 				 
@@ -2038,11 +2040,13 @@ ACC.singlePageCheckout = {
 	  {
 	  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","none");
 	  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","none");
+	  	$("#viewPaymentCODMobile").parent("li").removeClass("paymentModeMobile");
 	  }
 	  else
 	  {
 	  	$("#viewPaymentCOD, #viewPaymentCODMobile").css("display","block");
 	  	$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").css("display","block");
+	  	$("#viewPaymentCODMobile").parent("li").addClass("paymentModeMobile");
 	  }
   },
 //	mobileAccordion:function(){
@@ -2077,17 +2081,18 @@ ACC.singlePageCheckout = {
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
-//	2.isAddressSet		:	Used to track if existing address has been set as delivery address in cartModel for responsive
-//	3.isDeliveryModeSet	:	Used to track if delivery mode has been set in cartModel for responsive
+//	2.isAddressSet			:	Used to track if existing address has been set as delivery address in cartModel for responsive
+//	3.isDeliveryModeSet		:	Used to track if delivery mode has been set in cartModel for responsive
 //	4.saveNewAddress		:	Used to track if new address has to be saved in cartModel for responsive
-//	5.selectedAddressId	:	Used to track the selected address id for responsive
+//	5.selectedAddressId		:	Used to track the selected address id for responsive
 //	6.isInventoryReserved	:	Used to track if inventory has been reserved for responsive
-//	7.isScheduleServiceble:	Used to track scheduled delivery is available for responsive
-//	8.paymentModeSelected:	Used to track the selected payment mode for responsive
+//	7.isScheduleServiceble	:	Used to track scheduled delivery is available for responsive
+//	8.paymentModeSelected	:	Used to track the selected payment mode for responsive
 //	9.prePaymentValidationDone:	Used to track cart validation before payment is made
-//	10.isCncSelected:	Used to track if CNC delivery mode has been selected
+//	10.isCncSelected		:	Used to track if CNC delivery mode has been selected
 //	11.isPickUpPersonDetailsSaved:	Used to track if CNC pickup person details have been saved
-//	12.isPincodeServiceable:	Used to track if pincode is serviceable or not
+//	12.isPincodeServiceable	:	Used to track if pincode is serviceable or not
+//	13.saveEditAddress		:	Used to track if edit address has to be saved in cartModel for responsive
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	mobileValidationSteps:{
@@ -2102,7 +2107,8 @@ ACC.singlePageCheckout = {
 		prePaymentValidationDone:false,
 		isCncSelected:false,
 		isPickUpPersonDetailsSaved:false,
-		isPincodeServiceable:false
+		isPincodeServiceable:false,
+		saveEditAddress:false,
 	},
 
 	resetValidationSteps:function(){
@@ -2117,7 +2123,7 @@ ACC.singlePageCheckout = {
 		ACC.singlePageCheckout.mobileValidationSteps.prePaymentValidationDone=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isCncSelected=false;
 		ACC.singlePageCheckout.mobileValidationSteps.isPickUpPersonDetailsSaved=false;
-		//ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=false;
+		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 	},
 	
 	resetPaymentModes:function()
@@ -2214,7 +2220,7 @@ ACC.singlePageCheckout = {
 	
 	//Function used to fetch add address form for responsive
 	getMobileAddAddress:function(){
-		var formAlreadyLoaded=$(".new-address-form-mobile").attr("data-loaded");
+		var formAlreadyLoaded=$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded");
 		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
 		{//Will enter if an user selects new address after selecting a payment mode
 			ACC.singlePageCheckout.resetValidationSteps();
@@ -2222,6 +2228,7 @@ ACC.singlePageCheckout = {
 		}
 		//When ever a user selects a new address this flag should be set to true
 		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
 		if(formAlreadyLoaded=="false")
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
@@ -2233,15 +2240,19 @@ ACC.singlePageCheckout = {
 			});
 	        
 	        xhrResponse.done(function(data) {
+	        	$("#editAddressFormMobile.new-address-form-mobile").html("");//Removing edit address form when new address is selected
+	        	//Remove edit address radio button check
+        		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");//Remove radio of edit address
+        		$("#editAddressForResponsive").css("display","none");//Hide edit address block
 	        	//Unchecking the radio button of saved addresses
 	        	$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
-	        	$(".mobile_add_address").addClass("form_open");
-				$(".new-address-form-mobile").html(data);
-				$(".new-address-form-mobile").attr("data-loaded","true");
-				$(".new-address-form-mobile").slideDown();
+	        	$("#addNewAddressForResponsive div.mobile_add_address").addClass("form_open");
+				$("#newAddressFormMobile.new-address-form-mobile").html(data);
+				$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","true");
+				$("#newAddressFormMobile.new-address-form-mobile").slideDown();
 				$("#singlePageAddressPopup #modalBody").html('');
 				$("#newAddressButton").hide();
-				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent();
+				ACC.singlePageCheckout.attachOnPincodeKeyUpEvent("newAddressFormMobile",true,false);//OnKeyUp even will be attached so that after 6 digits are enter pincode serviceability call is made
 			});
 	        
 	        xhrResponse.always(function(){
@@ -2250,10 +2261,11 @@ ACC.singlePageCheckout = {
 		}
 		else
 		{
+			$("#newAddressFormMobile form#addressForm")[0].reset();
 			ACC.singlePageCheckout.showAjaxLoader();
 			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
-        	$(".mobile_add_address").addClass("form_open");
-			$(".new-address-form-mobile").slideDown();
+        	$("#addNewAddressForResponsive .mobile_add_address").addClass("form_open");
+			$(".newAddressFormMobile").slideDown();
 			ACC.singlePageCheckout.hideAjaxLoader();
 		} 
 		
@@ -2267,8 +2279,61 @@ ACC.singlePageCheckout = {
 		}
 		return false;	
 	},
+	//Function used to fetch edit address form for responsive
+	getMobileEditAddress:function(pincode,addressId){
+		if(ACC.singlePageCheckout.mobileValidationSteps.paymentModeSelected!="")
+		{//Will enter if an user selects new address after selecting a payment mode
+			ACC.singlePageCheckout.resetValidationSteps();
+			ACC.singlePageCheckout.resetPaymentModes();
+		}
+		//When ever a user selects a edit address this flag should be set to true
+		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=true;
+		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+		
+		ACC.singlePageCheckout.showAjaxLoader();
+		var url=ACC.config.encodedContextPath + "/checkout/single/edit-address/"+addressId;
+		var xhrResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET","",false);
+		
+		xhrResponse.fail(function(xhr, textStatus, errorThrown) {
+			console.log("ERROR:"+textStatus + ': ' + errorThrown);
+		});
+		
+		xhrResponse.done(function(data) {
+			$("#editAddressForResponsive").css("display","block");//Hide edit address block
+			$("#newAddressFormMobile.new-address-form-mobile").html("");//Removing new address form when new address is selected
+			$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","false");//As the form has been removed above we need to reset data-loaded attribute to false 
+			ACC.singlePageCheckout.changeAddress();//Hiding change link and displaying other addressess
+			//Unchecking the radio button of saved addresses
+			$('#selectAddressFormMobile input[name=selectedAddressCode]').prop('checked', false);
+			$("#addNewAddressForResponsive .mobile_add_address").removeClass("form_open");//Closing new address form
+			$("#editAddressForResponsive .mobile_add_address").addClass("form_open");	  //Opeining edit address form
+			$("#editAddressFormMobile.new-address-form-mobile").html(data);
+			$("#editAddressFormMobile.new-address-form-mobile").attr("data-loaded","true");
+			$("#editAddressFormMobile.new-address-form-mobile").slideDown();
+			$("#editAddressFormMobile #modalBody").html('');
+			$("#newAddressButton").hide();
+			//Call pincode serviceability on edit.
+			ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,addressId,false,true);
+			ACC.singlePageCheckout.attachOnPincodeKeyUpEvent("editAddressFormMobile",false,true);//OnKeyUp even will be attached so that after 6 digits are enter pincode serviceability call is made
+			ACC.singlePageCheckout.scrollToDiv("editAddressFormMobile",100);
+		});
+		
+		xhrResponse.always(function(){
+			ACC.singlePageCheckout.hideAjaxLoader();
+		});
+		
+		//UF-429
+		if(typeof(utag)!='undefined')
+		{
+			utag.link({
+				link_text  : 'new_address_clicked', 
+				event_type : 'new_address_clicked'
+			});
+		}
+		return false;	
+	},
 	//Function used to check pincode serviceability for responsive
-	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew)
+	checkPincodeServiceabilityForRespoinsive:function(selectedPincode,addressId,isNew,isEdit)
 	{
 		//alert("Calling pincode serviceability for responsive with Pincode:"+selectedPincode+"/AddressId:"+addressId+"/isNew:"+isNew);
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable || ACC.singlePageCheckout.mobileValidationSteps.isAddressSet || ACC.singlePageCheckout.mobileValidationSteps.isInventoryReserved)
@@ -2276,7 +2341,7 @@ ACC.singlePageCheckout = {
 			ACC.singlePageCheckout.resetValidationSteps();
     		ACC.singlePageCheckout.resetPaymentModes();
 		}
-		if(addressId!="")
+		if(addressId!="" && !isEdit)
 		{
 			$("#radio_mobile_"+addressId).prop("checked", true);
 		}
@@ -2298,15 +2363,45 @@ ACC.singlePageCheckout = {
 	            	$("#addressMessage").hide();
 	            	if(!isNew)
                 	{
-	            		//Remove new address radio nutton check
-	            		$("div.mobile_add_address.form_open").removeClass("form_open");
-	            		$(".new-address-form-mobile").slideUp();
+	            		//Remove new address radio button check
+	            		$("#addNewAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+	            		$("#newAddressFormMobile").slideUp();
                 	}
+	            	if(!isEdit)
+	            	{
+	            		//Remove edit address radio button check
+	            		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+	            		$("#editAddressFormMobile").slideUp();
+	            		$("#editAddressFormMobile").html("");
+	            		$("#editAddressForResponsive").css("display","none");
+	            	}
+	            	if(isNew)
+                	{
+	            		//Flags set for new address
+	            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
+                	}
+	            	else if(isEdit)
+                	{
+	            		//Flags set for edit address
+	            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=true;
+                	}
+	            	else
+	            	{
+	            		//Flags set for select address
+	            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
+	            		ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress=false;
+	            	}
+	            	//Processing ajax response below
 					if (jqXHR.responseJSON) {
 						//In case of some error at server end below block will execute.
 		                if(response.type!="response" && response.type!="confirm")
 		                {
-		                	if(isNew)
+		                	if(isNew || isEdit)
 		                	{
 		                		ACC.singlePageCheckout.processError("#addressMessage",response);
 		                		ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
@@ -2314,7 +2409,7 @@ ACC.singlePageCheckout = {
 		                	else
 	                		{
 		                		//Remove new address radio nutton check
-		                		$("div.mobile_add_address.form_open").removeClass("form_open");
+		                		//$("#addNewAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
 		                		ACC.singlePageCheckout.processError("#selectedAddressMessageMobile",response);
 		                		ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
 	                		}
@@ -2327,16 +2422,6 @@ ACC.singlePageCheckout = {
 		                }
 		            } else {
 		            	//In case of no error at server end below block will execute.
-		            	if(isNew)
-	                	{
-		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId="";
-		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=true;
-	                	}
-		            	else
-		            	{
-		            		ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId=addressId;
-		            		ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress=false;
-		            	}
 		            	//alert("Before setting #choosedeliveryModeMobile");
 		            	$("#choosedeliveryModeMobile").html(response);
 		            	ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable=true;
@@ -2361,11 +2446,11 @@ ACC.singlePageCheckout = {
 		
 	},
 	//Function called when change link of address is clicked for responsive
-	changeAddress:function(element){
+	changeAddress:function(){
 		//$("#address-change-link").on("click", function(){
-			$(element).parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
+			$("#address-change-link").parents(".checkout_mobile_section").find(".mobileNotDefaultDelAddress").show();
 			//$(this).parents(".checkout_mobile_section").find(".cancel-mobile").show();
-			$(element).hide();
+			$("#address-change-link").hide();
 			if(typeof utag !="undefined")  {
 				utag.link({
 			        link_text: "change_link_clicked",
@@ -2416,38 +2501,47 @@ ACC.singlePageCheckout = {
 	        'slow');
 	},
 	//Function called when ever a user enters pincode for responsive, When the character length becomes 6 a pincode serviceability call is fired.
-	attachOnPincodeKeyUpEvent:function()
+	attachOnPincodeKeyUpEvent:function(id,isNew,isEdit)
 	{	
-		$('.address_postcode').on('keyup',function(){
-			$("#addressMessage").html("");
+		$('#'+id+' .address_postcode').off('keyup'+"."+id);
+		$('#'+id+' .address_postcode').on('keyup'+"."+id,function(){
+			$("#"+id+" #addressMessage").html("");
 			var pincode=$('.address_postcode').val();
-			$(".otherLandMarkError").html("");
+			$("#"+id+" .otherLandMarkError").html("");
 			var regPostcode = /^([1-9])([0-9]){5}$/;
 			if(pincode.length>=6)
 			{
 				if(regPostcode.test(pincode) == false)
 				{
-					 $("#addresspostcodeError").show();
-				     $("#addresspostcodeError").html("<p>Please enter a valid pincode</p>");
+					 $("#"+id+" #addresspostcodeError").show();
+				     $("#"+id+" #addresspostcodeError").html("<p>Please enter a valid pincode</p>");
 				}
 				else
 				{
-					$("#addresspostcodeError").hide();
-					ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",true);
+					$("#"+id+" #addresspostcodeError").hide();
+					ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",isNew,isEdit);
 				}
 			}
 				
 		});
 	},
-	//Function used to save a new address and set it as delievry address[for responsive]. Called from onPaymentModeSelection() method
-	saveAndSetNewDeliveryAddress:function()
+	//Function used to save a new/edited address and set it as delievry address[for responsive]. Called from onPaymentModeSelection() method
+	saveAndSetDeliveryAddress:function(isNew,isEdit)
 	{
 		var validationResult=ACC.singlePageCheckout.validateAddressForm();
 		if(validationResult!=false)
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
 			try{
-				var url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+				var url="";
+				if(isNew)
+				{
+					url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive";
+				}
+				else if(isEdit)
+				{
+					url=ACC.config.encodedContextPath + "/checkout/single/new-address-responsive?isEdit=true";
+				}
 				var data=$("#selectAddressFormMobile form#addressForm").serialize().replace(/\+/g,'%20');
 				
 				ACC.singlePageCheckout.showAjaxLoader();
@@ -2592,7 +2686,14 @@ ACC.singlePageCheckout = {
 		//Below we are checking if pincode is serviceabile
 		if(!ACC.singlePageCheckout.mobileValidationSteps.isPincodeServiceable)
 		{
-			ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+			if(!ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress  && !ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress)
+			{
+				ACC.singlePageCheckout.scrollToDiv("selectedAddressMessageMobile",100);
+			}
+			else if((ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress||ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress))
+			{
+				ACC.singlePageCheckout.scrollToDiv("addressMessage",100);
+			}
 			return false;
 		}
 		
@@ -2605,9 +2706,16 @@ ACC.singlePageCheckout = {
 			});
 			return false;
 		}
-		if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
+		if((ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress||ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress) && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
-			formValidationSuccess=ACC.singlePageCheckout.saveAndSetNewDeliveryAddress();
+			if(ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress)
+			{
+				formValidationSuccess=ACC.singlePageCheckout.saveAndSetDeliveryAddress(true,false);
+			}
+			else if(ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress)
+			{
+				formValidationSuccess=ACC.singlePageCheckout.saveAndSetDeliveryAddress(false,true);
+			}
 			if(!formValidationSuccess)
 			{
 				//Removing payment mode selection incase of address form validation failure
@@ -2621,7 +2729,7 @@ ACC.singlePageCheckout = {
 	        	return false;
 			}
 		}
-		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
+		else if(ACC.singlePageCheckout.mobileValidationSteps.selectedAddressId!="" && !ACC.singlePageCheckout.mobileValidationSteps.saveNewAddress  && !ACC.singlePageCheckout.mobileValidationSteps.saveEditAddress && !ACC.singlePageCheckout.mobileValidationSteps.isAddressSet)
 		{
 			ACC.singlePageCheckout.showAjaxLoader();
 			ACC.singlePageCheckout.setDeliveryAddress();
@@ -2881,7 +2989,7 @@ $(document).ready(function(){
 			if(defaultAddressPresent=="true" && typeof(defaultAddressPincode)!='undefined' && typeof(defaultAddressId)!='undefined')
 			{
 				//Calling pincode serviceability on page load for responsive cases.
-				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false);
+				ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(defaultAddressPincode.trim(),defaultAddressId.trim(),false,false);
 			}
 			//Hiding change link if no dafault address is present
 			if(defaultAddressPresent=="false")

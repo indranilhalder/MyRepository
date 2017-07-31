@@ -201,7 +201,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String GETREVIEWORDER = "/reviewOrder";//UF-281;
 	public static final String MPLDELIVERYCNCINVRESV = "/invReservation";
 	public static final String MPLDELIVERYNEWADDRESSURL = "/new-address";
-	public static final String MPLRESPONSIVEDELIVERYNEWADDRESSURL = "/new-address-responsive";
+	public static final String MPLRESPONSIVEDELIVERYNEWADDRESSURL = "/new-address-responsive";//UF-282
 	public static final String SLOTDELIVERYRESPONSIVE = "/slotDelivery-responsive";//UF-282
 	public static final String MPLSHOWMESSAGE = "/message";
 	public static final String MPLDELIVERYSELECTADDRESSURL = "/select-address";
