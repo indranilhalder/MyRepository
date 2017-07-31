@@ -245,7 +245,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@Autowired
 	private MplDeliveryCostService mplDeliveryCostService;
 
-	private final String checkoutPageName = "Choose Your Delivery Options";
+	//private final String checkoutPageName = "Choose Your Delivery Options";
 
 	@Autowired
 	private CartService cartService;
@@ -1354,7 +1354,14 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return REDIRECT_PREFIX + "/checkout/single/choose";
 	}
 
-	// Save a new address in responsive
+	/**
+	 * @Description save a new address/edit address in responsive
+	 * @param addressForm
+	 * @param isEdit
+	 * @param bindingResult
+	 * @return JSONObject
+	 * @throws JSONException
+	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.MPLRESPONSIVEDELIVERYNEWADDRESSURL, method = RequestMethod.POST)
 	public @ResponseBody JSONObject addAddressResponsive(final AccountAddressForm addressForm,
 			@RequestParam(required = false, defaultValue = "false") final boolean isEdit, final BindingResult bindingResult)
@@ -1431,7 +1438,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return jsonObj;
 	}
 
-	//Added code for deliverySlots form submission for responsive design ....
+
+	/**
+	 * @Description Added code for deliverySlots form submission for responsive design ....
+	 * @param deliverySlotForm
+	 * @return deliverySlotPage
+	 * @throws UnsupportedEncodingException
+	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.DELIVERY_SLOTCOST_FOR_ED, method = RequestMethod.POST)
 	public @ResponseBody String calculateDeliverySlotCostForED(
 			@ModelAttribute("deliverySlotForm") final DeliverySlotForm deliverySlotForm) throws UnsupportedEncodingException
@@ -1572,6 +1585,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 				+ totalPriceFormatted;
 	}
 
+	/**
+	 * @Description Common method to save new address/edited address
+	 * @param addressForm
+	 * @param isEditAddress
+	 */
 	public void saveAndSetDeliveryAddress(final AccountAddressForm addressForm, final boolean isEditAddress)
 	{
 		CartModel oModel = null;
@@ -1713,14 +1731,13 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	/**
 	 * @param model
 	 * @param cartModel
-	 * @return
 	 * @throws VoucherOperationException
 	 * @throws EtailNonBusinessExceptions
-	 * @throws UnsupportedEncodingException
+	 * @throws EtailBusinessExceptions
 	 * @throws CMSItemNotFoundException
 	 */
-	private String modelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
-			EtailNonBusinessExceptions, UnsupportedEncodingException, CMSItemNotFoundException
+	private void modelForDeliveryMode(final Model model, final CartModel cartModel) throws VoucherOperationException,
+			EtailNonBusinessExceptions, EtailBusinessExceptions, CMSItemNotFoundException
 	{
 		Map<String, String> fullfillmentDataMap = new HashMap<String, String>();
 		Map<String, List<MarketplaceDeliveryModeData>> deliveryModeDataMap = new HashMap<String, List<MarketplaceDeliveryModeData>>();
@@ -1783,18 +1800,15 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 			}
 			else
 			{
-				final String requestQueryParam = UriUtils.encodeQuery("?msg="
-						+ MarketplacecclientservicesConstants.OMS_PINCODE_SERVICEABILTY_FAILURE_MESSAGE + "&type=error", UTF);
-				return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+				LOG.error("Unable to proced. responseData cannot be empty.");
+				throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9048);
 			}
 		}
 		else
 		{
-			final String requestQueryParam = UriUtils.encodeQuery("?url=" + MarketplacecommerceservicesConstants.CART
-					+ "&type=redirect", UTF);
-			return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+			LOG.error("Unable to populate model with fullfillment mode.");
+			throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9041);
 		}
-		return null;
 	}
 
 	/**
@@ -2474,8 +2488,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	 *
 	 * @param pin
 	 * @param productCode
-	 * @param sellerId
-	 * @return if successful retursn list of pos for a prouct else null.
+	 * @param ussId
+	 * @return if successful return list of pos for a product else null.
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
 	 */
@@ -3232,8 +3246,9 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	/**
+	 * @Description slot delivery page for responsive
 	 * @param model
-	 * @return
+	 * @return showChooseDeliverySlotPage,slot delivery page for responsive
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.SLOTDELIVERYRESPONSIVE, method = RequestMethod.GET)
@@ -4666,7 +4681,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4724,7 +4739,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode, model
 	 */
 	@ResponseBody
@@ -4808,7 +4823,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 
 	/**
-	 *
+	 * @Description remove cart entry by product code
 	 * @param ProductCode
 	 */
 	private void removeEntryByProductCode(final String ProductCode) throws EtailBusinessExceptions, EtailNonBusinessExceptions,
@@ -5071,6 +5086,10 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	}
 
+	/**
+	 * @param model
+	 * @param cartTotal
+	 */
 	private void setupMplCardForm(final Model model, final Double cartTotal)
 	{
 		//getting merchant ID ofJuspay
@@ -5309,9 +5328,8 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	}
 
 	/**
-	 * @description method is called to set address from list and save in cart in payment button radio click
-	 * @param selectedAddressCode
-	 * @return Json Object
+	 * @Description Method to remove exchange from cart
+	 * @return JSONObject
 	 * @throws JSONException
 	 */
 	@RequestMapping(value = MarketplacecheckoutaddonConstants.REMOVEEXCHANGEFROMCART, method = RequestMethod.GET)
@@ -5401,6 +5419,11 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	}
 
+	/**
+	 * @Description create a json object for ajax response
+	 * @param model
+	 * @return JSONObject
+	 */
 	private JSONObject populateTealiumDataForCartCheckoutJSON(final Model model)
 	{
 		final JSONObject json = new JSONObject();

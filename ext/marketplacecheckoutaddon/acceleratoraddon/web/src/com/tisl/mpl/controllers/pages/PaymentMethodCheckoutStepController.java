@@ -2159,6 +2159,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//UF-281/282 Starts
 				if (!checkCODforCNC(cart))
 				{
+					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
 					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
 					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
 				}
@@ -4829,7 +4830,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
@@ -4936,8 +4937,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 				//UF-281/282 Starts
 				if (!checkCODforCNC(cart))
 				{
-					final String requestQueryParam = UriUtils.encodeQuery("?msg=" + "codNotallowed" + "&type=error", UTF);
-					return FORWARD_PREFIX + "/checkout/single/message" + requestQueryParam;
+					LOG.debug("COD payment is not allwoed if an user selects CNC as payment mode");
+					return MarketplacecommerceservicesConstants.REDIRECT + MarketplacecommerceservicesConstants.CART;
 				}
 				//UF-281/282 Ends
 				//TPR-4461 Starts here for payment mode and bank restriction validation for Voucher
@@ -5742,6 +5743,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	//TPR-4461 ends here
 	/**
+	 * @Description Check if cart contsins CNC product
 	 * @param cart
 	 * @return
 	 * @throws UnsupportedEncodingException
@@ -5768,8 +5770,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 			}
 		}
-		//UF-281/282 End
 		return codEligible;
 	}
+	//UF-281/282 End
 
 }
