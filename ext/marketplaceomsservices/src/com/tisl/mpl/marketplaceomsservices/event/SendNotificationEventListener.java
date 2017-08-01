@@ -635,7 +635,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 
 	private void sendSMSHotc(final List<AbstractOrderEntryModel> childOrders, final String orderNumber, final String mobileNumber,
 			String trackingUrl, final String logisticPartner, final String awbNumber, final OrderModel orderModel,
-			final ConsignmentStatus newStatus)
+			final ConsignmentStatus newStatus,String shortTrackingUrl)
 	{
 		try
 		{
@@ -645,9 +645,9 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			final SendSMSRequestData smsRequestDataHOTC = new SendSMSRequestData();
 
 			//call google short url service to generate short url for an order code
-			final String shortTrackingUrl = googleShortUrlService
-					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
-							.getParentReference().getCode());
+//			final String shortTrackingUrl = googleShortUrlService
+//					.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+//							.getParentReference().getCode());
 
 			//print parent order number in the url
 			trackingUrl = orderModel.getParentReference() == null ? (getConfigurationService().getConfiguration().getString(
@@ -766,7 +766,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 	 * @param awbNumber
 	 */
 	private void sendEmailHotc(final OrderModel orderModel, final List<AbstractOrderEntryModel> childOrders,
-			final String awbNumber, final ConsignmentStatus newStatus)
+			final String awbNumber, final ConsignmentStatus newStatus,String shortTrackingUrl)
 	{
 		final List<OrderUpdateProcessModel> orderUpdateModelList = checkEmailSent(awbNumber, ConsignmentStatus.HOTC);
 		int numOfRows = 0;
@@ -792,6 +792,7 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			orderUpdateProcessModel.setOrder(orderModel);
 			orderUpdateProcessModel.setAwbNumber(awbNumber);
 			orderUpdateProcessModel.setShipmentStatus(ConsignmentStatus.HOTC);
+			orderUpdateProcessModel.setOrderTrackUrl(shortTrackingUrl);
 			final List<String> entryNumber = new ArrayList<String>();
 			for (final AbstractOrderEntryModel child : childOrders)
 			{
@@ -830,14 +831,16 @@ public class SendNotificationEventListener extends AbstractSiteEventListener<Sen
 			{
 				awbNumber = entry.getKey();
 				final List<AbstractOrderEntryModel> childOrders = entry.getValue();
-
+				final String shortTrackingUrl = googleShortUrlService
+						.genearateShortURL(orderModel.getParentReference() == null ? orderModel.getCode() : orderModel
+								.getParentReference().getCode());
 				//sending SMS
 				LOG.info("********* Sending SMS for HOTC ");
-				sendSMSHotc(childOrders, orderNumber, mobileNumber, trackingUrl, logisticPartner, awbNumber, orderModel, newStatus);
+				sendSMSHotc(childOrders, orderNumber, mobileNumber, trackingUrl, logisticPartner, awbNumber, orderModel, newStatus, shortTrackingUrl);
 				LOG.info("******************* SMS sent");
 				//sending Email
 				LOG.info("********* Sending Email for HOTC ");
-				sendEmailHotc(orderModel, childOrders, awbNumber, newStatus);
+				sendEmailHotc(orderModel, childOrders, awbNumber, newStatus,shortTrackingUrl);
 
 			}
 		}

@@ -164,7 +164,8 @@ public class ShippingConfirmationEmailContext extends AbstractEmailContext<Order
 				MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT)
 				+ pOrderCode;
 		/* Added in R2.3 for shortUrl START */
-		final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		// final String shortUrl = shortUrlService.genearateShortURL(pOrderCode);
+		final String shortUrl = orderUpdateProcessModel.getOrderTrackUrl();
 		put(TRACK_ORDER_URL, null != shortUrl ? shortUrl : trackOrderUrl);
 
 

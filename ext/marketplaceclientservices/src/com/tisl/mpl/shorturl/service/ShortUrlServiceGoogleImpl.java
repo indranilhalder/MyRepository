@@ -112,11 +112,15 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 				//create TULShortUrlReport model to generate report ,later use and update this model when user clicks on short url
 				try
 				{
-					final OrderShortUrlInfoModel shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
-					shortUrlModel.setOrderId(orderCode);
-					shortUrlModel.setShortURL(shortUrl);
-					shortUrlModel.setLongURL(longUrl);
-					getModelService().save(shortUrlModel);
+					 OrderShortUrlInfoModel shortUrlModel = getShortUrlReportModelByOrderId(orderCode);
+					if (shortUrlModel == null)
+					{
+						shortUrlModel = getModelService().create(OrderShortUrlInfoModel.class);
+						shortUrlModel.setOrderId(orderCode);
+						shortUrlModel.setShortURL(shortUrl);
+						shortUrlModel.setLongURL(longUrl);
+						getModelService().save(shortUrlModel);
+					}
 				}
 				catch(final ModelSavingException e){				
 					LOG.error("ModelSavingException while saving TULShortUrlReportModel " + orderCode,e);
