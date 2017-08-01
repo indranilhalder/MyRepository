@@ -261,7 +261,7 @@
 		<ul label="sizes" id="quickViewVariant">
 		 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
 	         <c:choose>
-			   <c:when test="${product.rootCategory=='FineJewellery'}">		     
+			   <c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">		     
 		 			<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
 					<c:url value="${entry.key}/quickView" var="link" />							
@@ -286,6 +286,7 @@
 				<c:otherwise>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
+							abjfhsihfsui
 					<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
 					<c:forEach items="${variantOption.colourCode}" var="color">
