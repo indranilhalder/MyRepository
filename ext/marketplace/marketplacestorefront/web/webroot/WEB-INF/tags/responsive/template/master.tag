@@ -276,17 +276,18 @@
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/my-account')}">
 	<link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/pikaday.css"/>
 </c:if>
+<!--Added for TPR-5812  -->
+<c:if test="${isIzootoEnabled=='Y'}">
+ <script> window._izq = window._izq || []; window._izq.push(["init"]); </script>
+<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('izooto.script.url')" var="izootoScript"/>
+<script src="${izootoScript}"></script>
+</c:if>
+ <!-- Changes End  TPR-5812 -->
 </head>
 <c:if test="${empty buildNumber}">
 <c:set var="buildNumber" value= "100000"/>
 </c:if>
 <body class="${pageBodyCssClasses} ${cmsPageRequestContextData.liveEdit ? ' yCmsLiveEdit' : ''} language-${currentLanguage.isocode}">
-
-
-
-
-
-
 
 	<c:if test="${isGigyaEnabled=='Y'}">
 		<c:choose>
