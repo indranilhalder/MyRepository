@@ -1649,7 +1649,29 @@ h2.panel-defaultHeading {
 .make_payment.payment-button #submitPaymentFormCODButton{
  display:block!important;
 }
-.page-multiStepCheckoutSummaryPage{
+.page-multiStepCheckoutSummaryPage.sticky-nav{
+    .header{
+        height: 107px;
+    }
+    .logo{       
+        background: #fff;
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        z-index: 1;
+        margin-left: -83px;
+        
+        @include media-breakpoint-down(sm) {
+                background: transparent;
+        }
+        
+    }
+}
+
+.page-multiStepCheckoutSummaryPage{    
+    .header {
+        height: 107px;
+    }
     .checkout-content.checkout-payment{
         margin-bottom: 20px;
     }
