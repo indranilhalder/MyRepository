@@ -70854,6 +70854,9 @@ select.update-entry-quantity-input.review-page-select{
     background-repeat: no-repeat;
     vertical-align: bottom;
 }
+.modal#singlePageChooseSlotDeliveryPopup>div.content li.item li.deliverySlotRadio input[type="radio"] ~ label.delslot_radio{		
+      cursor: pointer;				
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
