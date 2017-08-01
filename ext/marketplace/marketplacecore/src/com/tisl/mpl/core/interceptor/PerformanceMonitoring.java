@@ -49,8 +49,8 @@ public class PerformanceMonitoring implements MethodInterceptor
 		stats.count++;
 		stats.totalTime += elapsedTime;
 
-		LOG.error("declaring Class :" + dclass);
-		LOG.error("Total Time for methodName: " + methodName + ":  " + elapsedTime + "ms  Total Time:" + stats.totalTime + "ms");
+		LOG.info("declaring Class :" + dclass);
+		LOG.info("Total Time for methodName: " + methodName + ":  " + elapsedTime + "ms  Total Time:" + stats.totalTime + "ms");
 
 
 
@@ -62,7 +62,7 @@ public class PerformanceMonitoring implements MethodInterceptor
 
 		if (elapsedTime > methodWarningThreshold)
 		{
-			LOG.error("method warning: " + methodName + "(), cnt = " + stats.count + ", lastTime = " + elapsedTime + ", maxTime = "
+			LOG.info("method warning: " + methodName + "(), cnt = " + stats.count + ", lastTime = " + elapsedTime + ", maxTime = "
 					+ stats.maxTime);
 		}
 
@@ -70,8 +70,8 @@ public class PerformanceMonitoring implements MethodInterceptor
 		{
 			final long avgTime = stats.totalTime / stats.count;
 			final long runningAvg = (stats.totalTime - stats.lastTotalTime) / statLogFrequency;
-			LOG.error("method: " + methodName + "(), cnt = " + stats.count + ", lastTime = " + elapsedTime + ", avgTime = "
-					+ avgTime + ", runningAvg = " + runningAvg + ", maxTime = " + stats.maxTime);
+			LOG.info("method: " + methodName + "(), cnt = " + stats.count + ", lastTime = " + elapsedTime + ", avgTime = " + avgTime
+					+ ", runningAvg = " + runningAvg + ", maxTime = " + stats.maxTime);
 
 			//reset the last total time
 			stats.lastTotalTime = stats.totalTime;
