@@ -6,19 +6,28 @@
 </c:if>
 <c:choose>
 	<c:when test="${fn:contains(pageBodyCssClasses, 'homepage')}">
-	<noscript id="deferred-styles">
+<%-- <noscript id="deferred-styles">
       <link rel="stylesheet" type="text/css" media="all" href="${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}" />
-</noscript>
+</noscript> --%>
 
 <script>
-      var loadDeferredStyles = function() {
-        var addStylesNode = document.getElementById("deferred-styles");
+       var loadDeferredStyles = function() {
+       /* var addStylesNode = document.getElementById("deferred-styles");
         var replacement = document.createElement("div");
         replacement.innerHTML = addStylesNode.textContent;
         document.body.appendChild(replacement);
-        //var inlinestyle = document.getElementById("onloadcss");
-        //document.head.removeChild(inlinestyle);
-        addStylesNode.parentElement.removeChild(addStylesNode);
+        addStylesNode.parentElement.removeChild(addStylesNode); */
+        
+        var head = document.head ;
+        var link = document.getElementById('mincss');
+
+  		link.type = 'text/css';
+  		link.rel = 'stylesheet';
+  		link.media = 'all';
+  		link.href = '${themeResourcePath}/css/tmpmain.min.css?v=${buildNumber}';
+
+  		//head.appendChild(link);
+        
       };
       var raf = requestAnimationFrame || mozRequestAnimationFrame ||
           webkitRequestAnimationFrame || msRequestAnimationFrame;

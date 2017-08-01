@@ -111,7 +111,7 @@ body {
 	    outline: 0
 	}
 	
-	input[type="text"] {
+	input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
 	    border: 1px solid #dfd1d5;
 	    line-height: 1;
 	    padding: 0;
@@ -316,80 +316,20 @@ body {
 	    header .content .right>ul>li:first-of-type {
 	        margin-right: 10px
 	    }
-	    header .content .bottom .bag .mini-bag {
-	        position: absolute;
-	        overflow: hidden;
-	        width: 477px;
-	        max-height: 0;
-	        z-index: 11;
-	        background-color: #fff;
-	        top: -webkit-calc(100% - -64px);
-	        top: calc(100% - -64px);
-	        right: 1px;
-	        -webkit-transition: max-height .3s;
-	        -moz-transition: max-height .3s;
-	        transition: max-height .3s;
-	        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25)
-	    }
 	    header .content .right>ul>li.wishlist>a:before {
 	        font-family: 'icomoon';
 	        -webkit-font-smoothing: antialiased;
 	        -moz-osx-font-smoothing: grayscale;
 	        content: "\e602";
 	        font-size: 14px;
-	        color: #a9143c;
 	        line-height: 18px;
 	        margin-right: 5px;
 	        top: 3px;
 	        position: relative;
 	        font-weight: lighter
 	    }
-	    header .content .right>ul>li.wishlist .wishlist-info {
-	        display: block;
-	        background: #fafafa;
-	        z-index: 0;
-	        max-height: 0;
-	        overflow: hidden;
-	        position: absolute;
-	        left: 0;
-	        top: 100%;
-	        width: 259px;
-	        padding: 0 25px;
-	        line-height: 25px;
-	        -webkit-transition: max-height .3s, z-index 0 .3s;
-	        -moz-transition: max-height .3s, z-index 0 .3s;
-	        transition: max-height .3s, z-index 0 .3s
-	    }
 	}
-	
-	@media (min-width:791px) and (max-width:855px) {
-	    header .content .right>ul>li.wishlist .wishlist-info {
-	        max-width: 219px
-	    }
-	}
-	
-	@media (min-width:791px) {
-	    header .content .right>ul>li.sign-in .sign-in-info {
-	        display: block;
-	        position: absolute;
-	        left: 0;
-	        width: 366px;
-	        background: #fafafa;
-	        z-index: 0;
-	        max-height: 0;
-	        padding: 0;
-	        overflow: hidden;
-	        -webkit-transition: max-height .3s, padding .3s, z-index 0 .3s;
-	        -moz-transition: max-height .3s, padding .3s, z-index 0 .3s;
-	        transition: max-height .3s, padding .3s, z-index 0 .3s
-	    }
-	}
-	
-	@media (min-width:791px) and (max-width:855px) {
-	    header .content .right>ul>li.sign-in .sign-in-info {
-	        max-width: 306px
-	    }
-	}
+
 	
 	@media (min-width:791px) {
 	    header .content .bottom {
@@ -411,7 +351,8 @@ body {
 	        font-size: 20px;
 	        font-weight: 500;
 	        letter-spacing: 1.5px;
-	        text-transform: uppercase
+	        text-transform: uppercase;
+	        margin-right: 25px;
 	    }
 	    header .content .marketplace span {
 	        text-transform: none;
@@ -544,132 +485,6 @@ body {
 	        -webkit-transition: height .3s .3s;
 	        -moz-transition: height .3s .3s;
 	        transition: height .3s .3s
-	    }
-	    header .content nav>ul>li>ul>li {
-	        background-color: #fff;
-	        width: 150px
-	    }
-	    header .content nav>ul>li>ul>li>.toggle {
-	        position: relative;
-	        padding-left: 10px
-	    }
-	    header .content nav>ul>li>ul>li>.toggle:after {
-	        content: "";
-	        display: block;
-	        position: absolute;
-	        top: 0;
-	        right: -14px;
-	        z-index: 3;
-	        height: 0;
-	        width: 0;
-	        border-bottom: 25px solid transparent;
-	        border-left: 15px solid transparent;
-	        border-top: 25px solid transparent
-	    }
-	    header .content nav>ul>li>ul>li>.toggle a {
-	        font-size: 14px;
-	        font-weight: 500;
-	        -webkit-transition: none;
-	        -moz-transition: none;
-	        transition: none;
-	        display: block;
-	        white-space: nowrap;
-	        text-overflow: ellipsis;
-	        overflow: hidden
-	    }
-	}
-	
-	@media (min-width:791px) and (max-width:1050px) {
-	    header .content nav>ul>li>ul>li {
-	        width: 150px
-	    }
-	}
-	
-	@media (min-width:791px) {
-	    header .content nav>ul>li>ul>li>ul {
-	        position: absolute;
-	        top: 0;
-	        left: 150px;
-	        height: 500px;
-	        padding-top: 10px;
-	        padding-left: 30px;
-	        padding-right: 10px;
-	        overflow: auto;
-	        background-color: #f5f5f5;
-	        opacity: 0;
-	        width: -webkit-calc(100% - 150px);
-	        width: calc(100% - 150px)
-	    }
-	}
-	
-	@media (min-width:791px) and (max-width:1050px) {
-	    header .content nav>ul>li>ul>li>ul {
-	        left: 150px
-	    }
-	}
-	
-	@media (min-width:791px) {
-	    header .content nav>ul>li>ul>li>ul.words {
-	        background: #f5f5f5;
-	        padding-bottom: 10px
-	    }
-	    header .content nav>ul>li>ul>li>ul>li.l2_wrapper {
-	        line-height: 26px;
-	        display: inline-block;
-	        margin-right: 10px;
-	        vertical-align: top
-	    }
-	    header .content nav>ul>li>ul>li>ul>li>ul>li.long .toggle {
-	        font-weight: 400
-	    }
-	    li.l2_wrapper {
-	        height: 430px
-	    }
-	    header .content nav>ul>li>ul>li>ul>li.short {
-	        break-inside: avoid-column;
-	        -webkit-column-break-inside: avoid;
-	        margin-top: 15px
-	    }
-	    header .content nav>ul>li>ul>li>ul>li.short:first-child {
-	        margin-top: 0
-	    }
-	    header .content nav>ul>li>ul>li>ul>li .toggle {
-	        white-space: nowrap;
-	        font-size: 12px;
-	        font-weight: 700;
-	        text-transform: uppercase;
-	        line-height: 18px;
-	        padding: 5px 0;
-	        overflow: hidden;
-	        text-overflow: ellipsis
-	    }
-	    header .content nav>ul>li>ul>li>ul>li.images {
-	        break-inside: avoid-column;
-	        -webkit-column-break-inside: avoid;
-	        clear: both;
-	        min-width: 620px
-	    }
-	    header .content nav>ul>li>ul>li>ul>li.images::after {
-	        clear: both;
-	        content: "";
-	        display: table
-	    }
-	    header .content nav>ul>li>ul:before {
-	        content: "";
-	        display: block;
-	        width: 150px;
-	        height: 100%;
-	        position: absolute;
-	        top: 0;
-	        left: 0;
-	        background-color: #fff;
-	        z-index: -1
-	    }
-	}
-	
-	@media (min-width:791px) and (max-width:1050px) {
-	    header .content nav>ul>li>ul:before {
-	        width: 150px
 	    }
 	}
 	
@@ -814,7 +629,7 @@ body {
 	}
 	
 	@media (min-width:791px) {
-	    header .content .bottom .bag {
+	    header .content .bottom .bag, .brand-sub header .content .bottom .bag {
 	        float: right;
 	        width: 126px;
 	        margin-right: 23px;
@@ -885,16 +700,6 @@ body {
 	        -webkit-transition: top .15s .3s, left .15s .3s, opacity .15s .3s, -webkit-transform .15s .15s;
 	        -moz-transition: top .15s .3s, left .15s .3s, opacity .15s .3s, -moz-transform .15s .15s;
 	        transition: top .15s .3s, left .15s .3s, opacity .15s .3s, transform .15s .15s
-	    }
-	    header>.content .top .toggle span:first-child {
-	        top: 15px
-	    }
-	    header>.content .top .toggle span:last-child {
-	        top: 35px
-	    }
-	    header>.content .top>div:not(.toggle),header>.content .top ul {
-	        display: inline;
-	        font-size: 14px
 	    }
 	    header>.content .top>div:not(.toggle) li,header>.content .top ul li {
 	        padding-left: 15px;
@@ -1064,11 +869,6 @@ body {
 	        clear: both;
 	        content: "";
 	        display: table
-	    }
-	    header>.content .bottom .search {
-	        width: 100%;
-	        float: left;
-	        text-align: center
 	    }
 	    header>.content .bottom .search form {
 	        display: inline-block;
@@ -1379,37 +1179,7 @@ body {
 	    header .content .compact-toggle.mobile {
 	        display: none
 	    }
-	    header .content .compact-toggle {
-	        position: absolute;
-	        display: inline-block;
-	        width: 50px;
-	        height: 20px;
-	        bottom: -9px;
-	        left: 50%;
-	        margin-left: -25px;
-	        background-color: #fff;
-	        z-index: 1;
-	        border-radius: 50px/20px;
-	        cursor: pointer;
-	        opacity: 0;
-	        box-shadow: 0 4px 4px 0 #f0f0f0;
-	        -webkit-transition: opacity .3s;
-	        -moz-transition: opacity .3s;
-	        transition: opacity .3s
-	    }
-	    header .content .compact-toggle:before {
-	        content: "";
-	        display: inline-block;
-	        position: relative;
-	        left: 50%;
-	        margin-left: -4px;
-	        top: 0;
-	        height: 0;
-	        width: 0;
-	        border-left: 4px solid transparent;
-	        border-right: 4px solid transparent;
-	        border-top: 4px solid #a9143c
-	    }
+	    
 	    header .content .marketplace.compact a {
 	        position: relative;
 	        opacity: 0;
@@ -1436,9 +1206,6 @@ body {
 	@media (max-width:790px) {
 	    header>.content .bottom .search form input {
 	        border-left: 1px solid #AAA
-	    }
-	    header>.content .top {
-	        z-index: 105
 	    }
 	    header {
 	        margin-top: 0;
@@ -1689,23 +1456,9 @@ body {
 	}
 	
 	@media (max-width:790px) {
-	    #mobile-menu-toggle {
-	        display: block;
-	        float: right;
-	        font-size: 14px;
-	        width: 100%
-	    }
-	    #mobile-menu-toggle:after {
-	        font-family: 'FontAwesome';
-	        -webkit-font-smoothing: antialiased;
-	        -moz-osx-font-smoothing: grayscale;
-	        content: "\f054";
-	        float: right;
-	        margin-right: 15px
-	    }
-	    ul li #mobile-menu-toggle+ul {
-	        display: none
-	    }
+	#mobile-menu-toggle {
+    display: block;
+    }
 	}
 	
 	@media (max-width:790px) {
@@ -1725,12 +1478,6 @@ body {
 	        width: calc(100% - 30px);
 	        height: 2px
 	    }
-	    header>.content .top .toggle span:first-child {
-	        top: 19px
-	    }
-	    header>.content .top .toggle span:last-child {
-	        top: 31px
-	    }
 	    header>.content .bottom .bag a {
 	        font-size: 14px
 	    }
@@ -1743,14 +1490,6 @@ body {
 	    .marketplace img {
 	        height: 48px
 	    }
-	}
-	
-	header .content nav>ul>li>ul>li>ul>li>div.view_brands {
-	    display: none
-	}
-	
-	header .content nav>ul>li>ul>li>ul.words>li:nth-child(2) {
-	    margin-top: 0
 	}
 	li.download-app a:before {
 	    margin-right: 5px;
@@ -1837,19 +1576,6 @@ body {
 	}
 	
 	@media (max-width:790px) {
-	    header .content .right>ul>li.wishlist>a:before {
-	        font-family: 'icomoon';
-	        -webkit-font-smoothing: antialiased;
-	        -moz-osx-font-smoothing: grayscale;
-	        content: "\e602";
-	        font-size: 14px;
-	        color: #a9143c;
-	        line-height: 18px;
-	        margin-right: 5px;
-	        top: 3px;
-	        position: relative;
-	        font-weight: 700
-	    }
 	    li.download-app a:before {
 	        margin-right: 9px
 	    }
@@ -1859,14 +1585,8 @@ body {
 	}
 	
 	@media (max-width:767px) {
-	    header>.content {
-	        padding: 0 12px 15px
-	    }
 	    select#enhancedSearchCategory {
 	        background-position: 87% 51%
-	    }
-	    header>.content {
-	        padding: 0 12px 15px!important
 	    }
 	    header>.content .bottom .mobile-bag.bag:before {
 	        right: -12px!important
@@ -1941,10 +1661,6 @@ body {
 	        height: 18px;
 	        width: 18px
 	    }
-	    header>.content .bottom .search form button {
-	        height: 40px;
-	        width: 40px
-	    }
 	    select#enhancedSearchCategory {
 	        background-position: 92% 51%;
 	        background-image: url(./_ui/responsive/theme-blue/images/select-arrow-new.png)
@@ -1974,35 +1690,6 @@ body {
 	    header>.content .top ul:first-child li.short.images div.view_brands {
 	        display: none
 	    }
-	    #mobile-menu-toggle {
-	        position: absolute;
-	        right: 0;
-	        top: 0;
-	        z-index: 999
-	    }
-	    ul li #mobile-menu-toggle+ul {
-	        text-indent: 10px;
-	        background: #d6d6d6
-	    }
-	    ul li #mobile-menu-toggle+ul li ul {
-	        text-indent: 20px
-	    }
-	    ul li #mobile-menu-toggle+ul li {
-	        line-height: 50px
-	    }
-	    ul li #mobile-menu-toggle+ul li ul li {
-	        background: #c5c4c4;
-	        line-height: 40px
-	    }
-	    ul li #mobile-menu-toggle+ul li ul.words li.long {
-	        text-indent: 30px;
-	        background: #b9b8b8;
-	        line-height: 30px;
-	        display: none
-	    }
-	    ul li #mobile-menu-toggle+ul li ul.words li.long a {
-	        display: block
-	    }
 	}
 	
 	.top .container>.right>ul:first-child,
@@ -2020,7 +1707,7 @@ body {
 	    }
 	}
 	
-	header .bottom-header-wrapper {
+	header .bottom-header-wrapper, header.brand-header .microsite_bottom_wrapper {
 	    position: relative
 	}
 	
@@ -2032,15 +1719,6 @@ body {
 	        right: -51px
 	    }
 	}		
-	
-	.form-control {
-	    display: block;
-	    font-size: 12px;
-	    color: #555;
-	    background-color: #fff;
-	    border-radius: 0
-	}
-	
 	.form-control::-moz-placeholder {
 	    color: #777;
 	    opacity: 1
@@ -2154,11 +1832,6 @@ body {
 	        text-align: center
 	    }
 	}
-	
-	header .content .bottom .bag .transient-mini-bag {
-	    z-index: 10000
-	}
-	
 	@media (max-width:790px) {
 	    header .content .bottom .bag .transient-mini-bag {
 	        display: none
@@ -2228,9 +1901,6 @@ body {
 	}
 	
 	@media (min-width:791px) {
-	    header .content .right>ul>li>a {
-	        color: #fff
-	    }
 	    li.download-app a:before,
 	    span.material-icons,
 	    header .content .right>ul>li.wishlist>a:before {
@@ -2304,20 +1974,6 @@ body {
 	        position: relative;
 	        cursor: pointer
 	    }
-	    button.searchButtonGlobal {
-	        margin-top: -45px;
-	        margin-right: 16px;
-	        padding: 0;
-	        float: right
-	    }
-	    button.searchButtonGlobal:before {
-	        content: "";
-	        background: url(./_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -135px -5px;
-	        display: inline-block;
-	        height: 18px;
-	        width: 18px;
-	        margin-top: 26px
-	    }
 	}
 	
 	header>.content .bottom .marketplace .simple-banner-component img {
@@ -2330,12 +1986,6 @@ body {
 	    letter-spacing: .6px;
 	    line-height: 14px;
 	    font-weight: 400
-	}
-	
-	li.download-app a:before,
-	span.material-icons,
-	header .content .right>ul>li.wishlist>a:before {
-	    color: rgba(255, 255, 255, 0.7)
 	}
 	
 	li.download-app a:before {
@@ -2420,28 +2070,18 @@ body {
 	    header>.content .bottom .search form select {
 	        height: 42px
 	    }
-	    li.download-app a:before,
-	    span.material-icons,
-	    header .content .right>ul>li.wishlist>a:before {
-	        color: rgba(0, 0, 0, 0.7)
-	    }
 	    header>.content .bottom .mobile-bag.bag {
 	        top: 3px
 	    }
 	    header>.content .bottom .mobile-bag.bag:before {
-	        background: url(./_ui/responsive/theme-blue/images/sprite-07.png) no-repeat scroll -383px -145px
+	        background: url(./_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -383px -145px
 	    }
 	    header>.content .bottom .mobile-bag.bag a {
 	        width: 26px;
 	        background: #000
 	    }
 	    header>.content .bottom .search form button:before {
-	        background: url(./_ui/responsive/theme-blue/images/sprite-07.png) no-repeat scroll -300px -207px
-	    }
-	    li.download-app a:before,
-	    span.material-icons {
-	        -webkit-filter: invert(100%);
-	        filter: invert(100%)
+	        background: url(./_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -300px -207px
 	    }
 	    header>.content .top>div:not(.toggle) li.download-app {
 	        padding-left: 8px
@@ -2490,16 +2130,10 @@ body {
 	    header .content .search {
 	        margin-left: 85px
 	    }
-	    header .content .bottom:not(.active) .bag:before {
-	        right: 75px
-	    }
-	    header .content .bottom:not(.active) .bag:after {
-	        right: 74px
-	    }
 	     header .content .right>ul>li:first-of-type {
 	        margin-right: 17px
 	    }
-	    header .content .bottom .bag {
+	    header .content .bottom .bag, .brand-sub header .content .bottom .bag {
 	        float: right;
 	        margin-right: 30px
 	    }
@@ -2669,12 +2303,6 @@ body {
 	    width: auto
 	}
 	
-	li.download-app a:before,
-	span.material-icons,
-	header .content .right>ul>li.wishlist>a:before {
-	    color: rgba(255, 255, 255, 0.7)
-	}
-	
 	li.download-app a:before {
 	    top: 4px
 	}
@@ -2746,50 +2374,6 @@ body {
 	        left: 0;
 	        width: 217px
 	    }
-	    header .content nav>ul>li>ul>li {
-	        background-color: transparent
-	    }
-	    header .content nav>ul>li>ul>li>.toggle {
-	        padding-left: 30px
-	    }
-	    header .content nav>ul>li>ul>li>.toggle a {
-	        letter-spacing: .7px
-	    }
-	    header .content nav>ul>li>ul>li>.toggle:after {
-	        right: -15px
-	    }
-	    header .content nav>ul>li>ul>li,
-	    header .content nav>ul>li>ul:before {
-	        width: 217px
-	    }
-	    header .content nav>ul>li>ul:before {
-	        left: 0;
-	        background-image: linear-gradient(to bottom, #fff, #eee)
-	    }
-	    header .content nav>ul>li>ul>li>ul {
-	        left: 217px;
-	        width: -webkit-calc(100% - 217px);
-	        width: calc(100% - 217px)
-	    }
-	    header .content nav>ul>li>ul>li>ul.words,
-	    header .content nav>ul>li>ul>li>ul {
-	        background: #fff
-	    }
-	    header .content nav>ul>li>ul>li>ul>li .toggle {
-	        letter-spacing: .6px
-	    }
-	    .words li.long .toggle a {
-	        letter-spacing: .6px;
-	        color: #777;
-	        display: block
-	    }
-	    header .content nav>ul>li>ul:after {
-	        border-style: solid;
-	        border-width: 9px;
-	        border-color: transparent;
-	        border-top-width: 0;
-	        border-bottom: 9px solid #fff
-	    }
 	    header .content .search {
 	        float: left
 	    }
@@ -2832,60 +2416,6 @@ body {
 	    header .content nav>ul>li:first-child+li>ul {
 	        border-top: 1px solid #eee
 	    }
-	    header .content .right li.dropdown.sign-in-dropdown.sign-in.ajaxloginhi:after,
-	    header .content .right>ul>li.wishlist:after {
-	        content: "";
-	        width: 0;
-	        height: 0;
-	        border-left: 9px solid transparent;
-	        border-right: 9px solid transparent;
-	        border-bottom: 9px solid #fff;
-	        position: absolute;
-	        top: 28px;
-	        left: 50%;
-	        z-index: 1001;
-	        opacity: 0
-	    }
-	    header .content .bottom:not(.active) .bag:before {
-	        content: "";
-	        width: 0;
-	        height: 0;
-	        border-left: 8px solid transparent;
-	        border-right: 8px solid transparent;
-	        border-bottom: 8px solid #fff;
-	        position: absolute;
-	        z-index: 1002;
-	        opacity: 0;
-	        top: 56px;
-	        left: auto;
-	        right: 68px
-	    }
-	    header .content .bottom:not(.active) .bag:after {
-	        content: "";
-	        width: 0;
-	        height: 0;
-	        border-left: 9px solid transparent;
-	        border-right: 9px solid transparent;
-	        border-bottom: 9px solid rgba(0, 0, 0, 0.15);
-	        position: absolute;
-	        z-index: 1001;
-	        opacity: 0;
-	        top: 55px;
-	        left: auto;
-	        right: 67px
-	    }
-	    header .content .right>ul>li.sign-in .sign-in-info {
-	        width: 376px;
-	        left: auto;
-	        right: 0
-	    }
-	    header .content .right>ul>li.wishlist .wishlist-info {
-	        left: auto;
-	        right: 10px;
-	        background-color: #fff;
-	        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.35), 0 1px 2px 0 rgba(0, 0, 0, 0.25);
-	        padding: 0 15px
-	    }
 	    header .content .right>ul>li {
 	        padding: 0 13px
 	    }
@@ -2907,101 +2437,9 @@ body {
 	    }
 	}
 	
-	@media (min-width:791px) {
-	    header .content nav>ul>li>ul>li>ul.words,
-	    header .content nav>ul>li>ul>li>ul {
-	        border-bottom: 1px solid #eee
-	    }
-	}
-	
-	@media (max-width:790px) {
-	    #flip-navigation li.selected {
-	        border-bottom: 1px solid #000
-	    }
-	    #flip-navigation li a {
-	        padding: 4px 10px 4.5px
-	    }
-	    #flip-navigation li.selected a {
-	        padding: 4px 10px 3.5px
-	    }
-	    header>.content .bottom .marketplace.linear-logo .simple-banner-component {
-	        text-align: left
-	    }
-	    header>.content .bottom .marketplace .simple-banner-component img {
-	        width: auto;
-	        height: 24px
-	    }
-	    header>.content .bottom .marketplace {
-	        padding-left: 43px;
-	        padding-top: 22.5px;
-	        height: 62px
-	    }
-	    header>.content .bottom .search form button {
-	        width: 62px;
-	        background: #f8f8f8
-	    }
-	    header>.content .bottom .search form input {
-	        width: -webkit-calc(65% - 62px);
-	        width: calc(65% - 62px)
-	    }
-	    header>.content .bottom .search form button,
-	    header>.content .bottom .search form input,
-	    header>.content .bottom .search form select {
-	        height: 42px
-	    }
-	    li.download-app a:before,
-	    span.material-icons,
-	    header .content .right>ul>li.wishlist>a:before {
-	        color: rgba(0, 0, 0, 0.7)
-	    }
-	    header>.content .bottom .mobile-bag.bag {
-	        top: 3px
-	    }
-	    header>.content .bottom .mobile-bag.bag:before {
-	        background: url(./_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -383px -145px
-	    }
-	    header>.content .bottom .mobile-bag.bag a {
-	        width: 26px;
-	        background: #000
-	    }
-	    header>.content .bottom .search form button:before {
-	        background: url(./_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -300px -207px
-	    }
-	    li.download-app a:before,
-	    span.material-icons {
-	        -webkit-filter: invert(100%);
-	        filter: invert(100%)
-	    }
-	    header>.content .top>div:not(.toggle) li.download-app {
-	        padding-left: 8px
-	    }
-	    span.material-icons {
-	        margin-right: 2px
-	    }
-	    header .content .right>ul>li.wishlist>a:before {
-	        margin-right: 8px
-	    }
-	}
-	
 	@media (max-width:790px) and (min-width:768px) {
 	    header>.content .top .toggle {
 	        right: -64px
-	    }
-	}
-	
-	@media (max-width:767px) {
-	    header>.content {
-	        padding: 0 10px 10px!important
-	    }
-	    .select-view .select-list {
-	        border: 1px solid #bbb
-	    }
-	    .select-view .select-list>.selected:after {
-	        right: 16px
-	    }
-	    .select-view .select-list>.selected {
-	        padding-left: 16px;
-	        padding-right: 35px
 	    }
 	}
 	
@@ -3031,44 +2469,11 @@ body {
 	    .searchButtonGlobal {
 	        display: none
 	    }
-	    ul li #mobile-menu-toggle+ul li ul.words li.long.words.only-link {
-	        height: 0;
-	        border: 0
-	    }
-	    .l2_wrapper {
-	        border: 0!important
-	    }
 	}
 	
 	@media (min-width:791px) {
-	    header .content nav>ul>li>ul>li>ul.words {
-	        white-space: nowrap;
-	        overflow-y: hidden;
-	        overflow-x: auto
-	    }
-	    header .content nav>ul>li>ul>li>ul>li.l2_wrapper {
-	        width: 16.5%
-	    }
-	    header .content nav>ul>li.ShopByBrand>ul>li>ul>li {
-	        line-height: 26px
-	    }
-	    header .content .search .select-list {
-	        z-index: 10
-	    }
-	    header .content .right>ul>li.sign-in .sign-in-info {
-	        cursor: default
-	    }
 	    header .content .right>ul>li.track_order_header {
 	        line-height: 37px
-	    }
-	}
-	
-	@media (min-width:791px) {
-	    header .content nav>ul>li>ul>li>ul.images {
-	        padding-top: 0
-	    }
-	    header .content .bottom:not(.active) nav>ul>li>ul>li>ul {
-	        height: 499px
 	    }
 	}
 	
@@ -3076,26 +2481,7 @@ body {
 	    display: block
 	}
 	
-	@media (max-width:790px) {
-	    header>.content .top .toggle span:first-child,
-	    header>.content .top .toggle span,
-	    header>.content .top .toggle span:last-child {
-	        transition: background 0 .3s
-	    }
-	}
-	
-	.product-info>div.wishAddLogin,
-	.product-info>div.wishAddSucess,
-	.product-info>div.wishAddLogin,
-	.product-info>div.wishRemoveSucess,
-	.product-info>div.wishAlreadyAdded,
-	div.wishAlreadyAddedPlp,
-	div.wishAddLoginPlp,
-	div.wishAddSucessPlp,
-	div.wishRemoveSucessPlp,
-	div.wishAddSucessQV,
-	div.wishAddLoginQV,
-	div.wishAlreadyAddedQV {
+	.product-info>div.wishAddLogin,.product-info>div.wishAddSucess,.product-info>div.wishAddLogin,.product-info>div.wishRemoveSucess,.product-info>div.wishAlreadyAdded,div.wishAlreadyAddedPlp,div.wishAddLoginPlp,div.wishAddSucessPlp,div.wishRemoveSucessPlp,div.wishAddSucessQV,div.wishAddLoginQV,div.wishAlreadyAddedQV {
 	    opacity: 0;
 	    position: fixed;
 	    top: -100px;
@@ -3107,8 +2493,7 @@ body {
 	}
 	
 	.shop-promos {
-	    padding: 10px 15px;
-	    clear: both
+	    clear: both;
 	}
 	
 	.shop-promos .promos {
@@ -3138,18 +2523,6 @@ body {
 	    padding-left: 100px;
 	    display: block
 	}
-	
-	.shop-promos .promos li span {
-	    font-size: 18px;
-	    margin-bottom: 12px;
-	    font-weight: 500;
-	    text-transform: uppercase
-	}
-	
-	.shop-promos .promos li span::first-letter {
-	    font-weight: 600
-	}
-	
 	@media (min-width:651px) {
 	    .shop-promos .promos::after {
 	        clear: both;
@@ -3191,7 +2564,7 @@ body {
 	    .shop-promos .promos li {
 	        border-bottom: 1px solid #ccc;
 	        border-right: 1px solid #ccc;
-	        padding: 52px 0 0;
+	        padding: 34px 0 0 0;
 	        display: table-cell;
 	        float: none
 	    }
@@ -3213,13 +2586,6 @@ body {
 	.shop-promos {
 	    padding: 0
 	}
-	
-	.shop-promos .promos li span {
-	    color: #000;
-	    position: relative;
-	    font-weight: 700
-	}
-	
 	.shop-promos .promos li span:after {
 	    font-family: 'FontAwesome';
 	    -webkit-font-smoothing: antialiased;
@@ -3271,34 +2637,6 @@ body {
 	    }
 	}
 	
-	@media (min-width:768px) {
-	    .shop-promos .promos li {
-	        padding: 34px 0 0
-	    }
-	    .shop-promos .promos li span {
-	        font-size: 12px;
-	        letter-spacing: .7px;
-	        color: #666;
-	        font-weight: 400;
-	        text-transform: capitalize
-	    }
-	    .shop-promos .promos li span::first-letter {
-	        font-weight: 400
-	    }
-	    .shop-promos .promos li {
-	        padding: 34px 0 0
-	    }
-	    .shop-promos .promos li span {
-	        font-size: 12px;
-	        letter-spacing: .7px;
-	        color: #666;
-	        font-weight: 400;
-	        text-transform: capitalize
-	    }
-	    .shop-promos .promos li span::first-letter {
-	        font-weight: 400
-	    }
-	}
 	/* TPR-628 */
 	#rotatingImageMobile, #rotatingImageTimeoutMobile {
     display: none;

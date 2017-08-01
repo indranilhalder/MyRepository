@@ -260,6 +260,7 @@
 	 
 	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
+	<link id="mincss">
 	<template:styleSheets/>
 	<template:headercss/>
 	<script type="text/javascript"
