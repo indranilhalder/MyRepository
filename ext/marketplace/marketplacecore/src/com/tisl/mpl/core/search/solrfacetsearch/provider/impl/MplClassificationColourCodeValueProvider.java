@@ -146,13 +146,13 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 				value = value.toString().toLowerCase();
 				if (value.toString().startsWith(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR))
 				{
-					value = value.toString().replaceAll(MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
+					value = fastReplace(value.toString(), MarketplaceCoreConstants.COLORFAMILYFOOTWEAR,
 							MarketplaceCoreConstants.COLORFAMILYFOOTWEARBLANK);
 				}
 				// INC_12606 starts
 				else if (value.toString().startsWith(MarketplaceCoreConstants.DIALCOLORELECTRONICS))
 				{
-					value = value.toString().replaceAll(MarketplaceCoreConstants.DIALCOLORELECTRONICS,
+					value = fastReplace(value.toString(), MarketplaceCoreConstants.DIALCOLORELECTRONICS,
 							MarketplaceCoreConstants.DIALCOLORELECTRONICSBLANK);
 				}
 				// INC_12606 ends
@@ -249,5 +249,31 @@ public class MplClassificationColourCodeValueProvider extends ClassificationProp
 	public void setFieldNameProvider(final FieldNameProvider fieldNameProvider)
 	{
 		this.fieldNameProvider = fieldNameProvider;
+	}
+
+	static String fastReplace(final String str, final String target, final String replacement)
+	{
+		final int targetLength = target.length();
+		if (targetLength == 0)
+		{
+			return str;
+		}
+		int idx2 = str.indexOf(target);
+		if (idx2 < 0)
+		{
+			return str;
+		}
+		final StringBuilder buffer = new StringBuilder(targetLength > replacement.length() ? str.length() : str.length() * 2);
+		int idx1 = 0;
+		do
+		{
+			buffer.append(str, idx1, idx2);
+			buffer.append(replacement);
+			idx1 = idx2 + targetLength;
+			idx2 = str.indexOf(target, idx1);
+		}
+		while (idx2 > 0);
+		buffer.append(str, idx1, str.length());
+		return buffer.toString();
 	}
 }
