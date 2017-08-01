@@ -1466,9 +1466,17 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 														deliveryTrackingInfoWsDTO.setDeliveryTrackingDescription(null != statusRecords
 																.getStatusDescription() ? statusRecords.getStatusDescription()
 																: MarketplacecommerceservicesConstants.NULL_VALUE);
+														LOG.debug("+++++++delivery Tracking details+++++++++" + deliveryTrackingInfoWsDTO);
 														deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
-														customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+														LOG.debug("********delivery Tracking details List****************"
+																+ deliveryTrackingListInfoWsDTO);
+														//customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 													}
+													LOG.debug("------delivery Tracking details List in dto------"
+															+ deliveryTrackingListInfoWsDTO);
+													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
+													LOG.debug("-----delivery Tracking details in response------"
+															+ customerOrderInfoWsDTO.getDeliverytrackingDetails());
 												}
 												else
 												{
