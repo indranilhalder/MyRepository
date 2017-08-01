@@ -27,6 +27,7 @@
 				}
 
 				tmpmain.onload = function() {
+					<!-- Best pics loaded as part of tmpmain script load -->
 					document.body.appendChild(ia);
 					 if (!$('#bestPicks').attr('loaded')) {
 			             //not in ajax.success due to multiple sroll events
@@ -36,11 +37,12 @@
 			                 getBestPicksAjaxCall();
 			             }
 			         }
+					 <!-- Gigya called there after -->
 					 callGigya();
 				}
 				
 				ia.onload = function(){
-					
+					<!-- Banner loaded after IA plugin loaded  -->
 					$(".electronic-rotatingImage").owlCarousel({
 						items:1,
 			    		//loop: true,
@@ -318,5 +320,58 @@ $(window).load(function(){
 	     }
 	 });
 });
+/*--- Start of  Mobile view Left menu Sign In toggle---- */
+$(window).on("load resize",function(e){
+	//alert('here1');
+	if($('#pageTemplateId').val() =='LandingPage2Template'){	
+		//alert('here2');
+		var style=null;
+		if($(window).width() < 773) {
+			  $(document).off("click","span#mobile-menu-toggle").on("click","span#mobile-menu-toggle",function() {
+				$("a#tracklink").mouseover();
+				$(this).parent('li').siblings().children('#mobile-menu-toggle').removeClass("menu-dropdown-arrow");
+				$(this).parent('li').siblings().find('#mobile-menu-toggle + ul').slideUp();
+				$(this).next().slideToggle();
+				$(this).toggleClass("menu-dropdown-arrow");
+			});
+			  $(document).on("click","ul.words span#mobile-menu-toggle",function() {
+				var id = $(this).parents('ul.words').siblings("div.departmenthover").attr("id"), ind = $(this).parent('li.short.words').index("."+id+" .short.words")
+					$(".long.words").hide();
+					div_container=$(this).parent(".short.words");
+					if($(this).hasClass('menu-dropdown-arrow')){
+						for(var i=1;i<$(".long.words").length;i++){
+							if(div_container.next().hasClass("long")){
+								div_container.next().show();
+								div_container=div_container.next();
+							}
+							else
+								break;
+							}		
+					} else {
+						$(".long.words").hide();
+					}
+					longStyleContainer=$(this).parent(".short.words").next(".long.words").attr("style");
+					$(this).parents("li.level1").nextAll("li.level1").find(".short").children("#mobile-menu-toggle").removeClass("menu-dropdown-arrow");
+					$(this).parents("li.level1").prevAll("li.level1").find(".short").children("#mobile-menu-toggle").removeClass("menu-dropdown-arrow");
+			  });
+			/*--- Mobile view shop by brand and department ---*/ 
+		}
+		else {
+			$("#mobile-menu-toggle").next().attr("style",style);
+			$("li.short.words,li.long.words").next().attr("style",style); 
+		}
+		
+		div_container=$(".productGrid-menu nav #mobile-menu-toggle.mainli.menu-dropdown-arrow").parent(".short.words");
+		for(var i=1;i<$(".long.words").length;i++){
+			if(div_container.next().hasClass("long")){
+				div_container.next().attr("style",longStyleContainer);
+				div_container=div_container.next();
+			}
+			else
+				break;
+			}
+	}	
+		
+	});
 </script>
 </c:if>

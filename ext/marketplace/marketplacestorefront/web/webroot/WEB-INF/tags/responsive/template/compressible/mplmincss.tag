@@ -18,6 +18,7 @@
         document.body.appendChild(replacement);
         addStylesNode.parentElement.removeChild(addStylesNode); */
         
+        
         var head = document.head ;
         var link = document.getElementById('mincss');
 
