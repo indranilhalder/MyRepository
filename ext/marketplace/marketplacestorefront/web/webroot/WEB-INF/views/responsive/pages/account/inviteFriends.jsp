@@ -96,11 +96,11 @@
 						<c:if test="${not empty textMessage}">
 							<c:set var="textMessage" value="Have you shopped on Tata CLiQ yet? <www.tatacliq.com>"></c:set>
                        	</c:if>
-                        <label><spring:theme code="text.InviteFriends.friends.email" /></label>	
+                        <label class="invite-text-lbl label-float"><spring:theme code="text.InviteFriends.friends.email" /></label>	
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()" placeholder='<spring:theme code="text.InviteFriends.SeparateWithCommas"/>'/>
 						<%-- <span><spring:theme code="text.InviteFriends.SeparateWithCommas"/></span> --%>
 						<div class="errorMessage"><div id="errfemail"></div></div>
-						<label><spring:theme code="text.InviteFriends.message" /></label>	
+						<label class="massage-text-lbl"><spring:theme code="text.InviteFriends.message" /></label>	
 						<textarea class="mytextarea" id="mytextarea" placeholder="${textMessage}">${textMessage}</textarea>
 						<button type="button"  id="inviteFriends"
 							class="blue"><spring:theme code="text.InviteFriends.InviteNow"/></button>
@@ -111,8 +111,8 @@
 					
 					<span class="or"><spring:theme code="text.or"/></span>
 					
-					<h2><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></h2>
-					
+					<label class="invite-text-lbl"><spring:theme code="text.inviteFriends.invite.social" text="The social network"/></label>
+					<br />
 					<p><spring:theme code="text.inviteFriends.invite.more.friends" text="Invite your friends on Facebook, Google+ or Twitter"/></p>
 					
 						<div class="social">
@@ -164,17 +164,27 @@
 						$(".g-interactivepost").attr("data-calltoactionurl",window.location);
 					});
 					/* end change of INC144313760 */
+					/* start change of TPR-6147 */
+				   function copyToClipboard(element) {
+					  var $temp = $("<input>");
+					  $("body").append($temp);
+					  $temp.val($(element).val()).select();
+					  document.execCommand("copy");
+					  $temp.remove();
+					}
+				   /* start change of TPR-6147 */
 					</script>
 					<div class="personal-invites">
 					
 					<span class="or"><spring:theme code="text.or"/></span>
-					<h2><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></h2>
-					<p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Invite your friends to shop on Tata CLiQ by emailing them the link below"/></p>
+					<label class="invite-text-lbl"><spring:theme code="text.inviteFriends.invite.personal" text="One on one"/></label>
+					<%-- <p><spring:theme code="text.inviteFriends.invite.copy.and.share" text="Invite your friends to shop on Tata CLiQ by emailing them the link below"/></p> --%>
 					
 					<%-- <c:url value='/login/?affiliateId=${affiliateId}' var="regUrl" />
 					<c:set value="${baseUrl}${regUrl}" var="finalUrl"></c:set> --%>
 					
-					<input type="text" disabled="disabled" value="${baseUrl}" />
+					<input type="text" disabled="disabled" value="${baseUrl}" id="copyLink" />
+					<a  class="copy-link" onclick="copyToClipboard('#copyLink')">COPY LINK</a>
 					</div>
 				
 			</div>
