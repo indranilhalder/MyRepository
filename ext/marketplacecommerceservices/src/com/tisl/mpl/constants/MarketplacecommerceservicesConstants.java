@@ -2134,8 +2134,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String EMPTY_SPACE = " ".intern();
 	public static final String REFUND_SUCCESSFUL_ = "REFUND_SUCCESSFUL".intern();
 	public static final String MOBILE_NO_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
-	public static final String TRANSACTION_ID_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
-	public static final String ORDER_ID_NOT_PRESENT = "Mobile number is not present in Commerce System".intern();
+	public static final String TRANSACTION_ID_NOT_PRESENT = "TransactionId is not present in Commerce System".intern();
+	public static final String ORDER_ID_NOT_PRESENT = "Order Reference Number is not present in Commerce System".intern();
 
 	public static final String ERROR_MSG_TYPE_MISMATCHUSSID = "mismatchUssid";
 	public static final String TRANSACTIONID = "transactionid";

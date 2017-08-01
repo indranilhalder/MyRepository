@@ -8134,17 +8134,17 @@ div.wishlist-content .pagination {
 	color: #517fa4;
 }
 
-.social a.fb:after {
+/* .social a.fb:after {
 	content: "\f09a";
-}
+} */
 
 .social a.fb:hover:after {
 	color: #4d5a91;
 }
 
-.social a.tw:after {
+/* .social a.tw:after {
 	content: "\f099";
-}
+} */
 
 .social a.tw:hover:after {
 	color: #77aae8;
@@ -8158,10 +8158,10 @@ div.wishlist-content .pagination {
 	color: #cb2027;
 }
 
-.social a.gp:after {
+/* .social a.gp:after {
 	content: "\f0d5";
 }
-
+ */
 .social a.gp:hover:after {
 	color: #dd4b39;
 }
@@ -14728,9 +14728,9 @@ body .account .right-account button.blue:hover {
 		body #account-invite .right-account>div>h1 {
     		text-align: center;
 		}
-		body #account-invite .right-account>div>p {
+		/* body #account-invite .right-account>div>p {
    	 		text-align: center;
-		}
+		} */
 		body .account .right-account button.blue{
     		/* width: 100% !important;
     		margin-top: 15px !important; */		/* Commented for TPR-6013 */
@@ -73080,3 +73080,124 @@ footer #footerLink div.column ul li a {
 }
 /*end for TISPRDT-1936*/
 
+/* TPR-6147 start */
+label.massage-text-lbl {
+    margin-top: 24px;
+    margin-bottom: 6px;
+}
+body #account-invite .right-account>div form {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    position: relative;
+}
+.invites button#inviteFriends{
+	position: absolute;
+    right: 30px;
+    top: 30px;
+}
+.invite-text-lbl{  
+	margin-bottom: 6px;
+    line-height: 1;
+    letter-spacing: .6px;
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+}
+.invite-text-lbl.label-float{
+	float:left;
+}
+.invites #friendsEmail{
+	float:left;
+}
+body #account-invite .right-account>div.personal-invites input {
+    margin-top: 0px !important;
+    background-color: transparent !important;
+}
+.copy-link {
+  width: 70px;
+  height: 16px;
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  text-align: right;
+  color: #a5173c;
+  position: absolute;
+  right: 45px
+}
+body #account-invite .right-account>div.social-invites .social{
+	position: absolute;
+    right: 30px;
+    top: 0;
+}
+body #account-invite .right-account>div.social-invites{
+	border-bottom: 1px solid #eee;
+	padding-top: 30px;
+}
+body #account-invite .right-account>div.social-invites .social{
+	position: absolute;
+    right: 45px;
+    top: 30;
+}
+.right-account .social-invites label,
+.right-account .social-invites p{
+	display: inline-block;
+}
+body #account-invite .right-account>div.social-invites .social .links {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding: 0 ! important;
+    border: none ! important;
+}
+.right-account .social-invites p {
+    margin-bottom: 9px ! important;
+}
+body #account-invite .right-account>div.invites {
+    padding-bottom: 0px !important;
+}
+body #account-invite .right-account>div.personal-invites {
+    padding-top: 30px;
+}
+body #account-invite .right-account>div.social-invites .social .links a{
+	display: inline-block;
+    height: 45px;
+    width: 52px;
+    background-repeat: no-repeat;
+    border: 1px solid #bbb;
+}
+body #account-invite .right-account>div.social-invites .social .links a.fb {
+    background-image: url(../images/fb-icon-invite.PNG);
+}
+body #account-invite .right-account>div.social-invites .social .links a.gp {
+    background-image: url(../images/gplus-icon-invite.PNG);
+    border-width: 1px 0px 1px 0px;
+}
+body #account-invite .right-account>div.social-invites .social .links a.tw {
+    background-image: url(../images/twiter-icon-invite.PNG);
+}
+.social a {
+    margin: 0 ! important;
+}
+@media (max-width: 768px){
+body #account-invite .right-account>div.social-invites,
+body #account-invite .right-account>div.personal-invites {
+    padding-left: 0;
+}
+.copy-link {
+    position: relative;
+    left: 0;
+    top: 30px;
+}
+body #account-invite .right-account>div.social-invites .social {
+    position: relative;
+    left: 0;
+    top: 30;
+    padding-bottom: 48px;
+}
+.invites button#inviteFriends {
+    position: relative;
+    left: 0;
+    top: 15px;
+    margin-bottom: 48px;
+}
+}
+/* TPR-6147 End */

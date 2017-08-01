@@ -681,6 +681,9 @@ public final class ModelAttributetConstants
 	//for Gigya
 	public static final String IS_GIGYA_ENABLED = "isGigyaEnabled";
 
+	//for Izooto
+	public static final String IS_IZOOTO_ENABLED = "isIzootoEnabled";
+
 	//AccountPageController
 	public static final String UTF8 = "UTF-8";
 	public static final String HTTPS = "https";
@@ -870,7 +873,7 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
-	
+
 	/* TPR-5733 */
 	public static final String FOOTER_LINK_LIST = "footerLinkList";
 }
