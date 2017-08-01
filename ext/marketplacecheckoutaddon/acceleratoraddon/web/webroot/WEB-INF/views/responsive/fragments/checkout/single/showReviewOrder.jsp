@@ -117,7 +117,7 @@
 								</p> --%>
 								<c:choose>
 									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
-										<c:set var="noSize" value="<spring:theme code="product.variant.size.noSize"></spring:theme>"></c:set>
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
 										<c:if test="${entry.product.size ne noSize }">
 											<p class="size">
 												<ycommerce:testId code="cart_product_size">
