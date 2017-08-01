@@ -2,12 +2,10 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.BulkCancellationProcessModel;
 import de.hybris.platform.core.model.BulkReturnProcessModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
-
 import de.hybris.platform.core.model.user.CustomerModel;
-
 import de.hybris.platform.storelocator.model.PointOfServiceModel;
-
 
 import java.util.Date;
 import java.util.HashMap;
@@ -188,11 +186,12 @@ public class OrderModelServiceImpl implements OrderModelService
 	{
 		return orderModelDao.updatePickUpDetailsDao(orderId, name, mobile);
 	}
-//TO DO
-//<<<<<<< HEAD
-//	@Override
-//	public OrderModel getOrderModel(final String code)
-///=======
+
+	//TO DO
+	//<<<<<<< HEAD
+	//	@Override
+	//	public OrderModel getOrderModel(final String code)
+	///=======
 	/*
 	 * (non-Javadoc)
 	 *
@@ -204,12 +203,6 @@ public class OrderModelServiceImpl implements OrderModelService
 	{
 		return getOrderModelDao().getOrderModel(code);
 	}
-
-	public List<BulkCancellationProcessModel> getBulkCancelData()
-	{
-		return getOrderModelDao().getAllBulkCancelData();
-	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -230,14 +223,27 @@ public class OrderModelServiceImpl implements OrderModelService
 	}
 
 	@Override
-	public PointOfServiceModel getPointOfService(String storeId){
+	public PointOfServiceModel getPointOfService(final String storeId)
+	{
 		return getOrderModelDao().getPointOfService(storeId);
 	}
-		@Override
+
+	@Override
 	public OrderModel getOrderModel(final String code)
 	{
 		return getOrderModelDao().getOrderModel(code);
 
 	}
 
+	//Added For Bulk Return Cancellation Job For reducing Loops
+	@Override
+	public BulkCancellationProcessModel getBulkCancelData(final String transactionID)
+	{
+		return getOrderModelDao().getAllBulkCancelData(transactionID);
+	}
+
+	public List<OrderEntryModel> getOrderCancelData()
+	{
+		return getOrderModelDao().getOrderCancelData();
+	}
 }

@@ -146,5 +146,13 @@
    		<property name="interceptor" ref="TaskInterceptor" />
    		<property name="typeCode" value="Task" />
    	</bean>
+   	
+   	
+   	<!-- TPR-1348 -->
+	<bean id="autoRefundInitiateProcessDefinitionResource" class="de.hybris.platform.processengine.definition.ProcessDefinitionResource">
+		<property name="resource" value="classpath:/marketplacefulfilmentprocess/process/autorefundinitiate-process.xml"/>
+	</bean>
+	<!-- TPR-1348 -->
+   	
 	
 </beans>
