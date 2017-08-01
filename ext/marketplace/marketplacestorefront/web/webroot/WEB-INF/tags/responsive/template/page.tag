@@ -82,40 +82,39 @@
 			<footer class="mobile-footer">
 				<!-- UF-281/282:starts -->
 				<c:choose>
-					<c:when
-										test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
+					<c:when test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/single')}">
 						<div class="banner copyright-footer-text">
-						<span class="safe-secure-icon"></span>
-							<span style="display: none;">
-							<spring:theme code="checkout.single.footer.secure.text"></spring:theme></span>
-        						<div class="footer-copyrigt-text">
+							<span class="safe-secure-icon"></span>
+							<span>
+								<spring:theme code="checkout.single.footer.secure.text"></spring:theme>
+							</span>
+        					<div class="footer-copyrigt-text">
 								<cms:pageSlot position="Footer" var="feature" limit="1">
+									${feature.notice}
+       							</cms:pageSlot>
+        					</div>
+    						<cms:pageSlot position="Footer" var="feature">
+								<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
+	  								<cms:component component="${feature}"></cms:component>
+			  					</c:if>
+		       				</cms:pageSlot>
+       					</div>
+        			</c:when>
+        			<c:otherwise>
+        				<div class="banner">
+							<cms:pageSlot position="Footer" var="feature" limit="1">
 								${feature.notice}
-       								 </cms:pageSlot>
-        									</div>
-    							  <cms:pageSlot position="Footer" var="feature">
-						<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
-  						<cms:component component="${feature}"></cms:component>
-  					</c:if>
-       				 </cms:pageSlot>
-       </div>
-        </c:when>
-        <c:otherwise>
-        <div class="banner">
-				<cms:pageSlot position="Footer" var="feature" limit="1">
-						${feature.notice}
-       					 </cms:pageSlot>
-      			<cms:pageSlot position="Footer" var="feature">
-					<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
- 		 <cms:component component="${feature}"></cms:component>
-  			</c:if>
-        </cms:pageSlot>
-       </div>
-        </c:otherwise>
-        </c:choose>
-        
-<!-- UF-281/282:end -->
-</footer>
+	       					</cms:pageSlot>
+	      					<cms:pageSlot position="Footer" var="feature">
+								<c:if test="${feature.typeCode eq 'NeedHelpComponent'}">
+	 		 						<cms:component component="${feature}"></cms:component>
+	  							</c:if>
+	        				</cms:pageSlot>
+       					</div>
+        			</c:otherwise>
+        		</c:choose>        
+				<!-- UF-281/282:end -->
+			</footer>
  		</c:if>
 			</c:otherwise>
 			</c:choose>
