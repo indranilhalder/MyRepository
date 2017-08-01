@@ -13,7 +13,7 @@
 	<ycommerce:testId code="productStyleNotes_content_label">
 		<ul style="list-style:none; padding-left:0;">
 		<c:choose>
-					<c:when test="${product.rootCategory=='FineJewellery'}">
+					<c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">
 						<div class="product-desc">
 							<span class="key-label">
 							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
