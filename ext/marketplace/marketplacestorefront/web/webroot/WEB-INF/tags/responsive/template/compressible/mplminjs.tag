@@ -36,6 +36,7 @@
 			                 getBestPicksAjaxCall();
 			             }
 			         }
+					 callGigya();
 				}
 				
 				ia.onload = function(){

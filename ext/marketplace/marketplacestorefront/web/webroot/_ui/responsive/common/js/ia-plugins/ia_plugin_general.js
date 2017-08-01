@@ -390,8 +390,9 @@ function callRecApi(params, requestURL) {
   	    wS = $(this).scrollTop();
   		
   		if (!$('#ia_products_hot').attr('loaded') && wS > (hT + hH - wH)) {
-  			updatePage(response, requestURL);
   			$('#ia_products_hot').attr('loaded', true);
+  			updatePage(response, requestURL);
+  			
   		}
     	  }
   		
