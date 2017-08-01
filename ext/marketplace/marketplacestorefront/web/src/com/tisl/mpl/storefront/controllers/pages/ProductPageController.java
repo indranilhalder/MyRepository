@@ -2025,9 +2025,12 @@ public class ProductPageController extends MidPageController
 				if (productModel instanceof PcmProductVariantModel)
 				{
 					final PcmProductVariantModel variantProductModel = (PcmProductVariantModel) productModel;
-					if (variantProductModel.getSize().equalsIgnoreCase(ModelAttributetConstants.NOSIZE))
+					if (StringUtils.isNotEmpty(variantProductModel.getSize()))
 					{
-						showSizeGuideForFA = false;
+						if (variantProductModel.getSize().equalsIgnoreCase(ModelAttributetConstants.NOSIZE))
+						{
+							showSizeGuideForFA = false;
+						}
 					}
 
 				}
@@ -3286,9 +3289,12 @@ public class ProductPageController extends MidPageController
 			if (ModelAttributetConstants.FINEJEWELLERY.equalsIgnoreCase(variantProductModel.getProductCategoryType())
 					|| ModelAttributetConstants.FASHIONJEWELLERY.equalsIgnoreCase(variantProductModel.getProductCategoryType()))
 			{
-				if (variantProductModel.getSize().equalsIgnoreCase(ModelAttributetConstants.NOSIZE))
+				if (StringUtils.isNotEmpty(variantProductModel.getSize()))
 				{
-					showSizeGuideForFA = false;
+					if (variantProductModel.getSize().equalsIgnoreCase(ModelAttributetConstants.NOSIZE))
+					{
+						showSizeGuideForFA = false;
+					}
 				}
 			}
 
@@ -3431,7 +3437,7 @@ public class ProductPageController extends MidPageController
 
 	//CKD:TPR-250: End
 	/**
-	 * @param productCode
+	 * @param ussid
 	 * @return
 	 */
 	private String displayConfigurableAttributeForPriceBreakup(final String ussid)
