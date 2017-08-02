@@ -627,11 +627,11 @@ $classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),
 $categories=target(code, $catalogVersion)[unique=true]
 $classAttributeAssignment=classificationAttributeAssignment(classificationAttribute(code),classificationClass(code))
 $language=language(isocode)[default='en'][unique=true];
- INSERT_UPDATE ProductFeature;classificationAttributeAssignment(classificationAttribute(code,systemVersion(catalog(id),version)),classificationClass(catalogVersion(catalog(id),version),code),systemVersion(catalog(id),version));product(code,$catalogVersion)[unique=true,forceWrite=true,allownull=true];qualifier[unique=true,forceWrite=true,allownull=true];unit(code,systemVersion(catalog(id),version),unitType)[unique=true];valueType;value[translator=de.hybris.platform.catalog.jalo.classification.impex.ProductFeatureValueTranslator,allownull=true]
+ INSERT_UPDATE ProductFeature;classificationAttributeAssignment(classificationAttribute(code,systemVersion(catalog(id),version)),classificationClass(catalogVersion(catalog(id),version),code),systemVersion(catalog(id),version));product(code,$catalogVersion)[unique=true,forceWrite=true,allownull=true];qualifier[unique=true,forceWrite=true,allownull=true];unit(code,systemVersion(catalog(id),version),unitType)[unique=true];valueType;value[translator=de.hybris.platform.catalog.jalo.classification.impex.ProductFeatureValueTranslator,allownull=true];valueposition[unique=true]
          </value>
         </property>
         <property name="impexRow">
-            <value>;{+0};{+1};{2};{3};{4};{5}</value>
+            <value>;{+0};{+1};{2};{3};{4};{5};{6}</value>
         </property>
         
        </bean>
