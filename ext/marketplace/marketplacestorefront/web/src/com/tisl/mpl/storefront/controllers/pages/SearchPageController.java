@@ -42,7 +42,6 @@ import de.hybris.platform.commerceservices.search.facetdata.FacetData;
 import de.hybris.platform.commerceservices.search.facetdata.FacetRefinement;
 import de.hybris.platform.commerceservices.search.facetdata.ProductCategorySearchPageData;
 import de.hybris.platform.commerceservices.search.facetdata.ProductSearchPageData;
-import de.hybris.platform.commerceservices.search.facetdata.SpellingSuggestionData;
 import de.hybris.platform.commerceservices.search.pagedata.PageableData;
 import de.hybris.platform.commerceservices.search.pagedata.SearchPageData;
 import de.hybris.platform.core.model.product.ProductModel;
@@ -258,8 +257,8 @@ public class SearchPageController extends AbstractSearchPageController
 		boolean allSearchFlag = false;
 		String searchCategory = ALL;
 		String micrositeDropDownText = "";
-		final String spellingSearchterm = searchText;
-		String spellingtermDYM = "";
+		//Added for INC144317053
+		//boolean spellSuggestionFlag = false;
 		//UF-15
 		//final PageableData pageableData = createPageableData(0, getSearchPageSize(), null, ShowMode.Page);
 		final PageableData pageableData = createPageableData(0, 24, null, ShowMode.Page);
@@ -352,21 +351,27 @@ public class SearchPageController extends AbstractSearchPageController
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 								.textSearch(searchStateAll, pageableData);
 						// Code changes done for TPR-432
-						model.addAttribute("spellingSearchterm", spellingSearchterm);
-						if (CollectionUtils.isEmpty(searchPageData.getResults()) && searchPageData.getSpellingSuggestion() != null)
+						if (null != searchPageData.getSpellingSuggestion()
+
+						&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+
 						{
-							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchPageData.getSpellingSuggestion().getSuggestion()));
+
+							
+
+							model.addAttribute("spellingSearchterm",
+									searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[^a-zA-Z&0-9\\s+]+", ""));//setting the terms for suggestion
+
+							searchQueryDataAll.setValue(XSSFilterUtil.filter(searchPageData.getSpellingSuggestion().getSuggestion()
+									.replaceAll("[()]+", "")));
 							searchStateAll.setQuery(searchQueryDataAll);
-							spellingtermDYM = searchPageData.getFreeTextSearch();
+
 							searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
 									.textSearch(searchStateAll, pageableData);
-							if (null == searchPageData.getSpellingSuggestion())
-							{
-								final SpellingSuggestionData spelling = new SpellingSuggestionData();
-								spelling.setSuggestion(spellingtermDYM);
-								searchPageData.setSpellingSuggestion(spelling);
-								model.addAttribute("spellingSearchterm", spellingSearchterm);
-							}
+							model.addAttribute("isSpellCheck", Boolean.valueOf(true));
+							model.addAttribute("spellSearchTerm", searchText); //setting the search term in instead for
+
+
 						}
 						searchCategory = ALL;
 					}
@@ -1367,9 +1372,9 @@ public class SearchPageController extends AbstractSearchPageController
 	/*
 	 * protected <E> List<E> subList(final List<E> list, final int maxElements) { if (CollectionUtils.isEmpty(list)) {
 	 * return Collections.emptyList(); }
-	 * 
+	 *
 	 * if (list.size() > maxElements) { return list.subList(0, maxElements); }
-	 * 
+	 *
 	 * return list; }
 	 */
 

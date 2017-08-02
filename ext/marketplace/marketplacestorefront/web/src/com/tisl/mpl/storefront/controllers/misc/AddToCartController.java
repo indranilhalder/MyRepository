@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.tis.mpl.facade.data.ProductValidationData;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.facade.checkout.MplCartFacade;
 import com.tisl.mpl.helper.AddToCartHelper;
@@ -106,12 +107,29 @@ public class AddToCartController extends AbstractController
 
 			//INC144313608
 
-			final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(code);
-			if (isProductFreebie) //freebie product or not
-			{
-				return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE_FREEBIE;
+			/*
+			 * final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(code); if (isProductFreebie)
+			 * //freebie product or not { return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE_FREEBIE;
+			 *
+			 * }
+			 */
+			/* cart not opening issue --due to ussid mismatch */
 
+			final ProductValidationData isProductValid = getAddToCartHelper().isProductValid(code, ussid);
+
+			if (isProductValid != null)
+			{
+				if (isProductValid.getFreebie().booleanValue())
+				{
+					return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE_FREEBIE;
+				}
+				if (!isProductValid.getValidproduct().booleanValue())
+				{
+					return MarketplacecommerceservicesConstants.ERROR_MSG_TYPE_MISMATCHUSSID;
+				}
 			}
+
+
 
 			final long qty = form.getQty();
 			final long stock = form.getStock();
