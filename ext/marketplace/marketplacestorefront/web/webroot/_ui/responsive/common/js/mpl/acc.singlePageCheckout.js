@@ -2179,7 +2179,7 @@ ACC.singlePageCheckout = {
 		$("#paymentButtonId_up").css("display","none");
 		$("#make_mrupee_payment_up").css("display","none");
 		//Hiding SnackBar
-		ACC.singlePageCheckout.hideSnackBar();
+		//ACC.singlePageCheckout.hideSnackBar();
 	},
 	
 	//Used to get blank popup for pickup person form on clicking on cnc store for mobile

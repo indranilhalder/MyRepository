@@ -253,7 +253,7 @@ tr.d0 td {
 				<!-- </a> -->
 				<!-- //TPR-3752 Jewel Feature Attribute Added -->
 				<c:choose>
-					<c:when test="${product.rootCategory=='FineJewellery'}">
+					<c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery' }">
 						<div class="product-desc">
 							<span class="key-label">
 							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
