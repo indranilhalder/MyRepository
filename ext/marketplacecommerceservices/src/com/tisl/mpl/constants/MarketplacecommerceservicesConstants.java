@@ -2189,6 +2189,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GEMSTONE = "GEMSTONE";
 	public static final String WASTAGETAX = "WASTAGE TAX";
 	public static final String MAKINGCHARGE = "MAKING CHARGE";
+	public static final String ATTHERATE = "@";
+	public static final String GM = "gm";
+	public static final String CT = "Ct";
+	//public static final String PERGM = "/g";
+	//public static final String PERCT = "/ct";
 	//TPR-4134 web service
 	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
 	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";

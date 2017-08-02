@@ -16243,7 +16243,12 @@ body .account .right-account div.new-address .half.no-display.last-name {
 	}
     #countryListBox
     {
-    	margin-top:10px;
+    	margin-top: 10px;
+    	margin-right: 0%;
+    	float: right;
+    }
+    #stateListDropDown{
+    	margin-top: 10px;
     }
 }
 body .account .right-account form.new-card .half.account-only select,
@@ -70854,6 +70859,9 @@ select.update-entry-quantity-input.review-page-select{
     background-repeat: no-repeat;
     vertical-align: bottom;
 }
+.modal#singlePageChooseSlotDeliveryPopup>div.content li.item li.deliverySlotRadio input[type="radio"] ~ label.delslot_radio{		
+      cursor: pointer;				
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -75925,6 +75933,9 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiHRD{
 	display: none;
 } */
+
+
+
 .product-info>div.tabs-block.FineJewellery,
 .product-info>div.tabs-block.FashionJewellery
 {
@@ -76247,10 +76258,12 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 {		
 	padding-left: 0px !important;		
 }		
-.product-info .product-detail.FineJewellery .product-desc .key-label{		
+.product-info .product-detail.FineJewellery .product-desc .key-label,
+.product-info .product-detail.FashionJewellery .product-desc .key-label{		
 	display: inline-block;		
 }		
-.product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle{		
+.product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle,
+.product-info .product-detail.FashionJewellery .product-desc .key-label #jwlryTitle{		
 	float: left;		
 }		
 .accordtionTataCliq .reasonType.col-md-12,		
@@ -76264,7 +76277,8 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 .accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
 	padding-left: 0px;		
 }		
-.product-info .product-detail.FineJewellery .product-desc .key-label .more-link{		
+.product-info .product-detail.FineJewellery .product-desc .key-label .more-link,
+.product-info .product-detail.FashionJewellery .product-desc .key-label .more-link{		
 	padding-left: 20px;		
 }
 .col-md-7.col-sm-7.col-xs-12.reverseSealJwlry {
@@ -76882,3 +76896,30 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 	}
 }
 /*TISJEW-3230 end*/
+
+/* TPR-5007 start */
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before
+{
+	width: 58px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiBIS:before
+{
+    width: 134px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 27% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL:before
+{
+	width: 132px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 8% 0;;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGIA:before
+{
+	width: 94px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 52.5% 0;
+}
+/* TPR-5007 end */
