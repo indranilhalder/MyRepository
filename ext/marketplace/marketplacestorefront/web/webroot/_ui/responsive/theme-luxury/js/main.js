@@ -496,6 +496,8 @@ TATA.CommonFunctions = {
             return false;
         }
         var productCode = TATA.CommonFunctions.urlToProductCode(productURL);
+        var productarray = [];
+        productarray.push(productCode);
         var wishName = "";
         var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP";
         var sizeSelected=true;
@@ -526,6 +528,16 @@ TATA.CommonFunctions = {
                     },3000)
                 }
                 $(element).addClass("added");
+                if($('#pageType').val() == "productsearch"){
+                    if(typeof utag !="undefined"){
+                        utag.link({link_text: "add_to_wishlist_serp" , event_type : "add_to_wishlist_serp" ,product_sku_wishlist : productarray});
+                    }
+                } else {
+                    if(typeof utag !="undefined"){
+                        utag.link({link_text: "add_to_wishlist_plp" , event_type : "add_to_wishlist_plp" ,product_sku_wishlist : productarray});
+                    }
+                }
+
             },
             error : function(xhr, status, error){
                 alert(error);
@@ -1222,6 +1234,15 @@ TATA.Pages = {
                     }
                     dataString = dataString + '&sizeSelected=' + sizeSelected;
                     TATA.Pages.PDP.addToWishlist(dataString);
+                    var productCodePost = $("#productCodePost").val();
+                    var productcodearray =[];
+                    productcodearray.push(productCodePost);
+                    utag.link({
+                        link_obj: this,
+                        link_text: 'add_to_wishlist_pdp' ,
+                        event_type : 'add_to_wishlist_pdp',
+                        product_sku_wishlist : productcodearray
+                    });
                 }
             });
         },
@@ -2009,6 +2030,13 @@ function luxurycheckIsServicable()
 
                 console.log('Some issue occured in checkPincodeServiceability');
                 $("#isPincodeServicableId").val('N');
+                if(typeof utag !="undefined")
+                {
+                    //TPR-4736 | DataLAyerSchema changes | cart
+                    utag.link({
+                        "error_type" : "pincode_check_error",
+                    });
+                }
             }
         });
     }
@@ -2381,6 +2409,7 @@ function addToWishlistForCart(ussid,productCode)
 {
     var wishName = "";
     var sizeSelected=true;
+    var productcodearray = [];
 
     if (wishListList == "") {
         wishName = $("#defaultWishName").val();
@@ -2403,7 +2432,7 @@ function addToWishlistForCart(ussid,productCode)
 
     $("#wishlistErrorId").css("display","none");
 
-
+    productcodearray.push(productCode);
     var requiredUrl = ACC.config.encodedContextPath + "/p"+ "-addToWishListInPDP";
     var dataString = 'wish='+wishName
         +'&product='+ productCode
@@ -2422,9 +2451,16 @@ function addToWishlistForCart(ussid,productCode)
 
                 $("#radio_" + $("#hidWishlist").val()).prop("disabled", true);
 
+                if(typeof utag !="undefined"){
+                    utag.link({
+                        link_obj: this,
+                        link_text: 'cart_add_to_wishlist' ,
+                        event_type : 'cart_add_to_wishlist',
+                        product_sku_wishlist : productcodearray
+                    });
+                }
 
                 localStorage.setItem("movedToWishlist_msgFromCart", "Y");
-
 
                 /* 				var msg=$('#movedToWishlistFromCart').text();
                  $('#movedToWishlist_Cart').show();
