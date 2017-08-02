@@ -15,7 +15,6 @@
 		 <c:when test="${not empty pincode}">
 		 	<input id="pinCodeAvailable" type="hidden" value="${true}"/>
 		 	<a class="luxuyChangepincode" title="Change pincode">Change pincode</a>
-		 	<c:set var="pincodeClass" value="pincodeNotEmpty"/>
 			<input id="pin" type="text" value="${pincode}" maxlength="6" onkeypress="return isNum(event)" style="display: none;"/>
 			<button class="orange submit" id="pdpPincodeCheck" style="display: none;"><spring:theme code="text.submit"/></button>
 		    </c:when>
@@ -26,7 +25,6 @@
 				<button class="orange submit" id="pdpPincodeCheck"><spring:theme code="text.submit"/></button>
 				
 				<button class="gray submitDList" id="pdpPincodeCheckDList" style="display:none;"><spring:theme code="text.submit"/></button>
-				<c:set var="pincodeClass" value="pincodeEmpty"/>
 		    </c:otherwise>
 		 </c:choose>
 		</div>
@@ -48,7 +46,7 @@
 	   <c:forEach var="entry" items="${deliveryModeMap}">
 		<%-- Key: <c:out value="${entry.key}"/> --%>
 		<c:if test="${entry.key eq 'home-delivery'}">
-		<li class="do selected ${pincodeClass}" id="homeli"> <p><spring:theme code="text.home.delivery"/></p> 
+		<li class="do selected" id="homeli"> <p><spring:theme code="text.home.delivery"/></p> 
 		 <c:forEach var="homeEntry" items="${entry.value}">
 			 <c:if test="${homeEntry.key eq 'startForHome'}">
 			 <input type="hidden" value="${homeEntry.value}" id="homeStartId"/>
@@ -64,7 +62,7 @@
 		</li>
 		  </c:if>
 		  <c:if test="${entry.key eq 'express-delivery'}">
-			<li class="do selected ${pincodeClass}" id="expressli"> <p><spring:theme code="text.express.shipping"/></p> 
+			<li class="do selected" id="expressli"> <p><spring:theme code="text.express.shipping"/></p> 
 			 <c:forEach var="expressEntry" items="${entry.value}">
 			 <c:if test="${expressEntry.key eq 'startForExpress'}">
 			 <input type="hidden" value="${expressEntry.value}" id="expressStartId"/>
@@ -88,7 +86,7 @@
 					Collect</span><span>Buy online, collect in-store</span></a></li> -->
 	</ul>
 	<ul class="delivery-block right-delivery-block">
-		<li id="collectli" class="do selected ${pincodeClass}"><p><spring:theme code="text.clickandcollect.shipping"/></p>
+		<li id="collectli" class="do selected"><p><spring:theme code="text.clickandcollect.shipping"/></p>
 		<span style="display: block;">Buy online, collect in-store</span>
 		 <c:forEach var="clickEntry" items="${clickCollect.value}">
 	
