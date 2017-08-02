@@ -14862,7 +14862,7 @@ TATA.CommonFunctions = {
             });
         },
         addSortParameter: function() {
-            var item = $(".responsiveSort").val(), url = "";
+            var item = $(".responsiveSort option:selected").val(), url = "";
             switch (item) {
               case "relevance":
                 url += "&sort=relevance";

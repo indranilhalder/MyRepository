@@ -126,6 +126,9 @@
 .accordtionTataCliq .greyColor {
     color: #ccc;
 }
+.accordtionTataCliq .greyColor.blackColor{
+    color: #000;
+}
 .accordtionTataCliq .accContents .selectReason, .accordtionTataCliq .accContents .selectReturnMethod, .accordtionTataCliq .accContents .selectquickDrop {
     margin-top: 15px;
 }
@@ -280,12 +283,54 @@
         }
         .return-form.success .return-container .reason, .return-form.success .return-container .method {
             width: 60%;
-            float: left;
+            float: left;  
+            margin-top: -10px;
+            
+            label{
+                display: block;
+            }
+        }
+        .return-form.success .return-container .method{
+            h3{
+                font-size: 14px;
+                margin: 0px;
+            }
+            span{
+                font-weight: normal;
+            }
+        }
+        
+        .return-form.success .return-container .reason{
+            margin-bottom: 30px;           
         }
         .return-form .return-container::after {
             clear: both;
             content: "";
             display: table;
+        }
+    }
+}
+.products .item.look{
+    list-style: none;
+    .product-info{
+        li{
+            list-style: none;
+        }
+    }
+}
+.page-returnSuccess .return-form .return-container .products .item .product-info{
+    .product{
+        .product-name{
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 19px;
+            margin: 0px;
+        }
+        .item-info{
+            margin-top: 30px;
+        }
+        .item-info> span{
+            display: block;
         }
     }
 }

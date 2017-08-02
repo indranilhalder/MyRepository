@@ -358,9 +358,9 @@ tr.d0 td {
 		
 			
 			<!-- seller information section  -->
-			<div class="seller-details">
+			<%-- <div class="seller-details">
 			<product:sellerInfoDetailsSection/>
-			</div>
+			</div> --%>
 
 			
 
