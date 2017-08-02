@@ -28037,18 +28037,20 @@ body.page-reviews .account .my-reviews .wrapper,body.page-reviews .account .tool
 }
 /*account coupon page css starts*/
 body .account .right-account.rewards>div {
-	border: 1px solid #f0f4f5;
+	/* border: 1px solid #f0f4f5; */
 	margin-bottom: 10px;
+	border: none;
 }
 
-body .account .right-account.rewards>div h2, body .account .right-account.rewards>div>p
+/* body .account .right-account.rewards>div h2, body .account .right-account.rewards>div>p
 	{
 	padding: 10px 0 0 10px;
-}
+} */
 
 body .account .right-account.rewards>div h2 {
-	font-size: 24px;
-	margin-bottom: 10px;
+	font-size: 28px;
+    line-height: 1.29;
+    height: auto;
 }
 
 body .account .right-account.rewards>div>p {
@@ -28074,22 +28076,28 @@ body .account .right-account.rewards>div.customer-service p {
 
 body .account .right-account.rewards>div.customer-service ul {
 	margin-bottom: 20px;
-	display: flex;
-	justify-content: space-between;
+	display: block;
 }
 
 body .account .right-account.rewards>div.customer-service.steps ul .step
 	{
-	padding: 10px;
-	text-align: center;
-	border: none;
+	padding: 0;
+	padding-left: 10px;
+    border: none;
+    width: 100%;
+    display: block;
+}
+.rewards div.customer-service ul li:before{
+	display: none;
 }
 
 body .account .right-account.rewards>div.customer-service.steps ul .step span
 	{
-	width: 100%;
-	font-size: 32px;
 	margin: 20px 0;
+    display: inline;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
 }
 
 .rewards div.customer-service ul li {
@@ -28111,25 +28119,33 @@ body .account .right-account.rewards>div.customer-service.steps ul .step span
 body .account .right-account.rewards>div.customer-service.steps ul .step span:before
 	{
 	content: "";
-	display: block;
-	width: 111px;
-	height: 63px;
-	position: absolute;
-	z-index: -1;
-	left: 50%;
-	-webkit-transform: translateX(-60%) translateY(-30%) scale(.75);
-	-moz-transform: translateX(-60%) translateY(-30%) scale(.75);
-	-ms-transform: translateX(-60%) translateY(-30%) scale(.75);
-	-o-transform: translateX(-60%) translateY(-30%) scale(.75);
-	transform: translateX(-60%) translateY(-30%) scale(.75);
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-color: #eeeeee;
+    border: solid 1px #bbbbbb;
+    position: absolute;
+    z-index: -1;
+    border-radius: 100%;
+    top: -6px;
+    left: 1px;
 }
 
 body .account .right-account.rewards>div.customer-service.steps ul .step p
 	{
-	text-align: center;
-	font-size: 12px;
-	line-height: 20px;
-	padding: 0 15%;
+	text-align: left;
+    font-size: 12px;
+    line-height: 20px;
+    padding: 0;
+    padding-left: 20px;
+    display: inline-block;
+    line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: #666666;
+  	vertical-align: top;
+    margin-top: -2px;
+    margin-bottom: 25px;
+    width: calc(100% - 24px);
 }
 
 body .account .right-account.rewards>div.your-activity {
@@ -28137,10 +28153,13 @@ body .account .right-account.rewards>div.your-activity {
 }
 
 body .account .right-account.rewards>div.your-activity>p {
-	margin-bottom: 10px;
-	    margin-top: 10px;
-	font-weight: 500;
-	font-size: 12px;
+	margin-bottom: 0;
+    font-size: 12px;
+    border-bottom: solid 1px #eeeeee;
+    padding-bottom: 19px;
+    line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: #666666;
 }
 
 body .account .right-account.rewards>div.your-activity>p.mobile {
@@ -28149,9 +28168,9 @@ body .account .right-account.rewards>div.your-activity>p.mobile {
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container
 	{
-	padding: 30px 15px 0;
+	/* padding: 30px 0 0; 
 	font-weight: 600;
-	display:table;
+	display:table;*/
 	width:100%;
 }
 
@@ -28164,32 +28183,38 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container::afte
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 	{
-	border: 2px dashed #f0f4f5;
-	width: 33.3333%;
 	display: inline-block;
 	vertical-align:top;
 	background-color: #fff;
-	margin-left: -2px;
-    margin-bottom: -2px;
+	border-bottom: solid 1px #eeeeee;
+	margin-top: 30px;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
-	font-size: 14px;
-	font-weight:600;
-	text-align: center;
-	float: left;
 	width: 100%;
-	padding: 15px 5px;
-	line-height: 20px;
-	margin-bottom: 0
+    padding: 25px 0 29px 0;
+    margin-bottom: 0;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2.coupon-desc span
+	{
+	font-size: 14px;
+  	line-height: 1.14;
+  	letter-spacing: 0.5px;
+  	margin-bottom: 5px;
+  	display: block;
+  	color: #000;
 }
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .coupon_count{
 	display:inline-block;
 	line-height: 15px;
     padding-bottom: 10px;
 }
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
+/* body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right
 	{
 	position: relative;
@@ -28204,7 +28229,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	font-weight:500;
 	text-align:center;
 	word-wrap: break-word;
-}
+} 
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p
@@ -28225,13 +28250,36 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	{
 	direction: rtl;
 	font-size:10px;
+}*/
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left{
+	font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.8px;
+    color: #000000;
+    font-weight: normal;
 }
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left > p{
+	display: inline;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left a.copy-code,
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile{
+    float: right;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    color: #a5173c;
+    cursor: pointer;
+}
+body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile{
+	display: none;
+	float: none;
+	}
  body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p:last-child
 	{
     padding: 0px;
 }
 
-body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box.starred:before
+/* body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box.starred:before
 	{
 	font-family: 'FontAwesome';
 	-webkit-font-smoothing: antialiased;
@@ -28243,7 +28291,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	right: 10px;
 	top: 5px;
 	font-size: 16px
-}
+} */
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container+.bottom
 	{
@@ -28254,7 +28302,7 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container+.bott
 body .account .right-account.rewards>div.your-activity>ul>li {
 	width: 100%;
 	border-bottom: 1px solid #fff;
-	padding: 10px 5px;
+	/* padding: 10px 5px; */
 	position: relative;
 	font-size: 10px
 }
@@ -28280,21 +28328,20 @@ body .account .right-account.rewards>div.your-activity>ul>li h3+p {
 	text-align: left
 }
 
-body .account .right-account.rewards>div.your-activity>ul>li div.right {
+/* body .account .right-account.rewards>div.your-activity>ul>li div.right {
 	position: absolute;
 	top: 10px;
 	right: 10px;
 	text-align: right
-}
+} */
 
-body .account .right-account.rewards>div.your-activity>ul>li div.right h3,
-	body .account .right-account.rewards>div.your-activity>ul>li div.right p
-	{
-	text-align: right
-}
-
-body .account .right-account.rewards>div.your-activity>ul>li.header {
-	font-weight: 700
+body .account .right-account.rewards>div.your-activity>ul>li div.right p{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	font-weight: normal;
+  	color: #666666;
+  	margin-top: 6px;
 }
 
 body .account .right-account.rewards>div.your-activity>ul>li.header::after
@@ -28486,12 +28533,32 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	{
 	display: none
 }
-
+.copycode_message{
+	width: 301px;
+    height: 48px;
+    opacity: 0.9;
+    border-radius: 24px;
+    background-color: #444444;
+    position: fixed;
+    color: #fff;
+    text-align: center;
+    padding-top: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    display: none;
+}
 @media ( max-width :790px) {
-	body .account .right-account.rewards>div h2, body .account .right-account.rewards>div>p
+	/* body .account .right-account.rewards>div h2, body .account .right-account.rewards>div>p
 		{
 		padding-left: 0;
 		text-align: center
+	} */
+	.copycode_message{
+		top: auto;
+    	bottom: 30px;
 	}
 	body .account .right-account.rewards>div.customer-service h2, body .account .right-account.rewards>div.customer-service p
 		{
@@ -28500,27 +28567,28 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	body .account .right-account.rewards>div.customer-service.steps ul {
 		margin-top: 20px
 	}
-	body .account .right-account.rewards>div.customer-service.steps ul .step
+	/*body .account .right-account.rewards>div.customer-service.steps ul .step
 		{
 		width: 50%;
 		float: left;
 		clear: none;
 	}
-	body .account .right-account.rewards>div.customer-service.steps ul .step:first-child,
+	 body .account .right-account.rewards>div.customer-service.steps ul .step:first-child,
 		body .account .right-account.rewards>div.customer-service.steps ul .step:first-child+.step
 		{
 		height: 175px
-	}
+	} 
 	body .account .right-account.rewards>div.customer-service.steps ul .step p
 		{
 		padding: 0;
 		margin-bottom: 0;
 		font-weight: 500
-	}
+	}*/
 	body .account .right-account.rewards>div.your-activity>p {
-		margin: 15px 0 20px;
-		padding: 0 10%;
-		line-height: 20px
+		/*margin: 15px 0 0;
+		 padding: 0 10%; */
+		line-height: 20px;
+		display: none;
 	}
 	body .account .right-account.rewards>div.your-activity>p.mobile {
 		display: block;
@@ -28533,15 +28601,15 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container
 		{
 		border: none;
-		padding: 20px 5px 0;
+		/* padding: 20px 5px 0; */
 	}
-	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
+	/* body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box
 		{
 		border: 2px dashed #f0f4f5;
 		width: 48%;
 		margin: 1%;
 		padding: 0
-	}
+	} 
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 		{
 		padding: 10px 5px;
@@ -28555,15 +28623,15 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 		{
 		padding: 0 5px;
 		margin-top: 10px
-	}
-	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
+	}*/
+	/*body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left p,
 		body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .right p
 		{
 		font-size: 10px
 	}
-	body .account .right-account.rewards>div.your-activity>ul>li {
+	 body .account .right-account.rewards>div.your-activity>ul>li {
 		text-align: left
-	}
+	} */
 	body .account .right-account.rewards>div.your-activity.coupon-history>ul>li,
 		body .account .right-account.rewards>div.your-activity.coupon-history>ul>li.header
 		{
@@ -28662,6 +28730,13 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	body .account .right-account.rewards>div.points-list>ul>li {
 		text-align: left
 	}
+	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box .left a.copy-code{
+		display: none;
+	}
+	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile{
+	display: block;
+	margin-bottom: 48px;
+	}
 }
 
 @media ( max-width : 650px) {
@@ -28678,17 +28753,15 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 		font-weight: 400;
 		font-size: 18px;
 	}
-	body .account .right-account.rewards>div.customer-service p {
+	/* body .account .right-account.rewards>div.customer-service p {
 		font-size: 12px;
 		margin: 15px 0 20px;
 		padding: 0 15%;
 		line-height: 20px;
 		text-align: center;
-	}
+	} */
 	body .account .right-account.rewards>div h2 {
 		margin-top: 10px;
-		font-size: 20px;
-		font-weight: 400;
 	}
 }
 a#couponHistoryHide{
@@ -28702,10 +28775,14 @@ body .account .right-account.rewards>div.couponHistoryLinkDiv{
     text-align: left;
     border:none;
 }
-.your-activity.coupon-history>div>h2,.coupon-container>div>h2{
-	text-align: center;
-    color: #A9143C;
-    font-weight: 500;
+.your-activity.coupon-history>div>h2,body .account .right-account.rewards>div .coupon-container>div>h2{
+	font-size: 22px;
+    line-height: 1.09;
+    text-align: left;
+    color: #666666;
+}
+body .account .right-account.rewards>div .coupon-container>div>h2{
+    margin-top: 30px;
 }
 .couponHistoryLink{
     height: 20px;
@@ -68249,27 +68326,6 @@ footer .footer-text{
 header .content nav>ul>li>.toggle{
 	position: relative;
 }
-header .content nav>ul>li>.toggle:before{
-	content: "";
-    width: 20px;
-    height: 15px;
-    position: absolute;
-    bottom: -2px;
-    left: 16px;
-    z-index: 999999;
-    background-image: url('../images/header-arrow.PNG');
-    background-size: 100%;
-    background-repeat : no-repeat;
-/*     transform: rotate(45deg);
-    border: solid #eee;
-    border-width: 1px 0px 0 1px;
- */    
- background-color: transparent;
-    opacity: 0;
-     /* -webkit-transition: opacity 0.1s 0.1s;
-  -moz-transition: opacity 0.1s 0.1s;
-  transition: opacity 0.1s 0.1s; */
-}
 header .content nav>ul>li.hovered>.toggle:before{
 	opacity: 1;
 	-webkit-transition: opacity 0.1s 0.4s;
@@ -68289,7 +68345,7 @@ header .content  .bottom.active nav > ul > li:first-child > ul, header .content 
     border-top: 0px;
 }
 header .content  .bottom.active nav>ul>li:hover>.toggle:before{
-    bottom: -6px;
+    bottom: -1px;
 }
 .qued-content a.button.maroon{
 	margin: 0 !important;
@@ -71061,88 +71117,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     padding-left: 10px;
 }
 /*TISPRDT-1609 end*/
-
-/* TPR-6148 Coupon starts */
-.details4Coupon {
-    /* height: 15px; */
-    font-family: Montserrat;
-    font-size: 12px;
-    letter-spacing: 0.6px;
-    text-align: left;
-    color: #666666;
-    font-weight: 400;
-    margin-top: 5px;
-    line-height: 1.5;
-}
-.copyCouponCode p,.copyCouponCodeMobile p{
-	height: 16px;
-  	font-size: 12px;
-  	line-height: 1.33;
-  	letter-spacing: 0.6px;
-  	color: #a5173c;
-  	text-transform: uppercase;
-  	display: inline-block;
-}
-.copyCouponCodeMobile p a{
-	color:#a5173c;
-}
-.copyCouponCode,.copyCouponCodeMobile{
-	display: inline-block;
-	cursor:pointer;
-}
-.copyCouponCode{
-	width: 40%;
-	text-align: right;
-}
-.copyCouponCodeMobile{
-	display: none;
-	margin-top: 30px;
-}
-.tipToolCopyMsg{
-    position: absolute;
-    height: 48px;
-    width: 301px;
-    background-color: #444444;
-    z-index: 1;
-    border-radius: 24px;
-    left: 16%;
-    opacity: 0.9;
-    text-align: center;
-    top: -20px;
-    display:none;
-}
-.tipToolCopyMsg.mobile{
-	display:block;
-	visibility:hidden;
-}
-.tipToolCopyMsg span{
-	position: relative;
-    top: calc(50% - 8px);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1.33;
-    letter-spacing: 0.6px;
-}
-body .account .right-account.rewards .customer-service.steps h2{
-	padding-top: 0;
-	height: auto;
-    /* font-family: Montserrat; */
-    font-size: 28px;
-    line-height: 1.29;
-    text-align: left;
-    color: #000000;
-    margin-bottom: 16px;
-}
-.tipToolCopyMsg.mobile {
-    bottom: 0px;
-    /* position: fixed; */
-    position: relative;
-    left: 13%;
-    top: -54px;
-    /* bottom: 24px; */
-}
-/* TPR-6148 Coupon ends */
 
 /* TPR-6013 Invite Friends Start*/
 body .account .right-account>div>p{
