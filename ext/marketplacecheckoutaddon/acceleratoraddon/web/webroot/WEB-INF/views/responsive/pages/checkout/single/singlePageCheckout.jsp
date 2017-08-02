@@ -23,6 +23,15 @@
 <%@ taglib prefix="single-checkout" tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/single"%>
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true" showOnlySiteLogo="true">
+<style>
+/* below style is written here as class 'page-multiStepCheckoutSummaryPage' appears twice once in one page again in payment failure page*/
+body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
+	background: #eee;
+}
+body.page-multiStepCheckoutSummaryPage #up{
+	display: none;
+}
+</style>
 <cart:tealiumCartParameters/>
 <c:if test="${deviceType ne 'mobile'}">
 <div id="singlePageDesktop">
@@ -86,7 +95,7 @@
 	<div class="checkout_mobile_section" id="chooseDeliveryAddressMobile">
 		<div class="checkout-mobile-heading">Delivery Address</div>
 		<div class="change-cancel-wrapper">
-		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress(this);">Change</p>
+		<p class="change-mobile" id="address-change-link" onclick="ACC.singlePageCheckout.changeAddress();">Change</p>
 		<p class="cancel-mobile">Cancel</p>
 		</div>
 		<div id="chooseDeliveryAddressMobileDiv">
@@ -115,6 +124,11 @@
 			<%@include file="/WEB-INF/views/addons/marketplacecheckoutaddon/responsive/pages/checkout/single/showAddPaymentMethodPage.jsp"%>
 		</div>
 	</div>
+	<!-- The actual snackbar -->
+<div id="mobileSnackbar">
+<h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
+<span id="selectSnackbar">SELECT</span>
+</div>
 </div>
 </c:if>
 <div class="modal fade" id="singlePageAddressPopup">
@@ -126,9 +140,9 @@
 	</div>
 </div>
 <div class="modal fade" id="singlePagePickupPersonPopup">
-	<div class="content" style="padding: 40px;max-width: 650px;">
+	<div class="content" style="padding:36px 26px 36px 36px;/*  overflow-y: hidden; */ max-width: 30%;border-radius: 8px;">
 		<span id="modalBody" data-htmlPopulated="NO"></span>
-		<!-- <button class="close" data-dismiss="modal"></button> -->
+		<button class="close" data-dismiss="modal"></button>
 	</div>
 	<div class="overlay" data-dismiss="modal">
 	</div>
@@ -141,11 +155,11 @@
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
-<!-- The actual snackbar -->
-<div id="mobileSnackbar">
+<!-- <!-- The actual snackbar -->
+<!-- <div id="mobileSnackbar">
 <h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
 <span id="selectSnackbar">SELECT</span>
-</div>
+</div> -->
 <div id="confirmOverlay" style="display:none">
     <div id="confirmBox" style="display:none">
 
@@ -161,22 +175,22 @@
 
 <style>
 
-
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #mobileSnackbar {
     visibility: hidden; /* Hidden by default. Visible on click */
-    min-width: 250px; /* Set a default minimum width */
+    width: 100%; /* Set a default minimum width */
     margin-left: -125px; /* Divide value of min-width by 2 */
     background-color: #333; /* Black background color */
     color: #fff; /* White text color */
-    text-align: center; /* Centered text */
+    text-align: left; /* Centered text */
     border-radius: 2px; /* Rounded borders */
-    padding: 16px; /* Padding */
+    padding: 10px 14px 14px 8px; /* Padding */
     position: fixed; /* Sit on top of the screen */
     z-index: 1; /* Add a z-index if needed */
-    left: 50%; /* Center the snackbar */
-    bottom: 30px; /* 30px from the bottom */
+    right: 0; /* Center the snackbar */
+    bottom: 46px; /* 30px from the bottom */
 }
+
 
 /* Show the snackbar when clicking on a button (class added with JavaScript) */
 #mobileSnackbar.show {
@@ -297,6 +311,20 @@ However, delay the fade out process for 2.5 seconds */
 #confirmBox .gray span{			background-position:-395px 0;}
 #confirmBox .gray:hover{		background-position:-200px bottom;}
 #confirmBox .gray:hover span{	background-position:-395px bottom;}
+
+span#selectSnackbar {
+    float: right;
+    line-height: 2.7;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+#mobileSnackbar h1 {
+    float: left;
+    display: inline-block;
+    width: 73%;
+    line-height: 1.4;
+}
 
 </style>
 <script>

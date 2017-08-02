@@ -37,9 +37,8 @@
 						<input type="hidden" maxlength="10" size="1" id="skuIdForCod"
 						name="skuIdForCod" value="" />	
 
-				<!-- Other Seller for fine Jewellery removed -->
-					<c:if test="${product.rootCategory !='FineJewellery' }">
-					<button type="submit" name="submit" id="submit">
+				
+					<button type="submit" name="submit" id="submit" class="otherSellersFont">
 					<%-- <button type="submit" name="submit" id="submit"
 						class="otherSellersFont">
 						<p id="otherSellerInfoId" class="other-sellers" style="display: none"><a>
@@ -72,7 +71,7 @@
 						</div> --%>
 						</a>
 					</button>
-					</c:if>
+					
 
 					
 				</form:form>

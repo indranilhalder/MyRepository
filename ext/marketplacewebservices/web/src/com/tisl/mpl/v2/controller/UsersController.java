@@ -97,7 +97,6 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -6567,7 +6566,6 @@ public class UsersController extends BaseCommerceController
 					{
 						result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 						result.setError(MarketplacecommerceservicesConstants.INVALID_CART_ID);
-
 						throw new EtailBusinessExceptions(MarketplacecommerceservicesConstants.B9064);
 					}
 				}
@@ -7775,7 +7773,7 @@ public class UsersController extends BaseCommerceController
 				//TPR-4134
 				if (null != returnData.getRevSealJwlry())
 				{
-					returnInfoData.setReverseSealForJwllry(returnData.getRevSealJwlry());
+					returnInfoData.setReverseSealLostflag(returnData.getRevSealJwlry());
 				}
 				if (returnData.getRefundType().equalsIgnoreCase(MarketplacecommerceservicesConstants.RETURN_TYPE))
 				{

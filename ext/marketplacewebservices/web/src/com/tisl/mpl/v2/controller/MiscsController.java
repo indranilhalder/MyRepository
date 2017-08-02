@@ -206,13 +206,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 * 
+	 *
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 * 
+	 *
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 * 
+	 *
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 * 
+	 *
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -239,7 +239,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 * 
+	 *
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -689,9 +689,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1760,8 +1760,8 @@ public class MiscsController extends BaseController
 					for (final MplNewsLetterSubscriptionModel mplNewsLetterSubscriptionModel : newsLetterSubscriptionList)
 					{
 						if ((mplNewsLetterSubscriptionModel.getEmailId().equalsIgnoreCase(emailId))
-								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue()) || mplNewsLetterSubscriptionModel
-										.getIsLuxury() == null))
+								&& (!(mplNewsLetterSubscriptionModel.getIsLuxury().booleanValue())
+										|| mplNewsLetterSubscriptionModel.getIsLuxury() == null))
 						{
 							mplNewsLetterSubscriptionModel.setIsLuxury(Boolean.TRUE);
 							modelService.save(mplNewsLetterSubscriptionModel);
@@ -1817,19 +1817,34 @@ public class MiscsController extends BaseController
 
 	/*
 	 * to receive pancard status from SP for jewellery
-	 * 
+	 *
 	 * @param restrictionXML
-	 * 
+	 *
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/pancardStatus", method = RequestMethod.POST)
 	@ResponseBody
 	public void pancardStatusFromSP(final InputStream panStatusXML) throws RequestParameterException, JAXBException
 	{
-		final JAXBContext jaxbContext = JAXBContext.newInstance(PanCardResDTO.class);
-		final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		final PanCardResDTO resDTO = (PanCardResDTO) jaxbUnmarshaller.unmarshal(panStatusXML);
+		try
+		{
+			final JAXBContext jaxbContext = JAXBContext.newInstance(PanCardResDTO.class);
+			final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			final PanCardResDTO resDTO = (PanCardResDTO) jaxbUnmarshaller.unmarshal(panStatusXML);
 
-		mplPancardFacade.setPancardRes(resDTO);
+			mplPancardFacade.setPancardRes(resDTO);
+		}
+		catch (final RequestParameterException e)
+		{
+			LOG.error("the exception is **** " + e.getMessage());
+		}
+		catch (final JAXBException e)
+		{
+			LOG.error("the exception is **** " + e.getMessage());
+		}
+		catch (final Exception e)
+		{
+			LOG.error("the exception is **** " + e.getMessage());
+		}
 	}
 }

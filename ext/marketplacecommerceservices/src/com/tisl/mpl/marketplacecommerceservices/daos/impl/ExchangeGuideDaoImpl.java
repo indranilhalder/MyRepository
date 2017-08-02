@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
@@ -36,6 +37,11 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 	@Autowired
 	private FlexibleSearchService flexibleSearchService;
 
+	protected static final Logger LOG = Logger.getLogger(ExchangeGuideDaoImpl.class);
+
+	private static final String logQuery = " ***********Query********* ";
+	private static final String logQueryParam = " ***********QueryParameters********* ";
+
 	/*
 	 * @Javadoc
 	 * 
@@ -50,10 +56,9 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 		boolean isExchangable = false;
 		try
 		{
-			final StringBuffer exchangeL3Query = new StringBuffer(500);
-			exchangeL3Query.append("SELECT count(*)" + "FROM {" + ExchangeCouponValueModel._TYPECODE + " AS exchange" + " JOIN "
-					+ CategoryModel._TYPECODE + " AS category " + "on {exchange.thirdLevelCategory}={category.pk} "
-					+ "} where {category.code} =?categoryCode");
+			final String exchangeL3Query = "SELECT count(*)" + "FROM {" + ExchangeCouponValueModel._TYPECODE + " AS exchange"
+					+ " JOIN " + CategoryModel._TYPECODE + " AS category " + "on {exchange.thirdLevelCategory}={category.pk} "
+					+ "} where {category.code} =?categoryCode";
 
 
 			final FlexibleSearchQuery flexExchangeL3Query = new FlexibleSearchQuery(exchangeL3Query.toString());
@@ -63,6 +68,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 			flexExchangeL3Query.setResultClassList(resultClassList);
 			//flexExchangeL3Query.setResultClassList(Arrays.asList(String.class));
 
+			LOG.debug(logQuery + flexExchangeL3Query.getQuery() + logQueryParam + flexExchangeL3Query.getQueryParameters());
 			final List<Integer> categoryListcount = flexibleSearchService.<Integer> search(flexExchangeL3Query).getResult();
 
 			if (CollectionUtils.isNotEmpty(categoryListcount))
@@ -106,8 +112,10 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 					+ ExchangeCouponValueModel._TYPECODE + " AS exchange" + " JOIN " + CategoryModel._TYPECODE + " AS category "
 					+ "on {exchange.thirdLevelCategory}={category.pk} " + "} where {category.code} =?categoryCode";
 
+
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("categoryCode", categoryCode);
+			LOG.debug(logQuery + query.getQuery() + logQueryParam + query.getQueryParameters());
 			return flexibleSearchService.<ExchangeCouponValueModel> search(query).getResult();
 		}
 		catch (final FlexibleSearchException e)
@@ -140,6 +148,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 			query.addQueryParameter("pincode", pincode);
 
+			LOG.debug(logQuery + query.getQuery() + logQueryParam + query.getQueryParameters());
 			final List<ExchangePincodeModel> serviceableResultList = flexibleSearchService.<ExchangePincodeModel> search(query)
 					.getResult();
 			if (CollectionUtils.isNotEmpty(serviceableResultList))
@@ -195,6 +204,7 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 			{
 				query.addQueryParameter("working", "0");
 			}
+			LOG.debug(logQuery + query.getQuery() + logQueryParam + query.getQueryParameters());
 			return flexibleSearchService.<ExchangeCouponValueModel> search(query).getResult();
 		}
 		catch (final FlexibleSearchException e)
@@ -238,10 +248,10 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 			queryString.append("SELECT {exchange." + ExchangeTransactionModel.PK + "} " + "FROM {"
 					+ ExchangeTransactionModel._TYPECODE + " AS exchange }" + " where {exchange.exchangeid} in (");
 			queryString.append(exIdString);
-			queryString.append(")");
+			queryString.append(')');//SONAR FIX JEWELLERY
 			final FlexibleSearchQuery query = new FlexibleSearchQuery(queryString);
 
-
+			LOG.debug(logQuery + query.getQuery() + logQueryParam + query.getQueryParameters());
 			return flexibleSearchService.<ExchangeTransactionModel> search(query).getResult();
 
 
@@ -258,19 +268,6 @@ public class ExchangeGuideDaoImpl implements ExchangeGuideDao
 		{
 			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.tisl.mpl.marketplacecommerceservices.daos.ExchangeGuideDao#addToExchangeTable(com.tisl.mpl.core.model.
-	 * ExchangeTransactionModel)
-	 */
-	@Override
-	public boolean addToExchangeTable(final ExchangeTransactionModel ex)
-	{
-		// YTODO Auto-generated method stub
-		return false;
 	}
 
 

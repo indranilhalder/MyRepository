@@ -1042,5 +1042,12 @@ $(document).ready(function(){
 		var idContainer = $(this).attr("id");
 		$(this).next("label").attr("for",idContainer);
 		});
+	
+	$(".ifscPopOver").popover({
+	    html: 'true',
+	    placement: 'bottom',
+	    trigger: 'hover',
+	    content: $("#ifscPopOverHelp").html()
+	});
 });	
 		

@@ -26,12 +26,12 @@
 							</div>
 							<ul class="delivered scrollThis delivered${entryNumber} owl-carousel cnc_carousel" id="cnc_carousel">
 								<c:forEach items="${poses.pointOfServices}" var="pos" varStatus="status">
-									<li class="removeColor${entryNumber}" id="storeLiId${entryNumber}${status.index}" style="cursor:pointer;">
+									<li class="removeColor${entryNumber}" id="storeLiId${entryNumber}${status.index}" onclick="ACC.singlePageCheckout.selectStore('${pos.name}','${entryNumber}','${status.index}')" style="cursor:pointer;">
 										<div class="cncStoreAddressSection"><!-- START:Address Section -->
 											<input class="radio_btn radio_btn${entryNumber}"
 											type="radio" name="address${entryNumber}"
 											id="address${entryNumber}${status.index}"
-											value="address${status.index}" data-storeName="${pos.name}">
+											value="address${status.index}" data-storeName="${pos.name}"  onclick="ACC.singlePageCheckout.selectStore('${pos.name}','${entryNumber}','${status.index}')">
 											<div class='pin bounce'>
 												<span class="text_in">${status.count}</span>
 											</div> <label
@@ -164,7 +164,7 @@
 													}
 													
 												}); */
-												$("#address${entryNumber}${status.index},#storeLiId${entryNumber}${status.index}").click(function(){
+												/* $("#address${entryNumber}${status.index},#storeLiId${entryNumber}${status.index}").click(function(){
 													$(".removeColor${entryNumber} .radio_color").removeClass("colorChange");
 													$(".select_store").hide();
 													$("#address${entryNumber}${status.index}").prop("checked",true);
@@ -179,7 +179,7 @@
 															event_type : storeName+'_store_seleted'
 														});
 													}
-												});
+												}); */
 											});
 										</script>
 										</li>

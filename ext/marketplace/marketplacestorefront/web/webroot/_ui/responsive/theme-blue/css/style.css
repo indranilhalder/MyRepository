@@ -703,12 +703,12 @@ a.morelink, .more-link {
     float: left;
     width: 100%;
 }
-.certified-by h2 {
+/* .certified-by h2 {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
     margin-top: 20px;
-}
+} */
 .certified-by li {
     font-weight: bold;
     font-size: 14px;
@@ -776,9 +776,6 @@ a.morelink, .more-link {
 	padding-right: 20px;
 	width: 100%;
 } */
-.tabs-block .wrapper{
-	padding: 0;
-}
 .tabs-block .FineJewellery .nav>li, 
 .tabs-block .FashionJewellery .nav>li,
 .tabs-block .FineJewellery .nav>li#tabs_styleNotes,
@@ -891,7 +888,7 @@ a.morelink, .more-link {
 	font-size:18px;
 	font-family: 'Montserrat', sans-serif;
 }
-.sureheader{
+/*.sureheader{
 	background-color:#aa133e;
 	box-shadow:-1px 2px 7px #ccc;
 	-webkit-box-shadow:-1px 2px 7px #ccc;
@@ -918,7 +915,7 @@ a.morelink, .more-link {
 	margin-top: 36px;
 	margin-left: 50px;
 }
-.pan-detail-sec {
+ .pan-detail-sec {
 	padding: 50px 30px;
 }
 .pan-heading{
@@ -1040,7 +1037,7 @@ div.fileupload{
 }
 .pancard-msg, .pancard-img-msg{
 	display: none;
-}
+} */
 @media (min-width: 651px){
     input[type="checkbox"] + label, input[type="radio"] + label {
       padding-left: 10px; } 
@@ -10673,9 +10670,12 @@ body .account .right-account .order-history .pagination li{
   max-height: 255px;
   overflow-y: auto;
 }
-.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
+/* .facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.size .facet-values.js-facet-values.js-facet-form,
 .facet.js-facet.Size .facet-values.js-facet-values.js-facet-form {
+	max-height: none;
+} */
+.facet.js-facet.Colour .facet-values.js-facet-values.js-facet-form{
 	max-height: none;
 }
 @media ( max-width :650px) {
@@ -16243,7 +16243,12 @@ body .account .right-account div.new-address .half.no-display.last-name {
 	}
     #countryListBox
     {
-    	margin-top:10px;
+    	margin-top: 10px;
+    	margin-right: 0%;
+    	float: right;
+    }
+    #stateListDropDown{
+    	margin-top: 10px;
     }
 }
 body .account .right-account form.new-card .half.account-only select,
@@ -36081,6 +36086,7 @@ body.template-pages-category-productGridPage .trending h1,body.template-pages-se
     padding: 24px 0 10px;
     border-bottom: 0 none;
     margin-bottom: 0;
+    margin-top: 0;
 }
 .prolist-sort {
     float: left !important;
@@ -36385,6 +36391,7 @@ color:#a9143c;
 }
 .listing.wrapper .right-block .facet-values.js-facet-values{
 	margin-left:-27%;
+	display: none;
 }
 .product-tile .image .new, .newExclusiveElement .new {
     left: 5px !important;
@@ -44956,6 +44963,9 @@ transform-origin:0 0;
 		margin-left: 15px;
     	margin-top: 3px;
 	}
+	#singlePagePickupPersonPopup .pickupPersonMobileError {
+		margin-left: 0px;
+	}
 	
 	.pickupPersonNameError {
 		margin-top: 3px;
@@ -47448,12 +47458,12 @@ float: right;
 .product-info .size span {
 	border-right: 2px solid #9b9b9b;
 }
-.product-info .FineJewellery .size span,
+/* .product-info .FineJewellery .size span,
 .product-info .FashionJewellery .size span,
 .quickview .FineJewellery .sizetext,
 .quickview .FashionJewellery .sizetext{
 	border-right: none;
-}
+} */
 
 /* .product-info .FineJewellery .size .size-guide,
 .product-info .FashionJewellery .size .size-guide{
@@ -48317,8 +48327,11 @@ float: right;
 	.product-info.wrapper .product-image-container {
 		margin: 0;
 	}
-	.product-info .product-image-container {
-		display: none;
+	.product-info .product-image-container .productImageGallery.pdp-gallery.image-list ,
+	.product-info .product-image-container .main-image ,
+	.product-info .product-image-container #zoomModal ,
+	.product-info .product-image-container #productPromotionSection {
+		display: none; /*TISTE-223 fix*/
 	}
 	.product-info .product-image-container.device,
 	.product-info .product-image-container.FineJewellery.device,
@@ -48457,11 +48470,11 @@ float: right;
 	.tabs.pdp p, .tabs.pdp ul li {
 		font-size: 12px;
 	}
-	/* .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
+	 .tabs-block .tabs>li.active, .tabs-block .tabs>.wrapper>li.active {
 		display: block;
 		margin: 0 auto;
 		width: 92%;
-	} */
+	} 
 	.tab-details li {    float: none;    padding:  0;    width: 100%;}
 	/*More Stuff Like This slider*/
 	.page-productDetails .trending:nth-child(2n+1) {
@@ -62922,9 +62935,9 @@ body.page-productGrid .facet-list.filter-opt ~ .left-block{
 	.certified-by ul li{
 		width: 33.33%;
 	}	
-	.product-info .product-content .delivery-block li.do{
+	/* .product-info .product-content .delivery-block li.do{
 		padding-bottom: 0;
-	}
+	} */
 	.about-pro{
 		width: 52%;
 		float: left;
@@ -68742,7 +68755,7 @@ header .content .bottom:not(.active) .bag:after{
 /*UF-14 change end*/
 /* STW changes start */
 #stw_widget {
-min-height:250px;
+/* min-height:250px; */ /*commented for PRDI-501*/
 position:relative;
 }
 #stw_widget .carousel-component{
@@ -69108,6 +69121,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage {
     margin-bottom: 0px;
 }
+#singlePageMobile div#selectedAddressMessageMobile > span.alert-danger,
 #singlePageAddressPopup .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger ,
 .new-address-form-mobile .product-block.addresses.new-form fieldset > div#addressMessage > span.alert-danger {
     width: 100%;
@@ -69120,6 +69134,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
     border-radius: 4px;
     background-color: #ffe5ec;
     border: solid 1px #ff0000;
+    top: 0px ! important;
 }
 	#singlePageAddressPopup .product-block.addresses.new-form fieldset select ,
 	.new-address-form-mobile .product-block.addresses.new-form fieldset select {
@@ -69336,6 +69351,7 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
   	display: inline-block;
   	padding: 13px 8px 14px 16px !important;
   	height: auto !important;
+  	top: 0px !important;
 }
 #singlePageAccordion .new-address{
 	text-align: center;
@@ -69355,9 +69371,9 @@ body.page-multiStepCheckoutSummaryPage header, body.page-checkout-login header {
 .addNewAddress .formaddress h3 {
     text-transform: none;
 }
-body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
+/*body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	background: #eee;
-}
+}*/
 .checkout-accordion.checkout-selected .checkout-accordion-heading{
 	padding: 5px 16px;
     font-size: 12px;
@@ -69404,7 +69420,11 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading #selectedReviewOrderDivId span#selectedReviewOrderHighlight{
     color: #cccccc;
 }
-.checkout-accordion .checkout-accordion-heading{
+.checkout-accordion .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open + .checkout-accordion .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open + .checkout-accordion.checkout-selected  + .checkout-accordion.checkout-selected .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading,
+.page-multiStepCheckoutSummaryPage #singlePageDesktop .checkout-accordion.accordion-open .checkout-accordion-heading{
 	cursor: not-allowed;
 	pointer-events: none;
 }
@@ -69413,8 +69433,8 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 	margin-bottom: 0px !important;
 }
 .checkout-accordion:first-child .checkout-accordion-heading,
-.checkout-accordion.checkout-selected .checkout-accordion-heading,
-.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading {
+.checkout-accordion.checkout-selected .checkout-accordion-heading/* ,
+.checkout-accordion.checkout-selected + .checkout-accordion .checkout-accordion-heading */ {
     cursor: pointer;
     pointer-events: all;
 } 
@@ -69472,7 +69492,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     box-shadow: none;
     height: 140px;
     position: absolute;
-    z-index: 999;
+    z-index: 98;
     background: #fff;
     border-radius: 4px;
   	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
@@ -69704,16 +69724,66 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     box-shadow: none;
 }
 #singlePagePickupPersonPopup h2.panel-defaultHeading{
-	font-weight: normal;
-    text-transform: capitalize;
-    font-size: 16px;
+  width: 224px;
+  height: 18px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.29;
+  letter-spacing: 0.6px;
+  text-align: left;
+  color: #000000;
+  text-transform: capitalize;
+}
+#singlePagePickupPersonPopup .retail-detail
+{
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #666666;
+   /*  margin-bottom: 30px; */
+}
+#singlePagePickupPersonPopup .name-label{
+	  height: 16px;
+	  font-size: 12px;
+	  line-height: 1.33;
+	  letter-spacing: 0.6px;
+	  text-align: left;
+	  color: #666666;
+}
+#singlePagePickupPersonPopup .form-group{
+	  text-align: left;
+	  margin-bottom: 24px;
+}
+#singlePagePickupPersonPopup input{
+	  width: 100%;
+	  font-size: 12px;
+	  line-height: 1.33;
+	  letter-spacing: 0.6px;
+	  text-align: left;
+	  color: #666666;
+}
+#singlePagePickupPersonPopup .line {
+	  width: 100%;
+	  height: 2px;
+	  border: solid 1px #eeeeee;
+	  margin: 20px auto;
+	  display: inline-block;
+}
+.#singlePagePickupPersonPopup .cancel_delslot{
+	  color: #666666;
+	  letter-spacing: 0.6px;
 }
 #singlePagePickupPersonPopup #savePickupPersondDetails{
-	margin: 0px auto;
+	margin: 20px auto;
     font-size: 12px;
     line-height: 1;
     font-weight: normal;
-    margin-top: 20px;
+}
+#singlePagePickupPersonPopup #savePickupPersondDetails .content{
+	max-width: 413px;	
 }
 #reviewOrder.cart.wrapper .product-block li.item>ul>li:first-child div.product-img{
 	width: 88px;
@@ -69792,7 +69862,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
 #reviewOrder.cart.wrapper .product-block li.item ul .item-edit-details li:nth-child(2) {
     margin-left: 0;
     margin-right: 0;
-    width: 70px;
+    width: 35px; /* TRT-1646 */
 }
 #reviewOrder.cart.wrapper .product-block li.item .productItemInfo ul.item-edit-details a.move-to-wishlist-button.cart_move_wishlist {
     margin-left: 25px;
@@ -69855,6 +69925,7 @@ body.page-multiStepCheckoutSummaryPage .mainContent-wrapper{
     padding: 0 25px 0 15px;
     background-image: url(../images/select-arrow-new.png);
     background-position: calc(100% - 12px) 53%;
+    cursor: auto;
 }
 #reviewOrder.cart.wrapper .product-block li.item > ul > li.delivery ul{
 	margin-bottom:0;
@@ -70301,6 +70372,15 @@ background:#f8f8f8;
 	}
  }
  @media(max-width: 767px){
+ #singlePagePickupPersonPopup .content{
+	max-width: 381px;	
+}
+#singlePagePickupPersonPopup .retail-detail{
+	border: 1px solid transparent;
+}
+#singlePagePickupPersonPopup .panel.panel-default.pickuppersonWidth .panel.panel-body{
+	border: 1px solid transparent;
+}
  #singlePageDesktop{
  display: none;
  }
@@ -70308,9 +70388,9 @@ background:#f8f8f8;
  display: block;
  padding: 75px 8px 0;
  }
- #singlePageMobile>div{
+ /* #singlePageMobile>div{
  padding-top: 20px;
- }
+ } */
  #singlePageMobile .checkout-shipping.checkTab,
  #singlePageMobile #choosedeliveryModeMobile,
  #singlePageMobile .checkout-content.checkout-payment.cart.checkout.wrapper .left-block.choose-payment{
@@ -70492,6 +70572,9 @@ background:#f8f8f8;
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search .cnc_search_wrapper{
 		display: none;
 	}
+	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_pincode_search_wrapper{
+		display: none;
+	}
 	.cart.wrapper .cnc_store_wrapper .checkout-shipping-items.left-block.left-block-width .cnc_title_search {
     padding: 0 19px;
     margin: 16px 0 8px;
@@ -70510,7 +70593,8 @@ background:#f8f8f8;
     /* padding: 6px 16px 16px; */
     border-bottom: solid 1px #e8e8e8;
 	}
-	.cart.wrapper.checkout-payment .left-block .saved_cards_mobile li#savedCard{
+	.cart.wrapper.checkout-payment .left-block .saved_cards_mobile li#savedCard,
+	.cart.wrapper.checkout-payment .left-block .saved_cards_mobile li#savedCardDebit{
     padding: 6px 16px 16px;
     overflow: hidden;
 	}
@@ -70520,7 +70604,8 @@ background:#f8f8f8;
 	.cart.wrapper.checkout-payment .card-sec .card-num div.radio{
 		margin-bottom: 14px;
 	}
-	.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label>span{
+	.cart.wrapper .left-block li#savedCard div.card input[type="radio"] + label>span,
+	.cart.wrapper .left-block #savedDebitCard .debit-card-group input[type="radio"]+label>span{
 	font-size: 14px;
 	padding-bottom: 0;
     color: #000;
@@ -70537,6 +70622,9 @@ background:#f8f8f8;
 	}
 	.cart.wrapper.checkout-payment .card-sec .card-num .card_image{
 	margin-left: 30px;
+	}
+	.cart.wrapper.checkout-payment .card-sec .card-num .payment-failed-card-image{
+	margin-left: 0px;
 	}
 	div#savedCreditCard .credit-card-group .right-align-form input.cvvValdiation, 
 	div#savedDebitCard .debit-card-group .right-align-form input.cvvValdiation, 
@@ -70658,6 +70746,121 @@ background:#f8f8f8;
 .cnc_carousel.owl-carousel.two_address#cnc_carousel .owl-stage .owl-item:last-child{
 	margin-right: 0 !important;
 }
+}
+#singlePageDesktop #reviewOrder select.update-entry-quantity-input{
+	cursor:auto;
+} 
+.checkout-accordion.checkout-selected.accordion-open .checkout-accordion-heading>div+div {
+    display: none ! important;
+}
+#reviewOrder.cart.wrapper .product-block li.header ul li {
+    font-size: 12px;
+}
+.preferred-delivery-type{
+	font-size: 11px;
+    line-height: 1.36;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #a5173c;
+}
+.preferred-delivery-type{
+	font-size: 11px;
+    line-height: 1.36;
+    letter-spacing: 0.6px;
+    text-align: left;
+    color: #a5173c;
+}
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable{
+    top: 106px !important;
+    display: block;
+    height: auto ! important;
+    padding: 13px 8px 14px 16px !important;
+    font-size: 12px;
+    letter-spacing: .6px;
+    color: red;
+    border-radius: 4px;
+    background-color: #ffe5ec;
+    border: solid 1px red;
+    position: relative ! important;
+}
+.page-multiStepCheckoutSummaryPage .alert.alert-danger.alert-dismissable span{
+	    display: block;
+}
+.payment-failed-card-image + input + label{
+	opacity:1.5 !important;
+}
+.payment-failed-card-image + input + label span{
+	font-weight: bold !important;
+}
+.payement-failed-delivery-method{
+	margin-left: 23px;
+}
+.payement-failed-delivery-heading{
+	text-align: left !important;
+}
+.marketplace-checkout span.need-help-call {
+    font-size: 12px ! important;
+    text-align: right !important;
+    color: #999 ! important;
+    float: right;
+    display: inline-block;
+    right: 0px;
+}
+@media(max-width: 768px){
+.marketplace-checkout span.need-help-call {
+    display: none;
+}
+}
+body.page-multiStepCheckoutSummaryPage span.delSeat.delAction{
+	color: #ff2c43;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>.add-disc ~ span>.off-bag span:last-child {
+    font-size: 12px ! important;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>span>.off-bag {
+    display: inline;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item>ul.desktop>li.price {
+    font-size: 12px !important;
+    font-weight: normal !important;
+    letter-spacing: 1px;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .off-bag span:last-child {
+    display: inline !important;
+}
+body.page-multiStepCheckoutSummaryPage #reviewOrder.cart.wrapper .product-block li.item li.price>ul>.add-disc {
+    margin-top: 10px;
+}
+.page-multiStepCheckoutSummaryPage #singlePageDesktop #makePaymentDiv .alert.alert-danger.alert-dismissable {
+    top: 0px ! important;
+}
+.page-multiStepCheckoutSummaryPage #singlePageDesktop #reviewOrder tr.d0 td {
+  background-color:#E0E0E0 ;
+  color: black;
+}
+select.update-entry-quantity-input.review-page-select{
+   background-image: none ! important;
+   width: 50px ! important;
+   padding: 0px 18px 0 22px ! important;
+}
+.footer-copyrigt-text{
+	float:right;
+}
+.mobile-footer .banner.copyright-footer-text {
+	background: #eee;
+	line-height: 20px;
+}	
+.safe-secure-icon{
+	background-image: url(../images/safe_secure_icon.JPG);
+    background-size: 100%;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+}
+.modal#singlePageChooseSlotDeliveryPopup>div.content li.item li.deliverySlotRadio input[type="radio"] ~ label.delslot_radio{		
+      cursor: pointer;				
 }
 /*UF-281 UF-282 single page checkout css ends*/
 
@@ -72358,7 +72561,7 @@ body .account .right-account .order-history .product-block li.item .attributes p
   }
   
   body.page-search .listing.wrapper .right-block .listing-menu{
-  	display:none;
+  	/* display:none; */				/* Commented for UF-408 */
   }		/*TISPRDT-1179*/
  /*  start of PRDI-177 */
 #OfferWrap .Inner .show-termsConditions p {
@@ -74307,6 +74510,103 @@ span#juspayErrorMsg{
     margin-bottom: 5px;
 }
 /* TISKIDK-1416 */
+/* UF-361/TPR-6034 */
+.feedback-form-header {
+    background-color: #fff;
+}
+.feedback-form-header-image{
+	padding: 20px 10px 0 30px;
+}
+.feedback-form-question-options{
+	padding-left: 0px;
+}
+/* UF-361/TPR-6034 */
+.listing-leftmenu .size .facet-list .filter-Size .facet-mark,
+.listing-leftmenu .Size .facet-list .filter-size .facet-mark, 
+.listing-leftmenu .size .facet-list .filter-size .facet-mark,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-mark{
+  display: block !important;
+  }
+.listing-leftmenu .size .facet-list .filter-Size .facet-text, 
+.listing-leftmenu .Size .facet-list .filter-size .facet-text, 
+.listing-leftmenu .size .facet-list .filter-size .facet-text, 
+.listing-leftmenu .Size .facet-list .filter-Size .facet-text{
+  display: block;
+  margin-left: 17px;
+  line-height: 18px;
+  width: auto;
+  height: auto;
+  font-size: 13px;
+  text-transform: capitalize !important;
+  border: none;
+    }
+.listing-leftmenu .size .facet-list .filter-Size .facet-text,
+.listing-leftmenu .Size .facet-list .filter-size .facet-text,
+.listing-leftmenu .size .facet-list .filter-size .facet-text,
+.listing-leftmenu .Size .facet-list .filter-Size .facet-text{
+    line-height: 18px;
+    width: auto;
+    height: auto;
+    color: #000;
+    opacity: 0.9;
+    font-size: 13px;
+    text-transform: capitalize !important;
+    margin-bottom: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    text-align: left;
+    margin-left: 0px;
+    display: inline-block;
+    vertical-align: top;
+    }
+ .product-facet .facet.size .facet-list li.filter-Size, 
+ .product-facet .facet.Size .facet-list li.filter-size,
+ .product-facet .facet.size .facet-list li.filter-size,
+ .product-facet .facet.Size .facet-list li.filter-Size{
+     display: block;
+     width: 100%; 
+     margin-left: 0px;
+     height: 25px;
+     }
+  /* .listing-leftmenu .size .facet-list .filter-Size .facet-text .facet-count, 
+  .listing-leftmenu .Size .facet-list .filter-size .facet-text .facet-count, 
+  .listing-leftmenu .size .facet-list .filter-size .facet-text .facet-count, 
+  .listing-leftmenu .Size .facet-list .filter-Size .facet-text .facet-count{
+     padding-left: 5px;
+     } */
+ @media(max-width: 767px){    
+ #addToCartFormTitle {
+    position: fixed;
+    z-index: 10000;
+    line-height: 18px;	/*changed for TISTE-159 fix*/
+    padding: 9px 10px;	/*changed for TISTE-159 fix*/
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    /* display: inline-block; */
+    display: none; /*added for TISTE-159 fix*/
+    color: #fff;	/*added for TISTE-159 fix*/
+    text-align: center;
+    width: 200px;
+    min-height: 36px;	/*changed for TISTE-159 fix*/
+    opacity: 0.9;
+    border-radius: 18px;
+    background-color: #a5173c;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+}
+.addToCartTitle font{
+	color: #fff !important;
+}
+}
+.addToCartTitle font{
+	color: #ff1c47;
+}
+/* UF-349 start */
+.modal.size-guide .sizes .details{
+	display: none;
+}
+/* UF-349 end */
 /*UF-373 start*/
 @media (max-width: 790px){
 header > .content .top.active > .toggle > span:first-child{
@@ -74345,8 +74645,6 @@ transition: background 0s 0.3s ;
 	  }
 }
 /*UF-317 end*/
-/*PRDI-227 end*/
-
 /* TPR-6013 My Profile starts*/
 .lastNameHideVisibility,.firstNameHideVisibility{
 	visibility:hidden;
@@ -75489,6 +75787,18 @@ body.template-pages-account-accountOrderHistoryPage .account .right-account .ord
 body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-fulfillment {
     margin-top: 75px !important;
 }
+body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header{
+ 	margin-bottom: -75px;
+ 	overflow: hidden;
+ }
+ /* TISTE-204 fix */
+body .account .right-account .order-history.order-details.responsiveProfile li.item:not(.in-store).first .item-header + .col-md-4.col-sm-6{
+ 	position: relative;
+ 	top: 75px;
+ }
+}
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li{
+	font-size: 10px;
 }
 @media (max-width: 650px) {
 	body .right-account .order-details .deliveryTrack .dot-arrow {
@@ -75496,12 +75806,12 @@ body .account .right-account .order-history.order-details.responsiveProfile li.i
     width: 14px;
 }
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    font-size: 10px;
+    font-size: 9px;
 }
 }
 @media (max-width: 413px){
 body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
-    font-size: 8px;
+    font-size: 9px;/* changed for TISPRDT-1612 */
     color: #ccc;
 }
 }
@@ -75512,64 +75822,31 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 }
 /*TISPRDT-1609 end*/
 /* TISPRDT-1611 start */
-@media (max-width: 790px){
-.pagination-bar.listing-menu.pagination-order-history.bottom {
-     width: 90%;
-}
-}
-@media (max-width: 767px){
-.pagination-bar.listing-menu.pagination-order-history.bottom {
-    border: none;
-}
-
-
-}
-/* TISPRDT-1611 end */
-
+ @media (max-width: 790px){
+ .pagination-bar.listing-menu.pagination-order-history.bottom {
+      width: 90%;
+ }
+ }
+ @media (max-width: 767px){
+ .pagination-bar.listing-menu.pagination-order-history.bottom {
+     border: none;
+ }
+ }
+ /* TISPRDT-1611 end */
+ /*PRDI-402 fix start*/
+ .product-block.order-details .pickup_Edit .savebtn{
+ 	position: relative;
+ }
+ .product-block.order-details .pickup_Edit {
+     margin-bottom: 10px;
+ }
+ /*PRDI-402 fix end*/
 /*STW heading start*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .best_seller.stw-list .best_seller_section.hide_clplist{
 	height: auto;
     opacity: 1;
     z-index: 1;
     font-size: 28px;
-
     text-transform: capitalize;
     letter-spacing: 0.6px;
     padding-top: 64px;
@@ -75605,7 +75882,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 /* TISSTRT-1625 end */
 /* TISSTRT-1621 start */
 @media (max-width: 980px){
-
 	.sign-in.tab-view .tabs > li .left form div#checkBox label:before{
 	margin-top: 0px; 
 	}
@@ -75636,27 +75912,30 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 .product-info .product-detail.FineJewellery .certified-by ul li{
 	position: relative;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq{
-	width: 50px;
-	height: 30px;
+.product-info .product-detail.FineJewellery .certified-by ul li{
+	width: 58px;
+	height: 40px;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before, 
-.product-info .product-detail.FashionJewellery .certified-by ul li.jwlryCertiTanishq:before{
-	width: 50px;
-    height: 30px;
+.product-info .product-detail.FineJewellery .certified-by ul li:before, 
+.product-info .product-detail.FashionJewellery .certified-by ul li:before{
+	width: 58px;
+    height: 40px;
     display: inline-block;
     content: "";
-    position: absolute;
+    position: relative;
     left: 0;
     top: 8px;
-    background: url(../images/cerified_logo.png) no-repeat 0px 0px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
+/* .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGS,
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGTA,
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiHRD{
 	display: none;
-}
+} */
+
+
+
 .product-info>div.tabs-block.FineJewellery,
 .product-info>div.tabs-block.FashionJewellery
 {
@@ -75664,12 +75943,15 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 48%;
 }
 .accordin.FineJewellery .item .title p,
-.accordin.FashionJewellery .item .title p
+.accordin.FashionJewellery .item .title p,
+.accordin.FineJewellery .item .title span,
+.accordin.FashionJewellery .item .title span
 {
 	font-size: 12px;
     line-height: 1.33;
     letter-spacing: 0.6px;
     color: #000000;
+    padding: 0;
 }
 .accordin.FineJewellery .item div.title,
 .accordin.FashionJewellery .item div.title{
@@ -75700,6 +75982,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 100%;
 	table-layout: fixed;
 }
+.accordin.FineJewellery .item .detail table#showPriceBreakup,
+.accordin.FashionJewellery .item .detail table#showPriceBreakup{
+	border-top: solid 2px #cccccc;
+}
 .accordin.FineJewellery .item .detail table tr td.title,
 .accordin.FashionJewellery .item .detail table tr td.title{
 	padding-top: 16px;
@@ -75708,6 +75994,13 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     font-weight: normal;
     width: 20%; 
     display: table-cell;
+}
+table#showPriceBreakup{
+	display: table !important;
+}
+.accordin.FineJewellery .item .detail table#showPriceBreakup tr td.title, 
+.accordin.FashionJewellery .item .detail table#showPriceBreakup tr td.title{
+	width: auto;
 }
 .accordin.FineJewellery .item .detail table tr td,
 .accordin.FashionJewellery .item .detail table tr td{
@@ -75808,11 +76101,13 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	background: none;
 }
 .accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content{
+.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content
+{
 	display: block !important;
 }
 .accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content{
+.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
+{
 	display: none !important;
 }
 @media (min-width: 1190px){
@@ -75820,7 +76115,7 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	.product-info>div.accordin.FashionJewellery
 	{
 	width: 44%;
-	margin-top: 60px;
+	margin-top: 95px;
 	}
 }
 @media (min-width: 1025px) and (max-width: 1189px){
@@ -75877,7 +76172,392 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     width: 100%;
 }
 }
+/*TPR-4134 starts*/
+.accordtionTataCliq .accContents .selectReason.selectRefund  b,		
+.accordtionTataCliq .accContents .slectionRefund b,
+.accordtionTataCliq .accContents.returnMethod .selectReturnMethod b{		
+	font-size: 14px;		
+  	line-height: 1.43;		
+  	letter-spacing: 0.6px;		
+  	display: inline-block;			
+}		
+.accordtionTataCliq .accContents .slectionRefund .suggestionText span{		
+	font-size: 12px;		
+  	line-height: 1.67;		
+  	letter-spacing: 0.6px;		
+  	color: rgba(0, 0, 0, 0.4);		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4 b{		
+	font-size: 16px;		
+  	line-height: 1;		
+  	letter-spacing: 0.6px;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-3.col-sm-4 select,		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 select, 		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4 input{		
+	height: 40px;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4 input{		
+	margin-top: 6px;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-3.col-sm-4 select,		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2 select{		
+	margin-top: 2px;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.ifsccode .ifscPopOver{		
+	font-size: 11px;		
+  	font-style: italic;		
+  	line-height: 1.64;		
+  	letter-spacing: 0.6px;		
+  	color: rgba(0, 0, 0, 0.4);		
+  	text-decoration: none;		
+  	float: right;		
+}		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder{		
+	margin-top: 30px;		
+	margin-bottom: 21px;		
+	position: static;		
+}		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button{		
+	width: 181px;		
+    height: 42px;		
+    font-size: 12px;		
+    line-height: 1.33;		
+    letter-spacing: 0.6px;		
+    font-weight: normal;		
+}		
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button.light-blue.submit-request,
+body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_holder button#saveBlockData.btn.btn-primary
+{		
+	    margin-right: 26px;		
+}		
+.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10 .returnPayment{		
+	font-size: 12px;		
+    line-height: 1.5;		
+    letter-spacing: 0.6px;		
+    padding-top: 15px;		
+}		
+.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10 span.returnPaymentMessage{		
+	font-size: 12px;		
+  	line-height: 1.67;		
+  	letter-spacing: 0.6px;		
+  	color: rgba(0, 0, 0, 0.4);		
+  	padding-top: 5px;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12{		
+	padding-top: 30px !important;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12.col-xs12{		
+	padding-top: 20px !important;		
+}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.accountnumber,		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.accountholdername,		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.bankname		
+{		
+	padding-left: 0px !important;		
+}		
+.product-info .product-detail.FineJewellery .product-desc .key-label{		
+	display: inline-block;		
+}		
+.product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle{		
+	float: left;		
+}		
+.accordtionTataCliq .reasonType.col-md-12,		
+.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor{		
+	margin-top: 0px;		
+}		
+.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .selectRadio.col-md-2.col-sm-2.col-xs-2{		
+	padding: 0px;		
+	width: 8%;		
+}		
+.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
+	padding-left: 0px;		
+}		
+.product-info .product-detail.FineJewellery .product-desc .key-label .more-link{		
+	padding-left: 20px;		
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry {
+   margin-top: 50px;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry b,
+.col-md-7.col-sm-7.col-xs-12.selectReasonForReturn b
+{
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.6px;
+  font-weight: normal;
+}
+.accordtionTataCliq .accContents .reverseSealJwlry .radioButton{
+	display: none !important;
+}
+.accordtionTataCliq .accContents .reverseSealJwlry .radioButton + label{
+	margin-right: 15px;
+	line-height: 1.5;
+	letter-spacing: 0.6px;
+	width: 100%;
+	margin-bottom: 14px;
+}
+.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
+	text-decoration: none;
+	font-size: 11px;
+	color: rgba(0, 0, 0, 0.4);
+	font-weight: normal;
+	font-style: italic;
+	line-height: 1.64;
+	letter-spacing: 0.6px;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .popover-content .revSealText #revSealHelpText{
+	border: none;
+	line-height: 1.5;
+	letter-spacing: 0.6px;
+	font-size: 12px;
+    padding: 16px 0 0;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .popover-content{
+padding: 0px 16px 16px;
+height: 183px;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .popover-content .revSealImage img{
+height: 135px;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
+margin-left: 304px;
+left: 0 !important;
+}
+.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow{
+left: 60px !important;
+}
+.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason{
+	width: 47%;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder button{
+	width: 181px;
+	height: 42px;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  font-weight: normal;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 *{
+	font-size: 12px;
+  	line-height: 1.5;
+  	letter-spacing: 0.6px;
+  	color: #666666;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 span.priceFormat{
+	display: inline !important;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 div.attributes{
+	margin-top: 15px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 > span{
+	margin-bottom: 3px !important;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7 div.attributes > p > span{
+	display: inline !important;
+}
+body.page-returnSubmit p.return-title{
+	font-size: 28px;
+  	line-height: 1.29;
+  	color: #000000;
+  	margin-bottom: 17px;
+}
+body.page-returnSubmit .accordtionTataCliq .accHeading{
+    background: #fff;
+    font-size: 16px;
+  	line-height: 1;
+  	letter-spacing: 0.6px;
+  	color: #000000;
+    cursor: pointer;
+    padding: 30.5px 0px;
+}
+body.page-returnSubmit .accordtionTataCliq{
+	border: 0;
+	border-top: solid 1px #eeeeee;
+	margin-top: 0;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin{
+	border-bottom: solid 1px #eeeeee;
+}
+body.page-returnSubmit .col-md-5.col-sm-5.col-xs-5.return-img{
+	width: 93px;
+}
+body.page-returnSubmit .col-md-7.productDetails.col-sm-7.col-xs-7.return-prod-desc{
+	width: calc(100% - 93px);
+}
+body.page-returnSubmit .account .wrapper{
+	padding: 0 31px;
+	margin-bottom: 0;
+}
+ body.page-returnSubmit .accordtionTataCliq .accContents .button_holder {
+ 		position: static;
+ 		/* margin-bottom: 79px; */
+ 	} 
+ body.page-returnSubmit .accordtionTataCliq .accContents .col-md-7.col-sm-7.col-xs-12 ~ .button_holder{		
+ 		position: static;	
+ 		margin-bottom: 79px;
+ 		}
+ 	.accordtionTataCliq .accContents.selectReason.col-md-12 .col-md-7.col-sm-7.col-xs-12.selectReasonForReturn #returnReason{
+ 		border: solid 1px #bbbbbb;
+ 		font-size: 12px;
+  		line-height: 1.5;
+  		letter-spacing: 0.6px;
+  		padding-right: 22px;
+  		background: url('../images/plp-select-arrow.png') no-repeat 97% 13px #fff;
+  		background-size: 10px;
+ 	}
+ 	span.price-breakup{
+ 	font-size: 12px;
+  	line-height: 1.5;
+  	letter-spacing: 0.7px;
+  	color: #a5173c;
+  	cursor: pointer;
+ 	}
+ 	span.more-link{
+ 	cursor: pointer;
+ 	}
+ 	.certified-by h2 {
+    font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	margin-top: 30px;
+}
+p.disclaimer-txt{
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+  	color: rgba(0, 0, 0, 0.4);
+  	font-style: normal;
+  	margin-bottom: 25px;
+  }
+  .accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4.col-sm-4.reenteraccountnumber b{		
+	 	width: 300px;		
+	}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in .arrow{
+	left: 70%;
+}
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress{
+	width: 100%;
+	}
+@media(min-width: 1024px){
+	body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4{
+	width: 38%;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4 .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{
+	width: 90%;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-8.slectionRefund{
+	width: 62%;
+}
+}
+@media(max-width: 1024px){		
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{		
+	    width: 16.66666667%;		
+}		
+.accordtionTataCliq .accContents .col-md-8.slectionRefund b{		
+	margin-top: 20px;		
+}
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.ifsccode .ifscPopOver{
+	padding-top: 18px;
+}
+body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in{
+	    margin-top: 26px;
+}		
+}		
+ 	@media (min-width: 791px){
+	body.page-returnSubmit .body-Content {
+     padding-bottom: 50px !important; 
+	}
+}
+@media(max-width: 767px){
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
+		margin-left: 265px;
+	}
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow{
+		left: 68px;
+	}
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-4.col-sm-4.accountholdername{		
+	width: 203px;		
+	}		
+.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-3.col-sm-4{		
+	    padding-left: 10px;		
+}
+}
+@media(max-width: 690px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 120px;
+}
+}
+@media(max-width: 640px){
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12 .col-md-4{
+		padding-left: 0px !important;
+	}
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-3.col-sm-4{
+		padding-left: 0px;
+		}
+	.accordtionTataCliq .accContents .slectionRefund .col-md-12.col-sm-12 .col-md-2.col-sm-2{
+		padding-left: 0px;
+		}
+		body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{
+		width: 170px;
+		}
+}
+@media(max-width: 520px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 140px;
+}
+}
+@media(max-width: 480px){		
+	.accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor .col-md-10.col-sm-10.col-xs-10{		
+	padding-left: 15px;		
+	}
+	body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button{
+	 	width: 150px;
+	}
+	}
+@media(max-width: 450px){
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
+		margin-left: 210px;
+	}
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover .arrow {
+    left: 123px;
+}
+body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button {
+    width: 150px;
+}
+.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 160px;
+}
+}
+@media(max-width: 420px){
+	body.page-returnSubmit .accordtionTataCliq .accContents.reasonType .slectionRefund ~ .button_holder button {
+    	width: 100px;
+}	
+.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 180px;
+}
+.accordtionTataCliq .accContents.returnMethod .scheduledPickup .scheduledPickupArea .selectScheduledPickup .editAddress{
+	float: none;
+}
+}
+@media(max-width: 350px){
+	.accordtionTataCliq .slectionRefund .paymentCC {
+    margin-top: 220px;
+}
+}
+@media(max-width: 790px){
+	.accordtionTataCliq .accContents .reverseSealJwlry a.revSeal{
+		display: table;
+	}
+	.col-md-7.col-sm-7.col-xs-12.reverseSealJwlry .popover{
+		margin-left: 0;
+	}
+}
+/*TPR-4134 starts*/
 /* Jewellery end */
+
 /*TISBBC-47 fix start*/
 body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.delSeat{
 	display: block;	
@@ -75927,7 +76607,9 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 
 #stw_widget .product-tile .short-info .color-swatch, #stw_widget_blp .product-tile .short-info .color-swatch{
 	display: none;
+
 }
+
 /*TISPRDT-1670 fix start*/
 @media (max-width: 970px){
 	body.page-compare .product-tile .short-info .shop-now{
@@ -75935,3 +76617,306 @@ body.page-cartPage .cart.wrapper .product-block li.item li.price > ul > span.del
 	}
 } 
 /*TISPRDT-1670 fix end*/
+
+/*pan card verification start*/
+.pan-card-block{
+	max-width: 100%;
+    background-color: #f2f2f2;
+    padding: 66px 0 100px;
+}
+.pan-card-block > section{
+	max-width: 556px;
+	margin: 0px auto;
+}
+.pan-card-block > section .pan-detail-sec{
+	padding: 0;
+}
+.pan-card-block > section .pan-detail-sec h2.pan-heading{
+	text-align: center;
+  	font-size: 28px;
+  	line-height: 1.29;
+}
+.pan-card-block > section .pan-detail-sec p.lead-text{
+	text-align: center;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+}
+.pan-card-block > section .pan-detail-sec div.form-section{
+	border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
+  border: solid 1px #dddddd;
+  margin-top: 28px;
+  padding: 29px 25px 52px 30px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left{
+	width: auto;
+	float: left;
+	font-size: 12px;
+    letter-spacing: 0.6px;
+    padding-bottom: 17px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right{
+	width: auto;
+	float: right;
+	text-align: right;
+	font-size: 12px;
+    letter-spacing: 0.6px;
+    padding-bottom: 17px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right + .pan-card-fields{
+	clear: both;
+	border-top: solid 1px #eeeeee;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right + .pan-card-fields > div{
+	max-width: 273px;
+	margin: 0px auto;
+	padding-top: 48px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left .pan-label, 
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right .pan-label{
+	color: #666666;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .orderId-left > div, 
+.pan-card-block > section .pan-detail-sec div.form-section .orderName-right > div{
+	padding: 5px 0;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label, 
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label{
+	font-size: 14px;
+  letter-spacing: 0.6px;
+  color: #000000;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label{
+	margin-bottom: 8px;
+	}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label span.pancard-img-msg,
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img .pan-label span.pancard-img-msg{
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  color: #666666;
+  display: block;
+  margin-top: 4px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label-value{
+  margin-top: 8px;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-num .pan-label-value input{
+  width: 100%;
+  height: 42px;
+  border: solid 1px #bbbbbb;
+}
+.pan-card-block > section .pan-detail-sec div.form-section .pan-img div.fileupload{
+	background-color: #fff;
+	position:relative;
+	border: 1px solid #bbbbbb;
+	height: 42px;
+}
+.panfield-wrapper input[type='file'] {
+	opacity:0;
+	padding: 0;
+    border: 0;
+}
+#val {
+	width: 166px;
+	position: absolute;
+	top: 7px;
+	left: 0;
+	font-size:12px;
+	line-height: 25px;
+	text-indent: 10px;
+	pointer-events: none;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#labelBrowseBtn {
+	cursor: pointer;
+	display: block;
+	width: 107px;
+	background-color: #000;
+	height:100%;
+	color: #fff;
+	position: absolute;
+	right:0;
+	top: 0;
+	font-size: 12px;
+  line-height: 40px;
+  letter-spacing: 0.6px;
+	text-align: center;
+	-webkit-transition: 500ms all;
+	-moz-transition: 500ms all;
+	transition: 500ms all;
+}
+.panfield-wrapper.btn-wrapper a{
+	width: 100%;
+	height: 48px;
+	margin-bottom: 15px;
+	display: block;
+	font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: 0.6px;
+  text-align: center;
+  padding: 17px 0;
+}
+.panfield-wrapper.btn-wrapper a.pan-submit-btn{
+	background-color: #a5173c;
+	color: #fff;
+}
+.panfield-wrapper.btn-wrapper a.pan-cancel-btn{
+	border: 1px solid #a5173c;
+	color: #a5173c;
+}
+/*pan card verification end*/
+
+/*TISTE-163 fix start*/
+.modal.size-guide .sizes .tables>div {
+    margin-bottom: 0px;
+}
+.modal.size-guide > .content {
+    min-height: 288px;
+}
+/*TISTE-163 fix end*/
+/*TISTE-181, TISTE-182 fix start*/
+.product-facet .facet.size .facet-list li.filter-Size, 
+.product-facet .facet.Size .facet-list li.filter-size, 
+.product-facet .facet.size .facet-list li.filter-size, 
+.product-facet .facet.Size .facet-list li.filter-Size{
+	min-height: 25px;
+    height: auto;
+} 
+@media (max-width: 790px){
+.listing-leftmenu .size .facet-list .filter-Size form, 
+.listing-leftmenu .Size .facet-list .filter-size form, 
+.listing-leftmenu .size .facet-list .filter-size form, 
+.listing-leftmenu .Size .facet-list .filter-Size form {
+    width: 100%;
+}
+.product-facet .facet .facet-list div.facet-text {
+    padding-right: 0px;
+    width: calc(100% - 25px) !important;
+}
+.product-facet .facet .facet-list li.filter-size span.facet-text{
+	display: inline !important;
+}
+}
+/*TISTE-181, TISTE-182 fix end*/
+@media(max-width: 767px){
+    .track-order-iframe{
+        padding-bottom: 20px;
+    }
+} 
+
+/*TISTE-192 fix start*/
+@media (min-width: 791px){
+body .account .right-account .order-history.order-details li.item #pickNo{
+	padding-bottom: 10px;
+}
+} 
+/*TISTE-192 fix end*/
+
+/*TISTE-222 fix start*/
+@media(max-width: 790px){
+	body .account .right-account .order-history .navigation2 #ofPagination{
+		width: 110px;
+	}
+	body .account .right-account .order-history .pagination-bar.listing-menu.pagination-order-history.bottom{
+		width: auto;
+    	overflow: hidden;
+    	vertical-align: top;
+    	float: right;
+	}
+	body .account .right-account .order-history .bottom .pagination.mobile{
+		position: static;
+	}
+	body .account .right-account .order-history .navigation2{
+		overflow: hidden;
+	}
+}
+/*TISTE-222 fix end*/
+
+/*TISTE-225 fix start*/
+@media(min-width: 791px){
+	body.page-productGrid .product-listing.product-grid.lazy-grid, 
+	body.page-productGrid .product-listing.product-grid.lazy-grid-facet, 
+	body.page-productGrid .product-listing.product-grid.lazy-grid-normal{
+		padding-top: 9px !important;
+		clear: both;
+	}
+	.product-listing{
+		clear: both; /*TISPRDT-1724 fix*/
+	}
+}
+/*TISTE-225 fix end*/
+
+/*TISPRDT 1673 fix start*/
+.mop_span{
+	display: block;
+}
+.mop_span ~ li {
+    display: inline-block;
+    margin-top: 5px;
+}
+.mop_span ~ li + span.off-bag {
+    display: inline-block;
+     color: #000;
+     width: auto;
+}
+.mop_span > span.delSeat{
+	margin-bottom: 0px;
+}
+/* TISPRDT- 1791*/
+@media (max-width: 420px){
+body .account .right-account .order-history.order-details li.item .status>ul.nav>li {
+    font-size: 9px;
+    color: #ccc;
+    padding: 0 4px !important;
+} 
+}
+
+/*TISPRDT 1673 fix end*/
+@media (max-width: 790px){
+	.product-facet .facet.size .facet-list li.filter-Size,
+	.product-facet .facet.Size .facet-list li.filter-size,
+	.product-facet .facet.size .facet-list li.filter-size,
+	.product-facet .facet.Size .facet-list li.filter-Size{
+		margin: 5px 0;
+	}
+}
+/*TISJEW-3230 start*/
+@media(max-width: 790px) and (min-width: 768px){
+	body.page-order.pageType-ContentPage.template-pages-account-accountOrderDetailPage .account .wrapper{
+		margin-top: 54px;
+	}
+}
+/*TISJEW-3230 end*/
+
+/* TPR-5007 start */
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before
+{
+	width: 58px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiBIS:before
+{
+    width: 134px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 27% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL:before
+{
+	width: 132px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 8% 0;;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGIA:before
+{
+	width: 94px;
+    height: 40px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 52.5% 0;
+}
+/* TPR-5007 end */

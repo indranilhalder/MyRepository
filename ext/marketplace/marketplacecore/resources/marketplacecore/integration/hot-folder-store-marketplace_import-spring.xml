@@ -55,6 +55,7 @@
 				<entry key="promoted_product" value="0"/>
 				<entry key="bulk_return_initiation" value="0"/>
 				<entry key="bulk_cancel_initiation" value="0"/>
+				<entry key="pcmmplassociation" value="0" />
 					</map>
 		</property>
 	</bean>
@@ -265,6 +266,10 @@
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
     p:mapping="promoted_product"
     p:converter-ref="batchPromotedProductConverter"/>
+    
+    <bean id="batchMplLeadAssociationConverterMapping"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+		p:mapping="pcmmplassociation" p:converter-ref="batchLeadUssidMplAssociationConverter" />
     
       <!-- Converter for seller Import -->
       <bean id="batchSellerPriorityConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
@@ -1411,4 +1416,34 @@ INSERT_UPDATE SellerInformation;productSource(code,$catalogVersion);sellerSKU[un
             <value>;{+0};{+1};{+2};{3}</value>
         </property>
         </bean>
+        
+          <bean id="batchLeadUssidMplAssociationConverter"
+		class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+		<property name="header">
+			<value>
+				$productCatalog=mplProductCatalog
+				$productCatalogName=Marketplace Product Catalog
+				$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+				$approved=approvalstatus(code)[default='approved']
+				INSERT_UPDATE JewelleryInformation;ProductCode;PCMUSSID;USSID[unique=true];PIMAttributeId[unique=true];Weight
+			</value>
+		</property>
+		<property name="impexRow">
+			<value>
+				;{0};{1};{1};grossweightfinejwlry;{2}
+				;{0};{1};{1};metalweightfinejwlry;{3}
+				;{0};{1};{1};coinbarweightfinejwlry;{4}
+				;{0};{1};{1};solitaireweightfinejwlry;{5}
+				;{0};{1};{1};diamondtotalweightfinejwlry;{6}
+				;{0};{1};{1};diamondweightfinejwlry1;{7}
+				;{0};{1};{1};diamondweightfinejwlry2;{8}
+				;{0};{1};{1};diamondweightfinejwlry3;{9}
+				;{0};{1};{1};diamondweightfinejwlry4;{10}
+				;{0};{1};{1};diamondweightfinejwlry5;{11}
+				;{0};{1};{1};diamondweightfinejwlry6;{12}
+				;{0};{1};{1};diamondweightfinejwlry7;{13}
+			</value>
+			
+		</property>
+	</bean>   
   </beans>

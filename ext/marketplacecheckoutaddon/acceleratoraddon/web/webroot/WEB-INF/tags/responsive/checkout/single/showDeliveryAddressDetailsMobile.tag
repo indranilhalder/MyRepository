@@ -19,6 +19,8 @@
 		showPromotionTag();
 	});
 </script>
+<!-- Div to display ajax failure messages -->
+<div id="selectedAddressMessageMobile" style=""></div>
 <div class="checkout-shipping checkTab">
 
 	<c:if test="${not empty deliveryAddresses}">	
@@ -27,8 +29,6 @@
 			action="/checkout/single/select-address-responsive"
 			method="get">
 			<!-- change here for modified checkout page starts -->
-						<!-- Div to display ajax failure messages -->
-						<div id="selectedAddressMessageMobile" style=""></div>
 
 						<span id="emptyAddressMobile" style="display:none">Please select a delivery method to proceed.</span>
 
@@ -55,7 +55,11 @@
 
 
 								<div class="address-list ${showItem} <c:if test="${not deliveryAddress.defaultAddress}">mobileNotDefaultDelAddress</c:if>">
-									 <div class="clickableDivMobile" style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false);">
+									<span class="edit"> 
+										<a href="javascript:void(0)"
+										onclick="event.stopPropagation();ACC.singlePageCheckout.getMobileEditAddress('${deliveryAddress.postalCode}','${deliveryAddress.id}');"></a>
+									</span>
+									 <div class="clickableDivMobile" style="cursor:pointer;" onclick="ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive('${deliveryAddress.postalCode}','${deliveryAddress.id}',false,false);">
 										<c:choose>
 											<c:when test="${deliveryAddress.defaultAddress}">
 												<input type="radio" class="radio1" name="selectedAddressCode"
@@ -157,13 +161,21 @@
 						</div>
 
 
-						<div class="addNew_wrapper">
+						<div class="addNew_wrapper" id="addNewAddressForResponsive">
 							<div class="mobile_add_address mobileNotDefaultDelAddress" onclick="ACC.singlePageCheckout.getMobileAddAddress();">
 							<span class="mobile_add_address_radio"></span>
 							<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
 							</div>
 							<span id="newAddressMobileErrorMessage"></span>
-							<div class="new-address-form-mobile" data-loaded="false"></div>
+							<div id="newAddressFormMobile" class="new-address-form-mobile" data-loaded="false"></div>
+						</div>
+						<div class="addNew_wrapper" id="editAddressForResponsive">
+							<div class="mobile_add_address mobileNotDefaultDelAddress">
+							<span class="mobile_add_address_radio"></span>
+							<spring:theme code="checkout.single.deliveryAddress.editAddress.mobile" text="Edit Address"></spring:theme>
+							</div>
+							<span id="editAddressMobileErrorMessage"></span>
+							<div id="editAddressFormMobile" class="new-address-form-mobile" data-loaded="false"></div>
 						</div>
 
 
@@ -199,7 +211,7 @@
 			<spring:theme code="checkout.multi.deliveryAddress.useNewAddress.mobile" text="Use New Address"></spring:theme>
 			</div>
 			<span id="newAddressMobileErrorMessage"></span>
-			<div class="new-address-form-mobile" data-loaded="false"></div>
+			<div id="newAddressFormMobile" class="new-address-form-mobile" data-loaded="false"></div>
 		</div>
 	</c:if>
 

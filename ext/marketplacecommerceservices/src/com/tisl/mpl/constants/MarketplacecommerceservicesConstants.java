@@ -596,7 +596,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String SMS_MESSAGE_ORDER_RISK = "We're sorry! Your Tata CLiQ order no.{0} has been put on hold for some checks. You might get a call from Tata CLiQ Care.";
 	/* 8. Anniversary Changes */
-	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While we’ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
+	public static final String SMS_MESSAGE_ORDER_RISK_CONFIRMED = "Hi, your order no. {0} is now confirmed. While weï¿½ll keep you posted, track your order at {1}. Hope you enjoyed shopping with us.";
 	/* 9.Anniversary Changes */
 	public static final String SMS_MESSAGE_ORDER_RISK_REJECTED = "Hi, there's been a problem and your order no.{0} has been rejected. Log on to your account {1} or call us on {3} for more details.";
 	//R2.3 Added ShipmentSecondaryStatus NEW SMS
@@ -755,6 +755,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String OUT_OF_INVENTORY = "outofinventory";
 	public static final String INVENTORY_WIIL_EXCEDE = "willexceedeinventory";
 	public static final String MAX_QUANTITY_ADDED_FOR_EXCHANGE = "maxqtyexchange";
+	//TISJEWST-10
+	public static final String MAX_QUANTITY_ADDED_FOR_FINEJEWELLERY = "maxqtyaddedforfinejewellery";
 
 	//For SellerPriority Report
 	public static final String CSVFILEHEADER_SELLERPRIORITY = "Modified Time, User ID, Seller ID, Seller Name, Category ID, Product ID, Start Date, End Date, Active?, Newly_Created?, Modified Swllwe ID, Modified Seller Name, Modified Start Date, Modified End Date, Modified Active Flag";
@@ -2069,6 +2071,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//FREEBIE FIX
 	public static final String FREEBIEPRICETHRESHOLD = "freebiePriceThreshold";
 
+
 	// OrderIssues:- multiple Payment Response from juspay restriction
 	public static final String DUPLICATEJUSPAYRESONSE = "duplicatJuspayResponse";
 
@@ -2170,6 +2173,10 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
 
+	//UF-281
+	public static final String B1002 = "B1002";
+
+
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
 	//TPR-3782
@@ -2182,6 +2189,11 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String GEMSTONE = "GEMSTONE";
 	public static final String WASTAGETAX = "WASTAGE TAX";
 	public static final String MAKINGCHARGE = "MAKING CHARGE";
+	public static final String ATTHERATE = "@";
+	public static final String GM = "gm";
+	public static final String CT = "Ct";
+	//public static final String PERGM = "/g";
+	//public static final String PERCT = "/ct";
 	//TPR-4134 web service
 	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
 	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";

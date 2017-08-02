@@ -45,21 +45,20 @@ $(document).ready(function(){
   	 
   	 
    	 //Changes for pdp CR
-   	  
-   	  // Jewellery Add to cart changes added 
-   	 
-   	if( $("#jewelleryvariant option:selected").val() == "#"  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'      ){
-		// alert("please select size !"+isShowSize);	 
- 		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
+
+   	if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
+  		/* alert("please select size !"+isShowSize); */
+   		$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
 		$("#addToCartFormTitle").show();
-	    return false;
- 	 } 	 
-   	if($("#variant li").length > 0)
-   	{
-   	 if(!$("#variant li").hasClass("selected")  && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics' && $("#ia_product_rootCategory_type").val()!='Watches' && $("#ia_product_rootCategory_type").val()!='TravelAndLuggage' &&  isShowSize=='true'){
-  	//	 alert("please select size !"+isShowSize);   		 
-   		$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-		$("#addToCartFormTitle").show();
+		if ($(window).width() < 768) {
+			setTimeout(function(){
+				$('#addToCartFormTitle').fadeOut(2000);		
+			 },2000);
+			//UF-390
+			$('html, body').animate({
+	              scrollTop: $('.product-info .product-image-container.device').height()
+	        }, 1000);
+		}	
 		//For pdp analytics changes
 		utag.link({"error_type":"size_not_selected"});
  	    return false;
@@ -75,7 +74,6 @@ $(document).ready(function(){
 		}); */
 
    	 }
-
 
    	/* if( $("#variant,#sizevariant option:selected").val()=="#")
  	  {

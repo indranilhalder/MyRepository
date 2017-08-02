@@ -30,7 +30,7 @@
 	<ul class="product-listing product-grid lazy-grid-normal">
 		<c:forEach items="${normalProducts}" var="product"
 			varStatus="status">
-			<product:productListerGridItem product="${product}" />
+			<product:productListerGridItem product="${product}" index="${status.index}"/>
 		</c:forEach>
 	</ul>
 	</c:if>
@@ -38,7 +38,7 @@
 	<c:if test="${not empty otherProducts}">
 	<ul class="product-listing product-grid lazy-grid">
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
-			<product:productListerGridItem product="${product}"/>
+			<product:productListerGridItem product="${product}" index="${status.index}"/>
 		</c:forEach>
 	</ul> 
 	</c:if>

@@ -312,7 +312,7 @@
 		<property name="TimeSlotTo" type="String"/>
 		<!-- R2.3 END -->
 		<!-- TPR-4134 -->
-		<property name="reverseSealForJwllry" type="String"/>
+		<property name="reverseSealLostflag" type="String"/>
 	</bean>
 	
 	<!-- Return Item AddressInfo Data -->
@@ -824,7 +824,7 @@
 		<!--Bug Id TISRLUAT-818  -->
 		<property name="selfCourierDocumentLink" type="String"/>
 		<!-- TPR-4134 -->
-		<property name="reverseSealForJwllry" type="String"/>
+		<property name="reverseSealLostflag" type="String"/>
 	</bean>
 	<!-- TPR-1083 Exchange Start -->
 	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">

@@ -41,7 +41,7 @@
 		<property name="deliveryDate" type="String" />
 		<!-- TPR-1083 Exchange Start -->
 		<property name="exchangePincode" type="String" />
-		<property name="isExchangeServiceable" type="boolean" />
+		<property name="exchangeServiceable" type="boolean" />
 		<!-- TPR-1083 Exchange End -->
 		
 	</bean>
@@ -1065,6 +1065,9 @@
 		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="totalMrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 starts here -->
+		<property name="cartAdditionalDiscPerc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 ends here -->
 	</bean>
 	<!-- TPR-774 -->
 	

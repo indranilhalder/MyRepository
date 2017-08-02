@@ -39,7 +39,7 @@
   <h2><span><spring:theme code="text.competing.products"/></span></h2>
   	<ul class="product-list">
 		<c:forEach items="${competingProductsSearchPageData.results}" var="product" varStatus="status">
-			<product:productListerGridItem product="${product}"/>
+			<product:productListerGridItem product="${product}" index="${status.index}"/>
 		</c:forEach>
 	</ul>
 	</div>
@@ -48,7 +48,7 @@
 	<ul class="product-list">
 	
 		<c:forEach items="${searchPageData.results}" var="product" varStatus="status">
-			<product:productListerGridItem product="${product}"/>
+			<product:productListerGridItem product="${product}" index="${status.index}"/>
 		</c:forEach>
 	</ul>
 	<div id="addToCartTitle" style="display:none">

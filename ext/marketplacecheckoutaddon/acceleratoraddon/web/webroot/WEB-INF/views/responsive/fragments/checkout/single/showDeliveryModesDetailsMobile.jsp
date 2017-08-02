@@ -41,7 +41,10 @@
 		{
 			$("#delivery-mode-change-link").hide();
 		}
-		$(".hideDelModeMobile").hide();
+		if($("#delivery-mode-change-link").css("display")!="none")
+		{
+			$(".hideDelModeMobile").hide();//Hiding delivery modes that are not having priority.
+		}
 		/* $(".hideDelModeMobile").attr('disabled', true);
 		$(".hideDelModeMobile").css("opacity","0.5");
 		$(".hideDelModeMobile").css("pointer-events","none"); */

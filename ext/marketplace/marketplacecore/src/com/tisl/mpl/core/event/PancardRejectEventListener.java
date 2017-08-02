@@ -20,17 +20,12 @@ import de.hybris.platform.core.model.order.OrderModel;
 //import de.hybris.platform.orderprocessing.events.OrderPlacedEvent;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.BusinessProcessService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.util.ServicesUtil;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.tisl.mpl.marketplacecommerceservices.event.PancardRejectEvent;
-import com.tisl.mpl.shorturl.service.ShortUrlService;
-import com.tisl.mpl.sms.MplSendSMSService;
 
 
 /**
@@ -38,17 +33,17 @@ import com.tisl.mpl.sms.MplSendSMSService;
  */
 public class PancardRejectEventListener extends AbstractSiteEventListener<PancardRejectEvent>
 {
-
-	@Autowired
-	private ConfigurationService configurationService;
-
-	@Autowired
-	private MplSendSMSService sendSMSService;
-
-	@Autowired
-	private ShortUrlService googleShortUrlService;
-
-	private static final Logger LOG = Logger.getLogger(PancardRejectEventListener.class);
+	//SONAR FIX JEWELLERY
+	//@Autowired
+	//private ConfigurationService configurationService;
+	//SONAR FIX JEWELLERY
+	//@Autowired
+	//private MplSendSMSService sendSMSService;
+	//SONAR FIX JEWELLERY
+	//@Autowired
+	//private ShortUrlService googleShortUrlService;
+	//SONAR FIX JEWELLERY
+	//	private static final Logger LOG = Logger.getLogger(PancardRejectEventListener.class);
 
 	private ModelService modelService;
 	private BusinessProcessService businessProcessService;
@@ -90,7 +85,7 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		//send SMS
 		/*
 		 * try { String mobileNumber = null; String firstName = null;
-		 * 
+		 *
 		 * final OrderModel orderDetails = orderProcessModel.getOrder(); CustomerModel customer = null; if
 		 * (orderModel.getUser() != null && orderModel.getUser() instanceof CustomerModel) { customer = (CustomerModel)
 		 * orderModel.getUser(); } if (null != orderDetails && orderDetails.getDeliveryAddress() != null &&
@@ -100,11 +95,11 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		 * orderDetails.getDeliveryAddress().getFirstname() != null) { firstName =
 		 * orderDetails.getDeliveryAddress().getFirstname(); } else { if (null != customer && customer.getFirstName() !=
 		 * null) { firstName = customer.getFirstName(); } else { firstName = "Customer"; } }
-		 * 
+		 *
 		 * final String orderReferenceNumber = orderDetails.getCode(); final String trackingUrl =
 		 * configurationService.getConfiguration().getString(
 		 * MarketplacecommerceservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT) + orderReferenceNumber;
-		 * 
+		 *
 		 * final String shortTrackingUrl = googleShortUrlService .genearateShortURL(orderModel.getParentReference() ==
 		 * null ? orderModel.getCode() : orderModel .getParentReference().getCode()); final String content =
 		 * MarketplacecommerceservicesConstants.SMS_MESSAGE_ORDER_PLACED
@@ -112,12 +107,12 @@ public class PancardRejectEventListener extends AbstractSiteEventListener<Pancar
 		 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_ONE, orderReferenceNumber)
 		 * .replace(MarketplacecommerceservicesConstants.SMS_VARIABLE_TWO, null != shortTrackingUrl ? shortTrackingUrl :
 		 * trackingUrl);
-		 * 
+		 *
 		 * final SendSMSRequestData smsRequestData = new SendSMSRequestData();
 		 * smsRequestData.setSenderID(MarketplacecommerceservicesConstants.SMS_SENDER_ID);
 		 * smsRequestData.setContent(content); smsRequestData.setRecipientPhoneNumber(mobileNumber);
 		 * sendSMSService.sendSMS(smsRequestData);
-		 * 
+		 *
 		 * } catch (final EtailNonBusinessExceptions ex) {
 		 * LOG.error("EtailNonBusinessExceptions occured while sending sms " + ex); } catch (final Exception ex) {
 		 * LOG.error("Exceptions occured while sending sms " + ex); }

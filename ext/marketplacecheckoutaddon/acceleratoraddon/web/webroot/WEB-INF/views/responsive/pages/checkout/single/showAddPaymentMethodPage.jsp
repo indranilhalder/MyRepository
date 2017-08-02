@@ -51,6 +51,7 @@
     					if(updateItHereLink.indexOf("updateItHereLink")>=0)
     					{
     						displayCODForm();
+    						$("ul.checkout-paymentmethod.nav li").removeClass("active");
     						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
     						$(".checkout-paymentmethod").css("display","block");
     						document.getElementById("otpMobileNUMField").focus();    						
@@ -61,6 +62,7 @@
         					{	
     							if($(window).width()>=768){
         						displayCreditCardForm();
+        						$("ul.checkout-paymentmethod.nav li").removeClass("active");
         						$("#viewPaymentCredit, #viewPaymentCreditMobile").parent("li").addClass("active");
     							}
         						$(".checkout-paymentmethod").css("display","block");
@@ -70,6 +72,7 @@
         					{
         						if($(window).width()>=768){
         						displayDebitCardForm();
+        						$("ul.checkout-paymentmethod.nav li").removeClass("active");
         						$("#viewPaymentDebit, #viewPaymentDebitMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -79,6 +82,7 @@
         					{
         						if($(window).width()>=768){
         						displayEMIForm();
+        						$("ul.checkout-paymentmethod.nav li").removeClass("active");
         						$("#viewPaymentEMI, #viewPaymentEMIMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -88,6 +92,7 @@
         					{
         						if($(window).width()>=768){
         						displayNetbankingForm();
+        						$("ul.checkout-paymentmethod.nav li").removeClass("active");
         						$("#viewPaymentNetbanking, #viewPaymentNetbankingMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -97,6 +102,7 @@
         					{
         						if($(window).width()>=768){
         						displayCODForm();
+        						$("ul.checkout-paymentmethod.nav li").removeClass("active");
         						$("#viewPaymentCOD, #viewPaymentCODMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -107,6 +113,7 @@
         					{
         						if($(window).width()>=768){
         						displayThrdPrtyWlt();
+        						$("ul.checkout-paymentmethod.nav li").removeClass("active");
         						$("#viewPaymentMRupee, #viewPaymentMRupeeMobile").parent("li").addClass("active");
         						}
         						$(".checkout-paymentmethod").css("display","block");
@@ -1568,6 +1575,11 @@
 									
 									<div id="emptyOTPMessage" class="error-message"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.emptyOTPMessage"/>
 									</div>
+									
+									<!-- UF-281/282 Starts -->
+									<div id="codNotAllowedMessage" class="error-message payment-notification"><spring:theme code="checkout.single.paymentMethod.addPaymentDetails.codNotAllowed"/>
+									</div>
+									<!-- UF-281/282 Ends -->
 									
 									<!-- COD error messages ends -->
 										

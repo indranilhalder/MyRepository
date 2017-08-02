@@ -215,9 +215,35 @@
 
 	<!-- End Size guide Pop-up -->
 	<form:form action="/" method="get" id="variantForm"  class="sizeVariantForm quickview-popup ${product.rootCategory}" >
-
-    <p class="sizetext"><spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
-		
+     
+    <p class="sizetext">
+    <c:choose> 
+	<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+	    <spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+		<c:forEach items="${product.categories}" var="categories">
+   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+   				<c:if test="${categories.code eq lengthVariantArray}">
+   				 	<c:set var="lengthSize" value="true"/>
+   				</c:if> 
+   			</c:forEach>
+   		</c:forEach>	  
+   		<c:choose>
+   			<c:when test="${true eq lengthSize}">
+   				<span><spring:theme code="product.variant.length"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span>
+   			</c:when>
+   			<c:otherwise>
+   				<span>
+					<spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
+			  </span> 
+   			</c:otherwise>
+   		</c:choose>
+	</c:when>
+	<c:otherwise>
+    <spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
+	</c:otherwise>
+	</c:choose>	
         <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 			<spring:theme code="product.variants.quickview.size.guide"/>
 		</a>
@@ -234,9 +260,8 @@
 			
 		<ul label="sizes" id="quickViewVariant">
 		 <li style="display:none;"><a href="#" class="js-reference-item cboxElement">select size</a></li>
-		<!--  Jewellery Size tab Change  Starts-->
 	         <c:choose>
-			   <c:when test="${product.rootCategory=='FineJewellery'}">		     
+			   <c:when test="${product.rootCategory=='FineJewellery' || product.rootCategory=='FashionJewellery'}">		     
 		 			<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:forEach var="entry" items="${variantOption.sizeLink}">
 					<c:url value="${entry.key}/quickView" var="link" />							
@@ -244,24 +269,24 @@
 						<c:when test="${(variantOption.code eq product.code)}">
 							<c:choose>
 								<c:when test="${selectedSize eq null}">										
-									<li><a href="${link}?selectedSize=true${msiteSellerForSize}" data-productCode="${variantOption.code}">${entry.value}</a></li>
+									<li><a href="${link}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 								</c:when>
 								<c:otherwise>											
-									<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+									<li class="selected"><a href="${link}?selectedSize=true${msiteSellerForSize}" class="js-reference-item cboxElement">${entry.value}</a></li>
 								</c:otherwise>
 							</c:choose>
 						</c:when>
 						<c:otherwise>								
-							<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  data-productCode="${variantOption.code}">${entry.value}</a></li>
+							<li data-vcode="${link}"><a href="${link}?selectedSize=true${msiteSellerForSize}"  class="js-reference-item cboxElement">${entry.value}</a></li>
 						</c:otherwise>
 					</c:choose>
 					</c:forEach>
 					</c:forEach>	  
 				</c:when>
-			<!--  Jewellery Size tab Change  Ends-->
 				<c:otherwise>
 				 <%-- <li><spring:theme
 							code="text.select.size" /></li> --%>
+							abjfhsihfsui
 					<c:forEach items="${product.variantOptions}" var="variantOption">
 					<c:url	value="${variantOption.url}/quickView"	var="variantUrl" />
 					<c:forEach items="${variantOption.colourCode}" var="color">

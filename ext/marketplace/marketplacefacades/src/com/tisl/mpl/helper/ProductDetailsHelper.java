@@ -46,11 +46,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -119,6 +118,10 @@ public class ProductDetailsHelper
 	private static final String CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME = "classification.attributes.finejewellery.groupname";
 	/*
 	 * Added for Fine Jewellery
+	 */
+	private static final String CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME = "classification.attributes.fashionjewellery.groupname";
+	/*
+	 * Added for Fashion Jewellery
 	 */
 	/**
 	 *
@@ -391,7 +394,7 @@ public class ProductDetailsHelper
 	}
 
 
-	public void groupGlassificationDataForFineDeatils(final ProductData productData)
+	public void groupGlassificationDataForJewelDetails(final ProductData productData)
 	{
 		final LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		String classificationName = null;
@@ -399,10 +402,10 @@ public class ProductDetailsHelper
 		{
 			for (final ClassificationData classData : productData.getClassifications())
 			{
-				if (featureDetails.isEmpty()
-						&& !(classData.getName().equalsIgnoreCase(N_A))
+				if (!(classData.getName().equalsIgnoreCase(N_A))
 						&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
-								.contains(classData.getName())))
+								.contains(classData.getName()) || configurationService.getConfiguration()
+								.getString(CLASSIFICATION_ATTRIBUTES_FASHIONJEWELLERY_GROUPNAME).contains(classData.getName())))
 				{
 					final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
 					if (classData.getName().equalsIgnoreCase("Stone Details"))
@@ -412,8 +415,14 @@ public class ProductDetailsHelper
 						{
 							final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
 							final String featurename = feature.getName();
-							final Set keys = featureDetails.keySet();
-							final Iterator itr = keys.iterator();
+							final List<String> keyList = new ArrayList<String>();
+							if (!featureDetails.isEmpty())
+							{
+								for (final Entry<String, Map<String, List<String>>> keys : featureDetails.entrySet())
+								{
+									keyList.add(keys.getKey());
+								}
+							}
 							final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
 							final List<String> featureValueList = new ArrayList<String>();
 							for (final FeatureValueData featurevalue : featuredvalue)
@@ -424,14 +433,11 @@ public class ProductDetailsHelper
 								}
 								else
 								{
-									if (!featurename.equalsIgnoreCase("Total Count") && keys.contains(StoneclassificationName))
+									if (!featurename.equalsIgnoreCase("Total Count") && keyList.contains(StoneclassificationName))
 									{
-
 										final String featureV = featurevalue.getValue();
-
-										while (itr.hasNext())
+										for (final String key : keyList)
 										{
-											final String key = (String) itr.next();
 											if (key != null && key.equalsIgnoreCase(StoneclassificationName))
 											{
 												if (featureDetails.get(StoneclassificationName).keySet() != null
@@ -455,12 +461,10 @@ public class ProductDetailsHelper
 									}
 								}
 							}
-							final Iterator fItr = keys.iterator();
-							if (keys.contains(StoneclassificationName))
+							if (keyList.contains(StoneclassificationName))
 							{
-								while (fItr.hasNext())
+								for (final String key : keyList)
 								{
-									final String key = (String) fItr.next();
 									if (key != null && key.equalsIgnoreCase(StoneclassificationName))
 									{
 										featureDetails.get(StoneclassificationName).putAll(featureMap);
@@ -488,147 +492,50 @@ public class ProductDetailsHelper
 							for (final FeatureValueData featurevalue : featuredvalue)
 							{
 								final String featureV = featurevalue.getValue();
-								featureValueList.add(featureV);
-								featureMap.put(featurename, featureValueList);
-
-							}
-						}
-						featureDetails.put(classificationName, featureMap);
-
-					}
-
-				}
-				else
-				{
-					if (!(classData.getName().equalsIgnoreCase(N_A))
-							&& (configurationService.getConfiguration().getString(CLASSIFICATION_ATTRIBUTES_FINEJEWELLERY_GROUPNAME)
-									.contains(classData.getName())))
-					{
-						final List<FeatureData> classDataName = new ArrayList<FeatureData>(classData.getFeatures());
-						if (classData.getName().equalsIgnoreCase("Stone Details"))
-						{
-							String StoneclassificationName = null;
-							for (final FeatureData feature : classDataName)
-							{
-								final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
-								final String featurename = feature.getName();
-								final Set keys = featureDetails.keySet();
-								final Iterator itr = keys.iterator();
-								final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
-								final List<String> featureValueList = new ArrayList<String>();
-								for (final FeatureValueData featurevalue : featuredvalue)
+								final List<String> featureMapKeys = new ArrayList<String>();
+								for (final Entry<String, List<String>> featureMapKey : featureMap.entrySet())//null check
 								{
-									if (featurename.equalsIgnoreCase("Stone"))
-									{
-										StoneclassificationName = featurevalue.getValue() + " Details";
-									}
-									else
-									{
-										if (!featurename.equalsIgnoreCase("Total Count") && keys.contains(StoneclassificationName))
-										{
-
-											final String featureV = featurevalue.getValue();
-
-											while (itr.hasNext())
-											{
-												final String key = (String) itr.next();
-												if (key != null && key.equalsIgnoreCase(StoneclassificationName))
-												{
-													if (featureDetails.get(StoneclassificationName).keySet() != null
-															&& featureDetails.get(StoneclassificationName).keySet().contains(featurename))
-													{
-														for (final String featureMapKey : featureDetails.get(StoneclassificationName).keySet())
-														{
-															if (featureMapKey.equalsIgnoreCase(featurename))
-															{
-																featureDetails.get(StoneclassificationName).get(featureMapKey).add(featureV);
-															}
-														}
-													}
-													else
-													{
-														featureValueList.add(featureV);
-														featureMap.put(featurename, featureValueList);
-													}
-												}
-											}
-										}
-									}
+									featureMapKeys.add(featureMapKey.getKey());
 								}
-								final Iterator fItr = keys.iterator();
-								if (keys.contains(StoneclassificationName))
+								if (featureMapKeys.contains(featurename))
 								{
-									while (fItr.hasNext())
+									for (final String key : featureMapKeys)
 									{
-										final String key = (String) fItr.next();
-										if (key != null && key.equalsIgnoreCase(StoneclassificationName))
+										if (key != null && key.equalsIgnoreCase(featurename))
 										{
-											featureDetails.get(StoneclassificationName).putAll(featureMap);
+											featureMap.get(featurename).add(featureV);
 										}
 									}
 								}
 								else
 								{
-									if (StoneclassificationName != null)
-									{
-										featureDetails.put(StoneclassificationName, featureMap);
-									}
+									featureValueList.add(featureV);
+									featureMap.put(featurename, featureValueList);
+								}
+							}
+						}
+						final List<String> keyList = new ArrayList<String>();
+						if (!featureDetails.isEmpty())
+						{
+							for (final Entry<String, Map<String, List<String>>> keys : featureDetails.entrySet())
+							{
+								keyList.add(keys.getKey());
+							}
+						}
+						if (keyList.contains(classificationName))
+						{
+							for (final String key : keyList)
+							{
+								if (key != null && key.equalsIgnoreCase(classificationName))
+								{
+									featureDetails.get(classificationName).putAll(featureMap);
 								}
 							}
 						}
 						else
 						{
-							final LinkedHashMap<String, List<String>> featureMap = new LinkedHashMap<String, List<String>>();
-							classificationName = classData.getName();
-							for (final FeatureData feature : classDataName)
-							{
-								final String featurename = feature.getName();
-								final List<FeatureValueData> featuredvalue = new ArrayList<FeatureValueData>(feature.getFeatureValues());
-								final List<String> featureValueList = new ArrayList<String>();
-								for (final FeatureValueData featurevalue : featuredvalue)
-								{
-									final String featureV = featurevalue.getValue();
-									final Set keys = featureMap.keySet();
-									final Iterator itr = keys.iterator();
-									String key = null;
-									if (keys.contains(featurename))
-									{
-										while (itr.hasNext())
-										{
-											key = (String) itr.next();
-											if (key != null && key.equalsIgnoreCase(featurename))
-											{
-												featureMap.get(featurename).add(featureV);
-											}
-										}
-									}
-									else
-									{
-										featureValueList.add(featureV);
-										featureMap.put(featurename, featureValueList);
-									}
-								}
-							}
-							final Set keys = featureDetails.keySet();
-							final Iterator itr = keys.iterator();
-							if (keys.contains(classificationName))
-							{
-								while (itr.hasNext())
-								{
-									final String key = (String) itr.next();
-									if (key != null && key.equalsIgnoreCase(classificationName))
-									{
-										featureDetails.get(classificationName).putAll(featureMap);
-									}
-								}
-							}
-							else
-							{
-
-								featureDetails.put(classificationName, featureMap);
-							}
+							featureDetails.put(classificationName, featureMap);
 						}
-
 					}
 				}
 			}
@@ -648,24 +555,6 @@ public class ProductDetailsHelper
 		}
 		return classificationData;
 	}
-
-
-	//public ClassificationData getExistingClasificationDataForFine(final String name,
-	//			final Map<String, Map<String, List<String>>> classificationList)
-	//	{
-	//	ClassificationData classificationData = null;
-	//	for (final ClassificationData cData : classificationList)
-	//	{
-	//		if (cData.getName().equals(name))
-	//		{
-	//			classificationData = cData;
-	//		}
-	//	}
-	//	return classificationData;
-	//	}
-
-
-
 
 
 

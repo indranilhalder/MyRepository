@@ -47,6 +47,7 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 	 */
 	private static final String Y = "Y";
 	private static final String FINEJEWELLERY = "FineJewellery";
+	private static final String FASHIONJEWELLERY = "FashionJewellery";
 	protected static final Logger LOG = Logger.getLogger(CustomVariantDataPopulator.class);
 
 	@Autowired
@@ -154,14 +155,16 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							//chceking size variant exists or not
 							//TISPRO-50 - null check added
 							//Added For TPR-210
-							//Fine Jewellery changes added
+							//Jewellery changes added
 							if (selectedSize.equals(pm.getSize()) && null != variantOptionData.getImage()
-									&& !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+									&& !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+									&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 							{
 								isSizeVariantPresent = true;
 								defaultColorMap.put(variantOptionData.getImage().getUrl(), Y);
 							}
-							else if (!FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+							else if (!FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+									&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 							{
 								isSizeVariantPresent = true;
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
@@ -169,7 +172,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 								defaultColorMap.put(color, Y);
 							}
 							//checking for colour variant
-							if (null != pm.getColour() && !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+							if (null != pm.getColour() && !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+									&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 							{
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
 										? pm.getColourHexCode() : pm.getColour().toLowerCase());
@@ -186,7 +190,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							isCapacityVariantPresent = true;
 							//TISPRO-50 - null check added
 							if (null != selectedCapacity && selectedCapacity.equals(pm.getCapacity())
-									&& !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+									&& !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+									&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 							{
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
 										? pm.getColourHexCode() : pm.getColour().toLowerCase());
@@ -196,7 +201,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 							}
 							variantOptionData.setCapacity(pm.getCapacity());
 							//checking for colour variant
-							if (null != pm.getColour() && !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+							if (null != pm.getColour() && !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+									&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 							{
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
 										? pm.getColourHexCode() : pm.getColour().toLowerCase());
@@ -208,7 +214,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 						//checking for colour variant
 						else
 						{
-							if (null != pm.getColour() && !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+							if (null != pm.getColour() && !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+									&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 							{
 								variantOptionData.setDefaultUrl(variantOptionData.getUrl());
 								final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
@@ -225,7 +232,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 					{
 						//variantOptionData.setDefaultUrl(variantOptionData.getUrl());
 						isSizeVariantPresent = true;
-						if (!FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+						if (!FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+								&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 						{
 							final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
 									? pm.getColourHexCode() : pm.getColour().toLowerCase());
@@ -240,7 +248,8 @@ public class CustomVariantDataPopulator<SOURCE extends ProductModel, TARGET exte
 
 					variantOptions.add(variantOptionData);
 					if (null == variantOptionData.getColourCode()
-							&& !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
+							&& !FINEJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType())
+							&& !FASHIONJEWELLERY.equalsIgnoreCase(variantOptionData.getProductType()))
 					{
 						final String color = (pm.getColourHexCode() != null && StringUtils.isNotEmpty(pm.getColourHexCode())
 								? pm.getColourHexCode() : pm.getColour().toLowerCase());

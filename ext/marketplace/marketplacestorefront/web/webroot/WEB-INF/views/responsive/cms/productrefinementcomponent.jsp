@@ -25,6 +25,8 @@ $(document).ready(function(){
 		
 });
 function displayPriotrityBrand(){
+	//PRDI-540 fix
+	if ('${PriorityBrandArray}'!=''){	
 	 var x= '${PriorityBrandArray}';
 	 x=$.parseJSON(x);
 	 console.log("PriorityBrandArray"+x);
@@ -50,8 +52,9 @@ function displayPriotrityBrand(){
 		 }
 		 
 	//	$(elements).remove(); 
-	 }); 
-	 }
+	 });
+	}
+}
 //
 //alert("priorityarray");
 $( document ).ajaxComplete(function(event, xhr, settings) {	

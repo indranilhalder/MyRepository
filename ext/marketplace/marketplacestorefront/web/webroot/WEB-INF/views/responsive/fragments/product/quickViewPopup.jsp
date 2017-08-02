@@ -413,12 +413,12 @@ display:none;
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
 	<c:choose>
 	<c:when test="${product.rootCategory=='FineJewellery'}">
-	<a href="${productUrl}"> <product:productPrimaryImage
+		<a href="${productUrl}"> <product:productPrimaryImage
 				product="${product}" format="fineJewelproductquickview" />
 		</a>
 	</c:when>
 	<c:otherwise>
-	 <a href="${productUrl}"> <product:productPrimaryImage
+ 		<a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
 				product="${product}" format="product" />
 				</a>
 	</c:otherwise>
@@ -522,14 +522,21 @@ display:none;
     
     <!-- //TPR-3752 Jewel Heading Added -->
 			<c:choose>
-  				<c:when test="${product.rootCategory=='FineJewellery'}">
-  				<input id="jwelQuick" type="hidden" value="${product.rootCategory}"/>
-					<p class="key-labelquick">
-	  					<c:forEach var="classification" items="${mapConfigurableAttributes}">
-						</c:forEach>
-	  			    </p>
-  				</c:when>
-  			</c:choose>
+					<c:when test="${product.rootCategory=='FineJewellery'}">
+						<div class="product-desc">
+							<span class="key-label">
+							 <c:forEach var="classification" items="${mapConfigurableAttributes}">
+							 <c:if test="${not empty classification.value }">
+   						 		<c:forEach var="classValue" items="${classification.value }">
+   						 			${classValue.key} &nbsp;&nbsp;${classValue.value}
+   						 			 </c:forEach>
+   						 			<!--  <a href="" class="more-link">More</a> -->
+							  </c:if> 
+								</c:forEach>
+							</span> 
+						</div>
+					</c:when>
+				</c:choose>
     
     
     <div class="price">
@@ -585,14 +592,14 @@ display:none;
     <%--for price breakup(TPR-3752) --%>
 
 	
-	
-	<div id = "showPricequick">
+	<!-- Price Breakup removed From Quickview -->
+	<!-- <div id = "showPricequick">
 	
 	<p id = "showquick" class="pricebreakup-link">Price Breakup</p>
 	
 	</div>
 	<ul id="showPriceBreakupquick" class="price-breakuplist clearfix" style="display:none"></ul>
-
+ -->
 	<%-- </c:if> --%>
 	
 	<%--for price breakup(TPR-3752) --%>
@@ -1149,8 +1156,4 @@ $(window).resize(function(){
 });
 
 /*add to wishlist st*/
-   
-    <!-- //TPR-3752 Jewel Heading Added -->
-var propQuick = '${mapConfigurableAttributes}';
-	propQuick =propQuick.replace(/[{}]/g, '');
 </script>

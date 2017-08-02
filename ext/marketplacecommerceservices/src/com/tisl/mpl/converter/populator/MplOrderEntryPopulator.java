@@ -36,7 +36,6 @@ import com.tisl.mpl.core.model.BrandModel;
 import com.tisl.mpl.core.model.MplZoneDeliveryModeValueModel;
 import com.tisl.mpl.facades.product.data.MarketplaceDeliveryModeData;
 import com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService;
-import com.tisl.mpl.model.SellerInformationModel;
 
 
 /**
@@ -144,8 +143,12 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			addPromotionValue(source, target);
 			addImeiDetails(source, target);
 			addSellerInformation(source, target);
-			populateSellerInfo(source, target);
+			//populateSellerInfo(source, target);
 			addDeliverySlots(source, target);
+			//TPR-1083 Start
+			addExchange(source, target);
+			//TPR-1083 End
+
 
 		}
 		target.setIsRefundable(source.isIsRefundable());
@@ -193,7 +196,20 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 		{
 			for (final SellerInformationData seller : target.getProduct().getSeller())
 			{
-				if (null != source.getSelectedUSSID() && null != seller.getUssid()
+				if (target.getProduct().getRootCategory().equalsIgnoreCase(FINEJEWELLERY))
+				{
+					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+							.getSelectedUSSID());
+					if (CollectionUtils.isNotEmpty(jewelleryInfo))
+					{
+						if (StringUtils.isNotEmpty(seller.getUssid()) && seller.getUssid().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+						{
+							target.setSelectedSellerInformation(seller);
+							break;
+						}
+					}
+				}
+				else if (StringUtils.isNotEmpty(source.getSelectedUSSID()) && StringUtils.isNotEmpty(seller.getUssid())
 						&& seller.getUssid().equalsIgnoreCase(source.getSelectedUSSID()))
 				{
 					target.setSelectedSellerInformation(seller);
@@ -284,6 +300,12 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 			{
 				target.setProdLevelPercentage(Integer.toString(source.getProdLevelPercentageDisc().intValue()));
 			}
+			//UF-260 starts here
+			if (null != source.getCartAdditionalDiscPerc() && source.getCartAdditionalDiscPerc().doubleValue() != 0.0)
+			{
+				target.setCartAdditionalDiscPerc(createPrice(source, source.getCartAdditionalDiscPerc()));
+			}
+			//UF-260 ends here
 			if (null != source.getTotalSalePrice() && source.getTotalSalePrice().doubleValue() != 0.0)
 			{
 				target.setTotalSalePrice(createPrice(source, source.getTotalSalePrice()));
@@ -385,6 +407,7 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 	}
 
 
+
 	//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
 	//	{
 	//		final ProductModel productModel = source.getProduct();
@@ -426,7 +449,8 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 
 
 
-	//	@Override
+
+
 	@Override
 	protected void addDeliveryMode(final AbstractOrderEntryModel orderEntry, final OrderEntryData entry)
 	{
@@ -511,44 +535,63 @@ public class MplOrderEntryPopulator extends OrderEntryPopulator
 				orderEntry.getOrder().getCurrency());
 	}
 
-	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+	/* SONAR FIX JEWELLERY */
+	//	private void populateSellerInfo(final AbstractOrderEntryModel source, final OrderEntryData target)
+	//	{
+	//		final ProductModel productModel = source.getProduct();
+	//		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
+	//
+	//		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+	//		{
+	//			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
+	//			{
+	//				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
+	//						.getSelectedUSSID());
+	//				if (CollectionUtils.isNotEmpty(jewelleryInfo))
+	//				{
+	//					if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
+	//					{
+	//						final SellerInformationData sellerInfoData = new SellerInformationData();
+	//						sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+	//						sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+	//						sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+	//						target.setSelectedSellerInformation(sellerInfoData);
+	//						break;
+	//					}
+	//				}
+	//			}
+	//
+	//			else
+	//			{
+	//				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
+	//				{
+	//					final SellerInformationData sellerInfoData = new SellerInformationData();
+	//					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
+	//					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
+	//					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
+	//					target.setSelectedSellerInformation(sellerInfoData);
+	//					break;
+	//				}
+	//			}
+	//		}
+	//	}
+
+	/**
+	 * @param source
+	 * @param target
+	 */
+	private void addExchange(final AbstractOrderEntryModel source, final OrderEntryData target)
 	{
-		final ProductModel productModel = source.getProduct();
-		final List<SellerInformationModel> sellerInfo = (List<SellerInformationModel>) productModel.getSellerInformationRelator();
-
-		for (final SellerInformationModel sellerInformationModel : sellerInfo)
+		if (StringUtils.isNotEmpty(source.getExchangeId()))
 		{
-			if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
-			{
-				final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(source
-						.getSelectedUSSID());
-				if (CollectionUtils.isNotEmpty(jewelleryInfo))
-				{
-					if (sellerInformationModel.getSellerArticleSKU().equals(jewelleryInfo.get(0).getPCMUSSID())) //added for fine jewellery
-					{
-						final SellerInformationData sellerInfoData = new SellerInformationData();
-						sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-						sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-						sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-						target.setSelectedSellerInformation(sellerInfoData);
-						break;
-					}
-				}
-			}
-
-			else
-			{
-				if (sellerInformationModel.getSellerArticleSKU().equals(source.getSelectedUSSID()))
-				{
-					final SellerInformationData sellerInfoData = new SellerInformationData();
-					sellerInfoData.setSellername(sellerInformationModel.getSellerName());
-					sellerInfoData.setUssid(sellerInformationModel.getSellerArticleSKU());
-					sellerInfoData.setSellerID(sellerInformationModel.getSellerID());
-					target.setSelectedSellerInformation(sellerInfoData);
-					break;
-				}
-			}
+			target.setExchangeApplied(source.getExchangeId());
 		}
+		else
+		{
+			target.setExchangeApplied("");
+		}
+
+
 	}
 
 	/**

@@ -22,6 +22,7 @@ import de.hybris.platform.order.AbstractOrderEntryTypeService;
 import de.hybris.platform.order.InvalidCartException;
 import de.hybris.platform.order.OrderService;
 import de.hybris.platform.order.strategies.ordercloning.CloneAbstractOrderStrategy;
+import de.hybris.platform.payment.model.PaymentTransactionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionModel;
 import de.hybris.platform.promotions.model.AbstractPromotionRestrictionModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
@@ -180,10 +181,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -290,9 +291,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * "Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 * 
-				 * 
-				 * 
+				 *
+				 *
+				 *
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -546,9 +547,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -562,10 +563,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -689,13 +690,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -796,13 +797,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @param subOrderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -955,9 +956,35 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 					else
 					{
 
+						//Added for jewellery
+						String ussid = "";
+
+						if (null != entryModelList.getProduct()
+								&& entryModelList.getProduct().getProductCategoryType()
+										.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+						{
+							final List<JewelleryInformationModel> jewelleryInfo = mplJewelleryService
+									.getJewelleryInfoByUssid(entryModelList.getSelectedUSSID());
+							if (CollectionUtils.isNotEmpty(jewelleryInfo))
+							{
+								ussid = jewelleryInfo.get(0).getPCMUSSID();
+							}
+
+						}
+						else
+						{
+							ussid = entryModelList.getSelectedUSSID();
+						}
+
+						/*
+						 * final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
+						 * .getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
+						 * entryModelList.getSelectedUSSID());
+						 */
+
 						final MplZoneDeliveryModeValueModel valueModel = deliveryCostService.getDeliveryCost(entryModelList
-								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(),
-								entryModelList.getSelectedUSSID());
+								.getMplDeliveryMode().getDeliveryMode().getCode(), sellerOrderList.getCurrency().getIsocode(), ussid);
+
 						if (entryModelList.getGiveAway() != null && !entryModelList.getGiveAway().booleanValue()
 								&& !entryModelList.getIsBOGOapplied().booleanValue())//TISPRDT-1226
 						{
@@ -1424,14 +1451,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @param orderList
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
@@ -1998,8 +2025,17 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 		//save once only
 		clonedSubOrder.setType(MarketplacecommerceservicesConstants.SUBORDER);
 		clonedSubOrder.setParentReference(orderModel);
+		//For child order payment transaction save issue
+		final List<PaymentTransactionModel> paymentTransactionList = clonedSubOrder.getPaymentTransactions();
+		clonedSubOrder.setPaymentTransactions(null);
 		getModelService().save(clonedSubOrder);
+		for (final PaymentTransactionModel paymentTransaction : paymentTransactionList)
+		{
+			paymentTransaction.setOrder(clonedSubOrder);
+		}
 
+		getModelService().saveAll(paymentTransactionList);
+		clonedSubOrder.setPaymentTransactions(paymentTransactionList);
 		LOG.debug("Sub Order Saved in DB:- Suborder ID:- " + clonedSubOrder.getCode());
 		if (CollectionUtils.isNotEmpty(clonedSubOrder.getEntries()))
 		{

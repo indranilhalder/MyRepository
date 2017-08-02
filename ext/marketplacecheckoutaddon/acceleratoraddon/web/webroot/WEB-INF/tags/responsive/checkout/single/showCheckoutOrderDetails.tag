@@ -22,8 +22,8 @@
 
 <div class="right-block billing  checkout-list-right">
 	<div class="checkout-order-summary">
-	<h3>Final payable amount</h3>
-		<span id="oredrTotalSpanId">
+	<h3><spring:theme code="checkout.single.payment.payableAmount"/></h3>
+		<span id="orderTotalSpanId">
 		<%-- <single-checkout:showOrderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/> --%>
 			<multi-checkout:orderTotals cartData="${cartData}" showTaxEstimate="${showTaxEstimate}" showTax="${showTax}" isCart="${isCart}" orderData="${orderData}"/>
 		</span>

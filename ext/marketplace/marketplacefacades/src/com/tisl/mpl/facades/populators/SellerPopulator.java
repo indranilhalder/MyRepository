@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -207,9 +208,11 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 						{
 							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
 									buyBoxService.buyboxPriceForJewellery(sellerInformationModel.getSellerArticleSKU()));
-
-							final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
-							sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm, sellerArticleSKU));
+							if (CollectionUtils.isNotEmpty(buyboxModelListAll))
+							{
+								final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
+								sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm, sellerArticleSKU));
+							}
 						}
 						//end
 

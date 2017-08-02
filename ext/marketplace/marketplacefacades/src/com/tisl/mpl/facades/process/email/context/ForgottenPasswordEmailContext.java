@@ -14,13 +14,16 @@
 package com.tisl.mpl.facades.process.email.context;
 
 import de.hybris.platform.acceleratorservices.model.cms2.pages.EmailPageModel;
+import de.hybris.platform.commercefacades.user.data.CustomerData;
 import de.hybris.platform.commerceservices.model.process.ForgottenPasswordProcessModel;
 import de.hybris.platform.commerceservices.model.process.StoreFrontCustomerProcessModel;
+import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -35,6 +38,9 @@ public class ForgottenPasswordEmailContext extends CustomerEmailContext
 
 	private static final String CUSTOMER_CARE_NUMBER = "customerCareNumber";
 	private static final String CUSTOMER_CARE_EMAIL = "customerCareEmail";
+	//TISTE-197 starts
+	private CustomerData customerData;
+	//TISTE-197 ends
 
 	@Autowired
 	private ConfigurationService configurationService;
@@ -70,6 +76,15 @@ public class ForgottenPasswordEmailContext extends CustomerEmailContext
 	public void init(final StoreFrontCustomerProcessModel storeFrontCustomerProcessModel, final EmailPageModel emailPageModel)
 	{
 		super.init(storeFrontCustomerProcessModel, emailPageModel);
+		//TISTE-197 starts
+		customerData = getCustomerConverter().convert(getCustomer(storeFrontCustomerProcessModel));
+		final CustomerModel customer = getCustomer(storeFrontCustomerProcessModel);
+		final String displayName = customer.getFirstName();
+		if (displayName != null && StringUtils.isNotEmpty(displayName))
+		{
+			put(DISPLAY_NAME, displayName);
+		}
+		//TISTE-197 ends
 		if (storeFrontCustomerProcessModel instanceof ForgottenPasswordProcessModel)
 		{
 			setToken(((ForgottenPasswordProcessModel) storeFrontCustomerProcessModel).getToken());

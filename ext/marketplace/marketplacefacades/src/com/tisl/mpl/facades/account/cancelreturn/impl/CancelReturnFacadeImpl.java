@@ -123,7 +123,6 @@ import com.tisl.mpl.marketplacecommerceservices.service.MplOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplProcessOrderService;
 import com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService;
 import com.tisl.mpl.marketplacecommerceservices.service.OrderModelService;
-import com.tisl.mpl.marketplacecommerceservices.service.impl.DefaultMplMWalletRefundService;
 import com.tisl.mpl.model.CRMTicketDetailModel;
 import com.tisl.mpl.model.SellerInformationModel;
 import com.tisl.mpl.ordercancel.MplOrderCancelEntry;
@@ -241,9 +240,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	private MPLReturnService mplReturnService;
 
 	private OrderCancelRecordsHandler orderCancelRecordsHandler;
-
-	@Autowired
-	private DefaultMplMWalletRefundService walletRefundService;
+	//SONAR FIX JEWELLERY
+	//	@Autowired
+	//	private DefaultMplMWalletRefundService walletRefundService;
 
 	@Resource(name = "mplProcessOrderService")
 	MplProcessOrderService mplProcessOrderService;
@@ -1326,9 +1325,9 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					sendTicketLineItemData.setReturnReasonCode(reasonCode);
 					sendTicketRequestData.setRefundType(refundType);
 					//TPR-4134
-					if (null != returnInfoData.getReverseSealForJwllry())
+					if (null != returnInfoData.getReverseSealLostflag())
 					{
-						sendTicketLineItemData.setReverseSealForJwllry(returnInfoData.getReverseSealForJwllry());
+						sendTicketLineItemData.setReverseSealLostflag(returnInfoData.getReverseSealLostflag());
 					}
 
 
@@ -1555,7 +1554,7 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 					//TPR-4134
 					if (StringUtils.isNotEmpty(revSealForJwlry))
 					{
-						sendTicketLineItemData.setReverseSealForJwllry(revSealForJwlry);
+						sendTicketLineItemData.setReverseSealLostflag(revSealForJwlry);
 
 					}
 					boolean returnLogisticsCheck = true; //Start
@@ -2917,151 +2916,152 @@ public class CancelReturnFacadeImpl implements CancelReturnFacade
 	 * @param subOrderModel
 	 * @param orderRequestRecord
 	 */
-	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
-			final String ticketTypeCode)
-	{
-		PaymentTransactionModel paymentTransactionModel = null;
-		if (orderRequestRecord.getRefundableAmount() != null
-				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
-		{
-			//TISSIT-1801
-			final String uniqueRequestId = walletRefundService.getRefundUniqueRequestId();
-			try
-			{
-				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
-
-				if ("C".equalsIgnoreCase(ticketTypeCode))
-				{
-					LOG.debug(" ############### MRupee doRefund  Method for Cancel order *********************************** "
-							+ ticketTypeCode);
-					paymentTransactionModel = walletRefundService.doRefund(subOrderModel, orderRequestRecord.getRefundableAmount()
-							.doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
-				}
-				if (null != paymentTransactionModel)
-				{
-					LOG.debug(" ############### MRupee doRefund  paymentTransactionModel not null  *************");
-					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
-
-					if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
-					{
-						for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
-								.getOrderEntriesModificationEntries())
-						{
-							final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
-							ConsignmentStatus newStatus = null;
-							if (orderEntry != null)
-							{
-								double refundAmount = 0D;
-								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
-										: NumberUtils.DOUBLE_ZERO;
-								// Added in r2.3 START
-								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
-										.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
-								// Added in r2.3 END
-
-								//refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
-								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue()
-										+ scheduleDeliveryCost.doubleValue();
-
-								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
-								List<PaymentTransactionEntryModel> entryList = new ArrayList<PaymentTransactionEntryModel>();
-								PaymentTransactionEntryModel entryValue = null;
-								entryList = paymentTransactionModel.getEntries();
-								if (CollectionUtils.isNotEmpty(entryList))
-								{
-									entryValue = entryList.get(entryList.size() - 1);
-
-									if (null != entryValue)
-									{
-										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-												MarketplacecommerceservicesConstants.SUCCESS))
-										{
-											LOG.debug(" ########## ConsignmentStatus for MRupee cancel order ********************************"
-													+ paymentTransactionModel.getStatus());
-
-											newStatus = ConsignmentStatus.ORDER_CANCELLED;
-										}
-									}
-								}
-								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
-										MarketplacecommerceservicesConstants.FAILURE))
-								{
-									LOG.debug(" ########## ConsignmentStatus for MRupee refund Inprogress ******************************"
-											+ paymentTransactionModel.getStatus());
-
-									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
-								}
-								else
-								{
-									LOG.debug(" ########## ConsignmentStatus for MRupee refund initiated ******************************"
-											+ paymentTransactionModel.getStatus());
-
-									newStatus = ConsignmentStatus.REFUND_INITIATED;
-								}
-								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
-								orderEntry.setCurrDelCharge(new Double(0D));
-
-								// Added in R2.3 START
-								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
-								orderEntry.setScheduledDeliveryCharge(new Double(0D));
-								// Added in R2.3 END
-
-								modelService.save(orderEntry);
-								LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from Mrupee "
-										+ newStatus.getCode());
-
-								LOG.debug(" ########## Calling Oms refund method at the time of Mrupee order*************" + newStatus);
-								//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-								//										Double.valueOf(refundAmount), newStatus);
-
-								//R2.3 changes
-
-								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
-										Double.valueOf(refundAmount), newStatus, null);
-							}
-						}
-					}
-				}
-				else
-				{
-					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
-					if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
-					{
-						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-								uniqueRequestId);
-					}
-				}
-			}
-			catch (final EtailNonBusinessExceptions e)
-			{
-				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
-				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-						uniqueRequestId);
-			}
-			catch (final Exception e)
-			{
-				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
-				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
-						uniqueRequestId);
-			}
-		}
-		else
-
-		{// Case of COD.
-
-			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
-			final double refundedAmount = 0D;
-			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord.getOriginalVersion()
-					.getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(refundedAmount),
-					PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID.randomUUID().toString());
-			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
-					paymentTransactionModel);
-		}
-		orderRequestRecord.setStatus(OrderModificationEntryStatus.SUCCESSFULL);
-		orderRequestRecord.setTransactionCode(paymentTransactionModel != null ? paymentTransactionModel.getCode()
-				: MarketplacecommerceservicesConstants.EMPTY);
-		modelService.save(orderRequestRecord);
-	}
+	/* SONAR FIX JEWELLERY */
+	//	private void initiateRefundMrupee(final OrderModel subOrderModel, final OrderCancelRecordEntryModel orderRequestRecord,
+	//			final String ticketTypeCode)
+	//	{
+	//		PaymentTransactionModel paymentTransactionModel = null;
+	//		if (orderRequestRecord.getRefundableAmount() != null
+	//				&& orderRequestRecord.getRefundableAmount().doubleValue() > NumberUtils.DOUBLE_ZERO.doubleValue())
+	//		{
+	//			//TISSIT-1801
+	//			final String uniqueRequestId = walletRefundService.getRefundUniqueRequestId();
+	//			try
+	//			{
+	//				LOG.debug("****** initiateRefund Step 1 >> Begin >> Calling for prepaid for " + orderRequestRecord.getCode());
+	//
+	//				if ("C".equalsIgnoreCase(ticketTypeCode))
+	//				{
+	//					LOG.debug(" ############### MRupee doRefund  Method for Cancel order *********************************** "
+	//							+ ticketTypeCode);
+	//					paymentTransactionModel = walletRefundService.doRefund(subOrderModel, orderRequestRecord.getRefundableAmount()
+	//							.doubleValue(), PaymentTransactionType.CANCEL, uniqueRequestId);
+	//				}
+	//				if (null != paymentTransactionModel)
+	//				{
+	//					LOG.debug(" ############### MRupee doRefund  paymentTransactionModel not null  *************");
+	//					mplJusPayRefundService.attachPaymentTransactionModel(subOrderModel, paymentTransactionModel);
+	//
+	//					if (CollectionUtils.isNotEmpty(orderRequestRecord.getOrderEntriesModificationEntries()))
+	//					{
+	//						for (final OrderEntryModificationRecordEntryModel modificationEntry : orderRequestRecord
+	//								.getOrderEntriesModificationEntries())
+	//						{
+	//							final OrderEntryModel orderEntry = modificationEntry.getOrderEntry();
+	//							ConsignmentStatus newStatus = null;
+	//							if (orderEntry != null)
+	//							{
+	//								double refundAmount = 0D;
+	//								final Double deliveryCost = orderEntry.getCurrDelCharge() != null ? orderEntry.getCurrDelCharge()
+	//										: NumberUtils.DOUBLE_ZERO;
+	//								// Added in r2.3 START
+	//								final Double scheduleDeliveryCost = orderEntry.getScheduledDeliveryCharge() != null ? orderEntry
+	//										.getScheduledDeliveryCharge() : NumberUtils.DOUBLE_ZERO;
+	//								// Added in r2.3 END
+	//
+	//								//refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue();
+	//								refundAmount = orderEntry.getNetAmountAfterAllDisc().doubleValue() + deliveryCost.doubleValue()
+	//										+ scheduleDeliveryCost.doubleValue();
+	//
+	//								refundAmount = mplJusPayRefundService.validateRefundAmount(refundAmount, subOrderModel);
+	//								List<PaymentTransactionEntryModel> entryList = new ArrayList<PaymentTransactionEntryModel>();
+	//								PaymentTransactionEntryModel entryValue = null;
+	//								entryList = paymentTransactionModel.getEntries();
+	//								if (CollectionUtils.isNotEmpty(entryList))
+	//								{
+	//									entryValue = entryList.get(entryList.size() - 1);
+	//
+	//									if (null != entryValue)
+	//									{
+	//										if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+	//												MarketplacecommerceservicesConstants.SUCCESS))
+	//										{
+	//											LOG.debug(" ########## ConsignmentStatus for MRupee cancel order ********************************"
+	//													+ paymentTransactionModel.getStatus());
+	//
+	//											newStatus = ConsignmentStatus.ORDER_CANCELLED;
+	//										}
+	//									}
+	//								}
+	//								else if (StringUtils.equalsIgnoreCase(paymentTransactionModel.getStatus(),
+	//										MarketplacecommerceservicesConstants.FAILURE))
+	//								{
+	//									LOG.debug(" ########## ConsignmentStatus for MRupee refund Inprogress ******************************"
+	//											+ paymentTransactionModel.getStatus());
+	//
+	//									newStatus = ConsignmentStatus.REFUND_IN_PROGRESS;
+	//								}
+	//								else
+	//								{
+	//									LOG.debug(" ########## ConsignmentStatus for MRupee refund initiated ******************************"
+	//											+ paymentTransactionModel.getStatus());
+	//
+	//									newStatus = ConsignmentStatus.REFUND_INITIATED;
+	//								}
+	//								orderEntry.setRefundedDeliveryChargeAmt(deliveryCost);
+	//								orderEntry.setCurrDelCharge(new Double(0D));
+	//
+	//								// Added in R2.3 START
+	//								orderEntry.setRefundedScheduleDeliveryChargeAmt(scheduleDeliveryCost);
+	//								orderEntry.setScheduledDeliveryCharge(new Double(0D));
+	//								// Added in R2.3 END
+	//
+	//								modelService.save(orderEntry);
+	//								LOG.debug("****** initiateRefund : Step 3  >>Payment transaction mode is not null >> Calling OMS with status as received from Mrupee "
+	//										+ newStatus.getCode());
+	//
+	//								LOG.debug(" ########## Calling Oms refund method at the time of Mrupee order*************" + newStatus);
+	//								//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+	//								//										Double.valueOf(refundAmount), newStatus);
+	//
+	//								//R2.3 changes
+	//
+	//								mplJusPayRefundService.makeRefundOMSCall(orderEntry, paymentTransactionModel,
+	//										Double.valueOf(refundAmount), newStatus, null);
+	//							}
+	//						}
+	//					}
+	//				}
+	//				else
+	//				{
+	//					LOG.debug("****** initiateRefund >>Payment transaction mode is null");
+	//					if (PaymentTransactionType.CANCEL.toString().equalsIgnoreCase("CANCEL"))
+	//					{
+	//						walletRefundService.createCancelRefundPgErrorEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+	//								uniqueRequestId);
+	//					}
+	//				}
+	//			}
+	//			catch (final EtailNonBusinessExceptions e)
+	//			{
+	//				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+	//				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+	//						uniqueRequestId);
+	//			}
+	//			catch (final Exception e)
+	//			{
+	//				LOG.error(">>>> *****************initiateRefund*********** Exception occured " + e.getMessage(), e);
+	//				walletRefundService.createCancelRefundExceptionEntry(orderRequestRecord, PaymentTransactionType.CANCEL,
+	//						uniqueRequestId);
+	//			}
+	//		}
+	//		else
+	//
+	//		{// Case of COD.
+	//
+	//			LOG.debug("****** initiateRefund >> Begin >> OMS will not be called for COD  ");
+	//			final double refundedAmount = 0D;
+	//			paymentTransactionModel = mplJusPayRefundService.createPaymentTransactionModel(orderRequestRecord.getOriginalVersion()
+	//					.getOrder(), MarketplacecommerceservicesConstants.FAILURE_FLAG, new Double(refundedAmount),
+	//					PaymentTransactionType.CANCEL, MarketplacecommerceservicesConstants.FAILURE_FLAG, UUID.randomUUID().toString());
+	//			mplJusPayRefundService.attachPaymentTransactionModel(orderRequestRecord.getOriginalVersion().getOrder(),
+	//					paymentTransactionModel);
+	//		}
+	//		orderRequestRecord.setStatus(OrderModificationEntryStatus.SUCCESSFULL);
+	//		orderRequestRecord.setTransactionCode(paymentTransactionModel != null ? paymentTransactionModel.getCode()
+	//				: MarketplacecommerceservicesConstants.EMPTY);
+	//		modelService.save(orderRequestRecord);
+	//	}
 
 	/**
 	 * @author TECHOUTS

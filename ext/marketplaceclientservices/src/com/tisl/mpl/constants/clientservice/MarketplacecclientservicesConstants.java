@@ -11,6 +11,9 @@ package com.tisl.mpl.constants.clientservice;
 { "PMD" })
 public class MarketplacecclientservicesConstants
 {
+
+
+
 	public static final String DMY_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String MALE = "Male";
 	public static final String FEMALE = "Female";
@@ -175,6 +178,9 @@ public class MarketplacecclientservicesConstants
 	public static final String MEDIA = "mediaItems";
 	public static final String CLOTHING = "Clothing";
 	public static final String FOOTWEAR = "Footwear";
+	//Added for jewellery
+	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
 	public static final String FIT = "Fit";
 	public static final String EASE_OF_USE = "Ease of use";
 	public static final String VALUE_FOR_MONEY = "Value for Money";

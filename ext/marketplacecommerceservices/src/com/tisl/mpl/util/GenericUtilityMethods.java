@@ -749,11 +749,11 @@ public class GenericUtilityMethods
 
 	/*
 	 * @description Setting DeliveryAddress
-	 *
+	 * 
 	 * @param orderDetail
-	 *
+	 * 
 	 * @param type (1-Billing, 2-Shipping)
-	 *
+	 * 
 	 * @return BillingAddressWsDTO
 	 */
 	public static BillingAddressWsDTO setAddress(final OrderData orderDetail, final int type)
@@ -1146,7 +1146,10 @@ public class GenericUtilityMethods
 						if (null != entry.getBrandName())
 						{
 
-							brand = appendQuote(entry.getBrandName());
+							//brand = appendQuote(entry.getBrandName());
+							brand = appendQuote(entry.getBrandName().replaceAll("[^\\w\\s]", "").replaceAll(" ", "_").replace("__", "_")
+									.toLowerCase());
+
 
 						}
 
@@ -1650,7 +1653,7 @@ public class GenericUtilityMethods
 	 * @param cartModel
 	 * @param priceData
 	 */
-	public static void getCartPriceDetails(final Model model, final AbstractOrderModel cartModel,
+	public static void getCartPriceDetails(final Model model, final AbstractOrderModel abstractOrderModel,
 			final MplPromoPriceData responseData)
 	{
 		final PriceDataFactory priceDataFactory = Registry.getApplicationContext().getBean("priceDataFactory",
@@ -1661,14 +1664,17 @@ public class GenericUtilityMethods
 		double cartEntryNetSellPrice = 0.0D;
 		final DecimalFormat df = new DecimalFormat("#.##");
 		double totalDeliveryCharge = 0;
+		Long cartEntryMrp = Long.valueOf(0);
 
-		if (cartModel.getEntries() != null && !cartModel.getEntries().isEmpty())
+		if (CollectionUtils.isNotEmpty(abstractOrderModel.getEntries()))
 		{
-			for (final AbstractOrderEntryModel entry : cartModel.getEntries())
+			for (final AbstractOrderEntryModel entry : abstractOrderModel.getEntries())
 			{
 				if (!entry.getGiveAway().booleanValue())
 				{
-					final Long cartEntryMrp = Long.valueOf((entry.getMrp().longValue()) * (entry.getQuantity().longValue()));
+					cartEntryMrp = Long.valueOf((null == entry.getMrp() ? 0l : entry.getMrp().longValue())
+							* (null == entry.getQuantity() ? 0l : entry.getQuantity().longValue()));
+
 					cartTotalMrp = Long.valueOf(cartTotalMrp.longValue() + cartEntryMrp.longValue());
 
 					if (null != entry.getNetAmountAfterAllDisc() && entry.getNetAmountAfterAllDisc().doubleValue() > 0)
@@ -1677,14 +1683,16 @@ public class GenericUtilityMethods
 					}
 					else
 					{
-						cartEntryNetSellPrice = Double.parseDouble(df.format((entry.getBasePrice().doubleValue())
-								* (entry.getQuantity().doubleValue())));
+						cartEntryNetSellPrice = Double
+								.parseDouble(df.format((null == entry.getBasePrice() ? 0.0d : entry.getBasePrice().doubleValue())
+										* (null == entry.getQuantity() ? 0.0d : entry.getQuantity().doubleValue())));
 					}
 					cartTotalNetSelPrice = cartTotalNetSelPrice + cartEntryNetSellPrice;
 
 					couponDiscount += (null == entry.getCouponValue() ? 0.0d : entry.getCouponValue().doubleValue());
 
-					totalDeliveryCharge += (entry.getCurrDelCharge().doubleValue() + entry.getScheduledDeliveryCharge().doubleValue());
+					totalDeliveryCharge += ((null == entry.getCurrDelCharge() ? 0.0d : entry.getCurrDelCharge().doubleValue()) + (null == entry
+							.getScheduledDeliveryCharge() ? 0.0d : entry.getScheduledDeliveryCharge().doubleValue()));
 
 				}
 			}
@@ -1694,7 +1702,7 @@ public class GenericUtilityMethods
 				MarketplacecommerceservicesConstants.INR);
 
 		//if (!(cartModel instanceof OrderModel) && (OrderStatus.PAYMENT_PENDING.equals(cartModel.getStatus())))
-		if (cartModel instanceof CartModel)
+		if (abstractOrderModel instanceof CartModel)
 		{
 			couponDiscount = 0.0D;
 		}
