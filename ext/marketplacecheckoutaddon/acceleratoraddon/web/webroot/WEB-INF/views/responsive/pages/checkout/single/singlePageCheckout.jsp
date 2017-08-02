@@ -317,6 +317,7 @@ span#selectSnackbar {
     line-height: 2.7;
     font-weight: bold;
     letter-spacing: 0.5px;
+    cursor: pointer;
 }
 #mobileSnackbar h1 {
     float: left;
