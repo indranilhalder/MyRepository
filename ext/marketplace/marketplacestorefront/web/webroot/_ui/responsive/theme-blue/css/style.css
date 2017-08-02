@@ -76264,7 +76264,10 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 }		
 .product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle,
 .product-info .product-detail.FashionJewellery .product-desc .key-label #jwlryTitle{		
-	float: left;		
+	float: left;
+	width: 10%;
+    overflow: hidden;
+    white-space: nowrap;		
 }		
 .accordtionTataCliq .reasonType.col-md-12,		
 .accordtionTataCliq .accContents .selectReason.selectRefund.col-md-12.blackColor{		
