@@ -97,6 +97,7 @@
 							<c:set var="textMessage" value="Hey! I loved the shopping experience on Tata CLiQ and I recommend that you try it as well."></c:set>
                        	</c:if>
                         <label class="invite-text-lbl label-float"><spring:theme code="text.InviteFriends.friends.email" /></label>	
+                        </br>
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()" placeholder='<spring:theme code="text.InviteFriends.SeparateWithCommas"/>'/>
 						<%-- <span><spring:theme code="text.InviteFriends.SeparateWithCommas"/></span> --%>
 						<div class="errorMessage"><div id="errfemail"></div></div>

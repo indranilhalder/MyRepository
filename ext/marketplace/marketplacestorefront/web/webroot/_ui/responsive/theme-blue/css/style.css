@@ -71468,6 +71468,9 @@ body #account-invite .right-account>div.social-invites .social .links a.tw {
 .social a {
     margin: 0 ! important;
 }
+#friendsEmail{
+	width:100% !important;
+}
 @media (max-width: 768px){
 body #account-invite .right-account>div.social-invites,
 body #account-invite .right-account>div.personal-invites {
