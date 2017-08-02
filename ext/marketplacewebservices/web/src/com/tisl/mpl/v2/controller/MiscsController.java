@@ -59,7 +59,6 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.product.PincodeModel;
 import de.hybris.platform.core.model.user.UserModel;
 import de.hybris.platform.enumeration.EnumerationService;
-import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.promotions.model.PromotionResultModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -130,7 +129,6 @@ import com.tisl.mpl.constants.MarketplacewebservicesConstants;
 import com.tisl.mpl.core.constants.MarketplaceCoreConstants;
 import com.tisl.mpl.core.enums.FeedbackCategory;
 import com.tisl.mpl.core.model.MplEnhancedSearchBoxComponentModel;
-import com.tisl.mpl.core.util.DateUtilHelper;
 import com.tisl.mpl.data.CODSelfShipData;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -178,10 +176,10 @@ import com.tisl.mpl.wsdto.HomescreenListData;
 import com.tisl.mpl.wsdto.ListPinCodeServiceData;
 import com.tisl.mpl.wsdto.MplAutoCompleteResultWsData;
 import com.tisl.mpl.wsdto.NewsletterWsDTO;
-import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestDTO;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnCrmRequestList;
 import com.tisl.mpl.wsdto.OneTouchCancelReturnDTO;
+import com.tisl.mpl.wsdto.OrderInfoWsDTO;
 import com.tisl.mpl.wsdto.PaymentInfoWsDTO;
 import com.tisl.mpl.wsdto.PinWsDto;
 import com.tisl.mpl.wsdto.ProductSearchPageWsDto;
@@ -227,13 +225,13 @@ public class MiscsController extends BaseController
 	private CustomerFacade customerFacade;
 	/*
 	 * @Resource private ModelService modelService;
-	 *
+	 * 
 	 * @Autowired private ForgetPasswordFacade forgetPasswordFacade;
-	 *
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
-	 *
+	 * 
 	 * @Autowired private WishlistFacade wishlistFacade;
-	 *
+	 * 
 	 * @Autowired private MplSellerMasterService mplSellerInformationService;
 	 */
 	@Autowired
@@ -260,7 +258,7 @@ public class MiscsController extends BaseController
 	private FieldSetBuilder fieldSetBuilder;
 	/*
 	 * @Resource(name = "i18NFacade") private I18NFacade i18NFacade;
-	 *
+	 * 
 	 * @Autowired private MplCommerceCartServiceImpl mplCommerceCartService;
 	 */
 	@Autowired
@@ -296,15 +294,15 @@ public class MiscsController extends BaseController
 	 * @Resource(name = "mplPaymentFacade") private MplPaymentFacade mplPaymentFacade; private static final String
 	 * APPLICATION_TYPE = "application/json"; public static final String EMAIL_REGEX =
 	 * "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
-	 *
 	 * 
 	 * 
 	 * 
-	 *
-	 *
 	 * 
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @return the configurationService
 	 */
 	@Autowired
@@ -353,9 +351,11 @@ public class MiscsController extends BaseController
 	private Converter<OrderModel, OrderData> orderConverter;
 	@Resource(name = "cancelReturnFacade")
 	private CancelReturnFacade cancelReturnFacade;
-	@Autowired
-	private DateUtilHelper dateUtilHelper;
-	
+	/* sonar fix */
+	/*
+	 * @Autowired private DateUtilHelper dateUtilHelper;
+	 */
+
 
 
 	/*
@@ -727,9 +727,9 @@ public class MiscsController extends BaseController
 
 	/*
 	 * restriction set up interface to save the data comming from seller portal
-	 *
+	 * 
 	 * @param restrictionXML
-	 *
+	 * 
 	 * @return void
 	 */
 	@RequestMapping(value = "/{baseSiteId}/miscs/restrictionServer", method = RequestMethod.POST)
@@ -1455,7 +1455,7 @@ public class MiscsController extends BaseController
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel MplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 * 
+	 *
 	 * if (null != MplZoneDeliveryModeValueModel) { if (null != MplZoneDeliveryModeValueModel.getValue()) { final
 	 * PriceData priceData = formPriceData(MplZoneDeliveryModeValueModel.getValue()); if (null != priceData) {
 	 * deliveryModeData.setDeliveryCost(priceData); } } if (null != MplZoneDeliveryModeValueModel.getDeliveryMode() &&
@@ -1468,11 +1468,11 @@ public class MiscsController extends BaseController
 	 * MplZoneDeliveryModeValueModel.getDeliveryMode().getName()) {
 	 * deliveryModeData.setName(MplZoneDeliveryModeValueModel.getDeliveryMode().getName()); } if (null != ussid) {
 	 * deliveryModeData.setSellerArticleSKU(ussid); }
-	 * 
+	 *
 	 * } return deliveryModeData; } =======
-	 * 
+	 *
 	 * @param code
-	 * 
+	 *
 	 * @return >>>>>>> origin/GOLDEN_PROD_SUPPORT_07122016
 	 */
 	@RequestMapping(value = "/{baseSiteId}/checkBrandOrCategory", method = RequestMethod.GET)
@@ -1950,6 +1950,7 @@ public class MiscsController extends BaseController
 	{
 		this.configurationService = configurationService;
 	}
+
 	//TPR-5225 ends
 	/**
 	 * Method: One touch Cancel and return--TPR-1345
@@ -2087,7 +2088,7 @@ public class MiscsController extends BaseController
 										LOG.debug("===Promotion Type of BuyAandBgetC-->" + isBuyAandBgetC);
 									}
 								}
-								if (isBuyAandBgetC == true)
+								if (isBuyAandBgetC)
 								{
 									LOG.debug("===Inside BuyAandBgetC check====");
 
@@ -2131,7 +2132,7 @@ public class MiscsController extends BaseController
 													break checkloop;
 												}
 											}
-											else if (deliverymodeValidator == false)
+											else if (!deliverymodeValidator)
 											{
 												if (!(con.getConsignment().getStatus().getCode())
 														.equalsIgnoreCase(MarketplacewebservicesConstants.ORDER_COLLECTED_STATUS.toString()))
@@ -2143,7 +2144,7 @@ public class MiscsController extends BaseController
 											}
 										}
 									}
-									if (deliveryCheckFlag == false)
+									if (!deliveryCheckFlag)
 									{
 										LOG.debug("===Inside deliveryCheckFlag loop====");
 										for (final AbstractOrderEntryModel orderEntry2 : orderEntriesModel)
@@ -2155,10 +2156,10 @@ public class MiscsController extends BaseController
 												{
 													output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 													output.setTransactionId(orderEntry2.getTransactionID());
-													output.setServiceability(serviceabilty == true ? "S" : "F");
+													output.setServiceability(serviceabilty ? "S" : "F");
 													//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
 													output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
-													output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+													output.setRemarks(serviceabilty ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
 															: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 													outputList.add(output);
 												}
@@ -2169,9 +2170,9 @@ public class MiscsController extends BaseController
 													consignmentStatus = "All the products in promotion are not in delivered status";
 													output.setTransactionId(orderEntry2.getTransactionID());
 													output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
-													output.setServiceability(serviceabilty == true ? "S" : "F");
+													output.setServiceability(serviceabilty ? "S" : "F");
 													//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
-													output.setRemarks(serviceabilty == true ? consignmentStatus
+													output.setRemarks(serviceabilty ? consignmentStatus
 															: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 													outputList.add(output);
 												}
@@ -2400,7 +2401,7 @@ public class MiscsController extends BaseController
 										output.setServiceability(serviceabilty == true ? "S" : "F");
 										//output.setServiceability(MarketplacewebservicesConstants.VALID_FLAG_S);
 										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_S);
-										output.setRemarks(serviceabilty == true ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
+										output.setRemarks(serviceabilty ? MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED_CSCP
 												: MarketplacewebservicesConstants.PINCODE_NOT_SERVICEABLE);
 										outputList.add(output);
 									}
@@ -2408,7 +2409,7 @@ public class MiscsController extends BaseController
 									{
 										output.setOrderRefNum(oneTouchCrmObj.getOrderRefNum());
 										output.setTransactionId(abstractOrderEntryModel.getTransactionID());
-										output.setServiceability(serviceabilty == true ? "S" : "F");
+										output.setServiceability(serviceabilty ? "S" : "F");
 										output.setValidFlag(MarketplacewebservicesConstants.VALID_FLAG_F);
 										output.setRemarks(MarketplacewebservicesConstants.RETURN_ALREADY_INITIATED);
 										outputList.add(output);
