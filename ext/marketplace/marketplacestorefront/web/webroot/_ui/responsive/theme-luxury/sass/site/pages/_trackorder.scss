@@ -50,9 +50,23 @@
  .account .wrapper .right-account h2{
  	font-size:14px;
  }
-.account .right-account .view-more-consignment-data table td{
-  line-height: 18px;
+.account .right-account .view-more-consignment-data table{
+    line-height: 18px;
+    margin: 0px;
+    background: #f7f6f6;
+    border: 1px solid #ccc; 
 }
+.account .right-account .view-more-consignment-data table td{
+    line-height: 18px;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+.account .right-account .view-more-consignment-data table tr:nth-child(2n+1){
+    td{
+        background: #fff;
+    }    
+}
+
 
 #anchor{
 	width:50%;
