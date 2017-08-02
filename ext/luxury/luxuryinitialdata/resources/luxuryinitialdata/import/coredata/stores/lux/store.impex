@@ -44,12 +44,12 @@ UPDATE BaseStore;uid[unique=true];CodUpperLimit;CodLowerLimit;juspayWebHookTAT;j
 ;lux;50000;2000;10;6;15;100000;0
 
 INSERT_UPDATE PaymentType;mode;isAvailable;modeId[unique=true];baseStore(uid)[default=$storeUid]
-;Credit Card;true;lux1
-;Debit Card;true;lux2
-;Netbanking;true;lux3
-;EMI;true;lux4
-;COD;true;lux5
-;Cheque;false;lux6
+;Credit Card;true;luxCreditCard
+;Debit Card;true;luxDebitCard
+;Netbanking;true;luxNetBanking
+;EMI;true;luxEMI
+;COD;true;luxCOD
+;Cheque;false;luxCheque
 
 INSERT_UPDATE Bank;bankName;bankCode[unique=true];baseStore(uid)
 ;HDFC Bank;HDFB;
