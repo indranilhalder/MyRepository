@@ -175,7 +175,12 @@ function getProductSetDataCustomSku() {
 	              		var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
 	                      if (query) {
 	                          ajaxUrl = ajaxUrl + query;
-	                          nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                        //  nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                          if(query == "?q="){
+	                        		nextPaginatedAjaxUrl = nextPaginatedAjaxUrl ;
+	                        	}else{
+	                        		nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
+	                        	}
 	                      }
 	                      window.history.replaceState({}, "", nextPaginatedAjaxUrl);
 	              	}
@@ -194,7 +199,9 @@ function getProductSetDataCustomSku() {
 
 $(document).ready(function() {
     //lazy image load initialization
-    $("img.lazy").lazyload();	
+	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+	    $("img.lazy").lazyload();	
+	}
     //set the total no of pages 
     totalNoOfPages = $('input[name=noOfPages]').val();
     totalNoOfPages == '' ? 0 : parseInt(totalNoOfPages);
@@ -368,9 +375,9 @@ $(document).ready(function() {
 });
 //UF-409 -> added for ajax complete events to auto lazy load
 $( document ).ajaxComplete(function( event, xhr, settings ) {
-	//if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
+	if($('#pageType').val() == "productsearch" || $('#pageType').val() == "product"){
 		$("img.lazy").lazyload();
-	//}
+	}
 });
 function findGetParameter(parameterName) {
     var result = null,

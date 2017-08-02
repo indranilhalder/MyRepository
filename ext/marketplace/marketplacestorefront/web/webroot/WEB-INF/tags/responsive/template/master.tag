@@ -260,7 +260,9 @@
 	 
 	
 	<%-- CSS Files Are Loaded First as they can be downloaded in parallel --%>
+	<link id="mincss">
 	<template:styleSheets/>
+	<template:headercss/>
 	<script type="text/javascript"
 	src="${commonResourcePath}/js/jquery-2.1.1.min.js"></script>
 	<%-- Inject any additional CSS required by the page --%>
@@ -367,7 +369,7 @@
  		var buildNumber='${buildNumber}'; 
  		
  		$(window).on('load',function(){
- 			callGigya();
+ 			//callGigya();
  		});
  		</script>
  	</c:when>
@@ -375,7 +377,7 @@
  		<script type="text/javascript">
  		
  		$(window).on('load',function(){
- 			callGigyaWhenNotMinified();
+ 			//callGigyaWhenNotMinified();
  		});
  		</script>
  		</c:otherwise>

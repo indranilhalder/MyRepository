@@ -1566,7 +1566,7 @@ $(document).ready(function(){
 		$("input[name='email']").parents("form#loginForm").attr("autocomplete","off");
 		$("input[name='j_username'],input[name='email']").attr("autocomplete","off");
 		$("input[type='password']").attr("autocomplete","new-password");
-		$(window).on("load resize", function() {
+		/*$(window).on("load resize", function() {
 			var $li = $("body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box");
 			var top_margin=$li.css("margin-top");
 			if (top_margin == '0px') {
@@ -1603,7 +1603,7 @@ $(document).ready(function(){
 					$li.eq($li.length - 1).css("height",'auto');
 				}
 			}
-		});
+		});*/
 		
 		if ('ontouchstart' in window) {
 			$('body').addClass("touchDevice");
@@ -3837,3 +3837,18 @@ function fixTopAdjustTimeOut(){
 	}  , 100 );
 }
 /*end change of INC144316778*/
+/*TPR-6148 start*/
+function copyCode(elem) {
+	//alert();
+	  var x = $("<input>");
+	  $("body").append(x);
+	  x.val($(elem).parents(".coupon-box").find("p.copycode").text()).select();
+	  document.execCommand("copy");
+	  x.remove();
+	  $('.copycode_message').fadeIn(function() {
+		  window.setTimeout(function() {
+		    $('.copycode_message').fadeOut('slow');
+		  }, 1500);
+		});
+	}
+	/*TPR-6148 end*/
