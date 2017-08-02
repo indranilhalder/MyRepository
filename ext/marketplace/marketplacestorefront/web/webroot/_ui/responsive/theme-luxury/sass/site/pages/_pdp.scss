@@ -979,7 +979,7 @@
             
             #homeDate, span{
                 font-size: 11px;
-                padding-left: 10px;
+                padding-left: 0px;
             }
         }
 	}
@@ -1106,6 +1106,12 @@
 							margin-bottom:5px;
 							padding:5px 10px;
 							border-bottom: 1px solid #ddd;
+                            
+                            @include media-breakpoint-down(sm) {
+                                font-size: 12px;
+                                white-space: nowrap;
+                                padding:5px 9px;
+                            }
 						}
 						li:last-child{
 							border-bottom: 0px solid #ddd;
@@ -1116,6 +1122,9 @@
 			.img{
 				float:left;
 				width:40%;
+                @include media-breakpoint-down(sm) {
+                    width:100%;
+                }
 			}
 		}
 	}

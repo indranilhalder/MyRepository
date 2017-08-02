@@ -1295,6 +1295,13 @@ checkout-shipping-items.left-block-width{
         margin-bottom: 60%;
         line-height: 16px;
     }
+    .cartSection{
+        .cart.wrapper .product-block li.item>ul>li.delivery ul, .confirmation .product-block li.item>ul>li.delivery ul {
+            margin-bottom: 0%;
+            line-height: 16px;
+        }
+    }
+    
 }
 .cart.wrapper .product-block li.item ul{
     clear: both;
@@ -1641,4 +1648,50 @@ h2.panel-defaultHeading {
 }
 .make_payment.payment-button #submitPaymentFormCODButton{
  display:block!important;
+}
+.page-multiStepCheckoutSummaryPage.sticky-nav{
+    .header{
+        height: 107px;
+    }
+    .logo{       
+        background: #fff;
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        z-index: 1;
+        margin-left: -83px;
+        
+        @include media-breakpoint-down(sm) {
+                background: transparent;
+        }
+        
+    }
+}
+
+.page-multiStepCheckoutSummaryPage{    
+    .header {
+        height: 107px;
+    }
+    .checkout-content.checkout-payment{
+        margin-bottom: 20px;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .page-multiStepCheckoutSummaryPage{
+        .container{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .payment-section{
+            padding: 10px;
+            #COD{
+                padding: 10px;
+            }
+        }
+        #hamburger-menu{
+            span{
+                display: none;
+            }
+        }
+    }
 }

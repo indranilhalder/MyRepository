@@ -137,7 +137,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (null != site && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
 		{
 			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
 			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
@@ -327,8 +327,8 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 
 					if (null != gsCommentObject.getString(MarketplacecclientservicesConstants.STREAM_ID))
 					{
-						final ProductModel productModel = productService
-								.getProductForCode(gsCommentObject.getString(MarketplacecclientservicesConstants.STREAM_ID));
+						final ProductModel productModel = productService.getProductForCode(gsCommentObject
+								.getString(MarketplacecclientservicesConstants.STREAM_ID));
 						//TISPT-221 Changes
 						productData = productFacade.getProductForOptions(productModel,
 								Arrays.asList(ProductOption.BASIC, ProductOption.PRICE, ProductOption.CATEGORIES));
@@ -367,7 +367,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (null != site && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
 		{
 			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
 			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);
@@ -455,7 +455,7 @@ public class MplGigyaReviewCommentServiceImpl implements MplGigyaReviewCommentSe
 		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
 		final String site = currentBaseSite.getUid();
 
-		if (null != site && MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
+		if (MarketplacecclientservicesConstants.LUXURYPREFIX.equals(site))
 		{
 			secretKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_SECRETKEY);
 			apiKey = configService.getConfiguration().getString(MarketplacecclientservicesConstants.LUXURY_RATING_APIKEY);

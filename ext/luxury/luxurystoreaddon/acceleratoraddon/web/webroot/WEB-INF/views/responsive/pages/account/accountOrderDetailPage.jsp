@@ -214,7 +214,10 @@
 								        </c:if>
 									</c:forEach>
 								</c:forEach>
-									 
+									
+									<c:if test="${(subOrder.status eq 'PAYMENT_PENDING' || subOrder.status eq 'PAYMENT_TIMEOUT' || subOrder.status eq 'PAYMENT_FAILED') && empty subOrder.mplPaymentInfo}">
+									<c:set var="paymentError" value="true" />
+								</c:if> 
 								<c:if test="${flag || paymentError}">
 								<li class="item delivered first" id="shipping-track-order">
 						    	<div class="item-header">

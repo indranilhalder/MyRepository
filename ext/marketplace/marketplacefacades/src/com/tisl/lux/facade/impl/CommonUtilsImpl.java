@@ -32,12 +32,10 @@ public class CommonUtilsImpl implements CommonUtils
 
 		boolean isLuxury = false;
 
-		if (null != site && MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
+		if (MarketplaceFacadesConstants.LuxuryPrefix.equals(site))
 		{
 			isLuxury = true;
 		}
 		return isLuxury;
 	}
 }
-
-

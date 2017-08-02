@@ -201,11 +201,20 @@
 														<format:price priceData="${orderHistoryDetail.totalPriceWithConvCharge}" />
 													</c:otherwise>
 												</c:choose>	
-												
-
-												
 											</ul>
 										</li>
+										
+										<c:if test= "${empty orderHistoryDetail.sellerOrderList}">
+								<li class="item"><a
+									href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=viewOrder"
+									class="btn btn-primary btn-sm"><spring:theme
+										code="text.orderHistory.view.order" /></a>
+								<a
+									href="${orderDetailsUrl}?orderCode=${orderHistoryDetail.code}&pageAnchor=trackOrder"
+									class="btn btn-primary btn-sm"><spring:theme
+										code="text.orderHistory.track.order" /></a></li>
+								</c:if>
+										
 										<c:forEach items="${orderHistoryDetail.sellerOrderList}"
 											var="subOrder" varStatus="status">
 											<input type="hidden" id="subOrderCode"
