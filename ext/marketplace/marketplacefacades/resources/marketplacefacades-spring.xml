@@ -1723,6 +1723,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="initiateCancelForOrderJob"
 		class="com.tisl.mpl.facade.job.InitiateCancelForOrderJob"
 		autowire="byName" >
+		<property name="taskService" ref="taskService"/>
 	</bean>	
 
 	<bean id="bulkCancelStoreData"
@@ -1971,6 +1972,7 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 		<property name="orderConverter" ref="orderConverter" />
 	</bean>
 	<!-- close R2.3 Changes -->
+
 	<!-- TPR-5733 : creating n new converter -->
 	<bean id="mplFooterLinkConverter" parent="abstractPopulatingConverter">
 		<property name="targetClass" value="com.tisl.mpl.facades.cms.data.FooterLinkData"/>
@@ -1984,5 +1986,14 @@ class="de.hybris.platform.commercefacades.product.impl.DefaultImageFormatMapping
 	<bean id="mplFooterLinkPopulator"
 			class="com.tisl.mpl.facades.populators.MplFooterLinkPopulator">
 	</bean>
+	
+	 <!--  OrderBulk Cancellation Job Runner-->
+ 	 <alias name="omsOrderCancelTaskRunner" alias="omsOrderCancelTaskRunner"/>
+ 	 <bean id="omsOrderCancelTaskRunner" class="com.tisl.mpl.dataimport.batch.task.OmsOrderCancelTaskRunner">
+ 		
+ 	 </bean>
+ 	 <!--  OrderBulk Cancellation Job Runner-->
+	
+	
 </beans>
 
