@@ -16243,7 +16243,12 @@ body .account .right-account div.new-address .half.no-display.last-name {
 	}
     #countryListBox
     {
-    	margin-top:10px;
+    	margin-top: 10px;
+    	margin-right: 0%;
+    	float: right;
+    }
+    #stateListDropDown{
+    	margin-top: 10px;
     }
 }
 body .account .right-account form.new-card .half.account-only select,
