@@ -128,7 +128,10 @@ function luxurycheckIsServicable() {
             console.log(resp);
             var errorDetails = JSON.stringify(resp);
             console.log("errorDetails 1>> " + errorDetails), handleExceptionOnServerSide(errorDetails), 
-            console.log("Some issue occured in checkPincodeServiceability"), $("#isPincodeServicableId").val("N");
+            console.log("Some issue occured in checkPincodeServiceability"), $("#isPincodeServicableId").val("N"), 
+            "undefined" != typeof utag && utag.link({
+                error_type: "pincode_check_error"
+            });
         }
     });
 }
@@ -272,14 +275,14 @@ function removefromCart(entryNo, wishName) {
 }
 
 function addToWishlistForCart(ussid, productCode) {
-    var wishName = "";
+    var wishName = "", productcodearray = [];
     if ("" == (wishName = "" == wishListList ? $("#defaultWishName").val() : wishListList[$("#hidWishlist").val()])) {
         var msg = $("#wishlistnotblank").text();
         return $("#addedMessage").show(), $("#addedMessage").html(msg), !1;
     }
     if (void 0 == wishName || null == wishName) return $("#wishlistErrorId").html("Please select a wishlist"), 
     $("#wishlistErrorId").css("display", "block"), !1;
-    $("#wishlistErrorId").css("display", "none");
+    $("#wishlistErrorId").css("display", "none"), productcodearray.push(productCode);
     var requiredUrl = ACC.config.encodedContextPath + "/p-addToWishListInPDP", dataString = "wish=" + wishName + "&product=" + productCode + "&ussid=" + ussid + "&sizeSelected=" + !0, entryNo = $("#entryNo").val();
     $.ajax({
         contentType: "application/json; charset=utf-8",
@@ -287,8 +290,12 @@ function addToWishlistForCart(ussid, productCode) {
         data: dataString,
         dataType: "json",
         success: function(data) {
-            1 == data && ($("#radio_" + $("#hidWishlist").val()).prop("disabled", !0), localStorage.setItem("movedToWishlist_msgFromCart", "Y"), 
-            removefromCart(entryNo, wishName));
+            1 == data && ($("#radio_" + $("#hidWishlist").val()).prop("disabled", !0), "undefined" != typeof utag && utag.link({
+                link_obj: this,
+                link_text: "cart_add_to_wishlist",
+                event_type: "cart_add_to_wishlist",
+                product_sku_wishlist: productcodearray
+            }), localStorage.setItem("movedToWishlist_msgFromCart", "Y"), removefromCart(entryNo, wishName));
         }
     }), $("a.wishlist#wishlist").popover("hide");
 }
@@ -588,7 +595,7 @@ function luxValidateAccountAddress() {
     $("form#addressForm :input[type=text]").each(function() {
         $(this);
         $(this).val($(this).val().trim());
-    }), $("line1").val($("line1").val().trim());
+    }), $("#line1").val($("#line1").val().trim());
     var selectedValueState = document.getElementById("stateListBox").selectedIndex, regexCharSpace = /^[a-zA-Z]+$/, regexCharWithSpace = /^([a-zA-Z]+\s)*[a-zA-Z]+$/, regexSpace = /\s/, equalNoCheck = /^\D*(\d)(?:\D*|\1)*$/, flagFn = !0, flagLn = !0, flagAd1 = !0, flagPost = !0, flagCity = !0, flagState = !0, flagMob = !0, addLine1 = encodeURIComponent(addressForm.line1.value);
     return 0 == addressForm.addressRadioType[0].checked && 0 == addressForm.addressRadioType[1].checked && (document.getElementById("errtype").innerHTML = "<font color='#ff1c47' size='2'>Please select an address type</font>", 
     flagFn = !1), null == addressForm.firstName.value || "" == addressForm.firstName.value ? ($("#erraddressfn").css({
@@ -14616,7 +14623,7 @@ TATA.CommonFunctions = {
         });
     },
     wishlistInit: function() {
-        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click touchstart", ".add-to-wishlist", function() {
+        TATA.CommonFunctions.luxuryForceUpdateHeader(), $(document).on("click", ".add-to-wishlist", function() {
             $(this).hasClass("added") ? TATA.CommonFunctions.removeFromWishlist($(this).data("product"), this) : TATA.CommonFunctions.addToWishlist($(this).data("product"), this);
         });
         var wishlistHover;
@@ -14651,7 +14658,9 @@ TATA.CommonFunctions = {
     },
     addToWishlist: function(productURL, element) {
         if (!luxuryHeaderLoggedinStatus) return $(".luxury-login").trigger("click"), !1;
-        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP", sizeSelected = !0;
+        var productCode = TATA.CommonFunctions.urlToProductCode(productURL), productarray = [];
+        productarray.push(productCode);
+        var requiredUrl = ACC.config.encodedContextPath + "/search/addToWishListInPLP", sizeSelected = !0;
         $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1);
         var ussid = $(element).attr("data-ussid"), dataString = "wish=&product=" + productCode + "&ussid=" + ussid + "&sizeSelected=" + sizeSelected;
         $.ajax({
@@ -14665,7 +14674,15 @@ TATA.CommonFunctions = {
                 }, 3e3), $(element).addClass("added")) : ($(".wishAlreadyAddedPlp").addClass("active"), 
                 setTimeout(function() {
                     $(".wishAlreadyAddedPlp").removeClass("active");
-                }, 3e3)), $(element).addClass("added");
+                }, 3e3)), $(element).addClass("added"), "productsearch" == $("#pageType").val() ? "undefined" != typeof utag && utag.link({
+                    link_text: "add_to_wishlist_serp",
+                    event_type: "add_to_wishlist_serp",
+                    product_sku_wishlist: productarray
+                }) : "undefined" != typeof utag && utag.link({
+                    link_text: "add_to_wishlist_plp",
+                    event_type: "add_to_wishlist_plp",
+                    product_sku_wishlist: productarray
+                });
             },
             error: function(xhr, status, error) {
                 alert(error), "undefined" != typeof utag && utag.link({
@@ -15048,6 +15065,13 @@ TATA.CommonFunctions = {
                     var sizeSelected = !0;
                     $("#variant li").hasClass("selected") && "#" != $("#variant,#sizevariant option:selected").val() || (sizeSelected = !1), 
                     dataString = dataString + "&sizeSelected=" + sizeSelected, TATA.Pages.PDP.addToWishlist(dataString);
+                    var productCodePost = $("#productCodePost").val(), productcodearray = [];
+                    productcodearray.push(productCodePost), utag.link({
+                        link_obj: this,
+                        link_text: "add_to_wishlist_pdp",
+                        event_type: "add_to_wishlist_pdp",
+                        product_sku_wishlist: productcodearray
+                    });
                 }
             });
         },

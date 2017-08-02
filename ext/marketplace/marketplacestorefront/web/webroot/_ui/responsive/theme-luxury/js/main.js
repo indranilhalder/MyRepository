@@ -438,7 +438,7 @@ TATA.CommonFunctions = {
     
     wishlistInit: function(){
         TATA.CommonFunctions.luxuryForceUpdateHeader();
-        $(document).on("click touchstart",".add-to-wishlist",function(){
+        $(document).on("click",".add-to-wishlist",function(){
             if ($(this).hasClass("added")){
                 TATA.CommonFunctions.removeFromWishlist($(this).data("product"),this);
             } else {
