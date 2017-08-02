@@ -152,6 +152,10 @@
     display: inline-block;
     vertical-align: top;
  }
+
+.accordtionTataCliq .accContents .scheduledPickupArea .selectScheduledPickup .selectRadio{
+    margin-top: 5px;    
+}
  .accordtionTataCliq .accContents .selectReason .select-content, .accordtionTataCliq .accContents .selectReturnMethod .select-content, .accordtionTataCliq .accContents .selectScheduledPickup .select-content{
  display: inline-block;
     width: 80%;
@@ -229,6 +233,13 @@
             background-color: #fafafa;
             padding: 50px 0;
             margin: 0;
+            
+            h2{
+                font-size: 24px;
+                margin: 0px;
+                text-align: center;
+            }
+            
             span {
                 display: inline-block;
                 font-size: 16px;
