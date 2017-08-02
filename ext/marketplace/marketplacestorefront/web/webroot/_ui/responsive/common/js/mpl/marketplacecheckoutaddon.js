@@ -5883,14 +5883,6 @@ function checkPincodeServiceability(buttonType,el)
 	} //CAR-246//UF-70
 	else if(selectedPincode!=="" && $("#isPincodeRestrictedPromoPresentId").val()=="true"){
 		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
-		// TPR-5666 | cartGuid Append in url during pincode servicability check
-		var cartGuidParamValue = getParameterByName("cartGuid");
-		if(typeof cartGuidParamValue != "undefined"){
-			$(location).attr('href',ACC.config.encodedContextPath + "/cart?cartGuid="+cartGuidParamValue+"&pincode="+selectedPincode);
-		}
-		else{
-			$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
-		}
 	}
 	else
     {
