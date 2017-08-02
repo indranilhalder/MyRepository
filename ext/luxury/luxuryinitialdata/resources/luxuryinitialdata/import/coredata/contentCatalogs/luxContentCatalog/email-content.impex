@@ -293,21 +293,38 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;SiteLogo;;;logo
 ;TopContent;;$wideContent;
 ;BottomContent;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];validComponentTypes(code)
 ;SiteLogo;;;logo
 ;Tip;;$wideContent;
 ;Description;;$wideContent;
-#;RefundBanner;;$wideContent;
-#;smileyimg;;$wideContent;
-#;fb;;$wideContent;
-#;gplus;;$wideContent;
-;AppDownloadUrl;;$wideContent;
-;smileyimg;;$wideContent;
 ;fb;;$wideContent;
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='DeliverySentEmailTemplate'];validComponentTypes(code)
 ;SiteLogo;;;logo
@@ -492,20 +509,20 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 # ORDER DELIVERY CHANGES
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];validComponentTypes(code)
-;SiteLogo;;;logo
-;TopContent;;$wideContent;
-;BottomContent;;$wideContent;
-#;OrderReferenceNumberOne;;$wideContent;
-#;OrderReferenceNumberTwo;;$wideContent;
-;Tip;;$wideContent;
-#;Description;;$wideContent;
-#;DeliveryConfirmationBannerTwo;;$wideContent;
-;AppDownloadUrl;;$wideContent;
-;smileyimg;;$wideContent;
-;fb;;$wideContent;
-;tweet;;$wideContent;
-;youtube;;$wideContent;
-;insta;;$wideContent;
+;SiteLogoNew;;;logo
+;fbnew;;$wideContent;
+;twitterNew;;$wideContent;
+;youtubeNew;;$wideContent;
+;instaNew;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
 
 
 INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationRiskEmailTemplate'];validComponentTypes(code)
@@ -537,14 +554,23 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;TopContent;;$wideContent;
 ;BottomContent;;$wideContent;
 ;Tip;;$wideContent;
-;HOTCTrackOrder1;;$wideContent;
-;HOTCDeliveryPerson1;;$wideContent;
+#;HOTCTrackOrder1;;$wideContent;
+#;HOTCDeliveryPerson1;;$wideContent;
 ;AppDownloadUrl;;$wideContent;
 ;smileyimg;;$wideContent;
-;fb;;$wideContent;
+;fbNew;;$wideContent;
 ;tweet;;$wideContent;
 ;youtube;;$wideContent;
 ;insta;;$wideContent;
+;gplus;;$wideContent;
+;linegrey;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
 
 #Shipment out for delivery
 #INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OutForDeliveryEmailTemplate'];validComponentTypes(code)
@@ -971,43 +997,59 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;gplus-OrderConfirmationEmail;gplus;;EmailgplusRegSlot1;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;SiteLogo-OrderDeliveryEmail;SiteLogo;;EmailSiteLogoConfSlot;true
-;;TopContent-OrderDeliveryEmail;TopContent;;EmailTopDlvrySlot;true
-;;BottomContent-OrderDeliveryEmail;BottomContent;;EmailBottomDlvrySlot;true
-#;;OrderReferenceNumberOne-OrderDeliveryEmail;OrderReferenceNumberOne;;EmailOrderReferenceNumberOneDlvrySlot;true
-#;;OrderReferenceNumberTwo-OrderDeliveryEmail;OrderReferenceNumberTwo;;EmailOrderReferenceNumberTwoDlvrySlot;true
-;;Tip-OrderDeliveryEmail;Tip;;EmailTipDlvrySlot;true
-#;;Description-OrderDeliveryEmail;Description;;EmailDescriptionDlvrySlot;true
-#;;DeliveryConfirmationBannerTwo-OrderDeliveryEmail;DeliveryConfirmationBannerTwo;;EmailOrderDeliveryConfirmationBannerTwoDlvrySlot;true
-;;AppDownloadUrl-OrderDeliveryEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
-;;smileyimg-OrderDeliveryEmail;smileyimg;;EmailsmileyimgDlvrySlot;true
-;;fb-OrderDeliveryEmail;fb;;EmailfbDlvrySlot;true
-#;;gplus-OrderDeliveryEmail;gplus;;EmailgplusDlvrySlot;true
-;;tweet-OrderDeliveryEmail;tweet;;EmailtweetSlot;true
-;;youtube-OrderDeliveryEmail;youtube;;EmailYouTubeSlot;true
-;;insta-OrderDeliveryEmail;insta;;EmailInstaSlot;true
+;;SiteLogo-OrderDeliveryEmail;SiteLogoNew;;EmailSiteLogoODCSlot;true
+;;fb-OrderDeliveryEmail;fbNew;;EmailfbRegSlot;true
+;;tweeter-OrderDeliveryEmail;twitterNew;;EmailODCtweetSlot;true
+;;youtubenew-OrderDeliveryEmail;youtubeNew;;EmailODCYouTubeSlot;true
+;;instanew-OrderDeliveryEmail;instaNew;;EmailODCInstaSlot;true
+;;gplus-OrderDeliveryEmail;gplus;;EmailODCgplusSlot;true
+;;tatatrust-OrderDeliveryEmail;tatatrust;;EmailODCtatatrustSlot;true
+;;cliqnpic-OrderDeliveryEmail;cliqnpic;;EmailODCcliqnpicSlot;true
+;;easyreturn-OrderDeliveryEmail;easyreturn;;EmailODCEasyreturnSlot;true
+;;authenticbrands-OrderDeliveryEmail;authenticbrands;;EmailODCAuthenticbrandsSlot;true
+;;freeshipping-OrderDeliveryEmail;freeshipping;;EmailODCFreeshippingSlot;true
+;;linegrey-OrderDeliveryEmail;linegrey;;EmailODCLinegreySlot;true
+;;appstore-OrderDeliveryEmail;appstore;;EmailODCAppleStoreSlot;true
+;;googleplay-OrderDeliveryEmail;googleplay;;EmailODCAndroidStoreSlot;true
+
+
 
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderCancelledEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;SiteLogo-OrderCancelledEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;SiteLogo-OrderCancelledEmail;SiteLogo;;EmailSiteLogoOCSlot;true
 ;;TopContent-OrderCancelledEmail;TopContent;;EmailTopSlot;true
 ;;BottomContent-OrderCancelledEmail;BottomContent;;EmailBottomSlot;true
+;;fbnew-OrderCancelledEmail;fbnew;;EmailODCfbSlot;true
+;;tweeter-OrderCancelledEmail;twitterNew;;EmailOCtweetSlot;true
+;;youtubenew-OrderCancelledEmail;youtubeNew;;EmailOCYouTubeSlot;true
+;;instanew-OrderCancelledEmail;instaNew;;EmailOCInstaSlot;true
+;;gplus-OrderCancelledEmail;gplus;;EmailOCgplusSlot;true
+;;tatatrust-OrderCancelledEmail;tatatrust;;EmailOCtatatrustSlot;true
+;;cliqnpic-OrderCancelledEmail;cliqnpic;;EmailOCcliqnpicSlot;true
+;;easyreturn-OrderCancelledEmail;easyreturn;;EmailOCEasyreturnSlot;true
+;;authenticbrands-OrderCancelledEmail;authenticbrands;;EmailOCAuthenticbrandsSlot;true
+;;freeshipping-OrderCancelledEmail;freeshipping;;EmailOCFreeshippingSlot;true
+;;linegrey-OrderCancelledEmail;linegrey;;EmailOCLinegreySlot;true
+;;appstore-OrderCancelledEmail;appstore;;EmailOCAppleStoreSlot;true
+;;googleplay-OrderCancelledEmail;googleplay;;EmailOCAndroidStoreSlot;true
+
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-#;;SiteLogo-OrderRefundEmail;SiteLogo;;EmailSiteLogoConfSlot;true
-;;Tip-OrderRefundEmail;Tip;;EmailTipCUSlot;true
-;;Description-OrderRefundEmail;Description;;EmailDescriptionRefundSlot;true
-#;;RefundBanner-OrderRefundEmail;RefundBanner;;EmailRefundBannerSlot;true
-#;;smileyimg-OrderRefundEmail;smileyimg;;EmailsmileyimgRefundSlot;true
-#;;fb-OrderRefundEmail;fb;;EmailfbRefundSlot;true
-#;;gplus-OrderRefundEmail;gplus;;EmailgplusRefundSlot;true
-;;AppDownloadUrl-OrderRefundEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
-;;smileyimg-OrderRefundEmail;smileyimg;;EmailsmileyimgCUSlot;true
-;;fb-OrderRefundEmail;fb;;EmailfbCUSlot;true
-;;tweet-OrderRefundEmail;tweet;;EmailtweetSlot;true
-;;youtube-OrderRefundEmail;youtube;;EmailYouTubeSlot;true
-;;insta-OrderRefundEmail;insta;;EmailInstaSlot;true
+;;SiteLogo-OrderRefundEmail;SiteLogo;;EmailSiteLogoORSlot;true
+;;fbnew-OrderRefundEmail;fbnew;;EmailORfbSlot;true
+;;tweeter-OrderRefundEmail;twitterNew;;EmailORtweetSlot;true
+;;youtubenew-OrderRefundEmail;youtubeNew;;EmailORYouTubeSlot;true
+;;instanew-OrderRefundEmail;instaNew;;EmailORInstaSlot;true
+;;gplus-OrderRefundEmail;gplus;;EmailORgplusSlot;true
+;;tatatrust-OrderRefundEmail;tatatrust;;EmailORtatatrustSlot;true
+;;cliqnpic-OrderRefundEmail;cliqnpic;;EmailORcliqnpicSlot;true
+;;easyreturn-OrderRefundEmail;easyreturn;;EmailOREasyreturnSlot;true
+;;authenticbrands-OrderRefundEmail;authenticbrands;;EmailORAuthenticbrandsSlot;true
+;;freeshipping-OrderRefundEmail;freeshipping;;EmailORFreeshippingSlot;true
+;;linegrey-OrderRefundEmail;linegrey;;EmailORLinegreySlot;true
+;;appstore-OrderRefundEmail;appstore;;EmailORAppleStoreSlot;true
+;;googleplay-OrderRefundEmail;googleplay;;EmailORAndroidStoreSlot;true
 
 #Order Refund Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
@@ -1158,17 +1200,24 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 #Shipping Confirmation Event
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;HOTCSiteLogo-ShippingConfirmationEmail;HOTCSiteLogo;;EmailSiteLogoHOTCSlot;true
+;;HOTCSiteLogo-ShippingConfirmationEmailnew;HOTCSiteLogo;;EmailSiteLogoSCslot;true
 ;;HOTCTrackOrder1-ShippingConfirmationEmail;HOTCTrackOrder1;;EmailTrackOrder1HOTCSlot;true
 ;;HOTCDeliveryPerson1-ShippingConfirmationEmail;HOTCDeliveryPerson1;;EmailDeliveryPerson1HOTCSlot;true
-;;smileyimg-ShippingConfirmationEmail;smileyimg;;EmailsmileyimgRegSlot;true
-;;fb-ShippingConfirmationEmail;fb;;EmailfbRegSlot;true
+#;;fbnew-ShippingConfirmationEmail;fbNew;;EmailCUfbSCSlot;true
+;;fb-ShippingConfirmationEmail;fbNew;;EmailfbRegSlot;true
 ;;AppDownloadUrl-ShippingConfirmationEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
-;;tweet-ShippingConfirmationEmail;tweet;;EmailtweetSlot;true
-;;youtube-ShippingConfirmationEmail;youtube;;EmailYouTubeSlot;true
-;;insta-ShippingConfirmationEmail;insta;;EmailInstaSlot;true
-;;Tip-ShippingConfirmationEmail;Tip;;EmailTipCUSlot;true
-
+;;tweeter-ShippingConfirmationEmail;tweet;;EmailCUtweetSCSlot;true
+;;youtubenew-ShippingConfirmationEmail;youtube;;EmailCUYouTubSCeSlot;true
+;;instanew-ShippingConfirmationEmail;insta;;EmailCUInstaSCSlot;true
+;;gplusnew-ShippingConfirmationEmail;gplus;;EmailCUgplusSCSlot;true
+;;linegreynew-ShippingConfirmationEmail;linegrey;;EmailCULinegreySCSlot;true
+;;tatatrust-ShippingConfirmationEmail;tatatrust;;EmailCUTatatrustSCSlot;true
+;;cliqnpic-ShippingConfirmationEmail;cliqnpic;;EmailCUcliqnpicSCSlot;true
+;;easyreturn-ShippingConfirmationEmail;easyreturn;;EmailCUEasyreturnSCSlot;true
+;;authenticbrands-ShippingConfirmationEmail;authenticbrands;;EmailCUAuthenticbrandsSCSlot;true
+;;freeshipping-ShippingConfirmationEmail;freeshipping;;EmailCUFreeshippingSCSlot;true
+;;appstore-ShippingConfirmationEmail;appstore;;EmailCUAppleStoreSCSlot;true
+;;googleplay-ShippingConfirmationEmail;googleplay;;EmailCUAndroidStoreSCSlot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderOnHoldEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;OnHOldSiteLogo-OrderOnHoldEmail;OnHOldSiteLogo;;EmailSiteLogoOnHoldSlot;true

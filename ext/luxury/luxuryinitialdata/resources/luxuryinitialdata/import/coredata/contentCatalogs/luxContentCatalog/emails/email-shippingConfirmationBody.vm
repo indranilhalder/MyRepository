@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width" />
 
-  <title>Tata CliQ</title>
+  <title>Tata CliQ Luxury</title>
 
 </head>
 <body style="padding: 0; margin:0; font-family:Arial, Helvetica, sans-serif;">
@@ -63,14 +63,12 @@
 		  	        		        </tr>
 			  	        		    <tr>
 									
-										#if($ctx.cmsSlotContents.HOTCSiteLogo)
-										<td class="logo" ><a href="${ctx.secureBaseUrl}" target="_blank">
+													<td class="logo" ><a href="${ctx.baseUrl}" target="_blank">
 										
 										<span style="width:133px; height:48px; display:block; line-height:0; font-size:0">
 										${ctx.cmsSlotContents.HOTCSiteLogo}</span>
 										
 										</a></td>
-										#end
 
 										<td align="right" class="toplink">
 			  	        		      	 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -82,7 +80,7 @@
 				  	        		        </tr>
 			  	        		      	   	 <tr>
 			  	        		      	   	 	<td align="right">
-			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="${ctx.secureBaseUrl}/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:22052017" target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
+			  	        		      	   	 		<p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;margin:2px 0;padding:0;"><a href="${ctx.secureBaseUrl}/my-account/orders?tcid=em:transactional:Orderconfirmation:myorders:${ctx.pOrderCode}"   target="blank" style="color: #aa1d3d;line-height:16px;">Your Orders</a></p>
 			  	        		      	          <p class="fwnormal" style="font-size:12px;font-family:Arial, Helvetica, sans-serif;color: #333333;margin:2px 0;padding:0;">Order Shipped - Order  <span style="color: #aa1d3d;">${ctx.pOrderCode}</span></p>
 			  	        		      	   	 	</td>
 			  	        		      	   	 </tr>
@@ -143,7 +141,7 @@
 		  	        		    		<br>
 		  	        		    		<br>
 		  	        		    		It's on its way! All or part of your order has been shipped. We will also be sending SMS alerts about the order delivery status on your registered mobile number. 
-		  	        		    		</div>
+		  	        		    			  	        		    		</div>
 		  	        		    	</td>
 		  	        		    </tr>
 		  	        		    <tr>
@@ -447,10 +445,10 @@ Free
 		  	        		    				    <td class="smFull trackdiv" width="190" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;">Track Your Order on the go. Download our app.Stay updated on what's NEW &amp; NOW.</td>
 		  	        		    					<td class="smFull">
 														#if($ctx.cmsSlotContents.appstore)
-															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp;tcid=em:transactional:Ordershipped:ios:22052017" target="_blank"> ${ctx.cmsSlotContents.appstore}</a> 
+															<a href="https://itunes.apple.com/us/app/tata-cliq-online-shopping/id1101619385?ls=1&amp;mt=8&amp;tcid=em:transactional:Ordershipped:ios:22052017" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.appstore}</a> 
 														#end
 														#if($ctx.cmsSlotContents.googleplay)
-															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Ordershipped:android:22052017" target="_blank"> ${ctx.cmsSlotContents.googleplay}</a> 
+															<a href="https://play.google.com/store/apps/details?id=com.tul.tatacliq&amp;tcid=em:transactional:Ordershipped:android:22052017" target="_blank" style="text-decoration: none;"> ${ctx.cmsSlotContents.googleplay}</a> 
 														#end
 													</td>
 		  	        		    					<td class="smFull dsnone">
@@ -458,14 +456,14 @@ Free
 													</td>
 		  	        		    					<td class="smFull followhead" style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #000000;"> Follow Us: </td>
 		  	        		    					<td class="smFull socialLinks">
-		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank"> ${ctx.cmsSlotContents.fbNew}</a> #end
+		  	        		    						#if($ctx.cmsSlotContents.fbNew)<a href="https://www.facebook.com/TataCLiQ/" target="_blank" style="text-decoration:none;"> ${ctx.cmsSlotContents.fbNew}</a> #end
 														
-						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank">${ctx.cmsSlotContents.tweet}</a>#end
-						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank">${ctx.cmsSlotContents.insta}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.tweet)<a href="https://twitter.com/tatacliq" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.tweet}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.insta)<a href="https://www.instagram.com/tatacliq/" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.insta}</a>#end
 														
-						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank">${ctx.cmsSlotContents.gplus}</a>#end
+						  	        		    		#if($ctx.cmsSlotContents.gplus)<a href="https://plus.google.com/+TataCLiQ/" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.gplus}</a>#end
 						  	        		    		
-														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank">${ctx.cmsSlotContents.youtube}</a>#end
+														#if($ctx.cmsSlotContents.youtube)<a href="https://www.youtube.com/channel/UCUwkaWqIcl9dYQccKkM0VRA" target="_blank" style="text-decoration:none;">${ctx.cmsSlotContents.youtube}</a>#end
 					  	        		    		</td>
 		  	        		    				</tr>
 		  	        		    			</tbody>
@@ -481,7 +479,7 @@ Free
 		  	        		    <tr>
 		  	        		    	<td align="center" class="content foocontnt inPad">
 		  	        		    	  <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
-		  	        		    	    This email can't receive replies. Get in touch with us by contacting Tata CLiQ  Luxury Care <a href="${ctx.secureBaseUrl}/contact?tcid=em:transactional:ordershipped:customercare:22052017" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
+		  	        		    	    This email can't receive replies. Get in touch with us by contacting Tata CLiQ  Luxury Care <a href="${ctx.baseUrl}/contact?tcid=em:transactional:ordershipped:customercare:22052017" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">click here</a>
 		  	        		    	    <br>
 		  	        		    	    You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
 		  	        		    	  </div>
