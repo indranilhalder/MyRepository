@@ -650,6 +650,14 @@
 				}
 			}
 		}
+        
+        .product-list-wrapper.plpsinglecolumn{ 
+            .product-grid-wrapper .product-grid .product-image{
+                @include media-breakpoint-down(sm) {
+                    height: 353px;
+                }
+            }                    
+        }
 	}
 	.plp-wrapper{
 		padding:0 !important;
