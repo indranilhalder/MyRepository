@@ -136,10 +136,11 @@
 										<div class="right">
 											<p>Coupon code expires on ${closedVoucherDisplay.voucherExpiryDate}</p>
 										</div>
+										<c:if test="${not empty closedVoucherDisplay.voucherDescription}">
 										<h2 class="coupon-desc">
 										<span>Details</span>
 										${closedVoucherDisplay.voucherDescription}</h2>
-										
+										</c:if>
 										<a class="copy-code-mobile" onclick="copyCode(this)">COPY COUPON CODE</a>
 									</li>
 								</c:forEach> 

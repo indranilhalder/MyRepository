@@ -28077,6 +28077,7 @@ body .account .right-account.rewards>div.customer-service p {
 body .account .right-account.rewards>div.customer-service ul {
 	margin-bottom: 20px;
 	display: block;
+	margin-top: 15px;
 }
 
 body .account .right-account.rewards>div.customer-service.steps ul .step
@@ -28188,12 +28189,13 @@ body .account .right-account.rewards>div.your-activity>ul.coupon-container .coup
 	background-color: #fff;
 	border-bottom: solid 1px #eeeeee;
 	margin-top: 30px;
+	padding-bottom: 29px;
 }
 
 body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box h2
 	{
 	width: 100%;
-    padding: 25px 0 29px 0;
+    padding: 25px 0 0 0;
     margin-bottom: 0;
     font-size: 12px;
     letter-spacing: 0.6px;
@@ -28735,7 +28737,8 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	}
 	body .account .right-account.rewards>div.your-activity>ul.coupon-container .coupon-box a.copy-code-mobile{
 	display: block;
-	margin-bottom: 48px;
+	margin-top: 29px;
+	margin-bottom: 19px;
 	}
 }
 
