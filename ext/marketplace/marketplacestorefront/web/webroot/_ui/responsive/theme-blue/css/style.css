@@ -71615,8 +71615,8 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 /*UF-377 end*/
 /*UF-404 start for multi-color facet*/
 .product-facet .filter-colour:not(.selected-multi-colour) input[value='Multi_multi'] + input.js-facet-colourbutton{
-	background: url("../images/Sprite-combined.png") no-repeat scroll -6px -109px !important;
-	background-size: 85px 210px !important;
+	background: url("../images/Sprite-combined.png") no-repeat scroll -6px -114px !important;
+	background-size: 85px 220px !important;
 }
 /*UF-404 end for multi-color facet*/
 /* TISPRDT-1611 start */
@@ -71916,6 +71916,9 @@ footer #footerLink div.column ul li:first-child {
 }
 footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a{
     color: #000;
+}
+footer #footerLink div.column ul li a:hover {
+    color: #a9133d;
 }
 footer #footerLink div.column ul li:after {
     content: '/';
