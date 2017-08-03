@@ -280,7 +280,7 @@
 				$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
 				$URI=http:
 				$folder=folder(qualifier)[default='images']
-				INSERT_UPDATE Media;Qualifier;MediaStatus(code);mediaFormat(qualifier)[cellDecorator=com.tisl.lux.core.celldecorator.MediaFormatDecorator];code[unique=true];$media;mediaType(code)[default='Image'];mime[default='image/jpeg'];mediaPriority;description;$folder;$catalogVersion
+				INSERT_UPDATE Media;Qualifier;MediaStatus(code);mediaFormat(qualifier)[cellDecorator=com.tisl.lux.core.celldecorator.LuxuryMediaFormatDecorator];code[unique=true];$media;mediaType(code)[default='Image'];mime[default='image/jpeg'];mediaPriority;description;$folder;$catalogVersion
 			</value>
 		</property>
 		<property name="impexRow">
