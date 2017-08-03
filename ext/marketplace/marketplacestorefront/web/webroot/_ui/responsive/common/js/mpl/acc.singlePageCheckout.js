@@ -1554,13 +1554,23 @@ ACC.singlePageCheckout = {
 	        		$("#off-bag").show();
 
 	        		$("li.price").each(function(){
-	        				if($(this).find(".off-bag").css("display") === "block"){
-	        					$(this).find("span.delSeat").addClass("delAction");
+	        			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+	        				if($(this).find("span.delSeat.mop").length > 0){
+	        				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
 	        				}
-	        				else{
-	        					$(this).find("span.delSeat").removeClass("delAction");
-	        				}
-	        			});
+	        			}
+	        			else{
+	        				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+	        			}
+	        		});
+//	        		$("li.price").each(function(){
+//	        				if($(this).find(".off-bag").css("display") === "block"){
+//	        					$(this).find("span.delSeat").addClass("delAction");
+//	        				}
+//	        				else{
+//	        					$(this).find("span.delSeat").removeClass("delAction");
+//	        				}
+//	        			});
 	        		//END:Code to show strike off price
 //	        		var entryNumbers=$("#entryNumbersId").val();
 //	        		var removeEntryNo=entryNumber+"#";
