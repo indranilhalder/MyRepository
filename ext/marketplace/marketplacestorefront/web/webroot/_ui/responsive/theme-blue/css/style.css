@@ -76960,6 +76960,7 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 .product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li.active
 {
 	border-bottom: 2px solid #000;
+	padding-bottom: 8px;
 } 
 .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li,
 .product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li{
