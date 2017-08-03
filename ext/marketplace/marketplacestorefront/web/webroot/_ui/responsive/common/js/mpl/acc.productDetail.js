@@ -3269,6 +3269,19 @@ function getProductContents() {
 		success : function(data) {
 			if(data){ 
 				$('#productContentDivId').html(data);
+				//UF-403 starts
+				if ($(".youtube-player").length) {
+					var div, n,
+	                v = document.getElementsByClassName("youtube-player");
+		            for (n = 0; n < v.length; n++) {
+		                div = document.createElement("div");
+		                div.setAttribute("data-id", v[n].dataset.id);
+		                div.innerHTML = labnolThumb(v[n].dataset.id); //labnolThumb function implementation in videocomponent.jsp
+		                div.onclick = labnolIframe; //labnolIframe function implementation in videocomponent.jsp
+		                v[n].appendChild(div);
+		            }
+				}
+				//UF-403 ends
 				 if (data.indexOf('class="Manufacturer Temp07"') > -1 ) {
 					 $(".every-scene-carousel").owlCarousel({
 							items:3,

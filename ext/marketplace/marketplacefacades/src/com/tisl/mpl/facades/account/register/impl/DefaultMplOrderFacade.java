@@ -1810,8 +1810,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 					customerOrderInfoWsDTO.setEdd(MarketplacecommerceservicesConstants.NULL_VALUE);
 					customerOrderInfoWsDTO.setShippingMode(MarketplacecommerceservicesConstants.NULL_VALUE);
 					customerOrderInfoWsDTO.setPaymentType(MarketplacecommerceservicesConstants.NULL_VALUE);
-					customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().toString() ? orderModel.getStatus()
-							.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);
+					customerOrderInfoWsDTO.setOrderStatus(null != orderModel.getStatus().getCode() ? orderModel.getStatus().getCode()
+							: MarketplacecommerceservicesConstants.NULL_VALUE);
 					custdto.add(customerOrderInfoWsDTO);
 					orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 				}
