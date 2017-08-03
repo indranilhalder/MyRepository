@@ -1291,6 +1291,20 @@ ACC.singlePageCheckout = {
 	            return false;
 	        }
     },
+    addReviewOrderPriceStrikeThrough:function(){
+    	$("#off-bag").show();
+
+		$("li.price").each(function(){
+			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
+				if($(this).find("span.delSeat.mop").length > 0){
+				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
+				}
+			}
+			else{
+				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
+			}
+		});
+    },
     //Function to fetch review order page from server
     getReviewOrder:function(){
     	ACC.singlePageCheckout.showAjaxLoader();
@@ -1329,26 +1343,7 @@ ACC.singlePageCheckout = {
             }
   	      // tealiumCallOnPageLoad();
         	//START:Code to show strike off price
-    		$("#off-bag").show();
-
-//    		$("li.price").each(function(){
-//    				if($(this).find(".off-bag").css("display") === "block"){
-//    					$(this).find("span.delSeat").addClass("delAction");
-//    				}
-//    				else{
-//    					$(this).find("span.delSeat").removeClass("delAction");
-//    				}
-//    			});
-    		$("li.price").each(function(){
-    			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
-    				if($(this).find("span.delSeat.mop").length > 0){
-    				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
-    				}
-    			}
-    			else{
-    				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
-    			}
-    		});
+        	ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
     		//END:Code to show strike off price
         	if($('body').find('a.cart_move_wishlist').length > 0){
         	$('a.cart_move_wishlist').popover({ 
@@ -1551,26 +1546,7 @@ ACC.singlePageCheckout = {
 	        		}
 	        		ACC.singlePageCheckout.getTealiumData();
 	        		//START:Code to show strike off price
-	        		$("#off-bag").show();
-
-	        		$("li.price").each(function(){
-	        			if(($(this).find(".off-bag").css("display") === "inline-block") || ($(this).find(".off-bag").css("display") === "block")){
-	        				if($(this).find("span.delSeat.mop").length > 0){
-	        				$(this).find("span.delSeat:not(.mop)").addClass("delAction");
-	        				}
-	        			}
-	        			else{
-	        				$(this).find("span.delSeat:not(.mop)").removeClass("delAction");
-	        			}
-	        		});
-//	        		$("li.price").each(function(){
-//	        				if($(this).find(".off-bag").css("display") === "block"){
-//	        					$(this).find("span.delSeat").addClass("delAction");
-//	        				}
-//	        				else{
-//	        					$(this).find("span.delSeat").removeClass("delAction");
-//	        				}
-//	        			});
+	        		ACC.singlePageCheckout.addReviewOrderPriceStrikeThrough();
 	        		//END:Code to show strike off price
 //	        		var entryNumbers=$("#entryNumbersId").val();
 //	        		var removeEntryNo=entryNumber+"#";
