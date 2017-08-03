@@ -108,10 +108,10 @@
 					
 					<div class="itemsDescription col-xs-7 col-sm-9 product">
 					<ul>
-						<li><h3><strong>${product.brand.brandname}</strong></h3></li>
-						<li>${product.productTitle}</li>
-						<li>${product.colour} - ${product.size}</li>
-						<li>${product.productMRP.currencyIso}${product_list_price}</li>
+						<li class="brand_name"><h3><strong>${product.brand.brandname}</strong></h3></li>
+						<li class="product_title">${product.productTitle}</li>
+						<li class="product_color">${product.colour} - <span class="product_size"> ${product.size} </span></li>
+						<li class="product_price">${product.productMRP.currencyIso}${product_list_price}</li>
 					</ul>								
 				 </div>
 			</div>

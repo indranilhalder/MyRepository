@@ -3649,6 +3649,7 @@ function onSizeSelectPopulateDOM()//First Method to be called in size select aja
 						
 						//CKD:TPR-250 :End
 						//Deselect the previously selected li and highlight the current li
+						$(".product_size").html(responseProductSize);
 						$('ul#variant.variant-select li').each(function (index, value) { 
 							if($(this).hasClass("selected"))
 							{
