@@ -76945,7 +76945,9 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
   	text-align: center;
 }
 .product-info>div.tabs-block.FineJewellery .tabs.pdp.productTabs li,
-.product-info>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li{
+.product-info>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li,
+.product-info>div.tabs-block.FineJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc,
+.product-info>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc{
 	font-size: 12px;
 	letter-spacing: 0.6px;
 	line-height: 1.5;
