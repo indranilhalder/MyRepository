@@ -76115,7 +76115,7 @@ table#showPriceBreakup{
 	.product-info>div.accordin.FashionJewellery
 	{
 	width: 44%;
-	margin-top: 95px;
+	margin-top: 117px;
 	}
 }
 @media (min-width: 1025px) and (max-width: 1189px){
@@ -76953,3 +76953,25 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 	line-height: 1.5;
 }
 /*JWLSPCUAT-46 end*/
+/* JWLSPCUAT-54 start */
+ .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li.active,
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li.active
+{
+	border-bottom: 2px solid #000;
+} 
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li,
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li{
+	border-bottom: 2px solid transparent;
+}
+.product-info>div.tabs-block.FineJewellery .nav-wrapper:after, 
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper:after{
+	height: 2px;
+}
+@media(max-width: 767px){
+	.product-info>div.tabs-block.FineJewellery, .product-info>div.tabs-block.FashionJewellery{
+	 	width: 100%;
+	 	margin-left: -14px !important;
+    	margin-right: 0px !important;
+	 }
+}
+/* JWLSPCUAT-54 end */
