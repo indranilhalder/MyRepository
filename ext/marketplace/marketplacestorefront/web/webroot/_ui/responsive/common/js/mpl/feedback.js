@@ -3891,6 +3891,9 @@ $("span.price-breakup").click(function() {
 $("span.more-link").click(function() {
 	  $("body,html").animate({ scrollTop: $("#tabs_styleNotes").offset().top - 150 }, "slow");
 	  $("#tabs_styleNotes").addClass("active");
+	  $("#tabs_styleNotes_Refunds").removeClass("active");
+	  $("#tabs_knowmore").removeClass("active");
+	  $("#tabs_brandInfo").removeClass("active");
 });
 /*Feature for FineJewellery scroll end*/
 /* end change of PRDI-92 */
