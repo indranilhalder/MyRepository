@@ -75916,26 +75916,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 58px;
 	height: 40px;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li:before, 
-.product-info .product-detail.FashionJewellery .certified-by ul li:before{
-	width: 58px;
-    height: 40px;
-    display: inline-block;
-    content: "";
-    position: relative;
-    left: 0;
-    top: 8px;
-    background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
-}
-/* .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGL,
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGS,
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiAGTA,
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiHRD{
-	display: none;
-} */
-
-
-
 .product-info>div.tabs-block.FineJewellery,
 .product-info>div.tabs-block.FashionJewellery
 {
@@ -75963,6 +75943,7 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	padding-top: 24px;
 	padding-bottom: 16px;
     font-size: 12px;
+    line-height: 1.33;
     font-weight: normal;
     color: rgba(0, 0, 0, 0.5);
     border-bottom: solid 1px #eeeeee;
@@ -75991,6 +75972,7 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	padding-top: 16px;
     padding-bottom: 16px;
     font-size: 12px;
+    line-height: 1.33;
     font-weight: normal;
     width: 20%; 
     display: table-cell;
@@ -76001,6 +75983,7 @@ table#showPriceBreakup{
 .accordin.FineJewellery .item .detail table#showPriceBreakup tr td.title, 
 .accordin.FashionJewellery .item .detail table#showPriceBreakup tr td.title{
 	width: auto;
+	line-height: 1.33;
 }
 .accordin.FineJewellery .item .detail table tr td,
 .accordin.FashionJewellery .item .detail table tr td{
@@ -76260,12 +76243,12 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 }		
 .product-info .product-detail.FineJewellery .product-desc .key-label,
 .product-info .product-detail.FashionJewellery .product-desc .key-label{		
-	display: inline-block;		
+	display: inline-block;
 }		
 .product-info .product-detail.FineJewellery .product-desc .key-label #jwlryTitle,
 .product-info .product-detail.FashionJewellery .product-desc .key-label #jwlryTitle{		
 	float: left;
-	width: 10%;
+	max-width: 200px;
     overflow: hidden;
     white-space: nowrap;		
 }		
