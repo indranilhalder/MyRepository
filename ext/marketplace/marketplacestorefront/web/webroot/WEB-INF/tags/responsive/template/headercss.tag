@@ -353,6 +353,10 @@ body {
 	        letter-spacing: 1.5px;
 	        text-transform: uppercase;
 	        margin-right: 25px;
+	        margin-left: 30px;
+	        height: 64px;
+    		line-height: 64px;
+    		width: auto;
 	    }
 	    header .content .marketplace span {
 	        text-transform: none;
@@ -365,11 +369,27 @@ body {
 	@media (min-width:791px) and (max-width:900px) {
 	    header .content .marketplace {
 	        margin-left: 5px;
-	        width: 215px
+	       /*  width: 215px */
 	    }
 	}
-	
+	.bell-icon:after {
+    font-family: 'FontAwesome';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f0a2";
+    font-size: 17px;
+    line-height: 41px;
+    height: 41px;
+    top: 0;
+    position: relative;
+    font-weight: lighter;
+}
 	@media (min-width:791px) {
+	.bell-icon:after {
+    line-height: 33px;
+    height: 36px;
+    color: rgba(255,255,255,0.7);
+		}
 	    header .content nav>ul {
 	        clear: both;
 	        padding-top: 18px
@@ -425,6 +445,11 @@ body {
 	        top: 3px;
 	        font-size: 20px;
 	        line-height: 10px
+	    }
+	    header .content .right>ul>li.wishlist .wishlist-info{
+	    	max-height: 0;
+    		overflow: hidden;
+    		position: absolute;
 	    }
 	}
 	
@@ -2137,6 +2162,9 @@ body {
 	        float: right;
 	        margin-right: 30px
 	    }
+		header .content nav>ul>li {
+    		margin-right: 51px;
+		}
 	}
 	
 	header>.content .top ul a[href="/helpservices"] {

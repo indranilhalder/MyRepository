@@ -8960,11 +8960,11 @@ footer .banner {
         margin-bottom:20px;	
     }		    
     } 
-.listing.wrapper .right-block {
+/* .listing.wrapper .right-block {
 	display:inline;
 	float:none;
   overflow: hidden;
-  width: 100%; }
+  width: 100%; } */
   @media (min-width: 651px) {
     .listing.wrapper .right-block {
       width: 70%;
@@ -17308,8 +17308,7 @@ max-width:100%;
 {
 	display:none;
 }
-@-moz-document url-prefix() {
-	
+@-moz-document url-prefix() {	
 	body .account .right-account form .select select {
 		padding-top:6px;
 	}
@@ -17317,13 +17316,12 @@ max-width:100%;
 	header .content .bottom .search .select-list select {
 		padding-top:11px;
 	}
-	
-	
-	 header .content nav > ul > li > ul > li > ul
+	}
+	/*  header .content nav > ul > li > ul > li > ul
 	 {
 	 	height:450px;
 	 	overflow: auto;
-	 }
+	 } */
 
 	.product-info .product-content .wish-share>li .share>ul li {
     vertical-align:middle;
@@ -17408,8 +17406,7 @@ body .account .right-account form .select.gender select
 	color:red;
 	background:transparent !important;
 }
-@media (max-width: 650px)
-{
+@media(max-width: 650px){
 	body .account .right-account form .select .half_span select {
 	  float: left;
 	  width: 30%;
@@ -18781,7 +18778,6 @@ header.brand-header .content .search form .select-list ul li {
 
 header.brand-header .content .bottom .mobile-bag.bag {
 	display: none !important;
-}
 }
 
 header.brand-header .content .bottom .search select{
@@ -28562,10 +28558,10 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 		top: auto;
     	bottom: 30px;
 	}
-	body .account .right-account.rewards>div.customer-service h2, body .account .right-account.rewards>div.customer-service p
+	/* body .account .right-account.rewards>div.customer-service h2, body .account .right-account.rewards>div.customer-service p
 		{
 		text-align: center
-	}
+	} */
 	body .account .right-account.rewards>div.customer-service.steps ul {
 		margin-top: 20px
 	}
@@ -45463,13 +45459,14 @@ float: right;
     font-size: 14px;
     text-decoration: underline;
    }
-   #customPriceFilter #applyCustomPriceFilter{
+   #customPriceFilter #applyCustomPriceFilter, #customPriceFilter #applyCustomPriceFilterMob{
    padding: 5px 4px;
     height: auto;
     background: #a9143c;
     color: #fff;
     border: none;
     margin-bottom: 5px;
+    line-height: normal;
    }
     #customPriceFilter span{
   color:#dfd1d5;
@@ -64922,7 +64919,7 @@ header .content nav > ul > li > ul > li:hover > .toggle:after, header .content n
 	    border-left: 15px solid #444444;
 }
 header .content nav > ul > li:first-child  > ul:hover, header .content nav > ul > li.hovered > ul{
-	width:100%;
+	width:100% !important;
 	/* padding-top:40px; */
 } 
 header .content nav > ul > li > ul > li,header .content nav > ul > li > ul:before{
@@ -68019,7 +68016,7 @@ header .content nav > ul > li > ul > li:hover > .toggle:after, header .content n
 	    border-left: 15px solid #444444;
 }
 header .content nav > ul > li:first-child  > ul:hover, header .content nav > ul > li.hovered > ul{
-	width:100%;
+	width:100% !important;
 	/* padding-top:40px; */
 } 
 header .content nav > ul > li > ul > li,header .content nav > ul > li > ul:before{
