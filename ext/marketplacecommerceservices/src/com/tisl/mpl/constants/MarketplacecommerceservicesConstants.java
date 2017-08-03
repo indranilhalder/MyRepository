@@ -43,7 +43,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// TPR-4464 ends here
 	//TPR-4461 STARTS HERE
 	public static final String COUPONFAILUREMESSAGE = "Sorry,Voucher is not applicable for the PAYMENT MODE/BANK you have selected.In order to proceed with this payment mode, please release the coupon or select an alternative payment mode";
-	
+
 	public static final String EXTENSIONNAME = "marketplacecommerceservices";
 
 	public static final String EMPTYSPACE = "";
@@ -275,7 +275,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String EMIBANTERMSSQUERY = "select {e:pk} from {emibank as e},{bank as b} where {e.name}={b.pk} and {b.bankName}=?bank"
 			.intern();
-	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode"
+	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode and {b.basestore}=?baseStore"
 			.intern();
 	public static final String BANKFORBINQUERY = "select {b:pk} from {Bin As b} WHERE {b.binno}=?bin".intern();
 	public static final String GETPAYMENTTRANSACTIONFROMCARTQUERY = "select {p:pk} from {PaymentTransaction as p},{Cart as c},{Customer as u} where {p.order}={c.pk} and {c.user}={u.pk} and {u.uid}=?customerId and {p.code}=?juspayOrderId and {p.status}='success' "
@@ -283,7 +283,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILEBLACKLIST = "select {b:pk} from {blacklist As b} where {b.phoneNumber} =?phoneNumber"
 			.intern();
 	public static final String MOBILENO = "phoneNumber".intern();
-	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode".intern();
+	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore}=?baseStore"
+			.intern();
 	public static final String MODE = "mode".intern();
 	public static final String SAVEDCARDQUERY = "Select {s:pk} from {SavedCard as s},{Customer as c} where {s.customer}={c.pk} and {c.customerid}=?customerId and {s.cardReferenceNumber}=?cardRef"
 			.intern();
@@ -2104,7 +2105,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String NOENTRYSUBORDERLOG = "No  Entries available for Suborder ID:- ";
 
 	public static final String SECONDPRODUCT = "secondProduct";
-	
+
 	//TPR-5346
 	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "reachedMaxLimitforproduct";
 	public static final String PRECOUNTMSG = "Unfortunately, there is a restriction on the number of";
@@ -2148,6 +2149,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+
+	//Payment Type changes
+	public static final String BASESTORE = "baseStore".intern();
 }
-
-
