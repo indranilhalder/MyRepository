@@ -72147,4 +72147,16 @@ body #account-invite .right-account>div.social-invites .social {
     margin-bottom: 48px;
 }
 }
+
 /* TPR-6147 End */
+
+/* TPR-6410 End */
+@-moz-document url-prefix(){
+.shop-by-department-banner {
+	float:none ! important;
+	position: absolute;
+	right: 1%;
+	top: 8px;
+}
+}
+/* TPR-6410 End */

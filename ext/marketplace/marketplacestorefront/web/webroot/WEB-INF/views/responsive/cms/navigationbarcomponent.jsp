@@ -111,10 +111,15 @@
 				</c:forEach>
 				</ul></li>
 				</c:forEach>
-				<!-- TPR-6410 -->
 			<!-- TPR-6410 -->
-				<img class="shop-by-department-banner banner-column-${columnCounter}">  <a href="${component.navigationNode.media.alternativeURL}">
-				<img src="${component.navigationNode.media.URL}"/></a>
+			<%-- 	<img class="shop-by-department-banner banner-column-${columnCounter}">   --%>
+				<c:if test="${not empty component.navigationNode.media.alternativeURL}">
+				<a href="${component.navigationNode.media.alternativeURL}">
+				</c:if>
+				<img class="shop-by-department-banner banner-column-${columnCounter}" src="${component.navigationNode.media.URL}"/>
+				<c:if test="${not empty component.navigationNode.media.alternativeURL}">
+				</a>
+				</c:if>
 						<!-- TPR-561 -->
 				
 	</c:when>
