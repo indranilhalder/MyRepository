@@ -76115,13 +76115,13 @@ table#showPriceBreakup{
 	.product-info>div.accordin.FashionJewellery
 	{
 	width: 44%;
-	margin-top: 117px;
+	margin-top: 106px;
 	}
 }
 @media (min-width: 1025px) and (max-width: 1189px){
 	.product-info>div.accordin.FineJewellery, 
 	.product-info>div.accordin.FashionJewellery{
-	margin-top: 112px;
+	margin-top: 97px;
 	width: 43%;
 	}
 	.product-info>div.tabs-block.FineJewellery,
@@ -76929,6 +76929,8 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 /*JWLSPCUAT-46 start*/
 .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes, 
 .product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes,
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes_Refunds,
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes_Refunds,
 .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
 .product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
 .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
@@ -76961,7 +76963,8 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 } 
 .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li,
 .product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li{
-	border-bottom: 2px solid transparent;
+	border-bottom: 2px solid #ccc;
+	padding-bottom: 8px;
 }
 .product-info>div.tabs-block.FineJewellery .nav-wrapper:after, 
 .product-info>div.tabs-block.FashionJewellery .nav-wrapper:after{

@@ -70,7 +70,7 @@ var buyboxskuId='';
 			</li>
 		</c:if>
 		<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
-			<li id="tabs_styleNotes">
+			<li id="tabs_styleNotes_Refunds">
 				 <spring:theme code="product.product.returnsAndRefunds" />
 			</li>
 		</c:if>
