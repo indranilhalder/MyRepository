@@ -18,8 +18,8 @@
 							<%-- <li><a href="<c:url value="/my-account/"/>"><spring:theme
 										code="header.flyout.overview" /></a></li> --%> 	<!-- UF-249 -->
 							
-							<%-- <li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li> --%>  <!-- UF-249 -->
+							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+										code="header.flyout.marketplacepreferences" /></a></li>  <!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
 										code="header.flyout.Personal" /></a></li>
@@ -71,8 +71,8 @@
 							<%-- <li><a href="<c:url value="/my-account/"/>"><spring:theme
 										code="header.flyout.overview" /></a></li> --%>
 							
-							<%-- <li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
-										code="header.flyout.marketplacepreferences" /></a></li> --%>   <!-- UF-249 -->
+							<li><a href="<c:url value="/my-account/marketplace-preference"/>"><spring:theme
+										code="header.flyout.marketplacepreferences" /></a></li>   <!-- UF-249 -->
 	
 							<li><a href="<c:url value="/my-account/update-profile"/>"><spring:theme
 										code="header.flyout.Personal" /></a></li>
