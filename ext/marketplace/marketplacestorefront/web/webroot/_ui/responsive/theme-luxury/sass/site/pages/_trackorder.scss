@@ -198,7 +198,8 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
 }
 
 body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_00cbe9:before,
-body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_ff1c47:before{
+body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_ff1c47:before,
+body .account .right-account .order-history.order-details .status>ul>li.progress span.dot.trackOrder_ff0000:before{
 	background-color: #b99d6b;
     box-shadow: 0 0 0 3px #b99d6b;
     z-index: 2;
@@ -213,7 +214,8 @@ body .account .right-account .order-history.order-details .status>ul>li.progress
 }
 
 body .account .right-account .order-history.order-details .status .message.trackOrdermessage_00cbe9,
-body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47{
+body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff1c47,
+body .account .right-account .order-history.order-details .status .message.trackOrdermessage_ff0000{
 	color: #a9143c;
     z-index: 100;
     top: 55px !important;

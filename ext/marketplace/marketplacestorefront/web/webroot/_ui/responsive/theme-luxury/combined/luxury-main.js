@@ -14261,7 +14261,7 @@ if (function(a, b) {
                 return this.optional(b) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(a);
             },
             url: function(a, b) {
-                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(a);
+                return this.optional(b) || /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[\/?#]\S*)?$/i.test(a);
             },
             date: function(a, b) {
                 return this.optional(b) || !/Invalid|NaN/.test(new Date(a).toString());
@@ -14869,7 +14869,7 @@ TATA.CommonFunctions = {
                 pageQuery = url + TATA.Pages.PLP.addSortParameter()), "" != pageQuery && /page-[0-9]+/.test(pageQuery) ? (pageQueryString = pageQuery.match(/page-[0-9]+/), 
                 prevPageNoString = pageQueryString[0].split("-"), prevPageNo = parseInt(prevPageNoString[1]), 
                 currentPageNo = prevPageNo + 1, ajaxUrl = pageQuery.replace(/page-[0-9]+/, "page-" + currentPageNo)) : (currentPageNo++, 
-                ajaxUrl = pathName.replace(/[/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
+                ajaxUrl = pathName.replace(/[\/]$/, "") + "/page-" + currentPageNo + "?" + pageQuery), 
                 currentPageNo <= totalNoOfPages && (TATA.Pages.PLP.performLoadMore(ajaxUrl), currentPageNo == totalNoOfPages && $(this).hide());
             });
         },
@@ -15379,9 +15379,9 @@ $(document).ready(function() {
     "overViews" == pageNameDropdown ? $("#menuPageSelect option").eq(0).attr("selected", "selected") : "mplPref" == pageNameDropdown ? $("#menuPageSelect option").eq(1).attr("selected", "selected") : "personalInfo" == pageNameDropdown ? $("#menuPageSelect option").eq(2).attr("selected", "selected") : "orderHistory" == pageNameDropdown ? $("#menuPageSelect option").eq(3).attr("selected", "selected") : "savedCards" == pageNameDropdown ? $("#menuPageSelect option").eq(4).attr("selected", "selected") : "addressBook" == pageNameDropdown ? $("#menuPageSelect option").eq(5).attr("selected", "selected") : "review" == pageNameDropdown ? $("#menuPageSelect option").eq(6).attr("selected", "selected") : "coupons" == pageNameDropdown ? $("#menuPageSelect option").eq(8).attr("selected", "selected") : "invite" == pageNameDropdown && $("#menuPageSelect option").eq(9).attr("selected", "selected");
     var sPageURL = window.location.search.substring(1);
     if (sPageURL.indexOf("&pageAnchor=") > 0) {
-        "trackOrder" == sPageURL.split("&")[1].split("=")[1] && ("none" == $("header div.bottom .marketplace.linear-logo").css("display") ? $("html, body").animate({
+        "trackOrder" == sPageURL.split("&")[1].split("=")[1] && ("none" == $("header div.bottom .marketplace.linear-logo").css("display") ? $("#shipping-track-order").length > 0 && $("html, body").animate({
             scrollTop: $("#shipping-track-order").offset().top - 150
-        }, 500) : $("html, body").animate({
+        }, 500) : $("#shipping-track-order").length > 0 && $("html, body").animate({
             scrollTop: $("#shipping-track-order").offset().top - 10
         }, 500));
     }

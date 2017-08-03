@@ -578,7 +578,6 @@
 														</c:if>
 													
 									</div>
-									<br> <br>
 									<c:url value="${entry.product.url}" var="productUrl" />
 									<c:set var="orderEntrySellerSKU"
 										value="${entry.mplDeliveryMode.sellerArticleSKU}" />
@@ -986,7 +985,7 @@
 										 	<c:set var="productDelivered" value="1"/>
 										  </c:if>
 										  </c:forEach>
-										<div class="deliveryTrack status"
+										<div class="deliveryTrack status suman"
 											id="tracker_${entry.transactionId}">
 											<ul class="nav">
 											
@@ -1174,7 +1173,7 @@
 														class="progress progtrckr-done processingStatus processing"
 														orderlineid="${entry.orderLineId}"
 														ordercode="${subOrder.code}">
-														<span class="start"></span>
+														<!-- <span class="start"></span> -->
 														<c:set value="${0}" var="dotCount" /> 
 														
 														<c:forEach items="${processingStatus}" var="productStatus" varStatus="loop">

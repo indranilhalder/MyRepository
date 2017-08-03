@@ -86,14 +86,18 @@ $(document).ready(function(){
 			
 			if(anchorPoint == 'trackOrder'){
 				if($('header div.bottom .marketplace.linear-logo').css('display') == 'none'){
-				$('html, body').animate({
-			        scrollTop: $('#shipping-track-order').offset().top - 150
-			    }, 500);
+					if($('#shipping-track-order').length>0){
+						$('html, body').animate({
+					        scrollTop: $('#shipping-track-order').offset().top - 150
+					    }, 500);
+					}
 				}
 				else{
-					$('html, body').animate({
-				        scrollTop: $('#shipping-track-order').offset().top - 10
-				    }, 500);
+					if($('#shipping-track-order').length>0){
+						$('html, body').animate({
+					        scrollTop: $('#shipping-track-order').offset().top - 10
+					    }, 500);
+					}
 				}
 			}
 		}
