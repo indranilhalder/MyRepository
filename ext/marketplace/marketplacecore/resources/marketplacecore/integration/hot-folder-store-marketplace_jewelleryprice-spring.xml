@@ -188,7 +188,7 @@
 				</value>
 			</property>
 			<property name="impexRow">
-				<value>;{0};{1};{2};{3};{4}</value>
+				<value>;{0};{4};{1};{2};{3}</value>
 			</property>
 		</bean>  
          
