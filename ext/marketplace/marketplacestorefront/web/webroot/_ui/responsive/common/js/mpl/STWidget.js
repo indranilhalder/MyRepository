@@ -219,12 +219,13 @@ $(document).ready(function() {
 	    hH = $('.lazy-reached-stw').outerHeight(),
 		wH = $(window).height(),
 	    wS = $(this).scrollTop();
-		if (!$('#stw_widget').attr('loaded')) {
-		if ($("#pageType").val() == "homepage" && $('#stw_widget').length == 1 && wS > (hT + hH - wH)) {
+		if (!$('#stw_widget').attr('loaded') || !$('#stw_widget_blp').attr('loaded')) {
+		if ($('#stw_widget').length == 1 && wS > (hT + hH - wH)) {
 	        stw.renderTabsWidget();
 	        $('#stw_widget').attr('loaded', true);
 	    } else if ($('#stw_widget_blp').length == 1 && wS > (hT + hH - wH)) {
 	        stw.renderFlatWidget();
+	        $('#stw_widget_blp').attr('loaded', true);
 	    }
 		}
 		}
