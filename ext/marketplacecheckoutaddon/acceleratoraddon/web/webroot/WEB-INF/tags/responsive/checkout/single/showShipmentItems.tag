@@ -40,16 +40,16 @@
 											<!-- Commented as part JWLSPCUAT-38 -->
 												<c:choose>
 													<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-															<a href="${productUrl}"><product:productPrimaryImage
+															<a href="${productUrl}"><product:productPrimaryImage lazyLoad="false"
 																	product="${entry.product}" format="luxuryCartIcon" /></a>
 													</c:when>
 													<%-- <c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator and (entry.product.rootCategory)=='FineJewellery'}">
-															<a href="${entryProductUrl}"> <product:productPrimaryImage
+															<a href="${entryProductUrl}"> <product:productPrimaryImage lazyLoad="false"
 																	product="${entry.product}" format="fineJewelcartIcon" />
 															</a>
 													</c:when> --%>
 													<c:otherwise>
-															<a href="${productUrl}"><product:productPrimaryImage
+															<a href="${productUrl}"><product:productPrimaryImage lazyLoad="false"
 																	product="${entry.product}" format="thumbnail" /></a>
 															
 													</c:otherwise>
