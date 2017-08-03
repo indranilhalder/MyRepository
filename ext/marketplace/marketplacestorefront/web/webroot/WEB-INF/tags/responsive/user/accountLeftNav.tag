@@ -19,8 +19,8 @@
 		</li>
 		<%-- <li id="lnOverView"><a href="<c:url value="/my-account?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.overview" /></a></li> --%>
-		<%-- <li id="lnMplPref"><a href="<c:url value="/my-account/marketplace-preference?isLux=${isLuxVal}"/>"><spring:theme
-					code="header.flyout.marketplacepreferences" /></a></li> --%> <!-- UF-249 -->
+		<li id="lnMplPref"><a href="<c:url value="/my-account/marketplace-preference?isLux=${isLuxVal}"/>"><spring:theme
+					code="header.flyout.marketplacepreferences" /></a></li> <!-- UF-249 -->
 		<li id="lnUpdateProfile"><a href="<c:url value="/my-account/update-profile?isLux=${isLuxVal}"/>"><spring:theme
 					code="header.flyout.Personal" /></a></li>
 		<li id="lnOrder"><a href="<c:url value="/my-account/orders?isLux=${isLuxVal}"/>"><spring:theme
