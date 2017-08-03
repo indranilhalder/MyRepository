@@ -112,14 +112,10 @@
 				</ul></li>
 				</c:forEach>
 				<!-- TPR-6410 -->
-				<c:if test ="${not empty component.navigationNode.media.alternativeURL}">
-				<img class="shop-by-department-banner banner-column-${columnCounter}" alt="tesr" src="${component.navigationNode.media.URL}" /></c:if>
-				<c:otherwise>
-					<!-- TPR-6410 -->
+			<!-- TPR-6410 -->
 				<img class="shop-by-department-banner banner-column-${columnCounter}">  <a href="${component.navigationNode.media.alternativeURL}">
 				<img src="${component.navigationNode.media.URL}"/></a>
-				</c:otherwise>
-				</ul>		<!-- TPR-561 -->
+						<!-- TPR-561 -->
 				
 	</c:when>
 	<c:otherwise>
