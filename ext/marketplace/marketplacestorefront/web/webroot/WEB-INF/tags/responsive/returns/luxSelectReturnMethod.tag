@@ -53,7 +53,7 @@
 		<c:if test="${productRichAttrOfQuickDrop eq 'yes' &&  sellerRichAttrOfQuickDrop eq 'yes' }"> 
 		<!-- Quick Drop -->
 		<div class="col-md-9 quickDrop">
-			<div class="col-md-4 col-sm-6">
+			<div class="col-md-6 col-sm-12">
 				<b><spring:theme code="text.order.returns.quickdrop"/> : </b> <br /> <span><spring:theme code="text.order.returns.listofstores"/></span>
 				<div class="quickDropArea" data-loaded="false">
 						<div class='error_text'></div>
@@ -116,12 +116,12 @@
 					
 					<c:when test="${subOrderEntry.mplDeliveryMode.code eq 'click-and-collect'}">
 					<div class="row clearfix">
-						<div class="col-md-6 col-sm-6 col-xs-6">
+						<div class="quickDropAreaPincode-left col-md-8 col-sm-8 col-xs-8">
 							<div class="form-group">
 								 <input type="text" class="form-control" id="pin" maxlength="6" placeholder="Enter Pincode" value="${subOrderEntry.deliveryPointOfService.address.postalCode}" onkeypress="return isNum(event)" />
 							</div>
 						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6">
+						<div class="quickDropAreaPincode-right col-md-4 col-sm-4 col-xs-4">
 							<button id="subOrderEntry" type="button" class="btn btn-primary pincodeSubmit">Submit</button>
 						</div>
 					</div>
@@ -131,12 +131,12 @@
 					</c:when>
 					<c:otherwise>
 					<div class="row clearfix">
-						<div class="col-md-6 col-sm-6 col-xs-6">
+						<div class="quickDropAreaPincode-left col-md-8 col-sm-8 col-xs-8">
 							<div class="form-group">
 								 <input type="text" class="form-control" id="pin" maxlength="6" placeholder="Enter Pincode" value="${subOrder.deliveryAddress.postalCode}" onkeypress="return isNum(event)" />
 							</div>
 						</div>
-						<div class="col-md-6 col-sm-6 col-xs-6">
+						<div class="quickDropAreaPincode-right col-md-4 col-sm-4 col-xs-4">
 							<button id="subOrder" type="button" class="btn btn-primary pincodeSubmit">Submit</button>
 						</div>
 					</div>
@@ -147,7 +147,7 @@
 							
 					</div>
 			</div>
-			<div class="col-md-8 col-sm-12 mapArea">
+			<div class="col-md-6 col-sm-12 mapArea">
 				<div id="map-canvas"></div>
 				<!-- <div class="mapDistance">This store is 8 KM away from your
 					current location.</div> -->
@@ -363,7 +363,7 @@ $(document).ready(function(){
 										 +data[i].address.postalCode+",  Opening Time :"+data[i].mplOpeningTime +",  Closing Time : "+data[i].mplClosingTime + "</span></div></div>";
 							  }else{
 							  
-							  tempHtml += "<div class='selectquickDrop quickDropRadio"+i+" col-md-12'>"
+							  tempHtml += "<div class='selectquickDrop quickDropRadio"+i+" row'>"
 							  +"<div class='selectRadio col-md-2 col-sm-2 col-xs-2'>"	
 							  +"<input id='storeIds"+i+"' name='storeIds'  onclick=updatePointersNew('quickDropRadio"+i+"','"+ data[i].geoPoint.latitude+"','"+ data[i].geoPoint.longitude+"','"+ data[i].displayName+","+data[i].address.city+","+ data[i].address.postalCode+"') class='checkButton' type='checkbox' value = '"+data[i].slaveId+"' /></div>"
 								+"<div class='col-md-10 col-sm-10 col-xs-10'>"

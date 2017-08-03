@@ -62,11 +62,11 @@
 		display: inline-block;
 	}
 }
-.accordtionTataCliq .accContents .radioButton:checked {
+.accordtionTataCliq .accContents .radioButton:checked{
     background-color: #B9966B;
     border: 2px solid #B9966B !important;
 }
-.accordtionTataCliq .accContents .radioButton {
+.accordtionTataCliq .accContents .radioButton{
     display: block !important;
     height: 15px !important;
     width: 15px !important;
@@ -81,7 +81,22 @@
     position: static;
     overflow: auto;
 }
-.accordtionTataCliq .radioButton{
+.accordtionTataCliq .accContents .quickDropAreaPincode{
+    background: #fff;
+    margin-top: 30px;
+    
+    .quickDropAreaPincode-left, .quickDropAreaPincode-right{
+        padding: 5px;
+    }
+    .pincodeSubmit, .pincodeSubmit:hover{
+        color: #fff!important;
+        background: #2d2d2d !important;
+        border-color: #2d2d2d !important;
+        height: auto !important;
+        font-weight: normal!important;
+    }
+} 
+.accordtionTataCliq .radioButton,  .accordtionTataCliq .checkButton{
       -webkit-appearance: none;
 	  appearance: none;
 }
@@ -98,6 +113,11 @@
     cursor: pointer;
     margin-top: 5px;
     z-index: 9999999999;
+    border: 1px solid #B9966B !important;   
+}
+.accordtionTataCliq .accContents .checkButton:checked{
+    background-color: #B9966B;
+    border: 2px solid #B9966B !important;    
 }
 .accordtionTataCliq .accContents .quickDropArea, .accordtionTataCliq .accContents .scheduledPickupArea {
     height: 211px;
