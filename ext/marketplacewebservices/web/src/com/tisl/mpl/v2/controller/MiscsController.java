@@ -2107,10 +2107,10 @@ public class MiscsController extends BaseController
 										{
 											LOG.debug("===Inside ConsignmentEntryModel loop===="
 													+ con.getConsignment().getStatus().getCode());
-											if (StringUtils.isNotEmpty(con.getConsignment().getStatus().getCode()))
-											{
-												//consignmentStatusCheck = con.getConsignment().getStatus().getCode();
-											}
+											//											if (StringUtils.isNotEmpty(con.getConsignment().getStatus().getCode()))
+											//											{
+											//												//consignmentStatusCheck = con.getConsignment().getStatus().getCode();
+											//											}
 											LOG.debug("===========DeliveryMode:====****======"
 													+ orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode());
 											if (orderEntry1.getMplDeliveryMode().getDeliveryMode().getCode()
