@@ -153,12 +153,10 @@
             padding:0 0px;
         }
         .lookbook-pdr-10{
-            padding:0px;
-            padding-right: 10px;
+           padding:0 5px;
         }
         .lookbook-pdl-10{
-            padding:0px;
-            padding-left: 10px;
+            padding:0 5px;
         }
 		.colmn {
 			&:nth-child(1) {
@@ -195,10 +193,16 @@
             li:first-child{
                 width: 50%;
                 float: left;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
             }
             li:nth-child(2){
                 width: 50%;
                 float: right;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
             }
         }
     }
@@ -212,10 +216,16 @@
             li:first-child{
                 width: 50%;
                 float: left;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
             }
             li:nth-child(2){
                 width: 50%;
                 float: right;
+                @include media-breakpoint-down(sm) {
+                     width: 49%;
+                }
             }
         }
          .split-lookbook-3{

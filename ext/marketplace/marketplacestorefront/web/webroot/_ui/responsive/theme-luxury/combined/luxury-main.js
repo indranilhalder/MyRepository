@@ -14935,7 +14935,7 @@ TATA.CommonFunctions = {
         },
         filterByFacet: function() {
             $(document).on("click", ".reset-filters", function() {
-                var resetUrl = $(this).data("resetqueryurl") + $(".responsiveSort").find(":selected");
+                var resetUrl = $(this).data("resetqueryurl") + TATA.Pages.PLP.addSortParameter();
                 TATA.Pages.PLP.performAjax(resetUrl);
             }), $(document).on("click", ".remove-filter", function() {
                 var relevantCheckbox = $(this).attr("data-facetCode");
