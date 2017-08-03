@@ -50,7 +50,7 @@
             <div class="detail" style="display: block;">
                <c:choose>
                   <c:when test="${classification.key=='Product Details'}">
-                     <div class="title">PRODUCT CODE 
+                     <div class="title">Product Code 
                      <span id="jewelDetailsUssid" ></span>
                      </div>
                      <table>
@@ -61,7 +61,7 @@
                                  <td >${featureValue}</td>
                               </c:forEach>
                            </tr>
-                        </c:forEach>
+                        </c:forEach> 
                      </table>
                   </c:when>
                   <c:when test="${classification.key=='Diamond Details'}">
