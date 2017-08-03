@@ -2064,6 +2064,8 @@ ACC.singlePageCheckout = {
 	isSlotDeliveryAndCncPresent:false,
 	countItemsForReviewOrder:"",
 	needHelpContactNumber:"",
+	currentPincode:"",
+	previousPincode:"",
 /****************MOBILE STARTS HERE************************/
 //-----------------------------COMMENTS ON mobileValidationSteps object-----------------------------//
 //	1.isAddressSaved		:	Used to track if new address has been saved in cartModel for responsive
@@ -2298,6 +2300,10 @@ ACC.singlePageCheckout = {
 			$("#editAddressFormMobile.new-address-form-mobile").slideDown();
 			$("#editAddressFormMobile #modalBody").html('');
 			$("#newAddressButton").hide();
+			loadPincodeData("edit").done(function() {
+        	var value = $(".address_landmarkOtherDiv").attr("data-value");
+   			 otherLandMarkTri(value,"defult");
+            });
 			//Call pincode serviceability on edit.
 			ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,addressId,false,true);
 			ACC.singlePageCheckout.attachOnPincodeKeyUpEvent("editAddressFormMobile",false,true);//OnKeyUp even will be attached so that after 6 digits are enter pincode serviceability call is made
@@ -2489,8 +2495,10 @@ ACC.singlePageCheckout = {
 	//Function called when ever a user enters pincode for responsive, When the character length becomes 6 a pincode serviceability call is fired.
 	attachOnPincodeKeyUpEvent:function(id,isNew,isEdit)
 	{	
-		$('#'+id+' .address_postcode').off('keyup'+"."+id);
-		$('#'+id+' .address_postcode').on('keyup'+"."+id,function(){
+		var selector1='keyup'+"."+id;
+		var selector2='change'+"."+id;//Adding change event to handle form autocomplete/autofill scenario
+		$('#'+id+' .address_postcode').off(selector1+" "+selector2);
+		$('#'+id+' .address_postcode').on(selector1+" "+selector2,function(){
 			$("#"+id+" #addressMessage").html("");
 			var pincode=$('.address_postcode').val();
 			$("#"+id+" .otherLandMarkError").html("");
@@ -2504,8 +2512,14 @@ ACC.singlePageCheckout = {
 				}
 				else
 				{
-					$("#"+id+" #addresspostcodeError").hide();
-					ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",isNew,isEdit);
+					ACC.singlePageCheckout.currentPincode=pincode;
+					if(ACC.singlePageCheckout.currentPincode!=ACC.singlePageCheckout.previousPincode)
+					{
+						console.log("CONSOLE========>"+pincode);
+						ACC.singlePageCheckout.previousPincode=pincode;
+						$("#"+id+" #addresspostcodeError").hide();
+						ACC.singlePageCheckout.checkPincodeServiceabilityForRespoinsive(pincode,"",isNew,isEdit);
+					}
 				}
 			}
 				
@@ -2992,5 +3006,10 @@ $(document).ready(function(){
 			//For web site we are removing payment page laoded for responsive view inorder to keep unique id's in the view
 			$("#makePaymentDivMobile").html("");
 		}
+		//Preventing auto complete of forms in single page
+//		$( document ).on( 'focus', ':input', function(){
+//	        //$( this ).attr( 'autocomplete', 'off' );
+//	        $( this ).attr( 'autocomplete', 'false' );
+//	    });
 	}
 });
