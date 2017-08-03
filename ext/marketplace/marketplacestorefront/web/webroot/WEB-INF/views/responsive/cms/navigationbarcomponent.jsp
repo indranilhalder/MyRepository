@@ -120,6 +120,7 @@
 				<c:if test="${not empty component.navigationNode.media.alternativeURL}">
 				</a>
 				</c:if>
+				</ul>
 						<!-- TPR-561 -->
 				
 	</c:when>
