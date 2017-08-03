@@ -76926,3 +76926,28 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     background: url(../images/jewellery-sprite-v2.png) no-repeat 52.5% 0;
 }
 /* TPR-5007 end */
+/*JWLSPCUAT-46 start*/
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes, 
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes,
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo{
+	width: 25%;
+	font-size: 12px;
+  	line-height: 1.33;
+  	letter-spacing: 0.6px;
+}
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
+.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
+.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo{
+  	text-align: center;
+}
+.product-info>div.tabs-block.FineJewellery .tabs.pdp.productTabs li,
+.product-info>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li{
+	font-size: 12px;
+	letter-spacing: 0.6px;
+	line-height: 1.5;
+}
+/*JWLSPCUAT-46 end*/
