@@ -14735,7 +14735,7 @@ TATA.CommonFunctions = {
     },
     Header: {
         MobileMenu: function() {
-            $(".mega-menu li span").each(function() {
+            $(window).width() < 768 && ($(".mega-menu li span").each(function() {
                 $(this).prev().css("pointer-events", "none");
             }), $(".mega-menu > li ").on("click", function() {
                 $(".mega-menu li span").each(function() {
@@ -14749,7 +14749,7 @@ TATA.CommonFunctions = {
                     $(".sub-menu-toggle", this).first().removeClass("active").next(".sub-menu").removeClass("active");
                 }), $(".sub-menu-toggle", this).first().toggleClass("active").next(".sub-menu").toggleClass("active"), 
                 $("a", this).css("pointer-events", "auto"), $(this).closest(".parent").children(":first").css("pointer-events", "auto");
-            }), $("#hamburger-menu").on("click", function() {
+            })), $("#hamburger-menu").on("click", function() {
                 $("body").addClass("menu-open");
             }), $("#main-nav-close").on("click", function() {
                 $("body").removeClass("menu-open");
