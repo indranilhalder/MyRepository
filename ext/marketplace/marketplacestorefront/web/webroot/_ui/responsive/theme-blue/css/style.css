@@ -75934,6 +75934,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     color: #000000;
     padding: 0;
 }
+.jewellery-wrapper>div.accordin.FineJewellery .item .title p,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .title p{
+	font-weight: 600;
+}
 .jewellery-wrapper>div.accordin.FineJewellery .item div.title,
 .jewellery-wrapper>div.accordin.FashionJewellery .item div.title{
 	border-bottom: solid 2px #cccccc;
