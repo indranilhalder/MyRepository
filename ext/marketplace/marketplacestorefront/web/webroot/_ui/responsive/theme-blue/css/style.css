@@ -66747,7 +66747,7 @@ hr {
 
 
 @media (min-width: 791px){
-body .account .track{
+body .account:not(.preferences) .track{
     width: 75%;
      float: none;
     padding: 0px;  
