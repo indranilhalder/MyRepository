@@ -219,7 +219,7 @@ public class BrandPageController extends AbstractSearchPageController
 			final Map<String, Map<String, List<CategoryModel>>> allBrandListMapForCode = new HashMap();
 
 			String categoryCode = null;
-			boolean present = false; Changes for SR144311279
+			boolean present = false; //Changes for SR144311279
 
 			if (subcategoryList != null)
 			{
