@@ -75916,16 +75916,17 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 	width: 58px;
 	height: 40px;
 }
-.product-info>div.tabs-block.FineJewellery,
-.product-info>div.tabs-block.FashionJewellery
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery
 {
 	margin: 116px 25px 0 !important;
 	width: 48%;
+	float: right;
 }
-.accordin.FineJewellery .item .title p,
-.accordin.FashionJewellery .item .title p,
-.accordin.FineJewellery .item .title span,
-.accordin.FashionJewellery .item .title span
+.jewellery-wrapper>div.accordin.FineJewellery .item .title p,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .title p,
+.jewellery-wrapper>div.accordin.FineJewellery .item .title span,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .title span
 {
 	font-size: 12px;
     line-height: 1.33;
@@ -75933,13 +75934,13 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     color: #000000;
     padding: 0;
 }
-.accordin.FineJewellery .item div.title,
-.accordin.FashionJewellery .item div.title{
+.jewellery-wrapper>div.accordin.FineJewellery .item div.title,
+.jewellery-wrapper>div.accordin.FashionJewellery .item div.title{
 	border-bottom: solid 2px #cccccc;
 	padding-bottom: 8px;
 }
-.accordin.FineJewellery .item .detail div.title,
-.accordin.FashionJewellery .item .detail div.title{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title{
 	padding-top: 24px;
 	padding-bottom: 16px;
     font-size: 12px;
@@ -75948,27 +75949,27 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     color: rgba(0, 0, 0, 0.5);
     border-bottom: solid 1px #eeeeee;
 }
-.accordin.FineJewellery .item .detail div.title span#jewelDetailsUssid,
-.accordin.FashionJewellery .item .detail div.title span#jewelDetailsUssid{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail div.title span#jewelDetailsUssid,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail div.title span#jewelDetailsUssid{
 	float: right;
 	color: rgba(0, 0, 0, 0.5);
 }
-.accordin.FineJewellery div.item,
-.accordin.FashionJewellery div.item{
+.jewellery-wrapper>div.accordin.FineJewellery div.item,
+.jewellery-wrapper>div.accordin.FashionJewellery div.item{
 	border: none;
 	margin-bottom: 22px;
 }
-.accordin.FineJewellery .item .detail table,
-.accordin.FashionJewellery .item .detail table{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table{
 	width: 100%;
 	table-layout: fixed;
 }
-.accordin.FineJewellery .item .detail table#showPriceBreakup,
-.accordin.FashionJewellery .item .detail table#showPriceBreakup{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table#showPriceBreakup,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table#showPriceBreakup{
 	border-top: solid 2px #cccccc;
 }
-.accordin.FineJewellery .item .detail table tr td.title,
-.accordin.FashionJewellery .item .detail table tr td.title{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td.title,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td.title{
 	padding-top: 16px;
     padding-bottom: 16px;
     font-size: 12px;
@@ -75980,54 +75981,54 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 table#showPriceBreakup{
 	display: table !important;
 }
-.accordin.FineJewellery .item .detail table#showPriceBreakup tr td.title, 
-.accordin.FashionJewellery .item .detail table#showPriceBreakup tr td.title{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table#showPriceBreakup tr td.title, 
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table#showPriceBreakup tr td.title{
 	width: auto;
 	line-height: 1.33;
 }
-.accordin.FineJewellery .item .detail table tr td,
-.accordin.FashionJewellery .item .detail table tr td{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td{
 	/* width: 10%; */
 	overflow: hidden;
 	display: table-cell;
 }
 
-.accordin.FineJewellery .item .detail ,
-.accordin.FashionJewellery .item .detail{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail ,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail{
 	font-size: 12px;
     line-height: 1.33;
     letter-spacing: 0.6px;
     color: rgba(0, 0, 0, 0.5);
 }
-.accordin.FineJewellery .item .detail table tr td:last-child,
-.accordin.FashionJewellery .item .detail table tr td:last-child{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:last-child,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:last-child{
 	text-align: right;
 }
-.accordin.FineJewellery .item .detail table tr:last-child,
-.accordin.FashionJewellery .item .detail table tr:last-child,
-.accordin.FineJewellery .item .detail .t-d-d ~ table:last-child tr,
-.accordin.FashionJewellery .item .detail .t-d-d ~ table:last-child tr
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr:last-child,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr:last-child,
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail .t-d-d ~ table:last-child tr,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail .t-d-d ~ table:last-child tr
 {
 	border-bottom: 0px;
 }
-.accordin.FineJewellery .item .detail .t-d-d ~ table tr, 
-.accordin.FashionJewellery .item .detail .t-d-d ~ table tr{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail .t-d-d ~ table tr, 
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail .t-d-d ~ table tr{
 	border-bottom: solid 1px #eeeeee;
 }
-.accordin.FineJewellery .item .detail table tr,
-.accordin.FashionJewellery .item .detail table tr{
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr{
 	border-bottom: solid 1px #eeeeee;
 }
  /* .accordin.FineJewellery .item:first-of-type div.title a:after,
  .accordin.FashionJewellery .item:first-of-type div.title a:after{
 	display: none;
 }  */
- .accordin.FineJewellery .item div.title a:after,
-.accordin.FashionJewellery .item div.title a:after{
+ .jewellery-wrapper>div.accordin.FineJewellery .item div.title a:after,
+.jewellery-wrapper>div.accordin.FashionJewellery .item div.title a:after{
 	display: none;
 } 
-.accordin.FineJewellery div.item div.detail .t-d-d, 
-.accordin.FashionJewellery div.item div.detail .t-d-d{
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d{
 	padding-top: 24px;
     padding-bottom: 16px;
     font-size: 12px;
@@ -76035,20 +76036,20 @@ table#showPriceBreakup{
     color: rgba(0, 0, 0, 0.5);
     border-bottom: solid 1px #eeeeee;
 }
-.accordin.FineJewellery div.item div.detail .t-d-d span, 
-.accordin.FashionJewellery div.item div.detail .t-d-d span{
+.jewellery-wrapper>div.accordin.FineJewellery div.item div.detail .t-d-d span, 
+.jewellery-wrapper>div.accordin.FashionJewellery div.item div.detail .t-d-d span{
 	float: right;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content{
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content{
 	background: none;
 	margin: 0px;
 	cursor: pointer;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in:after,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in:after,
-.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after{
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:after,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:after,
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after{
 	content: "\f067";
     font-size: 12px;
     line-height: 0.67;
@@ -76061,10 +76062,10 @@ table#showPriceBreakup{
     font-family: "FontAwesome";
     font-weight: normal;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:after,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:after,
-.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type:after,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type:after{
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:after,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:after,
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type:after,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type:after{
 	content: "\f068";
 	transform: rotate(180deg);
 	-webkit-transform: rotate(180deg);
@@ -76073,42 +76074,42 @@ table#showPriceBreakup{
   	-o-transform: rotate(180deg);
 	right: -6px;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after{
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type:after{
 	right: -9px;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in,
-.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active{
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in,
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active{
 	background: none;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content
 {
 	display: block !important;
 }
-.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
-.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
 {
 	display: none !important;
 }
 @media (min-width: 1190px){
-	.product-info>div.accordin.FineJewellery, 
-	.product-info>div.accordin.FashionJewellery
+	.product-info>.jewellery-wrapper>div.accordin.FineJewellery, 
+	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery
 	{
 	width: 44%;
 	margin-top: 106px;
 	}
 }
 @media (min-width: 1025px) and (max-width: 1189px){
-	.product-info>div.accordin.FineJewellery, 
-	.product-info>div.accordin.FashionJewellery{
+	.product-info>.jewellery-wrapper>div.accordin.FineJewellery, 
+	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery{
 	margin-top: 97px;
 	width: 43%;
 	}
-	.product-info>div.tabs-block.FineJewellery,
-	 .product-info>div.tabs-block.FashionJewellery{
+	.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery,
+	 .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery{
 	   margin-top: 91px !important;
 	 }
 }
@@ -76119,32 +76120,32 @@ table#showPriceBreakup{
     width: 57%;
     margin: 0;
 	}
-.product-info>div.tabs-block.FineJewellery,
-.product-info>div.tabs-block.FashionJewellery{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery{
 	margin: 0px 25px 0 !important;
 }
-.product-info>div.accordin.FineJewellery, 
-.product-info>div.accordin.FashionJewellery{
+.product-info>.jewellery-wrapper>div.accordin.FineJewellery, 
+.product-info>.jewellery-wrapper>div.accordin.FashionJewellery{
 	margin-top: 48px;
 	width: 48%;
 }
 }
 @media (min-width: 791px){
-	.product-info>div.accordin.FineJewellery,
-	.product-info>div.accordin.FashionJewellery{
+	.product-info>.jewellery-wrapper>div.accordin.FineJewellery,
+	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery{
 	     /* width: 44%; */
 	   margin-left: 30px;
        /* margin-top: 41px; */
 	}
 }
 @media (max-width: 790px){
-	.product-info>div.accordin.FineJewellery,
-	.product-info>div.accordin.FashionJewellery{
+	.product-info>.jewellery-wrapper>div.accordin.FineJewellery,
+	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery{
 	padding: 30px 12px 0;
 	 width: 100%; 
 }
-.product-info>div.tabs-block.FineJewellery,
- .product-info>div.tabs-block.FashionJewellery{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery,
+ .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery{
    width: 97%;
    margin: 0px 0px 0px 12px !important;
  }
@@ -76888,74 +76889,94 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 {
 	width: 58px;
     height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiBIS:before
 {
     width: 134px;
     height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 27% 0;
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL:before
 {
 	width: 132px;
     height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 8% 0;;
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGIA:before
 {
 	width: 94px;
     height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 52.5% 0;
 }
 /* TPR-5007 end */
 /*JWLSPCUAT-46 start*/
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes, 
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes,
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes_Refunds,
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes_Refunds,
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes, 
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes,
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes_Refunds,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_styleNotes_Refunds,
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo{
 	width: 25%;
 	font-size: 12px;
   	line-height: 1.33;
   	letter-spacing: 0.6px;
 }
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore, 
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_knowmore,
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo, 
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav #tabs_brandInfo{
   	text-align: center;
 }
-.product-info>div.tabs-block.FineJewellery .tabs.pdp.productTabs li,
-.product-info>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li,
-.product-info>div.tabs-block.FineJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc,
-.product-info>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .tabs.pdp.productTabs li,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li,
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc{
 	font-size: 12px;
 	letter-spacing: 0.6px;
 	line-height: 1.5;
 }
 /*JWLSPCUAT-46 end*/
 /* JWLSPCUAT-54 start */
- .product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li.active,
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li.active
+ .product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li.active,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li.active
 {
 	border-bottom: 2px solid #000;
 	padding-bottom: 8px;
 } 
-.product-info>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li,
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper .nav.pdp.productNav > li,
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper .nav.pdp.productNav > li{
 	border-bottom: 2px solid #ccc;
 	padding-bottom: 8px;
 }
-.product-info>div.tabs-block.FineJewellery .nav-wrapper:after, 
-.product-info>div.tabs-block.FashionJewellery .nav-wrapper:after{
+.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .nav-wrapper:after, 
+.product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .nav-wrapper:after{
 	height: 2px;
 }
 @media(max-width: 767px){
-	.product-info>div.tabs-block.FineJewellery, .product-info>div.tabs-block.FashionJewellery{
+	.product-info>.jewellery-wrapper>div.tabs-block.FineJewellery, .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery{
 	 	width: 100%;
 	 	margin-left: -14px !important;
     	margin-right: 0px !important;
@@ -77056,3 +77077,6 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 	}
 }
 /*exchange modal end*/
+.product-info.wrapper .jewellery-wrapper{
+	width: 100%;
+}
