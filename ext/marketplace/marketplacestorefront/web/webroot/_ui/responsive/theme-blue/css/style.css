@@ -71554,8 +71554,23 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	padding-left: 0;
 	padding-right: 0;
 }
-.tabs-block .nav-wrapper, .tabs.pdp.productTabs{
-	display: none;
+.product-classifications.wrapper{
+	padding:0;
+}
+.product-classifications.wrapper .stats-table {
+    border: 1px solid #f0f4f5;
+}
+.tabs-block .nav-wrapper, .tabs.pdp.productTabs, .SpecWrap, .view-button + .product-classifications.wrapper, .view-button, .hide-button{
+	display: none !important;
+}
+.electronics-accordian-tabs.pdp.specTabs{
+	width: 100%;
+}
+.electronics-accordian-tabs.pdp.specTabs tbody tr{
+	border: 1px solid #f0f4f5;
+}
+.electronics-accordian-tabs.pdp.specTabs tbody tr td {
+    padding: 15px 20px;
 }
 .product-specification-accordion.smk_accordion .accordion_in{
 	background: none;
@@ -71610,6 +71625,9 @@ body .account.preferences .right-account div.email-pref form .button-set a{
   	line-height: 1.67;
   	text-align: justify;
   	color: #31363d;
+}
+.product-specification-accordion.smk_accordion .accordion_in.specMob .acc_content{
+    background-color: #fff;
 }
 }
 /*UF-377 end*/
