@@ -269,4 +269,17 @@ public class MarketplacecclientservicesConstants
 	public static final String NO = "NO".intern();
 
 	public static final String OMSTIMEOUT = "5000";
+
+	//TPR-5667
+	public static final String SAMSUNG_API_USERNAME = "samsung.api.username";
+	public static final String SAMSUNG_API_PASSWORD = "samsung.api.password";
+	public static final String SAMSUNG_API_URL = "samsung.api.url";
+	public static final String SAMSUNG_HTTP_ERROR_CODE = "samsung.http.error.code";
+	public static final String SAMSUNG_CONNECTION_TIMEOUT = "samsung.connection.timeout";
+	public static final String SAMSUNG_READ_TIMEOUT = "samsung.read.timeout";
+	public static final String S0000_EXCEP = "S0000";
+	public static final String S0001_EXCEP = "S0001";
+	public static final String S0002_EXCEP = "S0002";
+	public static final String S0003_EXCEP = "S0003";
+	public static final String SAMSUNG_LOGGER_HEAD = "######## CreateSamsungOrder :: ";
 }

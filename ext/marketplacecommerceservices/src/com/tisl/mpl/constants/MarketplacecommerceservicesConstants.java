@@ -2153,5 +2153,6 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Restriction doesn't work
 	// public static final String BANKNAMEFORNETBANKING =
 	// "bankNameforNetbanking";
-
+	//TPR-5667 | Query to Find categoryCode for product
+	public static final String CATEGORY_CODE_FOR_PRODUCT = "select {c.code} from {CategoryProductRelation as cpr JOIN Category as c ON {cpr.source}={c.pk}} where {cpr.target} in ({{select {p.pk} from { product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} where {cv.version} = ?catalogVersion AND {p.code} = ?code }}) AND ({c.code} LIKE ?mplCategoryPrefix OR {c.code} LIKE ?luxuryCategoryprefix)";
 }
