@@ -225,7 +225,7 @@ public class BrandPageController extends AbstractSearchPageController
 			{
 				for (final CategoryModel category : subcategoryList)
 				{
-					present = false;
+					present = false;  //Changes for SR144311279
 					allBrandListForCategory = category.getCategories();
 
 					for (final CategoryModel subBrand : category.getAllSubcategories())
