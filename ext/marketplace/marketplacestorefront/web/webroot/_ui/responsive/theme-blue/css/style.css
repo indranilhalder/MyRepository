@@ -28532,6 +28532,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	display: none
 }
 .copycode_message{
+	z-index: 9;
 	width: 301px;
     height: 48px;
     opacity: 0.9;
