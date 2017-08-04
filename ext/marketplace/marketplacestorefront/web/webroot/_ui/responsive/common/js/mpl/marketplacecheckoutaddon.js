@@ -4944,6 +4944,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 
 function submitNBForm(){
 	$("#netbankingIssueError").css("display","none");
+	var staticHost = $('#staticHost').val();
 	var selectedValue=$('input[class=NBBankCode]:checked').val();
 	//TPR-4461 set for setting the bank name for NetBanking starts here
 	//var selectedHiddenValue=$('input[name=NBBankName]').val();
