@@ -147,7 +147,9 @@ function getProductSetData() {
 function getProductSetDataCustomSku() {
 	 	 
 	  	var pathName = $('input[name=customSkuUrl]').val();
-	      var query = window.location.search;
+	  	var browserPathName = window.location.pathName;
+	    var query = window.location.search;
+	    
 	     if (pageNoPagination <= totalNoOfPages) {
 	  
 	          //url with page no occourance found.
@@ -172,19 +174,12 @@ function getProductSetDataCustomSku() {
 	              		window.history.replaceState({}, "", ajaxUrl);
 	              	}else{
 	              		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	              		var nextPaginatedAjaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	                      if (query) {
+	              		var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	                      if (query != "?q=") {
 	                          ajaxUrl = ajaxUrl + query;
-	                        //  nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
-	                          if(query == "?q="){
-	                        		nextPaginatedAjaxUrl = nextPaginatedAjaxUrl ;
-	                        	}else{
-	                        		nextPaginatedAjaxUrl = nextPaginatedAjaxUrl + query;
-	                        	}
 	                      }
-	                      window.history.replaceState({}, "", nextPaginatedAjaxUrl);
+	                      window.history.replaceState({}, "", nextPaginatedUrl);
 	              	}
-	              	
 	  				ajaxPLPLoad(ajaxUrl);
 	              }
 	          } else { // if no url with page no occourance found.
@@ -250,7 +245,7 @@ $(document).ready(function() {
     	// INC144315462 and INC144315104
     	//TISSQAUAT-3429 ends
     	if($('input[name=customSku]').length == 1){
-    		getProductSetDataCustomSku();
+    		//getProductSetDataCustomSku();
     	}else{
     		//inital call to this function commented for starting the lazy load from page 2 UF-409
     		   //	getProductSetData();
