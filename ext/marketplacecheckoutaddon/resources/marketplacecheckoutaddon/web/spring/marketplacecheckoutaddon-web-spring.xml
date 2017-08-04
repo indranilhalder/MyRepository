@@ -143,7 +143,8 @@
 		<!-- <property name="checkoutStepValidator" ref="defaultResponsivePaymentMethodCheckoutValidator"/> --> <!-- TPR-629 -->
 		<property name="transitions">
 			<map merge="true">
-				<entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+				<!-- <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/> -->
+				<entry key="previous" value-ref="REDIRECT_TO_SINGLE_STEP"/>
 				<entry key="current" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
 				<!-- <entry key="next" value-ref="REDIRECT_TO_SUMMARY"/>  Commented for checkout journey modification-->
 				<entry key="next" value="redirect:/checkout/orderConfirmation/%s"/> 

@@ -578,6 +578,9 @@ tr.d0 td {
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION ENDS HERE--> --%>
           
 		</div>
+		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+		 <div class="jewellery-wrapper">
+		 </c:if>
 		 <div class="tabs-block ${product.rootCategory}">
 				<product:productPageTabs />
 			</div>
@@ -597,6 +600,9 @@ tr.d0 td {
 		<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
 			<product:productDetailsClassifications product="${product}" />
 			</c:if>
+			<c:if test="${product.rootCategory=='FineJewellery'or product.rootCategory=='FashionJewellery' }">
+		 </div>
+		 </c:if>	
 	</div>
 	
 	

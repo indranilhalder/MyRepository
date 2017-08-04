@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-	tagdir="/WEB-INF/tags/responsive/formElement"%>
 <%@ taglib prefix="single-checkout"
 	tagdir="/WEB-INF/tags/addons/marketplacecheckoutaddon/responsive/checkout/single"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
