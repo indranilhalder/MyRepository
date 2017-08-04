@@ -661,9 +661,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SALES_REPORT = "salesReport";
 	public static final String OTPGENERATEERROR = "Otp has not generated";
 	public static final String PREPAID_SPACE = "Prepaid";
-
-	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails.";
-	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails.";
+	//TISSPTEN-116 remove full stop
+	public static final String INTERESTED_IN_EMAIL = "I am interested in receiving e-mails";
+	public static final String NOT_INTERESTED_IN_EMAIL = "I am not interested in receiving e-mails";
 	public static final String BRAND_NAME_PREFIX = "MBH";
 
 	public static final String CUSTOMERNOTFOUND = "Customer not found";
