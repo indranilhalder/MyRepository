@@ -72168,7 +72168,7 @@ body #account-invite .right-account>div.social-invites .social {
 
 /* TPR-6147 End */
 
-/* TPR-6410 End */
+/* TPR-6410 start */
 @-moz-document url-prefix(){
 .shop-by-department-banner {
 	float:none ! important;
@@ -72178,3 +72178,45 @@ body #account-invite .right-account>div.social-invites .social {
 }
 }
 /* TPR-6410 End */
+
+/* TISSPTEN-107 start */
+@media (max-width: 768px){
+.page-returnSubmit .thirdTataCliq .selectReturnMethod.scheduled.col-md-12.col-sm-12.blackColor{
+    width: 100%;
+    display: -webkit-inline-box;
+}
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-8.updateaddress1{
+    display: -webkit-inline-box;
+    padding-right: 0;
+    margin-left: 0px;
+    margin-top: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-4.col-sm-4.col-xs-2.editAddress{
+    padding: 0;
+    width: 85px;
+    margin-top: 7px;
+}
+.page-returnSubmit .thirdTataCliq .page-returnSubmit .thirdTataCliq .scheduledPickupArea{
+    width: 109%;
+}
+.page-returnSubmit .thirdTataCliq .col-md-12.col-xs-12{
+   padding-right: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-12{
+   padding-right: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-12.scheduledPickup{
+    display: block;
+    padding-right: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-12.col-xs-12{
+	    margin-left: 10px;
+}
+.page-returnSubmit .thirdTataCliq .row.col-md-12.col-sm-6.col-xs-12.selectDateTime{
+	padding: 0;
+}
+.page-returnSubmit .thirdTataCliq .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input{
+	    margin: 10px auto 15px auto ! important;
+}
+}
+/* TISSPTEN-107 END */
