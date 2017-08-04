@@ -9,12 +9,11 @@
 	<ul class="delivery-block">
 	<li><h3><spring:theme code="pdp.delivery.options"/></h3><%-- <p id="pdpPinCodeAvailable"><spring:theme code="product.pincode"/></p> --%>
 	
-		
-		<div class="inline-form">
+		<a class="luxuyChangepincode" title="Change pincode">Change pincode</a>
+		<div class="inline-form mt-10">
 		 <c:choose>
 		 <c:when test="${not empty pincode}">
-		 	<input id="pinCodeAvailable" type="hidden" value="${true}"/>
-		 	<a class="luxuyChangepincode" title="Change pincode">Change pincode</a>
+		 	<input id="pinCodeAvailable" type="hidden" value="${true}"/>		 	
 			<input id="pin" type="text" value="${pincode}" maxlength="6" onkeypress="return isNum(event)" style="display: none;"/>
 			<button class="orange submit" id="pdpPincodeCheck" style="display: none;"><spring:theme code="text.submit"/></button>
 		    </c:when>
