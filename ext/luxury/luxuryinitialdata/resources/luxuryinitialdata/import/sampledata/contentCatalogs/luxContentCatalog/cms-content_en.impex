@@ -97,13 +97,13 @@ UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[la
 				</ul>"
 ;;EmptyCartParagraphComponent;"Your bag's empty - let's fill it up shall we?"
 ;;TitleForSellWithUsComponent;"Sell With Us"
-;;TitleForShippingPageComponent;"Shipping"
-;;TitleForCancellationPageComponent;"Cancellation"
-;;TitleForTrackOrderPageComponent;"Track Order"
-;;TitleForReturnsPageComponent;"Returns"
-;;TitleForFrequentlyAskedPageComponent;"Frequently Asked Question"
-;;TitleForTnCPaymentPageComponent;"Terms and Conditions"
-;;ShippingPageComponent;"Excellent  SHIPPING service Of  is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+#;;TitleForShippingPageComponent;"Shipping"
+#;;TitleForCancellationPageComponent;"Cancellation"
+#;;TitleForTrackOrderPageComponent;"Track Order"
+#;;TitleForReturnsPageComponent;"Returns"
+#;;TitleForFrequentlyAskedPageComponent;"Frequently Asked Question"
+#;;TitleForTnCPaymentPageComponent;"Terms and Conditions"
+#;;ShippingPageComponent;"Excellent  SHIPPING service Of  is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
 condition and in the fastest time possible. <!DOCTYPE html>
 <html>
 
@@ -158,7 +158,7 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
 </body>
 </html>"
-;;TrackOrderPageComponent;" Excellent  TRACK ORDER service is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+#;;TrackOrderPageComponent;" Excellent  TRACK ORDER service is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
 condition and in the fastest time possible. <!DOCTYPE html>
 <html>
 
@@ -181,7 +181,7 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
 </body>
 </html>"
-;;CancellationPageComponent;" CANCELLATION process is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+#;;CancellationPageComponent;" CANCELLATION process is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
 condition and in the fastest time possible. <!DOCTYPE html>
 <html>
 
@@ -204,7 +204,7 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
 </body>
 </html>"
-;;ReturnsPageComponent;" RETURNS service of  is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+#;;ReturnsPageComponent;" RETURNS service of  is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
 condition and in the fastest time possible. <!DOCTYPE html>
 <html>
 
@@ -461,7 +461,7 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
 
 
-;;TnCPaymentPageComponent;" <!DOCTYPE html>
+#;;TnCPaymentPageComponent;" <!DOCTYPE html>
 <html>
 <body>
 
@@ -511,7 +511,7 @@ condition and in the fastest time possible. <!DOCTYPE html>
 </body>
 </html> "
 
-;;FrequentlyAskedPageComponent;" Frequently Asked Questions <!DOCTYPE html>
+#;;FrequentlyAskedPageComponent;" Frequently Asked Questions <!DOCTYPE html>
 <html>
 
 <head>
