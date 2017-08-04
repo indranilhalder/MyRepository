@@ -14093,9 +14093,9 @@ body .account .left-nav ul li a{
 	color: #666666;
 
 }
-body .account .left-nav ul li a.active {
-    color: #A9143C;
-    text-decoration: underline;
+body .account .left-nav ul li.active a {
+    color: #a5173c;		/* TISSPTEN-118 fix */
+    /* text-decoration: underline; */
 }
 @media (max-width: 790px) {
     body .account .left-nav {
@@ -28549,12 +28549,18 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
     margin: auto;
     display: none;
 }
+body.page-coupons .account .wrapper{
+	padding-right: 30px;
+}
 @media ( max-width :790px) {
 	/* body .account .right-account.rewards>div h2, body .account .right-account.rewards>div>p
 		{
 		padding-left: 0;
 		text-align: center
 	} */
+	body.page-coupons .account .wrapper{
+	padding-right: 10px;
+	}
 	.copycode_message{
 		top: auto;
     	bottom: 30px;
