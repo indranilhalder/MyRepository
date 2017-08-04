@@ -147,7 +147,7 @@ function getProductSetData() {
 function getProductSetDataCustomSku() {
 	 	 
 	  	var pathName = $('input[name=customSkuUrl]').val();
-	  	var browserPathName = window.location.pathName;
+	  	var browserPathName = window.location.pathname;
 	    var query = window.location.search;
 	    
 	     if (pageNoPagination <= totalNoOfPages) {
@@ -245,7 +245,7 @@ $(document).ready(function() {
     	// INC144315462 and INC144315104
     	//TISSQAUAT-3429 ends
     	if($('input[name=customSku]').length == 1){
-    		//getProductSetDataCustomSku();
+    		getProductSetDataCustomSku();
     	}else{
     		//inital call to this function commented for starting the lazy load from page 2 UF-409
     		   //	getProductSetData();
