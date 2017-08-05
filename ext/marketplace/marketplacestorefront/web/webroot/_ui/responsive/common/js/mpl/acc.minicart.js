@@ -60,6 +60,8 @@ ACC.minicart = {
 						function(e) {
 							var entryNo = $(this).attr("data-entry-no");
 							var entryUssid = $(this).attr("data-ussid");
+							var status = $(this).attr("data-status");
+
 							$
 									.ajax({
 										url : ACC.config.encodedContextPath
@@ -84,7 +86,7 @@ ACC.minicart = {
 															} else {
 																// console.log($(e.target).parents().find("li.item"));
 																
-																$(e.target).parents().find("li.item").remove();
+																$(e.target).parents().find("li.item_"+status).remove();
 															}
 																var url = window.location.href;
 																if (url.indexOf("cart") != -1) {

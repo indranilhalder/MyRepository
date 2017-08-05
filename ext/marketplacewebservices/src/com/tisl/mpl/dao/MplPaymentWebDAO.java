@@ -6,6 +6,7 @@ package com.tisl.mpl.dao;
 import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.promotions.model.OrderPromotionModel;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public interface MplPaymentWebDAO
 	 * @return PaymentTypeModel
 	 */
 
-	PaymentTypeModel getPaymentMode(String paymentMode);
+	PaymentTypeModel getPaymentMode(String paymentMode, final BaseStoreModel baseStore);
 
 
 	/**
@@ -80,7 +81,7 @@ public interface MplPaymentWebDAO
 
 	/**
 	 * This method returns the OrderPromotion Model where order is enable
-	 * 
+	 *
 	 * @return OrderPromotionModel
 	 *
 	 */

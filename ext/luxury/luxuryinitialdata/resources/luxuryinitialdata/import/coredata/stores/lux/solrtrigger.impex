@@ -1,0 +1,39 @@
+#
+# Import the Solr CronJob Trigger configuration for the Product Catalog
+#
+
+INSERT_UPDATE Job;code[unique=true];nodeId
+;solrIndexerJob;1
+
+INSERT_UPDATE CronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode)
+#;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeJob;false;en
+#;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeJob;false;en
+
+# TISPRO-371 Start update and delete index solr cron job into single composite cronjob
+INSERT_UPDATE CompositeCronJob;code[unique=true];job(code);sessionLanguage(isocode);runningOnClusterNode
+;luxIndexingCompositeCronjob;compositeJobPerformable;en;1
+;luxFullIndexingCompositeCronjob;compositeJobPerformable;en;1
+
+INSERT_UPDATE CronJob;code[unique=true];job(code);runningOnClusterNode
+# Run the update-luxIndex-cronJob every 15 minutes
+;full-luxIndex-cronJob;solrIndexerJob;1
+;update-luxIndex-cronJob;solrIndexerJob;1
+;delete-luxIndex-cronJob;solrIndexerJob;1 
+ 
+#Items to run from the Composite Cron Job
+INSERT_UPDATE CompositeEntry;code[unique=true];executablecronjob(code);compositecronjob(code);compositecronjobpos
+;delete-luxIndex-cronJob;delete-luxIndex-cronJob;luxIndexingCompositeCronjob;1
+;update-luxIndex-cronJob;update-luxIndex-cronJob;luxIndexingCompositeCronjob;2
+# ;disableMplIndexingCompositeCronJob;disableMplIndexingCompositeCronJob;luxFullIndexingCompositeCronjob;1
+;full-luxIndex-cronJob;full-luxIndex-cronJob;luxFullIndexingCompositeCronjob;2
+# ;enableMplIndexingCompositeCronJob;enableMplIndexingCompositeCronJob;luxFullIndexingCompositeCronjob;3
+ 
+					   
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
+# Run the luxIndexingCompositeCronjob every 15 minutes
+;luxIndexingCompositeCronjob;0;15;0;-1;-1;-1;true;true;-1
+
+INSERT_UPDATE Trigger;cronJob(code)[unique=true];second;minute;hour;day;month;year;relative;active;maxAcceptableDelay
+# Run the update-luxIndex-cronJob every 15 minutes
+;update-luxIndex-cronJob;0;15;-1;-1;-1;-1;true;true;-1
+;delete-luxIndex-cronJob;0;15;-1;-1;-1;-1;true;true;-1

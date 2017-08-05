@@ -1,0 +1,139 @@
+$contentCatalog=luxContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+
+# Language
+$lang=en
+
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode ; $contentCV[unique=true] ; uid[unique=true]             ; title[lang=$lang]              
+                         ;                         ; ClothingNavNode              ; "Clothing"                  
+                         ;                         ; ShoesNavNode           	  ; "Shoes"                  
+                         ;                         ; AccessoriesNavNode           ; "Accessories"                  
+                         ;                         ; MensGroomingNavNode          ; "MensGrooming"                 
+                         ;                         ; EditorsPicksNavNode          ; "EditorsPicks"                   
+                         ;                         ; PopularBrandsNavNode         ; "PopularBrands"                
+            
+
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent  ; $contentCV[unique=true] ; uid[unique=true]             ; linkName[lang=$lang]
+					     ;                         ; MensGroomingCategoryLink     ; "MensGrooming"
+						 ;                         ; EditorsPicksCategoryLink     ; "EditorsPicks"
+                         ;                         ; TopsLink                     ; "Tops"                  
+                         ;                         ; DressShoesLink               ; "Blazers&Vests"                  
+                         ;                         ; BottomsLink                  ; "Bottoms"                  
+                         ;                         ; OuterwearLink                ; "Outerwear "                 
+                         ;                         ; ActivewearLink               ; "Activewear"                   
+                         ;                         ; Socks&UnderwearLink          ; "Socks&Underwear"                   
+                         ;                         ; Sleep&LoungewearLink         ; "Sleep&Loungewear"                   
+                         ;                         ; SwimwearLink                 ; "Swimwear"                   
+                         ;                         ; Bundles&SetsLink             ; "Bundles&Sets"
+						 
+						 
+						 
+						 
+                         ;                         ; BootsLink                    ; "Boots"                  
+                         ;                         ; Blazers&VestsLink            ; "Blazers&Vests"                  
+                         ;                         ; Loafers&Slip-onsLink         ; "Loafers&Slip-ons"                  
+                         ;                         ; SandalsLink                  ; "Sandals "                 
+                         ;                         ; SneakersLink                 ; "Sneakers"  
+
+
+
+
+
+						 
+                         ;                         ; GlovesLink                  ; "Gloves"                   
+                         ;                         ; HatsLink                    ; "Hats"                   
+                         ;                         ; OpticalLink                 ; "Optical"                   
+                         ;                         ; SunglassesLink              ; "Sunglasses"
+						 
+						 
+						 
+						 
+						 
+                  
+                         ;                         ; ColeHaanLink                 ; "ColeHaan"                  
+                         ;                         ; FrenchConnectionLink         ; "FrenchConnection"                  
+                         ;                         ; LacosteLink                  ; "Lacoste "                 
+                         ;                         ; MichaelKorsLink              ; "MichaelKors" 
+						 ;						   ; NewBalanceLink               ; "NewBalance"
+                         ;                         ; ReasonClothingLink           ; "ReasonClothing"						 
+						 
+						 
+#-------------------------------------------------------Women--------------------------------------------------------
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+;;TopsLinkWomen;"Tops"                  
+;;Tops&T-shirtsLink;"Tops&T-shirts"                  
+;;JeansLink;"Jeans"                  
+;;DressesLink;"Dresses"   
+						 
+;;SatchelsLink;"Satchels"
+;;ToteBagsLink;"ToteBags"
+;;Hobo&ShoulderBagsLink;"Hobo&ShoulderBags"
+;;CrossbodyBagsLink;"CrossbodyBags"
+;;WalletsLink;"Wallets"
+;;EveningBagsLink;"EveningBags"
+;;Cases&pouchesLink;"Cases&pouches"
+;;BackPacksLink;"BackPacks"
+;;VanityBagsLink;"VanityBags"
+												   
+;;FlatsLink;"Flats"
+;;Loafers&MoccasinsLink;"Loafers&Moccasins"
+;;SneakersLink;"Sneakers"
+												   
+;;BeltsLink;"Belts"
+						
+						
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;ClothingNavNodeWomen;"Clothing" 
+;;BagsNavNodeWomen;"Bags"
+;;ShoesNavNodeWomen;"Shoes"                  
+;;AccessoriesNavNodeWomen;"Accessories"  
+						 
+#-------------------------------------------------------Designers--------------------------------------------------------
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+;;MichaelKorsLink;"MichaelKors"
+;;HugoBossLink;"HugoBoss"
+;;CoachLink;"Coach"
+;;ArmaniJeansLink;"ArmaniJeans"
+;;FurlaLink;"Furla"
+;;TumiLink;"Tumi"
+;;EmporioArmaniLink;"EmporioArmani"
+;;G-StarRawLink;"G-StarRaw"
+;;ArmaniExchangeLink;"ArmaniExchange"
+;;M MissoniLink;"M Missoni"
+;;TrueRelegionLink;"TrueRelegion"
+;;CoccinelleLink;"Coccinelle"
+;;BrooksBrothersLink;"BrooksBrothers"
+						 
+
+#----------------------------------------------------------New Arrival-----------------------------------------------------
+
+# CMS Navigation Nodes
+UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]           
+;;HandBagsLinkNewArrivalsWomen;"HandBags"
+;;WalletsLinkNewArrivalsWomen;"Wallets"
+;;ClothingLinkNewArrivalsWomen;"Clothing"
+;;ShoesLinkNewArrivalsWomen;"Shoes"
+						 						   
+;;SpringSummer17LinkShoesLinkNewArrivalsWomen;"SpringSummer 17"
+												   
+;;ClothingLinkNewArrivalsMen;"Clothing"
+;;BagsLinkNewArrivalsMen;"Bags"
+;;WalletsLinkNewArrivalsMen;"Wallets"
+;;AccessoriesLinkNewArrivalsMen;"Accessories"
+;;ShoesLinkNewArrivalsMen;"Shoes"
+												   
+;;SpringSummer17LinkNewArrivalsMen;"SpringSummer 17"
+						 
+# CMS Navigation Nodes
+UPDATE CMSNavigationNode;$contentCV[unique=true];uid[unique=true];title[lang=$lang]              
+;;WomenNavNodeNewArrivals;"Women" 
+;;MenNavNodeNewArrivals;"Men"
+
+

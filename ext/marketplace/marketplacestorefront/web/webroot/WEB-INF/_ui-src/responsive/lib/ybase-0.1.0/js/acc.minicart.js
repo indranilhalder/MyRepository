@@ -31,6 +31,14 @@ ACC.minicart = {
 			var data = $.parseJSON(data);
 			$(".js-mini-cart-link .js-mini-cart-count").html(data.miniCartCount)
 			$(".js-mini-cart-link .js-mini-cart-price").html(data.miniCartPrice)
+			if(data.miniCartCount<1){
+				console.log("add class");
+				$("span.js-mini-cart-count").addClass("hide");
+			}
+			else{
+				console.log("remove class");
+				$("span.js-mini-cart-count").removeClass("hide");
+			}
 		})
 	}
 

@@ -23,6 +23,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tisl.lux.facade.CommonUtils;
+
 
 /**
  * This class populates data into product data from solr search results
@@ -34,9 +36,31 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 {
 
 
-
+	private CommonUtils commonUtils;
+	
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
+
+	
+	
+	
+	/**
+	 * @return the commonUtils
+	 */
+	public CommonUtils getCommonUtils()
+	{
+		return commonUtils;
+	}
+
+
+
+	/**
+	 * @param commonUtils the commonUtils to set
+	 */
+	public void setCommonUtils(CommonUtils commonUtils)
+	{
+		this.commonUtils = commonUtils;
+	}
 
 	//private static final String DELIMETER = ":";
 	//private static final String STOCK = "STOCK";
@@ -215,8 +239,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
-					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
+					getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
 		final Double mobilePriceValue = this.<Double> getValue(source, "mobileprice");
@@ -296,13 +320,16 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 		//TPR-796
-		if (getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
+		if (commonUtils.isLuxurySite()||getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
 		{
 			addImageData(source, "luxurySearchPage", result);
+			addImageData(source, "luxuryModel", result);
+			addImageData(source, "luxurySecondary", result);
 		}
 		else
 		{
 			addImageData(source, "searchPage", result);
+			
 		}
 		addImageData(source, "product", result);
 
@@ -416,3 +443,4 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	}
 
 }
+>>>>>>> 437fc97e5dcb5aaa9e4f12e646eb9ae50233d5f2

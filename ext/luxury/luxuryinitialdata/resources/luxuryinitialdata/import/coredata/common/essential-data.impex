@@ -1,0 +1,29 @@
+# Import essential data for the Accelerator
+#
+# Includes:
+# * Languages
+# * Currencies
+# * Titles
+# * Vendors
+# * Warehouses
+# * Supported Credit/Debit cards
+# * User Groups
+# * DistanceUnits for Storelocator
+# * MediaFolders
+# * MediaFormats
+# * Tax & Tax Groups
+# * Jobs
+
+
+# example of assigning the rights to the user group
+
+$passwordEncoding=md5
+$defaultPassword=1234
+$setPassword=@password[translator=de.hybris.platform.impex.jalo.translators.ConvertPlaintextToEncodedUserPasswordTranslator][default='$passwordEncoding:$defaultPassword']
+
+
+INSERT_UPDATE mplConfig;id[unique=true];value;description
+;configurable-radius;200;Radius for pincode service
+
+INSERT_UPDATE Pincode;pincode[unique=true];latitude;longitude;active[default="yes"]
+;500030;17.3202127;78.4020322

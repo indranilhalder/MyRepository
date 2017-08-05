@@ -43,4 +43,5 @@ public interface MplSellerInformationService
 	 * @return
 	 */
 	String getSellerIdByUssid(String selectedUSSID);
+
 }

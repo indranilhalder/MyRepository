@@ -1,0 +1,54 @@
+.main-banner {
+	margin-bottom: 20px;
+	.slick-slide {
+		img {
+			display: inline-block; 
+		}
+	}
+	.slick-dots {
+		text-align: center;
+		width: 100%;
+		bottom: 32px;
+		position: absolute;
+		left: 0;
+		height: 2px;
+		li {
+			margin: 0 10px;
+		}
+		button {
+			background-color: rgba(255, 255, 255, 0.37);
+			text-indent: -9000px;
+			height: 2px;
+			width: 75px;
+			display: block;
+			border: 0;
+		}
+		.slick-active {
+			button {
+				background-color: $white;
+			}
+		}
+	}
+	.banner-list {
+		position: relative;
+	}
+	.banner-content {
+		color: $white;
+		letter-spacing: 4px;
+	}
+	.banner-sub-title {
+		font-size: 2em;
+		font-weight: 500;
+        @include media-breakpoint-down(sm) {
+              font-size: 24px;               
+        }  
+	}
+	.banner-content {
+	    text-align: center;
+	    bottom: 85px;
+	    position: absolute;
+	    left: 0;
+	    right: 0;
+	    z-index: 1;
+	}
+}

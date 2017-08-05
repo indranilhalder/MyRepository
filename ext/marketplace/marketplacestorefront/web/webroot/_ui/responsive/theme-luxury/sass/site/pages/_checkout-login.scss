@@ -1,0 +1,258 @@
+/*Checkout Login Page Styles*/
+//variables
+$redTxt:		#a9143c;
+$mildGrayTxt:	#7f7f7f;
+
+.checkout__login--page {
+	padding-top: 0;
+}
+.checkoutLoginSection {
+	header {
+		Background: $white;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 99;
+		padding: 19px 0;
+		max-width: 100%;
+		border-bottom: 1px solid $light-gray;
+		text-align: center;
+		@include media-breakpoint-up(md) {
+			padding: 19px 24px;
+		}
+		@include media-breakpoint-only(xs) {
+			padding: 10px 0;
+		}
+		.inner {
+			position: relative;
+		}
+		.logo {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			margin: auto 0;
+			@include media-breakpoint-only(xs) {
+				position: static;
+			}
+		}
+		h1 {
+			font: bold 20px/1.2 $font-lato;
+			margin: 7px 0 0;
+			letter-spacing: 1px;			
+			display: inline-block;
+			@include media-breakpoint-only(xs) {
+				display: block;
+				margin: 10px 0 0;
+				font-size: 18px;
+			}
+		}
+	}
+	.content {
+		margin-top: 85px;
+		@include media-breakpoint-only(xs) {
+			margin-top: 100px;
+		}
+	}	
+	.btn {
+		min-width: 120px;
+	}
+	.text-danger {
+		color: $redTxt;
+	}	
+	p, .le-checkbox label {
+		font: normal 12px/1.2 $font-lato;
+	}	
+	.vr-line {
+		background: $light-gray;
+		width: 1px;
+		height: 110px;
+		display: block;
+		margin: 0 auto;
+	}
+	.or-rounded {
+		display: block;
+		border: 1px solid $light-gray;
+		padding: 7px 9px 10px;
+		color: $gray-lighter;
+		font: normal 14px/1.2 $font-lato;
+		border-radius: 50%;
+		background: $white;
+		letter-spacing: 1px;
+		color: $mildGrayTxt;
+		margin: 10px auto; 
+		width: 36px;
+		height: 33px;
+	}
+	@include media-breakpoint-down(sm) {
+		.hidden-sm-down {
+			display: none;
+		}
+		.button-set, .accept-cond {
+			text-align: center;
+		}
+	}
+    
+    
+    .left form button{
+        margin-bottom: 0;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        user-select: none;
+        text-transform: uppercase;
+        padding: 10px 16px;
+        font-size: 18px;
+        line-height: 1.33333;
+        border-radius: 4px;
+        background-color: #2d2d2d;
+        color: #fff;
+    }
+
+
+
+.sign-in.tab-view.checkoutSignPage .nav{
+    display: none;
+    
+}
+.checkoutSignPage{
+    .tabs{
+        padding: 0px;
+        li{
+            list-style: none;
+        }
+        
+    }
+    
+    @include media-breakpoint-down(sm) {
+		padding: 0px 15px;
+	}
+    
+    
+}
+#sign_in_content, #sign_up_content{
+    .button_fwd_wrapper, .form-actions{
+            margin: 10px 0px;
+    }
+    .else-sec{
+        display: none;
+    }
+}
+    
+}
+.checkoutLoginHeader {
+	background-color: $light-gray;
+	h2 {
+		font: bold 20px/1.2 $font-lato;
+		padding: 20px 0;
+		margin: 0;
+		letter-spacing: 1px;
+		@include media-breakpoint-only(xs) {
+			font-size: 16px;
+			text-align: center;
+		}
+	}
+}
+.orTxt {
+	@include media-breakpoint-down(sm) {
+		position: relative;
+		overflow: hidden;
+		padding: 0;
+		margin: 0 20px;
+		&:before, &:after {
+			content: '';
+			background: $light-gray;
+			width: 100%;
+			height: 1px;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+			z-index: 1;
+		}
+		&:before {
+			left: -50%;
+		}
+		&:after {
+			right: -50%
+		}
+		.or-rounded {
+			position: relative;
+			z-index: 2;
+			border: none;
+			background: $white;
+			width: 60px;
+			&:before {
+				content: '';
+				position: absolute;
+				border: 1px solid $light-gray;
+				border-radius: 50%;
+				height: 33px;
+				width: 36px;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				margin: 0 auto;
+			}
+		}
+	}
+}
+.signInWrapper, .signUpWrapper {
+	a {
+		color: $blue;
+		text-decoration: none;
+		&:hover {
+			color: inherit;
+		}
+	}
+}
+.forgot__password--modal {
+	.modal-dialog {
+		max-width: 450px;
+		width: 90%;
+		margin: 10px auto;
+	}
+	.modal-header {
+		border: none;
+		text-align: center;	
+		padding-bottom: 0;
+		h4 {
+			font: bold 24px/24px $font-lato;
+			margin-bottom: 15px;
+			@include media-breakpoint-down(sm) {
+				font-size: 20px;
+				line-height: 20px;
+			}
+		}
+		@include media-breakpoint-only(xs) {
+			.close {
+				font-size: 24px;
+			}
+		}
+	}
+	.modal-body {
+		padding: 0 20px;
+		p {
+			text-align: center;
+			margin-bottom: 15px;
+			line-height: 12px;
+		}
+	}
+	.button-set {
+		text-align: center;
+		button {
+			margin: 10px;			
+		}
+	}
+	
+}
+
+
+
+/*EOF Checkout Login Page Styles*/

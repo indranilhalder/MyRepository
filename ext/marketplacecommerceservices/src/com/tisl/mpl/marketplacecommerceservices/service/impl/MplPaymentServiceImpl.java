@@ -55,6 +55,7 @@ import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.servicelayer.session.SessionService;
 import de.hybris.platform.servicelayer.user.UserService;
+import de.hybris.platform.store.services.BaseStoreService;
 import de.hybris.platform.util.DiscountValue;
 import de.hybris.platform.voucher.model.PromotionVoucherModel;
 import de.hybris.platform.voucher.model.VoucherModel;
@@ -158,6 +159,10 @@ public class MplPaymentServiceImpl implements MplPaymentService
 	private DiscountUtility discountUtility;
 	@Resource(name = "mplCommerceCartService")
 	private MplCommerceCartService mplCommerceCartService;
+
+	@Autowired
+	private BaseStoreService baseStoreService;
+
 	//@Autowired
 	//private CommerceCartService commerceCartService;
 
@@ -664,6 +669,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
 				paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+				paymentTypeModelCOD.setBaseStore(baseStoreService.getCurrentBaseStore());
 				paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
 				paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 
@@ -3964,6 +3970,7 @@ public class MplPaymentServiceImpl implements MplPaymentService
 
 				PaymentTypeModel paymentTypeModelCOD = modelService.create(PaymentTypeModel.class);
 				paymentTypeModelCOD.setMode(MarketplacecommerceservicesConstants.COD);
+				paymentTypeModelCOD.setBaseStore(baseStoreService.getCurrentBaseStore());
 				paymentTypeModelCOD = flexibleSearchService.getModelByExample(paymentTypeModelCOD);
 				paymentTransactionEntry.setPaymentMode(paymentTypeModelCOD);
 

@@ -1,0 +1,38 @@
+$productCatalog=luxProductCatalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$languages=ja,en,de,zh
+
+
+# Product catalog
+INSERT_UPDATE Catalog;id[unique=true]
+;$productCatalog
+
+
+# Classification catalog
+INSERT_UPDATE ClassificationSystem;id[unique=true];name[lang=en];;;;
+;pcmClassification;PCM Classification;;;;
+
+
+# Product versions for product catalogs
+INSERT_UPDATE CatalogVersion;catalog(id)[unique=true];version[unique=true];active;languages(isoCode);readPrincipals(uid)
+;$productCatalog;Staged;false;$languages;employeegroup
+;$productCatalog;Online;true;$languages;employeegroup
+
+
+INSERT_UPDATE ClassificationSystemVersion;catalog(id)[unique=true];version;readPrincipals(uid);writePrincipals(uid);active;;;
+;pcmClassification;1;admingroup,marketplaceGroup,ETAILREAD;admingroup,marketplaceGroup,ETAILREAD,employeegroup;true;;;;
+
+
+# Create default tax row for all products in product catalog
+INSERT_UPDATE TaxRow;$catalogVersion;tax(code)[unique=true];pg(code)[unique=true];ug(code)[unique=true]
+;;jp-vat-full;jp-vat-full;jp-taxes
+
+$catalog-id=luxProductCatalog
+$syncJobCode=sync $catalog-id:Staged->Online
+$sourceversion=sourceversion(catalog(id[default=$catalog-id]),version[default=Staged])[unique=true,default=$catalog-id:Staged]
+$targetversion=targetversion(catalog(id[default=$catalog-id]),version[default=Online])[unique=true,default=$catalog-id:Online]
+INSERT_UPDATE CatalogVersionSyncJob;code[unique=true];active;roottypes(code)[mode=append];sessionUser(uid);$sourceversion;$targetversion
+;sync luxProductCatalog:Staged->Online;true;SellerInformation,GlobalIdentifier,Brand,SeoContent,RichAttribute,ratingReview;syncmanager
+INSERT_UPDATE SearchRestriction;code[unique=true];name[lang=de];name[lang=en];query;restrictedType(code);principal(UID);active;generate
+;SyncManagerRestriction;SyncManagerRestriction;SyncManagerRestriction;({approvalStatus}=  ({{select {appstatus:pk} from {ArticleApprovalStatus as appstatus} where {appstatus:code}='approved'}}));Product;syncmanager;true;true

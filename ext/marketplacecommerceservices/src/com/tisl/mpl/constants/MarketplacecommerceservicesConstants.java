@@ -243,6 +243,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String RETURNURL = "payment.juspay.returnUrl".intern();
 	public static final String ON = "on".intern();
 	public static final String WAREHOUSE = "mpl_warehouse";
+	
+	//Luxury Return URL
+	public static final String RETURNURLLUX = "payment.juspay.returnUrl.lux".intern();
 
 	// PAYMENT DAO
 	public static final String MPLPAYMENTDAO = "mplPaymentDao";
@@ -266,7 +269,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	public static final String EMIBANTERMSSQUERY = "select {e:pk} from {emibank as e},{bank as b} where {e.name}={b.pk} and {b.bankName}=?bank"
 			.intern();
-	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode"
+	public static final String PAYMENTTYPEFORAPPORTIONQUERY = "select {p:pk} from {PaymentType As p} WHERE {p.mode}=?paymentMode and {b.basestore}=?baseStore"
 			.intern();
 	public static final String BANKFORBINQUERY = "select {b:pk} from {Bin As b} WHERE {b.binno}=?bin".intern();
 	public static final String GETPAYMENTTRANSACTIONFROMCARTQUERY = "select {p:pk} from {PaymentTransaction as p},{Cart as c},{Customer as u} where {p.order}={c.pk} and {c.user}={u.pk} and {u.uid}=?customerId and {p.code}=?juspayOrderId and {p.status}='success' "
@@ -274,7 +277,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String MOBILEBLACKLIST = "select {b:pk} from {blacklist As b} where {b.phoneNumber} =?phoneNumber"
 			.intern();
 	public static final String MOBILENO = "phoneNumber".intern();
-	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode".intern();
+	public static final String PAYMENTMODETYPE = "select {b:pk} from {PaymentType As b} where {b.mode}=?mode and {b.basestore}=?baseStore".intern();
 	public static final String MODE = "mode".intern();
 	public static final String SAVEDCARDQUERY = "Select {s:pk} from {SavedCard as s},{Customer as c} where {s.customer}={c.pk} and {c.customerid}=?customerId and {s.cardReferenceNumber}=?cardRef"
 			.intern();
@@ -386,6 +389,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	// Mobile all cat
 	public static final String SALESCATEGORYTYPE = "marketplace.mplcatalog.salescategory.code";
 	public static final String DEFAULTCATALOGID = "cronjob.promotion.catelog";
+	public static final String DEFAULTLUXURYCATALOGID = "cronjob.luxury.promotion.catelog";
+	public static final String DEFAULTLUXURYSITEID = "luxury.site.id";
 	public static final String DEFAULTCATALOGVERISONID = "cronjob.promotion.catalogVersionName";
 	public static final String SALESROOTCATEGORY = "marketplace.mplcatalog.sales.rootcategory.code";
 	public static final String SHOPBYBRANDCOMPONENT = "marketplace.mplcatalog.shopbybrand.component.id";
@@ -2120,6 +2125,9 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	// PRDI - 151
 	public static final String TYPE_OF_RETURN_FOR_RSS = "return.typeofreturn";
+	
+	//Payment Type changes
+	public static final String BASESTORE = "baseStore".intern();
 
 	public static final String ERROR_MSG_TYPE_MISMATCHUSSID = "mismatchUssid";
 	public static final String TRANSACTIONID = "transactionid";
@@ -2140,3 +2148,4 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//TPR-5667 | Query to Find categoryCode for product
 	public static final String CATEGORY_CODE_FOR_PRODUCT = "select {c.code} from {CategoryProductRelation as cpr JOIN Category as c ON {cpr.source}={c.pk}} where {cpr.target} in ({{select {p.pk} from { product as p JOIN Catalogversion as cv ON {p.catalogversion}={cv.pk}} where {cv.version} = ?catalogVersion AND {p.code} = ?code }}) AND ({c.code} LIKE ?mplCategoryPrefix OR {c.code} LIKE ?luxuryCategoryprefix)";
 }
+
