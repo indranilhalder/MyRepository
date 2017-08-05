@@ -2449,6 +2449,11 @@ ACC.singlePageCheckout = {
 			        event_type: "change_link_clicked"
 			    })
 		      }
+			//Remove edit address radio button check
+    		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+    		$("#editAddressFormMobile").slideUp();
+    		$("#editAddressFormMobile").html("");
+    		$("#editAddressForResponsive").css("display","none");
 	    //});
 	},
 	//Function called when change link of delivery mode is clicked for responsive
