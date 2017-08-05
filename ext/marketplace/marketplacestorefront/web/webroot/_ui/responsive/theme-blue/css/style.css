@@ -75912,10 +75912,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 .product-info .product-detail.FineJewellery .certified-by ul li{
 	position: relative;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li{
-	width: 58px;
-	height: 40px;
-}
 .product-info>.jewellery-wrapper>div.tabs-block.FineJewellery,
 .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery
 {
@@ -75933,6 +75929,10 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     letter-spacing: 0.6px;
     color: #000000;
     padding: 0;
+}
+.jewellery-wrapper>div.accordin.FineJewellery .item .title p,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .title p{
+	font-weight: 600;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item div.title,
 .jewellery-wrapper>div.accordin.FashionJewellery .item div.title{
@@ -76885,6 +76885,11 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 /*TISJEW-3230 end*/
 
 /* TPR-5007 start */
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq{
+	width: 58px;
+    height: 40px;
+    display: inline-block;
+}
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiTanishq:before
 {
 	width: 58px;
@@ -76895,6 +76900,11 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     left: 0;
     top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 0px 0px;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiBIS{
+	width: 134px;
+    height: 40px;
+    display: inline-block;
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiBIS:before
 {
@@ -76907,6 +76917,11 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 27% 0;
 }
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL{
+	width: 132px;
+    height: 40px;
+    display: inline-block;
+}
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL:before
 {
 	width: 132px;
@@ -76917,6 +76932,11 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     left: 0;
     top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 8% 0;;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGIA{
+	width: 94px;
+    height: 40px;
+    display: inline-block;
 }
 .product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGIA:before
 {
