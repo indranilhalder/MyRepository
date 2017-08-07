@@ -72224,8 +72224,26 @@ body #account-invite .right-account>div.social-invites .social {
 .page-returnSubmit .thirdTataCliq .row.col-md-12.col-sm-6.col-xs-12.selectDateTime{
 	padding: 0;
 }
-.page-returnSubmit .thirdTataCliq .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input{
-	    margin: 10px auto 15px auto ! important;
-}
 }
 /* TISSPTEN-107 END */
+
+/* TISSPTEN-120 start */
+
+@media (max-width: 768px){
+	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.updateaddress1 {
+    margin-left: -10px;
+    margin-top: 0px;
+}
+.page-returnSubmit .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
+    margin: 10px auto 15px auto ! important;
+}
+.thirdTataCliq .selectReturnMethod.self.col-md-12.col-sm-12.blackColor {
+    float: left;
+    margin-bottom: 25px;
+}
+.thirdTataCliq .col-md-2.col-xs-12.col-sm-2{
+	 width: 100%;
+}
+}
+
+/* TISSPTEN-120 END */
