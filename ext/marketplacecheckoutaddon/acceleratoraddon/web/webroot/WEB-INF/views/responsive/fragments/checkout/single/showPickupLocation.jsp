@@ -4,15 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
 
-<%--  <c:set var = "addressFlag" scope="session" value = "${addressFlag}" />  --%>
 
-
-<!-- <script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script
-	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> -->
 <div class="checkout-content cart checkout wrapper">
 <c:if test="${storesAvailable eq true}">
 	<script>
