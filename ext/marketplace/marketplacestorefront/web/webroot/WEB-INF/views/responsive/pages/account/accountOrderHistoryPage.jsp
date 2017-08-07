@@ -653,7 +653,7 @@
 																					 <span
 																						class="price"><b>Price:</b> <ycommerce:testId
 																							code="orderDetails_productTotalPrice_label">
-																							<format:price priceData="${entryCancel.totalPrice}"
+																							<format:price priceData="${subOrder.totalPrice}"
 																								displayFreeForZero="true" />
 																						</ycommerce:testId>
 																					</span>
@@ -781,7 +781,7 @@
 																					 <span
 																						class="price"><b>Price:</b> <ycommerce:testId
 																							code="orderDetails_productTotalPrice_label">
-																							<format:price priceData="${entryCancel.totalPrice}"
+																							<format:price priceData="${subOrder.totalPrice}"
 																								displayFreeForZero="true" />
 																						</ycommerce:testId>
 																					</span>
