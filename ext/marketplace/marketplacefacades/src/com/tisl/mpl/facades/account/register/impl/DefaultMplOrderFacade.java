@@ -1595,11 +1595,12 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 											while (it2.hasNext())
 											{
+												LOG.debug("**********inside return entry loop*********");
 												final ReturnEntryModel rte = (ReturnEntryModel) it2.next();
 
 												if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase(transactionId))
 												{
-													LOG.debug("**********fetching return request and return entry details*********");
+													LOG.debug("**********fetching return request and return entry details for matching transaction id*********");
 													customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
 															.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
 													customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn()
@@ -1624,12 +1625,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 										{
 											while (it1.hasNext())
 											{
+												LOG.debug("**********inside else part of return entry loop*********");
 												//final ReturnRequestModel returnRequest = (ReturnRequestModel) it1.next();
 												for (final AbstractOrderEntryModel orderEntry : rq.getOrder().getEntries())
 												{
 													if (orderEntry.getTransactionID().equalsIgnoreCase(transactionId))
 													{
-														LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist*********");
+														LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist for matching transaction id*********");
 														customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
 																.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
 														customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq
