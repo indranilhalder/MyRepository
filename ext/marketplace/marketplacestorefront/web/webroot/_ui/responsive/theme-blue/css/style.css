@@ -25300,6 +25300,7 @@ padding:0;
 	text-transform: uppercase;	
 	border:none;
 	height:40px;
+	line-height: 1; /* TISSPTEN-121 */
 }	
 .feedbackNo {		
 	padding: 12px 38px;		
@@ -25310,6 +25311,7 @@ padding:0;
 	text-transform: uppercase;
 	border:none;
 	height:40px;
+	line-height: 1; /* TISSPTEN-121 */
 }	
 #feedBackFormYes {		
 	font-weight: bold;
