@@ -76093,6 +76093,10 @@ table#showPriceBreakup{
 	width: 100%;
 	margin-top: 112px;
 }
+ .product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc .key-label li, 
+ .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc .key-label li{
+ 	margin-top: 20px;
+}
 @media (min-width: 1190px){
 	.product-info>.jewellery-wrapper>div.accordin.FineJewellery, 
 	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery
@@ -76266,7 +76270,7 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 }		
 .product-info .product-detail.FineJewellery .product-desc .key-label .more-link,
 .product-info .product-detail.FashionJewellery .product-desc .key-label .more-link{		
-	padding-left: 20px;		
+	margin-left: 20px;		
 }
 .col-md-7.col-sm-7.col-xs-12.reverseSealJwlry {
    margin-top: 50px;
