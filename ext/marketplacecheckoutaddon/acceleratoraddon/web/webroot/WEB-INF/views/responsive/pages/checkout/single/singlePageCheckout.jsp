@@ -126,7 +126,7 @@ body.page-multiStepCheckoutSummaryPage #up{
 	</div>
 	<!-- The actual snackbar -->
 <div id="mobileSnackbar">
-<h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
+<h1><spring:theme code="checkout.single.deliverySlot.mobile.chooseMsg"/></h1>
 <span id="selectSnackbar">SELECT</span>
 </div>
 </div>
@@ -155,16 +155,11 @@ body.page-multiStepCheckoutSummaryPage #up{
 	<div class="overlay" data-dismiss="modal">
 	</div>
 </div>
-<!-- <!-- The actual snackbar -->
-<!-- <div id="mobileSnackbar">
-<h1>'Preferred Delivery time' option avaliable for some items in your bag.</h1>
-<span id="selectSnackbar">SELECT</span>
-</div> -->
 <div id="confirmOverlay" style="display:none">
     <div id="confirmBox" style="display:none">
 
-         <h1>OOPss Exchange Is not Serviceable</h1>
-        <p>Do you want to continue without Exchange?</p>
+         <h1><spring:theme code="checkout.single.exchange.msg.one"/></h1>
+        <p><spring:theme code="checkout.single.exchange.msg.two"/></p>
 
         <div id="confirmButtons">
             <a class="button blue" id="exConfirmYes" href="#">Yes<span></span></a>
