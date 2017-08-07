@@ -37,7 +37,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -62,7 +62,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -145,8 +145,8 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 		{
 			if (null != orderEntry && null != orderEntry.getParentTransactionID())
 			{
-				LOG.debug(
-						"parent transaction Id for" + orderEntry.getTransactionID() + " is : " + orderEntry.getParentTransactionID());
+				LOG.debug("parent transaction Id for" + orderEntry.getTransactionID() + " is : "
+						+ orderEntry.getParentTransactionID());
 
 				parentFulfillmentType = mplSellerInformationDAO.getparentFulfillmenttype(orderEntry.getParentTransactionID());
 
@@ -177,7 +177,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getContentPageBySellerID(de.hybris
 	 * .platform.catalog.model.CatalogVersionModel, java.lang.String)
@@ -187,10 +187,10 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	{
 		return getMplSellerInformationDAO().getContentPageBySellerID(sellerId);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerIdByUssid(java.lang.String)
 	 */
@@ -204,6 +204,23 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 			sellerID = sellerModel.getSellerID();
 		}
 		return sellerID;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String,
+	 * de.hybris.platform.catalog.model.CatalogVersionModel)
+	 */
+	@Override
+	public SellerInformationModel getSellerDetail(final String selectedUSSID, final CatalogVersionModel onlineCatalog)
+	{
+		if (selectedUSSID != null)
+		{
+			return mplSellerInformationDAO.getSellerInforationDetails(selectedUSSID, onlineCatalog);
+		}
+		return null;
 	}
 
 }

@@ -44,4 +44,11 @@ public interface MplSellerInformationService
 	 */
 	String getSellerIdByUssid(String selectedUSSID);
 
+	/**
+	 * @param selectedUSSID
+	 * @param onlineCatalog
+	 * @return
+	 */
+	public SellerInformationModel getSellerDetail(String selectedUSSID, CatalogVersionModel onlineCatalog);
+
 }
