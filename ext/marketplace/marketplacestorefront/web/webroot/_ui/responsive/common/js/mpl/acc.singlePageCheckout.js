@@ -110,6 +110,8 @@ ACC.singlePageCheckout = {
         	else
         	{
         		$("#chooseDeliveryAddressMobileDiv").html(data);
+        		//Hide edit radio for responsive
+        		ACC.singlePageCheckout.hideMobileEditRadio();
         	}
 		});
         
@@ -2287,7 +2289,7 @@ ACC.singlePageCheckout = {
 		});
 		
 		xhrResponse.done(function(data) {
-			$("#editAddressForResponsive").css("display","block");//Hide edit address block
+			$("#editAddressForResponsive").show();//Show edit address block
 			$("#newAddressFormMobile.new-address-form-mobile").html("");//Removing new address form when new address is selected
 			$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","false");//As the form has been removed above we need to reset data-loaded attribute to false 
 			ACC.singlePageCheckout.changeAddress();//Hiding change link and displaying other addressess
@@ -2361,11 +2363,8 @@ ACC.singlePageCheckout = {
                 	}
 	            	if(!isEdit)
 	            	{
-	            		//Remove edit address radio button check
-	            		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
-	            		$("#editAddressFormMobile").slideUp();
-	            		$("#editAddressFormMobile").html("");
-	            		$("#editAddressForResponsive").css("display","none");
+	            		//Hide edit radio for responsive
+	            		 ACC.singlePageCheckout.hideMobileEditRadio();
 	            	}
 	            	if(isNew)
                 	{
@@ -2436,6 +2435,14 @@ ACC.singlePageCheckout = {
 		 		});
 		}
 		
+	},
+	//Function to hide edit radio for responsive
+	hideMobileEditRadio:function(){
+		//Remove edit address radio button check
+		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+		$("#editAddressFormMobile").slideUp();
+		$("#editAddressFormMobile").html("");
+		$("#editAddressForResponsive").css("display","none");
 	},
 	//Function called when change link of address is clicked for responsive
 	changeAddress:function(){
