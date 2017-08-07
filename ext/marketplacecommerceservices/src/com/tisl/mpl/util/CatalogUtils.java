@@ -36,18 +36,17 @@ public class CatalogUtils
 
 	public CatalogVersionModel getSessionCatalogVersionForProduct()
 	{
-		CatalogVersionModel catalogVersionModel = null;
-		final List<CatalogModel> productCatalogs = baseSiteService.getProductCatalogs(baseSiteService.getCurrentBaseSite());
-		if (CollectionUtils.isNotEmpty(productCatalogs))
+		final CatalogModel productCatalog = cmsSiteService.getCurrentSite().getDefaultCatalog();
+		if (null != productCatalog)
 		{
-			catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
+			//catalogVersionModel = catalogVersionService.getSessionCatalogVersionForCatalog(productCatalogs.get(0).getId());
+			return productCatalog.getActiveCatalogVersion();
 		}
 		else
 		{
-			catalogVersionModel = catalogVersionService
+			return catalogVersionService
 					.getSessionCatalogVersionForCatalog(MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID);
 		}
-		return catalogVersionModel;
 	}
 
 	public CatalogVersionModel getSessionCatalogVersionForContent()
