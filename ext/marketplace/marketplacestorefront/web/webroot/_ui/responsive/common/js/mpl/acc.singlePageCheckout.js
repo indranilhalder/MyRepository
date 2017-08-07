@@ -731,13 +731,13 @@ ACC.singlePageCheckout = {
 		}
 	},
 	//Function to get pick up persson form from server, Once fetched it will not be fetched again[For web].
-	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){		
+	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){
     	var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
     		if(htmlPopulated=="NO")
-        	{
+        	{	//If form has not been fetched yet
     			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
         		var data="";
         		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
@@ -753,6 +753,11 @@ ACC.singlePageCheckout = {
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
         	}
+    		else if(htmlPopulated=="YES")
+    		{	//If form has already been fetched, We just need to update the form entries.
+    			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
+        		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
+    		}
     	}
 	},
 	
