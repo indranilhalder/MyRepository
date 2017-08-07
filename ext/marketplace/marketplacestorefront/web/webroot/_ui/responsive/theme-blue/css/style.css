@@ -72244,6 +72244,9 @@ body #account-invite .right-account>div.social-invites .social {
 .thirdTataCliq .col-md-2.col-xs-12.col-sm-2{
 	 width: 100%;
 }
+.thirdTataCliq .col-md-9.selfCourier b {
+    display: none;
+}
 }
 
 /* TISSPTEN-120 END */
