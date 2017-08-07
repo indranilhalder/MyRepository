@@ -1311,12 +1311,12 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		{
 			if (orderModel != null)
 			{
-				List<AbstractOrderEntryModel> subOrderModel = new ArrayList<AbstractOrderEntryModel>();
+				List<AbstractOrderEntryModel> orderEntryModel = new ArrayList<AbstractOrderEntryModel>();
 				//fetching entry of suborder specific to transaction id
-				subOrderModel = orderModel.getEntries();
-				if (CollectionUtils.isNotEmpty(subOrderModel))
+				orderEntryModel = orderModel.getEntries();
+				if (CollectionUtils.isNotEmpty(orderEntryModel))
 				{
-					for (final AbstractOrderEntryModel entry : subOrderModel)
+					for (final AbstractOrderEntryModel entry : orderEntryModel)
 					{
 						final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
 						if (StringUtils.isNotEmpty(entry.getTransactionID())
@@ -1622,20 +1622,33 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 										}
 										else
 										{
-											LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist*********");
-											customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
-													.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
-											customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn()
-													.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
-											customerOrderInfoWsDTO.setReturnRequestStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
-											customerOrderInfoWsDTO
-													.setReturnRequestTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
+											while (it1.hasNext())
+											{
+												//final ReturnRequestModel returnRequest = (ReturnRequestModel) it1.next();
+												for (final AbstractOrderEntryModel orderEntry : rq.getOrder().getEntries())
+												{
+													if (orderEntry.getTransactionID().equalsIgnoreCase(transactionId))
+													{
+														LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist*********");
+														customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
+																.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
+														customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq
+																.getTypeofreturn().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
+														customerOrderInfoWsDTO
+																.setReturnRequestStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
+														customerOrderInfoWsDTO
+																.setReturnRequestTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
+														break;
+													}
+												}
+											}
 										}
 									}
 								}
 							}
 							else
 							{
+								LOG.debug("**********No return request and return entry details exist*********");
 								customerOrderInfoWsDTO.setReturnRequestStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setReturnRequestTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setQcRejectionReason(MarketplacecommerceservicesConstants.NULL_VALUE);
