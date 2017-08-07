@@ -892,7 +892,7 @@
 																						<span class="price"><b>Price:</b> <ycommerce:testId
 																								code="orderDetails_productTotalPrice_label">
 																								<format:price
-																									priceData="${entryCancel.totalPrice}"
+																									priceData="${sellerOrder.totalPrice}"
 																									displayFreeForZero="true" />
 																							</ycommerce:testId> </span>
 																						<c:if test="${not empty entryCancel.imeiDetails}">
@@ -1031,7 +1031,7 @@
 																						<span class="price"><b>Price:</b> <ycommerce:testId
 																								code="orderDetails_productTotalPrice_label">
 																								<format:price
-																									priceData="${entryCancel.totalPrice}"
+																									priceData="${sellerOrder.totalPrice}"
 																									displayFreeForZero="true" />
 																							</ycommerce:testId> </span>
 																						<c:if test="${not empty entryCancel.imeiDetails}">
@@ -2114,7 +2114,7 @@
 																						<span class="price"><b>Price:</b> <ycommerce:testId
 																								code="orderDetails_productTotalPrice_label">
 																								<format:price
-																									priceData="${entryCancel.totalPrice}"
+																									priceData="${sellerOrder.totalPrice}"
 																									displayFreeForZero="true" />
 																							</ycommerce:testId> </span>
 																						<c:if test="${not empty entryCancel.imeiDetails}">
@@ -2259,7 +2259,7 @@
 																						<span class="price"><b>Price:</b> <ycommerce:testId
 																								code="orderDetails_productTotalPrice_label">
 																								<format:price
-																									priceData="${entryCancel.totalPrice}"
+																									priceData="${sellerOrder.totalPrice}"
 																									displayFreeForZero="true" />
 																							</ycommerce:testId> </span>
 																						<c:if test="${not empty entryCancel.imeiDetails}">
