@@ -8,9 +8,11 @@ import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.integration.oms.order.data.OrderPlacementResult;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.processengine.action.AbstractSimpleDecisionAction;
+import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.task.RetryLaterException;
 
+import javax.annotation.Resource;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -30,6 +32,8 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 	private ImpersonationService impersonationService;
 	private CatalogVersionService catalogVersionService;
 	private ModelService modelService;
+	@Resource(name = "configurationService")
+	private ConfigurationService configurationService;
 
 
 	@Override
@@ -43,6 +47,7 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 				.getAllCatalogVersions()));
 		OrderPlacementResult crmResult = null;
 		OrderPlacementResult omsResult = null;
+		OrderPlacementResult samsungResult = null;
 		if (order.getCrmSubmitStatus() == null || !order.getCrmSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
 		{
 			crmResult = CustomCreateOmsOrderAction.this.getOmsOrderService().createCrmOrder(order);
@@ -73,9 +78,52 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 		{
 			order.setOmsSubmitStatus(omsResult.getResult().toString());
 		}
+		// For TPR-5667 - start
+		final boolean samsungOrderResponseCheckFlag = configurationService.getConfiguration().getBoolean(
+				"samsung.order.reponse.call.check");
+		if (samsungOrderResponseCheckFlag)
+		{
+			if (order.getSalesApplication().getCode().equalsIgnoreCase(MarketplaceomsservicesConstants.SAMSUNG))
+			{
+				LOG.debug("############## This is a Samsung order ##################");
+				if (order.getSamsungSubmitStatus() == null
+						|| !order.getSamsungSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
+				{
+					samsungResult = CustomCreateOmsOrderAction.this.getOmsOrderService().createSamsungOrder(order);
+					LOG.debug("After Samsung call from Action : " + samsungResult.getCause() + " : " + samsungResult.getResult());
+					if (samsungResult.getResult().toString().equalsIgnoreCase(MarketplaceomsservicesConstants.SUCCESS))
+					{
+						order.setSamsungSubmitStatus(MarketplaceomsservicesConstants.SUCCESS);
+					}
+					else
+					{
+						order.setSamsungSubmitStatus(MarketplaceomsservicesConstants.FAILURE);
+					}
+				}
+				else if (order.getSamsungSubmitStatus() != null
+						&& order.getSamsungSubmitStatus().equals(MarketplaceomsservicesConstants.SUCCESS))
+				{
+					samsungResult = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+				}
+			}
+			else
+			{
+				// Explicit bypassing the flag by setting it as success
+				samsungResult = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+			}
+		}
+		else
+		{
+			// Explicit bypassing the flag by setting it as success
+			samsungResult = new OrderPlacementResult(OrderPlacementResult.Status.SUCCESS);
+		}
+
+		// For TPR-5667 - end
+
 		getModelService().save(order);
 		if (crmResult.getResult().equals(OrderPlacementResult.Status.SUCCESS)
-				&& omsResult.getResult().equals(OrderPlacementResult.Status.SUCCESS))
+				&& omsResult.getResult().equals(OrderPlacementResult.Status.SUCCESS)
+				&& samsungResult.getResult().equals(OrderPlacementResult.Status.SUCCESS))
 		{
 
 			getModelService().save(order);
@@ -150,6 +198,7 @@ public class CustomCreateOmsOrderAction extends AbstractSimpleDecisionAction<Ord
 				throw retryLaterException;
 			}
 		}
+
 		return Transition.NOK;
 	}
 

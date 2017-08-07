@@ -14093,9 +14093,9 @@ body .account .left-nav ul li a{
 	color: #666666;
 
 }
-body .account .left-nav ul li a.active {
-    color: #A9143C;
-    text-decoration: underline;
+body .account .left-nav ul li.active a {
+    color: #a5173c;		/* TISSPTEN-118 fix */
+    /* text-decoration: underline; */
 }
 @media (max-width: 790px) {
     body .account .left-nav {
@@ -25300,6 +25300,7 @@ padding:0;
 	text-transform: uppercase;	
 	border:none;
 	height:40px;
+	line-height: 1; /* TISSPTEN-121 */
 }	
 .feedbackNo {		
 	padding: 12px 38px;		
@@ -25310,6 +25311,7 @@ padding:0;
 	text-transform: uppercase;
 	border:none;
 	height:40px;
+	line-height: 1; /* TISSPTEN-121 */
 }	
 #feedBackFormYes {		
 	font-weight: bold;
@@ -28532,6 +28534,7 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
 	display: none
 }
 .copycode_message{
+	z-index: 9;
 	width: 301px;
     height: 48px;
     opacity: 0.9;
@@ -28548,12 +28551,18 @@ body .account .right-account.rewards>div.your-activity.cashback-history ul li.ca
     margin: auto;
     display: none;
 }
+body.page-coupons .account .wrapper{
+	padding-right: 30px;
+}
 @media ( max-width :790px) {
 	/* body .account .right-account.rewards>div h2, body .account .right-account.rewards>div>p
 		{
 		padding-left: 0;
 		text-align: center
 	} */
+	body.page-coupons .account .wrapper{
+	padding-right: 10px;
+	}
 	.copycode_message{
 		top: auto;
     	bottom: 30px;
@@ -66747,7 +66756,7 @@ hr {
 
 
 @media (min-width: 791px){
-body .account .track{
+body .account:not(.preferences) .track{
     width: 75%;
      float: none;
     padding: 0px;  
@@ -71554,8 +71563,23 @@ body .account.preferences .right-account div.email-pref form .button-set a{
 	padding-left: 0;
 	padding-right: 0;
 }
-.tabs-block .nav-wrapper, .tabs.pdp.productTabs{
-	display: none;
+.product-classifications.wrapper{
+	padding:0;
+}
+.product-classifications.wrapper .stats-table {
+    border: 1px solid #f0f4f5;
+}
+.tabs-block .nav-wrapper, .tabs.pdp.productTabs, .SpecWrap, .view-button + .product-classifications.wrapper, .view-button, .hide-button{
+	display: none !important;
+}
+.electronics-accordian-tabs.pdp.specTabs{
+	width: 100%;
+}
+.electronics-accordian-tabs.pdp.specTabs tbody tr{
+	border: 1px solid #f0f4f5;
+}
+.electronics-accordian-tabs.pdp.specTabs tbody tr td {
+    padding: 15px 20px;
 }
 .product-specification-accordion.smk_accordion .accordion_in{
 	background: none;
@@ -71611,12 +71635,15 @@ body .account.preferences .right-account div.email-pref form .button-set a{
   	text-align: justify;
   	color: #31363d;
 }
+.product-specification-accordion.smk_accordion .accordion_in.specMob .acc_content{
+    background-color: #fff;
+}
 }
 /*UF-377 end*/
 /*UF-404 start for multi-color facet*/
 .product-facet .filter-colour:not(.selected-multi-colour) input[value='Multi_multi'] + input.js-facet-colourbutton{
-	background: url("../images/Sprite-combined.png") no-repeat scroll -6px -109px !important;
-	background-size: 85px 210px !important;
+	background: url("../images/Sprite-combined.png") no-repeat scroll -6px -114px !important;
+	background-size: 85px 220px !important;
 }
 /*UF-404 end for multi-color facet*/
 /* TISPRDT-1611 start */
@@ -71917,6 +71944,9 @@ footer #footerLink div.column ul li:first-child {
 footer #footerLink div.column ul li:first-child, footer #footerLink div.column ul li:first-child a{
     color: #000;
 }
+footer #footerLink div.column ul li a:hover {
+    color: #a9133d;
+}
 footer #footerLink div.column ul li:after {
     content: '/';
     padding: 0 2px;
@@ -72144,4 +72174,58 @@ body #account-invite .right-account>div.social-invites .social {
     margin-bottom: 48px;
 }
 }
+
 /* TPR-6147 End */
+
+/* TPR-6410 start */
+@-moz-document url-prefix(){
+.shop-by-department-banner {
+	float:none ! important;
+	position: absolute;
+	right: 1%;
+	top: 8px;
+}
+}
+/* TPR-6410 End */
+
+/* TISSPTEN-107 start */
+@media (max-width: 768px){
+.page-returnSubmit .thirdTataCliq .selectReturnMethod.scheduled.col-md-12.col-sm-12.blackColor{
+    width: 100%;
+    display: -webkit-inline-box;
+}
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-8.updateaddress1{
+    display: -webkit-inline-box;
+    padding-right: 0;
+    margin-left: 0px;
+    margin-top: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-4.col-sm-4.col-xs-2.editAddress{
+    padding: 0;
+    width: 85px;
+    margin-top: 7px;
+}
+.page-returnSubmit .thirdTataCliq .page-returnSubmit .thirdTataCliq .scheduledPickupArea{
+    width: 109%;
+}
+.page-returnSubmit .thirdTataCliq .col-md-12.col-xs-12{
+   padding-right: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-12{
+   padding-right: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-12.scheduledPickup{
+    display: block;
+    padding-right: 0;
+}
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-12.col-xs-12{
+	    margin-left: 10px;
+}
+.page-returnSubmit .thirdTataCliq .row.col-md-12.col-sm-6.col-xs-12.selectDateTime{
+	padding: 0;
+}
+.page-returnSubmit .thirdTataCliq .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input{
+	    margin: 10px auto 15px auto ! important;
+}
+}
+/* TISSPTEN-107 END */

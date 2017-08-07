@@ -173,6 +173,8 @@
 		<bean id="shortUrlReportDaoImpl"
 		class="com.tisl.mpl.shorturl.report.dao.OrderShortUrlDaoImpl"/>
 		
-
+		<!-- TPR-5667 -->
+		<bean id="mplSendOrderFromCommerceToSamsung" class="com.tisl.mpl.service.impl.MplSendOrderFromCommerceToSamsungImpl" />
+		
 </beans>
 
