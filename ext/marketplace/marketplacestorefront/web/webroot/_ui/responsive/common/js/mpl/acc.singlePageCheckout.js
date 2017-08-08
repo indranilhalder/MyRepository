@@ -1160,16 +1160,16 @@ ACC.singlePageCheckout = {
 			$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 			return false;
 		}
-		else if(nameCheck == false){
-			$(".pickupPersonNameError").show();
-			$(".pickupPersonNameError").text("Spaces cannot be allowed");
-			return false;
-		 }
 		else if(statusName == false) {
 			$(".pickupPersonNameError").show();
 			$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 			return false;
 		}
+		else if(nameCheck == false){
+			$(".pickupPersonNameError").show();
+			$(".pickupPersonNameError").text("Spaces cannot be allowed");
+			return false;
+		 }
 		else{
 			return true;
 		}

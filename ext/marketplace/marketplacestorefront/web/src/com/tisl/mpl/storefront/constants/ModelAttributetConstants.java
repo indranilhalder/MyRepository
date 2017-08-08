@@ -296,6 +296,9 @@ public final class ModelAttributetConstants
 
 	public static final String VALID_TABS = "VALID_TABS";
 
+	//for return refund tab fine jewellery
+	public static final String RET_REF_TAB = "RetRefTab";
+
 	public static final String FRIENDS_INVITE_FORM = "friendsInviteForm";
 	public static final String J_FRIENDSEMAIL = "j_friendsEmail";
 
