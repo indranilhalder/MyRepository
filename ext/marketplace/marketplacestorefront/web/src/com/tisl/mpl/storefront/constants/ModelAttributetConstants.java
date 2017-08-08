@@ -870,4 +870,6 @@ public final class ModelAttributetConstants
 	public static final String ICID = "icid";
 	public static final String SHARE = "share";
 
+	//PRDI-422
+	public static final String METAPAGETITLE = "metaPageTitle";
 }

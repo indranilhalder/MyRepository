@@ -34,7 +34,7 @@
 			</c:otherwise>
 		   </c:choose>	
 		<title>
-			<c:out value="${titleSocialTags}"/>
+			<c:out value="${titleSocialTags}" escapeXml="false"/>
 			
    </title>
 	<%-- Meta Content --%>
@@ -75,7 +75,12 @@
 	
 	
 	<%-- Additional meta tags --%>
-	<htmlmeta:meta items="${metatags}"/>
+	<!-- commented for PRDI-422 -->
+	<%-- <htmlmeta:meta items="${metatags}"/> --%>
+	<!-- Added for PRDI-422 starts-->
+    <meta name="keywords" content="${keywords}">
+    <meta name="description" content="${description}">
+	<!-- PRDI-422 ends-->
 	
 	
 	<meta name="google-site-verification" content="aArvRu0izzcT9pd1HQ5lSaikeYQ-2Uy1NcCNLuIJkmU" />

@@ -235,7 +235,7 @@ public class ProductPageController extends MidPageController
 	private static final String IA_USS_IDS = "iaUssIds";
 
 	private static final String REGEX = "[^\\w\\s]";
-	
+
 	private static final String NEW_LINE = "\n";//Sonar Fix
 
 
@@ -387,8 +387,8 @@ public class ProductPageController extends MidPageController
 		String returnStatement = null;
 
 		final String userAgent = request.getHeader("user-agent");
-		final String siteurl=request.getRequestURL().toString();	//UF-277
-		model.addAttribute("siteurl",siteurl);	//UF-277
+		final String siteurl = request.getRequestURL().toString(); //UF-277
+		model.addAttribute("siteurl", siteurl); //UF-277
 		//	final Boolean isProductPage = true;
 		//CKD:TPR-250:Start
 		model.addAttribute("msiteBuyBoxSellerId", StringUtils.isNotBlank(sellerId) ? sellerId : null);
@@ -2024,11 +2024,13 @@ public class ProductPageController extends MidPageController
 			final String productCode, final String metaKeywords)
 	{
 		final List<MetaElementData> metadata = new LinkedList<>();
-		metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+		//metadata.add(createMetaElement(ModelAttributetConstants.DESCRIPTION, metaDescription));
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription); //PRDI-422
 		//TISPRD-4977
 		if (null != metaKeywords)
 		{
-			metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+			//metadata.add(createMetaElement(ModelAttributetConstants.KEYWORDS, metaKeywords));
+			model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords); //PRDI-422
 		}
 		//metadata.add(createMetaElement(ModelAttributetConstants.TITLE, metaTitle));
 		metadata.add(createMetaElement("productCode", productCode));
@@ -2066,8 +2068,10 @@ public class ProductPageController extends MidPageController
 						final Map<String, String> productFeatureMap = new LinkedHashMap<String, String>();
 						final List<FeatureValueData> featureValueList = new ArrayList<FeatureValueData>(featureData.getFeatureValues());
 						//CKD:CAR-289
-						/*final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
-								productData, featureData.getCode());*/
+						/*
+						 * final ProductFeatureModel productFeature =
+						 * mplProductFacade.getProductFeatureModelByProductAndQualifier( productData, featureData.getCode());
+						 */
 						if (null != productData.getRootCategory())
 						{
 							final String properitsValue = configurationService.getConfiguration().getString(
@@ -2092,8 +2096,8 @@ public class ProductPageController extends MidPageController
 										&& properitsValue.toLowerCase().contains(featureData.getName().toLowerCase()))
 								{
 									//CKD:CAR-289
-									final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
-											productData, featureData.getCode());
+									final ProductFeatureModel productFeature = mplProductFacade
+											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
 									productFeatureMap.put(featureValueData.getValue(),
 											productFeature != null && productFeature.getUnit() != null
 													&& !productFeature.getUnit().getSymbol().isEmpty() ? productFeature.getUnit().getSymbol()
@@ -2110,8 +2114,8 @@ public class ProductPageController extends MidPageController
 								if (propertiesValues != null && propertiesValues.length > 0)
 								{
 									//CKD:CAR-289
-									final ProductFeatureModel productFeature = mplProductFacade.getProductFeatureModelByProductAndQualifier(
-											productData, featureData.getCode());
+									final ProductFeatureModel productFeature = mplProductFacade
+											.getProductFeatureModelByProductAndQualifier(productData, featureData.getCode());
 									for (final String value : propertiesValues)
 									{
 										if (value.equalsIgnoreCase(featureData.getName()))
