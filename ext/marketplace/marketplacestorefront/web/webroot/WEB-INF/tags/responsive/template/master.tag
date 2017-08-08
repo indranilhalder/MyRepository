@@ -133,7 +133,7 @@
 					<c:set var="totalNumberOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 				</c:when>
 			</c:choose>
-			<c:if test="${totalNumberOfPages gt 0}">
+			<c:if test="${totalNumberOfPages gt 1}">
 				<c:set var="currentPageNumber" value="${fn:substringAfter(canonical,'/page-')}"/>
 				<c:if test="${empty currentPageNumber}">
 					<c:set var="currentPageNumber" value="1"/>
