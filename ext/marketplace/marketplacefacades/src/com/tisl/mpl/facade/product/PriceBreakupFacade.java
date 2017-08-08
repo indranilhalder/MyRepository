@@ -15,7 +15,7 @@ import com.tisl.mpl.data.PriceBreakupData;
 public interface PriceBreakupFacade
 {
 	//
-	public List<PriceBreakupData> getPricebreakup(final String ussid);
+	public List<PriceBreakupData> getPricebreakup(final String ussid, final String sellerId);
 
 	//Added for 3782
 

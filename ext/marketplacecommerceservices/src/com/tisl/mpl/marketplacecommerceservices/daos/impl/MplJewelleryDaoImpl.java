@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.daos.impl;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.PancardInformationModel;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
@@ -36,7 +37,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getJewelleryUssid(java.lang.String)
 	 */
 	@Override
@@ -69,7 +70,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getJewelleryInfoByUssid(java.lang.String)
 	 */
 	@Override
@@ -101,7 +102,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getWeightVarientUssid(java.lang.String)
 	 */
 	@Override
@@ -176,7 +177,7 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getPanCardStatus(java.lang.String)
 	 */
 	//CKD:TPR-3809
@@ -214,6 +215,41 @@ public class MplJewelleryDaoImpl implements MplJewelleryDao
 		}
 
 		return status;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao#getSellerMsgForRetRefTab(java.lang.String)
+	 */
+	@Override
+	public List<JewellerySellerDetailsModel> getSellerMsgForRetRefTab(final String sellerId)
+	{
+		// YTODO Auto-generated method stub
+		try
+		{
+			final String query = "select pk from {" + JewellerySellerDetailsModel._TYPECODE + "} where {"
+					+ JewellerySellerDetailsModel.SELLERID + "} =?sellerId order by {" + JewellerySellerDetailsModel.INDEX + "}";
+			final FlexibleSearchQuery retRefQuery = new FlexibleSearchQuery(query);
+			retRefQuery.addQueryParameter("sellerId", sellerId);
+			return flexibleSearchService.<JewellerySellerDetailsModel> search(retRefQuery).getResult();
+		}
+		catch (final FlexibleSearchException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0002);
+		}
+		catch (final UnknownIdentifierException e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0006);
+		}
+		catch (final EtailNonBusinessExceptions e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000);
+		}
 	}
 
 }

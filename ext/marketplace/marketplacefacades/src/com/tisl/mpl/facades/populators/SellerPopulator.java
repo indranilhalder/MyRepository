@@ -19,13 +19,11 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.PaymentModesEnum;
-import com.tisl.mpl.core.model.BuyBoxModel;
 import com.tisl.mpl.core.model.RichAttributeModel;
 import com.tisl.mpl.enums.SellerAssociationStatusEnum;
 import com.tisl.mpl.exception.EtailNonBusinessExceptions;
@@ -202,26 +200,9 @@ public class SellerPopulator<SOURCE extends ProductModel, TARGET extends Product
 					sellerData.setSellerAssociationstatus(SellerAssociationStatusEnum.YES.toString());
 					for (final RichAttributeModel rm : sellerInformationModel.getRichAttribute())
 					{
-
-						//changes for Jewellery pincode service in pdp
-						if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplaceFacadesConstants.PRODUCT_TYPE))
-						{
-							final List<BuyBoxModel> buyboxModelListAll = new ArrayList<BuyBoxModel>(
-									buyBoxService.buyboxPriceForJewellery(sellerInformationModel.getSellerArticleSKU()));
-							if (CollectionUtils.isNotEmpty(buyboxModelListAll))
-							{
-								final String sellerArticleSKU = buyboxModelListAll.get(0).getSellerArticleSKU();
-								sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm, sellerArticleSKU));
-							}
-						}
-						//end
-
-						else
-						{
-							sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
-									sellerInformationModel.getSellerArticleSKU()));
-						}
-
+						//JWLSPCUAT-76
+						sellerData.setDeliveryModes(productDetailsHelper.getDeliveryModeLlist(rm,
+								sellerInformationModel.getSellerArticleSKU()));
 
 						final PaymentModesEnum paymentEnum = rm.getPaymentModes();
 

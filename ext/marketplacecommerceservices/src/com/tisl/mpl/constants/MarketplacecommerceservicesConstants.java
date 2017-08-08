@@ -74,6 +74,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
 	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
 
 	//SONAR FIX
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
@@ -2192,8 +2193,8 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ATTHERATE = "@";
 	public static final String GM = "gm";
 	public static final String CT = "Ct";
-	//public static final String PERGM = "/g";
-	//public static final String PERCT = "/ct";
+	public static final String KG = "kg";
+
 	//TPR-4134 web service
 	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
 	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";

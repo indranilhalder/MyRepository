@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 
 import java.util.List;
 
@@ -47,5 +48,6 @@ public interface MplJewelleryService
 	 */
 	List<BuyBoxModel> getAllWeightVariant(String ussid);
 
+	List<JewellerySellerDetailsModel> getSellerMsgForRetRefTab(String sellerId);
 
 }
