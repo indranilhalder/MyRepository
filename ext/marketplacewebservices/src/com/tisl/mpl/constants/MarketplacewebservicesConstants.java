@@ -561,6 +561,7 @@ public class MarketplacewebservicesConstants
 	//TPR-6117
 	public static final String REACHED_MAX_LIMIT_FOR_PRODUCT = "MAX QUANTITY ADDED";
 	public static final String FINEJEWELLERY = "finejewellery";
+	public static final String FASHIONJEWELLERY = "fashionjewellery";
 
 	public static final String FASHIONJEWELLERY = "Fashionjewellery";
 

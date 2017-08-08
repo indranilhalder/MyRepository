@@ -306,7 +306,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 
 	/*
 	 * To get product details for a product code
-	 *
+	 * 
 	 * @see com.tisl.mpl.service.MplProductWebService#getProductdetailsForProductCode(java.lang.String)
 	 */
 	@Override
@@ -887,7 +887,34 @@ public class MplProductWebServiceImpl implements MplProductWebService
 						productDetailMobile.setPriceBreakUpDetailsMap(priceBreakUpList);
 					}
 				}
+				if (((MarketplacewebservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productData.getRootCategory()))
+						|| ((MarketplacewebservicesConstants.FASHIONJEWELLERY).equalsIgnoreCase(productData.getRootCategory())))
+				{
+					final String jwlryCat = configurationService.getConfiguration().getString("mpl.jewellery.category");
+					boolean showSizeOrLength = false;
+					if (StringUtils.isNotEmpty(jwlryCat))
+					{
+						final List<String> catCodeList = Arrays.asList(jwlryCat.split(","));
 
+						for (final CategoryData cat : productData.getCategories())
+						{
+							final String catCode = cat.getCode();
+							if (catCodeList.contains(catCode))
+							{
+								showSizeOrLength = true;
+								break;
+							}
+						}
+					}
+					if (showSizeOrLength)
+					{
+						productDetailMobile.setIsSizeOrLength("Length");
+					}
+					else
+					{
+						productDetailMobile.setIsSizeOrLength("Size");
+					}
+				}
 			}
 			sharedText += MarketplacecommerceservicesConstants.SPACE
 					+ Localization.getLocalizedString(MarketplacewebservicesConstants.PDP_SHARED_POST);

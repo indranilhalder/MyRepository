@@ -230,7 +230,14 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				final List<CategoryModel> productCategoryList = getDefaultPromotionsManager().getPrimarycategoryData(productModel);
 				if (CollectionUtils.isNotEmpty(productCategoryList))
 				{
-					target.setCategoryName(productCategoryList.get(0).getCode());
+					for (final CategoryModel cat : productCategoryList)
+					{
+						if (StringUtils.isNotEmpty(cat.getCode()) && (cat.getCode().length() >= 5))
+						{
+							target.setCategoryName(cat.getCode().substring(0, 5));
+							break;
+						}
+					}
 				}
 			}
 

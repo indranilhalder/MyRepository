@@ -241,9 +241,10 @@
    		</c:choose>
 	</c:when>
 	<c:otherwise>
-    <spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if></p>
+    <spring:theme code="product.variant.size"></spring:theme><c:if test="${not empty productSizeType}">(${productSizeType})</c:if>
 	</c:otherwise>
 	</c:choose>	
+	</p>
         <a class="size-guide" href="${sizeGuideUrl}" role="button" data-toggle="modal" data-target="#popUpModal" data-productcode="${product.code}" data-sizeSelected="${selectedSize}">
 			<spring:theme code="product.variants.quickview.size.guide"/>
 		</a>

@@ -2177,7 +2177,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//UF-281
 	public static final String B1002 = "B1002";
 
-
+	public static final String HOME = "Home";
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
 	//TPR-3782

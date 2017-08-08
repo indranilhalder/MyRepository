@@ -1,7 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="template" tagdir="/WEB-INF/tags/desktop/template"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="cms" uri="http://hybris.com/tld/cmstags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="theme" tagdir="/WEB-INF/tags/shared/theme"%>
@@ -16,12 +14,12 @@
 
 <div id="reviewOrderMessage" style=""></div>
 <ul class="product-block">
-	<li>
+	<%-- <li>
 		<span id="removeFromCart_Cart" style="display: none; color: #60A119;">
 			<!-- And it's out!</span> -->
 			<spring:theme code="remove.product.cartmsg" />
 		</span>
-	</li>
+	</li> --%>
 	<li class="moveToWishlistMsg" style="display: none;"></li>
 	<li class="header">
 		<ul>

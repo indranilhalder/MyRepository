@@ -225,7 +225,7 @@ public final class ModelAttributetConstants
 
 	//Added  for Fine Jewellery  :::  START
 	public static final String FINEJEWELLERY = "FineJewellery";
-	public static final String NOSIZE = "NoSize";
+	public static final String NOSIZE = "NO SIZE";
 	//Added  for Fine Jewellery  :::  END
 
 	//Added  for Fashion Jewellery  :::  START

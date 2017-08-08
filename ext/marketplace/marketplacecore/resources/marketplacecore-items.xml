@@ -1741,14 +1741,6 @@
 						<description>This is the value reference of the banner's deeplink reference</description>
 					</attribute>
 					<!-- Added for Deep Linking in Mobile apps - End -->
-					 <!--  Jewellery Changes added below  -->
-                    
-                      <attribute qualifier="JewelleryType" type="java.lang.String"
-						generate="true" autocreate="true">
-						<persistence type="property" />
-						<description>This value refer the jewellery type </description>
-					</attribute>					
-
 					<!-- Added for KidsWear -->
 					<attribute qualifier="productCategoryTypeL2" type="java.lang.String">
 						<description>Represent the product's master Category</description>

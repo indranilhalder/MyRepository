@@ -183,11 +183,11 @@
 							<div class="thumb product-img">
 								<c:choose>
 									<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
-										<a href="${productUrl}"><product:productPrimaryImage
+										<a href="${productUrl}"><product:productPrimaryImage lazyLoad="false"
 												product="${entry.product}" format="luxuryCartIcon" /></a>
 									</c:when>
 									<c:otherwise>
-										<a href="${productUrl}"><product:productPrimaryImage
+										<a href="${productUrl}"><product:productPrimaryImage lazyLoad="false"
 												product="${entry.product}" format="thumbnail" /></a>
 									</c:otherwise>
 								</c:choose>
