@@ -154,7 +154,15 @@ function getProductSetDataCustomSku() {
 	  
 	          //url with page no occourance found.
 	          if (/page-[0-9]+/.test(pathName)) {
-	              var currentPageNo = pathName.match(/page-[0-9]+/);
+	        	/* TISSPTEN-124 & TISSPTEN-123 starts */
+	        	//var currentPageNo = pathName.match(/page-[0-9]+/);
+	        	if (/page-[0-9]+/.test(browserPathName)) {
+	        	  var currentPageNo = browserPathName.match(/page-[0-9]+/);
+	        	}
+	        	else {
+	        	  var currentPageNo = pathName.match(/page-[0-9]+/);  
+	        	}
+	        	/* TISSPTEN-124 & TISSPTEN-123 ends */
 	  
 	              currentPageNo = currentPageNo[0].split("-");
 	              currentPageNo = parseInt(currentPageNo[1]);
@@ -174,7 +182,15 @@ function getProductSetDataCustomSku() {
 	              		window.history.replaceState({}, "", ajaxUrl);
 	              	}else{
 	              		ajaxUrl = pathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
-	              		var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+	              		/* TISSPTEN-124 & TISSPTEN-123 starts */
+		              	//var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+		              	if (/page-[0-9]+/.test(browserPathName)) {
+		              		var nextPaginatedUrl = browserPathName.replace(/page-[0-9]+/, 'page-' + currentPageNo);
+		              	}
+		              	else {
+		              		var nextPaginatedUrl = browserPathName.replace(/[/]$/,"") + '/page-' + currentPageNo;
+		              	}
+		              	/* TISSPTEN-124 & TISSPTEN-123 ends */
 	                      if (query != "?q=") {
 	                          ajaxUrl = ajaxUrl + query;
 	                      }
