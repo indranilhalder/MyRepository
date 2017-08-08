@@ -72067,7 +72067,7 @@ body #account-invite .right-account>div form {
     top: 30px;
 }
 .invite-text-lbl{  
-	margin-bottom: 6px;
+	margin-bottom: 6px ! important;
     line-height: 1;
     letter-spacing: .6px;
     display: block;
@@ -72194,7 +72194,7 @@ body #account-invite .right-account>div.social-invites .social {
     width: 100%;
     display: -webkit-inline-box;
 }
-.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-8.updateaddress1{
+.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-8.update-pickup-address{
     display: -webkit-inline-box;
     padding-right: 0;
     margin-left: 0px;
@@ -72230,7 +72230,7 @@ body #account-invite .right-account>div.social-invites .social {
 /* TISSPTEN-120 start */
 
 @media (max-width: 768px){
-	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.updateaddress1 {
+	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
     margin-left: -10px;
     margin-top: 0px;
 }
@@ -72244,9 +72244,10 @@ body #account-invite .right-account>div.social-invites .social {
 .thirdTataCliq .col-md-2.col-xs-12.col-sm-2{
 	 width: 100%;
 }
-.thirdTataCliq .col-md-9.selfCourier b {
-    display: none;
+.thirdTataCliq .col-md-9.scheduledPickup + .col-md-9.selfCourier b {
+    display: inline-block;
 }
+
 }
 
 /* TISSPTEN-120 END */
