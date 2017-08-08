@@ -3402,10 +3402,10 @@ public class UsersController extends BaseCommerceController
 												.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_WISHLIST);
 										wlDTO.setDelistedMessage(delistMessage);
 									}
-									//wldDTO.setCount(Integer.valueOf(entryModels.size()));
-									entryModelSize += 1;//TPR-5787 modified
-									wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
+									//wldDTO.setCount(Integer.valueOf(entryModels.size()));									
 								}
+								entryModelSize += 1;//TPR-5787 modified
+								wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
 							}
 						}
 					}
