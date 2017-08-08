@@ -101,7 +101,7 @@
 						<input type="text" id="friendsEmail" onkeypress="kpressfemail()" placeholder='<spring:theme code="text.InviteFriends.SeparateWithCommas"/>'/>
 						<%-- <span><spring:theme code="text.InviteFriends.SeparateWithCommas"/></span> --%>
 						<div class="errorMessage"><div id="errfemail"></div></div>
-						<label class="massage-text-lbl"><spring:theme code="text.InviteFriends.message" /></label>	
+						<label class="massage-text-lbl invite-text-lbl"><spring:theme code="text.InviteFriends.message" /></label>	
 						<textarea class="mytextarea" id="mytextarea" placeholder="${textMessage}">${textMessage}</textarea>
 						<button type="button"  id="inviteFriends"
 							class="blue"><spring:theme code="text.InviteFriends.InviteNow"/></button>
@@ -141,9 +141,10 @@
 							<!-- <g:plus action="share" style="width:174px !important;"></g:plus> -->
 							
 							<a class="fb" onclick="return openPopup('https://www.facebook.com/dialog/feed?link=' + window.location + '&amp;app_id=' + $('#facebookAppid').text() + '&amp;description='+$('#sharepretext').text()+' '+' &amp;redirect_uri=http://www.facebook.com/')"></a>   
-							
-							
-							<span id="myBtn" class="demo g-interactivepost"
+						
+	                         <a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' + window.location + ' ')"></a>
+								
+								<span id="myBtn" class="demo g-interactivepost"
 	                            data-contenturl=""
 	                            data-clientid='${googleClientid}'
 	                            data-cookiepolicy="single_host_origin"
@@ -152,9 +153,6 @@
 	                            data-calltoactionurl="">
 	                           <a class="gp"></a>
 	                         </span> 
-	                         
-	                         <a class="tw" onclick="return openPopup('https://twitter.com/intent/tweet?text='+ $('#sharepretext').text() + ' ' + window.location + ' ')"></a>
-								
 						</div>
 						</div>
 					</div>
