@@ -1035,6 +1035,9 @@ function editAddress(addressId) {
    		 $(this).val($(this).val().trim());    		     		
    	});  
     	$("#line1").val($("#line1").val().trim());
+       $("#line2").val($("#line2").val().trim());
+        $("#line3").val($("#line3").val().trim());
+        
         var selectedValueState = document.getElementById('stateListBox').selectedIndex;
 //        var regexCharSpace = /^[a-zA-Z ]*$/;
         var regexCharSpace = /^[a-zA-Z]+$/;
