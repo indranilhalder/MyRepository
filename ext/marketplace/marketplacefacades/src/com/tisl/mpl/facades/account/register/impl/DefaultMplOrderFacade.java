@@ -1304,9 +1304,10 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
 		final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
-		ConsignmentModel cng = null;
+		//	final ConsignmentModel cng = null;
 
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		boolean flag = false;
 		try
 		{
 			if (orderModel != null)
@@ -1318,6 +1319,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 				{
 					for (final AbstractOrderEntryModel entry : orderEntryModel)
 					{
+						LOG.debug("**********inside entry*********");
 						final CustomerOrderInfoWsDTO customerOrderInfoWsDTO = new CustomerOrderInfoWsDTO();
 						if (StringUtils.isNotEmpty(entry.getTransactionID())
 								&& entry.getTransactionID().equalsIgnoreCase(transactionId))
@@ -1431,10 +1433,13 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 									.getModeOfOrderPayment() : MarketplacecommerceservicesConstants.NULL_VALUE);
 							if (CollectionUtils.isNotEmpty(orderModel.getConsignments()))
 							{
-								final Iterator itr = orderModel.getConsignments().iterator();
-								while (itr.hasNext())
+								//								final Iterator itr = orderModel.getConsignments().iterator();
+								//								while (itr.hasNext())
+								//								{
+								//									cng = (ConsignmentModel) itr.next();
+								for (final ConsignmentModel cng : orderModel.getConsignments())
 								{
-									cng = (ConsignmentModel) itr.next();
+
 									if (cng.getCode().equalsIgnoreCase(transactionId))
 									{
 										//Delivery tracking Details
@@ -1576,29 +1581,34 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								customerOrderInfoWsDTO.setPaymentType(MarketplacecommerceservicesConstants.NULL_VALUE);
 							}
 
-							boolean flag = false;
+
 							if (CollectionUtils.isNotEmpty(orderModel.getReturnRequests()))
 							{
-								final Iterator it1 = orderModel.getReturnRequests().iterator();
-								while (it1.hasNext())
+								LOG.debug("**********inside not empty return request*********");
+								//								final Iterator it1 = orderModel.getReturnRequests().iterator();
+								//								while (it1.hasNext())
+								for (final ReturnRequestModel rq : orderModel.getReturnRequests())
 								{
+									LOG.debug("**********inside iterator1*********");
 									if (!flag)
 									{
-										final ReturnRequestModel rq = (ReturnRequestModel) it1.next();
+										LOG.debug("**********inside flag equals to false*********");
+										//	final ReturnRequestModel rq = (ReturnRequestModel) it1.next();
 										//									customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq.getRejectionReason()
 										//											: MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
 										//									customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn().toString()
 										//											: MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
-										final List<ReturnEntryModel> reList = rq.getReturnEntries();
+										//	final List<ReturnEntryModel> reList = rq.getReturnEntries();
 
-										if (CollectionUtils.isNotEmpty(reList))
+										if (CollectionUtils.isNotEmpty(rq.getReturnEntries()))
 										{
-											final Iterator it2 = reList.iterator();
-
-											while (it2.hasNext())
+											//											final Iterator it2 = reList.iterator();
+											//
+											//											while (it2.hasNext())
+											for (final ReturnEntryModel rte : rq.getReturnEntries())
 											{
 												LOG.debug("**********inside return entry loop*********");
-												final ReturnEntryModel rte = (ReturnEntryModel) it2.next();
+												//final ReturnEntryModel rte = (ReturnEntryModel) it2.next();
 
 												if (rte.getOrderEntry().getTransactionID().equalsIgnoreCase(transactionId))
 												{
@@ -1629,31 +1639,30 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 										}
 										else
 										{
-											while (it1.hasNext())
+
+											LOG.debug("**********inside else part of return entry loop*********");
+											//final ReturnRequestModel returnRequest = (ReturnRequestModel) it1.next();
+											for (final AbstractOrderEntryModel orderEntry : rq.getOrder().getEntries())
 											{
-												LOG.debug("**********inside else part of return entry loop*********");
-												//final ReturnRequestModel returnRequest = (ReturnRequestModel) it1.next();
-												for (final AbstractOrderEntryModel orderEntry : rq.getOrder().getEntries())
+												if (orderEntry.getTransactionID().equalsIgnoreCase(transactionId))
 												{
-													if (orderEntry.getTransactionID().equalsIgnoreCase(transactionId))
-													{
-														LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist for matching transaction id*********");
-														customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
-																.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
-														LOG.debug("**********QC rejection reason setting done in else*********");
-														customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq
-																.getTypeofreturn().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
-														LOG.debug("**********Type of Return setting done in else*********");
-														customerOrderInfoWsDTO
-																.setReturnRequestStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
-														LOG.debug("**********Return request status setting done in else*********");
-														customerOrderInfoWsDTO
-																.setReturnRequestTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
-														LOG.debug("**********Return timeStamp setting done in else*********");
-														break;
-													}
+													LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist for matching transaction id*********");
+													customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
+															.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
+													LOG.debug("**********QC rejection reason setting done in else*********");
+													customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn()
+															.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
+													LOG.debug("**********Type of Return setting done in else*********");
+													customerOrderInfoWsDTO
+															.setReturnRequestStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
+													LOG.debug("**********Return request status setting done in else*********");
+													customerOrderInfoWsDTO
+															.setReturnRequestTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
+													LOG.debug("**********Return timeStamp setting done in else*********");
+													break;
 												}
 											}
+
 										}
 									}
 								}
@@ -1666,6 +1675,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 								customerOrderInfoWsDTO.setQcRejectionReason(MarketplacecommerceservicesConstants.NULL_VALUE);
 								customerOrderInfoWsDTO.setReturnType(MarketplacecommerceservicesConstants.NULL_VALUE);
 							}
+							LOG.debug("**********setting final dto*********");
 							custdto.add(customerOrderInfoWsDTO);
 							orderInfoWsDTO.setCustomerOrderInfoWsDTO(custdto);
 							break;
@@ -1685,6 +1695,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 			LOG.error("Exception occured: ", e);
 			orderInfoWsDTO.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 		}
+		LOG.debug("**********returning final dto*********");
 		return orderInfoWsDTO;
 	}
 
