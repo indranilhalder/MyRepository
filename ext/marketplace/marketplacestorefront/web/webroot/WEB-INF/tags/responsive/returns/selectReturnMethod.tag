@@ -172,7 +172,7 @@
 										class="radioButton" type="radio" value="schedule"
 										name="selectScheduledPickup" />
 								</div>
-								<div class="col-md-6 col-sm-6 col-xs-6 updateaddress${i.count}">
+								<div class="col-md-6 col-sm-6 col-xs-6 update-pickup-address updateaddress${i.count}">
 									<ul >
 										<li>${fn:escapeXml(address.title)}&nbsp;<span class="firstName">${fn:escapeXml(address.firstName)}</span>&nbsp;<span class="lastName">${fn:escapeXml(address.lastName)}</span></li>
 										<li><span class="addressline1">${fn:escapeXml(address.line1)}</span></li>
@@ -187,7 +187,7 @@
 										<li style="display: none" id="addressUniqueId">${address.id}</li>
 									</ul>
 								</div>
-								<div class="col-md-4 col-sm-4 col-xs-4 editAddress">
+								<div class="col-md-4 col-sm-4 col-xs-5 editAddress">
 									<a href="#" class="changeAddressLinkPop" data-class="address${i.count}"><spring:theme code="text.order.returns.editaddress"/></a>
 								</div>		
 							</div> 
