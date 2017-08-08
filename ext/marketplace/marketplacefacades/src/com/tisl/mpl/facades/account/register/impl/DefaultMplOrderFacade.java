@@ -405,7 +405,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#getPagedParentOrderHistory(de.hybris.platform.
 	 * commerceservices .search.pagedata.PageableData, de.hybris.platform.core.enums.OrderStatus[],
 	 * de.hybris.platform.core.model.user.CustomerModel)
@@ -456,9 +456,9 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch IMEI details for Account Page order history
-	 * 
+	 *
 	 * @return Map<String, Map<String, String>>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -495,11 +495,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch Invoice details for Account Page order history
-	 * 
+	 *
 	 * @param : orderModelList
-	 * 
+	 *
 	 * @return Map<String, Boolean>
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -533,11 +533,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * @Desc : Used to fetch and populate details for Account Page order history
-	 * 
+	 *
 	 * @param : orderEntryData
-	 * 
+	 *
 	 * @return OrderEntryData
-	 * 
+	 *
 	 * @ throws EtailNonBusinessExceptions
 	 */
 	@Override
@@ -872,7 +872,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.facades.account.register.MplOrderFacade#createcrmTicketForCockpit()
 	 */
 	@Override
@@ -1589,9 +1589,11 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 										//											: MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
 										//									customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn().toString()
 										//											: MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
-										if (CollectionUtils.isNotEmpty(rq.getReturnEntries()))
+										final List<ReturnEntryModel> reList = rq.getReturnEntries();
+
+										if (CollectionUtils.isNotEmpty(reList))
 										{
-											final Iterator it2 = rq.getReturnEntries().iterator();
+											final Iterator it2 = reList.iterator();
 
 											while (it2.hasNext())
 											{
@@ -1603,14 +1605,18 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 													LOG.debug("**********fetching return request and return entry details for matching transaction id*********");
 													customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
 															.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
+													LOG.debug("**********QC rejection reason setting done*********");
 													customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq.getTypeofreturn()
 															.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
+													LOG.debug("**********Type of Return setting done*********");
 													customerOrderInfoWsDTO.setReturnRequestStatus(null != rte.getStatus() ? rte.getStatus()
 															.toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Return request status
+													LOG.debug("**********Return request status setting done*********");
 													if (null != rte.getCreationtime())
 													{
 														customerOrderInfoWsDTO.setReturnRequestTimestamp(formatter.format((rte
 																.getCreationtime())));//Return timeStamp
+														LOG.debug("**********Return timeStamp setting done*********");
 													}
 													else
 													{
@@ -1634,12 +1640,16 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 														LOG.debug("**********fetching return request and return entry details if return entry details are null and return request details exist for matching transaction id*********");
 														customerOrderInfoWsDTO.setQcRejectionReason(null != rq.getRejectionReason() ? rq
 																.getRejectionReason() : MarketplacecommerceservicesConstants.NULL_VALUE);//QC rejection reason
+														LOG.debug("**********QC rejection reason setting done in else*********");
 														customerOrderInfoWsDTO.setReturnType(null != rq.getTypeofreturn() ? rq
 																.getTypeofreturn().toString() : MarketplacecommerceservicesConstants.NULL_VALUE);//Type of Return
+														LOG.debug("**********Type of Return setting done in else*********");
 														customerOrderInfoWsDTO
 																.setReturnRequestStatus(MarketplacecommerceservicesConstants.NULL_VALUE);
+														LOG.debug("**********Return request status setting done in else*********");
 														customerOrderInfoWsDTO
 																.setReturnRequestTimestamp(MarketplacecommerceservicesConstants.NULL_VALUE);
+														LOG.debug("**********Return timeStamp setting done in else*********");
 														break;
 													}
 												}
