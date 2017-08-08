@@ -1597,6 +1597,7 @@ function displayDeliveryDetails(sellerName) {
 
 	var buyboxSeller = $("#ussid").val();
 	var productCode = $("#product").val();
+	var productCategoryType=$('#productCategoryType').val();
 	var requiredUrl = ACC.config.encodedContextPath + "/p-" + productCode
 			+ "/getRichAttributes";
 	var dataString = 'buyboxid=' + buyboxSeller;
@@ -1607,6 +1608,7 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
+				console.log("success");
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -1782,38 +1784,51 @@ function displayDeliveryDetails(sellerName) {
 				}
 				if(null != data['returnWindow'])
 				{
-				//TISCR-414 - Chairmans demo feedback 10thMay CR starts
-				var rWindowValue = data['returnWindow'];
-				
-				if(rWindowValue=="LINGERIE1")
-					{
-					$("#lingerieKnowMoreLi1").show();
-					$("#defaultKnowMoreLi").hide();
-					}
-				else if(rWindowValue=="LINGERIE2")
-					{
-					$("#lingerieKnowMoreLi2").show();
-					$("#defaultKnowMoreLi").hide();
-					}
-				//Added for UF-98_start
-				else if(rWindowValue=="0")
-				{        
-					$("#defaultKnowMoreLi4").show();
-					$("#defaultKnowMoreLi").hide();
-				}
-				else
-					{
-					$("#returnWindow").text(data['returnWindow']);
-					}
-				//TISCR-414 - Chairmans demo feedback 10thMay CR ends
-				}
-				else
-					{
-					$("#defaultKnowMoreLi4").show();
-					$("#defaultKnowMoreLi").hide();
-					$("#returnWindow").text("0");
+					//TISCR-414 - Chairmans demo feedback 10thMay CR starts
+					var rWindowValue = data['returnWindow'];
 					
+					if(rWindowValue=="LINGERIE1")
+					{
+						$("#lingerieKnowMoreLi1").show();
+						$("#defaultKnowMoreLi").hide();
+						
 					}
+					else if(rWindowValue=="LINGERIE2")
+					{
+						$("#lingerieKnowMoreLi2").show();
+						$("#defaultKnowMoreLi").hide();
+					}
+					//Added for UF-98_start
+					else if(rWindowValue=="0")
+					{ 
+						var catType = $("#categoryType").val();
+						if(catType != 'FineJewellery' && catType != 'FashionJewellery'){
+							$("#defaultKnowMoreLi4").show();
+						}
+						//$("#defaultKnowMoreLi4").show();
+						$("#defaultKnowMoreLi").hide();
+						$("#defaultRetRefLi4").show();
+						$("#defaultRetRefLi").hide();
+						$("#defaultRetLi4").show();
+						$("#defaultRetLi").hide();
+					}
+					else 
+					{
+						$("#returnWindow").text(data['returnWindow']);
+						$("#returnWindowRefRet").text(data['returnWindow']);
+						$("#returnWindowRet").text(data['returnWindow']);
+					}
+					//TISCR-414 - Chairmans demo feedback 10thMay CR ends
+				}
+				else
+				{
+					$("#defaultKnowMoreLi4").show();
+					$("#defaultKnowMoreLi").hide();
+					$("#defaultRetRefLi4").show();
+					$("#defaultRetRefLi").hide();
+					$("#returnWindow").text("0");
+					$("#returnWindowRefRet").text("0");
+				}
 			}
 		}
 	});
