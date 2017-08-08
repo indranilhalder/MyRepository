@@ -146,8 +146,9 @@ $(document).ready(function(){
 	})
 });
 
-$(document).on("click",".lazy-need-help",function(){
-//UF-412
+//TISSPTEN-132 gcb.min.js loading on page load for contact us page only
+if(window.location.pathname == '/contact'){
+	//UF-412
 	(function(co, b, r, o, w, s, e) {
 	    e = co.getElementsByTagName(b)[0];
 	    if (co.getElementById(r)){
@@ -163,8 +164,27 @@ $(document).on("click",".lazy-need-help",function(){
 	//'https://219.65.91.73:443/cobrowse');
 	   'https://prod-tulweb.tata-bss.com:443/cobrowse/js/gcb.min.js',
 	   'https://prod-tulweb.tata-bss.com:443/cobrowse');
-});
-
+}
+else {
+	$(document).on("click",".lazy-need-help",function(){
+	//UF-412
+		(function(co, b, r, o, w, s, e) {
+		    e = co.getElementsByTagName(b)[0];
+		    if (co.getElementById(r)){
+		          return;
+		    }
+		    s = co.createElement(b); s.id = r; s.src = o;
+		    s.setAttribute('data-gcb-url', w);
+		    e.parentNode.insertBefore(s, e);
+		})(document, 'script', 'gcb-js',
+		//'http://10.9.17.46:8700/cobrowse/js/gcb.min.js',
+		//'http://10.9.17.46:8700/cobrowse');
+		//'https://219.65.91.73:443/cobrowse/js/gcb.min.js',
+		//'https://219.65.91.73:443/cobrowse');
+		   'https://prod-tulweb.tata-bss.com:443/cobrowse/js/gcb.min.js',
+		   'https://prod-tulweb.tata-bss.com:443/cobrowse');
+	});
+}
 	   
 var chatSession = null;
 var chatObj = null;
