@@ -84,14 +84,13 @@
 					  	 <!-- starts here-->
 					  	   <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 					  	     <tbody>
-					  	       <!-- <tr class="dsnone">
+					  	        <tr class="dsnone">
 					  	         <td>
 					  	       	   <img src="images/placeh.gif" height="20" style="display:block;line-height:0;font-size:0;">
 					  	          </td>
 					  	        </tr>
-					  	        -->
-		  	        		    <tr>
-		  	        		    	<td align="center" class="topLinks" style="border-bottom: 1px solid #aa1d3d;padding: 10px;>
+					  	        <tr>
+		  	        		    	<td align="center" class="topLinks">
 		  	        		    		<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration: none "> FASHION </a>
 			  	        		      	<span style="font-size:20px;font-family:Arial, Helvetica, sans-serif;color: #333333;"> &middot; </span>
 			  	        		      	<a href="#" style="font-size:14px;font-family:Arial, Helvetica, sans-serif;color: #aa1d3d;text-decoration:none"> ELECTRONICS </a>
@@ -213,7 +212,7 @@
                                         <div style="font-size:10px;font-family:Arial, Helvetica, sans-serif;color: #333333;">
                                           This email can't receive replies. Get in touch with us by contacting <a href="${ctx.secureBaseUrl}/contact"  target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">Tata CLiQ Luxury Care</a>
                                           <br>
-                                          You can also write to us at <a href="mailto:hello@tatacliq.com.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
+                                          You can also write to us at <a href="mailto:hello@tatacliq.com" target="blank" style="text-decoration:underline;color: #aa1d3d;line-height:16px;">hello@tatacliq.com.com</a>. For help with our luxury products. Write to <a href="mailto:concierge@tatacliq.com" target="blank" style="text-decoration:underline;color:#aa1d3d;line-height:16px;">concierge@tatacliq.com</a>
                                         </div>
                                       </td>
                                   </tr>

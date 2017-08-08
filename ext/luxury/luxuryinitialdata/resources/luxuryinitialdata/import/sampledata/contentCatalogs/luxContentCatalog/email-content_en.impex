@@ -46,9 +46,9 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;EmailAppleStoreImage;/images/theme/applestore.png
 ;;EmailAndroidstoreImage;/images/theme/androidstore.png
 ;;EmailLinegreyImage;/images/theme/linegrey.png
-;;EmailFBImage;/images/theme/Luxury_Fb.jpg;
-;;EmailYouTubeImage;/images/theme/Luxury_youtube.png;
-;;EmailInstagramImage;/images/theme/Luxury_Insta.png;
+;;EmailFBImage;/images/theme/Luxury_Fb.jpg
+;;EmailYouTubeImage;/images/theme/Luxury_youtube.png
+;;EmailInstagramImage;/images/theme/Luxury_Insta.png
 ;;EmailTweetImage;/images/theme/tweet.png
 ;;EmailgplusImage;/images/theme/gplus.png
 
@@ -64,6 +64,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;EmailAuthenticbrandsSlot;EmailAuthenticbrandsImage
 ;;EmailFreeshippingSlot;EmailFreeshippingImage
 ;;EmailLinegreySlot;EmailLinegreyImage
+;;EmailfbRegSlot;EmailFBImage
 ;;EmailgplusRegSlot1;EmailgplusImage
 ;;EmailtweetSlot;EmailTweetImage
 ;;EmailAppleStoreSlot;EmailAppleStoreImage
@@ -84,7 +85,6 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;EmailForgotPwdSiteLogoImage;/images/theme/Luxury_logo.png
 ;;ForgetPwEmailfbImage;/images/theme/Fb1.jpg;
 ;;ForgetPwEmailgplusImage;/images/theme/gplus1.png;
-;;ForgetPwEmailsmileyImage;/images/theme/smileyimg.jpg;
 ;;AppDownloadImage;/images/theme/Luxury_App.jpg;
 ;;EmailtweetImage;/images/theme/tweeter.jpg;
 
@@ -134,8 +134,6 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 ;;OrderRefNumbOneConfImage;/images/theme/OrderReferenceNumberOne.jpg;
 ;;OrderRefNumbTwoConfImage;/images/theme/OrderReferenceNumberTwo.jpg;
 ;;EmailFBImage;/images/theme/Luxury_Fb.jpg;
-;;EmailsmileyImage;/images/theme/Luxury_Happy.png;
-;;EmailTipsImage;/images/theme/Luxury_Tip.jpg;
 ;;EmailAppImage;/images/theme/Luxury_App.jpg;
 ;;Emailyoutube;/images/theme/Luxury_youtube.jpg;
 ;;Emailtwitter;/images/theme/Luxury_twiiter.jpg;
@@ -457,15 +455,12 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 # CMS Image Components for Order Rejected High Risk Email  
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;EmailBannerOrderRejectedImage;/images/theme/headerBanner.jpg;
-#;;TipImage;/images/theme/Tip.jpg;
 
 # Order Rejected High Risk Email Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;EmailSiteLogoOrderRejectSlot;EmailBannerOrderRejectedImage
-;;EmailTipCUSlot;TipImage
 ;;AppDownloadUrlSlot;AppDownloadImage
 ;;EmailsmileyimgCUSlot;EmailsmileyImage
-;;EmailfbCUSlot;EmailfbImage
 ;;EmailgplusCUSlot;EmailgplusImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
@@ -526,7 +521,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 #;;EmailTipCUSlot;TipImage
 ;;AppDownloadUrlSlot;AppDownloadImage
 ;;EmailsmileyimgCUSlot;EmailsmileyImage
-;;EmailfbCUSlot;EmailfbImage
+#;;EmailfbCUSlot;EmailfbImage
 ;;EmailgplusCUSlot;EmailgplusImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
@@ -565,8 +560,8 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 #;;EmailInvoiceBanner2Slot;InvoiceBanner2Image
 ;;AppDownloadUrlSlot;AppDownloadImage
 ;;EmailInvoiceSmileySlot;EmailsmileyImage
-;;EmailInvoiceFbSlot;EmailfbImage
-#;;EmailInvoiceGplusSlot;EmailgplusImage
+#;;EmailInvoiceFbSlot;EmailfbImage
+;;EmailInvoiceGplusSlot;EmailgplusImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
 ;;EmailInstaSlot;EmailInstagramImage
@@ -588,11 +583,11 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;EmailSiteLogoOnHoldSlot;EmailOnHoldBanner1Image
-;;EmailTipCUSlot;TipImage
+#;;EmailTipCUSlot;TipImage
 ;;EmailDescriptionOnHoldSlot;EmailOnHOldDescriptionImage
 ;;AppDownloadUrlSlot;AppDownloadImage
-;;EmailsmileyimgCUSlot;EmailsmileyImage
-;;EmailfbCUSlot;EmailfbImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
 ;;EmailgplusCUSlot;EmailgplusImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
@@ -610,10 +605,10 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 # Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;EmailPDPHeaderImageSlot;EmailPDPHeaderImage
-;;EmailPDPTipsImageSlot;TipImage
-;;EmailPDPFbImageSlot;EmailfbImage
+#;;EmailPDPTipsImageSlot;TipImage
+#;;EmailPDPFbImageSlot;EmailfbImage
 ;;AppDownloadUrlSlot;AppDownloadImage
-;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
 ;;EmailInstaSlot;EmailInstagramImage
@@ -628,19 +623,19 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@medi
 # CMS Image Components
 INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
 ;;OrderConfirmSiteLogoImage;/images/theme/headerBanner.jpg;
-;;OrderConfirmTrackButtonImage;/images/theme/track-btn.jpg;
+;;OrderConfirmTrackButtonImage;/images/theme/Track2.jpg;
 
 # Order Order Confirmation Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;EmailConfirmOrderSiteLogoSlot;OrderConfirmSiteLogoImage
 #;;EmailForgorPwdTipSlot;DeliveryPersonImage
-;;EmailTrackOrderOneSlot;Track1HOTCImage
+#;;EmailTrackOrderOneSlot;Track1HOTCImage
 #;;EmailTrackOrderTwoSlot;Track2HOTCImage
-;;EmailOrderConfirmSlot;TipImage
-;;EmailTipCUSlot;TipImage
+#;;EmailOrderConfirmSlot;TipImage
+#;;EmailTipCUSlot;TipImage
 ;;AppDownloadUrlSlot;AppDownloadImage
-;;EmailsmileyimgCUSlot;EmailsmileyImage
-;;EmailfbCUSlot;EmailfbImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
 ;;EmailgplusCUSlot;EmailgplusImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
@@ -661,11 +656,11 @@ INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$pictur
 # Content Slots
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
 ;;EmailSiteLogoRefundSlot;EmailSiteLogoRefundImage
-;;EmailTipCUSlot;TipImage
+#;;EmailTipCUSlot;TipImage
 ;;EmailDescriptionRefundSlot;DescriptionConfImage
 ;;AppDownloadUrlSlot;AppDownloadImage
-;;EmailsmileyimgCUSlot;EmailsmileyImage
-;;EmailfbCUSlot;EmailfbImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
 ;;EmailgplusCUSlot;EmailgplusImage
 ;;EmailtweetSlot;EmailtweetImage
 ;;EmailYouTubeSlot;EmailYouTubeImage
