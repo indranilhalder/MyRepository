@@ -65,13 +65,18 @@ var buyboxskuId='';
 	</c:if>
 <!-- 	TISPRD-7604 fix end -->
 	<c:if test="${fn:contains(validTabs, 'reviewsAndRatings')}">
-			<li id="tabs_styleNotes">
+			<li id="tabs_review">
 				 <spring:theme code="product.product.reviewsAndRatings" />
 			</li>
 		</c:if>
 		<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
-			<li id="tabs_styleNotes">
+			<li id="tabs_styleNotes_Refunds">
 				 <spring:theme code="product.product.returnsAndRefunds" />
+			</li>
+		</c:if>
+		<c:if test="${fn:contains(validTabs, 'Returns')}">
+			<li id="tabs_ret">
+				 <spring:theme code="product.product.returns" />
 			</li>
 		</c:if>
 <!-- moved as part of PRDI-96 start -->
@@ -134,8 +139,13 @@ var buyboxskuId='';
 		</li>
 	</c:if>
 	<c:if test="${fn:contains(validTabs, 'returnsAndRefunds')}">
-		<li id="return" class="tab-content">
+		<li id="returnrefund" class="tab-content">
 			<product:productReturnsAndRefunds product="${product}" />
+		</li>
+	</c:if>
+	<c:if test="${fn:contains(validTabs, 'Returns')}">
+		<li id="return" class="tab-content">
+			<product:productReturns product="${product}" />
 		</li>
 	</c:if>
 	<!-- moved as part of PRDI-96 start -->

@@ -212,19 +212,19 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@Resource(name = "mplStoreLocatorFacade")
 	private MplStoreLocatorFacade mplStoreLocatorFacade;
 
-	@Autowired
+	@Resource(name = "commerceCartService")
 	private CommerceCartService commerceCartService;
 
-	@Autowired
+	@Resource(name = "productService")
 	ProductService productService;
 
-	@Autowired
+	@Resource(name = "priceDataFactory")
 	private PriceDataFactory priceDataFactory;
 
-	@Autowired
+	@Resource(name = "wishlistFacade")
 	private WishlistFacade wishlistFacade;
 
-	@Resource
+	@Resource(name = "mplCheckoutFacade")
 	private MplCheckoutFacade mplCheckoutFacade;
 
 	@Resource(name = "mplCustomAddressFacade")
@@ -239,33 +239,33 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 	@Resource(name = "mplSlaveMasterFacade")
 	private MplSlaveMasterFacade mplSlaveMasterFacade;
 
-	@Autowired
+	@Resource(name = "mplCouponFacade")
 	private MplCouponFacade mplCouponFacade;
 
-	@Autowired
+	@Resource(name = "mplDeliveryCostService")
 	private MplDeliveryCostService mplDeliveryCostService;
 
 	//private final String checkoutPageName = "Choose Your Delivery Options";
 
-	@Autowired
+	@Resource(name = "cartService")
 	private CartService cartService;
 
 	@Resource(name = "accProductFacade")
 	private ProductFacade productFacade;
 
-	@Autowired
+	@Resource(name = "mplSellerInformationFacade")
 	private MplSellerInformationFacade mplSellerInformationFacade;
 
 	@Resource(name = "pointOfServiceConverter")
 	private Converter<PointOfServiceModel, PointOfServiceData> pointOfServiceConverter;
 
-	@Autowired
+	@Resource(name = "mplAddressValidator")
 	private MplAddressValidator mplAddressValidator;
 
-	@Autowired
+	@Resource(name = "mplConfigFacade")
 	private MplConfigFacade mplConfigFacade;
 
-	@Autowired
+	@Resource(name = "accountAddressFacade")
 	private MplAccountAddressFacade accountAddressFacade;
 
 
@@ -4681,7 +4681,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description adding wishlist popup in cart page
-	 *
+	 * 
 	 * @param String productCode,String wishName, model
 	 */
 
@@ -4739,7 +4739,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 
 	/*
 	 * @Description showing wishlist popup in cart page
-	 * 
+	 *
 	 * @param String productCode, model
 	 */
 	@ResponseBody

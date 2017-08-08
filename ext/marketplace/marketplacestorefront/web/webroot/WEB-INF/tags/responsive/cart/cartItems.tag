@@ -172,7 +172,8 @@ tr.d0 td {
 										</c:choose>
 									</c:when>
 									<c:when test="${not empty entry.product.rootCategory && entry.product.rootCategory=='FashionJewellery'}">
-										<c:if test="${entry.product.size ne 'FreeSize' }">
+										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+										<c:if test="${entry.product.size ne noSize }">
 											<p class="size disclaimer-txt more">
 												<ycommerce:testId code="cart_product_size">
 													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
