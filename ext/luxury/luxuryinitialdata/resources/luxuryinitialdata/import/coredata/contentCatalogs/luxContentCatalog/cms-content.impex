@@ -37,6 +37,7 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;AccountCouponDetailsPageTemplate;Coupon Details Page Template;$luxuryStoreAddonPrefix/pages/account/accountCouponDetailsPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountOverviewPageTemplate; Overview  Page Template;$luxuryStoreAddonPrefix/pages/account/accountLayoutPage;ContentPage
 ;;LuxSearchResultsPageTemplate;Lux Search Results Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchResultsPage;;;$jarResourceCms/structure-view/structure_searchResultsGridPageLuxTemplate.vm
+;;LuxSearchResultsEmptyPageTemplate;Luxury Search Results Empty Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchEmptyPage;;;
 ;;AccountUpdateProfilePageTemplate;Update Profile Page Template;$luxuryStoreAddonPrefix/pages/account/accountProfileEditPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountUpdatePasswordPageTemplate;Update Password Page Template;$luxuryStoreAddonPrefix/pages/account/accountChangePasswordPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountOrderHistoryPageTemplate;Order History Page Template;account/accountOrderHistoryPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
@@ -57,11 +58,27 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;termsOfUse;Terms of Use Page;LuxuryContentPageTemplate;/termsOfUse
 ;;trackorders;Track Orders;LuxuryContentPageTemplate;/trackorders
 ;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
+;;LuxSearchEmpty;Luxury Search Results Empty Page;LuxSearchResultsEmptyPageTemplate;searchEmpty
 ;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/lifestyle
 ;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
 ;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/womenlanding
 ;;luxuryMenlandingPage4;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding4
 ;;overview;Overview Page;AccountOverviewPageTemplate;overview
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsEmptyPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;LuxTopHeaderSlot-SearchResultsEmpty;TopHeaderSlot;;TopHeaderSlot;true
+;;LuxMiddleHeaderHelpLink-SearchResultsEmpty;MiddleHeader;;MiddleHeader;true
+;;LuxSiteLogo-SearchResultsEmpty;SiteLogo;;SiteLogoSlot;true
+;;LuxHeaderLinks-SearchResultsEmpty;HeaderLinks;;HeaderLinksSlot;true
+;;LuxSearchBox-SearchResultsEmpty;SearchBox;;SearchBoxSlot;true
+;;LuxMiniCart-SearchResultsEmpty;MiniCart;;MiniCartSlot;true
+;;LuxNavigationBar-SearchResultsEmpty;NavigationBar;;NavigationBarSlot;true
+;;LuxWhyShopOnLuxury-SearchResultsEmpty;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;LuxFooter-SearchResultsEmpty;Footer;;FooterSlot;true
+;;LuxPlaceholderContentSlot-SearchResultsEmpty;PlaceholderContentSlot;;PlaceholderContentSlot;true
+;;WishList-SearchResultsEmpty;WishList;;WishListSlot;true
+;;LuxBottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
 
