@@ -1877,8 +1877,8 @@ public class AccountPageController extends AbstractMplSearchPageController
 					}
 
 					//TPR-4134 starts
-					if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType())
-							&& ((sellerName).contains((MarketplacecommerceservicesConstants.TANISHQ))))
+					if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType()) && ((sellerName)
+							.contains((configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername"))))) 
 					{
 						model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
 					}
