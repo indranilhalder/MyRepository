@@ -411,18 +411,9 @@ display:none;
     <div class="main-image">
 	<a onClick="openPop_quick();" class="wishlist-icon-qv normal"></a>
 	<a onClick="openPop_quick();" class="wishlist-icon-qv zoom-qv" style="display: none;"></a>
-	<c:choose>
-	<c:when test="${product.rootCategory=='FineJewellery'}">
-		<a href="${productUrl}"> <product:productPrimaryImage
-				product="${product}" format="fineJewelproductquickview" />
-		</a>
-	</c:when>
-	<c:otherwise>
- 		<a href="${productUrl}"> <product:productPrimaryImage lazyLoad="false"
+	<a href="${productUrl}"> <product:productPrimaryImage
 				product="${product}" format="product" />
-				</a>
-	</c:otherwise>
-	</c:choose>
+		</a>
 <!-- 		<div class="zoom" style="z-index:10000;">
 		<a onClick="openPop_quick();" id="wishlist_quick" class="wishlist" data-toggle="popover" data-placement='bottom'></a>
 		</div> -->
