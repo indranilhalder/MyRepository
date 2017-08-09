@@ -988,10 +988,43 @@ function dtmSearchTags(){
 	 }
   });
 	
+$(document).on('click','.add_address_button',function(){
+	if(typeof _satellite != "undefined") {  
+		_satellite.track('cpj_checkout_add_address');
+	}
+})	
 	
-	
-	
-	
+
+$(document).on('click','#newAddressButton .button',function(){
+	if(typeof _satellite != "undefined") {  
+		_satellite.track('cpj_checkout_save_address');
+	}
+})
+
+if($("#checkoutPageName").val()=="Review Order"){
+	if(typeof _satellite != "undefined") {  
+		_satellite.track('cpj_checkout_save_address');
+	}	
+}
+
+if($("#checkoutPageName").val()=="Select Address"){
+	if(typeof _satellite != "undefined") {  
+		_satellite.track('cpj_checkout_proceed_to_address');
+	}	
+}
+
+if($("#checkoutPageName").val()=="Payment Options"){
+	if(typeof _satellite != "undefined") {  
+		_satellite.track('cpj_checkout_proceed_to_payment');
+	}	
+}
+
+if($("#checkoutPageName").val()=="Choose Your Delivery Options"){
+	if(typeof _satellite != "undefined") {  
+		_satellite.track('cpj_checkout_delivery_option');
+	}	
+}
+
 	
 	
 	

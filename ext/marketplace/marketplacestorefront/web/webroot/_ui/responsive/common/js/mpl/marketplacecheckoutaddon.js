@@ -5295,6 +5295,10 @@ function calculateDeliveryCost(radioId,deliveryCode)
 		  	event_type : deliveryCode+"_delivery_selected"
 		  });
 		}
+		
+		if(typeof _satellite != "undefined") {  
+		  _satellite.track('cpj_checkout_delivery_option_select');
+		}
 }
 
 //TPR-1214
