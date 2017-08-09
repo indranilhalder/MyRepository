@@ -23,7 +23,6 @@ $jarResourceCms=$config-jarResourceCmsValue
 
 
 
-
 INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
 ;;luxuryBrandLandingPageTemplate;Luxury Band Landing Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryBrandLandingPage;ContentPage;true;$jarResourceCms/structure-view/structure_luxuryBrand.vm
 ;;luxuryGenderLandingPageTemplate;Luxury Gender Landing page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryGenderLandingPage;ContentPage;true;$jarResourceCms/structure-view/structure_luxuryGender.vm
@@ -37,13 +36,15 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;AccountCouponDetailsPageTemplate;Coupon Details Page Template;$luxuryStoreAddonPrefix/pages/account/accountCouponDetailsPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountOverviewPageTemplate; Overview  Page Template;$luxuryStoreAddonPrefix/pages/account/accountLayoutPage;ContentPage
 ;;LuxSearchResultsPageTemplate;Lux Search Results Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchResultsPage;;;$jarResourceCms/structure-view/structure_searchResultsGridPageLuxTemplate.vm
-;;LuxSearchResultsEmptyPageTemplate;Luxury Search Results Empty Page Template;$luxuryStoreAddonPrefix/pages/search/luxurySearchEmptyPage;;;
 ;;AccountUpdateProfilePageTemplate;Update Profile Page Template;$luxuryStoreAddonPrefix/pages/account/accountProfileEditPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountUpdatePasswordPageTemplate;Update Password Page Template;$luxuryStoreAddonPrefix/pages/account/accountChangePasswordPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountOrderHistoryPageTemplate;Order History Page Template;account/accountOrderHistoryPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountOrderDetailsPageTemplate;Order Details Page Template;account/accountOrderDetailPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountPaymentDetailsPageTemplate;Payment Details Page Template;account/accountPaymentInfoPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;AccountAddressBookPageTemplate;Address Book Page Template;account/accountAddressBookPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
+;;ContactUsPageTemplate         ;Contact Us Page Template  ;$luxuryStoreAddonPrefix/pages/layout/ContactUsPage;ContentPage;;$jarResourceCms/structure-view/structure_contactUsPageTemplate.vm
+;;AccountCouponDetailsPageTemplate;Coupon Details Page Template;account/accountCouponDetailsPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
+;;ErrorPageTemplate;Error Page Template;$luxuryStoreAddonPrefix/pages/layout/errorPageTemplate;ContentPage;;$jarResourceCms/structure-view/structure_errorPageTemplate.vm
 
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
@@ -58,27 +59,11 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;termsOfUse;Terms of Use Page;LuxuryContentPageTemplate;/termsOfUse
 ;;trackorders;Track Orders;LuxuryContentPageTemplate;/trackorders
 ;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
-;;LuxSearchEmpty;Luxury Search Results Empty Page;LuxSearchResultsEmptyPageTemplate;searchEmpty
 ;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/lifestyle
 ;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
 ;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/womenlanding
 ;;luxuryMenlandingPage4;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding4
 ;;overview;Overview Page;AccountOverviewPageTemplate;overview
-
-
-INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsEmptyPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
-;;LuxTopHeaderSlot-SearchResultsEmpty;TopHeaderSlot;;TopHeaderSlot;true
-;;LuxMiddleHeaderHelpLink-SearchResultsEmpty;MiddleHeader;;MiddleHeader;true
-;;LuxSiteLogo-SearchResultsEmpty;SiteLogo;;SiteLogoSlot;true
-;;LuxHeaderLinks-SearchResultsEmpty;HeaderLinks;;HeaderLinksSlot;true
-;;LuxSearchBox-SearchResultsEmpty;SearchBox;;SearchBoxSlot;true
-;;LuxMiniCart-SearchResultsEmpty;MiniCart;;MiniCartSlot;true
-;;LuxNavigationBar-SearchResultsEmpty;NavigationBar;;NavigationBarSlot;true
-;;LuxWhyShopOnLuxury-SearchResultsEmpty;WhyShopOnLuxury;;WhyShopOnLuxury;true
-;;LuxFooter-SearchResultsEmpty;Footer;;FooterSlot;true
-;;LuxPlaceholderContentSlot-SearchResultsEmpty;PlaceholderContentSlot;;PlaceholderContentSlot;true
-;;WishList-SearchResultsEmpty;WishList;;WishListSlot;true
-;;LuxBottomHeaderSlot-SearchResultsGrid;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
 
@@ -100,8 +85,7 @@ INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=tru
 INSERT_UPDATE LuxEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest
 ;;luxury-SearchBox; Search Box; SearchBox; 2; 3; 1
 
-INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;visible
-;;MplEnhancedSearchBox;Marketplace Enhanced  Search Box Component;MplEnhancedSearchBox;2;3;3;false
+
 
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
@@ -285,6 +269,12 @@ INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=d
 ;;savedAddresses.jpg;$siteResource/images/banners/site/savedAddresses.jpg;savedAddresses.jpg;"Saved Addresses"
 
 
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;callus.png;$siteResource/images/banners/homepage/responsive/callus.png;callus.png;"Call us";
+;;FAQ.png;$siteResource/images/banners/homepage/FAQ.png;FAQ.png;"Frequent  Questions";
+;;chatwidus.png;$siteResource/images/banners/homepage/responsive/chatwidus.png;chatwidus.png;"Chat With Us";
+
+
 
 
 INSERT_UPDATE LuxShowCaseComponent;$contentCV[unique=true];uid[unique=true];title;ShowCase(uid,$contentCV)
@@ -330,6 +320,9 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 ;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;"<h3>SAVED CARDS</h3><p>Manage and delete your credit/debit card details here.</p><a href='/my-account/payment-details'>VIEW PAYMENT INFO</a>";savedCards.jpg;;
 ;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3><p>When will that package arrive? And other such pressing questions.</p><a href='/my-account/orders'>VIEW ORDER HISTORY</a>";orderHistory.jpg;;
 ;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;"<h3>MY ADDRESS</h3><p>Where do we send that package? And other such address details. </p><a href='/my-account/address-book'>VIEW SAVED ADDRESSES</a>";savedAddresses.jpg;;
+;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<p>Call Us,24/7</p><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a>";callus.png
+;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<p>Chat with us</p><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
+;;FrequentlyAskedMediaParagraphComponent;FAQ Media Paragraph Component;FrequentlyAskedMediaParagraphComponent;"<p>FAQ</p><a href='/store/mpl/en/faq'>Frequently Asked Questions</a>";FAQ.png
 
 
 
@@ -535,6 +528,11 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;TermsandConditionsPageComponent;Terms and Conditions Page Component;TermsandConditionsPageComponent;;;;
 ;;TitleForTermsOfUsePageComponent;Title For TermsOfUsePageComponent;TitleForTermsOfUsePageComponent;;;;
 ;;TermsOfUsePageComponent;Terms Of Use Page Component;TermsOfUsePageComponent;;;;
+
+
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;contactUsHeaderComponent;"<h2>Contact Us</h2><span class='copy'>You want to talk to us? Shoot your questions about your order, our site, your account, our deals, and everything in between. We're here for you. But not here here. Make our Hotline Blink. Call Us anytime,and from anywhere or drop us an email at hello@tatacliq.com</span>"
+
 
 # CMS Footer Component
 INSERT_UPDATE LuxuryFooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;navigationNodes(uid,$contentCV);footerAppTitle;footerAppText;footerSocialTitle;footerImageList(uid,$contentCV);footerAppImageList(uid,$contentCV); footerBarContent(uid,$contentCV);
@@ -765,6 +763,9 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
 ;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
 ;;SearchResultsGridSlot;Search Result Grid Slot for Search List;true;SearchResultsGrid;;;
+;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
+;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
+
 
 
 ####################STATIC PAGES ########################
@@ -1224,6 +1225,51 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 ;BottomHeaderSlot;;;wide
 
 
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;Section1;;CMSParagraphComponent;
+;Section2;;CMSMediaParagraphComponent;
+;TopHeader;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide   
+;WishList;;;wide            
+;NavigationBar;;;navigation   
+;BottomHeaderSlot;;BreadcrumbComponent              
+;Footer;;;footer
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;SideContent;;;narrow
+;BodyContent;;;wide
+;BottomContent;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+
+
+# Error Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide               
+;NavigationBar;;;navigation                   
+;Footer;;;footer
+;SideContent;;MplBigPromoBannerComponent;
+#;MiddleContent;;AccountNavigationCollectionComponent;
+;BottomContent;;;wide
+
 
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateProfilePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
@@ -1470,7 +1516,46 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;BottomHeaderSlot-AccountUpdateProfilePage;BottomHeaderSlot;;BottomHeaderSlot;true
 
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;Section1-ContactUsPageTemplate;Section1;;Section1-contact;true
+;;Section2-ContactUsPageTemplate;Section2;;Section2-contact;true 
+;;TopHeader-ContactUsPageTemplate;TopHeader;;TopHeaderSlot;true         
+;;MiddleHeaderHelpLink-ContactUsPageTemplate;MiddleHeader;;MiddleHeader;true 
+;;SiteLogo-ContactUsPageTemplate1;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-ContactUsPageTemplate1;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-ContactUsPageTemplate;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-ContactUsPageTemplate;MiniCart;;MiniCartSlot;true  
+;;WishList-ContactUsPageTemplate;WishList;;WishListSlot;true     
+;;NavigationBar-ContactUsPageTemplate;NavigationBar;;NavigationBarSlot;true  
+;;BottomHeaderSlot-ContactUsPageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
+;;Footer-ContactUsPageTemplate;Footer;;FooterSlot;true  
 
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountCouponDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountCouponDetailsPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountCouponDetailsPage;MiniCart;;MiniCartSlot;true
+;;Footer-AccountCouponDetailsPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountCouponDetailsPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountCouponDetailsPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountCouponDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountCouponDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ErrorPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-ErrorPage;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-ErrorPage;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo-ErrorPage;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-ErrorPage;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-ErrorPage;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-ErrorPage;MiniCart;;MiniCartSlot;true       
+;;NavigationBar-ErrorPage;NavigationBar;;NavigationBarSlot;true                  
+;;Footer-ErrorPage;Footer;;FooterSlot;true
+;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
+#;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
 
 
 
@@ -1493,6 +1578,7 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;order;Order Details Page;AccountOrderDetailsPageTemplate;order
 ;;payment-details;Payment Details Page;AccountPaymentDetailsPageTemplate;payment-details
 ;;address-book;Address Book Page;AccountAddressBookPageTemplate;address-book
+;;coupons;Coupon Details Page;AccountCouponDetailsPageTemplate;coupons
 
 
 ############################## for Static pages #################
@@ -1529,3 +1615,14 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
 ;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;
+
+
+###CONTACT US PAGE###
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;contact;Contact us;ContactUsPageTemplate;/contact
+
+
+
+# Functional Content Pages
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;notFound;Not Found Page;ErrorPageTemplate;notFound
