@@ -636,6 +636,7 @@ public class ProductsController extends BaseController
 			suggestionData.setValue(autoSuggestion.getTerm());
 			suggestions.add(suggestionData);
 		}
+
 		suggestionDataList.setSuggestions(suggestions);
 
 		return dataMapper.map(suggestionDataList, SuggestionListWsDTO.class, fields);
@@ -875,7 +876,8 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 			}
 		}
 		return productSearchPage;
@@ -1018,6 +1020,26 @@ public class ProductsController extends BaseController
 					{
 						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) productSearchFacade
 								.textSearch(searchState, pageableData);
+
+
+					}
+
+					//TPR-6528
+					if (null != searchPageData.getSpellingSuggestion()
+							&& StringUtils.isNotEmpty(searchPageData.getSpellingSuggestion().getSuggestion()))
+					{
+						productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+								.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
+						final SearchStateData searchStateAll = new SearchStateData();
+						final SearchQueryData searchQueryDataAll = new SearchQueryData();
+						searchQueryDataAll.setValue(searchPageData.getSpellingSuggestion().getSuggestion().replaceAll("[()]+", ""));
+						searchStateAll.setQuery(searchQueryDataAll);
+						if (isFromLuxuryWeb)
+						{
+							searchStateAll.setLuxurySiteFrom(MarketplacecommerceservicesConstants.CHANNEL_WEB);
+						}
+						searchPageData = (ProductCategorySearchPageData<SearchStateData, ProductData, CategoryData>) searchFacade
+								.textSearch(searchStateAll, pageableData);
 					}
 
 					if (isFilter)
@@ -1091,10 +1113,7 @@ public class ProductsController extends BaseController
 				{
 					productSearchPage.setCurrentQuery(sortingvalues.getCurrentQuery());
 				}
-				if (null != searchPageData.getSpellingSuggestion() && null != searchPageData.getSpellingSuggestion().getSuggestion())
-				{
-					productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
-				}
+
 			}
 
 		}
@@ -1284,7 +1303,8 @@ public class ProductsController extends BaseController
 			}
 			if (null != sortingvalues.getSpellingSuggestion())
 			{
-				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion());
+				productSearchPage.setSpellingSuggestion(searchPageData.getSpellingSuggestion().getSuggestion()
+						.replaceAll("[^a-zA-Z&0-9\\s+]+", ""));
 			}
 		}
 		return productSearchPage;
@@ -1382,7 +1402,8 @@ public class ProductsController extends BaseController
 	//@Cacheable(value = "productCache", key = "T(de.hybris.platform.commercewebservicescommons.cache.CommerceCacheKeyGenerator).generateKey(true,true,#productCode,#fields)")
 	@ResponseBody
 	public ProductInfoWSDTO getProductInfo(@RequestParam(required = true) final String productCodes,
-			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request)
+			@RequestParam(defaultValue = DEFAULT_FIELD_SET) final String fields, final HttpServletRequest request,
+			@RequestParam(required = false) final String channel)
 	{
 		final List<String> productCodeList = new ArrayList<String>();
 		ProductDetailMobileWsData productWSData = null;
@@ -1431,7 +1452,7 @@ public class ProductsController extends BaseController
 			{
 				try
 				{
-					productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl);
+					productWSData = mplProductWebService.getProductInfoForProductCode(productCodeRef, baseUrl, channel);
 				}
 				catch (final Exception e)
 				{

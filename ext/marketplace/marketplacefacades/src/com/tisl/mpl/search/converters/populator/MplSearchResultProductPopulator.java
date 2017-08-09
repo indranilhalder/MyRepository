@@ -37,13 +37,13 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 
 	private CommonUtils commonUtils;
-	
+
 	@Autowired
 	private SizeAttributeComparator sizeAttributeComparator;
 
-	
-	
-	
+
+
+
 	/**
 	 * @return the commonUtils
 	 */
@@ -55,9 +55,10 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 
 
 	/**
-	 * @param commonUtils the commonUtils to set
+	 * @param commonUtils
+	 *           the commonUtils to set
 	 */
-	public void setCommonUtils(CommonUtils commonUtils)
+	public void setCommonUtils(final CommonUtils commonUtils)
 	{
 		this.commonUtils = commonUtils;
 	}
@@ -239,8 +240,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		final Double priceValue = this.<Double> getValue(source, "priceValue");
 		if (priceValue != null)
 		{
-			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(priceValue.doubleValue()),
-					getCommonI18NService().getCurrentCurrency());
+			final PriceData priceData = getPriceDataFactory().create(PriceDataType.BUY,
+					BigDecimal.valueOf(priceValue.doubleValue()), getCommonI18NService().getCurrentCurrency());
 			target.setPrice(priceData);
 		}
 		final Double mobilePriceValue = this.<Double> getValue(source, "mobileprice");
@@ -320,7 +321,8 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 	{
 		final List<ImageData> result = new ArrayList<ImageData>();
 		//TPR-796
-		if (commonUtils.isLuxurySite()||getValue(source, "isLuxuryProduct") != null && this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
+		if (commonUtils.isLuxurySite() || getValue(source, "isLuxuryProduct") != null
+				&& this.<Boolean> getValue(source, "isLuxuryProduct").booleanValue())
 		{
 			addImageData(source, "luxurySearchPage", result);
 			addImageData(source, "luxuryModel", result);
@@ -329,7 +331,7 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 		else
 		{
 			addImageData(source, "searchPage", result);
-			
+
 		}
 		addImageData(source, "product", result);
 
@@ -398,8 +400,9 @@ public class MplSearchResultProductPopulator extends MplSearchResultVariantProdu
 				final String mrp = value[1];
 				final String price = value[2];
 				//CKD:PRDI-350
-				Integer sellerStock=null;
-				if (null!=Integer.valueOf(value[3])){
+				Integer sellerStock = null;
+				if (value.length > 3 && null != value[3] && StringUtils.isNotEmpty(value[3].trim()))
+				{
 					sellerStock = Integer.valueOf(value[3]);
 				}
 				final PriceData mrpVal = getPriceDataFactory().create(PriceDataType.BUY, BigDecimal.valueOf(Double.parseDouble(mrp)),

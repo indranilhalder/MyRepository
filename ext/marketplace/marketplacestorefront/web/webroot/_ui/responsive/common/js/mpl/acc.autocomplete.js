@@ -34,7 +34,6 @@ ACC.autocomplete = {
 					window.location.href = ui.item.url;
 				}
 			},_renderItem : function (ul, item){
-				var site =$("#ia_site_id").val();
 			if (item.type == "autoSuggestion"){
 					var renderHtml = "<a href='/search?q=" + item.value +"&best_search_keyword="+ item.searchterm + "' ><div class='name'>" + item.value + "</div></a>";
 					return $("<li>")
@@ -45,17 +44,14 @@ ACC.autocomplete = {
 				}
 				if (item.type == "productResult"){ 
 					var renderHtml = "<a href='" + ACC.config.encodedContextPath + item.url + "' >";
-					if($("#isLuxury").val() != "true"){
-						renderHtml += 	"<div class='Best-Sellers'>" + "Best Sellers" +"</div>";
-					}
+					
+					renderHtml += 	"<div class='Best-Sellers'>" + "Best Sellers" +"</div>";
 					if (item.image != null){
 						renderHtml += "<img src='" + item.image + "'  />";
 					}
 
 					renderHtml += 	"<div class='name'>" + item.value +"</div>";
-					if($("#isLuxury").val() != "true"){
-						renderHtml += 	"<div class='price'>" + item.price +"</div>";
-					}
+					renderHtml += 	"<div class='price'>" + item.price +"</div>";
 					renderHtml += 	"</a>";
 
 					return $("<li class='product'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
@@ -96,11 +92,9 @@ ACC.autocomplete = {
 					{
 						renderHtml += "<span class='thumb'><img src='" + item.image + "' /></span><span class='desc clearfix'>";
 					}
-					if($("#isLuxury").val() != "true"){
-						renderHtml += "<span class='title'>" + item.manufacturer +" "+ item.value /*+ " in " + item.category*/ +
-						"</span><span class='price'>" + item.price + "</span></span>" +
-						"</a>";
-					}
+					renderHtml += "<span class='title'>" + item.manufacturer +" "+ item.value /*+ " in " + item.category*/ +
+							"</span><span class='price'>" + item.price + "</span></span>" +
+							"</a>";
 					return $("<li class='product-list'>").data("item.autocomplete", item).append(renderHtml).appendTo(ul);
 				}
 			},
@@ -161,7 +155,7 @@ ACC.autocomplete = {
 									autoSearchData.push({
 										value: suggestedString,
 										searchterm:term,
-										url: ACC.config.encodedContextPath + "/search?q=" + suggestedString +"&best_search_keyword="+term,
+										url: ACC.config.encodedContextPath + "/search?text=" + suggestedString +"&best_search_keyword="+term,
 										type: "autoSuggestion"
 									});
 									
@@ -211,7 +205,7 @@ ACC.autocomplete = {
 							    autoSearchData.push({
 								value: suggestedString,
 								searchterm:term,
-								url: ACC.config.encodedContextPath + "/search?q=" + suggestedString,
+								url: ACC.config.encodedContextPath + "/search?text=" + suggestedString,
 								type: "autoSuggestion"
 							});
 							
@@ -266,25 +260,25 @@ ACC.autocomplete = {
 						});
 					}*/
 					
-					if(data.suggestions != null){
-					$.each(data.suggestions, function (i, obj)
-			       	{
-					 
-						if(i!=0){
-							if((data.categories.length!=undefined && data.categories.length>0) ||
-									(data.brands.length!=undefined && data.brands.length>0)){
-						autoSearchData.push({
-							value: obj.term,
-							searchterm:term,
-							url: ACC.config.encodedContextPath + "/search?q=" + obj.term +"&best_search_keyword="+term,
-							type: "autoSuggestion"
-						});
-						
-						
-							}
-						}
-					});
-			     	}
+//					if(data.suggestions != null){
+//					$.each(data.suggestions, function (i, obj)
+//			       	{
+//					 
+//						if(i!=0){
+//							if((data.categories.length!=undefined && data.categories.length>0) ||
+//									(data.brands.length!=undefined && data.brands.length>0)){
+//						autoSearchData.push({
+//							value: obj.term,
+//							searchterm:term,
+//							url: ACC.config.encodedContextPath + "/search?text=" + obj.term +"&best_search_keyword="+term,
+//							type: "autoSuggestion"
+//						});
+//						
+//						
+//							}
+//						}
+//					});
+//			     	}
 					if(data.products != null){
 						$.each(data.products, function (i, obj)
 						{

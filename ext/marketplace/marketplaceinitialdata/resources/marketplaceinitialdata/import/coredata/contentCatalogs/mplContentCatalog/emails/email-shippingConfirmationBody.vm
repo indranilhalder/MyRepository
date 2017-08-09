@@ -177,7 +177,7 @@
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<br>
 		  	        		      	   	 	  	<p style="margin:0px">
-		  	        		      	   	 	  	<a href="${ctx.trackOrderUrl}?tcid=em:transactional:Ordershipped:manageorder:22052017" class="btn" style="background-color:#aa1d3d; color:#ffffff;font-size;12px;font-family:Arial, Helvetica, sans-serif;padding:4px 10px; text-decoration:none;display:inherit;width:120px;text-align:center;border-bottom:2px solid #8e0f2d;text-decoration:none;">View / Manage Order</a>
+		  	        		      	   	 	  	<a href="${ctx.trackOrderUrl}?tcid=em:transactional:Ordershipped:manageorder:22052017" class="btn" style="background-color: #aa1d3d; color: #ffffff; font-size: 12px; font-family: Arial, Helvetica, sans-serif; padding: 4px 10px; text-decoration: none; display: inherit; width: 120px; text-align: center; border-bottom: 2px solid #8e0f2d; text-decoration: none;">View / Manage Order</a>
 		  	        		      	   	 	  	</p>
 		  	        		      	   	 	  </div>
 		  	        		      	   	 	  

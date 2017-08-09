@@ -129,6 +129,14 @@
   		 <collectiontype elementtype="java.lang.String" code="quickDropStoreNames"
    				autocreate="true" generate="true" type="list" />
 		<!-- Added in R2.3 END  -->
+
+		<!-- Added for TPR-6286  -->
+		<collectiontype code="AbstractOrderEntryListInvoice" elementtype="AbstractOrderEntry"
+			autocreate="true" generate="true" type="list" />
+			
+		<collectiontype code="ChildOrderListInvoice" elementtype="Order"
+			autocreate="true" generate="true" type="list" />
+
 		<collectiontype code="luxuryCategoryCollection"
 			elementtype="Category" autocreate="true" generate="true" type="list" />
 		<collectiontype code="luxuryProductCollection"
@@ -752,6 +760,8 @@
 			</description>
 			<value code="Kiosk" />
 			<value code="Mobile" />
+			<!-- TPR-5666, TPR-5667 | Enum value added for samsung -->
+			<value code="Samsung" />
 		</enumtype>
 
 
@@ -3030,6 +3040,7 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-970 ends -->
+					
 				</attributes>
 			</itemtype>
 
@@ -5498,6 +5509,23 @@
 						<persistence type="property" />
 						<description>Transaction Id</description>
 					</attribute>
+					<!-- Added for TPR-6286 -->
+					 <attribute qualifier="AbstractOrderEntryList" type="AbstractOrderEntryListInvoice">
+						<persistence type="property" />
+						<description>Abstract Order Entry</description>
+					</attribute>
+					<attribute qualifier="ChildOrderList" type="ChildOrderListInvoice">
+						<persistence type="property" />
+						<description>Child Order</description>
+					</attribute>
+					<attribute qualifier="DeliveryAddress" type="Address">
+						<persistence type="property" />
+						<description>Delivery Address</description>
+					</attribute>
+					<attribute qualifier="OrderPlacedDate" type="java.util.Date">
+						<persistence type="property" />
+						<description>Order Placed Date</description>
+					</attribute>
 				</attributes>
 
 			</itemtype>
@@ -6248,6 +6276,45 @@
 
 						<persistence type="property" />
 					</attribute>
+					<!-- For TPR-5667 | samsung order -->
+					<attribute qualifier="samsungSubmitStatus" type="java.lang.String">
+						<modifiers optional="true" />
+						<persistence type="property" />
+					</attribute>
+					
+					<!-- TPR-5667 | Start : Attribute added to store samsung reuqest and response json for audit purpose -->
+					<attribute autocreate="true" qualifier="samsungOrderRequestJSON" type="java.lang.String">
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="sap">
+								<value>CLOB</value>
+							</columntype>
+							<columntype>
+								<value>HYBRIS.LONG_STRING</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<attribute autocreate="true" qualifier="samsungOrderResponseJSON"
+						type="java.lang.String">
+						<persistence type='property'>
+							<columntype database="oracle">
+								<value>CLOB</value>
+							</columntype>
+							<columntype database="sap">
+								<value>CLOB</value>
+							</columntype>
+							<columntype>
+								<value>HYBRIS.LONG_STRING</value>
+							</columntype>
+						</persistence>
+						<modifiers read="true" write="true" search="true"
+							optional="true" />
+					</attribute>
+					<!-- TPR-5667 | End : Attribute added to store samsung reuqest and response json for audit purpose -->
 				</attributes>
 				<!-- CAR-274 -->
 				<indexes>
@@ -7070,6 +7137,16 @@
 						<persistence type="property" />
 					</attribute>
 					<!-- TPR-774 -->
+					<!-- UF-260 starts here -->
+					<attribute qualifier="cartAdditionalDiscPerc" autocreate="true"
+						type="java.lang.Double">
+						<description>cartAdditional discount percentage Display</description>
+						<modifiers read="true" write="true" removable="true"
+							optional="true" initial="true" unique="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- UF-260 ends here -->
+					<!-- TPR-774 ends here-->
 
 					<!--Start Added new Attributes -->
 

@@ -155,24 +155,27 @@ ACC.carousel = {
 			var loop = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false;
 			var dots = $(".homepage-banner #rotatingImageTimeout img").length > 1 ? true :false; 
 			//$(".home-rotatingImage").owlCarousel({
-				$("#rotatingImageTimeout").owlCarousel({
+			$("#rotatingImageTimeout").owlCarousel({
 				items:1,
 				nav:false,
 				dots:dots,
 				loop: loop,
 		        autoplay: true,
-		        autoHeight : true,
+		        //autoHeight : true, //UF-365
 		        autoplayTimeout: timeout
 		    });
-			//UF-291 starts here
-			if ($(window).width() >= 720) {	
+			//UF-291 starts here ---- UF-365 starts here 
+			if ($(window).width() > 773) {
 				$("#rotatingImageTimeout img").each(function() {
 				    if ($(this).attr("data-src")) {
 						$(this).attr("src",$(this).attr("data-src"));
 						$(this).removeAttr("data-src");
+						$(this).load(function(){
+							$(this).css("display", "block");
+						});
 					}	
 				});
-			}	
+			}
 			//UF-291 ends here
 		}
 			//Mobile View
@@ -188,15 +191,18 @@ ACC.carousel = {
 					dots:dots,
 					loop: loop,
 			        autoplay: true,
-			        autoHeight : true,
+			        //autoHeight : true, //UF-365
 			        autoplayTimeout: timeout
 			    });
-				//UF-291 starts here
-				if ($(window).width() < 720) {	
+				//UF-291 starts here ---- UF-365 starts here
+				if ($(window).width() <= 773) {	
 					$("#rotatingImageTimeoutMobile img").each(function() {
 					    if ($(this).attr("data-src")) {
 							$(this).attr("src",$(this).attr("data-src"));
 							$(this).removeAttr("data-src");
+							$(this).load(function(){
+								$(this).css("display", "block");
+							});
 						}	
 					});
 				}
@@ -444,6 +450,7 @@ ACC.carousel = {
 	/*sprint8(TPR-1672 CLP)*/
 	offersCarousel: function(){
 		$(".offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:true,
@@ -607,6 +614,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('#autoplayTimeout').val()?$('#autoplayTimeout').val():5000;
 		var autoPlay= $('#autoPlay').val()?$.parseJSON($('#autoPlay').val()):true;
 		$(".top_deal_blp .offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -669,6 +677,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('.top_deal #autoplayTimeoutOffer').val()?$('.top_deal #autoplayTimeoutOffer').val():5000;
 		
 		$(".top_deal .offersCarousel").owlCarousel({
+					autoWidth : true,	/*add for INC144315059*/	/*add for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -730,6 +739,7 @@ ACC.carousel = {
 		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".best-offers .offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,
@@ -791,6 +801,7 @@ BlpBestOffersCarousel: function(){
 		var autoplayTimeout= $('#autoplayTimeoutOffer').val()?$('#autoplayTimeoutOffer').val():5000;
 		
 		$(".best-offers_blp .offersCarousel").owlCarousel({
+					/*autoWidth : true,*/	/*add for INC144315059*/	/*commented for TISPRDT-1936*/
 					items:5,
             		loop: true,
             		nav:false,

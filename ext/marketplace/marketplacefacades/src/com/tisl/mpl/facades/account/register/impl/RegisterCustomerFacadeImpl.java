@@ -702,6 +702,11 @@ public class RegisterCustomerFacadeImpl extends DefaultCustomerFacade implements
 			//End
 			sendInvoiceProcessModel.setOrderCode(sendInvoiceData.getOrdercode());
 			sendInvoiceProcessModel.setTransactionId(sendInvoiceData.getTransactionId());
+			//Added for TPR-6286
+			sendInvoiceProcessModel.setAbstractOrderEntryList(orderModel.getEntries());
+			sendInvoiceProcessModel.setChildOrderList(orderModel.getChildOrders());
+			sendInvoiceProcessModel.setDeliveryAddress(orderModel.getDeliveryAddress());
+			sendInvoiceProcessModel.setOrderPlacedDate(orderModel.getCreationtime());
 
 			sendInvoiceProcessModel.setStore(orderModel.getStore());
 

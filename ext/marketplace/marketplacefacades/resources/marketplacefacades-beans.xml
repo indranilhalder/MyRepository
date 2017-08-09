@@ -1045,6 +1045,9 @@
 		<property name="mrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="totalMrp" type="de.hybris.platform.commercefacades.product.data.PriceData"/>		
 		<property name="productPerDiscDisplay" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 starts here -->
+		<property name="cartAdditionalDiscPerc" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+		<!-- UF-260 ends here -->
 	</bean>
 	<!-- TPR-774 -->
 	
@@ -1207,6 +1210,11 @@
 		<property name="storeName" type="String"></property>
 		<property name="storeAddress" type="String"></property>
 		<property name="date" type="String"></property>
+	</bean>
+	<!-- used for addtocart helper -->
+	<bean class="com.tis.mpl.facade.data.ProductValidationData">
+		<property name="freebie" type="java.lang.Boolean"></property>
+		<property name="validproduct" type="java.lang.Boolean"></property>
 	</bean>
 	
 	<!--TPR-6117-->

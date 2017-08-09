@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<process xmlns="http://www.hybris.de/xsd/processdefinition" start="autoRefundInitiateAction" name="autorefundinitiate-process" processClass="de.hybris.platform.orderprocessing.model.OrderProcessModel">
+
+	<action id="autoRefundInitiateAction" bean="autoRefundInitiateAction">
+		<transition name="NOK" to="failed"/>
+		<transition name="OK" to="success"/>
+	</action>
+
+
+	<end id="error" state="ERROR">All went wrong.</end>
+	<end id="failed" state="FAILED">Order not placed.</end>
+	<end id="success" state="SUCCEEDED">Order placed.</end>
+</process>

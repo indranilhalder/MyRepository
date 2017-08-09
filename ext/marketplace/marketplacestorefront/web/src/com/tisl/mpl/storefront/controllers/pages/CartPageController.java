@@ -39,6 +39,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.commercefacades.user.UserFacade;
 import de.hybris.platform.commercefacades.user.data.AddressData;
+import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.commerceservices.order.CommerceCartModificationException;
 import de.hybris.platform.core.Constants.USER;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -201,13 +202,14 @@ public class CartPageController extends AbstractPageController
 			CartModel externalCart = null;
 			CartModel cartModel = null;
 			final String currentUser = userService.getCurrentUser().getUid();
-			//TPR-5666 | check on cartGuid parameter
+			//TPR-5666, TPR-5667 | check on cartGuid parameter
 			if (cartGuid != null)
 			{
 				externalCart = mplCartFacade.getCartByGuid(cartGuid);
 				// If invalid cartGuid
 				if (externalCart == null)
 				{
+					LOG.debug("Fetched invalid cart with guid " + cartGuid);
 					return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.INVALID_CART_URL;
 				}
 				else
@@ -216,6 +218,7 @@ public class CartPageController extends AbstractPageController
 					// fetching existing cart by guid
 					if (!externalCartUser.equalsIgnoreCase(MarketplacecommerceservicesConstants.ANONYMOUS))
 					{
+						LOG.debug("Fetched existing user cart with guid " + cartGuid);
 						return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
 					}
 					// fetching anonymous cart by guid
@@ -225,14 +228,18 @@ public class CartPageController extends AbstractPageController
 						if (!currentUser.equalsIgnoreCase(MarketplacecommerceservicesConstants.ANONYMOUS))
 						{
 							mplCartFacade.mergeCarts(externalCart, getCartService().getSessionCart());
-							return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+							final CartModel sessionCart = getCartService().getSessionCart();
+							sessionCart.setChannel(SalesApplication.SAMSUNG);
+							modelService.save(sessionCart);
 						}
 						// show fetched cart for anonymous user
 						else
 						{
+							externalCart.setChannel(SalesApplication.SAMSUNG);
+							modelService.save(externalCart);
 							getCartService().setSessionCart(externalCart);
 						}
-						cartModel = getCartService().getSessionCart();
+						return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
 					}
 				}
 
@@ -955,16 +962,16 @@ public class CartPageController extends AbstractPageController
 					}
 				}
 				// Redirect to the cart page on update success so that the browser doesn't re-post again
-				//return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
-				//TPR-5666 | check on cartGuid Parameter
-				if (StringUtil.isEmpty(request.getParameter("cartGuid")))
-				{
-					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
-				}
-				else
-				{
-					returnPage = REDIRECT_PREFIX + "/cart?cartGuid=" + request.getParameter("cartGuid");
-				}
+				return REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//				//TPR-5666 | check on cartGuid Parameter
+				//				if (StringUtil.isEmpty(request.getParameter("cartGuid")))
+				//				{
+				//					returnPage = REDIRECT_PREFIX + MarketplacecommerceservicesConstants.CART_URL;
+				//				}
+				//				else
+				//				{
+				//					returnPage = REDIRECT_PREFIX + "/cart?cartGuid=" + request.getParameter("cartGuid");
+				//				}
 			}
 
 

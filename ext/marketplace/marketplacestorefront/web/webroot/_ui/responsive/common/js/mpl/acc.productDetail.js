@@ -202,37 +202,17 @@ ACC.productDetail = {
 				function() {
 				  var target = $(this).attr('data-producturl');
 				//   console.log(target);
-				  var productcode= $(this).attr('data-productcode1');
+				  var productcode= $(this).attr('data-productcode');
 				//   console.log(productcode);
 				   $('body').on('hidden.bs.modal', '#popUpModal', function () {
 						  $(this).removeData('bs.modal');
 						});
 
-				   
-				   var isLuxury = $("#isLuxury").val();
-				   if(isLuxury) {
-					   var action = $("#sizeGuideAction").val();
-					   if(typeof action != 'undefined' && action !== null && action !== '') {
-						   $(".page-variant [data-productcode='"+ productcode +"']").click();
-						   $("#popUpModal").modal("hide");
-						   
-						   setTimeout(function() {
-							   var staticHost = $('#staticHost').val();
-							   $("body").append("<div id='no-click' style='opacity:0.5; background:#000; z-index: 100000; width:100%; height:100%; position: fixed; top: 0; left:0;'></div>");
-							   $("body").append('<div class="loaderDiv" style="position: fixed; left: 45%;top:45%;z-index: 10000"><img src="'+staticHost+'/_ui/responsive/common/images/red_loader.gif" class="spinner"></div>'); //UF-263
-							   $(action).click();
-							},3000)
-					   } else {
-						   $(".page-variant [data-productcode='"+ productcode +"']").click();
-						   $("#popUpModal").modal("hide");
-					   }
-					   $("#sizeGuideAction").val('');
-				   } else {
-					   $("#popUpModal .modal-content").load(target, function() {
-						   $("#popUpModal").modal("show");
-						   // buyboxDetailsForSizeGuide(productcode);
-					   });
-				   }
+				   // load the url and show modal on success
+				   $("#popUpModal .modal-content").load(target, function() { 
+					   	   $("#popUpModal").modal("show");
+						  // buyboxDetailsForSizeGuide(productcode);
+				    });
 				  
 			});
 		
@@ -475,6 +455,7 @@ $(".product-image-container .productImageGallery.pdp-gallery .imageList img").cl
 				$("#videoModal #player").attr("src",url);
 				$("#videoModal").modal();
 				$("#videoModal").addClass("active");
+				$("#videoModal").css("z-index", "100003");
 				//$(".productImagePrimary .picZoomer-pic-wp img").hide();
 				/*$(".zoomContainer").remove();
 				$('.picZoomer-pic').removeData('zoom-image');*/
@@ -1159,8 +1140,6 @@ $(function() {
 										url : requiredUrl,
 										data : dataString,
 										success : function(data) {
-										
-											var isLuxury = $("#isLuxury").val();
 
 											if (data == "" || data == []
 													|| data == null) {
@@ -1205,12 +1184,6 @@ $(function() {
 											}
 											// check if oms service is down
 											else if (data[0]['isServicable'] == 'NA') {
-												
-												if(isLuxury) {
-													$(this).hide();
-													$('.luxuyChangepincode').show();
-												}
-											
 												$("#home").show();
 												$("#homeli").show();
 												$("#homeli").addClass("selected");
@@ -1240,12 +1213,6 @@ $(function() {
 											/*TPR-642 & 640 ends*/
 												return false;
 											} else {
-												
-												if(isLuxury) {
-													$(this).hide();
-													$('.luxuyChangepincode').show();
-												}
-												
 												// TPR-1375
 												//populating  buybox details agian after checking pincode response
 												repopulateBuyBoxDetails(data,buyBoxList);
@@ -1609,8 +1576,6 @@ function displayDeliveryDetails(sellerName) {
 		dataType : "json",
 		success : function(data) {
 			if (data != null) {
-				var isLuxury = $("#isLuxury").val();
-				var pinCodeAvailable = $("#pinCodeAvailable").val();
 				var pretext=$("#deliveryPretext").text();
 				var posttext=$("#deliveryPosttext").text();
 				var fulFillment = data['fulfillment'];
@@ -1667,31 +1632,18 @@ function displayDeliveryDetails(sellerName) {
 					var start_hd=parseInt($("#homeStartId").val())+leadTime;
 					var end_hd=parseInt($("#homeEndId").val())+leadTime;
 				if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-					if(isLuxury) {
-						$("#home").hide();
-						$("#homeli").hide();
-					} else {
-						$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
-						$("#homeli").css("opacity","0.5");
-						$("#homeli").removeClass("selected");
-					}
+					//$("#home").hide();
+					//$("#homeli").hide();
+				
+					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
+					$("#homeli").css("opacity","0.5");
+					$("#homeli").removeClass("selected");
 				} else {
 					//var start=parseInt($("#homeStartId").val())+leadTime;
 					//var end=parseInt($("#homeEndId").val())+leadTime;
 					$("#homeDate").html(pretext+start_hd+"-"+end_hd+posttext);
-					if(isLuxury) {
-						if(pinCodeAvailable == 'true') {
-							$("#home").show();
-							$("#homeli").show();
-						} else {
-							$("#home").hide();
-							$("#homeli").hide();
-						}
-						
-					} else {
-						$("#home").show();
-						$("#homeli").show();
-					}
+					$("#home").show();
+					$("#homeli").show();
 					$("#homeli").addClass("selected");
 				    $("#homeli").css("opacity","1");
 					
@@ -1699,62 +1651,33 @@ function displayDeliveryDetails(sellerName) {
 				var start_ed=$("#expressStartId").val();
 				var end_ed=$("#expressEndId").val();
 				if (null != deliveryModes && deliveryModes.indexOf("ED") == -1) {
-					
+					//$("#express").hide();
+					//$("#expressli").hide();
 					//var start=$("#expressStartId").val();
 					//var end=$("#expressEndId").val();
-					if(isLuxury) {
-						$("#express").hide();
-						$("#expressli").hide();
-					} else {
-						$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
-						$("#expressli").css("opacity","0.5");
-						$("#expressli").removeClass("selected");
-					}
+					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
+					$("#expressli").css("opacity","0.5");
+					$("#expressli").removeClass("selected");
 				} else {		
 					
 			    
 					$("#expressDate").html(pretext+start_ed+"-"+end_ed+posttext);
-					if(isLuxury) {
-						if(pinCodeAvailable == 'true') {
-							$("#express").show();
-							$("#expressli").show();
-						} else {
-							$("#express").hide();
-							$("#expressli").hide();
-						}
-						
-					} else {
-						$("#express").show();
-						$("#expressli").show();
-					}
+					$("#express").show();
+					$("#expressli").show();
 					$("#expressli").addClass("selected");
 				    $("#expressli").css("opacity","1");
 
 					if (null != deliveryModes && deliveryModes.indexOf("HD") == -1) {
-						if(isLuxury) {
-							$("#home").hide();
-							$("#homeli").hide();
-						} else {
-							$("#homeli").css("opacity","0.5");
-							$("#homeli").removeClass("selected");
-						}
+						//$("#home").hide();
+						//$("#homeli").hide();
+						$("#homeli").css("opacity","0.5");
+						$("#homeli").removeClass("selected");
 					} else {
 						var start=parseInt($("#homeStartId").val())+leadTime;
 						var end=parseInt($("#homeEndId").val())+leadTime;
 						$("#homeDate").html(pretext+start+"-"+end+posttext);
-						if(isLuxury) {
-							if(pinCodeAvailable == 'true') {
-								$("#home").show();
-								$("#homeli").show();
-							} else {
-								$("#home").hide();
-								$("#homeli").hide();
-							}
-							
-						} else {
-							$("#home").show();
-							$("#homeli").show();
-						}
+						$("#home").show();
+						$("#homeli").show();
 						$("#homeli").addClass("selected");
 						$("#homeli").css("opacity","1");
 					}
@@ -1768,48 +1691,24 @@ function displayDeliveryDetails(sellerName) {
 						var start=$("#expressStartId").val();
 						var end=$("#expressEndId").val();
 						$("#expressDate").html(pretext+start+"-"+end+posttext);
-						if(isLuxury) {
-							if(pinCodeAvailable == 'true') {
-								$("#express").show();
-								$("#expressli").show();
-							} else {
-								$("#express").hide();
-								$("#expressli").show();
-							}
-							
-						} else {
-							$("#express").show();
-							$("#expressli").show();
-						}
+						$("#express").show();
+						$("#expressli").show();
 						$("#expressli").addClass("selected");
 						$("#expressli").css("opacity","1");
 					}
 					
 					if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
-						if(isLuxury) {
-							$("#collect").hide();
-							$("#collectli").hide();
-						} else {
-							$("#collectli").css("opacity","0.5");
-							$("#collectli").removeClass("selected");
-						}
+						
+						//$("#collect").hide();
+						//$("#collectli").hide();
+						$("#collectli").css("opacity","0.5");
+						$("#collectli").removeClass("selected");
 					} else {
 						var start=$("#clickStartId").val();
 						var end=$("#clickEndId").val();
 						$("#clickDate").html(pretext+start+"-"+end+posttext);
-						if(isLuxury) {
-							if(pinCodeAvailable == 'true') {
-								$("#collect").show();
-								$("#collectli").show();
-							} else {
-								$("#collect").hide();
-								$("#collectli").hide();
-							}
-							
-						} else {
-							$("#collect").show();
-							$("#collectli").show();
-						}
+						$("#collect").show();
+						$("#collectli").show();
 						$("#collectli").css("opacity","1");
 						$("#collectli").addClass("selected");
 					}
@@ -1823,31 +1722,19 @@ function displayDeliveryDetails(sellerName) {
 				var start_cnc=$("#clickStartId").val();
 				var end_cnc=$("#clickEndId").val();
 				if (null != deliveryModes && deliveryModes.indexOf("CNC") == -1) {
-					if(isLuxury) {
-						$("#collect").hide();
-						$("#collectli").hide();
-					} else {
-						$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
-						$("#collectli").css("opacity","0.5");
-						$("#collectli").removeClass("selected");
-					}
+					
+					//$("#collect").hide();
+					//$("#collectli").hide();
+					
+					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
+					$("#collectli").css("opacity","0.5");
+					$("#collectli").removeClass("selected");
 				} else {
 				    //var start=$("#clickStartId").val();
 		        	//var end=$("#clickEndId").val();
 					$("#clickDate").html(pretext+start_cnc+"-"+end_cnc+posttext);
-					if(isLuxury) {
-						if(pinCodeAvailable == 'true') {
-							$("#collect").show();
-							$("#collectli").show();
-						} else {
-							$("#collect").hide();
-							$("#collectli").hide();
-						}
-						
-					} else {
-						$("#collect").show();
-						$("#collectli").show();
-					}
+					$("#collect").show();
+					$("#collectli").show();
 					$("#collectli").addClass("selected");
 				    $("#collectli").css("opacity","1");
 				  }
@@ -2459,9 +2346,9 @@ function nextImage(elem)
 	}
 	else if (grandParentId == 'zoom_gallery') {
 		$("#zoom_gallery .imageListCarousel li img").each(function() {
-			if ($(this).attr('data-type') == "image") {
+			//if ($(this).attr('data-type') == "image") {
 				$(this).show();
-			}
+			//}
 		});
 		var item_height = $("#zoom_gallery .imageListCarousel li").height();
 		var item_count = $("#zoom_gallery .imageListCarousel li").length;
@@ -2996,18 +2883,25 @@ function loadDefaultWishListName_SizeGuide() {
 		//var cartReturn = ACC.product.sendAddToBag("addToCartForm");
 		var isShowSize= $("#showSize").val();
 		if(!$("#variant li ").hasClass("selected") && typeof($(".variantFormLabel").html())== 'undefined' && $("#ia_product_rootCategory_type").val()!='Electronics'&& $("#ia_product_rootCategory_type").val()!='Watches' && isShowSize=='true'){
-			
-			var isLuxury = $("#isLuxury").val();
-			if(isLuxury) {
-				$("#sizeGuideAction").val('#buyNow .js-add-to-cart');
-				$(".size-guide").click();
-			} else {
-				$("#addToCartFormTitle").html("<font color='#ff1c47'>" + $('#selectSizeId').text() + "</font>");
-				$("#addToCartFormTitle").show();
-				//For pdp analytics changes
-				utag.link({"error_type":"size_not_selected"});
+			$("#addToCartFormTitle").html("<font color='#fff'>" + $('#selectSizeId').text() + "</font>");
+			//alert('here');
+			$("#addToCartFormTitle").show();
+			//$('#addToCartFormTitle').remove();
+			if ($(window).width() < 768) {
+				setTimeout(function(){
+					$('#addToCartFormTitle').fadeOut(2000);		
+				},2000);
+				//UF-390
+				$('html, body').animate({
+		              scrollTop: $('.product-info .product-image-container.device').height()
+		        }, 1000);
 			}
 			
+			/*setTimeout(function(){
+				$('#addToCartFormTitle').remove();		
+			},4000);*/
+			//For pdp analytics changes
+			utag.link({"error_type":"size_not_selected"});
 	 	    return false;
 	 }
 		//UF-160
@@ -4457,4 +4351,3 @@ function getProductCodeFromPdpUrl(url)
 }
 
 //End of UF-60 changes
-
