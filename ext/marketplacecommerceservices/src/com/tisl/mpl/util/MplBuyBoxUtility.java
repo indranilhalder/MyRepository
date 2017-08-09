@@ -595,9 +595,9 @@ public class MplBuyBoxUtility
 
 	/*
 	 * @param sellerArticleSKUList
-	 * 
+	 *
 	 * @param currency
-	 * 
+	 *
 	 * @return priceRange
 	 */
 
@@ -622,7 +622,7 @@ public class MplBuyBoxUtility
 			if (min.doubleValue() == max.doubleValue())
 			{
 				//priceRange = currency + String.valueOf(min);//SONAR FIX JEWELLERY
-				priceRange = currency + min;
+				priceRange = currency + Math.round(min.doubleValue());
 			}
 			else
 			{
