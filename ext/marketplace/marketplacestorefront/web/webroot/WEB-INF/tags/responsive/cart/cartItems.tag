@@ -155,7 +155,7 @@ tr.d0 td {
 										<spring:theme code="product.variant.size.noSize" var="noSize"/>
 										<c:choose>
 											<c:when test="${entry.product.size ne noSize }">
-												<p class="size disclaimer-txt more">
+												<p class="size disclaimer-txt more-cart">
 													<ycommerce:testId code="cart_product_size">
 														<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
 														${disclaimer}
@@ -163,7 +163,7 @@ tr.d0 td {
 												</p>
 											</c:when>
 											<c:otherwise>
-													<p class="size disclaimer-txt more">
+													<p class="size disclaimer-txt more-cart">
 														<ycommerce:testId code="cart_product_size">
 															${disclaimer}
 														</ycommerce:testId>
