@@ -127,7 +127,7 @@ body {
 	    background-color: #fff;
 	    height: 32px;
 	    padding: 0 15px;
-	    background-image: url(../_ui/responsive/theme-blue/images/arrow.png);
+	    background-image: url(${siteRootUrl}/theme-blue/images/arrow.png);
 	    background-repeat: no-repeat;
 	    background-position: 95% 53%;
 	    line-height: 30px;
@@ -585,7 +585,7 @@ body {
 	    }
 	    header .content .search button:before {
 	        content: "";
-	        background: url(../_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -300px -207px;
+	        background: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png) no-repeat scroll -300px -207px;
 	        display: inline-block;
 	        height: 18px;
 	        width: 18px;
@@ -679,7 +679,7 @@ body {
 	    }
 	    header .content .bottom .bag .mini-cart-link:before {
 	        content: "";
-	        background: url(../_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -380px -176px;
+	        background: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png) no-repeat scroll -380px -176px;
 	        display: inline-block;
 	        width: 23px;
 	        height: 23px;
@@ -1521,7 +1521,7 @@ body {
 	    top: 2px;
 	    position: relative;
 	    content: "";
-	    background: url(../_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -296px -175px;
+	    background: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png) no-repeat scroll -296px -175px;
 	    display: inline-block;
 	    width: 23px;
 	    height: 23px;
@@ -1533,7 +1533,7 @@ body {
 	    vertical-align: middle;
 	    margin-right: -2px;
 	    content: "";
-	    background: url(../_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -352px -176px;
+	    background: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png) no-repeat scroll -352px -176px;
 	    width: 23px;
 	    height: 23px;
 	    opacity: .7
@@ -1688,7 +1688,7 @@ body {
 	    }
 	    select#enhancedSearchCategory {
 	        background-position: 92% 51%;
-	        background-image: url(../_ui/responsive/theme-blue/images/select-arrow-new.png)
+	        background-image: url(${siteRootUrl}/theme-blue/images/select-arrow-new.png)
 	    }
 	    .select-view select {
 	        padding: 8px 37px 8px 5px !important;
@@ -2099,14 +2099,14 @@ body {
 	        top: 3px
 	    }
 	    header>.content .bottom .mobile-bag.bag:before {
-	        background: url(../_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -383px -145px
+	        background: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png) no-repeat scroll -383px -145px
 	    }
 	    header>.content .bottom .mobile-bag.bag a {
 	        width: 26px;
 	        background: #000
 	    }
 	    header>.content .bottom .search form button:before {
-	        background: url(../_ui/responsive/theme-blue/images/Sprite-combined.png) no-repeat scroll -300px -207px
+	        background: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png) no-repeat scroll -300px -207px
 	    }
 	    header>.content .top>div:not(.toggle) li.download-app {
 	        padding-left: 8px
@@ -2431,7 +2431,7 @@ body {
 	        bottom: 3px;
 	        left: 16px;
 	        z-index: 999999;
-	        background-image: url(../_ui/responsive/theme-blue/images/Sprite-combined.png);
+	        background-image: url(${siteRootUrl}/theme-blue/images/Sprite-combined.png);
 	        background-position: -197px -376px;
 	        background-repeat: no-repeat;
 	        background-color: transparent;
