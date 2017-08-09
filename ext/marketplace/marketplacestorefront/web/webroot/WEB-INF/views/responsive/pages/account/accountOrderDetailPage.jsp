@@ -714,7 +714,18 @@
 											</h2>
 											<div class="attributes">
 												<c:if test="${not empty entry.product.size}">
-													<p>Size: ${entry.product.size}</p>
+													<%-- <p>Size: ${entry.product.size}</p> --%>
+													<c:choose>
+														<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+															<spring:theme code="product.variant.size.noSize" var="noSize"/>
+															<c:if test="${entry.product.size ne noSize}">
+																<p>Size: ${entry.product.size}</p>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<p>Size: ${entry.product.size}</p>
+														</c:otherwise>
+													</c:choose>
 												</c:if>
 												<c:if test="${not empty entry.product.colour}">
 													<p>Color: ${entry.product.colour}</p>
@@ -891,8 +902,21 @@
 																				</c:if></b> </span>
 
 																						<c:if test="${not empty entryCancel.product.size}">
-																							<span><b>Size:</b>
-																								${entryCancel.product.size}</span>
+																							<%-- <span><b>Size:</b>
+																								${entryCancel.product.size}</span> --%>
+																							<c:choose>
+																								<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																									<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																									<c:if test="${entryCancel.product.size ne noSize}">
+																										<span><b>Size:</b>
+																											${entryCancel.product.size}</span>
+																									</c:if>
+																								</c:when>
+																								<c:otherwise>
+																									<span><b>Size:</b>
+																											${entryCancel.product.size}</span>
+																								</c:otherwise>
+																							</c:choose>
 																						</c:if>
 																						<c:if
 																							test="${not empty entryCancel.product.colour}">
@@ -1030,8 +1054,21 @@
 																				</c:if></b> </span>
 
 																						<c:if test="${not empty entryCancel.product.size}">
-																							<span><b>Size:</b>
-																								${entryCancel.product.size}</span>
+																							<%-- <span><b>Size:</b>
+																								${entryCancel.product.size}</span> --%>
+																							<c:choose>
+																								<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																									<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																									<c:if test="${entryCancel.product.size ne noSize}">
+																										<span><b>Size:</b>
+																																							${entryCancel.product.size}</span>
+																									</c:if>
+																								</c:when>
+																								<c:otherwise>
+																									<span><b>Size:</b>
+																																							${entryCancel.product.size}</span>
+																								</c:otherwise>
+																							</c:choose>
 																						</c:if>
 																						<c:if
 																							test="${not empty entryCancel.product.colour}">
@@ -1980,7 +2017,18 @@
 											</h2>
 											<div class="attributes">
 												<c:if test="${not empty entry.product.size}">
-													<p>Size: ${entry.product.size}</p>
+													<%-- <p>Size: ${entry.product.size}</p> --%>
+													<c:choose>
+														<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
+															<spring:theme code="product.variant.size.noSize" var="noSize"/>
+															<c:if test="${entry.product.size ne noSize}">
+																<p>Size: ${entry.product.size}</p>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<p>Size: ${entry.product.size}</p>
+														</c:otherwise>
+													</c:choose>
 												</c:if>
 												<c:if test="${not empty entry.product.colour}">
 													<p>Color: ${entry.product.colour}</p>
@@ -2122,8 +2170,21 @@
 																				</c:if></b> </span>
 
 																						<c:if test="${not empty entryCancel.product.size}">
-																							<span><b>Size:</b>
-																								${entryCancel.product.size}</span>
+																							<%-- <span><b>Size:</b>
+																								${entryCancel.product.size}</span> --%>
+																								<c:choose>
+																								<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																									<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																									<c:if test="${entryCancel.product.size ne noSize}">
+																										<span><b>Size:</b>
+																																							${entryCancel.product.size}</span>
+																									</c:if>
+																								</c:when>
+																								<c:otherwise>
+																									<span><b>Size:</b>
+																																							${entryCancel.product.size}</span>
+																								</c:otherwise>
+																							</c:choose>
 																						</c:if>
 																						<c:if
 																							test="${not empty entryCancel.product.colour}">
@@ -2267,8 +2328,21 @@
 																				</c:if></b> </span>
 
 																						<c:if test="${not empty entryCancel.product.size}">
-																							<span><b>Size:</b>
-																								${entryCancel.product.size}</span>
+																							<%-- <span><b>Size:</b>
+																								${entryCancel.product.size}</span> --%>
+																								<c:choose>
+																									<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																										<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																										<c:if test="${entryCancel.product.size ne noSize}">
+																											<span><b>Size:</b>
+																												${entryCancel.product.size}</span>
+																										</c:if>
+																									</c:when>
+																									<c:otherwise>
+																										<span><b>Size:</b>
+																											${entryCancel.product.size}</span>
+																									</c:otherwise>
+																							</c:choose>
 																						</c:if>
 																						<c:if
 																							test="${not empty entryCancel.product.colour}">

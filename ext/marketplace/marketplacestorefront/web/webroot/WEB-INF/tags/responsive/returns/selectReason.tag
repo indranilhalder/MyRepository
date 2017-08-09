@@ -29,7 +29,18 @@
 										<span class="productName">${entryReturn.product.name}</span>
 										<%-- <span><spring:theme code="text.order.returns.quantitylable"/> ${entryReturn.quantity}</span><br/> --%>
 												<c:if test="${not empty entryReturn.product.size}">
-				 									<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
+				 									<%-- <span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span> --%>
+				 									<c:choose>
+														<c:when test="${(not empty entryReturn.product.rootCategory) && (entryReturn.product.rootCategory == 'FineJewellery' || entryReturn.product.rootCategory == 'FashionJewellery') }">
+															<spring:theme code="product.variant.size.noSize" var="noSize"/>
+															<c:if test="${entryReturn.product.size ne noSize}">
+																<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
+															</c:if>
+														</c:when>
+														<c:otherwise>
+															<span class="size"><spring:theme code="text.order.returns.sizelable"/>${entryReturn.product.size}</span>
+														</c:otherwise>
+													</c:choose>
 												</c:if>
 												<c:if test="${not empty entryReturn.product.colour}">
 													<span class="productName"><spring:theme code="text.order.returns.colourlable"/> ${entryReturn.product.colour}</span>
