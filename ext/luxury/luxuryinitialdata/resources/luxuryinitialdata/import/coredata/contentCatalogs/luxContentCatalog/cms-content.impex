@@ -45,6 +45,8 @@ INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;fronten
 ;;ContactUsPageTemplate         ;Contact Us Page Template  ;$luxuryStoreAddonPrefix/pages/layout/ContactUsPage;ContentPage;;$jarResourceCms/structure-view/structure_contactUsPageTemplate.vm
 ;;AccountCouponDetailsPageTemplate;Coupon Details Page Template;account/accountCouponDetailsPage;ContentPage;;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
 ;;ErrorPageTemplate;Error Page Template;$luxuryStoreAddonPrefix/pages/layout/errorPageTemplate;ContentPage;;$jarResourceCms/structure-view/structure_errorPageTemplate.vm
+;;AppPageTemplate;App Page Template;$luxuryStoreAddonPrefix/pages/layout/appPageTemplate;ContentPage;;$jarResourceCms/structure-view/structure_appPageTemplate.vm
+
 
 
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
@@ -85,6 +87,8 @@ INSERT_UPDATE MyWishListInHeaderComponent;$contentCV[unique=true];uid[unique=tru
 INSERT_UPDATE LuxEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest
 ;;luxury-SearchBox; Search Box; SearchBox; 2; 3; 1
 
+INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;visible
+;;MplEnhancedSearchBox;Marketplace Enhanced  Search Box Component;MplEnhancedSearchBox;2;3;3;false
 
 
 
@@ -119,6 +123,83 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;SaleCategoryLink;;;;;;;;"Sale"
 
 
+#####################  LuxuryNavigation    #################
+;;TopsLink;Tops Link;#;TopsLink;TopsLink;;
+;;Blazers&VestsLink;Blazers&Vests Link;#;Blazers&VestsLink;Blazers&VestsLink;;
+;;BottomsLink;Bottoms Link;#;BottomsLink;BottomsLink;;
+;;OuterwearLink;Outerwear Link;#;OuterwearLink;OuterwearLink;;
+;;ActivewearLink;ActivewearLink;#;ActivewearLink;ActivewearLink;;
+;;Socks&UnderwearLink;Socks&Underwear Link;#;Socks&UnderwearLink;Socks&UnderwearLink;;
+;;Sleep&LoungewearLink;Sleep&Loungewear Link;#;Sleep&LoungewearLink;Sleep&LoungewearLink;;
+;;SwimwearLink;Swimwear Link;#;SwimwearLink;SwimwearLink;;
+;;Bundles&SetsLink;Bundles&Sets Link;#;Bundles&SetsLink;Bundles&SetsLink;;
+;;BootsLink;Boots Link;#;BootsLink;BootsLink;;
+;;DressShoesLink;DressShoes Link;#;DressShoesLink;DressShoesLink;;
+;;Loafers&Slip-onsLink;Loafers&Slip-ons Link;#;Loafers&Slip-onsLink;Loafers&Slip-onsLink;;
+;;SandalsLink;Sandals Link;#;SandalsLink;SandalsLink;;
+;;SneakersLink;Sneakers Link;#;SneakersLink;SneakersLink;;
+;;GlovesLink;Gloves Link;#;GlovesLink;GlovesLink;;
+;;HatsLink;Hats Link;#;HatsLink;HatsLink;;
+;;OpticalLink;Optical Link;#;OpticalLink;OpticalLink;;
+;;SunglassesLink;Sunglasses Link;#;SunglassesLink;SunglassesLink;;
+;;Abercrombie&FitchLink;Abercrombie&Fitch Link;#;Abercrombie&FitchLink;Abercrombie&FitchLink;;
+;;ColeHaanLink;ColeHaan Link;#;ColeHaanLink;ColeHaanLink;;
+;;FrenchConnectionLink;FrenchConnection Link;#;FrenchConnectionLink;FrenchConnectionLink;;
+;;LacosteLink;Lacoste Link;#;LacosteLink;LacosteLink;;
+;;MichaelKorsLink;MichaelKors Link;#;MichaelKorsLink;MichaelKorsLink;;
+;;NewBalanceLink;NewBalance Link;#;NewBalanceLink;NewBalanceLink;;
+;;ReasonClothingLink;ReasonClothing Link;#;ReasonClothingLink;ReasonClothingLink;;
+;;MensGroomingCategoryLink;MensGroomingCategory;#;MensGroomingCategoryLink;;
+;;EditorsPicksCategoryLink;EditorsPicksCategoryLink;#;EditorsPicksCategoryLink;; 
+
+;;DesignersCategoryLink;Designers Category Link;/designer;DesignersCategoryLink;DesignersCategoryLink;;;;Designers 
+
+;;MichaelKorsLink;MichaelKorsLink;#;MichaelKorsLink;MichaelKorsLink;;
+;;HugoBossLink;HugoBossLink;#;HugoBossLink;HugoBossLink;;
+;;CoachLink;CoachLink;#;CoachLink;CoachLink;;
+;;ArmaniJeansLink;ArmaniJeansLink;#;ArmaniJeansLink;ArmaniJeansLink;;
+;;FurlaLink;FurlaLink;#;FurlaLink;FurlaLink;;
+;;TumiLink;TumiLink;#;TumiLink;TumiLink;;
+;;EmporioArmaniLink;EmporioArmaniLink;#;EmporioArmaniLink;EmporioArmaniLink;;
+;;G-StarRawLink;G-StarRawLink;#;G-StarRawLink;G-StarRawLink;;
+;;ArmaniExchangeLink;ArmaniExchangeLink;#;ArmaniExchangeLink;ArmaniExchangeLink;;
+;;M MissoniLink;M MissoniLink;#;M MissoniLink;M MissoniLink;;
+;;TrueRelegionLink;TrueRelegionLink;#;TrueRelegionLink;TrueRelegionLink;;
+;;CoccinelleLink;CoccinelleLink;#;CoccinelleLink;CoccinelleLink;;
+;;BrooksBrothersLink;BrooksBrothersLink;#;BrooksBrothersLink;BrooksBrothersLink;;
+
+;;HandBagsLinkNewArrivalsWomen;HandBags Link;#;HandBagsLinkNewArrivalsWomen;HandBagsLinkNewArrivalsWomen;;
+;;WalletsLinkNewArrivalsWomen;Wallets Link;#;WalletsLinkNewArrivalsWomen;WalletsLinkNewArrivalsWomen;;
+;;ClothingLinkNewArrivalsWomen;Clothing Link;#;ClothingLinkNewArrivalsWomen;ClothingLinkNewArrivalsWomen;;
+;;ShoesLinkNewArrivalsWomen;Shoes Link;#;ShoesLinkNewArrivalsWomen;ShoesLinkNewArrivalsWomen;;
+;;SpringSummer17LinkShoesLinkNewArrivalsWomen;SpringSummer17 Link;#;SpringSummer17LinkShoesLinkNewArrivalsWomen;SpringSummer17LinkShoesLinkNewArrivalsWomen;;
+;;ClothingLinkNewArrivalsMen;Clothing Link;#;ClothingLinkNewArrivalsMen;ClothingLinkNewArrivalsMen;;
+;;BagsLinkNewArrivalsMen;Bags Link;#;BagsLinkNewArrivalsMen;BagsLinkNewArrivalsMen;;
+;;WalletsLinkNewArrivalsMen;Wallets Link;#;WalletsLinkNewArrivalsMen;WalletsLinkNewArrivalsMen;;
+;;AccessoriesLinkNewArrivalsMen;Accessories Link;#;AccessoriesLinkNewArrivalsMen;AccessoriesLinkNewArrivalsMen;;
+;;ShoesLinkNewArrivalsMen;Shoes Link;#;ShoesLinkNewArrivalsMen;ShoesLinkNewArrivalsMen;;
+;;SpringSummer17LinkNewArrivalsMen;SpringSummer17 Link;#;SpringSummer17LinkNewArrivalsMen;SpringSummer17LinkNewArrivalsMen;;
+
+
+;;TopsLinkWomen;Tops Link;#;TopsLinkWomen;TopsLinkWomen;;
+;;Tops&T-shirtsLink;Tops&T-shirts Link;#;Tops&T-shirtsLink;Tops&T-shirtsLink;;
+;;JeansLink;Jeans Link;#;JeansLink;JeansLink;;
+;;DressesLink;Dresses Link;#;DressesLink;DressesLink;;
+;;SatchelsLink;Satchels Link;#;SatchelsLink;SatchelsLink;;
+;;ToteBagsLink;ToteBags Link;#;ToteBagsLink;ToteBagsLink;;
+;;Hobo&ShoulderBagsLink;Hobo&ShoulderBags Link;#;Hobo&ShoulderBagsLink;Hobo&ShoulderBagsLink;;
+;;CrossbodyBagsLink;CrossbodyBags Link;#;CrossbodyBagsLink;CrossbodyBagsLink;;
+;;WalletsLink;Wallets Link;#;WalletsLink;WalletsLink;;
+;;EveningBagsLink;EveningBags Link;#;EveningBagsLink;EveningBagsLink;;
+;;Cases&pouchesLink;Cases&pouches Link;#;Cases&pouchesLink;Cases&pouchesLink;;
+;;BackPacksLink;BackPacks Link;#;BackPacksLink;BackPacksLink;;
+;;VanityBagsLink;VanityBags Link;#;VanityBagsLink;VanityBagsLink;;
+;;FlatsLink;Flats Link;#;FlatsLink;FlatsLink;;
+;;Loafers&MoccasinsLink;Loafers&MoccasinsLink;#;Loafers&MoccasinsLink;Loafers&MoccasinsLink;;
+;;SneakersLink;Sneakers Link;#;SneakersLink;SneakersLink;;
+;;BeltsLink;Belts Link;#;BeltsLink;BeltsLink;;
+
+
 
 INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;title[lang=en];parent(uid, $contentCV);children(uid,$contentCV)[mode=append];links(uid, $contentCV);&nodeRef
 ;root;;root;;;;;root;
@@ -148,6 +229,22 @@ INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;pa
 ;NPPageCustomerServiceNavNode;;Customer Service Pages;;;ContactUsLink,FrequentlyAskedQuestionsLink,TrackOrdersLink,ShippingLink,CancellationLink,ReturnsLink,TermsAndConditions;NPPageCustomerServiceNavNode;
 
 
+
+#############   LuxuryNavigation     ###############
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;ClothingNavNode;;Clothing Category;MenNavNode;TopsLink,Blazers&VestsLink,BottomsLink,OuterwearLink,ActivewearLink,Socks&UnderwearLink,Sleep&LoungewearLink,SwimwearLink,Bundles&SetsLink;ClothingNavNode
+;ShoesNavNode;;Shoes Category;MenNavNode;BootsLink,DressShoesLink,Loafers&Slip-onsLink,SandalsLink,SneakersLink;ShoesNavNode
+;AccessoriesNavNode;;Accessories Category;MenNavNode;GlovesLink,HatsLink,OpticalLink,SunglassesLink;AccessoriesNavNode
+;MensGroomingNavNode;;MensGrooming Category;MenNavNode;MensGroomingCategoryLink;MensGroomingNavNode
+;EditorsPicksNavNode;;EditorsPicks Category;MenNavNode;EditorsPicksCategoryLink;EditorsPicksNavNode
+;PopularBrandsNavNode;;PopularBrands Category;MenNavNode;Abercrombie&FitchLink,ColeHaanLink,FrenchConnectionLink,LacosteLink,MichaelKorsLink,NewBalanceLink,ReasonClothingLink;PopularBrandsNavNode
+;DesignersNavNode;;Designers Category;LuxuryNavNode;DesignersCategoryLink,MichaelKorsLink,HugoBossLink,CoachLink,ArmaniJeansLink,FurlaLink,TumiLink,EmporioArmaniLink,G-StarRawLink,ArmaniExchangeLink,M MissoniLink,TrueRelegionLink,CoccinelleLink,BrooksBrothersLink;DesignersNavNode
+;WomenNavNodeNewArrivals;;Women Category;NewArrivalsNavNode;HandBagsLinkNewArrivalsWomen,WalletsLinkNewArrivalsWomen,ClothingLinkNewArrivalsWomen,ShoesLinkNewArrivalsWomen,SpringSummer17LinkShoesLinkNewArrivalsWomen;WomenNavNodeNewArrivals
+;MenNavNodeNewArrivals;;Men Category;NewArrivalsNavNode;ClothingLinkNewArrivalsMen,BagsLinkNewArrivalsMen,WalletsLinkNewArrivalsMen,AccessoriesLinkNewArrivalsMen,ShoesLinkNewArrivalsMen,SpringSummer17LinkNewArrivalsMen;MenNavNodeNewArrivals
+;ClothingNavNodeWomen;;Clothing Category;WomenNavNode;Tops&T-shirtsLink,JeansLink,DressesLink;ClothingNavNodeWomen
+;BagsNavNodeWomen;;Bags Category;WomenNavNode;SatchelsLink,ToteBagsLink,Hobo&ShoulderBagsLink,CrossbodyBagsLink;WalletsLink,EveningBagsLink,Cases&pouchesLink,BackPacksLink,VanityBagsLink;BagsNavNodeWomen
+;ShoesNavNodeWomen;;Shoes Category;WomenNavNode;FlatsLink,Loafers&MoccasinsLink,SneakersLink;ShoesNavNodeWomen
+;AccessoriesNavNodeWomen;;Accessories Category;WomenNavNode;BeltsLink;AccessoriesNavNodeWomen
 
 
 
@@ -488,11 +585,11 @@ INSERT_UPDATE ShopOnLuxury;$contentCV[unique=true];uid[unique=true];shopOnLuxury
 INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
 ;;SiteLogoComponent;Site logo ;SiteLogoComponent;"/";tulSiteLogo
 ;;FacebookImageComponent;Facebook Image Component;FacebookImageComponent;"https://www.facebook.com";facebook
-;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://plus.google.com";twitter
+;;TwitterImageComponent;Twitter Image Component;TwitterImageComponent;"https://twitter.com/TATACLiQLuxury";twitter
 ;;YoutubeImageComponent;Youtube Image Component;YoutubeImageComponent;"https://youtube.com";youtube
 ;;InstagramImageComponent;Instagram Image Component;InstagramImageComponent;"https://instagram.com";instagram
-;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/appPage";googleplay
-;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/appPage";appstore
+;;AndroidAppIconComponent;Android App Icon Component;AndroidAppIconComponent;"/app-page";googleplay
+;;AppleAppIconComponent;Apple App Icon Component;AppleAppIconComponent;"/app-age";appstore
 ;;FreeDeliverySimpleBannerComponent;Free Delivery Simple Banner Component;FreeDeliverySimpleBannerComponent;;;;
 
 
@@ -531,9 +628,10 @@ INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];nam
 ;;TermsandConditionsPageComponent;Terms and Conditions Page Component;TermsandConditionsPageComponent;;;;
 ;;TitleForTermsOfUsePageComponent;Title For TermsOfUsePageComponent;TitleForTermsOfUsePageComponent;;;;
 ;;TermsOfUsePageComponent;Terms Of Use Page Component;TermsOfUsePageComponent;;;;
+;;AppInfo;Apps information;AppInfo;;;;
 
 
-UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
 ;;contactUsHeaderComponent;"<h2>Contact Us</h2><span class='copy'>You want to talk to us? Shoot your questions about your order, our site, your account, our deals, and everything in between. We're here for you. But not here here. Make our Hotline Blink. Call Us anytime,and from anywhere or drop us an email at hello@tatacliq.com</span>"
 
 
@@ -631,7 +729,6 @@ INSERT_UPDATE LuxuryVideoComponent;$contentCV[unique=true];uid[unique=true];name
 
 
 # Create Content Slots
-
 INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
 ;;CenterContentSlot;Center Content Slot;true
 ;;CenterLeftContentSlot;Center Left Content Slot;true
@@ -644,7 +741,6 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;SearchBoxSlot;Search Box;true;luxury-SearchBox
 ;;HomeTopHeroBannerLeft;Left Top Hero Banner Home page;true;Home-ShopMen
 ;;HomeTopHeroBannerRight;Right Top Hero Banner Home page;true;Home-ShopWomen
-;;SearchBoxSlot;;true;SearchBox
 ;;HomepageNavLinkSlot;;true;HomepageNavLink
 ;;LeftContentSlot;Middle Left Banner;true;Home-LeftContent
 ;;RightContentSlot;Middle Right Banner;true;Home-RightContent
@@ -765,10 +861,10 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;LuxPLPVisualFilterSlot-100009K0001K11;PLP Visual Filter for 100009K0001K11;true;visual-filter-100009K0001K11
 ;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
 ;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
-;;SearchResultsGridSlot;Search Result Grid Slot for Search List;true;SearchResultsGrid;;;
+#;;SearchResultsGridSlot;Search Result Grid Slot for Search List;true;SearchResultsGrid;;;
 ;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
 ;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
-
+;;AppSideContentSlot;;true;AppInfo
 
 
 ####################STATIC PAGES ########################
@@ -967,7 +1063,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ########### Luxury Search Page Template ##########################
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxSearchResultsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;LuxProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true
-;;LuxSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true
+#;;LuxSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true
 ;;LuxTopHeaderSlot-SearchResultsGrid;TopHeaderSlot;;TopHeaderSlot;true
 ;;LuxMiddleHeaderHelpLink-SearchResultsGrid;MiddleHeader;;MiddleHeader;true
 ;;LuxSiteLogo-SearchResultsGrid;SiteLogo;;SiteLogoSlot;true
@@ -984,7 +1080,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ProductGridPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;LuxNew-ProductLeftRefinements-SearchResultsGrid;LuxProductLeftRefinements;;ProductLeftRefinements;true
-;;LuxNewSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true
+#;;LuxNewSearchResultsGridSlot-SearchResultsGrid;LuxSearchResultsGridSlot;;SearchResultsGridSlot;true
 ;;LuxNewTopHeaderSlot-SearchResultsGrid;TopHeaderSlot;;TopHeaderSlot;true
 ;;LuxNewMiddleHeaderHelpLink-SearchResultsGrid;MiddleHeader;;MiddleHeader;true
 ;;LuxNewSiteLogo-SearchResultsGrid;SiteLogo;;SiteLogoSlot;true
@@ -1275,6 +1371,20 @@ INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=
 
 
 
+# App Page Template
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AppPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;TopHeaderSlot;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide               
+;NavigationBar;;;navigation                   
+;Footer;;;footer
+;SideContent;;;wide
+
+
+
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountUpdateProfilePageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
 ;;SiteLogo-AccountUpdateProfilePage;SiteLogo;;SiteLogoSlot;true
 ;;HomepageLink-AccountUpdateProfilePage;HomepageNavLink;;HomepageNavLinkSlot;true
@@ -1560,6 +1670,17 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
 #;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
 
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AppPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;TopHeaderSlot-AppPage;TopHeaderSlot;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-AppPage;MiddleHeader;;MiddleHeader;true          
+;;SiteLogo-AppPage;SiteLogo;;SiteLogoSlot;true          
+;;HeaderLinks-AppPage;HeaderLinks;;HeaderLinksSlot;true          
+;;SearchBox-AppPage;SearchBox;;SearchBoxSlot;true          
+;;MiniCart-AppPage;MiniCart;;MiniCartSlot;true       
+;;NavigationBar-AppPage;NavigationBar;;NavigationBarSlot;true                  
+;;Footer-AppPage;Footer;;FooterSlot;true
+;;SideContent-AppPage;SideContent;;AppSideContentSlot;true 
+
 
 
 
@@ -1629,3 +1750,9 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 # Functional Content Pages
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;notFound;Not Found Page;ErrorPageTemplate;notFound
+;;nonBusinessErrorFound;Non Business Error Found Page;ErrorPageTemplate;nonBusinessErrorFound
+;;businessErrorFound;Business Error Found Page;ErrorPageTemplate;businessErrorFound
+
+# Applications Content Pages
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;app-page;APP Page;AppPageTemplate;/app-page
