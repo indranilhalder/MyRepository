@@ -1547,6 +1547,12 @@ TATA.Pages = {
                 $('#pin').show();
                 $('#pdpPincodeCheck').show();
             });
+            
+            if($("#pin").val()==""){
+                $(".luxuyChangepincode").addClass("hide");
+            }else{
+                $(".luxuyChangepincode").removeClass("hide");
+            }
         },
         
         writeReview:function() {
