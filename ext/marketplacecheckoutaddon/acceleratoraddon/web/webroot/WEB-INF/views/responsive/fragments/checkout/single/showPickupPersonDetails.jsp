@@ -36,7 +36,7 @@
 					<label class="control-label" for="pickupPersonMobile"><spring:theme	code="checkout.single.pickup.person.mobileNumber" /></label>
 					<input type="text" id="pickupPersonMobile" class="inputmobile"
 						maxlength="10" placeholder="Enter Mobile Number*"
-						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonMobileOnKeyUp()"/><br />
+						value="" onkeyup="ACC.singlePageCheckout.validatePickupPersonMobileOnKeyUp()" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/><br />
 					<div class="error_txt pickupPersonMobileError"></div>
 					</div>
 				</div>

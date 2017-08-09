@@ -4,6 +4,7 @@
 package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 
 import java.util.List;
 
@@ -79,6 +80,19 @@ public class MplJewelleryServiceImpl implements MplJewelleryService
 	public String getPanCardStatus(final String orderLineId)
 	{
 		return mplJewelleryDao.getPanCardStatus(orderLineId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplJewelleryService#getSellerMsgForRetRefTab(java.lang.String)
+	 */
+	@Override
+	public List<JewellerySellerDetailsModel> getSellerMsgForRetRefTab(final String sellerId)
+	{
+		// YTODO Auto-generated method stub
+		return mplJewelleryDao.getSellerMsgForRetRefTab(sellerId);
 	}
 
 }

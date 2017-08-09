@@ -3894,6 +3894,8 @@ $("span.more-link").click(function() {
 	  $("#tabs_styleNotes_Refunds").removeClass("active");
 	  $("#tabs_knowmore").removeClass("active");
 	  $("#tabs_brandInfo").removeClass("active");
+	  $("ul.tabs.pdp.productTabs li").removeClass('active'); 
+	  $("ul.tabs.pdp.productTabs li").eq(0).addClass('active');
 });
 /*Feature for FineJewellery scroll end*/
 /* end change of PRDI-92 */

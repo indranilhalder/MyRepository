@@ -74,6 +74,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String IS_BOGO_APPLIED = "isBOGOapplied";
 	public static final String BOGO_ITEM_COUNT = "bogoFreeItmCount";
 	public static final String FINEJEWELLERY = "FineJewellery";
+	public static final String FASHIONJEWELLERY = "FashionJewellery";
 
 	//SONAR FIX
 	public static final String CONSIGNMENT_STATUS = " Consignment status :";
@@ -581,7 +582,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String SMS_SHORT_ORDER_TRACK_URL = "marketplace.sms.shortOrder.track.url";
 
 	public static final String SMS_SERVICE_APP_DWLD_URL = "marketplace.sms.app.download.url";
-	public static final String SMS_SERVICE_WEBSITE_URL = "marketplace.sms.order.website.url";
+
 
 
 	//public static final String SMS_MESSAGE_HOTC = "Hey! we have shipped {0} item(s) of your order #{1} via {2}.Give it 2-3 working days to reach you. Can't control the excitement? Track your order here {3} .Thanks!";
@@ -2176,7 +2177,7 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	//UF-281
 	public static final String B1002 = "B1002";
 
-
+	public static final String HOME = "Home";
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	public static final String PENDING_FOR_VERIFICATION = "PENDING_FOR_VERIFICATION";
 	//TPR-3782
@@ -2192,10 +2193,13 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 	public static final String ATTHERATE = "@";
 	public static final String GM = "gm";
 	public static final String CT = "Ct";
-	//public static final String PERGM = "/g";
-	//public static final String PERCT = "/ct";
+	public static final String KG = "kg";
+
 	//TPR-4134 web service
 	public static final String REV_SEAL_JWLRY = "Do you have Reverse Seal with you?";
 	public static final String REV_SEAL_RADIO_YES = "Yes,I have reverse seal";
 	public static final String REV_SEAL_RADIO_NO = "No,I do not have reverse seal";
+
+	//jewellery TPR-3765
+	public static final String SMS_SERVICE_WEBSITE_URL = "marketplace.sms.order.website.url";
 }

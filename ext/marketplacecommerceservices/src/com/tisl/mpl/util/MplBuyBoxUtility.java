@@ -595,9 +595,9 @@ public class MplBuyBoxUtility
 
 	/*
 	 * @param sellerArticleSKUList
-	 *
+	 * 
 	 * @param currency
-	 *
+	 * 
 	 * @return priceRange
 	 */
 
@@ -627,7 +627,7 @@ public class MplBuyBoxUtility
 			else
 			{
 				//	priceRange = currency + String.valueOf(min) + HYPHEN + currency + String.valueOf(max);//SONAR FIX JEWELLERY
-				priceRange = currency + min + HYPHEN + currency + max;
+				priceRange = currency + Math.round(min.doubleValue()) + HYPHEN + currency + Math.round(max.doubleValue());
 			}
 		}
 		return priceRange;

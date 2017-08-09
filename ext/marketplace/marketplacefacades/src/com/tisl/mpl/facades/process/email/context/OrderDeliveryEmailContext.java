@@ -74,6 +74,7 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 	private static final String SUBTOTAL = "subTotal";
 	private static final String CONVENIENCECHARGE = "convenienceChargesVal";
 	private static final String COUNT = "count"; //added for jewellery
+	private static final String WEBSITE_URL = "websiteUrl";
 
 
 	@Autowired
@@ -152,12 +153,14 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 					final String orderPlaceDate = formatter.format(childOrder.getCreationtime());
 					put(ORDERPLACEDATE, orderPlaceDate);
 
-					//added for jewellery
+					//added for jewellery-TPR-3765 start
 					final ProductModel prod = childOrder.getProduct();
 					if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
 					{
 						count += 1;
 					}
+					//added for jewellery-TPR-3765 end
+
 
 					//					final ProductModel productModel = childOrder.getProduct();
 					//					final String productImageUrl = productModel.getPicture().getURL();
@@ -193,12 +196,18 @@ public class OrderDeliveryEmailContext extends AbstractEmailContext<OrderUpdateP
 		put(AWBNUMBER, orderUpdateProcessModel.getAwbNumber());
 		put(SUBTOTAL, Double.valueOf(subTotal));
 		put(CONVENIENCECHARGE, Double.valueOf(convenienceChargesVal));
-
 		put(NAMEOFPERSON, deliveryAddress.getFirstname());
 
-		put(COUNT, Double.valueOf(count)); //added for jewellery
-
-
+		//added for jewellery
+		put(COUNT, Double.valueOf(count));
+		String websiteUrl = null;
+		websiteUrl = getConfigurationService().getConfiguration().getString(
+				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
+		if (null != websiteUrl)
+		{
+			put(WEBSITE_URL, websiteUrl);
+		}
+		//end
 
 		final StringBuilder deliveryAddr = new StringBuilder(150);
 
