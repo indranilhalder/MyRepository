@@ -14959,11 +14959,7 @@ TATA.CommonFunctions = {
                     TATA.Pages.PLP.showSelectedRefinements()), $(filtered).has(".product-grid") && $(".product-grid-wrapper").html($(filtered).find(".product-grid-wrapper").html()), 
                     $(filtered).has("input[name=noOfPages]") && (totalPages = parseInt($(filtered).find("input[name=noOfPages]").val()), 
                     totalPages > 1 ? ($("#pageQuery").val(""), currentPageNo = 1, totalNoOfPages = totalPages, 
-                    $(".loadMore").show()) : $(".loadMore").hide()), $(".product-grid").hover(function() {
-                        $(this).addClass("hover"), $(this).find(".plp-hover-img").show().siblings().hide();
-                    }, function() {
-                        $(this).removeClass("hover"), $(".plp-modelimg-show.active").length ? $(this).find(".plp-model-img").show().siblings().hide() : $(this).find(".plp-default-img").show().siblings().hide();
-                    });
+                    $(".loadMore").show()) : $(".loadMore").hide()), TATA.Pages.PLP.productHover();
                 },
                 complete: function() {
                     $("body").removeClass("loader"), $(".plp-leftbar-close a").on("click", function() {

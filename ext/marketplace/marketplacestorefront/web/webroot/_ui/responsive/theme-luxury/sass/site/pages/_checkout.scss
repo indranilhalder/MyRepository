@@ -1251,7 +1251,7 @@ checkout-shipping-items.left-block-width{
     display: none;
 }
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.deliveryWidth {
-    width: 34% !important;
+    width: 30% !important;
     float: none;
     
      @include media-breakpoint-down(sm) {
@@ -1373,7 +1373,7 @@ ul.delivered.scrollThis {
     margin: 0;
 }
 .cart.wrapper .product-block li.item>ul>li.mapConatinerParent {
-    width: 27% !important;
+    width: 30% !important;
     float: none;
      @include media-breakpoint-down(sm) {
          width: 100% !important;
@@ -1430,6 +1430,8 @@ ul.delivered.scrollThis {
 .cart.wrapper .checkout-shipping-items.left-block.left-block-width .delivery.header4.deliveryWidth {
     width: 25% !important;
     display: inline-block;
+    margin-bottom: 10px;
+    text-align: right;
 }
 .checkout.wrapper .product-block li.header>ul li.delivery {
     text-align: left;
