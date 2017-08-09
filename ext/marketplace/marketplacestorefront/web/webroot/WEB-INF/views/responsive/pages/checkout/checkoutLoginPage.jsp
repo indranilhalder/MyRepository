@@ -13,13 +13,13 @@
 			</ul>
 
 		
-		<ul class="tabs row">
-			<li id="sign_in_content col-xs-12 col-sm-5 signInWrapper" class="active">
+		<ul class="tabs">
+			<li id="sign_in_content" class="active">
 				<cms:pageSlot position="RightContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
 			</li>
-			<li id="sign_up_content  col-xs-12 col-sm-5">
+			<li id="sign_up_content">
 				<cms:pageSlot position="LeftContentSlot" var="feature">
 					<cms:component component="${feature}" />
 				</cms:pageSlot>
