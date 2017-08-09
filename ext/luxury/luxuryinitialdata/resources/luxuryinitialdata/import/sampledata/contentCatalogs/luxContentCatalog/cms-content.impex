@@ -427,7 +427,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents
 ;;NavigationBarSlot;ShopByDepartmentComponent,ShopByBrandComponent  
  #Bread Crumb added to BottomHeader Slot
 ;;BottomHeaderSlot;breadcrumbComponent
-
+;;AppSideContentSlot;MobileAppBanner
  
  
 # Preview Image for use in the CMS Cockpit for special ContentPages 
