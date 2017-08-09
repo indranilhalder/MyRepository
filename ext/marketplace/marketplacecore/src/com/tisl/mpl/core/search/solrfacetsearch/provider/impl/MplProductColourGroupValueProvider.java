@@ -34,10 +34,11 @@ public class MplProductColourGroupValueProvider extends AbstractPropertyFieldVal
 	private FieldNameProvider fieldNameProvider;
 
 	final String FINE_JEWELLERY = "FineJewellery";
+	final String FASHIONJEWELLERY = "FashionJewellery";
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * de.hybris.platform.solrfacetsearch.provider.FieldValueProvider#getFieldValues(de.hybris.platform.solrfacetsearch
 	 * .config.IndexConfig, de.hybris.platform.solrfacetsearch.config.IndexedProperty, java.lang.Object)
@@ -60,7 +61,8 @@ public class MplProductColourGroupValueProvider extends AbstractPropertyFieldVal
 			final String baseProductPK = pcmColorModel.getBaseProduct().getPk().getLongValueAsString();
 			final Collection<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
-			if (pcmColorModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY))
+			if (pcmColorModel.getProductCategoryType().equalsIgnoreCase(FINE_JEWELLERY)
+					|| pcmColorModel.getProductCategoryType().equalsIgnoreCase(FASHIONJEWELLERY))
 			{
 				//indexing base product for Fine Jewellery
 				fieldValues.addAll(createFieldValue(indexedProperty, baseProductPK));

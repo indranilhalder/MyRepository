@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.tools.generic.MathTool;
 import org.apache.velocity.tools.generic.NumberTool;
@@ -167,9 +166,9 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 		put(SHIPPINGCHARGE, Double.valueOf(shippingCharge));
 		put(CONVENIENCECHARGE, convenienceChargesVal);
 		//Setting first name and last name to NAMEOFPERSON
-		final StringBuilder name = new StringBuilder(150);
+		//final StringBuilder name = new StringBuilder(150);
 		final Set<PointOfServiceModel> storeAddrList = new HashSet<PointOfServiceModel>();
-		final StringBuilder deliveryAddr = new StringBuilder(150);
+		//final StringBuilder deliveryAddr = new StringBuilder(150);
 		final List<StateData> stateDataList = getAccountAddressFacade().getStates();
 		for (final AbstractOrderEntryModel entryModel : orderProcessModel.getOrder().getEntries())
 
@@ -224,45 +223,7 @@ public class PancardRejectEmailContext extends AbstractEmailContext<OrderProcess
 		}
 		put(CHILDENTRIES, childEntries);
 
-		final AddressModel deliveryAddress = orderProcessModel.getOrder().getDeliveryAddress();
-		if (deliveryAddress != null)
 
-		{
-			if (null != deliveryAddress.getFirstname())
-			{
-				put(CUSTOMER_NAME, deliveryAddress.getFirstname());
-			}
-			if (null != deliveryAddress.getFirstname())
-			{
-				name.append(deliveryAddress.getFirstname());
-			}
-			if (null != deliveryAddress.getLastname())
-			{
-				name.append(SPACE).append(deliveryAddress.getLastname());
-			}
-			put(NAMEOFPERSON, (name.length() > 0 ? name : CUSTOMER));
-			put(MOBILENUMBER, (null != deliveryAddress.getPhone1() ? deliveryAddress.getPhone1() : deliveryAddress.getCellphone()));
-			put(DISPLAY_NAME, (null != deliveryAddress.getFirstname() ? deliveryAddress.getFirstname() : CUSTOMER));
-
-			deliveryAddr.append(deliveryAddress.getStreetname());
-			if (!StringUtils.isEmpty(deliveryAddress.getStreetnumber()))
-			{
-				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getStreetnumber());
-			}
-			if (!StringUtils.isEmpty(deliveryAddress.getAddressLine3()))
-			{
-				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getAddressLine3());
-			}
-			if (!StringUtils.isEmpty(deliveryAddress.getLandmark()))
-			{
-				deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getLandmark());
-			}
-
-			deliveryAddr.append(COMMA).append(SPACE).append(deliveryAddress.getTown()).append(COMMA).append(SPACE)
-					.append(deliveryAddress.getDistrict()).append(COMMA).append(SPACE).append(deliveryAddress.getPostalcode());
-
-			put(DELIVERYADDRESS, deliveryAddr);
-		}
 		String websiteUrl = null;
 		websiteUrl = getConfigurationService().getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SMS_SERVICE_WEBSITE_URL);
