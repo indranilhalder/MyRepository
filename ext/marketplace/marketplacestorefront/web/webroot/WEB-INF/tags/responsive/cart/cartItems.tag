@@ -1140,7 +1140,7 @@ tr.d0 td {
 		    	<input type="text" id= "defaultPinCodeIdsBtm" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return luxurycheckPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				<button id= "pinCodeButtonIdsBtm" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 				<p id="AvailableMessageBtm" style="display:none" class="availablePins"></p>
 				<p id="unserviceablepincodeBtm" style="display:none" class="unservicePins"><spring:theme code="cart.unserviceable.pincode" /></p>
 				<p id="error-IdBtm" style="display:none" class="errorPins"><spring:theme code="product.invalid.pincode" /></p>	
@@ -1228,18 +1228,18 @@ tr.d0 td {
 		    	<input type="text" id= "defaultPinCodeIds" name = "defaultPinCodeIds" style="" value="" placeholder="Pincode" maxlength="6" onkeypress="return isNumber(event)" />
 		   		</c:otherwise>
 				 </c:choose>
-				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return luxurycheckPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
+				<button id= "pinCodeButtonIds" name="pinCodeButtonId" style="" type="" onclick="return checkPincodeServiceability('typeSubmit',this);"><spring:theme code="text.submit"/></button>
 			</div>
 			</td>
 			<td>
 				<li id="checkout-id" class="checkout-button">
 				<!-- TISEE-6257 -->
-				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return luxurycheckPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				</li>
 				<ul class="checkout-types onlyCheckoutButton">
 				<li id="checkout-id-down" class="checkout-button">
-				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return luxurycheckPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
+				<a  id="checkout-down-enabled" class="checkoutButton checkout button red"  onclick="return checkPincodeServiceability('typeCheckout',this);"><spring:theme code="checkout.checkout" /></a>
 				<input type="hidden" id="checkoutLinkURlId" value="${checkoutUrl}"> 
 				</li>
 				 </ul>

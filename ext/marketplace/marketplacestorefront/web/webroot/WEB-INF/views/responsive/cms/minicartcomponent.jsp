@@ -8,18 +8,17 @@
 <c:url value="/cart/rollover/${component.uid}" var="rolloverPopupUrl"/>
 <c:url value="/cart" var="cartUrl"/>
 
-<!-- <li class="transient-mini-bag"></li> -->
+<li class="transient-mini-bag"></li>
 				<li class="bag">
 				<a href="${cartUrl}" 
 					class="mini-cart-link myBag-sticky"
 					data-mini-cart-url="${rolloverPopupUrl}"
 					data-mini-cart-refresh-url="${refreshMiniCartUrl}"
-					data-mini-cart-name="<spring:theme code="text.cart"/>" data-shan=""
+					data-mini-cart-name="<spring:theme code="text.cart"/>"
 					data-mini-cart-empty-name="<spring:theme code="popup.cart.empty"/>">
 					<spring:theme code="minicart.mybag" />&nbsp;(<span class="js-mini-cart-count">${totalItems}</span>)</a>
 					<div class="mini-bag">
 					</div>
-					<span class="js-mini-cart-count">${totalItems}</span>
 					</li>
 
 

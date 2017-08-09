@@ -25,7 +25,7 @@
 	<%-- <label class="email_Label"><spring:theme
 				code="text.account.email" text="Email Address" /></label> --%>
 	
-	<form:input id="register.email_login" class="form-control inputText"
+	<form:input id="register.email_login" class="inputText"
 		idKey="register.email" labelKey="" placeholder="EMAIL ADDRESS" path="email" maxlength="240" />
 	<div class="help-block has-error" id="signupEmailIdDiv" style="display: none;"></div>
 	
