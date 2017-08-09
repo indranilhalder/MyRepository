@@ -114,9 +114,10 @@
 							//UF-291 ends here
 						
 					}
+					//TISSPTEN-134
+					_autoload();	
 				}
-				//TISSPTEN-134
-				_autoload();
+				
 			}
 
 			if (window.addEventListener)
