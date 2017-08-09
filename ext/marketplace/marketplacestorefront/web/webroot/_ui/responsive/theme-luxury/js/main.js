@@ -1607,9 +1607,12 @@ TATA.Pages = {
                 cache: !1,
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
+                	var fulladdr = data.line1;
+                    data.line2 && (console.log("Inside line2 checking***"),fulladdr  += data.line2);
+                    data.line3 && (console.log("Inside line3 checking***"),fulladdr  += data.line3);
                     $("#addressId").val(addressId), $("#firstName").val(data.firstName), $("#lastName").val(data.lastName), 
-                    $("#line1").val((data.line1 + data.line2 + data.line3).trim()), 
-                    $("#postcode").val(data.postcode), $(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
+                    $("#line1").val(fulladdr),$("#line2").val(""),$("#line3").val(""),
+                    $("#postcode").val(data.postcode),$(".address_landmarks").val(data.landmark), $(".address_landmarkOther").val(data.landmark), 
                     loadPincodeData("edit").done(function() {
                         otherLandMarkTri(data.landmark, "defult");
                     }), $("#townCity").val(data.townCity), $("#mobileNo").val(data.mobileNo), $("#stateListBox").data("selectBox-selectBoxIt").selectOption(data.state), 
