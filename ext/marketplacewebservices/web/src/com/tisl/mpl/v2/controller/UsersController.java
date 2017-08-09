@@ -3408,6 +3408,7 @@ public class UsersController extends BaseCommerceController
 							}
 						}
 					}
+					LOG.debug("The size of entries in wishlist is" + entryModelSize);//for TPR-5787
 				        wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
 					wldDTO.setProducts(wldpDTOList);
 					wldDTOList.add(wldDTO);
