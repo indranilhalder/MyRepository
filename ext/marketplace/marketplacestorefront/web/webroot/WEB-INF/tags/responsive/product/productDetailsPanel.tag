@@ -404,7 +404,7 @@ tr.d0 td {
 			</div> --%>
 
             <!-- BLOCK ADDED FOR JEWELLERY CERTIFICATION STARTS HERE-->
-            <c:if test="${product.rootCategory =='FineJewellery'}">
+            <c:if test="${product.rootCategory =='FineJewellery' && not empty certificationfeatureValueDataList}">
              <div class="certified-by"> 
               <h2>Certified by:</h2>
               <ul>

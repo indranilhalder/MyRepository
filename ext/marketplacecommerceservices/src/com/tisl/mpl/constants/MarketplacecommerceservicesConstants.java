@@ -2202,4 +2202,5 @@ public final class MarketplacecommerceservicesConstants extends GeneratedMarketp
 
 	//jewellery TPR-3765
 	public static final String SMS_SERVICE_WEBSITE_URL = "marketplace.sms.order.website.url";
+	public static final String RETURN_FINEJEWELLERY = "Forward Seal Mismatch";
 }
