@@ -90,8 +90,6 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 ;;CustomerFirstMediaParagraphComponent;Customer First Media Paragraph Component;CustomerFirstMediaParagraphComponent;"<span class='spriteImg realStories'></span><span>Real Stories</span>";;"/contact";
 ;;DeliveryOnTimeMediaParagraphComponent;Delivery On Time Media Paragraph Component;DeliveryOnTimeMediaParagraphComponent;"<span class='spriteImg trackOrders'></span><span>Track Orders</span>";;"/trackorders";
 ;;EveryWhereMediaParagraphComponent;EveryWhere Media Paragraph Component;EveryWhereMediaParagraphComponent;"<span class='spriteImg storePickup'></span><span>Store PiQ ups</span>";;"#";
-;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<div>Call Us,24/7</div><div><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a></div>";callus.png
-;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<div>Chat with us</div><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
 
 # Changes for help and service page
 ;;CallUsMediaParagraphHSComponent;Call Us Media Paragraph Component;CallUsMediaParagraphHSComponent;"<a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'><span>CALL US, 24/7</span><span class='link'>1-800-123-4567<span></a>";callus-getintouch.png
@@ -907,34 +905,11 @@ INSERT_UPDATE CMSSubbrand;subBrandName[unique=true];subBrandUrl;subBrandImage(co
 
 # CMSParagraphComponent
 INSERT_UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;;;;
-;;contactUsHeaderComponent;Contact Us Header Paragraph;contactUsHeaderComponent;;;;
 ;;SupportOfficeComponent;Support Office Paragraph;SupportOfficeComponent;;;;
 ;;CorporateOfficeComponent;Corporate Office Paragraph;CorporateOfficeComponent;;;;
 ;;HelplineComponent;Help Line Paragraph;HelplineComponent;;;;
 ;;NeedAssistanceComponent;Need Assistance Component;NeedAssistanceComponent;;;;
 
-
-#CMSMediaParagraphComponent changes starts
-INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture
-;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'><span>CALL US, 24/7</span><span class='link'>1-800-123-4567<span></a>";callus.png
-;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'><span>CHAT WITH US</span><span class='link'>Available Now</span></a>";chatwidus.png
-;;FrequentlyAskedMediaParagraphComponent;FAQ Media Paragraph Component;FrequentlyAskedMediaParagraphComponent;"<a href='/store/mpl/en/faq'><span>FAQ</span><span class='link'><span class='link'>Frequently Asked Questions</span></a>";FAQ.png
-
-
-INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
-;;callus.png;$siteResource/images/banners/homepage/callus.png;callus.png;"Call us";
-;;FAQ.png;$siteResource/images/banners/homepage/FAQ.png;FAQ.png;"Frequent  Questions";
-;;chatwidus.png;$siteResource/images/banners/homepage/chatwidus.png;chatwidus.png;"Chat With Us";
-
-# ContentSlot
-
-INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
-;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
-;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
-;;Section3-contact;Section3 slot for Contact Us Page;true;NeedAssistanceComponent;;;
-;;Section4A-contact;Section4A slot for Contact Us Page;true;SupportOfficeComponent;;;
-;;Section4B-contact;Section4B slot for Contact Us Page;true;CorporateOfficeComponent;;;
-;;Section4C-contact;Section4C slot for Contact Us Page;true;HelplineComponent;;;
 
 #ContentSlotforPage for Contact Us Page
 INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='contact'];contentSlot(uid,$contentCV)[unique=true];;;

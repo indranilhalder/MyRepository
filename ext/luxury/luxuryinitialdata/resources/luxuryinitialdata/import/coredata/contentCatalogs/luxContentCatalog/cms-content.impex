@@ -320,9 +320,12 @@ INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true
 ;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;"<h3>SAVED CARDS</h3><p>Manage and delete your credit/debit card details here.</p><a href='/my-account/payment-details'>VIEW PAYMENT INFO</a>";savedCards.jpg;;
 ;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;"<h3>ORDER HISTORY</h3><p>When will that package arrive? And other such pressing questions.</p><a href='/my-account/orders'>VIEW ORDER HISTORY</a>";orderHistory.jpg;;
 ;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;"<h3>MY ADDRESS</h3><p>Where do we send that package? And other such address details. </p><a href='/my-account/address-book'>VIEW SAVED ADDRESSES</a>";savedAddresses.jpg;;
-;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<p>Call Us,24/7</p><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a>";callus.png
-;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<p>Chat with us</p><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
-;;FrequentlyAskedMediaParagraphComponent;FAQ Media Paragraph Component;FrequentlyAskedMediaParagraphComponent;"<p>FAQ</p><a href='/store/mpl/en/faq'>Frequently Asked Questions</a>";FAQ.png
+;;CallUsMediaParagraphComponent;Call Us Media Paragraph Component;CallUsMediaParagraphComponent;"<p>Call Us,24/7</p>
+<a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a>";callus.png
+;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<p>Chat with us</p>
+<a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available Now</a>";chatwidus.png
+;;FrequentlyAskedMediaParagraphComponent;FAQ Media Paragraph Component;FrequentlyAskedMediaParagraphComponent;"<p>FAQ</p>
+<a href='/store/mpl/en/faq'>Frequently Asked Questions</a>";FAQ.png
 
 
 

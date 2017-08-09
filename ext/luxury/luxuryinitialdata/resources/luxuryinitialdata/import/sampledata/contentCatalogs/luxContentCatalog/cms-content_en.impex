@@ -668,9 +668,6 @@ condition and in the fastest time possible. <!DOCTYPE html>
 
  </body>
  </html>"
-;;contactUsHeaderComponent;"
-<h2>Contact Us</h2>
-<span class='copy'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquamerat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation.</span>"
 
 ;;SupportOfficeComponent;"<h1>Support Office</h1>
       <div>
