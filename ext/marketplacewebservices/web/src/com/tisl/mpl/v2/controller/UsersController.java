@@ -3164,6 +3164,7 @@ public class UsersController extends BaseCommerceController
 		List<GetWishListProductWsDTO> wldpDTOList = new ArrayList<GetWishListProductWsDTO>();
 		List<Wishlist2Model> allWishlists;
 		String selectedSize = null;
+		int entryModelSize = 0;//TPR-5787
 		try
 		{
 			allWishlists = wishlistFacade.getAllWishlists();
@@ -3189,8 +3190,7 @@ public class UsersController extends BaseCommerceController
 
 						wldpDTOList = new ArrayList<GetWishListProductWsDTO>();
 						for (final Wishlist2EntryModel entryModel : entryModels)
-						{
-							int entryModelSize = 0;//TPR-5787
+						{							
 							if (!entryModel.getIsDeleted().booleanValue() || entryModel.getIsDeleted() == null)//TPR-5787 check added
 							{
 								wldpDTO = new GetWishListProductWsDTO();
@@ -3402,13 +3402,14 @@ public class UsersController extends BaseCommerceController
 												.getLocalizedString(MarketplacewebservicesConstants.DELISTED_MESSAGE_WISHLIST);
 										wlDTO.setDelistedMessage(delistMessage);
 									}
-									//wldDTO.setCount(Integer.valueOf(entryModels.size()));
+									//wldDTO.setCount(Integer.valueOf(entryModels.size()));	
 									entryModelSize += 1;//TPR-5787 modified
-									wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
-								}
+								}								
 							}
 						}
 					}
+					LOG.debug("The size of entries in wishlist is" + entryModelSize);//for TPR-5787
+				        wldDTO.setCount(Integer.valueOf(entryModelSize));//TPR-5787 modified
 					wldDTO.setProducts(wldpDTOList);
 					wldDTOList.add(wldDTO);
 				}

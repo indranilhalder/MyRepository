@@ -100,12 +100,12 @@ tr.d0 td {
    
    <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='marketplace' or empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
-												product="${entry.product}" format="cartPage" /></a>
+												product="${entry.product}" format="cartPage" lazyLoad="false" /></a>
 												</c:if>
 												
    <c:if test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury' and not empty entry.product.luxIndicator}">
    <a href="${productUrl}"><product:productPrimaryImage
-												product="${entry.product}" format="luxuryCartPage" /></a>
+												product="${entry.product}" format="luxuryCartPage" lazyLoad="false" /></a>
 												</c:if>
    
    </div>
