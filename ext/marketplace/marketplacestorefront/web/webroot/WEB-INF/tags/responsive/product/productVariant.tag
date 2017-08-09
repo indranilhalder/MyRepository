@@ -81,9 +81,11 @@ function loadVariant(x){
 				</c:if>
 				<c:choose>
 		   <c:when test="${not empty product.variantOptions}">
-			<p>
-				<spring:theme code="text.colour" />
-			</p>
+		   <c:if test="${product.rootCategory ne 'FineJewellery' && product.rootCategory ne 'FashionJewellery'}">
+				<p>
+					<spring:theme code="text.colour" />
+				</p>
+			</c:if>
 			<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:choose>
 					<c:when test="${not empty variantOption.defaultUrl}">
