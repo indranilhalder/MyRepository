@@ -62929,9 +62929,9 @@ body.page-productGrid .facet-list.filter-opt ~ .left-block{
 	.product-info .product-content.FashionJewellery .delivery-block li:not(:first-child):before{
 	    left: 33%;
 	}
-	.certified-by{
+	/* .certified-by{
 		border-top: 1px solid #ccc;
-	}
+	} */
 	.certified-by ul li{
 		width: 33.33%;
 	}	
