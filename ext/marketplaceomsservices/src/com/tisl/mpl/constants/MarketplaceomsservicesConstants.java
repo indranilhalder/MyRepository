@@ -39,16 +39,25 @@ public final class MarketplaceomsservicesConstants extends GeneratedMarketplaceo
 	public static final String LOSTINTT = "LOSTINTT";
 	public static final String UNDLVERD = "UNDLVERD";
 	public static final String TAX_CATEGORY = "N/A";
-	public static final String Y="Y";
+	public static final String Y = "Y";
 
-	
+
 	public static final String BOTH = "BOTH".intern();
 	public static final String TSHIP = "TSHIP".intern();
 	public static final String SSHIP = "SSHIP".intern();
-	
+
 	public static final String N = "N".intern();
 	public static final String YES = "yes";
 	public static final String NO = "no";
+
+	//TPR-5667
+	public static final String FAILURE = "FAILURE";
+	public static final String SAMSUNG = "samsung";
+	public static final String MESSAGE = "message";
+
+	//added for TPR-1348
+	public static final String AUTO_REFUND_ENABLED = "oms.order.status.autoRefund.enabled";
+
 
 	private MarketplaceomsservicesConstants()
 	{

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="order">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" minOccurs="1" name="cartID" type="xs:string"/> 
+				<xs:element maxOccurs="1" minOccurs="1" name="emailid" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="firstName" type="xs:string"/>                           
+				<xs:element maxOccurs="1" minOccurs="1" name="lastName" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="phoneNumber" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="customerID" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="orderId" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="orderType" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="submissionDateTime" type="xs:dateTime"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="issueDate" type="xs:dateTime"/>
+				<xs:element maxOccurs="1" minOccurs="1" name="channel" type="xs:string"/>									   
+				<xs:element maxOccurs="unbounded" minOccurs="1" name="orderLines">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" name="sellerOrderId" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="orderLineId" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="sellerId" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="skuId" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="ussId" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="productName" type="xs:string"/> 
+							<xs:element maxOccurs="1" minOccurs="1" name="unitPrice">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="1" minOccurs="1" name="currencyCode" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="value" type="xs:double"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="1" name="approtionedPrice" type="xs:double"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="approtionedCODPrice" type="xs:double"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="apportionedShippingCharge" type="xs:double"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="ShippingChargeDifference" type="xs:double"/>
+							
+							<xs:element maxOccurs="1" minOccurs="0" name="scheduledDeliveryCharge" type="xs:double"/>
+							
+							<xs:element maxOccurs="unbounded" minOccurs="0" name="promotion">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="1" minOccurs="1" name="promotionCode" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="promotionValue" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element maxOccurs="unbounded" minOccurs="0" name="coupon">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="1" minOccurs="0" name="couponCode" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="0" name="couponValue" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="0" name="sellerID" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element maxOccurs="1" minOccurs="0" name="isaGift" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="giftMessage" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="giftPrice" type="xs:double"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="isAFreebie" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isPrecious"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="isBOGO" type="xs:boolean"/> <!--TPR-1345-->
+							
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="isFragile"/>
+											  
+							<xs:element maxOccurs="1" minOccurs="1" name="deliveryType" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="ShippingCharge" type="xs:double"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="storeID" type="xs:string"/>											 
+							<xs:element maxOccurs="1" minOccurs="0" name="slaveID" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="collectName" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="collectPhoneNumber" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="isCOD" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="transportMode" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="fulfillmentType" type="xs:string"/>
+							
+							<xs:element maxOccurs="1" minOccurs="0" name="parentTransactionID" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="crmParentRef" type="xs:string"/><!--TPR-1345-->
+							<xs:element maxOccurs="1" minOccurs="1" name="estimatedDelivery" type="xs:dateTime"/>
+							 
+							<xs:element maxOccurs="1" minOccurs="0" name="estimatedDeliveryTill" type="xs:dateTime"/>
+							
+							<xs:element maxOccurs="1" minOccurs="1" name="orderLineStatus" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="cancellationAllowed" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="returnsAllowed" type="xs:string"/> 
+							<xs:element maxOccurs="1" minOccurs="0" name="replacementAllowed" type="xs:string"/> 
+							<xs:element maxOccurs="1" minOccurs="0" name="exchangeAllowed" type="xs:string"/> 
+							<xs:element maxOccurs="1" minOccurs="0" name="collectionDays" type="xs:string"/> 
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="EDScheduledDate"/>
+							
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TimeSlotFrom"/>
+							
+							<xs:element maxOccurs="1" minOccurs="0" type="xs:string" name="TimeSlotTo"/>
+							
+							<xs:element maxOccurs="1" minOccurs="1" name="quantity">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="1" minOccurs="1" name="unitCode" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="value" type="xs:int"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>											 
+							<xs:element maxOccurs="unbounded" minOccurs="0" name="paymentInfos">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="1" minOccurs="1" name="transactionPaymentCost" type="xs:double"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="transactionPaymentMode" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>				
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element maxOccurs="1" minOccurs="0" name="shippingFirstName" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="0" name="shippingLastName" type="xs:string"/>
+				<xs:element maxOccurs="1" minOccurs="0" name="shippingAddress">
+					<xs:complexType>
+						<xs:sequence>                                             
+							<xs:element maxOccurs="1" minOccurs="1" name="phoneNumber" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="addressLine1" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="addressLine2" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="addressLine3" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="cityName" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="countryCode" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="stateCode" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="pinCode" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="landmark" type="xs:string"/>
+							
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element maxOccurs="unbounded" minOccurs="1" name="paymentInfos">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="1" minOccurs="1" name="paymentCost" type="xs:double"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="paymentMode" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="paymentStatus" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="paymentInfo" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="1" name="paymentDate" type="xs:string"/>
+							<xs:element maxOccurs="1" minOccurs="0" name="billingAddress">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="1" minOccurs="1" name="firstName" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="lastName" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="addressLine1" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="0" name="addressLine2" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="0" name="addressLine3" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="cityName" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="countryCode" type="xs:string"/> 
+										<xs:element maxOccurs="1" minOccurs="1" name="stateCode" type="xs:string"/>
+										<xs:element maxOccurs="1" minOccurs="1" name="pinCode" type="xs:string"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
