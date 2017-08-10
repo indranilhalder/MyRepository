@@ -431,17 +431,20 @@ public class DefaultMplOrderDao implements MplOrderDao
 	@Override
 	public List<OrderModel> getOrderByMobile(final String mobileNo, final int queryCount)
 	{
-
 		try
 		{
 			LOG.debug("QueryCount**" + queryCount);
-			final String query = "SELECT UNIQUE {a:pk} FROM {order as a},{address as b} WHERE {a:user}={b:owner} AND {b.cellphone}=?mobileNo AND {a.type}=?type AND ({a.creationtime} > sysdate -180) order by {a.creationtime} desc fetch first ?queryCount rows only";
+			final String query = MarketplacecommerceservicesConstants.MOBILE_QUERY;
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("mobileNo", mobileNo);
 			flexiQuery.addQueryParameter("type", PARENT_KEY);
 			flexiQuery.addQueryParameter("queryCount", String.valueOf(queryCount));
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData : null;
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error("Null pointer Exception occured: ", e);
 		}
 		catch (final Exception e)
 		{
@@ -457,7 +460,7 @@ public class DefaultMplOrderDao implements MplOrderDao
 		String l4CategoryId = null;
 		try
 		{
-			final String query = "select distinct {c.pk} from {product as p},{CategoryProductRelation as cp},{Category as c},{catalogversion as cv} where {cp.TARGET} = {p.pk} and {cp.SOURCE} = {c.pk} and {c.code} like 'MPH%' and {p.varianttype} is null and {p.catalogversion}={cv.pk} and {cv.version}='Online' and {p.code} = ?productCode";
+			final String query = MarketplacecommerceservicesConstants.MOBILE_QUERY_FOR_L4CATEGORY;
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("productCode", productCode);
 			final List<CategoryModel> l4List = flexibleSearchService.<CategoryModel> search(flexiQuery).getResult();
@@ -469,6 +472,10 @@ public class DefaultMplOrderDao implements MplOrderDao
 			{
 				LOG.debug("l4 category id is " + l4CategoryId);
 			}
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error("Null pointer Exception occured: ", e);
 		}
 		catch (final Exception e)
 		{
@@ -483,12 +490,16 @@ public class DefaultMplOrderDao implements MplOrderDao
 	{
 		try
 		{
-			final String query = "select {b:pk} from {orderentry as a},{order as b} where p_orderlineid=?transactionId and {a:order}={b:pk} and {b:type}=?type";
+			final String query = MarketplacecommerceservicesConstants.TRANSACTION_QUERY;
 			final FlexibleSearchQuery flexiQuery = new FlexibleSearchQuery(query);
 			flexiQuery.addQueryParameter("transactionId", transactionId);
 			flexiQuery.addQueryParameter("type", SUB_ORDER_KEY);
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(flexiQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
+		}
+		catch (final NullPointerException e)
+		{
+			LOG.error("Null pointer Exception occured: ", e);
 		}
 		catch (final Exception e)
 		{
@@ -503,18 +514,22 @@ public class DefaultMplOrderDao implements MplOrderDao
 	{
 		try
 		{
-			final String queryString = "select {o:pk} from {order as o} where {o:type}=?type and {o:code}=?orderRefNo";
+			final String queryString = MarketplacecommerceservicesConstants.PARENT_ORDER_QUERY;
 			final FlexibleSearchQuery fQuery = new FlexibleSearchQuery(queryString);
 			fQuery.addQueryParameter("type", PARENT_KEY);
 			fQuery.addQueryParameter("orderRefNo", orderRefNo);
 			final List<OrderModel> listOfData = flexibleSearchService.<OrderModel> search(fQuery).getResult();
 			return !listOfData.isEmpty() ? listOfData.get(0) : null;
 		}
+		catch (final NullPointerException e)
+		{
+			LOG.error("Null pointer Exception occured: ", e);
+		}
 		catch (final Exception e)
 		{
 			LOG.error("Error while fetching orderModel by orderId  ", e);
-			throw new EtailNonBusinessExceptions(e);
 		}
+		return null;
 
 	}
 
