@@ -62964,9 +62964,9 @@ body.page-productGrid .facet-list.filter-opt ~ .left-block{
 	.product-info .product-content.FashionJewellery .delivery-block li:not(:first-child):before{
 	    left: 33%;
 	}
-	.certified-by{
+	/* .certified-by{
 		border-top: 1px solid #ccc;
-	}
+	} */
 	.certified-by ul li{
 		width: 33.33%;
 	}	
@@ -70897,6 +70897,9 @@ select.update-entry-quantity-input.review-page-select{
 .modal#singlePageChooseSlotDeliveryPopup>div.content li.item li.deliverySlotRadio input[type="radio"] ~ label.delslot_radio{		
       cursor: pointer;				
 }
+#singlePageMobile .mobileNotDefaultDelAddress{
+	display:none;
+}
 /*UF-281 UF-282 single page checkout css ends*/
 
 /* R2.3:START: Date: 2016-12-19- Code Merge */
@@ -76131,6 +76134,10 @@ table#showPriceBreakup{
 	width: 100%;
 	margin-top: 112px;
 }
+ .product-info>.jewellery-wrapper>div.tabs-block.FineJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc .key-label li, 
+ .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc .key-label li{
+ 	margin-top: 20px;
+}
 @media (min-width: 1190px){
 	.product-info>.jewellery-wrapper>div.accordin.FineJewellery, 
 	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery
@@ -76304,7 +76311,7 @@ body.page-returnSubmit .accordtionTataCliq .accContents.returnMethod .button_hol
 }		
 .product-info .product-detail.FineJewellery .product-desc .key-label .more-link,
 .product-info .product-detail.FashionJewellery .product-desc .key-label .more-link{		
-	padding-left: 20px;		
+	margin-left: 20px;		
 }
 .col-md-7.col-sm-7.col-xs-12.reverseSealJwlry {
    margin-top: 50px;
@@ -76493,8 +76500,17 @@ body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.
 body.page-returnSubmit .accordtionTataCliq.removeMargin .accContents.reasonType.col-md-12 .col-md-4.col-sm-4.ifsccode .popover.fade.bottom.in{
 	    margin-top: 26px;
 }		
-}		
- 	@media (min-width: 791px){
+}
+/* TISJEW-3457 start */
+@media(max-width: 1024px) and (min-width: 768px){
+.product-info .product-detail.FashionJewellery .Cta,
+.product-info .product-detail.FineJewellery .Cta
+{
+	overflow: initial;
+	}
+}
+/* TISJEW-3457 end	 */	
+ @media (min-width: 791px){
 	body.page-returnSubmit .body-Content {
      padding-bottom: 50px !important; 
 	}

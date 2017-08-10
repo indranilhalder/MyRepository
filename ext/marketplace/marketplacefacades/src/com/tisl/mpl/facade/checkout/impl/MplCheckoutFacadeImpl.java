@@ -253,7 +253,8 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		ServicesUtil.validateParameterNotNull(addressDataList, "Address data list cannot be empty");
 		final List<AddressData> addressDataNewList = new ArrayList<AddressData>();
 		String defaultAddressId = "";
-		String firstPriority = "Home";
+		String firstPriority = MarketplacecommerceservicesConstants.HOME;
+
 		int count = 0;
 
 		final Map<String, AddressData> sortedMap = new TreeMap<String, AddressData>(new Comparator<String>()

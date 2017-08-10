@@ -22,7 +22,7 @@ public class MplPriceBreakupFacadeImpl implements PriceBreakupFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.PriceBreakupFacade#getPricebreakup(java.lang.String, java.lang.String)
 	 */
 
@@ -30,13 +30,13 @@ public class MplPriceBreakupFacadeImpl implements PriceBreakupFacade
 	private PriceBreakupService priceBreakupService;
 
 	@Override
-	public List<PriceBreakupData> getPricebreakup(final String ussid)
+	public List<PriceBreakupData> getPricebreakup(final String ussid, final String sellerId)
 	{
 		//List<JewelleryPriceRowModel> jewelleryPriceRowList = new ArrayList<JewelleryPriceRowModel>();
 
 		// LinkedHashMap<String, PriceData> PriceMap = priceBreakupService.getPricebreakup(ussid);
 
-		return priceBreakupService.getPricebreakup(ussid);
+		return priceBreakupService.getPricebreakup(ussid, sellerId);
 	}
 
 	//ADDED FOR 3782
@@ -68,7 +68,7 @@ public class MplPriceBreakupFacadeImpl implements PriceBreakupFacade
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.facade.product.PriceBreakupFacade#createPricebreakupOrder(java.lang.String, java.lang.String)
 	 */
 

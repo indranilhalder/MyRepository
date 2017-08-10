@@ -1263,7 +1263,8 @@ public class BuyBoxDaoImpl extends AbstractItemDao implements BuyBoxDao
 		final String sellerVarb = sellerV.substring(0, sellerV.length() - 1);
 
 		String priceQueryString = "";
-		priceQueryString = "SELECT  {bb.PK} FROM {BuyBox AS bb} where {bb.SELLERARTICLESKU} IN (" + sellerVarb + ")";
+		priceQueryString = "SELECT  {bb.PK} FROM {BuyBox AS bb} where {bb.SELLERARTICLESKU} IN (" + sellerVarb
+				+ ") ORDER BY {modifiedtime} DESC";
 		final FlexibleSearchQuery query = new FlexibleSearchQuery(priceQueryString);
 
 		return flexibleSearchService.<BuyBoxModel> search(query).getResult();

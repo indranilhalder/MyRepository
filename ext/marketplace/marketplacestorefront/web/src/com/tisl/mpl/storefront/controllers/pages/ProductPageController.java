@@ -559,7 +559,7 @@ public class ProductPageController extends MidPageController
 				 * final String metaTitle = productData.getSeoMetaTitle(); final String pdCode = productData.getCode();
 				 * final String metaDescription = productData.getSeoMetaDescription(); //TISPRD-4977 final String
 				 * metaKeyword = productData.getSeoMetaKeyword(); //final String metaKeywords = productData.gets
-				 *
+				 * 
 				 * setUpMetaData(model, metaDescription, metaTitle, pdCode, metaKeyword);
 				 */
 				//AKAMAI fix
@@ -1939,6 +1939,14 @@ public class ProductPageController extends MidPageController
 			final String validTabs = configurationService.getConfiguration().getString(
 					"mpl.categories." + productData.getRootCategory());
 
+			//this method is called to fetch the details of seller specific description to show in return refund tab for fine jewellery.
+			if (FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+			{
+				final List<String> retRefTabList = mplJewelleryFacade.getSellerMsgForRetRefTab(productData);
+				model.addAttribute(ModelAttributetConstants.RET_REF_TAB, retRefTabList);
+			}
+
+
 			final String sharePath = configurationService.getConfiguration().getString("social.share.path");
 			//For Gigya
 			final String isGigyaEnabled = configurationService.getConfiguration().getString(MessageConstants.USE_GIGYA);
@@ -2219,9 +2227,9 @@ public class ProductPageController extends MidPageController
 										/*
 										 * else if (value.equalsIgnoreCase(featureData.getCode().substring(
 										 * featureData.getCode().lastIndexOf(".") + 1))) {
-										 *
+										 * 
 										 * if (productFeatureMap.size() > 0) { productFeatureMap.clear(); }
-										 *
+										 * 
 										 * productFeatureMap.put(featureValueData.getValue(), jewelleryDescMapping.get(value));
 										 * mapConfigurableAttributes.put(featureData.getName(), productFeatureMap); }
 										 */
@@ -2679,11 +2687,11 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private MarketplaceDeliveryModeData fetchDeliveryModeDataForUSSID(final String deliveryMode, final String ussid) {
-	 *
+	 * 
 	 * final MarketplaceDeliveryModeData deliveryModeData = new MarketplaceDeliveryModeData(); final
 	 * MplZoneDeliveryModeValueModel mplZoneDeliveryModeValueModel = mplCheckoutFacade
 	 * .populateDeliveryCostForUSSIDAndDeliveryMode(deliveryMode, MarketplaceFacadesConstants.INR, ussid);
-	 *
+	 * 
 	 * final PriceData priceData = productDetailsHelper.formPriceData(mplZoneDeliveryModeValueModel.getValue());
 	 * deliveryModeData.setCode(mplZoneDeliveryModeValueModel.getDeliveryMode().getCode());
 	 * deliveryModeData.setDescription(mplZoneDeliveryModeValueModel.getDeliveryMode().getDescription());
@@ -2703,76 +2711,76 @@ public class ProductPageController extends MidPageController
 	 */
 	/*
 	 * private List<PincodeServiceData> populatePinCodeServiceData(final String productCode) {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * final List<PincodeServiceData> requestData = new ArrayList<>(); PincodeServiceData data = null;
-	 *
+	 * 
 	 * MarketplaceDeliveryModeData deliveryModeData = null; try { final ProductModel productModel =
-	 *
-	 *
+	 * 
+	 * 
 	 * productService.getProductForCode(productCode); final ProductData productData =
-	 *
+	 * 
 	 * productFacade.getProductForOptions(productModel, Arrays.asList(ProductOption.BASIC, ProductOption.SELLER,
 	 * ProductOption.PRICE));
-	 *
-	 *
+	 * 
+	 * 
 	 * for (final SellerInformationData seller : productData.getSeller()) { final List<MarketplaceDeliveryModeData>
-	 *
+	 * 
 	 * deliveryModeList = new ArrayList<MarketplaceDeliveryModeData>(); data = new PincodeServiceData(); if ((null !=
-	 *
+	 * 
 	 * seller.getDeliveryModes()) && !(seller.getDeliveryModes().isEmpty())) { for (final MarketplaceDeliveryModeData
-	 *
+	 * 
 	 * deliveryMode : seller.getDeliveryModes()) { deliveryModeData =
-	 *
+	 * 
 	 * fetchDeliveryModeDataForUSSID(deliveryMode.getCode(), seller.getUssid()); deliveryModeList.add(deliveryModeData);
-	 *
-	 *
+	 * 
+	 * 
 	 * } data.setDeliveryModes(deliveryModeList); } if (null != seller.getFullfillment() &&
-	 *
+	 * 
 	 * StringUtils.isNotEmpty(seller.getFullfillment())) {
-	 *
+	 * 
 	 * data.setFullFillmentType(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getFullfillment().toUpperCase())); }
-	 *
+	 * 
 	 * if (null != seller.getShippingMode() && (StringUtils.isNotEmpty(seller.getShippingMode()))) {
-	 *
+	 * 
 	 * data.setTransportMode(MplGlobalCodeConstants.GLOBALCONSTANTSMAP.get(seller.getShippingMode().toUpperCase())); } if
-	 *
+	 * 
 	 * (null != seller.getSpPrice() && !(seller.getSpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getSpPrice().getValue().doubleValue())); } else if (null != seller.getMopPrice() &&
-	 *
+	 * 
 	 * !(seller.getMopPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMopPrice().getValue().doubleValue())); } else if (null != seller.getMrpPrice() &&
-	 *
+	 * 
 	 * !(seller.getMrpPrice().equals(ModelAttributetConstants.EMPTY))) { data.setPrice(new
-	 *
+	 * 
 	 * Double(seller.getMrpPrice().getValue().doubleValue())); } else {
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * LOG.info("*************** No price avaiable for seller :" + seller.getSellerID()); continue; } if (null !=
-	 *
-	 *
+	 * 
+	 * 
 	 * seller.getIsCod() && StringUtils.isNotEmpty(seller.getIsCod())) { data.setIsCOD(seller.getIsCod()); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * data.setSellerId(seller.getSellerID()); data.setUssid(seller.getUssid());
-	 *
+	 * 
 	 * data.setIsDeliveryDateRequired(ControllerConstants.Views.Fragments.Product.N); requestData.add(data); } } catch
-	 *
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * (final EtailBusinessExceptions e) { ExceptionUtil.etailBusinessExceptionHandler(e, null); }
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
 	 * catch (final Exception e) {
-	 *
+	 * 
 	 * throw new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0000); } return requestData; }
 	 */
 
@@ -2987,14 +2995,15 @@ public class ProductPageController extends MidPageController
 		final BuyBoxData buyboxdata = (BuyBoxData) buydata.get("pdp_buy_box");
 
 		//PRICE BREAKUP STARTS:TPR-3782
-		if (StringUtils.isNotEmpty(buyboxdata.getSellerArticleSKU()))
+		if (StringUtils.isNotEmpty(buyboxdata.getSellerArticleSKU()) && StringUtils.isNotEmpty(buyboxdata.getSellerId()))
 		{
 			final String displayConfigurableAttributeForPriceBreakup = displayConfigurableAttributeForPriceBreakup(buyboxdata
 					.getSellerArticleSKU());
 			LOG.debug("display " + displayConfigurableAttributeForPriceBreakup);
 			if (StringUtils.isNotEmpty(displayConfigurableAttributeForPriceBreakup))
 			{
-				final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU());
+				final List<PriceBreakupData> PriceMap = priceBreakupFacade.getPricebreakup(buyboxdata.getSellerArticleSKU(),
+						buyboxdata.getSellerId());
 				if (CollectionUtils.isNotEmpty(PriceMap))
 				{
 					buyboxJson.put(ControllerConstants.Views.Fragments.Product.PRICE_BREAKUP, gson.toJson(PriceMap));

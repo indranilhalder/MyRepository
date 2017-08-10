@@ -13,6 +13,7 @@ import de.hybris.platform.commercefacades.product.data.PriceDataType;
 import de.hybris.platform.commercefacades.product.data.ProductData;
 import de.hybris.platform.core.model.JewelleryInformationModel;
 import de.hybris.platform.core.model.JewelleryPriceRowModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.OrderJewelEntryModel;
 import de.hybris.platform.core.model.c2l.CurrencyModel;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
@@ -34,11 +35,13 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.data.PriceBreakupData;
+import com.tisl.mpl.marketplacecommerceservices.daos.MplJewelleryDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.PriceBreakupDao;
 import com.tisl.mpl.marketplacecommerceservices.daos.product.MplProductDao;
 import com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService;
@@ -84,16 +87,29 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 	@Resource(name = "productConfiguredPopulator")
 	private ConfigurablePopulator<ProductModel, ProductData, ProductOption> productConfiguredPopulator;
 
+	@Resource(name = "mplJewelleryDao")
+	private MplJewelleryDao mplJewelleryDao;
+
 	@Override
-	public List<PriceBreakupData> getPricebreakup(final String ussid)
+	public List<PriceBreakupData> getPricebreakup(final String ussid, final String sellerId)
 	{
 		JewelleryPriceRowModel jPrice = null;
+
+		JewellerySellerDetailsModel jSellerDetails = null;
+
 		final List<JewelleryPriceRowModel> jewelleryPriceRowList = priceBreakupDao.getPricebreakup(ussid);
 		if (CollectionUtils.isNotEmpty(jewelleryPriceRowList))
 		{
 			jPrice = priceBreakupDao.getPricebreakup(ussid).get(0);
 		}
 		final List<JewelleryInformationModel> jewelleryInfoList = priceBreakupDao.getJewelInfo(ussid);
+
+		final List<JewellerySellerDetailsModel> jSellerDetailsList = mplJewelleryDao.getSellerMsgForRetRefTab(sellerId);
+
+		if (CollectionUtils.isNotEmpty(jSellerDetailsList))
+		{
+			jSellerDetails = jSellerDetailsList.get(0);
+		}
 
 		PriceBreakupData priceBreakupData = null;
 		List<String> weightRateList = null;
@@ -129,7 +145,22 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getGoldRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
-									+ MarketplacecommerceservicesConstants.FRONTSLASH + MarketplacecommerceservicesConstants.GM;
+									+ MarketplacecommerceservicesConstants.FRONTSLASH;
+							if (null != jSellerDetails)
+							{
+								if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitGold()))
+								{
+									key = key + jSellerDetails.getMetalRateUnitGold();
+								}
+								else
+								{
+									key = key + MarketplacecommerceservicesConstants.GM;
+								}
+							}
+							else
+							{
+								key = key + MarketplacecommerceservicesConstants.GM;
+							}
 							weightRateList.add(key);
 							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getGoldValue()
 									.doubleValue()), commonI18NService.getCurrency(INR));
@@ -152,7 +183,22 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSilverRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
-									+ MarketplacecommerceservicesConstants.FRONTSLASH + MarketplacecommerceservicesConstants.GM;
+									+ MarketplacecommerceservicesConstants.FRONTSLASH;
+							if (null != jSellerDetails)
+							{
+								if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitSil()))
+								{
+									key = key + jSellerDetails.getMetalRateUnitSil();
+								}
+								else
+								{
+									key = key + MarketplacecommerceservicesConstants.KG;
+								}
+							}
+							else
+							{
+								key = key + MarketplacecommerceservicesConstants.KG;
+							}
 							weightRateList.add(key);
 							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSilverValue()
 									.doubleValue()), commonI18NService.getCurrency(INR));
@@ -175,7 +221,22 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 									+ MarketplacecommerceservicesConstants.SPACE
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getPlatinumRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
-									+ MarketplacecommerceservicesConstants.FRONTSLASH + MarketplacecommerceservicesConstants.GM;
+									+ MarketplacecommerceservicesConstants.FRONTSLASH;
+							if (null != jSellerDetails)
+							{
+								if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitPlat()))
+								{
+									key = key + jSellerDetails.getMetalRateUnitPlat();
+								}
+								else
+								{
+									key = key + MarketplacecommerceservicesConstants.GM;
+								}
+							}
+							else
+							{
+								key = key + MarketplacecommerceservicesConstants.GM;
+							}
 							weightRateList.add(key);
 							final PriceData price = createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getPlatinumValue()
 									.doubleValue()), commonI18NService.getCurrency(INR));

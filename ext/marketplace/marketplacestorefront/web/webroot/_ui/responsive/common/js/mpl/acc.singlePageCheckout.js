@@ -110,6 +110,8 @@ ACC.singlePageCheckout = {
         	else
         	{
         		$("#chooseDeliveryAddressMobileDiv").html(data);
+        		//Hide edit radio for responsive
+        		ACC.singlePageCheckout.hideMobileEditRadio();
         	}
 		});
         
@@ -729,13 +731,13 @@ ACC.singlePageCheckout = {
 		}
 	},
 	//Function to get pick up persson form from server, Once fetched it will not be fetched again[For web].
-	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){		
+	getPickUpPersonForm:function(pickupPersonName,pickupPersonMobileNo){
     	var isCncPresent=$("#selectDeliveryMethodForm #isCncPresentInSinglePageCart").val();
     	if(isCncPresent=="true")
     	{
     		var htmlPopulated=$("#singlePagePickupPersonPopup span#modalBody").attr("data-htmlPopulated");
     		if(htmlPopulated=="NO")
-        	{
+        	{	//If form has not been fetched yet
     			var url=ACC.config.encodedContextPath + "/checkout/single/pickupPerson/popup";
         		var data="";
         		var xhrPickupPersonResponse=ACC.singlePageCheckout.ajaxRequest(url,"GET",data,false);;
@@ -751,6 +753,11 @@ ACC.singlePageCheckout = {
             		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
     			});
         	}
+    		else if(htmlPopulated=="YES")
+    		{	//If form has already been fetched, We just need to update the form entries.
+    			$('form[name="pickupPersonDetails"] #pickupPersonName').val(pickupPersonName);
+        		$('form[name="pickupPersonDetails"] #pickupPersonMobile').val(pickupPersonMobileNo);
+    		}
     	}
 	},
 	
@@ -1153,16 +1160,16 @@ ACC.singlePageCheckout = {
 			$(".pickupPersonNameError").text("Enter Atleast 4 Letters");
 			return false;
 		}
-		else if(nameCheck == false){
-			$(".pickupPersonNameError").show();
-			$(".pickupPersonNameError").text("Spaces cannot be allowed");
-			return false;
-		 }
 		else if(statusName == false) {
 			$(".pickupPersonNameError").show();
 			$(".pickupPersonNameError").text("Please Enter Only Alphabets");
 			return false;
 		}
+		else if(nameCheck == false){
+			$(".pickupPersonNameError").show();
+			$(".pickupPersonNameError").text("Spaces cannot be allowed");
+			return false;
+		 }
 		else{
 			return true;
 		}
@@ -2287,7 +2294,7 @@ ACC.singlePageCheckout = {
 		});
 		
 		xhrResponse.done(function(data) {
-			$("#editAddressForResponsive").css("display","block");//Hide edit address block
+			$("#editAddressForResponsive").show();//Show edit address block
 			$("#newAddressFormMobile.new-address-form-mobile").html("");//Removing new address form when new address is selected
 			$("#newAddressFormMobile.new-address-form-mobile").attr("data-loaded","false");//As the form has been removed above we need to reset data-loaded attribute to false 
 			ACC.singlePageCheckout.changeAddress();//Hiding change link and displaying other addressess
@@ -2361,11 +2368,8 @@ ACC.singlePageCheckout = {
                 	}
 	            	if(!isEdit)
 	            	{
-	            		//Remove edit address radio button check
-	            		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
-	            		$("#editAddressFormMobile").slideUp();
-	            		$("#editAddressFormMobile").html("");
-	            		$("#editAddressForResponsive").css("display","none");
+	            		//Hide edit radio for responsive
+	            		 ACC.singlePageCheckout.hideMobileEditRadio();
 	            	}
 	            	if(isNew)
                 	{
@@ -2436,6 +2440,14 @@ ACC.singlePageCheckout = {
 		 		});
 		}
 		
+	},
+	//Function to hide edit radio for responsive
+	hideMobileEditRadio:function(){
+		//Remove edit address radio button check
+		$("#editAddressForResponsive div.mobile_add_address.form_open").removeClass("form_open");
+		$("#editAddressFormMobile").slideUp();
+		$("#editAddressFormMobile").html("");
+		$("#editAddressForResponsive").css("display","none");
 	},
 	//Function called when change link of address is clicked for responsive
 	changeAddress:function(){

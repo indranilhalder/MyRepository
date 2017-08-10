@@ -98,6 +98,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -1806,8 +1807,9 @@ public class AccountPageController extends AbstractMplSearchPageController
 		String productRichAttrOfQuickDrop = null;
 		String sellerRichAttrOfQuickDrop = null;
 		String ussidForJwlry = null;
-		final List<String> sellerName = new ArrayList<String>();
-
+		String sellerName = "";
+		boolean isFineJew = false;
+		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 
 		try
 		{
@@ -1845,6 +1847,7 @@ public class AccountPageController extends AbstractMplSearchPageController
 					//This is added for jewellery
 					if (productModel.getProductCategoryType().equalsIgnoreCase(FINEJEWELLERY))
 					{
+						isFineJew = true;
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
 								.getSelectedUssid());
 						ussidForJwlry = jewelleryInfo.get(0).getPCMUSSID();
@@ -1872,15 +1875,22 @@ public class AccountPageController extends AbstractMplSearchPageController
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
 							}
+							sellerName = sellerInformationModel.getSellerName();
 						}
-						sellerName.add(sellerInformationModel.getSellerName());
 					}
 
 					//TPR-4134 starts
-					if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType())
-							&& ((sellerName).contains((MarketplacecommerceservicesConstants.TANISHQ))))
+					if (StringUtils.isNotEmpty(revSealSellerList))
 					{
-						model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+						final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+						if ((FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							//Checking if seller contains the values
+							if (sellerList.contains(sellerName))
+							{
+								model.addAttribute(ModelAttributetConstants.SHOW_REVERSESEAL_JWLRY, "true");
+							}
+						}
 					}
 					//TPR-4134 ends
 					model.addAttribute(ModelAttributetConstants.QUCK_DROP_PROD_LEVEL, productRichAttrOfQuickDrop);
@@ -1931,6 +1941,17 @@ public class AccountPageController extends AbstractMplSearchPageController
 			}
 			model.addAttribute(ModelAttributetConstants.ADDRESS_DATA, addressDataList);
 			final List<ReturnReasonData> reasonDataList = getMplOrderFacade().getReturnReasonForOrderItem();
+			if (!isFineJew)
+			{
+				for (final Iterator<ReturnReasonData> iterator = reasonDataList.iterator(); iterator.hasNext();)
+				{
+					final ReturnReasonData returnData = iterator.next();
+					if (MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(returnData.getReasonDescription()))
+					{
+						iterator.remove();
+					}
+				}
+			}
 			model.addAttribute(ModelAttributetConstants.REASON_DATA_LIST, reasonDataList);
 			model.addAttribute(ModelAttributetConstants.RETURN_PRODUCT_MAP, returnProductMap);
 			model.addAttribute(ModelAttributetConstants.SUBORDER_ENTRY, orderEntry);

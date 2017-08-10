@@ -27,6 +27,7 @@ import de.hybris.platform.commercefacades.product.data.SellerInformationData;
 import de.hybris.platform.commercefacades.product.data.VariantOptionData;
 import de.hybris.platform.commerceservices.enums.SalesApplication;
 import de.hybris.platform.core.model.JewelleryInformationModel;
+import de.hybris.platform.core.model.JewellerySellerDetailsModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.product.ProductService;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
@@ -102,6 +103,7 @@ import com.tisl.mpl.wsdto.ProductContentWsData;
 import com.tisl.mpl.wsdto.ProductDetailMobileWsData;
 import com.tisl.mpl.wsdto.ProductOfferMsgDTO;
 import com.tisl.mpl.wsdto.PromotionMobileData;
+import com.tisl.mpl.wsdto.RefundReturnDTO;
 import com.tisl.mpl.wsdto.SellerInformationMobileData;
 import com.tisl.mpl.wsdto.SizeLinkData;
 import com.tisl.mpl.wsdto.VariantOptionMobileData;
@@ -336,6 +338,9 @@ public class MplProductWebServiceImpl implements MplProductWebService
 		final List<PriceBreakUpDto> priceBreakUpList = new ArrayList<PriceBreakUpDto>();
 		final Map<String, FineJwlryClassificationListDTO> fineJewelleryClassificationList = new LinkedHashMap<String, FineJwlryClassificationListDTO>();
 		String ussidJwlry = "";
+
+		//for new tab return refund for fine and fashion jewellery
+		List<RefundReturnDTO> refundReturnList = null;
 		try
 		{
 
@@ -484,7 +489,10 @@ public class MplProductWebServiceImpl implements MplProductWebService
 				{
 					final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(buyBoxData
 							.getSellerArticleSKU());
-					ussidJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					if (CollectionUtils.isNotEmpty(jewelleryInfo) && StringUtils.isNotEmpty(jewelleryInfo.get(0).getPCMUSSID()))
+					{
+						ussidJwlry = jewelleryInfo.get(0).getPCMUSSID();
+					}
 				}
 			}
 			//			Added for OfferDetail of  a product TPR-1299
@@ -742,10 +750,32 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					productDetailMobile.setKnowMore(knowMoreList);
 				}
 
+				if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+						|| MarketplacecommerceservicesConstants.FASHIONJEWELLERY
+								.equalsIgnoreCase(productModel.getProductCategoryType()))
+				{
+					if (null != buyBoxData)
+					{
+						refundReturnList = getRefundReturnDetails(productModel, buyBoxData, ussidJwlry);
+					}
+				}
+				if (CollectionUtils.isNotEmpty(refundReturnList))
+				{
+					if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						productDetailMobile.setReturnAndRefund(refundReturnList);
+					}
+					if (MarketplacecommerceservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+					{
+						productDetailMobile.setReturns(refundReturnList);
+					}
+				}
+
 				if (null != productData.getBrand() && null != productData.getBrand().getBrandname())
 				{
 					productDetailMobile.setBrandName(productData.getBrand().getBrandname());
 				}
+
 
 				// changed for TPR-796
 				//first set false to make all available
@@ -839,7 +869,7 @@ public class MplProductWebServiceImpl implements MplProductWebService
 					{
 						final String priceBrkUpPDP = displayConfigurableAttributeForPriceBreakup(buyBoxData.getSellerArticleSKU());
 						productDetailMobile.setShowPriceBrkUpPDP(priceBrkUpPDP);
-						priceMap = priceBreakupFacade.getPricebreakup(buyBoxData.getSellerArticleSKU());
+						priceMap = priceBreakupFacade.getPricebreakup(buyBoxData.getSellerArticleSKU(), buyBoxData.getSellerId());
 					}
 
 					if (CollectionUtils.isNotEmpty(priceMap))
@@ -945,6 +975,68 @@ public class MplProductWebServiceImpl implements MplProductWebService
 	//	}
 
 	/**
+	 * @param buyBoxData
+	 * @param ussidJwlry
+	 * @return
+	 */
+	private List<RefundReturnDTO> getRefundReturnDetails(final ProductModel productModel, final BuyBoxData buyBoxData,
+			final String ussidJwlry)
+	{
+		// YTODO Auto-generated method stub
+		final List<RefundReturnDTO> refundReturnList = new ArrayList<RefundReturnDTO>();
+		List<JewellerySellerDetailsModel> jSellerMsgList = new ArrayList<JewellerySellerDetailsModel>();
+		RefundReturnDTO refundReturn = null;
+
+		String retRefFirst = null;
+		String retRefSec = null;
+
+		String returnWindow = "0";
+
+		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
+		{
+			retRefFirst = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
+
+			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
+			{
+				retRefSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
+			}
+		}
+
+		returnWindow = getReturnWindow(productModel, buyBoxData.getSellerArticleSKU(), ussidJwlry);
+
+		if (StringUtils.isNotEmpty(retRefFirst) && StringUtils.isNotEmpty(returnWindow) && StringUtils.isNotEmpty(retRefSec))
+		{
+			refundReturn = new RefundReturnDTO();
+			refundReturn.setRefundReturnItem(retRefFirst + MarketplacecommerceservicesConstants.SPACE + returnWindow
+					+ MarketplacecommerceservicesConstants.SPACE + retRefSec);
+			refundReturnList.add(refundReturn);
+		}
+
+		if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
+		{
+			if (StringUtils.isNotEmpty(buyBoxData.getSellerId()))
+			{
+				jSellerMsgList = jewelleryService.getSellerMsgForRetRefTab(buyBoxData.getSellerId());
+			}
+
+			if (CollectionUtils.isNotEmpty(jSellerMsgList))
+			{
+				for (final JewellerySellerDetailsModel jSellerMsg : jSellerMsgList)
+				{
+					refundReturn = new RefundReturnDTO();
+					if (StringUtils.isNotEmpty(jSellerMsg.getDescription()))
+					{
+						refundReturn.setRefundReturnItem(jSellerMsg.getDescription());
+						refundReturnList.add(refundReturn);
+					}
+				}
+			}
+		}
+
+		return refundReturnList;
+	}
+
+	/**
 	 * get eligible delivery modes
 	 *
 	 * @param seller
@@ -1028,19 +1120,25 @@ public class MplProductWebServiceImpl implements MplProductWebService
 			{
 				isProductLingerie = true;
 			}
-			if (!isProductLingerie)
+			if (!isProductLingerie
+					&& !MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+					&& !MarketplacewebservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 			{
 				returnWindow = getReturnWindow(productModel, buyBoxData.getSellerArticleSKU(), ussidJwlry);
 			}
 		}
 
-		if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
+		if (!MarketplacewebservicesConstants.FINEJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType())
+				&& !MarketplacewebservicesConstants.FASHIONJEWELLERY.equalsIgnoreCase(productModel.getProductCategoryType()))
 		{
-			knowMoreSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
-
-			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
+			if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND)))
 			{
-				knowMoreTh = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
+				knowMoreSec = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_SECOND);
+
+				if (StringUtils.isNotEmpty(Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD)))
+				{
+					knowMoreTh = Localization.getLocalizedString(MarketplacewebservicesConstants.KNOW_MORE_THIRD);
+				}
 			}
 		}
 
