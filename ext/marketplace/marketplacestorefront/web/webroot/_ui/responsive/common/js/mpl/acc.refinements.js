@@ -434,7 +434,18 @@ ACC.refinements = {
 				filterChecked = true;
 				//onFilterRemoveAnalytics(filterName,filterValue);
 			}
-			
+			//TISSPTEN-130 starts
+			if ($("input[name=customSku]").val()) {
+				pageURL =  window.location.href;
+				if (pageURL.indexOf("?") > -1) {
+					pageURL = pageURL.split("?")[0];
+					pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
+				}
+				if (action[1] != "") {
+					pageURL = pageURL + '?' + action[1]; 
+				}
+			}
+			//TISSPTEN-130 ends
 			// AJAX call
 			filterDataAjax(requiredUrl,dataString,pageURL);
 			
@@ -1009,7 +1020,21 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 				       window.localStorage.setItem('lastUrlpathName',encodeURI(pathName));
 					   window.localStorage.setItem('lastUrlquery',encodeURI(query));
 				 }
-			}		
+			}
+			//TISSPTEN-130 starts
+			else {
+				pageURL = window.location.pathname;
+				pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
+				if (facetAjaxUrl.indexOf("?") > -1) {
+					var queryArr = facetAjaxUrl.split("?");
+					if (queryArr[1] != "") {
+						pageURL = pageURL + '?' + queryArr[1];
+					}
+				}
+				
+				window.history.replaceState(response,"",pageURL);
+			}
+			//TISSPTEN-130 ends
 			// TPR-158 and TPR-413 starts here
 			
 			$("#displayAll").show();
