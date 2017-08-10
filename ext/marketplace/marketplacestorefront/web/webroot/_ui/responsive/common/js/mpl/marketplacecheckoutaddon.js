@@ -1806,6 +1806,19 @@ function savedDebitCardRadioChange(radioId){
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
 				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TPR-629
 				}
@@ -1938,7 +1951,21 @@ function savedDebitCardRadioChange(radioId){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else{
 
 					 //TISPRO-313
 					if($(".redirect").val()=="false"){
@@ -2091,7 +2118,21 @@ function savedDebitCardRadioChange(radioId){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{	
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else{	
 					//TISSTRT-1391
 					window.sessionStorage.removeItem("header");
 					 //TISPRO-313
@@ -2259,7 +2300,21 @@ function savedDebitCardRadioChange(radioId){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 					//$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/add");
-				}else{		
+				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
+				else{		
 					 //TISPRO-313
 					 if($(".redirect").val()=="false"){
 						Juspay.startSecondFactor();
@@ -5124,6 +5179,19 @@ function submitNBForm(){
 					$(".pay .loaderDiv").remove();
 					$("#no-click,.loaderDiv").remove();
 				}
+				//added for INC144317450 Payment Not processing--starts
+			    else if(null!=response && response.indexOf("NONBusinessException") >-1){
+					document.getElementById("juspayErrorMsg").innerHTML=response.substring(20);
+					$("#juspayconnErrorDiv").css("display","block");
+					$(".pay button, #make_saved_cc_payment_up").prop("disabled",false);
+					$(".pay button, #make_saved_cc_payment_up").css("opacity","1");
+					$(".pay .loaderDiv").remove();
+					$(".pay .spinner").remove();
+					$("#no-click,.loaderDiv").remove();
+					$("#no-click,.spinner").remove();									    
+
+			    }
+				//added for INC144317450 Payment Not processing--ends
 				else if(response=='redirect_with_details'){
 					$(location).attr('href',ACC.config.encodedContextPath+"/checkout/multi/payment-method/cardPayment/"+guid); //TIS 404
 				}
@@ -5947,14 +6015,6 @@ function checkPincodeServiceability(buttonType,el)
 	} //CAR-246//UF-70
 	else if(selectedPincode!=="" && $("#isPincodeRestrictedPromoPresentId").val()=="true"){
 		$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
-		// TPR-5666 | cartGuid Append in url during pincode servicability check
-		var cartGuidParamValue = getParameterByName("cartGuid");
-		if(typeof cartGuidParamValue != "undefined"){
-			$(location).attr('href',ACC.config.encodedContextPath + "/cart?cartGuid="+cartGuidParamValue+"&pincode="+selectedPincode);
-		}
-		else{
-			$(location).attr('href',ACC.config.encodedContextPath + "/cart?pincode="+selectedPincode);
-		}
 	}
 	else
     {

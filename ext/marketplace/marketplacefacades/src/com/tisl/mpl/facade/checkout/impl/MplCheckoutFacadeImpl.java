@@ -1567,16 +1567,31 @@ public class MplCheckoutFacadeImpl extends DefaultCheckoutFacade implements MplC
 		getOrderService().submitOrder(orderModel);
 	}
 
+	/**
+	 * This method overrides the OOTB placeorder method where it allows to pass the available sales application of the
+	 * cartModel
+	 *
+	 * @param cartModel
+	 */
+	@Override
+	public OrderModel placeOrder(final CartModel cartModel) throws InvalidCartException
+	{
+		final CommerceCheckoutParameter parameter = new CommerceCheckoutParameter();
+		parameter.setEnableHooks(true);
+		parameter.setCart(cartModel);
+		// For TPR-5667 : setting salesapplication
+		if (cartModel.getChannel() != null)
+		{
+			parameter.setSalesApplication(cartModel.getChannel());
+		}
+		else
+		{
+			parameter.setSalesApplication(SalesApplication.WEB);
+		}
 
-
-
-
-
-
-
-
-
-
+		final CommerceOrderResult commerceOrderResult = getCommerceCheckoutService().placeOrder(parameter);
+		return commerceOrderResult.getOrder();
+	}
 
 
 	public VoucherModelService getVoucherModelService()

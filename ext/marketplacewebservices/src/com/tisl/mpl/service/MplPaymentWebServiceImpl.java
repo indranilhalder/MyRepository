@@ -1088,7 +1088,6 @@ public class MplPaymentWebServiceImpl implements MplPaymentWebService
 			else if (StringUtils.isEmpty(binNo) && StringUtils.isNotEmpty(bankName)
 					&& paymentMode.equalsIgnoreCase(MarketplacewebservicesConstants.NETBANKING))
 			{
-
 				getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bankName);
 				promoPriceData.setBinCheck(Boolean.TRUE);
 			}

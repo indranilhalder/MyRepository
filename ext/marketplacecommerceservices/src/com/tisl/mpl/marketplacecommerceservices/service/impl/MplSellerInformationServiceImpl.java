@@ -38,7 +38,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -60,7 +60,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerDetail(java.lang.String)
 	 */
@@ -175,7 +175,7 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getContentPageBySellerID(de.hybris
 	 * .platform.catalog.model.CatalogVersionModel, java.lang.String)
@@ -184,6 +184,24 @@ public class MplSellerInformationServiceImpl implements MplSellerInformationServ
 	public ContentPageModel getContentPageBySellerID(final String sellerId)
 	{
 		return getMplSellerInformationDAO().getContentPageBySellerID(sellerId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tisl.mpl.marketplacecommerceservices.service.MplSellerInformationService#getSellerIdByUssid(java.lang.String)
+	 */
+	@Override
+	public String getSellerIdByUssid(final String selectedUSSID)
+	{
+		String sellerID = null;
+		final SellerInformationModel sellerModel = getSellerDetail(selectedUSSID);
+		if (sellerModel != null)
+		{
+			sellerID = sellerModel.getSellerID();
+		}
+		return sellerID;
 	}
 
 }
