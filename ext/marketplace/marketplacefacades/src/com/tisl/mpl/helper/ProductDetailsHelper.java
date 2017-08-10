@@ -232,8 +232,8 @@ public class ProductDetailsHelper
 
 	/*
 	 * @Resource(name = "GigyaService") private GigyaService gigyaservice;
-	 *
-	 *
+	 * 
+	 * 
 	 * @Autowired private ExtendedUserServiceImpl userexService;
 	 *//**
 	 * @return the gigyaservice
@@ -410,6 +410,7 @@ public class ProductDetailsHelper
 
 	public void groupGlassificationDataForJewelDetails(final ProductData productData)
 	{
+		final LinkedHashMap<String, Map<String, List<String>>> featureDetailsMap = new LinkedHashMap<String, Map<String, List<String>>>();
 		final LinkedHashMap<String, Map<String, List<String>>> featureDetails = new LinkedHashMap<String, Map<String, List<String>>>();
 		String classificationName = null;
 		if (null != productData.getClassifications())
@@ -634,7 +635,34 @@ public class ProductDetailsHelper
 					}
 				}
 			}
-			productData.setFineJewelleryDeatils(featureDetails);
+			//JWLSPCUAT-101:Product details section should be top in PDP page
+			final String featureDetailsOrder = configurationService.getConfiguration().getString(
+					"classification.attributes.details.order");
+			if (StringUtils.isNotEmpty(featureDetailsOrder))
+			{
+				final String[] featureDetailsOrderArray = featureDetailsOrder.split(",");
+
+				for (final String keyArray : featureDetailsOrderArray)
+				{
+					if (featureDetails.containsKey(keyArray))
+					{
+						featureDetailsMap.put(keyArray, featureDetails.get(keyArray));
+					}
+				}
+				for (final String keyArray : featureDetails.keySet())
+				{
+					if (!featureDetailsMap.containsKey(keyArray))
+					{
+						featureDetailsMap.put(keyArray, featureDetails.get(keyArray));
+					}
+				}
+			}
+			else
+			{
+				featureDetailsMap.putAll(featureDetails);
+			}
+			//productData.setFineJewelleryDeatils(featureDetails);
+			productData.setFineJewelleryDeatils(featureDetailsMap);
 		}
 	}
 
@@ -1225,15 +1253,15 @@ public class ProductDetailsHelper
 
 	/*
 	 * @description: It is used for populating delivery code and cost for sellerartickeSKU
-	 *
+	 * 
 	 * @param deliveryCode
-	 *
+	 * 
 	 * @param currencyIsoCode
-	 *
+	 * 
 	 * @param sellerArticleSKU
-	 *
+	 * 
 	 * @return MplZoneDeliveryModeValueModel
-	 *
+	 * 
 	 * @throws EtailNonBusinessExceptions
 	 */
 	private MplZoneDeliveryModeValueModel populateDeliveryCostForUSSIDAndDeliveryMode(final String deliveryCode,

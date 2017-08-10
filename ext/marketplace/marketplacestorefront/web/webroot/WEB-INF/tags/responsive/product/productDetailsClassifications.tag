@@ -2,6 +2,7 @@
 <%@ attribute name="product" required="true"
 	type="de.hybris.platform.commercefacades.product.data.ProductData"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
 .view-button, .hide-button {
@@ -53,12 +54,14 @@
                      <div class="title">Product Code 
                      <span id="jewelDetailsUssid" ></span>
                      </div>
-                     <table>
+                     <table border="3">
                         <c:forEach items="${classification.value}" var="feature" varStatus="inner">
                            <tr>
                               <td class="title">${feature.key}  </td>
                               <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
                                  <td >${featureValue}</td>
+                                 <c:set var = "length" value = "${fn:length(featureValue)-20}"></c:set>
+                                 <td colspan = "length" style="border:2"></td> <!-- TISJEW-3447:UI issue under product details in fashion jewelry. -->
                               </c:forEach>
                            </tr>
                         </c:forEach> 

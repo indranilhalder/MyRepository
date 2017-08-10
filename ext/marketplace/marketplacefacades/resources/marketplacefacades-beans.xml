@@ -1241,6 +1241,12 @@
 	</bean>
 	<!-- TPR-1083 Exchange Ends -->
 
+	<!-- used for addtocart helper -->
+	<bean class="com.tis.mpl.facade.data.ProductValidationData">
+		<property name="freebie" type="java.lang.Boolean"></property>
+		<property name="validproduct" type="java.lang.Boolean"></property>
+	</bean>
+	
 	<!--TPR-6117-->
 	<bean class="com.tisl.mpl.wsdto.MaxLimitData">
 		<property name="productCode" type="String" />
