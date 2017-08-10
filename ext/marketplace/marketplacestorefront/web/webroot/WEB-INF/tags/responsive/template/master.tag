@@ -133,6 +133,7 @@
 					<c:set var="totalNumberOfPages" value="${searchPageData.pagination.numberOfPages}"/>
 				</c:when>
 			</c:choose>
+			<!-- UF-265 start --> 
 			<c:if test="${totalNumberOfPages gt 1}">
 				<c:set var="currentPageNumber" value="${fn:substringAfter(canonical,'/page-')}"/>
 				<c:if test="${empty currentPageNumber}">
@@ -155,8 +156,16 @@
 								</c:choose>
 							</c:when>
 							<c:otherwise>
-								<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
-								<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+								<c:choose>
+									<c:when test="${currentPageNumber eq 2}">
+										<link rel="prev" href="${fn:replace(canonical,'/page-2','')}" />
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:when>
+									<c:otherwise>
+										<link rel="prev" href="${fn:replace(canonical,currentPage,previousPage)}" />
+										<link rel="next" href="${fn:replace(canonical,currentPage,nextPage)}" />
+									</c:otherwise>
+								</c:choose>
 							</c:otherwise>
 						</c:choose>
 					</c:when>
@@ -167,6 +176,7 @@
 			</c:if>
 		</c:otherwise>
 	</c:choose>
+	<!-- UF-265 ends -->
 	
 	<c:forEach items="${metatags}" var="metatagItem">
 		<c:if test="${metatagItem.name eq 'title'}">
