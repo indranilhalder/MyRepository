@@ -38,7 +38,7 @@
 				</div>
 				<div class="form-field-button">
 					<ycommerce:testId code="update_update_button">
-						<button class="form blue" onclick="encodePwd()"><spring:theme code="updatePwd.submit"/></button>
+						<button class="form blue btn btn-primary" onclick="encodePwd()"><spring:theme code="updatePwd.submit"/></button>
 					</ycommerce:testId>
 				</div>
 				<c:if test="${param.source ne null and param.source eq 'App' }">
