@@ -76003,7 +76003,8 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table{
 	width: 100%;
-	table-layout: fixed;
+	/*TISJEW-3447:UI issue under product details in fashion jewelry.*/
+	/* table-layout: fixed; */
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table#showPriceBreakup,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table#showPriceBreakup{
