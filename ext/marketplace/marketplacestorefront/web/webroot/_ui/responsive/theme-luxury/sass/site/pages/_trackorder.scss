@@ -415,3 +415,7 @@ body .account .right-account .order-history.order-details .status>ul>li.delivery
 .deliveryTrack.status .progress.progtrckr-done.returnStatus.processing .dot.inactive{
             top: -5px;
 }
+
+#shipping-track-order .item-header address span{
+    word-break: break-word;
+}

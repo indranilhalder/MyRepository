@@ -921,20 +921,27 @@
             display: inline-block;
             width: 80%;
         }
+        .creditCardsRadio{
+            @include media-breakpoint-down(sm) {
+                margin-left: -48px;
+            }
+        }
         .cvv.right-align-form{
             display: inline-block;
-            width: 19%;
-            
+            width:17%;
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }            
             #cvv1{
                 width: 100%;
             }
         }
     }
     #card_form{
-        background: #f9f9f9;
+       /* background: #f9f9f9;
         padding: 25px;
         border: 1px solid #dee2eb;
-        border-radius: 10px;
+        border-radius: 10px;*/
     }
 }
 .card-flag, .card-button, .card-details{
@@ -1070,16 +1077,19 @@ checkout-shipping-items.left-block-width{
                 width: 100%;
             }
         }
-        .cvv.right-align-form #cvv1{
+        .cvv.right-align-form input{
             width: 100%;
         }
     }
 }
 .checkout-paymentmethod #card_form{
     #savedCreditCard{
-        display: inline-block;
-        width: 84%;
-        vertical-align: top;
+        .credit-card-group{
+            background: #f9f9f9;
+            padding: 25px;
+            border: 1px solid #dee2eb;
+            border-radius: 10px;
+        }
         
         .card.card-num{
             display: inline-block;
@@ -1644,6 +1654,9 @@ h2.panel-defaultHeading {
         .radio{
             label{
                 padding-left: 0px;
+            }
+            .debitCardsRadio{
+                margin-left:-63px;
             }
         }
     }  

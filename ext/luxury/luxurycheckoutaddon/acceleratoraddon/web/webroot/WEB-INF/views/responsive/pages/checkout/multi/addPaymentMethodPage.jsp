@@ -280,11 +280,12 @@
 																	</c:otherwise>   
 														        </c:choose>	
 														        </div>
+														        <input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"  />
+									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers"></label>
 														        </div>
 														        </div>
 														        
-										                 		<input type="radio" data-id="savedCCard" name="creditCards" class="card_token creditCardsRadio" id="cc${status.index}"  value="${map.value.cardToken}"  style="visibility: hidden;"/>
-									                 	 		<label for="cc${status.index}" data-id="savedCCard" class="numbers"></label>
+										                 		
 									                 	 		
 									                 	 		<div class="card-details">
 									                 	 			<span>${map.value.cardBrand}</span> ending in ${map.value.cardEndingDigits}
@@ -302,9 +303,6 @@
 									                  			<div id="ebsErrorSavedCard" class="card_ebsErrorSavedCard error-message">
 																	<spring:theme code="checkout.multi.paymentMethod.savedCard.ebsError"/>
 																</div>
-										            		</div>
-										            		</c:forEach>
-										       			</div>
 										        		<div class="cvv right-align-form digits">
 										        			<%-- <label class="sr-only" for="cvv${status.index+1}"><spring:theme code="checkout.multi.paymentMethod.addPaymentDetails.CVV"/></label> --%>
 												            <input type="password" autocomplete="off" placeholder="CVV" class="cvvValdiation form-control security_code" id="cvv${status.index+1}"  maxlength="4" onkeypress="return isNumber(event)" />
@@ -312,7 +310,9 @@
 																<spring:theme code="checkout.multi.paymentMethod.savedCard.cvvError"/>
 															</div>
 										        		</div>
-
+											</div>
+												</c:forEach>
+											</div> 
 										
 											<div id="savedEMICard">
 											</div>
@@ -634,7 +634,7 @@
 														        </c:choose>															 
 				        							
 										        			<%-- <span class="visa card_image"><img src="${commonResourcePath}/images/Visa.png" alt=""></span> --%>
-										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}" style="visibility: hidden;" />
+										                    		<input type="radio" data-id="savedDCard" name="debitCards" class="card_token  debitCardsRadio" id="dc${status.index}"  value="${map.value.cardToken}"/>
 										                    		<div class="card-details">
 										                    		<label for="dc${status.index}" data-id="savedDCard" class="numbers">
 										                    		
