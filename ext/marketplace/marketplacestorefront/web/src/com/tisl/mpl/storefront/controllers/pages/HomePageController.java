@@ -1735,4 +1735,11 @@ public class HomePageController extends AbstractPageController
 		}
 		return STWJObject;
 	}
+	//PRDI-422
+	@Override
+	public void setUpMetaData(final Model model, final String metaKeywords, final String metaDescription)
+	{
+		model.addAttribute(ModelAttributetConstants.KEYWORDS, metaKeywords);
+		model.addAttribute(ModelAttributetConstants.DESCRIPTION, metaDescription);
+	}
 }
