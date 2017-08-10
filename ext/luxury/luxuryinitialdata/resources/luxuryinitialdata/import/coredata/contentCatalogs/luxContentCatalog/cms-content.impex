@@ -62,9 +62,9 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 ;;trackorders;Track Orders;LuxuryContentPageTemplate;/trackorders
 ;;LuxSearchResultsPage;Luxury Search Results Page;LuxSearchResultsPageTemplate;search
 ;;luxuryBrandLandingPage;Luxury Brand Landing Page;luxuryBrandLandingPageTemplate;/lifestyle
-;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
+;;luxuryMenlandingPage;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlandingtest
 ;;luxuryWomenlandingPage;Luxury Women Landing Page;luxuryGenderLandingPageTemplate;/womenlanding
-;;luxuryMenlandingPage4;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding4
+;;luxuryMenlandingPage4;Luxury Men Landing Page;luxuryGenderLandingPageTemplate;/menlanding
 ;;overview;Overview Page;AccountOverviewPageTemplate;overview
 
 
@@ -89,6 +89,10 @@ INSERT_UPDATE LuxEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=t
 
 INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;maxProducts;maxSuggestions;minCharactersBeforeRequest;visible
 ;;MplEnhancedSearchBox;Marketplace Enhanced  Search Box Component;MplEnhancedSearchBox;2;3;3;false
+
+
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
 
 
 
@@ -355,6 +359,10 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;mobile-RedPoster;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;
 ;;pickitup-poster;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;
 
+
+# Error Pages Image
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;TMP_ErrorPageBanner.png;$jarResourceCms/preview-images/404.jpg;TMP_ErrorPageBanner.png;"Bussiness Error Banner";
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 
@@ -1670,7 +1678,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;Footer-ErrorPage;Footer;;FooterSlot;true
 ;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
 #;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
-;;ErrorPageBannerComponent-Errorpage;MiddleContent;;ErrorPageBannerComponent-slot;true
+;;ErrorPageBannerComponent-ErrorPage;MiddleContent;;ErrorPageBannerComponent-slot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AppPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;TopHeaderSlot-AppPage;TopHeaderSlot;;TopHeaderSlot;true          
@@ -1758,12 +1766,4 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 # Applications Content Pages
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;app-page;APP Page;AppPageTemplate;/app-page
-
-# Error Pages Image
-INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
-;;TMP_ErrorPageBanner.png;$jarResourceCms/preview-images/404.jpg;TMP_ErrorPageBanner.png;"Bussiness Error Banner";
-
-INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
-;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
-
 
