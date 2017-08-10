@@ -5226,6 +5226,7 @@ function submitNBForm(){
 
 function calculateDeliveryCost(radioId,deliveryCode)
 {
+	console.log("ddddddddddddddddddddddddddddddddddddd "+deliveryCode);
 	//UF-282:Starts
 	if(ACC.singlePageCheckout.getIsResponsive())
 	{
@@ -5253,7 +5254,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	
 	var radioSelected=$('#deliveryradioul input:radio');
 	var totalDeliveryCharge=0;
-	 
+	var shippingMode = "";
 	 radioSelected.each(function() {
 	        if (this.checked === true) {
 	        	var delCost=$(this).val();
@@ -5306,11 +5307,21 @@ function calculateDeliveryCost(radioId,deliveryCode)
 	 		}
 	 	});	
 	 
+	 //UF-435,UF-436 fix
+	 if(deliveryCode == 'home-delivery'){
+		shippingMode = "Standard_Shipping" ; 
+	 }
+	 else if(deliveryCode == 'express-delivery'){
+		 shippingMode = "Express_Shipping";
+	 }
+	 else{
+		 shippingMode = "CLiQ_AND_PiQ";
+	 }
 	 //UF-428 fix
 		if(typeof utag !="undefined"){
 	         utag.link({
-		  	link_text: "deliver_mode_"+deliveryCode,
-		  	event_type : deliveryCode+"_delivery_selected"
+		  	link_text: "deliver_mode_"+shippingMode,
+		  	event_type : shippingMode+"_delivery_selected"
 		  });
 		}
 }
