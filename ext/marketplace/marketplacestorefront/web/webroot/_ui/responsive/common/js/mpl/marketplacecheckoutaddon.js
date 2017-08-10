@@ -2392,7 +2392,13 @@ $("#otpMobileNUMField").focus(function(){
 		 }
 		 var firstName=validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
 		 var lastName=validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
-		 var addressLine1=validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
+         var addressVal = "";
+		 if($("#address1").length > 0){
+		 	addressVal = $("#address1").val();
+		 }else if($("#line1").length > 0){
+		 	addressVal = $("#line1").val();
+		 }
+		 var addressLine1=validateAddressLine1(addressVal, document.getElementById("address1Error"));
 		 var addressLine2=$("#address2").val();
 		 var addressLine3=$("#address3").val();
 		 var pin = validatePin();
@@ -7327,6 +7333,9 @@ $("#lastName").focus(function(){
 
 function validateAddressLine1(addressLine, errorHandle){
 	//PRDI-546
+	if(addressLine == null){
+		return false;
+	}
 	var str = addressLine.trim();
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
