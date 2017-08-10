@@ -511,7 +511,7 @@ display:none;
     <h3 class="product-name"><a href="${productUrl}">${product.productTitle}</a></h3>
     
     <!-- //TPR-3752 Jewel Heading Added -->
-			<c:choose>
+			<%-- <c:choose>
 					<c:when test="${product.rootCategory=='FineJewellery'}">
 						<div class="product-desc">
 							<span class="key-label">
@@ -527,7 +527,7 @@ display:none;
 						</div>
 					</c:when>
 				</c:choose>
-    
+     --%>
     
     <div class="price">
     

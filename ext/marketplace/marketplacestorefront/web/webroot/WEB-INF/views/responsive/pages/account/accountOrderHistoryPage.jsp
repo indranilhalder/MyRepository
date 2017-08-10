@@ -664,7 +664,18 @@
 																					</span>
 																					
 																					<c:if test="${not empty entryCancel.product.size}">
-													 									<span><b>Size:</b> ${entryCancel.product.size}</span>
+													 									<%-- <span><b>Size:</b> ${entryCancel.product.size}</span> --%>
+													 									<c:choose>
+																							<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																								<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																								<c:if test="${entryCancel.product.size ne noSize}">
+																									<span><b>Size:</b> ${entryCancel.product.size}</span>
+																								</c:if>
+																							</c:when>
+																							<c:otherwise>
+																								<span><b>Size:</b> ${entryCancel.product.size}</span>
+																							</c:otherwise>
+																						</c:choose>
 																					</c:if>
 																					<c:if test="${not empty entryCancel.product.colour}">
 																						<span><b>Color:</b> ${entryCancel.product.colour}</span>
@@ -792,7 +803,18 @@
 																					</span>
 																					
 																					<c:if test="${not empty entryCancel.product.size}">
-													 									<span><b>Size:</b> ${entryCancel.product.size}</span>
+													 									<%-- <span><b>Size:</b> ${entryCancel.product.size}</span> --%>
+													 									<c:choose>
+																							<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
+																								<spring:theme code="product.variant.size.noSize" var="noSize"/>
+																								<c:if test="${entryCancel.product.size ne noSize}">
+																									<span><b>Size:</b> ${entryCancel.product.size}</span>
+																								</c:if>
+																							</c:when>
+																							<c:otherwise>
+																								<span><b>Size:</b> ${entryCancel.product.size}</span>
+																							</c:otherwise>
+																						</c:choose>
 																					</c:if>
 																					<c:if test="${not empty entryCancel.product.colour}">
 																						<span><b>Color:</b> ${entryCancel.product.colour}</span>

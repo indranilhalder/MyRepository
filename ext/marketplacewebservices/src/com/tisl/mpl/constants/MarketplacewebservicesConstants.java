@@ -563,8 +563,6 @@ public class MarketplacewebservicesConstants
 	public static final String FINEJEWELLERY = "finejewellery";
 	public static final String FASHIONJEWELLERY = "fashionjewellery";
 
-	public static final String FASHIONJEWELLERY = "Fashionjewellery";
-
 	//TPR-1083
 	public static final String MAXIMUM_CONFIGURED_QUANTIY_FOR_EXCHANGE = "1";
 	public static final String EXCHANGEAPPLIED = "Exchange Applied";

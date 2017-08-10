@@ -97,6 +97,7 @@ import de.hybris.platform.voucher.model.VoucherModel;
 import de.hybris.platform.wishlist2.Wishlist2Service;
 import de.hybris.platform.wishlist2.model.Wishlist2EntryModel;
 import de.hybris.platform.wishlist2.model.Wishlist2Model;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -7462,8 +7463,10 @@ public class UsersController extends BaseCommerceController
 		List<ReturnReasonData> reasonList = new ArrayList<ReturnReasonData>();
 		List<PointOfServiceData> returnableStores = new ArrayList<PointOfServiceData>();
 		String ussid = "";
-		final List<String> sellerName = new ArrayList<String>();
+		String sellerName = "";
 		final RevSealJwlryDataWsDTO revSealFrJwlry = new RevSealJwlryDataWsDTO();
+		boolean isFineJew = false;
+		final String revSealSellerList = configurationService.getConfiguration().getString("finejewellery.reverseseal.sellername");
 		try
 		{
 			final OrderModel subOrderModel = orderModelService.getOrder(orderCode);
@@ -7494,6 +7497,7 @@ public class UsersController extends BaseCommerceController
 
 					if (productModel.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 					{
+						isFineJew = true;
 						final List<JewelleryInformationModel> jewelleryInfo = jewelleryService.getJewelleryInfoByUssid(orderEntry
 								.getSelectedUssid());
 						ussid = (CollectionUtils.isNotEmpty(jewelleryInfo)) ? jewelleryInfo.get(0).getPCMUSSID() : "";
@@ -7524,7 +7528,7 @@ public class UsersController extends BaseCommerceController
 									sellerRichAttrOfQuickDrop = sellerRichAttributeModel.get(0).getReturnAtStoreEligible().toString();
 								}
 							}
-							sellerName.add(sellerInformationModel.getSellerName());
+							sellerName = sellerInformationModel.getSellerName();
 						}
 						if (!(entry.isGiveAway() || entry.isIsBOGOapplied()))
 						{
@@ -7532,26 +7536,46 @@ public class UsersController extends BaseCommerceController
 						}
 					}
 
-					if ((MarketplacecommerceservicesConstants.FINEJEWELLERY).equalsIgnoreCase(productModel.getProductCategoryType())
-							&& ((sellerName).contains((MarketplacecommerceservicesConstants.TANISHQ))))
 
+					if (StringUtils.isNotEmpty(revSealSellerList))
 					{
-						revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
-						final List<String> revSealRadioYes = new ArrayList<String>();
-						revSealRadioYes.add(MarketplacecommerceservicesConstants.REV_SEAL_RADIO_YES);
-						revSealRadioYes.add("Y");
-						revSealFrJwlry.setYes(revSealRadioYes);
-						final List<String> revSealRadioNo = new ArrayList<String>();
-						revSealRadioNo.add(MarketplacecommerceservicesConstants.REV_SEAL_RADIO_NO);
-						revSealRadioNo.add("N");
-						revSealFrJwlry.setNo(revSealRadioNo);
-
+						final List<String> sellerList = Arrays.asList(revSealSellerList.split(","));
+						if ((MarketplacecommerceservicesConstants.FINEJEWELLERY)
+								.equalsIgnoreCase(productModel.getProductCategoryType()))
+						{
+							//Checking if seller contains the values
+							if (sellerList.contains(sellerName))
+							{
+								revSealFrJwlry.setMessage(MarketplacecommerceservicesConstants.REV_SEAL_JWLRY);
+								final List<String> revSealRadioYes = new ArrayList<String>();
+								revSealRadioYes.add(MarketplacecommerceservicesConstants.REV_SEAL_RADIO_YES);
+								revSealRadioYes.add("Y");
+								revSealFrJwlry.setYes(revSealRadioYes);
+								final List<String> revSealRadioNo = new ArrayList<String>();
+								revSealRadioNo.add(MarketplacecommerceservicesConstants.REV_SEAL_RADIO_NO);
+								revSealRadioNo.add("N");
+								revSealFrJwlry.setNo(revSealRadioNo);
+							}
+						}
 					}
 					break;
 				}
 
 			}
 			reasonList = mplOrderService.getReturnReasonForOrderItem();
+
+			if (!isFineJew)
+			{
+				for (final Iterator<ReturnReasonData> iterator = reasonList.iterator(); iterator.hasNext();)
+				{
+					final ReturnReasonData returnData = iterator.next();
+					if (MarketplacecommerceservicesConstants.RETURN_FINEJEWELLERY.equalsIgnoreCase(returnData.getReasonDescription()))
+					{
+						iterator.remove();
+					}
+				}
+			}
+
 			final List<String> timeSlots = mplConfigFacade.getDeliveryTimeSlots("RD");
 			final List<String> returnableDates = cancelReturnFacade.getReturnableDates(orderEntry);
 			returnDeatails.setReturnTimeSlots(timeSlots);

@@ -57,7 +57,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -146,9 +146,16 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getGoldRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
 									+ MarketplacecommerceservicesConstants.FRONTSLASH;
-							if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitGold()))
+							if (null != jSellerDetails)
 							{
-								key = key + jSellerDetails.getMetalRateUnitGold();
+								if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitGold()))
+								{
+									key = key + jSellerDetails.getMetalRateUnitGold();
+								}
+								else
+								{
+									key = key + MarketplacecommerceservicesConstants.GM;
+								}
 							}
 							else
 							{
@@ -177,9 +184,16 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getSilverRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
 									+ MarketplacecommerceservicesConstants.FRONTSLASH;
-							if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitSil()))
+							if (null != jSellerDetails)
 							{
-								key = key + jSellerDetails.getMetalRateUnitSil();
+								if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitSil()))
+								{
+									key = key + jSellerDetails.getMetalRateUnitSil();
+								}
+								else
+								{
+									key = key + MarketplacecommerceservicesConstants.KG;
+								}
 							}
 							else
 							{
@@ -208,9 +222,16 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 									+ createPriceSign(PriceDataType.BUY, new BigDecimal(jPrice.getPlatinumRate().doubleValue()),
 											commonI18NService.getCurrency(INR)).getFormattedValue()
 									+ MarketplacecommerceservicesConstants.FRONTSLASH;
-							if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitPlat()))
+							if (null != jSellerDetails)
 							{
-								key = key + jSellerDetails.getMetalRateUnitPlat();
+								if (StringUtils.isNotEmpty(jSellerDetails.getMetalRateUnitPlat()))
+								{
+									key = key + jSellerDetails.getMetalRateUnitPlat();
+								}
+								else
+								{
+									key = key + MarketplacecommerceservicesConstants.GM;
+								}
 							}
 							else
 							{
