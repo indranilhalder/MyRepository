@@ -226,13 +226,13 @@
 														<c:choose>
 															<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="luxuryCartIcon" />
+																					product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
 																			</a>
 										
 															</c:when>
 															<c:otherwise>
 																	<a href="${productUrl}"> <product:productPrimaryImage
-																					product="${entry.product}" format="thumbnail" />
+																					product="${entry.product}" format="thumbnail" lazyLoad="false" />
 																			</a>
 																	
 															</c:otherwise>
@@ -619,13 +619,13 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryCartIcon" lazyLoad="false" />
 																															</a>
 																
 																					</c:when>
 																					<c:otherwise>
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="thumbnail" />
+																																	product="${entryCancel.product}" format="thumbnail" lazyLoad="false" />
 																															</a>
 																							
 																					</c:otherwise>
@@ -653,7 +653,7 @@
 																					 <span
 																						class="price"><b>Price:</b> <ycommerce:testId
 																							code="orderDetails_productTotalPrice_label">
-																							<format:price priceData="${subOrder.totalPrice}"
+																							<format:price priceData="${entryCancel.totalPrice}"
 																								displayFreeForZero="true" />
 																						</ycommerce:testId>
 																					</span>
@@ -747,13 +747,13 @@
 																				<c:choose>
 																					<c:when test="${fn:toLowerCase(entryCancel.product.luxIndicator)=='luxury'}">
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="luxuryCartIcon" />
+																																	product="${entryCancel.product}" format="luxuryCartIcon" lazyLoad="false" />
 																															</a>
 																
 																					</c:when>
 																					<c:otherwise>
 																							<a href="${productUrl}"> <product:productPrimaryImage
-																																	product="${entryCancel.product}" format="thumbnail" />
+																																	product="${entryCancel.product}" format="thumbnail" lazyLoad="false" />
 																															</a>
 																							
 																					</c:otherwise>
@@ -781,7 +781,7 @@
 																					 <span
 																						class="price"><b>Price:</b> <ycommerce:testId
 																							code="orderDetails_productTotalPrice_label">
-																							<format:price priceData="${sellerOrder.totalPrice}"
+																							<format:price priceData="${entryCancel.totalPrice}"
 																								displayFreeForZero="true" />
 																						</ycommerce:testId>
 																					</span>

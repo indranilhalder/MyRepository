@@ -72148,10 +72148,11 @@ body #account-invite .right-account>div.social-invites .social .links a.fb {
 }
 body #account-invite .right-account>div.social-invites .social .links a.gp {
     background-image: url(../images/gplus-icon-invite.PNG);
+        border-width: 1px 1px 1px 0px;
 }
 body #account-invite .right-account>div.social-invites .social .links a.tw {
     background-image: url(../images/twiter-icon-invite.PNG);
-    border-width: 1px 0px 1px 0px;
+    border-width: 1px 1px 1px 0px;
 }
 .social a {
     margin: 0 ! important;
@@ -72249,7 +72250,7 @@ body .account .right-account form label.invite-text-lbl{
 
 @media (max-width: 768px){
 	.page-returnSubmit .thirdTataCliq .col-md-6.col-sm-6.col-xs-6.update-pickup-address {
-    margin-left: -10px;
+    margin-left: -3px;
     margin-top: 0px;
 }
 .page-returnSubmit .accordtionTataCliq .accContents .scheduledPickup .selectDateTime .selectRadio input {
