@@ -118,6 +118,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.granule.json.JSON;
+import com.tis.mpl.facade.data.ProductValidationData;
 import com.tisl.mpl.cart.impl.CommerceWebServicesCartFacade;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplacewebservicesConstants;
@@ -1903,8 +1904,15 @@ public class CartsController extends BaseCommerceController
 		{
 			final String exParam = l3code + "|" + exchangeParam + "|" + brandParam + "|" + pinParam;
 			//INC144313608
-			final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(productCode);
-			if (isProductFreebie) //freebie product or not
+			//final boolean isProductFreebie = getAddToCartHelper().isProductFreebie(productCode);
+
+			/* cart not opening issue --due to ussid mismatch */
+
+			final ProductValidationData isProductValid = getAddToCartHelper().isProductValid(productCode, USSID);
+
+
+			if (isProductValid != null
+					&& (!isProductValid.getValidproduct().booleanValue() || isProductValid.getFreebie().booleanValue())) //ussid valid or not and freebie product or not
 			{
 				result.setStatus(MarketplacecommerceservicesConstants.ERROR_FLAG);
 
@@ -2703,7 +2711,7 @@ public class CartsController extends BaseCommerceController
 			 * bin = null; if (StringUtils.isNotEmpty(binNo)) { bin = getBinService().checkBin(binNo); } if (null != bin &&
 			 * StringUtils.isNotEmpty(bin.getBankName())) {
 			 * getSessionService().setAttribute(MarketplacewebservicesConstants.BANKFROMBIN, bin.getBankName());
-			 *
+			 * 
 			 * LOG.debug("************ Logged-in cart mobile soft reservation BANKFROMBIN **************" +
 			 * bin.getBankName()); } }
 			 */
@@ -3919,7 +3927,6 @@ public class CartsController extends BaseCommerceController
 			deliverySlotsRequestData.setCartId(cartModel.getGuid());
 			final InvReserForDeliverySlotsResponseData deliverySlotsResponseData = mplCartFacade.convertDeliverySlotsDatatoWsdto(
 					deliverySlotsRequestData, cartModel);
-
 
 			if (CollectionUtils.isNotEmpty(deliverySlotsResponseData.getInvReserForDeliverySlotsItemEDDInfoData()))
 			{

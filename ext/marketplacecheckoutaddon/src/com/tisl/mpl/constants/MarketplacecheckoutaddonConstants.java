@@ -368,4 +368,7 @@ public final class MarketplacecheckoutaddonConstants extends GeneratedMarketplac
 	public static final String REMOVEEXCHANGEFROMCART = "/removeExchangeFromCart";
 	//INC144316212
 	public static final String IS_DELIVERY_OPTION_PAGE = "isDeliveryOptionPage";
+
+	//INC144317480: Order Threshold Discount Promotion: Netbanking Payment Mode Restriction doesn't work
+	//public static final String BANKNAMEFORNETBANKING = "bankNameforNetbanking";
 }
