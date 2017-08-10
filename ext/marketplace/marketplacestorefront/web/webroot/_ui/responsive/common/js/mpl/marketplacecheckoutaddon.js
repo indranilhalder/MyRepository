@@ -5226,7 +5226,6 @@ function submitNBForm(){
 
 function calculateDeliveryCost(radioId,deliveryCode)
 {
-	console.log("ddddddddddddddddddddddddddddddddddddd "+deliveryCode);
 	//UF-282:Starts
 	if(ACC.singlePageCheckout.getIsResponsive())
 	{
