@@ -57,7 +57,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.PriceBreakupService#getPricebreakup(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -486,8 +486,12 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 			}
 			else
 			{
+				JewelleryPriceRowModel jewelleryModel = null;
 				final List<JewelleryPriceRowModel> jewelleryPriceRow = priceBreakupDao.getPricebreakup(entry.getSelectedUSSID());
-				final JewelleryPriceRowModel jewelleryModel = jewelleryPriceRow.get(0);
+				if (CollectionUtils.isNotEmpty(jewelleryPriceRow))
+				{
+					jewelleryModel = jewelleryPriceRow.get(0);
+				}
 				/*
 				 * orderJewelEntryModel.setBaseMetalPrice1(jewelleryModel.getGoldValue());
 				 * orderJewelEntryModel.setBaseMetalPrice2(jewelleryModel.getSilverValue());
@@ -499,92 +503,92 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 				 * orderJewelEntryModel.setBaseMetalRate4(jewelleryModel.getSolitaireRate());
 				 */
 
-				if (jewelleryModel.getDiamondRateType1() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType1() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType1(jewelleryModel.getDiamondRateType1());
 				}
-				if (jewelleryModel.getDiamondRateType2() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType2() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType2(jewelleryModel.getDiamondRateType2());
 				}
-				if (jewelleryModel.getDiamondRateType3() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType3() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType3(jewelleryModel.getDiamondRateType3());
 				}
-				if (jewelleryModel.getDiamondRateType4() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType4() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType4(jewelleryModel.getDiamondRateType4());
 				}
-				if (jewelleryModel.getDiamondRateType5() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType5() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType5(jewelleryModel.getDiamondRateType5());
 				}
-				if (jewelleryModel.getDiamondRateType6() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType6() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType6(jewelleryModel.getDiamondRateType6());
 				}
-				if (jewelleryModel.getDiamondRateType7() != null)
+				if (null != jewelleryModel && jewelleryModel.getDiamondRateType7() != null)
 				{
 					orderJewelEntryModel.setDiamondRateType7(jewelleryModel.getDiamondRateType7());
 				}
-				if (jewelleryModel.getTotalDiamondValue() != null)
+				if (null != jewelleryModel && jewelleryModel.getTotalDiamondValue() != null)
 				{
 					orderJewelEntryModel.setDiamondValue(jewelleryModel.getTotalDiamondValue());
 				}
-				if (jewelleryModel.getStoneRateType1() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType1() != null)
 				{
 					orderJewelEntryModel.setStoneRateType1(jewelleryModel.getStoneRateType1());
 				}
-				if (jewelleryModel.getStoneRateType2() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType2() != null)
 				{
 					orderJewelEntryModel.setStoneRateType2(jewelleryModel.getStoneRateType2());
 				}
-				if (jewelleryModel.getStoneRateType3() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType3() != null)
 				{
 					orderJewelEntryModel.setStoneRateType3(jewelleryModel.getStoneRateType3());
 				}
-				if (jewelleryModel.getStoneRateType4() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType4() != null)
 				{
 					orderJewelEntryModel.setStoneRateType4(jewelleryModel.getStoneRateType4());
 				}
-				if (jewelleryModel.getStoneRateType5() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType5() != null)
 				{
 					orderJewelEntryModel.setStoneRateType5(jewelleryModel.getStoneRateType5());
 				}
-				if (jewelleryModel.getStoneRateType6() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType6() != null)
 				{
 					orderJewelEntryModel.setStoneRateType6(jewelleryModel.getStoneRateType6());
 				}
-				if (jewelleryModel.getStoneRateType7() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType7() != null)
 				{
 					orderJewelEntryModel.setStoneRateType7(jewelleryModel.getStoneRateType7());
 				}
-				if (jewelleryModel.getStoneRateType8() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType8() != null)
 				{
 					orderJewelEntryModel.setStoneRateType8(jewelleryModel.getStoneRateType8());
 				}
-				if (jewelleryModel.getStoneRateType9() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType9() != null)
 				{
 					orderJewelEntryModel.setStoneRateType9(jewelleryModel.getStoneRateType9());
 				}
-				if (jewelleryModel.getStoneRateType10() != null)
+				if (null != jewelleryModel && jewelleryModel.getStoneRateType10() != null)
 				{
 					orderJewelEntryModel.setStoneRateType10(jewelleryModel.getStoneRateType10());
 				}
-				if (jewelleryModel.getTotalStoneValue() != null)
+				if (null != jewelleryModel && jewelleryModel.getTotalStoneValue() != null)
 				{
 					orderJewelEntryModel.setStoneValue(jewelleryModel.getTotalStoneValue());
 				}
-				if (jewelleryModel.getMakingCharges() != null)
+				if (null != jewelleryModel && jewelleryModel.getMakingCharges() != null)
 				{
 					orderJewelEntryModel.setMakingCharge(jewelleryModel.getMakingCharges());
 				}
-				if (jewelleryModel.getWastageCharges() != null)
+				if (null != jewelleryModel && jewelleryModel.getWastageCharges() != null)
 				{
 					orderJewelEntryModel.setWastageTax(jewelleryModel.getWastageCharges());
 				}
 
-				if ((jewelleryModel.getGoldRate() != null) && (jewelleryModel.getGoldValue() != null))
+				if (null != jewelleryModel && (jewelleryModel.getGoldRate() != null) && (jewelleryModel.getGoldValue() != null))
 				{
 					orderJewelEntryModel.setMetalName(MarketplacecommerceservicesConstants.GOLD);
 					orderJewelEntryModel.setMetalRate(jewelleryModel.getGoldRate());
@@ -592,19 +596,21 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 					//orderJewelEntryModel.setBaseMetalPrice1(jewelleryModel.getGoldValue());
 					//orderJewelEntryModel.setBaseMetalRate1(jewelleryModel.getGoldRate());
 				}
-				if ((jewelleryModel.getSilverRate() != null) && (jewelleryModel.getSilverValue() != null))
+				if (null != jewelleryModel && (jewelleryModel.getSilverRate() != null) && (jewelleryModel.getSilverValue() != null))
 				{
 					orderJewelEntryModel.setMetalName(MarketplacecommerceservicesConstants.SILVER);
 					orderJewelEntryModel.setMetalRate(jewelleryModel.getSilverRate());
 					orderJewelEntryModel.setMetalValue(jewelleryModel.getSilverValue());
 				}
-				if ((jewelleryModel.getPlatinumRate() != null) && (jewelleryModel.getPlatinumValue() != null))
+				if (null != jewelleryModel && (jewelleryModel.getPlatinumRate() != null)
+						&& (jewelleryModel.getPlatinumValue() != null))
 				{
 					orderJewelEntryModel.setMetalName(MarketplacecommerceservicesConstants.PLATINUM);
 					orderJewelEntryModel.setMetalRate(jewelleryModel.getPlatinumRate());
 					orderJewelEntryModel.setMetalValue(jewelleryModel.getPlatinumValue());
 				}
-				if ((jewelleryModel.getSolitaireRate() != null) && (jewelleryModel.getSolitaireValue() != null))
+				if (null != jewelleryModel && (jewelleryModel.getSolitaireRate() != null)
+						&& (jewelleryModel.getSolitaireValue() != null))
 				{
 					orderJewelEntryModel.setMetalName(MarketplacecommerceservicesConstants.SOLITAIRE);
 					orderJewelEntryModel.setMetalRate(jewelleryModel.getSolitaireRate());
