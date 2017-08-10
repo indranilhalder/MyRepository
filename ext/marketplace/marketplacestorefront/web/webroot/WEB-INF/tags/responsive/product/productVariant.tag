@@ -268,7 +268,6 @@ function loadVariant(x){
 </li>
 </ul> -->
 <!-- share mobile -->
-
 <c:if test="${noVariant!=true&&notApparel!=true}">
 <div class="size" style="font-size: 12px;">
 	<form:form action="/" id="sizevariantForm" method="post">
@@ -296,6 +295,29 @@ function loadVariant(x){
 				</c:choose> --%>
 
 				<!-- <option value="#">select size</option> -->
+				<!-- JWLSPCUAT-99:After click on other seller link in PDP Size in not loading and color attribute is showing -->
+				<c:choose>
+				<c:when test="${ product.rootCategory =='FineJewellery' || product.rootCategory =='FashionJewellery'}">
+						<c:forEach items="${product.variantOptions}" var="variantOption">
+							<c:forEach var="entry" items="${variantOption.sizeLink}">
+									<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
+									<c:choose>
+										<c:when test="${(variantOption.code eq product.code)}">
+											<c:url value="/p/${variantOption.code}/viewSellers"	var="variantUrl" />
+											<c:choose>
+												<c:when test="${selectedSize eq null}">
+													<li><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+												</c:when>
+												<c:otherwise>
+													<li class="selected"><a href="${variantUrl}?selectedSize=true${msiteSellerForSize}">${entry.value}</a></li>
+												</c:otherwise>
+											</c:choose>
+										</c:when>
+									</c:choose>
+							</c:forEach>
+						</c:forEach>
+				</c:when>
+				<c:otherwise>
 				<c:forEach items="${product.variantOptions}" var="variantOption">
 				<c:url value="/p/${variantOption.code}/viewSellers" var="variantUrl" />
 				<c:forEach items="${variantOption.colourCode}" var="color">
@@ -375,6 +397,8 @@ function loadVariant(x){
 					</c:choose>
 				</c:forEach>
 			</c:forEach>
+			</c:otherwise>
+			</c:choose>
 			</ul>
 			
 		</div>
