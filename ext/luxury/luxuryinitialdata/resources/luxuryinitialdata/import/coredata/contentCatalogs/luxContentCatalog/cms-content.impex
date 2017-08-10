@@ -94,6 +94,8 @@ INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=t
 INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
 ;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
 
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;ErrorPageBannerComponent;TMP_ErrorPageBanner.png;;
 
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
@@ -832,18 +834,20 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Women-MiniCartSlot;Gender MiniCart;true;Luxury-MiniCart
 ;;Women-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Women-FooterSlot;Gender Footer;true;
-;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
-;;Women-BannerDescriptionSlot;Brand BannerDescription;true;
-;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;LookBook-Bag2
-;;Women-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
-;;Women-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
-;;Women-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
-;;Women-ProductCurosel2Slot;Brand ProductCurosel2;true;CoachBrand-ProductCarouselComponent
-;;Women-MoreStoriesbanner1DescriptionSlot;Brand MoreStoriesbanner1Description;true;
-;;Women-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;look1ShowCol1,look1ShowCol2
-;;Women-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col2;true;look2ShowCol1,look2ShowCol2
-;;Women-MoreStoriesbanner2Col1Slot;Brand MoreStoriesbanner2Col1;true;bagShow-look1col1
-;;Women-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
+;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBanner
+;;Women-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
+;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Women-ShowCase1Slot;Brand ShowCase1;true;MenNew-ShowCase
+;;Women-ShowCase2Slot;Brand ShowCase2;true;BagNew-shopLookBook
+;;Women-ProductCurosel1Slot;Brand ProductCurosel1;true;Bag-shopLookBook,mobile-shortBanner,short2New-shopLookBook,mobile-shortBanner2,LookBook-Bag1,mobile-half-shortBanner,
+;;Women-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;mobile-shortBanner
+;;Women-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col1;true;
+;;Women-MoreStoriesbanner1Col3Slot;Brand MoreStoriesbanner1Col1;true;short2New-shopLookBook
+;;Women-MoreStoriesbanner1Col4Slot;Brand MoreStoriesbanner1Col1;true;mobile-short-Banner
+;;Women-MoreStoriesbanner1Col5Slot;Brand MoreStoriesbanner1Col1;true;LookBook-Bag
+;;Women-MoreStoriesbanner1Col6Slot;Brand MoreStoriesbanner1Col1;true;mobile-shortBanner2
+;;Women-MoreStoriesbanner1Col7Slot;Brand MoreStoriesbanner1Col1;true;mobile-half-shortBanner
+;;Women-MoreStoriesbanner1Col8Slot;Brand MoreStoriesbanner1Col1;true;LookBook-Bag1
 ;;Women-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
 ;;Women-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
 ;;Women-ShortlookBookSlot;Gender ShortlookBook;true;Men-MiniLookBook
