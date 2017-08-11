@@ -407,11 +407,14 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(":::::::::::::::::::::response:::" + response);
+				LOG.debug("*********************response:::" + response.getStatus());
+				LOG.debug("$$$$$$$$$$$$$$$$$$$$$response:::" + response.getEntity(String.class));
 			}
 		}
-		if (response.getStatus() != 200 || response.getStatus() != 202)
+		if (response.getStatus() != 200)
 		{
 			output = "faliure";
+			LOG.debug("output " + output);
 		}
 		else
 		{

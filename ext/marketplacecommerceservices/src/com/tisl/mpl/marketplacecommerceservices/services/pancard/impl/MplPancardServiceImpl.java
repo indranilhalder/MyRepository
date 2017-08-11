@@ -80,7 +80,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getPanCardOrderId(java.lang.String)
 	 */
@@ -174,7 +174,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPancardDetailsService(de.hybris
 	 * .platform.core.model.PancardInformationModel, org.springframework.web.multipart.MultipartFile)
@@ -242,7 +242,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getCrmStatusForPancardDetailsFacade
 	 * (de.hybris.platform.core.model.PancardInformationModel)
@@ -268,15 +268,15 @@ public class MplPancardServiceImpl implements MplPancardService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPanCardDetailsAndPIcall(java.lang
 	 * .String, java.lang.String, java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
 	@Override
 	public void setPanCardDetailsAndPIcall(final String orderreferancenumber, final List<String> transactionidList,
-			final String customername, final String pancardnumber, final MultipartFile file)
-			throws IllegalStateException, IOException, JAXBException
+			final String customername, final String pancardnumber, final MultipartFile file) throws IllegalStateException,
+			IOException, JAXBException
 	{
 		// YTODO Auto-generated method stub
 
@@ -335,10 +335,12 @@ public class MplPancardServiceImpl implements MplPancardService
 			}
 			if (null != status && StringUtils.isNotEmpty(status) && !"faliure".equalsIgnoreCase(status))
 			{
+				LOG.debug("if " + MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
 			}
 			else
 			{
+				LOG.debug("if " + MarketplacecommerceservicesConstants.NA + " " + status);
 				panCardModel.setStatus(MarketplacecommerceservicesConstants.NA);
 			}
 			panCardModelList.add(panCardModel);
@@ -350,7 +352,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#refreshPanCardDetailsAndPIcall(de.
 	 * hybris.platform.core.model.PancardInformationModel, java.lang.String,
@@ -407,7 +409,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#getOrderForCode(java.lang.String)
 	 */
 	@Override
@@ -419,7 +421,7 @@ public class MplPancardServiceImpl implements MplPancardService
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.tisl.mpl.marketplacecommerceservices.services.pancard.MplPancardService#setPancardRes(com.tisl.mpl.pojo.
 	 * PanCardResDTO)
 	 */
@@ -476,7 +478,7 @@ public class MplPancardServiceImpl implements MplPancardService
 							}
 							catch (final Exception e1)
 							{ // YTODO
-								  // Auto-generated catch block
+							  // Auto-generated catch block
 								LOG.error("Exception during sending mail >> " + e1.getMessage());
 							}
 
