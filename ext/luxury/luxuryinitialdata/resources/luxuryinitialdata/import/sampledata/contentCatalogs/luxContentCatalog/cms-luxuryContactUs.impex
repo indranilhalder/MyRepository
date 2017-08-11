@@ -1,0 +1,96 @@
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+#$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue                                                                                        
+$lang=en
+
+$category=category(code, $productCV)                                                                       
+$product=product(code, $productCV)
+$picture=media(code, $contentCV)
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+
+
+
+########### Contact us Page for Luxury ##########################
+
+# Contact us Page Template
+# Create PageTemplates
+# These define the layout for pages
+# "FrontendTemplateName" is used to define the JSP that should be used to render the page for pages with multiple possible layouts.
+# "RestrictedPageTypes" is used to restrict templates to page types
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+#Contact Us Page Template
+;;ContactUsPageTemplate;Contact Us Page Template;$luxuryStoreAddonPrefix/pages/layout/ContactUsPage;ContentPage
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;ContactUsPageTemplate;$jarResourceCms/structure-view/structure_contactUsPageTemplate.vm
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;Section1;;CMSParagraphComponent;
+;Section2;;CMSMediaParagraphComponent;
+;TopHeader;;;wide               
+;MiddleHeader;;;wide               
+;SiteLogo;;;logo               
+;HeaderLinks;;;headerlinks        
+;SearchBox;;;searchbox          
+;MiniCart;;;wide   
+;WishList;;;wide            
+;NavigationBar;;;navigation   
+;BottomHeaderSlot;;BreadcrumbComponent              
+;Footer;;;footer
+
+ #Slot for Offers Page Template
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
+;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
+;;MiddleHeader;helpLink;true;LuxuryHelpLink  
+;;SiteLogoSlot;site logo;true;SiteLogoComponent      
+;;SearchBoxSlot;Search Box;true;luxury-SearchBox
+#;;TopHeaderSlot;Top header slot;true;Home-TopBannerContent
+;;FooterSlot;Footer;true;LuxuryFooterComponent        
+;;NavigationBarSlot;Navigation Bar Slot;true;NavBarComponent
+;;BottomHeaderSlot;Bottom Header;true;breadcrumbComponent
+;;WishListSlot;Wish List;true;MyWishList
+;;MiniCartSlot;Mini Cart;true;MiniCart
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ContactUsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;Section1-ContactUsPageTemplate;Section1;;Section1-contact;true
+;;Section2-ContactUsPageTemplate;Section2;;Section2-contact;true
+#;;TopHeader-ContactUsPageTemplate;TopHeader;;TopHeaderSlot;true          
+;;MiddleHeaderHelpLink-ContactUsPageTemplate;MiddleHeader;;MiddleHeader;true          
+#;;SiteLogo-ContactUsPageTemplate1;SiteLogo;;SiteLogoSlot;true          
+#;;HeaderLinks-ContactUsPageTemplate1;HeaderLinks;;HeaderLinksSlot;true          
+#;;SearchBox-ContactUsPageTemplate;SearchBox;;SearchBoxSlot;true          
+#;;MiniCart-ContactUsPageTemplate;MiniCart;;MiniCartSlot;true  
+#;;WishList-ContactUsPageTemplate;WishList;;WishListSlot;true     
+#;;NavigationBar-ContactUsPageTemplate;NavigationBar;;NavigationBarSlot;true  
+#;;BottomHeaderSlot-ContactUsPageTemplate;BottomHeaderSlot;;BottomHeaderSlot;true
+#;;Footer-ContactUsPageTemplate;Footer;;FooterSlot;true 
+
+
+###CONTACT US PAGE###
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;contact;Contact us;ContactUsPageTemplate;/contact
+
+
+
+
+
+
+
+
+
+
+
+
+

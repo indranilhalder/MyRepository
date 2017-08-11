@@ -30,6 +30,8 @@
 									</script>
 
 									<div class="form-group">
+									
+		
 										<label for="j_username"><spring:theme code="header.flyout.email"/></label> 
 										<input  type="email" class="form-control" name="j_username" id="j_username" placeholder="Enter email" required>
 									</div>

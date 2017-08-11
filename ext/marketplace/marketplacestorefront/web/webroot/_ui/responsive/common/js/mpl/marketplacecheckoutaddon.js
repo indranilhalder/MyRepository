@@ -186,7 +186,7 @@ function refresh(){
 	$("#is_emi").val("false");
 	$("#emi_bank").val("");
 	$("#emi_tenure").val("");
-	$("#COD, #emi, #netbanking, #card,#cardEmi, #paymentFormButton, #submitPaymentFormButton, #submitPaymentFormCODButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display","none");
+	$("#COD, #emi, #netbanking, #card,#cardEmi, #paymentFormButton, #submitPaymentFormButton, #mobileNoError, #OTPGenerationErrorMessage, #codMessage, #customerBlackListMessage, #otpValidationMessage, #wrongOtpValidationMessage, #expiredOtpValidationMessage, #fulfillmentMessage, #codItemEligibilityMessage, #emptyOTPMessage, #resendOTPMessage, .nbAjaxError").css("display","none");
 	$("#netbankingError,.newCard, #emiRangeError, #juspayconnErrorDiv").css("display","none");
 	$("#bankNameForEMI, #listOfEMiBank, #netbankingIssueError, #emiPromoError, #codErrorMessage").css("display","none");
 	$("#convChargeFieldId, #convChargeField").css("display","none");
@@ -425,8 +425,10 @@ function displayCODForm()
 		data: { /*'cartValue' : cartValue , */'request' : httpRequest , 'guid' : guid},		//Commented as not used - TPR-629
 		cache: false,
 		success : function(response) {
+			console.log(response);
 			$("#otpNUM").html(response);
 			var codEligible=$("#codEligible").val();
+			console.log(codEligible);
 			$("#paymentDetails, #otpNUM, #sendOTPNumber, #sendOTPButton").css("display","block");
 			$("#enterOTP, #submitPaymentFormButton, #submitPaymentFormCODButton, #paymentFormButton, #otpSentMessage").css("display","none");/*modified for pprd testing -- changing back*/
 			if(codEligible=="BLACKLISTED")
@@ -489,10 +491,13 @@ function displayCODForm()
 						data: { 'paymentMode' : paymentMode , 'guid' : guid },
 						cache: false,
 						success : function(response) {
+							console.log(response);
 							if(response==null){
 								$(location).attr('href',ACC.config.encodedContextPath+"/cart"); // TISEE-510
 							}
 							else{
+								$("#paymentButtonId #submitPaymentFormCODButton").css("display","block");
+								$("#OTPGenerationErrorMessage").css("display","none");
 								$("#sendOTPNumber, #convCharge").css("display","block");
 								var totalPrice=response.totalPrice.formattedValue;
 								var convCharge=response.convCharge.formattedValue;
@@ -2387,7 +2392,13 @@ $("#otpMobileNUMField").focus(function(){
 		 }
 		 var firstName=validateNameOnAddress($("#firstName").val(), document.getElementById("firstNameError"), "firstName");
 		 var lastName=validateNameOnAddress($("#lastName").val(), document.getElementById("lastNameError"), "lastName");
-		 var addressLine1=validateAddressLine1($("#address1").val(), document.getElementById("address1Error"));
+         var addressVal = "";
+		 if($("#address1").length > 0){
+		 	addressVal = $("#address1").val();
+		 }else if($("#line1").length > 0){
+		 	addressVal = $("#line1").val();
+		 }
+		 var addressLine1=validateAddressLine1(addressVal, document.getElementById("address1Error"));
 		 var addressLine2=$("#address2").val();
 		 var addressLine3=$("#address3").val();
 		 var pin = validatePin();
@@ -4714,28 +4725,7 @@ $("#newAddressButton,#newAddressButtonUp").click(function() {
 		address3.value=encodeURIComponent(address3.value);
     	}
 		$('#addressForm').submit();	
-//		$.ajax({
 
-//			url: ACC.config.encodedContextPath + "/cart/checkPincodeServiceability/"+zipcode,
-//			type: "GET",
-//			cache: false,
-//			success : function(response) {
-//				console.log("response "+response);
-//				var values=response.split("|");
-//				var isServicable=values[0];
-//				if(isServicable=='N'){
-//					$("#addressPincodeServicableDiv").show();
-//					$("#addressPincodeServicableDiv").html("<p>Pincode is not serviceable</p>");
-//				}else{
-//				
-//					$('#addressForm').submit();	
-//				}
-//			},
-//			error : function(resp) {
-//				alert("Some issues are there with Checkout at this time. Please try  later or contact our helpdesk");
-
-//			}
-//		});	 
 	}
 	return false;
 });
@@ -5060,6 +5050,7 @@ function applyPromotion(bankName,binValue,formSubmit)
 
 function submitNBForm(){
 	$("#netbankingIssueError").css("display","none");
+	var staticHost = $('#staticHost').val();
 	var selectedValue=$('input[class=NBBankCode]:checked').val();
 	//TPR-4461 set for setting the bank name for NetBanking starts here
 	//var selectedHiddenValue=$('input[name=NBBankName]').val();
@@ -5326,7 +5317,7 @@ function calculateDeliveryCost(radioId,deliveryCode)
 }
 
 //TPR-1214
-$("#address-form").click(function(){
+$("#address-form").click(function(){	
 	
 	$.ajax({
  		url: ACC.config.encodedContextPath + "/checkout/multi/delivery-method/new-address",
@@ -5533,7 +5524,7 @@ function selectDefaultDeliveryMethod() {
 			  // console.log($(this).find("li:first").children("input:radio").attr("id"));
 			  var radioSplit = $(this).find("li:first").children("input:radio").attr("id").split("_");
 			  var radioId = radioSplit[0]+"_"+radioSplit[1];
-			  calculateDeliveryCost(radioId,radioSplit[2]); // TISPT-104 REMOVED
+			  //calculateDeliveryCost(radioId,radioSplit[2]); // TISPT-104 REMOVED
 			  $("#"+$(this).find("li:first").children("input:radio").attr("id")).prop('checked', true);
 			  if($(this).find("input[type='radio']:checked").attr("id").split("_")[2] == "click-and-collect") {
 			  		changeCTAButtonName($(this).find("input[type='radio']:checked").attr("id").split("_")[2]);
@@ -6084,7 +6075,6 @@ function checkPincodeServiceability(buttonType,el)
  			//console.log("errorDetails 1>> "+errorDetails);
  			
  			handleExceptionOnServerSide(errorDetails);
- 			//console.log('Some issue occured in checkPincodeServiceability');
  			// setTimeout(function(){
  	 			$("#pinCodeDispalyDiv .loaderDiv").remove();
  	 			$("#no-click,.loaderDiv").remove();
@@ -6720,7 +6710,6 @@ function checkIsServicable()
 	 			console.log("errorDetails 1>> "+errorDetails);
 	 			
 	 			handleExceptionOnServerSide(errorDetails);
-	 			//console.log('Some issue occured in checkPincodeServiceability');
 	 			$("#isPincodeServicableId").val('N');
 	 			// TISPRM-65
 	 			$('#defaultPinCodeIdsq').val(selectedPincode);
@@ -6850,6 +6839,87 @@ function checkSignInValidation(path){
 
 function checkSignUpValidation(path){
 	
+	var validationResult= true;
+	var regexCharSpace = /^[a-zA-Z]+$/;
+	var mob = /^[1-9]{1}[0-9]{9}$/;
+	if ((document.getElementById("profilefirstName").value) == "") {
+		$("#errfn").css({
+			"display" : "block",
+			"margin-top" : "10px"
+		});
+		document.getElementById("errfn").innerHTML = "<font color='red' size='2'>Please enter first name.</font>";
+		validationResult = false;
+	}
+	
+	
+	if ((document.getElementById("profilefirstName").value) != "") {
+		if (!regexCharSpace
+				.test(document.getElementById("profilefirstName").value)) {
+			$("#errfn").css({
+				"display" : "block",
+				"margin-top" : "10px"
+			});
+			document.getElementById("errfn").innerHTML = "<font color='red' size='2'>First name should not contain any special characters or space</font>";
+			validationResult = false;
+		}
+	}
+	
+	if ((document.getElementById("profilelastName").value) == "") {
+		$("#errln").css({
+			"display" : "block",
+			"margin-top" : "10px"
+		});
+		document.getElementById("errln").innerHTML = "<font color='red' size='2'>Please enter last name.</font>";
+		validationResult = false;
+	}
+	
+	
+	if ((document.getElementById("profilelastName").value) != "") {
+		if (!regexCharSpace
+				.test(document.getElementById("profilelastName").value)) {
+			$("#errln").css({
+				"display" : "block",
+				"margin-top" : "10px"
+			});
+
+			document.getElementById("errln").innerHTML = "<font color='red' size='2'>Last name should not contain any special characters or space</font>";
+			validationResult = false;
+		}
+	}
+	
+	if ((document.getElementById("profile.gender").value) == "") {
+		
+		
+			$("#errgen").css({
+				"display" : "block",
+				"margin-top" : "10px"
+			});
+
+			document.getElementById("errgen").innerHTML = "<font color='red' size='2'>Please select Gender</font>";
+			validationResult = false;
+		
+	}
+	if ((document.getElementById("profile.gender").value) != "") {
+		$("#errgen").hide();
+		
+	}
+	var txtMobile=document.getElementById("mobileNumber").value;
+	 if(txtMobile  == undefined || txtMobile == "")
+		{	
+			$("#errmob").show();
+			$("#errmob").html("<p>Please enter mobile no.</p>");
+			validationResult = false;
+		}
+	    else if (mob.test(txtMobile) == false) {
+			$("#errmob").show();
+			$("#errmob").html("<p> Please enter correct mobile no.</p>");
+			validationResult = false;  
+	    }
+	       else
+		{
+			$("#errmob").hide();
+		}
+	
 	var password = "";
 	var rePassword = "";
 	
@@ -6870,7 +6940,7 @@ function checkSignUpValidation(path){
 	
 	
 	var emailPattern=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-	var validationResult= true;
+	
 	
 	if(emailId == null || emailId.length==0){
 		$("#signupEmailIdDiv").show();
@@ -7306,6 +7376,9 @@ $("#lastName").focus(function(){
 
 function validateAddressLine1(addressLine, errorHandle){
 	//PRDI-546
+	if(addressLine == null){
+		return false;
+	}
 	var str = addressLine.trim();
 	if(addressLine==""){
 		errorHandle.innerHTML = "Please enter Address line.";
@@ -7845,6 +7918,8 @@ $(".remove-coupon-button").click(function(){
  			
  				$("#couponSubmitButton").prop('disabled', false);
  				$("#couponSubmitButton").css("opacity","1");
+ 				console.log("cupon2");
+ 				window.location.reload();
  		},
  		error : function(resp) {
  		}
@@ -8834,8 +8909,6 @@ $("button[name='pinCodeButtonId']").click(function(){
 	pincode=$(this).parent().children("input[name='defaultPinCodeIds']").val();
 	$("input[name='defaultPinCodeIds']").val(pincode).css("color","rgb(255, 28, 71)");
 	
-	//$(".emptyPins").show();
-	//checkPincodeServiceability('typeSubmit',this);
 	});
 
 /*UF-68 UF-69*/

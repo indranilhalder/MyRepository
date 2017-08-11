@@ -71,7 +71,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		if (source.getSelectedUSSID() != null)
 		{
 			final SellerInformationModel sellerInfoModel = getMplSellerInformationService().getSellerDetail(
-					source.getSelectedUSSID());
+					source.getSelectedUSSID(), source.getOrder().getStore().getCatalogs().get(0).getActiveCatalogVersion());
+
 			List<RichAttributeModel> richAttributeModel = null;
 			if (sellerInfoModel != null)
 			{
@@ -254,6 +255,7 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				//TPR-1347---START
 				target.setCrmParentRef(source.getParentTransactionID());
 				//TPR-1347---END
+
 			}
 			//TPR-1347---START
 			if (source.getIsBOGOapplied() != null && source.getIsBOGOapplied().booleanValue()
@@ -518,6 +520,8 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 		}
 		//TPR-1345--END
 		target.setOrderLineId((source.getOrderLineId() != null) ? source.getOrderLineId() : source.getTransactionID());
+
+
 	}
 
 	/**

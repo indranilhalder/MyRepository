@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+<title>TATA - CLiQ</title>
+</head>
+
+<body>
+<table width="598" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial, Helvetica, sans-serif; border:1px solid #000;" >
+  <tr>
+    <td><table width="598" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left" valign="top" bgcolor="#ffffff">${ctx.cmsSlotContents.InvoiceSiteLogo}</td>
+      </tr>
+ 
+      <tr>
+        <td bgcolor="#FBFBFB"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-bottom: 2px;margin-top:0px">One Happy Shopper's</h2>
+			<h2 style="padding-left: 17px;color: #AA133D;margin-top: 4px;margin-bottom:0px">Invoice Coming Up!</h2>
+			<br>
+			<font style="font-family:Arial, Helvetica, sans-serif; font-size:18px; color:#4a4a4b; font-weight:bold;">Hey ${ctx.displayName},</font>
+                  <br>
+                  <br>
+                  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We heard you wanted a copy of your order's invoice. So we've attached it for you.<br>
+                  <br>
+                  </font>
+				   <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;"><strong>${ctx.orderCode}</strong> with <strong>${ctx.transactionID}</strong><br>
+                  <br>
+                  </font>
+				  <font style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#606060;">We have tons of new stuff for you at TataCliq. So what are you waiting for?<br>
+                  <br>
+                  </font>
+				  <div style="font-family:Arial, Helvetica, sans-serif;font-size: 16px;color:#AA133D;background-color:#AA133D;border-radius:16px;text-align: center;width: 30%;margin: auto;height: 35px;padding: 0 21px;
+"><a href="${ctx.websiteUrl}" style="color: #fff;text-decoration:none;line-height: 35px;font-weight:bold">Let's go shopping!</a><br>
+                  
+                  </div>
+				  <br>
+				  </td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      
+      <tr>
+        <td bgcolor="#fbfbfb"><table width="598" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="13">&nbsp;</td>
+            <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+             
+             
+             
+              
+              <tr>
+                <td height="60" align="left" valign="top">${ctx.cmsSlotContents.InvoiceTip}</td>
+              </tr>
+              <tr>
+                <td style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;"><span style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:14px; color:#4a4a4a; padding:5px 0;">Window shopping at TataCliq is not for the faint-hearted. With so many great things to check out,we reckon you'll be a regular here in no time!
+ </span></td>
+              </tr>
+              <tr>
+                <td height="70" align="center"><a href="${ctx.secureBaseUrl}/apps" target="_blank">${ctx.cmsSlotContents.AppDownloadUrl}</a></td>
+              </tr>
+              <tr>
+                <td>${ctx.cmsSlotContents.Invoicesmileyimg}</td>
+              </tr>
+              <tr>
+                <td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;"><p>This email cant receive replies. Get in touch by calling  us at 1800 208 8282 or email us at <a href="mailto:hello@tatacliq.com">hello@tatacliq.com</a></p></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><table width="572" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="200" align="left" style="font-family:Avenir, Arial, Helvetica, sans-serif; font-size:11px; color:#4a4a4a;">&#169; 2016 Tata CLiQ  Luxury| All Rights Reserved</td>
+                    <td>&nbsp;</td>
+                    <td width="27" align="right"><a href="https://www.facebook.com" style="border:none;">${ctx.cmsSlotContents.Invoicefb}</a></td>
+                    <td width="27" align="right"><a href="https://twitter.com" style="border:none;">${ctx.cmsSlotContents.tweet}</a></td>
+                    <td width="27" align="right"><a href="https://www.youtube.com" style="border:none;">${ctx.cmsSlotContents.youtube}</a></td>
+                    <td width="27" align="right"><a href="https://www.instagram.com" style="border:none;">${ctx.cmsSlotContents.insta}</a></td>
+                  </tr>
+                </table></td>
+              </tr>
+              </table></td>
+            <td width="13">&nbsp;</td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td bgcolor="#fbfbfb">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

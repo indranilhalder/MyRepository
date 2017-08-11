@@ -1,0 +1,47 @@
+#
+# ImpEx for Responsive Tata Luxury Site CMS Content 
+# 
+$contentCatalog=luxContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+# 
+$productCatalog=luxProductCatalog 
+$productCatalogName=Luxury Product Catalog 
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
+
+
+####################################Luxury Overview Page###################################
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
+
+;;personalInformation.jpg;$siteResource/images/banners/site/personalInformation.jpg;personalInformation.jpg;"Personal Information"
+;;savedCards.jpg;$siteResource/images/banners/site/savedCards.jpg;savedCards.jpg;"Saved Cards"
+;;myRecommendations.jpg;$siteResource/images/banners/site/myRecommendations.jpg;myRecommendations.jpg;"My Recommendations"
+;;inviteFriends.jpg;$siteResource/images/banners/site/inviteFriends.jpg;inviteFriends.jpg;"Invite Friends"
+;;orderHistory.jpg;$siteResource/images/banners/site/orderHistory.jpg;orderHistory.jpg;"Order History"
+;;savedAddresses.jpg;$siteResource/images/banners/site/savedAddresses.jpg;savedAddresses.jpg;"Saved Addresses"
+
+#Changes for Luxury overview
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content;$picture;url
+
+;;PersonalInformationMediaParagraphComponent;Personal Information Media Paragraph Component;PersonalInformationMediaParagraphComponent;;personalInformation.jpg;;
+;;SavedCardsMediaParagraphComponent;Saved Cards Media Paragraph Component;SavedCardsMediaParagraphComponent;;savedCards.jpg;;
+;;MyRecommendationsMediaParagraphComponent;My Recommendations Media Paragraph Component;MyRecommendationsMediaParagraphComponent;;myRecommendations.jpg;;
+;;InviteFriendsMediaParagraphComponent;Invite Friends Paragraph Component;InviteFriendsMediaParagraphComponent;;inviteFriends.jpg;;
+;;OrderHistoryMediaParagraphComponent;Order History Paragraph Component;OrderHistoryMediaParagraphComponent;;orderHistory.jpg;;
+;;SavedAddressesMediaParagraphComponent;Saved Addresses Paragraph Component;SavedAddressesMediaParagraphComponent;;savedAddresses.jpg;;
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;BodyContent-Overview;Body Content for Overview Page;true;PersonalInformationMediaParagraphComponent,OrderHistoryMediaParagraphComponent,SavedCardsMediaParagraphComponent,SavedAddressesMediaParagraphComponent,MyRecommendationsMediaParagraphComponent,InviteFriendsMediaParagraphComponent;;;
+
+
+
+#ContentSlotforPage for Overview  Page
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='overview'];contentSlot(uid,$contentCV)[unique=true];;;
+;;BodyContent-Overview;BodyContent;;BodyContent-Overview;;;
