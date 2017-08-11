@@ -4,6 +4,7 @@
 package com.tisl.mpl.facade.nps;
 
 import de.hybris.platform.core.model.user.CustomerModel;
+import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 
 import java.text.SimpleDateFormat;
@@ -195,11 +196,15 @@ public class NPSFeedbackQuestionFacadeImpl implements NPSFeedbackQuestionFacade
 			//npsFeedbackModel.setOriginalSurveyDate();
 			modelService.save(npsFeedbackModel);
 		}
+		catch (final ModelSavingException e)
+		{
+			ExceptionUtil.getCustomizedExceptionTrace(e);
+		}
 		catch (final Exception e)
 		{
 			ExceptionUtil.getCustomizedExceptionTrace(e);
 		}
-		return false;
+		return true;
 	}
 
 	/*
