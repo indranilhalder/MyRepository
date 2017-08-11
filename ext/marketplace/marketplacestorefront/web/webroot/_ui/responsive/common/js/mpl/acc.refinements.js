@@ -1023,6 +1023,7 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 			}
 			//TISSPTEN-130 starts
 			else {
+				$("body,html").animate({scrollTop:$('#productGrid').offset().top - 200},500);
 				pageURL = window.location.pathname;
 				pageURL = pageURL.replace(/page-[0-9]+/, 'page-1');
 				if (facetAjaxUrl.indexOf("?") > -1) {
@@ -1030,8 +1031,12 @@ function filterDataAjax(requiredUrl,dataString,pageURL){
 					if (queryArr[1] != "") {
 						pageURL = pageURL + '?' + queryArr[1];
 					}
+					if($( "span.sort[style*='color']" ).length == 1){
+				 		var sortData = $( "span.sort[style*='color']" ).attr('data-name');
+				 		pageURL = pageURL + getSortCode(sortData); 
+				  	}
 				}
-				
+
 				window.history.replaceState(response,"",pageURL);
 			}
 			//TISSPTEN-130 ends
@@ -1121,7 +1126,14 @@ function getSortCode(item){
 	  		code = '&sort=relevance';
 	  		break;
 	  	case 'new':
-	  		code = '&sort=isProductNew';
+	  		//TISSPTEN-125 starts
+			if ($("input[name=customSku]").length) {
+				code = '&sort=new';
+			}
+			else {
+				code = '&sort=isProductNew';
+			}
+			//TISSPTEN-125 ends
 	  		break;
 	  	case 'discount':
 	  		code = '&sort=isDiscountedPrice';
