@@ -288,6 +288,7 @@ fn:contains(requestScope['javax.servlet.forward.request_uri'],'/cancelSuccess')}
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.returns.js"></script>
 
+<!--Single page  -->
 <c:if test="${fn:contains(requestScope['javax.servlet.forward.request_uri'],'/checkout/single')}">
 <script type="text/javascript"
 	src="${commonResourcePath}/js/mpl/acc.singlePageCheckout.js"></script>	
