@@ -157,8 +157,25 @@ tr.d0 td {
 											<c:when test="${entry.product.size ne noSize }">
 												<p class="size disclaimer-txt more-cart">
 													<ycommerce:testId code="cart_product_size">
-														<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
-														${disclaimer}
+														<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+														<c:forEach items="${entry.product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																<c:if test="${categories.code eq lengthVariantArray}">
+																	<c:set var="lengthSize" value="true"/>
+																</c:if> 
+															</c:forEach>
+														</c:forEach> 	  
+														<c:choose>
+															<c:when test="${true eq lengthSize}">
+															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
+															  ${disclaimer}
+															</c:when>
+															<c:otherwise>
+															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+															  ${disclaimer}
+															</c:otherwise>
+														</c:choose>
 													</ycommerce:testId>
 												</p>
 											</c:when>
@@ -176,7 +193,23 @@ tr.d0 td {
 										<c:if test="${entry.product.size ne noSize }">
 											<p class="size disclaimer-txt more">
 												<ycommerce:testId code="cart_product_size">
-													<spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+														<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+														<c:forEach items="${entry.product.categories}" var="categories">
+															<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																<c:if test="${categories.code eq lengthVariantArray}">
+																	<c:set var="lengthSize" value="true"/>
+																</c:if> 
+															</c:forEach>
+														</c:forEach> 	  
+														<c:choose>
+															<c:when test="${true eq lengthSize}">
+															  <spring:theme code="product.variant.length"/>:&nbsp;${entry.product.size}&nbsp;
+															</c:when>
+															<c:otherwise>
+															  <spring:theme code="product.variant.size" />:&nbsp;${entry.product.size}&nbsp;
+															</c:otherwise>
+														</c:choose>
 												</ycommerce:testId>
 											</p>		
 										</c:if>
