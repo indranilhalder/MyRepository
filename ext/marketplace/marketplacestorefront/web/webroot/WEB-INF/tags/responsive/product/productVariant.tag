@@ -269,6 +269,7 @@ function loadVariant(x){
 </ul> -->
 <!-- share mobile -->
 <c:if test="${noVariant!=true&&notApparel!=true}">
+<c:if test="${showSizeGuideForFA eq true}">
 <div class="size" style="font-size: 12px;">
 	<form:form action="/" id="sizevariantForm" method="post">
 		<input type="hidden" maxlength="10" size="1" id="sellersSkuListId"
@@ -408,6 +409,7 @@ function loadVariant(x){
 				code="product.variants.size.guide" />
 		</a> --%>
 	</div>
+	</c:if>
 </c:if>
 
 <div id="allVariantOutOfStock" style="display: none;">
