@@ -127,7 +127,7 @@ public class OrderNotificationEmailContext extends AbstractEmailContext<OrderPro
 				if (prod != null && prod.getProductCategoryType().equalsIgnoreCase("FineJewellery"))
 				{
 					totalFineJewelleryPrice += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
-					isPancardRequired = (totalFineJewelleryPrice > totalAmount) ? 1 : 0;
+					isPancardRequired = (totalFineJewelleryPrice >= totalAmount) ? 1 : 0;
 
 				}
 			}

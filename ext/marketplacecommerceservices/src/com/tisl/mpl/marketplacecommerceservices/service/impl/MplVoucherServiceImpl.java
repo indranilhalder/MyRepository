@@ -5,6 +5,7 @@ package com.tisl.mpl.marketplacecommerceservices.service.impl;
 
 import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationException;
 import de.hybris.platform.commerceservices.service.data.CommerceCartParameter;
+import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
@@ -715,21 +716,26 @@ public class MplVoucherServiceImpl implements MplVoucherService
 			{
 				//For order
 				LOG.debug("Step 3:::Voucher and cart is not null");
-
-				getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the order
-				LOG.debug("Step 4:::Voucher released");
-				final List<AbstractOrderEntryModel> entryList = getOrderEntryModelFromVouEntries(voucher, orderModel);//new ArrayList<AbstractOrderEntryModel>();
-				for (final AbstractOrderEntryModel entry : entryList)//Resets the coupon details against the entries
+				//Added for INC144317090: For Mobile App, releaseCoupons API is getting called on order if user clicks on application "back" button from order confirmation page
+				if (!OrderStatus.PAYMENT_SUCCESSFUL.equals(orderModel.getStatus())
+						&& CollectionUtils.isEmpty(orderModel.getChildOrders()))
 				{
-					entry.setCouponCode("");
-					entry.setCouponValue(Double.valueOf(0.00D));
-				}
-				if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
-				{
-					getModelService().saveAll(entryList);
-				}
 
-				LOG.debug("Step 5:::CouponCode, CouponValue  resetted");
+					getVoucherService().releaseVoucher(voucherCode, orderModel); //Releases the voucher from the order
+					LOG.debug("Step 4:::Voucher released");
+					final List<AbstractOrderEntryModel> entryList = getOrderEntryModelFromVouEntries(voucher, orderModel);//new ArrayList<AbstractOrderEntryModel>();
+					for (final AbstractOrderEntryModel entry : entryList)//Resets the coupon details against the entries
+					{
+						entry.setCouponCode("");
+						entry.setCouponValue(Double.valueOf(0.00D));
+					}
+					if (CollectionUtils.isNotEmpty(entryList)) //Saving the entryList
+					{
+						getModelService().saveAll(entryList);
+					}
+
+					LOG.debug("Step 5:::CouponCode, CouponValue  resetted");
+				}
 			}
 
 		}
