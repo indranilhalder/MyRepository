@@ -3717,6 +3717,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 		return MarketplacecheckoutaddonControllerConstants.Views.Fragments.Checkout.Single.OrderTotals;
 	}
 
+	//Method not used any more
 	@RequestMapping(value = "/payment", method = RequestMethod.GET)
 	public String getPaymentPage(final Model model, final RedirectAttributes redirectAttributes,
 			@RequestParam(value = "value", required = false, defaultValue = "") final String guid)
@@ -3812,7 +3813,7 @@ public class MplSingleStepCheckoutController extends AbstractCheckoutController
 							{
 								selectPickupDetails = true;
 								model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
-								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+								//return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
 							}
 						}
 						if (!orderEntry.isGiveAway() && orderEntry.getSelectedUssid() != null)

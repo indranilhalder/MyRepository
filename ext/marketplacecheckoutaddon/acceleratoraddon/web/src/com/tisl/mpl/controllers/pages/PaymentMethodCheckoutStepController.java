@@ -415,7 +415,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 							{
 								selectPickupDetails = true;
 								model.addAttribute("selectPickupDetails", Boolean.valueOf(selectPickupDetails));
-								return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+								//return MarketplacecommerceservicesConstants.REDIRECT + "/checkout/multi/delivery-method/check";
+								return getCheckoutStep().previousStep();
 							}
 						}
 						if (!orderEntry.isGiveAway() && orderEntry.getSelectedUssid() != null)
@@ -4849,7 +4850,7 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.controllers.pages.CheckoutStepController#enterStep(org.springframework.ui.Model,
 	 * org.springframework.web.servlet.mvc.support.RedirectAttributes)
 	 */
