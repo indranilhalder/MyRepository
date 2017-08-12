@@ -719,7 +719,23 @@
 														<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
 															<spring:theme code="product.variant.size.noSize" var="noSize"/>
 															<c:if test="${entry.product.size ne noSize}">
-																<p>Size: ${entry.product.size}</p>
+																<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																<c:forEach items="${entry.product.categories}" var="categories">
+																	<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																		<c:if test="${categories.code eq lengthVariantArray}">
+																			<c:set var="lengthSize" value="true"/>
+																		</c:if> 
+																	</c:forEach>
+																</c:forEach>	  
+																<c:choose>
+																	<c:when test="${true eq lengthSize}">
+																	  <p><spring:theme code="product.variant.length.colon"/> ${entry.product.size}</p>
+																	</c:when>
+																	<c:otherwise>
+																	  <p>Size: ${entry.product.size}</p>
+																	</c:otherwise>
+																</c:choose>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -908,8 +924,25 @@
 																								<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
 																									<spring:theme code="product.variant.size.noSize" var="noSize"/>
 																									<c:if test="${entryCancel.product.size ne noSize}">
-																										<span><b>Size:</b>
-																											${entryCancel.product.size}</span>
+																										<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																										<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																										<c:forEach items="${entryCancel.product.categories}" var="categories">
+																											<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																												<c:if test="${categories.code eq lengthVariantArray}">
+																													<c:set var="lengthSize" value="true"/>
+																												</c:if> 
+																											</c:forEach>
+																										</c:forEach>	  
+																										<c:choose>
+																											<c:when test="${true eq lengthSize}">
+																											  <span><b><spring:theme code="product.variant.length.colon"/></b>
+																													  ${entryCancel.product.size}</span>
+																											</c:when>
+																											<c:otherwise>
+																											  <span><b>Size:</b>
+																													  ${entryCancel.product.size}</span>
+																											</c:otherwise>
+																										</c:choose>
 																									</c:if>
 																								</c:when>
 																								<c:otherwise>
@@ -1060,8 +1093,25 @@
 																								<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
 																									<spring:theme code="product.variant.size.noSize" var="noSize"/>
 																									<c:if test="${entryCancel.product.size ne noSize}">
-																										<span><b>Size:</b>
+																										<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																										<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																										<c:forEach items="${entryCancel.product.categories}" var="categories">
+																											<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																												<c:if test="${categories.code eq lengthVariantArray}">
+																													<c:set var="lengthSize" value="true"/>
+																												</c:if> 
+																											</c:forEach>
+																										</c:forEach>	  
+																										<c:choose>
+																											<c:when test="${true eq lengthSize}">
+																											  <span><b><spring:theme code="product.variant.length.colon"/></b>
 																																							${entryCancel.product.size}</span>
+																											</c:when>
+																											<c:otherwise>
+																											  <span><b>Size:</b>
+																																							${entryCancel.product.size}</span>
+																											</c:otherwise>
+																										</c:choose>
 																									</c:if>
 																								</c:when>
 																								<c:otherwise>
@@ -2022,7 +2072,23 @@
 														<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
 															<spring:theme code="product.variant.size.noSize" var="noSize"/>
 															<c:if test="${entry.product.size ne noSize}">
-																<p>Size: ${entry.product.size}</p>
+																<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																<c:forEach items="${entry.product.categories}" var="categories">
+																	<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																		<c:if test="${categories.code eq lengthVariantArray}">
+																			<c:set var="lengthSize" value="true"/>
+																		</c:if> 
+																	</c:forEach>
+																</c:forEach>	  
+																<c:choose>
+																	<c:when test="${true eq lengthSize}">
+																	  <p><spring:theme code="product.variant.length.colon"/> ${entry.product.size}</p>
+																	</c:when>
+																	<c:otherwise>
+																	  <p>Size: ${entry.product.size}</p>
+																	</c:otherwise>
+																</c:choose>
 															</c:if>
 														</c:when>
 														<c:otherwise>
@@ -2176,8 +2242,25 @@
 																								<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
 																									<spring:theme code="product.variant.size.noSize" var="noSize"/>
 																									<c:if test="${entryCancel.product.size ne noSize}">
-																										<span><b>Size:</b>
+																										<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																										<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																										<c:forEach items="${entryCancel.product.categories}" var="categories">
+																											<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																												<c:if test="${categories.code eq lengthVariantArray}">
+																													<c:set var="lengthSize" value="true"/>
+																												</c:if> 
+																											</c:forEach>
+																										</c:forEach>	  
+																										<c:choose>
+																											<c:when test="${true eq lengthSize}">
+																											  <span><b><spring:theme code="product.variant.length.colon"/></b>
 																																							${entryCancel.product.size}</span>
+																											</c:when>
+																											<c:otherwise>
+																											  <span><b>Size:</b>
+																																							${entryCancel.product.size}</span>
+																											</c:otherwise>
+																										</c:choose>
 																									</c:if>
 																								</c:when>
 																								<c:otherwise>
@@ -2334,8 +2417,25 @@
 																									<c:when test="${(not empty entryCancel.product.rootCategory) && (entryCancel.product.rootCategory == 'FineJewellery' || entryCancel.product.rootCategory == 'FashionJewellery') }">
 																										<spring:theme code="product.variant.size.noSize" var="noSize"/>
 																										<c:if test="${entryCancel.product.size ne noSize}">
-																											<span><b>Size:</b>
-																												${entryCancel.product.size}</span>
+																											<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+																											<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+																											<c:forEach items="${entryCancel.product.categories}" var="categories">
+																												<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+																													<c:if test="${categories.code eq lengthVariantArray}">
+																														<c:set var="lengthSize" value="true"/>
+																													</c:if> 
+																												</c:forEach>
+																											</c:forEach>	  
+																											<c:choose>
+																												<c:when test="${true eq lengthSize}">
+																												  <span><b><spring:theme code="product.variant.length.colon"/></b>
+																													${entryCancel.product.size}</span>
+																												</c:when>
+																												<c:otherwise>
+																												  <span><b>Size:</b>
+																													${entryCancel.product.size}</span>
+																												</c:otherwise>
+																											</c:choose>
 																										</c:if>
 																									</c:when>
 																									<c:otherwise>

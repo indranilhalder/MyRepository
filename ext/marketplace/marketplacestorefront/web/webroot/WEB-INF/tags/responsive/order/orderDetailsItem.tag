@@ -124,14 +124,32 @@
 										<c:if test="${entry.product.size ne noSize }">
 											<ycommerce:testId code="cart_product_size">
 												<div class="size">
-													<spring:theme code="text.size" />${entry.product.size}</div>
+													<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+											     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+													<c:forEach items="${entry.product.categories}" var="categories">
+											   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+											   				<c:if test="${categories.code eq lengthVariantArray}">
+											   				 	<c:set var="lengthSize" value="true"/>
+											   				</c:if> 
+											   			</c:forEach>
+											   		</c:forEach>	  
+											   		<c:choose>
+											   			<c:when test="${true eq lengthSize}">
+														  <spring:theme code="product.variant.length.colon"/>${entry.product.size}
+											   			</c:when>
+											   			<c:otherwise>
+														  <spring:theme code="text.size" />${entry.product.size}
+											   			</c:otherwise>
+											   		</c:choose>
+												</div>
 											</ycommerce:testId>
 										</c:if>
 									</c:when>
 									<c:otherwise>
 										<ycommerce:testId code="cart_product_size">
 											<div class="size">
-												<spring:theme code="text.size" />${entry.product.size}</div>
+												<spring:theme code="text.size" />${entry.product.size}
+											</div>
 										</ycommerce:testId>
 									</c:otherwise>
 								</c:choose>

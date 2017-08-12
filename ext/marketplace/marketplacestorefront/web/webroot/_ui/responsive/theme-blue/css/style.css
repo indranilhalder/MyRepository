@@ -76003,8 +76003,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table{
 	width: 100%;
-	/*TISJEW-3447:UI issue under product details in fashion jewelry.*/
-	/* table-layout: fixed; */
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail table#showPriceBreakup,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table#showPriceBreakup{
@@ -76017,7 +76015,6 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     font-size: 12px;
     line-height: 1.33;
     font-weight: normal;
-    width: 20%; 
     display: table-cell;
 }
 table#showPriceBreakup{
@@ -76032,8 +76029,14 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td{
 	overflow: hidden;
 	display: table-cell;
+	padding-left: 5px;
+	padding-right: 5px;
 }
-
+.jewellery-wrapper>div.accordin.FineJewellery .item .detail table tr td:first-child,
+.jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:first-child{
+	padding-right: 0px;
+    padding-left: 0px;
+}
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail ,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail{
 	font-size: 12px;
@@ -76125,6 +76128,10 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content
 {
 	display: block !important;
+}
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content #jewelTableDetails,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content #jewelTableDetails{
+	overflow-x: scroll;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content

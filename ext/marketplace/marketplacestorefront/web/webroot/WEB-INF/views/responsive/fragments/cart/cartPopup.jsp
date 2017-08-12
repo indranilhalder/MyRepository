@@ -70,7 +70,23 @@
 									<c:when test="${(not empty entry.product.rootCategory) && (entry.product.rootCategory == 'FineJewellery' || entry.product.rootCategory == 'FashionJewellery') }">
 										<spring:theme code="product.variant.size.noSize" var="noSize"/>
 										<c:if test="${entry.product.size ne noSize}">
-											<li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+											<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
+									     	<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />
+											<c:forEach items="${entry.product.categories}" var="categories">
+									   			<c:forEach items = "${categoryListArray}" var="lengthVariantArray">
+									   				<c:if test="${categories.code eq lengthVariantArray}">
+									   				 	<c:set var="lengthSize" value="true"/>
+									   				</c:if> 
+									   			</c:forEach>
+									   		</c:forEach>	  
+									   		<c:choose>
+									   			<c:when test="${true eq lengthSize}">
+												  <li><spring:theme code="product.variant.length"/>&nbsp;${entry.product.size}</li>
+									   			</c:when>
+									   			<c:otherwise>
+												  <li><spring:theme code="cart.popup.size" />&nbsp;${entry.product.size}</li>
+									   			</c:otherwise>
+									   		</c:choose>
 										</c:if>
 									</c:when>
 									<c:otherwise>
