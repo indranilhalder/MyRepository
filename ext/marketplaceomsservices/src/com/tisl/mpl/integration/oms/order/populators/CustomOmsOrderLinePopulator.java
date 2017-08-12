@@ -246,6 +246,19 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 					&& source.getProduct().getProductCategoryType()
 							.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
 			{
+
+				if (null != source.getOrder() && null != source.getOrder().getParentReference())
+				{
+					//Checking the pancard request is true or not
+					if (source.getOrder().getParentReference().getPanVerificationReq().booleanValue())
+					{
+						target.setIsPANCARDVerificationReq("Y");
+					}
+					else
+					{
+						target.setIsPANCARDVerificationReq("N");
+					}
+				}
 				populateJewelleryInfo(source, target);
 
 				final List<BrandModel> brands = (List<BrandModel>) productModel.getBrands();

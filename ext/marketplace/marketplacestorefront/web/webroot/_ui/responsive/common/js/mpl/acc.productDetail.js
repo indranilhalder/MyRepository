@@ -4543,7 +4543,7 @@ function populateProductPageTabs(jsonData)
 	}
 	
 	var catType = $("#categoryType").val();
-	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase())){
+	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase()) && ("FASHIONJEWELLERY" == catType.toUpperCase())){
 		populateClassificationForJewellery(jsonData);
 	}
 	
