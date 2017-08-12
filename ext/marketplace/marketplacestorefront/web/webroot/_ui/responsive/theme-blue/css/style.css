@@ -49058,6 +49058,7 @@ body.page-productDetails .breadcrumbs.wrapper {
 	position: relative;
 	margin: -15px 0 0;
 	display: inline-block;
+	width:100%
 }
 
 .product-detail .Emi p, .pricebreakup-link {
