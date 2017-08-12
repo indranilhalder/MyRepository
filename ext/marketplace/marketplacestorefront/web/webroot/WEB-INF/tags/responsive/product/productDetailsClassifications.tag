@@ -54,18 +54,20 @@
                      <div class="title">Product Code 
                      <span id="jewelDetailsUssid" ></span>
                      </div>
-                     <table border="3">
+                     <div id ="jewelTableDetails">
+                     <table>
                         <c:forEach items="${classification.value}" var="feature" varStatus="inner">
                            <tr>
                               <td class="title">${feature.key}  </td>
                               <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
                                  <td >${featureValue}</td>
-                                 <c:set var = "length" value = "${fn:length(featureValue)-20}"></c:set>
-                                 <td colspan = "length" style="border:2"></td> <!-- TISJEW-3447:UI issue under product details in fashion jewelry. -->
                               </c:forEach>
+                              <c:set var = "length" value = "${21-fn:length(feature.value)}"></c:set>
+                              <td colspan = "${length}"></td> <!-- TISJEW-3447:UI issue under product details in fashion jewelry. -->
                            </tr>
                         </c:forEach> 
                      </table>
+                     </div>
                   </c:when>
                   <c:when test="${classification.key=='Diamond Details'}">
                      <c:forEach items="${classification.value}" var="feature" varStatus="inner">
