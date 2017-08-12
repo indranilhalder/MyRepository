@@ -44,7 +44,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#ticketPancardModeltoDTO(de.hybris.platform.core.model.
 	 * PancardInformationModel)
 	 */
@@ -57,7 +57,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#createticketPancardModeltoDTO(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -101,7 +101,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#getCrmStatusForPancardDetails(de.hybris.platform.core.model.
 	 * PancardInformationModel)
 	 */
@@ -193,7 +193,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#ticketPancardModeltoDTO(java.lang.String, java.lang.String)
 	 */
 
@@ -236,7 +236,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardTicketCRMservice#createCrmTicket(java.lang.String)
 	 */
 	@Override
@@ -274,7 +274,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 	//For sending pancard details to SP through PI and save data into database for new pancard entry
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.service.MplPancardUploadserviceImpl#generateXmlForPanCard(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, org.springframework.web.multipart.MultipartFile)
 	 */
@@ -362,7 +362,7 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 		final Client client = Client.create();
 		ClientResponse response = null;
 		WebResource webResource = null;
-		String output = null;
+		String output = "";
 		LOG.debug("********************Pancard upload PI-->SP called********************************** ");
 		if (null != configurationService && null != configurationService.getConfiguration()
 				&& null != configurationService.getConfiguration().getString(MarketplacecclientservicesConstants.PANCARD_UPLOAD_URL))
@@ -408,21 +408,22 @@ public class MplPancardUploadserviceImpl implements MplPancardUploadService
 			{
 				LOG.debug(":::::::::::::::::::::response:::" + response);
 				LOG.debug("*********************response:::" + response.getStatus());
-				LOG.debug("$$$$$$$$$$$$$$$$$$$$$response:::" + response.getEntity(String.class));
+				LOG.debug("*********************response.hasEntity():::" + response.hasEntity());
 			}
 		}
-		if (response.getStatus() != 200)
-		{
-			output = "faliure";
-			LOG.debug("output " + output);
-		}
-		else
+		if (response.getStatus() == 200)
 		{
 			output = response.getEntity(String.class);
+
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("output " + output);
 			}
+		}
+		else
+		{
+			output = "faliure";
+			LOG.debug("output " + output);
 		}
 		return output;
 	}
