@@ -34,6 +34,7 @@
 				 									<c:choose>
 														<c:when test="${(not empty entryReturn.product.rootCategory) && (entryReturn.product.rootCategory == 'FineJewellery' || entryReturn.product.rootCategory == 'FashionJewellery') }">
 															<spring:theme code="product.variant.size.noSize" var="noSize"/>
+															<input type="hidden" id="productCategoryTypeReturn" value="${entryReturn.product.rootCategory}"/>
 															<c:if test="${entryReturn.product.size ne noSize}">
 																<spring:eval expression="T(de.hybris.platform.util.Config).getParameter('mpl.jewellery.category')" var="lengthVariant"/>
 																<c:set var = "categoryListArray" value = "${fn:split(lengthVariant, ',')}" />

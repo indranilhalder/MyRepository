@@ -181,10 +181,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 *
-	 *
-	 *
+	 * 
+	 * 
+	 * 
+	 * 
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#afterPlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -291,9 +291,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 				 * "Order Sequence Generation True"); final String orderIdSequence =
 				 * getMplCommerceCartService().generateOrderId(); LOG.debug("Order Sequence Generated:- " +
 				 * orderIdSequence);
-				 *
-				 *
-				 *
+				 * 
+				 * 
+				 * 
 				 * orderModel.setCode(orderIdSequence); } else { LOG.debug("Order Sequence Generation False"); final Random
 				 * rand = new Random(); orderModel.setCode(Integer.toString((rand.nextInt(900000000) + 100000000))); }
 				 */
@@ -547,9 +547,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforePlaceOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter)
@@ -563,10 +563,10 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @see
 	 * de.hybris.platform.commerceservices.order.hook.CommercePlaceOrderMethodHook#beforeSubmitOrder(de.hybris.platform
 	 * .commerceservices.service.data.CommerceCheckoutParameter,
@@ -577,6 +577,9 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			final CommerceOrderResult paramCommerceOrderResult) throws InvalidCartException, EtailNonBusinessExceptions
 	{
 		final OrderModel orderModel = paramCommerceOrderResult.getOrder();
+		double totalJwlryPrice = 0.0D;
+		final double totalAmntFineJwlry = Integer.parseInt(getConfigurationService().getConfiguration().getString(
+				"order.amount.for.pancard.upload"));
 		//orderModel.setType("Parent");
 		if (StringUtils.isNotEmpty(orderModel.getType()) && PARENT.equalsIgnoreCase(orderModel.getType()))
 		{
@@ -607,6 +610,36 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 			{
 				// Set the Child Orders with Order
 				orderModel.setChildOrders(orderList);
+
+				//TPR-3782 pancard verfication changes start
+				for (final OrderModel childOrder : orderModel.getChildOrders())
+				{
+					for (final AbstractOrderEntryModel childOrderEntries : childOrder.getEntries())
+					{
+						final ProductModel prod = childOrderEntries.getProduct();
+						//added for jewellery
+						if (prod != null
+								&& prod.getProductCategoryType().equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
+						{
+							totalJwlryPrice += childOrderEntries.getNetAmountAfterAllDisc().doubleValue();
+						}
+					}
+
+				}
+
+				if (totalJwlryPrice >= totalAmntFineJwlry)
+				{
+					orderModel.setPanVerificationReq(Boolean.valueOf(true));
+				}
+				else
+				{
+					orderModel.setPanVerificationReq(Boolean.valueOf(false));
+				}
+
+				//TPR-3782 pancard verfication changes ends
+
+
+
 				getModelService().save(orderModel);
 				getModelService().refresh(orderModel);
 
@@ -690,13 +723,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to set parent transaction id and transaction id mapping Buy A B Get C TISPRO-249
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param subOrderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -797,13 +830,13 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : Used to populate parent freebie map for BUY A B GET C promotion TISPRO-249
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param subOrderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws Exception
 	 */
 	//OrderIssues:-
@@ -1451,14 +1484,14 @@ public class MplDefaultPlaceOrderCommerceHooks implements CommercePlaceOrderMeth
 
 	/*
 	 * @Desc : this method is used to set freebie items parent transactionid TISUTO-128
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
 	 * @param orderList
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @throws EtailNonBusinessExceptions
 	 */
 	// OrderIssues:- InvalidCartException exception throws
