@@ -13,7 +13,6 @@ import de.hybris.platform.promotions.model.PromotionGroupModel;
 import de.hybris.platform.servicelayer.search.FlexibleSearchQuery;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
 import de.hybris.platform.store.BaseStoreModel;
-import de.hybris.platform.store.services.BaseStoreService;
 
 import java.util.List;
 
@@ -50,9 +49,9 @@ public class DefaultBulkPromotionCreationDaoImpl implements BulkPromotionCreatio
 	private static final String BASESTORE_CLASS = "} = ?baseStore";
 	private static final String AND = " and ";
 
-
-	@Autowired
-	private BaseStoreService baseStoreService;
+	//SONAR FIX
+	//@Autowired
+	//private BaseStoreService baseStoreService;
 
 	/**
 	 * @return the flexibleSearchService
