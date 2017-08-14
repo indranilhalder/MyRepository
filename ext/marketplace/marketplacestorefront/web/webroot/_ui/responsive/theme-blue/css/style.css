@@ -76017,6 +76017,7 @@ body .account .right-account .info fieldset form .quarter.phone .mobile_greyed>s
     line-height: 1.33;
     font-weight: normal;
     display: table-cell;
+    width: 20%;
 }
 table#showPriceBreakup{
 	display: table !important;
