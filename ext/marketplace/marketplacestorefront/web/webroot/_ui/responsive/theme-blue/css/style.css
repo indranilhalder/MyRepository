@@ -76037,6 +76037,7 @@ table#showPriceBreakup{
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail table tr td:first-child{
 	padding-right: 0px;
     padding-left: 0px;
+    width: 20%;
 }
 .jewellery-wrapper>div.accordin.FineJewellery .item .detail ,
 .jewellery-wrapper>div.accordin.FashionJewellery .item .detail{
@@ -76086,6 +76087,7 @@ table#showPriceBreakup{
 	background: none;
 	margin: 0px;
 	cursor: pointer;
+	overflow: auto;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:after,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:after,
@@ -76132,7 +76134,7 @@ table#showPriceBreakup{
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content #jewelTableDetails,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content #jewelTableDetails{
-	overflow-x: scroll;
+	overflow: auto;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
@@ -76987,12 +76989,12 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 27% 0;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL{
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGI{
 	width: 132px;
     height: 40px;
     display: inline-block;
 }
-.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL:before
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGI:before
 {
 	width: 132px;
     height: 40px;
@@ -77018,6 +77020,102 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
     left: 0;
     top: 8px;
     background: url(../images/jewellery-sprite-v2.png) no-repeat 52.5% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiSGL{
+	width: 60px;;
+    height: 40px;
+    display: inline-block;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiSGL:before
+{
+	width: 60px;
+    height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 42.3% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiPGI{
+	width: 30px;
+    height: 40px;
+    display: inline-block;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiPGI:before
+{
+	width: 30px;
+    height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 67.5% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGSL{
+	width: 190px;
+    height: 40px;
+    display: inline-block;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGSL:before
+{
+	width: 190px;
+    height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 89.5% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGSI{
+	width: 30px;
+    height: 40px;
+    display: inline-block;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiGSI:before
+{
+	width: 30px;
+    height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 95% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL{
+	width: 30px;
+    height: 40px;
+    display: inline-block;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiIGL:before
+{
+	width: 30px;
+    height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 99% 0;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiDGLA{
+	width: 26px;
+    height: 40px;
+    display: inline-block;
+}
+.product-info .product-detail.FineJewellery .certified-by ul li.jwlryCertiDGLA:before
+{
+	width: 26px;
+    height: 40px;
+    display: inline-block;
+    content: "";
+    position: relative;
+    left: 0;
+    top: 8px;
+    background: url(../images/jewellery-sprite-v2.png) no-repeat 94.5% 0;
 }
 /* TPR-5007 end */
 /*JWLSPCUAT-46 start*/
@@ -77183,3 +77281,13 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 	margin: 0 3px;
 }
 /*end for TISPRDT-1936*/
+
+/* TISJEW-3478 start */
+.exchange-applied-ul li.cart_exchange {
+    text-transform: none;
+    font-size: 12px;
+    margin-bottom: 8px;
+    padding-right: 5px;
+    color: #92002e;
+} 
+/*  TISJEW-3478 End  */
