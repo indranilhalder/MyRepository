@@ -2180,6 +2180,7 @@
     
     <!-- CAR-285 End -->
     
+    <bean id="catalogUtils" class="com.tisl.mpl.util.CatalogUtils" />
 </beans>
 
 

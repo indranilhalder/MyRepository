@@ -1,0 +1,93 @@
+
+#
+# Import the CMS content for the site
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
+$productCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+# Import modulegen config properties into impex macros
+$lang=en
+
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$picture=media(code, $contentCV)
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+
+
+
+
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+
+# changes for account overview
+#;;AccountOverviewPageTemplate; Overview  Page Template;account/accountLayoutPage;ContentPage
+;;AccountCouponDetailsPageTemplate;Coupon Details Page Template;account/accountCouponDetailsPage;ContentPage
+
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+
+#changes for account overview
+#;;AccountOverviewPageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
+;;AccountCouponDetailsPageTemplate;$jarResourceCms/structure-view/structure_accountPageTemplate.vm
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;TopContent;;;wide
+;SideContent;;;narrow
+;BodyContent;;;wide
+;BottomContent;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+
+
+
+
+
+
+
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='AccountCouponDetailsPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-AccountCouponDetailsPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-AccountCouponDetailsPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-AccountCouponDetailsPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-AccountCouponDetailsPage;MiniCart;;MiniCartSlot;true
+;;Footer-AccountCouponDetailsPage;Footer;;FooterSlot;true
+;;HeaderLinks-AccountCouponDetailsPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-AccountCouponDetailsPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-AccountCouponDetailsPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-AccountCouponDetailsPage;BottomHeaderSlot;;BottomHeaderSlot;true
+
+
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false'];
+
+#changes for overview page
+
+#;;overview; Overview Page;AccountOverviewPageTemplate;overview
+;;coupons;Coupon Details Page;AccountCouponDetailsPageTemplate;coupons
+

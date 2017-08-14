@@ -3,9 +3,11 @@
  */
 package com.tisl.mpl.shorturl.service;
 
+import de.hybris.platform.basecommerce.model.site.BaseSiteModel;
 import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
+import de.hybris.platform.site.BaseSiteService;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -22,6 +24,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -59,6 +62,8 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	@Resource(name = "shortUrlReportDaoImpl")
 	private OrderShortUrlDao orderShortUrlDaoImpl;
 
+	@Resource(name = "baseSiteService")
+	private BaseSiteService baseSiteService;
 
 	/**
 	 * @param url
@@ -72,10 +77,11 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 		try
 		{
 			LOG.info("Generating short url for order id :" + orderCode);
-			final String googleAPIUrl = getConfigurationService().getConfiguration().getString(
-					MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
-			final String googleShortUrlApiKey = getConfigurationService().getConfiguration().getString(
-					MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
+
+			final String googleAPIUrl = getConfigurationService().getConfiguration()
+					.getString(MarketplaceclientservicesConstants.GOOGLE_API_SHORT_URL);
+			final String googleShortUrlApiKey = getConfigurationService().getConfiguration()
+					.getString(MarketplaceclientservicesConstants.GOOGLE_SHORT_URL_API_KEY);
 			//final String longUrl = getConfigurationService().getConfiguration().getString(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
 			final String longUrl = genearateLongURL(orderCode);
 			final StringBuilder sb = new StringBuilder(googleAPIUrl);
@@ -103,8 +109,6 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 			{
 				LOG.info("Short URL " + shortUrl);
 			}
-
-
 
 			if (null != shortUrl)
 			{
@@ -144,15 +148,14 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	}
 
 
-
 	private String getShortUrl(final String endPoint, final String encodedParams)
 	{
-		final String proxyEnableStatus = getConfigurationService().getConfiguration().getString(
-				MarketplaceclientservicesConstants.PROXYENABLED);
-		final String proxyAddress = getConfigurationService().getConfiguration().getString(
-				MarketplaceclientservicesConstants.GENPROXY);
-		final String proxyPort = getConfigurationService().getConfiguration().getString(
-				MarketplaceclientservicesConstants.GENPROXYPORT);
+		final String proxyEnableStatus = getConfigurationService().getConfiguration()
+				.getString(MarketplaceclientservicesConstants.PROXYENABLED);
+		final String proxyAddress = getConfigurationService().getConfiguration()
+				.getString(MarketplaceclientservicesConstants.GENPROXY);
+		final String proxyPort = getConfigurationService().getConfiguration()
+				.getString(MarketplaceclientservicesConstants.GENPROXYPORT);
 		HttpsURLConnection connection = null;
 		final StringBuilder buffer = new StringBuilder();
 
@@ -305,8 +308,19 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 	 */
 	public String genearateLongURL(final String orderCode)
 	{
-		final String longURLFormat = (String) getConfigurationService().getConfiguration().getProperty(
-				MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+		final BaseSiteModel currentBaseSite = baseSiteService.getCurrentBaseSite();
+		final String site = currentBaseSite.getUid();
+		final String longURLFormat;
+		if (StringUtils.isNotBlank(site) && MarketplaceclientservicesConstants.LuxuryPrefix.equals(site))
+		{
+			longURLFormat = (String) getConfigurationService().getConfiguration()
+					.getProperty(MarketplaceclientservicesConstants.LUX_TRACK_ORDER_LONG_URL_FORMAT);
+		}
+		else
+		{
+			longURLFormat = (String) getConfigurationService().getConfiguration()
+					.getProperty(MarketplaceclientservicesConstants.MPL_TRACK_ORDER_LONG_URL_FORMAT);
+		}
 		return longURLFormat + "/" + orderCode;
 	}
 
@@ -364,7 +378,6 @@ public class ShortUrlServiceGoogleImpl implements ShortUrlService
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see com.tisl.mpl.shorturl.service.ShortUrlService#getShortUrlReportModels(java.util.Date, java.util.Date)
 	 */
 	@Override

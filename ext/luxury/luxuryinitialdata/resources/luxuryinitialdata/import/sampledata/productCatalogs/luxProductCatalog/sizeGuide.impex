@@ -1,0 +1,49 @@
+$productCatalog=luxProductCatalog
+$productCatalogName=Luxury Product Catalog
+$classificationCatalog=pcmClassification
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true,default='$classificationCatalog:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='$classificationCatalog']),version[default='1.0'])[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$classAttributeAssignment=classificationAttributeAssignment(classificationAttribute(code),classificationClass(code))
+
+
+INSERT_UPDATE SizeGuide;sizeGuideId[unique=true];dimension[unique=true][cellDecorator=com.tisl.mpl.core.celldecorator.SizeGuideDimensionDecorator];unit;size[unique=true];value;categoryCode;brand;fitType;imageUrl;usSize;euroSize;age;catalogversion(catalog(id[default=luxProductCatalog]),version[default='Online'])[unique=true,default=luxProductCatalog:Online]
+
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;L;36-37.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;M;34.5-36;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;S;33-34.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;XL;37.5-39;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;XS;33;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;XXL;39-41.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;L;8;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;M;6;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;S;4;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;XL;10;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;XS;2;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;XXL;12;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;L;30.5-32;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;M;29-30.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;S;27.5-29;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;XL;32-33.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;XS;27.5;SHIRT;ZUDIO;REGULAR FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;XXL;33.5-36;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Staged
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;L;36-37.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;M;34.5-36;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;S;33-34.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;XL;37.5-39;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;XS;33;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;BUST;INCHES;XXL;39-41.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;L;8;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;M;6;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;S;4;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;XL;10;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;XS;2;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;SIZE REFERENCE;INCHES;XXL;12;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;L;30.5-32;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;M;29-30.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;S;27.5-29;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;XL;32-33.5;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;XS;27.5;SHIRT;ZUDIO;REGULAR FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+;ZUDIO_FSHIRT_SLIM;WAIST;INCHES;XXL;33.5-36;SHIRT;ZUDIO;SLIM FIT;//assets.tatacliq.com/medias/sys_master/images/8797249568798.jpg;;;;luxProductCatalog:Online
+

@@ -1,0 +1,252 @@
+
+
+# ImpEx for Importing CMS Content
+# English Localisation
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+
+# Language
+$lang=en
+
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForCancellationPageComponent;"Cancellation"
+
+
+
+
+;;CancellationPageComponent;" CANCELLATION process is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible.
+<h3>Frequently Asked CANCELLATION Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+"
+
+
+#FAQ Starts
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForFrequentlyAskedPageComponent;"Frequently Asked Question"
+
+
+
+
+;;FrequentlyAskedPageComponent;" Frequently Asked Questions 
+
+<table >
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h3>Frequently Asked Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+ </div>
+
+"
+
+#FAQ Starts
+
+#Returns - Starts
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForReturnsPageComponent;"Returns"
+
+
+
+
+;;ReturnsPageComponent;" RETURNS service of  is  in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. 
+<h3>Frequently Asked RETURNS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+ 
+"
+
+# Returns - End
+
+# Shipping Starts
+
+
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForShippingPageComponent;"Shipping"
+
+
+
+;;ShippingPageComponent;"Excellent  SHIPPING service Of  is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible. 
+
+<table>
+
+<tr>
+	<th>Shipping Type</th>
+	<th>Price</th>
+</tr>	
+ 
+  
+  <tr>
+    <td>Home Delivery</td>
+    <td>Free</td>		
+    
+  </tr>
+  
+  <tr>
+  <td>Express Shipping</td>
+  <td>300</td>
+  </tr>
+  
+  <tr>
+  <td>Cash On Delivery</td>
+  <td>150</td>
+  </tr>
+  
+</table>
+
+
+<h2>Frequently asked shipping questions:</h2>
+
+
+ <ul class='faq'> 
+
+<div id='collapsible-panels'> 
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href=''>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+ 
+
+ </ul>
+"
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForTrackOrderPageComponent;"Track Order"
+
+
+
+;;TrackOrderPageComponent;" Excellent  TRACK ORDER service is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible.
+<h3>Frequently Asked TRACK ORDERS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+"
+
+#Shipping End. 
+
+#Track Order start
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+
+;;TitleForTrackOrderPageComponent;"Track Order"
+
+
+
+;;TrackOrderPageComponent;" Excellent  TRACK ORDER service is our core, in-store and online. We strive to deliver products purchased from the Tata Marketplace in excellent
+condition and in the fastest time possible.
+<h3>Frequently Asked TRACK ORDERS Questions:</h3>
+
+
+ <div id='collapsible-panels'> 
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question One goes here.</p></div>  
+
+<h5 class='questions'><a href='#'>How do I check the status of my order?</a></h5>
+<div><p>Answer to Question two goes here.</p></div>  
+
+
+ </div>
+
+"

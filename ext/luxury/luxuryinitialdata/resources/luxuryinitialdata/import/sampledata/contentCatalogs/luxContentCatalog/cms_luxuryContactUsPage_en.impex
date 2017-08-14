@@ -1,0 +1,39 @@
+
+#
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=luxContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online] 
+$productCatalog=luxProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/png'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;callus.png;$siteResource/images/banners/homepage/responsive/callus.png;callus.png;"Call us";
+;;FAQ.png;$siteResource/images/banners/homepage/FAQ.png;FAQ.png;"Frequent  Questions";
+#;;chatwidus.png;$siteResource/images/banners/homepage/chatwidus.png;chatwidus.png;"Chat With Us";
+;;chatwidus.png;$siteResource/images/banners/homepage/responsive/chatwidus.png;chatwidus.png;"Chat With Us";
+
+#CMSMediaParagraphComponent changes starts
+INSERT_UPDATE CMSMediaParagraphComponent;$contentCV[unique=true]  ;uid[unique=true]                ;name                                   ;&componentRef                   ;content                                                                                                                               ;$picture    ;url
+                                        ;                         ;CallUsMediaParagraphComponent   ;Call Us Media Paragraph Component     ;CallUsMediaParagraphComponent    ;"<p>Call Us,24/7</p><a id='callMe' data-title='<strong>Click 2 Call</strong>' href='/store/mpl/en/clickto/call'>1-800-123-4567</a>"   ;callus.png
+;;ChatWithUsMediaParagraphComponent;Chat With Us Media Paragraph Component;ChatWithUsMediaParagraphComponent;"<p>Chat with us</p><a id='chatMe' data-title='<strong>Click 2 Chat</strong>' href='/store/mpl/en/clickto/chat'>Available 
+
+Now</a>";chatwidus.png
+;;FrequentlyAskedMediaParagraphComponent;FAQ Media Paragraph Component;FrequentlyAskedMediaParagraphComponent;"<p>FAQ</p><a href='/store/mpl/en/faq'>Frequently Asked Questions</a>";FAQ.png
+
+
+
+# CMS Paragraph Components
+UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];content[lang=$lang]
+;;contactUsHeaderComponent;"<h2>Contact Us</h2>
+<span class='copy'>You want to talk to us? Shoot your questions about your order, our site, your account, our deals, and everything in between. We're here for you. But not here here. Make our Hotline Blink. Call Us anytime,and from 
+
+anywhere or drop us an email at hello@tatacliq.com</span>";
