@@ -91,6 +91,12 @@ INSERT_UPDATE MplEnhancedSearchBoxComponent;$contentCV[unique=true];uid[unique=t
 ;;MplEnhancedSearchBox;Marketplace Enhanced  Search Box Component;MplEnhancedSearchBox;2;3;3;false
 
 
+INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
+
+UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];bannerImage(code,$contentCV);majorPromoText;minorPromo1Text;minorPromo2Text
+;;ErrorPageBannerComponent;TMP_ErrorPageBanner.png;;
+
 
 INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow'];$category;$product;linkName[lang=$lang]
 ;;LuxuryHelpLink;Luxury Help Link;/help;;helpLink;;;;
@@ -116,11 +122,7 @@ INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url
 ;;CancellationLink;Cancellation Link;/cancellation;;;;;;Cancellation
 ;;ReturnsLink;Returns Link;/returns;;;;;;Returns
 ;;BlogLink;Blog Link;/blog;;;;;;Blog
-;;MenCategoryLink;;;;;;;;"Men"
-;;WomenCategoryLink;;;;;;;;"Women"
-;;KidsCategoryLink;;;;;;;;"Kids"
-;;BeautyCategoryLink;;;;;;;;"Beauty"
-;;SaleCategoryLink;;;;;;;;"Sale"
+
 
 
 #####################  LuxuryNavigation    #################
@@ -355,6 +357,10 @@ INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;
 ;;mobile-RedPoster;text/png;gadget-banner.png;$jarResourceCms/preview-images/gadget-banner.png;;;
 ;;pickitup-poster;text/png;banner-right.png;$jarResourceCms/preview-images/banner-right.png;;;
 
+
+# Error Pages Image
+INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
+;;TMP_ErrorPageBanner.png;$jarResourceCms/preview-images/404.jpg;TMP_ErrorPageBanner.png;"Bussiness Error Banner";
 
 INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images]
 
@@ -763,7 +769,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;ConfigureProductsCountSlot;ConfigureProductsCountComponent;true;ConfigureProductsCount
 ;;PinCodeServiceSlot;Pin Code Service;true;LuxuryPinCodeService
 ;;CategoryHeroBanner;Category Hero Banner;true;CategoryBannerRotating
-;;CategoryCurosel;Category Curosel;true	;shop-bag
+;;CategoryCurosel;Category Curosel;true	;Brand-shopbycategory
 ;;ProductCurosel;Product Curosel;true	;LuxProductCarouselComponent
 ;;CategoryProductCurosel;Product Curosel;true
 ;;Categorybanner2Slot;Category Banner 2;true;Bag-ShowCase
@@ -819,23 +825,30 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;Men-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
 ;;Men-WeeklyBanner1Slot;Gender WeeklyBanner1;true;HomePageWeaklySpecialBanner
 ;;Women-TopHeaderSlot;Gender TopHeader;true;Home-TopBannerContent
+;;Women-BannerDescriptionSlot;Women BannerDescription;true
 ;;Women-HeaderLinkSlot;Gender HeaderLinkSlot;true;
 ;;Women-siteLogoSlot;Gender siteLogo;true;
 ;;Women-MiniCartSlot;Gender MiniCart;true;Luxury-MiniCart
+;;Women-ProductCurosel2Slot;Women ProductCurosel2;true;
+;;Women-MoreStoriesbanner2Col1Slot;Women MoreStoriesbanner2Col1;true;
+;;Women-MoreStoriesbanner2Col2Slot;Women MoreStoriesbanner2Col2;true;
+;;Women-MoreStoriesbanner1DescriptionSlot;Women MoreStoriesbanner1Description;true;
 ;;Women-WhyShopOnLuxurySlot;Gender WhyShopOnLuxury;true;
 ;;Women-FooterSlot;Gender Footer;true;
-;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBannerRotating
-;;Women-BannerDescriptionSlot;Brand BannerDescription;true;
-;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;LookBook-Bag2
-;;Women-ShowCase1Slot;Brand ShowCase1;true;Men-ShowCase
-;;Women-ShowCase2Slot;Brand ShowCase2;true;Men-ShowCase
-;;Women-ProductCurosel1Slot;Brand ProductCurosel1;true;CoachBrand-ProductCarouselComponent
-;;Women-ProductCurosel2Slot;Brand ProductCurosel2;true;CoachBrand-ProductCarouselComponent
-;;Women-MoreStoriesbanner1DescriptionSlot;Brand MoreStoriesbanner1Description;true;
-;;Women-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;look1ShowCol1,look1ShowCol2
-;;Women-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col2;true;look2ShowCol1,look2ShowCol2
-;;Women-MoreStoriesbanner2Col1Slot;Brand MoreStoriesbanner2Col1;true;bagShow-look1col1
-;;Women-MoreStoriesbanner2Col2Slot;Brand MoreStoriesbanner2Col2;true;bagShow-look1col21,bagShow-look1col22,bagShow-look2col1
+;;Women-HeroBannerSlot;Brand HeroBanner;true;MenBanner
+;;Women-WeeklyBanner2Slot;Gender WeeklyBanner2;true;HomePageWeaklySpecialBanner
+;;Women-CategoryCuroselSlot;Brand CategoryCurosel;true;Brand-shopbycategory
+;;Women-ShowCase1Slot;Brand ShowCase1;true;MenNew-ShowCase
+;;Women-ShowCase2Slot;Brand ShowCase2;true;BagNew-shopLookBook
+;;Women-ProductCurosel1Slot;Brand ProductCurosel1;true;Bag-shopLookBook,mobile-shortBanner,short2New-shopLookBook,mobile-shortBanner2,LookBook-Bag1,mobile-half-shortBanner,
+;;Women-MoreStoriesbanner1Col1Slot;Brand MoreStoriesbanner1Col1;true;mobile-shortBanner
+;;Women-MoreStoriesbanner1Col2Slot;Brand MoreStoriesbanner1Col1;true;
+;;Women-MoreStoriesbanner1Col3Slot;Brand MoreStoriesbanner1Col1;true;short2New-shopLookBook
+;;Women-MoreStoriesbanner1Col4Slot;Brand MoreStoriesbanner1Col1;true;mobile-short-Banner
+;;Women-MoreStoriesbanner1Col5Slot;Brand MoreStoriesbanner1Col1;true;LookBook-Bag
+;;Women-MoreStoriesbanner1Col6Slot;Brand MoreStoriesbanner1Col1;true;mobile-shortBanner2
+;;Women-MoreStoriesbanner1Col7Slot;Brand MoreStoriesbanner1Col1;true;mobile-half-shortBanner
+;;Women-MoreStoriesbanner1Col8Slot;Brand MoreStoriesbanner1Col1;true;LookBook-Bag1
 ;;Women-MoreStoriesbanner2DescriptionSlot;Brand MoreStoriesbanner2Description;true;
 ;;Women-PopularCategorySlot;Brand PopularCategory;true;Brand-shopByFav
 ;;Women-ShortlookBookSlot;Gender ShortlookBook;true;Men-MiniLookBook
@@ -860,7 +873,7 @@ INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;c
 ;;LuxPLPBannerSlot-100009K0001K11;PLP Hero Banner for 100009K0001K11;true;PLP-Banner-100009K0001K11
 ;;LuxPLPVisualFilterSlot-100009K0001K11;PLP Visual Filter for 100009K0001K11;true;visual-filter-100009K0001K11
 ;;LuxPLPBannerSlot;PLP Hero Banner;true;CategoryBannerRotating
-;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;shop-bag
+;;LuxPLPVisualFilterSlot;PLP Visual Filter;true;Brand-shopbycategory
 ;;SearchResultsGridSlot;Search Result Grid Slot for Search List;true;SearchResultsGrid;;;
 ;;Section1-contact;Section1 slot for Contact Us Page;true;contactUsHeaderComponent;;;
 ;;Section2-contact;Section2 slot for Contact Us Page;true;CallUsMediaParagraphComponent,ChatWithUsMediaParagraphComponent,FrequentlyAskedMediaParagraphComponent;;;
@@ -939,7 +952,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 
 ########### Luxury Men Page ##########################
-INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position;page(uid,$contentCV)[unique=true][default='luxuryMenlandingPage4'];contentSlot(uid,$contentCV);
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position;page(uid,$contentCV)[unique=true][default='luxuryMenlandingPage'];contentSlot(uid,$contentCV);
 ;;NewMen1-HeroBanner;Gender-HeroBanner;;NewMen1-HeroBannerSlot
 ;;NewMen1-WeeklyBanner2;Gender-WeeklyBanner2;;NewMen1-WeeklyBanner2Slot
 ;;NewMen1-CategoryCurosel;Gender-CategoryCurosel;;NewMen1-CategoryCuroselSlot
@@ -960,7 +973,7 @@ INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];positi
 
 
 ########### Luxury Men Page ##########################
-INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position;page(uid,$contentCV)[unique=true][default='luxuryMenlandingPage'];contentSlot(uid,$contentCV);
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position;page(uid,$contentCV)[unique=true][default='luxuryMenlandingPage4'];contentSlot(uid,$contentCV);
 ;;Men-HeroBanner;Gender-HeroBanner;;Men-HeroBannerSlot
 ;;Men-BannerDescription;Gender-BannerDescription;;Men-BannerDescriptionSlot
 ;;Men-CategoryCurosel;Gender-CategoryCurosel;;Men-CategoryCuroselSlot
@@ -1670,7 +1683,7 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;Footer-ErrorPage;Footer;;FooterSlot;true
 ;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
 #;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
-;;ErrorPageBannerComponent-Errorpage;MiddleContent;;ErrorPageBannerComponent-slot;true
+;;ErrorPageBannerComponent-ErrorPage;MiddleContent;;ErrorPageBannerComponent-slot;true
 
 INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position;pageTemplate(uid,$contentCV)[unique=true][default='AppPageTemplate'];contentSlot(uid,$contentCV);allowOverwrite
 ;;TopHeaderSlot-AppPage;TopHeaderSlot;;TopHeaderSlot;true          
@@ -1758,12 +1771,4 @@ INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTe
 # Applications Content Pages
 INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
 ;;app-page;APP Page;AppPageTemplate;/app-page
-
-# Error Pages Image
-INSERT_UPDATE Media;mediaFormat(qualifier);code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];realfilename;altText;mime[default='image/jpeg'];$contentCV[unique=true];folder(qualifier)[default=images];
-;;TMP_ErrorPageBanner.png;$jarResourceCms/preview-images/404.jpg;TMP_ErrorPageBanner.png;"Bussiness Error Banner";
-
-INSERT_UPDATE MplBigPromoBannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
-;;ErrorPageBannerComponent;Error Page Banner Component;ErrorPageBannerComponent
-
 
