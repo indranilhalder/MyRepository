@@ -301,7 +301,18 @@
 							</c:forEach>
 						</ul>
 					</c:if>
+							<ul>
+					<!-- TPR 1083 Start -->
+						  <c:if test="${not empty entry.exchangeApplied}">
+		              			<li class="cart_exchange">
 
+			              		<input type="hidden" id="exc_cart" value="${entry.exchangeApplied}">
+			              		<c:set var="isExchangeavailable" value="Exchange Applied"/>
+   										${isExchangeavailable} 
+			              		</li>
+			              		</c:if>
+			              		<!-- TPR 1083 End -->
+							</ul>
 					<p class="item-info">
 						<span> <spring:theme code="order.qty" /> <ycommerce:testId
 								code="orderDetails_productQuantity_label">&nbsp;${entry.quantity}</ycommerce:testId>

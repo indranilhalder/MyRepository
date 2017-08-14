@@ -1261,7 +1261,7 @@ function tealiumCallOnPageLoad()
 				//TPR-429 END
 				//TPR-5193|Req-1 starts
 				if($("#tealiumExchangeVar").val() != 'undefined' && $("#tealiumExchangeVar").val() !='' &&  $("#tealiumExchangeVar").val()!= "notAvailable"){ 
-					tealiumData += '"exchange":"'
+					tealiumData += '"exchange:value":"'
 					+ $("#tealiumExchangeVar").val() + '",';
 				}
 				//TPR-5193|Req-1 ends
@@ -2166,7 +2166,7 @@ $(window).unload(function(event) {
 });
 
 //UF-398
-$(document).on('click','#selectedAddressDivId',function(){
+$(document).on('click','#selectedAddressDivId span:last-child',function(){
 	if(typeof utag !="undefined"){
 		utag.link({
 			link_text: "change_address_clicked",
@@ -2175,7 +2175,7 @@ $(document).on('click','#selectedAddressDivId',function(){
 	   }
 });
 
-$(document).on('click','#selectedDeliveryOptionsDivId',function(){
+$(document).on('click','#selectedDeliveryOptionsDivId span:last-child',function(){
 	if(typeof utag !="undefined"){
 		utag.link({
 			link_text: "change_delivery_option_clicked",
