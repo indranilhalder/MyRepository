@@ -59,6 +59,9 @@ public class NPSFeedbackController
 	 *
 	 * @param model
 	 * @param transactionId
+	 * @param deliveryMode
+	 * @param rating
+	 * @param originalUid
 	 * @return String
 	 * @throws CMSItemNotFoundException
 	 * @throws UnsupportedEncodingException
@@ -81,7 +84,7 @@ public class NPSFeedbackController
 		{
 			if (npsFeedBackModelCount > 0)
 			{
-				return ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
+				returnStatement = ControllerConstants.Views.Fragments.NPS_Emailer.NpsFeedbackExists;
 			}
 			else
 			{

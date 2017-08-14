@@ -126,11 +126,11 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 										final String[] dynProperties = dynCategory.split(",");
 										for (final String dynproperty : dynProperties)
 										{
-											final String property = fastReplace(fastReplace(dynproperty, " ", ""), "-", "").toLowerCase();
+											final String property = dynproperty.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 
 											if (StringUtils.isNotEmpty(indexedProperty.getName()))
 											{
-												final String name = fastReplace(fastReplace(indexedProperty.getName(), " ", ""), "-", "")
+												final String name = indexedProperty.getName().replaceAll(" ", "").replaceAll("-", "")
 														.toLowerCase();
 												if (StringUtils.isNotEmpty(name) && property.equals(name))
 												{
@@ -330,7 +330,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				//groupName=Canvas
 				for (final String groupName : dynGroups)
 				{
-					final String name = fastReplace(fastReplace(groupName, " ", ""), "-", "").toLowerCase();
+					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
 							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
@@ -343,14 +343,14 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 							for (final String attribute : dynAttributes)
 							{
 								//att= metal || alloys || titanium || aluminium || stainlesssteel
-								final String att = fastReplace(fastReplace(attribute, " ", ""), "-", "").toLowerCase();
+								final String att = attribute.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 								FieldValue newValue = null;
 								for (final FieldValue fieldValue : list)
 								{
 									final String valueStr = (String) fieldValue.getValue();
 									if (StringUtils.isNotEmpty(valueStr))
 									{
-										final String formattedValueStr = fastReplace(fastReplace(valueStr, " ", ""), "-", "").toLowerCase();
+										final String formattedValueStr = valueStr.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 										if (att.equals(formattedValueStr))
 										{
 											newValue = new FieldValue(fieldValue.getFieldName(), groupName);
@@ -394,7 +394,7 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 				//groupName=Canvas
 				for (final String groupName : dynGroups)
 				{
-					final String name = fastReplace(fastReplace(groupName, " ", ""), "-", "").toLowerCase();
+					final String name = groupName.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 					//classification.attirbutes.dynamic.materialtype.metal=Metal,Alloys,Titanium,Aluminium,Stainless Steel
 					final String dynAttribute = configurationService.getConfiguration().getString(
 							MarketplaceCoreConstants.DYNAMICATTRIBUTE + property + "." + name);
@@ -407,23 +407,23 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 							for (final String attribute : dynAttributes)
 							{
 								//att= metal || alloys || titanium || aluminium || stainlesssteel
-								final String att = fastReplace(fastReplace(attribute, " ", ""), "-", "").toLowerCase();
+								final String att = attribute.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
 								for (final FeatureValue featureValue : featureValues)
 								{
 									final Object value = featureValue.getValue();
 									if (value instanceof ClassificationAttributeValue)
 									{
 										final String valueName = ((ClassificationAttributeValue) value).getName();
-										//System.out.println("loggggggg========valueName=" + valueName);
+										System.out.println("loggggggg========valueName=" + valueName);
 										if (valueName != null && StringUtils.isNotEmpty(valueName))
 										{
-											final String formattedValueName = fastReplace(fastReplace(valueName, " ", ""), "-", "")
+											final String formattedValueName = valueName.replaceAll(" ", "").replaceAll("-", "")
 													.toLowerCase();
-											//System.out.println("loggggggg========att=" + att);
+											System.out.println("loggggggg========att=" + att);
 											if (att.equals(formattedValueName))
 											{
-												//System.out.println("loggggggg========formattedValueName=" + formattedValueName);
-												//System.out.println("loggggggg========groupName=" + groupName);
+												System.out.println("loggggggg========formattedValueName=" + formattedValueName);
+												System.out.println("loggggggg========groupName=" + groupName);
 												((ClassificationAttributeValue) value).setName(groupName);
 												featureValue.setValue(value);
 												flag = true;
@@ -452,31 +452,5 @@ public class MplClassificationPropertyValueProvider extends ClassificationProper
 			}
 		}
 
-	}
-
-	static String fastReplace(final String str, final String target, final String replacement)
-	{
-		final int targetLength = target.length();
-		if (targetLength == 0)
-		{
-			return str;
-		}
-		int idx2 = str.indexOf(target);
-		if (idx2 < 0)
-		{
-			return str;
-		}
-		final StringBuilder buffer = new StringBuilder(targetLength > replacement.length() ? str.length() : str.length() * 2);
-		int idx1 = 0;
-		do
-		{
-			buffer.append(str, idx1, idx2);
-			buffer.append(replacement);
-			idx1 = idx2 + targetLength;
-			idx2 = str.indexOf(target, idx1);
-		}
-		while (idx2 > 0);
-		buffer.append(str, idx1, str.length());
-		return buffer.toString();
 	}
 }

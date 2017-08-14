@@ -297,7 +297,7 @@
 						<span>Sort:</span>
 
 						<li><span class="sort" data-name="relevance"<c:if test="${param.sort == null || param.sort eq 'relevance'}"> style="color: #a5173c;"</c:if>>Relevance</span></li>
-						<li><span class="sort" data-name="new"<c:if test="${param.sort eq 'isProductNew'}"> style="color: #a5173c;"</c:if>>New</span></li>
+						<li><span class="sort" data-name="new"<c:if test="${param.sort eq 'isProductNew' || param.sort eq 'new'}"> style="color: #a5173c;"</c:if>>New</span></li>
 						<li><span class="sort" data-name="discount"<c:if test="${param.sort eq 'isDiscountedPrice'}"> style="color: #a5173c;"</c:if>>Discount</span></li>
 					</ul>
 					<ul>
@@ -313,7 +313,7 @@
 			<label class="sortByMobile">Sort by</label>
 			<select class="responsiveSort">
 			<option  data-name="relevance"<c:if test="${param.sort == null || param.sort eq 'relevance'}"> selected="selected"</c:if>>Relevance</option>
-			<option  data-name="new"<c:if test="${param.sort eq 'isProductNew'}"> selected="selected"</c:if>>New</option>
+			<option  data-name="new"<c:if test="${param.sort eq 'isProductNew' || param.sort eq 'new'}"> selected="selected"</c:if>>New</option>
 			<option  data-name="discount"<c:if test="${param.sort eq 'isDiscountedPrice'}"> selected="selected"</c:if>>Discount</option>
 			<option  data-name="low"<c:if test="${param.sort eq 'price-asc'}"> selected="selected"</c:if>>Low to High</option>
 			<option  data-name="high"<c:if test="${param.sort eq 'price-desc'}"> selected="selected"</c:if>>High to Low</option>
