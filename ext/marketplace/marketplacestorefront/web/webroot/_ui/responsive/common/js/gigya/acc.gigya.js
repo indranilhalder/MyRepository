@@ -229,7 +229,11 @@ function registerUserGigya(eventObject)
     						$('#ratingDiv .gig-rating-readReviewsLink').text(data.streamInfo.ratingCount+" REVIEWS");
     						}
     				$('#customer').text("Customer Reviews (" + data.streamInfo.ratingCount + ")");
-    				
+    				//TPR-6655
+    				if(avgreview != undefined && avgreview > 0.0){
+    					$('#ratingvalue').text(data.streamInfo.avgRatings._overall);
+    					$('#reviewcount').text(data.streamInfo.ratingCount);
+    				}
     				//added for tealium to get average product rating
    				     utag.link({"product_rating":avgreview});
     				

@@ -426,21 +426,26 @@ public class ProductPageController extends MidPageController
 			// TPR- 4389 STARTS FROM HERE
 
 			final ProductModel productModel = productService.getProductForCode(productCode);
-			final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
-					productModel.getProductCategoryType(), productCode);
-
-			if (reviewAndRating != null)
+			//TPR-6655
+			final boolean isGigyaforPdpEnabled = configurationService.getConfiguration().getBoolean("gigya.pdpCall");
+			if (isGigyaforPdpEnabled)
 			{
-				for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
-				{
-					final String commentCount = entry.getKey();
-					final String ratingCount = entry.getValue();
-					model.addAttribute("commentCount", commentCount);
-					model.addAttribute("averageRating", ratingCount);
+				final Map<String, String> reviewAndRating = mplGigyaReviewService.getReviewsAndRatingByCategoryId(
+						productModel.getProductCategoryType(), productCode);
 
+				if (reviewAndRating != null)
+				{
+					for (final Map.Entry<String, String> entry : reviewAndRating.entrySet())
+					{
+						final String commentCount = entry.getKey();
+						final String ratingCount = entry.getValue();
+						model.addAttribute("commentCount", commentCount);
+						model.addAttribute("averageRating", ratingCount);
+
+					}
 				}
+				//   TPR-4389 ENDS HERE
 			}
-			//   TPR-4389 ENDS HERE
 
 			if (productModel.getLuxIndicator() != null
 					&& productModel.getLuxIndicator().getCode().equalsIgnoreCase(ControllerConstants.Views.Pages.Cart.LUX_INDICATOR))
