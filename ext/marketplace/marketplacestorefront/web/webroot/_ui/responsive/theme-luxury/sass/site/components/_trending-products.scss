@@ -1,0 +1,31 @@
+.trending-products { 
+	li {
+		display: inline-block;
+		max-width: 235px; 
+		padding: 0 20px;
+		.title {
+			text-transform: uppercase;
+			margin-top: 35px;
+			+ p {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			a {
+				font-size: 16px;
+			}
+			
+		}
+	}
+	.price {
+		text-align: left;
+		> span {
+			width: 50%;
+			display: inline-block;
+			&:nth-child(2) {
+				text-align: right;
+				margin-left: -2px;
+			}
+		}
+	}
+}

@@ -334,6 +334,9 @@
 		<property name="timestamp" type="String"></property>
 		<property name="checkTataRewards" type="boolean"></property>
 		<property name="gigyaSessionsForMob" type="com.tisl.mpl.wsdto.GigyaWsDTO" />
+		<property name="gender" type="String" />
+		<property name="mobilenumber" type="String" />
+		
 	</bean>
 
 	<bean class="com.tisl.mpl.facades.product.data.TrackOrderData">
@@ -1207,6 +1210,11 @@
 		<property name="storeName" type="String"></property>
 		<property name="storeAddress" type="String"></property>
 		<property name="date" type="String"></property>
+	</bean>
+	<!-- used for addtocart helper -->
+	<bean class="com.tis.mpl.facade.data.ProductValidationData">
+		<property name="freebie" type="java.lang.Boolean"></property>
+		<property name="validproduct" type="java.lang.Boolean"></property>
 	</bean>
 	
 	<!--TPR-6117-->

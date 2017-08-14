@@ -8,6 +8,7 @@ import de.hybris.platform.core.model.order.CartModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.user.CustomerModel;
 import de.hybris.platform.payment.model.PaymentTransactionModel;
+import de.hybris.platform.store.BaseStoreModel;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public interface MplPaymentDao
 	 * @param paymentType
 	 * @return PaymentTypeModel
 	 */
-	PaymentTypeModel getPaymentTypeForApportion(String paymentType);
+	PaymentTypeModel getPaymentTypeForApportion(String paymentType, final BaseStoreModel baseStore);
 
 
 	/**
@@ -99,9 +100,10 @@ public interface MplPaymentDao
 	 * This method is used to get the PaymentTypeModel against the mode name
 	 *
 	 * @param paymentMode
+	 * @param baseStore
 	 * @return PaymentTypeModel
 	 */
-	PaymentTypeModel getPaymentMode(String paymentMode);
+	PaymentTypeModel getPaymentMode(String paymentMode, BaseStoreModel baseStore);
 
 	/**
 	 * This method is used to get the Country ISO

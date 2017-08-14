@@ -6,6 +6,7 @@ import de.hybris.platform.commercefacades.voucher.exceptions.VoucherOperationExc
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
 import de.hybris.platform.core.model.order.AbstractOrderModel;
 import de.hybris.platform.core.model.order.CartModel;
+import de.hybris.platform.core.model.order.OrderEntryModel;
 import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.core.model.order.payment.PaymentInfoModel;
 import de.hybris.platform.core.model.user.CustomerModel;
@@ -407,6 +408,14 @@ public interface MplPaymentService
 	 */
 	void setPaymentTransactionForCODFromSubmitProcess(Map<String, Double> paymentMode, OrderModel orderModel)
 			throws EtailNonBusinessExceptions;
+
+	/**
+	 * added for TPR-1348 for AutofundInitiation SprintPaymentFixes:-
+	 *
+	 * @param orderEntryModel
+	 *
+	 */
+	public String doRefundPayment(List<OrderEntryModel> orderEntryModel);
 
 
 }

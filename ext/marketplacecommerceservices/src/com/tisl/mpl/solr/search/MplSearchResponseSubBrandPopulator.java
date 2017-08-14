@@ -15,6 +15,8 @@ import de.hybris.platform.solrfacetsearch.search.SearchResult;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 
 
@@ -45,7 +47,7 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see de.hybris.platform.converters.Populator#populate(java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -57,7 +59,7 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 
 		if (source.getRequest().getSearchQueryData().isSns())
 		{
-			target.setAllBrand(buildSubBrands(source.getSearchResult()));
+			target.setAllBrand(buildSubBrands(source.getSearchResult(), source.getRequest().getSearchText()));
 			target.setAllSeller(buildSubSeller(source.getSearchResult()));
 			target.setSnsCategories(buildCategories(source.getSearchResult()));
 			target.setMicrositeSnsCategories(buildMicrositeSNSCategories(source.getSearchResult()));
@@ -101,36 +103,31 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 	 * final Facet brandPathFacet = solrSearchResult.getFacet(MarketplacecommerceservicesConstants.BRAND); final
 	 * List<String> allBrands = new ArrayList<String>(); if ((brandPathFacet != null) &&
 	 * !(brandPathFacet.getFacetValues().isEmpty())) {
-	 * 
+	 *
 	 * for (final FacetValue facetValue : brandPathFacet.getFacetValues()) { allBrands.add(facetValue.getName()); }
-	 * 
+	 *
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * return allBrands; }
 	 */
 
-	private List<CategoryData> buildSubBrands(final SearchResult solrSearchResult)
+	private List<CategoryData> buildSubBrands(final SearchResult solrSearchResult, final String searchText)
 	{
 		// YTODO Auto-generated method stub
 		final Facet brandFacet = solrSearchResult.getFacet(MarketplacecommerceservicesConstants.BRAND);
 		final List<CategoryData> allBrands = new ArrayList<CategoryData>();
+		boolean isBrandPresent = false;
 		if ((brandFacet != null) && !(brandFacet.getFacetValues().isEmpty()))
 		{
-
 			for (final FacetValue facetValue : brandFacet.getFacetValues())
 			{
-
-
-
 				final CategoryData categoryData = new CategoryData();
+
 				if (facetValue != null)
 				{
-
-
 					if (facetValue.getName() != null)
 					{
-
 						categoryData.setCode(facetValue.getName());
 					}
 					if (facetValue.getDisplayName() != null)
@@ -138,12 +135,23 @@ public class MplSearchResponseSubBrandPopulator<FACET_SEARCH_CONFIG_TYPE, INDEXE
 
 						categoryData.setName(facetValue.getDisplayName());
 					}
+					if (StringUtils.isNotEmpty(facetValue.getDisplayName())
+							&& facetValue.getDisplayName().toLowerCase().contains(searchText.toLowerCase()))
+
+					{
+						isBrandPresent = true;
+						allBrands.clear();
+
+					}
 				}
 				allBrands.add(categoryData);
+				if (isBrandPresent)
+				{
+					break;
 
+				}
 			}
 		}
-
 		return allBrands;
 	}
 

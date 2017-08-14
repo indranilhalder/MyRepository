@@ -1,0 +1,61 @@
+
+#
+# Import the Solr configuration for the store
+#
+$prefix=lux
+$productCatalog=$prefixProductCatalog
+$catalogVersions=catalogVersions(catalog(id),version);
+$serverConfigName=$prefixSolrServerConfig
+$indexConfigName=$prefixSolrIndexConfig
+$searchConfigName=$prefixPageSize
+$facetSearchConfigName=$prefixIndex
+$facetSearchConfigDescription=Marketplace Solr Index
+$searchIndexNamePrefix=$prefix
+$solrIndexedType=$prefixProductType
+$indexBaseSite=$prefix
+$indexLanguages=en
+$indexCurrencies=INR
+$priceRangeINR=$prefixPriceRangeINR
+$classAttributeAssignment=classAttributeAssignment(classificationAttribute(code),classificationClass(code))
+$classificationAttributeAssignments=classificationAttributeAssignments(classificationAttribute(code),classificationClass(code))
+
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=true];facetType(code);facetSort(code);priority;visible;useForSpellchecking[default=false];useForAutocomplete[default=false];fieldValueProvider			;facetDisplayNameProvider			;customFacetSortProvider;topValuesProvider		 ;rangeSets(name);$classificationAttributeAssignments;
+								 ;$solrIndexedType						  ;colour           				;string    ;true                ;    			    ;     				        ;     				    ;true;     				;MultiSelectOr;Alpha 		 	;2500	;true;; ;mplClassificationColourCodeValueProvider;mplColorFacetDisplayNameProvider;;defaultTopValuesProvider;;colorfamilyapparel:apparelCC,colorfamilyfootwear:footwearCC,colorelectronics:appliancesgf,colorelectronics:audioandhometheatresystemsgf,colorelectronics:actioncamcordersgf,colorelectronics:camerasgf,colorelectronics:computersandlaptopsgf,colorelectronics:gaminggf,colorelectronics:headphonesandspeakersgf,colorelectronics:health&groominggf,colorelectronics:small&kitchenappliancesgf,colorelectronics:smartphonesgf,colorelectronics:tabletscef,colorelectronics:tvandentertainmentgf,colorelectronics:wearabletechgf,colorfamilyfashiona:10001
+
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=false];facet[default=false];facetType(code);facetSort(code);priority;visible		;fieldValueProvider  ;facetDisplayNameProvider  ;customFacetSortProvider;rangeSets(name);$classAttributeAssignment;$classificationAttributeAssignments;
+								 ;$solrIndexedType                        ;Occasion							;string		;true				;					; 					;true						;true 					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyCodeValueProvider;mplOccasionDisplayNameProvider;;;occasion:apparelCC;occasionfashiona:10002,occasionwatches:20002
+
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
+								 ;$solrIndexedType                        ;patternWatches					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;patternfashiona:10015
+								 ;$solrIndexedType                        ;gender							;string		;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;genderfashiona:10014,genderwatches:20002
+								 ;$solrIndexedType                        ;multipack						;string		;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;multipackfashiona:10001
+								 ;$solrIndexedType                        ;materialType						;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;materialtypefashiona:10001
+								 ;$solrIndexedType                        ;bagType							;string	    ;		true;			; 					;true						;   					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;bagtypefashiona:10003
+								 ;$solrIndexedType                        ;hairAccessoryType				;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;hairaccessoriestypefashiona:10009
+#								 ;$solrIndexedType                        ;typeofBelt						;string	    ;		true;			; 					;true						;   					;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typeofbeltfashiona:10010
+								 ;$solrIndexedType                        ;beltSize							;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;beltsizefashiona:10010
+								 ;$solrIndexedType                        ;typeWatches						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;writinginstrumenttypefashiona:10013
+								 ;$solrIndexedType                        ;embellishment					;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;embellishmentfashiona:10016
+								 ;$solrIndexedType                        ;walletSize						;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;sizefashiona:10003
+								 ;$solrIndexedType                        ;hatcaptype						;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;typeofhatsandcapsfashiona:10011
+								 ;$solrIndexedType                        ;straptype						;string	    ;		true;			; 					;true						;false   				;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;straptypefashiona:10003 
+ ########Added Classification for Watches   :::: START ###############
+ INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
+#								 ;$solrIndexedType                        ;functionality					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;functionalitywatches:20002
+# 								 ;$solrIndexedType                        ;movement							;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;movementwatches:20003
+# 								 ;$solrIndexedType                        ;wearability						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;wearabilitywatches:20002
+ 								 ;$solrIndexedType                        ;dailshape   						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialshapewatches:20004
+# 								 ;$solrIndexedType                        ;dailshapecolor					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;dialcolorwatches:20003
+ 								 ;$solrIndexedType                        ;strapmaterial					;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;straptypewatches:20010
+ 								 ;$solrIndexedType                        ;strapcolor						;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;strapcolorwatches:20010
+ 								 ;$solrIndexedType                        ;features			   				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;specialfeatureswatches:20003,waterresistancewatches:20002
+# 								 ;$solrIndexedType                        ;collectionname   				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationPropertyValueProvider	;						;				;							;collectionnamewatches:20002
+ 
+
+INSERT_UPDATE SolrIndexedProperty;solrIndexedType(identifier)[unique=true];name[unique=true];type(code);genericFacet[default=false];sortableType(code);currency[default=false];localized[default=false];multiValue[default=true];facet[default=false];facetType(code);facetSort(code);priority;visible;fieldValueProvider	;facetDisplayNameProvider						;customFacetSortProvider;rangeSets(name);$classAttributeAssignment	;$classificationAttributeAssignments;
+								 ;$solrIndexedType                        ;dialColourWatches				;string		;		true;			; 					;true						; 						;true					;MultiSelectOr;Alpha			;1000	;true	;mplClassificationColourCodeValueProvider;mplWchFAColorFacetDisplayNameProvider		;				;				;							;dialcolorwatches:20003
+
+ ########Added Classification for Watches   :::: END ###############

@@ -1,0 +1,1752 @@
+#
+# Import the CMS content for the site emails
+#
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$wideContent=CMSImageComponent,BannerComponent
+
+# Import config properties into impex macros
+
+$jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/import/cockpits/cmscockpit
+
+$emailPackageName=com.tisl.mpl.facades.process.email.context
+
+# Templates for CMS Cockpit Page Edit
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;CustomerRegistrationEmailTemplate;$jarResourceCms/structure-view/structure_customerRegistrationEmailTemplate.vm
+;;CustomerRegistrationInCsEmailTemplate;$jarResourceCms/structure-view/structure_customerRegistrationInCsEmailTemplate.vm
+;;ForgottenPasswordEmailTemplate;$jarResourceCms/structure-view/structure_forgottenPasswordEmailTemplate.vm
+;;OrderConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationEmailTemplate.vm
+;;DeliverySentEmailTemplate;$jarResourceCms/structure-view/structure_deliverySentEmailTemplate.vm
+;;ReadyForPickupEmailTemplate;$jarResourceCms/structure-view/structure_readyForPickupEmailTemplate.vm
+;;OrderCancelledEmailTemplate;$jarResourceCms/structure-view/structure_orderCancelledEmailTemplate.vm
+;;OrderRefundEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundEmailTemplate.vm
+;;OrderCollectionReminderEmailTemplate;$jarResourceCms/structure-view/structure_orderCollectionReminderEmailTemplate.vm
+;;OrderMoveToCsEmailTemplate;$jarResourceCms/structure-view/structure_orderMoveToCSEmailTemplate.vm
+;;OrderPartiallyCanceledEmailTemplate;$jarResourceCms/structure-view/structure_orderPartiallyCanceledEmailTemplate.vm
+;;OrderPartiallyRefundedEmailTemplate;$jarResourceCms/structure-view/structure_orderPartiallyRefundedEmailTemplate.vm
+;;NotPickedUpConsignmentCanceledEmailTemplate;$jarResourceCms/structure-view/structure_notPickedUpConsignmentCanceledEmailTemplate.vm
+;;FriendsInviteEmailTemplate;$jarResourceCms/structure-view/structure_friendsInviteEmailTemplate.vm
+;;SendInvoiceEmailTemplate;$jarResourceCms/structure-view/structure_sendInvoiceEmailTemplate.vm
+;;SendUpdateEmailTemplate;$jarResourceCms/structure-view/structure_sendUpdateEmailTemplate.vm
+;;CustomerProfileUpdateEmailTemplate;$jarResourceCms/structure-view/structure_customerProfileUpdateEmailTemplate.vm
+;;ChangePasswordEmailTemplate;$jarResourceCms/structure-view/structure_changePasswordEmailTemplate.vm
+;;SubmitRequestEmailTemplate;$jarResourceCms/structure-view/structure_submitRequestEmailTemplate.vm
+;;LuxuryPdpQuestionEmailTemplate;$jarResourceCms/structure-view/structure_submitRequestEmailTemplate.vm
+#Shipping Confirmation Event
+;;ShippingConfirmationEmailTemplate;$jarResourceCms/structure-view/structure_shippingConfirmationEmailTemplate.vm
+;;OrderOnHoldEmailTemplate;$jarResourceCms/structure-view/structure_orderOnHoldEmailTemplate.vm
+;;OrderRejectRiskEmailTemplate;$jarResourceCms/structure-view/structure_orderRejectRiskEmailTemplate.vm
+;;OrderConfirmationRiskEmailTemplate;$jarResourceCms/structure-view/structure_orderConfirmationRiskEmailTemplate.vm
+
+#Shipment out for delivery
+#;;OutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_outForDeliveryEmailTemplate.vm
+
+;;OrderDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_orderDeliveryEmailTemplate.vm
+
+###########PDP Email
+;;PDPEmailTemplate;$jarResourceCms/structure-view/structure_PDPEmailTemplate.vm
+
+###Email to notify market place when an order with high risk RMS score is registered
+;;HighRiskNotificationEmailTemplate;$jarResourceCms/structure-view/structure_highRiskNotificationEmailTemplate.vm
+###Email to notify market place user to take action when an order is put on HOLD
+;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
+
+#Shipment out for delivery
+#;;OutForDeliveryEmailTemplate;$jarResourceCms/structure-view/structure_outForDeliveryEmailTemplate.vm
+
+### Order Refund
+;;OrderRefundCreditedEmailTemplate;$jarResourceCms/structure-view/structure_orderRefundCreditedEmailTemplate.vm
+## Order Collected By PickUp Person
+;;OrderCollectedByPersonEmailTemplate;$jarResourceCms/structure-view/structure_OrderCollectedByPersonEmailTemplate.vm
+
+###########PDP Email
+#;;PDPEmailTemplate;$jarResourceCms/structure-view/structure_PDPEmailTemplate.vm
+
+###Email to notify market place when an order with high risk RMS score is registered
+#;;HighRiskNotificationEmailTemplate;$jarResourceCms/structure-view/structure_highRiskNotificationEmailTemplate.vm
+###Email to notify market place user to take action when an order is put on HOLD
+#;;TakeActionOnHeldOrderEmailTemplate;$jarResourceCms/structure-view/structure_takeActionOnHeldOrderEmailTemplate.vm
+
+###########PDP Email
+  
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+###########PDP Email
+;;PDPEmailTemplate;PDP Email Template;true;PDPEmail;lux_Email_PDP_Subject;lux_Email_PDP_Body;EmailPage
+;;CustomerRegistrationEmailTemplate;Customer Registration Email Template;true;customerRegistrationEmail;lux_Email_Customer_Registration_Subject;lux_Email_Customer_Registration_Body;EmailPage
+;;CustomerRegistrationInCsEmailTemplate;Customer Registration In Cs Email Template;true;customerRegistrationInCsEmail;lux_Email_Customer_Registration_In_Cs_Subject;lux_Email_Customer_Registration_In_Cs_Body;EmailPage
+;;ForgottenPasswordEmailTemplate;Forgotten Password Email Template;true;forgottenPasswordEmail;lux_Email_Forgotten_Password_Subject;lux_Email_Forgotten_Password_Body;EmailPage
+;;OrderConfirmationEmailTemplate;Order Confirmation Email Template;true;orderConfirmationEmail;lux_Email_Order_Confirmation_Subject;lux_Email_Order_Confirmation_Body;EmailPage
+;;DeliverySentEmailTemplate;Delivery Sent Email Template;true;deliverySentEmail;lux_Email_Delivery_Sent_Subject;lux_Email_Delivery_Sent_Body;EmailPage
+;;ReadyForPickupEmailTemplate;Ready For Pickup Email Template;true;readyForPickupEmail;lux_Email_Ready_For_Pickup_Subject;lux_Email_Ready_For_Pickup_Body;EmailPage
+;;OrderCancelledEmailTemplate;Order Cancelled Email Template;true;orderCancelledEmail;lux_Email_Order_Cancelled_Subject;lux_Email_Order_Cancelled_Body;EmailPage
+;;OrderRefundEmailTemplate;Order Refund Email Template;true;orderRefundEmail;lux_Email_Order_Refund_Subject;lux_Email_Order_Refund_Body;EmailPage
+;;OrderCollectionReminderEmailTemplate;Order Collection Reminder Email Template;true;orderCollectionReminderEmail;lux_Email_Order_Collection_Reminder_Subject;lux_Email_Order_Collection_Reminder_Body;EmailPage
+;;OrderMoveToCsEmailTemplate;Order Moved To CS Email Template;true;orderMoveToCsEmail;lux_Email_Order_Move_To_CS_Subject;lux_Email_Order_Move_To_CS_Body;EmailPage
+;;OrderPartiallyCanceledEmailTemplate;Order Partially Canceled Email Template;true;orderPartiallyCanceledEmail;lux_Email_Order_Partially_Canceled_Subject;lux_Email_Order_Partially_Canceled_Body;EmailPage
+;;OrderPartiallyRefundedEmailTemplate;Order Partially Refunded Email Template;true;orderPartiallyRefundedEmail;lux_Email_Order_Partially_Refunded_Subject;lux_Email_Order_Partially_Refunded_Body;EmailPage
+;;NotPickedUpConsignmentCanceledEmailTemplate;Not Picked Up Consignment Canceled Email Template;true;notPickedUpConsignmentCanceledEmail;lux_Email_NotPickedUpConsignment_Canceled_Subject;lux_Email_NotPickedUpConsignment_Canceled_Body;EmailPage
+;;FriendsInviteEmailTemplate;Friends Invitation Email Template;true;friendsInviteEmail;lux_Email_FriendsInvite_Subject;lux_Email_FriendsInvite_Body;EmailPage
+;;SendInvoiceEmailTemplate;Send Invoice Email Template;true;sendInvoiceEmail;lux_Email_SendInvoice_Subject;lux_Email_SendInvoice_Body;EmailPage
+;;SendUpdateEmailTemplate;Send Update Email Template;true;sendUpdateEmail;lux_Email_SendUpdate_Subject;lux_Email_SendUpdate_Body;EmailPage
+;;CustomerProfileUpdateEmailTemplate;Customer Profile Update Email Template;true;customerProfileUpdateEmail;lux_Email_CustomerProfileUpdate_Subject;lux_Email_CustomerProfileUpdate_Body;EmailPage
+;;ChangePasswordEmailTemplate;Change Password Email Template;true;changePasswordEmail;lux_Email_ChangePassword_Subject;lux_Email_ChangePassword_Body;EmailPage
+;;SubmitRequestEmailTemplate;Submit Request Email Template;true;submitRequestEmail;lux_Email_SubmitRequest_Subject;lux_Email_SubmitRequest_Body;EmailPage
+;;LuxuryPdpQuestionEmailTemplate;Luxury Pdp Question Email Template;true;luxuryPdpQuestionEmail;lux_Email_LuxuryPdpQuestion_Subject;lux_Email_LuxuryPdpQuestion_Body;EmailPage
+;;OrderPlacedFeedbackEmailTemplate;OrderPlaced Feedback Email Template;true;orderPlacedFeedbackEmail;lux_Email_OrderPlacedFeedback_Subject;lux_Email_OrderPlacedFeedback_Body;EmailPage
+#Shipping Confirmation Event 
+;;ShippingConfirmationEmailTemplate;Shipping Confirmation Email Template;true;shippingConfirmationEmail;lux_Email_ShippingConfirmation_Subject;lux_Email_ShippingConfirmation_Body;EmailPage
+;;OrderOnHoldEmailTemplate;Order On Hold Email Template;true;orderOnHoldEmail;lux_Email_Order_On_Hold_Subject;lux_Email_Order_On_Hold_Body;EmailPage
+;;OrderRejectRiskEmailTemplate;Order Reject Risk Email Template;true;orderRejectRiskEmail;lux_Email_Order_Reject_Risk_Subject;lux_Email_Order_Reject_Risk_Body;EmailPage
+;;OrderConfirmationRiskEmailTemplate;Order Confirmation Risk Email Template;true;orderConfirmationRiskEmail;lux_Email_Order_Confirmation_Risk_Subject;lux_Email_Order_Confirmation_Risk_Body;EmailPage
+
+#Shipment out for delivery
+#;;OutForDeliveryEmailTemplate;Out For Delivery Email Template;true;outForDeliveryEmail;lux_Email_OutForDelivery_Subject;lux_Email_OutForDelivery_Body;EmailPage
+
+;;OrderDeliveryEmailTemplate;Order Delivery Email Template;true;orderDeliveryEmail;lux_Email_Order_Delivery_Subject;lux_Email_Order_Delivery_Body;EmailPage
+
+###########PDP Email
+;;PDPEmailTemplate;PDP Email Template;true;PDPEmail;lux_Email_PDP_Subject;lux_Email_PDP_Body;EmailPage
+
+###Email to notify market place when an order with high risk RMS score is registered
+;;HighRiskNotificationEmailTemplate;High Risk Notification Email Template;true;highRiskNotificationEmail;lux_High_Risk_Notification_Subject;lux_High_Risk_Notification_Body;EmailPage
+###Email to notify market place user to take action when an order is put on HOLD
+;;TakeActionOnHeldOrderEmailTemplate;Take Action On Held Order Email Template;true;takeActionOnHeldOrderEmail;lux_Take_Action_On_Held_Order_Subject;lux_Take_Action_On_Held_Order_Body;EmailPage
+##order Refund Email
+;;OrderRefundCreditedEmailTemplate;Order Collected By Customer Email Template;true;orderRefundCreditedEmail;lux_Email_Order_RefundCredited_Subject;lux_Email_Order_RefundCredited_Body;EmailPage
+##order Collected by pickupUp Person
+;;OrderCollectedByPersonEmailTemplate;Order Collected By Customer Email Template;true;orderCollectedByPersonEmail;lux_Email_Order_CollectedByPerson_Subject	;lux_Email_Order_CollectedByPerson_Body;EmailPage
+
+
+
+
+
+
+
+###########PDP Email
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PDPEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;pdp_Header-PDPEmail;pdp_Header;;EmailPDPHeaderImageSlot;true
+;;pdp_tips-PDPEmail;pdp_tips;;EmailPDPTipsImageSlot;true
+;;smileyimg-PDPEmail;smileyimg;;EmailsmileyimgRegSlot;true
+;;fb-PDPEmail;fb;;EmailfbRegSlot;true
+;;AppDownloadUrl-PDPEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;tweet-PDPEmail;tweet;;EmailtweetSlot;true
+;;youtube-PDPEmail;youtube;;EmailYouTubeSlot;true
+;;insta-PDPEmail;insta;;EmailInstaSlot;true
+
+
+###########PDP Email
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PDPEmailTemplate'];validComponentTypes(code)
+;pdp_Header;;;logo
+;pdp_tips;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+#oreder Refund Email Slot Name
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderRefundCreditedEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;fb;;$wideContent;
+;youtube;;$wideContent;
+;twitter;;$wideContent;
+;gplus;;$wideContent;
+
+## Order Collected PickUp Person
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderCollectedByPersonEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;Tip;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;fb;;$wideContent;
+;youtube;;$wideContent;
+;twitter;;$wideContent;
+;gplus;;$wideContent;
+
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CustomerRegistrationEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;letsgoshopping1;;$wideContent;
+;letsgoshopping2;;$wideContent;
+;Tip;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CustomerRegistrationInCsEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;slotBeforeTogetherFun;;$wideContent;
+;togetherFun;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+#;tipImage;;$wideContent;
+#;tipContentImage;;$wideContent;
+;shoppingGenieImage;;$wideContent;
+#;smileyimg;;$wideContent;
+#;fb;;$wideContent;
+#;gplus;;$wideContent;
+;Tip;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ForgottenPasswordEmailTemplate'];validComponentTypes(code)
+;ForgotPwdSiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;ChangePasswordOne;;$wideContent;
+;ChangePasswordTwo;;$wideContent;
+;ForgorPwdTip;;$wideContent;
+;ForgotPwdDescription;;$wideContent;
+;ForgotPwdBannerTwo;;$wideContent;
+;ForgotPwdsmileyimg;;$wideContent;
+;ForgotPwdfb;;$wideContent;
+;ForgotPwdgplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+;gplus;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];validComponentTypes(code)
+;SiteLogoNew;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderCancelledEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='DeliverySentEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;DeliveryConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;gplus;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ReadyForPickupEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderCollectionReminderEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderMoveToCsEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderPartiallyCanceledEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderPartiallyRefundedEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='NotPickedUpConsignmentCanceledEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='FriendsInviteEmailTemplate'];validComponentTypes(code)
+;InviteSiteLogo;;;logo
+;Invitefantastic1;;$wideContent;
+;Invitefantastic2;;$wideContent;
+;Invitehandpick;;$wideContent;
+;InviteslashImgOne;;$wideContent;
+;Invitebrand;;$wideContent;
+;InviteslashImgTwo;;$wideContent;
+;Inviteexp;;$wideContent;
+;InviteslashImgThree;;$wideContent;
+;Invitefast;;$wideContent;
+;Invitetip;;$wideContent;
+#;tipcontent;;$wideContent;
+#;bestfriend1;;$wideContent;
+#;bestfriend2;;$wideContent;
+#;Invitesmileyimg;;$wideContent;
+#;Invitefb;;$wideContent;
+#;Invitegplus;;$wideContent;
+;Tip;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='SendInvoiceEmailTemplate'];validComponentTypes(code)
+;InvoiceSiteLogo;;;logo
+;Invoiceletsgoshopping1;;$wideContent;
+;Invoiceletsgoshopping2;;$wideContent;
+;InvoiceTip;;$wideContent;
+#;InvoiceDescription;;$wideContent;
+#;InvoiceBanner2;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;Invoicesmileyimg;;$wideContent;
+;Invoicefb;;$wideContent;
+#;Invoicegplus;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='SendUpdateEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='CustomerProfileUpdateEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Tip;;$wideContent;
+#;Description;;$wideContent;
+#;CustomerProfileUpdateBanner;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ChangePasswordEmailTemplate'];validComponentTypes(code)
+;EmailForgotPasswordHeaderSlot;;$wideContent;
+;EmailForgotPasswordMiddlebannerSlot;;$wideContent;
+;EmailForgotPasswordMinibannerSlot;;$wideContent;
+;EmailForgotPasswordMinibannerSlot;;$wideContent;
+;EmailsmileyimgRegSlot;;;logo
+;EmailfbRegSlot;;$wideContent;
+;EmailgplusRegSlot;;$wideContent;
+;EmailForgotPasswordPinSlot;;$wideContent;
+;EmailForgotPasswordInstaSlot;;$wideContent;
+;EmailForgotPasswordMiniRightBannerSlot;;$wideContent;
+;EmailForgotPasswordMiniLeftBannerSlot;;$wideContent;
+;EmailResetPwdTipSlot;;;logo
+;EmailForgotPasswordMiniLeftBannerSlot;;$wideContent;
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='SubmitRequestEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='SubmitRequestEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='LuxuryPdpQuestionEmailTemplate'];validComponentTypes(code)
+#####;SiteLogo;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+#########;Footer;;CMSLinkComponent,CMSParagraphComponent
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderPlacedFeedbackEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderOnHoldEmailTemplate'];validComponentTypes(code)
+;OnHOldSiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OnHOldDescription;;$wideContent;
+;Tip;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderRejectRiskEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+#;Tip;;$wideContent;
+;Description;;$wideContent;
+;OrderRejectBottom;;$wideContent;
+#;smileyimg;;$wideContent;
+#;fb;;$wideContent;
+#;gplus;;$wideContent;
+;Tip;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+
+# ORDER DELIVERY CHANGES
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];validComponentTypes(code)
+;SiteLogoNew;;;logo
+;fbnew;;$wideContent;
+;twitterNew;;$wideContent;
+;youtubeNew;;$wideContent;
+;instaNew;;$wideContent;
+;gplus;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;linegrey;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OrderConfirmationRiskEmailTemplate'];validComponentTypes(code)
+;OrderConfirmSiteLogo;;;logo
+;OrderRefOne;;$wideContent;
+;OrderRefTwo;;$wideContent;
+;OrderDelivery;;$wideContent;
+;OrderConfirmTip;;$wideContent;
+;OrderConfirmDescription;;$wideContent;
+;TrackOrderOne;;$wideContent;
+;TrackOrderTwo;;$wideContent;
+#;OrderConfirmBannerTwo;;$wideContent;
+#;OrderConfirmsmileyimg;;$wideContent;
+#;OrderConfirmfb;;$wideContent;
+#;OrderConfirmgplus;;$wideContent;
+;Tip;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;trackbtn;;$wideContent;
+
+
+#Shipping Confirmation Event
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];validComponentTypes(code)
+;HOTCSiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;Tip;;$wideContent;
+#;HOTCTrackOrder1;;$wideContent;
+#;HOTCDeliveryPerson1;;$wideContent;
+;AppDownloadUrl;;$wideContent;
+;smileyimg;;$wideContent;
+;fbNew;;$wideContent;
+;tweet;;$wideContent;
+;youtube;;$wideContent;
+;insta;;$wideContent;
+;gplus;;$wideContent;
+;linegrey;;$wideContent;
+;tatatrust;;$wideContent;
+;cliqnpic;;$wideContent;
+;easyreturn;;$wideContent;
+;authenticbrands;;$wideContent;
+;freeshipping;;$wideContent;
+;appstore;;$wideContent;
+;googleplay;;$wideContent;
+
+#Shipment out for delivery
+#INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='OutForDeliveryEmailTemplate'];validComponentTypes(code)
+#;SiteLogo;;;logo
+#;TopContent;;$wideContent;
+#;BottomContent;;$wideContent;
+
+###HighRiskNotificationEmail
+#INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='HighRiskNotificationEmailTemplate'];validComponentTypes(code)
+#;SiteLogo;;;logo
+#;TopContent;;$wideContent;
+#;BottomContent;;$wideContent;
+
+###HighRiskNotificationEmail
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='HighRiskNotificationEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+###Email to notify market place user to take action when an order is put on HOLD
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='TakeActionOnHeldOrderEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+
+# Create Content Slots
+#ResetPassword changes
+
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailForgotPasswordHeaderSlot;Forgot Password Header Slot;true
+;;EmailForgotPasswordMiddlebannerSlot;Forgot Password Middlebanner Slot;true
+;;EmailForgotPasswordMinibannerSlot;Forgot Password Minibanner Slot;true
+;;EmailForgotPasswordPinSlot;Forgot Password Pinterest;true
+;;EmailForgotPasswordInstaSlot;Forgot Password Insta Slot;true
+;;EmailForgotPasswordTwitterSlot;Forgot Password Twitter Slot;true
+;;EmailForgotPasswordMiniRightBannerSlot;Forgot Password Right Banner;true
+;;EmailForgotPasswordMiniLeftBannerSlot;Forgot Password Left Banner;true
+;;EmailResetPwdTipSlot;Tip slot;true
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailTopSlot;Default Email Top Slot;true
+
+#Registration Content Slots
+;;EmailSiteLogoRegSlot;Default Email Site Reg Slot;true
+;;EmailBottomRegSlot;Default Email Bottom Reg Slot;true
+;;Emailletsgoshopping1RegSlot;Default Email lets go shopping1 Reg Slot;true
+;;Emailletsgoshopping2RegSlot;Default Email lets go shopping2 Reg Slot;true
+;;Emailfantastic1RegSlot;Default Email Fantastic1 Reg Slot;true
+;;Emailfantastic2RegSlot;Default Email Fantastic2 Reg Slot;true
+;;EmailhandpickRegSlot;Default Email handpick Reg Slot;true
+;;EmailslashImgOneRegSlot;Default Email slash Img One Reg Slot;true
+;;EmailbrandRegSlot;Default Email brand Reg Slot;true
+;;EmailslashImgTwoRegSlot;Default Email slash Img Two Reg Slot;true
+;;EmailexpRegSlot;Default Email lets go shopping2 Reg Slot;true
+;;EmailslashImgThreeRegSlot;Default Email Slash Slot;true
+;;EmailfastRegSlot;Default Email fast Reg Slot;true
+;;EmailRegBanner2RegSlot;Default Email Reg Banner2 Reg Slot;true
+;;EmailsmileyimgRegSlot;Default Email SmileyReg Slot;true
+;;EmailfbRegSlot;Default Email fb  Reg Slot;true
+;;EmailgplusRegSlot;Default Email gplus Reg Slot;true
+
+
+#Order Confirmation Content Slots
+
+;;EmailSiteLogoConfSlot; Default Email Site Confirmation slot;true
+;;EmailTopConfSlot;Default Email Top Confirmation Slot;true
+;;EmailBottomConfSlot;Default Email Bottom Confirmation Slot;true
+;;EmailOrderRefNoOneConfSlot; Default Email Order Reference Number One Confirmation Slot;true
+;;EmailOrderRefNoTwoConfSlot; Default Email Order Reference Number Two Confirmation Slot;true
+;;EmailTrackOrderOneConfSlot;Default Track Order One Confirmation Slot;true
+;;EmailTrackOrderTwoConfSlot;Default Track Order Two  Confirmation Slot;true
+;;EmailDeliveryPersonConfSlot;Default Delivery Person Confirmation Slot;true
+;;EmailTipConfSlot;Default Email Tip Confirmation Slot;true
+;;EmailDescriptionConfSlot;Default Email Description Confirmation Slot;true
+;;EmailConfBanner2ConfSlot;Default Order Confirmation Banner Two Slot;true
+;;EmailsmileyimgConfSlot;Default Email Smiley Confirmation Slot;true
+;;EmailfbConfSlot;Default Email fb Confirmation Slot;true
+;;EmailgplusConfSlot;Default Email gplus Confirmation Slot;true
+;;EmailtwitterconfSlot;Default Email twitter Confirmation slot;true
+;;EmailyoutubeConfSlot;Default Email youtube Confimation slot;true
+;;EmailappConfSlot;Default Email App Confirmation Slot;true
+
+#Order Delivery Content Slots
+;;EmailSiteLogoDlvrySlot; Default Email Site Delivery slot;true
+;;EmailTopDlvrySlot;Default Email Top Delivery Slot;true
+;;EmailBottomDlvrySlot;Default Email Bottom Delivery Slot;true
+;;EmailOrderReferenceNumberOneDlvrySlot; Default Email Order Reference Number One Delivery Slot;true
+;;EmailOrderReferenceNumberTwoDlvrySlot; Default Email Order Reference Number Two Delivery Slot;true
+;;EmailTipDlvrySlot;Default Email Tip Delivery Slot;true
+;;EmailDescriptionDlvrySlot;Default Email Description Delivery Slot;true
+;;EmailDeliveryConfirmationBannerTwoDlvrySlot;Default Delivery Confirmation Banner Two Delivery Slot;true
+;;EmailsmileyimgDlvrySlot;Default Email Smiley Delivery Slot;true
+;;EmailfbDlvrySlot;Default Email fb Delivery Slot;true
+;;EmailgplusDlvrySlot;Default Email Google Plus Delivery Slot;true
+
+
+
+#Order HOTC Content Slots
+;;EmailSiteLogoHOTCSlot;Default Site Logo Slot;true
+;;EmailTopSlot;Default Top slot;true
+;;EmailBottomSlot;Default Bottom slot;true
+;;EmailOrderReferenceNumber1HOTCSlot;Default Order Reference 1 Slot;true
+;;EmailOrderReferenceNumber2HOTCSlot;Default Order Reference 2  Slot;true
+;;EmailTrackOrder1HOTCSlot;Default Track Order 1 Slot;true
+;;EmailTrackOrder2HOTCSlot;Default Track Order 2 slot;true
+;;EmailDeliveryPerson1HOTCSlot;Default Delivery Person Slot;true
+;;EmailTipHOTCSlot;Default Tip Slot;true
+;;EmailDescriptionHOTCSlot;Default Email Description Slot;true
+;;EmailShippingConfirmationBannerTwoHOTCSlot;Default Shipping confirmation banner Two Slot;true
+;;EmailsmileyimgHOTCSlot;Default Email Smiley Slot;true
+;;EmailfbHOTCSlot;Default Facebook Slot;true
+;;EmailgplusHOTCSlot;Default Google Pluslot;true
+
+
+#Order Rejected High Risk Content Slots
+
+;;EmailSiteLogoOrderRejectSlot; Default Email Site Order Reject slot;true
+;;EmailTopOrderRejectSlot;Default Email Top Order Reject Slot;true
+;;EmailBottomOrderRejectSlot;Default Email Bottom Order Reject Slot;true
+;;EmailTipOrderRejectSlot;Default Email Tip Order Reject Slot;true
+;;EmailDescriptionOrderRejectSlot;Default Email Description Order Reject Slot;true
+;;EmailOrderRejectBottomOrderRejectSlot;Default Email Bottom Banner Order Reject Slot;true
+;;EmailsmileyimgOrderRejectSlot;Default Email Smiley Order Reject Slot;true
+;;EmailfbOrderRejectSlot;Default Email fb Order Reject Slot;true
+;;EmailgplusOrderRejectSlot;Default Email gplus Order Reject Slot;true
+
+#Forgot Password Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailForgotPwdSiteLogoSlot;Default Site Logo Slot;true
+;;EmailChangePasswordOneSlot;Default Change Password 1 Slot;true
+;;EmailChangePasswordTwoSlot;Default Change Password 1 Slot;true
+;;EmailForgorPwdTipSlot;Default Tip Slot;true
+;;EmailForgotPwdDescriptionSlot;Default Description Slot;true
+;;EmailForgotPwdBannerTwoSlot;Default Banner 1 Slot;true
+;;EmailForgotPwdsmileyimgSlot;Default Email Smiley Slot;true
+;;EmailForgotPwdfbSlot;Default Site Logo Slot;true
+;;EmailForgotPwdgplusSlot;Default Site Logo Slot;true
+
+#Order Refund Credit Email
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]			;cmsComponents(uid,$contentCV) 	;name 			;active
+#				;			;emailTopContSlotrefund  		;mail_topContent_refund		;Logo Slot		;true
+#				;			;emailTipsContSlotrefund	  	;mail_tips_refund		;Tips Slot		;true
+#				;			;emailClickAppDownContSlotrefund  	;mail_clickApp_refund		;App Download Slot	;true
+#				;			;emailHappyShopContSlotrefund  		;mail_happyshopping		;Happy Shop Slot	;true
+#				;			;emailFacebookContSlotrefund  		;mail_facebook_refund		;Facebook Slot		;true
+#				;			;emailTwitterContSlotrefund	  	;mail_twitter_refund		;Twitter Slot		;true
+#				;			;emailYoutubeContSlotrefund  		;mail_youtube_refund		;Youtube Slot		;true
+#				;			;emailSocialContSlotrefund  		;mail_socialNewtwork_refund	;Social Network Slot	;true
+
+##Oreder Collected By PickUp Person Email
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]		;cmsComponents(uid,$contentCV) 	;name 			;active
+#				;			;emailTopContSlot  	;mail_topContent_cms		;Logo Slot		;true
+#				;			;emailTrackOrderContSlot  	;mail_trackOrder_cms		;Track Order Slot	;true
+#				;			;emailTipsContSlot	  	;mail_tipsImage_cms		;Tips Slot		;true
+#				;			;emailClickAppDownContSlot  	;mail_clickApp_cms		;App Download Slot	;true
+#				;			;emailHappyShopContSlot  	;mail_happyShopping_cms		;Happy Shop Slot	;true
+#				;			;emailFacebookContSlot  	;mail_facebook_cms		;Facebook Slot		;true
+#				;			;emailTwitterContSlot	  	;mail_twitter_cms		;Twitter Slot		;true
+#				;			;emailYoutubeContSlot  		;mail_youtube_cms		;Youtube Slot		;true
+#				;			;emailSocialContSlot  		;mail_socialNewtwork_cms	;Social Network Slot	;true
+
+
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteLogoRegInCsSlot;Default Email Site Reg Slot;true
+;;EmailTopInCsSlot;Default Email Top Slot;true
+;;EmailBottomRegInCsSlot;Default Email Bottom Reg Slot;true
+;;EmailSlotBeforeTogetherFunInCsSlot; Default slot Before Together Fun Slot;true
+;;EmailTogetherFunInCsSlot; Email together fun slot;true
+;;EmailhandpickRegInCsSlot;Default Email handpick Reg Slot;true
+;;EmailslashImgOneRegInCsSlot;Default Email slash Img One Reg Slot;true
+;;EmailbrandRegInCsSlot;Default Email brand Reg Slot;true
+;;EmailslashImgTwoRegInCsSlot;Default Email slash Img Two Reg Slot;true
+;;EmailexpRegInCsSlot;Default Email lets go shopping2 Reg Slot;true
+;;EmailslashImgThreeRegInCsSlot;Default Email Slash Slot;true
+;;EmailfastRegInCsSlot;Default Email fast Reg Slot;true
+;;EmailTipImageInCsSlot;Default Email Tip Image Slot;true
+;;EmailTipImageContentInCsSlot;Default email Tip Image Content Slot;true
+;;EmailShoppingGenieImageInCsSlot; Shopping Genie Image slot;true
+;;EmailsmileyimgRegInCsSlot;Default Email SmileyReg Slot;true
+;;EmailfbRegInCsSlot;Default Email fb  Reg Slot;true
+;;EmailgplusRegInCsSlot;Default Email gplus Reg Slot;true
+
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteInvoiceLogoSlot;Default Send Invoice Logo Slot;true
+;;EmailInvoiceLetsGOSHopping1Slot;Default Send Invoice LetsGOSHopping1 Slot;true
+;;EmailInvoiceLetsGOSHopping2Slot;Default Send Invoice LetsGOSHopping2 Slot;true
+;;EmailInvoiceTipSlot;Default Send Invoice Tip Slot;true
+;;EmailInvoiceInvoiceDescriptionSlot;Default Send Invoice InvoiceDescription Slot;true
+;;EmailInvoiceBanner2Slot;Default Send Invoice Banner2 Slot;true
+;;EmailInvoiceSmileySlot;Default Send Invoice Smiley Slot;true
+;;EmailInvoiceFbSlot;Default Send Invoice Fb Slot;true
+;;EmailInvoiceGplusSlot;Default Send Invoice Gplus Slot;true
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailConfirmOrderSiteLogoSlot;Default Site Logo Slot;true
+;;EmailOrderRefOneSlot;Default Order Reference One Slot;true
+;;EmailOrderRefTwoSlot;Default Order Reference Two Slot;true
+;;EmailOrderDeliverySlot;Default Order Delivery Slot;true
+;;EmailOrderConfirmSlot;Default Order Confirm Slot;true
+;;EmailOrderConfirmDescriptionSlot;Default Order Confirmation Description Slot;true
+;;EmailTrackOrderOneSlot;Default Email Track Order One Slot;true
+;;EmailTrackOrderTwoSlot;Default Track Order Two Slot;true
+;;EmailOrderConfirmBannerTwoSlot;Default Order Confirmation Two Slot;true
+;;EmailOrderConfirmsmileyimgSlot;Default Email Order Confirmation smiley Slot;true
+;;EmailOrderConfirmPwdfbSlot;Default Order Confirmation Facebook Slot;true
+;;EmailOrderConfirmgplusSlot;Default Order Confirmation Gooogle Plus Slot;true
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailPDPHeaderImageSlot;Default Site Logo Slot;true
+;;EmailPDPTipsImageSlot;Default PDP Tips image Slot;true
+;;EmailPDPRightBannerImageSlot;Default Right banner Slot;true
+;;EmailPDPAppImageSlot;Default PDP App Slot;true
+;;EmailPDPFbImageSlot;Default PDP Fb Slot;true
+;;EmailPDPGPlusImageSlot;Default PDP GPlus Slot;true
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+#Friends Invite Content Slots
+;;EmailSiteLogoInviteSlot;Default Email Site Invite Slot;true
+;;Emailfantastic1InviteSlot;Default Email Fantastic1 Friends Invite Slot;true
+;;Emailfantastic2InviteSlot;Default Email Fantastic2 Friends Invite Slot;true
+;;EmailhandpickInviteSlot;Default Email handpick Friends Invite Slot;true
+;;EmailslashImgOneInviteSlot;Default Email slash Img One Invite Slot;true
+;;EmailbrandInviteSlot;Default Email brand Friends Invite Slot;true
+;;EmailslashImgTwoInviteSlot;Default Email slash Img Two Friends Invite Slot;true
+;;EmailexpInviteSlot;Default Email lets go shopping2 Invite Slot;true
+;;EmailslashImgThreeInviteSlot;Default Email Slash Slot;true
+;;EmailfastInviteSlot;Default Email fast Invite Slot;true
+;;EmailTipInviteSlot;Default Email Tip Invite Slot;true
+;;EmailTipContentInviteSlot;Default Email Tip Content Invite Slot;true
+;;EmailBestFriend1InviteSlot;Default Email Best Friend 1 Invite Slot;true
+;;EmailBestFriend2InviteSlot;Default Email Best Friend 2 Invite Slot;true
+;;EmailsmileyimgInviteSlot;Default Email Smiley Invite Slot;true
+;;EmailfbInviteSlot;Default Email fb Friends Invite Slot;true
+;;EmailgplusInviteSlot;Default Email gplus Friends Invite Slot;true
+
+
+
+# Bind Content Slots to Email Page Templates
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='CustomerRegistrationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-CustomerRegistrationEmail;SiteLogo;;EmailSiteLogoRegSlot;true
+#;;TopContent-CustomerRegistrationEmail;TopContent;;EmailTopSlot;true
+;;letsgoshopping1-CustomerRegistrationEmail;letsgoshopping1;;Emailletsgoshopping1RegSlot;true
+;;letsgoshopping2-CustomerRegistrationEmail;letsgoshopping2;;Emailletsgoshopping2RegSlot;true
+;;handpick-CustomerRegistrationEmail;handpick;;EmailhandpickRegSlot;true
+;;slashImgOne-CustomerRegistrationEmail;slashImgOne;;EmailslashImgOneRegSlot;true
+;;brand-CustomerRegistrationEmail;brand;;EmailbrandRegSlot;true
+;;slashImgTwo-CustomerRegistrationEmail;slashImgTwo;;EmailslashImgTwoRegSlot;true
+;;exp-CustomerRegistrationEmail;exp;;EmailexpRegSlot;true
+;;slashImgThree-CustomerRegistrationEmail;slashImgThree;;EmailslashImgThreeRegSlot;true
+;;fast-CustomerRegistrationEmail;fast;;EmailfastRegSlot;true
+;;smileyimg-CustomerRegistrationEmail;smileyimg;;EmailsmileyimgRegSlot;true
+;;fb-CustomerRegistrationEmail;fb;;EmailfbRegSlot;true
+;;AppDownloadUrl-CustomerRegistrationEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;tweet-CustomerRegistrationEmail;tweet;;EmailtweetSlot;true
+;;gplus-CustomerRegistrationEmail;gplus;;EmailgplusRegSlot1;true
+;;youtube-CustomerRegistrationEmail;youtube;;EmailYouTubeSlot;true
+;;insta-CustomerRegistrationEmail;insta;;EmailInstaSlot;true
+;;Tip-CustomerRegistrationEmail;Tip;;EmailTipCUSlot;true
+;;tatatrust-CustomerRegistrationEmail;tatatrust;;EmailTatatrustSlot;true
+;;cliqnpic-CustomerRegistrationEmail;cliqnpic;;EmailcliqnpicSlot;true
+;;easyreturn-CustomerRegistrationEmail;easyreturn;;EmailEasyreturnSlot;true
+;;authenticbrands-CustomerRegistrationEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
+;;freeshipping-CustomerRegistrationEmail;freeshipping;;EmailFreeshippingSlot;true
+;;linegrey-CustomerRegistrationEmail;linegrey;;EmailLinegreySlot;true
+;;appstore-CustomerRegistrationEmail;appstore;;EmailAppleStoreSlot;true
+;;googleplay-CustomerRegistrationEmail;googleplay;;EmailAndroidStoreSlot;true
+
+
+### Order Refund Email 
+
+INSERT_UPDATE ContentSlotForTemplate	;$contentCV[unique=true];uid[unique=true]				;position[unique=true]	;pageTemplate(uid,$contentCV)[unique=true][default='OrderRefundCreditedEmailTemplate']	;contentSlot(uid,$contentCV)			;allowOverwrite
+					;			;topContent-orderRefundCreditedEmail		;TopContent		;												;emailTopContSlotrefund				;true
+					;			;tipsOrder-orderRefundCreditedEmail			;Tip			;												;emailTipsContSlotrefund			;true
+					;			;clickApp-orderRefundCreditedEmail			;handpick		;												;emailClickAppDownContSlotrefund		;true
+					;			;happyshopping-orderRefundCreditedEmail		;slashImgOne		;												;emailHappyShopContSlotrefund			;true
+					;			;facebook-orderRefundCreditedEmail			;fb			;												;emailFacebookContSlotrefund			;true
+					;			;twitter-orderRefundCreditedEmail			;twitter		;												;emailTwitterContSlotrefund			;true
+					;			;socialnetwork-orderRefundCreditedEmail		;gplus			;												;emailSocialContSlotrefund			;true
+					;			;youtube-orderRefundCreditedEmai			;youtube		;												;emailYoutubeContSlotrefund			;true
+	
+
+##Order Collected By Person Email Context
+INSERT_UPDATE ContentSlotForTemplate	;$contentCV[unique=true];uid[unique=true]				;position[unique=true]	;pageTemplate(uid,$contentCV)[unique=true][default='OrderCollectedByPersonEmailTemplate']	;contentSlot(uid,$contentCV)			;allowOverwrite
+					;			;topContent-orderCollectedByPersonEmail	;TopContent		;												;emailTopContSlot				;true
+					;			;trackOrder-orderCollectedByPersonEmail	;OrderReferenceNumberOne;												;emailTrackOrderContSlot			;true
+					;			;tipsOrder-orderCollectedByPersonEmail		;Tip			;												;emailTipsContSlot				;true
+					;			;clickApp-orderCollectedByPersonEmail		;handpick		;												;emailClickAppDownContSlot			;true
+					;			;happyshopping-orderCollectedByPersonEmail	;slashImgOne		;												;emailHappyShopContSlot				;true
+					;			;facebook-orderCollectedByPersonEmail		;fb			;												;emailFacebookContSlot				;true
+					;			;twitter-orderCollectedByPersonEmail		;twitter		;												;emailTwitterContSlot				;true
+					;			;socialnetwork-orderCollectedByPersonEmail	;gplus			;												;emailSocialContSlot				;true
+					;			;youtube-orderCollectedByPersonEmail		;youtube		;												;emailYoutubeContSlot				;true
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteLogoOnHoldSlot;Default Email On Hold Site Logo Slot;true
+;;EmailTopSlot; Default Email Top Slot;true
+;;EmailBottomSlot; Default Email Bottom Slot;true
+;;EmailTipOnHoLdSlot; Default Email Tip Slot;true
+;;EmailDescriptionOnHoldSlot; Default Email Description Slot;true
+;;EmailOnHoldBannerTwoSlot; Default Email On hold Banner Two Slot Slot;true
+;;Emailsmileyimglot; Default Email Smiley image Slot;true
+;;EmailfbSlot; Default Email Facebook Slot;true
+;;EmailgplusSlot; Default Email Google Plus Slot;true
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteLogoCUSlot;Email Site Logo CU Slot;true
+;;EmailTopCUSlot;Email Top CU Slot;true
+;;EmailBottomCUSlot;Email Bottom CU Slot;true
+;;EmailTipCUSlot;Email Tip CU Slot;true
+;;EmailDescriptionCUSlot;Email Description CU Slot;true
+;;EmailConfBannerCUSlot;Email Conf Banner CU Slot;true
+;;EmailsmileyimgCUSlot;Email smiley img CU Slot;true
+;;EmailfbCUSlot;Email fb CU Slot;true
+;;EmailgplusCUSlot;Email gplus CU Slot;true
+
+
+#Order Delivery Content Slots
+# Create Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteLogoDlvrySlot; Default Email Site Delivery slot;true
+;;EmailTopDlvrySlot;Default Email Top Delivery Slot;true
+;;EmailBottomDlvrySlot;Default Email Bottom Delivery Slot;true
+;;EmailOrderReferenceNumberOneDlvrySlot; Default Email Order Reference Number One Delivery Slot;true
+;;EmailOrderReferenceNumberTwoDlvrySlot; Default Email Order Reference Number Two Delivery Slot;true
+;;EmailTipDlvrySlot;Default Email Tip Delivery Slot;true
+;;EmailDescriptionDlvrySlot;Default Email Description Delivery Slot;true
+;;EmailOrderDeliveryConfirmationBannerTwoDlvrySlot;Default Delivery Confirmation Banner Two Delivery Slot;true
+;;EmailsmileyimgDlvrySlot;Default Email Smiley Delivery Slot;true
+;;EmailfbDlvrySlot;Default Email fb Delivery Slot;true
+;;EmailgplusDlvrySlot;Default Email Google Plus Delivery Slot;true
+
+
+#Slot creation for new template
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;AppDownloadUrlSlot;Default App Download Url Slot;true
+;;EmailtweetSlot;Default Tweeter Image Slot;true
+;;EmailYouTubeSlot;Default You Tube Slot;true
+;;EmailInstaSlot;Default Instagram Slot;true
+;;EmailTrackbtnSlot;Default TrackBtn Slot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='CustomerRegistrationInCsEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-CustomerRegistrationInCsEmail;SiteLogo;;EmailSiteLogoRegInCsSlot;true
+#;;TopContent-CustomerRegistrationInCsEmail;TopContent;;EmailTopInCsSlot;true
+;;BottomContent-CustomerRegistrationInCsEmailId;BottomContent;;EmailBottomRegInCsSlot;true
+;;slotBeforeTogetherFun-CustomerRegistrationInCsEmailId;slotBeforeTogetherFun;;EmailSlotBeforeTogetherFunInCsSlot;true
+;;togetherFun-CustomerRegistrationInCsEmail;togetherFun;;EmailTogetherFunInCsSlot;true
+;;handpick-CustomerRegistrationInCsEmail;handpick;;EmailhandpickRegInCsSlot;true
+;;slashImgOne-CustomerRegistrationInCsEmail;slashImgOne;;EmailslashImgOneRegInCsSlot;true
+;;brand-CustomerRegistrationInCsEmail;brand;;EmailbrandRegInCsSlot;true
+;;slashImgTwo-CustomerRegistrationInCsEmail;slashImgTwo;;EmailslashImgTwoRegInCsSlot;true
+;;exp-CustomerRegistrationInCsEmail;exp;;EmailexpRegInCsSlot;true
+;;slashImgThree-CustomerRegistrationInCsEmail;slashImgThree;;EmailslashImgThreeRegInCsSlot;true
+;;fast-CustomerRegistrationInCsEmail;fast;;EmailfastRegInCsSlot;true
+#;;tipImage-CustomerRegistrationInCsEmail;tipImage;;EmailTipImageInCsSlot;true
+#;;tipContentImage-CustomerRegistrationInCsEmail;tipContentImage;;EmailTipImageContentInCsSlot;true
+;;shoppingGenieImage-CustomerRegistrationInCsEmail;shoppingGenieImage;;EmailShoppingGenieImageInCsSlot;true
+;;Tip-CustomerRegistrationInCsEmail;Tip;;EmailTipCUSlot;true
+#;;smileyimg-CustomerRegistrationInCsEmail;smileyimg;;EmailsmileyimgRegInCsSlot;true
+#;;fb-CustomerRegistrationInCsEmail;fb;;EmailfbRegInCsSlot;true
+#;;gplus-CustomerRegistrationInCsEmail;gplus;;EmailgplusRegInCsSlot;true
+;;tweet-CustomerRegistrationInCsEmail;tweet;;EmailtweetSlot;true
+;;youtube-CustomerRegistrationInCsEmail;youtube;;EmailYouTubeSlot;true
+;;insta-CustomerRegistrationInCsEmail;insta;;EmailInstaSlot;true
+;;AppDownloadUrl-CustomerRegistrationInCsEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-CustomerRegistrationInCsEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;fb-CustomerRegistrationInCsEmail;fb;;EmailfbCUSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ForgottenPasswordEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;ForgotPwdSiteLogo-ForgottenPasswordEmail;ForgotPwdSiteLogo;;EmailForgotPwdSiteLogoSlot;true
+;;ForgotPwdfb-ForgottenPasswordEmail;ForgotPwdfb;;EmailForgotPwdfbSlot;true
+;;tweeter-ForgottenPasswordEmail;tweet;;EmailForgotPwdtweetSlot;true
+;;Luxuryyoutube-ForgottenPasswordEmail;youtube;;EmailForgotPwdYouTubeSlot;true
+;;Luxuryinsta-ForgottenPasswordEmail;insta;;EmailForgotPwdInstaSlot;true
+;;gplus-ForgottenPasswordEmail;gplus;;EmailForgotPwdgplusSlot;true
+;;tatatrust-ForgottenPasswordEmail;tatatrust;;EmailForgotPwdTatatrustSlot;true
+;;cliqnpic-ForgottenPasswordEmail;cliqnpic;;EmailForgotPwdcliqnpicSlot;true
+;;easyreturn-ForgottenPasswordEmail;easyreturn;;EmailForgotPwdEasyreturnSlot;true
+;;authenticbrands-ForgottenPasswordEmail;authenticbrands;;EmailForgotPwdAuthenticbrandsSlot;true
+;;freeshipping-ForgottenPasswordEmail;freeshipping;;EmailForgotPwdFreeshippingSlot;true
+;;linegrey-ForgottenPasswordEmail;linegrey;;EmailForgotPwdLinegreySlot;true
+;;appstore-ForgottenPasswordEmail;appstore;;EmailForgotPwdAppleStoreSlot;true
+;;googleplay-ForgottenPasswordEmail;googleplay;;EmailForgotPwdAndroidStoreSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderConfirmationEmail;SiteLogoNew;;EmailSiteLogoConfSlot;true
+;;TopContent-OrderConfirmationEmail;TopContent;;EmailTopConfSlot;true
+;;BottomContent-OrderConfirmationEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-OrderConfirmationEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-OrderConfirmationEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-OrderConfirmationEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-OrderConfirmationEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-OrderConfirmationEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-OrderConfirmationEmail;Tip;;EmailTipConfSlot;true
+;;Description-OrderConfirmationEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-OrderConfirmationEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-OrderConfirmationEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-OrderConfirmationEmail;fb;;EmailfbConfSlot;true
+;;tweet-OrderConfirmationEmail;tweet;;EmailtweetSlot;true
+;;youtube-OrderConfirmationEmail;youtube;;EmailYouTubeSlot;true
+;;insta-OrderConfirmationEmail;insta;;EmailInstaSlot;true
+;;tatatrust-OrderConfirmationEmail;tatatrust;;EmailTatatrustSlot;true
+;;cliqnpic-OrderConfirmationEmail;cliqnpic;;EmailcliqnpicSlot;true
+;;easyreturn-OrderConfirmationEmail;easyreturn;;EmailEasyreturnSlot;true
+;;authenticbrands-OrderConfirmationEmail;authenticbrands;;EmailAuthenticbrandsSlot;true
+;;freeshipping-OrderConfirmationEmail;freeshipping;;EmailFreeshippingSlot;true
+;;linegrey-OrderConfirmationEmail;linegrey;;EmailLinegreySlot;true
+;;appstore-OrderConfirmationEmail;appstore;;EmailAppleStoreSlot;true
+;;googleplay-OrderConfirmationEmail;googleplay;;EmailAndroidStoreSlot;true
+;;gplus-OrderConfirmationEmail;gplus;;EmailgplusRegSlot1;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderDeliveryEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderDeliveryEmail;SiteLogoNew;;EmailSiteLogoODCSlot;true
+;;fb-OrderDeliveryEmail;fbNew;;EmailfbRegSlot;true
+;;tweeter-OrderDeliveryEmail;twitterNew;;EmailODCtweetSlot;true
+;;youtubenew-OrderDeliveryEmail;youtubeNew;;EmailODCYouTubeSlot;true
+;;instanew-OrderDeliveryEmail;instaNew;;EmailODCInstaSlot;true
+;;gplus-OrderDeliveryEmail;gplus;;EmailODCgplusSlot;true
+;;tatatrust-OrderDeliveryEmail;tatatrust;;EmailODCtatatrustSlot;true
+;;cliqnpic-OrderDeliveryEmail;cliqnpic;;EmailODCcliqnpicSlot;true
+;;easyreturn-OrderDeliveryEmail;easyreturn;;EmailODCEasyreturnSlot;true
+;;authenticbrands-OrderDeliveryEmail;authenticbrands;;EmailODCAuthenticbrandsSlot;true
+;;freeshipping-OrderDeliveryEmail;freeshipping;;EmailODCFreeshippingSlot;true
+;;linegrey-OrderDeliveryEmail;linegrey;;EmailODCLinegreySlot;true
+;;appstore-OrderDeliveryEmail;appstore;;EmailODCAppleStoreSlot;true
+;;googleplay-OrderDeliveryEmail;googleplay;;EmailODCAndroidStoreSlot;true
+
+
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderCancelledEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderCancelledEmail;SiteLogo;;EmailSiteLogoOCSlot;true
+;;TopContent-OrderCancelledEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-OrderCancelledEmail;BottomContent;;EmailBottomSlot;true
+;;fbnew-OrderCancelledEmail;fbnew;;EmailODCfbSlot;true
+;;tweeter-OrderCancelledEmail;twitterNew;;EmailOCtweetSlot;true
+;;youtubenew-OrderCancelledEmail;youtubeNew;;EmailOCYouTubeSlot;true
+;;instanew-OrderCancelledEmail;instaNew;;EmailOCInstaSlot;true
+;;gplus-OrderCancelledEmail;gplus;;EmailOCgplusSlot;true
+;;tatatrust-OrderCancelledEmail;tatatrust;;EmailOCtatatrustSlot;true
+;;cliqnpic-OrderCancelledEmail;cliqnpic;;EmailOCcliqnpicSlot;true
+;;easyreturn-OrderCancelledEmail;easyreturn;;EmailOCEasyreturnSlot;true
+;;authenticbrands-OrderCancelledEmail;authenticbrands;;EmailOCAuthenticbrandsSlot;true
+;;freeshipping-OrderCancelledEmail;freeshipping;;EmailOCFreeshippingSlot;true
+;;linegrey-OrderCancelledEmail;linegrey;;EmailOCLinegreySlot;true
+;;appstore-OrderCancelledEmail;appstore;;EmailOCAppleStoreSlot;true
+;;googleplay-OrderCancelledEmail;googleplay;;EmailOCAndroidStoreSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderRefundEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderRefundEmail;SiteLogo;;EmailSiteLogoORSlot;true
+;;fbnew-OrderRefundEmail;fbnew;;EmailORfbSlot;true
+;;tweeter-OrderRefundEmail;twitterNew;;EmailORtweetSlot;true
+;;youtubenew-OrderRefundEmail;youtubeNew;;EmailORYouTubeSlot;true
+;;instanew-OrderRefundEmail;instaNew;;EmailORInstaSlot;true
+;;gplus-OrderRefundEmail;gplus;;EmailORgplusSlot;true
+;;tatatrust-OrderRefundEmail;tatatrust;;EmailORtatatrustSlot;true
+;;cliqnpic-OrderRefundEmail;cliqnpic;;EmailORcliqnpicSlot;true
+;;easyreturn-OrderRefundEmail;easyreturn;;EmailOREasyreturnSlot;true
+;;authenticbrands-OrderRefundEmail;authenticbrands;;EmailORAuthenticbrandsSlot;true
+;;freeshipping-OrderRefundEmail;freeshipping;;EmailORFreeshippingSlot;true
+;;linegrey-OrderRefundEmail;linegrey;;EmailORLinegreySlot;true
+;;appstore-OrderRefundEmail;appstore;;EmailORAppleStoreSlot;true
+;;googleplay-OrderRefundEmail;googleplay;;EmailORAndroidStoreSlot;true
+
+#Order Refund Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active
+;;EmailSiteLogoRefundSlot;Default Email Site Order Refund Logo Slot;true
+;;EmailTipRefundSlot;Default Email Tip Refund Slot;true
+;;EmailDescriptionRefundSlot;Default Email Description Refund Slot;true
+;;EmailRefundBannerSlot;Default Email Refund Banner Slot;true
+;;EmailsmileyimgRefundSlot;Default Email Smiley Slot;true
+;;EmailfbRefundSlot;Default Facebook Slot;true
+;;EmailgplusRefundSlot;Default Google Pluslot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='DeliverySentEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-DeliverySentEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+;;TopContent-DeliverySentEmail;TopContent;;EmailTopDlvrySlot;true
+;;BottomContent-DeliverySentEmail;BottomContent;;EmailBottomDlvrySlot;true
+;;OrderReferenceNumberOne-DeliverySentEmail;OrderReferenceNumberOne;;EmailOrderReferenceNumberOneDlvrySlot;true
+;;OrderReferenceNumberTwo-DeliverySentEmail;OrderReferenceNumberTwo;;EmailOrderReferenceNumberTwoDlvrySlot;true
+;;Tip-DeliverySentEmail;Tip;;EmailTipDlvrySlot;true
+;;Description-DeliverySentEmail;Description;;EmailDescriptionDlvrySlot;true
+;;DeliveryConfirmationBannerTwo-DeliverySentEmail;DeliveryConfirmationBannerTwo;;EmailDeliveryConfirmationBannerTwoDlvrySlot;true
+;;smileyimg-DeliverySentEmail;smileyimg;;EmailsmileyimgDlvrySlot;true
+;;fb-DeliverySentEmail;fb;;EmailfbDlvrySlot;true
+;;gplus-DeliverySentEmail;gplus;;EmailgplusDlvrySlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ReadyForPickupEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-ReadyForPickupEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-ReadyForPickupEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-ReadyForPickupEmail;BottomContent;;EmailBottomSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderPartiallyCanceledEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-OrderPartiallyCanceledEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-OrderPartiallyCanceledEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-OrderPartiallyCanceledEmail;BottomContent;;EmailBottomSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderPartiallyRefundedEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-OrderPartiallyRefundedEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-OrderPartiallyRefundedEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-OrderPartiallyRefundedEmail;BottomContent;;EmailBottomSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='NotPickedUpConsignmentCanceledEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-NotPickedUpConsignmentCanceledEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-NotPickedUpConsignmentCanceledEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-NotPickedUpConsignmentCanceledEmail;BottomContent;;EmailBottomSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderCollectionReminderEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-OrderCollectionReminderEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-OrderCollectionReminderEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-OrderCollectionReminderEmail;BottomContent;;EmailBottomSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SendInvoiceEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;InvoiceSiteLogo-SendInvoiceEmail;InvoiceSiteLogo;;EmailSiteInvoiceLogoSlot;true
+;;Invoiceletsgoshopping1-SendInvoiceEmail;Invoiceletsgoshopping1;;EmailInvoiceLetsGOSHopping1Slot;true
+;;Invoiceletsgoshopping2-SendInvoiceEmail;Invoiceletsgoshopping2;;EmailInvoiceLetsGOSHopping2Slot;true
+;;InvoiceTip-SendInvoiceEmail;InvoiceTip;;EmailInvoiceTipSlot;true
+#;;InvoiceDescription-SendInvoiceEmail;InvoiceDescription;;EmailInvoiceInvoiceDescriptionSlot;true
+#;;InvoiceBanner2-SendInvoiceEmail;InvoiceBanner2;;EmailInvoiceBanner2Slot;true
+;;AppDownloadUrl-SendInvoiceEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;Invoicesmileyimg-SendInvoiceEmail;Invoicesmileyimg;;EmailInvoiceSmileySlot;true
+;;Invoicefb-SendInvoiceEmail;Invoicefb;;EmailInvoiceFbSlot;true
+#;;Invoicegplus-SendInvoiceEmail;Invoicegplus;;EmailInvoiceGplusSlot;true
+;;tweet-SendInvoiceEmail;tweet;;EmailtweetSlot;true
+;;youtube-SendInvoiceEmail;youtube;;EmailYouTubeSlot;true
+;;insta-SendInvoiceEmail;insta;;EmailInstaSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SendUpdateEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-SendUpdateEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-SendUpdateEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-SendUpdateEmail;BottomContent;;EmailBottomSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='FriendsInviteEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;InviteSiteLogo-FriendsInviteEmail;InviteSiteLogo;;EmailSiteLogoInviteSlot;true
+;;Invitefantastic1-FriendsInviteEmail;Invitefantastic1;;Emailfantastic1InviteSlot;true
+;;Invitefantastic2-FriendsInviteEmail;Invitefantastic2;;Emailfantastic2InviteSlot;true
+;;Invitehandpick-FriendsInviteEmail;Invitehandpick;;EmailhandpickInviteSlot;true
+;;InviteslashImgOne-FriendsInviteEmail;InviteslashImgOne;;EmailslashImgOneInviteSlot;true
+;;Invitebrand-FriendsInviteEmail;Invitebrand;;EmailbrandInviteSlot;true
+;;InviteslashImgTwo-FriendsInviteEmail;InviteslashImgTwo;;EmailslashImgTwoInviteSlot;true
+;;Inviteexp-FriendsInviteEmail;Inviteexp;;EmailexpInviteSlot;true
+;;InviteslashImgThree-FriendsInviteEmail;InviteslashImgThree;;EmailslashImgThreeInviteSlot;true
+;;Invitefast-FriendsInviteEmail;Invitefast;;EmailfastInviteSlot;true
+#;;Invitetip-FriendsInviteEmail;Invitetip;;EmailTipInviteSlot;true
+#;;tipcontent-FriendsInviteEmail;tipcontent;;EmailTipContentInviteSlot;true
+#;;bestfriend1-FriendsInviteEmail;bestfriend1;;EmailBestFriend1InviteSlot;true
+#;;bestfriend2-FriendsInviteEmail;bestfriend2;;EmailBestFriend2InviteSlot;true
+#;;Invitesmileyimg-FriendsInviteEmail;Invitesmileyimg;;EmailsmileyimgInviteSlot;true
+#;;Invitefb-FriendsInviteEmail;Invitefb;;EmailfbInviteSlot;true
+#;;Invitegplus-FriendsInviteEmail;Invitegplus;;EmailgplusInviteSlot;true
+;;Tip-FriendsInviteEmail;Tip;;EmailTipCUSlot;true
+;;tweet-FriendsInviteEmail;tweet;;EmailtweetSlot;true
+;;youtube-FriendsInviteEmail;youtube;;EmailYouTubeSlot;true
+;;insta-FriendsInviteEmail;insta;;EmailInstaSlot;true
+;;AppDownloadUrl-FriendsInviteEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-FriendsInviteEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;fb-FriendsInviteEmail;fb;;EmailfbCUSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='CustomerProfileUpdateEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-CustomerProfileUpdateEmailnew;SiteLogo;;EmailCUSiteLogoSlot;true
+;;fb-CustomerProfileUpdateEmailnew;fb;;EmailCUfbSlot;true
+;;tweet-CustomerProfileUpdateEmailnew;tweet;;EmailCUtweetSlot;true
+;;gplus-CustomerProfileUpdateEmailnew;gplus;;EmailCUgplusSlot;true
+;;youtube-CustomerProfileUpdateEmailnew;youtube;;EmailCUYouTubeSlot;true
+;;insta-CustomerProfileUpdateEmailnew;insta;;EmailCUInstaSlot;true
+;;tatatrust-CustomerProfileUpdateEmailnew;tatatrust;;EmailCUTatatrustSlot;true
+;;cliqnpic-CustomerProfileUpdateEmailnew;cliqnpic;;EmailCUcliqnpicSlot;true
+;;easyreturn-CustomerProfileUpdateEmailnew;easyreturn;;EmailCUEasyreturnSlot;true
+;;authenticbrands-CustomerProfileUpdateEmailnew;authenticbrands;;EmailCUAuthenticbrandsSlot;true
+;;freeshipping-CustomerProfileUpdateEmailnew;freeshipping;;EmailCUFreeshippingSlot;true
+;;linegrey-CustomerProfileUpdateEmailnew;linegrey;;EmailCULinegreySlot;true
+;;appstore-CustomerProfileUpdateEmailnew;appstore;;EmailCUAppleStoreSlot;true
+;;googleplay-CustomerProfileUpdateEmailnew;googleplay;;EmailCUAndroidStoreSlot;true
+
+##reset password content slot For Template
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ChangePasswordEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;EmailForgotPasswordHeader-ChangePasswordEmail;ForgotPasswordHeaderContent;;EmailForgotPasswordHeaderSlot;true
+;;EmailForgotPasswordMiddleBanner-ChangePasswordEmail;ForgotPasswordMiddleBannerContent;;EmailForgotPasswordMiddlebannerSlot;true
+;;EmailForgotPasswordMinibanner-ChangePasswordEmail;ForgotPasswordMiniBannerContent;;EmailForgotPasswordMinibannerSlot;true
+;;Emailsmileyimg-ChangePasswordEmail;smileyimg;;EmailsmileyimgRegSlot;true
+;;EmailfbReg-ChangePasswordEmail;fb;;EmailfbRegSlot;true
+;;EmailgplusReg-ChangePasswordEmail;gplus;;EmailgplusRegSlot;true
+;;EmailPin-ChangePasswordEmail;pin;;EmailForgotPasswordPinSlot;true
+;;EmailInsta-ChangePasswordEmail;insta;;EmailForgotPasswordInstaSlot;true
+;;EmailForgotPasswordMiniRightBanner-ChangePasswordEmail;RightMiniBannerContent;;EmailForgotPasswordMiniRightBannerSlot;true
+;;EmailForgotPasswordMiniLeftBanner-ChangePasswordEmail;LeftMiniBannerContent;;EmailForgotPasswordMiniLeftBannerSlot;true
+;;EmailForgotPasswordTip-ChangePasswordEmail;TipSlot;;EmailResetPwdTipSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='SubmitRequestEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-SubmitRequestEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-SubmitRequestEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-SubmitRequestEmail;BottomContent;;EmailBottomSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='LuxuryPdpQuestionEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#######;;SiteLogo-LuxuryPdpQuestionEmail;SiteLogo;;SiteLogoSlot;true
+##########;;Footer-LuxuryPdpQuestionEmail;Footer;;FooterSlot;true
+;;TopContent-LuxuryPdpQuestionEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-LuxuryPdpQuestionEmail;BottomContent;;EmailBottomSlot;true
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderPlacedFeedbackEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-orderPlacedFeedbackEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-orderPlacedFeedbackEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-orderPlacedFeedbackEmail;BottomContent;;EmailBottomSlot;true
+
+
+#Shipping Confirmation Event
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='ShippingConfirmationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;HOTCSiteLogo-ShippingConfirmationEmailnew;HOTCSiteLogo;;EmailSiteLogoSCslot;true
+;;HOTCTrackOrder1-ShippingConfirmationEmail;HOTCTrackOrder1;;EmailTrackOrder1HOTCSlot;true
+;;HOTCDeliveryPerson1-ShippingConfirmationEmail;HOTCDeliveryPerson1;;EmailDeliveryPerson1HOTCSlot;true
+#;;fbnew-ShippingConfirmationEmail;fbNew;;EmailCUfbSCSlot;true
+;;fb-ShippingConfirmationEmail;fbNew;;EmailfbRegSlot;true
+;;AppDownloadUrl-ShippingConfirmationEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;tweeter-ShippingConfirmationEmail;tweet;;EmailCUtweetSCSlot;true
+;;youtubenew-ShippingConfirmationEmail;youtube;;EmailCUYouTubSCeSlot;true
+;;instanew-ShippingConfirmationEmail;insta;;EmailCUInstaSCSlot;true
+;;gplusnew-ShippingConfirmationEmail;gplus;;EmailCUgplusSCSlot;true
+;;linegreynew-ShippingConfirmationEmail;linegrey;;EmailCULinegreySCSlot;true
+;;tatatrust-ShippingConfirmationEmail;tatatrust;;EmailCUTatatrustSCSlot;true
+;;cliqnpic-ShippingConfirmationEmail;cliqnpic;;EmailCUcliqnpicSCSlot;true
+;;easyreturn-ShippingConfirmationEmail;easyreturn;;EmailCUEasyreturnSCSlot;true
+;;authenticbrands-ShippingConfirmationEmail;authenticbrands;;EmailCUAuthenticbrandsSCSlot;true
+;;freeshipping-ShippingConfirmationEmail;freeshipping;;EmailCUFreeshippingSCSlot;true
+;;appstore-ShippingConfirmationEmail;appstore;;EmailCUAppleStoreSCSlot;true
+;;googleplay-ShippingConfirmationEmail;googleplay;;EmailCUAndroidStoreSCSlot;true
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderOnHoldEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;OnHOldSiteLogo-OrderOnHoldEmail;OnHOldSiteLogo;;EmailSiteLogoOnHoldSlot;true
+;;TopContent-OrderOnHoldEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-OrderOnHoldEmail;BottomContent;;EmailBottomSlot;true
+;;Tip-OrderOnHoldEmail;Tip;;EmailTipCUSlot;true
+;;AppDownloadUrl-OrderOnHoldEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-OrderOnHoldEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;OnHOldDescription-OrderOnHoldEmail;OnHOldDescription;;EmailDescriptionOnHoldSlot;true
+;;fb-OrderOnHoldEmail;fb;;EmailfbCUSlot;true
+;;tweet-OrderOnHoldEmail;tweet;;EmailtweetSlot;true
+;;youtube-OrderOnHoldEmail;youtube;;EmailYouTubeSlot;true
+;;insta-OrderOnHoldEmail;insta;;EmailInstaSlot;true
+
+
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderConfirmationRiskEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;OrderConfirmSiteLogo-OrderConfirmationRiskEmail;OrderConfirmSiteLogo;;EmailConfirmOrderSiteLogoSlot;true
+;;OrderRefOne-OrderConfirmationRiskEmail;OrderRefOne;;EmailOrderRefOneSlot;true
+;;OrderRefTwo-OrderConfirmationRiskEmail;OrderRefTwo;;EmailOrderRefTwoSlot;true
+;;OrderDelivery-OrderConfirmationRiskEmail;OrderDelivery;;EmailOrderDeliverySlot;true
+;;OrderConfirmTip-OrderConfirmationRiskEmail;OrderConfirmTip;;EmailOrderConfirmSlot;true
+;;OrderConfirmDescription-OrderConfirmationRiskEmail;OrderConfirmDescription;;EmailOrderConfirmDescriptionSlot;true
+;;TrackOrderOne-OrderConfirmationRiskEmail;TrackOrderOne;;EmailTrackOrderOneSlot;true
+;;TrackOrderTwo-OrderConfirmationRiskEmail;TrackOrderTwo;;EmailTrackOrderTwoSlot;true
+#;;OrderConfirmBannerTwo-OrderConfirmationRiskEmail;OrderConfirmBannerTwo;;EmailOrderConfirmBannerTwoSlot;true
+#;;OrderConfirmsmileyimg-OrderConfirmationRiskEmail;OrderConfirmsmileyimg;;EmailOrderConfirmsmileyimgSlot;true
+#;;OrderConfirmfb-OrderConfirmationRiskEmail;OrderConfirmfb;;EmailOrderConfirmPwdfbSlot;true
+#;;OrderConfirmgplus-OrderConfirmationRiskEmail;OrderConfirmgplus;;EmailOrderConfirmgplusSlot;true
+;;Tip-OrderConfirmationRiskEmail;Tip;;EmailTipCUSlot;true
+;;AppDownloadUrl-OrderConfirmationRiskEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-OrderConfirmationRiskEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;fb-OrderConfirmationRiskEmail;fb;;EmailfbCUSlot;true
+;;tweet-OrderConfirmationRiskEmail;tweet;;EmailtweetSlot;true
+;;youtube-OrderConfirmationRiskEmail;youtube;;EmailYouTubeSlot;true
+;;insta-OrderConfirmationRiskEmail;insta;;EmailInstaSlot;true
+;;trackbtn-OrderConfirmationRiskEmail;trackbtn;;EmailTrackbtnSlot;true
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='OrderRejectRiskEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-OrderRejectEmail;SiteLogo;;EmailSiteLogoOrderRejectSlot;true
+;;TopContent-OrderRejectEmail;TopContent;;EmailTopOrderRejectSlot;true
+;;BottomContent-OrderRejectEmail;BottomContent;;EmailBottomOrderRejectSlot;true
+#;;Tip-OrderRejectEmail;Tip;;EmailTipOrderRejectSlot;true
+;;Description-OrderRejectEmail;Description;;EmailDescriptionOrderRejectSlot;true
+;;OrderRejectBottom-OrderRejectEmail;OrderRejectBottom;;EmailOrderRejectBottomOrderRejectSlot;true
+#;;smileyimg-OrderRejectEmail;smileyimg;;EmailsmileyimgOrderRejectSlot;true
+#;;fb-OrderRejectEmail;fb;;EmailfbOrderRejectSlot;true
+#;;gplus-OrderRejectEmail;gplus;;EmailgplusOrderRejectSlot;true
+;;Tip-OrderRejectEmail;Tip;;EmailTipCUSlot;true
+;;AppDownloadUrl-OrderRejectEmail;AppDownloadUrl;;AppDownloadUrlSlot;true
+;;smileyimg-OrderRejectEmail;smileyimg;;EmailsmileyimgCUSlot;true
+;;tweet-OrderRejectEmail;tweet;;EmailtweetSlot;true
+;;youtube-OrderRejectEmail;youtube;;EmailYouTubeSlot;true
+;;insta-OrderRejectEmail;insta;;EmailInstaSlot;true
+;;fb-OrderRejectEmail;fb;;EmailfbCUSlot;true
+
+
+###HighRiskNotificationEmail
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='HighRiskNotificationEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-HighRiskNotificationEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-HighRiskNotificationEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-HighRiskNotificationEmail;BottomContent;;EmailBottomSlot;true
+
+###Email to notify market place user to take action when an order is put on HOLD
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='TakeActionOnHeldOrderEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-TakeActionOnHeldOrderEmail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-TakeActionOnHeldOrderEmail;TopContent;;EmailTopSlot;true
+;;BottomContent-TakeActionOnHeldOrderEmail;BottomContent;;EmailBottomSlot;true
+
+# Email Pages
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;CustomerRegistrationEmail;Customer Registration Email;CustomerRegistrationEmailTemplate;true;
+;;CustomerRegistrationInCsEmail;Customer Registration In Cs Email;CustomerRegistrationInCsEmailTemplate;true;
+;;ForgottenPasswordEmail;Forgotten Password Email;ForgottenPasswordEmailTemplate;true;
+;;OrderConfirmationEmail;Order Confirmation Email;OrderConfirmationEmailTemplate;true;
+;;DeliverySentEmail;Delivery Sent Email;DeliverySentEmailTemplate;true;
+;;ReadyForPickupEmail;Ready For Pickup Email;ReadyForPickupEmailTemplate;true;
+;;OrderCancelledEmail;Order Cancelled Email;OrderCancelledEmailTemplate;true;
+;;OrderRefundEmail;Order Refund Email;OrderRefundEmailTemplate;true;
+;;OrderCollectionReminderEmail;Order Collection Reminder Email;OrderCollectionReminderEmailTemplate;true;;customerservices@hybris.com;Customer Services Team
+;;OrderMoveToCsEmail;Order Move To CS Email;OrderMoveToCsEmailTemplate;true;;customerservices@hybris.com;Customer Services Team
+;;OrderPartiallyCanceledEmail;Order Partially Canceled Email;OrderPartiallyCanceledEmailTemplate;true;
+;;OrderPartiallyRefundedEmail;Order Partially Refunded Email;OrderPartiallyRefundedEmailTemplate;true;
+;;NotPickedUpConsignmentCanceledEmail;Not Picked Up Consignment Canceled Email;NotPickedUpConsignmentCanceledEmailTemplate;true;
+;;FriendsInviteEmail;Friends Invite Email;FriendsInviteEmailTemplate;true;
+;;SendInvoiceEmail;Send Invoice Email;SendInvoiceEmailTemplate;true;
+;;SendUpdateEmail;Send Update Email;SendUpdateEmailTemplate;true;
+;;CustomerProfileUpdateEmail;Customer Profile Update Email;CustomerProfileUpdateEmailTemplate;true;
+;;ChangePasswordEmail;Change Password Email;ChangePasswordEmailTemplate;true;
+;;ContactUsSubmitRequestEmail;Contact Us Submit Request Email;SubmitRequestEmailTemplate;true;
+;;ContactUsLuxuryPdpQuestionEmail;Contact Us Luxury Pdp Question Email;LuxuryPdpQuestionEmailTemplate;true;
+;;OrderPlacedFeedbackEmail;Order Placed Feedback Email;OrderPlacedFeedbackEmailTemplate;true;
+#Shipping Confirmation Event
+;;ShippingConfirmationEmail;Shipping Confirmation Email;ShippingConfirmationEmailTemplate;true;
+;;OrderOnHoldEmail;Order On Hold Email;OrderOnHoldEmailTemplate;true;
+;;OrderRejectRiskEmail;Order Reject Risk Email;OrderRejectRiskEmailTemplate;true;
+;;OrderConfRiskEmail;Order Confirmation Risk Email;OrderConfirmationRiskEmailTemplate;true;
+#Shipment out for delivery
+#;;OutForDeliveryEmail;Out Of Delivery Email;OutForDeliveryEmailTemplate;true;
+
+;;OrderDeliveryEmail;Order Delivery Email;OrderDeliveryEmailTemplate;true;
+###########PDP Email
+;;PDPEmail;PDP Email;PDPEmailTemplate;true;
+
+###HighRiskNotificationEmail
+;;HighRiskNotificationEmail;High Risk Notification Email;HighRiskNotificationEmailTemplate;true;
+###Email to notify market place user to take action when an order is put on HOLD
+;;TakeActionOnHeldOrderEmail;Take Action On Held Order Email;TakeActionOnHeldOrderEmailTemplate;true;
+### Order Refund Credit Email
+;;orderRefundCreditedEmail;Order Collected from Store Email;OrderRefundCreditedEmailTemplate;true;
+### Order Collected ByPickUp Person Mail
+;;orderCollectedByPersonEmail;Order Collected from Store Email;OrderCollectedByPersonEmailTemplate;true		;
+
+
+
+# CMS components velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux-CMSImageComponent-template;java.util.Map
+;lux-BannerComponent-template;java.util.Map
+;lux-SimpleBannerComponent-template;java.util.Map
+;lux-CMSLinkComponent-template;java.util.Map
+;lux-CMSParagraphComponent-template;java.util.Map
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Email_Customer_Registration_Body;$emailPackageName.CustomerEmailContext
+;lux_Email_Customer_Registration_In_Cs_Body;$emailPackageName.CustomerRegistrationInCsEmailContext
+;lux_Email_Forgotten_Password_Body;$emailPackageName.ForgottenPasswordEmailContext
+;lux_Email_Order_Confirmation_Body;$emailPackageName.OrderNotificationEmailContext
+;lux_Email_Delivery_Sent_Body;$emailPackageName.DeliverySentEmailContext
+;lux_Email_Ready_For_Pickup_Body;$emailPackageName.ReadyForPickupEmailContext
+;lux_Email_Order_Cancelled_Body;$emailPackageName.OrderCancelledEmailContext
+;lux_Email_Order_Refund_Body;$emailPackageName.OrderRefundEmailContext
+;lux_Email_Order_Collection_Reminder_Body;$emailPackageName.ConsignmentCollectionReminderEmailContext
+;lux_Email_Order_Move_To_CS_Body;$emailPackageName.ConsignmentCollectionReminderEmailContext
+;lux_Email_Order_Partially_Canceled_Body;$emailPackageName.OrderPartiallyCanceledEmailContext
+;lux_Email_Order_Partially_Refunded_Body;$emailPackageName.OrderPartiallyRefundedEmailContext
+;lux_Email_NotPickedUpConsignment_Canceled_Body;$emailPackageName.NotPickedUpConsignmentCanceledEmailContext
+;lux_Email_Customer_Registration_Subject;$emailPackageName.CustomerEmailContext
+;lux_Email_Customer_Registration_In_Cs_Subject;$emailPackageName.CustomerRegistrationInCsEmailContext
+;lux_Email_Forgotten_Password_Subject;$emailPackageName.ForgottenPasswordEmailContext
+;lux_Email_Order_Confirmation_Subject;$emailPackageName.OrderNotificationEmailContext
+;lux_Email_Delivery_Sent_Subject;$emailPackageName.DeliverySentEmailContext
+;lux_Email_Ready_For_Pickup_Subject;$emailPackageName.ReadyForPickupEmailContext
+;lux_Email_Order_Cancelled_Subject;$emailPackageName.OrderCancelledEmailContext
+;lux_Email_Order_Refund_Subject;$emailPackageName.OrderRefundEmailContext
+;lux_Email_Order_Collection_Reminder_Subject;$emailPackageName.ConsignmentCollectionReminderEmailContext
+;lux_Email_Order_Move_To_CS_Subject;$emailPackageName.ConsignmentCollectionReminderEmailContext
+;lux_Email_Order_Partially_Canceled_Subject;$emailPackageName.OrderPartiallyCanceledEmailContext
+;lux_Email_Order_Partially_Refunded_Subject;$emailPackageName.OrderPartiallyRefundedEmailContext
+;lux_Email_NotPickedUpConsignment_Canceled_Subject;$emailPackageName.NotPickedUpConsignmentCanceledEmailContext
+;lux_Email_FriendsInvite_Body;$emailPackageName.FriendsInviteEmailContext
+;lux_Email_SendInvoice_Body;$emailPackageName.SendInvoiceEmailContext
+;lux_Email_SendUpdate_Body;$emailPackageName.SendUpdateEmailContext
+;lux_Email_FriendsInvite_Subject;$emailPackageName.FriendsInviteEmailContext
+;lux_Email_SendInvoice_Subject;$emailPackageName.SendInvoiceEmailContext
+;lux_Email_SendUpdate_Subject;$emailPackageName.SendUpdateEmailContext
+;lux_Email_CustomerProfileUpdate_Subject;$emailPackageName.CustomerUpdateEmailContext
+;lux_Email_CustomerProfileUpdate_Body;$emailPackageName.CustomerUpdateEmailContext
+;lux_Email_ChangePassword_Subject;$emailPackageName.ChangePasswordEmailContext
+;lux_Email_ChangePassword_Body;$emailPackageName.ChangePasswordEmailContext
+;lux_Email_SubmitRequest_Body;$emailPackageName.SubmitRequestEmailContext
+;lux_Email_SubmitRequest_Subject;$emailPackageName.SubmitRequestEmailContext
+;lux_Email_LuxuryPdpQuestion_Body;$emailPackageName.LuxuryPdpQuestionEmailContext
+;lux_Email_LuxuryPdpQuestion_Subject;$emailPackageName.LuxuryPdpQuestionEmailContext
+;lux_Email_OrderPlacedFeedback_Body;$emailPackageName.OrderPlacedFeedbackEmailContext
+;lux_Email_OrderPlacedFeedback_Subject;$emailPackageName.OrderPlacedFeedbackEmailContext
+#Shipping Confirmation Event
+;lux_Email_ShippingConfirmation_Body;$emailPackageName.ShippingConfirmationEmailContext
+;lux_Email_ShippingConfirmation_Subject;$emailPackageName.ShippingConfirmationEmailContext
+
+
+#Shipment out for delivery
+#;lux_Email_OutForDelivery_Subject;$emailPackageName.OutForDeliveryEmailContext
+#;lux_Email_OutForDelivery_Body;$emailPackageName.OutForDeliveryEmailContext
+
+;lux_Email_Order_Delivery_Body;$emailPackageName.OrderDeliveryEmailContext
+;lux_Email_Order_Delivery_Subject;$emailPackageName.OrderDeliveryEmailContext
+###########PDP Email
+;lux_Email_PDP_Subject;$emailPackageName.PDPEmailContext
+;lux_Email_PDP_Body;$emailPackageName.PDPEmailContext
+;lux_Email_Order_On_Hold_Body;$emailPackageName.OrderHoldOnRiskEmailContext
+;lux_Email_Order_On_Hold_Subject;$emailPackageName.OrderHoldOnRiskEmailContext
+;lux_Email_Order_Reject_Risk_Body;$emailPackageName.OrderRejectRiskEmailContext
+;lux_Email_Order_Reject_Risk_Subject;$emailPackageName.OrderRejectRiskEmailContext
+;lux_Email_Order_Confirmation_Risk_Body;$emailPackageName.OrderConfirmationRiskEmailContext
+;lux_Email_Order_Confirmation_Risk_Subject;$emailPackageName.OrderConfirmationRiskEmailContext
+
+#### Order Refund Credit email
+;lux_Email_Order_RefundCredited_Subject;$emailPackageName.OrderRefundCreditedEmailContext
+;lux_Email_Order_RefundCredited_Body;$emailPackageName.OrderRefundCreditedEmailContext
+### Order Collecte By PickUp Person
+;lux_Email_Order_CollectedByPerson_Subject;$emailPackageName.OrderCollectedByPersonNotificationEmailContext
+;lux_Email_Order_CollectedByPerson_Body;$emailPackageName.OrderCollectedByPersonNotificationEmailContext
+
+
+###HighRiskNotificationEmail
+;lux_High_Risk_Notification_Subject;$emailPackageName.HighRiskNotificationEmailContext
+;lux_High_Risk_Notification_Body;$emailPackageName.HighRiskNotificationEmailContext
+###Email to notify market place user to take action when an order is put on HOLD
+;lux_Take_Action_On_Held_Order_Subject;$emailPackageName.TakeActionOnHeldOrderEmailContext
+;lux_Take_Action_On_Held_Order_Body;$emailPackageName.TakeActionOnHeldOrderEmailContext
+
+# Preview Image for use in the CMS Cockpit
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true]
+;;EmailPageModel_preview;text/gif;EmailPageModel_preview.gif;$jarResourceCms/preview-images/EmailPageModel_preview.gif
+
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+;;CustomerRegistrationEmail;EmailPageModel_preview
+;;CustomerRegistrationInCsEmail;EmailPageModel_preview
+;;ForgottenPasswordEmail;EmailPageModel_preview
+;;OrderConfirmationEmail;EmailPageModel_preview
+;;DeliverySentEmail;EmailPageModel_preview
+;;ReadyForPickupEmail;EmailPageModel_preview
+;;OrderCancelledEmail;EmailPageModel_preview
+;;OrderRefundEmail;EmailPageModel_preview
+;;OrderCollectionReminderEmail;EmailPageModel_preview
+;;OrderMoveToCsEmail;EmailPageModel_preview
+;;OrderPartiallyCanceledEmail;EmailPageModel_preview
+;;OrderPartiallyRefundedEmail;EmailPageModel_preview
+;;NotPickedUpConsignmentCanceledEmail;EmailPageModel_preview
+;;FriendsInviteEmail;EmailPageModel_preview
+;;SendInvoiceEmail;EmailPageModel_preview
+;;SendUpdateEmail;EmailPageModel_preview
+;;CustomerProfileUpdateEmail;EmailPageModel_preview
+;;ChangePasswordEmail;EmailPageModel_preview
+;;ContactUsSubmitRequestEmail;EmailPageModel_preview
+;;OrderPlacedFeedbackEmail;EmailPageModel_preview
+;;OrderOnHoldEmail;EmailPageModel_preview
+;;OrderRejectRiskEmail;EmailPageModel_preview
+;;OrderConfRiskEmail;EmailPageModel_preview
+## Oreder Refund
+;;orderRefundCreditedEmail;EmailPageModel_preview
+## Order COllected By Person
+;;orderCollectedByPersonEmail;EmailPageModel_preview
+
+
+
+
+;;ShippingConfirmationEmail;EmailPageModel_preview
+#;;OutForDeliveryEmail;EmailPageModel_preview
+
+;;OrderDeliveryEmail;EmailPageModel_preview
+###########PDP Email
+;;PDPEmail;EmailPageModel_preview
+
+###HighRiskNotificationEmail
+;;HighRiskNotificationEmail;EmailPageModel_preview
+###Email to notify market place user to take action when an order is put on HOLD
+;;TakeActionOnHeldOrderEmail;EmailPageModel_preview
+
+########### Tata Etail-Promotion Creation Mail #################
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PromotionCreationMailTemplate;Promotin Creation Mail Template;true;promotionCreationMail;lux_Promotion_Creation_Mail_Subject;lux_Promotion_Creation_Mail_Body;EmailPage
+
+UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PromotionCreationMailTemplate;$jarResourceCms/structure-view/structure_PromotinCreationMailTemplate.vm
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PromotionCreationMailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+#;;SiteLogo-PromotionCreationMail;SiteLogo;;EmailSiteLogoSlot;true
+;;TopContent-PromotionCreationMail;TopContent;;EmailTopSlot;true
+;;BottomContent-PromotionCreationMail;BottomContent;;EmailBottomSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PromotionCreationMail;Promotion Creation Mail;PromotionCreationMailTemplate;true;
+
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Promotion_Creation_Mail_Body;$emailPackageName.PromotionCreationEmailContext
+;lux_Promotion_Creation_Mail_Subject;$emailPackageName.PromotionCreationEmailContext
+
+UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+;;PromotionCreationMail;EmailPageModel_preview
+
+
+####################Payment Related Emails##############################
+########Inventory Reservation Failed
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;InventoryReservationFailedEmailTemplate;$jarResourceCms/structure-view/structure_inventoryReservationFailedEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;InventoryReservationFailedEmailTemplate;Inventory Reservation Failed Email Template;true;inventoryReservationFailedEmail;lux_Email_Inventory_Reservation_Failed_Subject;lux_Email_Inventory_Reservation_Failed_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='InventoryReservationFailedEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='InventoryReservationFailedEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-InventoryReservationFailedEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-InventoryReservationFailedEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-InventoryReservationFailedEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-InventoryReservationFailedEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-InventoryReservationFailedEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-InventoryReservationFailedEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-InventoryReservationFailedEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-InventoryReservationFailedEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-InventoryReservationFailedEmail;Tip;;EmailTipConfSlot;true
+;;Description-InventoryReservationFailedEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-InventoryReservationFailedEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-InventoryReservationFailedEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-InventoryReservationFailedEmail;fb;;EmailfbConfSlot;true
+;;gplus-InventoryReservationFailedEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-InventoryReservationFailedEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-InventoryReservationFailedEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-InventoryReservationFailedEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;InventoryReservationFailedEmail;Inventory Reservation Failed Email;InventoryReservationFailedEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Email_Inventory_Reservation_Failed_Body;$emailPackageName.OrderNotificationEmailContext
+;lux_Email_Inventory_Reservation_Failed_Subject;$emailPackageName.OrderNotificationEmailContext
+
+#################Payment Failed Emails
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PaymentFailedEmailTemplate;$jarResourceCms/structure-view/structure_paymentFailedEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PaymentFailedEmailTemplate;Payment Failed Email Template;true;paymentFailedEmail;lux_Email_Payment_Failed_Subject;lux_Email_Payment_Failed_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PaymentFailedEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PaymentFailedEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-PaymentFailedEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-PaymentFailedEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-PaymentFailedEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-PaymentFailedEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-PaymentFailedEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-PaymentFailedEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-PaymentFailedEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-PaymentFailedEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-PaymentFailedEmail;Tip;;EmailTipConfSlot;true
+;;Description-PaymentFailedEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-PaymentFailedEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-PaymentFailedEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-PaymentFailedEmail;fb;;EmailfbConfSlot;true
+;;gplus-PaymentFailedEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-PaymentFailedEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-PaymentFailedEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-PaymentFailedEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PaymentFailedEmail;Payment Failed Email;PaymentFailedEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Email_Payment_Failed_Body;$emailPackageName.OrderNotificationEmailContext
+;lux_Email_Payment_Failed_Subject;$emailPackageName.OrderNotificationEmailContext
+
+######Payment Pending Email
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PaymentPendingEmailTemplate;$jarResourceCms/structure-view/structure_paymentPendingEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PaymentPendingEmailTemplate;Payment Pending Email Template;true;paymentPendingEmail;lux_Email_Payment_Pending_Subject;lux_Email_Payment_Pending_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PaymentPendingEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PaymentPendingEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-PaymentPendingEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-PaymentPendingEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-PaymentPendingEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-PaymentPendingEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-PaymentPendingEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-PaymentPendingEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-PaymentPendingEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-PaymentPendingEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-PaymentPendingEmail;Tip;;EmailTipConfSlot;true
+;;Description-PaymentPendingEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-PaymentPendingEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-PaymentPendingEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-PaymentPendingEmail;fb;;EmailfbConfSlot;true
+;;gplus-PaymentPendingEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-PaymentPendingEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-PaymentPendingEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-PaymentPendingEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PaymentPendingEmail;Payment Pending Email;PaymentPendingEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Email_Payment_Pending_Body;$emailPackageName.OrderNotificationEmailContext
+;lux_Email_Payment_Pending_Subject;$emailPackageName.OrderNotificationEmailContext
+
+#########Payment Timeout Email
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;PaymentTimeoutEmailTemplate;$jarResourceCms/structure-view/structure_paymentTimeoutEmailTemplate.vm
+
+
+# Email page Template
+INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
+;;PaymentTimeoutEmailTemplate;Payment Timeout Email Template;true;paymentTimeoutEmail;lux_Email_Payment_Timeout_Subject;lux_Email_Payment_Timeout_Body;EmailPage
+
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='PaymentTimeoutEmailTemplate'];validComponentTypes(code)
+;SiteLogo;;;logo
+;TopContent;;$wideContent;
+;BottomContent;;$wideContent;
+;OrderReferenceNumberOne;;$wideContent;
+;OrderReferenceNumberTwo;;$wideContent;
+;TrackOrder1;;$wideContent;
+;TrackOrder2;;$wideContent;
+;DeliveryPerson;;$wideContent;
+;Tip;;$wideContent;
+;Description;;$wideContent;
+;handpick;;$wideContent;
+;slashImgOne;;$wideContent;
+;brand;;$wideContent;
+;slashImgTwo;;$wideContent;
+;exp;;$wideContent;
+;slashImgThree;;$wideContent;
+;fast;;$wideContent;
+;OrderConfirmationBannerTwo;;$wideContent;
+;smileyimg;;$wideContent;
+;fb;;$wideContent;
+;twitter;;$wideContent;
+;youtube;;$wideContent;
+;gplus;;$wideContent;
+;app;;$wideContent;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='PaymentTimeoutEmailTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-PaymentTimeoutEmail;SiteLogo;;EmailSiteLogoConfSlot;true
+#;;TopContent-PaymentTimeoutEmail;TopContent;;EmailTopConfSlot;true
+#;;BottomContent-PaymentTimeoutEmail;BottomContent;;EmailBottomConfSlot;true
+;;OrderReferenceNumberOne-PaymentTimeoutEmail;OrderReferenceNumberOne;;EmailOrderRefNoOneConfSlot;true
+;;OrderReferenceNumberTwo-PaymentTimeoutEmail;OrderReferenceNumberTwo;;EmailOrderRefNoTwoConfSlot;true
+;;TrackOrder1-PaymentTimeoutEmail;TrackOrder1;;EmailTrackOrderOneConfSlot;true
+;;TrackOrder2-PaymentTimeoutEmail;TrackOrder2;;EmailTrackOrderTwoConfSlot;true
+;;DeliveryPerson-PaymentTimeoutEmail;DeliveryPerson;;EmailDeliveryPersonConfSlot;true
+;;Tip-PaymentTimeoutEmail;Tip;;EmailTipConfSlot;true
+;;Description-PaymentTimeoutEmail;Description;;EmailDescriptionConfSlot;true
+;;OrderConfirmationBannerTwo-PaymentTimeoutEmail;OrderConfirmationBannerTwo;;EmailConfBanner2ConfSlot;true
+;;smileyimg-PaymentTimeoutEmail;smileyimg;;EmailsmileyimgConfSlot;true
+;;fb-PaymentTimeoutEmail;fb;;EmailfbConfSlot;true
+;;gplus-PaymentTimeoutEmail;gplus;;EmailgplusConfSlot;true
+#;;twitter-PaymentTimeoutEmail;twitter;;EmailtwitterconfSlot;true
+;;youtube-PaymentTimeoutEmail;youtube;;EmailyoutubeConfSlot;true
+;;app-PaymentTimeoutEmail;app;;EmailappConfSlot;true
+
+INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
+;;PaymentTimeoutEmail;Payment Timeout Email;PaymentTimeoutEmailTemplate;true;
+
+
+# Email velocity templates
+INSERT_UPDATE RendererTemplate;code[unique=true];contextClass;rendererType(code)[default='velocity']
+;lux_Email_Payment_Timeout_Body;$emailPackageName.OrderNotificationEmailContext
+;lux_Email_Payment_Timeout_Subject;$emailPackageName.OrderNotificationEmailContext

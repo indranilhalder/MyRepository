@@ -1,0 +1,667 @@
+# 
+# ImpEx for Responsive Tata Marketplace Site CMS Content 
+# 
+$contentCatalog=luxContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+$productCatalog=luxProductCatalog 
+$productCatalogName=MarketPlace Product Catalog
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
+$medias=medias(code, $contentCV);
+$lang=en
+$mediaContainer=media(qualifier, $contentCV)[lang=$lang];
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+
+#Registration Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
+;;/images/theme/TataTrust.png;Luxury_TataTrust.png;$siteResource/images/theme/TataTrust.png;;
+;;/images/theme/cliqnpic.png;Luxury_Cliqnpic.png;$siteResource/images/theme/cliqnpic.png;;
+;;/images/theme/easyreturns.png;Luxury_Easyreturns.png;$siteResource/images/theme/easyreturns.png;;
+;;/images/theme/authenticbrands.png;Luxury_Authenticbrands.png;$siteResource/images/theme/authenticbrands.png;;
+;;/images/theme/freeshipping.png;Luxury_Freeshipping.png;$siteResource/images/theme/freeshipping.png;;
+;;/images/theme/applestore.png;Applestore.png;$siteResource/images/theme/applestore.png;;
+;;/images/theme/androidstore.png;Androidstore.png;$siteResource/images/theme/androidstore.png;;
+;;/images/theme/linegrey.png;Luxury_Linegrey.png;$siteResource/images/theme/linegrey.png;;
+;;/images/theme/Luxury_Fb.jpg;facebook.png;$siteResource/images/theme/facebook.png;;
+;;/images/theme/gplus.png;gplus.jpg;$siteResource/images/theme/gplus.png;;
+;;/images/theme/Luxury_youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
+;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
+;;/images/theme/Luxury_Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
+
+
+# CMS Image Components for Registration  
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;CustRegSiteLogoImage;/images/theme/logo.png
+;;EmailTatatrustImage;/images/theme/TataTrust.png
+;;EmailcliqnpicImage;/images/theme/cliqnpic.png
+;;EmailEasyreturnImage;/images/theme/easyreturns.png
+;;EmailAuthenticbrandsImage;/images/theme/authenticbrands.png
+;;EmailFreeshippingImage;/images/theme/freeshipping.png
+;;EmailAppleStoreImage;/images/theme/applestore.png
+;;EmailAndroidstoreImage;/images/theme/androidstore.png
+;;EmailLinegreyImage;/images/theme/linegrey.png
+;;EmailFBImage;/images/theme/Luxury_Fb.jpg
+;;EmailYouTubeImage;/images/theme/Luxury_youtube.png
+;;EmailInstagramImage;/images/theme/Luxury_Insta.png
+;;EmailTweetImage;/images/theme/tweet.png
+;;EmailgplusImage;/images/theme/gplus.png
+
+
+
+
+# Registration Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoRegSlot;CustRegSiteLogoImage
+;;EmailTatatrustSlot;EmailTatatrustImage
+;;EmailcliqnpicSlot;EmailcliqnpicImage
+;;EmailEasyreturnSlot;EmailEasyreturnImage
+;;EmailAuthenticbrandsSlot;EmailAuthenticbrandsImage
+;;EmailFreeshippingSlot;EmailFreeshippingImage
+;;EmailLinegreySlot;EmailLinegreyImage
+;;EmailfbRegSlot;EmailFBImage
+;;EmailgplusRegSlot1;EmailgplusImage
+;;EmailtweetSlot;EmailTweetImage
+;;EmailAppleStoreSlot;EmailAppleStoreImage
+;;EmailAndroidStoreSlot;EmailAndroidstoreImage
+
+
+# Forget Password Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/Luxury_logo.png;Luxury_logo.png;$siteResource/images/theme/Luxury_logo.png;;
+;;/images/theme/Fb1.jpg;Facebook.png;$siteResource/images/theme/facebook.png;;
+;;/images/theme/gplus1.png;Gplus.jpg;$siteResource/images/theme/gplus.png;;
+;;/images/theme/youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
+;;/images/theme/tweeter.jpg;twt.png;$siteResource/images/theme/twt.png;;
+;;/images/theme/Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
+
+# CMS Image Components for Forget Password
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailForgotPwdSiteLogoImage;/images/theme/Luxury_logo.png
+;;ForgetPwEmailfbImage;/images/theme/Fb1.jpg;
+;;ForgetPwEmailgplusImage;/images/theme/gplus1.png;
+;;AppDownloadImage;/images/theme/Luxury_App.jpg;
+;;EmailtweetImage;/images/theme/tweeter.jpg;
+
+
+# Forget Password Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailForgotPwdSiteLogoSlot;EmailForgotPwdSiteLogoImage
+;;EmailForgotPwdTatatrustSlot;EmailTatatrustImage
+;;EmailForgotPwdcliqnpicSlot;EmailcliqnpicImage
+;;EmailForgotPwdEasyreturnSlot;EmailEasyreturnImage
+;;EmailForgotPwdAuthenticbrandsSlot;EmailAuthenticbrandsImage
+;;EmailForgotPwdFreeshippingSlot;EmailFreeshippingImage
+;;EmailForgotPwdAppleStoreSlot;EmailAppleStoreImage
+;;EmailForgotPwdAndroidStoreSlot;EmailAndroidstoreImage
+;;EmailForgotPwdLinegreySlot;EmailLinegreyImage
+;;EmailForgotPwdfbSlot;ForgetPwEmailfbImage
+;;EmailForgotPwdtweetSlot;EmailtweetImage
+;;EmailForgotPwdYouTubeSlot;EmailYouTubeImage
+;;EmailForgotPwdInstaSlot;EmailInstagramImage
+;;EmailForgotPwdgplusSlot;EmailgplusImage
+
+#Order Confirmation Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/Luxury_logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
+;;/images/theme/OrderConfirmationBanner2.jpg;OrderConfirmationBanner2.jpg;$siteResource/images/theme/OrderConfirmationBanner2.jpg;;
+;;/images/theme/DeliveryPerson.jpg;DeliveryPerson.jpg;$siteResource/images/theme/DeliveryPerson.jpg;;
+;;/images/theme/Luxury_TrackOrder.jpg;Luxury_TrackOrder.jpg;$siteResource/images/theme/Luxury_TrackOrder.jpg;;
+;;/images/theme/Track2.jpg;Track2.jpg;$siteResource/images/theme/track-btn.jpg;;
+;;/images/theme/ConfDescription.jpg;ConfDescription.jpg;$siteResource/images/theme/ConfDescription.jpg;;
+;;/images/theme/OrderReferenceNumberOne.jpg;OrderReferenceNumberOne.jpg;$siteResource/images/theme/OrderReferenceNumberOne.jpg;;
+;;/images/theme/OrderReferenceNumberTwo.jpg;OrderReferenceNumberTwo.jpg;$siteResource/images/theme/OrderReferenceNumberTwo.jpg;;
+;;/images/theme/Luxury_Happy.png;Luxury_Happy.png;$siteResource/images/theme/Luxury_Happy.png;;
+;;/images/theme/Luxury_App.jpg;Luxury_App.jpg;$siteResource/images/theme/Luxury_App.jpg;;
+;;/images/theme/Luxury_Fb.jpg;facebook.png;$siteResource/images/theme/facebook.png;;;
+;;/images/theme/Luxury_twiiter.jpg;twt.png;$siteResource/images/theme/twt.png;;
+;;/images/theme/Luxury_youtube.jpg;Luxury_youtube.jpg;$siteResource/images/theme/Luxury_youtube.png;;
+;;/images/theme/Luxury_Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmationBanner1Image;/images/theme/Luxury_logo.png;
+;;OrderConfirmationBanner2Image;/images/theme/OrderConfirmationBanner2.jpg;
+;;Track1Image;/images/theme/Luxury_TrackOrder.jpg;
+;;Track2Image;/images/theme/Track2.jpg;
+;;DeliveryPersonImage;/images/theme/DeliveryPerson.jpg;
+;;DescriptionConfImage;/images/theme/ConfDescription.jpg;
+;;OrderRefNumbOneConfImage;/images/theme/OrderReferenceNumberOne.jpg;
+;;OrderRefNumbTwoConfImage;/images/theme/OrderReferenceNumberTwo.jpg;
+;;EmailFBImage;/images/theme/Luxury_Fb.jpg;
+;;EmailAppImage;/images/theme/Luxury_App.jpg;
+;;Emailyoutube;/images/theme/Luxury_youtube.jpg;
+;;Emailtwitter;/images/theme/Luxury_twiiter.jpg;
+;;EmailInstagramImage;/images/theme/Luxury_Insta.png
+
+## reset password changes
+;;EmailForgotPasswordHeaderImage;/images/theme/forgot_password_header.jpg;
+;;EmailForgotPasswordMiddlebannerImage;/images/theme/forgot_password_middlebanner.jpg;
+;;EmailForgotPasswordMinibannerImage;/images/theme/forgot_password_minibanner.jpg;
+;;EmailForgotPasswordMiniRightBanner;/images/theme/forgot_password_mini_right_banner.jpg;
+;;EmailForgotPasswordMiniLeftBanner;/images/theme/forgot_password_mini_left_banner.jpg;
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoConfSlot;OrderConfirmationBanner1Image
+;;EmailTrackOrderOneConfSlot;Track1Image
+;;EmailTrackOrderTwoConfSlot;Track2Image
+;;EmailDeliveryPersonConfSlot;DeliveryPersonImage
+;;EmailConfBanner2ConfSlot;OrderConfirmationBanner2Image
+;;EmailDescriptionConfSlot;DescriptionConfImage
+;;EmailOrderRefNoOneConfSlot;OrderRefNumbOneConfImage
+;;EmailOrderRefNoTwoConfSlot;OrderRefNumbTwoConfImage
+;;EmailTipConfSlot;EmailTipsImage
+;;EmailsmileyimgConfSlot;EmailsmileyImage
+;;EmailfbConfSlot;ForgetPwEmailfbImage
+;;EmailtweetSlot;Emailtwitter
+;;EmailYouTubeSlot;Emailyoutube
+;;EmailappConfSlot;EmailAppImage;
+;;EmailInstaSlot;EmailInstagramImage
+;;EmailLinegreySlot;EmailLinegreyImage
+
+
+#Customer Profile Update Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
+;;/images/theme/TataTrust.png;Luxury_TataTrust.png;$siteResource/images/theme/TataTrust.png;;
+;;/images/theme/cliqnpic.png;Luxury_Cliqnpic.png;$siteResource/images/theme/cliqnpic.png;;
+;;/images/theme/easyreturns.png;Luxury_Easyreturns.png;$siteResource/images/theme/easyreturns.png;;
+;;/images/theme/authenticbrands.png;Luxury_Authenticbrands.png;$siteResource/images/theme/authenticbrands.png;;
+;;/images/theme/freeshipping.png;Luxury_Freeshipping.png;$siteResource/images/theme/freeshipping.png;;
+;;/images/theme/applestore.png;Applestore.png;$siteResource/images/theme/applestore.png;;
+;;/images/theme/androidstore.png;Androidstore.png;$siteResource/images/theme/androidstore.png;;
+;;/images/theme/linegrey.png;Luxury_Linegrey.png;$siteResource/images/theme/linegrey.png;;
+;;/images/theme/Luxury_Fb.jpg;facebook.png;$siteResource/images/theme/facebook.png;;
+;;/images/theme/gplus.png;gplus.jpg;$siteResource/images/theme/gplus.png;;
+;;/images/theme/Luxury_youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
+;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
+;;/images/theme/Luxury_Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailCUSiteLogoImage;/images/theme/logo.png
+;;EmailCUTatatrustImage;/images/theme/TataTrust.png
+;;EmailCUcliqnpicImage;/images/theme/cliqnpic.png
+;;EmailCUEasyreturnImage;/images/theme/easyreturns.png
+;;EmailCUAuthenticbrandsImage;/images/theme/authenticbrands.png
+;;EmailCUFreeshippingImage;/images/theme/freeshipping.png
+;;EmailCUAppleStoreImage;/images/theme/applestore.png
+;;EmailCUAndroidstoreImage;/images/theme/androidstore.png
+;;EmailCULinegreyImage;/images/theme/linegrey.png
+;;EmailCUFBImage1;/images/theme/Luxury_Fb.jpg;
+;;EmailCUYouTubeImage;/images/theme/Luxury_youtube.png;
+;;EmailCUInstagramImage;/images/theme/Luxury_Insta.png;
+;;EmailCUTweetImage;/images/theme/tweet.png
+;;EmailCUgplusImage;/images/theme/gplus.png
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailCUSiteLogoSlot;EmailCUSiteLogoImage
+;;EmailCUTatatrustSlot;EmailCUTatatrustImage
+;;EmailCUcliqnpicSlot;EmailCUcliqnpicImage
+;;EmailCUEasyreturnSlot;EmailCUEasyreturnImage
+;;EmailCUAuthenticbrandsSlot;EmailCUAuthenticbrandsImage
+;;EmailCUFreeshippingSlot;EmailCUFreeshippingImage
+;;EmailCUAppleStoreSlot;EmailCUAppleStoreImage
+;;EmailCUAndroidStoreSlot;EmailCUAndroidstoreImage
+;;EmailCULinegreySlot;EmailCULinegreyImage
+;;EmailCUfbSlot;ForgetPwEmailfbImage
+;;EmailCUtweetSlot;EmailCUTweetImage
+;;EmailCUYouTubeSlot;EmailCUYouTubeImage
+;;EmailCUInstaSlot;EmailCUInstagramImage
+;;EmailCUgplusSlot;EmailCUgplusImage
+
+
+#ShippingConfirmationEmailTemplate Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/logo.png;Luxury_HeaderLogo.png;$siteResource/images/theme/Luxury_logo.png;;
+;;/images/theme/TataTrust.png;Luxury_TataTrust.png;$siteResource/images/theme/TataTrust.png;;
+;;/images/theme/cliqnpic.png;Luxury_Cliqnpic.png;$siteResource/images/theme/cliqnpic.png;;
+;;/images/theme/easyreturns.png;Luxury_Easyreturns.png;$siteResource/images/theme/easyreturns.png;;
+;;/images/theme/authenticbrands.png;Luxury_Authenticbrands.png;$siteResource/images/theme/authenticbrands.png;;
+;;/images/theme/freeshipping.png;Luxury_Freeshipping.png;$siteResource/images/theme/freeshipping.png;;
+;;/images/theme/applestore.png;Applestore.png;$siteResource/images/theme/applestore.png;;
+;;/images/theme/androidstore.png;Androidstore.png;$siteResource/images/theme/androidstore.png;;
+;;/images/theme/linegrey.png;Luxury_Linegrey.png;$siteResource/images/theme/linegrey.png;;
+;;/images/theme/Luxury_Fb.png;facebook.png;$siteResource/images/theme/facebook.png;;
+;;/images/theme/gplus.png;gplus.png;$siteResource/images/theme/gplus.png;;
+;;/images/theme/Luxury_youtube.png;Luxury_youtube.png;$siteResource/images/theme/Luxury_youtube.png;;
+;;/images/theme/tweet.png;Luxury_youtube.png;$siteResource/images/theme/twt.png;;
+;;/images/theme/Luxury_Insta.png;Luxury_Insta.png;$siteResource/images/theme/Luxury_Insta.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailSiteLogoshippingconfirmationImage;/images/theme/logo.png
+;;EmailCUTatatrustshippingconfirmationImage;/images/theme/TataTrust.png
+;;EmailCUcliqnpicshippingconfirmationImage;/images/theme/cliqnpic.png
+;;EmailCUEasyreturnshippingconfirmationImage;/images/theme/easyreturns.png
+;;EmailCUAuthenticbrandsshippingconfirmationImage;/images/theme/authenticbrands.png
+;;EmailCUFreeshippingshippingconfirmationImage;/images/theme/freeshipping.png
+;;EmailCUAppleStoreshippingconfirmationImage;/images/theme/applestore.png
+;;EmailCUAndroidstoreshippingconfirmationImage;/images/theme/androidstore.png
+;;EmailCULinegreyshippingconfirmationImage;/images/theme/linegrey.png
+;;EmailCUFBshippingconfirmationImage1;/images/theme/Luxury_Fb.png
+;;EmailCUYouTubeshippingconfirmationImage;/images/theme/Luxury_youtube.png
+;;EmailCUInstagramshippingconfirmationImage;/images/theme/Luxury_Insta.png
+;;EmailCUTweetshippingconfirmationImage;/images/theme/tweet.png
+;;EmailCUgplusshippingconfirmationImage;/images/theme/gplus.png
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoSCslot;EmailSiteLogoshippingconfirmationImage
+;;EmailCUTatatrustSCSlot;EmailCUTatatrustshippingconfirmationImage
+;;EmailCUcliqnpicSCSlot;EmailCUcliqnpicshippingconfirmationImage
+;;EmailCUEasyreturnSCSlot;EmailCUEasyreturnshippingconfirmationImage
+;;EmailCUAuthenticbrandsSCSlot;EmailCUAuthenticbrandsshippingconfirmationImage
+;;EmailCUFreeshippingSCSlot;EmailCUFreeshippingshippingconfirmationImage
+;;EmailCUAppleStoreSCSlot;EmailCUAppleStoreshippingconfirmationImage
+;;EmailCUAndroidStoreSCSlot;EmailCUAndroidstoreshippingconfirmationImage
+;;EmailCULinegreySCSlot;EmailCULinegreyshippingconfirmationImage
+;;EmailCUfbSCSlot;EmailCUFBshippingconfirmationImage1
+;;EmailCUtweetSCSlot;EmailCUTweetshippingconfirmationImage
+;;EmailCUYouTubSCeSlot;EmailCUYouTubeshippingconfirmationImage
+;;EmailCUInstaSCSlot;EmailCUInstagramshippingconfirmationImage
+;;EmailCUgplusSCSlot;EmailCUgplusshippingconfirmationImage
+
+
+#OrderDeliveryEmailTemplate ODC
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/Luxury_logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailODCsitelogoimage;/images/theme/Luxury_logo.png;
+;;EmailODCtatatrustImage;/images/theme/TataTrust.png
+;;EmailODCcliqnpicImage;/images/theme/cliqnpic.png
+;;EmailODCEasyreturnImage;/images/theme/easyreturns.png
+;;EmailODCAuthenticbrandsImage;/images/theme/authenticbrands.png
+;;EmailODCFreeshippingImage;/images/theme/freeshipping.png
+;;EmailODCAppleStoreImage;/images/theme/applestore.png
+;;EmailODCAndroidstoreImage;/images/theme/androidstore.png
+;;EmailODCLinegreyImage;/images/theme/linegrey.png
+;;EmailODCFBImage1;/images/theme/Luxury_Fb.jpg
+;;EmailODCYouTubeImage;/images/theme/Luxury_youtube.png
+;;EmailODCInstagramImage;/images/theme/Luxury_Insta.png
+;;EmailODCTweetImage;/images/theme/tweet.png
+;;EmailODCgplusImage;/images/theme/gplus.png
+
+# Content Slots  ODC-orderDelivery Confirmation
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoODCSlot;EmailODCsitelogoimage
+;;EmailODCtatatrustSlot;EmailODCtatatrustImage
+;;EmailODCcliqnpicSlot;EmailODCcliqnpicImage
+;;EmailODCEasyreturnSlot;EmailODCEasyreturnImage
+;;EmailODCAuthenticbrandsSlot;EmailODCAuthenticbrandsImage
+;;EmailODCFreeshippingSlot;EmailODCFreeshippingImage
+;;EmailODCAppleStoreSlot;EmailODCAppleStoreImage
+;;EmailODCAndroidStoreSlot;EmailODCAndroidstoreImage
+;;EmailODCLinegreySlot;EmailODCLinegreyImage
+;;EmailODCfbSlot;EmailCUFBImage1
+;;EmailODCtweetSlot;EmailODCTweetImage
+;;EmailODCYouTubeSlot;EmailODCYouTubeImage
+;;EmailODCInstaSlot;EmailODCInstagramImage
+;;EmailODCgplusSlot;EmailODCgplusImage
+
+#OrderCancelledEmailTemplate OC
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/Luxury_logo.png;Luxury_HeaderLogo.jpg;$siteResource/images/theme/Luxury_logo.png;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailOCsitelogoimage;/images/theme/Luxury_logo.png;
+;;EmailOCtatatrustImage;/images/theme/TataTrust.png
+;;EmailOCcliqnpicImage;/images/theme/cliqnpic.png
+;;EmailOCEasyreturnImage;/images/theme/easyreturns.png
+;;EmailOCAuthenticbrandsImage;/images/theme/authenticbrands.png
+;;EmailOCFreeshippingImage;/images/theme/freeshipping.png
+;;EmailOCAppleStoreImage;/images/theme/applestore.png
+;;EmailOCAndroidstoreImage;/images/theme/androidstore.png
+;;EmailOCLinegreyImage;/images/theme/linegrey.png
+;;EmailOCFBImage1;/images/theme/Luxury_Fb.jpg
+;;EmailOCYouTubeImage;/images/theme/Luxury_youtube.png
+;;EmailOCInstagramImage;/images/theme/Luxury_Insta.png
+;;EmailOCTweetImage;/images/theme/tweet.png
+;;EmailOCgplusImage;/images/theme/gplus.png
+
+# Content Slots  OC-orderCancellation
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoOCSlot;EmailOCsitelogoimage
+;;EmailOCtatatrustSlot;EmailOCtatatrustImage
+;;EmailOCcliqnpicSlot;EmailOCcliqnpicImage
+;;EmailOCEasyreturnSlot;EmailOCEasyreturnImage
+;;EmailOCAuthenticbrandsSlot;EmailOCAuthenticbrandsImage
+;;EmailOCFreeshippingSlot;EmailOCFreeshippingImage
+;;EmailOCAppleStoreSlot;EmailOCAppleStoreImage
+;;EmailOCAndroidStoreSlot;EmailOCAndroidstoreImage
+;;EmailOCLinegreySlot;EmailOCLinegreyImage
+;;EmailOCfbSlot;EmailOCFBImage1
+;;EmailOCtweetSlot;EmailOCTweetImage
+;;EmailOCYouTubeSlot;EmailOCYouTubeImage
+;;EmailOCInstaSlot;EmailOCInstagramImage
+;;EmailOCgplusSlot;EmailOCgplusImage
+
+#Order Refund EmailTemplate
+# Media fOr Order refund
+INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
+;;/images/theme/logo.png;Luxury_HeaderLogo.png;$siteResource/images/theme/Luxury_logo.png;;
+
+			
+# CMS Image Components forOrder Refund  
+INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]		;$picture[lang=$lang]
+;;mail_logo_refundImage;/images/theme/Luxury_logo.png
+;;mail_tatatrust_refundImage;/images/theme/TataTrust.png
+;;mail_cliqnpic_refundImage;/images/theme/cliqnpic.png
+;;mail_easyreturn_refundImage;/images/theme/easyreturns.png
+;;mail_authenticbrands_refundImage;/images/theme/authenticbrands.png
+;;mail_freeshipping_refundImage;/images/theme/freeshipping.png
+;;mail_appstore_refundImage;/images/theme/applestore.png
+;;mail_googleplay_refundImage;/images/theme/androidstore.png
+;;mail_linegrey_refundImage;/images/theme/linegrey.png
+;;mail_fb_refundImage;/images/theme/Luxury_Fb.jpg
+;;mail_youtube_refundImage;/images/theme/Luxury_youtube.png
+;;mail_insta_refundImage;/images/theme/Luxury_Insta.png
+;;mail_tweet_refundImage;/images/theme/tweet.png
+;;mail_gplus_refundImage;/images/theme/gplus.png
+
+
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV) 	;name 			;active
+;;EmailSiteLogoORSlot;mail_logo_refundImage;Logo Slot		;true
+;;EmailORtatatrustSlot;mail_tatatrust_refundImage;Tatatrust Slot	;true
+;;EmailORcliqnpicSlot;mail_cliqnpic_refundImage;cliqnpic Slot	;true
+;;EmailOREasyreturnSlot;mail_easyreturn_refundImage;Easyreturn Slot		;true
+;;EmailORAuthenticbrandsSlot;mail_authenticbrands_refundImage;Authenticbrands Slot		;true
+;;EmailORFreeshippingSlot;mail_freeshipping_refundImage;Freeshipping Slot		;true
+;;EmailORAppleStoreSlot;mail_appstore_refundImage;AppleStore Slot		;true
+;;EmailORAndroidStoreSlot;mail_googleplay_refundImage;AndroidStore Slot		;true
+;;EmailORLinegreySlot;mail_linegrey_refundImage;Linegrey Slot		;true
+;;EmailORfbSlot;mail_fb_refundImage;mail_facebook_refund;true
+;;EmailORtweetSlot;mail_tweet_refundImage;mail_twitter_refund;true
+;;EmailORYouTubeSlot;mail_youtube_refundImage;mail_youtube_refund;true
+;;EmailORInstaSlot;mail_insta_refundImage;mail_Insta_refund;true
+;;EmailORgplusSlot;mail_gplus_refundImage;mail_gplus_refund;true
+		
+
+
+
+# Order Collected By PickUp Person Email Template
+# Media
+INSERT_UPDATE Media	;$contentCV[unique=true];code[unique=true]		;realfilename		;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]	;mime[default='image/jpg']
+			;			;mail_top_banner		;mailTopContentBody	;$siteResource/images/theme/header4.jpg							;	
+			;			;mail_track-button		;trackOrderButton	;$siteResource/images/theme/track-btn.jpg							;
+			;			;mail_tip-image			;tipsImageComponent	;$siteResource/images/theme/tip.jpg								;
+			;			;mail_click-app_download	;clicktoDownloadApp	;$siteResource/images/theme/click-app.jpg							;
+			;			;mail_happyShopping_banner	;happyShopping		;$siteResource/images/theme/happy-shopping.jpg						;
+			;			;mail_facebook_link		;facebooklink		;$siteResource/images/theme/facebook.jpg								;
+			;			;mail_twitter_link		;twitterlink		;$siteResource/images/theme/twitter.jpg								;
+			;			;mail_youtube_link		;youtubelink		;$siteResource/images/theme/youtube.jpg								;
+			;			;mail_socialnetwork_link	;socialnetworklin	;$siteResource/images/theme/socialnet.jpg								;
+
+# CMS Images Component For PickUp Person 
+INSERT_UPDATE CMSImageComponent	;$contentCV[unique=true]	;uid[unique=true]	;$picture[lang=$lang]
+				;				;mail_topContent_cms	;mail_top_banner
+				;				;mail_trackOrder_cms	;mail_track-button
+				;				;mail_tipsImage_cms	;mail_tip-image
+				;				;mail_clickApp_cms	;mail_click-app_download
+				;				;mail_happyShopping_cms	;mail_happyShopping_banner
+				;				;mail_facebook_cms	;mail_facebook_link
+				;				;mail_twitter_cms	;mail_twitter_link
+				;				;mail_youtube_cms	;mail_youtube_link
+				;				;mail_socialNewtwork_cms;mail_socialnetwork_link
+				
+			
+INSERT_UPDATE ContentSlot	;$contentCV[unique=true];uid[unique=true]		;cmsComponents(uid,$contentCV) 	;name 			;active
+				;			;emailTopContSlot  	;mail_topContent_cms		;Logo Slot		;true
+				;			;emailTrackOrderContSlot  	;mail_trackOrder_cms		;Track Order Slot	;true
+				;			;emailTipsContSlot	  	;mail_tipsImage_cms		;Tips Slot		;true
+				;			;emailClickAppDownContSlot  	;mail_clickApp_cms		;App Download Slot	;true
+				;			;emailHappyShopContSlot  	;mail_happyShopping_cms		;Happy Shop Slot	;true
+				;			;emailFacebookContSlot  	;mail_facebook_cms		;Facebook Slot		;true
+				;			;emailTwitterContSlot	  	;mail_twitter_cms		;Twitter Slot		;true
+				;			;emailYoutubeContSlot  		;mail_youtube_cms		;Youtube Slot		;true
+				;			;emailSocialContSlot  		;mail_socialNewtwork_cms	;Social Network Slot	;true
+
+
+
+
+
+##entries for reset password
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/forgot_password_header.jpg;forgot_password_header.jpg;$siteResource/images/theme/forgot_password_header.jpg;;
+;;/images/theme/forgot_password_middlebanner.jpg;forgot_password_middlebanner.jpg;$siteResource/images/theme/forgot_password_middlebanner.jpg;;
+;;/images/theme/forgot_password_minibanner.jpg;forgot_password_minibanner.jpg;$siteResource/images/theme/forgot_password_minibanner.jpg;;
+;;/images/theme/fast.jpg;fast.jpg;$siteResource/images/theme/fast.jpg;;
+;;/images/theme/forgot_password_mini_left_banner.jpg;forgot_password_mini_left_banner.jpg;$siteResource/images/theme/forgot_password_mini_left_banner.jpg;;
+;;/images/theme/forgot_password_mini_right_banner.jpg;forgot_password_mini_right_banner.jpg;$siteResource/images/theme/forgot_password_mini_right_banner.jpg;;
+
+#Order Rejected High Risk Email
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+
+# CMS Image Components for Order Rejected High Risk Email  
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailBannerOrderRejectedImage;/images/theme/headerBanner.jpg;
+
+# Order Rejected High Risk Email Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoOrderRejectSlot;EmailBannerOrderRejectedImage
+;;AppDownloadUrlSlot;AppDownloadImage
+;;EmailsmileyimgCUSlot;EmailsmileyImage
+;;EmailgplusCUSlot;EmailgplusImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+
+
+
+#Registration through call center
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+
+
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;SiteLogoImageForRegistration;/images/theme/headerBanner.jpg;
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoRegInCsSlot;SiteLogoImageForRegistration
+#;;EmailhandpickRegInCsSlot;EmailhandpickImage
+#;;EmailslashImgOneRegInCsSlot;EmailslashImgTwoImage
+#;;EmailbrandRegInCsSlot;EmailbrandImage
+#;;EmailslashImgTwoRegInCsSlot;EmailslashImgTwoImage
+#;;EmailexpRegInCsSlot;EmailexpImage
+#;;EmailslashImgThreeRegInCsSlot;EmailslashImgTwoImage
+#;;EmailfastRegInCsSlot;EmailfastSImage
+#;;EmailTipCUSlot;TipImage
+#;;AppDownloadUrlSlot;AppDownloadImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
+#;;EmailgplusCUSlot;EmailgplusImage
+#;;EmailtweetSlot;EmailtweetImage
+#;;EmailYouTubeSlot;EmailYouTubeImage
+#;;EmailInstaSlot;EmailInstagramImage
+
+
+
+#invite friends 
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+
+
+# CMS Image Components for Friends Invite
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailBannerInviteImage;/images/theme/headerBanner.jpg;
+
+# Friends Invite Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoInviteSlot;EmailBannerInviteImage
+#;;EmailbrandInviteSlot;EmailbrandImage
+#;;EmailexpInviteSlot;EmailexpImage
+#;;EmailslashImgThreeInviteSlot;EmailslashImgTwoImage
+#;;EmailslashImgTwoInviteSlot;EmailslashImgTwoImage
+#;;EmailslashImgOneInviteSlot;EmailslashImgTwoImage
+#;;EmailfastInviteSlot;EmailfastSImage
+#;;EmailhandpickInviteSlot;EmailhandpickImage
+#;;EmailTipCUSlot;TipImage
+;;AppDownloadUrlSlot;AppDownloadImage
+;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
+;;EmailgplusCUSlot;EmailgplusImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+
+
+
+
+#Resend Invoice
+
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/InvoiceSiteLogo.jpg;InvoiceSiteLogo.jpg;$siteResource/images/theme/InvoiceSiteLogo.jpg;;
+;;/images/theme/InvoiceDescription.jpg;InvoiceDescription.jpg;$siteResource/images/theme/InvoiceDescription.jpg;;
+;;/images/theme/InvoiceBanner2.jpg;InvoiceBanner2.jpg;$siteResource/images/theme/InvoiceBanner2.jpg;;
+
+
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;InvoiceSiteLogoImage;/images/theme/headerBanner.jpg;
+#;;InvoiceDescriptionImage;/images/theme/InvoiceDescription.jpg;
+#;;InvoiceBanner2Image;/images/theme/InvoiceBanner2.jpg;
+
+
+ 
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteInvoiceLogoSlot;InvoiceSiteLogoImage
+#;;EmailInvoiceLetsGOSHopping1Slot;EmailLetsGoShopping1Image
+#;;EmailInvoiceLetsGOSHopping2Slot;EmailLetsGoShopping2Image
+#;;EmailInvoiceTipSlot;EmailTipImage
+#;;EmailInvoiceInvoiceDescriptionSlot;InvoiceDescriptionImage
+#;;EmailInvoiceBanner2Slot;InvoiceBanner2Image
+;;AppDownloadUrlSlot;AppDownloadImage
+;;EmailInvoiceSmileySlot;EmailsmileyImage
+#;;EmailInvoiceFbSlot;EmailfbImage
+;;EmailInvoiceGplusSlot;EmailgplusImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+
+
+
+## Order On Hold
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+;;/images/theme/OnHoldDescription.jpg;OnHoldDescription.jpg;$siteResource/images/theme/OnHoldDescription.jpg;;
+
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailOnHoldBanner1Image;/images/theme/headerBanner.jpg;
+;;EmailOnHOldDescriptionImage;/images/theme/OnHoldDescription.jpg;;
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoOnHoldSlot;EmailOnHoldBanner1Image
+#;;EmailTipCUSlot;TipImage
+;;EmailDescriptionOnHoldSlot;EmailOnHOldDescriptionImage
+;;AppDownloadUrlSlot;AppDownloadImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
+;;EmailgplusCUSlot;EmailgplusImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+
+
+
+#PDP Email Template
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailPDPHeaderImage;/images/theme/headerBanner.jpg;
+
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailPDPHeaderImageSlot;EmailPDPHeaderImage
+#;;EmailPDPTipsImageSlot;TipImage
+#;;EmailPDPFbImageSlot;EmailfbImage
+;;AppDownloadUrlSlot;AppDownloadImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+
+
+
+#Order Confirmation Risk
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;OrderConfirmSiteLogoImage;/images/theme/headerBanner.jpg;
+;;OrderConfirmTrackButtonImage;/images/theme/Track2.jpg;
+
+# Order Order Confirmation Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailConfirmOrderSiteLogoSlot;OrderConfirmSiteLogoImage
+#;;EmailForgorPwdTipSlot;DeliveryPersonImage
+#;;EmailTrackOrderOneSlot;Track1HOTCImage
+#;;EmailTrackOrderTwoSlot;Track2HOTCImage
+#;;EmailOrderConfirmSlot;TipImage
+#;;EmailTipCUSlot;TipImage
+;;AppDownloadUrlSlot;AppDownloadImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
+;;EmailgplusCUSlot;EmailgplusImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage
+;;EmailTrackbtnSlot;OrderConfirmTrackButtonImage
+;;EmailOrderDeliverySlot;DeliveryPersonImage
+
+
+
+#Order Refund Email
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images']
+;;/images/theme/headerBanner.jpg;headerBanner.jpg;$siteResource/images/theme/headerBanner.jpg;;
+
+# CMS Image Components
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang]
+;;EmailSiteLogoRefundImage;/images/theme/headerBanner.jpg;
+
+# Content Slots
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;EmailSiteLogoRefundSlot;EmailSiteLogoRefundImage
+#;;EmailTipCUSlot;TipImage
+;;EmailDescriptionRefundSlot;DescriptionConfImage
+;;AppDownloadUrlSlot;AppDownloadImage
+#;;EmailsmileyimgCUSlot;EmailsmileyImage
+#;;EmailfbCUSlot;EmailfbImage
+;;EmailgplusCUSlot;EmailgplusImage
+;;EmailtweetSlot;EmailtweetImage
+;;EmailYouTubeSlot;EmailYouTubeImage
+;;EmailInstaSlot;EmailInstagramImage

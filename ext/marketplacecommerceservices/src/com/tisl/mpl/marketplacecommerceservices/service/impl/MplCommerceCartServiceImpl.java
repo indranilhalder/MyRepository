@@ -153,6 +153,7 @@ import com.tisl.mpl.mplcommerceservices.service.data.InvReserForDeliverySlotsRes
 import com.tisl.mpl.service.InventoryReservationService;
 import com.tisl.mpl.service.PinCodeDeliveryModeService;
 import com.tisl.mpl.strategy.service.impl.MplDefaultCommerceAddToCartStrategyImpl;
+import com.tisl.mpl.util.CatalogUtils;
 import com.tisl.mpl.util.ExceptionUtil;
 import com.tisl.mpl.util.GenericUtilityMethods;
 import com.tisl.mpl.wsdto.CNCServiceableSlavesWsDTO;
@@ -298,6 +299,9 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 
 	@Autowired
 	private MplCommerceAddToCartStrategy mplCommerceAddToCartStrategy;
+	
+	@Autowired
+	private CatalogUtils catalogUtils;
 
 	/**
 	 * @description: It is responsible for adding product to cart at ussid level
@@ -591,11 +595,8 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 											&& isFulFillmentTypeMatch(deliveryData.getFulfilmentType(), deliveryModel
 													.getDeliveryFulfillModes().getCode(), sellerInformationData))
 									{
-										/*
-										 * priceData = formPriceData(Double.valueOf(deliveryModel.getValue().doubleValue()
-										 * entry.getQualifyingCount().intValue()), cartData);
-										 */
-										//TISPRDT-1226
+									
+									//TISPRDT-1226
 										priceData = formPriceData(
 												Double.valueOf(deliveryModel.getValue().doubleValue()
 														* (entry.getQuantity().intValue() - entry.getFreeCount().intValue())), cartData);
@@ -1362,9 +1363,7 @@ public class MplCommerceCartServiceImpl extends DefaultCommerceCartService imple
 		final Date sysDate = new Date();
 		final String ussid = wishlistEntryModel.getUssid();
 
-		final CatalogVersionModel onlineCatalog = catalogService.getCatalogVersion(
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_ID,
-				MarketplacecommerceservicesConstants.DEFAULT_IMPORT_CATALOG_VERSION);
+		final CatalogVersionModel onlineCatalog = catalogUtils.getSessionCatalogVersionForProduct();
 
 		final List<SellerInformationModel> sellerInformationModelList = mplDelistingService.getModelforUSSID(ussid, onlineCatalog);
 

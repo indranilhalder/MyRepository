@@ -1,0 +1,463 @@
+# ImpEx for Importing Category Classifications
+
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$productCatalogName=Luxury Product Catalog
+$classificationCatalog=pcmClassification
+$productCatalog=luxProductCatalog		
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
+$classSystemVersion=systemVersion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true]	
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]	
+$supercategories=source(code,$classCatalogVersion)[unique=true]	
+$categories=target(code,$catalogVersion)[unique=true]	
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]	
+$unit=unit(code,$classSystemVersion)
+
+
+# Create Class Attr 
+INSERT_UPDATE classificationAttribute;code[unique=true];name[lang=en];$classSystemVersion
+;collectionnamewatches;Collection Name;pcmClassification:1
+#;stylenotewatches;Style Note;pcmClassification:1
+;genderwatches;Gender;pcmClassification:1
+;unisexwatches;Unisex;pcmClassification:1
+;stylecodewatches;Style Code;pcmClassification:1
+;modelnumberwatches;Model Number;pcmClassification:1
+;functionalitywatches;Functionality;pcmClassification:1
+;movementwatches;Movement;pcmClassification:1
+;occasionwatches;Occasion;pcmClassification:1
+;pairwatcheswatches;Pair Watches;pcmClassification:1
+;watchcombowatches;Watch Combo;pcmClassification:1
+;waterresistancewatches;Water Resistance;pcmClassification:1
+;dialshapewatches;Dial Shape;pcmClassification:1
+;dialcolorwatches;Dial Color;pcmClassification:1
+;dialcolorbrandwatches;Dial Color Brand;pcmClassification:1
+;dialsizewatches;Dial Size;pcmClassification:1
+;dialtypewatches;Dial Type;pcmClassification:1
+;dialdiameterwatches;Dial Diameter;pcmClassification:1
+;straptypewatches;Strap Type;pcmClassification:1
+;strapcolorwatches;Strap Color;pcmClassification:1
+;strapcolorbrandwatches;Strap Color Brand;pcmClassification:1
+;strapwidthwatches;Strap Width;pcmClassification:1
+;bandstylewatches;Band Style;pcmClassification:1
+;clasptypewatches;Clasp Type;pcmClassification:1
+;bezelfunctionwatches;Bezel Function;pcmClassification:1
+;bezelcoatingwatches;Bezel Coating;pcmClassification:1
+;watchglasscrystalwatches;Watch Glass/Crystal;pcmClassification:1
+;embellishmentwatches;Embellishment;pcmClassification:1
+;specialfeatureswatches;Special Features;pcmClassification:1
+;calendartypewatches;Calendar Type;pcmClassification:1
+;casematerialwatches;Case Material;pcmClassification:1
+;sporttypewatches;Sport Type;pcmClassification:1
+;pocketwatchtypewatches;Pocket Watch Type;pcmClassification:1
+;crowntypewatches;Crown Type;pcmClassification:1
+;needleswatches;Needles;pcmClassification:1
+;careinstructionswatches;Care Instructions;pcmClassification:1
+;batterycompositionwatches;Battery Composition;pcmClassification:1
+;warrantydetailswatches;Warranty Details;pcmClassification:1
+
+# Create Enum Values
+INSERT_UPDATE classificationAttributeValue;code[unique=true];name[lang=en];systemVersion(catalog(id),version)[default=pcmClassification:1]
+;plain3hand;Plain 3-Hand
+;multifuntion;Multifuntion
+;chronograph;Chronograph
+;smartwatch;Smart watch
+;quartz;Quartz
+;manual;Manual
+;automatic;Automatic
+;ecodrive;Eco drive
+;kinetic;Kinetic
+;springdrive;Spring Drive
+;precisionist;Precisionist
+;mechanical;Mechanical
+;keywind;Key Wind
+;stemwind;Stem Wind
+;dressy;Dressy
+;fashion;Fashion
+;functional;Functional
+;basic;Basic
+;25;25
+;50;50
+;75;75
+;100;100
+;125;125
+;150;150
+;175;175
+;200;200
+;225;225
+;250;250
+;275;275
+;300;300
+;325;325
+;350;350
+;375;375
+;400;400
+;425;425
+;450;450
+;475;475
+;500;500
+;25m;25 m
+;50m;50 m
+;75m;75 m
+;100m;100 m
+;125m;125 m
+;150m;150 m
+;175m;175 m
+;200m;200 m
+;225m;225 m
+;250m;250 m
+;275m;275 m
+;300m;300 m
+;325m;325 m
+;350m;350 m
+;375m;375 m
+;400m;400 m
+;425m;425 m
+;450m;450 m
+;475m;475 m
+;500m;500 m
+;round;Round
+;oval;Oval
+;rectangular;Rectangular
+;tonneau;Tonneau
+;carre;Carre
+;carage;Carage
+;assymetrical;Assymetrical
+;heart;Heart
+;triangle;Triangle
+;hexagon;Hexagon
+;polygonal;Polygonal
+;beige;Beige
+;black;Black 
+;blue;Blue
+;charcoal;Charcoal
+;gold;Gold
+;grey;Grey
+;nude;Nude
+;olive;Olive
+;pink;Pink
+;silver;Silver
+;white;White
+;indigo;Indigo
+;small;Small
+;big;Big
+;oversized;Oversized
+;europeannumbers;European Numbers
+;stick;Stick
+;roman;Roman
+;europeannumbersandstick;European Numbers & Stick
+;romanandstick;Roman & Stick
+;california;California
+;fiber;Fiber
+;goldandplatinum;Gold & Platinum
+;stainlesssteelchromeplated;Stainless Steel Chrome Plated
+;stainlesssteelgoldplated;Stainless Steel Gold Plated
+;stainlesssteelplatinumplated;Stainless Steel Platinum Plated
+;stainlesssteelrhodiumplated;Stainless Steel Rhodium Plated
+;stainlesssteelsilverplated;Stainless Steel Silver Plated
+;stainlesssteeltitaniumplated;Stainless Steel Titanium Plated
+;tungsten;Tungsten
+;whitegold;White Gold
+;yellowgold;Yellow Gold
+;bangle;Bangle
+;bracelet;Bracelet
+;cuff;Cuff
+;strap;Strap
+;ardillon;Ardillon 
+;deployment;Deployment
+;boxsafetyclasp;Box Safety Clasp
+;boxwithtongueandsafetyclasp;Box with Tongue & Safety Clasp
+;boxwithtongueclasp;Box with Tongue Clasp
+;deploymentbuckle;Deployment Buckle
+;deploymentclasp;Deployment Clasp
+;deploymentclaspwithpushbutton;Deployment Clasp with Push Button
+;deploymentpushbuttonclaspwithbuckle;Deployment Push Button Clasp with Buckle
+;doublelockingfoldoverclasp;Double Locking Fold-Over Clasp
+;expansionband;Expansion Band
+;fancyclasp;Fancy Clasp
+;foldoverclasp;Fold-Over Clasp
+;foldoverclaspwithdoublepushbuttonsafety;Fold-Over Clasp with Double Push Button Safety
+;foldoverclaspwithhiddendoublepushbutton;Fold-Over Clasp with Hidden Double Push Button
+;foldoverclaspwithsafety;Fold-Over Clasp with Safety
+;foldoverclaspwithsinglepushbuttonsafety;Fold-Over Clasp with Single Push Button Safety
+;foldoverpushbuttonclaspwithsafety;Fold-Over Push Button Clasp with Safety
+;hookbuckle;Hook Buckle
+;invisibledoublelockingclasp;Invisible Double Locking Clasp
+;jewelleryclasp;Jewellery Clasp
+;jewelleryclaspwithpushbutton;Jewellery Clasp with Push Button
+;leatherdeploymentbuckle;Leather Deployment Buckle
+;leatherdeploymentbucklewithsafety;Leather Deployment Buckle with Safety
+;lobsterclawclasp;Lobster Claw Clasp
+;multistrandboxclasp;Multi-Strand Box Clasp
+;pearlclasp;Pearl Clasp
+;pushandslideclasp;Push & Slide Clasp
+;pushbuttonclasp;Push Button Clasp
+;singlelockingfoldoverclasp;Single Locking Fold-Over Clasp
+;springringclasp;Spring Ring Clasp
+;toggleclasp;Toggle Clasp
+;velcro;Velcro
+;24hourtimedisplay;24-Hour Time Display
+;bidirectional;Bi-Directional
+;calendar;Calendar
+;diving;Diving
+;sliderule;Slide Rule
+;tachometer;Tachometer
+;unidirectional;Uni-Directional
+;chrome;Chrome
+;gunmetal;Gun Metal
+;rosegold;Rose Gold
+;mineralglass;Mineral Glass
+;sapphireglass;Sapphire Glass
+;acrylic;Acrylic
+;hardlex;Hardlex
+;scratchresistantglass;Scratch Resistant Glass
+;syntheticsapphire;Synthetic Sapphire
+;alarm;Alarm
+;altimeter;Altimeter
+;backlight;Back Light
+;barometer;Barometer
+;bikecomputer;Bike Computer
+;calculator;Calculator
+;compass;Compass
+;countdown;Countdown
+;gps;GPS
+;laptimer;Lap Timer
+;multiface;Multi Face
+;multitimezone;Multi Time Zone
+;nightlight;Night Light
+;outdoorcomputer;Outdoor Computer
+;pulsemonitor;Pulse Monitor
+;radiocontrolled;Radio Controlled
+;solarpowered;Solar Powered
+;stopwatch;Stop Watch
+;thermometer;Thermometer
+;tide;Tide
+;date;Date
+;dateandmonth;Date & Month
+;dateandmoonphase;Date & Moon Phase
+;day;Day
+;dayanddate;Day & Date
+;daydateandmonth;Day, Date & Month
+;daydateandmoonphase;Day, Date & Moon Phase
+;daydatemonthandyear;Day, Date, Month & Year
+;daydatemonthyearandmoonphase;Day, Date, Month, Year & Moon Phase
+;month;Month
+;perpetualcalendar;Perpetual Calendar
+;brass;Brass
+;copper;Copper
+;goldplated;Gold Plated
+;platinum;Platinum
+;climbing;Climbing
+;cycling;Cycling
+;fishing;Fishing
+;fitness;Fitness
+;hiking;Hiking
+;running;Running
+;swimming;Swimming
+;openface;Open Face
+;hunterface;Hunter Face
+;pushbutton;Push Button
+;threaded;Threaded
+;flat;Flat 
+;domed;Domed
+;jewelled;Jewelled
+;dustproof;Dustproof
+;waterproof;Waterproof
+;swissarmystyle;Swiss Army style
+;plume;Plume
+;baton;Baton
+;dauphine;Dauphine
+;galba;Galba
+;sword;Sword
+;breguet;Breguet
+;squelette;Squelette
+;alkaline;Alkaline
+;aluminumoxygen;Aluminum Oxygen
+;leadacid;Lead Acid
+;leadcalcium;Lead Calcium
+;lithium;Lithium
+;lithiumion;Lithium Ion
+;lithiummanganesedioxide;Lithium Manganese Dioxide
+;lithiummetal;Lithium Metal
+;lithiumpolymer;Lithium Polymer
+;manganese;Manganese
+;mercuryoxide;Mercury Oxide
+;nicad;NiCAD
+;nimh;NiMh
+;nickeloxyhydroxide;Nickel Oxyhydroxide
+;polymer;Polymer
+;sealedleadacid;Sealed Lead Acid
+;silveroxide;Silver Oxide
+;zinc;Zinc
+;zinccarbon;Zinc Carbon
+;zincchloride;Zinc Chloride
+;genuineleather;Genuine Leather
+;unisex;Unisex
+;couples;Couples
+;waterresistant;Water Resistant
+
+# Create Classification Class
+INSERT_UPDATE classificationclass;code[unique=true];name[lang=en];$classCatalogVersion
+;20001;watch_group_001;pcmClassification:1
+;20002;watch_group_002;pcmClassification:1
+;20003;watch_group_003;pcmClassification:1
+;20004;watch_group_004;pcmClassification:1
+;20005;watch_group_005;pcmClassification:1
+;20006;watch_group_006;pcmClassification:1
+;20007;watch_group_007;pcmClassification:1
+;20008;watch_group_008;pcmClassification:1
+;20009;watch_group_009;pcmClassification:1
+;20010;watch_group_010;pcmClassification:1
+;20011;watch_group_011;pcmClassification:1
+;20012;watch_group_012;pcmClassification:1
+
+# Create Class Attr Assignment 
+INSERT_UPDATE ClassAttributeAssignment;$attribute;$unit;attributeType(code[default=string]);$class;attributeValues(code);multiValued(code);mandatory(code)
+;stylecodewatches;;string;20001;;false;true;30
+#;stylenotewatches;;string;20001;;false;true;300
+;modelnumberwatches;;string;20001;;false;true;30
+;collectionnamewatches;;string;20002;;false;false;30
+;genderwatches;;enum;20002;men,women,boys,girls,unisex,couples;false;true;10
+;unisexwatches;;enum;20002;yes,no;false;true;5
+;functionalitywatches;;enum;20002;plain3hand,multifuntion,chronograph,smartwatch;false;true;30
+;movementwatches;;enum;20003;quartz,manual,automatic,ecodrive,kinetic,springdrive,precisionist,mechanical,keywind,stemwind;false;true;30
+;occasionwatches;;enum;20002;formal,casual,dressy,sport,fashion,functional,basic;true;true;30
+;pairwatcheswatches;;enum;20005;yes,no;false;true;5
+;watchcombowatches;;string;20003;;false;false;200
+;waterresistancewatches;;enum;20002;25m,50m,75m,100m,125m,150m,175m,200m,225m,250m,275m,300m,325m,350m,375m,400m,425m,450m,475m,500m;false;true;10
+;dialshapewatches;;enum;20004;round,square,oval,rectangular,square,tonneau,carre,carage,assymetrical,heart,triangle,hexagon,polygonal,diamond;false;true;30
+;dialcolorwatches;;enum;20003;beige,black,brown,blue,charcoal,green,gold,grey,khaki,metallic,navy,nude,olive,orange,pink,purple,red,silver,tan,white,yellow,multi,indigo;false;true;30
+;dialcolorbrandwatches;;string;20002;;false;false;30
+;dialsizewatches;;enum;20004;small,medium,big,oversized;false;false;15
+;dialtypewatches;;enum;20003;europeannumbers,stick,roman,europeannumbersandstick,romanandstick,california;false;false;30
+;dialdiameterwatches;103;number;20004;;false;false;6
+;bezelfunctionwatches;;enum;20002;24hourtimedisplay,bidirectional,calendar,diving,sliderule,tachometer,unidirectional;false;false;30
+;bezelcoatingwatches;;enum;20002;silver,gold,chrome,gunmetal,rosegold;false;false;30
+;watchglasscrystalwatches;;enum;20003;mineralglass,sapphireglass,acrylic,hardlex,plastic,scratchresistantglass,syntheticsapphire;false;false;50
+;specialfeatureswatches;;enum;20003;alarm,altimeter,backlight,barometer,bikecomputer,calculator,calendar,compass,countdown,gps,laptimer,multiface,multitimezone,nightlight,outdoorcomputer,pulsemonitor,radiocontrolled,sliderule,solarpowered,stopwatch,thermometer,tide,waterresistant;true;true;50
+;calendartypewatches;;enum;20002;date,dateandmonth,dateandmoonphase,day,dayanddate,daydateandmonth,daydateandmoonphase,daydatemonthandyear,daydatemonthyearandmoonphase,month,perpetualcalendar;false;false;50
+;casematerialwatches;;enum;20004;leather,stainlesssteel,ceramic,fiber,rubber,silicon,pu,plastic,titanium,aluminium,alloys,brass,copper,gold,goldplated,platinum,silver,whitegold,yellowgold,resin;false;false;30
+;sporttypewatches;;enum;20002;climbing,cycling,diving,fishing,fitness,hiking,running,swimming;false;false;30
+;crowntypewatches;;enum;20003;pushbutton,threaded,flat,domed,jewelled,dustproof,waterproof,swissarmystyle;false;false;30
+;straptypewatches;;enum;20010;genuineleather,stainlesssteel,ceramic,fiber,rubber,silicon,pu,plastic,titanium,aluminium,alloys,gold,goldandplatinum,nylon,patentleather,stainlesssteelchromeplated,stainlesssteelgoldplated,stainlesssteelplatinumplated,stainlesssteelrhodiumplated,stainlesssteelsilverplated,stainlesssteeltitaniumplated,synthetic,tungsten,whitegold,yellowgold,resin;false;true;50
+;strapcolorwatches;;enum;20010;beige,black,brown,blue,charcoal,green,gold,grey,khaki,metallic,navy,nude,olive,orange,pink,purple,red,silver,tan,white,yellow,multi,indigo;false;true;30
+;strapcolorbrandwatches;;string;20011;;false;false;30
+;strapwidthwatches;103;number;20011;;false;false;10
+;bandstylewatches;;enum;20011;bangle,bracelet,cuff,strap;false;false;30
+;clasptypewatches;;enum;20011;ardillon,deployment,bangle,boxsafetyclasp,boxwithtongueandsafetyclasp,boxwithtongueclasp,buckle,deploymentbuckle,deploymentclasp,deploymentclaspwithpushbutton,deploymentpushbuttonclaspwithbuckle,doublelockingfoldoverclasp,expansionband,fancyclasp,foldoverclasp,foldoverclaspwithdoublepushbuttonsafety,foldoverclaspwithhiddendoublepushbutton,foldoverclaspwithsafety,foldoverclaspwithsinglepushbuttonsafety,foldoverpushbuttonclaspwithsafety,hookbuckle,invisibledoublelockingclasp,jewelleryclasp,jewelleryclaspwithpushbutton,leatherdeploymentbuckle,leatherdeploymentbucklewithsafety,lobsterclawclasp,multistrandboxclasp,pearlclasp,pushandslideclasp,pushbuttonclasp,singlelockingfoldoverclasp,springringclasp,toggleclasp,velcro;false;false;100
+;embellishmentwatches;;enum;20012;diamond,gemstone,rhinestone,cubiczirconium,crystals,swarovski,glass;true;false;30
+;needleswatches;;enum;20007;plume,baton,dauphine,galba,sword,breguet,squelette,stick;false;false;30; 
+;careinstructionswatches;;string;20008;;false;true;300
+;batterycompositionwatches;;enum;20009;alkaline,aluminumoxygen,leadacid,leadcalcium,lithium,lithiumion,lithiummanganesedioxide,lithiummetal,lithiumpolymer,manganese,mercuryoxide,nicad,nimh,nickeloxyhydroxide,polymer,sealedleadacid,silveroxide,zinc,zinccarbon,zincchloride;false;false;80
+;pocketwatchtypewatches;;enum;20006;openface,hunterface;false;false;30
+;warrantydetailswatches;;string;20001;;false;true;200
+
+# Links ClassificationClasses to Categories
+# Macros / Replacement Parameter definitions
+$productCatalog=luxProductCatalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='pcmClassification']),version[default='1'])[unique=true,default='pcmClassification:1']
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+
+# Links ClassificationClasses to Categories
+INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories
+;MPH15;20001
+;MPH1500;20002
+;MPH1501;20002
+;MPH1502;20002
+;MPH1500;20003
+;MPH1501;20003
+;MPH1502;20003
+;MPH1503;20003
+;MPH1504;20003
+;MPH1500;20004
+;MPH1501;20004
+;MPH1502;20004
+;MPH1503;20004
+;MPH1500;20005
+;MPH1501;20005
+;MPH1503;20006
+;MPH1500;20010
+;MPH1501;20010
+;MPH1502;20010
+;MPH1500;20011
+;MPH1501;20011
+;MPH1502;20011
+;MPH1500;20012
+;MPH1501;20012
+;MPH1502;20012
+;MPH1503;20012
+;MPH1505001000;20010
+;MPH1505004000;20010
+;MPH1505004000;20011
+;MPH1500000000;20007
+;MPH1500002000;20007
+;MPH1500003000;20007
+;MPH1500004000;20007
+;MPH1501000000;20007
+;MPH1501002000;20007
+;MPH1501003000;20007
+;MPH1501004000;20007
+;MPH1502000000;20007
+;MPH1502002000;20007
+;MPH1502003000;20007
+;MPH1503000000;20007
+;MPH1503002000;20007
+;MPH1503003000;20007
+;MPH1503004000;20007
+;MPH1504000000;20007
+;MPH1504002000;20007
+;MPH1504003000;20007
+;MPH1500000000;20008
+;MPH1500001000;20008
+;MPH1500002000;20008
+;MPH1500003000;20008
+;MPH1500004000;20008
+;MPH1501000000;20008
+;MPH1501001000;20008
+;MPH1501002000;20008
+;MPH1501003000;20008
+;MPH1501004000;20008
+;MPH1502000000;20008
+;MPH1502001000;20008
+;MPH1502002000;20008
+;MPH1502003000;20008
+;MPH1503000000;20008
+;MPH1503001000;20008
+;MPH1503002000;20008
+;MPH1503003000;20008
+;MPH1503004000;20008
+;MPH1504000000;20008
+;MPH1504001000;20008
+;MPH1504002000;20008
+;MPH1504003000;20008
+;MPH1505000000;20008
+;MPH1505004000;20008
+;MPH1500000000;20009
+;MPH1500001000;20009
+;MPH1500002000;20009
+;MPH1500003000;20009
+;MPH1500004000;20009
+;MPH1501000000;20009
+;MPH1501001000;20009
+;MPH1501002000;20009
+;MPH1501003000;20009
+;MPH1501004000;20009
+;MPH1502000000;20009
+;MPH1502001000;20009
+;MPH1502002000;20009
+;MPH1502003000;20009
+;MPH1503000000;20009
+;MPH1503001000;20009
+;MPH1503002000;20009
+;MPH1503003000;20009
+;MPH1503004000;20009
+;MPH1504000000;20009
+;MPH1504001000;20009
+;MPH1504002000;20009
+;MPH1504003000;20009
+;MPH1505000000;20009
+;MPH1505001000;20012
+;MPH1505004000;20012

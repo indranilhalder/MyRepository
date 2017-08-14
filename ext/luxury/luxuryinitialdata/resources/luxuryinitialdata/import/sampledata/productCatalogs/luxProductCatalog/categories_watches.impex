@@ -1,0 +1,65 @@
+$uidGroup=admingroup,marketplaceGroup,ETAILREAD
+$supercategories=supercategories( code, catalogVersion(catalog(id[default='luxProductCatalog']),version[default='Staged']));;;;;;;;;
+$catalogVersion=catalogVersion(catalog(id[default='luxProductCatalog']),version[default='Staged'])[unique=true,default='luxProductCatalog:Staged'];;;;;;;;;
+;;;;;;;;;
+
+INSERT_UPDATE Category;code[unique=true];name[lang=en];$supercategories;$catalogVersion;allowedPrincipals(uid);
+
+# L1
+;MSH20;Watches;MSH1;luxProductCatalog:Staged;$uidGroup
+#;MSH17;Kids & Baby;MSH1;luxProductCatalog:Staged;$uidGroup
+
+# L2
+;MSH2010;Men;MSH20;luxProductCatalog:Staged;$uidGroup
+;MSH2011;Women;MSH20;luxProductCatalog:Staged;$uidGroup
+;MSH2012;Kids;MSH20;luxProductCatalog:Staged;$uidGroup
+;MSH2013;Pocket Watches;MSH20;luxProductCatalog:Staged;$uidGroup
+;MSH2014;Stop Watches;MSH20;luxProductCatalog:Staged;$uidGroup
+;MSH2015;Accessories;MSH20;luxProductCatalog:Staged;$uidGroup
+;MSH1711;Watches;MSH17;luxProductCatalog:Staged;$uidGroup
+
+# L3 Watches -> Men -> ...
+;MSH2010100;Analog;MSH2010;luxProductCatalog:Staged;$uidGroup
+;MSH2010101;Digital;MSH2010;luxProductCatalog:Staged;$uidGroup
+;MSH2010102;Analog-Digital;MSH2010;luxProductCatalog:Staged;$uidGroup
+;MSH2010103;Binary;MSH2010;luxProductCatalog:Staged;$uidGroup
+;MSH2010104;Others;MSH2010;luxProductCatalog:Staged;$uidGroup
+
+# L3 Watches -> Women -> ...
+;MSH2011100;Analog;MSH2011;luxProductCatalog:Staged;$uidGroup
+;MSH2011101;Digital;MSH2011;luxProductCatalog:Staged;$uidGroup
+;MSH2011102;Analog-Digital;MSH2011;luxProductCatalog:Staged;$uidGroup
+;MSH2011103;Binary;MSH2011;luxProductCatalog:Staged;$uidGroup
+;MSH2011104;Others;MSH2011;luxProductCatalog:Staged;$uidGroup
+
+# L3 Watches -> Kids -> ...
+;MSH2012100;Analog;MSH2012;luxProductCatalog:Staged;$uidGroup
+;MSH2012101;Digital;MSH2012;luxProductCatalog:Staged;$uidGroup
+;MSH2012102;Analog-Digital;MSH2012;luxProductCatalog:Staged;$uidGroup
+;MSH2012103;Others;MSH2012;luxProductCatalog:Staged;$uidGroup
+
+# L3 Watches -> Pocket Watches -> ...
+;MSH2013100;Analog;MSH2013;luxProductCatalog:Staged;$uidGroup
+;MSH2013101;Digital;MSH2013;luxProductCatalog:Staged;$uidGroup
+;MSH2013102;Analog-Digital;MSH2013;luxProductCatalog:Staged;$uidGroup
+;MSH2013103;Binary;MSH2013;luxProductCatalog:Staged;$uidGroup
+;MSH2013104;Others;MSH2013;luxProductCatalog:Staged;$uidGroup
+
+# L3 Watches -> Stop Watches -> ...
+;MSH2014100;Analog;MSH2014;luxProductCatalog:Staged;$uidGroup
+;MSH2014101;Digital;MSH2014;luxProductCatalog:Staged;$uidGroup
+;MSH2014102;Analog-Digital;MSH2014;luxProductCatalog:Staged;$uidGroup
+;MSH2014103;Others;MSH2014;luxProductCatalog:Staged;$uidGroup
+
+# L3 Watches -> Accessories -> ...
+;MSH2015100;Batteries;MSH2015;luxProductCatalog:Staged;$uidGroup
+;MSH2015101;Boxes & Cases;MSH2015;luxProductCatalog:Staged;$uidGroup
+;MSH2015102;Repair Kits;MSH2015;luxProductCatalog:Staged;$uidGroup
+;MSH2015103;Others;MSH2015;luxProductCatalog:Staged;$uidGroup
+;MSH2015104;Straps & Bands;MSH2015;luxProductCatalog:Staged;$uidGroup
+
+# L3 Kids & Baby -> Watches -> ...
+;MSH1711100;Analog;MSH1711;luxProductCatalog:Staged;$uidGroup
+;MSH1711101;Digital;MSH1711;luxProductCatalog:Staged;$uidGroup
+;MSH1711102;Analog-Digital;MSH1711;luxProductCatalog:Staged;$uidGroup
+;MSH1711103;Others;MSH1711;luxProductCatalog:Staged;$uidGroup
