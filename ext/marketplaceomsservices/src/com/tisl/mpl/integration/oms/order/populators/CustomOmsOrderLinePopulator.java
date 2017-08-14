@@ -884,6 +884,17 @@ public class CustomOmsOrderLinePopulator implements Populator<OrderEntryModel, O
 				target.setStoneSizeType10(jewelleryEntry.getStoneSizeType10());
 			}
 
+			//TISJEW-3469
+			if (null != jewelleryEntry.getPriceBreakuponInvoice())
+			{
+				target.setPriceBreakuponInvoice(jewelleryEntry.getPriceBreakuponInvoice());
+			}
+
+			if (null != jewelleryEntry.getMetalName())
+			{
+				target.setMetalName(jewelleryEntry.getMetalName());
+			}
+
 
 		}
 	}

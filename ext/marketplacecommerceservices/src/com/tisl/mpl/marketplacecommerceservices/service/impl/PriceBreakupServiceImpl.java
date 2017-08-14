@@ -874,7 +874,7 @@ public class PriceBreakupServiceImpl implements PriceBreakupService
 								orderJewelEntryModel.setDiamondClarityType7(value);
 							}
 
-							else if (name.equalsIgnoreCase("price Break on Invoice"))
+							else if (featureData.getCode().contains("pricebreakuponinvoicefinejwlry"))
 							{
 								orderJewelEntryModel.setPriceBreakuponInvoice(value);
 							}
