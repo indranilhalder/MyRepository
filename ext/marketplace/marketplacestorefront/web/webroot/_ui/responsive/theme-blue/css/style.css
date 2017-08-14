@@ -76132,7 +76132,7 @@ table#showPriceBreakup{
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content #jewelTableDetails,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:first-of-type .detail.acc_content #jewelTableDetails{
-	overflow-x: scroll;
+	overflow: auto;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in.acc_active:first-of-type .detail.acc_content
