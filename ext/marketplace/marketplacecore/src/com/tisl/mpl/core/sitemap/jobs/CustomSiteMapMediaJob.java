@@ -31,7 +31,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -46,6 +48,7 @@ import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.core.enums.SiteMapUpdateModeEnum;
 import com.tisl.mpl.marketplacecommerceservices.daos.MplCategoryDao;
 import com.tisl.mpl.marketplacecommerceservices.service.CustomMediaService;
+import com.tisl.mpl.sitemap.generator.impl.MplBrandPageSiteMapGenerator;
 import com.tisl.mpl.sitemap.generator.impl.MplCustomPageSiteMapGenerator;
 
 
@@ -62,6 +65,26 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 	private CustomMediaService mediaService;
 	private MplCategoryDao mplCategoryDao;
 	private MplCustomPageSiteMapGenerator mplCustomPageSiteMapGenerator;
+
+	private MplBrandPageSiteMapGenerator mplbrandPageSiteMapGenerator;
+
+	/**
+	 * @return the mplbrandPageSiteMapGenerator
+	 */
+	public MplBrandPageSiteMapGenerator getMplbrandPageSiteMapGenerator()
+	{
+		return mplbrandPageSiteMapGenerator;
+	}
+
+	/**
+	 * @param mplbrandPageSiteMapGenerator
+	 *           the mplbrandPageSiteMapGenerator to set
+	 */
+	public void setMplbrandPageSiteMapGenerator(final MplBrandPageSiteMapGenerator mplbrandPageSiteMapGenerator)
+	{
+		this.mplbrandPageSiteMapGenerator = mplbrandPageSiteMapGenerator;
+	}
+
 	@Resource(name = "configurationService")
 	private ConfigurationService configurationService;
 	@Autowired
@@ -113,6 +136,8 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 								{
 									final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
 
+									//fetchBrand(category.getCode(), categoryl2.getCode());
+
 									final List models = fetchProductforL2code(activeCatalog, categoryl2);
 									if (CollectionUtils.isNotEmpty(models) && StringUtils.isNotEmpty(categoryName))
 									{
@@ -150,6 +175,63 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 						LOG.debug("L1 Category Not available");
 					}
 
+					System.out.println("**START**BRAND***");
+					if (CollectionUtils.isNotEmpty(L1Category))
+					{
+						System.out.println("100...");
+						for (final CategoryModel category : L1Category)
+						{
+							System.out.println("200...");
+							final List<CategoryModel> L2Category = fetchL2fromL1(category);
+							if (CollectionUtils.isNotEmpty(L2Category))
+							{
+								System.out.println("300...");
+								for (final CategoryModel categoryl2 : L2Category)
+								{
+									//Logic For Brand Filter Sitemap
+									final List brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
+
+									System.out.println("1*******");
+									final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category, categoryl2,
+											brandLists);
+
+									System.out.println("2*******");
+									final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
+
+									if (CollectionUtils.isNotEmpty(models))
+									{
+										//Logic for splitting files based on model size
+										final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+										if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+										{
+											final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+											for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+											{
+												System.out.println("3*******");
+												generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+														siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
+														Integer.valueOf(modelIndex), categoryName);
+											}
+										}
+										else
+										{
+											System.out.println("4*******");
+											generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+													siteMapConfig, models, SiteMapPageEnum.CATEGORY, null, categoryName);
+										}
+
+
+									}
+									else
+									{
+										System.out.println("5*******");
+										LOG.debug("Brand Filter  Not available");
+									}
+
+								}
+							}
+						}
+					}
 
 				}
 
@@ -242,8 +324,6 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 		return new PerformResult(CronJobResult.SUCCESS, CronJobStatus.FINISHED);
 	}
 
-
-
 	/**
 	 * This method creates CatalogUnawareMediaModel with the file generated for TPR-1285 Dynamic sitemap
 	 *
@@ -297,11 +377,21 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			{
 				if (pageType.equals(SiteMapPageEnum.PRODUCT))
 				{
+					System.out.println("**Inside pageType Product**");
+
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
 				}
+				else if (pageType.equals(SiteMapPageEnum.CATEGORY))
+				{
+					System.out.println("**Inside pageType Category**");
+					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
+							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, fileIndex, index));
+				}
+
 				else
 				{
+					System.out.println("**Inside pageType else**");
 					siteMapFiles.add(generator.render(contentSite, siteMapLanguageCurrency.getCurrency(),
 							siteMapLanguageCurrency.getLanguage(), siteMapConfig.getSiteMapTemplate(), models, pageType.toString(),
 							index));
@@ -434,5 +524,40 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 			}
 		}
 		return categoryName;
+	}
+
+	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
+	{
+		//List<MplbrandfilterModel> brandFilterList = null;
+		final List<String> brandfilterurl = new ArrayList<>();
+
+		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
+		{
+			//			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
+			//			for (final MplbrandfilterModel brandFilter : brandFilterList)
+			//			{
+			//				brandfilterurl.add(brandFilter.getUrl1());
+			//				brandfilterurl.add(brandFilter.getUrl2());
+			//				brandfilterurl.add(brandFilter.getUrl3());
+			//				System.out.println("111" + brandFilter.getUrl1());
+			//				System.out.println("22222" + brandFilter.getUrl2());
+			//				System.out.println("333333333" + brandFilter.getUrl3());
+			//			}
+			for (int i = 0; i < 2; i++)
+			{
+				brandfilterurl.add("URL1-" + i + 1);
+				brandfilterurl.add("URL2-" + i + 1);
+				brandfilterurl.add("URL3-" + i + 1);
+			}
+		}
+		final Set<String> set = new HashSet<String>(brandfilterurl);
+
+		for (final String myset : set)
+		{
+			System.out.println("*************" + myset);
+		}
+		System.out.println();
+		return brandfilterurl;
+
 	}
 }
