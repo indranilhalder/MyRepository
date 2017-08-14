@@ -1,0 +1,389 @@
+#wishlistDetailItemNo{
+    h2{
+        font-size: 18px;
+    }
+}
+#removeProductConfirmation{
+    top: 25%;
+    
+}
+#manageMyList .manage-wishlist-container{
+        padding: 10px 20px 15px;
+}
+#redirectsToPDP .modal-content{
+    margin: auto;
+    top:25%;
+    text-align: center;
+    
+    @include media-breakpoint-down(sm) {
+          width: 320px;
+    }
+    
+    
+    .redirectsToPdpPage {
+        background-color: #2d2d2d;
+        color: #fff;
+        text-transform: uppercase;
+        display: inline-block;
+        padding: 0 10px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        width: 80px;
+        margin: 20px 10px 10px 10px;
+        vertical-align: top;
+        border: 0px;
+    }
+    .modal-title {
+        font-size: 24px;
+        margin-bottom: 15px;
+        line-height: 24px;
+    }
+}
+#manageMyList{
+    top: 25%;
+    .content{
+        width: 500px;
+        margin: auto;
+        background: #fff;   
+        
+        
+         @include media-breakpoint-down(sm) {
+              width: 320px;
+        }
+    }
+    .rename-wishlist-container {
+        display: none;
+        margin-top: 10px;
+    }
+    .manage-wishlist-container span {
+        margin: 10px 0;
+        max-width: 180px;
+        word-break: break-word;
+        display: block;
+    }
+}
+.manage-wishlist .other-sellers {
+    max-height: 300px;
+    overflow-y: auto;
+}
+.rename-wishlist-container .rename_link {
+    color: #fff;
+    background-color: #2d2d2d;
+    width: 90px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    float: left;
+    margin-left: 10px;
+    height: 22px;
+    line-height: 4px;
+    padding: 0;
+border: 0px;
+}
+
+#redirectsToPDP .content>.close:before, #manageMyList .content>.close:before {
+    content: "\00d7";
+    color:#2d2d2d;
+    font-family: "Montserrat";
+    font-size: 24px;
+    font-weight: 500;
+    -webkit-transition: font-weight .15s;
+    -moz-transition: font-weight .15s;
+    transition: font-weight .15s;
+}
+
+#manageMyList .content {
+       position: relative;
+}
+
+.rename-wishlist-container #editWishList {
+    border: 1px solid #2d2d2d;
+    height: 22px;
+    float: left;
+    width: 110px;
+    margin-bottom: 10px;
+}
+
+wishlist-container h2{
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+    width: 100%;
+    float: right;
+}
+.manage-wishlist .other-sellers {
+    max-height: 300px;
+    overflow-y: auto;
+}
+div.other-sellers .other-sellers-table {
+    width: 100%;
+    text-align: left;
+}
+#deleteConfirmation .modal-title b, #removeProductConfirmation .modal-title b {
+    font-weight: 500;
+}
+
+#deleteConfirmation .deleteWlConfirmation, #removeProductConfirmation .removeProductConfirmation, #deleteReview .deleteReviewConfirmation, #updateReview .updateReviewConfirmation, .manage-wishlist-container .actions button, {
+    background-color: #2d2d2d;
+    color: #fff;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    width: 80px;
+    margin: 20px 10px 10px 10px;
+    vertical-align: top;
+    border: 0px;
+}
+
+.forgot-password-container, .manage-wishlist-container, .create-new-wishlist-popup-container {
+    display: block;
+    margin: 0 auto;
+    padding: 30px 20px 45px 20px;
+    max-width: 700px;
+    text-align: center;
+    clear: both;
+}
+
+#removeProductConfirmation .modal-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+    line-height: 24px;
+}
+
+#removeProductConfirmation .modal-dialog{
+    text-align: center;
+}
+#removeProductConfirmation .modal-header{
+        border-bottom: 0px;
+}
+
+#deleteConfirmation .deleteWlConfirmationNo, #removeProductConfirmation .removeProductConfirmationNo, #deleteReview .deleteReviewConfirmationNo, #updateReview .updateReviewConfirmationNo {
+    background-color: #B9966B;
+    opacity: .7;
+    color: #000;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    width: 80px;
+    margin: 20px 10px 10px 10px;
+    vertical-align: top;
+}
+
+div.wishlist-nav h3, div.wishlist-nav h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}    
+div.wishlist-nav {
+    
+    .js-manage-myList{
+        cursor: pointer;
+    }
+    
+    ul.options li a:after {
+        content: "";
+        color: #000;
+        margin-left: 10px;
+        display: inline-block;
+        -webkit-transition: border .15s;
+        -moz-transition: border .15s;
+        transition: border .15s;
+        height: 0;
+        width: 0;
+        border-bottom: 4.5px solid transparent;
+        border-left: 4.5px solid #000;
+        border-top: 4.5px solid transparent;
+    }
+    .list{
+        padding: 0px;
+        li{
+            list-style: none;
+            
+            .selectedWishlist {
+                color:#2d2d2d;
+                li span.title {
+                    width: 100%;
+                    word-wrap: break-word;
+                }
+            } 
+        }
+       
+    }
+    ul.options{
+        padding: 0px;
+        
+        li{
+            list-style: none;
+            a {
+                padding: 0px;
+                font-weight: 600;
+                font-size: 14px;
+                text-transform: none;
+            }
+        }
+    } 
+}  
+.wishlist-content{
+    
+    .cart{
+        .remove{
+            .remove-btn{
+                background: transparent;
+                border: 0px;
+                text-align: left;
+                width: auto;
+                padding: 0px;
+                margin: 0px;
+                min-height: auto;
+                text-decoration: underline;
+            }
+        }
+    }
+    
+    button#addToCartButtonwl {
+    margin-bottom: 30px !important;
+    line-height: 0 !important;
+    font-size: 12px !important;
+    height: 40px !important;
+    width: 100% !important;
+    background-color: #2d2d2d;
+    margin-top: 0 !important;
+    color: #fff;
+    letter-spacing: 1px;
+    padding: 0 10px;
+    font-weight: 500;
+    clear: both;
+    border: 1px solid #2d2d2d;
+    vertical-align: middle;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Montserrat";
+    display: block;   
+    transition: background .3s;  
+}    
+
+    .products>ul{
+        padding: 0px;
+        
+        >li{
+        list-style: none;
+        padding: 20px;
+        position: relative;
+        margin-bottom: 10px;
+        background: #f0f4f5;
+        border: 2px solid transparent;
+        -webkit-transition: background .3s;
+        -moz-transition: background .3s;
+        transition: background .3s;
+        min-height: 150px;
+
+        >form {
+        left: 17%;
+        width: 50%;
+        clear: left;
+        margin-bottom: 0;
+        display: none;
+        position: relative;
+        }
+
+
+        div.actions{
+            position: absolute;
+            right: 20px;
+            width: 30%;
+            top: 20px;
+            
+            @include media-breakpoint-down(sm) {
+                position: initial;
+                right: 0px;
+                width: 100%;
+                top: 20px;
+            }
+            
+            button {
+                margin-bottom: 30px;
+                line-height: initial;
+                font-size: 12px;
+                min-height: 30px;
+                width: 100%;
+                padding: 10px;
+            }
+
+        } 
+
+        div.product-info {
+            float: left;
+            width: 70%;
+            padding-right: 3%;
+
+            >a{
+                width: 20%;
+                float: left;  
+            }
+            >div {
+                width: 75%;
+                float: left;
+                margin-left: 5%;
+
+                >ul{
+                    padding: 0px;
+                    >li {
+                        line-height: 1.3; 
+                        list-style: none;
+
+                        &.name {
+                            font-weight: 600;
+                        }
+                    }  
+                }
+            }
+        }   
+
+        }
+    }
+}
+.page-wishlist{
+    .wishlist-content{
+        .top{
+            &:after{
+                clear: both;
+                display: table;
+                content: '';
+            }
+            #wishlistDetailItemNo{
+                display: block;
+                float: left;
+                width: 40%;
+            }
+            .wishlistPagination{
+                position: relative;
+                width: 60%;
+                display: inline-block;
+                text-align: right;
+                ul{
+                    margin: 0px;
+                    display: inline-block;
+                    li{
+                        display: inline-block;
+                        margin: 10px 1px;
+                        &.currentPage{
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

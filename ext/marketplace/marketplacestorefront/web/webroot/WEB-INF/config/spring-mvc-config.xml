@@ -78,6 +78,8 @@
 			<property name="userService" ref="userService" />
 			<property name="redirectStrategy" ref="redirectStrategy" />
 			<property name="loginUrl" value="/login" />
+			<property name="luxuryLoginUrl" value="/?showPopup=true" />
+			<property name="luxuryLoginAndCheckoutUrl" value="/cart?showPopup=true" />
 			<property name="loginAndCheckoutUrl" value="/checkout/multi/checkoutlogin/login" />
 			<property name="cookieGenerator" ref="guidCookieGenerator" />
 			<property name="sessionService" ref="sessionService" />
@@ -86,6 +88,10 @@
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforecontroller.DeviceDetectionBeforeControllerHandler" >
 			<property name="uiExperienceService" ref="uiExperienceService" />
+			<property name="baseSiteService" ref="baseSiteService" />
+			<property name="configurationService" ref="configurationService"></property>
+			<property name="sessionService" ref="sessionService"></property>
+			
 		</bean>
 		<bean
 			class="com.tisl.mpl.storefront.interceptors.beforecontroller.SetLanguageBeforeControllerHandler" />
@@ -196,6 +202,8 @@
 					value="${commerceservices.default.desktop.ui.experience:desktop}/" />
 				<entry key="MOBILE"
 					value="${commerceservices.default.desktop.ui.experience:desktop}/" />
+				<entry key="RESPONSIVE"
+					value="${commerceservices.default.desktop.ui.experience:responsive}/" />
 			</map>
 		</property>
 		<property name="unknownUiExperiencePrefix"

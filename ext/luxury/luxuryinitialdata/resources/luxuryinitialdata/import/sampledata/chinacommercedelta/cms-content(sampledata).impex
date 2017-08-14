@@ -1,0 +1,29 @@
+# ImpEx for Importing CMS Content
+
+# Macros / Replacement Parameter definitions
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$contentCatalogName=Marketplace Content Catalog
+$productCatalog=luxProductCatalog
+$productCatalogName=Marketplace Product Catalog
+
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$picture=media(code, $contentCV);
+$image=image(code, $contentCV);
+$media=media(code, $contentCV);
+$page=page(uid, $contentCV);
+$category=category(code, $productCV)
+$product=product(code, $productCV)
+$contentPage=contentPage(uid, $contentCV);
+$siteResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/contentCatalogs/$contentCatalog
+$productResource=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/productCatalogs/$productCatalog
+$jarResourceCms=jar:com.tisl.lux.setup.InitialDataSystemSetup&/luxuryinitialdata/import/sampledata/cockpits/cmscockpit
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+
+#Shop by Department Components
+INSERT_UPDATE DepartmentCollectionComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;departmentCollection(code,$productCV)
+;;ShopByDepartmentComponent;Shop By Department;ShopByDepartmentComponent;MSH10,MSH11,MSH12,MSH13,MSH20,MSH16,MSH17,MSH18,MSH19

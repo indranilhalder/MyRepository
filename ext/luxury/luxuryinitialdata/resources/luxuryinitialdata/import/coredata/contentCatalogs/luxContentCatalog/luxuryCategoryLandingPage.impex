@@ -1,0 +1,165 @@
+$storePrefix=lux
+$contentCatalog=$storePrefixContentCatalog
+$productCatalog=luxProductCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$picture=media(code, $contentCV)
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$luxuryStoreAddonPrefix=addon:/luxurystoreaddon
+$lang=en
+
+# Import modulegen config properties into impex macros
+UPDATE GenericItem[processor=de.hybris.platform.commerceservices.impex.impl.ConfigPropertyImportProcessor];pk[unique=true]
+$jarResourceCms=$config-jarResourceCmsValue
+
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;luxuryCategoryLandingPageTemplate;Luxury Category Landing Page Template;$luxuryStoreAddonPrefix/pages/layout/luxuryCategoryLandingPage;ContentPage;true
+
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;luxuryCategoryPage;Luxury Category Landing Page;luxuryCategoryLandingPageTemplate;/luxuryCategoryLandingPage
+
+
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;luxuryCategoryLandingPageTemplate;$jarResourceCms/structure-view/structure_luxuryCategory.vm
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true]	;mime;realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator][forceWrite=true];folder(qualifier)[default='images'];;
+;;tulSiteLogo;text/png;logo.png;$jarResourceCms/preview-images/logo.png;;;
+;;CLPHeroBanner;text/png;Categorylanding.png;$jarResourceCms/preview-images/Categorylanding.png;;;
+;;CLPHeroBanner1;text/png;Categorylanding.png;$jarResourceCms/preview-images/Categorylanding.png;;;
+;;CLPHeroBanner2;text/png;Categorylanding.png;$jarResourceCms/preview-images/Categorylanding.png;;;
+;;CLPHeroBanner3;text/png;Categorylanding.png;$jarResourceCms/preview-images/Categorylanding.png;;;
+;;ImageCoursel;text/jpg;temp2.jpg;$jarResourceCms/preview-images/temp2.jpg;;;
+;;ImageCoursel1;text/jpg;temp2.jpg;$jarResourceCms/preview-images/temp2.jpg;;;
+;;ImageCoursel2;text/jpg;temp2.jpg;$jarResourceCms/preview-images/temp2.jpg;;;
+;;ImageCoursel3;text/jpg;thumb.png;$jarResourceCms/preview-images/thumb.png;;;
+;;ImageCoursel4;text/jpg;thumb.png;$jarResourceCms/preview-images/thumb.png;;;
+;;showbanner;text/png;showbanner.png;$jarResourceCms/preview-images/showbanner.png;;;
+;;showCase-productImage;text/jpg;temp3.jpg;$jarResourceCms/preview-images/temp3.jpg;;;
+;;showCase-productImage1;text/jpg;temp3.jpg;$jarResourceCms/preview-images/temp3.jpg;;;
+;;showCase-productImage2;text/jpg;temp3.jpg;$jarResourceCms/preview-images/temp3.jpg;;;
+;;showCase-productImage3;text/jpg;temp3.jpg;$jarResourceCms/preview-images/temp3.jpg;;;
+
+
+INSERT_UPDATE CMSImageComponent;$contentCV[unique=true];uid[unique=true];$picture[lang=$lang];&componentRef
+;;tulSiteLogo;tulSiteLogo;tulSiteLogo
+;;CLPHeroBannerSlot;CLPHeroBanner;
+;;CLPHeroBannerSlot1;CLPHeroBanner1;
+;;CLPHeroBannerSlot2;CLPHeroBanner2;
+;;CLPHeroBannerSlot3;CLPHeroBanner3;
+;;ImageCourselImageComponent;ImageCoursel;ImageCoursel
+;;ImageCourselImageComponent1;ImageCoursel;ImageCoursel1
+;;ImageCourselImageComponent2;ImageCoursel;ImageCoursel2
+;;ImageCourselImageComponent3;ImageCoursel;ImageCoursel3
+;;ImageCourselImageComponent4;ImageCoursel;ImageCoursel4
+;;showbanner;showbanner;ShowBanner
+;;showCase-productImage;showCase-productImage;showCase-productImage
+;;showCase-productImage1;showCase-productImage1;showCaseproductImage1
+;;showCase-productImage2;showCase-productImage2;showCaseproductImage2
+;;showCase-productImage3;showCase-productImage3;showCaseproductImage3
+
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;$picture[lang=$lang]
+;;ImageCourselBanner;Bags;ImageCourselBanner;/;ImageCoursel
+;;ImageCourselBanner1;Shoes;ImageCourselBanner1;/;ImageCoursel
+;;ImageCourselBanner2;Wallets;ImageCourselBanner2;/;ImageCoursel
+;;ImageCourselBanner3;Hand bags;ImageCourselBanner3;/;ImageCoursel
+;;ImageCourselBanner4;belts;ImageCourselBanner4;/;ImageCoursel4
+;;CategoryType1Banner;Category Type Banner 1;CategoryType1Banner;/;CLPHeroBanner
+;;CategoryType2Banner;Category Type Banner 2;CategoryType2Banner;/;CLPHeroBanner1
+;;CategoryType3Banner;Category Type Banner 3;CategoryType3Banner;/;CLPHeroBanner2
+;;CategoryType4Banner;Category Type Banner 4;CategoryType4Banner;/;CLPHeroBanner3
+;;Showbanner;Show Banner;shop-banner;/luxuryCategoryLandingPage;showbanner
+;;showCase1-productImage1;showCase productImage;showCase1-productImage1;"/p-mp000000000390479";showCase-productImage
+;;showCase2-productImage2;showCase productImage;showCase-productImage1;"/p-mp000000000390479";showCase-productImage1
+;;showCase3-productImage3;showCase productImage;showCase-productImage2;"/p-mp000000000390479";showCase-productImage2
+;;showCase4-productImage4;showCase productImage;showCase-productImage3;"/p-mp000000000390479";showCase-productImage3
+
+
+
+
+INSERT_UPDATE LuxShowCaseCollectionComponent;$contentCV[unique=true];uid[unique=true];name;title			;description				  ;bannerImage(uid,$contentCV) ;BannerImagePosition(code)[default='left']; productImages(uid,$contentCV)																					;shopNowName				;shopNowLink
+										 ;						 ;Flowerbags	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;right				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
+										 ;						 ;Flowerbags1	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
+										 ;						 ;Flowerbags2	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;right				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
+										 ;						 ;Flowerbags3	  ;Flowerbags;The Crossbody	;If you Like your accessories ;Showbanner   			   ;				 			   			 ; showCase1-productImage1,showCase2-productImage2,showCase3-productImage3,showCase4-productImage4						;Shop Now					;/shop-now 
+
+INSERT_UPDATE LuxShowCaseComponent;$contentCV[unique=true];uid[unique=true];title;ShowCase(uid,$contentCV)
+								  ; 					  ;Bag-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1,Flowerbags2,Flowerbags3
+								  ;						  ;Men-ShowCase	   ;The Hand Bags;Flowerbags,Flowerbags1		  
+								  							  
+#### Product carousel
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;scroll(code);popup;&componentRef
+;;LuxProductCarouselComponent; Lux Product Carousel Component;allVisible;false;LuxProductCarouselComponent
+
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];products(code,$productCV)
+;;LuxProductCarouselComponent;
+
+
+
+
+
+
+
+INSERT_UPDATE ShopByCategory;$contentCV[unique=true];uid[unique=true];name;title;relatedImage(uid,$contentCV)
+;;shop-bag	;shop-bag;Shop by Category;ImageCourselBanner,ImageCourselBanner1,ImageCourselBanner2,ImageCourselBanner3,ImageCourselBanner4
+
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang];name;url;category(code, $productCV);target(code)[default='sameWindow'];&componentRef;
+;;LuxuryHelpLink;"Help";Luxury Help Link;/help;;;helpLink;;;
+;;LuxuryFreeShippingLink;"Free Shipping";Luxury Free Shipping Link;/free-shipping;;;freeShippingLink;;;
+
+
+INSERT_UPDATE ComponentTypeGroups2ComponentType;source(code)[unique=true];target(code)[unique=true]
+;wide;LuxuryCategoryCollectionComponent
+
+
+INSERT_UPDATE luxuryCategoryCollectionComponent;$contentCV[unique=true];uid[unique=true];title;categories(code,$productCV);&componentRef
+;;TMPWomenMainCategoriesComponent;Women Bags ;;TMPWomenMainCategoriesComponent
+
+
+
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef)                                              					;&componentRef
+;;CategoryBannerRotating;Category Banner Rotating;CategoryType1Banner,CategoryType2Banner,CategoryType3Banner,CategoryType4Banner;CategoryBannerRotating
+
+
+
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV)
+;;CategoryHeroBanner;Category Hero Banner;true;CategoryBannerRotating
+;;CategoryCurosel;Category Curosel;true	;shop-bag
+;;ProductCurosel;Product Curosel;true	;LuxProductCarouselComponent
+;;CategoryProductCurosel;Product Curosel;true
+;;Categorybanner2Slot;Category Banner 2;true;Bag-ShowCase
+;;Categorybanner3Slot;Category Banner 3;true
+;;Categorybanner4Slot;Category Banner 4;true
+
+                              
+
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;CategoryCurosel;;;wide
+;CategoryHeroBanner;;;wide
+;ProductCurosel;;;wide
+;Categorybanner1Slot;;;wide
+;Categorybanner2Slot;;;wide
+;Categorybanner3Slot;;;wide
+;Categorybanner4Slot;;;wide
+
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='luxuryCategoryLandingPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;CategoryPageTopHeaderSlot;TopHeaderSlot;;TopHeaderSlot;true
+;;MiddleCategoryPageHeaderHelpLink;MiddleHeader;;MiddleHeader;true
+;;CategoryPageSiteLogo;SiteLogo;;SiteLogoSlot;true
+;;CategoryPageHeaderLinks;HeaderLinks;;HeaderLinksSlot;true
+;;CategoryPageSearchBox;SearchBox;;SearchBoxSlot;true
+;;CategoryPageWishList;WishList;;WishListSlot;true;
+;;CategoryPageMiniCart;MiniCart;;MiniCartSlot;true
+;;CategoryPageNavigationBar;NavigationBar;;NavigationBarSlot;true
+;;CategoryPageWhyShopOnLuxury;WhyShopOnLuxury;;WhyShopOnLuxury;true
+;;CategoryPageFooter;Footer;;FooterSlot;true
+;;CategoryHeroBanner;CategoryHeroBanner;;CategoryHeroBanner;true
+;;Category-Page-Curosel;CategoryCurosel;;CategoryCurosel;true
+	
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='luxuryCategoryPage'];contentSlot(uid,$contentCV)[unique=true];
+;;CategoryCurosel;CategoryCurosel;;CategoryCurosel
+;;Categorybanner2;Categorybanner2;;Categorybanner2Slot
+;;ProductCurosel;ProductCurosel;;ProductCurosel

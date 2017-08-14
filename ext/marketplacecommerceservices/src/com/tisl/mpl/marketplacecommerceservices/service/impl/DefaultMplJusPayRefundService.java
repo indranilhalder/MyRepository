@@ -17,6 +17,8 @@ import de.hybris.platform.servicelayer.config.ConfigurationService;
 import de.hybris.platform.servicelayer.exceptions.ModelSavingException;
 import de.hybris.platform.servicelayer.model.ModelService;
 import de.hybris.platform.servicelayer.search.FlexibleSearchService;
+import de.hybris.platform.store.BaseStoreModel;
+import de.hybris.platform.store.services.BaseStoreService;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -87,6 +89,9 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	@Autowired
 	private JuspayWebHookDao juspayWebHookDao;
 
+	@Autowired
+	private BaseStoreService baseStoreService;
+
 
 	private final List<PaymentTransactionType> validPaymentType = Arrays.asList(PaymentTransactionType.CAPTURE,
 			PaymentTransactionType.COD_PAYMENT, PaymentTransactionType.AUTHORIZATION);
@@ -122,7 +127,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#doRefund(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -406,7 +411,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
 									paymentTransactionEntryModel.setTransactionStatus(MarketplacecommerceservicesConstants.SUCCESS_VAL);
 
-									final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(paymentType);
+									final PaymentTypeModel paymentTypeModel = getPaymentModeDetails(paymentType,
+											baseStoreService.getCurrentBaseStore());
 
 									//Setting Payment Mode in Payment Transaction Entry
 									setPaymentModeInTransaction(paymentTypeModel, paymentTransactionEntryModel);
@@ -442,7 +448,8 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 									//paymentTransactionEntryModel.setCurrency(orderModel.getPaymentTransactions().get(0).getEntries().get(0).getCurrency());
 
 									//Note : Get Payment Details
-									final PaymentTypeModel paymentModel = getPaymentModeDetails(paymentType);
+									final PaymentTypeModel paymentModel = getPaymentModeDetails(paymentType,
+											baseStoreService.getCurrentBaseStore());
 
 									//Setting Payment Mode in Payment Transaction Entry
 									setPaymentModeInTransaction(paymentModel, paymentTransactionEntryModel);
@@ -512,7 +519,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	 *
 	 * @param paymentType
 	 */
-	private PaymentTypeModel getPaymentModeDetails(final String paymentType)
+	private PaymentTypeModel getPaymentModeDetails(final String paymentType, final BaseStoreModel baseStore)
 	{
 		PaymentTypeModel oModel = null;
 		String paymentMode = MarketplacecommerceservicesConstants.EMPTY;
@@ -521,23 +528,23 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 			if (paymentType.equalsIgnoreCase("CREDIT"))
 			{
 				paymentMode = "Credit Card";
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 			else if (paymentType.equalsIgnoreCase("DEBIT"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.DEBIT;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 			//TISPRO-675
 			else if (paymentType.equalsIgnoreCase("NB"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.NETBANKING;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 			else if (paymentType.equalsIgnoreCase("EMI"))
 			{
 				paymentMode = MarketplacecommerceservicesConstants.EMI;
-				oModel = mplPaymentDao.getPaymentMode(paymentMode);
+				oModel = mplPaymentDao.getPaymentMode(paymentMode, baseStore);
 			}
 		}
 		return oModel;
@@ -591,7 +598,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#attachPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, de.hybris.platform.payment.model.PaymentTransactionModel)
@@ -647,7 +654,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#createPaymentTransactionModel(de.hybris
 	 * .platform.core.model.order.OrderModel, java.lang.String, java.math.BigDecimal,
@@ -690,7 +697,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeRefundOMSCall(de.hybris.platform.core
 	 * .model.order.OrderEntryModel, java.lang.Double)
@@ -777,7 +784,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#makeOMSStatusUpdate(de.hybris.platform
 	 * .core.model.order.AbstractOrderEntryModel)
@@ -809,7 +816,7 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.tisl.mpl.marketplacecommerceservices.service.MplJusPayRefundService#validateRefundAmount(double,
 	 * de.hybris.platform.core.model.order.OrderModel)
 	 */
@@ -877,15 +884,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 
 	/*
 	 * @Desc used in web and cscockpit for handling network exception while cancellation TISSIT-1801 TISPRO-94
-	 * 
+	 *
 	 * @param orderRequestRecord
-	 * 
+	 *
 	 * @param paymentTransactionType
-	 * 
+	 *
 	 * @param juspayRefundType
-	 * 
+	 *
 	 * @param uniqueRequestId
-	 * 
+	 *
 	 * @return void
 	 */
 
@@ -941,15 +948,15 @@ public class DefaultMplJusPayRefundService implements MplJusPayRefundService
 	/*
 	 * @Desc used in web and cscockpit for in case no response received from juspay while cancellation refund TISSIT-1801
 	 * TISPRO-94
-	 * 
+	 *
 	 * @param orderRequestRecord
-	 * 
+	 *
 	 * @param paymentTransactionType
-	 * 
+	 *
 	 * @param juspayRefundType
-	 * 
+	 *
 	 * @param uniqueRequestId
-	 * 
+	 *
 	 * @return void
 	 */
 
