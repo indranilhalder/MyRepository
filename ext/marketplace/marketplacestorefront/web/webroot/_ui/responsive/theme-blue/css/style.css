@@ -77281,3 +77281,13 @@ body .account .right-account .order-history.order-details li.item .status>ul.nav
 	margin: 0 3px;
 }
 /*end for TISPRDT-1936*/
+
+/* TISJEW-3478 start */
+.exchange-applied-ul li.cart_exchange {
+    text-transform: none;
+    font-size: 12px;
+    margin-bottom: 8px;
+    padding-right: 5px;
+    color: #92002e;
+} 
+/*  TISJEW-3478 End  */
