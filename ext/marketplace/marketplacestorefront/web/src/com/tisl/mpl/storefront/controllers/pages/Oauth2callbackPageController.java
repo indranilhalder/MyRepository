@@ -19,7 +19,6 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.GuestForm;
 import de.hybris.platform.acceleratorstorefrontcommons.forms.LoginForm;
-import de.hybris.platform.acceleratorstorefrontcommons.forms.RegisterForm;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.cms2.model.pages.AbstractPageModel;
 import de.hybris.platform.commercefacades.order.CartFacade;
@@ -54,9 +53,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import atg.taglib.json.util.JSONException;
-import atg.taglib.json.util.JSONObject;
-
 import com.tisl.mpl.constants.MarketplacecheckoutaddonConstants;
 import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.exception.EtailBusinessExceptions;
@@ -75,6 +71,9 @@ import com.tisl.mpl.storefront.controllers.helpers.GoogleAuthHelper;
 import com.tisl.mpl.storefront.security.cookie.LuxuryEmailCookieGenerator;
 import com.tisl.mpl.storefront.web.forms.ExtRegisterForm;
 import com.tisl.mpl.util.ExceptionUtil;
+
+import atg.taglib.json.util.JSONException;
+import atg.taglib.json.util.JSONObject;
 
 
 
@@ -109,7 +108,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	private String gigyaUID;
 	private String signature;
 	private String timestamp;
-	
+
 
 	public GigyaService getGigyaservice()
 	{
@@ -190,8 +189,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	@RequestMapping(method = RequestMethod.GET)
 	public String oauth2callback(@RequestHeader(value = ModelAttributetConstants.REFERER, required = false) final String referer,
 			final ExtRegisterForm form, final BindingResult bindingResult, final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException,
-			IOException, JSONException
+			final HttpServletResponse response, final RedirectAttributes redirectModel)
+			throws CMSItemNotFoundException, IOException, JSONException
 	{
 		try
 		{
@@ -214,8 +213,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			}
 			else if (request.getParameter(ModelAttributetConstants.CODE) != null
 					&& request.getParameter(ModelAttributetConstants.STATE) != null
-					&& request.getParameter(ModelAttributetConstants.STATE).equals(
-							request.getSession().getAttribute(ModelAttributetConstants.STATE)))
+					&& request.getParameter(ModelAttributetConstants.STATE)
+							.equals(request.getSession().getAttribute(ModelAttributetConstants.STATE)))
 			{
 				//Google code
 				request.getSession().removeAttribute(ModelAttributetConstants.STATE);
@@ -261,8 +260,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 		}
 		catch (final IllegalArgumentException e)
 		{
-			ExceptionUtil.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e,
-					MarketplacecommerceservicesConstants.E0012));
+			ExceptionUtil
+					.etailNonBusinessExceptionHandler(new EtailNonBusinessExceptions(e, MarketplacecommerceservicesConstants.E0012));
 			session.removeAttribute(ModelAttributetConstants.SOCIAL_LOGIN);
 			return frontEndErrorHelper.callNonBusinessError(model, MessageConstants.SYSTEM_ERROR_PAGE_NON_BUSINESS);
 		}
@@ -295,7 +294,8 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			@RequestParam(ModelAttributetConstants.UID) final String uid,
 			@RequestParam(ModelAttributetConstants.TIMESTAMP) final String timestamp,
 			@RequestParam(ModelAttributetConstants.SIGNATURE) final String signature,
-			@RequestParam(ModelAttributetConstants.PROVIDER) final String provider, final ExtRegisterForm form,
+			@RequestParam(ModelAttributetConstants.PROVIDER) final String provider,
+			@RequestParam(value = ModelAttributetConstants.GENDER, required = false) final String gender, final ExtRegisterForm form,
 			final BindingResult bindingResult, final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, final RedirectAttributes redirectModel) throws CMSItemNotFoundException, IOException
 
@@ -311,6 +311,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			LOG.debug("Method socialLogin, TIMESTAMP " + timestamp);
 			LOG.debug("Method socialLogin, SIGNATURE " + signature);
 			LOG.debug("Method socialLogin,PROVIDER " + provider);
+			LOG.debug("Method socialLogin, GENDER " + gender);
 
 
 			final String fbEmail = emailId;
@@ -352,6 +353,10 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 				final String decodedTimestamp = java.net.URLDecoder.decode(timestamp, UTF_8);
 
 				setTimestamp(decodedTimestamp);
+			}
+			if (StringUtils.isNotEmpty(gender))
+			{
+				form.setGender(gender);
 			}
 
 
@@ -454,7 +459,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 	 * redirectModel, final String socialLogin) throws CMSItemNotFoundException
 	 */
 
-	private String processRegisterUserRequestForOAuth2(final RegisterForm form, final BindingResult bindingResult,
+	private String processRegisterUserRequestForOAuth2(final ExtRegisterForm form, final BindingResult bindingResult,
 			final Model model, final HttpServletRequest request, final HttpServletResponse response, final String socialLogin)
 			throws CMSItemNotFoundException
 	{
@@ -473,6 +478,7 @@ public class Oauth2callbackPageController extends AbstractLoginPageController
 			data.setLogin(form.getEmail());
 			data.setFirstName(form.getFirstName());
 			data.setLastName(form.getLastName());
+			data.setGender(form.getGender());
 			if (StringUtils.isNotEmpty(socialLogin) && socialLogin.equalsIgnoreCase(ModelAttributetConstants.FACEBOOK))
 			{
 				data.setSocialMediaType(ModelAttributetConstants.FACEBOOK);

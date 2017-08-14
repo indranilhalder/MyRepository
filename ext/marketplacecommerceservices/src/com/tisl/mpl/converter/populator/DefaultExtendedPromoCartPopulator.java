@@ -99,6 +99,12 @@ public class DefaultExtendedPromoCartPopulator extends CartPopulator
 				{
 					target.setTotalPriceWithConvCharge(createPrice(source, Double.valueOf(0.0d)));
 				}
+				//TCL-818 & TCL-947			
+				if (null != source.getCurrency().getSymbol())
+				{
+
+					target.setCurrencySymbol(source.getCurrency().getSymbol());
+				}
 			}
 			else
 			{

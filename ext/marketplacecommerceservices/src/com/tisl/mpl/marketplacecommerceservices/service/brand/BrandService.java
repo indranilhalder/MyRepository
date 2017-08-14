@@ -37,5 +37,7 @@ public interface BrandService
 	 */
 	List<MplNewsLetterSubscriptionModel> checkEmailIdForMarketplace(String emailId);
 
+
+	List<MplNewsLetterSubscriptionModel> checkEmailIdForluxury(final String emailId, final String isLuxury);
 	public List<PriorityBrandsModel> priorityBrands(final String categoryCode);
 }
