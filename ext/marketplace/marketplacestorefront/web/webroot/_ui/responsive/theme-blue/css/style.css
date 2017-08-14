@@ -76087,7 +76087,6 @@ table#showPriceBreakup{
 	background: none;
 	margin: 0px;
 	cursor: pointer;
-	overflow: auto;
 }
 .jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in:after,
 .jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in:after,
@@ -76149,6 +76148,14 @@ table#showPriceBreakup{
  .product-info>.jewellery-wrapper>div.tabs-block.FashionJewellery .tabs.pdp.productTabs li .tab-details ul .product-desc .key-label li{
  	margin-top: 20px;
 }
+/* JWLSPCUAT-63 start */
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content #diamondDetailsTable,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content #diamondDetailsTable,
+.jewellery-wrapper>div.accordin.FineJewellery.smk_accordion .item.accordion_in .detail.acc_content #stoneDetailsTable,
+.jewellery-wrapper>div.accordin.FashionJewellery.smk_accordion .item.accordion_in .detail.acc_content #stoneDetailsTable{
+	overflow: auto;
+}
+/* JWLSPCUAT-63 end */
 @media (min-width: 1190px){
 	.product-info>.jewellery-wrapper>div.accordin.FineJewellery, 
 	.product-info>.jewellery-wrapper>div.accordin.FashionJewellery
