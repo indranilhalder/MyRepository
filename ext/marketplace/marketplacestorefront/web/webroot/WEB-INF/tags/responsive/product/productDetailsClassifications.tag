@@ -2,6 +2,7 @@
 <%@ attribute name="product" required="true"
 	type="de.hybris.platform.commercefacades.product.data.ProductData"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
 .view-button, .hide-button {
@@ -53,6 +54,7 @@
                      <div class="title">Product Code 
                      <span id="jewelDetailsUssid" ></span>
                      </div>
+                     <div id ="jewelTableDetails">
                      <table>
                         <c:forEach items="${classification.value}" var="feature" varStatus="inner">
                            <tr>
@@ -60,36 +62,44 @@
                               <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
                                  <td >${featureValue}</td>
                               </c:forEach>
+                              <c:set var = "length" value = "${21-fn:length(feature.value)}"></c:set>
+                              <td colspan = "${length}"></td> <!-- TISJEW-3447:UI issue under product details in fashion jewelry. -->
                            </tr>
                         </c:forEach> 
                      </table>
+                     </div>
                   </c:when>
                   <c:when test="${classification.key=='Diamond Details'}">
                      <c:forEach items="${classification.value}" var="feature" varStatus="inner">
-                        <c:choose>
-                           <c:when test="${feature.key=='Total Count' or feature.key=='Total Weight' }">
+                           <c:if test="${feature.key=='Total Count' or feature.key=='Total Weight' }">
                                  <div class="t-d-d">${feature.key}
                                   <span>
                                  <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
-                                    <td >${featureValue}</td>
+                                    ${featureValue}
                                  </c:forEach>
                                  </span>
                                  </div>
-                           </c:when>
-                           <c:otherwise>
-                              <table>
-                                 <tr>
-                                    <td class="title">${feature.key}  </td>
-                                    <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
-                                       <td >${featureValue}</td>
-                                    </c:forEach>
-                                 </tr>
-                              </table>
-                           </c:otherwise>
-                        </c:choose>
-                     </c:forEach>
+                           </c:if>
+                       </c:forEach>
+                       <div id="diamondDetailsTable">
+                          <table>
+                           	<c:forEach items="${classification.value}" var="feature" varStatus="inner">
+                           	 <c:choose>
+                           	 <c:when test="${feature.key ne 'Total Count' and feature.key ne 'Total Weight' }">
+                              <tr>
+                                 <td class="title">${feature.key}  </td>
+                                 <c:forEach items="${feature.value}" var="featureValue" varStatus="status">
+                                    <td >${featureValue}</td>
+                                 </c:forEach>
+                              </tr>
+                             </c:when>
+                             </c:choose>
+                              </c:forEach>
+                           </table>
+                           </div>
                   </c:when>
                   <c:otherwise>
+                  <div id="stoneDetailsTable">
                      <table>
                         <c:forEach items="${classification.value}" var="feature" varStatus="inner">
                            <tr>
@@ -100,6 +110,7 @@
                            </tr>
                         </c:forEach>
                      </table>
+                     </div>
                   </c:otherwise>
                </c:choose>
             </div>

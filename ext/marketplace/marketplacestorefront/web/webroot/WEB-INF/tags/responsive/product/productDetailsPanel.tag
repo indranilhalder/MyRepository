@@ -416,10 +416,6 @@ tr.d0 td {
                  <%-- <li class="jwlryCerti"><img src="${commonResourcePath}/images/Visa.png" alt="certified by"></li> --%>
                  <li class="jwlryCertiAGL"></li>
              </c:if>
-             <c:if test="${certification.value=='Tanishq'}">  
-                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
-                <li class="jwlryCertiTanishq"></li>
-             </c:if>
              <c:if test="${certification.value=='AGS'}">
                 <%--  <img src="${commonResourcePath}/images/American_Express.png" alt="certified by"> --%>
                 <li class="jwlryCertiAGS"></li>
@@ -432,17 +428,9 @@ tr.d0 td {
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiHRD"></li>  
             </c:if>
-            <c:if test="${certification.value=='BIS'}">  
-                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
-                <li class="jwlryCertiBIS"></li>  
-            </c:if>
             <c:if test="${certification.value=='EGL'}">  
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiEGL"></li>  
-            </c:if>
-             <c:if test="${certification.value=='GIA'}">  
-                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
-                <li class="jwlryCertiGIA"></li>  
             </c:if>
             <c:if test="${certification.value=='GII'}">  
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
@@ -456,14 +444,46 @@ tr.d0 td {
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiIDL"></li>  
             </c:if>
-            <c:if test="${certification.value=='IGI'}">  
+            <c:if test="${certification.value=='Tanishq'}">  
+                <%--  <img src="${commonResourcePath}/images/Master_Card.png" alt="certified by">   --%>
+                <li class="jwlryCertiTanishq"></li>
+             </c:if>
+             <c:if test="${certification.value=='IGI'}">  
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiIGI"></li>  
-            </c:if> 
+            </c:if>
+             <c:if test="${certification.value=='BIS'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiBIS"></li>  
+            </c:if>
+            <c:if test="${certification.value=='SGL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiSGL"></li>  
+            </c:if>
+             <c:if test="${certification.value=='GIA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGIA"></li>  
+            </c:if>
+            <c:if test="${certification.value=='PGI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiPGI"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GSL'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGSL"></li>  
+            </c:if>
+            <c:if test="${certification.value=='GSI'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiGSI"></li>  
+            </c:if>
             <c:if test="${certification.value=='IGL'}">  
                 <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
                 <li class="jwlryCertiIGL"></li>  
-            </c:if>   
+            </c:if>
+            <c:if test="${certification.value=='DGLA'}">  
+                <%--  <img src="${commonResourcePath}/images/Discover.png" alt="certified by">  --%>
+                <li class="jwlryCertiDGLA"></li>  
+            </c:if>
            </c:forEach>
          </ul>
       </div>

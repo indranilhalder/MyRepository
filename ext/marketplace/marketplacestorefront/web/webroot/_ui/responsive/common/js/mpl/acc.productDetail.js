@@ -4543,7 +4543,7 @@ function populateProductPageTabs(jsonData)
 	}
 	
 	var catType = $("#categoryType").val();
-	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase())){
+	if((catType != undefined) && ("FINEJEWELLERY" == catType.toUpperCase()) && ("FASHIONJEWELLERY" == catType.toUpperCase())){
 		populateClassificationForJewellery(jsonData);
 	}
 	
@@ -4927,6 +4927,17 @@ function onSubmitExc()
 	var l4select=$('#l4select').val();
 	var isError=false;
 	var isWorking=$('#activeselect').val();
+	//TPR-5193 Analytics starts
+	var brandExchange = $('#brandExchange').val();
+	var couponValue = $('#priceselect').text();
+	var l3 =$('#l3').val();
+    var selector	 = $('#activeselect option:selected').val();
+    var exchangeDropdown = selector.split('|');
+    var exchangeCondition = exchangeDropdown[1] ;
+    var productCode =  $('#product_id').val();
+	var productArray =[];
+	productArray.push(productCode);
+	//TPR-5193 Analytics ends
 		if(!brand)
 			{
 			$("#lbrand").text("Please Enter Brand");
@@ -4952,8 +4963,19 @@ function onSubmitExc()
 			}
 		if(!isError)
 			{
-	document.getElementById('couponValue').style.display = "block";
-	document.getElementById('submit&Condition').style.display = "none";
+	          document.getElementById('couponValue').style.display = "block";
+	          document.getElementById('submit&Condition').style.display = "none";
+     	//TPR-5193
+	   if(typeof utag !="undefined"){
+		  utag.link({
+			event_type          : "exchange_success",
+			exchange_brand      : brandExchange ,
+			exchange_condition  : exchangeCondition ,
+			exchange_l3         : l3 ,
+			couponcode_exchange : couponValue ,
+			product_id          : productCode
+		});
+	   }
 			}
 	
 }

@@ -39,7 +39,6 @@ import com.hybris.oms.domain.address.Address;
 import com.hybris.oms.domain.order.Order;
 import com.hybris.oms.domain.order.OrderLine;
 import com.hybris.oms.domain.order.PaymentInfo;
-import com.tisl.mpl.constants.MarketplacecommerceservicesConstants;
 import com.tisl.mpl.constants.MarketplaceomsordersConstants;
 import com.tisl.mpl.constants.MarketplaceomsservicesConstants;
 import com.tisl.mpl.globalcodes.utilities.MplCodeMasterUtility;
@@ -75,8 +74,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		target.setCartID(source.getGuid());
 
 		final AddressModel delAddress = source.getDeliveryAddress();
-
-		double totalJwlryPrice = 0.0D;
 
 		if (delAddress != null)
 		{
@@ -122,14 +119,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 				if (entrie.getQuantity() != null && entrie.getQuantity().doubleValue() > 0)
 				{
 					ondemandOrderEntrys.add(getOrderLineConverter().convert((OrderEntryModel) entrie));
-
-					if (null != entrie.getProduct()
-							&& entrie.getProduct().getProductCategoryType()
-									.equalsIgnoreCase(MarketplacecommerceservicesConstants.FINEJEWELLERY))
-					{
-						totalJwlryPrice = totalJwlryPrice + entrie.getNetAmountAfterAllDisc().doubleValue();
-					}
-
 				}
 			}
 		}
@@ -260,17 +249,6 @@ public class CustomOmsOrderPopulator implements Populator<OrderModel, Order>
 		}
 
 		//target.setCancellable(true);
-
-		if (totalJwlryPrice >= 200000.0)
-		{
-			target.setIsPANCARDVerificationReq("Y");
-			LOG.debug("Total Jewellery Price is " + totalJwlryPrice);
-		}
-		else
-		{
-			target.setIsPANCARDVerificationReq("N");
-			LOG.debug("Total Jewellery Price is " + totalJwlryPrice);
-		}
 	}
 
 	public void setFirstAndLastName(final OrderModel source, final Order target)

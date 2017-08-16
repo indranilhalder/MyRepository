@@ -6048,6 +6048,13 @@
 						<defaultvalue>Integer.valueOf(0)</defaultvalue>
 						<persistence type="property" />
 					</attribute>
+					
+					<!-- TPR-3782 pancard changes -->
+					<attribute qualifier="panVerificationReq" type="java.lang.Boolean">
+						<modifiers optional="true" read="true" write="true" />
+						<persistence type="property" />
+					</attribute>
+					<!-- TPR-3782 pancard changes -->
 					<!-- For TPR-5667 | samsung order -->
 					<attribute qualifier="samsungSubmitStatus" type="java.lang.String">
 						<modifiers optional="true" />
