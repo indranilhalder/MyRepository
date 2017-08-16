@@ -2854,6 +2854,11 @@ $("#otpMobileNUMField").focus(function(){
 				 $("#pincode").val(values[8]); 
 				 $("#firstName, #lastName, #address1, #address2, #address3, #state, #city, #pincode").attr("readonly", true); 
 				 $("#country").attr("disabled", true); 
+				 
+				 var isLuxury = $("#isLuxury").val();
+				 if(isLuxury) {
+					 $("#line1").val(values[2] + values[3] + values[4]);
+				 }
 			 } 
 			 else 
 			 { 
@@ -2895,6 +2900,10 @@ $("#otpMobileNUMField").focus(function(){
 			 $("#pincodeEmi").val(values[8]); 
 			 $("#firstNameEmi, #lastNameEmi, #address1Emi, #address2Emi, #address3Emi, #stateEmi, #cityEmi, #pincodeEmi").attr("readonly", true); 
 			 $("#countryEmi").attr("disabled", true); 
+				 var isLuxury = $("#isLuxury").val();
+				 if(isLuxury) {
+					 $("#line1").val(values[2] + values[3] + values[4]);
+				 }
 			 } 
 			 else 
 			 { 

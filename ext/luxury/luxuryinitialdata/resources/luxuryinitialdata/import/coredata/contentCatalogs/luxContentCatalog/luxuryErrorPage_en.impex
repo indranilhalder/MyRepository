@@ -43,5 +43,5 @@ INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];po
 ;;Footer-ErrorPage;Footer;;FooterSlot;true
 ;;SideContent-ErrorPage;SideContent;;SideContentSlot;true 
 #;;MiddleContent-ErrorPage;MiddleContent;;MiddleContentSlot;true
-;;ErrorPageBannerComponent-Errorpage;MiddleContent;;ErrorPageBannerComponent-slot;true
+;;ErrorPageBannerComponent-ErrorPage;MiddleContent;;ErrorPageBannerComponent-slot;true
 
