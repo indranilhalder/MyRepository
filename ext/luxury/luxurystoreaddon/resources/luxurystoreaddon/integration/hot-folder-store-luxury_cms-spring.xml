@@ -49,7 +49,7 @@
     <!-- 2) move the file to processing and setup header -->
     
     <file:outbound-gateway request-channel="batchFilesLuxuryCMS" reply-channel="batchFilesLuxuryCMSProc"
-        directory="#{baseDirectoryLuxuryCMS}/processing" delete-source-files="true" />
+        directory="#{baseDirectoryLuxuryCMS}/processing" delete-source-files="true" filename-generator-expression="'lux_' + payload.name"/>
 
 	<!-- 3) transform csv to impex file -->
 	
@@ -67,7 +67,7 @@
  	<!-- Transformer for ProductCarousel Import -->
     <bean id="batchLuxuryCarouselConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="product_collection"
+    p:mapping="lux_product_collection"
     p:converter-ref="batchLuxuryCarouselConverter"/>
     
     <!-- Converter for seller Import -->

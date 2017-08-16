@@ -36,7 +36,7 @@
  
     <!-- 2) move the file to processing and setup header -->
     <file:outbound-gateway request-channel="batchFilesLuxuryPrice" reply-channel="batchFilesLuxuryPriceProc"
-        directory="#{baseDirectoryLuxuryPrice}/processing" delete-source-files="true" />
+        directory="#{baseDirectoryLuxuryPrice}/processing" delete-source-files="true" filename-generator-expression="'lux_' + payload.name"/>
 	
  <int:service-activator input-channel="batchFilesLuxuryPriceProc" output-channel="batchFilesHeaderInitPrice"
         ref="LuxuryPriceHeaderSetupTask" method="execute" />
@@ -95,7 +95,7 @@
      <!-- Transformer for Price Import -->
     <bean id="batchLuxpriceConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mplprice"
+    p:mapping="lux_mplprice"
     p:converter-ref="batchLuxpriceConverter"/>
            
      
@@ -103,7 +103,7 @@
      <!-- Transformer for Product Approval when price is given Import -->      
     <bean id="batchLuxuryHomedeliveryConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mplprice"
+    p:mapping="lux_mplprice"
     p:converter-ref="batchLuxuryHomedeliveryConverter"/>
     
     	 

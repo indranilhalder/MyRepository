@@ -36,7 +36,7 @@
  
     <!-- 2) move the file to processing and setup header -->
     <file:outbound-gateway request-channel="batchFilesLuxuryratingReview" reply-channel="batchFilesLuxuryratingReviewProc"
-        directory="#{baseDirectoryLuxuryratingReview}/processing" delete-source-files="true" />
+        directory="#{baseDirectoryLuxuryratingReview}/processing" delete-source-files="true" filename-generator-expression="'lux_' + payload.name"/>
 
  
   <!-- 3) transform csv to impex file -->
@@ -66,13 +66,13 @@
      <!-- Transformer for ratingReview Import -->
     <bean id="batchLuxratingReviewConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mplratingReview"
+    p:mapping="lux_mplratingReview"
     p:converter-ref="batchLuxratingReviewConverter"/>
            
       <!-- Transformer for Product Approval when ratingReview is given Import -->      
     <bean id="batchLuxratingReview_product_approvalConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="mplratingReview"
+    p:mapping="lux_mplratingReview"
     p:converter-ref="batchLuxratingReview_product_approvalConverter"/>
     
    	 

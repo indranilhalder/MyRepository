@@ -31,7 +31,7 @@
     <!-- 2) move the file to processing and setup header -->
     
     <file:outbound-gateway request-channel="batchFilesLuxuryBuybox" reply-channel="batchFilesLuxuryBuyboxProc"
-        directory="#{baseDirectoryLuxuryBuyBox}/processing" delete-source-files="true" />
+        directory="#{baseDirectoryLuxuryBuyBox}/processing" delete-source-files="true" filename-generator-expression="'lux_' + payload.name"/>
 
 	<!-- 3) transform csv to impex file -->
 	
@@ -50,7 +50,7 @@
 	
 	<bean id="batchLuxuryBuyboxConverterMapping"
     class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
-    p:mapping="buybox"
+    p:mapping="lux_buybox"
     p:converter-ref="batchLuxuryBuyboxConverter"/>
 
 	<!-- Converters -->
