@@ -1296,6 +1296,7 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 	{
 		final OrderInfoWsDTO orderInfoWsDTO = new OrderInfoWsDTO();
 		final List<CustomerOrderInfoWsDTO> custdto = new ArrayList<CustomerOrderInfoWsDTO>();
+		final DeliveryTrackingInfoWsDTO deliveryTrackingInfoAllWsDTO = new DeliveryTrackingInfoWsDTO();
 		final List<DeliveryTrackingInfoWsDTO> deliveryTrackingListInfoWsDTO = new ArrayList<DeliveryTrackingInfoWsDTO>();
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		boolean flag = false;
@@ -1446,6 +1447,8 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 													{
 														if (CollectionUtils.isNotEmpty(awbResponseInfo.getStatusRecords()))
 														{
+															deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+															LOG.debug("********Removing pre stored values in delivery tracking list dto****");
 															for (final StatusRecords statusRecords : awbResponseInfo.getStatusRecords())
 															{
 																final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
@@ -1471,44 +1474,47 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 														}
 														else
 														{
-															final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+															deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
+															//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
 															LOG.debug("**********Inside else part of status records*********");
-															deliveryTrackingInfoWsDTO
+															deliveryTrackingInfoAllWsDTO
 																	.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-															deliveryTrackingInfoWsDTO
+															deliveryTrackingInfoAllWsDTO
 																	.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-															deliveryTrackingInfoWsDTO
+															deliveryTrackingInfoAllWsDTO
 																	.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-															deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+															deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
 															customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 														}
 													}
 												}
 												else
 												{
+													deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
 													LOG.debug("**********Inside else part of awb response*********");
-													final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-													deliveryTrackingInfoWsDTO
+													//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+													deliveryTrackingInfoAllWsDTO
 															.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingInfoWsDTO
+													deliveryTrackingInfoAllWsDTO
 															.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingInfoWsDTO
+													deliveryTrackingInfoAllWsDTO
 															.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+													deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
 													customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 												}
 											}
 											else
 											{
+												deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
 												LOG.debug("**********Inside else part of null tracking id*********");
-												final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-												deliveryTrackingInfoWsDTO
+												//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+												deliveryTrackingInfoAllWsDTO
 														.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-												deliveryTrackingInfoWsDTO
+												deliveryTrackingInfoAllWsDTO
 														.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-												deliveryTrackingInfoWsDTO
+												deliveryTrackingInfoAllWsDTO
 														.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-												deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+												deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
 												customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 											}
 											customerOrderInfoWsDTO.setAwbNumber(null != cng.getTrackingID() ? cng.getTrackingID()
@@ -1533,15 +1539,16 @@ public class DefaultMplOrderFacade implements MplOrderFacade
 										}
 										else
 										{
+											deliveryTrackingListInfoWsDTO.clear();//Removing pre stored values
 											LOG.debug("**********Inside else part consignment not matching transaction id*********");
-											final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
-											deliveryTrackingInfoWsDTO
+											//final DeliveryTrackingInfoWsDTO deliveryTrackingInfoWsDTO = new DeliveryTrackingInfoWsDTO();
+											deliveryTrackingInfoAllWsDTO
 													.setDeliveryTrackingDate(MarketplacecommerceservicesConstants.NULL_VALUE);
-											deliveryTrackingInfoWsDTO
+											deliveryTrackingInfoAllWsDTO
 													.setDeliveryTrackingLocation(MarketplacecommerceservicesConstants.NULL_VALUE);
-											deliveryTrackingInfoWsDTO
+											deliveryTrackingInfoAllWsDTO
 													.setDeliveryTrackingDescription(MarketplacecommerceservicesConstants.NULL_VALUE);
-											deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoWsDTO);
+											deliveryTrackingListInfoWsDTO.add(deliveryTrackingInfoAllWsDTO);
 											customerOrderInfoWsDTO.setDeliverytrackingDetails(deliveryTrackingListInfoWsDTO);
 											customerOrderInfoWsDTO.setAwbNumber(MarketplacecommerceservicesConstants.NULL_VALUE);
 											customerOrderInfoWsDTO.setReturnCarrier(MarketplacecommerceservicesConstants.NULL_VALUE);
