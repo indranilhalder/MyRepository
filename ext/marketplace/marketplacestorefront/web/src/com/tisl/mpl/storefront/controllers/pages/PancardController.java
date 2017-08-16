@@ -42,9 +42,11 @@ public class PancardController
 	@Resource(name = "mplPancardFacadeImpl")
 	private MplPancardFacade mplPancardFacade;
 
+	private static final String status = "status";
+
 	/*
 	 * @ResponseBody
-	 *
+	 * 
 	 * @RequestMapping(value = "/pancardupload/test123", method = RequestMethod.GET) public String getTest123() throws
 	 * CMSItemNotFoundException { System.out.println("Test123****************"); return "test123"; }
 	 */
@@ -75,13 +77,14 @@ public class PancardController
 		model.addAttribute("customername", customerName);
 		//model.addAttribute("transactionid", transactionid);
 		boolean ifRejected = false;
+		boolean ifPending = false;
 		final List<PancardInformationModel> pModelList = mplPancardFacade.getPanCardOredrId(orderReferanceNumber);
 
 		if (CollectionUtils.isNotEmpty(pModelList))
 		{
 			for (final PancardInformationModel pModel : pModelList)
 			{
-				if (null != pModel.getStatus() && StringUtils.isNotEmpty(pModel.getStatus()))
+				if (StringUtils.isNotEmpty(pModel.getStatus()))
 				{
 					if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.REJECTED))
 					{
@@ -93,12 +96,36 @@ public class PancardController
 			}
 			if (ifRejected)
 			{
+				//model.addAttribute(status, MarketplacecommerceservicesConstants.REJECTED);
 				return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 			}
 			else
 			{
-				model.addAttribute(MarketplacecommerceservicesConstants.APPROVED);
-				return ControllerConstants.Views.Pages.Pancard.panCardApproved;
+				//model.addAttribute(MarketplacecommerceservicesConstants.APPROVED);
+				for (final PancardInformationModel pModel : pModelList)
+				{
+					if (StringUtils.isNotEmpty(pModel.getStatus()))
+					{
+						if (pModel.getStatus().equalsIgnoreCase(MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION))
+						{
+							ifPending = true;
+							break;
+						}
+					}
+				}
+				if (ifPending)
+				{
+					model.addAttribute(status, MarketplacecommerceservicesConstants.PENDING_FOR_VERIFICATION);
+					//return ControllerConstants.Views.Pages.Pancard.panCardApproved;
+					return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
+				}
+				else
+				{
+					model.addAttribute(status, MarketplacecommerceservicesConstants.APPROVED);
+					//return ControllerConstants.Views.Pages.Pancard.panCardApproved;
+					return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
+				}
+				//return ControllerConstants.Views.Pages.Pancard.panCardApproved;
 			}
 		}
 		return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
@@ -115,6 +142,7 @@ public class PancardController
 		{
 			model.addAttribute("orderreferancenumber", orderReferanceNumber);
 			model.addAttribute("filename", file.getOriginalFilename());
+			model.addAttribute("customername", customerName);
 
 			boolean ifRejected = false;
 			PancardInformationModel pancRejModel = null;
@@ -148,8 +176,8 @@ public class PancardController
 					{
 						for (final AbstractOrderEntryModel entry : childOModel.getEntries())
 						{
-							if (MarketplacecommerceservicesConstants.FINEJEWELLERY
-									.equalsIgnoreCase(entry.getProduct().getProductCategoryType()))
+							if (MarketplacecommerceservicesConstants.FINEJEWELLERY.equalsIgnoreCase(entry.getProduct()
+									.getProductCategoryType()))
 							{
 								transEntryList.add(entry.getOrderLineId());
 							}
@@ -162,21 +190,25 @@ public class PancardController
 		catch (final JAXBException e)
 		{
 			LOG.error("the exception is**" + e.getMessage());
+			model.addAttribute(status, MarketplacecommerceservicesConstants.ERROR_FLAG);
 			return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 		}
 		catch (final IOException e)
 		{
 			LOG.error("the exception is**" + e.getMessage());
+			model.addAttribute(status, MarketplacecommerceservicesConstants.ERROR_FLAG);
 			return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 		}
 		catch (final IllegalStateException e)
 		{
 			LOG.error("the exception is**" + e.getMessage());
+			model.addAttribute(status, MarketplacecommerceservicesConstants.ERROR_FLAG);
 			return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 		}
 		catch (final Exception e)
 		{
 			LOG.error("the exception is**" + e.getMessage());
+			model.addAttribute(status, MarketplacecommerceservicesConstants.ERROR_FLAG);
 			return ControllerConstants.Views.Pages.Pancard.PanCardDetail;
 		}
 		return ControllerConstants.Views.Pages.Pancard.panCardUploadSuccess;
