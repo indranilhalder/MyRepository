@@ -30,9 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -94,7 +92,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			final CategoryModel categoryl2, final List<String> brandLists)
 	{
 
-		System.out.println("**Inside MplBrandPageSiteMapGenerator***");
+		LOG.debug("**Inside MplBrandPageSiteMapGenerator***");
 		List<CustomPageData> mainSiteMapUrlList = new ArrayList<CustomPageData>();
 		final Collection<SiteMapPageModel> siteMapPages = siteModel.getSiteMapConfig().getSiteMapPages();
 		for (final SiteMapPageModel siteMapPage : siteMapPages)
@@ -104,19 +102,19 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 				//Homepage
 				mainSiteMapUrlList = homePageSiteMap(mainSiteMapUrlList, siteMapPage);
 
-				System.out.println("**Inside HomePage***");
+				LOG.debug("**Inside HomePage***");
 			}
 			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CATEGORY))
 			{
-				System.out.println("**Inside CategoryPage***");
+				LOG.debug("**Inside CategoryPage***");
 				//CategoryPage
-				mainSiteMapUrlList = brandPageSiteMap(siteModel, mainSiteMapUrlList, siteMapPage);
+				mainSiteMapUrlList = brandPageSiteMap(siteModel, mainSiteMapUrlList, siteMapPage, brandLists);
 
 			}
 			else if (siteMapPage.getCode().equals(SiteMapPageEnum.CONTENT))
 			{
 
-				System.out.println("**Inside ContentPage***");
+				LOG.debug("**Inside ContentPage***");
 				//ContentPage
 				mainSiteMapUrlList = contentPageSiteMap(mainSiteMapUrlList, siteMapPage);
 			}
@@ -140,25 +138,84 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			//			}
 		}
 
-		final List<CustomPageData> mainSiteMapUrlListFinal = new ArrayList<CustomPageData>();
-		if (CollectionUtils.isNotEmpty(mainSiteMapUrlList))
-		{
-			System.out.println("***Final mainSiteMapUrlList***" + mainSiteMapUrlList);
-			//final int i = 0;
-			for (final String brand : brandLists)
-			{
-				for (final CustomPageData pageData : mainSiteMapUrlList)
-				{
-					//System.out.println("**Inside--" + i);
-					pageData.setUrl(brand);
-					mainSiteMapUrlListFinal.add(pageData);
-				}
-			}
-		}
-		System.out.println("***Final mainSiteMapUrlListFinal***" + mainSiteMapUrlListFinal);
-		mainSiteMapUrlList.clear();
-		mainSiteMapUrlList.addAll(mainSiteMapUrlListFinal);
-		System.out.println("***Returning mainSiteMapUrlList***" + mainSiteMapUrlList);
+		//		final List<CustomPageData> mainSiteMapUrlListFinal = new ArrayList<CustomPageData>();
+		//		if (CollectionUtils.isNotEmpty(mainSiteMapUrlList))
+		//		{
+		//			System.out.println("***Final mainSiteMapUrlList***" + mainSiteMapUrlList);
+		//			//final int i = 0;
+		//			for (final String brand : brandLists)
+		//			{
+		//				for (final CustomPageData pageData : mainSiteMapUrlList)
+		//				{
+		//					//System.out.println("**Inside--" + i);
+		//					pageData.setUrl(brand);
+		//					mainSiteMapUrlListFinal.add(pageData);
+		//				}
+		//			}
+		//		}
+		//		System.out.println("***Final mainSiteMapUrlListFinal***" + mainSiteMapUrlListFinal);
+		//		mainSiteMapUrlList.clear();
+		//		mainSiteMapUrlList.addAll(mainSiteMapUrlListFinal);
+		//		System.out.println("***Returning mainSiteMapUrlList***" + mainSiteMapUrlList);
+		//
+		//		final List<CustomPageData> removeUrlBlankList = new ArrayList<CustomPageData>();
+		//		final List<CustomPageData> addfrontSlashList = new ArrayList<CustomPageData>();
+		//		final String[] excludedKeywordsStartswith = configurationService.getConfiguration()
+		//				.getString("mpl.sitemap.excludeKeywords.startsWith").split(",");
+		//		final String[] excludedKeywordsEqual = configurationService.getConfiguration()
+		//				.getString("mpl.sitemap.excludeKeywords.equals").split(",");
+		//		if (CollectionUtils.isNotEmpty(mainSiteMapUrlList))
+		//		{
+		//
+		//			for (final CustomPageData pageData : mainSiteMapUrlList)
+		//			{
+		//				if (StringUtils.isNotEmpty(pageData.getUrl()))
+		//				{
+		//					//check if / is present
+		//					if (!pageData.getUrl().startsWith("/"))
+		//					{
+		//						removeUrlBlankList.add(pageData);
+		//						final CustomPageData cpd = new CustomPageData();
+		//						cpd.setUrl("/" + pageData.getUrl());
+		//						cpd.setChangeFrequency(pageData.getChangeFrequency());
+		//						cpd.setPriority(pageData.getPriority());
+		//
+		//						addfrontSlashList.add(cpd);
+		//					}
+		//					//check for excluded keywords that starts with
+		//					for (final String keyword : excludedKeywordsStartswith)
+		//					{
+		//
+		//						if (StringUtils.isNotEmpty(pageData.getUrl())
+		//								&& pageData.getUrl().toUpperCase().startsWith(keyword.toUpperCase()))
+		//						{
+		//							removeUrlBlankList.add(pageData);
+		//
+		//						}
+		//					}
+		//					//check for excluded equal keywords
+		//					for (final String keyword : excludedKeywordsEqual)
+		//					{
+		//
+		//						if (StringUtils.isNotEmpty(pageData.getUrl()) && pageData.getUrl().equalsIgnoreCase(keyword))
+		//						{
+		//							removeUrlBlankList.add(pageData);
+		//
+		//						}
+		//					}
+		//				}
+		//				//check for blank/null URL
+		//				else
+		//				{
+		//					removeUrlBlankList.add(pageData);
+		//				}
+		//			}
+		//		}
+		//		mainSiteMapUrlList.removeAll(removeUrlBlankList);
+		//		mainSiteMapUrlList.addAll(addfrontSlashList);
+		//
+		//
+		//		return mainSiteMapUrlList;
 
 		final List<CustomPageData> removeUrlBlankList = new ArrayList<CustomPageData>();
 		final List<CustomPageData> addfrontSlashList = new ArrayList<CustomPageData>();
@@ -215,8 +272,6 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 		}
 		mainSiteMapUrlList.removeAll(removeUrlBlankList);
 		mainSiteMapUrlList.addAll(addfrontSlashList);
-
-
 		return mainSiteMapUrlList;
 	}
 
@@ -265,18 +320,23 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	 * @return List<CustomPageData>
 	 */
 	private List<CustomPageData> brandPageSiteMap(final CMSSiteModel siteModel, final List<CustomPageData> mainSiteMapUrlList,
-			final SiteMapPageModel siteMapPage)
+			final SiteMapPageModel siteMapPage, final List<String> brandLists)
 	{
-		final String query = getCategoryForSitemapQuery();
+		//final String query = getCategoryForSitemapQuery();
 
-		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("site", siteModel);
-		final List<CategoryModel> categoryList = doSearch(query, params, CategoryModel.class);
-		for (final CategoryModel categoryModel : categoryList)
+		//final Map<String, Object> params = new HashMap<String, Object>();
+		//params.put("site", siteModel);
+		//final List<CategoryModel> categoryList = doSearch(query, params, CategoryModel.class);
+		//		for (final CategoryModel categoryModel : categoryList)
+		//		{
+
+		for (final String relUrl : brandLists)
 		{
-			final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
+			LOG.debug("brandurl" + relUrl);
+			//final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(categoryModel));
 			final CustomPageData data = new CustomPageData();
 			data.setUrl(relUrl);
+			LOG.debug("brandurl in custompagedata" + data.getUrl());
 			if (null != siteMapPage.getFrequency())
 			{
 				data.setChangeFrequency(siteMapPage.getFrequency().getCode());
@@ -285,8 +345,8 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			{
 				data.setPriority(siteMapPage.getPriority().toString());
 			}
-
 			mainSiteMapUrlList.add(data);
+			//}
 		}
 		return mainSiteMapUrlList;
 	}
@@ -301,6 +361,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	private List<CustomPageData> contentPageSiteMap(final List<CustomPageData> mainSiteMapUrlList,
 			final SiteMapPageModel siteMapPage)
 	{
+		LOG.debug("Inside mplbrandpagesitemapgenerator contentPageSiteMap");
 		final List<ContentPageModel> contentPageList = doSearch(getContentForSitemapQuery(), null, ContentPageModel.class);
 		for (final ContentPageModel contentPageModel : contentPageList)
 		{
@@ -316,6 +377,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			{
 				if (StringUtils.isNotEmpty(contentPageModel.getLabel()))
 				{
+					LOG.debug("Inside mplbrandpagesitemapgenerator contentPageModel" + contentPageModel.getLabel());
 					data.setUrl(contentPageModel.getLabel());
 					if (null != siteMapPage.getFrequency())
 					{
@@ -333,6 +395,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			{
 				final String relUrl = StringEscapeUtils.escapeXml(getCategoryModelUrlResolver().resolve(
 						contentPageModel.getCategoryAssociated()));
+				LOG.debug("Inside mplbrandpagesitemapgenerator category templates" + relUrl);
 				data.setUrl(relUrl);
 				if (null != siteMapPage.getFrequency())
 				{
@@ -350,6 +413,7 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			{
 				final StringBuilder urlBuilder = new StringBuilder();
 				urlBuilder.append("s/").append(contentPageModel.getAssociatedSeller().getId());
+				LOG.debug("Inside mplbrandpagesitemapgenerator seller templates" + urlBuilder.toString());
 				data.setUrl(urlBuilder.toString());
 				if (null != siteMapPage.getFrequency())
 				{
@@ -391,13 +455,12 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 			final Integer index) throws IOException
 	{
 
-		LOG.debug("::::::::::Inside MplCustomPageSiteMapGenerator generator::::::::::");
+		LOG.debug("::::::::::Inside MplBrandPageSiteMapGenerator generator::::::::::");
 		String prefix = (index != null) ? String.format("main" + "-%s-%s", "sitemap", Integer.valueOf(index.intValue() + 1))
 				: String.format("brand" + "-%s", "sitemap");
 		prefix = GenericUtilityMethods.changePrefix(prefix);
 		final File siteMap = new File(configurationService.getConfiguration().getString(
 				MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND), prefix + ".xml");
-
 
 		final ImpersonationContext context = new ImpersonationContext();
 		context.setSite(site);
@@ -566,14 +629,14 @@ public class MplBrandPageSiteMapGenerator extends AbstractSiteMapGenerator<Custo
 	}
 
 
-	public String getCategoryForSitemapQuery()
-	{
-		final String query = configurationService.getConfiguration().getString(
-				MarketplacecommerceservicesConstants.SITEMAP_CATEGORY_QUERY,
-				MarketplacecommerceservicesConstants.DEFAULT_SITEMAP_CATEGORY_QUERY);
-		LOG.debug("query" + query);
-		return query;
-	}
+	//	public String getCategoryForSitemapQuery()
+	//	{
+	//		final String query = configurationService.getConfiguration().getString(
+	//				MarketplacecommerceservicesConstants.SITEMAP_CATEGORY_QUERY,
+	//				MarketplacecommerceservicesConstants.DEFAULT_SITEMAP_CATEGORY_QUERY);
+	//		LOG.debug("query" + query);
+	//		return query;
+	//	}
 
 	public String getContentForSitemapQuery()
 	{

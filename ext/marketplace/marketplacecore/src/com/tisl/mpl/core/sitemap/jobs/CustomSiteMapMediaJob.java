@@ -18,6 +18,7 @@ import de.hybris.platform.catalog.model.CatalogVersionModel;
 import de.hybris.platform.category.CategoryService;
 import de.hybris.platform.category.model.CategoryModel;
 import de.hybris.platform.cms2.model.site.CMSSiteModel;
+import de.hybris.platform.core.model.MplbrandfilterModel;
 import de.hybris.platform.core.model.media.MediaModel;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.cronjob.enums.CronJobResult;
@@ -175,57 +176,62 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 						LOG.debug("L1 Category Not available");
 					}
 
-					System.out.println("**START**BRAND***");
+					LOG.debug("**START**BRAND***");
 					if (CollectionUtils.isNotEmpty(L1Category))
 					{
-						System.out.println("100...");
+						LOG.debug("100...");
 						for (final CategoryModel category : L1Category)
 						{
-							System.out.println("200...");
+							LOG.debug("200...");
 							final List<CategoryModel> L2Category = fetchL2fromL1(category);
 							if (CollectionUtils.isNotEmpty(L2Category))
 							{
-								System.out.println("300...");
+								LOG.debug("300...");
 								for (final CategoryModel categoryl2 : L2Category)
 								{
 									//Logic For Brand Filter Sitemap
 									final List brandLists = fetchBrand(category.getCode(), categoryl2.getCode());
-
-									System.out.println("1*******");
-									final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category, categoryl2,
-											brandLists);
-
-									System.out.println("2*******");
-									final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
-
-									if (CollectionUtils.isNotEmpty(models))
+									if (CollectionUtils.isNotEmpty(brandLists))
 									{
-										//Logic for splitting files based on model size
-										final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
-										if (models.size() > MAX_SITEMAP_LIMIT.intValue())
+										LOG.debug("1*******");
+										final List models = getMplbrandPageSiteMapGenerator().getBrandData(contentSite, category,
+												categoryl2, brandLists);
+
+										LOG.debug("2*******");
+										final String categoryName = getSiteMapNamefromCategories(category, categoryl2);
+
+										if (CollectionUtils.isNotEmpty(models))
 										{
-											final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
-											for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+											//Logic for splitting files based on model size
+											final Integer MAX_SITEMAP_LIMIT = cronJob.getSiteMapUrlLimitPerFile();
+											if (models.size() > MAX_SITEMAP_LIMIT.intValue())
 											{
-												System.out.println("3*******");
-												generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
-														siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
-														Integer.valueOf(modelIndex), categoryName);
+												final List<List> modelsList = splitUpTheListIfExceededLimit(models, MAX_SITEMAP_LIMIT);
+												for (int modelIndex = 0; modelIndex < modelsList.size(); modelIndex++)
+												{
+													LOG.debug("3*******");
+													generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+															siteMapConfig, modelsList.get(modelIndex), SiteMapPageEnum.CATEGORY,
+															Integer.valueOf(modelIndex), categoryName);
+												}
 											}
+											else
+											{
+												LOG.debug("4*******");
+												generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
+														siteMapConfig, models, SiteMapPageEnum.CATEGORY, null, categoryName);
+											}
+
+
 										}
 										else
 										{
-											System.out.println("4*******");
-											generateSiteMapFiles(siteMapFiles, contentSite, getMplbrandPageSiteMapGenerator(),
-													siteMapConfig, models, SiteMapPageEnum.CATEGORY, null, categoryName);
+											LOG.debug("models are empty");
 										}
-
-
 									}
 									else
 									{
-										System.out.println("5*******");
-										LOG.debug("Brand Filter  Not available");
+										LOG.debug("brand filter model is empty");
 									}
 
 								}
@@ -528,35 +534,42 @@ public class CustomSiteMapMediaJob extends SiteMapMediaJob
 
 	protected List<String> fetchBrand(final String categoryl1, final String categoryl2)
 	{
-		//List<MplbrandfilterModel> brandFilterList = null;
+		List<MplbrandfilterModel> brandFilterList = null;
 		final List<String> brandfilterurl = new ArrayList<>();
+		//		final FileWriter fw = new FileWriter("/brandOriginal.txt");
 
 		if (StringUtils.isNotEmpty(categoryl1) && StringUtils.isNotEmpty(categoryl2))
 		{
-			//			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
-			//			for (final MplbrandfilterModel brandFilter : brandFilterList)
-			//			{
-			//				brandfilterurl.add(brandFilter.getUrl1());
-			//				brandfilterurl.add(brandFilter.getUrl2());
-			//				brandfilterurl.add(brandFilter.getUrl3());
-			//				System.out.println("111" + brandFilter.getUrl1());
-			//				System.out.println("22222" + brandFilter.getUrl2());
-			//				System.out.println("333333333" + brandFilter.getUrl3());
-			//			}
-			for (int i = 0; i < 2; i++)
+			brandFilterList = getMplCategoryDao().fetchBrandFilterforL1L2(categoryl1, categoryl2);
+			for (final MplbrandfilterModel brandFilter : brandFilterList)
 			{
-				brandfilterurl.add("URL1-" + i + 1);
-				brandfilterurl.add("URL2-" + i + 1);
-				brandfilterurl.add("URL3-" + i + 1);
+				brandfilterurl.add(brandFilter.getUrl1());
+				brandfilterurl.add(brandFilter.getUrl2());
+				brandfilterurl.add(brandFilter.getUrl3());
+				LOG.debug("111" + brandFilter.getUrl1());
+				LOG.debug("22222" + brandFilter.getUrl2());
+				LOG.debug("333333333" + brandFilter.getUrl3());
+
+				//					fw.write(brandFilter.getUrl1() + "\n");
+				//					fw.write(brandFilter.getUrl2() + "\n");
+				//					fw.write(brandFilter.getUrl3() + "\n");
 			}
+
+			//				fw.close();
+			//				for (int i = 0; i < 2; i++)
+			//				{
+			//					brandfilterurl.add("URL1-" + i + 1);
+			//					brandfilterurl.add("URL2-" + i + 1);
+			//					brandfilterurl.add("URL3-" + i + 1);
+			//				}
 		}
 		final Set<String> set = new HashSet<String>(brandfilterurl);
 
 		for (final String myset : set)
 		{
-			System.out.println("*************" + myset);
+			LOG.debug("*************" + myset);
 		}
-		System.out.println();
+
 		return brandfilterurl;
 
 	}

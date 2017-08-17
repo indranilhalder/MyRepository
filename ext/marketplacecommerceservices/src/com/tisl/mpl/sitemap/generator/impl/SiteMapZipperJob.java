@@ -73,13 +73,17 @@ public class SiteMapZipperJob extends AbstractJobPerformable<CronJobModel>
 					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_CUSTOM);
 			final String productFileLocation = configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_PRODUCT);
-
+			//PRDI-423
+			final String brandFileLocation = configurationService.getConfiguration().getString(
+					MarketplacecommerceservicesConstants.SITEMAP_FILE_LOCATION_BRAND);
 			final String zipFileLocation = configurationService.getConfiguration().getString(
 					MarketplacecommerceservicesConstants.SITEMAP_ZIP_LOCATION,
 					MarketplacecommerceservicesConstants.SITEMAP_ZIP_LOCATION_DEFAULT);
 			createXML(siteMapFileName, siteMapFileLocation);
 			generateFileList(new File(customFileLocation));
 			generateFileList(new File(productFileLocation));
+			//PRDI-423
+			generateFileList(new File(brandFileLocation));
 			if (zipFileLocation.equalsIgnoreCase("/"))
 			{
 				LOG.debug("Cannot Clean Directory Starting with root");
