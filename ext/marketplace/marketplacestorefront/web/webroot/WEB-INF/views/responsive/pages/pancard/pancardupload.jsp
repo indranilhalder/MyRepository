@@ -131,7 +131,7 @@ $(document).ready(function() {
 						<div class="panfield-wrapper btn-wrapper clearfix">
 							<div class="pan-label-value">
 								<a href="javascript:;" class="pan-submit-btn" title="SUBMIT" id="btn_PanDetails">SUBMIT</a>
-								<a href="javascript:;" class="pan-cancel-btn" title="CANCEL" id="btncncl_PanDetails">CANCEL</a>
+								<!-- <a href="javascript:;" class="pan-cancel-btn" title="CANCEL" id="btncncl_PanDetails">CANCEL</a> -->
 							</div>
 						</div>
 						</div>
