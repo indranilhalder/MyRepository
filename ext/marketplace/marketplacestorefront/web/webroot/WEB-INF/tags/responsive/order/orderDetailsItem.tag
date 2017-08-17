@@ -206,9 +206,19 @@
 		<ul class="mobile-product">
 			<li>
 				<div class="product-img">
-					<a href="${productUrl}"> <product:productPrimaryImage
-							product="${entry.product}" format="thumbnail" />
-					</a>
+					<c:choose>
+						<c:when test="${fn:toLowerCase(entry.product.luxIndicator)=='luxury'}">
+							<a href="${productUrl}"> <product:productPrimaryImage
+									product="${entry.product}" format="luxuryCartIcon" lazyLoad="false" />
+							</a>
+						</c:when>
+						<c:otherwise>
+							<a href="${productUrl}"> <product:productPrimaryImage
+								product="${entry.product}" format="thumbnail" lazyLoad="false" />
+							</a>
+						</c:otherwise>
+					</c:choose>
+				<!-- TISPRDT-2131	 -->			
 				</div>
 				<div class="product">
 
