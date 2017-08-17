@@ -1,7 +1,7 @@
 # Import the CMS content for the site emails
 $storePrefix=mpl
 $contentCatalog=$storePrefixContentCatalog
-$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Online])[default=$contentCatalog:Online]
 $wideContent=CMSImageComponent,BannerComponent
 $emailResource=jar:com.tisl.mpl.initialdata.setup.InitialDataSystemSetup&/marketplaceinitialdata/import/coredata/contentCatalogs/$contentCatalog/emails
 $productCatalog=mplProductCatalog 
@@ -21,6 +21,15 @@ $jarResourceCms=jar:com.tisl.mpl.core.setup.CoreSystemSetup&/marketplacecore/imp
 $emailPackageName=com.tisl.mpl.facades.process.email.context
 
 
+# CMS components and Email velocity templates
+UPDATE RendererTemplate;code[unique=true];description[lang=$lang];templateScript[lang=$lang,translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;mpl_Email_PDP_Body;"Send Invoice Email Body";$emailResource/email-PDPBody.vm
+;mpl_Email_Customer_Registration_Body;"Customer Registration Email Body";$emailResource/email-customerRegistrationBody.vm
+ ;mpl_Email_FriendsInvite_Body;"Friends Invite Email Body";$emailResource/email-friendsInviteBody.vm
+ ;mpl_Email_Nps_Emailer_Body;"Nps Email Body";$emailResource/email-npsEmailerBody.vm
+ ;mpl_Email_Payment_Failed_Body;"Payment Failed Email Body";$emailResource/email-paymentFailedBody.vm
+ ;mpl_Email_Payment_Timeout_Body;"Payment Timeout Email Body";$emailResource/email-paymentTimeoutBody.vm
+
 
 
 INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;active;frontendTemplateName;subject(code);htmlTemplate(code);restrictedPageTypes(code)
@@ -30,6 +39,7 @@ INSERT_UPDATE EmailPageTemplate;$contentCV[unique=true];uid[unique=true];name;ac
 ;;NpsEmailTemplate;Nps Email Template;true;npsEmail;mpl_Email_Nps_Emailer_Subject;mpl_Email_Nps_Emailer_Body;EmailPage
 ;;PaymentFailedEmailTemplate;Payment Failed Email Template;true;paymentFailedEmail;mpl_Email_Payment_Failed_Subject;mpl_Email_Payment_Failed_Body;EmailPage
 ;;PaymentTimeoutEmailTemplate;Payment Timeout Email Template;true;paymentTimeoutEmail;mpl_Email_Payment_Timeout_Subject;mpl_Email_Payment_Timeout_Body;EmailPage
+
 
 # Email Pages
 INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved']
@@ -43,7 +53,7 @@ INSERT_UPDATE EmailPage;$contentCV[unique=true];uid[unique=true];name;masterTemp
 
 
 UPDATE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;content[lang=$lang]
-;;FeedbackTextComponent;"Send us some love or direct your anger this way. We want to know how we can serve you better."
+;;FeedbackTextComponent;FeedbackTextComponent;;"Send us some love or direct your anger this way. We want to know how we can serve you better."
 
 
 
